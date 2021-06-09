@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "fb6b399b_5a35e350",
+        "filename": "packages/policy-clamp-docker/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-09T17:16:06Z",
+      "side": 1,
+      "message": "LFN provided the boilerplate code from which this was cloned.  I wouldn\u0027t mind seeing it put in a common place for use by all of the repos, if possible, though it\u0027s also nice having it here where we can see what it\u0027s doing.  I created a JIRA to investigate this idea: https://jira.onap.org/browse/POLICY-3378",
+      "parentUuid": "929cac99_7fcacd18",
+      "revId": "b920a1551e3d689611fcb91363ab0bd2f55a25ea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8e48d490_c154531f",
         "filename": "packages/policy-clamp-docker/src/main/config/DcaeParticipantParameters.json",
         "patchSetId": 1
@@ -182,6 +200,24 @@
       "revId": "b920a1551e3d689611fcb91363ab0bd2f55a25ea",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "97dafa15_136b92d3",
+        "filename": "packages/policy-clamp-docker/src/main/docker/RuntimeDockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-09T17:16:06Z",
+      "side": 1,
+      "message": "this image is based on the integration image ;-)",
+      "parentUuid": "76d68b07_1d6d0636",
+      "revId": "b920a1551e3d689611fcb91363ab0bd2f55a25ea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
