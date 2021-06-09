@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "929cac99_7fcacd18",
+        "filename": "packages/policy-clamp-docker/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-06-09T16:56:37Z",
+      "side": 1,
+      "message": "Could you put the groovy script out of the XML, you can do :\n                        \u003cconfiguration\u003e\n                            \u003csource\u003e${project.basedir}/src/main/script/TagVersion.groovy\u003c/source\u003e\n                        \u003c/configuration\u003e",
+      "revId": "b920a1551e3d689611fcb91363ab0bd2f55a25ea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8e48d490_c154531f",
         "filename": "packages/policy-clamp-docker/src/main/config/DcaeParticipantParameters.json",
         "patchSetId": 1
@@ -145,6 +162,40 @@
         "endLine": 47,
         "endChar": 45
       },
+      "revId": "b920a1551e3d689611fcb91363ab0bd2f55a25ea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "76d68b07_1d6d0636",
+        "filename": "packages/policy-clamp-docker/src/main/docker/RuntimeDockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-06-09T16:56:37Z",
+      "side": 1,
+      "message": "Should we move to the integration alpine images ?",
+      "revId": "b920a1551e3d689611fcb91363ab0bd2f55a25ea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "01ca3188_778ce07d",
+        "filename": "packages/policy-clamp-docker/src/main/docker/dcae-participant.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-06-09T16:56:37Z",
+      "side": 1,
+      "message": "Just wondering one thing here\nThe participant and Policy Participant are spring boot based right ?\n\nSo do you intend to access those env vars in the application.yaml ? I don\u0027t remember having seen such var defined in the application.yaml",
       "revId": "b920a1551e3d689611fcb91363ab0bd2f55a25ea",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
