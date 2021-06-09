@@ -29,7 +29,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import lombok.Getter;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
@@ -39,10 +38,7 @@ import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.Parti
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopUpdate;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantHealthCheck;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStateChange;
-import org.onap.policy.clamp.controlloop.participant.intermediary.handler.ParticipantHandler;
-import org.onap.policy.clamp.controlloop.participant.policy.main.handler.PolicyProvider;
 import org.onap.policy.clamp.controlloop.participant.policy.main.parameters.CommonTestData;
-import org.onap.policy.clamp.controlloop.participant.policy.main.parameters.ParticipantPolicyParameters;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -61,25 +57,7 @@ public class TestListenerUtils {
     static CommonTestData commonTestData = new CommonTestData();
     private static final Logger LOGGER = LoggerFactory.getLogger(TestListenerUtils.class);
 
-    @Getter
-    private static ParticipantHandler participantHandler;
-
     private TestListenerUtils() {}
-
-    /**
-     * Method to initialize participantHandler.
-     */
-    public static void initParticipantHandler() {
-
-        final ParticipantPolicyParameters participantParameters = commonTestData.toObject(
-                commonTestData.getParticipantPolicyParametersMap(CommonTestData.PARTICIPANT_GROUP_NAME),
-                ParticipantPolicyParameters.class);
-
-        PolicyProvider policyProvider =
-                new PolicyProvider(participantParameters.getIntermediaryParameters());
-
-        participantHandler = policyProvider.getIntermediaryApi().getParticipantHandler();
-    }
 
     /**
      * Method to create a controlLoop from a yaml file.

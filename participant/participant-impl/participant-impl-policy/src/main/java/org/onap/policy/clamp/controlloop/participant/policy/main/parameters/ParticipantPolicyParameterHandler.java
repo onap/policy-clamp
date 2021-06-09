@@ -23,8 +23,7 @@ package org.onap.policy.clamp.controlloop.participant.policy.main.parameters;
 import java.io.File;
 import javax.ws.rs.core.Response;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
-import org.onap.policy.clamp.controlloop.participant.policy.main.startstop.ParticipantPolicyCommandLineArguments;
-import org.onap.policy.common.parameters.ValidationResult;
+import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -39,37 +38,34 @@ public class ParticipantPolicyParameterHandler {
     /**
      * Read the parameters from the parameter file.
      *
-     * @param arguments the arguments passed to policy
+     * @param path the path passed to policy
      * @return the parameters read from the configuration file
      * @throws ControlLoopException on parameter exceptions
      */
-    public ParticipantPolicyParameters getParameters(final ParticipantPolicyCommandLineArguments arguments)
-            throws ControlLoopException {
+    public ParticipantPolicyParameters toParticipantDcaeParameters(final String path) throws ControlLoopException {
         ParticipantPolicyParameters parameters = null;
 
         // Read the parameters
         try {
             // Read the parameters from JSON
-            File file = new File(arguments.getFullConfigurationFilePath());
+            File file = new File(path);
             parameters = CODER.decode(file, ParticipantPolicyParameters.class);
         } catch (final CoderException e) {
-            final String errorMessage = "error reading parameters from \"" + arguments.getConfigurationFilePath()
-                    + "\"\n" + "(" + e.getClass().getSimpleName() + ")";
+            final String errorMessage =
+                    "error reading parameters from \"" + path + "\"\n" + "(" + e.getClass().getSimpleName() + ")";
             throw new ControlLoopException(Response.Status.NOT_ACCEPTABLE, errorMessage, e);
         }
 
         // The JSON processing returns null if there is an empty file
         if (parameters == null) {
-            final String errorMessage = "no parameters found in \"" + arguments.getConfigurationFilePath() + "\"";
-            throw new ControlLoopException(Response.Status.NOT_ACCEPTABLE, errorMessage);
+            throw new ControlLoopException(Response.Status.NOT_ACCEPTABLE, "no parameters found in \"" + path + "\"");
         }
 
         // validate the parameters
-        final ValidationResult validationResult = parameters.validate();
+        final BeanValidationResult validationResult = parameters.validate();
         if (!validationResult.isValid()) {
-            String returnMessage =
-                    "validation error(s) on parameters from \"" + arguments.getConfigurationFilePath() + "\"\n";
-            returnMessage += validationResult.getResult();
+            final String returnMessage =
+                    "validation error(s) on parameters from \"" + path + "\"\n" + validationResult.getResult();
 
             throw new ControlLoopException(Response.Status.NOT_ACCEPTABLE, returnMessage);
         }
