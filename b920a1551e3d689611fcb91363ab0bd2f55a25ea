@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d657979c_c5be446f",
+        "filename": "packages/policy-clamp-docker/src/main/config/DcaeParticipantParameters.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 4903
+      },
+      "writtenOn": "2021-06-09T09:30:42Z",
+      "side": 1,
+      "message": "Is this correct? If the intention is to use this in csit etc, isn\u0027t it better to keep it standard like message-router? Same comment in other config files.",
+      "range": {
+        "startLine": 38,
+        "startChar": 24,
+        "endLine": 38,
+        "endChar": 35
+      },
+      "revId": "b920a1551e3d689611fcb91363ab0bd2f55a25ea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8143306b_7df223bd",
+        "filename": "packages/policy-clamp-tarball/src/main/resources/etc/logback.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 4903
+      },
+      "writtenOn": "2021-06-09T09:30:42Z",
+      "side": 1,
+      "message": "Would it be better to log to stdout too by default? If this goes to OOM deployment, then I think logging to stdout  is a general requirement from ONAP.",
+      "revId": "b920a1551e3d689611fcb91363ab0bd2f55a25ea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
