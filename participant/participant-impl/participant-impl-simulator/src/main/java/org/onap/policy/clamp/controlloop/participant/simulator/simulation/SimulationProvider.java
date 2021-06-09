@@ -20,44 +20,30 @@
 
 package org.onap.policy.clamp.controlloop.participant.simulator.simulation;
 
-import java.io.Closeable;
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import lombok.Getter;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
-import org.onap.policy.clamp.controlloop.common.exception.ControlLoopRuntimeException;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoops;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
 import org.onap.policy.clamp.controlloop.models.messages.rest.TypedSimpleResponse;
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryApi;
-import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryFactory;
-import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantIntermediaryParameters;
+import org.springframework.stereotype.Service;
 
 /**
  * This provider class simulation of participants and control loop elements.
  */
-public class SimulationProvider implements Closeable {
-    @Getter
+@Service
+public class SimulationProvider {
+
     private final ParticipantIntermediaryApi intermediaryApi;
 
     /**
      * Create a participant simulation provider.
-     *
-     * @throws ControlLoopRuntimeException on errors creating the provider
      */
-    public SimulationProvider(ParticipantIntermediaryParameters participantParameters)
-                     throws ControlLoopRuntimeException {
-        intermediaryApi = new ParticipantIntermediaryFactory().createApiImplementation();
-        intermediaryApi.init(participantParameters);
-    }
-
-    @Override
-    public void close() throws IOException {
-        intermediaryApi.close();
+    public SimulationProvider(ParticipantIntermediaryApi intermediaryApi) {
+        this.intermediaryApi = intermediaryApi;
     }
 
     /**
@@ -78,10 +64,8 @@ public class SimulationProvider implements Closeable {
      * @param name the controlLoopElement, null to get all
      * @param version the controlLoopElement, null to get all
      * @return the control loop elements
-     * @throws ControlLoopException on errors getting the control loop elements
      */
-    public Map<UUID, ControlLoopElement> getControlLoopElements(String name, String version)
-                    throws ControlLoopException {
+    public Map<UUID, ControlLoopElement> getControlLoopElements(String name, String version) {
         return intermediaryApi.getControlLoopElements(name, version);
     }
 
@@ -90,13 +74,11 @@ public class SimulationProvider implements Closeable {
      *
      * @param element the control loop element to update
      * @return response simple response returned
-     * @throws ControlLoopException on errors updating the control loop element
      */
-    public TypedSimpleResponse<ControlLoopElement> updateControlLoopElement(ControlLoopElement element)
-            throws ControlLoopException {
+    public TypedSimpleResponse<ControlLoopElement> updateControlLoopElement(ControlLoopElement element) {
         TypedSimpleResponse<ControlLoopElement> response = new TypedSimpleResponse<>();
-        response.setResponse(intermediaryApi.updateControlLoopElementState(
-                element.getId(), element.getOrderedState(), element.getState()));
+        response.setResponse(intermediaryApi.updateControlLoopElementState(element.getId(), element.getOrderedState(),
+                element.getState()));
         return response;
     }
 
@@ -106,9 +88,8 @@ public class SimulationProvider implements Closeable {
      * @param name the participant, null to get all
      * @param version the participant, null to get all
      * @return the list of participants
-     * @throws ControlLoopException on errors getting the participants
      */
-    public List<Participant> getParticipants(String name, String version) throws ControlLoopException {
+    public List<Participant> getParticipants(String name, String version) {
         return intermediaryApi.getParticipants(name, version);
     }
 
@@ -117,13 +98,11 @@ public class SimulationProvider implements Closeable {
      *
      * @param participant the participant to update
      * @return TypedSimpleResponse simple response
-     * @throws ControlLoopException on errors updating the participant
      */
-
-    public TypedSimpleResponse<Participant> updateParticipant(Participant participant) throws ControlLoopException {
+    public TypedSimpleResponse<Participant> updateParticipant(Participant participant) {
         TypedSimpleResponse<Participant> response = new TypedSimpleResponse<>();
-        response.setResponse(intermediaryApi.updateParticipantState(
-                participant.getDefinition(), participant.getParticipantState()));
+        response.setResponse(
+                intermediaryApi.updateParticipantState(participant.getDefinition(), participant.getParticipantState()));
         return response;
     }
 }

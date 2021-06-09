@@ -48,7 +48,7 @@ public class CommonTestData {
     private static final String REST_SERVER_PASSWORD = "zb!XztG34";
     private static final String REST_SERVER_USER = "healthcheck";
     private static final int REST_SERVER_PORT = 6969;
-    private static final String REST_SERVER_HOST = "0.0.0.0";
+    public static final String REST_SERVER_HOST = "0.0.0.0";
     private static final boolean REST_SERVER_HTTPS = true;
     private static final boolean REST_SERVER_AAF = false;
 
@@ -197,8 +197,8 @@ public class CommonTestData {
             return coder.decode(getParticipantParameterGroupAsString(port), ParticipantSimulatorParameters.class);
 
         } catch (CoderException e) {
-            throw new ControlLoopRuntimeException(Response.Status.NOT_ACCEPTABLE,
-                    "cannot read participant parameters", e);
+            throw new ControlLoopRuntimeException(Response.Status.NOT_ACCEPTABLE, "cannot read participant parameters",
+                    e);
         }
     }
 
@@ -220,8 +220,8 @@ public class CommonTestData {
             return json;
 
         } catch (IOException e) {
-            throw new ControlLoopRuntimeException(Response.Status.NOT_ACCEPTABLE,
-                    "cannot read participant parameters", e);
+            throw new ControlLoopRuntimeException(Response.Status.NOT_ACCEPTABLE, "cannot read participant parameters",
+                    e);
 
         }
     }
@@ -239,6 +239,7 @@ public class CommonTestData {
 
     /**
      * Nulls out a field within a JSON string.
+     *
      * @param json JSON string
      * @param field field to be nulled out
      * @return a new JSON string with the field nulled out
