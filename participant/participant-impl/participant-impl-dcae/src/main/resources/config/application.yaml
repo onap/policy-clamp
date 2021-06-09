@@ -1,0 +1,3 @@
+
+participant:
+  file: src/main/resources/config/DCAEParticipantConfig.json
