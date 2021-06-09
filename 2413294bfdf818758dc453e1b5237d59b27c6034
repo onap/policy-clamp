@@ -16,6 +16,24 @@
       "revId": "2413294bfdf818758dc453e1b5237d59b27c6034",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "48726e97_aa5c6d1c",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/parameters/ParticipantK8sParameters.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-09T12:29:05Z",
+      "side": 1,
+      "message": "Using policy annotations, yes.  (Using hibernate annotations, NotNull works at the class level, but NotBlank only works at the field level - even though it allows you to specify it at the class level - go figure)",
+      "parentUuid": "55a83092_575bf523",
+      "revId": "2413294bfdf818758dc453e1b5237d59b27c6034",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
