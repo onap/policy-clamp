@@ -72,13 +72,6 @@
         <maven.build.timestamp.format>yyyyMMdd'T'HHmmss'Z'</maven.build.timestamp.format>
         <clamp.project.version>${project.version}</clamp.project.version>
         <clamp.build.timestamp>${maven.build.timestamp}</clamp.build.timestamp>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-        <eelf.core.version>1.0.0</eelf.core.version>
-        <camel.version>3.7.3</camel.version>
-        <springboot.version>2.4.4</springboot.version>
-
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <sonar.surefire.reportsPath>${project.build.directory}/surefire-reports</sonar.surefire.reportsPath>
         <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/jacoco-html-xml-reports/jacoco.xml
@@ -102,7 +95,6 @@
         <docker.skip.tag>true</docker.skip.tag>
         <skip.staging.artifacts>false</skip.staging.artifacts>
         <python.http.proxy.param/>
-        <tomcat.version>9.0.45</tomcat.version>
         <ui.react.src>ui-react</ui.react.src>
         <ui.react.lib.src>ui-react-lib</ui.react.lib.src>
         <npm.publish.url>https://nexus3.onap.org/repository/npm.snapshot/</npm.publish.url>
@@ -168,7 +160,7 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
-                <version>${springboot.version}</version>
+                <version>${version.springboot}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -176,7 +168,7 @@
             <dependency>
                 <groupId>org.apache.camel.springboot</groupId>
                 <artifactId>camel-spring-boot-bom</artifactId>
-                <version>${camel.version}</version>
+                <version>${version.camel}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -187,7 +179,7 @@
         <dependency>
             <groupId>com.att.eelf</groupId>
             <artifactId>eelf-core</artifactId>
-            <version>${eelf.core.version}</version>
+            <version>${version.eelf.core}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.powermock</groupId>
@@ -207,22 +199,22 @@
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-core</artifactId>
-            <version>${tomcat.version}</version>
+            <version>${version.tomcat}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-el</artifactId>
-            <version>${tomcat.version}</version>
+            <version>${version.tomcat}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-websocket</artifactId>
-            <version>${tomcat.version}</version>
+            <version>${version.tomcat}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-annotations-api</artifactId>
-            <version>${tomcat.version}</version>
+            <version>${version.tomcat}</version>
         </dependency>
         <!-- For CAMEL -->
         <dependency>
@@ -371,7 +363,6 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.8.0</version>
         </dependency>
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
@@ -407,12 +398,10 @@
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
-            <version>1.15</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.plexus</groupId>
             <artifactId>plexus-utils</artifactId>
-            <version>3.3.0</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.spec.javax.ws.rs</groupId>
@@ -447,7 +436,6 @@
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>1.28</version>
         </dependency>
         <dependency>
             <groupId>org.dom4j</groupId>
@@ -484,12 +472,6 @@
             <groupId>com.github.docker-java</groupId>
             <artifactId>docker-java</artifactId>
             <version>3.2.7</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.onap.policy.common</groupId>
-            <artifactId>utils-test</artifactId>
-            <version>${policy.common.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -807,7 +789,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${springboot.version}</version>
+                <version>${version.springboot}</version>
                 <executions>
                     <execution>
                         <goals>
@@ -1175,10 +1157,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
-                <configuration>
-                    <source>11</source>
-                    <target>11</target>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.sonarsource.scanner.maven</groupId>
