@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a3cae163_a6d2b6d0",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ControlLoopProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-10T13:50:43Z",
+      "side": 1,
+      "message": "use common method here? :-)",
+      "range": {
+        "startLine": 146,
+        "startChar": 8,
+        "endLine": 159,
+        "endChar": 9
+      },
+      "revId": "3577f5de401f1c69d421a9ab588c2a4f5ab3a880",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "22258645_08e1393a",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ProviderUtils.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-10T13:50:43Z",
+      "side": 1,
+      "message": "I didn\u0027t know about this way of listing multiple interfaces in a parameterized type - thanks!",
+      "range": {
+        "startLine": 36,
+        "startChar": 45,
+        "endLine": 36,
+        "endChar": 46
+      },
+      "revId": "3577f5de401f1c69d421a9ab588c2a4f5ab3a880",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "89669bc6_73dbda27",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ProviderUtils.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-10T13:50:43Z",
+      "side": 1,
+      "message": "modify this to take a Supplier\u003cJ\u003e (i.e., JpaXxx::new)?  then intantiateJpaClass() could be deleted",
+      "range": {
+        "startLine": 37,
+        "startChar": 44,
+        "endLine": 37,
+        "endChar": 61
+      },
+      "revId": "3577f5de401f1c69d421a9ab588c2a4f5ab3a880",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
