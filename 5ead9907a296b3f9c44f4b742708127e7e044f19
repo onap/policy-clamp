@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "5e77f879_6636bfd3",
+        "filename": "participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/client/AbstractHttpClient.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-06-10T20:56:41Z",
+      "side": 1,
+      "message": "could just return it without storing in a var",
+      "range": {
+        "startLine": 68,
+        "startChar": 1,
+        "endLine": 69,
+        "endChar": 24
+      },
+      "revId": "5ead9907a296b3f9c44f4b742708127e7e044f19",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9ad8fb38_bc1a6518",
         "filename": "participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/client/PolicyApiHttpClient.java",
         "patchSetId": 2
