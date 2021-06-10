@@ -23,9 +23,9 @@ package org.onap.policy.clamp.controlloop.participant.policy.main.parameters;
 import javax.validation.constraints.NotBlank;
 import lombok.Getter;
 import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantIntermediaryParameters;
+import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
 import org.onap.policy.common.parameters.ParameterGroupImpl;
 import org.onap.policy.common.parameters.annotations.NotNull;
-import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 
 /**
  * Class to hold all parameters needed for the policy participant.
@@ -36,7 +36,7 @@ import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 @Getter
 public class ParticipantPolicyParameters extends ParameterGroupImpl {
     private ParticipantIntermediaryParameters intermediaryParameters;
-    private PolicyModelsProviderParameters databaseProviderParameters;
+    private BusTopicParams policyApiParameters;
 
     /**
      * Create the policy participant parameter group.
