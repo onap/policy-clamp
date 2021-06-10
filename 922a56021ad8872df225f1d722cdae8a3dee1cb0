@@ -92,6 +92,30 @@
       "revId": "922a56021ad8872df225f1d722cdae8a3dee1cb0",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "91f2ac14_5fd22677",
+        "filename": "participant/participant-impl/participant-impl-simulator/src/main/resources/config/application.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-06-10T13:38:32Z",
+      "side": 1,
+      "message": "yes, and there is the issue on how to change the passwords if it affects this application, security tools will flag this on static analysis I think.   In general, I think the use of credentials and localhost references in resources files needs attention.",
+      "parentUuid": "e0d1a1f5_9f782c0c",
+      "range": {
+        "startLine": 4,
+        "startChar": 6,
+        "endLine": 5,
+        "endChar": 25
+      },
+      "revId": "922a56021ad8872df225f1d722cdae8a3dee1cb0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
