@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "7a9b540f_114e2a56",
+        "filename": "runtime/src/main/resources/META-INF/resources/swagger.html",
+        "patchSetId": 1
+      },
+      "lineNbr": 4494,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-06-10T19:45:48Z",
+      "side": 1,
+      "message": "probably not the right swagger ?\nA new entry should be added for the new endpoint",
+      "revId": "a9e73e670d319c1013e3b5e42c23a3ff51a68cbe",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0024e0e6_7c959f90",
+        "filename": "runtime/src/main/resources/application.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-06-10T19:45:48Z",
+      "side": 1,
+      "message": "I would not keep that new permission, this is really confusing with the existing ones, reuse org.onap.clamp.clds.cl or org.onap.clamp.clds.cl.manage\n\nOr use a more specific name so that we understand easily what it is about 😊",
+      "revId": "a9e73e670d319c1013e3b5e42c23a3ff51a68cbe",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6e123a8a_f12d1104",
         "filename": "runtime/src/main/resources/application.properties",
         "patchSetId": 1
@@ -31,6 +65,75 @@
       "side": 1,
       "message": "This is really just a placeholder. I can change it if you wish.",
       "parentUuid": "6e123a8a_f12d1104",
+      "revId": "a9e73e670d319c1013e3b5e42c23a3ff51a68cbe",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f9648fa4_b838a71a",
+        "filename": "runtime/src/main/resources/application.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-06-10T19:45:48Z",
+      "side": 1,
+      "message": "It\u0027s ok to keep localhost, those are typically replaced in OOM by the right values.",
+      "parentUuid": "b29894aa_a27ff461",
+      "revId": "a9e73e670d319c1013e3b5e42c23a3ff51a68cbe",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "15907f6f_1660746e",
+        "filename": "runtime/src/main/resources/clds/camel/routes/controlloop-flows.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-06-10T19:45:48Z",
+      "side": 1,
+      "message": "Not sure where this is coming from ?\nShould be removed i guess",
+      "revId": "a9e73e670d319c1013e3b5e42c23a3ff51a68cbe",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0e1385c4_b0a11cb5",
+        "filename": "runtime/src/main/resources/clds/camel/routes/controlloop-flows.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-06-10T19:45:48Z",
+      "side": 1,
+      "message": "Not sure where this is coming from ?\nShould be removed i guess",
+      "revId": "a9e73e670d319c1013e3b5e42c23a3ff51a68cbe",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "26f817e0_2a39d645",
+        "filename": "runtime/src/main/resources/clds/camel/routes/controlloop-flows.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-06-10T19:45:48Z",
+      "side": 1,
+      "message": "Same here Name and version are not Set ?",
       "revId": "a9e73e670d319c1013e3b5e42c23a3ff51a68cbe",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
