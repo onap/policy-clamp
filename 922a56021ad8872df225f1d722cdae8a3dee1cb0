@@ -145,6 +145,30 @@
     },
     {
       "key": {
+        "uuid": "371fbcac_e2e06531",
+        "filename": "participant/participant-impl/participant-impl-simulator/src/main/resources/config/CDSParticipantConfig.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-10T15:16:41Z",
+      "side": 1,
+      "message": "Refactor ParticipantIntermediaryParameters, ParticipantDcaeParameters ParticipantPolicyParameters and ParticipantSimulatorParameters in Spring will be implemented in POLICY-3343. All parameters will be moved to application.yaml",
+      "parentUuid": "e3a34357_4f450134",
+      "range": {
+        "startLine": 28,
+        "startChar": 25,
+        "endLine": 28,
+        "endChar": 40
+      },
+      "revId": "922a56021ad8872df225f1d722cdae8a3dee1cb0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6407f139_35f93767",
         "filename": "participant/participant-impl/participant-impl-simulator/src/main/resources/config/CDSParticipantConfig.json",
         "patchSetId": 2
