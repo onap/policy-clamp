@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "2321889d_c71716de",
+        "filename": "participant/participant-impl/participant-impl-simulator/src/main/resources/config/CDSParticipantConfig.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-10T13:44:57Z",
+      "side": 1,
+      "message": "for now, let\u0027s change it to mirror what is done in the other policy repos.\n\nNevertheless, this raises a good point: many of these config files found in the various policy repos will not work as is in either CSITs or on Wind River.  As such, they\u0027re really just examples.  Question: should these be changed so they work out of the box in one of those environments, or possibly in a \"stand-alone\" environment?  Or should we move them to an \"examples\" folder and thus exclude them from the release artifacts?  I\u0027m of leaning toward the latter, even though it means that anyone wanting to the component would always have to provide an appropriate config file for their environment.\n\nOther opinions?",
+      "parentUuid": "06605c58_cb038eab",
+      "range": {
+        "startLine": 28,
+        "startChar": 25,
+        "endLine": 28,
+        "endChar": 40
+      },
+      "revId": "922a56021ad8872df225f1d722cdae8a3dee1cb0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6407f139_35f93767",
         "filename": "participant/participant-impl/participant-impl-simulator/src/main/resources/config/CDSParticipantConfig.json",
         "patchSetId": 2
