@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9ad8fb38_bc1a6518",
+        "filename": "participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/client/PolicyApiHttpClient.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2021-06-10T19:22:15Z",
+      "side": 1,
+      "message": "It\u0027s okay to use this, but you could have gone for the simpler api which is just /policy/api/v1/policies",
+      "range": {
+        "startLine": 63,
+        "startChar": 27,
+        "endLine": 64,
+        "endChar": 29
+      },
+      "revId": "5ead9907a296b3f9c44f4b742708127e7e044f19",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "524eb75d_1ffc2212",
+        "filename": "participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/main/handler/ControlLoopElementHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2021-06-10T19:22:15Z",
+      "side": 1,
+      "message": "Not sure if this log will help in realtime debugging. Should we add more info to it?\nSame comment for line 140.",
+      "range": {
+        "startLine": 130,
+        "startChar": 11,
+        "endLine": 130,
+        "endChar": 50
+      },
+      "revId": "5ead9907a296b3f9c44f4b742708127e7e044f19",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
