@@ -97,6 +97,30 @@
     },
     {
       "key": {
+        "uuid": "57dd3036_f589ded8",
+        "filename": "participant/participant-impl/participant-impl-simulator/src/main/resources/config/CDSParticipantConfig.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-06-10T13:53:51Z",
+      "side": 1,
+      "message": "Yeah - thinking about this more. I know the other repos have these also most likely in src/main/resources. We can do the same as them. But are they needed? Possibly for a development environment - but then again if its configurable all you have to do is be able to set an environment variable or command line to point to a test file. The thing is, the user/password just happens to be the same that we use in OOM by default. I understand that can be changed but we really should have been more careful.\n\nOthers?",
+      "parentUuid": "2321889d_c71716de",
+      "range": {
+        "startLine": 28,
+        "startChar": 25,
+        "endLine": 28,
+        "endChar": 40
+      },
+      "revId": "922a56021ad8872df225f1d722cdae8a3dee1cb0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6407f139_35f93767",
         "filename": "participant/participant-impl/participant-impl-simulator/src/main/resources/config/CDSParticipantConfig.json",
         "patchSetId": 2
