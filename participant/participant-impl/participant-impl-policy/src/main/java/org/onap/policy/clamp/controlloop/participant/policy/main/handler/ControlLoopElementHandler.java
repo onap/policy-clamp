@@ -32,9 +32,9 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ControlLoopElementListener;
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryApi;
+import org.onap.policy.clamp.controlloop.participant.policy.client.PolicyApiHttpClient;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
-import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
@@ -52,7 +52,7 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
     private final Map<String, String> policyTypeMap = new LinkedHashMap<>();
     private final Map<String, String> policyMap = new LinkedHashMap<>();
 
-    private final PolicyModelsProvider databaseProvider;
+    private final PolicyApiHttpClient apiHttpClient;
 
     @Setter
     private ParticipantIntermediaryApi intermediaryApi;
@@ -60,10 +60,10 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
     /**
      * constructor.
      *
-     * @param databaseProvider the Policy Models Provider
+     * @param apiHttpClient the Policy Api Http Client
      */
-    public ControlLoopElementHandler(PolicyModelsProvider databaseProvider) {
-        this.databaseProvider = databaseProvider;
+    public ControlLoopElementHandler(PolicyApiHttpClient apiHttpClient) {
+        this.apiHttpClient = apiHttpClient;
     }
 
     /**
@@ -82,7 +82,7 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
                 try {
                     deletePolicyData(controlLoopElementId, newState);
                 } catch (PfModelRuntimeException e) {
-                    LOGGER.debug("Delete policytpes failed", e);
+                    LOGGER.debug("Deleting policy data failed", e);
                 }
                 break;
             case PASSIVE:
@@ -100,12 +100,12 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
     private void deletePolicyData(UUID controlLoopElementId, ControlLoopOrderedState newState) throws PfModelException {
         // Delete all policies of this controlLoop from policy framework
         for (Entry<String, String> policy : policyMap.entrySet()) {
-            databaseProvider.deletePolicy(policy.getKey(), policy.getValue());
+            apiHttpClient.deletePolicy(policy.getKey(), policy.getValue());
         }
         policyMap.clear();
         // Delete all policy types of this control loop from policy framework
         for (Entry<String, String> policyType : policyTypeMap.entrySet()) {
-            databaseProvider.deletePolicyType(policyType.getKey(), policyType.getValue());
+            apiHttpClient.deletePolicyType(policyType.getKey(), policyType.getValue());
         }
         policyTypeMap.clear();
         intermediaryApi.updateControlLoopElementState(controlLoopElementId, newState, ControlLoopState.UNINITIALISED);
@@ -127,17 +127,18 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
             for (ToscaPolicyType policyType : controlLoopDefinition.getPolicyTypes().values()) {
                 policyTypeMap.put(policyType.getName(), policyType.getVersion());
             }
-            databaseProvider.createPolicyTypes(controlLoopDefinition);
+            LOGGER.debug("Creating Policy Types");
+            apiHttpClient.createPolicyType(controlLoopDefinition);
         }
         if (controlLoopDefinition.getToscaTopologyTemplate().getPolicies() != null) {
             for (Map<String, ToscaPolicy> foundPolicyMap : controlLoopDefinition.getToscaTopologyTemplate()
                     .getPolicies()) {
-                for (Entry<String, ToscaPolicy> policyEntry : foundPolicyMap.entrySet()) {
-                    ToscaPolicy policy = policyEntry.getValue();
+                for (ToscaPolicy policy : foundPolicyMap.values()) {
                     policyMap.put(policy.getName(), policy.getVersion());
                 }
             }
-            databaseProvider.createPolicies(controlLoopDefinition);
+            LOGGER.debug("Creating Policies");
+            apiHttpClient.createPolicy(controlLoopDefinition);
         }
     }
 
