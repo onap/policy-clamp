@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c579681f_d8eadde5",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ControlLoopProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-10T13:36:18Z",
+      "side": 1,
+      "message": "Did this in the next patch set. It might be even more generally applicable in policy-models but let\u0027s use it here for now.",
+      "parentUuid": "5fae4e0d_d9b37eae",
+      "range": {
+        "startLine": 158,
+        "startChar": 6,
+        "endLine": 171,
+        "endChar": 9
+      },
+      "revId": "5968268a736cac55aef81e0282b7d95cd729f6d2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e485cd37_589437a4",
         "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ParticipantStatisticsProvider.java",
         "patchSetId": 1
