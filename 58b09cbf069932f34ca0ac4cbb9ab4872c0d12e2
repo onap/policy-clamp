@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3bd68cc8_83df6858",
+        "filename": "participant/participant-impl/participant-impl-policy/src/main/resources/config/PolicyParticipantConfig.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-10T12:19:17Z",
+      "side": 1,
+      "message": "message-router, as in other policy repos?\n\nsame question below",
+      "range": {
+        "startLine": 20,
+        "startChar": 25,
+        "endLine": 20,
+        "endChar": 34
+      },
+      "revId": "58b09cbf069932f34ca0ac4cbb9ab4872c0d12e2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f35cad6d_1b9ee807",
+        "filename": "participant/participant-impl/participant-impl-policy/src/main/resources/config/PolicyParticipantConfig.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-10T12:19:17Z",
+      "side": 1,
+      "message": "policy-api?",
+      "range": {
+        "startLine": 46,
+        "startChar": 21,
+        "endLine": 46,
+        "endChar": 30
+      },
+      "revId": "58b09cbf069932f34ca0ac4cbb9ab4872c0d12e2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b0d5d871_eca57adf",
+        "filename": "participant/participant-impl/participant-impl-policy/src/main/resources/config/PolicyParticipantConfig.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-10T12:19:17Z",
+      "side": 1,
+      "message": "missing newline at the end of the file",
+      "revId": "58b09cbf069932f34ca0ac4cbb9ab4872c0d12e2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
