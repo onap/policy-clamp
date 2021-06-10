@@ -85,11 +85,13 @@ public class ParticipantProvider extends AbstractModelsProvider {
      */
     public List<Participant> createParticipants(@NonNull final List<Participant> participants) throws PfModelException {
 
-        BeanValidationResult validationResult = new BeanValidationResult("participants", participants);
+        var validationResult = new BeanValidationResult("participants", participants);
+        List<JpaParticipant> jpaParticipantList = new ArrayList<>(participants.size());
 
         for (Participant participant : participants) {
-            JpaParticipant jpaParticipant = new JpaParticipant();
+            var jpaParticipant = new JpaParticipant();
             jpaParticipant.fromAuthorative(participant);
+            jpaParticipantList.add(jpaParticipant);
 
             validationResult.addResult(jpaParticipant.validate("participant"));
         }
@@ -98,18 +100,13 @@ public class ParticipantProvider extends AbstractModelsProvider {
             throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, validationResult.getResult());
         }
 
-        for (Participant participant : participants) {
-            JpaParticipant jpaParticipant = new JpaParticipant();
-            jpaParticipant.fromAuthorative(participant);
-
-            getPfDao().create(jpaParticipant);
-        }
+        jpaParticipantList.forEach(jpaParticipant -> getPfDao().create(jpaParticipant));
 
         // Return the created participants
         List<Participant> returnParticipants = new ArrayList<>(participants.size());
 
         for (Participant participant : participants) {
-            JpaParticipant jpaParticipant = getPfDao().get(JpaParticipant.class,
+            var jpaParticipant = getPfDao().get(JpaParticipant.class,
                     new PfConceptKey(participant.getName(), participant.getVersion()));
             returnParticipants.add(jpaParticipant.toAuthorative());
         }
@@ -126,11 +123,13 @@ public class ParticipantProvider extends AbstractModelsProvider {
      */
     public List<Participant> updateParticipants(@NonNull final List<Participant> participants) throws PfModelException {
 
-        BeanValidationResult validationResult = new BeanValidationResult("participants", participants);
+        var validationResult = new BeanValidationResult("participants", participants);
+        List<JpaParticipant> jpaParticipantList = new ArrayList<>(participants.size());
 
         for (Participant participant : participants) {
-            JpaParticipant jpaParticipant = new JpaParticipant();
+            var jpaParticipant = new JpaParticipant();
             jpaParticipant.fromAuthorative(participant);
+            jpaParticipantList.add(jpaParticipant);
 
             validationResult.addResult(jpaParticipant.validate("participant"));
         }
@@ -139,18 +138,13 @@ public class ParticipantProvider extends AbstractModelsProvider {
             throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, validationResult.getResult());
         }
 
-        for (Participant participant : participants) {
-            JpaParticipant jpaParticipant = new JpaParticipant();
-            jpaParticipant.fromAuthorative(participant);
-
-            getPfDao().update(jpaParticipant);
-        }
+        jpaParticipantList.forEach(jpaParticipant -> getPfDao().update(jpaParticipant));
 
         // Return the created participants
         List<Participant> returnParticipants = new ArrayList<>(participants.size());
 
         for (Participant participant : participants) {
-            JpaParticipant jpaParticipant = getPfDao().get(JpaParticipant.class,
+            var jpaParticipant = getPfDao().get(JpaParticipant.class,
                     new PfConceptKey(participant.getName(), participant.getVersion()));
             returnParticipants.add(jpaParticipant.toAuthorative());
         }
@@ -168,7 +162,7 @@ public class ParticipantProvider extends AbstractModelsProvider {
      */
     public Participant deleteParticipant(@NonNull final String name, @NonNull final String version) {
 
-        PfConceptKey participantKey = new PfConceptKey(name, version);
+        var participantKey = new PfConceptKey(name, version);
 
         JpaParticipant jpaDeleteParticipant = getPfDao().get(JpaParticipant.class, participantKey);
 

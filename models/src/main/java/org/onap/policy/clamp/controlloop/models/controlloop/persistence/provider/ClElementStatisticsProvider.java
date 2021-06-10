@@ -64,11 +64,14 @@ public class ClElementStatisticsProvider extends AbstractModelsProvider {
     public List<ClElementStatistics> createClElementStatistics(
             @NonNull final List<ClElementStatistics> clElementStatisticsList) throws PfModelException {
 
-        BeanValidationResult validationResult =
+        var validationResult =
                 new BeanValidationResult("control loop element statistics list", clElementStatisticsList);
+        List<JpaClElementStatistics> jpaClElementStatisticsList = new ArrayList<>(clElementStatisticsList.size());
+
         for (ClElementStatistics clElementStatistics : clElementStatisticsList) {
-            JpaClElementStatistics jpaClElementStatistics = new JpaClElementStatistics();
+            var jpaClElementStatistics = new JpaClElementStatistics();
             jpaClElementStatistics.fromAuthorative(clElementStatistics);
+            jpaClElementStatisticsList.add(jpaClElementStatistics);
 
             validationResult.addResult(jpaClElementStatistics.validate("control loop element statistics"));
         }
@@ -77,20 +80,16 @@ public class ClElementStatisticsProvider extends AbstractModelsProvider {
             throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, validationResult.getResult());
         }
 
-        for (ClElementStatistics clElementStatistics : clElementStatisticsList) {
-            JpaClElementStatistics jpaClElementStatistics = new JpaClElementStatistics();
-            jpaClElementStatistics.fromAuthorative(clElementStatistics);
-            getPfDao().create(jpaClElementStatistics);
-        }
+        jpaClElementStatisticsList.forEach(jpaClElementStatistics -> getPfDao().create(jpaClElementStatistics));
 
         // Return the created control loop element statistics
         List<ClElementStatistics> elementStatistics = new ArrayList<>(clElementStatisticsList.size());
 
         for (ClElementStatistics clElementStat : clElementStatisticsList) {
-            JpaClElementStatistics jpaClElementStatistics = getPfDao().get(JpaClElementStatistics.class,
-                new PfReferenceTimestampKey(clElementStat.getParticipantId().getName(),
-                    clElementStat.getParticipantId().getVersion(), clElementStat.getId().toString(),
-                    clElementStat.getTimeStamp()));
+            var jpaClElementStatistics = getPfDao().get(JpaClElementStatistics.class,
+                    new PfReferenceTimestampKey(clElementStat.getParticipantId().getName(),
+                            clElementStat.getParticipantId().getVersion(), clElementStat.getId().toString(),
+                            clElementStat.getTimeStamp()));
             elementStatistics.add(jpaClElementStatistics.toAuthorative());
         }
 
@@ -122,16 +121,15 @@ public class ClElementStatisticsProvider extends AbstractModelsProvider {
         List<ClElementStatistics> clElementStatistics = new ArrayList<>(1);
         if (name != null && version != null && timestamp != null && id != null) {
             clElementStatistics.add(getPfDao()
-                .get(JpaClElementStatistics.class, new PfReferenceTimestampKey(name, version, id, timestamp))
-                .toAuthorative());
+                    .get(JpaClElementStatistics.class, new PfReferenceTimestampKey(name, version, id, timestamp))
+                    .toAuthorative());
             return clElementStatistics;
         } else if (name != null) {
-            clElementStatistics.addAll(getFilteredClElementStatistics(name, version, null, null, null,
-                "DESC", 0));
+            clElementStatistics.addAll(getFilteredClElementStatistics(name, version, null, null, null, "DESC", 0));
         } else {
             clElementStatistics.addAll(asClElementStatisticsList(getPfDao().getAll(JpaClElementStatistics.class)));
         }
-        return  clElementStatistics;
+        return clElementStatistics;
     }
 
     /**

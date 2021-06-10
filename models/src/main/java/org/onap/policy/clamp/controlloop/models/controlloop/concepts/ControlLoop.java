@@ -20,7 +20,6 @@
 
 package org.onap.policy.clamp.controlloop.models.controlloop.concepts;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;

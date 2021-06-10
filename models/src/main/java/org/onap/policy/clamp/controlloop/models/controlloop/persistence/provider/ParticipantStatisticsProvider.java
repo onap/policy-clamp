@@ -108,12 +108,14 @@ public class ParticipantStatisticsProvider extends AbstractModelsProvider {
     public List<ParticipantStatistics> createParticipantStatistics(
             @NonNull final List<ParticipantStatistics> participantStatisticsList) throws PfModelException {
 
-        BeanValidationResult validationResult =
+        var validationResult =
                 new BeanValidationResult("participant statistics List", participantStatisticsList);
+        List<JpaParticipantStatistics> jpaParticipantStatisticsList = new ArrayList<>(participantStatisticsList.size());
 
         for (ParticipantStatistics participantStatistics : participantStatisticsList) {
-            JpaParticipantStatistics jpaParticipantStatistics = new JpaParticipantStatistics();
+            var jpaParticipantStatistics = new JpaParticipantStatistics();
             jpaParticipantStatistics.fromAuthorative(participantStatistics);
+            jpaParticipantStatisticsList.add(jpaParticipantStatistics);
 
             validationResult.addResult(jpaParticipantStatistics.validate("participant statistics"));
         }
@@ -123,7 +125,7 @@ public class ParticipantStatisticsProvider extends AbstractModelsProvider {
         }
 
         for (ParticipantStatistics participantStatistics : participantStatisticsList) {
-            JpaParticipantStatistics jpaParticipantStatistics = new JpaParticipantStatistics();
+            var jpaParticipantStatistics = new JpaParticipantStatistics();
             jpaParticipantStatistics.fromAuthorative(participantStatistics);
 
             getPfDao().create(jpaParticipantStatistics);
@@ -133,7 +135,7 @@ public class ParticipantStatisticsProvider extends AbstractModelsProvider {
         List<ParticipantStatistics> participantStatistics = new ArrayList<>(participantStatisticsList.size());
 
         for (ParticipantStatistics participantStatisticsItem : participantStatisticsList) {
-            JpaParticipantStatistics jpaParticipantStatistics = getPfDao().get(JpaParticipantStatistics.class,
+            var jpaParticipantStatistics = getPfDao().get(JpaParticipantStatistics.class,
                     new PfTimestampKey(participantStatisticsItem.getParticipantId().getName(),
                             participantStatisticsItem.getParticipantId().getVersion(),
                             participantStatisticsItem.getTimeStamp()));
