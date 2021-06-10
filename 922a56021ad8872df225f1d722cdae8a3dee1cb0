@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "06605c58_cb038eab",
+        "filename": "participant/participant-impl/participant-impl-simulator/src/main/resources/config/CDSParticipantConfig.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-06-10T13:27:57Z",
+      "side": 1,
+      "message": "I think that simulators cannot assume that the environment is 127.0.0.1 or localhost. Question is packaging. If this is temporary in that the whole project will be re-factored for separation from production, then maybe ok?? But I\u0027m not sure.",
+      "parentUuid": "330aacd4_c2d43951",
+      "range": {
+        "startLine": 28,
+        "startChar": 25,
+        "endLine": 28,
+        "endChar": 40
+      },
+      "revId": "922a56021ad8872df225f1d722cdae8a3dee1cb0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6407f139_35f93767",
         "filename": "participant/participant-impl/participant-impl-simulator/src/main/resources/config/CDSParticipantConfig.json",
         "patchSetId": 2
@@ -41,6 +65,29 @@
         "startChar": 39,
         "endLine": 56,
         "endChar": 48
+      },
+      "revId": "922a56021ad8872df225f1d722cdae8a3dee1cb0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e0d1a1f5_9f782c0c",
+        "filename": "participant/participant-impl/participant-impl-simulator/src/main/resources/config/application.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-06-10T13:27:57Z",
+      "side": 1,
+      "message": "how these be changed if need be? I guess if this is a simulator, not a big deal. But it will be packaged into a release artifact. And thus could expose credentials.",
+      "range": {
+        "startLine": 4,
+        "startChar": 6,
+        "endLine": 5,
+        "endChar": 25
       },
       "revId": "922a56021ad8872df225f1d722cdae8a3dee1cb0",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
