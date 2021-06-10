@@ -121,6 +121,30 @@
     },
     {
       "key": {
+        "uuid": "e3a34357_4f450134",
+        "filename": "participant/participant-impl/participant-impl-simulator/src/main/resources/config/CDSParticipantConfig.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-10T14:24:53Z",
+      "side": 1,
+      "message": "Maybe we should just remove these files altogether, thus avoiding the use of clear-text passwords in the source files.",
+      "parentUuid": "57dd3036_f589ded8",
+      "range": {
+        "startLine": 28,
+        "startChar": 25,
+        "endLine": 28,
+        "endChar": 40
+      },
+      "revId": "922a56021ad8872df225f1d722cdae8a3dee1cb0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6407f139_35f93767",
         "filename": "participant/participant-impl/participant-impl-simulator/src/main/resources/config/CDSParticipantConfig.json",
         "patchSetId": 2
