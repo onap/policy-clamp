@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d4fd8125_4af3b684",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/controller/ChartController.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-06-10T13:26:43Z",
+      "side": 1,
+      "message": "Should it follow usual conventions for URL paths as in api/pap .. with /policy/.. ?  If it should, could be added to the ticket that was opened by Saul.",
+      "revId": "030ba1a000fc78e4c8778be469a41b14538a58ea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
