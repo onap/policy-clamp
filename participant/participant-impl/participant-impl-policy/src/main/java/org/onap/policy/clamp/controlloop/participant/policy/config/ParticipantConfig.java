@@ -49,17 +49,4 @@ public class ParticipantConfig {
         controlLoopElementHandler.setIntermediaryApi(intermediaryApi);
         return intermediaryApi;
     }
-
-    /**
-     * Create PolicyModelsProvider.
-     *
-     * @param parameters the Participant Policy Parameters
-     * @return PolicyModelsProvider
-     * @throws PfModelException in case of an exception
-     */
-    @Bean
-    public PolicyModelsProvider databaseProvider(ParticipantPolicyParameters parameters) throws PfModelException {
-        return new PolicyModelsProviderFactory().createPolicyModelsProvider(parameters.getDatabaseProviderParameters());
-    }
-
 }
