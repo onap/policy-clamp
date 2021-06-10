@@ -25,13 +25,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import javax.ws.rs.core.Response;
 import lombok.NonNull;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ClElementStatistics;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.concepts.JpaClElementStatistics;
-import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.base.PfReferenceTimestampKey;
 import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.provider.impl.AbstractModelsProvider;
@@ -64,33 +61,19 @@ public class ClElementStatisticsProvider extends AbstractModelsProvider {
     public List<ClElementStatistics> createClElementStatistics(
             @NonNull final List<ClElementStatistics> clElementStatisticsList) throws PfModelException {
 
-        BeanValidationResult validationResult =
-                new BeanValidationResult("control loop element statistics list", clElementStatisticsList);
-        for (ClElementStatistics clElementStatistics : clElementStatisticsList) {
-            JpaClElementStatistics jpaClElementStatistics = new JpaClElementStatistics();
-            jpaClElementStatistics.fromAuthorative(clElementStatistics);
+        List<JpaClElementStatistics> jpaClElementStatisticsList = ProviderUtils.getJpaAndValidate(
+                clElementStatisticsList, JpaClElementStatistics.class, "control loop element statistics");
 
-            validationResult.addResult(jpaClElementStatistics.validate("control loop element statistics"));
-        }
-
-        if (!validationResult.isValid()) {
-            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, validationResult.getResult());
-        }
-
-        for (ClElementStatistics clElementStatistics : clElementStatisticsList) {
-            JpaClElementStatistics jpaClElementStatistics = new JpaClElementStatistics();
-            jpaClElementStatistics.fromAuthorative(clElementStatistics);
-            getPfDao().create(jpaClElementStatistics);
-        }
+        jpaClElementStatisticsList.forEach(jpaClElementStatistics -> getPfDao().create(jpaClElementStatistics));
 
         // Return the created control loop element statistics
         List<ClElementStatistics> elementStatistics = new ArrayList<>(clElementStatisticsList.size());
 
         for (ClElementStatistics clElementStat : clElementStatisticsList) {
-            JpaClElementStatistics jpaClElementStatistics = getPfDao().get(JpaClElementStatistics.class,
-                new PfReferenceTimestampKey(clElementStat.getParticipantId().getName(),
-                    clElementStat.getParticipantId().getVersion(), clElementStat.getId().toString(),
-                    clElementStat.getTimeStamp()));
+            var jpaClElementStatistics = getPfDao().get(JpaClElementStatistics.class,
+                    new PfReferenceTimestampKey(clElementStat.getParticipantId().getName(),
+                            clElementStat.getParticipantId().getVersion(), clElementStat.getId().toString(),
+                            clElementStat.getTimeStamp()));
             elementStatistics.add(jpaClElementStatistics.toAuthorative());
         }
 
@@ -122,16 +105,15 @@ public class ClElementStatisticsProvider extends AbstractModelsProvider {
         List<ClElementStatistics> clElementStatistics = new ArrayList<>(1);
         if (name != null && version != null && timestamp != null && id != null) {
             clElementStatistics.add(getPfDao()
-                .get(JpaClElementStatistics.class, new PfReferenceTimestampKey(name, version, id, timestamp))
-                .toAuthorative());
+                    .get(JpaClElementStatistics.class, new PfReferenceTimestampKey(name, version, id, timestamp))
+                    .toAuthorative());
             return clElementStatistics;
         } else if (name != null) {
-            clElementStatistics.addAll(getFilteredClElementStatistics(name, version, null, null, null,
-                "DESC", 0));
+            clElementStatistics.addAll(getFilteredClElementStatistics(name, version, null, null, null, "DESC", 0));
         } else {
             clElementStatistics.addAll(asClElementStatisticsList(getPfDao().getAll(JpaClElementStatistics.class)));
         }
-        return  clElementStatistics;
+        return clElementStatistics;
     }
 
     /**
