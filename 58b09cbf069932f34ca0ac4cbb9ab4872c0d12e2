@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "881714c6_5fd81b99",
+        "filename": "participant/participant-impl/participant-impl-policy/src/main/resources/config/PolicyParticipantConfig.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 5569
+      },
+      "writtenOn": "2021-06-10T14:03:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3bd68cc8_83df6858",
+      "range": {
+        "startLine": 20,
+        "startChar": 25,
+        "endLine": 20,
+        "endChar": 34
+      },
+      "revId": "58b09cbf069932f34ca0ac4cbb9ab4872c0d12e2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f35cad6d_1b9ee807",
         "filename": "participant/participant-impl/participant-impl-policy/src/main/resources/config/PolicyParticipantConfig.json",
         "patchSetId": 1
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "16ab3009_3f3d6f68",
+        "filename": "participant/participant-impl/participant-impl-policy/src/main/resources/config/PolicyParticipantConfig.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 5569
+      },
+      "writtenOn": "2021-06-10T14:03:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f35cad6d_1b9ee807",
+      "range": {
+        "startLine": 46,
+        "startChar": 21,
+        "endLine": 46,
+        "endChar": 30
+      },
+      "revId": "58b09cbf069932f34ca0ac4cbb9ab4872c0d12e2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b0d5d871_eca57adf",
         "filename": "participant/participant-impl/participant-impl-policy/src/main/resources/config/PolicyParticipantConfig.json",
         "patchSetId": 1
@@ -62,6 +110,24 @@
       "revId": "58b09cbf069932f34ca0ac4cbb9ab4872c0d12e2",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b6983072_941a7777",
+        "filename": "participant/participant-impl/participant-impl-policy/src/main/resources/config/PolicyParticipantConfig.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 5569
+      },
+      "writtenOn": "2021-06-10T14:03:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b0d5d871_eca57adf",
+      "revId": "58b09cbf069932f34ca0ac4cbb9ab4872c0d12e2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
