@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "ee6e5074_62c1da8f",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ControlLoopProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-10T18:13:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c579681f_d8eadde5",
+      "range": {
+        "startLine": 158,
+        "startChar": 6,
+        "endLine": 171,
+        "endChar": 9
+      },
+      "revId": "5968268a736cac55aef81e0282b7d95cd729f6d2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e485cd37_589437a4",
         "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ParticipantStatisticsProvider.java",
         "patchSetId": 1
