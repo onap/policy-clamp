@@ -25,21 +25,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import javax.ws.rs.core.Response;
 import lombok.NonNull;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantStatistics;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.concepts.JpaParticipantStatistics;
-import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.base.PfTimestampKey;
 import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.provider.impl.AbstractModelsProvider;
 
 /**
  * This class provides the provision of information on participant statistics in the database to callers.
- *
- * @author Ramesh Murugan Iyer (ramesh.murugan.iyer@est.tech)
  */
 public class ParticipantStatisticsProvider extends AbstractModelsProvider {
 
@@ -70,8 +65,7 @@ public class ParticipantStatisticsProvider extends AbstractModelsProvider {
                     .get(JpaParticipantStatistics.class, new PfTimestampKey(name, version, timestamp)).toAuthorative());
             return participantStatistics;
         } else if (name != null) {
-            return getFilteredParticipantStatistics(name, version, timestamp, null, null,
-                "DESC", 0);
+            return getFilteredParticipantStatistics(name, version, timestamp, null, null, "DESC", 0);
         } else {
             return asParticipantStatisticsList(getPfDao().getAll(JpaParticipantStatistics.class));
         }
@@ -108,32 +102,16 @@ public class ParticipantStatisticsProvider extends AbstractModelsProvider {
     public List<ParticipantStatistics> createParticipantStatistics(
             @NonNull final List<ParticipantStatistics> participantStatisticsList) throws PfModelException {
 
-        BeanValidationResult validationResult =
-                new BeanValidationResult("participant statistics List", participantStatisticsList);
+        List<JpaParticipantStatistics> jpaParticipantStatisticsList = ProviderUtils
+                .getJpaAndValidate(participantStatisticsList, JpaParticipantStatistics::new, "Participant Statistics");
 
-        for (ParticipantStatistics participantStatistics : participantStatisticsList) {
-            JpaParticipantStatistics jpaParticipantStatistics = new JpaParticipantStatistics();
-            jpaParticipantStatistics.fromAuthorative(participantStatistics);
-
-            validationResult.addResult(jpaParticipantStatistics.validate("participant statistics"));
-        }
-
-        if (!validationResult.isValid()) {
-            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, validationResult.getResult());
-        }
-
-        for (ParticipantStatistics participantStatistics : participantStatisticsList) {
-            JpaParticipantStatistics jpaParticipantStatistics = new JpaParticipantStatistics();
-            jpaParticipantStatistics.fromAuthorative(participantStatistics);
-
-            getPfDao().create(jpaParticipantStatistics);
-        }
+        jpaParticipantStatisticsList.forEach(jpaParticipantStatistics -> getPfDao().update(jpaParticipantStatistics));
 
         // Return the created participant statistics
         List<ParticipantStatistics> participantStatistics = new ArrayList<>(participantStatisticsList.size());
 
         for (ParticipantStatistics participantStatisticsItem : participantStatisticsList) {
-            JpaParticipantStatistics jpaParticipantStatistics = getPfDao().get(JpaParticipantStatistics.class,
+            var jpaParticipantStatistics = getPfDao().get(JpaParticipantStatistics.class,
                     new PfTimestampKey(participantStatisticsItem.getParticipantId().getName(),
                             participantStatisticsItem.getParticipantId().getVersion(),
                             participantStatisticsItem.getTimeStamp()));
@@ -142,6 +120,7 @@ public class ParticipantStatisticsProvider extends AbstractModelsProvider {
 
         return participantStatistics;
     }
+
 
 
     /**

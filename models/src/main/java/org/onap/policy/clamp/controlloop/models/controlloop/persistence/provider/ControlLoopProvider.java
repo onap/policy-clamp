@@ -28,7 +28,6 @@ import javax.ws.rs.core.Response;
 import lombok.NonNull;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.concepts.JpaControlLoop;
-import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.models.base.PfAuthorative;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfKey;
@@ -66,7 +65,7 @@ public class ControlLoopProvider extends AbstractModelsProvider {
      * @throws PfModelException on errors getting the control loop
      */
     public ControlLoop getControlLoop(final ToscaConceptIdentifier controlLoopId) throws PfModelException {
-        JpaControlLoop jpaControlLoop = getPfDao().get(JpaControlLoop.class, controlLoopId.asConceptKey());
+        var jpaControlLoop = getPfDao().get(JpaControlLoop.class, controlLoopId.asConceptKey());
 
         return jpaControlLoop == null ? null : jpaControlLoop.toAuthorative();
     }
@@ -117,31 +116,16 @@ public class ControlLoopProvider extends AbstractModelsProvider {
      */
     public List<ControlLoop> createControlLoops(@NonNull final List<ControlLoop> controlLoops) throws PfModelException {
 
-        BeanValidationResult validationResult = new BeanValidationResult("control loops", controlLoops);
+        List<JpaControlLoop> jpaControlLoopList =
+                ProviderUtils.getJpaAndValidate(controlLoops, JpaControlLoop::new, "control loop");
 
-        for (ControlLoop controlLoop : controlLoops) {
-            JpaControlLoop jpaControlLoop = new JpaControlLoop();
-            jpaControlLoop.fromAuthorative(controlLoop);
-
-            validationResult.addResult(jpaControlLoop.validate("control loop"));
-        }
-
-        if (!validationResult.isValid()) {
-            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, validationResult.getResult());
-        }
-
-        for (ControlLoop controlLoop : controlLoops) {
-            JpaControlLoop jpaControlLoop = new JpaControlLoop();
-            jpaControlLoop.fromAuthorative(controlLoop);
-
-            getPfDao().create(jpaControlLoop);
-        }
+        jpaControlLoopList.forEach(jpaControlLoop -> getPfDao().create(jpaControlLoop));
 
         // Return the created control loops
         List<ControlLoop> returnControlLoops = new ArrayList<>(controlLoops.size());
 
         for (ControlLoop controlLoop : controlLoops) {
-            JpaControlLoop jpaControlLoop = getPfDao().get(JpaControlLoop.class,
+            var jpaControlLoop = getPfDao().get(JpaControlLoop.class,
                     new PfConceptKey(controlLoop.getName(), controlLoop.getVersion()));
             returnControlLoops.add(jpaControlLoop.toAuthorative());
         }
@@ -158,29 +142,16 @@ public class ControlLoopProvider extends AbstractModelsProvider {
      */
     public List<ControlLoop> updateControlLoops(@NonNull final List<ControlLoop> controlLoops) throws PfModelException {
 
-        BeanValidationResult validationResult = new BeanValidationResult("control loops", controlLoops);
-
-        for (ControlLoop controlLoop : controlLoops) {
-            JpaControlLoop jpaControlLoop = new JpaControlLoop();
-            jpaControlLoop.fromAuthorative(controlLoop);
-
-            validationResult.addResult(jpaControlLoop.validate("control loop"));
-        }
-
-        if (!validationResult.isValid()) {
-            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, validationResult.getResult());
-        }
+        List<JpaControlLoop> jpaControlLoopList =
+                ProviderUtils.getJpaAndValidate(controlLoops, JpaControlLoop::new, "control loop");
 
         // Return the created control loops
         List<ControlLoop> returnControlLoops = new ArrayList<>(controlLoops.size());
 
-        for (ControlLoop controlLoop : controlLoops) {
-            JpaControlLoop jpaControlLoop = new JpaControlLoop();
-            jpaControlLoop.fromAuthorative(controlLoop);
-
-            JpaControlLoop returnJpaControlLoop = getPfDao().update(jpaControlLoop);
+        jpaControlLoopList.forEach(jpaControlLoop -> {
+            var returnJpaControlLoop = getPfDao().update(jpaControlLoop);
             returnControlLoops.add(returnJpaControlLoop.toAuthorative());
-        }
+        });
 
         return returnControlLoops;
     }
@@ -195,7 +166,7 @@ public class ControlLoopProvider extends AbstractModelsProvider {
      */
     public ControlLoop deleteControlLoop(@NonNull final String name, @NonNull final String version) {
 
-        PfConceptKey controlLoopKey = new PfConceptKey(name, version);
+        var controlLoopKey = new PfConceptKey(name, version);
 
         JpaControlLoop jpaDeleteControlLoop = getPfDao().get(JpaControlLoop.class, controlLoopKey);
 
