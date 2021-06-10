@@ -385,6 +385,24 @@
       "revId": "2d3743735ebd9e64189af305c8527f92815084ef",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8688f7db_4ebe52ad",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/HelmClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-10T14:10:57Z",
+      "side": 1,
+      "message": "appears to have been removed",
+      "parentUuid": "2a29e8b3_d02b4437",
+      "revId": "2d3743735ebd9e64189af305c8527f92815084ef",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }

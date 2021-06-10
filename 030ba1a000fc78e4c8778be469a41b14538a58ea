@@ -34,6 +34,24 @@
       "revId": "030ba1a000fc78e4c8778be469a41b14538a58ea",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d04e2918_07025414",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/controller/ChartController.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-10T14:10:57Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "516617e5_bfd48c98",
+      "revId": "030ba1a000fc78e4c8778be469a41b14538a58ea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }

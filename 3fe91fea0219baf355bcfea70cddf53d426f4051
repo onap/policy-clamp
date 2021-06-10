@@ -2412,6 +2412,24 @@
     },
     {
       "key": {
+        "uuid": "b43bab06_c631e967",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/service/ChartStore.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-10T14:10:57Z",
+      "side": 1,
+      "message": "planning to leave this as is?  or use Spring\u0027s version of an init method?",
+      "parentUuid": "cde0bb6a_c20a1814",
+      "revId": "3fe91fea0219baf355bcfea70cddf53d426f4051",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6c955db7_0b077846",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/service/ChartStore.java",
         "patchSetId": 3
