@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6e123a8a_f12d1104",
+        "filename": "runtime/src/main/resources/application.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-06-10T13:34:05Z",
+      "side": 1,
+      "message": "is localhost right?  can you remind me the reasons why references to localhost are needed as resources?",
+      "revId": "a9e73e670d319c1013e3b5e42c23a3ff51a68cbe",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fb5c076a_a5fc6b18",
+        "filename": "runtime/src/main/resources/clds/clds-users.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-06-10T13:34:05Z",
+      "side": 1,
+      "message": "you\u0027ll need aaf/oom changes for it .. probably should track it as a task",
+      "revId": "a9e73e670d319c1013e3b5e42c23a3ff51a68cbe",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
