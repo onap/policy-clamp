@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5fae4e0d_d9b37eae",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ControlLoopProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-10T12:10:08Z",
+      "side": 1,
+      "message": "looks like common code\n\nmight even be able to extract a parameterized method that could be used in all the other Provider classes",
+      "range": {
+        "startLine": 158,
+        "startChar": 6,
+        "endLine": 171,
+        "endChar": 9
+      },
+      "revId": "5968268a736cac55aef81e0282b7d95cd729f6d2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e485cd37_589437a4",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ParticipantStatisticsProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-10T12:10:08Z",
+      "side": 1,
+      "message": "maybe use forEach() like the other Providers, and avoid the second call to fromAuthorative()",
+      "range": {
+        "startLine": 127,
+        "startChar": 8,
+        "endLine": 132,
+        "endChar": 9
+      },
+      "revId": "5968268a736cac55aef81e0282b7d95cd729f6d2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
