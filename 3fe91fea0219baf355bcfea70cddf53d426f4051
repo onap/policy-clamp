@@ -2430,6 +2430,24 @@
     },
     {
       "key": {
+        "uuid": "2412bc58_f353b40a",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/service/ChartStore.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-10T14:20:54Z",
+      "side": 1,
+      "message": "I\u0027ll take this in the next review that\u0027s coming up to handle the output and termination of commands correctly.",
+      "parentUuid": "b43bab06_c631e967",
+      "revId": "3fe91fea0219baf355bcfea70cddf53d426f4051",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6c955db7_0b077846",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/service/ChartStore.java",
         "patchSetId": 3
