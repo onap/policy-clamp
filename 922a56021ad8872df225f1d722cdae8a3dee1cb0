@@ -169,6 +169,30 @@
     },
     {
       "key": {
+        "uuid": "5998a141_8823583a",
+        "filename": "participant/participant-impl/participant-impl-simulator/src/main/resources/config/CDSParticipantConfig.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 4903
+      },
+      "writtenOn": "2021-06-11T09:14:12Z",
+      "side": 1,
+      "message": "@Jim I think the default configuration used to work by default in all or most of the policy CSITs when we had the DMaaP service name as \"message-router\" in the docker-compose file. But later, when we changed it to use the common simulator name service \"policy.api.simpledemo.onap.org\", this required us to mount the config file too with just this name change. \nEven in OOM, we have a copy of the config file, but the only change there is the username/password env variables usage.\n\nI am okay with removal if necessary, but I think it is good to have a default config file with all the standard service names with which the container can just start up with and start communicating with services in a standard setup by default",
+      "parentUuid": "371fbcac_e2e06531",
+      "range": {
+        "startLine": 28,
+        "startChar": 25,
+        "endLine": 28,
+        "endChar": 40
+      },
+      "revId": "922a56021ad8872df225f1d722cdae8a3dee1cb0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6407f139_35f93767",
         "filename": "participant/participant-impl/participant-impl-simulator/src/main/resources/config/CDSParticipantConfig.json",
         "patchSetId": 2
