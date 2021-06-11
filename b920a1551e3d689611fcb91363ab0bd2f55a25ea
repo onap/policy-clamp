@@ -72,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "4847d3ef_fb3010cf",
+        "filename": "packages/policy-clamp-docker/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-06-11T10:31:13Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "ae45c1ab_827f68d3",
+      "revId": "b920a1551e3d689611fcb91363ab0bd2f55a25ea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8e48d490_c154531f",
         "filename": "packages/policy-clamp-docker/src/main/config/DcaeParticipantParameters.json",
         "patchSetId": 1
@@ -86,6 +104,24 @@
       "revId": "b920a1551e3d689611fcb91363ab0bd2f55a25ea",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a7c3f324_870593be",
+        "filename": "packages/policy-clamp-docker/src/main/config/DcaeParticipantParameters.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-06-11T10:31:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8e48d490_c154531f",
+      "revId": "b920a1551e3d689611fcb91363ab0bd2f55a25ea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -109,6 +145,30 @@
       "revId": "b920a1551e3d689611fcb91363ab0bd2f55a25ea",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0062bf03_71ff8b83",
+        "filename": "packages/policy-clamp-docker/src/main/config/DcaeParticipantParameters.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-06-11T10:31:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d657979c_c5be446f",
+      "range": {
+        "startLine": 38,
+        "startChar": 24,
+        "endLine": 38,
+        "endChar": 35
+      },
+      "revId": "b920a1551e3d689611fcb91363ab0bd2f55a25ea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -147,6 +207,24 @@
     },
     {
       "key": {
+        "uuid": "8ea2b9f2_30281b45",
+        "filename": "packages/policy-clamp-docker/src/main/config/DcaeParticipantParameters.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-06-11T10:31:13Z",
+      "side": 1,
+      "message": "Thank you. Changed to mariadb",
+      "parentUuid": "dcc15e2f_29ef57a9",
+      "revId": "b920a1551e3d689611fcb91363ab0bd2f55a25ea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4809eb97_e498467c",
         "filename": "packages/policy-clamp-docker/src/main/config/RuntimeParameters.json",
         "patchSetId": 1
@@ -164,6 +242,24 @@
     },
     {
       "key": {
+        "uuid": "19d2a211_3762de25",
+        "filename": "packages/policy-clamp-docker/src/main/config/RuntimeParameters.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-06-11T10:31:13Z",
+      "side": 1,
+      "message": "This is not used, checked with team. Removing its reference in ClRuntimeParameterGroup.java and all json files across controlloop directories.",
+      "parentUuid": "4809eb97_e498467c",
+      "revId": "b920a1551e3d689611fcb91363ab0bd2f55a25ea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "80293522_4275c1e1",
         "filename": "packages/policy-clamp-docker/src/main/config/RuntimeParameters.json",
         "patchSetId": 1
@@ -178,6 +274,24 @@
       "revId": "b920a1551e3d689611fcb91363ab0bd2f55a25ea",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a858f7eb_d4327deb",
+        "filename": "packages/policy-clamp-docker/src/main/config/RuntimeParameters.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-06-11T10:31:13Z",
+      "side": 1,
+      "message": "Removed healthCheckRestClientParameters completely.",
+      "parentUuid": "80293522_4275c1e1",
+      "revId": "b920a1551e3d689611fcb91363ab0bd2f55a25ea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -201,6 +315,30 @@
       "revId": "b920a1551e3d689611fcb91363ab0bd2f55a25ea",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9afdf1ec_987317d7",
+        "filename": "packages/policy-clamp-docker/src/main/docker/DcaeParticipantDockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-06-11T10:31:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4be69906_b6b87ea1",
+      "range": {
+        "startLine": 47,
+        "startChar": 39,
+        "endLine": 47,
+        "endChar": 45
+      },
+      "revId": "b920a1551e3d689611fcb91363ab0bd2f55a25ea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -345,6 +483,24 @@
     },
     {
       "key": {
+        "uuid": "2ab15291_664fbeee",
+        "filename": "packages/policy-clamp-docker/src/main/docker/dcae-participant.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-06-11T10:31:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8e6c27d7_d9893860",
+      "revId": "b920a1551e3d689611fcb91363ab0bd2f55a25ea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8143306b_7df223bd",
         "filename": "packages/policy-clamp-tarball/src/main/resources/etc/logback.xml",
         "patchSetId": 1
@@ -359,6 +515,24 @@
       "revId": "b920a1551e3d689611fcb91363ab0bd2f55a25ea",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bc565070_a0cbd9d2",
+        "filename": "packages/policy-clamp-tarball/src/main/resources/etc/logback.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-06-11T10:31:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8143306b_7df223bd",
+      "revId": "b920a1551e3d689611fcb91363ab0bd2f55a25ea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
