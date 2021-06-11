@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "65358d00_93b46208",
+        "filename": "participant/participant-impl/participant-impl-simulator/src/main/java/org/onap/policy/clamp/controlloop/participant/simulator/main/parameters/ParticipantSimulatorParameterHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-06-11T11:47:42Z",
+      "side": 1,
+      "message": "Not used ?",
+      "revId": "0b06f436d5dfb79d0283f8c4e0163a4b1de4edb8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6166109c_d482c2c4",
+        "filename": "participant/participant-impl/participant-impl-simulator/src/main/java/org/onap/policy/clamp/controlloop/participant/simulator/main/parameters/ParticipantSimulatorParameterHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-06-11T11:47:42Z",
+      "side": 1,
+      "message": "I nitpick: instead of \"\\n\" \nSystem.getProperty(\"line.separator\")",
+      "revId": "0b06f436d5dfb79d0283f8c4e0163a4b1de4edb8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ab951c2a_7c5e4121",
+        "filename": "participant/participant-impl/participant-impl-simulator/src/test/java/org/onap/policy/clamp/controlloop/participant/simulator/endtoend/ParticipantSimulatorTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-06-11T11:47:42Z",
+      "side": 1,
+      "message": "Why ?",
+      "revId": "0b06f436d5dfb79d0283f8c4e0163a4b1de4edb8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
