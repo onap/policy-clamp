@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9070baf2_79879908",
+        "filename": "runtime/src/main/resources/application-noaaf.properties",
+        "patchSetId": 2
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-06-11T13:21:27Z",
+      "side": 1,
+      "message": "Done. Thanks.",
+      "parentUuid": "762773fa_6e77761e",
+      "revId": "23d4c5f2d68a307cf48d54ff7d67f591fd19b1bb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1aee64e1_39da1aa8",
         "filename": "runtime/src/main/resources/application.properties",
         "patchSetId": 2
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "82311a80_eb3a9b66",
+        "filename": "runtime/src/main/resources/application.properties",
+        "patchSetId": 2
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-06-11T13:21:27Z",
+      "side": 1,
+      "message": "Done. Thanks.",
+      "parentUuid": "1aee64e1_39da1aa8",
+      "revId": "23d4c5f2d68a307cf48d54ff7d67f591fd19b1bb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e30847a7_f874d43a",
         "filename": "runtime/src/main/resources/clds/camel/rest/clamp-api-v2.xml",
         "patchSetId": 2
@@ -50,6 +86,24 @@
       "revId": "23d4c5f2d68a307cf48d54ff7d67f591fd19b1bb",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dc297cfa_c5c3554d",
+        "filename": "runtime/src/main/resources/clds/camel/rest/clamp-api-v2.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 1472,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-06-11T13:21:27Z",
+      "side": 1,
+      "message": "That\u0027s done. Thanks",
+      "parentUuid": "e30847a7_f874d43a",
+      "revId": "23d4c5f2d68a307cf48d54ff7d67f591fd19b1bb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
