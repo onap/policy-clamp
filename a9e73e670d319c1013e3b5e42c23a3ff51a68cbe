@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "f83ac391_d0610cf8",
+        "filename": "runtime/src/main/resources/META-INF/resources/swagger.html",
+        "patchSetId": 1
+      },
+      "lineNbr": 4494,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-06-11T11:21:19Z",
+      "side": 1,
+      "message": "There was a line in the pom.xml that was pointing at the wrong swagger.json. swagger.html now fixed",
+      "parentUuid": "7a9b540f_114e2a56",
+      "revId": "a9e73e670d319c1013e3b5e42c23a3ff51a68cbe",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0024e0e6_7c959f90",
         "filename": "runtime/src/main/resources/application.properties",
         "patchSetId": 1
@@ -33,6 +51,24 @@
       "revId": "a9e73e670d319c1013e3b5e42c23a3ff51a68cbe",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "430c931f_aaba2b84",
+        "filename": "runtime/src/main/resources/application.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-06-11T11:21:19Z",
+      "side": 1,
+      "message": "Ok, I am reusing org.onap.clamp.clds.cl as recommended.",
+      "parentUuid": "0024e0e6_7c959f90",
+      "revId": "a9e73e670d319c1013e3b5e42c23a3ff51a68cbe",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -89,6 +125,24 @@
     },
     {
       "key": {
+        "uuid": "b4930240_5ebd8eee",
+        "filename": "runtime/src/main/resources/application.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-06-11T11:21:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f9648fa4_b838a71a",
+      "revId": "a9e73e670d319c1013e3b5e42c23a3ff51a68cbe",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "15907f6f_1660746e",
         "filename": "runtime/src/main/resources/clds/camel/routes/controlloop-flows.xml",
         "patchSetId": 1
@@ -103,6 +157,24 @@
       "revId": "a9e73e670d319c1013e3b5e42c23a3ff51a68cbe",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ec13d5eb_4cdd6865",
+        "filename": "runtime/src/main/resources/clds/camel/routes/controlloop-flows.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-06-11T11:21:19Z",
+      "side": 1,
+      "message": "I did this incorrectly. Working now... Thanks",
+      "parentUuid": "15907f6f_1660746e",
+      "revId": "a9e73e670d319c1013e3b5e42c23a3ff51a68cbe",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -123,6 +195,24 @@
     },
     {
       "key": {
+        "uuid": "5857ada9_18c70e79",
+        "filename": "runtime/src/main/resources/clds/camel/routes/controlloop-flows.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-06-11T11:21:19Z",
+      "side": 1,
+      "message": "I did this incorrectly. Working now... Thanks",
+      "parentUuid": "0e1385c4_b0a11cb5",
+      "revId": "a9e73e670d319c1013e3b5e42c23a3ff51a68cbe",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "26f817e0_2a39d645",
         "filename": "runtime/src/main/resources/clds/camel/routes/controlloop-flows.xml",
         "patchSetId": 1
@@ -137,6 +227,24 @@
       "revId": "a9e73e670d319c1013e3b5e42c23a3ff51a68cbe",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "39898b21_8258d97b",
+        "filename": "runtime/src/main/resources/clds/camel/routes/controlloop-flows.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-06-11T11:21:19Z",
+      "side": 1,
+      "message": "I did this incorrectly. Working now... Thanks",
+      "parentUuid": "26f817e0_2a39d645",
+      "revId": "a9e73e670d319c1013e3b5e42c23a3ff51a68cbe",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
