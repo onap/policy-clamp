@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "762773fa_6e77761e",
+        "filename": "runtime/src/main/resources/application-noaaf.properties",
+        "patchSetId": 2
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-06-11T12:07:54Z",
+      "side": 1,
+      "message": "Same comment you can remove that and re-use clamp.config.security.permission.type.cl\u003dorg.onap.clamp.clds.cl\n\nSo that you do not need to modify AAF",
+      "revId": "23d4c5f2d68a307cf48d54ff7d67f591fd19b1bb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1aee64e1_39da1aa8",
+        "filename": "runtime/src/main/resources/application.properties",
+        "patchSetId": 2
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-06-11T12:07:54Z",
+      "side": 1,
+      "message": "You can remove that and re-use the clamp.config.security.permission.type.cl\u003dorg.onap.clamp.clds.cl",
+      "revId": "23d4c5f2d68a307cf48d54ff7d67f591fd19b1bb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e30847a7_f874d43a",
+        "filename": "runtime/src/main/resources/clds/camel/rest/clamp-api-v2.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 1472,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-06-11T12:07:54Z",
+      "side": 1,
+      "message": "I think you can replace controlloop by authorize(*,\u0027cl\u0027,\u0027\u0027,\u0027read\u0027)\"/\u003e\nNo need to have a new type of creds",
+      "revId": "23d4c5f2d68a307cf48d54ff7d67f591fd19b1bb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
