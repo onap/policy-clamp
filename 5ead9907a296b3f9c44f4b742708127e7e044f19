@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "667fc24f_afdb8ed5",
+        "filename": "participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/client/AbstractHttpClient.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 5569
+      },
+      "writtenOn": "2021-06-11T08:00:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5e77f879_6636bfd3",
+      "range": {
+        "startLine": 68,
+        "startChar": 1,
+        "endLine": 69,
+        "endChar": 24
+      },
+      "revId": "5ead9907a296b3f9c44f4b742708127e7e044f19",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9ad8fb38_bc1a6518",
         "filename": "participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/client/PolicyApiHttpClient.java",
         "patchSetId": 2
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "07f418fb_3cc74398",
+        "filename": "participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/client/PolicyApiHttpClient.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 5569
+      },
+      "writtenOn": "2021-06-11T08:00:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9ad8fb38_bc1a6518",
+      "range": {
+        "startLine": 63,
+        "startChar": 27,
+        "endLine": 64,
+        "endChar": 29
+      },
+      "revId": "5ead9907a296b3f9c44f4b742708127e7e044f19",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "524eb75d_1ffc2212",
         "filename": "participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/main/handler/ControlLoopElementHandler.java",
         "patchSetId": 2
@@ -68,6 +116,30 @@
       "revId": "5ead9907a296b3f9c44f4b742708127e7e044f19",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "30176c77_6fdf3b76",
+        "filename": "participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/main/handler/ControlLoopElementHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 5569
+      },
+      "writtenOn": "2021-06-11T08:00:15Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "524eb75d_1ffc2212",
+      "range": {
+        "startLine": 130,
+        "startChar": 11,
+        "endLine": 130,
+        "endChar": 50
+      },
+      "revId": "5ead9907a296b3f9c44f4b742708127e7e044f19",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
