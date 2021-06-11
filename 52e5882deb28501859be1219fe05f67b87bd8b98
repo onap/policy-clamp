@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a603d3ca_cb4576b5",
+        "filename": "packages/policy-clamp-docker/src/main/docker/controlloop-runtime.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-11T16:49:46Z",
+      "side": 1,
+      "message": "looks like line 28 \u0026 29 should still refer to $1, because the docker doesn\u0027t add anything extra between the script and the config file\n\nsame comment in the other shell scripts",
+      "range": {
+        "startLine": 28,
+        "startChar": 14,
+        "endLine": 28,
+        "endChar": 15
+      },
+      "revId": "52e5882deb28501859be1219fe05f67b87bd8b98",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f95686e4_e8a15d73",
+        "filename": "packages/policy-clamp-tarball/src/main/resources/etc/logback-default.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-11T16:49:46Z",
+      "side": 1,
+      "message": "trailing spaces",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 2
+      },
+      "revId": "52e5882deb28501859be1219fe05f67b87bd8b98",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f613c855_e80c6fc3",
+        "filename": "pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-11T16:49:46Z",
+      "side": 1,
+      "message": "is it necessary to specify the version?",
+      "range": {
+        "startLine": 143,
+        "startChar": 12,
+        "endLine": 143,
+        "endChar": 36
+      },
+      "revId": "52e5882deb28501859be1219fe05f67b87bd8b98",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "964512a6_55c46617",
+        "filename": "pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-11T16:49:46Z",
+      "side": 1,
+      "message": "is it necessary to specify the version?",
+      "revId": "52e5882deb28501859be1219fe05f67b87bd8b98",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}

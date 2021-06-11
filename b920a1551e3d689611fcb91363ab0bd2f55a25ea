@@ -533,6 +533,24 @@
       "revId": "b920a1551e3d689611fcb91363ab0bd2f55a25ea",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "78d6415b_ffe1217a",
+        "filename": "packages/policy-clamp-tarball/src/main/resources/etc/logback.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-11T16:49:46Z",
+      "side": 1,
+      "message": "I think we want to merge logback-default with this file - see the standard logback.xml in the other repos",
+      "parentUuid": "bc565070_a0cbd9d2",
+      "revId": "b920a1551e3d689611fcb91363ab0bd2f55a25ea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
