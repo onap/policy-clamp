@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "601a50b5_80d8e43f",
+        "filename": "participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/config/ParticipantConfig.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-06-11T11:59:36Z",
+      "side": 1,
+      "message": "Unused import",
+      "revId": "29f83be5586d77d3b0acb1a741ac80fab2afdd99",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b4f1f624_80f48c06",
+        "filename": "participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/config/ParticipantConfig.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-06-11T11:59:36Z",
+      "side": 1,
+      "message": "Unused import",
+      "revId": "29f83be5586d77d3b0acb1a741ac80fab2afdd99",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1c98a83e_007e8df5",
+        "filename": "participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/config/ParticipantConfig.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-06-11T11:59:36Z",
+      "side": 1,
+      "message": "Unused import",
+      "revId": "29f83be5586d77d3b0acb1a741ac80fab2afdd99",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
