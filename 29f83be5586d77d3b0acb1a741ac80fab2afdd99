@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d7210654_8a87f3f0",
+        "filename": "participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/config/ParticipantConfig.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 5569
+      },
+      "writtenOn": "2021-06-11T16:25:59Z",
+      "side": 1,
+      "message": "Done, Missed those my bad. Thank you",
+      "parentUuid": "601a50b5_80d8e43f",
+      "revId": "29f83be5586d77d3b0acb1a741ac80fab2afdd99",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b4f1f624_80f48c06",
         "filename": "participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/config/ParticipantConfig.java",
         "patchSetId": 3
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "f79279fb_ba955228",
+        "filename": "participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/config/ParticipantConfig.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 5569
+      },
+      "writtenOn": "2021-06-11T16:25:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b4f1f624_80f48c06",
+      "revId": "29f83be5586d77d3b0acb1a741ac80fab2afdd99",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1c98a83e_007e8df5",
         "filename": "participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/config/ParticipantConfig.java",
         "patchSetId": 3
@@ -50,6 +86,24 @@
       "revId": "29f83be5586d77d3b0acb1a741ac80fab2afdd99",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bfdec997_b6f7a206",
+        "filename": "participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/config/ParticipantConfig.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 5569
+      },
+      "writtenOn": "2021-06-11T16:25:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1c98a83e_007e8df5",
+      "revId": "29f83be5586d77d3b0acb1a741ac80fab2afdd99",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
