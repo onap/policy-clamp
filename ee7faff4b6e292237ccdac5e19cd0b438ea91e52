@@ -22,6 +22,30 @@
       "revId": "ee7faff4b6e292237ccdac5e19cd0b438ea91e52",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3dcce4af_cbae9827",
+        "filename": "runtime/src/main/resources/application.properties",
+        "patchSetId": 3
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-06-14T09:20:56Z",
+      "side": 1,
+      "message": "Thanks for the comment. The localhost is just a placeholder here. These configurations would be changed during deployment - these configs would have to be changed depending on where ONAP is deployed. See Seb\u0027s comment from earlier on the same line: \"It\u0027s ok to keep localhost, those are typically replaced in OOM by the right values.\". I can still change if you feel it is necessary Ajith?",
+      "parentUuid": "3d8e08ab_dfdbc488",
+      "range": {
+        "startLine": 206,
+        "startChar": 44,
+        "endLine": 206,
+        "endChar": 53
+      },
+      "revId": "ee7faff4b6e292237ccdac5e19cd0b438ea91e52",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
