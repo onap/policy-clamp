@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "e2bcb1f6_83a7c46e",
+        "filename": "packages/policy-clamp-docker/src/main/docker/controlloop-runtime.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-06-14T17:17:52Z",
+      "side": 1,
+      "message": "The print was not for above command, it was for this below one from docker/csit/clamp/docker-compose-controlloop.yml, while invoking controlloop-runtime.sh. Sorry for the confusion :-)\ncommand: [\n        \u0027-c\u0027, \u0027./controlloop-runtime.sh -c /opt/app/policy/clamp/etc/onappf/config/ClRuntimeParameters.json\u0027,\n        \u0027policy.api.simpledemo.onap.org\u0027, \u00273905\u0027\n        ]",
+      "parentUuid": "db023e76_68c9dc45",
+      "range": {
+        "startLine": 28,
+        "startChar": 14,
+        "endLine": 28,
+        "endChar": 15
+      },
+      "revId": "52e5882deb28501859be1219fe05f67b87bd8b98",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f95686e4_e8a15d73",
         "filename": "packages/policy-clamp-tarball/src/main/resources/etc/logback-default.xml",
         "patchSetId": 3
