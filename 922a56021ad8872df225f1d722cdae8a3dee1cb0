@@ -308,6 +308,30 @@
       "revId": "922a56021ad8872df225f1d722cdae8a3dee1cb0",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "682ced02_33b1a53d",
+        "filename": "participant/participant-impl/participant-impl-simulator/src/main/resources/config/application.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-14T12:21:07Z",
+      "side": 1,
+      "message": "Usually in application.yaml we can use generic credentials for development purpose. There are many way to override parameters defined in application.yaml, and a more common is using  environment variable. Any property can be overridden by an environment variable of the same name, with the characters changed to upper case, and the dots changed to underscores. In this case SPRING_SECURITY_USER_NAME, SPRING_SECURITY_USER_PASSWORD",
+      "parentUuid": "91f2ac14_5fd22677",
+      "range": {
+        "startLine": 4,
+        "startChar": 6,
+        "endLine": 5,
+        "endChar": 25
+      },
+      "revId": "922a56021ad8872df225f1d722cdae8a3dee1cb0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
