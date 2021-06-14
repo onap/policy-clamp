@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aabf1236_18f0e92f",
+        "filename": "packages/policy-clamp-docker/src/main/docker/DcaeParticipantDockerfile",
+        "patchSetId": 4
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-14T17:25:03Z",
+      "side": 1,
+      "message": "combine these lines",
+      "range": {
+        "startLine": 43,
+        "startChar": 0,
+        "endLine": 45,
+        "endChar": 0
+      },
+      "revId": "d12737363684c190575dd369fcdc968202ca66cc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2e67f51b_3a4c5716",
+        "filename": "packages/policy-clamp-docker/src/main/docker/PolicyParticipantDockerfile",
+        "patchSetId": 4
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-14T17:25:03Z",
+      "side": 1,
+      "message": "combine these lines",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 31
+      },
+      "revId": "d12737363684c190575dd369fcdc968202ca66cc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cd1bbb65_e8cacbb7",
+        "filename": "packages/policy-clamp-docker/src/main/docker/dcae-participant.sh",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-14T17:25:03Z",
+      "side": 1,
+      "message": "so I assume that the participant is now completely self contained in app.jar?  Can logback.xml still be overridden?  We normally put config files in \"etc\", not \"config\".  Does Spring force it to be \"config\"?\n\nsame questions for the other shell scripts",
+      "revId": "d12737363684c190575dd369fcdc968202ca66cc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3f2456eb_e9ecb654",
+        "filename": "packages/policy-clamp-tarball/src/main/resources/etc/logback-default.xml",
+        "patchSetId": 4
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-14T17:25:03Z",
+      "side": 1,
+      "message": "trailing spaces :-)",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 2
+      },
+      "revId": "d12737363684c190575dd369fcdc968202ca66cc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}

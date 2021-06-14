@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "6f082f1f_59ea6782",
+        "filename": "packages/policy-clamp-docker/src/main/docker/controlloop-runtime.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-14T17:25:03Z",
+      "side": 1,
+      "message": "did you print them from this shell script, or from startstop.Main?  It appears that it\u0027s the latter, because it prints the \"-c\" argument, which does not appear in the ENTRYPOINT line of the Dockerfile.  Pretty sure this should be $1, not $2",
+      "parentUuid": "db023e76_68c9dc45",
+      "range": {
+        "startLine": 28,
+        "startChar": 14,
+        "endLine": 28,
+        "endChar": 15
+      },
+      "revId": "52e5882deb28501859be1219fe05f67b87bd8b98",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f95686e4_e8a15d73",
         "filename": "packages/policy-clamp-tarball/src/main/resources/etc/logback-default.xml",
         "patchSetId": 3
