@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e8fc9540_daa7d4c2",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/service/ChartStore.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2021-06-14T14:31:42Z",
+      "side": 1,
+      "message": "Instead of defining the properties in this class and accessing it in ChartStore, would it be more suitable to add them under application.yaml ? \n\n@Patrik, Sorry I am not aware you are already working on this issue. I have also created a code review for the same issue, adding the properties in application.yaml.",
+      "range": {
+        "startLine": 64,
+        "startChar": 33,
+        "endLine": 64,
+        "endChar": 58
+      },
+      "revId": "349f4cac8f0f87a264aac89eef757fa6d1d755e5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
