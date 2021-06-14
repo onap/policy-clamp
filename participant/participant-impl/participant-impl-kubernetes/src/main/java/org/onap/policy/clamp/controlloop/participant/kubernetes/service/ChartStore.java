@@ -35,12 +35,11 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.onap.policy.clamp.controlloop.participant.kubernetes.exception.ServiceException;
 import org.onap.policy.clamp.controlloop.participant.kubernetes.models.ChartInfo;
-import org.onap.policy.clamp.controlloop.participant.kubernetes.parameters.ParticipantK8sParameters;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -51,8 +50,9 @@ public class ChartStore {
 
     private static final StandardCoder STANDARD_CODER = new StandardCoder();
 
-    @Autowired
-    private ParticipantK8sParameters participantK8sParameters;
+    private String localChartDir;
+
+    private String chartInfoFile;
 
     /**
      * The chartStore map contains chart name as key & ChartInfo as value.
@@ -62,7 +62,10 @@ public class ChartStore {
     /**
      * Constructor method.
      */
-    public ChartStore() {
+    public ChartStore(@Value("${participant.chart-directory}") String localChartDir,
+                      @Value("${participant.info-file}") String chartInfoFile) {
+        this.localChartDir = localChartDir;
+        this.chartInfoFile = chartInfoFile;
         this.restoreFromLocalFileSystem();
     }
 
@@ -160,7 +163,7 @@ public class ChartStore {
      * @return path
      */
     public Path getAppPath(String chartName, String chartVersion) {
-        return Path.of(participantK8sParameters.getLocalChartDirectory(), chartName, chartVersion);
+        return Path.of(localChartDir, chartName, chartVersion);
     }
 
     private void storeChartInFile(ChartInfo chart) {
@@ -173,12 +176,12 @@ public class ChartStore {
 
     private File getFile(ChartInfo chart) {
         var appPath = getAppPath(chart.getChartName(), chart.getVersion()).toString();
-        return Path.of(appPath, participantK8sParameters.getInfoFileName()).toFile();
+        return Path.of(appPath, chartInfoFile).toFile();
     }
 
     private synchronized void restoreFromLocalFileSystem() {
-        Path localChartDirectoryPath = Paths.get(participantK8sParameters.getLocalChartDirectory());
 
+        Path localChartDirectoryPath = Paths.get(localChartDir);
         try {
             Files.createDirectories(localChartDirectoryPath);
             restoreFromLocalFileSystem(localChartDirectoryPath);
@@ -194,8 +197,10 @@ public class ChartStore {
             @Override
             public FileVisitResult visitFile(Path localChartFile, BasicFileAttributes attrs) throws IOException {
                 try {
-                    ChartInfo chart = STANDARD_CODER.decode(localChartFile.toFile(), ChartInfo.class);
-                    localChartMap.put(key(chart), chart);
+                    if (localChartFile.endsWith(chartInfoFile)) {
+                        ChartInfo chart = STANDARD_CODER.decode(localChartFile.toFile(), ChartInfo.class);
+                        localChartMap.put(key(chart), chart);
+                    }
                     return FileVisitResult.CONTINUE;
                 } catch (CoderException ce) {
                     throw new IOException("Error decoding chart file", ce);

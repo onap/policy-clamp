@@ -36,17 +36,11 @@ import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 @NotBlank
 @Getter
 public class ParticipantK8sParameters extends ParameterGroupImpl {
-    public static final String DEFAULT_LOCAL_CHART_DIR = "/var/helm-manager/local-charts";
-    public static final String DEFAULT_INFO_FILE_NAME = "CHART_INFO.json";
 
     @Valid
     private ParticipantIntermediaryParameters intermediaryParameters;
     @Valid
     private PolicyModelsProviderParameters databaseProviderParameters;
-
-
-    private String localChartDirectory = DEFAULT_LOCAL_CHART_DIR;
-    private String infoFileName = DEFAULT_INFO_FILE_NAME;
 
     /**
      * Create the kubernetes participant parameter group.

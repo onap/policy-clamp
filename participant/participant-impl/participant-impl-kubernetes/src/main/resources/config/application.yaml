@@ -4,6 +4,9 @@ spring:
 
 participant:
   file: src/main/resources/config/KubernetesParticipantConfig.json
+  chart-directory: /var/helm-manager/local-charts
+  info-file: CHART_INFO.json
+
 management:
   endpoints:
     web:
@@ -23,3 +26,4 @@ logging:
     org.springframework.web.reactive.function.client.ExchangeFunctions: ERROR
   file:
     name: /var/log/helm-manager/application.log
+
