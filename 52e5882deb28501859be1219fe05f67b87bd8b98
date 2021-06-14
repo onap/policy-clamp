@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "db023e76_68c9dc45",
+        "filename": "packages/policy-clamp-docker/src/main/docker/controlloop-runtime.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-06-14T17:03:39Z",
+      "side": 1,
+      "message": "For the below command \nENTRYPOINT [ \"./controlloop-runtime.sh $POLICY_HOME/etc/ClRuntimeParameters.json\" ]\n\nI tried printing the Total, $0, $1, $2, $3 them as below\n\npolicy-controlloop-runtime        | Print number of total entries in command: 2\npolicy-controlloop-runtime        | Print 0 is : ./controlloop-runtime.sh\npolicy-controlloop-runtime        | Print 1 is : -c\npolicy-controlloop-runtime        | Print 2 is : /opt/app/policy/clamp/etc/onappf/config/ClRuntimeParameters.json\npolicy-controlloop-runtime        | Print 3 is : \npolicy-controlloop-runtime        | Policy clamp config file: /opt/app/policy/clamp/etc/onappf/config/ClRuntimeParameters.json\n\nAs i need $2 for CONFIG_FILE, i am leaving it as-it-is. Please let me know, if this interpretation is\u0027nt correct.",
+      "parentUuid": "a603d3ca_cb4576b5",
+      "range": {
+        "startLine": 28,
+        "startChar": 14,
+        "endLine": 28,
+        "endChar": 15
+      },
+      "revId": "52e5882deb28501859be1219fe05f67b87bd8b98",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f95686e4_e8a15d73",
         "filename": "packages/policy-clamp-tarball/src/main/resources/etc/logback-default.xml",
         "patchSetId": 3
@@ -45,6 +69,30 @@
       "revId": "52e5882deb28501859be1219fe05f67b87bd8b98",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "05993e2c_774cbd42",
+        "filename": "packages/policy-clamp-tarball/src/main/resources/etc/logback-default.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-06-14T17:03:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f95686e4_e8a15d73",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 2
+      },
+      "revId": "52e5882deb28501859be1219fe05f67b87bd8b98",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "01bd42c7_6a474842",
+        "filename": "pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-06-14T17:03:39Z",
+      "side": 1,
+      "message": "I removed, and i think it is fine to be removed.",
+      "parentUuid": "f613c855_e80c6fc3",
+      "range": {
+        "startLine": 143,
+        "startChar": 12,
+        "endLine": 143,
+        "endChar": 36
+      },
+      "revId": "52e5882deb28501859be1219fe05f67b87bd8b98",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "964512a6_55c46617",
         "filename": "pom.xml",
         "patchSetId": 3
@@ -85,6 +157,24 @@
       "revId": "52e5882deb28501859be1219fe05f67b87bd8b98",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4bf93708_7edd40f3",
+        "filename": "pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-06-14T17:03:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "964512a6_55c46617",
+      "revId": "52e5882deb28501859be1219fe05f67b87bd8b98",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
