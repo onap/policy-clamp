@@ -51,8 +51,7 @@ public class ChartStore {
 
     private static final StandardCoder STANDARD_CODER = new StandardCoder();
 
-    @Autowired
-    private ParticipantK8sParameters participantK8sParameters;
+    private final ParticipantK8sParameters participantK8sParameters;
 
     /**
      * The chartStore map contains chart name as key & ChartInfo as value.
@@ -62,7 +61,8 @@ public class ChartStore {
     /**
      * Constructor method.
      */
-    public ChartStore() {
+    public ChartStore(@Autowired ParticipantK8sParameters participantK8sParameters) {
+        this.participantK8sParameters = participantK8sParameters;
         this.restoreFromLocalFileSystem();
     }
 
@@ -88,14 +88,13 @@ public class ChartStore {
         return new File(appPath.toFile(), "values.yaml");
     }
 
-
     /**
      * Saves the helm chart.
      *
      * @param chartInfo chartInfo
      * @param chartFile helm chart file.
      * @return chart
-     * @throws IOException incase of IO error
+     * @throws IOException      incase of IO error
      * @throws ServiceException incase of error.
      */
     public synchronized ChartInfo saveChart(ChartInfo chartInfo, MultipartFile chartFile, MultipartFile overrideFile)
@@ -119,7 +118,7 @@ public class ChartStore {
     /**
      * Get the chart info.
      *
-     * @param name name of the chart
+     * @param name    name of the chart
      * @param version version of the chart
      * @return chart
      */
@@ -155,7 +154,7 @@ public class ChartStore {
     /**
      * Fetch the local chart directory of specific chart.
      *
-     * @param chartName name of the chart
+     * @param chartName    name of the chart
      * @param chartVersion version of the chart
      * @return path
      */
@@ -177,18 +176,16 @@ public class ChartStore {
     }
 
     private synchronized void restoreFromLocalFileSystem() {
-        Path localChartDirectoryPath = Paths.get(participantK8sParameters.getLocalChartDirectory());
-
         try {
+            Path localChartDirectoryPath = Paths.get(participantK8sParameters.getLocalChartDirectory());
             Files.createDirectories(localChartDirectoryPath);
             restoreFromLocalFileSystem(localChartDirectoryPath);
-        } catch (IOException ioe) {
+        } catch (Exception ioe) {
             LOGGER.warn("Could not restore charts from local file system: {}", ioe);
         }
     }
 
-    private synchronized void restoreFromLocalFileSystem(Path localChartDirectoryPath)
-            throws IOException {
+    private synchronized void restoreFromLocalFileSystem(Path localChartDirectoryPath) throws IOException {
 
         Files.walkFileTree(localChartDirectoryPath, new SimpleFileVisitor<Path>() {
             @Override
