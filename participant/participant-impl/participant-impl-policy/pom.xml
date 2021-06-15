@@ -32,17 +32,13 @@
     <name>${project.artifactId}</name>
     <description>Policy participant, that allows Policy to partake in control loops</description>
 
-    <properties>
-        <springboot.version>2.4.4</springboot.version>
-    </properties>
-
     <dependencyManagement>
         <dependencies>
             <!-- Spring Boot BOM -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
-                <version>${springboot.version}</version>
+                <version>${version.springboot}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -70,7 +66,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${springboot.version}</version>
                 <executions>
                     <execution>
                         <goals>

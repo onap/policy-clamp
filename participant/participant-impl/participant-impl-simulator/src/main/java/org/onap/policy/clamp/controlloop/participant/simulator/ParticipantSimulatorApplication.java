@@ -22,12 +22,14 @@ package org.onap.policy.clamp.controlloop.participant.simulator;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
 /**
  * Starter.
  *
  */
 @SpringBootApplication
+@ConfigurationPropertiesScan("org.onap.policy.clamp.controlloop.participant.simulator.main.parameters")
 public class ParticipantSimulatorApplication {
 
     public static void main(String[] args) {

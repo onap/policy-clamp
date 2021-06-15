@@ -20,77 +20,56 @@
 
 package org.onap.policy.clamp.controlloop.participant.dcae.main.parameters;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.Getter;
-import org.apache.commons.lang3.StringUtils;
+import lombok.Setter;
 import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantIntermediaryParameters;
 import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
-import org.onap.policy.common.parameters.BeanValidationResult;
-import org.onap.policy.common.parameters.ParameterGroupImpl;
-import org.onap.policy.common.parameters.ValidationStatus;
-import org.onap.policy.common.parameters.annotations.NotNull;
-import org.onap.policy.common.parameters.annotations.Valid;
-import org.onap.policy.models.provider.PolicyModelsProviderParameters;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.validation.annotation.Validated;
 
 /**
  * Class to hold all parameters needed for the participant dcae.
  *
  */
-@NotNull
-@NotBlank
+@Validated
 @Getter
-public class ParticipantDcaeParameters extends ParameterGroupImpl {
+@Setter
+@ConfigurationProperties(prefix = "participant")
+public class ParticipantDcaeParameters {
 
-    private static final String MSG_IS_BLANK = "is blank";
+    @NotBlank
+    private String name;
 
+    @NotNull
+    @Min(10)
+    private int checkCount;
+
+    @NotNull
+    @Min(1)
+    private int secCount;
+
+    @NotBlank
+    private String jsonBodyConsulPath;
+
+    @NotNull
     @Valid
+    private ClampEndPoints clampClientEndPoints;
+
+    @NotNull
+    @Valid
+    private ConsulEndPoints consulClientEndPoints;
+
+    @NotNull
     private BusTopicParams clampClientParameters;
 
-    @Valid
+    @NotNull
     private BusTopicParams consulClientParameters;
 
+    @NotNull
+    @Valid
     private ParticipantIntermediaryParameters intermediaryParameters;
-    private PolicyModelsProviderParameters databaseProviderParameters;
-
-    /**
-     * Create the participant dcae parameter group.
-     *
-     * @param name the parameter group name
-     */
-    public ParticipantDcaeParameters(final String name) {
-        super(name);
-    }
-
-    /**
-     * {@inheritDoc}.
-     */
-    @Override
-    public BeanValidationResult validate() {
-        BeanValidationResult result = super.validate();
-        if (result.isValid()) {
-            result.addResult(checkMissingMandatoryParams(clampClientParameters));
-            result.addResult(checkMissingMandatoryParams(consulClientParameters));
-        }
-        return result;
-    }
-
-    private BeanValidationResult checkMissingMandatoryParams(BusTopicParams clientParameters) {
-        BeanValidationResult result = new BeanValidationResult(clientParameters.getClientName(), clientParameters);
-        if (clientParameters.isHostnameInvalid()) {
-            result.addResult("Host", clientParameters.getHostname(), ValidationStatus.INVALID, MSG_IS_BLANK);
-        }
-        if (clientParameters.isClientNameInvalid()) {
-            result.addResult("Name", clientParameters.getClientName(), ValidationStatus.INVALID, MSG_IS_BLANK);
-        }
-        if (StringUtils.isBlank(clientParameters.getPassword())) {
-            result.addResult("Password", clientParameters.getPassword(), ValidationStatus.INVALID, MSG_IS_BLANK);
-        }
-        if (StringUtils.isBlank(clientParameters.getUserName())) {
-            result.addResult("UserName", clientParameters.getUserName(), ValidationStatus.INVALID, MSG_IS_BLANK);
-        }
-        if (clientParameters.isPortInvalid()) {
-            result.addResult("Port", clientParameters.getPort(), ValidationStatus.INVALID, "is not valid");
-        }
-        return result;
-    }
 }

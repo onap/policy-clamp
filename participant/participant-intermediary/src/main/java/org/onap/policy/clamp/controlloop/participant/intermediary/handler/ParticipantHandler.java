@@ -66,8 +66,10 @@ public class ParticipantHandler implements Closeable {
      * @param publisher the publisher for sending responses to messages
      */
     public ParticipantHandler(ParticipantIntermediaryParameters parameters, ParticipantStatusPublisher publisher) {
-        this.participantType = parameters.getParticipantType();
-        this.participantId = parameters.getParticipantId();
+        this.participantType = new ToscaConceptIdentifier(parameters.getParticipantType().getName(),
+                parameters.getParticipantType().getVersion());
+        this.participantId = new ToscaConceptIdentifier(parameters.getParticipantId().getName(),
+                parameters.getParticipantId().getVersion());
         this.sender = new MessageSender(this, publisher, parameters.getReportingTimeInterval());
         this.controlLoopHandler = new ControlLoopHandler(parameters, sender);
         this.participantStatistics = new ParticipantStatistics();
@@ -111,14 +113,13 @@ public class ParticipantHandler implements Closeable {
             default:
                 LOGGER.debug("StateChange message has no state, state is null {}", stateChangeMsg.getParticipantId());
                 response.setResponseStatus(ParticipantResponseStatus.FAIL);
-                response.setResponseMessage("StateChange message has invalid state for participantId "
-                    + stateChangeMsg.getParticipantId());
+                response.setResponseMessage(
+                        "StateChange message has invalid state for participantId " + stateChangeMsg.getParticipantId());
                 break;
         }
 
         sender.sendResponse(response);
     }
-
 
     /**
      * Method which handles a participant health check event from clamp.
@@ -195,8 +196,7 @@ public class ParticipantHandler implements Closeable {
      * @param definition participant definition
      * @param participantState participant state
      */
-    public Participant updateParticipantState(ToscaConceptIdentifier definition,
-            ParticipantState participantState) {
+    public Participant updateParticipantState(ToscaConceptIdentifier definition, ParticipantState participantState) {
         if (!Objects.equals(definition, participantId)) {
             LOGGER.debug("No participant with this ID {}", definition.getName());
             return null;
