@@ -3,7 +3,32 @@ spring:
     active: prod
 
 participant:
-  file: src/main/resources/config/KubernetesParticipantConfig.json
+  localChartDirectory: /var/helm-manager/local-charts
+  infoFileName: CHART_INFO.json
+  intermediaryParameters:
+    reportingTimeInterval: 120000
+    description: Participant Description
+    participantId:
+      name: K8sParticipant0
+      version: 1.0.0
+    participantType:
+      name: org.onap.k8s.controlloop.K8SControlLoopParticipant
+      version: 2.3.4
+    clampControlLoopTopics:
+      topicSources[0]:
+        topic: POLICY-CLRUNTIME-PARTICIPANT
+        servers[0]: ${topicServer:message-router}
+        topicCommInfrastructure: dmaap
+        fetchTimeout: 15000
+      topicSinks[0]:
+        topic: POLICY-CLRUNTIME-PARTICIPANT
+        servers[0]: ${topicServer:message-router}
+        topicCommInfrastructure: dmaap
+      topicSinks[1]:
+        topic: POLICY-NOTIFICATION
+        servers[0]: ${topicServer:message-router}
+        topicCommInfrastructure: dmaap
+
 management:
   endpoints:
     web:

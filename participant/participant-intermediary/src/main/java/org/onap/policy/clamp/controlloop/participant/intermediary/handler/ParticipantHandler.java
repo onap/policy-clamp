@@ -111,14 +111,13 @@ public class ParticipantHandler implements Closeable {
             default:
                 LOGGER.debug("StateChange message has no state, state is null {}", stateChangeMsg.getParticipantId());
                 response.setResponseStatus(ParticipantResponseStatus.FAIL);
-                response.setResponseMessage("StateChange message has invalid state for participantId "
-                    + stateChangeMsg.getParticipantId());
+                response.setResponseMessage(
+                        "StateChange message has invalid state for participantId " + stateChangeMsg.getParticipantId());
                 break;
         }
 
         sender.sendResponse(response);
     }
-
 
     /**
      * Method which handles a participant health check event from clamp.
@@ -196,8 +195,7 @@ public class ParticipantHandler implements Closeable {
      * @param participantState participant state
      * @return the participant
      */
-    public Participant updateParticipantState(ToscaConceptIdentifier definition,
-            ParticipantState participantState) {
+    public Participant updateParticipantState(ToscaConceptIdentifier definition, ParticipantState participantState) {
         if (!Objects.equals(definition, participantId)) {
             LOGGER.debug("No participant with this ID {}", definition.getName());
             return null;
