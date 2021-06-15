@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "d42122a2_a9adcbe8",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/parameters/ParticipantK8sParameters.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-15T07:46:31Z",
+      "side": 0,
+      "message": "Well, we have a parameter handling infrastructure in the Policy Framework. In this participant, the two approaches are mixed.\n\nFrancesco Fiora is doing some work on unifying the two approaches. We need to see how we\u0027re going to handle parameters in the future. The danger is that we could have the two ways of doing parameters.",
+      "parentUuid": "a8b6eea0_bcc217d5",
+      "revId": "24619d423c084cb212c97959a93380278b60e414",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4a1357e4_79d42357",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/parameters/ParticipantK8sParameters.java",
         "patchSetId": 1
