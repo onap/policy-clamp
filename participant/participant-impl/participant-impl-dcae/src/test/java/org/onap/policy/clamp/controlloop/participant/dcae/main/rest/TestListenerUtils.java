@@ -48,7 +48,7 @@ public class TestListenerUtils {
 
     private static final YamlJsonTranslator yamlTranslator = new YamlJsonTranslator();
     private static final Coder CODER = new StandardCoder();
-    private static final String TOSCA_TEMPLATE_YAML = "examples/controlloop/PMSubscriptionHandling.yaml";
+    private static final String TOSCA_TEMPLATE_YAML = "examples.controlloop/PMSubscriptionHandling.yaml";
     static CommonTestData commonTestData = new CommonTestData();
 
     /**
