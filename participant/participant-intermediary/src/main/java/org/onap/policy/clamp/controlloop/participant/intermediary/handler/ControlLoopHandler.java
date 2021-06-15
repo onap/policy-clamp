@@ -63,7 +63,8 @@ public class ControlLoopHandler implements Closeable {
     @Getter
     private List<ControlLoopElementListener> listeners = new ArrayList<>();
 
-    public ControlLoopHandler() {}
+    public ControlLoopHandler() {
+    }
 
     /**
      * Constructor, set the participant ID and messageSender.
@@ -72,8 +73,10 @@ public class ControlLoopHandler implements Closeable {
      * @param messageSender the messageSender for sending responses to messages
      */
     public ControlLoopHandler(ParticipantIntermediaryParameters parameters, MessageSender messageSender) {
-        this.participantType = parameters.getParticipantType();
-        this.participantId = parameters.getParticipantId();
+        this.participantType = new ToscaConceptIdentifier(parameters.getParticipantType().getName(),
+                parameters.getParticipantType().getVersion());
+        this.participantId = new ToscaConceptIdentifier(parameters.getParticipantId().getName(),
+                parameters.getParticipantId().getVersion());
         this.messageSender = messageSender;
     }
 
@@ -85,7 +88,7 @@ public class ControlLoopHandler implements Closeable {
     public void registerControlLoopElementListener(ControlLoopElementListener listener) {
         listeners.add(listener);
     }
-    
+
     /**
      * Handle a control loop element state change message.
      *
@@ -246,8 +249,7 @@ public class ControlLoopHandler implements Closeable {
         for (ControlLoopElementListener clElementListener : listeners) {
             try {
                 for (ControlLoopElement element : controlLoop.getElements().values()) {
-                    clElementListener.controlLoopElementStateChange(element.getId(), element.getState(),
-                            orderedState);
+                    clElementListener.controlLoopElementStateChange(element.getId(), element.getState(), orderedState);
                 }
             } catch (PfModelException e) {
                 LOGGER.debug("Control loop element update failed {}", controlLoop.getDefinition());
@@ -278,7 +280,7 @@ public class ControlLoopHandler implements Closeable {
             final ParticipantResponseDetails response) {
         handleStateChange(controlLoop, orderedState, ControlLoopState.RUNNING, response);
     }
-    
+
     /**
      * Method to update the state of control loop elements.
      *
@@ -297,18 +299,16 @@ public class ControlLoopHandler implements Closeable {
 
         if (!CollectionUtils.isEmpty(controlLoop.getElements().values())) {
             controlLoop.getElements().values().forEach(element -> {
-                    element.setState(newState);
-                    element.setOrderedState(orderedState);
-                }
-            );
+                element.setState(newState);
+                element.setOrderedState(orderedState);
+            });
         }
 
         response.setResponseStatus(ParticipantResponseStatus.SUCCESS);
-        response.setResponseMessage("ControlLoop state changed from " + controlLoop.getOrderedState()
-                        + " to " + orderedState);
+        response.setResponseMessage(
+                "ControlLoop state changed from " + controlLoop.getOrderedState() + " to " + orderedState);
         controlLoop.setOrderedState(orderedState);
     }
-
 
     /**
      * Get control loops as a {@link ConrolLoops} class.

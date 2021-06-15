@@ -33,7 +33,6 @@
     <description>Participant simulator, used to test control loops</description>
 
     <properties>
-        <springboot.version>2.4.4</springboot.version>
         <springfox.version>3.0.0</springfox.version>
     </properties>
 
@@ -43,7 +42,7 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
-                <version>${springboot.version}</version>
+                <version>${version.springboot}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -86,7 +85,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${springboot.version}</version>
+                <version>${version.springboot}</version>
                 <executions>
                     <execution>
                         <goals>

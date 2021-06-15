@@ -34,7 +34,6 @@ import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.Parti
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopUpdate;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantHealthCheck;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStateChange;
-import org.onap.policy.clamp.controlloop.participant.dcae.main.parameters.CommonTestData;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -49,7 +48,6 @@ public class TestListenerUtils {
     private static final YamlJsonTranslator yamlTranslator = new YamlJsonTranslator();
     private static final Coder CODER = new StandardCoder();
     private static final String TOSCA_TEMPLATE_YAML = "examples/controlloop/PMSubscriptionHandling.yaml";
-    static CommonTestData commonTestData = new CommonTestData();
 
     /**
      * Method to create a controlLoop from a yaml file.

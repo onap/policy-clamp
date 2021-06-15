@@ -20,30 +20,40 @@
 
 package org.onap.policy.clamp.controlloop.participant.policy.main.parameters;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.Setter;
+import org.onap.policy.clamp.controlloop.participant.intermediary.models.ParameterGroupImpl;
+import org.onap.policy.clamp.controlloop.participant.intermediary.models.RestClientParameters;
+import org.onap.policy.clamp.controlloop.participant.intermediary.models.validation.PolicyConstraint;
 import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantIntermediaryParameters;
-import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
-import org.onap.policy.common.parameters.ParameterGroupImpl;
-import org.onap.policy.common.parameters.annotations.NotNull;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.validation.annotation.Validated;
+
 
 /**
  * Class to hold all parameters needed for the policy participant.
  *
  */
-@NotNull
-@NotBlank
+@Validated
 @Getter
+@Setter
+@ConfigurationProperties(prefix = "participant")
 public class ParticipantPolicyParameters extends ParameterGroupImpl {
+
+    @NotNull
+    @Valid
     private ParticipantIntermediaryParameters intermediaryParameters;
-    private BusTopicParams policyApiParameters;
+
+    @NotNull
+    @PolicyConstraint
+    private RestClientParameters policyApiParameters;
 
     /**
      * Create the policy participant parameter group.
-     *
-     * @param name the parameter group name
      */
-    public ParticipantPolicyParameters(final String name) {
-        super(name);
+    public ParticipantPolicyParameters() {
+        super(ParticipantPolicyParameters.class.getName());
     }
 }

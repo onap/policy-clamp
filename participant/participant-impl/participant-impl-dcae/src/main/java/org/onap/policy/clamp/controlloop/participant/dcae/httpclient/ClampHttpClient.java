@@ -21,6 +21,7 @@
 package org.onap.policy.clamp.controlloop.participant.dcae.httpclient;
 
 import org.apache.http.HttpStatus;
+import org.onap.policy.clamp.controlloop.participant.dcae.main.parameters.ClampEndPoints;
 import org.onap.policy.clamp.controlloop.participant.dcae.main.parameters.ParticipantDcaeParameters;
 import org.onap.policy.clamp.controlloop.participant.dcae.model.ExternalComponent;
 import org.onap.policy.clamp.controlloop.participant.dcae.model.Loop;
@@ -29,12 +30,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ClampHttpClient extends AbstractHttpClient {
 
-    private static final String STATUS = "/restservices/clds/v2/loop/getstatus/";
-    private static final String CREATE = "/restservices/clds/v2/loop/create/%s?templateName=%s";
-    private static final String DEPLOY = "/restservices/clds/v2/loop/deploy/";
-    private static final String STOP = "/restservices/clds/v2/loop/stop/";
-    private static final String DELETE = "/restservices/clds/v2/loop/delete/";
-    private static final String UNDEPLOY = "/restservices/clds/v2/loop/undeploy/";
+    private final ClampEndPoints endPoints;
     public static final String STATUS_NOT_FOUND = "STATUS_NOT_FOUND";
     public static final String POLICY_NOT_FOUND = "POLICY_NOT_FOUND";
 
@@ -43,6 +39,7 @@ public class ClampHttpClient extends AbstractHttpClient {
      */
     public ClampHttpClient(ParticipantDcaeParameters parameters) {
         super(parameters.getClampClientParameters());
+        this.endPoints = parameters.getClampClientEndPoints();
     }
 
     /**
@@ -53,7 +50,7 @@ public class ClampHttpClient extends AbstractHttpClient {
      * @return the Loop object or null if error occurred
      */
     public Loop create(String loopName, String templateName) {
-        return executePost(String.format(CREATE, loopName, templateName), HttpStatus.SC_OK);
+        return executePost(String.format(endPoints.getCreate(), loopName, templateName), HttpStatus.SC_OK);
     }
 
     /**
@@ -63,7 +60,7 @@ public class ClampHttpClient extends AbstractHttpClient {
      * @return true
      */
     public boolean deploy(String loopName) {
-        return executePut(DEPLOY + loopName, HttpStatus.SC_ACCEPTED);
+        return executePut(endPoints.getDeploy() + loopName, HttpStatus.SC_ACCEPTED);
     }
 
     /**
@@ -73,7 +70,7 @@ public class ClampHttpClient extends AbstractHttpClient {
      * @return the Loop object or null if error occurred
      */
     public Loop getstatus(String loopName) {
-        return executeGet(STATUS + loopName, HttpStatus.SC_OK);
+        return executeGet(endPoints.getStatus() + loopName, HttpStatus.SC_OK);
     }
 
     /**
@@ -83,7 +80,7 @@ public class ClampHttpClient extends AbstractHttpClient {
      * @return true
      */
     public boolean undeploy(String loopName) {
-        return executePut(UNDEPLOY + loopName, HttpStatus.SC_ACCEPTED);
+        return executePut(endPoints.getUndeploy() + loopName, HttpStatus.SC_ACCEPTED);
     }
 
     /**
@@ -93,7 +90,7 @@ public class ClampHttpClient extends AbstractHttpClient {
      * @return true
      */
     public boolean stop(String loopName) {
-        return executePut(STOP + loopName, HttpStatus.SC_OK);
+        return executePut(endPoints.getStop() + loopName, HttpStatus.SC_OK);
     }
 
     /**
@@ -103,7 +100,7 @@ public class ClampHttpClient extends AbstractHttpClient {
      * @return true
      */
     public boolean delete(String loopName) {
-        return executePut(DELETE + loopName, HttpStatus.SC_OK);
+        return executePut(endPoints.getDelete() + loopName, HttpStatus.SC_OK);
     }
 
     /**

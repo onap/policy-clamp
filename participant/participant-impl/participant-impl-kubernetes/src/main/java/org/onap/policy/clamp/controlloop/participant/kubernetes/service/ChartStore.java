@@ -40,7 +40,6 @@ import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -51,8 +50,7 @@ public class ChartStore {
 
     private static final StandardCoder STANDARD_CODER = new StandardCoder();
 
-    @Autowired
-    private ParticipantK8sParameters participantK8sParameters;
+    private final ParticipantK8sParameters participantK8sParameters;
 
     /**
      * The chartStore map contains chart name as key & ChartInfo as value.
@@ -62,7 +60,8 @@ public class ChartStore {
     /**
      * Constructor method.
      */
-    public ChartStore() {
+    public ChartStore(ParticipantK8sParameters participantK8sParameters) {
+        this.participantK8sParameters = participantK8sParameters;
         this.restoreFromLocalFileSystem();
     }
 

@@ -18,24 +18,36 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.controlloop.participant.kubernetes.configurations;
+package org.onap.policy.clamp.controlloop.participant.intermediary.models;
 
-import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
-import org.onap.policy.clamp.controlloop.participant.kubernetes.parameters.ParticipantK8sParameterHandler;
-import org.onap.policy.clamp.controlloop.participant.kubernetes.parameters.ParticipantK8sParameters;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import javax.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.Setter;
 
-@Configuration
-public class ParametersConfig {
+@Getter
+@Setter
+public class ParameterGroupImpl implements ParameterGroup {
 
-    @Value("${participant.file}")
-    private String file;
+    /**
+     * Group name.
+     */
+    @NotBlank
+    private String name;
 
-    @Bean
-    public ParticipantK8sParameters participantK8sParameters() throws ControlLoopException {
-        return new ParticipantK8sParameterHandler().toParticipantK8sParameters(file);
+    /**
+     * Constructs the object, with a {@code null} name.
+     */
+    public ParameterGroupImpl() {
+        this.name = null;
     }
-}
 
+    /**
+     * Constructs the object.
+     *
+     * @param name the group's name
+     */
+    public ParameterGroupImpl(String name) {
+        this.name = name;
+    }
+
+}
