@@ -26,23 +26,23 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 
 import java.util.Map;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.common.parameters.ValidationResult;
 
 /**
  * Class to perform unit test of {@link ParticipantParameterGroup}.
  */
-public class TestParticipantSimulatorParameters {
+class TestParticipantSimulatorParameters {
     CommonTestData commonTestData = new CommonTestData();
 
     @Test
-    public void testParticipantParameterGroup_Named() {
+    void testParticipantParameterGroup_Named() {
         final ParticipantSimulatorParameters participantParameters = new ParticipantSimulatorParameters("my-name");
         assertEquals("my-name", participantParameters.getName());
     }
 
     @Test
-    public void testParticipantParameterGroup() {
+    void testParticipantParameterGroup() {
         final ParticipantSimulatorParameters participantParameters = commonTestData.toObject(
                 commonTestData.getParticipantParameterGroupMap(CommonTestData.PARTICIPANT_GROUP_NAME),
                 ParticipantSimulatorParameters.class);
@@ -51,7 +51,7 @@ public class TestParticipantSimulatorParameters {
     }
 
     @Test
-    public void testParticipantParameterGroup_NullName() {
+    void testParticipantParameterGroup_NullName() {
         final ParticipantSimulatorParameters participantParameters = commonTestData
                 .toObject(commonTestData.getParticipantParameterGroupMap(null),
                         ParticipantSimulatorParameters.class);
@@ -62,7 +62,7 @@ public class TestParticipantSimulatorParameters {
     }
 
     @Test
-    public void testParticipantParameterGroup_EmptyName() {
+    void testParticipantParameterGroup_EmptyName() {
         final ParticipantSimulatorParameters participantParameters = commonTestData
                 .toObject(commonTestData.getParticipantParameterGroupMap(""),
                                 ParticipantSimulatorParameters.class);
@@ -74,7 +74,7 @@ public class TestParticipantSimulatorParameters {
     }
 
     @Test
-    public void testParticipantParameterGroup_SetName() {
+    void testParticipantParameterGroup_SetName() {
         final ParticipantSimulatorParameters participantParameters = commonTestData.toObject(
                 commonTestData.getParticipantParameterGroupMap(CommonTestData.PARTICIPANT_GROUP_NAME),
                 ParticipantSimulatorParameters.class);
@@ -84,7 +84,7 @@ public class TestParticipantSimulatorParameters {
     }
 
     @Test
-    public void testParticipantParameterGroup_EmptyParticipantIntermediaryParameters() {
+    void testParticipantParameterGroup_EmptyParticipantIntermediaryParameters() {
         final Map<String, Object> map =
                 commonTestData.getParticipantParameterGroupMap(CommonTestData.PARTICIPANT_GROUP_NAME);
         map.replace("intermediaryParameters", commonTestData.getIntermediaryParametersMap(true));
@@ -95,7 +95,7 @@ public class TestParticipantSimulatorParameters {
     }
 
     @Test
-    public void testParticipantParameterGroupp_EmptyTopicParameters() {
+    void testParticipantParameterGroupp_EmptyTopicParameters() {
         final Map<String, Object> map =
                 commonTestData.getParticipantParameterGroupMap(CommonTestData.PARTICIPANT_GROUP_NAME);
         final Map<String, Object> intermediaryParametersMap = commonTestData.getIntermediaryParametersMap(false);

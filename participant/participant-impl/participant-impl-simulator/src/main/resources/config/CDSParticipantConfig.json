@@ -1,31 +1,61 @@
 {
-    "name":"ParticipantParameterGroup",
-    "participantStatusParameters":{
-        "timeIntervalMs": 10000,
-        "description":"Participant Status",
-        "participantType":{
-            "name": "org.onap.ccsdk.cds.controlloop.CdsControlLoopParticipant",
-            "version":"2.2.1"
+    "name": "ControlLoopParticipantGroup",
+    "restServerParameters": {
+        "host": "0.0.0.0",
+        "port": 6969,
+        "userName": "healthcheck",
+        "password": "zb!XztG34",
+        "https": false,
+        "aaf": false
+    },
+    "intermediaryParameters": {
+        "name": "Participant parameters",
+        "reportingTimeInterval": 120000,
+        "description": "Participant Description",
+        "participantId": {
+            "name": "org.onap.PM_CDS_Blueprint",
+            "version": "1.0.0"
         },
-        "participantId":{
-            "name": "CDSParticipant0",
-            "version":"1.0.0"
+        "participantType": {
+            "name": "org.onap.PM_CDS_Blueprint",
+            "version": "1.0.0"
         },
-        "participantDefinition":{
-            "name": "org.onap.ccsdk.cds.controlloop.CdsControlLoopParticipant",
-            "version":"3.2.1"
+        "clampControlLoopTopics": {
+            "topicSources": [
+                {
+                    "topic": "POLICY-CLRUNTIME-PARTICIPANT",
+                    "servers": [
+                        "message-router"
+                    ],
+                    "topicCommInfrastructure": "dmaap",
+                    "fetchTimeout": 15000
+                }
+            ],
+            "topicSinks": [
+                {
+                    "topic": "POLICY-CLRUNTIME-PARTICIPANT",
+                    "servers": [
+                        "message-router"
+                    ],
+                    "topicCommInfrastructure": "dmaap"
+                },
+                {
+                    "topic": "POLICY-NOTIFICATION",
+                    "servers": [
+                        "message-router"
+                    ],
+                    "topicCommInfrastructure": "dmaap"
+                }
+            ]
         }
     },
-    "topicParameterGroup": {
-        "topicSources" : [{
-            "topic" : "POLICY-CLRUNTIME-PARTICIPANT",
-            "servers" : [ "127.0.0.1:3904" ],
-            "topicCommInfrastructure" : "dmaap"
-        }],
-        "topicSinks" : [{
-            "topic" : "POLICY-CLRUNTIME-PARTICIPANT",
-            "servers" : [ "127.0.0.1:3904" ],
-            "topicCommInfrastructure" : "dmaap"
-        }]
+    "databaseProviderParameters": {
+        "name": "PolicyProviderParameterGroup",
+        "implementation": "org.onap.policy.models.provider.impl.DatabasePolicyModelsProviderImpl",
+        "databaseDriver": "org.mariadb.jdbc.Driver",
+        "databaseUrl": "jdbc:mariadb://mariadb:3306/cdsparticipantsim",
+        "databaseUser": "policy",
+        "databasePassword": "P01icY",
+        "persistenceUnit": "ToscaConceptTest"
     }
 }
