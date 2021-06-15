@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "1c394bfe_50a0812b",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/service/ChartStore.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-15T07:27:27Z",
+      "side": 1,
+      "message": "We should use standard Policy Framework parameter handling here.",
+      "revId": "a98310d63abfb0dbe5628efc4ed9f18b3ebd0898",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3f84e0de_c41d7a4b",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/resources/config/application.yaml",
         "patchSetId": 1

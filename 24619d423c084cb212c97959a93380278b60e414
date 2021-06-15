@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "528c2d3e_86038ce5",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/parameters/ParticipantK8sParameters.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-15T07:27:27Z",
+      "side": 0,
+      "message": "This is standard Policy Framework parameter handling",
+      "revId": "24619d423c084cb212c97959a93380278b60e414",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4a1357e4_79d42357",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/parameters/ParticipantK8sParameters.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-15T07:27:27Z",
+      "side": 0,
+      "message": "This is standard Policy Framework parameter handling.",
+      "revId": "24619d423c084cb212c97959a93380278b60e414",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
