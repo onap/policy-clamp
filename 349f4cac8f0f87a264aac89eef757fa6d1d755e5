@@ -22,6 +22,30 @@
       "revId": "349f4cac8f0f87a264aac89eef757fa6d1d755e5",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eb362740_b9551b63",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/service/ChartStore.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 5072
+      },
+      "writtenOn": "2021-06-15T06:51:34Z",
+      "side": 1,
+      "message": "The purpose of the fix is to get the component possible to run. I do not know where these parameters come from. But a local filepath should probably be suitable to be put in application.yaml.",
+      "parentUuid": "e8fc9540_daa7d4c2",
+      "range": {
+        "startLine": 64,
+        "startChar": 33,
+        "endLine": 64,
+        "endChar": 58
+      },
+      "revId": "349f4cac8f0f87a264aac89eef757fa6d1d755e5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
