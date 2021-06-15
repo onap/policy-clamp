@@ -647,7 +647,7 @@
                     </dependency>
                 </dependencies>
                 <configuration>
-                    <swaggerInput>${project.basedir}/../docs/swagger/swagger.json</swaggerInput>
+                    <swaggerInput>${project.basedir}/docs/swagger/swagger.json</swaggerInput>
                     <outputDir>${project.build.directory}/asciidoc/generated</outputDir>
                     <config>
                         <swagger2markup.markupLanguage>ASCIIDOC</swagger2markup.markupLanguage>
