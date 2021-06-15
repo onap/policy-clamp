@@ -24,9 +24,6 @@ import org.onap.policy.clamp.controlloop.participant.intermediary.api.Participan
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryFactory;
 import org.onap.policy.clamp.controlloop.participant.policy.main.handler.ControlLoopElementHandler;
 import org.onap.policy.clamp.controlloop.participant.policy.main.parameters.ParticipantPolicyParameters;
-import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.provider.PolicyModelsProvider;
-import org.onap.policy.models.provider.PolicyModelsProviderFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -49,17 +46,4 @@ public class ParticipantConfig {
         controlLoopElementHandler.setIntermediaryApi(intermediaryApi);
         return intermediaryApi;
     }
-
-    /**
-     * Create PolicyModelsProvider.
-     *
-     * @param parameters the Participant Policy Parameters
-     * @return PolicyModelsProvider
-     * @throws PfModelException in case of an exception
-     */
-    @Bean
-    public PolicyModelsProvider databaseProvider(ParticipantPolicyParameters parameters) throws PfModelException {
-        return new PolicyModelsProviderFactory().createPolicyModelsProvider(parameters.getDatabaseProviderParameters());
-    }
-
 }
