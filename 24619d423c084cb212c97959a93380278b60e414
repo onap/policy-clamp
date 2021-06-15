@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "a8b6eea0_bcc217d5",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/parameters/ParticipantK8sParameters.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-06-15T07:31:11Z",
+      "side": 0,
+      "message": "Liam, better to define that kind of config in application.yaml isn\u0027t it ?",
+      "parentUuid": "528c2d3e_86038ce5",
+      "revId": "24619d423c084cb212c97959a93380278b60e414",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4a1357e4_79d42357",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/parameters/ParticipantK8sParameters.java",
         "patchSetId": 1
