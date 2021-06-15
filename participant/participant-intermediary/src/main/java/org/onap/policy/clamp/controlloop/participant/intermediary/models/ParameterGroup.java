@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2018 Ericsson. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,25 +18,26 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.controlloop.participant.kubernetes;
-
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
+package org.onap.policy.clamp.controlloop.participant.intermediary.models;
 
 /**
- * Starter.
+ * This interface acts as a base interface for all parameter groups in the ONAP Policy Framework. All parameter group
+ * POJOs are implementations of the parameter group interface and can be used with the {@link ParameterService}.
  *
  */
-@SpringBootApplication
-@ConfigurationPropertiesScan("org.onap.policy.clamp.controlloop.participant.kubernetes.parameters")
-public class Application {
+public interface ParameterGroup {
     /**
-     * Main class.
+     * Get the group name.
      *
-     * @param args args
+     * @return the group name
      */
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
-    }
+    public String getName();
+
+    /**
+     * Set the group name.
+     *
+     * @param name the group name
+     */
+    public void setName(final String name);
+
 }

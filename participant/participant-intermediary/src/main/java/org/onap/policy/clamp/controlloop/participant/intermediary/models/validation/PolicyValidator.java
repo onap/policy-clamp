@@ -18,23 +18,25 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.controlloop.participant.policy.config;
+package org.onap.policy.clamp.controlloop.participant.intermediary.models.validation;
 
-import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
-import org.onap.policy.clamp.controlloop.participant.policy.main.parameters.ParticipantPolicyParameterHandler;
-import org.onap.policy.clamp.controlloop.participant.policy.main.parameters.ParticipantPolicyParameters;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
+import org.onap.policy.common.parameters.BeanValidationResult;
+import org.onap.policy.common.parameters.ParameterGroup;
 
-@Configuration
-public class ParametersConfig {
+public class PolicyValidator implements ConstraintValidator<PolicyConstraint, ParameterGroup> {
 
-    @Value("${participant.file}")
-    private String file;
-
-    @Bean
-    public ParticipantPolicyParameters participantPolicyParameters() throws ControlLoopException {
-        return new ParticipantPolicyParameterHandler().toParticipantDcaeParameters(file);
+    @Override
+    public boolean isValid(ParameterGroup value, ConstraintValidatorContext context) {
+        if (value == null) {
+            return true;
+        }
+        final BeanValidationResult result = value.validate();
+        if (!result.isValid()) {
+            context.buildConstraintViolationWithTemplate(result.getMessage()).addConstraintViolation();
+        }
+        return result.isValid();
     }
+
 }

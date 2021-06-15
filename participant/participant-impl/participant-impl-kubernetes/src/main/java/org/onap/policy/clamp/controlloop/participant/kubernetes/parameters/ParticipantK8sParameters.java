@@ -21,39 +21,39 @@
 package org.onap.policy.clamp.controlloop.participant.kubernetes.parameters;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.Setter;
+import org.onap.policy.clamp.controlloop.participant.intermediary.models.ParameterGroupImpl;
 import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantIntermediaryParameters;
-import org.onap.policy.common.parameters.ParameterGroupImpl;
-import org.onap.policy.common.parameters.annotations.NotNull;
 import org.onap.policy.common.parameters.annotations.Valid;
-import org.onap.policy.models.provider.PolicyModelsProviderParameters;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.validation.annotation.Validated;
 
 /**
  * Class to hold all parameters needed for the kubernetes participant.
  *
  */
-@NotNull
-@NotBlank
+@Validated
 @Getter
+@Setter
+@ConfigurationProperties(prefix = "participant")
 public class ParticipantK8sParameters extends ParameterGroupImpl {
-    public static final String DEFAULT_LOCAL_CHART_DIR = "/var/helm-manager/local-charts";
-    public static final String DEFAULT_INFO_FILE_NAME = "CHART_INFO.json";
 
+    @NotNull
     @Valid
     private ParticipantIntermediaryParameters intermediaryParameters;
-    @Valid
-    private PolicyModelsProviderParameters databaseProviderParameters;
 
+    @NotBlank
+    private String localChartDirectory;
 
-    private String localChartDirectory = DEFAULT_LOCAL_CHART_DIR;
-    private String infoFileName = DEFAULT_INFO_FILE_NAME;
+    @NotBlank
+    private String infoFileName;
 
     /**
      * Create the kubernetes participant parameter group.
-     *
-     * @param name the parameter group name
      */
-    public ParticipantK8sParameters(final String name) {
-        super(name);
+    public ParticipantK8sParameters() {
+        super(ParticipantK8sParameters.class.getName());
     }
 }

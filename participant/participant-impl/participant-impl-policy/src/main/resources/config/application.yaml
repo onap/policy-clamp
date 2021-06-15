@@ -1,3 +1,35 @@
 
 participant:
-  file: src/main/resources/config/PolicyParticipantConfig.json
+  name: ControlLoopParticipantGroup
+  policyApiParameters:
+    clientName: api
+    hostname: policy-api
+    port: 6969
+    userName: healthcheck
+    password: zb!XztG34
+    https: true
+    allowSelfSignedCerts: true
+  intermediaryParameters:
+    name: Participant parameters
+    reportingTimeInterval: 120000
+    description: Participant Description
+    participantId:
+      name: org.onap.PM_Policy
+      version: 1.0.0
+    participantType:
+      name: org.onap.policy.controlloop.PolicyControlLoopParticipant
+      version: 2.3.1
+    clampControlLoopTopics:
+      topicSources[0]:
+        topic: POLICY-CLRUNTIME-PARTICIPANT
+        servers[0]: ${topicServer:message-router}
+        topicCommInfrastructure: dmaap
+        fetchTimeout: 15000
+      topicSinks[0]:
+        topic: POLICY-CLRUNTIME-PARTICIPANT
+        servers[0]: ${topicServer:message-router}
+        topicCommInfrastructure: dmaap
+      topicSinks[1]:
+        topic: POLICY-NOTIFICATION
+        servers[0]: ${topicServer:message-router}
+        topicCommInfrastructure: dmaap

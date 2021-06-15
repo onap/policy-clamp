@@ -18,25 +18,19 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.controlloop.participant.kubernetes;
+package org.onap.policy.clamp.controlloop.participant.intermediary.models;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
+import javax.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.Setter;
 
-/**
- * Starter.
- *
- */
-@SpringBootApplication
-@ConfigurationPropertiesScan("org.onap.policy.clamp.controlloop.participant.kubernetes.parameters")
-public class Application {
-    /**
-     * Main class.
-     *
-     * @param args args
-     */
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
-    }
+@Getter
+@Setter
+public class ToscaConceptIdentifier {
+
+    @NotBlank
+    private String name;
+
+    @NotBlank
+    private String version;
 }

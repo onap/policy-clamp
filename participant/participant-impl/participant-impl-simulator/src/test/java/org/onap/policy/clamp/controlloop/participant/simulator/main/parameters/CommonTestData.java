@@ -20,18 +20,12 @@
 
 package org.onap.policy.clamp.controlloop.participant.simulator.main.parameters;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import javax.ws.rs.core.Response;
-import org.onap.policy.clamp.controlloop.common.exception.ControlLoopRuntimeException;
+import org.onap.policy.clamp.controlloop.participant.intermediary.models.ParameterGroup;
 import org.onap.policy.common.endpoints.parameters.TopicParameters;
-import org.onap.policy.common.parameters.ParameterGroup;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -67,6 +61,15 @@ public class CommonTestData {
         } catch (final CoderException e) {
             throw new RuntimeException("cannot create " + clazz.getName() + " from map", e);
         }
+    }
+
+    /**
+     * Get ParticipantSimulatorParameters.
+     *
+     * @return ParticipantSimulatorParameters
+     */
+    public ParticipantSimulatorParameters getParticipantSimulatorParameters() {
+        return toObject(getParticipantParameterGroupMap(PARTICIPANT_GROUP_NAME), ParticipantSimulatorParameters.class);
     }
 
     /**
@@ -184,57 +187,6 @@ public class CommonTestData {
     public static ToscaConceptIdentifier getParticipantId() {
         final ToscaConceptIdentifier participantId = new ToscaConceptIdentifier("org.onap.PM_CDS_Blueprint", "1.0.0");
         return participantId;
-    }
-
-    /**
-     * Gets the standard participant parameters.
-     *
-     * @param port port to be inserted into the parameters
-     * @return the standard participant parameters
-     */
-    public ParticipantSimulatorParameters getParticipantParameterGroup(int port) {
-        try {
-            return coder.decode(getParticipantParameterGroupAsString(port), ParticipantSimulatorParameters.class);
-
-        } catch (CoderException e) {
-            throw new ControlLoopRuntimeException(Response.Status.NOT_ACCEPTABLE, "cannot read participant parameters",
-                    e);
-        }
-    }
-
-    /**
-     * Gets the standard participant parameters, as a String.
-     *
-     * @param port port to be inserted into the parameters
-     * @return the standard participant parameters
-     */
-    public static String getParticipantParameterGroupAsString(int port) {
-
-        try {
-            File file = new File(getParamFile());
-            String json = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
-
-            json = json.replace("${port}", String.valueOf(port));
-            json = json.replace("${dbName}", "jdbc:h2:mem:testdb");
-
-            return json;
-
-        } catch (IOException e) {
-            throw new ControlLoopRuntimeException(Response.Status.NOT_ACCEPTABLE, "cannot read participant parameters",
-                    e);
-
-        }
-    }
-
-    /**
-     * Gets the full path to the parameter file, which may vary depending on whether or
-     * not this is an end-to-end test.
-     *
-     * @return the parameter file name
-     */
-    private static String getParamFile() {
-        String paramFile = "src/test/resources/parameters/TestParametersStd.json";
-        return paramFile;
     }
 
     /**
