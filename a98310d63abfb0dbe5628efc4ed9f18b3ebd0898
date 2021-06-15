@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f84e0de_c41d7a4b",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/resources/config/application.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-06-15T07:03:42Z",
+      "side": 1,
+      "message": "I don\u0027t think this profile exists somewhere.\nIt can be removed i guess",
+      "revId": "a98310d63abfb0dbe5628efc4ed9f18b3ebd0898",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
