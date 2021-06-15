@@ -31,7 +31,6 @@ import java.util.TreeMap;
 import javax.ws.rs.core.Response;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopRuntimeException;
 import org.onap.policy.common.endpoints.parameters.TopicParameters;
-import org.onap.policy.common.parameters.ParameterGroup;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -54,24 +53,19 @@ public class CommonTestData {
     private static final boolean REST_CONSUL_HTTPS = false;
     private static final boolean REST_CLIENT_AAF = false;
 
-    public static final Coder coder = new StandardCoder();
+    public static final Coder CODER = new StandardCoder();
 
     /**
-     * Converts the contents of a map to a parameter class.
+     * Get ParticipantDcaeParameters.
      *
-     * @param <T> specific type of ParameterGroup class
-     * @param source property map
-     * @param clazz class of object to be created from the map
-     * @return a new object represented by the map
-     * @throws ControlLoopRuntimeException on errors
+     * @return ParticipantDcaeParameters
      */
-    public <T extends ParameterGroup> T toObject(final Map<String, Object> source, final Class<T> clazz) {
+    public ParticipantDcaeParameters getParticipantDcaeParameters() {
         try {
-            return coder.convert(source, clazz);
-
+            return CODER.convert(getParticipantParameterGroupMap(PARTICIPANT_GROUP_NAME),
+                    ParticipantDcaeParameters.class);
         } catch (final CoderException e) {
-            throw new ControlLoopRuntimeException(Response.Status.INTERNAL_SERVER_ERROR,
-                    "cannot create " + clazz.getName() + " from map", e);
+            throw new RuntimeException("cannot create ParticipantDcaeParameters from map", e);
         }
     }
 
@@ -86,10 +80,31 @@ public class CommonTestData {
         final Map<String, Object> map = new TreeMap<>();
 
         map.put("name", name);
+        map.put("checkCount", 10);
+        map.put("secCount", 10);
+        map.put("jsonBodyConsulPath", "src/main/resources/parameters/consul.json");
         map.put("clampClientParameters", getClampClientParametersMap(false));
         map.put("consulClientParameters", getConsulClientParametersMap(false));
         map.put("intermediaryParameters", getIntermediaryParametersMap(false));
-        map.put("databaseProviderParameters", getDatabaseProviderParametersMap(false));
+        map.put("clampClientEndPoints", getClampClientEndPoints());
+        map.put("consulClientEndPoints", getConsulClientEndPoints());
+        return map;
+    }
+
+    private Map<String, Object> getConsulClientEndPoints() {
+        final Map<String, Object> map = new TreeMap<>();
+        map.put("deploy", "/v1/kv/dcae-pmsh:");
+        return map;
+    }
+
+    private Map<String, Object> getClampClientEndPoints() {
+        final Map<String, Object> map = new TreeMap<>();
+        map.put("status", "/restservices/clds/v2/loop/getstatus/");
+        map.put("create", "/restservices/clds/v2/loop/create/%s?templateName=%s");
+        map.put("deploy", "/restservices/clds/v2/loop/deploy/");
+        map.put("stop", "/restservices/clds/v2/loop/stop/");
+        map.put("delete", "/restservices/clds/v2/loop/delete/");
+        map.put("undeploy", "/restservices/clds/v2/loop/undeploy/");
         return map;
     }
 
@@ -142,27 +157,6 @@ public class CommonTestData {
             }
             map.put("userName", REST_CLIENT_USER);
             map.put("password", REST_CLIENT_PASSWORD);
-        }
-
-        return map;
-    }
-
-    /**
-     * Returns a property map for a databaseProviderParameters map for test cases.
-     *
-     * @param isEmpty boolean value to represent that object created should be empty or not
-     * @return a property map suitable for constructing an object
-     */
-    public Map<String, Object> getDatabaseProviderParametersMap(final boolean isEmpty) {
-        final Map<String, Object> map = new TreeMap<>();
-        if (!isEmpty) {
-            map.put("name", "PolicyProviderParameterGroup");
-            map.put("implementation", "org.onap.policy.models.provider.impl.DatabasePolicyModelsProviderImpl");
-            map.put("databaseDriver", "org.h2.Driver");
-            map.put("databaseUrl", "jdbc:h2:mem:testdb");
-            map.put("databaseUser", "policy");
-            map.put("databasePassword", "P01icY");
-            map.put("persistenceUnit", "ToscaConceptTest");
         }
 
         return map;
@@ -226,58 +220,6 @@ public class CommonTestData {
         participantId.setName("DCAEParticipant0");
         participantId.setVersion("1.0.0");
         return participantId;
-    }
-
-    /**
-     * Gets the standard participant parameters.
-     *
-     * @param port port to be inserted into the parameters
-     * @return the standard participant parameters
-     * @throws ControlLoopRuntimeException on errors
-     */
-    public ParticipantDcaeParameters getParticipantParameterGroup(int port) {
-        try {
-            return coder.decode(getParticipantParameterGroupAsString(port), ParticipantDcaeParameters.class);
-
-        } catch (CoderException e) {
-            throw new ControlLoopRuntimeException(Response.Status.NOT_ACCEPTABLE, "cannot read participant parameters",
-                    e);
-        }
-    }
-
-    /**
-     * Gets the standard participant parameters, as a String.
-     *
-     * @param port port to be inserted into the parameters
-     * @return the standard participant parameters
-     * @throws ControlLoopRuntimeException on errors
-     */
-    public static String getParticipantParameterGroupAsString(int port) {
-
-        try {
-            File file = new File(getParamFile());
-            String json = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
-
-            json = json.replace("${port}", String.valueOf(port));
-            json = json.replace("${dbName}", "jdbc:h2:mem:testdb");
-
-            return json;
-
-        } catch (IOException e) {
-            throw new ControlLoopRuntimeException(Response.Status.NOT_ACCEPTABLE, "cannot read participant parameters",
-                    e);
-
-        }
-    }
-
-    /**
-     * Gets the full path to the parameter file, which may vary depending on whether or
-     * not this is an end-to-end test.
-     *
-     * @return the parameter file name
-     */
-    private static String getParamFile() {
-        return "src/test/resources/parameters/TestParametersStd.json";
     }
 
     /**

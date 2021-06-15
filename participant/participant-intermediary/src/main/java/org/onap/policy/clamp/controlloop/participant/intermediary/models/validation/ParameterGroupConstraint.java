@@ -18,25 +18,40 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.controlloop.participant.kubernetes;
+package org.onap.policy.clamp.controlloop.participant.intermediary.models.validation;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import javax.validation.Constraint;
+import javax.validation.Payload;
 
-/**
- * Starter.
- *
- */
-@SpringBootApplication
-@ConfigurationPropertiesScan("org.onap.policy.clamp.controlloop.participant.kubernetes.parameters")
-public class Application {
+@Documented
+@Constraint(validatedBy = ParameterGroupValidator.class)
+@Target({ElementType.METHOD, ElementType.FIELD})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface ParameterGroupConstraint {
+
     /**
-     * Main class.
+     * Get error Message.
      *
-     * @param args args
+     * @return error Message
      */
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
-    }
+    String message() default "validation error(s) on parameters";
+
+    /**
+     * Get groups.
+     *
+     * @return Class arrays
+     */
+    Class<?>[] groups() default {};
+
+    /**
+     * Get payload.
+     *
+     * @return Class arrays
+     */
+    Class<? extends Payload>[] payload() default {};
 }

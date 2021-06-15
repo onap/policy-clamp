@@ -41,7 +41,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@TestPropertySource(properties = "participant.file=src/test/resources/parameters/TestParameters.json")
+@TestPropertySource(locations = {"classpath:application_test.properties"})
 class ParticipantPolicyTest {
 
     private static final Object lockit = new Object();
