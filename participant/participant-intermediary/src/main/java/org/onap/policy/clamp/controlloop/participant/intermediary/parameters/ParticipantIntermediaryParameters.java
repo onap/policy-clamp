@@ -20,39 +20,39 @@
 
 package org.onap.policy.clamp.controlloop.participant.intermediary.parameters;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.Setter;
+import org.onap.policy.clamp.controlloop.participant.intermediary.models.ToscaConceptIdentifier;
+import org.onap.policy.clamp.controlloop.participant.intermediary.models.validation.PolicyConstraint;
 import org.onap.policy.common.endpoints.parameters.TopicParameterGroup;
-import org.onap.policy.common.parameters.ParameterGroupImpl;
-import org.onap.policy.common.parameters.annotations.NotBlank;
-import org.onap.policy.common.parameters.annotations.NotNull;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
  * Class to hold all parameters needed for participant component.
  */
-@NotNull
-@NotBlank
 @Getter
-public class ParticipantIntermediaryParameters extends ParameterGroupImpl {
+@Setter
+public class ParticipantIntermediaryParameters {
+
     // The ID and description of this participant
+    @NotNull
+    @Valid
     private ToscaConceptIdentifier participantId;
+
+    @NotBlank
     private String description;
 
     // The participant type of this participant
+    @NotNull
+    @Valid
     private ToscaConceptIdentifier participantType;
 
     // The time interval for periodic reporting of status to the CLAMP control loop server
     private long reportingTimeInterval;
 
-    // DMaaP topics for communicating with the CLAMP control loop server
+    @NotNull
+    @PolicyConstraint
     private TopicParameterGroup clampControlLoopTopics;
-
-    /**
-     * Create the participant parameter group.
-     *
-     * @param instanceId instance id of the event.
-     */
-    public ParticipantIntermediaryParameters(final String instanceId) {
-        super(instanceId);
-    }
 }

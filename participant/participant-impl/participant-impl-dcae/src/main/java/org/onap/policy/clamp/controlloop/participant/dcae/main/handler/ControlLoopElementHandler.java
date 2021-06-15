@@ -30,9 +30,11 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.clamp.controlloop.participant.dcae.httpclient.ClampHttpClient;
 import org.onap.policy.clamp.controlloop.participant.dcae.httpclient.ConsulDcaeHttpClient;
+import org.onap.policy.clamp.controlloop.participant.dcae.main.parameters.ParticipantDcaeParameters;
 import org.onap.policy.clamp.controlloop.participant.dcae.model.Loop;
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ControlLoopElementListener;
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryApi;
+import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
@@ -58,26 +60,22 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
 
     private static final String BLUEPRINT_DEPLOYED = "BLUEPRINT_DEPLOYED";
     private static final String MICROSERVICE_INSTALLED_SUCCESSFULLY = "MICROSERVICE_INSTALLED_SUCCESSFULLY";
-    private static final int CHECK_COUNT = 10;
 
-    private static final String BODY_CONSUL =
-            "{ \"subscription\": { \"subscriptionName\": \"subscriptiona\", \"administrativeState\": \"UNLOCKED\", "
-                    + "\"fileBasedGP\": 15, \"fileLocation\": \"/pm/pm.xml\", \"nfFilter\": "
-                    + "{ \"nfNames\": [ \"^pnf1.*\" ], \"modelInvariantIDs\": "
-                    + "[ \"5845y423-g654-6fju-po78-8n53154532k6\", \"7129e420-d396-4efb-af02-6b83499b12f8\" ], "
-                    + "\"modelVersionIDs\": [ \"e80a6ae3-cafd-4d24-850d-e14c084a5ca9\" ] }, \"measurementGroups\": "
-                    + "[ { \"measurementGroup\": { \"measurementTypes\": [ { \"measurementType\": \"countera\" }, "
-                    + "{ \"measurementType\": \"counterb\" } ], \"managedObjectDNsBasic\": [ { \"DN\": \"dna\" }, "
-                    + "{ \"DN\": \"dnb\" } ] } }, { \"measurementGroup\": { \"measurementTypes\": "
-                    + "[ { \"measurementType\": \"counterc\" }, { \"measurementType\": \"counterd\" } ], "
-                    + "\"managedObjectDNsBasic\": " + "[ { \"DN\": \"dnc\" }, { \"DN\": \"dnd\" } ] } } ] } }";
+    private int checkCount;
+    private int secCount;
+
+    private String bodyConsul;
 
     /**
      * Constructor.
      */
-    public ControlLoopElementHandler(ClampHttpClient clampClient, ConsulDcaeHttpClient consulClient) {
+    public ControlLoopElementHandler(ClampHttpClient clampClient, ConsulDcaeHttpClient consulClient,
+            ParticipantDcaeParameters parameters) {
         this.clampClient = clampClient;
         this.consulClient = consulClient;
+        this.checkCount = parameters.getCheckCount();
+        this.secCount = parameters.getSecCount();
+        bodyConsul = ResourceUtils.getResourceAsString(parameters.getJsonBodyConsulPath());
     }
 
     /**
@@ -123,7 +121,7 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
     }
 
     private void deploy() throws PfModelException {
-        if (!consulClient.deploy(POLICY, BODY_CONSUL)) {
+        if (!consulClient.deploy(POLICY, bodyConsul)) {
             throw new PfModelException(null, "deploy to consul failed");
         }
         if (!clampClient.deploy(LOOP)) {
@@ -147,9 +145,9 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
             if (BLUEPRINT_DEPLOYED.equals(ClampHttpClient.getStatusCode(loop))) {
                 deploy();
                 boolean deployedFlag = false;
-                for (int i = 0; i < CHECK_COUNT; i++) {
+                for (int i = 0; i < checkCount; i++) {
                     // sleep 10 seconds
-                    TimeUnit.SECONDS.sleep(CHECK_COUNT);
+                    TimeUnit.SECONDS.sleep(secCount);
                     loop = getStatus();
                     String status = ClampHttpClient.getStatusCode(loop);
                     if (MICROSERVICE_INSTALLED_SUCCESSFULLY.equals(status)) {
