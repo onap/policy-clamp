@@ -74,7 +74,6 @@ public class ParticipantStatisticsProvider extends AbstractModelsProvider {
         }
     }
 
-
     /**
      * Get filtered participant statistics.
      *
@@ -108,7 +107,6 @@ public class ParticipantStatisticsProvider extends AbstractModelsProvider {
         return asParticipantStatisticsList(getPfDao().getFiltered(JpaParticipantStatistics.class, filterParams));
     }
 
-
     /**
      * Creates Participant statistics.
      *
@@ -137,8 +135,6 @@ public class ParticipantStatisticsProvider extends AbstractModelsProvider {
 
         return participantStatistics;
     }
-
-
 
     /**
      * Convert JPA participant statistics list to participant statistics list.

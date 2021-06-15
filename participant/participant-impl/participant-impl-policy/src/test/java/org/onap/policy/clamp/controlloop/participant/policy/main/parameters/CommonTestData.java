@@ -20,19 +20,11 @@
 
 package org.onap.policy.clamp.controlloop.participant.policy.main.parameters;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-import org.onap.policy.clamp.controlloop.common.exception.ControlLoopRuntimeException;
 import org.onap.policy.common.endpoints.parameters.TopicParameters;
-import org.onap.policy.common.parameters.ParameterGroup;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -47,23 +39,19 @@ public class CommonTestData {
     public static final long TIME_INTERVAL = 2000;
     public static final List<TopicParameters> TOPIC_PARAMS = Arrays.asList(getTopicParams());
 
-    public static final Coder coder = new StandardCoder();
+    public static final Coder CODER = new StandardCoder();
 
     /**
-     * Converts the contents of a map to a parameter class.
+     * Get ParticipantPolicyParameters.
      *
-     * @param <T> the type of ParameterGroup to process
-     * @param source property map
-     * @param clazz class of object to be created from the map
-     * @return a new object represented by the map
-     * @throws ControlLoopRuntimeException on decoding errors
+     * @return ParticipantPolicyParameters
      */
-    public <T extends ParameterGroup> T toObject(final Map<String, Object> source, final Class<T> clazz) {
+    public ParticipantPolicyParameters getParticipantPolicyParameters() {
         try {
-            return coder.convert(source, clazz);
+            return CODER.convert(getParticipantPolicyParametersMap(PARTICIPANT_GROUP_NAME),
+                    ParticipantPolicyParameters.class);
         } catch (final CoderException e) {
-            throw new ControlLoopRuntimeException(Status.NOT_ACCEPTABLE,
-                "cannot create " + clazz.getName() + " from map", e);
+            throw new RuntimeException("cannot create ParticipantPolicyParameters from map", e);
         }
     }
 
@@ -79,27 +67,24 @@ public class CommonTestData {
 
         map.put("name", name);
         map.put("intermediaryParameters", getIntermediaryParametersMap(false));
-        map.put("databaseProviderParameters", getDatabaseProviderParametersMap(false));
+        map.put("policyApiParameters", getPolicyApiParametersMap());
         return map;
     }
 
     /**
-     * Returns a property map for a databaseProviderParameters map for test cases.
+     * Returns a property map for a policyApiParameters map for test cases.
      *
-     * @param isEmpty boolean value to represent that object created should be empty or not
      * @return a property map suitable for constructing an object
      */
-    public Map<String, Object> getDatabaseProviderParametersMap(final boolean isEmpty) {
+    public Map<String, Object> getPolicyApiParametersMap() {
         final Map<String, Object> map = new TreeMap<>();
-        if (!isEmpty) {
-            map.put("name", "PolicyProviderParameterGroup");
-            map.put("implementation", "org.onap.policy.models.provider.impl.DatabasePolicyModelsProviderImpl");
-            map.put("databaseDriver", "org.h2.Driver");
-            map.put("databaseUrl", "jdbc:h2:mem:testdb");
-            map.put("databaseUser", "policy");
-            map.put("databasePassword", "P01icY");
-            map.put("persistenceUnit", "ToscaConceptTest");
-        }
+        map.put("clientName", "api");
+        map.put("hostname", "localhost");
+        map.put("port", 6969);
+        map.put("userName", "healthcheck");
+        map.put("password", "zb!XztG34");
+        map.put("https", false);
+        map.put("allowSelfSignedCerts", true);
 
         return map;
     }
@@ -160,59 +145,6 @@ public class CommonTestData {
     public static ToscaConceptIdentifier getParticipantId() {
         final ToscaConceptIdentifier participantId = new ToscaConceptIdentifier("org.onap.PM_Policy", "0.0.0");
         return participantId;
-    }
-
-    /**
-     * Gets the standard participant parameters.
-     *
-     * @param port port to be inserted into the parameters
-     * @return the standard participant parameters
-     * @throws ControlLoopRuntimeException on parameter read errors
-     */
-    public ParticipantPolicyParameters getParticipantPolicyParameters(int port) {
-        try {
-            return coder.decode(getParticipantPolicyParametersAsString(port), ParticipantPolicyParameters.class);
-
-        } catch (CoderException e) {
-            throw new ControlLoopRuntimeException(Response.Status.NOT_ACCEPTABLE, "cannot read participant parameters",
-                e);
-        }
-    }
-
-    /**
-     * Gets the standard participant parameters, as a String.
-     *
-     * @param port port to be inserted into the parameters
-     * @return the standard participant parameters
-     * @throws ControlLoopRuntimeException on parameter read errors
-     */
-    public static String getParticipantPolicyParametersAsString(int port) {
-
-        try {
-            File file = new File(getParamFile());
-            String json = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
-
-            json = json.replace("${port}", String.valueOf(port));
-            json = json.replace("${dbName}", "jdbc:h2:mem:testdb");
-
-            return json;
-
-        } catch (IOException e) {
-            throw new ControlLoopRuntimeException(Response.Status.NOT_ACCEPTABLE, "cannot read participant parameters",
-                e);
-
-        }
-    }
-
-    /**
-     * Gets the full path to the parameter file, which may vary depending on whether or
-     * not this is an end-to-end test.
-     *
-     * @return the parameter file name
-     */
-    private static String getParamFile() {
-        String paramFile = "src/test/resources/parameters/TestParametersStd.json";
-        return paramFile;
     }
 
     /**

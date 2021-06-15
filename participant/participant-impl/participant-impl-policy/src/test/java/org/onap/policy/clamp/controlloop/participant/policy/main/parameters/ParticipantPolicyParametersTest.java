@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.controlloop.participant.simulator.main.parameters;
+package org.onap.policy.clamp.controlloop.participant.policy.main.parameters;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -26,44 +26,41 @@ import javax.validation.Validation;
 import javax.validation.ValidatorFactory;
 import org.junit.jupiter.api.Test;
 
-/**
- * Class to perform unit test of {@link ParticipantParameterGroup}.
- */
-class TestParticipantSimulatorParameters {
+class ParticipantPolicyParametersTest {
     private CommonTestData commonTestData = new CommonTestData();
     private ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
 
     @Test
-    void testParticipantParameterGroup() {
-        final ParticipantSimulatorParameters participantParameters = commonTestData.getParticipantSimulatorParameters();
+    void testParticipantPolicyParameters() {
+        final ParticipantPolicyParameters participantParameters = commonTestData.getParticipantPolicyParameters();
         assertThat(validatorFactory.getValidator().validate(participantParameters)).isEmpty();
     }
 
     @Test
-    void testParticipantParameterGroup_EmptyParticipantIntermediaryParameters() {
-        final ParticipantSimulatorParameters participantParameters = commonTestData.getParticipantSimulatorParameters();
-        participantParameters.setIntermediaryParameters(null);
-        assertThat(validatorFactory.getValidator().validate(participantParameters)).isNotEmpty();
-    }
-
-    @Test
-    void testParticipantParameterGroup_EmptyDatabaseProviderParameters() {
-        final ParticipantSimulatorParameters participantParameters = commonTestData.getParticipantSimulatorParameters();
-        participantParameters.setDatabaseProviderParameters(null);
-        assertThat(validatorFactory.getValidator().validate(participantParameters)).isNotEmpty();
-    }
-
-    @Test
     void testParticipantPolicyParameters_NullTopicSinks() {
-        final ParticipantSimulatorParameters participantParameters = commonTestData.getParticipantSimulatorParameters();
+        final ParticipantPolicyParameters participantParameters = commonTestData.getParticipantPolicyParameters();
         participantParameters.getIntermediaryParameters().getClampControlLoopTopics().setTopicSinks(null);
         assertThat(validatorFactory.getValidator().validate(participantParameters)).isNotEmpty();
     }
 
     @Test
     void testParticipantPolicyParameters_NullTopicSources() {
-        final ParticipantSimulatorParameters participantParameters = commonTestData.getParticipantSimulatorParameters();
+        final ParticipantPolicyParameters participantParameters = commonTestData.getParticipantPolicyParameters();
         participantParameters.getIntermediaryParameters().getClampControlLoopTopics().setTopicSources(null);
+        assertThat(validatorFactory.getValidator().validate(participantParameters)).isNotEmpty();
+    }
+
+    @Test
+    void testParticipantPolicyParameters_NullPolicyApiParameters() {
+        final ParticipantPolicyParameters participantParameters = commonTestData.getParticipantPolicyParameters();
+        participantParameters.setPolicyApiParameters(null);
+        assertThat(validatorFactory.getValidator().validate(participantParameters)).isNotEmpty();
+    }
+
+    @Test
+    void testParticipantPolicyParameters_NullHostname() {
+        final ParticipantPolicyParameters participantParameters = commonTestData.getParticipantPolicyParameters();
+        participantParameters.getPolicyApiParameters().setHostname(null);
         assertThat(validatorFactory.getValidator().validate(participantParameters)).isNotEmpty();
     }
 }

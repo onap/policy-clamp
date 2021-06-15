@@ -22,19 +22,21 @@ package org.onap.policy.clamp.controlloop.participant.kubernetes;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
 /**
  * Starter.
  *
  */
 @SpringBootApplication
+@ConfigurationPropertiesScan("org.onap.policy.clamp.controlloop.participant.kubernetes.parameters")
 public class Application {
     /**
      * Main class.
+     *
      * @param args args
      */
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
 }
-

@@ -18,24 +18,38 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.controlloop.participant.kubernetes.configurations;
+package org.onap.policy.clamp.controlloop.participant.dcae.main.parameters;
 
-import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
-import org.onap.policy.clamp.controlloop.participant.kubernetes.parameters.ParticipantK8sParameterHandler;
-import org.onap.policy.clamp.controlloop.participant.kubernetes.parameters.ParticipantK8sParameters;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import javax.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.validation.annotation.Validated;
 
-@Configuration
-public class ParametersConfig {
+/**
+ * Class to hold all end points needed for clamp client.
+ *
+ */
+@Validated
+@Getter
+@Setter
+public class ClampEndPoints {
 
-    @Value("${participant.file}")
-    private String file;
+    @NotBlank
+    private String status;
 
-    @Bean
-    public ParticipantK8sParameters participantK8sParameters() throws ControlLoopException {
-        return new ParticipantK8sParameterHandler().toParticipantK8sParameters(file);
-    }
+    @NotBlank
+    private String create;
+
+    @NotBlank
+    private String deploy;
+
+    @NotBlank
+    private String stop;
+
+    @NotBlank
+    private String delete;
+
+    @NotBlank
+    private String undeploy;
+
 }
-

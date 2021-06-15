@@ -48,9 +48,7 @@ class ConsulDcaeHttpClientTest {
     public static void startServer() {
         CommonTestData commonTestData = new CommonTestData();
 
-        parameters = commonTestData.toObject(
-                commonTestData.getParticipantParameterGroupMap(CommonTestData.PARTICIPANT_GROUP_NAME),
-                ParticipantDcaeParameters.class);
+        parameters = commonTestData.getParticipantDcaeParameters();
 
         mockServer = ClientAndServer.startClientAndServer(parameters.getConsulClientParameters().getPort());
 

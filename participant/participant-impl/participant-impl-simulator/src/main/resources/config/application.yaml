@@ -12,4 +12,34 @@ server:
     path: /error
 
 participant:
-  file: src/main/resources/config/CDSParticipantConfig.json
+  intermediaryParameters:
+    reportingTimeInterval: 120000
+    description: Participant Description
+    participantId:
+      name: org.onap.PM_CDS_Blueprint
+      version: 1.0.0
+    participantType:
+      name: org.onap.PM_CDS_Blueprint
+      version: 1.0.0
+    clampControlLoopTopics:
+      topicSources[0]:
+        topic: POLICY-CLRUNTIME-PARTICIPANT
+        servers[0]: ${topicServer:message-router}
+        topicCommInfrastructure: dmaap
+        fetchTimeout: 15000
+      topicSinks[0]:
+        topic: POLICY-CLRUNTIME-PARTICIPANT
+        servers[0]: ${topicServer:message-router}
+        topicCommInfrastructure: dmaap
+      topicSinks[1]:
+        topic: POLICY-NOTIFICATION
+        servers[0]: ${topicServer:message-router}
+        topicCommInfrastructure: dmaap
+  databaseProviderParameters:
+    name: PolicyProviderParameterGroup
+    implementation: org.onap.policy.models.provider.impl.DatabasePolicyModelsProviderImpl
+    databaseDriver: org.mariadb.jdbc.Driver
+    databaseUrl: jdbc:mariadb://mariadb:3306/cdsparticipantsim
+    databaseUser: policy
+    databasePassword: P01icY
+    persistenceUnit: ToscaConceptTest
