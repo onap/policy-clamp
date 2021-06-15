@@ -20,32 +20,35 @@
 
 package org.onap.policy.clamp.controlloop.participant.simulator.main.parameters;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.Setter;
+import org.onap.policy.clamp.controlloop.participant.intermediary.models.validation.PolicyConstraint;
 import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantIntermediaryParameters;
-import org.onap.policy.common.endpoints.parameters.RestServerParameters;
-import org.onap.policy.common.parameters.ParameterGroupImpl;
-import org.onap.policy.common.parameters.annotations.NotNull;
 import org.onap.policy.models.provider.PolicyModelsProviderParameters;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.validation.annotation.Validated;
 
 /**
  * Class to hold all parameters needed for the participant simulator.
  *
  */
-@NotNull
-@NotBlank
+@Validated
 @Getter
-public class ParticipantSimulatorParameters extends ParameterGroupImpl {
-    private RestServerParameters restServerParameters;
-    private ParticipantIntermediaryParameters intermediaryParameters;
-    private PolicyModelsProviderParameters databaseProviderParameters;
+@Setter
+@ConfigurationProperties(prefix = "participant")
+public class ParticipantSimulatorParameters {
 
-    /**
-     * Create the participant simulator parameter group.
-     *
-     * @param name the parameter group name
-     */
-    public ParticipantSimulatorParameters(final String name) {
-        super(name);
-    }
+    @NotBlank
+    private String name;
+
+    @NotNull
+    @Valid
+    private ParticipantIntermediaryParameters intermediaryParameters;
+
+    @NotNull
+    @PolicyConstraint
+    private PolicyModelsProviderParameters databaseProviderParameters;
 }
