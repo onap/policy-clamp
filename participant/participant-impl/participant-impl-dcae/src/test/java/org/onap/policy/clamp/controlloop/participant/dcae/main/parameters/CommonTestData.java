@@ -59,16 +59,19 @@ public class CommonTestData {
     /**
      * Converts the contents of a map to a parameter class.
      *
+     * @param <T> specific type of ParameterGroup class
      * @param source property map
      * @param clazz class of object to be created from the map
      * @return a new object represented by the map
+     * @throws ControlLoopRuntimeException on errors
      */
     public <T extends ParameterGroup> T toObject(final Map<String, Object> source, final Class<T> clazz) {
         try {
             return coder.convert(source, clazz);
 
         } catch (final CoderException e) {
-            throw new RuntimeException("cannot create " + clazz.getName() + " from map", e);
+            throw new ControlLoopRuntimeException(Response.Status.INTERNAL_SERVER_ERROR,
+                    "cannot create " + clazz.getName() + " from map", e);
         }
     }
 
@@ -95,6 +98,7 @@ public class CommonTestData {
      *
      * @param isEmpty boolean value to represent that object created should be empty or not
      * @return a property map suitable for constructing an object
+     * @throws ControlLoopRuntimeException on errors
      */
     public Map<String, Object> getClampClientParametersMap(final boolean isEmpty) {
         final Map<String, Object> map = new TreeMap<>();
@@ -121,6 +125,7 @@ public class CommonTestData {
      *
      * @param isEmpty boolean value to represent that object created should be empty or not
      * @return a property map suitable for constructing an object
+     * @throws ControlLoopRuntimeException on errors
      */
     public Map<String, Object> getConsulClientParametersMap(final boolean isEmpty) {
         final Map<String, Object> map = new TreeMap<>();
@@ -228,6 +233,7 @@ public class CommonTestData {
      *
      * @param port port to be inserted into the parameters
      * @return the standard participant parameters
+     * @throws ControlLoopRuntimeException on errors
      */
     public ParticipantDcaeParameters getParticipantParameterGroup(int port) {
         try {
@@ -244,6 +250,7 @@ public class CommonTestData {
      *
      * @param port port to be inserted into the parameters
      * @return the standard participant parameters
+     * @throws ControlLoopRuntimeException on errors
      */
     public static String getParticipantParameterGroupAsString(int port) {
 
@@ -289,6 +296,7 @@ public class CommonTestData {
      *
      * @param status the status of Partecipant
      * @return the JSON
+     * @throws ControlLoopRuntimeException on errors
      */
     public static String createJsonStatus(String status) {
         try {

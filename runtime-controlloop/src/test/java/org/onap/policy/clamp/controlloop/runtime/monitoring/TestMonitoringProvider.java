@@ -47,7 +47,6 @@ import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
-
 public class TestMonitoringProvider {
 
     private static final String CL_PARTICIPANT_STATISTICS_JSON =
@@ -68,8 +67,6 @@ public class TestMonitoringProvider {
     private static ClElementStatisticsList inputClElementStatistics;
     private static ClElementStatisticsList invalidClElementInput;
 
-
-
     @BeforeClass
     public static void beforeSetupStatistics() throws CoderException {
         // Reading input json for statistics data
@@ -80,7 +77,6 @@ public class TestMonitoringProvider {
         inputClElementStatistics = CODER.decode(new File(CL_ELEMENT_STATISTICS_JSON), ClElementStatisticsList.class);
         invalidClElementInput = CODER.decode(new File(INVALID_CL_ELEMENT_JSON_INPUT), ClElementStatisticsList.class);
     }
-
 
     @Test
     public void testCreateParticipantStatistics() throws Exception {
@@ -121,15 +117,14 @@ public class TestMonitoringProvider {
             }).hasMessageMatching("name is marked .*null but is null");
 
             // Fetch specific statistics record with name, version and record count
-            getResponse = provider.fetchFilteredParticipantStatistics("name2", "1.001", 1,
-                null, null);
+            getResponse = provider.fetchFilteredParticipantStatistics("name2", "1.001", 1, null, null);
             assertThat(getResponse.getStatisticsList()).hasSize(1);
             assertEquals(getResponse.getStatisticsList().get(0).toString().replaceAll("\\s+", ""),
                 inputParticipantStatistics.getStatisticsList().get(2).toString().replaceAll("\\s+", ""));
 
             // Fetch statistics using timestamp
-            getResponse = provider.fetchFilteredParticipantStatistics("name1", "1.001", 0,
-                null, Instant.parse("2021-01-10T15:00:00.000Z"));
+            getResponse = provider.fetchFilteredParticipantStatistics("name1", "1.001", 0, null,
+                Instant.parse("2021-01-10T15:00:00.000Z"));
             assertThat(getResponse.getStatisticsList()).hasSize(1);
 
             getResponse = provider.fetchFilteredParticipantStatistics("name1", "1.001", 0,
@@ -171,15 +166,12 @@ public class TestMonitoringProvider {
             ClElementStatisticsList getResponse;
 
             assertThatThrownBy(() -> {
-                provider.fetchFilteredClElementStatistics(null, null, null,  null,
-                    null, 0);
+                provider.fetchFilteredClElementStatistics(null, null, null, null, null, 0);
             }).hasMessageMatching("name is marked .*null but is null");
 
-            ClElementStatisticsList lists = provider.createClElementStatistics(inputClElementStatistics
-                .getClElementStatistics());
+            var lists = provider.createClElementStatistics(inputClElementStatistics.getClElementStatistics());
 
-            getResponse = provider.fetchFilteredClElementStatistics("name1", null, null, null,
-                null, 0);
+            getResponse = provider.fetchFilteredClElementStatistics("name1", null, null, null, null, 0);
 
             assertThat(getResponse.getClElementStatistics()).hasSize(2);
             assertEquals(getResponse.getClElementStatistics().get(0).toString().replaceAll("\\s+", ""),
@@ -204,18 +196,17 @@ public class TestMonitoringProvider {
         try (MonitoringProvider provider = Mockito.spy(new MonitoringProvider(parameters))) {
 
             provider.createParticipantStatistics(inputParticipantStatistics.getStatisticsList());
-            //Mock the response for fetching participant conceptIdentifiers per control loop
+            // Mock the response for fetching participant conceptIdentifiers per control loop
             List<ToscaConceptIdentifier> conceptIdentifiers = new ArrayList<>();
             conceptIdentifiers.add(new ToscaConceptIdentifier("name1", "1.001"));
-            when(provider.getAllParticipantIdsPerControlLoop("testName", "1.001"))
-                .thenReturn(conceptIdentifiers);
+            when(provider.getAllParticipantIdsPerControlLoop("testName", "1.001")).thenReturn(conceptIdentifiers);
             ParticipantStatisticsList getResponse;
             getResponse = provider.fetchParticipantStatsPerControlLoop("testName", "1.001");
             assertThat(getResponse.getStatisticsList()).hasSize(2);
             assertEquals(getResponse.getStatisticsList().get(0).toString().replaceAll("\\s+", ""),
                 inputParticipantStatistics.getStatisticsList().get(0).toString().replaceAll("\\s+", ""));
-            assertThat(provider.fetchParticipantStatsPerControlLoop("invalidCLName", "1.002")
-                .getStatisticsList()).isEmpty();
+            assertThat(provider.fetchParticipantStatsPerControlLoop("invalidCLName", "1.002").getStatisticsList())
+                .isEmpty();
         }
 
     }
@@ -224,20 +215,19 @@ public class TestMonitoringProvider {
     public void testClElementStatsPerCL() throws Exception {
         PolicyModelsProviderParameters parameters =
             CommonTestData.geParameterGroup(0, "getelemstatPerCL").getDatabaseProviderParameters();
-        //Setup a dummy Control loop data
+        // Setup a dummy Control loop data
         ControlLoopElement mockClElement = new ControlLoopElement();
         mockClElement.setId(inputClElementStatistics.getClElementStatistics().get(0).getId());
-        mockClElement.setParticipantId(new ToscaConceptIdentifier(inputClElementStatistics.getClElementStatistics()
-            .get(0).getParticipantId().getName(), inputClElementStatistics.getClElementStatistics().get(0)
-            .getParticipantId().getVersion()));
+        mockClElement.setParticipantId(new ToscaConceptIdentifier(
+            inputClElementStatistics.getClElementStatistics().get(0).getParticipantId().getName(),
+            inputClElementStatistics.getClElementStatistics().get(0).getParticipantId().getVersion()));
         ControlLoop mockCL = new ControlLoop();
         mockCL.setElements(new LinkedHashMap<>());
         mockCL.getElements().put(mockClElement.getId(), mockClElement);
 
-        //Mock controlloop data to be returned for the given CL Id
+        // Mock controlloop data to be returned for the given CL Id
         ControlLoopProvider mockClProvider = Mockito.mock(ControlLoopProvider.class);
-        when(mockClProvider.getControlLoop(new ToscaConceptIdentifier("testCLName", "1.001")))
-            .thenReturn(mockCL);
+        when(mockClProvider.getControlLoop(new ToscaConceptIdentifier("testCLName", "1.001"))).thenReturn(mockCL);
 
         try (MonitoringProvider monitoringProvider = new MonitoringProvider(parameters)) {
             monitoringProvider.createClElementStatistics(inputClElementStatistics.getClElementStatistics());
@@ -252,13 +242,14 @@ public class TestMonitoringProvider {
             assertEquals(getResponse.getClElementStatistics().get(1).toString().replaceAll("\\s+", ""),
                 inputClElementStatistics.getClElementStatistics().get(1).toString().replaceAll("\\s+", ""));
 
-            assertThat(monitoringProvider.fetchClElementStatsPerControlLoop("invalidCLName", "1.002")
-                .getClElementStatistics()).isEmpty();
+            assertThat(
+                monitoringProvider.fetchClElementStatsPerControlLoop("invalidCLName", "1.002").getClElementStatistics())
+                    .isEmpty();
 
-            Map<String, ToscaConceptIdentifier> clElementIds = monitoringProvider
-                .getAllClElementsIdPerControlLoop("testCLName", "1.001");
-            assertThat(clElementIds).containsKey(inputClElementStatistics.getClElementStatistics().get(0).getId()
-                .toString());
+            Map<String, ToscaConceptIdentifier> clElementIds =
+                monitoringProvider.getAllClElementsIdPerControlLoop("testCLName", "1.001");
+            assertThat(clElementIds)
+                .containsKey(inputClElementStatistics.getClElementStatistics().get(0).getId().toString());
         }
     }
 }

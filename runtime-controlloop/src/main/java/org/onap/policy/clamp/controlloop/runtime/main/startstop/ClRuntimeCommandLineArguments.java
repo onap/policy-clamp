@@ -20,21 +20,14 @@
 
 package org.onap.policy.clamp.controlloop.runtime.main.startstop;
 
-import java.io.File;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.net.URL;
 import java.util.Arrays;
 import javax.ws.rs.core.Response;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.commons.lang3.StringUtils;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopRuntimeException;
 import org.onap.policy.clamp.controlloop.common.startstop.CommonCommandLineArguments;
@@ -44,14 +37,11 @@ import org.onap.policy.common.utils.resources.ResourceUtils;
  * This class reads and handles command line parameters for the control loop runtime service.
  */
 public class ClRuntimeCommandLineArguments {
-    private static final String FILE_MESSAGE_PREAMBLE = " file \"";
-    private static final int HELP_LINE_LENGTH = 120;
-
     private final Options options;
     private final CommonCommandLineArguments commonCommandLineArguments;
 
-    @Getter()
-    @Setter()
+    @Getter
+    @Setter
     private String configurationFilePath = null;
 
     /**
@@ -66,6 +56,7 @@ public class ClRuntimeCommandLineArguments {
      * Construct the options for the CLI editor and parse in the given arguments.
      *
      * @param args The command line arguments
+     * @throws ControlLoopRuntimeException if the arguments are invalid
      */
     public ClRuntimeCommandLineArguments(final String[] args) {
         // Set up the options with the default constructor
@@ -76,7 +67,7 @@ public class ClRuntimeCommandLineArguments {
             parse(args);
         } catch (final ControlLoopException e) {
             throw new ControlLoopRuntimeException(Response.Status.NOT_ACCEPTABLE,
-                    "parse error on control loop runtime parameters", e);
+                "parse error on control loop runtime parameters", e);
         }
     }
 
@@ -95,7 +86,7 @@ public class ClRuntimeCommandLineArguments {
             commandLine = new DefaultParser().parse(options, args);
         } catch (final ParseException e) {
             throw new ControlLoopException(Response.Status.NOT_ACCEPTABLE,
-                    "invalid command line arguments specified : " + e.getMessage());
+                "invalid command line arguments specified : " + e.getMessage());
         }
 
         // Arguments left over after Commons CLI does its stuff
@@ -103,7 +94,7 @@ public class ClRuntimeCommandLineArguments {
 
         if (remainingArgs.length > 0) {
             throw new ControlLoopException(Response.Status.NOT_ACCEPTABLE,
-                    "too many command line arguments specified : " + Arrays.toString(args));
+                "too many command line arguments specified : " + Arrays.toString(args));
         }
 
         if (commandLine.hasOption('h')) {
@@ -137,15 +128,5 @@ public class ClRuntimeCommandLineArguments {
      */
     public String getFullConfigurationFilePath() {
         return ResourceUtils.getFilePath4Resource(getConfigurationFilePath());
-    }
-
-    /**
-     * Sets the configuration file path.
-     *
-     * @param configurationFilePath the configuration file path
-     */
-    public void setConfigurationFilePath(final String configurationFilePath) {
-        this.configurationFilePath = configurationFilePath;
-
     }
 }

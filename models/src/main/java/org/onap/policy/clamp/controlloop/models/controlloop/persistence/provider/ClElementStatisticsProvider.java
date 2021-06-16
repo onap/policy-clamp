@@ -121,10 +121,12 @@ public class ClElementStatisticsProvider extends AbstractModelsProvider {
      * Get filtered clElement statistics.
      *
      * @param name the clElement name for the statistics to get
+     * @param version the clElement version for the statistics to get
      * @param startTimeStamp startTimeStamp to filter statistics
      * @param endTimeStamp endTimeStamp to filter statistics
      * @param sortOrder sortOrder to query database
      * @param getRecordNum Total query count from database
+     * @param filterMap the filters to apply to the get operation
      * @return the clElement statistics found
      * @throws PfModelException on errors getting policies
      */

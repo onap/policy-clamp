@@ -70,6 +70,8 @@ public class AuthorizationControllerItCase {
     public static void setupBefore() {
 
         sc.setAuthentication(new Authentication() {
+            private static final long serialVersionUID = -6282526745791629050L;
+
             @Override
             public Collection<? extends GrantedAuthority> getAuthorities() {
                 return Arrays.asList(new SimpleGrantedAuthority(
@@ -121,7 +123,7 @@ public class AuthorizationControllerItCase {
 
     @Test
     public void testIsUserPermitted() {
-        assertEquals(AuthorizationController.getPrincipalName(sc), "admin");
+        assertEquals("admin", AuthorizationController.getPrincipalName(sc));
         assertTrue(auth.isUserPermitted(new SecureServicePermission("permission-type-cl", "dev", "read")));
         assertTrue(auth.isUserPermitted(new SecureServicePermission("permission-type-cl-manage", "dev", "DEPLOY")));
         assertTrue(auth.isUserPermitted(

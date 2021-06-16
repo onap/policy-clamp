@@ -117,22 +117,22 @@ public class CamelConfiguration extends RouteBuilder {
     private void configureCamelHttpComponent()
             throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException, CertificateException,
             IOException {
-        RequestConfig requestConfig = RequestConfig.custom()
+        var requestConfig = RequestConfig.custom()
                 .setConnectTimeout(connectTimeout)
                 .setConnectionRequestTimeout(connectRequestTimeout)
                 .setSocketTimeout(socketTimeout).build();
 
         if (trustStore != null) {
-            KeyStore truststore = KeyStore.getInstance(trustStoreType);
+            var truststore = KeyStore.getInstance(trustStoreType);
             truststore.load(
                     ResourceFileUtils.getResourceAsStream(trustStore),
                     Objects.requireNonNull(PassDecoder.decode(trustStorePass, keyFile)).toCharArray());
-            TrustManagerFactory trustFactory = TrustManagerFactory.getInstance(trustStoreAlgorithm);
+            var trustFactory = TrustManagerFactory.getInstance(trustStoreAlgorithm);
             trustFactory.init(truststore);
-            SSLContext sslcontext = SSLContext.getInstance("TLS");
+            var sslcontext = SSLContext.getInstance("TLS");
             sslcontext.init(null, trustFactory.getTrustManagers(), null);
             camelContext.getComponent(HTTPS, HttpComponent.class).setHttpClientConfigurer(builder -> {
-                SSLSocketFactory factory = new SSLSocketFactory(sslcontext,
+                var factory = new SSLSocketFactory(sslcontext,
                         SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
                 builder.setSSLSocketFactory(factory);
                 builder.setConnectionManager(new BasicHttpClientConnectionManager(

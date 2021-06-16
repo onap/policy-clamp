@@ -54,6 +54,8 @@ public class ParticipantStatisticsProvider extends AbstractModelsProvider {
      * Get Participant statistics.
      *
      * @param name the name of the participant statistics to get, null to get all stats
+     * @param version the version of the participant statistics to get, null to get all stats for a name
+     * @param timestamp the time stamp for the stats to get
      * @return the participant statistics found
      * @throws PfModelException on errors getting participant statistics
      */
@@ -77,10 +79,12 @@ public class ParticipantStatisticsProvider extends AbstractModelsProvider {
      * Get filtered participant statistics.
      *
      * @param name the participant name for the statistics to get
+     * @param version the participant version for the statistics to get
      * @param startTimeStamp startTimeStamp to filter statistics
      * @param endTimeStamp endTimeStamp to filter statistics
      * @param sortOrder sortOrder to query database
      * @param getRecordNum Total query count from database
+     * @param filterMap the filters to apply to the get operation
      * @return the participant statistics found
      * @throws PfModelException on errors getting policies
      */

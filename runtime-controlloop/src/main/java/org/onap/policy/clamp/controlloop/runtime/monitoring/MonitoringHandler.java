@@ -21,15 +21,12 @@
 package org.onap.policy.clamp.controlloop.runtime.monitoring;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Set;
 import javax.ws.rs.core.Response;
 import lombok.Getter;
 import org.onap.policy.clamp.controlloop.common.handler.ControlLoopHandler;
 import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
 import org.onap.policy.clamp.controlloop.runtime.monitoring.rest.MonitoringQueryController;
-import org.onap.policy.common.endpoints.event.comm.TopicSink;
-import org.onap.policy.common.endpoints.listeners.MessageTypeDispatcher;
 import org.onap.policy.common.utils.services.Registry;
 import org.onap.policy.models.base.PfModelRuntimeException;
 

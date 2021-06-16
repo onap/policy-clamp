@@ -104,8 +104,7 @@ public class LoopControllerTestItCase {
                 + "\"success\":\"\",\"failure\":\"\",\"failure_timeout\":\"\",\"failure_retries\":\"\","
                 + "\"failure_exception\":\"\",\"failure_guard\":\"\",\"target\":{\"type\":\"VNF\","
                 + "\"resourceID\":\"vFW_PG_T1\"}}]}}}]";
-        JsonParser parser = new JsonParser();
-        JsonElement ele = parser.parse(policy);
+        JsonElement ele = JsonParser.parseString(policy);
         JsonArray arr = ele.getAsJsonArray();
         Loop loop = loopController.updateOperationalPolicies(EXAMPLE_LOOP_NAME, arr);
         assertThat(loop.getOperationalPolicies()).hasSize(1);
@@ -126,8 +125,7 @@ public class LoopControllerTestItCase {
                 + "\"cbs_host\":\"config-binding-service\",\"cbs_port\":\"10000\",\"external_port\":\"32012\","
                 + "\"policy_model_id\":\"onap.policies.monitoring.cdap.tca.hi.lo.app\","
                 + "\"policy_id\":\"tca_k8s_CLTCA_v1_0_vFW_PG_T10_k8s-tca-clamp-policy-05162019\"}}";
-        JsonParser parser = new JsonParser();
-        JsonElement ele = parser.parse(policy);
+        JsonElement ele = JsonParser.parseString(policy);
         JsonObject obj = ele.getAsJsonObject();
         loopController.updateGlobalPropertiesJson(EXAMPLE_LOOP_NAME, obj);
         Loop loop = loopController.getLoop(EXAMPLE_LOOP_NAME);
@@ -170,6 +168,6 @@ public class LoopControllerTestItCase {
 
         loopController.removeOperationalPolicy(EXAMPLE_LOOP_NAME, "testPolicyModel", "1.0.0");
         Loop newLoop2 = loopController.getLoop(EXAMPLE_LOOP_NAME);
-        assertThat(newLoop2.getOperationalPolicies().size()).isEqualTo(0);
+        assertThat(newLoop2.getOperationalPolicies().size()).isZero();
     }
 }

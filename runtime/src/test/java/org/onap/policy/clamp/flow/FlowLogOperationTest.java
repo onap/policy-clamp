@@ -24,7 +24,6 @@
 
 package org.onap.policy.clamp.flow;
 
-import static junit.framework.Assert.assertEquals;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
@@ -74,8 +73,8 @@ public class FlowLogOperationTest {
         // then
         String entity = mdcAdapter.get(OnapLogConstants.Mdcs.TARGET_ENTITY);
         String serviceName = mdcAdapter.get(OnapLogConstants.Mdcs.TARGET_SERVICE_NAME);
-        assertEquals(entity, mockEntity);
-        assertEquals(serviceName, mockServiceName);
+        assertThat(entity).isEqualTo(mockEntity);
+        assertThat(serviceName).isEqualTo(mockServiceName);
     }
 
     @Test

@@ -51,11 +51,8 @@ public class ParticipantStatisticsProviderTest {
     private ParticipantStatisticsList inputParticipantStatistics;
     private String originalJson = ResourceUtils.getResourceAsString(PARTICIPANT_STATS_JSON);
 
-    /**
-     * Set up test Participant statistics provider.
-     */
     @Before
-    public void setupDao() throws Exception {
+    public void beforeSetupDao() throws Exception {
 
         parameters = new PolicyModelsProviderParameters();
         parameters.setDatabaseDriver("org.h2.Driver");

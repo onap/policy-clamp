@@ -24,6 +24,8 @@
 package org.onap.policy.clamp.clds.tosca.update;
 
 public class UnknownComponentException extends Exception {
+    private static final long serialVersionUID = 1187337836071750628L;
+
     public UnknownComponentException(String nameEntry) {
         this.getWrongName(nameEntry);
     }

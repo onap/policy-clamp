@@ -128,9 +128,8 @@ public class CommonRestController {
     /**
      * Starts the "Main".
      *
-     * @throws InterruptedException
-     *
-     * @throws Exception if an error occurs
+     * @throws InterruptedException if the NetworkUtil method calls are interrupted
+     * @throws IllegalStateException if a controller cannot be started on the requested port
      */
     protected static void startMain() throws InterruptedException {
         Registry.newRegistry();
@@ -152,11 +151,11 @@ public class CommonRestController {
     /**
      * Stops the "Main".
      *
-     * @throws ControlLoopException
-     *
-     * @throws Exception if an error occurs
+     * @throws ControlLoopException if an error occurs shutting down the controller
+     * @throws InterruptedException if the NetworkUtil method calls are interrupted
+     * @throws IllegalStateException if a controller cannot be started on the requested port
      */
-    private static void stopMain() throws Exception {
+    private static void stopMain() throws ControlLoopException, InterruptedException {
         if (main != null) {
             Main main2 = main;
             main = null;

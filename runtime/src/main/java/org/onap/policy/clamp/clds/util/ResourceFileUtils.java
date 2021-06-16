@@ -81,8 +81,8 @@ public final class ResourceFileUtils {
     }
 
     private static String streamToString(InputStream inputStream) {
-        try (Scanner scanner = new Scanner(inputStream)) {
-            Scanner delimitedScanner = scanner.useDelimiter("\\A");
+        try (var scanner = new Scanner(inputStream)) {
+            var delimitedScanner = scanner.useDelimiter("\\A");
             return delimitedScanner.hasNext() ? delimitedScanner.next() : "";
         }
     }

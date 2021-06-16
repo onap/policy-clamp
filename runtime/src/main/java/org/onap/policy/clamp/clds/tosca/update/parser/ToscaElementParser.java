@@ -30,6 +30,11 @@ import org.onap.policy.clamp.clds.tosca.update.elements.ToscaElementProperty;
 import org.yaml.snakeyaml.Yaml;
 
 public class ToscaElementParser {
+    private static final String DERIVED_FROM = "derived_from";
+    private static final String DESCRIPTION = "description";
+    private static final String PROPERTIES = "properties";
+    private static final String TYPE_VERSION = "type_version";
+
     /**
      * Constructor.
      */
@@ -37,17 +42,19 @@ public class ToscaElementParser {
     }
 
     private static LinkedHashMap<String, Object> searchAllDataTypesAndPolicyTypes(String toscaYaml) {
+        @SuppressWarnings("unchecked")
         LinkedHashMap<String, LinkedHashMap<String, Object>> file =
                 (LinkedHashMap<String, LinkedHashMap<String, Object>>) new Yaml().load(toscaYaml);
         LinkedHashMap<String, Object> allDataTypesFound = file.get("data_types");
         LinkedHashMap<String, Object> allPolicyTypesFound = file.get("policy_types");
-        LinkedHashMap<String, Object> allItemsFound = new LinkedHashMap<>();
+        LinkedHashMap<String, Object> allItemsFound;
         // Put the policies and datatypes in the same collection
         allItemsFound = (allDataTypesFound == null) ? (new LinkedHashMap<>()) : allDataTypesFound;
         allItemsFound.putAll(allPolicyTypesFound == null ? new LinkedHashMap<>() : allPolicyTypesFound);
         return allItemsFound;
     }
 
+    @SuppressWarnings("unchecked")
     private static LinkedHashMap<String, Object> searchAllNativeToscaDataTypes(String toscaNativeYaml) {
         return ((LinkedHashMap<String, LinkedHashMap<String, Object>>) new Yaml().load(toscaNativeYaml))
                 .get("data_types");
@@ -57,12 +64,11 @@ public class ToscaElementParser {
      * Yaml Parse gets raw policies and datatypes, in different sections : necessary to extract
      * all entities and put them at the same level.
      *
-     * @param toscaYaml       the tosca model content
+     * @param toscaYaml the tosca model content
      * @param nativeToscaYaml the tosca native datatype content
      * @return a map of Tosca Element containing all tosca elements found (policy types and datatypes)
      */
-    public static LinkedHashMap<String, ToscaElement> searchAllToscaElements(String toscaYaml,
-                                                                             String nativeToscaYaml) {
+    public static LinkedHashMap<String, ToscaElement> searchAllToscaElements(String toscaYaml, String nativeToscaYaml) {
         LinkedHashMap<String, Object> allItemsFound = searchAllDataTypesAndPolicyTypes(toscaYaml);
         allItemsFound.putAll(searchAllNativeToscaDataTypes(nativeToscaYaml));
         return parseAllItemsFound(allItemsFound);
@@ -73,25 +79,25 @@ public class ToscaElementParser {
      *
      * @param allMaps maps
      */
+    @SuppressWarnings("unchecked")
     private static LinkedHashMap<String, ToscaElement> parseAllItemsFound(LinkedHashMap<String, Object> allMaps) {
-        LinkedHashMap<String, ToscaElement> allItemsFound = new LinkedHashMap<String, ToscaElement>();
-        //Component creations, from the file maps
+        LinkedHashMap<String, ToscaElement> allItemsFound = new LinkedHashMap<>();
+        // Component creations, from the file maps
         for (Entry<String, Object> itemToParse : allMaps.entrySet()) {
             LinkedHashMap<String, Object> componentBody = (LinkedHashMap<String, Object>) itemToParse.getValue();
-            ToscaElement toscaElement =
-                    new ToscaElement(itemToParse.getKey(), (String) componentBody.get("derived_from"),
-                            (String) componentBody.get("description"));
-            //If policy, version and type_version :
-            if (componentBody.get("type_version") != null) {
-                toscaElement.setVersion((String) componentBody.get("type_version"));
-                toscaElement.setTypeVersion((String) componentBody.get("type_version"));
+            var toscaElement = new ToscaElement(itemToParse.getKey(), (String) componentBody.get(DERIVED_FROM),
+                    (String) componentBody.get(DESCRIPTION));
+            // If policy, version and type_version :
+            if (componentBody.get(TYPE_VERSION) != null) {
+                toscaElement.setVersion((String) componentBody.get(TYPE_VERSION));
+                toscaElement.setTypeVersion((String) componentBody.get(TYPE_VERSION));
             }
-            //Properties creation, from the map
-            if (componentBody.get("properties") != null) {
-                LinkedHashMap<String, Object> properties =
-                        (LinkedHashMap<String, Object>) componentBody.get("properties");
-                for (Entry<String, Object> itemToProperty : properties.entrySet()) {
-                    ToscaElementProperty toscaElementProperty = new ToscaElementProperty(itemToProperty.getKey(),
+            // Properties creation, from the map
+            if (componentBody.get(PROPERTIES) != null) {
+                LinkedHashMap<String, Object> foundProperties =
+                        (LinkedHashMap<String, Object>) componentBody.get(PROPERTIES);
+                for (Entry<String, Object> itemToProperty : foundProperties.entrySet()) {
+                    var toscaElementProperty = new ToscaElementProperty(itemToProperty.getKey(),
                             (LinkedHashMap<String, Object>) itemToProperty.getValue());
                     toscaElement.addProperties(toscaElementProperty);
                 }

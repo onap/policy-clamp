@@ -43,6 +43,10 @@ import org.onap.policy.clamp.loop.Loop;
 import org.onap.policy.clamp.policy.microservice.MicroServicePolicy;
 
 public class DcaeComponent extends ExternalComponent {
+    private static final String INSTALL = "install";
+    private static final String PROCESSING = "processing";
+    private static final String SUCCEEDED = "succeeded";
+    private static final String UNINSTALL = "uninstall";
 
     @Transient
     private static final EELFLogger logger = EELFManager.getInstance().getLogger(DcaeComponent.class);
@@ -136,12 +140,12 @@ public class DcaeComponent extends ExternalComponent {
      */
     public static String getDeployPayload(Loop loop) {
         JsonObject globalProp = loop.getGlobalPropertiesJson();
-        JsonObject deploymentProp = globalProp.getAsJsonObject(DEPLOYMENT_PARAMETER).getAsJsonObject(
+        var deploymentProp = globalProp.getAsJsonObject(DEPLOYMENT_PARAMETER).getAsJsonObject(
                 UNIQUE_BLUEPRINT_PARAMETERS);
 
         String serviceTypeId = loop.getLoopTemplate().getDcaeBlueprintId();
 
-        JsonObject rootObject = new JsonObject();
+        var rootObject = new JsonObject();
         rootObject.addProperty(DCAE_SERVICETYPE_ID, serviceTypeId);
         if (deploymentProp != null) {
             rootObject.add(DCAE_INPUTS, deploymentProp);
@@ -159,12 +163,12 @@ public class DcaeComponent extends ExternalComponent {
      */
     public static String getDeployPayload(Loop loop, MicroServicePolicy microServicePolicy) {
         JsonObject globalProp = loop.getGlobalPropertiesJson();
-        JsonObject deploymentProp =
+        var deploymentProp =
                 globalProp.getAsJsonObject(DEPLOYMENT_PARAMETER).getAsJsonObject(microServicePolicy.getName());
 
         String serviceTypeId = microServicePolicy.getDcaeBlueprintId();
 
-        JsonObject rootObject = new JsonObject();
+        var rootObject = new JsonObject();
         rootObject.addProperty(DCAE_SERVICETYPE_ID, serviceTypeId);
         if (deploymentProp != null) {
             rootObject.add(DCAE_INPUTS, deploymentProp);
@@ -180,7 +184,7 @@ public class DcaeComponent extends ExternalComponent {
      * @return The payload in string (json)
      */
     public static String getUndeployPayload(Loop loop) {
-        JsonObject rootObject = new JsonObject();
+        var rootObject = new JsonObject();
         rootObject.addProperty(DCAE_SERVICETYPE_ID, loop.getLoopTemplate().getDcaeBlueprintId());
         logger.info("DCAE Undeploy payload for unique blueprint: " + rootObject.toString());
         return rootObject.toString();
@@ -193,7 +197,7 @@ public class DcaeComponent extends ExternalComponent {
      * @return The payload in string (json)
      */
     public static String getUndeployPayload(MicroServicePolicy policy) {
-        JsonObject rootObject = new JsonObject();
+        var rootObject = new JsonObject();
         rootObject.addProperty(DCAE_SERVICETYPE_ID, policy.getDcaeBlueprintId());
         logger.info("DCAE Undeploy payload for multiple blueprints: " + rootObject.toString());
         return rootObject.toString();
@@ -208,26 +212,26 @@ public class DcaeComponent extends ExternalComponent {
         if (dcaeResponse == null) {
             setState(BLUEPRINT_DEPLOYED);
         } else {
-            if (dcaeResponse.getOperationType().equals("install") && dcaeResponse.getStatus().equals("succeeded")) {
+            if (dcaeResponse.getOperationType().equals(INSTALL) && dcaeResponse.getStatus().equals(SUCCEEDED)) {
                 setState(MICROSERVICE_INSTALLED_SUCCESSFULLY);
             } else {
-                if (dcaeResponse.getOperationType().equals("install") && dcaeResponse.getStatus()
-                        .equals("processing")) {
+                if (dcaeResponse.getOperationType().equals(INSTALL) && dcaeResponse.getStatus()
+                        .equals(PROCESSING)) {
                     setState(PROCESSING_MICROSERVICE_INSTALLATION);
                 } else {
-                    if (dcaeResponse.getOperationType().equals("install") && dcaeResponse.getStatus()
+                    if (dcaeResponse.getOperationType().equals(INSTALL) && dcaeResponse.getStatus()
                             .equals("failed")) {
                         setState(MICROSERVICE_INSTALLATION_FAILED);
                     } else {
-                        if (dcaeResponse.getOperationType().equals("uninstall")
-                                && dcaeResponse.getStatus().equals("succeeded")) {
+                        if (dcaeResponse.getOperationType().equals(UNINSTALL)
+                                && dcaeResponse.getStatus().equals(SUCCEEDED)) {
                             setState(MICROSERVICE_UNINSTALLED_SUCCESSFULLY);
                         } else {
-                            if (dcaeResponse.getOperationType().equals("uninstall")
-                                    && dcaeResponse.getStatus().equals("processing")) {
+                            if (dcaeResponse.getOperationType().equals(UNINSTALL)
+                                    && dcaeResponse.getStatus().equals(PROCESSING)) {
                                 setState(PROCESSING_MICROSERVICE_UNINSTALLATION);
                             } else {
-                                if (dcaeResponse.getOperationType().equals("uninstall") && dcaeResponse.getStatus()
+                                if (dcaeResponse.getOperationType().equals(UNINSTALL) && dcaeResponse.getStatus()
                                         .equals("failed")) {
                                     setState(MICROSERVICE_UNINSTALLATION_FAILED);
                                 } else {
@@ -251,10 +255,10 @@ public class DcaeComponent extends ExternalComponent {
      */
     public static List<DcaeInventoryResponse> convertToDcaeInventoryResponse(String responseBody)
             throws ParseException {
-        JSONParser parser = new JSONParser();
+        var parser = new JSONParser();
         JSONObject jsonObj = (JSONObject) parser.parse(responseBody);
         JSONArray itemsArray = (JSONArray) jsonObj.get("items");
-        Iterator it = itemsArray.iterator();
+        Iterator<?> it = itemsArray.iterator();
         List<DcaeInventoryResponse> inventoryResponseList = new LinkedList<>();
         while (it.hasNext()) {
             JSONObject item = (JSONObject) it.next();

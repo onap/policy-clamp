@@ -21,7 +21,6 @@
 package org.onap.policy.clamp.policy.pdpgroup;
 
 import org.junit.Test;
-import org.onap.policy.clamp.policy.pdpgroup.PdpGroupPayloadException;
 import org.onap.policy.common.utils.test.ExceptionsTester;
 
 public class PdpGroupPayloadExceptionTest extends ExceptionsTester {

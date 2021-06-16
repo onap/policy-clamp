@@ -76,39 +76,38 @@ public class SimulationParticipantController extends AbstractRestController {
             },
             authorizations = @Authorization(value = AUTHORIZATION_TYPE),
             responseHeaders = {
-                    @ResponseHeader(
-                            name = VERSION_MINOR_NAME, description = VERSION_MINOR_DESCRIPTION,
-                            response = String.class),
-                    @ResponseHeader(name = VERSION_PATCH_NAME, description = VERSION_PATCH_DESCRIPTION,
-                            response = String.class),
-                    @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
-                            response = String.class),
-                    @ResponseHeader(name = REQUEST_ID_NAME, description = REQUEST_ID_HDR_DESCRIPTION,
+                @ResponseHeader(
+                    name = VERSION_MINOR_NAME, description = VERSION_MINOR_DESCRIPTION,
+                    response = String.class),
+                @ResponseHeader(name = VERSION_PATCH_NAME, description = VERSION_PATCH_DESCRIPTION,
+                    response = String.class),
+                @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
+                    response = String.class),
+                @ResponseHeader(name = REQUEST_ID_NAME, description = REQUEST_ID_HDR_DESCRIPTION,
                             response = UUID.class)},
             extensions = {
-                    @Extension(
-                            name = EXTENSION_NAME,
-                            properties = {
-                                    @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
-                                    @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
-                            }
+                @Extension
+                    (
+                        name = EXTENSION_NAME,
+                        properties = {
+                            @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                            @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
+                        }
                     )
             }
     )
     @ApiResponses(
             value = {
-                    @ApiResponse(code = AUTHENTICATION_ERROR_CODE, message = AUTHENTICATION_ERROR_MESSAGE),
-                    @ApiResponse(code = AUTHORIZATION_ERROR_CODE, message = AUTHORIZATION_ERROR_MESSAGE),
-                    @ApiResponse(code = SERVER_ERROR_CODE, message = SERVER_ERROR_MESSAGE)
+                @ApiResponse(code = AUTHENTICATION_ERROR_CODE, message = AUTHENTICATION_ERROR_MESSAGE),
+                @ApiResponse(code = AUTHORIZATION_ERROR_CODE, message = AUTHORIZATION_ERROR_MESSAGE),
+                @ApiResponse(code = SERVER_ERROR_CODE, message = SERVER_ERROR_MESSAGE)
             }
     )
     // @formatter:on
     public ResponseEntity<List<Participant>> participants(
-            @RequestHeader(
-                    name = REQUEST_ID_NAME,
-                    required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-            @ApiParam(value = "Participant name", required = true) @PathVariable("name") String name,
-            @ApiParam(value = "Participant version", required = true) @PathVariable("version") String version) {
+        @RequestHeader(name = REQUEST_ID_NAME, required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+        @ApiParam(value = "Participant name", required = true) @PathVariable("name") String name,
+        @ApiParam(value = "Participant version", required = true) @PathVariable("version") String version) {
 
         return ResponseEntity.ok().body(getSimulationProvider().getParticipants(name, version));
     }
@@ -131,31 +130,32 @@ public class SimulationParticipantController extends AbstractRestController {
                 },
             authorizations = @Authorization(value = AUTHORIZATION_TYPE),
             responseHeaders = {
-                    @ResponseHeader(
-                            name = VERSION_MINOR_NAME,
-                            description = VERSION_MINOR_DESCRIPTION,
-                            response = String.class),
-                    @ResponseHeader(
-                            name = VERSION_PATCH_NAME,
-                            description = VERSION_PATCH_DESCRIPTION,
-                            response = String.class),
-                    @ResponseHeader(
-                            name = VERSION_LATEST_NAME,
-                            description = VERSION_LATEST_DESCRIPTION,
-                            response = String.class),
-                    @ResponseHeader(
-                            name = REQUEST_ID_NAME,
-                            description = REQUEST_ID_HDR_DESCRIPTION,
-                            response = UUID.class)
-                },
+                @ResponseHeader(
+                        name = VERSION_MINOR_NAME,
+                        description = VERSION_MINOR_DESCRIPTION,
+                        response = String.class),
+                @ResponseHeader(
+                        name = VERSION_PATCH_NAME,
+                        description = VERSION_PATCH_DESCRIPTION,
+                        response = String.class),
+                @ResponseHeader(
+                        name = VERSION_LATEST_NAME,
+                        description = VERSION_LATEST_DESCRIPTION,
+                        response = String.class),
+                @ResponseHeader(
+                        name = REQUEST_ID_NAME,
+                        description = REQUEST_ID_HDR_DESCRIPTION,
+                        response = UUID.class)
+            },
             extensions = {
-                @Extension(
-                    name = EXTENSION_NAME,
-                    properties = {
+                @Extension
+                    (
+                        name = EXTENSION_NAME,
+                        properties = {
                             @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
                             @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
-                    }
-                )
+                        }
+                    )
             }
         )
     @ApiResponses(
@@ -167,10 +167,8 @@ public class SimulationParticipantController extends AbstractRestController {
         )
     // @formatter:on
     public ResponseEntity<TypedSimpleResponse<Participant>> update(
-            @RequestHeader(
-                    name = REQUEST_ID_NAME,
-                    required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-            @ApiParam(value = "Body of a participant", required = true) @RequestBody Participant body) {
+        @RequestHeader(name = REQUEST_ID_NAME, required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+        @ApiParam(value = "Body of a participant", required = true) @RequestBody Participant body) {
 
         return ResponseEntity.ok().body(getSimulationProvider().updateParticipant(body));
     }

@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
@@ -76,11 +75,8 @@ public class JpaControlLoop extends PfConcept implements PfAuthorative<ControlLo
     // @formatter:off
     @VerifyKey
     @NotNull
-    @AttributeOverrides({
-            @AttributeOverride(name = "name",    column = @Column(name = "definition_name")),
-            @AttributeOverride(name = "version", column = @Column(name = "definition_version"))
-        }
-    )
+    @AttributeOverride(name = "name",    column = @Column(name = "definition_name"))
+    @AttributeOverride(name = "version", column = @Column(name = "definition_version"))
     private PfConceptKey definition;
     // @formatter:on
 
@@ -158,7 +154,7 @@ public class JpaControlLoop extends PfConcept implements PfAuthorative<ControlLo
 
     @Override
     public ControlLoop toAuthorative() {
-        ControlLoop controlLoop = new ControlLoop();
+        var controlLoop = new ControlLoop();
 
         controlLoop.setName(getKey().getName());
         controlLoop.setVersion(getKey().getVersion());
@@ -184,7 +180,7 @@ public class JpaControlLoop extends PfConcept implements PfAuthorative<ControlLo
 
         this.elements = new LinkedHashMap<>(controlLoop.getElements().size());
         for (Entry<UUID, ControlLoopElement> elementEntry : controlLoop.getElements().entrySet()) {
-            JpaControlLoopElement jpaControlLoopElement = new JpaControlLoopElement();
+            var jpaControlLoopElement = new JpaControlLoopElement();
             jpaControlLoopElement.setKey(new PfReferenceKey(getKey(), elementEntry.getValue().getId().toString()));
             jpaControlLoopElement.fromAuthorative(elementEntry.getValue());
             this.elements.put(elementEntry.getKey(), jpaControlLoopElement);
