@@ -46,13 +46,14 @@ public class Main {
      * Instantiates the control loop runtime service.
      *
      * @param args the command line arguments
+     * @throws ControlLoopRuntimeException if the CLAMP runtime fails to start
      */
     public Main(final String[] args) {
-        final String argumentString = Arrays.toString(args);
+        final var argumentString = Arrays.toString(args);
         LOGGER.info("Starting the control loop runtime service with arguments - {}", argumentString);
 
         // Check the arguments
-        final ClRuntimeCommandLineArguments arguments = new ClRuntimeCommandLineArguments();
+        final var arguments = new ClRuntimeCommandLineArguments();
         try {
             // The arguments return a string if there is a message to print and we should exit
             final String argumentMessage = arguments.parse(args);
@@ -82,12 +83,14 @@ public class Main {
 
         // Add a shutdown hook to shut everything down in an orderly manner
         Runtime.getRuntime().addShutdownHook(new ClRuntimeShutdownHookClass());
-        String successMsg = String.format(MessageConstants.START_SUCCESS_MSG, MessageConstants.POLICY_CLAMP);
+        var successMsg = String.format(MessageConstants.START_SUCCESS_MSG, MessageConstants.POLICY_CLAMP);
         LOGGER.info(successMsg);
     }
 
     /**
      * Check if main is running.
+     *
+     * @return true if the CLAMP runtime is running
      */
     public boolean isRunning() {
         return activator != null && activator.isAlive();

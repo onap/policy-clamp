@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.ws.rs.core.Response.Status;
 import lombok.Getter;
-import lombok.experimental.Delegate;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopRuntimeException;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopStateChange;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopUpdate;
@@ -70,21 +69,22 @@ public class IntermediaryActivator extends ServiceManagerContainer {
      * Instantiate the activator for participant.
      *
      * @param parameters the parameters for the participant intermediary
+     * @throws ControlLoopRuntimeException when the activation fails
      */
     public IntermediaryActivator(final ParticipantIntermediaryParameters parameters) {
         this.parameters = parameters;
 
         topicSinks =
-                TopicEndpointManager.getManager().addTopicSinks(parameters.getClampControlLoopTopics().getTopicSinks());
+            TopicEndpointManager.getManager().addTopicSinks(parameters.getClampControlLoopTopics().getTopicSinks());
 
-        topicSources = TopicEndpointManager.getManager()
-                .addTopicSources(parameters.getClampControlLoopTopics().getTopicSources());
+        topicSources =
+            TopicEndpointManager.getManager().addTopicSources(parameters.getClampControlLoopTopics().getTopicSources());
 
         try {
             this.msgDispatcher = new MessageTypeDispatcher(MSG_TYPE_NAMES);
         } catch (final RuntimeException e) {
             throw new ControlLoopRuntimeException(Status.INTERNAL_SERVER_ERROR,
-                    "topic message dispatcher failed to start", e);
+                "topic message dispatcher failed to start", e);
         }
 
         // @formatter:off
@@ -131,17 +131,14 @@ public class IntermediaryActivator extends ServiceManagerContainer {
      */
     private void registerMsgDispatcher() {
         msgDispatcher.register(ParticipantMessageType.PARTICIPANT_STATE_CHANGE.name(),
-                (ScoListener<ParticipantStateChange>) new ParticipantStateChangeListener(
-                 participantHandler.get()));
+            (ScoListener<ParticipantStateChange>) new ParticipantStateChangeListener(participantHandler.get()));
         msgDispatcher.register(ParticipantMessageType.PARTICIPANT_HEALTH_CHECK.name(),
-                (ScoListener<ParticipantHealthCheck>) new ParticipantHealthCheckListener(
-                 participantHandler.get()));
+            (ScoListener<ParticipantHealthCheck>) new ParticipantHealthCheckListener(participantHandler.get()));
         msgDispatcher.register(ParticipantMessageType.PARTICIPANT_CONTROL_LOOP_STATE_CHANGE.name(),
-                (ScoListener<ParticipantControlLoopStateChange>) new ControlLoopStateChangeListener(
-                 participantHandler.get()));
+            (ScoListener<ParticipantControlLoopStateChange>) new ControlLoopStateChangeListener(
+                participantHandler.get()));
         msgDispatcher.register(ParticipantMessageType.PARTICIPANT_CONTROL_LOOP_UPDATE.name(),
-                (ScoListener<ParticipantControlLoopUpdate>) new ControlLoopUpdateListener(
-                 participantHandler.get()));
+            (ScoListener<ParticipantControlLoopUpdate>) new ControlLoopUpdateListener(participantHandler.get()));
         for (final TopicSource source : topicSources) {
             source.register(msgDispatcher);
         }
@@ -158,6 +155,8 @@ public class IntermediaryActivator extends ServiceManagerContainer {
 
     /**
      * Return the participant handler.
+     *
+     * @return the participant handler
      */
     public ParticipantHandler getParticipantHandler() {
         return participantHandler.get();

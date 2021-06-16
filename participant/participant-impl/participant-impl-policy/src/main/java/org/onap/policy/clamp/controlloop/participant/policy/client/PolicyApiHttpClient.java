@@ -35,6 +35,8 @@ public class PolicyApiHttpClient extends AbstractHttpClient {
 
     /**
      * Constructor.
+     *
+     * @param parameters the policy participant parameters
      */
     public PolicyApiHttpClient(ParticipantPolicyParameters parameters) {
         super(parameters.getPolicyApiParameters());
@@ -45,6 +47,7 @@ public class PolicyApiHttpClient extends AbstractHttpClient {
      *
      * @param toscaServiceTemplate the whole ToscaServiceTemplate
      * @return Response
+     * @throws PfModelException on errors creating the policy type
      */
     public Response createPolicyType(ToscaServiceTemplate toscaServiceTemplate) throws PfModelException {
         return executePost(POLICY_URI + "policytypes", Entity.entity(toscaServiceTemplate, MediaType.APPLICATION_JSON));

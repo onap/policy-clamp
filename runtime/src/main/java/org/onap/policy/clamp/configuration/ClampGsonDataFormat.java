@@ -96,7 +96,7 @@ public class ClampGsonDataFormat extends ServiceSupport implements DataFormat, D
 
     @Override
     public void marshal(final Exchange exchange, final Object graph, final OutputStream stream) throws Exception {
-        try (final OutputStreamWriter osw = new OutputStreamWriter(stream, StandardCharsets.UTF_8);
+        try (final var osw = new OutputStreamWriter(stream, StandardCharsets.UTF_8);
                 final BufferedWriter writer = IOHelper.buffered(osw)) {
             gson.toJson(graph, writer);
         }
@@ -112,7 +112,7 @@ public class ClampGsonDataFormat extends ServiceSupport implements DataFormat, D
 
     @Override
     public Object unmarshal(final Exchange exchange, final InputStream stream) throws Exception {
-        try (final InputStreamReader isr = new InputStreamReader(stream, StandardCharsets.UTF_8);
+        try (final var isr = new InputStreamReader(stream, StandardCharsets.UTF_8);
                 final BufferedReader reader = IOHelper.buffered(isr)) {
             if (unmarshalType.equals(String.class)) {
                 return IOUtils.toString(reader);

@@ -44,8 +44,6 @@ import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningProv
 import org.onap.policy.clamp.controlloop.runtime.main.rest.RestController;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
-import org.onap.policy.models.errors.concepts.ErrorResponse;
-import org.onap.policy.models.errors.concepts.ErrorResponseInfo;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
@@ -81,58 +79,56 @@ public class CommissioningController extends RestController {
             value = "Commissions control loop definitions",
             notes = "Commissions control loop definitions, returning the commissioned control loop definition IDs",
             response = CommissioningResponse.class,
-            tags = {
-                    "Control Loop Commissioning API"
-            },
+            tags = {"Control Loop Commissioning API"},
             authorizations = @Authorization(value = AUTHORIZATION_TYPE),
             responseHeaders = {
-                    @ResponseHeader(
-                            name = VERSION_MINOR_NAME,
-                            description = VERSION_MINOR_DESCRIPTION,
-                            response = String.class),
-                    @ResponseHeader(
-                            name = VERSION_PATCH_NAME,
-                            description = VERSION_PATCH_DESCRIPTION,
-                            response = String.class),
-                    @ResponseHeader(
-                            name = VERSION_LATEST_NAME,
-                            description = VERSION_LATEST_DESCRIPTION,
-                            response = String.class),
-                    @ResponseHeader(
-                            name = REQUEST_ID_NAME,
-                            description = REQUEST_ID_HDR_DESCRIPTION,
-                            response = UUID.class)
+                @ResponseHeader(
+                    name = VERSION_MINOR_NAME,
+                    description = VERSION_MINOR_DESCRIPTION,
+                    response = String.class),
+                @ResponseHeader(
+                    name = VERSION_PATCH_NAME,
+                    description = VERSION_PATCH_DESCRIPTION,
+                    response = String.class),
+                @ResponseHeader(
+                    name = VERSION_LATEST_NAME,
+                    description = VERSION_LATEST_DESCRIPTION,
+                    response = String.class),
+                @ResponseHeader(
+                    name = REQUEST_ID_NAME,
+                    description = REQUEST_ID_HDR_DESCRIPTION,
+                    response = UUID.class)
             },
             extensions = {
-                    @Extension(
-                            name = EXTENSION_NAME,
-                            properties = {
-                                    @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
-                                    @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
-                            }
+                @Extension
+                    (
+                        name = EXTENSION_NAME,
+                        properties = {
+                            @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                            @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
+                        }
                     )
             }
     )
     @ApiResponses(
             value = {
-                    @ApiResponse(code = AUTHENTICATION_ERROR_CODE, message = AUTHENTICATION_ERROR_MESSAGE),
-                    @ApiResponse(code = AUTHORIZATION_ERROR_CODE, message = AUTHORIZATION_ERROR_MESSAGE),
-                    @ApiResponse(code = SERVER_ERROR_CODE, message = SERVER_ERROR_MESSAGE)
+                @ApiResponse(code = AUTHENTICATION_ERROR_CODE, message = AUTHENTICATION_ERROR_MESSAGE),
+                @ApiResponse(code = AUTHORIZATION_ERROR_CODE, message = AUTHORIZATION_ERROR_MESSAGE),
+                @ApiResponse(code = SERVER_ERROR_CODE, message = SERVER_ERROR_MESSAGE)
             }
     )
     // @formatter:on
-    public Response create(
-            @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-            @ApiParam(value = "Entity Body of Control Loop", required = true) ToscaServiceTemplate body) {
+    public Response create(@HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+        @ApiParam(value = "Entity Body of Control Loop", required = true) ToscaServiceTemplate body) {
 
         try {
             CommissioningResponse response = provider.createControlLoopDefinitions(body);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(Status.OK)), requestId)
-                    .entity(response).build();
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Status.OK)), requestId).entity(response)
+                .build();
 
         } catch (PfModelRuntimeException | PfModelException e) {
             LOGGER.warn("Commissioning of the control loops failed", e);
-            CommissioningResponse resp = new CommissioningResponse();
+            var resp = new CommissioningResponse();
             resp.setErrorDetails(e.getErrorResponse().getErrorMessage());
             return returnResponse(e.getErrorResponse().getResponseCode(), requestId, resp);
         }
@@ -153,58 +149,56 @@ public class CommissioningController extends RestController {
     @ApiOperation(value = "Delete a commissioned control loop",
             notes = "Deletes a Commissioned Control Loop, returning optional error details",
             response = CommissioningResponse.class,
-            tags = {
-                    "Clamp Control Loop Commissioning API"
-            },
+            tags = {"Clamp Control Loop Commissioning API"},
             authorizations = @Authorization(value = AUTHORIZATION_TYPE),
             responseHeaders = {
-                    @ResponseHeader(
-                            name = VERSION_MINOR_NAME,
-                            description = VERSION_MINOR_DESCRIPTION,
-                            response = String.class),
-                    @ResponseHeader(
-                            name = VERSION_PATCH_NAME,
-                            description = VERSION_PATCH_DESCRIPTION,
-                            response = String.class),
-                    @ResponseHeader(
-                            name = VERSION_LATEST_NAME,
-                            description = VERSION_LATEST_DESCRIPTION,
-                            response = String.class),
-                    @ResponseHeader(
+                @ResponseHeader(
+                    name = VERSION_MINOR_NAME,
+                    description = VERSION_MINOR_DESCRIPTION,
+                    response = String.class),
+                @ResponseHeader(
+                    name = VERSION_PATCH_NAME,
+                    description = VERSION_PATCH_DESCRIPTION,
+                    response = String.class),
+                @ResponseHeader(
+                    name = VERSION_LATEST_NAME,
+                    description = VERSION_LATEST_DESCRIPTION,
+                    response = String.class),
+                @ResponseHeader(
                             name = REQUEST_ID_NAME,
                             description = REQUEST_ID_HDR_DESCRIPTION,
                             response = UUID.class)},
             extensions = {
-                    @Extension(
-                            name = EXTENSION_NAME,
-                            properties = {
-                                    @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
-                                    @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
-                            }
+                @Extension
+                    (
+                        name = EXTENSION_NAME,
+                        properties = {
+                            @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                            @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
+                        }
                     )
             }
     )
-    @ApiResponses(value = {
+    @ApiResponses(
+        value = {
             @ApiResponse(code = AUTHENTICATION_ERROR_CODE, message = AUTHENTICATION_ERROR_MESSAGE),
             @ApiResponse(code = AUTHORIZATION_ERROR_CODE, message = AUTHORIZATION_ERROR_MESSAGE),
             @ApiResponse(code = SERVER_ERROR_CODE, message = SERVER_ERROR_MESSAGE)
         }
     )
     // @formatter:on
-    public Response delete(
-            @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-            @ApiParam(value = "Control Loop definition name", required = true) @QueryParam("name") String name,
-            @ApiParam(value = "Control Loop definition version", required = true)
-            @QueryParam("version") String version) {
+    public Response delete(@HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+        @ApiParam(value = "Control Loop definition name", required = true) @QueryParam("name") String name,
+        @ApiParam(value = "Control Loop definition version", required = true) @QueryParam("version") String version) {
 
         try {
             CommissioningResponse response = provider.deleteControlLoopDefinition(name, version);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(Status.OK)), requestId)
-                    .entity(response).build();
+            return addLoggingHeaders(addVersionControlHeaders(Response.status(Status.OK)), requestId).entity(response)
+                .build();
 
         } catch (PfModelRuntimeException | PfModelException e) {
             LOGGER.warn("Decommisssioning of control loop failed", e);
-            CommissioningResponse resp = new CommissioningResponse();
+            var resp = new CommissioningResponse();
             resp.setErrorDetails(e.getErrorResponse().getErrorMessage());
             return returnResponse(e.getErrorResponse().getResponseCode(), requestId, resp);
         }
@@ -226,52 +220,49 @@ public class CommissioningController extends RestController {
             notes = "Queries details of the requested commissioned control loop definitions, "
                     + "returning all control loop details",
             response = ToscaNodeTemplate.class,
-            tags = {
-                    "Clamp Control Loop Commissioning API"
-            },
+            tags = {"Clamp Control Loop Commissioning API"},
             authorizations = @Authorization(value = AUTHORIZATION_TYPE),
             responseHeaders = {
-                    @ResponseHeader(
-                            name = VERSION_MINOR_NAME, description = VERSION_MINOR_DESCRIPTION,
-                            response = String.class),
-                    @ResponseHeader(name = VERSION_PATCH_NAME, description = VERSION_PATCH_DESCRIPTION,
-                            response = String.class),
-                    @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
-                            response = String.class),
-                    @ResponseHeader(name = REQUEST_ID_NAME, description = REQUEST_ID_HDR_DESCRIPTION,
-                            response = UUID.class)},
-            extensions = {
-                    @Extension(
-                            name = EXTENSION_NAME,
-                            properties = {
-                                    @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
-                                    @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
-                            }
-                    )
+                @ResponseHeader(
+                        name = VERSION_MINOR_NAME, description = VERSION_MINOR_DESCRIPTION,
+                        response = String.class),
+                @ResponseHeader(name = VERSION_PATCH_NAME, description = VERSION_PATCH_DESCRIPTION,
+                        response = String.class),
+                @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
+                        response = String.class),
+                @ResponseHeader(name = REQUEST_ID_NAME, description = REQUEST_ID_HDR_DESCRIPTION,
+                        response = UUID.class)},
+        extensions = {
+            @Extension
+                (
+                    name = EXTENSION_NAME,
+                    properties = {
+                        @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                        @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
+                    }
+                )
             }
     )
     @ApiResponses(
-            value = {
-                    @ApiResponse(code = AUTHENTICATION_ERROR_CODE, message = AUTHENTICATION_ERROR_MESSAGE),
-                    @ApiResponse(code = AUTHORIZATION_ERROR_CODE, message = AUTHORIZATION_ERROR_MESSAGE),
-                    @ApiResponse(code = SERVER_ERROR_CODE, message = SERVER_ERROR_MESSAGE)
-            }
+        value = {
+            @ApiResponse(code = AUTHENTICATION_ERROR_CODE, message = AUTHENTICATION_ERROR_MESSAGE),
+            @ApiResponse(code = AUTHORIZATION_ERROR_CODE, message = AUTHORIZATION_ERROR_MESSAGE),
+            @ApiResponse(code = SERVER_ERROR_CODE, message = SERVER_ERROR_MESSAGE)
+        }
     )
     // @formatter:on
     public Response query(@HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-                          @ApiParam(value = "Control Loop definition name", required = true)
-                          @QueryParam("name") String name,
-                          @ApiParam(value = "Control Loop definition version", required = true)
-                          @QueryParam("version") String version) {
+        @ApiParam(value = "Control Loop definition name", required = true) @QueryParam("name") String name,
+        @ApiParam(value = "Control Loop definition version", required = true) @QueryParam("version") String version) {
 
         try {
             List<ToscaNodeTemplate> response = provider.getControlLoopDefinitions(name, version);
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Status.OK)), requestId).entity(response)
-                    .build();
+                .build();
 
         } catch (PfModelRuntimeException | PfModelException e) {
             LOGGER.warn("Get of control loop definitions failed", e);
-            CommissioningResponse resp = new CommissioningResponse();
+            var resp = new CommissioningResponse();
             resp.setErrorDetails(e.getErrorResponse().getErrorMessage());
             return returnResponse(e.getErrorResponse().getResponseCode(), requestId, resp);
         }
@@ -293,53 +284,50 @@ public class CommissioningController extends RestController {
             notes = "Queries details of the requested commissioned tosca service template, "
                     + "returning all tosca service template details",
             response = ToscaServiceTemplate.class,
-            tags = {
-                    "Clamp Control Loop Commissioning API"
-            },
+            tags = {"Clamp Control Loop Commissioning API"},
             authorizations = @Authorization(value = AUTHORIZATION_TYPE),
             responseHeaders = {
-                    @ResponseHeader(
-                            name = VERSION_MINOR_NAME, description = VERSION_MINOR_DESCRIPTION,
-                            response = String.class),
-                    @ResponseHeader(name = VERSION_PATCH_NAME, description = VERSION_PATCH_DESCRIPTION,
-                            response = String.class),
-                    @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
-                            response = String.class),
-                    @ResponseHeader(name = REQUEST_ID_NAME, description = REQUEST_ID_HDR_DESCRIPTION,
-                            response = UUID.class)},
+                @ResponseHeader(
+                    name = VERSION_MINOR_NAME, description = VERSION_MINOR_DESCRIPTION,
+                    response = String.class),
+                @ResponseHeader(name = VERSION_PATCH_NAME, description = VERSION_PATCH_DESCRIPTION,
+                    response = String.class),
+                @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
+                    response = String.class),
+                @ResponseHeader(name = REQUEST_ID_NAME, description = REQUEST_ID_HDR_DESCRIPTION,
+                    response = UUID.class)},
             extensions = {
-                    @Extension(
-                            name = EXTENSION_NAME,
-                            properties = {
-                                    @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
-                                    @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
-                            }
+                @Extension
+                    (
+                        name = EXTENSION_NAME,
+                        properties = {
+                            @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                            @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
+                        }
                     )
             }
     )
     @ApiResponses(
-            value = {
-                    @ApiResponse(code = AUTHENTICATION_ERROR_CODE, message = AUTHENTICATION_ERROR_MESSAGE),
-                    @ApiResponse(code = AUTHORIZATION_ERROR_CODE, message = AUTHORIZATION_ERROR_MESSAGE),
-                    @ApiResponse(code = SERVER_ERROR_CODE, message = SERVER_ERROR_MESSAGE)
-            }
+        value = {
+            @ApiResponse(code = AUTHENTICATION_ERROR_CODE, message = AUTHENTICATION_ERROR_MESSAGE),
+            @ApiResponse(code = AUTHORIZATION_ERROR_CODE, message = AUTHORIZATION_ERROR_MESSAGE),
+            @ApiResponse(code = SERVER_ERROR_CODE, message = SERVER_ERROR_MESSAGE)
+        }
     )
     // @formatter:on
-    public Response queryToscaServiceTemplate(@HeaderParam(REQUEST_ID_NAME)
-                                                  @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-                          @ApiParam(value = "Tosca service template name", required = true)
-                          @QueryParam("name") String name,
-                          @ApiParam(value = "Tosca service template version", required = true)
-                          @QueryParam("version") String version) {
+    public Response queryToscaServiceTemplate(
+        @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+        @ApiParam(value = "Tosca service template name", required = true) @QueryParam("name") String name,
+        @ApiParam(value = "Tosca service template version", required = true) @QueryParam("version") String version) {
 
         try {
-            ToscaServiceTemplate response = provider.getToscaServiceTemplate(name, version);
+            var response = provider.getToscaServiceTemplate(name, version);
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Status.OK)), requestId).entity(response)
-                    .build();
+                .build();
 
         } catch (PfModelRuntimeException | PfModelException e) {
             LOGGER.warn("Get of tosca service template failed", e);
-            CommissioningResponse resp = new CommissioningResponse();
+            var resp = new CommissioningResponse();
             resp.setErrorDetails(e.getErrorResponse().getErrorMessage());
             return returnResponse(e.getErrorResponse().getResponseCode(), requestId, resp);
         }
@@ -361,60 +349,57 @@ public class CommissioningController extends RestController {
             notes = "Queries details of the requested commissioned control loop element definitions, "
                     + "returning all control loop elements' details",
             response = ToscaNodeTemplate.class,
-            tags = {
-                    "Clamp Control Loop Commissioning API"
-            },
+            tags = {"Clamp Control Loop Commissioning API"},
             authorizations = @Authorization(value = AUTHORIZATION_TYPE),
             responseHeaders = {
-                    @ResponseHeader(
-                            name = VERSION_MINOR_NAME, description = VERSION_MINOR_DESCRIPTION,
-                            response = String.class),
-                    @ResponseHeader(name = VERSION_PATCH_NAME, description = VERSION_PATCH_DESCRIPTION,
-                            response = String.class),
-                    @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
-                            response = String.class),
-                    @ResponseHeader(name = REQUEST_ID_NAME, description = REQUEST_ID_HDR_DESCRIPTION,
-                            response = UUID.class)},
+                @ResponseHeader(
+                    name = VERSION_MINOR_NAME, description = VERSION_MINOR_DESCRIPTION,
+                    response = String.class),
+                @ResponseHeader(name = VERSION_PATCH_NAME, description = VERSION_PATCH_DESCRIPTION,
+                    response = String.class),
+                @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
+                    response = String.class),
+                @ResponseHeader(name = REQUEST_ID_NAME, description = REQUEST_ID_HDR_DESCRIPTION,
+                    response = UUID.class)},
             extensions = {
-                    @Extension(
-                            name = EXTENSION_NAME,
-                            properties = {
-                                    @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
-                                    @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
-                            }
+                @Extension
+                    (
+                        name = EXTENSION_NAME,
+                        properties = {
+                            @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                            @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
+                        }
                     )
             }
     )
     @ApiResponses(
-            value = {
-                    @ApiResponse(code = AUTHENTICATION_ERROR_CODE, message = AUTHENTICATION_ERROR_MESSAGE),
-                    @ApiResponse(code = AUTHORIZATION_ERROR_CODE, message = AUTHORIZATION_ERROR_MESSAGE),
-                    @ApiResponse(code = SERVER_ERROR_CODE, message = SERVER_ERROR_MESSAGE)
-            }
+        value = {
+            @ApiResponse(code = AUTHENTICATION_ERROR_CODE, message = AUTHENTICATION_ERROR_MESSAGE),
+            @ApiResponse(code = AUTHORIZATION_ERROR_CODE, message = AUTHORIZATION_ERROR_MESSAGE),
+            @ApiResponse(code = SERVER_ERROR_CODE, message = SERVER_ERROR_MESSAGE)
+        }
     )
     // @formatter:on
     public Response queryElements(@HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-                                  @ApiParam(value = "Control Loop definition name", required = true)
-                                  @QueryParam("name") String name,
-                                  @ApiParam(value = "Control Loop definition version", required = true)
-                                  @QueryParam("version") String version) throws Exception {
+        @ApiParam(value = "Control Loop definition name", required = true) @QueryParam("name") String name,
+        @ApiParam(value = "Control Loop definition version", required = true) @QueryParam("version") String version) {
 
         try {
             List<ToscaNodeTemplate> nodeTemplate = provider.getControlLoopDefinitions(name, version);
-            //Prevent ambiguous queries with multiple returns
+            // Prevent ambiguous queries with multiple returns
             if (nodeTemplate.size() > 1) {
-                CommissioningResponse resp = new CommissioningResponse();
+                var resp = new CommissioningResponse();
                 resp.setErrorDetails("Multiple ControlLoops are not supported");
                 return returnResponse(Response.Status.NOT_ACCEPTABLE, requestId, resp);
             }
 
             List<ToscaNodeTemplate> response = provider.getControlLoopElementDefinitions(nodeTemplate.get(0));
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Status.OK)), requestId).entity(response)
-                    .build();
+                .build();
 
         } catch (PfModelRuntimeException | PfModelException e) {
             LOGGER.warn("Get of control loop element definitions failed", e);
-            CommissioningResponse resp = new CommissioningResponse();
+            var resp = new CommissioningResponse();
             resp.setErrorDetails(e.getErrorResponse().getErrorMessage());
             return returnResponse(e.getErrorResponse().getResponseCode(), requestId, resp);
         }
@@ -422,7 +407,6 @@ public class CommissioningController extends RestController {
     }
 
     private Response returnResponse(Response.Status status, UUID requestId, CommissioningResponse resp) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(status)),
-                requestId).entity(resp).build();
+        return addLoggingHeaders(addVersionControlHeaders(Response.status(status)), requestId).entity(resp).build();
     }
 }

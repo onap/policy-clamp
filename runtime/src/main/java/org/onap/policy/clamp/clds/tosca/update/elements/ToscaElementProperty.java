@@ -27,6 +27,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import org.onap.policy.clamp.clds.tosca.update.templates.JsonTemplate;
 
 public class ToscaElementProperty {
@@ -40,7 +41,7 @@ public class ToscaElementProperty {
     /**
      * Constructor.
      *
-     * @param name  the name
+     * @param name the name
      * @param items the items
      */
     public ToscaElementProperty(String name, LinkedHashMap<String, Object> items) {
@@ -69,9 +70,10 @@ public class ToscaElementProperty {
      * For each primitive value, requires to get each field Value and cast it and add it in a Json.
      *
      * @param fieldsContent field
-     * @param fieldName     field
-     * @param value         value
+     * @param fieldName field
+     * @param value value
      */
+    @SuppressWarnings("unchecked")
     public void addFieldToJson(JsonObject fieldsContent, String fieldName, Object value) {
         if (value != null) {
             String typeValue = value.getClass().getSimpleName();
@@ -89,7 +91,7 @@ public class ToscaElementProperty {
                     fieldsContent.addProperty(fieldName, (Integer) value);
                     break;
                 default:
-                    fieldsContent.add(fieldName, parseArray((ArrayList) value));
+                    fieldsContent.add(fieldName, parseArray((ArrayList<Object>) value));
                     break;
             }
         }
@@ -101,31 +103,29 @@ public class ToscaElementProperty {
      * @param arrayProperties array pro
      * @return a json array
      */
-    public JsonArray parseArray(ArrayList<Object> arrayProperties) {
-        JsonArray arrayContent = new JsonArray();
+    public JsonArray parseArray(List<Object> arrayProperties) {
         ArrayList<Object> arrayComponent = new ArrayList<>();
         for (Object itemArray : arrayProperties) {
             arrayComponent.add(itemArray);
         }
-        ArrayField af = new ArrayField(arrayComponent);
-        arrayContent = af.deploy();
-        return arrayContent;
+        var af = new ArrayField(arrayComponent);
+        return af.deploy();
     }
 
     /**
      * Create an instance of Constraint, to extract the values and add it to the Json (according to the type
-     * *                    of the current property).
+     * * of the current property).
      *
      * @param json a json
      * @param constraints constraints
      * @param jsonTemplate template
      */
     @SuppressWarnings("unchecked")
-    public void addConstraintsAsJson(JsonObject json, ArrayList<Object> constraints, JsonTemplate jsonTemplate) {
+    public void addConstraintsAsJson(JsonObject json, List<Object> constraints, JsonTemplate jsonTemplate) {
         for (Object constraint : constraints) {
             if (constraint instanceof LinkedHashMap) {
                 LinkedHashMap<String, Object> valueConstraint = (LinkedHashMap<String, Object>) constraint;
-                Constraint constraintParser = new Constraint(valueConstraint, jsonTemplate);
+                var constraintParser = new Constraint(valueConstraint, jsonTemplate);
                 constraintParser.deployConstraints(json, (String) getItems().get("type"));
             }
         }

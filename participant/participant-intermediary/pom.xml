@@ -28,7 +28,6 @@
         <version>6.1.2-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.onap.policy.clamp.participant</groupId>
     <artifactId>policy-clamp-participant-intermediary</artifactId>
     <name>${project.artifactId}</name>
     <description>Common intermediary library for managing DMaaP participant messaging and holding participant and control

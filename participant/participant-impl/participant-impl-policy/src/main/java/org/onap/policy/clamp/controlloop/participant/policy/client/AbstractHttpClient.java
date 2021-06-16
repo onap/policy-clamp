@@ -41,25 +41,26 @@ public abstract class AbstractHttpClient implements Closeable {
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractHttpClient.class);
     private final HttpClient httpclient;
 
-
     /**
      * Constructor.
+     *
+     * @param policyParticipantParameters the parameters for the policy participant
+     * @throws ControlLoopRuntimeException on client start errors
      */
-    protected AbstractHttpClient(BusTopicParams policyApiParameters) {
+    protected AbstractHttpClient(BusTopicParams policyParticipantParameters) {
         try {
-            httpclient = HttpClientFactoryInstance.getClientFactory().build(policyApiParameters);
+            httpclient = HttpClientFactoryInstance.getClientFactory().build(policyParticipantParameters);
         } catch (final Exception e) {
             throw new ControlLoopRuntimeException(Status.INTERNAL_SERVER_ERROR, " Client failed to start", e);
         }
     }
 
     protected Response executePost(String path, final Entity<?> entity) {
-        Response response = httpclient.post(path, entity, Map.of(HttpHeaders.ACCEPT,
-                MediaType.APPLICATION_JSON, HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON));
+        var response = httpclient.post(path, entity, Map.of(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON,
+            HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON));
         if (response.getStatus() / 100 != 2) {
-            LOGGER.error(
-                    "Invocation of path {} failed for entity {}. Response status: {}, Response status info: {}",
-                    path, entity, response.getStatus(), response.getStatusInfo());
+            LOGGER.error("Invocation of path {} failed for entity {}. Response status: {}, Response status info: {}",
+                path, entity, response.getStatus(), response.getStatusInfo());
         }
         return response;
     }

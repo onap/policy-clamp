@@ -47,6 +47,7 @@ public class ArrayFieldTest extends TestCase {
                 ResourceFileUtils.getResourceAsString("clds/tosca-converter/templates.json"));
         ToscaElement toscaElement = jsonTemplateManager.getToscaElements().get("onap.datatype.controlloop.Actor");
         ToscaElementProperty toscaElementProperty = toscaElement.getProperties().get("actor");
+        @SuppressWarnings("unchecked")
         ArrayField arrayParser = new ArrayField((ArrayList<Object>) toscaElementProperty.getItems().get("default"));
         JsonArray toTest = arrayParser.deploy();
         String reference = "[1,\"String\",5.5,true]";

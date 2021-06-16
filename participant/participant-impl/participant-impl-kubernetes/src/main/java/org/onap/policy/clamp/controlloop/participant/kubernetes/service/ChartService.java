@@ -53,7 +53,7 @@ public class ChartService {
      * @param name name of the app
      * @param version version of the app
      * @return chart
-     * @throws ServiceException incase of error.
+     * @throws ServiceException in case of error.
      */
     public ChartInfo getChart(String name, String version) throws ServiceException {
         return chartStore.getChart(name, version);
@@ -63,12 +63,13 @@ public class ChartService {
      * Save a helm chart.
      * @param chartInfo name and version of the app.
      * @param chartFile Helm chart file
+     * @param overrideFile override file
      * @return chart details of the helm chart
-     * @throws IOException incase of IO error
-     * @throws ServiceException incase of error
+     * @throws IOException in case of IO error
+     * @throws ServiceException in case of error
      */
     public ChartInfo saveChart(ChartInfo chartInfo, MultipartFile chartFile, MultipartFile overrideFile)
-        throws IOException, ServiceException {
+            throws IOException, ServiceException {
         return chartStore.saveChart(chartInfo, chartFile, overrideFile);
     }
 
@@ -83,7 +84,8 @@ public class ChartService {
     /**
      * Install a helm chart.
      * @param chart name and version.
-     * @throws ServiceException incase of error
+     * @throws ServiceException in case of error
+     * @throws IOException in case of IO errors
      */
     public void installChart(ChartInfo chart) throws ServiceException, IOException {
         if (chart.getRepository() == null) {
@@ -102,7 +104,9 @@ public class ChartService {
     /**
      * Finds helm chart repository for a given chart.
      * @param chart chartInfo.
-     * @throws ServiceException incase of error
+     * @return the chart repo as a string
+     * @throws ServiceException in case of error
+     * @throws IOException in case of IO errors
      */
     public String findChartRepo(ChartInfo chart) throws ServiceException, IOException {
         logger.info("Fetching helm chart repository for the given chart {} ", chart.getChartName());
@@ -112,7 +116,7 @@ public class ChartService {
     /**
      * Uninstall a helm chart.
      * @param chart name and version
-     * @throws ServiceException incase of error.
+     * @throws ServiceException in case of error.
      */
     public void uninstallChart(ChartInfo chart) throws ServiceException {
         logger.info("Uninstalling helm deployment {}", chart.getReleaseName());

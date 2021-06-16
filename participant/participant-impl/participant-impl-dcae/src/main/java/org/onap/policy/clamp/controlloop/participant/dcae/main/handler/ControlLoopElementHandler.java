@@ -74,6 +74,9 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
 
     /**
      * Constructor.
+     *
+     * @param clampClient the CLAMP client
+     * @param consulClient the Consul client
      */
     public ControlLoopElementHandler(ClampHttpClient clampClient, ConsulDcaeHttpClient consulClient) {
         this.clampClient = clampClient;

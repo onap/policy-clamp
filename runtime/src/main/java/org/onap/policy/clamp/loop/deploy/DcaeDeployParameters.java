@@ -37,6 +37,9 @@ import org.yaml.snakeyaml.Yaml;
  * To decode the bluprint input parameters.
  */
 public class DcaeDeployParameters {
+    private DcaeDeployParameters() {
+        // Hide the public default constructor
+    }
 
     private static LinkedHashMap<String, JsonObject> init(Loop loop) {
         LinkedHashMap<String, JsonObject> deploymentParamMap = new LinkedHashMap<>();
@@ -54,9 +57,10 @@ public class DcaeDeployParameters {
                 microService.getName());
     }
 
+    @SuppressWarnings("unchecked")
     private static JsonObject generateDcaeDeployParameter(String blueprint, String policyId) {
-        JsonObject deployJsonBody = new JsonObject();
-        Yaml yaml = new Yaml();
+        var deployJsonBody = new JsonObject();
+        var yaml = new Yaml();
         Map<String, Object> inputsNodes = ((Map<String, Object>) ((Map<String, Object>) yaml
                 .load(blueprint)).get("inputs"));
         inputsNodes.entrySet().stream().filter(e -> !e.getKey().contains("policy_id")).forEach(elem -> {
@@ -91,8 +95,8 @@ public class DcaeDeployParameters {
      * @return The deploymentParameters in Json
      */
     public static JsonObject getDcaeDeploymentParametersInJson(Loop loop) {
-        JsonObject globalProperties = new JsonObject();
-        JsonObject deployParamJson = new JsonObject();
+        var globalProperties = new JsonObject();
+        var deployParamJson = new JsonObject();
         if (loop.getLoopTemplate().getUniqueBlueprint()) {
             // Normally the unique blueprint could contain multiple microservices but then we can't guess
             // the policy id params that will be used, so here we expect only one by default.

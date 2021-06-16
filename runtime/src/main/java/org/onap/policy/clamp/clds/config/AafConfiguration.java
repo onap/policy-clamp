@@ -50,8 +50,8 @@ public class AafConfiguration {
      * @return FilterRegistrationBean
      */
     @Bean
-    public FilterRegistrationBean cadiFilterRegistration() {
-        FilterRegistrationBean registration = new FilterRegistrationBean();
+    public FilterRegistrationBean<Filter> cadiFilterRegistration() {
+        var registration = new FilterRegistrationBean<Filter>();
         registration.setFilter(cadiFilter());
         registration.addUrlPatterns("/restservices/clds/v1/user/*");
         registration.addUrlPatterns("/restservices/clds/v2/dictionary/*");

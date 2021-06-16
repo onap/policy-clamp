@@ -26,7 +26,6 @@ package org.onap.policy.clamp.policy.pdpgroup;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -82,7 +81,7 @@ public class PdpGroupsAnalyzer {
         // Copy the subgroup but empty the policies & types
         pdpGroupsDeploymentPerToscaIdentifier.computeIfAbsent(toscaId, toscaKey -> new ConcurrentHashMap<>())
                 .computeIfAbsent(pdpGroupSource.getName(), pdpGroupName -> {
-                    PdpGroup pdpGroupCopy = new PdpGroup(pdpGroupSource);
+                    var pdpGroupCopy = new PdpGroup(pdpGroupSource);
                     pdpGroupCopy.setPdpSubgroups(new ArrayList<>());
                     return pdpGroupCopy;
                 }).getPdpSubgroups().add(new PdpSubGroup(pdpSubGroupSource));
@@ -107,8 +106,8 @@ public class PdpGroupsAnalyzer {
         Map<String, PdpGroup> mapOfGroups =
                 this.pdpGroupsDeploymentPerPolicy.get(new ToscaConceptIdentifier(policyName, version));
         if (mapOfGroups != null) {
-            JsonObject policyPdpGroups = new JsonObject();
-            JsonArray pdpGroupsArray = new JsonArray();
+            var policyPdpGroups = new JsonObject();
+            var pdpGroupsArray = new JsonArray();
             policyPdpGroups.add(ASSIGNED_PDP_GROUPS_INFO, pdpGroupsArray);
             pdpGroupsArray.add(JsonUtils.GSON
                     .toJsonTree(mapOfGroups));
@@ -133,8 +132,8 @@ public class PdpGroupsAnalyzer {
         if (PdpState.TERMINATED.equals(pdpGroup.getPdpGroupState())) {
             return null;
         }
-        JsonObject supportedPdpGroup = new JsonObject();
-        JsonArray supportedSubgroups = new JsonArray();
+        var supportedPdpGroup = new JsonObject();
+        var supportedSubgroups = new JsonArray();
         supportedPdpGroup.add(pdpGroup.getName(), supportedSubgroups);
         pdpGroup.getPdpSubgroups().stream().forEach(pdpSubGroup -> {
             if (pdpSubGroup.getSupportedPolicyTypes().stream().anyMatch(policyTypeIdentifier ->
@@ -155,8 +154,8 @@ public class PdpGroupsAnalyzer {
      * @return It returns a JsonObject containing each pdpGroup and subgroups associated
      */
     public static JsonObject getSupportedPdpGroupsForModelType(PdpGroups pdpGroups, String policyType, String version) {
-        JsonObject supportedPdpGroups = new JsonObject();
-        JsonArray pdpGroupsArray = new JsonArray();
+        var supportedPdpGroups = new JsonObject();
+        var pdpGroupsArray = new JsonArray();
         supportedPdpGroups.add(SUPPORTED_PDP_GROUPS_INFO, pdpGroupsArray);
 
         pdpGroups.getGroups().stream().map(pdpGroup -> PdpGroupsAnalyzer.getSupportedPdpSubgroupsForModelType(pdpGroup,

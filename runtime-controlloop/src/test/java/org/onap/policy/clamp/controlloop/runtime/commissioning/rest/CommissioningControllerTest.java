@@ -127,7 +127,7 @@ public class CommissioningControllerTest extends CommonRestController {
         Invocation.Builder invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT + "?name=noResultWithThisName");
         Response rawresp = invocationBuilder.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
-        List entityList = rawresp.readEntity(List.class);
+        List<?> entityList = rawresp.readEntity(List.class);
         assertThat(entityList).isEmpty();
     }
 
@@ -138,7 +138,7 @@ public class CommissioningControllerTest extends CommonRestController {
         Invocation.Builder invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT);
         Response rawresp = invocationBuilder.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
-        List entityList = rawresp.readEntity(List.class);
+        List<?> entityList = rawresp.readEntity(List.class);
         assertNotNull(entityList);
         assertThat(entityList).hasSize(2);
     }
@@ -161,7 +161,7 @@ public class CommissioningControllerTest extends CommonRestController {
                 + "?name=org.onap.domain.pmsh.PMSHControlLoopDefinition");
         Response rawresp = invocationBuilder.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
-        List entityList = rawresp.readEntity(List.class);
+        List<?> entityList = rawresp.readEntity(List.class);
         assertNotNull(entityList);
         assertThat(entityList).hasSize(4);
     }

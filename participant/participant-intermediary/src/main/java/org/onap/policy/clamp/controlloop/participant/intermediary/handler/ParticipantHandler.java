@@ -90,7 +90,7 @@ public class ParticipantHandler implements Closeable {
             return;
         }
 
-        ParticipantResponseDetails response = new ParticipantResponseDetails(stateChangeMsg);
+        var response = new ParticipantResponseDetails(stateChangeMsg);
 
         switch (stateChangeMsg.getState()) {
             case PASSIVE:
@@ -126,7 +126,7 @@ public class ParticipantHandler implements Closeable {
      * @param healthCheckMsg participant health check message
      */
     public void handleParticipantHealthCheck(final ParticipantHealthCheck healthCheckMsg) {
-        ParticipantResponseDetails response = new ParticipantResponseDetails(healthCheckMsg);
+        var response = new ParticipantResponseDetails(healthCheckMsg);
         response.setResponseStatus(ParticipantResponseStatus.SUCCESS);
         response.setResponseMessage(healthStatus.toString());
 
@@ -194,6 +194,7 @@ public class ParticipantHandler implements Closeable {
      *
      * @param definition participant definition
      * @param participantState participant state
+     * @return the participant
      */
     public Participant updateParticipantState(ToscaConceptIdentifier definition,
             ParticipantState participantState) {
@@ -201,7 +202,7 @@ public class ParticipantHandler implements Closeable {
             LOGGER.debug("No participant with this ID {}", definition.getName());
             return null;
         }
-        ParticipantResponseDetails response = new ParticipantResponseDetails();
+        var response = new ParticipantResponseDetails();
         handleStateChange(participantState, response);
         sender.sendResponse(response);
         return getParticipant(definition.getName(), definition.getVersion());
@@ -210,11 +211,13 @@ public class ParticipantHandler implements Closeable {
     /**
      * Get participants as a {@link Participant} class.
      *
+     * @param name the participant name to get
+     * @param version the version of the participant to get
      * @return the participant
      */
     public Participant getParticipant(String name, String version) {
         if (participantId.getName().equals(name)) {
-            Participant participant = new Participant();
+            var participant = new Participant();
             participant.setDefinition(participantId);
             participant.setParticipantState(state);
             participant.setHealthStatus(healthStatus);

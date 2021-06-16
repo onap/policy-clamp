@@ -41,6 +41,7 @@ public class SimulationProvider {
 
     /**
      * Create a participant simulation provider.
+     * @param intermediaryApi the intermediary to use for talking to the CLAMP runtime
      */
     public SimulationProvider(ParticipantIntermediaryApi intermediaryApi) {
         this.intermediaryApi = intermediaryApi;

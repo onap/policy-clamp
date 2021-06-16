@@ -44,7 +44,7 @@ public class ControlLoopException extends Exception implements ErrorResponseInfo
     /**
      * Instantiates a new control loop exception.
      *
-     * @param statusCode the return code for the exception
+     * @param statusCode the status code for the response as a HTTP status code
      * @param message the message on the exception
      */
     public ControlLoopException(final Response.Status statusCode, final String message) {
