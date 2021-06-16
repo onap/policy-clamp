@@ -16,6 +16,24 @@
       "revId": "3e0c29b835151e3e2e3282fc8c376af1c3b1309b",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8e76f6c3_76adbc24",
+        "filename": "packages/policy-clamp-tarball/src/main/resources/etc/logback-default.xml",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-16T18:40:44Z",
+      "side": 1,
+      "message": "yes, this file should be a copy of the logback.xml from the other repos.  Pretty sure it shouldn\u0027t refer to \"Apex\" either",
+      "parentUuid": "5e7237d3_cd40d581",
+      "revId": "3e0c29b835151e3e2e3282fc8c376af1c3b1309b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
