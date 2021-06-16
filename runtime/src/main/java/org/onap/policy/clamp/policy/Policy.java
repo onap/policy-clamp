@@ -27,34 +27,26 @@ package org.onap.policy.clamp.policy;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import java.io.UnsupportedEncodingException;
-import java.util.Map;
 import javax.persistence.Column;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
-import org.json.JSONObject;
 import org.onap.policy.clamp.clds.tosca.update.ToscaConverterWithDictionarySupport;
 import org.onap.policy.clamp.dao.model.jsontype.StringJsonUserType;
 import org.onap.policy.clamp.loop.common.AuditEntity;
 import org.onap.policy.clamp.loop.service.Service;
 import org.onap.policy.clamp.loop.template.LoopElementModel;
 import org.onap.policy.clamp.loop.template.PolicyModel;
-import org.yaml.snakeyaml.Yaml;
 
 @MappedSuperclass
-@TypeDefs({@TypeDef(name = "json", typeClass = StringJsonUserType.class)})
+@TypeDef(name = "json", typeClass = StringJsonUserType.class)
 public abstract class Policy extends AuditEntity {
 
     @Transient
@@ -89,8 +81,8 @@ public abstract class Policy extends AuditEntity {
 
     @Expose
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumns({@JoinColumn(name = "policy_model_type", referencedColumnName = "policy_model_type"),
-            @JoinColumn(name = "policy_model_version", referencedColumnName = "version")})
+    @JoinColumn(name = "policy_model_type", referencedColumnName = "policy_model_type")
+    @JoinColumn(name = "policy_model_version", referencedColumnName = "version")
     private PolicyModel policyModel;
 
     /**

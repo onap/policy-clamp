@@ -31,6 +31,8 @@ public class ConsulDcaeHttpClient extends AbstractHttpClient {
 
     /**
      * Constructor.
+     *
+     * @param parameters the DCAE parameters
      */
     public ConsulDcaeHttpClient(ParticipantDcaeParameters parameters) {
         super(parameters.getConsulClientParameters());
@@ -39,6 +41,7 @@ public class ConsulDcaeHttpClient extends AbstractHttpClient {
     /**
      * Call consult.
      *
+     * @param name the name to deploy
      * @param jsonEntity the Entity
      * @return true
      */

@@ -63,7 +63,8 @@ public class ControlLoopHandler implements Closeable {
     @Getter
     private List<ControlLoopElementListener> listeners = new ArrayList<>();
 
-    public ControlLoopHandler() {}
+    public ControlLoopHandler() {
+    }
 
     /**
      * Constructor, set the participant ID and messageSender.
@@ -85,7 +86,7 @@ public class ControlLoopHandler implements Closeable {
     public void registerControlLoopElementListener(ControlLoopElementListener listener) {
         listeners.add(listener);
     }
-    
+
     /**
      * Handle a control loop element state change message.
      *
@@ -95,7 +96,7 @@ public class ControlLoopHandler implements Closeable {
      * @return controlLoopElement the updated controlloop element
      */
     public ControlLoopElement updateControlLoopElementState(UUID id, ControlLoopOrderedState orderedState,
-            ControlLoopState newState) {
+        ControlLoopState newState) {
 
         if (id == null) {
             return null;
@@ -106,7 +107,7 @@ public class ControlLoopHandler implements Closeable {
             clElement.setOrderedState(orderedState);
             clElement.setState(newState);
             LOGGER.debug("Control loop element {} state changed to {}", id, newState);
-            ParticipantResponseDetails response = new ParticipantResponseDetails();
+            var response = new ParticipantResponseDetails();
             response.setResponseStatus(ParticipantResponseStatus.SUCCESS);
             response.setResponseMessage("ControlLoopElement state changed to {} " + newState);
             messageSender.sendResponse(response);
@@ -141,14 +142,14 @@ public class ControlLoopHandler implements Closeable {
             return;
         }
 
-        ControlLoop controlLoop = controlLoopMap.get(stateChangeMsg.getControlLoopId());
+        var controlLoop = controlLoopMap.get(stateChangeMsg.getControlLoopId());
 
         if (controlLoop == null) {
             LOGGER.debug("Control loop {} does not use this participant", stateChangeMsg.getControlLoopId());
             return;
         }
 
-        ParticipantResponseDetails response = new ParticipantResponseDetails(stateChangeMsg);
+        var response = new ParticipantResponseDetails(stateChangeMsg);
         handleState(controlLoop, response, stateChangeMsg.getOrderedState());
         messageSender.sendResponse(response);
     }
@@ -161,7 +162,7 @@ public class ControlLoopHandler implements Closeable {
      * @param orderedState controlloop ordered state
      */
     private void handleState(final ControlLoop controlLoop, final ParticipantResponseDetails response,
-            ControlLoopOrderedState orderedState) {
+        ControlLoopOrderedState orderedState) {
         switch (orderedState) {
             case UNINITIALISED:
                 handleUninitialisedState(controlLoop, orderedState, response);
@@ -189,16 +190,16 @@ public class ControlLoopHandler implements Closeable {
             return;
         }
 
-        ControlLoop controlLoop = controlLoopMap.get(updateMsg.getControlLoopId());
+        var controlLoop = controlLoopMap.get(updateMsg.getControlLoopId());
 
-        ParticipantResponseDetails response = new ParticipantResponseDetails(updateMsg);
+        var response = new ParticipantResponseDetails(updateMsg);
 
         // TODO: Updates to existing ControlLoops are not supported yet (Addition/Removal of ControlLoop
         // elements to existing ControlLoop has to be supported).
         if (controlLoop != null) {
             response.setResponseStatus(ParticipantResponseStatus.FAIL);
-            response.setResponseMessage("Control loop " + updateMsg.getControlLoopId()
-                    + " already defined on participant " + participantId);
+            response.setResponseMessage(
+                "Control loop " + updateMsg.getControlLoopId() + " already defined on participant " + participantId);
 
             messageSender.sendResponse(response);
             return;
@@ -226,7 +227,7 @@ public class ControlLoopHandler implements Closeable {
 
         response.setResponseStatus(ParticipantResponseStatus.SUCCESS);
         response.setResponseMessage(
-                "Control loop " + updateMsg.getControlLoopId() + " defined on participant " + participantId);
+            "Control loop " + updateMsg.getControlLoopId() + " defined on participant " + participantId);
 
         messageSender.sendResponse(response);
     }
@@ -239,15 +240,14 @@ public class ControlLoopHandler implements Closeable {
      * @param response participant response
      */
     private void handleUninitialisedState(final ControlLoop controlLoop, final ControlLoopOrderedState orderedState,
-            final ParticipantResponseDetails response) {
+        final ParticipantResponseDetails response) {
         handleStateChange(controlLoop, orderedState, ControlLoopState.UNINITIALISED, response);
         controlLoopMap.remove(controlLoop.getKey().asIdentifier());
 
         for (ControlLoopElementListener clElementListener : listeners) {
             try {
                 for (ControlLoopElement element : controlLoop.getElements().values()) {
-                    clElementListener.controlLoopElementStateChange(element.getId(), element.getState(),
-                            orderedState);
+                    clElementListener.controlLoopElementStateChange(element.getId(), element.getState(), orderedState);
                 }
             } catch (PfModelException e) {
                 LOGGER.debug("Control loop element update failed {}", controlLoop.getDefinition());
@@ -263,7 +263,7 @@ public class ControlLoopHandler implements Closeable {
      * @param response participant response
      */
     private void handlePassiveState(final ControlLoop controlLoop, final ControlLoopOrderedState orderedState,
-            final ParticipantResponseDetails response) {
+        final ParticipantResponseDetails response) {
         handleStateChange(controlLoop, orderedState, ControlLoopState.PASSIVE, response);
     }
 
@@ -275,19 +275,20 @@ public class ControlLoopHandler implements Closeable {
      * @param response participant response
      */
     private void handleRunningState(final ControlLoop controlLoop, final ControlLoopOrderedState orderedState,
-            final ParticipantResponseDetails response) {
+        final ParticipantResponseDetails response) {
         handleStateChange(controlLoop, orderedState, ControlLoopState.RUNNING, response);
     }
-    
+
     /**
      * Method to update the state of control loop elements.
      *
      * @param controlLoop participant status in memory
-     * @param orderedState orderedState
-     * @param state new state of the control loop elements
+     * @param orderedState orderedState the new ordered state the participant should have
+     * @param newState new state of the control loop elements
+     * @param response the response to the state change request
      */
     private void handleStateChange(ControlLoop controlLoop, final ControlLoopOrderedState orderedState,
-            ControlLoopState newState, ParticipantResponseDetails response) {
+        ControlLoopState newState, ParticipantResponseDetails response) {
 
         if (orderedState.equals(controlLoop.getOrderedState())) {
             response.setResponseStatus(ParticipantResponseStatus.SUCCESS);
@@ -297,18 +298,16 @@ public class ControlLoopHandler implements Closeable {
 
         if (!CollectionUtils.isEmpty(controlLoop.getElements().values())) {
             controlLoop.getElements().values().forEach(element -> {
-                    element.setState(newState);
-                    element.setOrderedState(orderedState);
-                }
-            );
+                element.setState(newState);
+                element.setOrderedState(orderedState);
+            });
         }
 
         response.setResponseStatus(ParticipantResponseStatus.SUCCESS);
-        response.setResponseMessage("ControlLoop state changed from " + controlLoop.getOrderedState()
-                        + " to " + orderedState);
+        response.setResponseMessage(
+            "ControlLoop state changed from " + controlLoop.getOrderedState() + " to " + orderedState);
         controlLoop.setOrderedState(orderedState);
     }
-
 
     /**
      * Get control loops as a {@link ConrolLoops} class.
@@ -316,7 +315,7 @@ public class ControlLoopHandler implements Closeable {
      * @return the control loops
      */
     public ControlLoops getControlLoops() {
-        ControlLoops controlLoops = new ControlLoops();
+        var controlLoops = new ControlLoops();
         controlLoops.setControlLoopList(new ArrayList<>(controlLoopMap.values()));
         return controlLoops;
     }

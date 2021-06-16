@@ -70,6 +70,6 @@ public class PdpGroupPayloadTest {
         JsonObject listOfOperations = new JsonObject();
         listOfOperations.add(PdpGroupPayload.PDP_ACTIONS, operations);
 
-        PdpGroupPayload pdpGroupPayload = new PdpGroupPayload(listOfOperations);
+        new PdpGroupPayload(listOfOperations);
     }
 }

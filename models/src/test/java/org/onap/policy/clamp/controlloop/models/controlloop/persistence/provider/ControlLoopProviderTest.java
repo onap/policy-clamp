@@ -56,11 +56,8 @@ public class ControlLoopProviderTest {
     private String originalJson = ResourceUtils.getResourceAsString(CONTROL_LOOP_JSON);
     private String updateClJson = ResourceUtils.getResourceAsString(UPDATE_CL_JSON);
 
-    /**
-     * Set up test control loop provider.
-     */
     @Before
-    public void setupDao() throws Exception {
+    public void beforeSetupDao() throws Exception {
 
         parameters = new PolicyModelsProviderParameters();
         parameters.setDatabaseDriver("org.h2.Driver");
@@ -90,7 +87,7 @@ public class ControlLoopProviderTest {
 
         ControlLoops createdControlLoops = new ControlLoops();
         createdControlLoops
-                .setControlLoopList(controlLoopProvider.createControlLoops(inputControlLoops.getControlLoopList()));
+            .setControlLoopList(controlLoopProvider.createControlLoops(inputControlLoops.getControlLoopList()));
 
         assertEquals(inputControlLoops, createdControlLoops);
     }
@@ -120,10 +117,9 @@ public class ControlLoopProviderTest {
         }).hasMessageMatching("filter is marked .*ull but is null");
 
         final ToscaTypedEntityFilter<ControlLoop> filter = ToscaTypedEntityFilter.<ControlLoop>builder()
-                .type("org.onap.domain.pmsh.PMSHControlLoopDefinition").build();
+            .type("org.onap.domain.pmsh.PMSHControlLoopDefinition").build();
         assertEquals(2, controlLoopProvider.getFilteredControlLoops(filter).size());
     }
-
 
     @Test
     public void testUpdateControlLoops() throws Exception {
@@ -133,7 +129,7 @@ public class ControlLoopProviderTest {
 
         ControlLoops existingControlLoops = new ControlLoops();
         existingControlLoops
-                .setControlLoopList(controlLoopProvider.createControlLoops(inputControlLoops.getControlLoopList()));
+            .setControlLoopList(controlLoopProvider.createControlLoops(inputControlLoops.getControlLoopList()));
         ControlLoop updateResponse = new ControlLoop();
         updateResponse = controlLoopProvider.updateControlLoop(updateControlLoops.getControlLoopList().get(0));
 
@@ -156,5 +152,3 @@ public class ControlLoopProviderTest {
 
     }
 }
-
-

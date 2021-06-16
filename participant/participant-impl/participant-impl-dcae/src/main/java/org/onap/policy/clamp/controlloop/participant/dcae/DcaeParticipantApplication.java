@@ -30,8 +30,10 @@ import org.springframework.context.annotation.ComponentScan;
  *
  */
 @SpringBootApplication
-@ComponentScan({"org.onap.policy.clamp.controlloop.participant.dcae",
-        "org.onap.policy.clamp.controlloop.participant.intermediary"})
+@ComponentScan({
+    "org.onap.policy.clamp.controlloop.participant.dcae",
+    "org.onap.policy.clamp.controlloop.participant.intermediary"
+})
 @ConfigurationPropertiesScan("org.onap.policy.clamp.controlloop.participant.dcae.main.parameters")
 public class DcaeParticipantApplication {
 

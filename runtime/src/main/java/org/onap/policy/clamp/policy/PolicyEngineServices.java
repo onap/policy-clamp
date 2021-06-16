@@ -29,7 +29,6 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
-import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.ExchangeBuilder;
 import org.onap.policy.clamp.clds.config.ClampProperties;
 import org.onap.policy.clamp.clds.sdc.controller.installer.BlueprintMicroService;
@@ -95,7 +94,7 @@ public class PolicyEngineServices {
      * @return A PolicyModel created from policyEngine data or null if nothing is found on policyEngine
      */
     public PolicyModel createPolicyModelFromPolicyEngine(String policyType, String policyVersion) {
-        PolicyModel policyModelFound = policyModelsService.getPolicyModel(policyType, policyVersion);
+        var policyModelFound = policyModelsService.getPolicyModel(policyType, policyVersion);
         if (policyModelFound == null) {
             String policyTosca = this.downloadOnePolicyToscaModel(policyType, policyVersion);
             if (policyTosca != null && !policyTosca.isEmpty()) {
@@ -127,6 +126,7 @@ public class PolicyEngineServices {
      * This method synchronize the clamp database and the policy engine.
      * So it creates the required PolicyModel.
      */
+    @SuppressWarnings("unchecked")
     public void synchronizeAllPolicies() {
         LinkedHashMap<String, Object> loadedYaml;
         loadedYaml = new Yaml().load(downloadAllPolicyModels());
@@ -162,12 +162,12 @@ public class PolicyEngineServices {
      */
     public String downloadOnePolicyToscaModel(String policyType, String policyVersion) {
         logger.info("Downloading the policy tosca model " + policyType + "/" + policyVersion);
-        DumperOptions options = new DumperOptions();
+        var options = new DumperOptions();
         options.setDefaultScalarStyle(DumperOptions.ScalarStyle.PLAIN);
         options.setIndent(4);
         options.setPrettyFlow(true);
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
-        Yaml yamlParser = new Yaml(options);
+        var yamlParser = new Yaml(options);
         String responseBody = callCamelRoute(
                 ExchangeBuilder.anExchange(camelContext).withProperty("policyModelType", policyType)
                         .withProperty("policyModelVersion", policyVersion).withProperty(RAISE_EXCEPTION_FLAG, false)
@@ -200,9 +200,9 @@ public class PolicyEngineServices {
     }
 
     private String callCamelRoute(Exchange exchange, String camelFlow, String logMsg) {
-        for (int i = 0; i < retryLimit; i++) {
-            try (ProducerTemplate producerTemplate = camelContext.createProducerTemplate()) {
-                Exchange exchangeResponse = producerTemplate.send(camelFlow, exchange);
+        for (var i = 0; i < retryLimit; i++) {
+            try (var producerTemplate = camelContext.createProducerTemplate()) {
+                var exchangeResponse = producerTemplate.send(camelFlow, exchange);
                 if (HttpStatus.valueOf((Integer) exchangeResponse.getIn().getHeader(Exchange.HTTP_RESPONSE_CODE))
                         .is2xxSuccessful()) {
                     return (String) exchangeResponse.getIn().getBody();

@@ -31,6 +31,8 @@ import java.util.Map.Entry;
 import org.onap.policy.clamp.clds.tosca.update.templates.JsonTemplate;
 
 public class Constraint {
+    private static final String ARRAY = "array";
+    private static final String STRING = "string";
 
     private LinkedHashMap<String, Object> constraints;
     private JsonTemplate jsonTemplate;
@@ -43,7 +45,7 @@ public class Constraint {
     /**
      * Deploy the linkedhashmap which contains the constraints, to extract them one to one.
      *
-     * @param jsonSchema   The json Schema
+     * @param jsonSchema The json Schema
      * @param typeProperty The ype property
      * @return the json object
      */
@@ -57,14 +59,14 @@ public class Constraint {
     /**
      * Each case of Tosca constraints below parse specifically the field in the JsonObject.
      *
-     * @param jsonSchema      Json Schema
-     * @param nameConstraint  Name constraint
+     * @param jsonSchema Json Schema
+     * @param nameConstraint Name constraint
      * @param valueConstraint value constraint
-     * @param typeProperty    Type Property
+     * @param typeProperty Type Property
      */
     @SuppressWarnings("unchecked")
     public void parseConstraint(JsonObject jsonSchema, String nameConstraint, Object valueConstraint,
-                                String typeProperty) {
+            String typeProperty) {
         switch (nameConstraint) {
             case "equal":
                 checkTemplateField("const", jsonSchema, valueConstraint);
@@ -100,7 +102,7 @@ public class Constraint {
                 String[] maxtab = nameConstraint.split("_");
                 this.getLimitValue(jsonSchema, valueConstraint, typeProperty, maxtab[0]);
                 break;
-            default://valid_value
+            default:// valid_value
                 this.getValueArray(jsonSchema, valueConstraint, typeProperty);
                 break;
         }
@@ -110,17 +112,17 @@ public class Constraint {
     /**
      * To be done.
      *
-     * @param jsonSchema   json schema
-     * @param fieldValue   field value
+     * @param jsonSchema json schema
+     * @param fieldValue field value
      * @param typeProperty For the complex components, get a specific number of items/properties
      */
     public void getSpecificLength(JsonObject jsonSchema, Object fieldValue, String typeProperty) {
         switch (typeProperty.toLowerCase()) {
-            case "string":
+            case STRING:
                 checkTemplateField("minLength", jsonSchema, fieldValue);
                 checkTemplateField("maxLength", jsonSchema, fieldValue);
                 break;
-            case "array":
+            case ARRAY:
                 if (fieldValue.equals(1) && jsonTemplate.hasFields("uniqueItems")) {
                     jsonSchema.addProperty("uniqueItems", true);
                 } else {
@@ -139,48 +141,46 @@ public class Constraint {
     /**
      * To be done.
      *
-     * @param jsonSchema   json schema
-     * @param fieldValue   field value
+     * @param jsonSchema json schema
+     * @param fieldValue field value
      * @param typeProperty type property
-     * @param side         Get the limits fieldValue for the properties : depend of the type of the component
+     * @param side Get the limits fieldValue for the properties : depend of the type of the component
      */
     public void getLimitValue(JsonObject jsonSchema, Object fieldValue, String typeProperty, String side) {
-        switch (typeProperty) {
-            case "string":
-                if (side.equals("min")) {
-                    checkTemplateField("minLength", jsonSchema, fieldValue);
-                } else {
-                    checkTemplateField("maxLength", jsonSchema, fieldValue);
-                }
-                break;
-            default:// Array
-                if (side.equals("min")) {
-                    checkTemplateField("minItems", jsonSchema, fieldValue);
-                } else {
-                    checkTemplateField("maxItems", jsonSchema, fieldValue);
-                }
-                break;
+        if (typeProperty.equals(STRING)) {
+            if (side.equals("min")) {
+                checkTemplateField("minLength", jsonSchema, fieldValue);
+            } else {
+                checkTemplateField("maxLength", jsonSchema, fieldValue);
+            }
+        } else {
+            if (side.equals("min")) {
+                checkTemplateField("minItems", jsonSchema, fieldValue);
+            } else {
+                checkTemplateField("maxItems", jsonSchema, fieldValue);
+            }
         }
-
     }
 
     /**
      * To be done.
      *
-     * @param jsonSchema   Json schema
-     * @param fieldValue   field value
+     * @param jsonSchema Json schema
+     * @param fieldValue field value
      * @param typeProperty Get as Enum the valid values for the property
      */
     public void getValueArray(JsonObject jsonSchema, Object fieldValue, String typeProperty) {
         if (jsonTemplate.hasFields("enum")) {
-            JsonArray enumeration = new JsonArray();
-            if (typeProperty.equals("string") || typeProperty.equals("String")) {
+            var enumeration = new JsonArray();
+            if (typeProperty.equals(STRING) || typeProperty.equals("String")) {
+                @SuppressWarnings("unchecked")
                 ArrayList<String> arrayValues = (ArrayList<String>) fieldValue;
                 for (String arrayItem : arrayValues) {
                     enumeration.add(arrayItem);
                 }
                 jsonSchema.add("enum", enumeration);
             } else {
+                @SuppressWarnings("unchecked")
                 ArrayList<Number> arrayValues = (ArrayList<Number>) fieldValue;
                 for (Number arrayItem : arrayValues) {
                     enumeration.add(arrayItem);
@@ -193,7 +193,7 @@ public class Constraint {
     /**
      * To be done.
      *
-     * @param field      Field
+     * @param field Field
      * @param jsonSchema Json schema
      * @param fieldValue Simple way to avoid code duplication
      */

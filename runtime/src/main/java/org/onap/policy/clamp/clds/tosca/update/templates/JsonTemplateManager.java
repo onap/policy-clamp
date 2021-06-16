@@ -44,9 +44,9 @@ public class JsonTemplateManager {
     /**
      * Constructor.
      *
-     * @param toscaYamlContent     Policy Tosca Yaml content as string
+     * @param toscaYamlContent Policy Tosca Yaml content as string
      * @param nativeToscaDatatypes The tosca yaml with tosca native datatypes
-     * @param jsonSchemaTemplates  template properties as string
+     * @param jsonSchemaTemplates template properties as string
      */
     public JsonTemplateManager(String toscaYamlContent, String nativeToscaDatatypes, String jsonSchemaTemplates) {
         if (toscaYamlContent != null && !toscaYamlContent.isEmpty()) {
@@ -57,7 +57,7 @@ public class JsonTemplateManager {
         }
     }
 
-    //GETTERS & SETTERS
+    // GETTERS & SETTERS
     public LinkedHashMap<String, ToscaElement> getToscaElements() {
         return toscaElements;
     }
@@ -77,12 +77,12 @@ public class JsonTemplateManager {
     /**
      * Add a template.
      *
-     * @param name               name
+     * @param name name
      * @param jsonTemplateFields fields
      */
     public void addTemplate(String name, List<JsonTemplateField> jsonTemplateFields) {
-        JsonTemplate jsonTemplate = new JsonTemplate(name, jsonTemplateFields);
-        //If it is true, the operation does not have any interest :
+        var jsonTemplate = new JsonTemplate(name, jsonTemplateFields);
+        // If it is true, the operation does not have any interest :
         // replace OR put two different object with the same body
         if (!jsonSchemaTemplates.containsKey(jsonTemplate.getName()) || !this.hasTemplate(jsonTemplate)) {
             this.jsonSchemaTemplates.put(jsonTemplate.getName(), jsonTemplate);
@@ -101,11 +101,11 @@ public class JsonTemplateManager {
     /**
      * Update Template : adding with true flag, removing with false.
      *
-     * @param nameTemplate      name template
+     * @param nameTemplate name template
      * @param jsonTemplateField field name
-     * @param operation         operation
+     * @param operation operation
      */
-    public void updateTemplate(String nameTemplate, JsonTemplateField jsonTemplateField, Boolean operation) {
+    public void updateTemplate(String nameTemplate, JsonTemplateField jsonTemplateField, boolean operation) {
         // Operation = true && field is not present => add Field
         if (operation
                 && !this.jsonSchemaTemplates.get(nameTemplate).getJsonTemplateFields().contains(jsonTemplateField)) {
@@ -124,10 +124,10 @@ public class JsonTemplateManager {
      * @return a boolean
      */
     public boolean hasTemplate(JsonTemplate jsonTemplate) {
-        boolean duplicateTemplate = false;
+        var duplicateTemplate = false;
         Collection<String> templatesName = jsonSchemaTemplates.keySet();
         if (templatesName.contains(jsonTemplate.getName())) {
-            JsonTemplate existingJsonTemplate = jsonSchemaTemplates.get(jsonTemplate.getName());
+            var existingJsonTemplate = jsonSchemaTemplates.get(jsonTemplate.getName());
             duplicateTemplate = existingJsonTemplate.checkFields(jsonTemplate);
         }
         return duplicateTemplate;
@@ -136,17 +136,15 @@ public class JsonTemplateManager {
     /**
      * For a given policy type, get a corresponding JsonObject from the tosca model.
      *
-     * @param policyType          The policy type in the tosca
+     * @param policyType The policy type in the tosca
      * @param toscaMetadataParser The MetadataParser class that must be used if metadata section are encountered,
-     *                            if null they will be skipped
+     *        if null they will be skipped
      * @return an json object defining the equivalent json schema from the tosca for a given policy type
      */
     public JsonObject getJsonSchemaForPolicyType(String policyType, ToscaMetadataParser toscaMetadataParser,
-                                                 Service serviceModel)
-            throws UnknownComponentException {
-        ToscaConverterToJsonSchema
-                toscaConverterToJsonSchema = new ToscaConverterToJsonSchema(toscaElements, jsonSchemaTemplates,
-                toscaMetadataParser, serviceModel);
+            Service serviceModel) throws UnknownComponentException {
+        var toscaConverterToJsonSchema =
+                new ToscaConverterToJsonSchema(toscaElements, jsonSchemaTemplates, toscaMetadataParser, serviceModel);
         if (toscaConverterToJsonSchema.getToscaElement(policyType) == null) {
             throw new UnknownComponentException(policyType);
         }
@@ -166,7 +164,7 @@ public class JsonTemplateManager {
         JsonObject templates = JsonUtils.GSON.fromJson(jsonTemplates, JsonObject.class);
 
         for (Map.Entry<String, JsonElement> templateAsJson : templates.entrySet()) {
-            JsonTemplate jsonTemplate = new JsonTemplate(templateAsJson.getKey());
+            var jsonTemplate = new JsonTemplate(templateAsJson.getKey());
             JsonObject templateBody = (JsonObject) templateAsJson.getValue();
             for (Map.Entry<String, JsonElement> field : templateBody.entrySet()) {
                 String fieldName = field.getKey();
@@ -174,8 +172,7 @@ public class JsonTemplateManager {
                 Object fieldValue = bodyFieldAsJson.get("defaultValue").getAsString();
                 Boolean fieldVisible = bodyFieldAsJson.get("visible").getAsBoolean();
                 Boolean fieldStatic = bodyFieldAsJson.get("static").getAsBoolean();
-                JsonTemplateField
-                        bodyJsonTemplateField = new JsonTemplateField(fieldName, fieldValue, fieldVisible, fieldStatic);
+                var bodyJsonTemplateField = new JsonTemplateField(fieldName, fieldValue, fieldVisible, fieldStatic);
                 jsonTemplate.getJsonTemplateFields().add(bodyJsonTemplateField);
             }
             generatedTemplates.put(jsonTemplate.getName(), jsonTemplate);

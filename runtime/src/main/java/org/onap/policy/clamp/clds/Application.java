@@ -39,7 +39,6 @@ import org.apache.catalina.connector.Connector;
 import org.onap.policy.clamp.clds.util.ClampVersioning;
 import org.onap.policy.clamp.clds.util.ResourceFileUtils;
 import org.onap.policy.clamp.util.PassDecoder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -54,7 +53,6 @@ import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -99,9 +97,6 @@ public class Application extends SpringBootServletInitializer {
     @Value("${clamp.config.keyFile:classpath:/clds/aaf/org.onap.clamp.keyfile}")
     private String keyFile;
 
-    @Autowired
-    private Environment env;
-
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(Application.class);
@@ -124,11 +119,11 @@ public class Application extends SpringBootServletInitializer {
      * @throws IOException IO Exception
      */
     @Bean
-    public ServletRegistrationBean camelServletRegistrationBean() throws IOException {
+    public ServletRegistrationBean<ClampServlet> camelServletRegistrationBean() throws IOException {
         eelfLogger.info(ResourceFileUtils.getResourceAsString("boot-message.txt") + "(v"
                 + ClampVersioning.getCldsVersionFromProps() + ")" + System.getProperty("line.separator")
                 + getSslExpirationDate());
-        ServletRegistrationBean registration = new ServletRegistrationBean(new ClampServlet(), "/restservices/clds/*");
+        var registration = new ServletRegistrationBean<ClampServlet>(new ClampServlet(), "/restservices/clds/*");
         registration.setName("CamelServlet");
         return registration;
     }
@@ -140,11 +135,11 @@ public class Application extends SpringBootServletInitializer {
      */
     @Bean
     public ServletWebServerFactory getEmbeddedServletContainerFactory() {
-        TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory();
+        var tomcat = new TomcatServletWebServerFactory();
         if (httpRedirectedPort != null && keystoreFile != null) {
             // Automatically redirect to HTTPS
             tomcat = new TomcatEmbeddedServletContainerFactoryRedirection();
-            Connector newConnector = createRedirectConnector(Integer.parseInt(springServerPort));
+            var newConnector = createRedirectConnector(Integer.parseInt(springServerPort));
             if (newConnector != null) {
                 tomcat.addAdditionalTomcatConnectors(newConnector);
             }
@@ -158,7 +153,7 @@ public class Application extends SpringBootServletInitializer {
                     + " (Connector disabled)");
             return null;
         }
-        Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
+        var connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
         connector.setScheme("http");
         connector.setSecure(false);
         connector.setPort(Integer.parseInt(httpRedirectedPort));
@@ -167,10 +162,10 @@ public class Application extends SpringBootServletInitializer {
     }
 
     private String getSslExpirationDate() throws IOException {
-        StringBuilder result = new StringBuilder("   :: SSL Certificates ::     ");
+        var result = new StringBuilder("   :: SSL Certificates ::     ");
         try {
             if (keystoreFile != null) {
-                KeyStore keystore = KeyStore.getInstance(keyStoreType);
+                var keystore = KeyStore.getInstance(keyStoreType);
                 keystore.load(ResourceFileUtils.getResourceAsStream(keystoreFile.replace("classpath:", "")),
                         PassDecoder.decode(keyStorePass, keyFile).toCharArray());
 

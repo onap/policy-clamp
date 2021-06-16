@@ -41,8 +41,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 public class ClElementStatisticsProviderTest {
     private static final String LIST_IS_NULL = ".*. is marked .*ull but is null";
     private static final Coder CODER = new StandardCoder();
-    private static final String CL_ELEMENT_STATS_JSON =
-        "src/test/resources/providers/TestClElementStatistics.json";
+    private static final String CL_ELEMENT_STATS_JSON = "src/test/resources/providers/TestClElementStatistics.json";
 
     private static AtomicInteger dbNameCounter = new AtomicInteger();
 
@@ -53,9 +52,11 @@ public class ClElementStatisticsProviderTest {
 
     /**
      * Set up test ClElement statistics provider.
+     *
+     * @throws Exception on errors
      */
     @Before
-    public void setupDao() throws Exception {
+    public void beforeSetupDao() throws Exception {
 
         parameters = new PolicyModelsProviderParameters();
         parameters.setDatabaseDriver("org.h2.Driver");
@@ -82,8 +83,8 @@ public class ClElementStatisticsProviderTest {
         }).hasMessageMatching(LIST_IS_NULL);
 
         ClElementStatisticsList createdClElementStats = new ClElementStatisticsList();
-        createdClElementStats.setClElementStatistics(clElementStatisticsProvider
-            .createClElementStatistics(inputClElementStats.getClElementStatistics()));
+        createdClElementStats.setClElementStatistics(
+            clElementStatisticsProvider.createClElementStatistics(inputClElementStats.getClElementStatistics()));
 
         assertEquals(inputClElementStats.toString().replaceAll("\\s+", ""),
             createdClElementStats.toString().replaceAll("\\s+", ""));
@@ -94,22 +95,18 @@ public class ClElementStatisticsProviderTest {
 
         List<ClElementStatistics> getResponse;
 
-        //Return empty list when no data present in db
-        getResponse = clElementStatisticsProvider.getClElementStatistics(null, null, null,
-            null);
+        // Return empty list when no data present in db
+        getResponse = clElementStatisticsProvider.getClElementStatistics(null, null, null, null);
         assertThat(getResponse).isEmpty();
 
-        clElementStatisticsProvider.createClElementStatistics(inputClElementStats
-            .getClElementStatistics());
-        ToscaConceptIdentifier identifier = inputClElementStats.getClElementStatistics().get(0)
-            .getParticipantId();
+        clElementStatisticsProvider.createClElementStatistics(inputClElementStats.getClElementStatistics());
+        ToscaConceptIdentifier identifier = inputClElementStats.getClElementStatistics().get(0).getParticipantId();
         Instant instant = inputClElementStats.getClElementStatistics().get(0).getTimeStamp();
         String id = inputClElementStats.getClElementStatistics().get(0).getId().toString();
-        assertEquals(1, clElementStatisticsProvider.getClElementStatistics(identifier.getName(),
-            identifier.getVersion(), id, instant).size());
+        assertEquals(1, clElementStatisticsProvider
+            .getClElementStatistics(identifier.getName(), identifier.getVersion(), id, instant).size());
 
-        assertEquals(1, clElementStatisticsProvider.getFilteredClElementStatistics("name2",
-            "1.0.1", null, null, null,
-            "DESC", 1).size());
+        assertEquals(1, clElementStatisticsProvider
+            .getFilteredClElementStatistics("name2", "1.0.1", null, null, null, "DESC", 1).size());
     }
 }

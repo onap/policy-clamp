@@ -102,6 +102,7 @@ public class RestController {
      * Adds logging headers to the response.
      *
      * @param respBuilder response builder
+     * @param requestId unique ID for this request
      * @return the response builder, with version logging
      */
     public ResponseBuilder addLoggingHeaders(ResponseBuilder respBuilder, UUID requestId) {

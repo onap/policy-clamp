@@ -30,6 +30,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.concepts.JpaParticipantStatistics;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfTimestampKey;
+import org.onap.policy.models.dao.PfFilterParameters;
 import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.provider.impl.AbstractModelsProvider;
 
@@ -53,6 +54,8 @@ public class ParticipantStatisticsProvider extends AbstractModelsProvider {
      * Get Participant statistics.
      *
      * @param name the name of the participant statistics to get, null to get all stats
+     * @param version the version of the participant statistics to get, null to get all stats for a name
+     * @param timestamp the time stamp for the stats to get
      * @return the participant statistics found
      * @throws PfModelException on errors getting participant statistics
      */
@@ -76,10 +79,12 @@ public class ParticipantStatisticsProvider extends AbstractModelsProvider {
      * Get filtered participant statistics.
      *
      * @param name the participant name for the statistics to get
+     * @param version the participant version for the statistics to get
      * @param startTimeStamp startTimeStamp to filter statistics
      * @param endTimeStamp endTimeStamp to filter statistics
      * @param sortOrder sortOrder to query database
      * @param getRecordNum Total query count from database
+     * @param filterMap the filters to apply to the get operation
      * @return the participant statistics found
      * @throws PfModelException on errors getting policies
      */
@@ -87,8 +92,20 @@ public class ParticipantStatisticsProvider extends AbstractModelsProvider {
             final Instant startTimeStamp, final Instant endTimeStamp, Map<String, Object> filterMap,
             final String sortOrder, final int getRecordNum) {
 
-        return asParticipantStatisticsList(getPfDao().getFiltered(JpaParticipantStatistics.class, name, version,
-                startTimeStamp, endTimeStamp, filterMap, sortOrder, getRecordNum));
+        // @formatter:off
+        PfFilterParameters filterParams = PfFilterParameters
+                .builder()
+                .name(name)
+                .version(version)
+                .startTime(startTimeStamp)
+                .endTime(endTimeStamp)
+                .filterMap(filterMap)
+                .sortOrder(sortOrder)
+                .recordNum(getRecordNum)
+                .build();
+        // @formatter:on
+
+        return asParticipantStatisticsList(getPfDao().getFiltered(JpaParticipantStatistics.class, filterParams));
     }
 
 

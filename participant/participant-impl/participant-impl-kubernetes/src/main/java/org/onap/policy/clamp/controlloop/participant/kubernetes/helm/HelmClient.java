@@ -46,7 +46,6 @@ public class HelmClient {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-
     /**
      * Install a chart.
      *
@@ -70,7 +69,9 @@ public class HelmClient {
      * Finds helm chart repository for the chart.
      *
      * @param chart ChartInfo.
-     * @throws ServiceException incase of error
+     * @return the chart repository as a string
+     * @throws ServiceException in case of error
+     * @throws IOException in case of IO errors
      */
     public String findChartRepository(ChartInfo chart) throws ServiceException, IOException {
         updateHelmRepo();
@@ -129,8 +130,8 @@ public class HelmClient {
             return output;
         } catch (InterruptedException ie) {
             Thread.currentThread().interrupt();
-            throw new ServiceException(
-                    "Failed to execute the Command: " + commandStr + ", the command was interrupted", ie);
+            throw new ServiceException("Failed to execute the Command: " + commandStr + ", the command was interrupted",
+                ie);
         } catch (Exception exc) {
             throw new ServiceException("Failed to execute the Command: " + commandStr, exc);
         }
@@ -141,12 +142,12 @@ public class HelmClient {
         // @formatter:off
         List<String> helmArguments = new ArrayList<>(
                 Arrays.asList(
-                        "helm",
-                        "install", chart.getReleaseName(), chart.getRepository() + "/" + chart.getChartName(),
-                        "--version", chart.getVersion(),
-                        "--namespace", chart.getNamespace()
+                    "helm",
+                    "install", chart.getReleaseName(), chart.getRepository() + "/" + chart.getChartName(),
+                    "--version", chart.getVersion(),
+                    "--namespace", chart.getNamespace()
                 )
-        );
+            );
         // @formatter:on
 
         // Verify if values.yaml available for the chart
