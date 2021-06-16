@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ClElementStatistics;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
@@ -134,6 +133,7 @@ public interface ParticipantIntermediaryApi {
      * if participantHandler is not returned, there is no way to test state change messages
      * without dmaap simulator.
      *
+     * @return the participant handler
      */
     ParticipantHandler getParticipantHandler();
 }

@@ -63,10 +63,11 @@ public class ToscaMetadataParserWithDictionarySupport implements ToscaMetadataPa
         }
     }
 
+    @SuppressWarnings("unchecked")
     private static JsonObject parseMetadataPossibleValues(LinkedHashMap<String, Object> childNodeMap,
                                                           DictionaryService dictionaryService, Service serviceModel,
                                                           ToscaMetadataExecutor toscaMetadataExecutor) {
-        JsonObject childObject = new JsonObject();
+        var childObject = new JsonObject();
         if (childNodeMap.containsKey(ToscaSchemaConstants.METADATA)
                 && childNodeMap.get(ToscaSchemaConstants.METADATA) != null) {
             ((LinkedHashMap<String, Object>) childNodeMap.get(ToscaSchemaConstants.METADATA)).forEach((key,
@@ -108,14 +109,14 @@ public class ToscaMetadataParserWithDictionarySupport implements ToscaMetadataPa
         if (dictionaryKeyArray.length == 2) {
             dictionaryElements = new ArrayList<>(dictionaryService.getDictionary(dictionaryKeyArray[0])
                     .getDictionaryElements());
-            JsonArray subDictionaryNames = new JsonArray();
+            var subDictionaryNames = new JsonArray();
             new ArrayList<DictionaryElement>(dictionaryService.getDictionary(dictionaryKeyArray[1])
                     .getDictionaryElements()).forEach(elem -> subDictionaryNames.add(elem.getShortName()));
 
-            JsonArray jsonArray = new JsonArray();
+            var jsonArray = new JsonArray();
 
             Optional.of(dictionaryElements).get().forEach(c -> {
-                JsonObject jsonObject = new JsonObject();
+                var jsonObject = new JsonObject();
                 jsonObject.addProperty(JsonEditorSchemaConstants.TYPE, getJsonType(c.getType()));
                 if (c.getType() != null
                         && c.getType().equalsIgnoreCase(ToscaSchemaConstants.TYPE_STRING)) {
@@ -128,7 +129,7 @@ public class ToscaMetadataParserWithDictionarySupport implements ToscaMetadataPa
                 jsonArray.add(jsonObject);
             });
 
-            JsonObject filterObject = new JsonObject();
+            var filterObject = new JsonObject();
             filterObject.add(JsonEditorSchemaConstants.FILTERS, jsonArray);
 
             childObject.addProperty(JsonEditorSchemaConstants.TYPE,
@@ -149,8 +150,8 @@ public class ToscaMetadataParserWithDictionarySupport implements ToscaMetadataPa
      */
     private static void processSimpleDictionaryElements(String[] dictionaryKeyArray, JsonObject childObject,
                                                         DictionaryService dictionaryService) {
-        JsonArray dictionaryNames = new JsonArray();
-        JsonArray dictionaryFullNames = new JsonArray();
+        var dictionaryNames = new JsonArray();
+        var dictionaryFullNames = new JsonArray();
         dictionaryService.getDictionary(dictionaryKeyArray[0]).getDictionaryElements().forEach(c -> {
             // Json type will be translated before Policy creation
             if (c.getType() != null && !c.getType().equalsIgnoreCase("json")) {
@@ -167,7 +168,7 @@ public class ToscaMetadataParserWithDictionarySupport implements ToscaMetadataPa
             }
             // Add Enum titles for generated translated values during JSON instance
             // generation
-            JsonObject enumTitles = new JsonObject();
+            var enumTitles = new JsonObject();
             enumTitles.add(JsonEditorSchemaConstants.ENUM_TITLES, dictionaryNames);
             if (childObject.get(JsonEditorSchemaConstants.OPTIONS) != null) {
                 childObject.get(JsonEditorSchemaConstants.OPTIONS).getAsJsonArray().add(enumTitles);

@@ -234,7 +234,7 @@ class ParticipantSimulatorTest {
                         String.class, uuid);
         checkResponseEntity(response, 200, uuid);
 
-        Map returnValue = coder.decode(response.getBody(), Map.class);
+        Map<?, ?> returnValue = coder.decode(response.getBody(), Map.class);
         // Verify the result of GET controlloop elements with what is stored
         assertThat(returnValue).isEmpty();
     }

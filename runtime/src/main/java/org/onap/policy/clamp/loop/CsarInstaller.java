@@ -45,7 +45,6 @@ import org.onap.policy.clamp.loop.service.Service;
 import org.onap.policy.clamp.loop.template.LoopElementModel;
 import org.onap.policy.clamp.loop.template.LoopTemplate;
 import org.onap.policy.clamp.loop.template.LoopTemplatesRepository;
-import org.onap.policy.clamp.loop.template.PolicyModel;
 import org.onap.policy.clamp.loop.template.PolicyModelsRepository;
 import org.onap.policy.clamp.policy.PolicyEngineServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,11 +94,11 @@ public class CsarInstaller {
         boolean alreadyInstalled = csarServiceInstaller.isServiceAlreadyDeployed(csar);
 
         for (Entry<String, BlueprintArtifact> blueprint : csar.getMapOfBlueprints().entrySet()) {
-            alreadyInstalled = alreadyInstalled
-                    && loopTemplatesRepository.existsById(LoopTemplate.generateLoopTemplateName(
-                    csar.getSdcNotification().getServiceName(), csar.getSdcNotification().getServiceVersion(),
-                    blueprint.getValue().getResourceAttached().getResourceInstanceName(),
-                    blueprint.getValue().getBlueprintArtifactName()));
+            alreadyInstalled =
+                    alreadyInstalled && loopTemplatesRepository.existsById(LoopTemplate.generateLoopTemplateName(
+                            csar.getSdcNotification().getServiceName(), csar.getSdcNotification().getServiceVersion(),
+                            blueprint.getValue().getResourceAttached().getResourceInstanceName(),
+                            blueprint.getValue().getBlueprintArtifactName()));
         }
         return alreadyInstalled;
     }
@@ -109,14 +108,14 @@ public class CsarInstaller {
      *
      * @param csar The Csar Handler
      * @throws SdcArtifactInstallerException The SdcArtifactInstallerException
-     * @throws InterruptedException          The InterruptedException
-     * @throws BlueprintParserException      In case of issues with the blueprint
-     *                                       parsing
+     * @throws InterruptedException The InterruptedException
+     * @throws BlueprintParserException In case of issues with the blueprint
+     *         parsing
      */
     public void installTheCsar(CsarHandler csar)
             throws SdcArtifactInstallerException, InterruptedException, BlueprintParserException {
         logger.info("Installing the CSAR " + csar.getFilePath());
-        Service associatedService = csarServiceInstaller.installTheService(csar);
+        var associatedService = csarServiceInstaller.installTheService(csar);
         cdsDataInstaller.installCdsServiceProperties(csar, associatedService);
 
         installTheLoopTemplates(csar, associatedService);
@@ -126,12 +125,12 @@ public class CsarInstaller {
     /**
      * Install the loop templates from the csar.
      *
-     * @param csar    The Csar Handler
+     * @param csar The Csar Handler
      * @param service The service object that is related to the loop
      * @throws SdcArtifactInstallerException The SdcArtifactInstallerException
-     * @throws InterruptedException          The InterruptedException
-     * @throws BlueprintParserException      In case of issues with the blueprint
-     *                                       parsing
+     * @throws InterruptedException The InterruptedException
+     * @throws BlueprintParserException In case of issues with the blueprint
+     *         parsing
      */
     public void installTheLoopTemplates(CsarHandler csar, Service service)
             throws SdcArtifactInstallerException, InterruptedException, BlueprintParserException {
@@ -150,10 +149,9 @@ public class CsarInstaller {
     }
 
     private LoopTemplate createLoopTemplateFromBlueprint(CsarHandler csar, BlueprintArtifact blueprintArtifact,
-                                                         Service service)
-            throws IOException, ParseException, InterruptedException, BlueprintParserException,
+            Service service) throws IOException, ParseException, InterruptedException, BlueprintParserException,
             SdcArtifactInstallerException {
-        LoopTemplate newLoopTemplate = new LoopTemplate();
+        var newLoopTemplate = new LoopTemplate();
         newLoopTemplate.setBlueprint(blueprintArtifact.getDcaeBlueprint());
         newLoopTemplate.setName(LoopTemplate.generateLoopTemplateName(csar.getSdcNotification().getServiceName(),
                 csar.getSdcNotification().getServiceVersion(),
@@ -173,22 +171,19 @@ public class CsarInstaller {
     }
 
     private HashSet<LoopElementModel> createMicroServiceModels(BlueprintArtifact blueprintArtifact,
-                                                               List<BlueprintMicroService> microServicesChain)
-            throws SdcArtifactInstallerException {
+            List<BlueprintMicroService> microServicesChain) throws SdcArtifactInstallerException {
         HashSet<LoopElementModel> newSet = new HashSet<>();
         for (BlueprintMicroService microService : microServicesChain) {
-            LoopElementModel loopElementModel =
-                    new LoopElementModel(microService.getModelType(), LoopElementModel.MICRO_SERVICE_TYPE,
-                            null);
+            var loopElementModel =
+                    new LoopElementModel(microService.getModelType(), LoopElementModel.MICRO_SERVICE_TYPE, null);
             newSet.add(loopElementModel);
-            PolicyModel newPolicyModel = policyEngineServices.createPolicyModelFromPolicyEngine(microService);
+            var newPolicyModel = policyEngineServices.createPolicyModelFromPolicyEngine(microService);
             if (newPolicyModel != null) {
                 loopElementModel.addPolicyModel(newPolicyModel);
             } else {
-                throw new SdcArtifactInstallerException(
-                        "Unable to find the policy specified in the blueprint " + blueprintArtifact
-                                .getBlueprintArtifactName() + ") on the Policy Engine:"
-                                + microService.getModelType() + "/" + microService.getModelVersion());
+                throw new SdcArtifactInstallerException("Unable to find the policy specified in the blueprint "
+                        + blueprintArtifact.getBlueprintArtifactName() + ") on the Policy Engine:"
+                        + microService.getModelType() + "/" + microService.getModelVersion());
             }
         }
         return newSet;

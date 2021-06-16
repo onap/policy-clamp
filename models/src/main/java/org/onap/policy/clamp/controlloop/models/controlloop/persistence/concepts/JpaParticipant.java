@@ -23,7 +23,6 @@ package org.onap.policy.clamp.controlloop.models.controlloop.persistence.concept
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -66,11 +65,8 @@ public class JpaParticipant extends PfConcept implements PfAuthorative<Participa
     // @formatter:off
     @VerifyKey
     @NotNull
-    @AttributeOverrides({
-            @AttributeOverride(name = "name",    column = @Column(name = "definition_name")),
-            @AttributeOverride(name = "version", column = @Column(name = "definition_version"))
-        }
-    )
+    @AttributeOverride(name = "name",    column = @Column(name = "definition_name"))
+    @AttributeOverride(name = "version", column = @Column(name = "definition_version"))
     private PfConceptKey definition;
     // @formatter:on
 
@@ -142,7 +138,7 @@ public class JpaParticipant extends PfConcept implements PfAuthorative<Participa
 
     @Override
     public Participant toAuthorative() {
-        Participant participant = new Participant();
+        var participant = new Participant();
 
         participant.setName(key.getName());
         participant.setVersion(key.getVersion());

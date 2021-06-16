@@ -92,6 +92,8 @@ public abstract class AbstractRestController {
 
     /**
      * create a Rest Controller.
+     *
+     * @param simulationProvider the provider for the simulation participant
      */
     protected AbstractRestController(SimulationProvider simulationProvider) {
         this.simulationProvider = simulationProvider;

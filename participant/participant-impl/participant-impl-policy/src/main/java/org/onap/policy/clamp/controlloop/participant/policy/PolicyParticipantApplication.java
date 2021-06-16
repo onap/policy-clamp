@@ -30,8 +30,9 @@ import org.springframework.context.annotation.ComponentScan;
  *
  */
 @SpringBootApplication
-@ComponentScan({"org.onap.policy.clamp.controlloop.participant.policy",
-        "org.onap.policy.clamp.controlloop.participant.intermediary"})
+@ComponentScan({
+    "org.onap.policy.clamp.controlloop.participant.policy",
+    "org.onap.policy.clamp.controlloop.participant.intermediary"})
 @ConfigurationPropertiesScan("org.onap.policy.clamp.controlloop.participant.policy.main.parameters")
 public class PolicyParticipantApplication {
 

@@ -23,9 +23,6 @@
 
 package org.onap.policy.clamp.policy.pdpgroup;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.util.Arrays;
 import org.junit.BeforeClass;

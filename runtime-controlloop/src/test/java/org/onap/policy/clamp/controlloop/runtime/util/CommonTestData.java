@@ -20,6 +20,8 @@
 
 package org.onap.policy.clamp.controlloop.runtime.util;
 
+import javax.ws.rs.core.Response.Status;
+import org.onap.policy.clamp.controlloop.common.exception.ControlLoopRuntimeException;
 import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
@@ -39,13 +41,14 @@ public class CommonTestData {
      * @param port port to be inserted into the parameters
      * @param dbName the database name
      * @return the standard Control Loop parameters
+     * @throws ControlLoopRuntimeException on errors reading the control loop parameters
      */
     public static ClRuntimeParameterGroup geParameterGroup(final int port, final String dbName) {
         try {
             return coder.decode(getParameterGroupAsString(port, dbName), ClRuntimeParameterGroup.class);
 
         } catch (CoderException e) {
-            throw new RuntimeException("cannot read Control Loop parameters", e);
+            throw new ControlLoopRuntimeException(Status.NOT_ACCEPTABLE, "cannot read Control Loop parameters", e);
         }
     }
 

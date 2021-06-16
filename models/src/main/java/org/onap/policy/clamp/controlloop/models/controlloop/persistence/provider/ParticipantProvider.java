@@ -133,7 +133,7 @@ public class ParticipantProvider extends AbstractModelsProvider {
      * @param name the name of the participant to delete
      * @param version the version of the participant to get
      * @return the participant deleted
-     * @throws PfModelException on errors deleting participants
+     * @throws PfModelRuntimeException on errors deleting participants
      */
     public Participant deleteParticipant(@NonNull final String name, @NonNull final String version) {
 
@@ -155,7 +155,7 @@ public class ParticipantProvider extends AbstractModelsProvider {
     /**
      * Convert JPA participant list to an authorative participant list.
      *
-     * @param foundParticipants the list to convert
+     * @param jpaParticipantList the list to convert
      * @return the authorative list
      */
     private List<Participant> asParticipantList(List<JpaParticipant> jpaParticipantList) {

@@ -74,7 +74,8 @@ public class ChartController {
      *
      * @param info Info of the chart to be installed
      * @return Status of the install operation
-     * @throws ServiceException incase of error
+     * @throws ServiceException in case of error
+     * @throws IOException in case of IO error
      */
     @PostMapping(path = "/install", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -97,7 +98,7 @@ public class ChartController {
      * @param name name of the chart
      * @param version version of the chart
      * @return Status of operation
-     * @throws ServiceException incase of error.
+     * @throws ServiceException in case of error.
      */
     @DeleteMapping(path = "/uninstall/{name}/{version}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Uninstall the Chart")
@@ -118,9 +119,10 @@ public class ChartController {
      *
      * @param chartFile Multipart file for the helm chart
      * @param infoJson AppInfo of the chart
+     * @param overrideFile the file for overriding the chart
      * @return Status of onboard operation
-     * @throws ServiceException incase of error
-     * @throws IOException incase of IO error
+     * @throws ServiceException in case of error
+     * @throws IOException in case of IO error
      */
     @PostMapping(path = "/charts", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -147,7 +149,7 @@ public class ChartController {
      * @param name name of the chart
      * @param version version of the chart
      * @return Status of operation
-     * @throws ServiceException incase of error.
+     * @throws ServiceException in case of error.
      */
     @DeleteMapping(path = "/charts/{name}/{version}")
     @ApiOperation(value = "Delete the chart")

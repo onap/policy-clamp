@@ -50,6 +50,7 @@ public class ToscaElementPropertyTest extends TestCase {
                 ResourceFileUtils.getResourceAsString("clds/tosca-converter/templates.json"));
         ToscaElement toscaElement = jsonTemplateManager.getToscaElements().get("onap.datatype.controlloop.Actor");
         ToscaElementProperty toscaElementProperty = toscaElement.getProperties().get("actor");
+        @SuppressWarnings("unchecked")
         JsonArray toTest =
                 toscaElementProperty.parseArray((ArrayList<Object>) toscaElementProperty.getItems().get("default"));
         assertNotNull(toTest);
@@ -60,6 +61,7 @@ public class ToscaElementPropertyTest extends TestCase {
      *
      * @throws IOException In case of failure
      */
+    @SuppressWarnings("unchecked")
     public void testAddConstraintsAsJson() throws IOException {
         JsonTemplateManager jsonTemplateManager = new JsonTemplateManager(
                 ResourceFileUtils.getResourceAsString("tosca/new-converter/sampleOperationalPolicies.yaml"),

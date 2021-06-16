@@ -162,13 +162,13 @@ public class ControlLoopProvider extends AbstractModelsProvider {
      * @param name the name of the control loop to delete
      * @param version the version of the control loop to delete
      * @return the control loop deleted
-     * @throws PfModelException on errors deleting the control loop
+     * @throws PfModelRuntimeException on errors deleting the control loop
      */
     public ControlLoop deleteControlLoop(@NonNull final String name, @NonNull final String version) {
 
         var controlLoopKey = new PfConceptKey(name, version);
 
-        JpaControlLoop jpaDeleteControlLoop = getPfDao().get(JpaControlLoop.class, controlLoopKey);
+        var jpaDeleteControlLoop = getPfDao().get(JpaControlLoop.class, controlLoopKey);
 
         if (jpaDeleteControlLoop == null) {
             String errorMessage =
@@ -210,6 +210,8 @@ public class ControlLoopProvider extends AbstractModelsProvider {
     /**
      * Convert JPA control loop list to an authorative control loop list.
      *
+     * @param <T> the type of TOSCA entity
+     * @param <J> the type of JPA TOSCA entity
      * @param jpaEntityList the list to convert
      * @return the authorative list
      */

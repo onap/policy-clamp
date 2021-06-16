@@ -132,7 +132,7 @@ public class LoggingUtilsTest {
         assertEquals(targetServiceName, mdc.get(OnapLogConstants.Mdcs.TARGET_SERVICE_NAME));
     }
 
-    private boolean checkMapKeys(Map map, String[] keys) {
+    private boolean checkMapKeys(Map<String, String> map, String[] keys) {
         return Arrays.stream(keys).allMatch(key -> map.get(key) != null);
     }
 }

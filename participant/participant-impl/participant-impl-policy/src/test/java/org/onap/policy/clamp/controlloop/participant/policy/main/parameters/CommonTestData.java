@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopRuntimeException;
 import org.onap.policy.common.endpoints.parameters.TopicParameters;
 import org.onap.policy.common.parameters.ParameterGroup;
@@ -51,15 +52,18 @@ public class CommonTestData {
     /**
      * Converts the contents of a map to a parameter class.
      *
+     * @param <T> the type of ParameterGroup to process
      * @param source property map
      * @param clazz class of object to be created from the map
      * @return a new object represented by the map
+     * @throws ControlLoopRuntimeException on decoding errors
      */
     public <T extends ParameterGroup> T toObject(final Map<String, Object> source, final Class<T> clazz) {
         try {
             return coder.convert(source, clazz);
         } catch (final CoderException e) {
-            throw new RuntimeException("cannot create " + clazz.getName() + " from map", e);
+            throw new ControlLoopRuntimeException(Status.NOT_ACCEPTABLE,
+                "cannot create " + clazz.getName() + " from map", e);
         }
     }
 
@@ -163,14 +167,15 @@ public class CommonTestData {
      *
      * @param port port to be inserted into the parameters
      * @return the standard participant parameters
+     * @throws ControlLoopRuntimeException on parameter read errors
      */
     public ParticipantPolicyParameters getParticipantPolicyParameters(int port) {
         try {
             return coder.decode(getParticipantPolicyParametersAsString(port), ParticipantPolicyParameters.class);
 
         } catch (CoderException e) {
-            throw new ControlLoopRuntimeException(Response.Status.NOT_ACCEPTABLE,
-                    "cannot read participant parameters", e);
+            throw new ControlLoopRuntimeException(Response.Status.NOT_ACCEPTABLE, "cannot read participant parameters",
+                e);
         }
     }
 
@@ -179,6 +184,7 @@ public class CommonTestData {
      *
      * @param port port to be inserted into the parameters
      * @return the standard participant parameters
+     * @throws ControlLoopRuntimeException on parameter read errors
      */
     public static String getParticipantPolicyParametersAsString(int port) {
 
@@ -192,8 +198,8 @@ public class CommonTestData {
             return json;
 
         } catch (IOException e) {
-            throw new ControlLoopRuntimeException(Response.Status.NOT_ACCEPTABLE,
-                    "cannot read participant parameters", e);
+            throw new ControlLoopRuntimeException(Response.Status.NOT_ACCEPTABLE, "cannot read participant parameters",
+                e);
 
         }
     }
@@ -211,6 +217,7 @@ public class CommonTestData {
 
     /**
      * Nulls out a field within a JSON string.
+     *
      * @param json JSON string
      * @param field field to be nulled out
      * @return a new JSON string with the field nulled out

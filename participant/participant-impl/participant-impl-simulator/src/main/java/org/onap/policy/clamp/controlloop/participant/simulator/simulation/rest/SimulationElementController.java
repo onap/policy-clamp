@@ -68,40 +68,42 @@ public class SimulationElementController extends AbstractRestController {
      */
     // @formatter:off
     @GetMapping("/elements/{name}/{version}")
-    @ApiOperation(value = "Query details of the requested simulated control loop elements",
-            notes = "Queries details of the requested simulated control loop elements, "
-                    + "returning all control loop element details",
-            response = ControlLoops.class,
-            tags = {
-                "Clamp Control Loop Participant Simulator API"
-            },
-            authorizations = @Authorization(value = AUTHORIZATION_TYPE),
-            responseHeaders = {
-                    @ResponseHeader(
-                            name = VERSION_MINOR_NAME, description = VERSION_MINOR_DESCRIPTION,
-                            response = String.class),
-                    @ResponseHeader(name = VERSION_PATCH_NAME, description = VERSION_PATCH_DESCRIPTION,
-                            response = String.class),
-                    @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
-                            response = String.class),
-                    @ResponseHeader(name = REQUEST_ID_NAME, description = REQUEST_ID_HDR_DESCRIPTION,
-                            response = UUID.class)},
-            extensions = {
-                    @Extension(
-                            name = EXTENSION_NAME,
-                            properties = {
-                                    @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
-                                    @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
-                            }
-                    )
-            }
+    @ApiOperation(
+        value = "Query details of the requested simulated control loop elements",
+        notes = "Queries details of the requested simulated control loop elements, "
+                + "returning all control loop element details",
+        response = ControlLoops.class,
+        tags = {
+            "Clamp Control Loop Participant Simulator API"
+        },
+        authorizations = @Authorization(value = AUTHORIZATION_TYPE),
+        responseHeaders = {
+            @ResponseHeader(
+                name = VERSION_MINOR_NAME, description = VERSION_MINOR_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(name = VERSION_PATCH_NAME, description = VERSION_PATCH_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(name = REQUEST_ID_NAME, description = REQUEST_ID_HDR_DESCRIPTION,
+                response = UUID.class)},
+        extensions = {
+            @Extension
+                (
+                    name = EXTENSION_NAME,
+                    properties = {
+                        @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                        @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
+                    }
+                )
+        }
     )
     @ApiResponses(
-            value = {
-                    @ApiResponse(code = AUTHENTICATION_ERROR_CODE, message = AUTHENTICATION_ERROR_MESSAGE),
-                    @ApiResponse(code = AUTHORIZATION_ERROR_CODE, message = AUTHORIZATION_ERROR_MESSAGE),
-                    @ApiResponse(code = SERVER_ERROR_CODE, message = SERVER_ERROR_MESSAGE)
-            }
+        value = {
+            @ApiResponse(code = AUTHENTICATION_ERROR_CODE, message = AUTHENTICATION_ERROR_MESSAGE),
+            @ApiResponse(code = AUTHORIZATION_ERROR_CODE, message = AUTHORIZATION_ERROR_MESSAGE),
+            @ApiResponse(code = SERVER_ERROR_CODE, message = SERVER_ERROR_MESSAGE)
+        }
     )
     // @formatter:on
     public ResponseEntity<Map<UUID, ControlLoopElement>> elements(
@@ -134,31 +136,32 @@ public class SimulationElementController extends AbstractRestController {
                 },
             authorizations = @Authorization(value = AUTHORIZATION_TYPE),
             responseHeaders = {
-                    @ResponseHeader(
-                            name = VERSION_MINOR_NAME,
-                            description = VERSION_MINOR_DESCRIPTION,
-                            response = String.class),
-                    @ResponseHeader(
-                            name = VERSION_PATCH_NAME,
-                            description = VERSION_PATCH_DESCRIPTION,
-                            response = String.class),
-                    @ResponseHeader(
-                            name = VERSION_LATEST_NAME,
-                            description = VERSION_LATEST_DESCRIPTION,
-                            response = String.class),
-                    @ResponseHeader(
-                            name = REQUEST_ID_NAME,
-                            description = REQUEST_ID_HDR_DESCRIPTION,
-                            response = UUID.class)
-                },
+                @ResponseHeader(
+                    name = VERSION_MINOR_NAME,
+                    description = VERSION_MINOR_DESCRIPTION,
+                    response = String.class),
+                @ResponseHeader(
+                    name = VERSION_PATCH_NAME,
+                    description = VERSION_PATCH_DESCRIPTION,
+                    response = String.class),
+                @ResponseHeader(
+                    name = VERSION_LATEST_NAME,
+                    description = VERSION_LATEST_DESCRIPTION,
+                    response = String.class),
+                @ResponseHeader(
+                    name = REQUEST_ID_NAME,
+                    description = REQUEST_ID_HDR_DESCRIPTION,
+                    response = UUID.class)
+            },
             extensions = {
-                @Extension(
-                    name = EXTENSION_NAME,
-                    properties = {
+                @Extension
+                    (
+                        name = EXTENSION_NAME,
+                        properties = {
                             @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
                             @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
-                    }
-                )
+                        }
+                    )
             }
         )
     @ApiResponses(

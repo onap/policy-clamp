@@ -64,6 +64,7 @@ public class ClRuntimeActivator extends ServiceManagerContainer {
      * Instantiate the activator for the control loop runtime as a complete service.
      *
      * @param clRuntimeParameterGroup the parameters for the control loop runtime service
+     * @throws ControlLoopRuntimeException if the activator does not start
      */
     public ClRuntimeActivator(final ClRuntimeParameterGroup clRuntimeParameterGroup) {
 
@@ -134,7 +135,7 @@ public class ClRuntimeActivator extends ServiceManagerContainer {
                 providerClasses.addAll(supervisionHandler.get().getProviderClasses());
                 providerClasses.addAll(monitoringHandler.get().getProviderClasses());
 
-                RestServer server = new RestServer(clRuntimeParameterGroup.getRestServerParameters(),
+                var server = new RestServer(clRuntimeParameterGroup.getRestServerParameters(),
                         ControlLoopAafFilter.class,
                         providerClasses.toArray(new Class<?>[providerClasses.size()]));
 

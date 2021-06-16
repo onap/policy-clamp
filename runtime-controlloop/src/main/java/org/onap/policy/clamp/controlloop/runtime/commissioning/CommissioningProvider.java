@@ -29,7 +29,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
-import org.onap.policy.clamp.controlloop.common.exception.ControlLoopRuntimeException;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ControlLoopProvider;
 import org.onap.policy.clamp.controlloop.models.messages.rest.commissioning.CommissioningResponse;
 import org.onap.policy.models.base.PfModelException;
@@ -57,11 +56,10 @@ public class CommissioningProvider implements Closeable {
 
     /**
      * Create a commissioning provider.
-     *
-     * @throws ControlLoopRuntimeException on errors creating the provider
+     * @param databaseProviderParameters parameters for database access
+     * @throws PfModelRuntimeException on errors creating the database provider
      */
-    public CommissioningProvider(PolicyModelsProviderParameters databaseProviderParameters)
-            throws ControlLoopRuntimeException {
+    public CommissioningProvider(PolicyModelsProviderParameters databaseProviderParameters) {
         try {
             modelsProvider = new PolicyModelsProviderFactory()
                     .createPolicyModelsProvider(databaseProviderParameters);
@@ -98,7 +96,7 @@ public class CommissioningProvider implements Closeable {
             modelsProvider.createServiceTemplate(serviceTemplate);
         }
 
-        CommissioningResponse response = new CommissioningResponse();
+        var response = new CommissioningResponse();
         // @formatter:off
         response.setAffectedControlLoopDefinitions(serviceTemplate.getToscaTopologyTemplate().getNodeTemplates()
                 .values()
@@ -123,7 +121,7 @@ public class CommissioningProvider implements Closeable {
             modelsProvider.deleteServiceTemplate(name, version);
         }
 
-        CommissioningResponse response = new CommissioningResponse();
+        var response = new CommissioningResponse();
         response.setAffectedControlLoopDefinitions(
                 Collections.singletonList(new ToscaConceptIdentifier(name, version)));
 
@@ -201,7 +199,7 @@ public class CommissioningProvider implements Closeable {
      * @throws PfModelException on errors getting control loop definitions
      */
     public ToscaServiceTemplate getToscaServiceTemplate(String name, String version) throws PfModelException {
-        ToscaServiceTemplates serviceTemplates = new ToscaServiceTemplates();
+        var serviceTemplates = new ToscaServiceTemplates();
         serviceTemplates.setServiceTemplates(modelsProvider.getServiceTemplateList(name, version));
         return serviceTemplates.getServiceTemplates().get(0);
     }
