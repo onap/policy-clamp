@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dbc0d178_75574a8f",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ParticipantStatisticsProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-16T14:24:01Z",
+      "side": 1,
+      "message": "sorry about that - I thought I had made it backward compatible. 😞",
+      "revId": "43fb6c9a683efb014c40d5736419cb0085556642",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
