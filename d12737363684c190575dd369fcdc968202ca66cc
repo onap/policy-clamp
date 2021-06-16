@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "25bac632_1dc3ff2a",
+        "filename": "packages/policy-clamp-docker/src/main/docker/DcaeParticipantDockerfile",
+        "patchSetId": 4
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-06-16T13:54:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aabf1236_18f0e92f",
+      "range": {
+        "startLine": 43,
+        "startChar": 0,
+        "endLine": 45,
+        "endChar": 0
+      },
+      "revId": "d12737363684c190575dd369fcdc968202ca66cc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2e67f51b_3a4c5716",
         "filename": "packages/policy-clamp-docker/src/main/docker/PolicyParticipantDockerfile",
         "patchSetId": 4
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "05eb87d1_0c1cef8f",
+        "filename": "packages/policy-clamp-docker/src/main/docker/PolicyParticipantDockerfile",
+        "patchSetId": 4
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-06-16T13:54:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2e67f51b_3a4c5716",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 31
+      },
+      "revId": "d12737363684c190575dd369fcdc968202ca66cc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cd1bbb65_e8cacbb7",
         "filename": "packages/policy-clamp-docker/src/main/docker/dcae-participant.sh",
         "patchSetId": 4
@@ -62,6 +110,24 @@
       "revId": "d12737363684c190575dd369fcdc968202ca66cc",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c376d08d_4fe0ffe5",
+        "filename": "packages/policy-clamp-docker/src/main/docker/dcae-participant.sh",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-06-16T13:54:06Z",
+      "side": 1,
+      "message": "\u003cQuestion\u003e so I assume that the participant is now completely self contained in app.jar? \n\u003cAnswer\u003e Yes. Participant code is completely contained in app.jar, this is being done in policy-clamp-docker/pom.xml with assembly tag while building Participant docker images using docker-maven-plugin.\n\n\u003cQuestion\u003e Can logback.xml still be overridden?  \n\u003cAnswer\u003e I have added another dependencySet in policy-clamp-docker/pom.xml to build policy-participant.tar.gz which contains an etc directory\nwhich inturn contains logback files and ssl. By this, these can become available in /opt/app/policy/clamp/etc (Or $POLICY_HOME/etc) just like\nany other policy containers.\n\n$docker exec -it dcae-participant ls ../etc\nClRuntimeParameters.json          logback.xml\nDcaeParticipantParameters.json    onappf\nPolicyParticipantParameters.json  ssl\nlogback-default.xml\n\n\u003cdependencySet\u003e\n    \u003cincludes\u003e\n        \u003cinclude\u003eorg.onap.policy.clamp:policy-clamp-tarball\u003c/include\u003e\n    \u003c/includes\u003e\n    \u003coutputDirectory\u003e/lib\u003c/outputDirectory\u003e\n    \u003coutputFileNameMapping\u003epolicy-participant.tar.gz\u003c/outputFileNameMapping\u003e\n\u003c/dependencySet\u003e\n\n\u003cQuestion\u003e We normally put config files in \"etc\", not \"config\".  Does Spring force it to be \"config\"?\n\u003cAnswer\u003e Yes, It looks for configuration in config directory in the order specified according to the documentation.\n$ docker exec -it dcae-participant pwd\n/opt/app/policy/clamp/bin\n$ docker exec -it dcae-participant ls ..\nbin     config  etc https://docs.spring.io/spring-boot/docs/1.5.6.RELEASE/reference/html/boot-features-external-config.html#boot-features-external-config-application-property-files",
+      "parentUuid": "cd1bbb65_e8cacbb7",
+      "revId": "d12737363684c190575dd369fcdc968202ca66cc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -85,6 +151,30 @@
       "revId": "d12737363684c190575dd369fcdc968202ca66cc",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ddae9c89_8bf863e4",
+        "filename": "packages/policy-clamp-tarball/src/main/resources/etc/logback-default.xml",
+        "patchSetId": 4
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-06-16T13:54:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3f2456eb_e9ecb654",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 2
+      },
+      "revId": "d12737363684c190575dd369fcdc968202ca66cc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
