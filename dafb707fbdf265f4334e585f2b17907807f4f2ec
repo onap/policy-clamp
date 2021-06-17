@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "a4a6df3c_1788f407",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/handler/ControlLoopElementHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-17T16:46:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dfa95e74_f2b20bf1",
+      "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6fcff001_581007fc",
         "filename": "participant/participant-impl/participant-impl-dcae/src/main/resources/config/application.yaml",
         "patchSetId": 2
@@ -624,6 +642,24 @@
       "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "391e1157_20ae2f27",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/models/RestClientParameters.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-17T16:46:26Z",
+      "side": 1,
+      "message": "I have removed this class because JerseyClient already does all these validations",
+      "parentUuid": "a762205a_efa47f1e",
+      "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
