@@ -34,6 +34,24 @@
       "revId": "3e0c29b835151e3e2e3282fc8c376af1c3b1309b",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "92673a9a_88c06a20",
+        "filename": "packages/policy-clamp-tarball/src/main/resources/etc/logback-default.xml",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-17T07:53:24Z",
+      "side": 1,
+      "message": "Yes, please change references from Apex to clamp.",
+      "parentUuid": "8e76f6c3_76adbc24",
+      "revId": "3e0c29b835151e3e2e3282fc8c376af1c3b1309b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
