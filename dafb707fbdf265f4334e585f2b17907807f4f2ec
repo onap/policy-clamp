@@ -19,6 +19,40 @@
     },
     {
       "key": {
+        "uuid": "dfa95e74_f2b20bf1",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/handler/ControlLoopElementHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-17T14:21:15Z",
+      "side": 1,
+      "message": "hmm.  Looks like we need two different parameters, one for the number of times through the loop and another for the amount of time to sleep",
+      "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6fcff001_581007fc",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/main/resources/config/application.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-17T14:21:15Z",
+      "side": 1,
+      "message": "missing newline at the end of the file",
+      "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f7030d51_9a63d128",
         "filename": "participant/participant-impl/participant-impl-dcae/src/test/resources/application_test.properties",
         "patchSetId": 2
@@ -36,6 +70,177 @@
         "endLine": 42,
         "endChar": 2
       },
+      "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "daf77031_cc478d7b",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/test/resources/application_test.properties",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-17T14:21:15Z",
+      "side": 1,
+      "message": "trailing whitespace",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 42,
+        "endChar": 2
+      },
+      "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7d159ecc_6e111aed",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-17T14:21:15Z",
+      "side": 1,
+      "message": "this can be removed - now in policy-parent",
+      "range": {
+        "startLine": 35,
+        "startChar": 4,
+        "endLine": 39,
+        "endChar": 0
+      },
+      "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dcdf7981_6797f358",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-17T14:21:15Z",
+      "side": 1,
+      "message": "this line can be removed - now in policy-parent",
+      "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "69042943_469c838c",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-17T14:21:15Z",
+      "side": 1,
+      "message": "this line can be removed - now in policy-parent",
+      "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e38ec17d_097e0dbf",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/parameters/ParticipantK8sParameters.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-17T14:21:15Z",
+      "side": 1,
+      "message": "question: are we using the policy BeanValidator?  If so, these should be the policy annotations instead of javax.validation annotations.",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 44
+      },
+      "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "caec7b06_c67c1890",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/parameters/ParticipantK8sParameters.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-17T14:21:15Z",
+      "side": 1,
+      "message": "also need NotNull?\n\nsame question below.  Note: can just move NotBlank (if using policy annotations) and NotNull to class level",
+      "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e8e5acc9_f76691fe",
+        "filename": "participant/participant-impl/participant-impl-policy/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-17T14:21:15Z",
+      "side": 1,
+      "message": "this line can be removed - now in policy-parent",
+      "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3ac7229b_5620d92f",
+        "filename": "participant/participant-impl/participant-impl-simulator/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-17T14:21:15Z",
+      "side": 1,
+      "message": "this line can be removed - now in policy-parent",
+      "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7716a729_284b5cc7",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ControlLoopHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-17T14:21:15Z",
+      "side": 1,
+      "message": "use lombok annotation instead",
       "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
@@ -93,6 +298,41 @@
     },
     {
       "key": {
+        "uuid": "c71255cd_9d7dd424",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/models/RestClientParameters.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-17T14:21:15Z",
+      "side": 1,
+      "message": "I\u0027m OK with this - we may want to move it to policy-common",
+      "parentUuid": "b7e2bdca_8055503a",
+      "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a762205a_efa47f1e",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/models/RestClientParameters.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-17T14:21:15Z",
+      "side": 1,
+      "message": "should user name and password be optional, or should they always be required?",
+      "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8e7497ea_1b5eb51a",
         "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/models/ToscaConceptIdentifier.java",
         "patchSetId": 2
@@ -138,6 +378,23 @@
       "writtenOn": "2021-06-17T09:56:51Z",
       "side": 1,
       "message": "Same comment.",
+      "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "60ef3a00_26b08948",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/parameters/ParticipantIntermediaryParameters.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-17T14:21:15Z",
+      "side": 1,
+      "message": "missing newline at end of file",
       "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
