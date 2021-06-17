@@ -30,6 +30,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.concepts.JpaParticipantStatistics;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfTimestampKey;
+import org.onap.policy.models.dao.PfFilterParameters;
 import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.provider.impl.AbstractModelsProvider;
 
@@ -87,8 +88,20 @@ public class ParticipantStatisticsProvider extends AbstractModelsProvider {
             final Instant startTimeStamp, final Instant endTimeStamp, Map<String, Object> filterMap,
             final String sortOrder, final int getRecordNum) {
 
-        return asParticipantStatisticsList(getPfDao().getFiltered(JpaParticipantStatistics.class, name, version,
-                startTimeStamp, endTimeStamp, filterMap, sortOrder, getRecordNum));
+        // @formatter:off
+        PfFilterParameters filterParams = PfFilterParameters
+                .builder()
+                .name(name)
+                .version(version)
+                .startTime(startTimeStamp)
+                .endTime(endTimeStamp)
+                .filterMap(filterMap)
+                .sortOrder(sortOrder)
+                .recordNum(getRecordNum)
+                .build();
+        // @formatter:on
+
+        return asParticipantStatisticsList(getPfDao().getFiltered(JpaParticipantStatistics.class, filterParams));
     }
 
 

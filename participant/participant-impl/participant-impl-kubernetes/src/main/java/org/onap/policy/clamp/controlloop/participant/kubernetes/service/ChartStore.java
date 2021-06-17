@@ -51,8 +51,7 @@ public class ChartStore {
 
     private static final StandardCoder STANDARD_CODER = new StandardCoder();
 
-    @Autowired
-    private ParticipantK8sParameters participantK8sParameters;
+    private final ParticipantK8sParameters participantK8sParameters;
 
     /**
      * The chartStore map contains chart name as key & ChartInfo as value.
@@ -62,7 +61,8 @@ public class ChartStore {
     /**
      * Constructor method.
      */
-    public ChartStore() {
+    public ChartStore(@Autowired ParticipantK8sParameters participantK8sParameters) {
+        this.participantK8sParameters = participantK8sParameters;
         this.restoreFromLocalFileSystem();
     }
 
@@ -177,12 +177,11 @@ public class ChartStore {
     }
 
     private synchronized void restoreFromLocalFileSystem() {
-        Path localChartDirectoryPath = Paths.get(participantK8sParameters.getLocalChartDirectory());
-
         try {
+            Path localChartDirectoryPath = Paths.get(participantK8sParameters.getLocalChartDirectory());
             Files.createDirectories(localChartDirectoryPath);
             restoreFromLocalFileSystem(localChartDirectoryPath);
-        } catch (IOException ioe) {
+        } catch (Exception ioe) {
             LOGGER.warn("Could not restore charts from local file system: {}", ioe);
         }
     }
@@ -194,8 +193,11 @@ public class ChartStore {
             @Override
             public FileVisitResult visitFile(Path localChartFile, BasicFileAttributes attrs) throws IOException {
                 try {
-                    ChartInfo chart = STANDARD_CODER.decode(localChartFile.toFile(), ChartInfo.class);
-                    localChartMap.put(key(chart), chart);
+                    // Decode only the json file excluding the helm charts
+                    if (localChartFile.endsWith(participantK8sParameters.getInfoFileName())) {
+                        ChartInfo chart = STANDARD_CODER.decode(localChartFile.toFile(), ChartInfo.class);
+                        localChartMap.put(key(chart), chart);
+                    }
                     return FileVisitResult.CONTINUE;
                 } catch (CoderException ce) {
                     throw new IOException("Error decoding chart file", ce);

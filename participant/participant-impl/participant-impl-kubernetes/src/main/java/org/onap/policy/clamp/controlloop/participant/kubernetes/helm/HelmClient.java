@@ -113,8 +113,6 @@ public class HelmClient {
     static String executeCommand(ProcessBuilder processBuilder) throws ServiceException {
         var commandStr = toString(processBuilder);
 
-        processBuilder.redirectInput(ProcessBuilder.Redirect.DISCARD);
-
         try {
             var process = processBuilder.start();
             process.waitFor();

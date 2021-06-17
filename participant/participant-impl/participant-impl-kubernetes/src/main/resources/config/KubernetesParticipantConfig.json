@@ -49,8 +49,8 @@
         "implementation":"org.onap.policy.models.provider.impl.DatabasePolicyModelsProviderImpl",
         "databaseDriver":"org.mariadb.jdbc.Driver",
         "databaseUrl":"jdbc:mariadb://localhost:3306/controlloop",
-        "databaseUser":"admin",
-        "databasePassword":"passme",
+        "databaseUser":"policy",
+        "databasePassword":"P01icY",
         "persistenceUnit":"ToscaConceptTest"
     }
 }
