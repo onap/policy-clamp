@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "736ac94a_d2de45ed",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/handler/ControlLoopElementHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-17T18:15:15Z",
+      "side": 1,
+      "message": "no error, Monday I will check Sonar setting in my laptop",
+      "parentUuid": "b5ce2949_040f3b26",
+      "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "dfa95e74_f2b20bf1",
         "filename": "participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/handler/ControlLoopElementHandler.java",
         "patchSetId": 2
@@ -628,6 +646,24 @@
     },
     {
       "key": {
+        "uuid": "11720c31_038ed055",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/models/RestClientParameters.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-17T18:15:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0630d293_db65a0f7",
+      "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a762205a_efa47f1e",
         "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/models/RestClientParameters.java",
         "patchSetId": 2
@@ -765,6 +801,24 @@
       "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ffe535ec_bf4d9ebb",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/models/validation/PolicyValidator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-17T18:15:15Z",
+      "side": 1,
+      "message": "I have created POLICY-3402",
+      "parentUuid": "84490f54_39f245af",
+      "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
