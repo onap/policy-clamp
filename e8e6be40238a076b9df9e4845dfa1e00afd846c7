@@ -1,0 +1,209 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "01ed21e4_aa9e9db3",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ParticipantProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-17T13:43:35Z",
+      "side": 1,
+      "message": "I didn\u0027t think sonar liked declaring runtime exceptions",
+      "range": {
+        "startLine": 139,
+        "startChar": 19,
+        "endLine": 139,
+        "endChar": 43
+      },
+      "revId": "e8e6be40238a076b9df9e4845dfa1e00afd846c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a88856dd_9cde2094",
+        "filename": "models/src/test/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ParticipantProviderTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-17T13:43:35Z",
+      "side": 1,
+      "message": "I\u0027m sure I see warnings in eclipse when these methods are not commented\n\nsame comment for the other files",
+      "revId": "e8e6be40238a076b9df9e4845dfa1e00afd846c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fae04db7_1998d2da",
+        "filename": "participant/participant-impl/participant-impl-dcae/pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-17T13:43:35Z",
+      "side": 1,
+      "message": "spring boot BOM was removed from policy-parent, so might it still be needed here?  or is it higher up the chain, in the the clamp repo, now?",
+      "revId": "e8e6be40238a076b9df9e4845dfa1e00afd846c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "57f4b676_8c66f4f2",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ControlLoopHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-17T13:43:35Z",
+      "side": 1,
+      "message": "while we\u0027re changing it, could just use lombok annotation for this",
+      "range": {
+        "startLine": 66,
+        "startChar": 4,
+        "endLine": 67,
+        "endChar": 5
+      },
+      "revId": "e8e6be40238a076b9df9e4845dfa1e00afd846c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "395199c8_1ffdc26c",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/config/AafConfiguration.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-17T13:43:35Z",
+      "side": 1,
+      "message": "missing newline at the end of the file\n\nsame comment in a number of files",
+      "revId": "e8e6be40238a076b9df9e4845dfa1e00afd846c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "61b08cfb_933079de",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/tosca/update/elements/Constraint.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-17T13:43:35Z",
+      "side": 1,
+      "message": "STRING.equals(xxx)",
+      "revId": "e8e6be40238a076b9df9e4845dfa1e00afd846c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "57f24894_89191c78",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/tosca/update/elements/Constraint.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-17T13:43:35Z",
+      "side": 1,
+      "message": "STRING.equalsIgnoreCase(xxx) ?\n\nlooks like every one of these methods takes a different approach to upper/lower case.  Should they all be consistent?",
+      "range": {
+        "startLine": 175,
+        "startChar": 16,
+        "endLine": 175,
+        "endChar": 76
+      },
+      "revId": "e8e6be40238a076b9df9e4845dfa1e00afd846c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ecbe55c9_a2b01d62",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/tosca/update/parser/ToscaConverterToJsonSchema.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-17T13:43:35Z",
+      "side": 1,
+      "message": "LIST.equalsIgnoreCase(xxx)\n\nsame for MAP",
+      "revId": "e8e6be40238a076b9df9e4845dfa1e00afd846c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "208e8772_16ba8809",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/loop/components/external/DcaeComponent.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-17T13:43:35Z",
+      "side": 1,
+      "message": "can change all of these to else-if, eliminating the increasing indentation.  Either that or could break it into chunks so that a given condition is only evaluated once:\n\n  if (INSTALL) {\n    if (SUCCEEDED) {\n    } else if (PROCESSING) {\n    } else {\n    }\n  } else if (UNINSTALL) {\n  } else {\n  }",
+      "revId": "e8e6be40238a076b9df9e4845dfa1e00afd846c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9980a28c_10bbc158",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/loop/components/external/DcaeComponent.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-17T13:43:35Z",
+      "side": 1,
+      "message": "INSTALL.equals(xxx)\n\nsame comment for the other cases",
+      "revId": "e8e6be40238a076b9df9e4845dfa1e00afd846c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f3217fec_c03db645",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/loop/deploy/DcaeDeployParameters.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-17T13:43:35Z",
+      "side": 1,
+      "message": "lombok: NoArgs(PRIVATE)",
+      "revId": "e8e6be40238a076b9df9e4845dfa1e00afd846c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
