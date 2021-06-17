@@ -59,6 +59,23 @@
     },
     {
       "key": {
+        "uuid": "9928f63b_a234e73d",
+        "filename": "participant/participant-impl/participant-impl-dcae/pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-06-17T13:44:15Z",
+      "side": 1,
+      "message": "shouldn\u0027t this be in some dependencyManagement section in some parent pom?",
+      "revId": "e8e6be40238a076b9df9e4845dfa1e00afd846c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "57f4b676_8c66f4f2",
         "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ControlLoopHandler.java",
         "patchSetId": 3
