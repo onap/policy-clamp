@@ -52,6 +52,24 @@
       "revId": "3e0c29b835151e3e2e3282fc8c376af1c3b1309b",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a6299c40_95d6baaf",
+        "filename": "packages/policy-clamp-tarball/src/main/resources/etc/logback-default.xml",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-06-17T08:31:19Z",
+      "side": 1,
+      "message": "My terrible copy-paste mistake :-(\nCorrected the same. Added scan\u003d\"true\" scanPeriod\u003d\"30 seconds\", Removed Context file references, as they do-not exist for Clamp",
+      "parentUuid": "92673a9a_88c06a20",
+      "revId": "3e0c29b835151e3e2e3282fc8c376af1c3b1309b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
