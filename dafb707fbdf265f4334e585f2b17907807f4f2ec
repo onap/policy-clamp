@@ -592,6 +592,24 @@
     },
     {
       "key": {
+        "uuid": "0630d293_db65a0f7",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/models/RestClientParameters.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-17T16:38:28Z",
+      "side": 1,
+      "message": "sure we don\u0027t want to validate this as part of the container\u0027s validation, as the error messages may provide better context than jersey-client",
+      "parentUuid": "f09163ff_c25f5cc4",
+      "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a762205a_efa47f1e",
         "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/models/RestClientParameters.java",
         "patchSetId": 2
@@ -641,6 +659,24 @@
       "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e2e4dd19_e2730f69",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/models/ToscaConceptIdentifier.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-17T16:38:28Z",
+      "side": 1,
+      "message": "maybe should add the jakarta annotations to the class in policy-models",
+      "parentUuid": "89532a4d_e6fc4f4d",
+      "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     },
     {
       "key": {
