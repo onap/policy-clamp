@@ -53,6 +53,24 @@
     },
     {
       "key": {
+        "uuid": "ec96422c_246b339e",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/main/resources/config/application.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-17T16:26:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6fcff001_581007fc",
+      "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f7030d51_9a63d128",
         "filename": "participant/participant-impl/participant-impl-dcae/src/test/resources/application_test.properties",
         "patchSetId": 2
@@ -99,6 +117,54 @@
     },
     {
       "key": {
+        "uuid": "ac51372a_dc83bab6",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/test/resources/application_test.properties",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-17T16:26:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f7030d51_9a63d128",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 42,
+        "endChar": 2
+      },
+      "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "72c52d31_f2d69d08",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/test/resources/application_test.properties",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-17T16:26:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "daf77031_cc478d7b",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 42,
+        "endChar": 2
+      },
+      "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7d159ecc_6e111aed",
         "filename": "participant/participant-impl/participant-impl-kubernetes/pom.xml",
         "patchSetId": 2
@@ -122,6 +188,30 @@
     },
     {
       "key": {
+        "uuid": "2be8d738_f445b06e",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-17T16:26:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7d159ecc_6e111aed",
+      "range": {
+        "startLine": 35,
+        "startChar": 4,
+        "endLine": 39,
+        "endChar": 0
+      },
+      "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dcdf7981_6797f358",
         "filename": "participant/participant-impl/participant-impl-kubernetes/pom.xml",
         "patchSetId": 2
@@ -139,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "f5dba0f8_0a3f7c9c",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-17T16:26:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dcdf7981_6797f358",
+      "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "69042943_469c838c",
         "filename": "participant/participant-impl/participant-impl-kubernetes/pom.xml",
         "patchSetId": 2
@@ -153,6 +261,24 @@
       "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2635e533_fad23b53",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-17T16:26:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "69042943_469c838c",
+      "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -179,6 +305,30 @@
     },
     {
       "key": {
+        "uuid": "0d359fe6_9df761ef",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/parameters/ParticipantK8sParameters.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-17T16:26:09Z",
+      "side": 1,
+      "message": "moving to SpringBoot properties, I also moved to Spring validation",
+      "parentUuid": "e38ec17d_097e0dbf",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 44
+      },
+      "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "caec7b06_c67c1890",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/parameters/ParticipantK8sParameters.java",
         "patchSetId": 2
@@ -193,6 +343,24 @@
       "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "23cdf28d_fa0a40e0",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/parameters/ParticipantK8sParameters.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-17T16:26:09Z",
+      "side": 1,
+      "message": "moving to SpringBoot properties, I also moved to Spring validation",
+      "parentUuid": "caec7b06_c67c1890",
+      "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -213,6 +381,24 @@
     },
     {
       "key": {
+        "uuid": "ba7bdb53_b6f5c435",
+        "filename": "participant/participant-impl/participant-impl-policy/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-17T16:26:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e8e5acc9_f76691fe",
+      "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3ac7229b_5620d92f",
         "filename": "participant/participant-impl/participant-impl-simulator/pom.xml",
         "patchSetId": 2
@@ -227,6 +413,24 @@
       "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d91787ca_99b9de18",
+        "filename": "participant/participant-impl/participant-impl-simulator/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-17T16:26:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3ac7229b_5620d92f",
+      "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -247,6 +451,24 @@
     },
     {
       "key": {
+        "uuid": "94002491_44ed4496",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ControlLoopHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-17T16:26:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7716a729_284b5cc7",
+      "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5578d421_8d381ba6",
         "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/models/ParameterGroup.java",
         "patchSetId": 2
@@ -264,6 +486,24 @@
     },
     {
       "key": {
+        "uuid": "ef225603_dbecb7ce",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/models/ParameterGroup.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-17T16:26:09Z",
+      "side": 1,
+      "message": "removed",
+      "parentUuid": "5578d421_8d381ba6",
+      "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "598ae8a9_1b7be645",
         "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/models/ParameterGroupImpl.java",
         "patchSetId": 2
@@ -278,6 +518,24 @@
       "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f499a2ad_c3176e45",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/models/ParameterGroupImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-17T16:26:09Z",
+      "side": 1,
+      "message": "removed",
+      "parentUuid": "598ae8a9_1b7be645",
+      "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -309,6 +567,24 @@
       "writtenOn": "2021-06-17T14:21:15Z",
       "side": 1,
       "message": "I\u0027m OK with this - we may want to move it to policy-common",
+      "parentUuid": "b7e2bdca_8055503a",
+      "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f09163ff_c25f5cc4",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/models/RestClientParameters.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-17T16:26:09Z",
+      "side": 1,
+      "message": "I have removed this class because JerseyClient already does all those validations",
       "parentUuid": "b7e2bdca_8055503a",
       "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
@@ -350,6 +626,24 @@
     },
     {
       "key": {
+        "uuid": "89532a4d_e6fc4f4d",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/models/ToscaConceptIdentifier.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-17T16:26:09Z",
+      "side": 1,
+      "message": "I need Jakarta annotations, or Spring can not validate it.",
+      "parentUuid": "8e7497ea_1b5eb51a",
+      "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b1069cfa_21cfd962",
         "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/models/validation/PolicyConstraint.java",
         "patchSetId": 2
@@ -364,6 +658,24 @@
       "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f664955a_ff818286",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/models/validation/PolicyConstraint.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-17T16:26:09Z",
+      "side": 1,
+      "message": "Can I use same Jira to insert it into  policy-common?",
+      "parentUuid": "b1069cfa_21cfd962",
+      "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
