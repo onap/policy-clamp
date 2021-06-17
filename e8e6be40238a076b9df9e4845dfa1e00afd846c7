@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a0033579_3ba32d88",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ParticipantProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-17T14:54:42Z",
+      "side": 1,
+      "message": "done",
+      "parentUuid": "01ed21e4_aa9e9db3",
+      "range": {
+        "startLine": 139,
+        "startChar": 19,
+        "endLine": 139,
+        "endChar": 43
+      },
+      "revId": "e8e6be40238a076b9df9e4845dfa1e00afd846c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a88856dd_9cde2094",
         "filename": "models/src/test/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ParticipantProviderTest.java",
         "patchSetId": 3
@@ -36,6 +60,24 @@
       "writtenOn": "2021-06-17T13:43:35Z",
       "side": 1,
       "message": "I\u0027m sure I see warnings in eclipse when these methods are not commented\n\nsame comment for the other files",
+      "revId": "e8e6be40238a076b9df9e4845dfa1e00afd846c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7afa846c_d5afd254",
+        "filename": "models/src/test/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ParticipantProviderTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-17T14:54:42Z",
+      "side": 1,
+      "message": "There\u0027s an exception in the checkstyle file for methods staring with the name \"before\", \"after\", and \"test\". See line 316 in:\nhttps://github.com/onap/oparent/blob/master/checkstyle/src/main/resources/onap-checkstyle/onap-java-style.xml",
+      "parentUuid": "a88856dd_9cde2094",
       "revId": "e8e6be40238a076b9df9e4845dfa1e00afd846c7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
@@ -59,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "c78f7d91_09411790",
+        "filename": "participant/participant-impl/participant-impl-dcae/pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-17T14:54:42Z",
+      "side": 1,
+      "message": "The build works without it so I removed it.",
+      "parentUuid": "fae04db7_1998d2da",
+      "revId": "e8e6be40238a076b9df9e4845dfa1e00afd846c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9928f63b_a234e73d",
         "filename": "participant/participant-impl/participant-impl-dcae/pom.xml",
         "patchSetId": 3
@@ -70,6 +130,24 @@
       "writtenOn": "2021-06-17T13:44:15Z",
       "side": 1,
       "message": "shouldn\u0027t this be in some dependencyManagement section in some parent pom?",
+      "revId": "e8e6be40238a076b9df9e4845dfa1e00afd846c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d623c062_0e72e3b1",
+        "filename": "participant/participant-impl/participant-impl-dcae/pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-17T14:54:42Z",
+      "side": 1,
+      "message": "I\u0027ll look into this, this review was about checkstyle/SONAR but it the remerge on the pom reviews dragged this in. Is it OK to look at this in another commit?",
+      "parentUuid": "9928f63b_a234e73d",
       "revId": "e8e6be40238a076b9df9e4845dfa1e00afd846c7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
@@ -99,6 +177,30 @@
     },
     {
       "key": {
+        "uuid": "7123b208_34984532",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ControlLoopHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-17T14:54:42Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "57f4b676_8c66f4f2",
+      "range": {
+        "startLine": 66,
+        "startChar": 4,
+        "endLine": 67,
+        "endChar": 5
+      },
+      "revId": "e8e6be40238a076b9df9e4845dfa1e00afd846c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "395199c8_1ffdc26c",
         "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/config/AafConfiguration.java",
         "patchSetId": 3
@@ -116,6 +218,24 @@
     },
     {
       "key": {
+        "uuid": "35e24fcd_bbedb57c",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/config/AafConfiguration.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-17T14:54:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "395199c8_1ffdc26c",
+      "revId": "e8e6be40238a076b9df9e4845dfa1e00afd846c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "61b08cfb_933079de",
         "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/tosca/update/elements/Constraint.java",
         "patchSetId": 3
@@ -127,6 +247,24 @@
       "writtenOn": "2021-06-17T13:43:35Z",
       "side": 1,
       "message": "STRING.equals(xxx)",
+      "revId": "e8e6be40238a076b9df9e4845dfa1e00afd846c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d84c75a0_a21ef4ee",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/tosca/update/elements/Constraint.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-17T14:54:42Z",
+      "side": 1,
+      "message": "Really we should do all of this file in a consistent way in one go, I was just dealing with the warning about occurrences of \"string\"",
+      "parentUuid": "61b08cfb_933079de",
       "revId": "e8e6be40238a076b9df9e4845dfa1e00afd846c7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
@@ -156,6 +294,30 @@
     },
     {
       "key": {
+        "uuid": "24501deb_39d22a67",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/tosca/update/elements/Constraint.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-17T14:54:42Z",
+      "side": 1,
+      "message": "I don\u0027t know. I was dealing with the \"string\" occurrences and putting \"string\" in as a constant. I would be afraid to change the logic of this code in case it breaks something. I would defer to Seb on this.\n\nHowever, according to the TOSCA specification, the only correct generic TOSCA type for strings is \"string\", all lower case, anything else is bad TOSCA.",
+      "parentUuid": "57f24894_89191c78",
+      "range": {
+        "startLine": 175,
+        "startChar": 16,
+        "endLine": 175,
+        "endChar": 76
+      },
+      "revId": "e8e6be40238a076b9df9e4845dfa1e00afd846c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ecbe55c9_a2b01d62",
         "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/tosca/update/parser/ToscaConverterToJsonSchema.java",
         "patchSetId": 3
@@ -167,6 +329,24 @@
       "writtenOn": "2021-06-17T13:43:35Z",
       "side": 1,
       "message": "LIST.equalsIgnoreCase(xxx)\n\nsame for MAP",
+      "revId": "e8e6be40238a076b9df9e4845dfa1e00afd846c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "65669f62_d7a615d5",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/tosca/update/parser/ToscaConverterToJsonSchema.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-17T14:54:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ecbe55c9_a2b01d62",
       "revId": "e8e6be40238a076b9df9e4845dfa1e00afd846c7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
@@ -190,6 +370,24 @@
     },
     {
       "key": {
+        "uuid": "f1820271_0e132746",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/loop/components/external/DcaeComponent.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-17T14:54:42Z",
+      "side": 1,
+      "message": "I was only extracting constants here, I didn\u0027t want to chance changing the logic. It will take me much more time to go through this and change the logic.",
+      "parentUuid": "208e8772_16ba8809",
+      "revId": "e8e6be40238a076b9df9e4845dfa1e00afd846c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9980a28c_10bbc158",
         "filename": "runtime/src/main/java/org/onap/policy/clamp/loop/components/external/DcaeComponent.java",
         "patchSetId": 3
@@ -207,6 +405,42 @@
     },
     {
       "key": {
+        "uuid": "1bc8db2a_3dc58e6e",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/loop/components/external/DcaeComponent.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-17T14:54:42Z",
+      "side": 1,
+      "message": "I was only extracting constants here, I didn\u0027t want to chance changing the logic. It will take me much more time to go through this and change the logic.",
+      "parentUuid": "9980a28c_10bbc158",
+      "revId": "e8e6be40238a076b9df9e4845dfa1e00afd846c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "668279f0_2698d8a1",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/loop/components/external/DcaeComponent.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-17T14:54:42Z",
+      "side": 1,
+      "message": "I was only extracting constants here, I didn\u0027t want to chance changing the logic. It will take me much more time to go through this and change the logic.",
+      "parentUuid": "9980a28c_10bbc158",
+      "revId": "e8e6be40238a076b9df9e4845dfa1e00afd846c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f3217fec_c03db645",
         "filename": "runtime/src/main/java/org/onap/policy/clamp/loop/deploy/DcaeDeployParameters.java",
         "patchSetId": 3
@@ -218,6 +452,24 @@
       "writtenOn": "2021-06-17T13:43:35Z",
       "side": 1,
       "message": "lombok: NoArgs(PRIVATE)",
+      "revId": "e8e6be40238a076b9df9e4845dfa1e00afd846c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f8226463_8498806d",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/loop/deploy/DcaeDeployParameters.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-17T14:54:42Z",
+      "side": 1,
+      "message": "Nice!",
+      "parentUuid": "f3217fec_c03db645",
       "revId": "e8e6be40238a076b9df9e4845dfa1e00afd846c7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
