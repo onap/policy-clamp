@@ -95,7 +95,7 @@ public class ParticipantErrorController implements ErrorController {
 
     }
 
-    @Override
+    //@Override
     public String getErrorPath() {
         return path;
     }

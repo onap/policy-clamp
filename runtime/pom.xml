@@ -153,10 +153,8 @@
             </properties>
         </profile>
     </profiles>
-
     <dependencyManagement>
         <dependencies>
-            <!-- Spring Boot BOM -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
@@ -164,17 +162,8 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <!-- Camel BOM -->
-            <dependency>
-                <groupId>org.apache.camel.springboot</groupId>
-                <artifactId>camel-spring-boot-bom</artifactId>
-                <version>${version.camel}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
         </dependencies>
     </dependencyManagement>
-
     <dependencies>
         <dependency>
             <groupId>com.att.eelf</groupId>
@@ -194,7 +183,6 @@
         <dependency>
             <groupId>org.codehaus.janino</groupId>
             <artifactId>janino</artifactId>
-            <version>3.0.8</version>
         </dependency>
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
@@ -220,26 +208,32 @@
         <dependency>
             <groupId>org.apache.camel.springboot</groupId>
             <artifactId>camel-http-starter</artifactId>
+            <version>${version.camel}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.camel.springboot</groupId>
             <artifactId>camel-spring-boot-starter</artifactId>
+            <version>${version.camel}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.camel.springboot</groupId>
             <artifactId>camel-jaxb-starter</artifactId>
+            <version>${version.camel}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.camel.springboot</groupId>
             <artifactId>camel-servlet-starter</artifactId>
+            <version>${version.camel}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.camel.springboot</groupId>
             <artifactId>camel-gson-starter</artifactId>
+            <version>${version.camel}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.camel.springboot</groupId>
             <artifactId>camel-swagger-java-starter</artifactId>
+            <version>${version.camel}</version>
             <exclusions>
                 <exclusion>
                     <groupId>javax.ws.rs</groupId>
@@ -255,6 +249,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <version>${version.springboot}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>
@@ -265,6 +260,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
+            <version>${version.springboot}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.glassfish</groupId>
@@ -279,14 +275,17 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
+            <version>${version.springboot}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
+            <version>${version.springboot}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <version>${version.springboot}</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -298,6 +297,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <version>${version.springboot}</version>
         </dependency>
         <!-- Policy dependencies mainly for the models required -->
         <dependency>
@@ -333,12 +333,10 @@
         <dependency>
             <groupId>javax.xml.ws</groupId>
             <artifactId>jaxws-api</artifactId>
-            <version>2.3.1</version>
         </dependency>
         <dependency>
             <groupId>org.onap.aaf.authz</groupId>
             <artifactId>aaf-cadi-aaf</artifactId>
-            <version>2.1.15</version>
             <exclusions>
                 <exclusion>
                     <groupId>javax.servlet</groupId>
@@ -357,12 +355,10 @@
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
             <artifactId>json-simple</artifactId>
-            <version>1.1.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-vfs2</artifactId>
-            <version>2.8.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.squareup.okhttp</groupId>
@@ -377,7 +373,6 @@
         <dependency>
             <groupId>javax.transaction</groupId>
             <artifactId>jta</artifactId>
-            <version>1.1</version>
         </dependency>
         <dependency>
             <groupId>javax.persistence</groupId>
@@ -396,7 +391,6 @@
         <dependency>
             <groupId>org.jboss.spec.javax.ws.rs</groupId>
             <artifactId>jboss-jaxrs-api_2.0_spec</artifactId>
-            <version>1.0.1.Final</version>
         </dependency>
 
 
@@ -404,13 +398,11 @@
         <dependency>
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
-            <version>2.7.2</version>
         </dependency>
         <!-- For SDC Controller -->
         <dependency>
             <groupId>org.onap.sdc.sdc-distribution-client</groupId>
             <artifactId>sdc-distribution-client</artifactId>
-            <version>1.4.1</version>
         </dependency>
         <dependency>
             <groupId>org.onap.sdc.sdc-tosca</groupId>
@@ -430,26 +422,17 @@
         <dependency>
             <groupId>org.dom4j</groupId>
             <artifactId>dom4j</artifactId>
-            <version>2.1.3</version>
         </dependency>
 
         <!-- TESTING -->
         <dependency>
             <groupId>org.junit.vintage</groupId>
             <artifactId>junit-vintage-engine</artifactId>
-            <version>5.7.1</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <version>3.10.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.github.docker-java</groupId>
             <artifactId>docker-java-core</artifactId>
-            <version>3.2.7</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -461,7 +444,6 @@
         <dependency>
             <groupId>com.github.docker-java</groupId>
             <artifactId>docker-java</artifactId>
-            <version>3.2.7</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -719,7 +701,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.2.0</version>
                 <executions>
                     <execution>
                         <id>jar-with-only-classes</id>
@@ -779,7 +760,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${version.springboot}</version>
                 <executions>
                     <execution>
                         <goals>
@@ -792,7 +772,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.2</version>
                 <configuration>
                     <forkCount>1C</forkCount>
                     <reuseForks>true</reuseForks>
@@ -804,7 +783,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.22.2</version>
                 <executions>
                     <execution>
                         <id>integration-tests</id>
@@ -992,7 +970,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.5</version>
+                <version>${jacoco.version}</version>
                 <configuration>
                     <dumpOnExit>true</dumpOnExit>
                     <append>true</append>
@@ -1146,16 +1124,16 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
             </plugin>
             <plugin>
                 <groupId>org.sonarsource.scanner.maven</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
-                <version>3.7.0.1746</version>
+                <version>${sonar.scanner.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
+                <version>1.3.2</version>
                 <executions>
                     <execution>
                         <id>libIndexCheck</id>
