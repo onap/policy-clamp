@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2e493ba3_46a3b3e6",
+        "filename": "participant/participant-impl/participant-impl-simulator/src/main/java/org/onap/policy/clamp/controlloop/participant/simulator/main/rest/ParticipantErrorController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-06-18T16:42:43Z",
+      "side": 1,
+      "message": "I think it creates sonar if not deleted, better to delete",
+      "revId": "4abb4428462fdeb079ac3ff09f2b62e307663579",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
