@@ -752,6 +752,24 @@
     },
     {
       "key": {
+        "uuid": "394dde01_98fe7eb4",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/models/ToscaConceptIdentifier.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-18T09:48:53Z",
+      "side": 1,
+      "message": "Yes, I agree",
+      "parentUuid": "e2e4dd19_e2730f69",
+      "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b1069cfa_21cfd962",
         "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/models/validation/PolicyConstraint.java",
         "patchSetId": 2
