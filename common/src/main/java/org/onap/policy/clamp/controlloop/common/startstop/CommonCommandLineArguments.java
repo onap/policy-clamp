@@ -139,7 +139,7 @@ public class CommonCommandLineArguments {
         }
         if (!theFile.canRead()) {
             throw new ControlLoopException(Response.Status.NOT_ACCEPTABLE,
-                    fileTag + FILE_MESSAGE_PREAMBLE + fileName + "\" is ureadable");
+                    fileTag + FILE_MESSAGE_PREAMBLE + fileName + "\" is unreadable");
         }
     }
 }
