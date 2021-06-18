@@ -126,6 +126,24 @@
     },
     {
       "key": {
+        "uuid": "02e4519b_9b755ed0",
+        "filename": "models/src/test/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ParticipantProviderTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-18T14:56:00Z",
+      "side": 1,
+      "message": "Yes, I snuck it in when I changed the checkstyle file in Guilin or Honolulu ;-)",
+      "parentUuid": "24cab973_4d62f43f",
+      "revId": "e8e6be40238a076b9df9e4845dfa1e00afd846c7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fae04db7_1998d2da",
         "filename": "participant/participant-impl/participant-impl-dcae/pom.xml",
         "patchSetId": 3
