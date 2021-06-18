@@ -54,6 +54,29 @@
     },
     {
       "key": {
+        "uuid": "2f522120_317372aa",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/models/RestClientParameters.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-18T15:31:54Z",
+      "side": 1,
+      "message": "where possible, this should exactly match the field name, thus \"host\" instead of \"Host\"\n\nsame comment below",
+      "range": {
+        "startLine": 47,
+        "startChar": 30,
+        "endLine": 47,
+        "endChar": 34
+      },
+      "revId": "9021c52cdbd85932a4c4ea354846e4ea28f3889f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6dc7d813_df1e6426",
         "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/models/RestClientParameters.java",
         "patchSetId": 5
