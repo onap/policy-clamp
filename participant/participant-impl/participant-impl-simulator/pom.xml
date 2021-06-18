@@ -32,24 +32,6 @@
     <name>${project.artifactId}</name>
     <description>Participant simulator, used to test control loops</description>
 
-    <properties>
-        <springboot.version>2.4.4</springboot.version>
-        <springfox.version>3.0.0</springfox.version>
-    </properties>
-
-    <dependencyManagement>
-        <dependencies>
-            <!-- Spring Boot BOM -->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${springboot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -66,12 +48,11 @@
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-boot-starter</artifactId>
-            <version>${springfox.version}</version>
+            <version>${version.springfox}</version>
         </dependency>
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
-            <version>${springfox.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
@@ -86,7 +67,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${springboot.version}</version>
                 <executions>
                     <execution>
                         <goals>
