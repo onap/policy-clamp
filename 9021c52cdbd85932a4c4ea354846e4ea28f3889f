@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "e1646d30_c4d8a1b5",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/models/RestClientParameters.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-18T12:52:45Z",
+      "side": 1,
+      "message": "Yes, this should go into policy-common, like RestServerParameters",
+      "parentUuid": "1fc711b2_b0807188",
+      "revId": "9021c52cdbd85932a4c4ea354846e4ea28f3889f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6dc7d813_df1e6426",
         "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/models/RestClientParameters.java",
         "patchSetId": 5
@@ -87,6 +105,24 @@
     },
     {
       "key": {
+        "uuid": "791ceaae_4a5f6f28",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/models/validation/PolicyConstraint.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-18T12:52:45Z",
+      "side": 1,
+      "message": "please see my comments for PolicyValidator",
+      "parentUuid": "b80d4abc_3bf0c0df",
+      "revId": "9021c52cdbd85932a4c4ea354846e4ea28f3889f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0077e122_bcc7cbba",
         "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/models/validation/PolicyValidator.java",
         "patchSetId": 5
@@ -98,6 +134,24 @@
       "writtenOn": "2021-06-18T09:48:53Z",
       "side": 1,
       "message": "This is the validator for the link to the Policy Framework validation. We should make this annotation generally available to all Policy Framework users.\n\nThis should be renamed and moved to policy-common. Please ask Jim Hahn where it should go.\n\nRenaming suggestion: ParameterGroupValidator\n\nPlease avoid calling this \"Policy....\" as the \"Policy\" word is too overloaded for us.",
+      "revId": "9021c52cdbd85932a4c4ea354846e4ea28f3889f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8e4213c9_f841bbbb",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/models/validation/PolicyValidator.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-18T12:52:45Z",
+      "side": 1,
+      "message": "it would go in common-parameters.  The one concern I have is that I don\u0027t want to include spring or hibernate in policy-common - maybe an appropriate \"scope\" will make it so it compiles, without actually making them a dependency of the jar/pom.\n\nOTOH, maybe it should just stay here for now.  We can move it if/when we decide to migrate the other components to spring.\n\nAgree that it should be renamed.",
+      "parentUuid": "0077e122_bcc7cbba",
       "revId": "9021c52cdbd85932a4c4ea354846e4ea28f3889f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
