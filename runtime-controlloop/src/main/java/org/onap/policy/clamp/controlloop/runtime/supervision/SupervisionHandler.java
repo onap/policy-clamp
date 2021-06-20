@@ -20,7 +20,6 @@
 
 package org.onap.policy.clamp.controlloop.runtime.supervision;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import javax.ws.rs.core.Response;
@@ -40,7 +39,6 @@ import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.Parti
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageType;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStatus;
 import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningHandler;
-import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningProvider;
 import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
 import org.onap.policy.clamp.controlloop.runtime.monitoring.MonitoringHandler;
 import org.onap.policy.clamp.controlloop.runtime.monitoring.MonitoringProvider;
@@ -54,7 +52,6 @@ import org.onap.policy.common.utils.services.Registry;
 import org.onap.policy.common.utils.services.ServiceManager;
 import org.onap.policy.common.utils.services.ServiceManagerException;
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,7 +71,6 @@ public class SupervisionHandler extends ControlLoopHandler {
 
     private ControlLoopProvider controlLoopProvider;
     private ParticipantProvider participantProvider;
-    private CommissioningProvider commissioningProvider;
     private MonitoringProvider monitoringProvider;
 
     // Publishers for participant communication
@@ -139,7 +135,7 @@ public class SupervisionHandler extends ControlLoopHandler {
 
         for (ToscaConceptIdentifier controlLoopId : controlLoopIdentifierList) {
             try {
-                ControlLoop controlLoop = controlLoopProvider.getControlLoop(controlLoopId);
+                var controlLoop = controlLoopProvider.getControlLoop(controlLoopId);
 
                 superviseControlLoop(controlLoop);
 
@@ -223,9 +219,10 @@ public class SupervisionHandler extends ControlLoopHandler {
      * Supervise a control loop, performing whatever actions need to be performed on the control loop.
      *
      * @param controlLoop the control loop to supervises
+     * @throws PfModelException on accessing models in the database
      * @throws ControlLoopException on supervision errors
      */
-    private void superviseControlLoop(ControlLoop controlLoop) throws ControlLoopException, PfModelException {
+    private void superviseControlLoop(ControlLoop controlLoop) throws ControlLoopException, PfModelException  {
         switch (controlLoop.getOrderedState()) {
             case UNINITIALISED:
                 superviseControlLoopUninitialization(controlLoop);
@@ -332,18 +329,18 @@ public class SupervisionHandler extends ControlLoopHandler {
     }
 
     private void sendControlLoopUpdate(ControlLoop controlLoop) throws PfModelException {
-        ParticipantControlLoopUpdate pclu = new ParticipantControlLoopUpdate();
+        var pclu = new ParticipantControlLoopUpdate();
         pclu.setControlLoopId(controlLoop.getKey().asIdentifier());
         pclu.setControlLoop(controlLoop);
         // TODO: We should look up the correct TOSCA node template here for the control loop
         // Tiny hack implemented to return the tosca service template entry from the database and be passed onto dmaap
-        commissioningProvider = CommissioningHandler.getInstance().getProvider();
+        var commissioningProvider = CommissioningHandler.getInstance().getProvider();
         pclu.setControlLoopDefinition(commissioningProvider.getToscaServiceTemplate(null, null));
         controlLoopUpdatePublisher.send(pclu);
     }
 
     private void sendControlLoopStateChange(ControlLoop controlLoop) {
-        ParticipantControlLoopStateChange clsc = new ParticipantControlLoopStateChange();
+        var clsc = new ParticipantControlLoopStateChange();
         clsc.setControlLoopId(controlLoop.getKey().asIdentifier());
         clsc.setMessageId(UUID.randomUUID());
         clsc.setOrderedState(controlLoop.getOrderedState());
@@ -363,7 +360,7 @@ public class SupervisionHandler extends ControlLoopHandler {
                         participantStatusMessage.getParticipantId().getVersion());
 
         if (CollectionUtils.isEmpty(participantList)) {
-            Participant participant = new Participant();
+            var participant = new Participant();
             participant.setName(participantStatusMessage.getParticipantId().getName());
             participant.setVersion(participantStatusMessage.getParticipantId().getVersion());
             participant.setDefinition(new ToscaConceptIdentifier("unknown", "0.0.0"));
@@ -397,7 +394,7 @@ public class SupervisionHandler extends ControlLoopHandler {
                     "PARTICIPANT_STATUS message references unknown control loop: " + controlLoop);
             }
 
-            ControlLoop dbControlLoop = controlLoopProvider
+            var dbControlLoop = controlLoopProvider
                     .getControlLoop(new ToscaConceptIdentifier(controlLoop.getName(), controlLoop.getVersion()));
             if (dbControlLoop == null) {
                 exceptionOccured(Response.Status.NOT_FOUND,

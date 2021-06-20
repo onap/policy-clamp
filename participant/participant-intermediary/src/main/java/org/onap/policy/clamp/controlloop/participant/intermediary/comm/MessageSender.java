@@ -34,7 +34,6 @@ import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.Parti
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantResponseStatus;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStatus;
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ControlLoopElementListener;
-import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ParticipantStatusPublisher;
 import org.onap.policy.clamp.controlloop.participant.intermediary.handler.ParticipantHandler;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -72,7 +71,7 @@ public class MessageSender extends TimerTask implements Closeable {
     public void run() {
         LOGGER.debug("Sent heartbeat to CLAMP");
 
-        ParticipantResponseDetails response = new ParticipantResponseDetails();
+        var response = new ParticipantResponseDetails();
 
         response.setResponseTo(null);
         response.setResponseStatus(ParticipantResponseStatus.PERIODIC);
@@ -100,7 +99,7 @@ public class MessageSender extends TimerTask implements Closeable {
      * @param response the details to include in the response message
      */
     public void sendResponse(ToscaConceptIdentifier controlLoopId, ParticipantResponseDetails response) {
-        ParticipantStatus status = new ParticipantStatus();
+        var status = new ParticipantStatus();
 
         // Participant related fields
         status.setParticipantType(participantHandler.getParticipantType());
@@ -109,12 +108,12 @@ public class MessageSender extends TimerTask implements Closeable {
         status.setHealthStatus(participantHandler.getHealthStatus());
 
         // Control loop related fields
-        ControlLoops controlLoops = participantHandler.getControlLoopHandler().getControlLoops();
+        var controlLoops = participantHandler.getControlLoopHandler().getControlLoops();
         status.setControlLoopId(controlLoopId);
         status.setControlLoops(controlLoops);
         status.setResponse(response);
 
-        ParticipantStatistics participantStatistics = new ParticipantStatistics();
+        var participantStatistics = new ParticipantStatistics();
         participantStatistics.setTimeStamp(Instant.now());
         participantStatistics.setParticipantId(participantHandler.getParticipantId());
         participantStatistics.setHealthStatus(participantHandler.getHealthStatus());

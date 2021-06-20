@@ -63,6 +63,7 @@ public class ControlLoopInstantiationProvider implements Closeable {
      * Create a instantiation provider.
      *
      * @param databaseProviderParameters the parameters for database access
+     * @throws PfModelRuntimeException on errors creating a provider
      */
     public ControlLoopInstantiationProvider(PolicyModelsProviderParameters databaseProviderParameters) {
         try {
@@ -89,10 +90,10 @@ public class ControlLoopInstantiationProvider implements Closeable {
 
         synchronized (lockit) {
             for (ControlLoop controlLoop : controlLoops.getControlLoopList()) {
-                ControlLoop checkControlLoop = controlLoopProvider.getControlLoop(controlLoop.getKey().asIdentifier());
+                var checkControlLoop = controlLoopProvider.getControlLoop(controlLoop.getKey().asIdentifier());
                 if (checkControlLoop != null) {
                     throw new PfModelException(Response.Status.BAD_REQUEST,
-                            controlLoop.getKey().asIdentifier() + " already defined");
+                        controlLoop.getKey().asIdentifier() + " already defined");
                 }
             }
             BeanValidationResult validationResult = validateControlLoops(controlLoops);
@@ -102,9 +103,9 @@ public class ControlLoopInstantiationProvider implements Closeable {
             controlLoopProvider.createControlLoops(controlLoops.getControlLoopList());
         }
 
-        InstantiationResponse response = new InstantiationResponse();
+        var response = new InstantiationResponse();
         response.setAffectedControlLoops(controlLoops.getControlLoopList().stream()
-                .map(cl -> cl.getKey().asIdentifier()).collect(Collectors.toList()));
+            .map(cl -> cl.getKey().asIdentifier()).collect(Collectors.toList()));
 
         return response;
     }
@@ -125,9 +126,9 @@ public class ControlLoopInstantiationProvider implements Closeable {
             controlLoopProvider.updateControlLoops(controlLoops.getControlLoopList());
         }
 
-        InstantiationResponse response = new InstantiationResponse();
+        var response = new InstantiationResponse();
         response.setAffectedControlLoops(controlLoops.getControlLoopList().stream()
-                .map(cl -> cl.getKey().asIdentifier()).collect(Collectors.toList()));
+            .map(cl -> cl.getKey().asIdentifier()).collect(Collectors.toList()));
 
         return response;
     }
@@ -136,32 +137,29 @@ public class ControlLoopInstantiationProvider implements Closeable {
      * Validate ControlLoops.
      *
      * @param controlLoops ControlLoops to validate
-     * @result the result of validation
+     * @return the result of validation
      * @throws PfModelException if controlLoops is not valid
      */
     private BeanValidationResult validateControlLoops(ControlLoops controlLoops) throws PfModelException {
 
-        BeanValidationResult result = new BeanValidationResult("ControlLoops", controlLoops);
+        var result = new BeanValidationResult("ControlLoops", controlLoops);
 
         for (ControlLoop controlLoop : controlLoops.getControlLoopList()) {
-            BeanValidationResult subResult = new BeanValidationResult(
-                    "entry " + controlLoop.getDefinition().getName(), controlLoop);
+            var subResult = new BeanValidationResult("entry " + controlLoop.getDefinition().getName(), controlLoop);
 
             List<ToscaNodeTemplate> toscaNodeTemplates = commissioningProvider.getControlLoopDefinitions(
-                    controlLoop.getDefinition().getName(), controlLoop.getDefinition().getVersion());
+                controlLoop.getDefinition().getName(), controlLoop.getDefinition().getVersion());
 
             if (toscaNodeTemplates.isEmpty()) {
-                subResult
-                        .addResult(new ObjectValidationResult("ControlLoop", controlLoop.getDefinition().getName(),
-                                ValidationStatus.INVALID, "Commissioned control loop definition not FOUND"));
+                subResult.addResult(new ObjectValidationResult("ControlLoop", controlLoop.getDefinition().getName(),
+                    ValidationStatus.INVALID, "Commissioned control loop definition not FOUND"));
             } else if (toscaNodeTemplates.size() > 1) {
-                subResult
-                        .addResult(new ObjectValidationResult("ControlLoop", controlLoop.getDefinition().getName(),
-                                ValidationStatus.INVALID, "Commissioned control loop definition not VALID"));
+                subResult.addResult(new ObjectValidationResult("ControlLoop", controlLoop.getDefinition().getName(),
+                    ValidationStatus.INVALID, "Commissioned control loop definition not VALID"));
             } else {
 
                 List<ToscaNodeTemplate> clElementDefinitions =
-                        commissioningProvider.getControlLoopElementDefinitions(toscaNodeTemplates.get(0));
+                    commissioningProvider.getControlLoopElementDefinitions(toscaNodeTemplates.get(0));
 
                 // @formatter:off
                 Map<String, ToscaConceptIdentifier> definitions = clElementDefinitions
@@ -184,11 +182,11 @@ public class ControlLoopInstantiationProvider implements Closeable {
      *
      * @param definitions map of all ToscaConceptIdentifiers
      * @param definition ToscaConceptIdentifier to validate
-     * @result result the validation result
+     * @return the validation result
      */
     private ValidationResult validateDefinition(Map<String, ToscaConceptIdentifier> definitions,
-                                                ToscaConceptIdentifier definition) {
-        BeanValidationResult result = new BeanValidationResult("entry " + definition.getName(), definition);
+        ToscaConceptIdentifier definition) {
+        var result = new BeanValidationResult("entry " + definition.getName(), definition);
         ToscaConceptIdentifier identifier = definitions.get(definition.getName());
         if (identifier == null) {
             result.setResult(ValidationStatus.INVALID, "Not FOUND");
@@ -207,7 +205,7 @@ public class ControlLoopInstantiationProvider implements Closeable {
      * @throws PfModelException on deletion errors
      */
     public InstantiationResponse deleteControlLoop(String name, String version) throws PfModelException {
-        InstantiationResponse response = new InstantiationResponse();
+        var response = new InstantiationResponse();
         synchronized (lockit) {
             List<ControlLoop> controlLoops = controlLoopProvider.getControlLoops(name, version);
             if (controlLoops.isEmpty()) {
@@ -216,12 +214,12 @@ public class ControlLoopInstantiationProvider implements Closeable {
             for (ControlLoop controlLoop : controlLoops) {
                 if (!ControlLoopState.UNINITIALISED.equals(controlLoop.getState())) {
                     throw new PfModelException(Response.Status.BAD_REQUEST,
-                            "Control Loop State is still " + controlLoop.getState());
+                        "Control Loop State is still " + controlLoop.getState());
                 }
             }
 
             response.setAffectedControlLoops(Collections
-                    .singletonList(controlLoopProvider.deleteControlLoop(name, version).getKey().asIdentifier()));
+                .singletonList(controlLoopProvider.deleteControlLoop(name, version).getKey().asIdentifier()));
         }
         return response;
     }
@@ -235,7 +233,7 @@ public class ControlLoopInstantiationProvider implements Closeable {
      * @throws PfModelException on errors getting control loops
      */
     public ControlLoops getControlLoops(String name, String version) throws PfModelException {
-        ControlLoops controlLoops = new ControlLoops();
+        var controlLoops = new ControlLoops();
         controlLoops.setControlLoopList(controlLoopProvider.getControlLoops(name, version));
 
         return controlLoops;
@@ -250,7 +248,7 @@ public class ControlLoopInstantiationProvider implements Closeable {
      * @throws ControlLoopException on ordered state invalid
      */
     public InstantiationResponse issueControlLoopCommand(InstantiationCommand command)
-            throws ControlLoopException, PfModelException {
+        throws ControlLoopException, PfModelException {
 
         if (command.getOrderedState() == null) {
             throw new ControlLoopException(Status.BAD_REQUEST, "ordered state invalid or not specified on command");
@@ -259,16 +257,16 @@ public class ControlLoopInstantiationProvider implements Closeable {
         synchronized (lockit) {
             List<ControlLoop> controlLoops = new ArrayList<>(command.getControlLoopIdentifierList().size());
             for (ToscaConceptIdentifier id : command.getControlLoopIdentifierList()) {
-                ControlLoop controlLoop = controlLoopProvider.getControlLoop(id);
+                var controlLoop = controlLoopProvider.getControlLoop(id);
                 controlLoop.setCascadedOrderedState(command.getOrderedState());
                 controlLoops.add(controlLoop);
             }
             controlLoopProvider.updateControlLoops(controlLoops);
         }
 
-        SupervisionHandler supervisionHandler = SupervisionHandler.getInstance();
+        var supervisionHandler = SupervisionHandler.getInstance();
         supervisionHandler.triggerControlLoopSupervision(command.getControlLoopIdentifierList());
-        InstantiationResponse response = new InstantiationResponse();
+        var response = new InstantiationResponse();
         response.setAffectedControlLoops(command.getControlLoopIdentifierList());
 
         return response;

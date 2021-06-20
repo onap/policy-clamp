@@ -53,7 +53,7 @@ public class DcaeInventoryCache {
     }
 
     public Set<String> getAllLoopIds() {
-        return this.blueprintsMap.keySet();
+        return blueprintsMap.keySet();
     }
 
     public Set<DcaeInventoryResponse> getAllBlueprintsPerLoopId(String loopId) {

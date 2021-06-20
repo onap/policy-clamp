@@ -47,7 +47,6 @@ public class LoopLogServiceTestItCase {
     private static final String EXAMPLE_JSON = "{\"testName\":\"testValue\"}";
     private static final String CLAMP_COMPONENT = "CLAMP";
     private static final String SAMPLE_LOG_MESSAGE = "Sample log";
-    private static final String BLUEPRINT = "blueprint";
 
     @Autowired
     LoopService loopService;

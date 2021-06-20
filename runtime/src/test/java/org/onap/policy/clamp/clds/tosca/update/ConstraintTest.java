@@ -48,6 +48,7 @@ public class ConstraintTest extends TestCase {
     /**
      * Test get value array.
      */
+    @SuppressWarnings("unchecked")
     public void testGetValuesArray() {
         ToscaElementProperty toscaElementProperty = toscaElement.getProperties().get("timeout");
         JsonTemplate jsonTemplate = jsonTemplateManager.getJsonSchemaTemplates().get("integer");
@@ -70,6 +71,7 @@ public class ConstraintTest extends TestCase {
     /**
      * Test get Specific length.
      */
+    @SuppressWarnings("unchecked")
     public void testGetSpecificLength() {
         //Test for string type, same process for array
         ToscaElementProperty toscaElementProperty = toscaElement.getProperties().get("id");
@@ -88,6 +90,7 @@ public class ConstraintTest extends TestCase {
     /**
      * Test get limit value.
      */
+    @SuppressWarnings("unchecked")
     public void testGetLimitValue() {
         //Test for array type, same process for string
         ToscaElementProperty toscaElementProperty = toscaElement.getProperties().get("description");
@@ -102,5 +105,4 @@ public class ConstraintTest extends TestCase {
         toTest = resultProcess.get("maxItems").getAsInt();
         assertEquals(7, toTest);
     }
-
 }

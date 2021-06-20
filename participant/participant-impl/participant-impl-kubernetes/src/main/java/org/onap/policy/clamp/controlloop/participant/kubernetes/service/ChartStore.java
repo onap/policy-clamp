@@ -94,6 +94,7 @@ public class ChartStore {
      *
      * @param chartInfo chartInfo
      * @param chartFile helm chart file.
+     * @param overrideFile override file.
      * @return chart
      * @throws IOException incase of IO error
      * @throws ServiceException incase of error.

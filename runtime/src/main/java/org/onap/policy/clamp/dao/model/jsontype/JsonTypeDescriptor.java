@@ -73,6 +73,7 @@ public class JsonTypeDescriptor extends AbstractTypeDescriptor<JsonObject> {
         return JsonUtils.GSON_JPA_MODEL.fromJson(string, JsonObject.class);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <X> X unwrap(JsonObject value, Class<X> type, WrapperOptions options) {
         if (value == null) {
@@ -95,7 +96,7 @@ public class JsonTypeDescriptor extends AbstractTypeDescriptor<JsonObject> {
             return null;
         }
 
-        if (String.class.isInstance(value)) {
+        if (value instanceof String) {
             return JsonUtils.GSON_JPA_MODEL.fromJson((String) value, JsonObject.class);
         }
 

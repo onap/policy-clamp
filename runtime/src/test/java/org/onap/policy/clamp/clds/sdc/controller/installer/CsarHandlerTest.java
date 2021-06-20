@@ -55,7 +55,6 @@ public class CsarHandlerTest {
     private static final String SERVICE_UUID = "serviceUUID";
     private static final String RESOURCE1_UUID = "resource1UUID";
     private static final String RESOURCE1_INSTANCE_NAME = "sim-1802 0";
-    private static final String RESOURCE1_INSTANCE_NAME_IN_CSAR = "sim18020";
     private static final String BLUEPRINT1_NAME = "FOI.Simfoimap223S0112.event_proc_bp.yaml";
     private static final String BLUEPRINT2_NAME = "FOI.Simfoimap223S0112.event_proc_bp2.yaml";
 

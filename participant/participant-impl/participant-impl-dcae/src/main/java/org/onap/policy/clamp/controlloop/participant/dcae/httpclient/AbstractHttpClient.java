@@ -24,7 +24,6 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.util.Collections;
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopRuntimeException;
 import org.onap.policy.clamp.controlloop.participant.dcae.model.Loop;
@@ -46,6 +45,9 @@ public abstract class AbstractHttpClient implements Closeable {
 
     /**
      * Constructor.
+     *
+     * @param restClientParameters the REST client parameters
+     * @throws ControlLoopRuntimeException on errors
      */
     protected AbstractHttpClient(BusTopicParams restClientParameters) {
         try {
@@ -58,7 +60,7 @@ public abstract class AbstractHttpClient implements Closeable {
 
     protected boolean executePut(String path, String jsonEntity, int statusCode) {
         try {
-            Response response = httpclient.put(path, Entity.json(jsonEntity), Collections.emptyMap());
+            var response = httpclient.put(path, Entity.json(jsonEntity), Collections.emptyMap());
             return response.getStatus() == statusCode;
         } catch (Exception e) {
             LOGGER.error(MSG_REQUEST_FAILED, httpclient.getName(), e);
@@ -68,7 +70,7 @@ public abstract class AbstractHttpClient implements Closeable {
 
     protected boolean executePut(String path, int statusCode) {
         try {
-            Response response = httpclient.put(path, Entity.json(""), Collections.emptyMap());
+            var response = httpclient.put(path, Entity.json(""), Collections.emptyMap());
             return response.getStatus() == statusCode;
         } catch (Exception e) {
             LOGGER.error(MSG_REQUEST_FAILED, httpclient.getName(), e);
@@ -78,7 +80,7 @@ public abstract class AbstractHttpClient implements Closeable {
 
     protected Loop executePost(String path, int statusCode) {
         try {
-            Response response = httpclient.post(path, Entity.json(""), Collections.emptyMap());
+            var response = httpclient.post(path, Entity.json(""), Collections.emptyMap());
             if (response.getStatus() != statusCode) {
                 return null;
             }
@@ -91,7 +93,7 @@ public abstract class AbstractHttpClient implements Closeable {
 
     protected Loop executeGet(String path, int statusCode) {
         try {
-            Response response = httpclient.get(path);
+            var response = httpclient.get(path);
 
             if (response.getStatus() != statusCode) {
                 return null;

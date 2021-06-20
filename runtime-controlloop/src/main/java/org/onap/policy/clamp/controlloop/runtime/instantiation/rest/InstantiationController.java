@@ -82,36 +82,35 @@ public class InstantiationController extends RestController {
             value = "Commissions control loop definitions",
             notes = "Commissions control loop definitions, returning the control loop IDs",
             response = InstantiationResponse.class,
-            tags = {
-                "Control Loop Instantiation API"
-                },
+            tags = {"Control Loop Instantiation API"},
             authorizations = @Authorization(value = AUTHORIZATION_TYPE),
             responseHeaders = {
-                    @ResponseHeader(
-                            name = VERSION_MINOR_NAME,
-                            description = VERSION_MINOR_DESCRIPTION,
-                            response = String.class),
-                    @ResponseHeader(
-                            name = VERSION_PATCH_NAME,
-                            description = VERSION_PATCH_DESCRIPTION,
-                            response = String.class),
-                    @ResponseHeader(
-                            name = VERSION_LATEST_NAME,
-                            description = VERSION_LATEST_DESCRIPTION,
-                            response = String.class),
-                    @ResponseHeader(
-                            name = REQUEST_ID_NAME,
-                            description = REQUEST_ID_HDR_DESCRIPTION,
-                            response = UUID.class)
+                @ResponseHeader(
+                    name = VERSION_MINOR_NAME,
+                    description = VERSION_MINOR_DESCRIPTION,
+                    response = String.class),
+                @ResponseHeader(
+                    name = VERSION_PATCH_NAME,
+                    description = VERSION_PATCH_DESCRIPTION,
+                    response = String.class),
+                @ResponseHeader(
+                    name = VERSION_LATEST_NAME,
+                    description = VERSION_LATEST_DESCRIPTION,
+                    response = String.class),
+                @ResponseHeader(
+                    name = REQUEST_ID_NAME,
+                    description = REQUEST_ID_HDR_DESCRIPTION,
+                    response = UUID.class)
                 },
             extensions = {
-                @Extension(
-                    name = EXTENSION_NAME,
-                    properties = {
+                @Extension
+                    (
+                        name = EXTENSION_NAME,
+                        properties = {
                             @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
                             @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
-                    }
-                )
+                        }
+                    )
             }
         )
     @ApiResponses(
@@ -156,22 +155,23 @@ public class InstantiationController extends RestController {
             },
             authorizations = @Authorization(value = AUTHORIZATION_TYPE),
             responseHeaders = {
-                    @ResponseHeader(
-                            name = VERSION_MINOR_NAME, description = VERSION_MINOR_DESCRIPTION,
-                                    response = String.class),
-                    @ResponseHeader(name = VERSION_PATCH_NAME, description = VERSION_PATCH_DESCRIPTION,
-                                    response = String.class),
-                    @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
-                                    response = String.class),
-                    @ResponseHeader(name = REQUEST_ID_NAME, description = REQUEST_ID_HDR_DESCRIPTION,
-                                    response = UUID.class)},
+                @ResponseHeader(
+                    name = VERSION_MINOR_NAME, description = VERSION_MINOR_DESCRIPTION,
+                    response = String.class),
+                @ResponseHeader(name = VERSION_PATCH_NAME, description = VERSION_PATCH_DESCRIPTION,
+                    response = String.class),
+                @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
+                    response = String.class),
+                @ResponseHeader(name = REQUEST_ID_NAME, description = REQUEST_ID_HDR_DESCRIPTION,
+                    response = UUID.class)},
             extensions = {
-                    @Extension(
-                            name = EXTENSION_NAME,
-                            properties = {
-                                    @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
-                                    @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
-                        }
+                @Extension
+                     (
+                         name = EXTENSION_NAME,
+                         properties = {
+                             @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                             @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
+                         }
                     )
                 }
         )
@@ -190,7 +190,7 @@ public class InstantiationController extends RestController {
                     required = true) @QueryParam("version") String version) {
 
         try {
-            ControlLoops response = provider.getControlLoops(name, version);
+            var response = provider.getControlLoops(name, version);
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Status.OK)), requestId).entity(response)
                     .build();
 
@@ -220,31 +220,32 @@ public class InstantiationController extends RestController {
                 },
             authorizations = @Authorization(value = AUTHORIZATION_TYPE),
             responseHeaders = {
-                    @ResponseHeader(
-                            name = VERSION_MINOR_NAME,
-                            description = VERSION_MINOR_DESCRIPTION,
-                            response = String.class),
-                    @ResponseHeader(
-                            name = VERSION_PATCH_NAME,
-                            description = VERSION_PATCH_DESCRIPTION,
-                            response = String.class),
-                    @ResponseHeader(
-                            name = VERSION_LATEST_NAME,
-                            description = VERSION_LATEST_DESCRIPTION,
-                            response = String.class),
-                    @ResponseHeader(
-                            name = REQUEST_ID_NAME,
-                            description = REQUEST_ID_HDR_DESCRIPTION,
-                            response = UUID.class)
-                },
+                @ResponseHeader(
+                    name = VERSION_MINOR_NAME,
+                    description = VERSION_MINOR_DESCRIPTION,
+                    response = String.class),
+                @ResponseHeader(
+                    name = VERSION_PATCH_NAME,
+                    description = VERSION_PATCH_DESCRIPTION,
+                    response = String.class),
+                @ResponseHeader(
+                    name = VERSION_LATEST_NAME,
+                    description = VERSION_LATEST_DESCRIPTION,
+                    response = String.class),
+                @ResponseHeader(
+                    name = REQUEST_ID_NAME,
+                    description = REQUEST_ID_HDR_DESCRIPTION,
+                    response = UUID.class)
+            },
             extensions = {
-                @Extension(
-                    name = EXTENSION_NAME,
-                    properties = {
+                @Extension
+                    (
+                        name = EXTENSION_NAME,
+                        properties = {
                             @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
                             @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
-                    }
-                )
+                        }
+                    )
             }
         )
     @ApiResponses(
@@ -289,33 +290,35 @@ public class InstantiationController extends RestController {
                 },
             authorizations = @Authorization(value = AUTHORIZATION_TYPE),
             responseHeaders = {
-                    @ResponseHeader(
-                            name = VERSION_MINOR_NAME,
-                            description = VERSION_MINOR_DESCRIPTION,
-                            response = String.class),
-                    @ResponseHeader(
-                            name = VERSION_PATCH_NAME,
-                            description = VERSION_PATCH_DESCRIPTION,
-                            response = String.class),
-                    @ResponseHeader(
-                            name = VERSION_LATEST_NAME,
-                            description = VERSION_LATEST_DESCRIPTION,
-                            response = String.class),
-                    @ResponseHeader(
-                            name = REQUEST_ID_NAME,
-                            description = REQUEST_ID_HDR_DESCRIPTION,
-                            response = UUID.class)},
+                @ResponseHeader(
+                    name = VERSION_MINOR_NAME,
+                    description = VERSION_MINOR_DESCRIPTION,
+                    response = String.class),
+                @ResponseHeader(
+                    name = VERSION_PATCH_NAME,
+                    description = VERSION_PATCH_DESCRIPTION,
+                    response = String.class),
+                @ResponseHeader(
+                    name = VERSION_LATEST_NAME,
+                    description = VERSION_LATEST_DESCRIPTION,
+                    response = String.class),
+                @ResponseHeader(
+                    name = REQUEST_ID_NAME,
+                    description = REQUEST_ID_HDR_DESCRIPTION,
+                    response = UUID.class)},
             extensions = {
-                    @Extension(
-                            name = EXTENSION_NAME,
-                            properties = {
-                                    @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
-                                    @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
-                                }
-                        )
+                @Extension
+                    (
+                        name = EXTENSION_NAME,
+                        properties = {
+                            @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                            @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
+                        }
+                    )
                 }
         )
-    @ApiResponses(value = {
+    @ApiResponses(
+        value = {
             @ApiResponse(code = AUTHENTICATION_ERROR_CODE, message = AUTHENTICATION_ERROR_MESSAGE),
             @ApiResponse(code = AUTHORIZATION_ERROR_CODE, message = AUTHORIZATION_ERROR_MESSAGE),
             @ApiResponse(code = SERVER_ERROR_CODE, message = SERVER_ERROR_MESSAGE)
@@ -358,21 +361,22 @@ public class InstantiationController extends RestController {
             },
             authorizations = @Authorization(value = AUTHORIZATION_TYPE),
             responseHeaders = {
-                    @ResponseHeader(
-                            name = VERSION_MINOR_NAME, description = VERSION_MINOR_DESCRIPTION,
-                                    response = String.class),
-                    @ResponseHeader(name = VERSION_PATCH_NAME, description = VERSION_PATCH_DESCRIPTION,
-                                    response = String.class),
-                    @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
-                                    response = String.class),
-                    @ResponseHeader(name = REQUEST_ID_NAME, description = REQUEST_ID_HDR_DESCRIPTION,
-                                    response = UUID.class)},
+                @ResponseHeader(
+                    name = VERSION_MINOR_NAME, description = VERSION_MINOR_DESCRIPTION,
+                    response = String.class),
+                @ResponseHeader(name = VERSION_PATCH_NAME, description = VERSION_PATCH_DESCRIPTION,
+                    response = String.class),
+                @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
+                    response = String.class),
+                @ResponseHeader(name = REQUEST_ID_NAME, description = REQUEST_ID_HDR_DESCRIPTION,
+                    response = UUID.class)},
             extensions = {
-                    @Extension(
-                            name = EXTENSION_NAME,
-                            properties = {
-                                    @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
-                                    @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
+                @Extension
+                    (
+                        name = EXTENSION_NAME,
+                        properties = {
+                            @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                            @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
                         }
                     )
                 }
@@ -407,7 +411,7 @@ public class InstantiationController extends RestController {
      * @return the Instantiation Response
      */
     private Response createInstantiationErrorResponse(ErrorResponseInfo e, UUID requestId) {
-        InstantiationResponse resp = new InstantiationResponse();
+        var resp = new InstantiationResponse();
         resp.setErrorDetails(e.getErrorResponse().getErrorMessage());
         return addLoggingHeaders(addVersionControlHeaders(Response.status(e.getErrorResponse().getResponseCode())),
             requestId).entity(resp).build();

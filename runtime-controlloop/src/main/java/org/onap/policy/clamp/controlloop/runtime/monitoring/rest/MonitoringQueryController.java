@@ -67,7 +67,10 @@ public class MonitoringQueryController extends RestController {
      *
      * @param requestId request ID used in ONAP logging
      * @param name the name of the participant to get, null for all participants statistics
+     * @param version the version of the participant to get, null for all participants with the given name
      * @param recordCount the record count to be fetched
+     * @param startTime the time from which to get statistics
+     * @param endTime the time to which to get statistics
      * @return the participant statistics
      */
     // @formatter:off
@@ -91,13 +94,14 @@ public class MonitoringQueryController extends RestController {
             @ResponseHeader(name = REQUEST_ID_NAME, description = REQUEST_ID_HDR_DESCRIPTION,
                 response = UUID.class)},
         extensions = {
-            @Extension(
-                name = EXTENSION_NAME,
-                properties = {
-                    @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
-                    @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
-                }
-            )
+            @Extension
+                (
+                    name = EXTENSION_NAME,
+                    properties = {
+                        @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                        @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
+                    }
+                )
         }
     )
     @ApiResponses(
@@ -174,13 +178,14 @@ public class MonitoringQueryController extends RestController {
             @ResponseHeader(name = REQUEST_ID_NAME, description = REQUEST_ID_HDR_DESCRIPTION,
                 response = UUID.class)},
         extensions = {
-            @Extension(
-                name = EXTENSION_NAME,
-                properties = {
-                    @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
-                    @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
-                }
-            )
+            @Extension
+                (
+                    name = EXTENSION_NAME,
+                    properties = {
+                        @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                        @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
+                    }
+                )
         })
     @ApiResponses(
         value = {
@@ -203,7 +208,7 @@ public class MonitoringQueryController extends RestController {
                 .entity(response)
                 .build();
 
-        } catch (PfModelRuntimeException | PfModelException e) {
+        } catch (PfModelRuntimeException e) {
             LOGGER.warn("Monitoring of Cl participant statistics failed", e);
             return addLoggingHeaders(addVersionControlHeaders(Response.status(e.getErrorResponse().getResponseCode())),
                 requestId).build();
@@ -242,13 +247,14 @@ public class MonitoringQueryController extends RestController {
             @ResponseHeader(name = REQUEST_ID_NAME, description = REQUEST_ID_HDR_DESCRIPTION,
                 response = UUID.class)},
         extensions = {
-            @Extension(
-                name = EXTENSION_NAME,
-                properties = {
-                    @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
-                    @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
-                }
-            )
+            @Extension
+                (
+                    name = EXTENSION_NAME,
+                    properties = {
+                        @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                        @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
+                    }
+                )
         })
     @ApiResponses(
         value = {
@@ -271,7 +277,7 @@ public class MonitoringQueryController extends RestController {
                 .entity(response)
                 .build();
 
-        } catch (PfModelRuntimeException | PfModelException e) {
+        } catch (PfModelRuntimeException e) {
             LOGGER.warn("Monitoring of Cl Element statistics failed", e);
             return addLoggingHeaders(addVersionControlHeaders(Response.status(e.getErrorResponse().getResponseCode())),
                 requestId).build();
@@ -290,6 +296,8 @@ public class MonitoringQueryController extends RestController {
      * @param version version of the control loop
      * @param id Id of the control loop element
      * @param recordCount the record count to be fetched
+     * @param startTime the time from which to get statistics
+     * @param endTime the time to which to get statistics
      * @return the control loop element statistics
      */
     // @formatter:off
@@ -313,13 +321,14 @@ public class MonitoringQueryController extends RestController {
             @ResponseHeader(name = REQUEST_ID_NAME, description = REQUEST_ID_HDR_DESCRIPTION,
                 response = UUID.class)},
         extensions = {
-            @Extension(
-                name = EXTENSION_NAME,
-                properties = {
-                    @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
-                    @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
-                }
-            )
+            @Extension
+                (
+                    name = EXTENSION_NAME,
+                    properties = {
+                        @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                        @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
+                    }
+                )
         })
     @ApiResponses(
         value = {

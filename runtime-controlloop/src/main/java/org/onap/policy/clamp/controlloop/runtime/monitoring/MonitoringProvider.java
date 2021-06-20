@@ -30,7 +30,6 @@ import java.util.Map;
 import lombok.NonNull;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ClElementStatistics;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ClElementStatisticsList;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantStatistics;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantStatisticsList;
@@ -55,6 +54,8 @@ public class MonitoringProvider implements Closeable {
     /**
      * Create a Monitoring provider.
      *
+     * @param parameters parameters for accessing the database for monitoring
+     * @throws PfModelRuntimeException on errors creating the provider
      */
     public MonitoringProvider(PolicyModelsProviderParameters parameters) {
 
@@ -83,9 +84,9 @@ public class MonitoringProvider implements Closeable {
      */
     public ParticipantStatisticsList createParticipantStatistics(List<ParticipantStatistics> participantStatistics)
         throws PfModelException {
-        ParticipantStatisticsList participantStatisticsList = new ParticipantStatisticsList();
-        participantStatisticsList.setStatisticsList(participantStatisticsProvider
-            .createParticipantStatistics(participantStatistics));
+        var participantStatisticsList = new ParticipantStatisticsList();
+        participantStatisticsList
+            .setStatisticsList(participantStatisticsProvider.createParticipantStatistics(participantStatistics));
 
         return participantStatisticsList;
     }
@@ -99,9 +100,9 @@ public class MonitoringProvider implements Closeable {
      */
     public ClElementStatisticsList createClElementStatistics(List<ClElementStatistics> clElementStatisticsList)
         throws PfModelException {
-        ClElementStatisticsList elementStatisticsList = new ClElementStatisticsList();
-        elementStatisticsList.setClElementStatistics(clElementStatisticsProvider
-            .createClElementStatistics(clElementStatisticsList));
+        var elementStatisticsList = new ClElementStatisticsList();
+        elementStatisticsList
+            .setClElementStatistics(clElementStatisticsProvider.createClElementStatistics(clElementStatisticsList));
 
         return elementStatisticsList;
     }
@@ -117,38 +118,36 @@ public class MonitoringProvider implements Closeable {
      * @return the participant found
      */
     public ParticipantStatisticsList fetchFilteredParticipantStatistics(@NonNull final String name,
-                                                                        final String version, int recordCount,
-                                                                        Instant startTime, Instant endTime)  {
-        ParticipantStatisticsList participantStatisticsList = new ParticipantStatisticsList();
+        final String version, int recordCount, Instant startTime, Instant endTime) {
+        var participantStatisticsList = new ParticipantStatisticsList();
 
-        //Additional parameters can be added in filterMap for filtering data.
+        // Additional parameters can be added in filterMap for filtering data.
         Map<String, Object> filterMap = null;
-        participantStatisticsList.setStatisticsList(participantStatisticsProvider.getFilteredParticipantStatistics(
-            name, version, startTime, endTime, filterMap, DESC_ORDER, recordCount));
+        participantStatisticsList.setStatisticsList(participantStatisticsProvider.getFilteredParticipantStatistics(name,
+            version, startTime, endTime, filterMap, DESC_ORDER, recordCount));
 
         return participantStatisticsList;
     }
 
     /**
-     * Get all participant statistics records found for a specific control loop.     *
+     * Get all participant statistics records found for a specific control loop. *
      *
      * @param controlLoopName name of the control loop
      * @param controlLoopVersion version of the control loop
      * @return All the participant statistics found
-     * @throws PfModelException on errors getting participant statistics
+     * @throws PfModelRuntimeException on errors getting participant statistics
      */
     public ParticipantStatisticsList fetchParticipantStatsPerControlLoop(@NonNull final String controlLoopName,
-                                                                         @NonNull final String controlLoopVersion)
-        throws PfModelException {
-        ParticipantStatisticsList statisticsList = new ParticipantStatisticsList();
+        @NonNull final String controlLoopVersion) {
+        var statisticsList = new ParticipantStatisticsList();
         List<ParticipantStatistics> participantStatistics = new ArrayList<>();
         try {
-            //Fetch all participantIds for a specific control loop
-            List<ToscaConceptIdentifier> participantIds = getAllParticipantIdsPerControlLoop(controlLoopName,
-                controlLoopVersion);
-            for (ToscaConceptIdentifier id: participantIds) {
-                participantStatistics.addAll(participantStatisticsProvider.getFilteredParticipantStatistics(
-                    id.getName(), id.getVersion(), null, null, null, DESC_ORDER, 0));
+            // Fetch all participantIds for a specific control loop
+            List<ToscaConceptIdentifier> participantIds =
+                getAllParticipantIdsPerControlLoop(controlLoopName, controlLoopVersion);
+            for (ToscaConceptIdentifier id : participantIds) {
+                participantStatistics.addAll(participantStatisticsProvider
+                    .getFilteredParticipantStatistics(id.getName(), id.getVersion(), null, null, null, DESC_ORDER, 0));
             }
             statisticsList.setStatisticsList(participantStatistics);
         } catch (PfModelException e) {
@@ -156,8 +155,6 @@ public class MonitoringProvider implements Closeable {
         }
         return statisticsList;
     }
-
-
 
     /**
      * Get clElement statistics based on specific filters.
@@ -172,20 +169,18 @@ public class MonitoringProvider implements Closeable {
      * @throws PfModelException on errors getting control loop statistics
      */
     public ClElementStatisticsList fetchFilteredClElementStatistics(@NonNull final String name, final String version,
-                                                                    final String id, Instant startTime, Instant endTime,
-                                                                    int recordCount) throws PfModelException {
-        ClElementStatisticsList clElementStatisticsList = new ClElementStatisticsList();
+        final String id, Instant startTime, Instant endTime, int recordCount) throws PfModelException {
+        var clElementStatisticsList = new ClElementStatisticsList();
         Map<String, Object> filterMap = new HashMap<>();
-        //Adding UUID in filter if present
+        // Adding UUID in filter if present
         if (id != null) {
             filterMap.put("localName", id);
         }
-        clElementStatisticsList.setClElementStatistics(clElementStatisticsProvider.getFilteredClElementStatistics(
-            name, version, startTime, endTime, filterMap, DESC_ORDER, recordCount));
+        clElementStatisticsList.setClElementStatistics(clElementStatisticsProvider.getFilteredClElementStatistics(name,
+            version, startTime, endTime, filterMap, DESC_ORDER, recordCount));
 
         return clElementStatisticsList;
     }
-
 
     /**
      * Get clElement statistics per control loop.
@@ -193,25 +188,23 @@ public class MonitoringProvider implements Closeable {
      * @param name the name of the control loop
      * @param version the version of the control loop
      * @return the clElement statistics found
-     * @throws PfModelException on errors getting control loop statistics
+     * @throws PfModelRuntimeException on errors getting control loop statistics
      */
     public ClElementStatisticsList fetchClElementStatsPerControlLoop(@NonNull final String name,
-                                                                     @NonNull final String version)
-        throws PfModelException {
-        ClElementStatisticsList clElementStatisticsList = new ClElementStatisticsList();
+        @NonNull final String version) {
+        var clElementStatisticsList = new ClElementStatisticsList();
         List<ClElementStatistics> clElementStats = new ArrayList<>();
         try {
             List<ControlLoopElement> clElements = new ArrayList<>();
-            //Fetch all control loop elements for the control loop
-            ControlLoop controlLoop = controlLoopProvider.getControlLoop(new ToscaConceptIdentifier(name,
-                version));
+            // Fetch all control loop elements for the control loop
+            var controlLoop = controlLoopProvider.getControlLoop(new ToscaConceptIdentifier(name, version));
             if (controlLoop != null) {
                 clElements.addAll(controlLoop.getElements().values());
-                //Collect control loop element statistics for each cl element.
+                // Collect control loop element statistics for each cl element.
                 for (ControlLoopElement clElement : clElements) {
                     clElementStats.addAll(fetchFilteredClElementStatistics(clElement.getParticipantId().getName(),
-                        clElement.getParticipantId().getVersion(), clElement.getId().toString(), null,
-                        null, 0).getClElementStatistics());
+                        clElement.getParticipantId().getVersion(), clElement.getId().toString(), null, null, 0)
+                            .getClElementStatistics());
                 }
             }
             clElementStatisticsList.setClElementStatistics(clElementStats);
@@ -233,7 +226,7 @@ public class MonitoringProvider implements Closeable {
     public List<ToscaConceptIdentifier> getAllParticipantIdsPerControlLoop(String name, String version)
         throws PfModelException {
         List<ToscaConceptIdentifier> participantIds = new ArrayList<>();
-        ControlLoop controlLoop = controlLoopProvider.getControlLoop(new ToscaConceptIdentifier(name, version));
+        var controlLoop = controlLoopProvider.getControlLoop(new ToscaConceptIdentifier(name, version));
         if (controlLoop != null) {
             for (ControlLoopElement clElement : controlLoop.getElements().values()) {
                 participantIds.add(clElement.getParticipantId());
@@ -254,7 +247,7 @@ public class MonitoringProvider implements Closeable {
     public Map<String, ToscaConceptIdentifier> getAllClElementsIdPerControlLoop(String name, String version)
         throws PfModelException {
         Map<String, ToscaConceptIdentifier> clElementId = new HashMap<>();
-        ControlLoop controlLoop = controlLoopProvider.getControlLoop(new ToscaConceptIdentifier(name, version));
+        var controlLoop = controlLoopProvider.getControlLoop(new ToscaConceptIdentifier(name, version));
         if (controlLoop != null) {
             for (ControlLoopElement clElement : controlLoop.getElements().values()) {
                 clElementId.put(clElement.getId().toString(), clElement.getParticipantId());

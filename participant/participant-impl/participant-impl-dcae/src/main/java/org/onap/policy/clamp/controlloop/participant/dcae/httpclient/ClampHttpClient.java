@@ -40,6 +40,8 @@ public class ClampHttpClient extends AbstractHttpClient {
 
     /**
      * Constructor.
+     *
+     * @param parameters the DCAE parameters
      */
     public ClampHttpClient(ParticipantDcaeParameters parameters) {
         super(parameters.getClampClientParameters());

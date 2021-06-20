@@ -42,7 +42,7 @@ public class ParticipantProviderTest {
 
     private static final Coder CODER = new StandardCoder();
     private static final String PARTICIPANT_JSON =
-        "src/test/resources/providers/TestParticipant.json";
+            "src/test/resources/providers/TestParticipant.json";
     private static final String LIST_IS_NULL = ".*. is marked .*ull but is null";
 
     private static AtomicInteger dbNameCounter = new AtomicInteger();
@@ -53,11 +53,8 @@ public class ParticipantProviderTest {
     private Participant updateParticipants;
     private String originalJson = ResourceUtils.getResourceAsString(PARTICIPANT_JSON);
 
-    /**
-     * Set up test Participant provider.
-     */
     @Before
-    public void setupDao() throws Exception {
+    public void beforeSetupDao() throws Exception {
 
         parameters = new PolicyModelsProviderParameters();
         parameters.setDatabaseDriver("org.h2.Driver");
@@ -86,10 +83,10 @@ public class ParticipantProviderTest {
 
         List<Participant> createdParticipants = new ArrayList<>();
         createdParticipants.addAll(participantProvider
-            .createParticipants(inputParticipants));
+                .createParticipants(inputParticipants));
 
         assertEquals(createdParticipants.get(0),
-            inputParticipants.get(0));
+                inputParticipants.get(0));
     }
 
 
@@ -108,14 +105,14 @@ public class ParticipantProviderTest {
         assertEquals(1, participantProvider.getParticipants(name, version).size());
 
         assertThat(participantProvider.getParticipants("invalid_name",
-            "1.0.1")).isEmpty();
+                "1.0.1")).isEmpty();
 
         assertThatThrownBy(() -> {
             participantProvider.getFilteredParticipants(null);
         }).hasMessageMatching("filter is marked .*ull but is null");
 
         final ToscaTypedEntityFilter<Participant> filter = ToscaTypedEntityFilter.<Participant>builder()
-            .type("org.onap.domain.pmsh.PMSHControlLoopDefinition").build();
+                .type("org.onap.domain.pmsh.PMSHControlLoopDefinition").build();
         assertEquals(1, participantProvider.getFilteredParticipants(filter).size());
     }
 

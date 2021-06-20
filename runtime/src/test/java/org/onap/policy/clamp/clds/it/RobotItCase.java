@@ -67,11 +67,13 @@ public class RobotItCase {
     public void robotTests() throws Exception {
         File robotFolder = new File(getClass().getClassLoader().getResource("robotframework").getFile());
         Volume testsVolume = new Volume("/opt/robotframework/tests");
-        DockerClient client = DockerClientBuilder
-                .getInstance()
-                .withDockerCmdExecFactory(new NettyDockerCmdExecFactory())
-                .build();
-
+        // @formatter:off
+        DockerClient client =
+                DockerClientBuilder
+                    .getInstance()
+                    .withDockerCmdExecFactory(new NettyDockerCmdExecFactory())
+                    .build();
+        // @formatter:on
 
         BuildImageResultCallback callback = new BuildImageResultCallback() {
             @Override
@@ -82,14 +84,17 @@ public class RobotItCase {
         };
 
         String imageId = client.buildImageCmd(robotFolder).exec(callback).awaitImageId();
-        CreateContainerResponse createContainerResponse = client.createContainerCmd(imageId)
+        // @formatter:off
+        CreateContainerResponse createContainerResponse =
+            client
+                .createContainerCmd(imageId)
                 .withVolumes(testsVolume)
-                .withBinds(
-                        new Bind(robotFolder.getAbsolutePath() + "/tests/", testsVolume, AccessMode.rw))
+                .withBinds(new Bind(robotFolder.getAbsolutePath() + "/tests/", testsVolume, AccessMode.rw))
                 .withEnv("CLAMP_PORT=" + httpPort)
                 .withStopTimeout(TIMEOUT_S)
                 .withNetworkMode("host")
                 .exec();
+        // @formatter:on
         String id = createContainerResponse.getId();
         client.startContainerCmd(id).exec();
         InspectContainerResponse exec;
