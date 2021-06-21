@@ -274,6 +274,24 @@
       "revId": "9021c52cdbd85932a4c4ea354846e4ea28f3889f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e544d5fb_ab6e730a",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/models/validation/PolicyValidator.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-21T13:02:52Z",
+      "side": 1,
+      "message": "to move it in policy-common, it needs only jakarta.validation-api into pom",
+      "parentUuid": "70ab5105_49d29768",
+      "revId": "9021c52cdbd85932a4c4ea354846e4ea28f3889f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
