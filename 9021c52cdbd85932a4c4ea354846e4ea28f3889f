@@ -292,6 +292,24 @@
       "revId": "9021c52cdbd85932a4c4ea354846e4ea28f3889f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bf24c341_3250ff4d",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/models/validation/PolicyValidator.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-21T13:15:56Z",
+      "side": 1,
+      "message": "Great!",
+      "parentUuid": "e544d5fb_ab6e730a",
+      "revId": "9021c52cdbd85932a4c4ea354846e4ea28f3889f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
