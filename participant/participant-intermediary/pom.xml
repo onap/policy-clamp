@@ -33,4 +33,16 @@
     <description>Common intermediary library for managing DMaaP participant messaging and holding participant and control
      loop state</description>
 
+    <properties>
+        <spring-context.version>5.3.8</spring-context.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring-context.version}</version>
+        </dependency>
+    </dependencies>
+
 </project>

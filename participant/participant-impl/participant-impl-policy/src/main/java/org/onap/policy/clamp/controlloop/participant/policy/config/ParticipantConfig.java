@@ -21,29 +21,23 @@
 package org.onap.policy.clamp.controlloop.participant.policy.config;
 
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryApi;
-import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryFactory;
 import org.onap.policy.clamp.controlloop.participant.policy.main.handler.ControlLoopElementHandler;
-import org.onap.policy.clamp.controlloop.participant.policy.main.parameters.ParticipantPolicyParameters;
-import org.springframework.context.annotation.Bean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ParticipantConfig {
 
     /**
-     * Create ParticipantIntermediaryApi.
+     * Register ControlLoopElementListener.
      *
-     * @param parameters the Participant Policy Parameters
-     * @param controlLoopElementHandler the ControlLoop Element Handler
-     * @return ParticipantIntermediaryApi
+     * @param intermediaryApi the ParticipantIntermediaryApi
+     * @param clElementHandler the ControlLoop Element Handler
      */
-    @Bean
-    public ParticipantIntermediaryApi participantIntermediaryApi(ParticipantPolicyParameters parameters,
-            ControlLoopElementHandler controlLoopElementHandler) {
-        ParticipantIntermediaryApi intermediaryApi = new ParticipantIntermediaryFactory().createApiImplementation();
-        intermediaryApi.init(parameters.getIntermediaryParameters());
-        intermediaryApi.registerControlLoopElementListener(controlLoopElementHandler);
-        controlLoopElementHandler.setIntermediaryApi(intermediaryApi);
-        return intermediaryApi;
+    @Autowired
+    public void registerControlLoopElementListener(ParticipantIntermediaryApi intermediaryApi,
+            ControlLoopElementHandler clElementHandler) {
+        intermediaryApi.registerControlLoopElementListener(clElementHandler);
+        clElementHandler.setIntermediaryApi(intermediaryApi);
     }
 }

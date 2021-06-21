@@ -20,9 +20,6 @@
 
 package org.onap.policy.clamp.controlloop.participant.simulator.config;
 
-import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryApi;
-import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryFactory;
-import org.onap.policy.clamp.controlloop.participant.simulator.main.parameters.ParticipantSimulatorParameters;
 import org.onap.policy.clamp.controlloop.participant.simulator.main.rest.RequestResponseLoggingFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -30,19 +27,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ParticipantConfig {
-
-    /**
-     * Create ParticipantIntermediaryApi.
-     *
-     * @param parameters the Participant Dcae Parameters
-     * @return ParticipantIntermediaryApi
-     */
-    @Bean
-    public ParticipantIntermediaryApi participantIntermediaryApi(ParticipantSimulatorParameters parameters) {
-        ParticipantIntermediaryApi intermediaryApi = new ParticipantIntermediaryFactory().createApiImplementation();
-        intermediaryApi.init(parameters.getIntermediaryParameters());
-        return intermediaryApi;
-    }
 
     /**
      * logging Filter configuration.

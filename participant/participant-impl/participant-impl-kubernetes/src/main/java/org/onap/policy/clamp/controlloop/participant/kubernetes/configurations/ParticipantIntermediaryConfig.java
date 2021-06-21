@@ -21,28 +21,23 @@
 package org.onap.policy.clamp.controlloop.participant.kubernetes.configurations;
 
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryApi;
-import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryFactory;
 import org.onap.policy.clamp.controlloop.participant.kubernetes.handler.ControlLoopElementHandler;
-import org.onap.policy.clamp.controlloop.participant.kubernetes.parameters.ParticipantK8sParameters;
-import org.springframework.context.annotation.Bean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ParticipantIntermediaryConfig {
 
     /**
-     * Create ParticipantIntermediaryApi.
+     * Register ControlLoopElementListener.
      *
-     * @param parameters the K8s Participant Parameters
+     * @param intermediaryApi the ParticipantIntermediaryApi
      * @param clElementHandler the ControlLoop Element Handler
-     * @return ParticipantIntermediaryApi
      */
-    @Bean
-    public ParticipantIntermediaryApi participantIntermediaryApi(ParticipantK8sParameters parameters,
-                                                                 ControlLoopElementHandler clElementHandler) {
-        ParticipantIntermediaryApi intermediaryApi = new ParticipantIntermediaryFactory().createApiImplementation();
-        intermediaryApi.init(parameters.getIntermediaryParameters());
+    @Autowired
+    public void registerControlLoopElementListener(ParticipantIntermediaryApi intermediaryApi,
+            ControlLoopElementHandler clElementHandler) {
         intermediaryApi.registerControlLoopElementListener(clElementHandler);
-        return intermediaryApi;
+        clElementHandler.setIntermediaryApi(intermediaryApi);
     }
 }

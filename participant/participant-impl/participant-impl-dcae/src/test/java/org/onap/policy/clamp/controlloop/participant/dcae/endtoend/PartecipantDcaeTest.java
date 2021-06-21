@@ -35,9 +35,9 @@ import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.Parti
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopUpdate;
 import org.onap.policy.clamp.controlloop.participant.dcae.main.parameters.CommonTestData;
 import org.onap.policy.clamp.controlloop.participant.dcae.main.rest.TestListenerUtils;
-import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ControlLoopStateChangeListener;
 import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ControlLoopUpdateListener;
+import org.onap.policy.clamp.controlloop.participant.intermediary.handler.ParticipantHandler;
 import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +61,7 @@ class PartecipantDcaeTest {
     private static ClientAndServer mockConsulServer;
 
     @Autowired
-    private ParticipantIntermediaryApi participantIntermediaryApi;
+    private ParticipantHandler participantHandler;
 
     /**
      * start Servers.
@@ -107,8 +107,7 @@ class PartecipantDcaeTest {
                 TestListenerUtils.createControlLoopStateChangeMsg(ControlLoopOrderedState.UNINITIALISED);
         participantControlLoopStateChangeMsg.setOrderedState(ControlLoopOrderedState.PASSIVE);
 
-        ControlLoopStateChangeListener clStateChangeListener =
-                new ControlLoopStateChangeListener(participantIntermediaryApi.getParticipantHandler());
+        ControlLoopStateChangeListener clStateChangeListener = new ControlLoopStateChangeListener(participantHandler);
 
         clStateChangeListener.onTopicEvent(INFRA, TOPIC, null, participantControlLoopStateChangeMsg);
         assertEquals(ControlLoopOrderedState.PASSIVE, participantControlLoopStateChangeMsg.getOrderedState());
@@ -128,13 +127,12 @@ class PartecipantDcaeTest {
         participantControlLoopUpdateMsg.getParticipantId().setName("DummyName");
         participantControlLoopUpdateMsg.getControlLoop().setOrderedState(ControlLoopOrderedState.PASSIVE);
 
-        ControlLoopUpdateListener clUpdateListener =
-                new ControlLoopUpdateListener(participantIntermediaryApi.getParticipantHandler());
+        ControlLoopUpdateListener clUpdateListener = new ControlLoopUpdateListener(participantHandler);
         clUpdateListener.onTopicEvent(INFRA, TOPIC, null, participantControlLoopUpdateMsg);
 
         // Verify the content in participantHandler
         assertNotEquals(participantControlLoopUpdateMsg.getParticipantId().getName(),
-                participantIntermediaryApi.getParticipantHandler().getParticipantId().getName());
+                participantHandler.getParticipantId().getName());
     }
 
     @Test
@@ -142,15 +140,12 @@ class PartecipantDcaeTest {
         ParticipantControlLoopUpdate participantControlLoopUpdateMsg = TestListenerUtils.createControlLoopUpdateMsg();
         participantControlLoopUpdateMsg.getControlLoop().setOrderedState(ControlLoopOrderedState.PASSIVE);
 
-        ControlLoopUpdateListener clUpdateListener =
-                new ControlLoopUpdateListener(participantIntermediaryApi.getParticipantHandler());
+        ControlLoopUpdateListener clUpdateListener = new ControlLoopUpdateListener(participantHandler);
         clUpdateListener.onTopicEvent(INFRA, TOPIC, null, participantControlLoopUpdateMsg);
 
         // Verify the content in participantHandler
-        assertEquals(participantIntermediaryApi.getParticipantHandler().getParticipantId(),
-                participantControlLoopUpdateMsg.getParticipantId());
-        assertEquals(1, participantIntermediaryApi.getParticipantHandler().getControlLoopHandler().getControlLoops()
-                .getControlLoopList().size());
+        assertEquals(participantHandler.getParticipantId(), participantControlLoopUpdateMsg.getParticipantId());
+        assertEquals(1, participantHandler.getControlLoopHandler().getControlLoops().getControlLoopList().size());
     }
 
     @Test
@@ -158,14 +153,11 @@ class PartecipantDcaeTest {
         ParticipantControlLoopUpdate participantControlLoopUpdateMsg = TestListenerUtils.createControlLoopUpdateMsg();
         participantControlLoopUpdateMsg.getControlLoop().setOrderedState(ControlLoopOrderedState.UNINITIALISED);
 
-        ControlLoopUpdateListener clUpdateListener =
-                new ControlLoopUpdateListener(participantIntermediaryApi.getParticipantHandler());
+        ControlLoopUpdateListener clUpdateListener = new ControlLoopUpdateListener(participantHandler);
         clUpdateListener.onTopicEvent(INFRA, TOPIC, null, participantControlLoopUpdateMsg);
 
         // Verify the content in participantHandler
-        assertEquals(participantIntermediaryApi.getParticipantHandler().getParticipantId(),
-                participantControlLoopUpdateMsg.getParticipantId());
-        assertEquals(1, participantIntermediaryApi.getParticipantHandler().getControlLoopHandler().getControlLoops()
-                .getControlLoopList().size());
+        assertEquals(participantHandler.getParticipantId(), participantControlLoopUpdateMsg.getParticipantId());
+        assertEquals(1, participantHandler.getControlLoopHandler().getControlLoops().getControlLoopList().size());
     }
 }

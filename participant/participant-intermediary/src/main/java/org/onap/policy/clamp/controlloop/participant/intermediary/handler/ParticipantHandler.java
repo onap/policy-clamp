@@ -28,6 +28,8 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantHealthStatus;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantStatistics;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopStateChange;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopUpdate;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantHealthCheck;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessage;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantResponseDetails;
@@ -35,15 +37,17 @@ import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.Parti
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStateChange;
 import org.onap.policy.clamp.controlloop.participant.intermediary.comm.MessageSender;
 import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ParticipantStatusPublisher;
-import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantIntermediaryParameters;
+import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 /**
  * This class is responsible for managing the state of a participant.
  */
 @Getter
+@Component
 public class ParticipantHandler implements Closeable {
     private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantHandler.class);
 
@@ -65,18 +69,18 @@ public class ParticipantHandler implements Closeable {
      * @param parameters the parameters of the participant
      * @param publisher the publisher for sending responses to messages
      */
-    public ParticipantHandler(ParticipantIntermediaryParameters parameters, ParticipantStatusPublisher publisher) {
-        this.participantType = parameters.getParticipantType();
-        this.participantId = parameters.getParticipantId();
-        this.sender = new MessageSender(this, publisher, parameters.getReportingTimeInterval());
-        this.controlLoopHandler = new ControlLoopHandler(parameters, sender);
+    public ParticipantHandler(ParticipantParameters parameters, ParticipantStatusPublisher publisher) {
+        this.participantType = parameters.getIntermediaryParameters().getParticipantType();
+        this.participantId = parameters.getIntermediaryParameters().getParticipantId();
+        this.sender =
+                new MessageSender(this, publisher, parameters.getIntermediaryParameters().getReportingTimeInterval());
+        this.controlLoopHandler = new ControlLoopHandler(parameters.getIntermediaryParameters(), sender);
         this.participantStatistics = new ParticipantStatistics();
     }
 
     @Override
     public void close() {
         sender.close();
-        controlLoopHandler.close();
     }
 
     /**
@@ -130,6 +134,24 @@ public class ParticipantHandler implements Closeable {
         response.setResponseMessage(healthStatus.toString());
 
         sender.sendResponse(response);
+    }
+
+    /**
+     * Handle a control loop update message.
+     *
+     * @param updateMsg the update message
+     */
+    public void handleControlLoopUpdate(ParticipantControlLoopUpdate updateMsg) {
+        controlLoopHandler.handleControlLoopUpdate(updateMsg);
+    }
+
+    /**
+     * Handle a control loop state change message.
+     *
+     * @param stateChangeMsg the state change message
+     */
+    public void handleControlLoopStateChange(ParticipantControlLoopStateChange stateChangeMsg) {
+        controlLoopHandler.handleControlLoopStateChange(stateChangeMsg);
     }
 
     /**
@@ -231,6 +253,16 @@ public class ParticipantHandler implements Closeable {
      * @return true if it applies, false otherwise
      */
     public boolean canHandle(ParticipantMessage partipantMsg) {
+        return partipantMsg.appliesTo(participantType, participantId);
+    }
+
+    /**
+     * Check if a participant message applies to this participant handler.
+     *
+     * @param partipantMsg the message to check
+     * @return true if it applies, false otherwise
+     */
+    public boolean appliesTo(ParticipantMessage partipantMsg) {
         return partipantMsg.appliesTo(participantType, participantId);
     }
 }

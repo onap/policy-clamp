@@ -35,11 +35,3 @@ participant:
         topic: POLICY-NOTIFICATION
         servers[0]: ${topicServer:message-router}
         topicCommInfrastructure: dmaap
-  databaseProviderParameters:
-    name: PolicyProviderParameterGroup
-    implementation: org.onap.policy.models.provider.impl.DatabasePolicyModelsProviderImpl
-    databaseDriver: org.mariadb.jdbc.Driver
-    databaseUrl: jdbc:mariadb://mariadb:3306/cdsparticipantsim
-    databaseUser: policy
-    databasePassword: P01icY
-    persistenceUnit: ToscaConceptTest

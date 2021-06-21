@@ -25,6 +25,7 @@ import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantIntermediaryParameters;
+import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantParameters;
 import org.onap.policy.common.parameters.annotations.Valid;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
@@ -37,7 +38,7 @@ import org.springframework.validation.annotation.Validated;
 @Getter
 @Setter
 @ConfigurationProperties(prefix = "participant")
-public class ParticipantK8sParameters {
+public class ParticipantK8sParameters implements ParticipantParameters {
 
     @NotNull
     @Valid
