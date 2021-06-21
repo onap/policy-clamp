@@ -30,4 +30,26 @@
             </doFinally>
         </doTry>
     </route>
+    <route id="commission-service-template">
+        <from uri="direct:commission-service-template"/>
+        <doTry>
+            <log loggingLevel="INFO"
+                 message="Commissioning the tosca service template"/>
+            <to
+                    uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('Controlloop', 'Commissioning the tosca service template')"/>
+            <setHeader name="CamelHttpMethod">
+                <constant>POST</constant>
+            </setHeader>
+            <log loggingLevel="INFO"
+                 message="Endpoint to send Tosca Service Template: {{clamp.config.controlloop.runtime.url}}/onap/controlloop/v2/commission"></log>
+            <toD
+                    uri="{{clamp.config.controlloop.runtime.url}}/onap/controlloop/v2/commission?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.controlloop.runtime.userName}}&amp;authPassword={{clamp.config.controlloop.runtime.password}}&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+            <convertBodyTo type="java.lang.String"/>
+            <doFinally>
+                <to uri="direct:reset-raise-http-exception-flag"/>
+                <to
+                        uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
+            </doFinally>
+        </doTry>
+    </route>
 </routes>
