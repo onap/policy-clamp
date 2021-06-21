@@ -47,13 +47,6 @@ class TestParticipantSimulatorParameters {
     }
 
     @Test
-    void testParticipantParameterGroup_EmptyDatabaseProviderParameters() {
-        final ParticipantSimulatorParameters participantParameters = commonTestData.getParticipantSimulatorParameters();
-        participantParameters.setDatabaseProviderParameters(null);
-        assertThat(validatorFactory.getValidator().validate(participantParameters)).isNotEmpty();
-    }
-
-    @Test
     void testParticipantPolicyParameters_NullTopicSinks() {
         final ParticipantSimulatorParameters participantParameters = commonTestData.getParticipantSimulatorParameters();
         participantParameters.getIntermediaryParameters().getClampControlLoopTopics().setTopicSinks(null);

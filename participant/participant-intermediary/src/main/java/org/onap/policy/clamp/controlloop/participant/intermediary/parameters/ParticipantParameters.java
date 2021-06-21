@@ -18,21 +18,9 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.controlloop.participant.intermediary.api;
+package org.onap.policy.clamp.controlloop.participant.intermediary.parameters;
 
-import org.onap.policy.clamp.controlloop.participant.intermediary.api.impl.ParticipantIntermediaryApiImpl;
+public interface ParticipantParameters {
 
-/**
- * Factory class for creating {@link ParticipantIntermediaryApi} instances.
- */
-public class ParticipantIntermediaryFactory {
-
-    /**
-     * Create an implementation of the {@link ParticipantIntermediaryApi} interface.
-     *
-     * @return the implementation of the API
-     */
-    public ParticipantIntermediaryApi createApiImplementation() {
-        return new ParticipantIntermediaryApiImpl();
-    }
+    ParticipantIntermediaryParameters getIntermediaryParameters();
 }

@@ -27,6 +27,7 @@ import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantIntermediaryParameters;
+import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantParameters;
 import org.onap.policy.common.endpoints.parameters.RestClientParameters;
 import org.onap.policy.common.parameters.validation.ParameterGroupConstraint;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -40,7 +41,7 @@ import org.springframework.validation.annotation.Validated;
 @Getter
 @Setter
 @ConfigurationProperties(prefix = "participant")
-public class ParticipantDcaeParameters {
+public class ParticipantDcaeParameters  implements ParticipantParameters {
 
     @NotNull
     @Min(10)

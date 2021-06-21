@@ -23,6 +23,7 @@ package org.onap.policy.clamp.controlloop.participant.simulator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
+import org.springframework.context.annotation.ComponentScan;
 
 /**
  * Starter.
@@ -30,6 +31,8 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
  */
 @SpringBootApplication
 @ConfigurationPropertiesScan("org.onap.policy.clamp.controlloop.participant.simulator.main.parameters")
+@ComponentScan({"org.onap.policy.clamp.controlloop.participant.simulator",
+        "org.onap.policy.clamp.controlloop.participant.intermediary"})
 public class ParticipantSimulatorApplication {
 
     public static void main(String[] args) {

@@ -26,6 +26,7 @@ import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import lombok.Setter;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
@@ -52,7 +53,7 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
     @Autowired
     private ChartService chartService;
 
-    @Autowired
+    @Setter
     private ParticipantIntermediaryApi intermediaryApi;
 
     // Map of CLElement Id and installed Helm charts
