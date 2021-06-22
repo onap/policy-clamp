@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cf2e3058_ba4dd847",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/test/java/org/onap/policy/clamp/controlloop/participant/dcae/main/rest/TestListenerUtils.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-06-22T13:41:37Z",
+      "side": 1,
+      "message": "Do you intend to have examples.participants, examples.XXX ???",
+      "revId": "c214157bc3216350fef3f4319b2153bf231ab996",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
