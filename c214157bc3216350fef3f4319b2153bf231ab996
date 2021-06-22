@@ -140,6 +140,24 @@
       "revId": "c214157bc3216350fef3f4319b2153bf231ab996",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0ed47ad9_c4c482d1",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/test/java/org/onap/policy/clamp/controlloop/participant/dcae/main/rest/TestListenerUtils.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2021-06-22T14:40:01Z",
+      "side": 1,
+      "message": "This one. It has been fixed in the latest patch.",
+      "parentUuid": "ba1e6411_6bfb94d4",
+      "revId": "c214157bc3216350fef3f4319b2153bf231ab996",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
