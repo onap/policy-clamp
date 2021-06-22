@@ -16,6 +16,24 @@
       "revId": "3ac69c98d2bc74c9f23a11673532a7682b4750e6",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "967fef9b_d3dc6024",
+        "filename": "common/src/test/java/org/onap/policy/clamp/controlloop/common/startstop/CommonCommandLineArgumentsTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2021-06-22T13:29:28Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "0587c4c6_bdb655b8",
+      "revId": "3ac69c98d2bc74c9f23a11673532a7682b4750e6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
