@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "fb779240_bfa969db",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2021-06-22T14:23:26Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "0193296c_9e844000",
+      "revId": "c214157bc3216350fef3f4319b2153bf231ab996",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7c3b2779_df72e2bd",
         "filename": "common/src/test/resources/examples.controlloop/PMSH/consul_url.txt",
         "patchSetId": 2
@@ -33,6 +51,24 @@
       "revId": "c214157bc3216350fef3f4319b2153bf231ab996",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9f322210_2b14db44",
+        "filename": "common/src/test/resources/examples.controlloop/PMSH/consul_url.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2021-06-22T14:23:26Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "7c3b2779_df72e2bd",
+      "revId": "c214157bc3216350fef3f4319b2153bf231ab996",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -65,6 +101,24 @@
       "side": 1,
       "message": "I\u0027m juste wondering because it\u0027s weird to have a dot instead of a slash ?\nAny good reason for that ?",
       "parentUuid": "cf2e3058_ba4dd847",
+      "revId": "c214157bc3216350fef3f4319b2153bf231ab996",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "17e3f558_5d46b558",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/test/java/org/onap/policy/clamp/controlloop/participant/dcae/main/rest/TestListenerUtils.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2021-06-22T14:23:26Z",
+      "side": 1,
+      "message": "I\u0027m guessing my IDE took the \".\" literally instead of interpreting it as a slash. I have a patch to fix this.",
+      "parentUuid": "b125318a_b2339f5f",
       "revId": "c214157bc3216350fef3f4319b2153bf231ab996",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
