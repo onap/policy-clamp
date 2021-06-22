@@ -122,6 +122,24 @@
       "revId": "c214157bc3216350fef3f4319b2153bf231ab996",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ba1e6411_6bfb94d4",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/test/java/org/onap/policy/clamp/controlloop/participant/dcae/main/rest/TestListenerUtils.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-22T14:37:01Z",
+      "side": 1,
+      "message": "Is this change coming in a subsequent patch or this one?",
+      "parentUuid": "17e3f558_5d46b558",
+      "revId": "c214157bc3216350fef3f4319b2153bf231ab996",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
