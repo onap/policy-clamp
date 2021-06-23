@@ -52,6 +52,24 @@
       "revId": "fe5af96352f57e9815c20b767db66248da803751",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6c85beec_28ba5a51",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/models/validation/ParameterGroupValidator.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-23T13:05:08Z",
+      "side": 1,
+      "message": "Considering two scenarios below, example1 cannot be null and example2 could be. If example1 is null, Spring handles it (not ParameterGroupConstraint), and If example2 is null ParameterGroupValidator does nothing because it is valid.\n\n@NotNull\n@ParameterGroupConstraint\nprivate Example example1;\n\n@ParameterGroupConstraint\nprivate Example example2;",
+      "parentUuid": "d5ae4a97_6b6d928d",
+      "revId": "fe5af96352f57e9815c20b767db66248da803751",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }

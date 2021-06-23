@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "88071583_05e42d5f",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/handler/ControlLoopElementHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-23T13:05:08Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "736ac94a_d2de45ed",
+      "revId": "dafb707fbdf265f4334e585f2b17907807f4f2ec",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dfa95e74_f2b20bf1",
         "filename": "participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/handler/ControlLoopElementHandler.java",
         "patchSetId": 2
