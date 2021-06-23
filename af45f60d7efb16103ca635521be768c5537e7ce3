@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c2118e1a_9846ca11",
+        "filename": "common/src/test/java/org/onap/policy/clamp/controlloop/common/startstop/CommonCommandLineArgumentsTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-06-23T12:11:33Z",
+      "side": 1,
+      "message": "Junit 5 would be better for new tests\nimport org.junit.jupiter.api.Test etc.....",
+      "revId": "af45f60d7efb16103ca635521be768c5537e7ce3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
