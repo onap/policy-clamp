@@ -52,6 +52,24 @@
       "revId": "af45f60d7efb16103ca635521be768c5537e7ce3",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "acfb0560_f44344f1",
+        "filename": "common/src/test/java/org/onap/policy/clamp/controlloop/common/startstop/CommonCommandLineArgumentsTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-23T14:02:59Z",
+      "side": 1,
+      "message": "during the scrum, we agreed to go ahead and change this class to junit5, provided it\u0027s as easy as it sounds.  Once that\u0027s done, the \"public\" keyword will have to be removed through-out, as sonar will complain about it otherwise.  In addition, if I remember some other code, the Before annotation has been changed to something else, like BeforeTest.",
+      "parentUuid": "54c2aad2_06e7c5bf",
+      "revId": "af45f60d7efb16103ca635521be768c5537e7ce3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
