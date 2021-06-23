@@ -34,6 +34,24 @@
       "revId": "af45f60d7efb16103ca635521be768c5537e7ce3",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "54c2aad2_06e7c5bf",
+        "filename": "common/src/test/java/org/onap/policy/clamp/controlloop/common/startstop/CommonCommandLineArgumentsTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-06-23T12:58:45Z",
+      "side": 1,
+      "message": "It\u0027s integrated in Springboot by default, so normally by transitivity you should have it",
+      "parentUuid": "c795789f_e182b265",
+      "revId": "af45f60d7efb16103ca635521be768c5537e7ce3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
