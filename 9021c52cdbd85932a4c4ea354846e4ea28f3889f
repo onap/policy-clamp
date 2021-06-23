@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "78d26e64_913b6d2b",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/parameters/ParticipantDcaeParameters.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-23T16:12:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1748795f_c13e5e94",
+      "revId": "9021c52cdbd85932a4c4ea354846e4ea28f3889f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1fc711b2_b0807188",
         "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/models/RestClientParameters.java",
         "patchSetId": 5
@@ -51,6 +69,24 @@
       "revId": "9021c52cdbd85932a4c4ea354846e4ea28f3889f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "09aa79ff_4a3c2b4b",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/models/RestClientParameters.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-23T16:12:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e1646d30_c4d8a1b5",
+      "revId": "9021c52cdbd85932a4c4ea354846e4ea28f3889f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -310,6 +346,24 @@
       "revId": "9021c52cdbd85932a4c4ea354846e4ea28f3889f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9fef1877_f0b8c11b",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/models/validation/PolicyValidator.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-23T16:12:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bf24c341_3250ff4d",
+      "revId": "9021c52cdbd85932a4c4ea354846e4ea28f3889f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
