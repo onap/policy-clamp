@@ -34,6 +34,24 @@
       "revId": "fe5af96352f57e9815c20b767db66248da803751",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d5ae4a97_6b6d928d",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/models/validation/ParameterGroupValidator.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-06-23T12:33:32Z",
+      "side": 1,
+      "message": "So this code can be removed ? this should crash during the constraint validation if it\u0027s null no ?, did i get you properly ? Or may be that code can be called in others conditions or to avoid sonar bugs ?",
+      "parentUuid": "db99d01d_33062704",
+      "revId": "fe5af96352f57e9815c20b767db66248da803751",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
