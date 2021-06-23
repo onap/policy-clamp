@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d21f2103_b3e4d60c",
+        "filename": "pom.xml",
+        "patchSetId": 6
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-23T15:16:39Z",
+      "side": 1,
+      "message": "needed?  junit5 instead of jupiter?",
+      "revId": "eaba0c9e1141ec6fa248b89934780bb14d5865fe",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
