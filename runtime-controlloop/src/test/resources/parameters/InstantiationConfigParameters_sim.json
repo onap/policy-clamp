@@ -1,5 +1,9 @@
 {
     "name": "Instantiation",
+  "supervisionScannerInterval" : 1000,
+  "participantStateChangeInterval" : 1000,
+  "participantClUpdateInterval" : 1000,
+  "participantClStateChangeInterval" : 1000,
   "restServerParameters": {
     "host": "127.0.0.1",
     "port": 6969,
