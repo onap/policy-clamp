@@ -70,6 +70,24 @@
       "revId": "fe5af96352f57e9815c20b767db66248da803751",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfcdbb14_e7d65ae1",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/models/validation/ParameterGroupValidator.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-06-24T08:40:49Z",
+      "side": 1,
+      "message": "Ok got you, sorry I should have foreseen that, at first glance it looks strange 😄",
+      "parentUuid": "6c85beec_28ba5a51",
+      "revId": "fe5af96352f57e9815c20b767db66248da803751",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
