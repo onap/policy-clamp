@@ -1,13 +1,17 @@
 {
-    "name":" ",
-  "restServerParameters": {
-    "host": "127.0.0.1",
-    "port": 6969,
-    "userName": "admin",
-    "password": "password",
-    "https": false,
-    "aaf": false
-  },
+    "name": " ",
+    "supervisionScannerIntervalSec": 1000,
+    "participantStateChangeIntervalSec": 1000,
+    "participantClUpdateIntervalSec": 1000,
+    "participantClStateChangeIntervalSec": 1000,
+    "restServerParameters": {
+        "host": "127.0.0.1",
+        "port": 6969,
+        "userName": "admin",
+        "password": "password",
+        "https": false,
+        "aaf": false
+    },
     "pdpParameters": {
         "heartBeatMs": 1,
         "updateParameters": {

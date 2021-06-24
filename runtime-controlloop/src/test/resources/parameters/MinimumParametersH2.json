@@ -1,10 +1,14 @@
 {
-    "name":"PapGroup",
-    "restServerParameters":{
-        "host":"0.0.0.0",
-        "port":6969,
-        "userName":"healthcheck",
-        "password":"zb!XztG34"
+    "name": "PapGroup",
+    "supervisionScannerIntervalSec": 1000,
+    "participantStateChangeIntervalSec": 1000,
+    "participantClUpdateIntervalSec": 1000,
+    "participantClStateChangeIntervalSec": 1000,
+    "restServerParameters": {
+        "host": "0.0.0.0",
+        "port": 6969,
+        "userName": "healthcheck",
+        "password": "zb!XztG34"
     },
     "pdpParameters": {
         "heartBeatMs": 1,
@@ -27,15 +31,23 @@
         "persistenceUnit": "PdpGroupTest"
     },
     "topicParameterGroup": {
-        "topicSources" : [{
-            "topic" : "POLICY-PDP-PAP",
-            "servers" : [ "message-router" ],
-            "topicCommInfrastructure" : "dmaap"
-        }],
-        "topicSinks" : [{
-            "topic" : "POLICY-PDP-PAP",
-            "servers" : [ "message-router" ],
-            "topicCommInfrastructure" : "dmaap"
-        }]
+        "topicSources": [
+            {
+                "topic": "POLICY-PDP-PAP",
+                "servers": [
+                    "message-router"
+                ],
+                "topicCommInfrastructure": "dmaap"
+            }
+        ],
+        "topicSinks": [
+            {
+                "topic": "POLICY-PDP-PAP",
+                "servers": [
+                    "message-router"
+                ],
+                "topicCommInfrastructure": "dmaap"
+            }
+        ]
     }
 }

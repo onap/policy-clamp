@@ -1,13 +1,17 @@
 {
     "name": "Instantiation",
-  "restServerParameters": {
-    "host": "127.0.0.1",
-    "port": 6969,
-    "userName": "admin",
-    "password": "password",
-    "https": false,
-    "aaf": false
-  },
+    "supervisionScannerIntervalSec": 1000,
+    "participantStateChangeIntervalSec": 1000,
+    "participantClUpdateIntervalSec": 1000,
+    "participantClStateChangeIntervalSec": 1000,
+    "restServerParameters": {
+        "host": "127.0.0.1",
+        "port": 6969,
+        "userName": "admin",
+        "password": "password",
+        "https": false,
+        "aaf": false
+    },
     "pdpParameters": {
         "heartBeatMs": 10,
         "updateParameters": {
@@ -29,15 +33,23 @@
         "persistenceUnit": "PolicyMariaDb"
     },
     "topicParameterGroup": {
-        "topicSources" : [{
-            "topic" : "INSTANTIATION",
-            "servers" : [ "localhost:6845" ],
-            "topicCommInfrastructure" : "dmaap"
-        }],
-        "topicSinks" : [{
-            "topic" : "INSTANTIATION",
-            "servers" : [ "localhost:6845" ],
-            "topicCommInfrastructure" : "dmaap"
-        }]
+        "topicSources": [
+            {
+                "topic": "INSTANTIATION",
+                "servers": [
+                    "localhost:6845"
+                ],
+                "topicCommInfrastructure": "dmaap"
+            }
+        ],
+        "topicSinks": [
+            {
+                "topic": "INSTANTIATION",
+                "servers": [
+                    "localhost:6845"
+                ],
+                "topicCommInfrastructure": "dmaap"
+            }
+        ]
     }
 }

@@ -20,10 +20,8 @@
 
 package org.onap.policy.clamp.controlloop.runtime.main.parameters;
 
-import java.util.List;
 import javax.validation.constraints.NotBlank;
 import lombok.Getter;
-import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
 import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.endpoints.parameters.TopicParameterGroup;
 import org.onap.policy.common.parameters.ParameterGroupImpl;
@@ -42,6 +40,11 @@ public class ClRuntimeParameterGroup extends ParameterGroupImpl {
     private PolicyModelsProviderParameters databaseProviderParameters;
     private ParticipantParameters participantParameters;
     private TopicParameterGroup topicParameterGroup;
+
+    private long supervisionScannerIntervalSec;
+    private long participantStateChangeIntervalSec;
+    private long participantClUpdateIntervalSec;
+    private long participantClStateChangeIntervalSec;
 
     /**
      * Create the Control Loop parameter group.
