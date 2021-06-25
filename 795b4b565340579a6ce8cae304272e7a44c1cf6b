@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "30512926_083a1e21",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/parameters/ClRuntimeParameterGroup.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-25T15:39:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3631b76e_bc04bafd",
+      "revId": "795b4b565340579a6ce8cae304272e7a44c1cf6b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2d48a034_82e6e949",
         "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/comm/AbstractParticipantPublisher.java",
         "patchSetId": 1
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "4c96b01a_6f9faf2f",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/comm/AbstractParticipantPublisher.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-25T15:39:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2d48a034_82e6e949",
+      "range": {
+        "startLine": 60,
+        "startChar": 4,
+        "endLine": 62,
+        "endChar": 5
+      },
+      "revId": "795b4b565340579a6ce8cae304272e7a44c1cf6b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "90447542_738bb0e0",
         "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/comm/AbstractParticipantPublisher.java",
         "patchSetId": 1
@@ -56,6 +98,24 @@
       "revId": "795b4b565340579a6ce8cae304272e7a44c1cf6b",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ae4bf9a9_6ee282c7",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/comm/AbstractParticipantPublisher.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-25T15:39:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "90447542_738bb0e0",
+      "revId": "795b4b565340579a6ce8cae304272e7a44c1cf6b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -82,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "1b72b6d5_0a5f40d8",
+        "filename": "runtime-controlloop/src/test/resources/parameters/InstantiationConfigParameters_InvalidName.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-25T15:39:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0c5f5186_7daded0f",
+      "range": {
+        "startLine": 3,
+        "startChar": 1,
+        "endLine": 7,
+        "endChar": 27
+      },
+      "revId": "795b4b565340579a6ce8cae304272e7a44c1cf6b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "725ca7e1_49a9ca83",
         "filename": "runtime-controlloop/src/test/resources/parameters/InstantiationConfigParameters_InvalidName.json",
         "patchSetId": 1
@@ -96,6 +180,24 @@
       "revId": "795b4b565340579a6ce8cae304272e7a44c1cf6b",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "56992f4e_7785c239",
+        "filename": "runtime-controlloop/src/test/resources/parameters/InstantiationConfigParameters_InvalidName.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-25T15:39:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "725ca7e1_49a9ca83",
+      "revId": "795b4b565340579a6ce8cae304272e7a44c1cf6b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
