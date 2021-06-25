@@ -1,0 +1,101 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3631b76e_bc04bafd",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/parameters/ClRuntimeParameterGroup.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-25T13:20:45Z",
+      "side": 1,
+      "message": "are these seconds, or milliseconds?  perhaps add \"Sec\" or \"Ms\" to the end of the field names, to make it clear\n\nsame comment in the other files - applies to field, parameter, and method names",
+      "revId": "795b4b565340579a6ce8cae304272e7a44c1cf6b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2d48a034_82e6e949",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/comm/AbstractParticipantPublisher.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-25T13:20:45Z",
+      "side": 1,
+      "message": "use lombok instead",
+      "range": {
+        "startLine": 60,
+        "startChar": 4,
+        "endLine": 62,
+        "endChar": 5
+      },
+      "revId": "795b4b565340579a6ce8cae304272e7a44c1cf6b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "90447542_738bb0e0",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/comm/AbstractParticipantPublisher.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-25T13:20:45Z",
+      "side": 1,
+      "message": "needed?  I\u0027m thinking the client.send() method may already log the message - should verify",
+      "revId": "795b4b565340579a6ce8cae304272e7a44c1cf6b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0c5f5186_7daded0f",
+        "filename": "runtime-controlloop/src/test/resources/parameters/InstantiationConfigParameters_InvalidName.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-25T13:20:45Z",
+      "side": 1,
+      "message": "fix indentation\n\nsame comment in the other files",
+      "range": {
+        "startLine": 3,
+        "startChar": 1,
+        "endLine": 7,
+        "endChar": 27
+      },
+      "revId": "795b4b565340579a6ce8cae304272e7a44c1cf6b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "725ca7e1_49a9ca83",
+        "filename": "runtime-controlloop/src/test/resources/parameters/InstantiationConfigParameters_InvalidName.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-25T13:20:45Z",
+      "side": 1,
+      "message": "fix indentation\n\nsame comment in the other files",
+      "revId": "795b4b565340579a6ce8cae304272e7a44c1cf6b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
