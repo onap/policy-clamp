@@ -40,7 +40,6 @@ import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -61,7 +60,7 @@ public class ChartStore {
     /**
      * Constructor method.
      */
-    public ChartStore(@Autowired ParticipantK8sParameters participantK8sParameters) {
+    public ChartStore(ParticipantK8sParameters participantK8sParameters) {
         this.participantK8sParameters = participantK8sParameters;
         this.restoreFromLocalFileSystem();
     }

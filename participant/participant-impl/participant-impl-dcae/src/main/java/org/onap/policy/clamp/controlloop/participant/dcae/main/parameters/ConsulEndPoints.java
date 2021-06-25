@@ -18,23 +18,22 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.controlloop.participant.simulator.config;
+package org.onap.policy.clamp.controlloop.participant.dcae.main.parameters;
 
-import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
-import org.onap.policy.clamp.controlloop.participant.simulator.main.parameters.ParticipantSimulatorParameterHandler;
-import org.onap.policy.clamp.controlloop.participant.simulator.main.parameters.ParticipantSimulatorParameters;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import javax.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.validation.annotation.Validated;
 
-@Configuration
-public class ParametersConfig {
+/**
+ * Class to hold all end points needed for consul client.
+ *
+ */
+@Validated
+@Getter
+@Setter
+public class ConsulEndPoints {
 
-    @Value("${participant.file}")
-    private String file;
-
-    @Bean
-    public ParticipantSimulatorParameters participantSimulatorParameters() throws ControlLoopException {
-        return new ParticipantSimulatorParameterHandler().toParticipantSimulatorParameters(file);
-    }
+    @NotBlank
+    private String deploy;
 }

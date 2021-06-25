@@ -21,13 +21,14 @@
 package org.onap.policy.clamp.controlloop.participant.dcae.httpclient;
 
 import org.apache.http.HttpStatus;
+import org.onap.policy.clamp.controlloop.participant.dcae.main.parameters.ConsulEndPoints;
 import org.onap.policy.clamp.controlloop.participant.dcae.main.parameters.ParticipantDcaeParameters;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ConsulDcaeHttpClient extends AbstractHttpClient {
 
-    private static final String DEPLOY = "/v1/kv/dcae-pmsh:";
+    private final ConsulEndPoints endPoints;
 
     /**
      * Constructor.
@@ -36,16 +37,17 @@ public class ConsulDcaeHttpClient extends AbstractHttpClient {
      */
     public ConsulDcaeHttpClient(ParticipantDcaeParameters parameters) {
         super(parameters.getConsulClientParameters());
+        this.endPoints = parameters.getConsulClientEndPoints();
     }
 
     /**
-     * Call consult.
+     * Call deploy consult.
      *
      * @param name the name to deploy
      * @param jsonEntity the Entity
      * @return true
      */
     public boolean deploy(String name, String jsonEntity) {
-        return executePut(DEPLOY + name, jsonEntity, HttpStatus.SC_OK);
+        return executePut(endPoints.getDeploy() + name, jsonEntity, HttpStatus.SC_OK);
     }
 }

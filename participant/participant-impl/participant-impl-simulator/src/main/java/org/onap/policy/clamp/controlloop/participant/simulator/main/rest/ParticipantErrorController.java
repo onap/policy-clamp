@@ -94,8 +94,4 @@ public class ParticipantErrorController implements ErrorController {
         return ResponseEntity.status(getStatus(request)).body(resp);
 
     }
-
-    public String getErrorPath() {
-        return path;
-    }
 }
