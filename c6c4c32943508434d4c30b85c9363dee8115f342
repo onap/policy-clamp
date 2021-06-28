@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1e4ca0eb_4a104a8f",
+        "filename": "participant/participant-intermediary/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-28T08:07:07Z",
+      "side": 1,
+      "message": "It is, but we need to update to the snapshot version of oparent to bring it in and the checkstyle update breaks some of the repos. I want to bring in those changes to the repos before upgrading the oparent version in policy/parent.",
+      "parentUuid": "bf138215_bea5015e",
+      "range": {
+        "startLine": 36,
+        "startChar": 4,
+        "endLine": 39,
+        "endChar": 0
+      },
+      "revId": "c6c4c32943508434d4c30b85c9363dee8115f342",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0b7495eb_5bed4251",
         "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/comm/ParticipantListener.java",
         "patchSetId": 1
