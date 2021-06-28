@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "d87ab696_cf7a2d76",
+        "filename": "participant/participant-intermediary/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-28T12:16:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1e4ca0eb_4a104a8f",
+      "range": {
+        "startLine": 36,
+        "startChar": 4,
+        "endLine": 39,
+        "endChar": 0
+      },
+      "revId": "c6c4c32943508434d4c30b85c9363dee8115f342",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0b7495eb_5bed4251",
         "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/comm/ParticipantListener.java",
         "patchSetId": 1
@@ -69,6 +93,30 @@
       "revId": "c6c4c32943508434d4c30b85c9363dee8115f342",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5e8c2292_7e784bd4",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/comm/ParticipantListener.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-28T12:16:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0b7495eb_5bed4251",
+      "range": {
+        "startLine": 60,
+        "startChar": 62,
+        "endLine": 60,
+        "endChar": 69
+      },
+      "revId": "c6c4c32943508434d4c30b85c9363dee8115f342",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
