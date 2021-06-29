@@ -1,26 +1,21 @@
 #!/usr/bin/env python2
-###
-# ============LICENSE_START=======================================================
-# ONAP CLAMP
-# ================================================================================
-# Copyright (C) 2018 AT&T Intellectual Property. All rights
-#                             reserved.
-# ================================================================================
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+#  ============LICENSE_START=======================================================
+#  Copyright (C) 2021 Nordix Foundation.
+#  ================================================================================
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
 #
-# http://www.apache.org/licenses/LICENSE-2.0
+#      http://www.apache.org/licenses/LICENSE-2.0
 #
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-# ============LICENSE_END============================================
-# ===================================================================
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
 #
-###
+#  SPDX-License-Identifier: Apache-2.0
+#  ============LICENSE_END=========================================================
 
 import json
 import requests
@@ -92,7 +87,8 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
             json.dump(dict(response.raw.headers), f)
     # Entry point of the code
     def _get_cached_file_folder_name(self,folder):
-        cached_file_folder = '%s/%s' % (folder, self.path,)
+        path = self.path.split('?')[0]
+        cached_file_folder = '%s/%s' % (folder, path,)
         print("Cached file name before escaping : %s" % cached_file_folder)
         cached_file_folder = cached_file_folder.replace('<','&#60;').replace('>','&#62;').replace('?','&#63;').replace('*','&#42;').replace('\\','&#42;').replace(':','&#58;').replace('|','&#124;')
         print("Cached file name after escaping (used for cache storage) : %s" % cached_file_folder)
@@ -265,6 +261,33 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
             with open(cached_file_content, 'w') as f:
                 f.write(response)
         return True
+     elif (self.path.startswith("/onap/controlloop/v2/commission/toscaservicetemplate")) and http_type == "GET":
+         path = self.path.split('?')[0]
+         cached_file_folder = '%s/%s' % (TMP_ROOT, path)
+         if not _file_available:
+             print ("cached file folder for onap is %s: ", cached_file_folder)
+             print "self.path start with /onap/controlloop/v2/commission/, generating response json..."
+             jsonGenerated =  "{\"tosca_definitions_version\": \"tosca_simple_yaml_1_1_0\",\"data_types\": {},\"node_types\": {}, \"policy_types\": {}, \"topology_template\": {}, \"name\": \"ToscaServiceTemplateSimple\", \"version\": \"1.0.0\", \"metadata\": {}}"
+             print "jsonGenerated: " + jsonGenerated
+             if not os.path.exists(cached_file_folder):
+                 os.makedirs(cached_file_folder, 0777)
+
+             with open(cached_file_header, 'w') as f:
+                 f.write("{\"Content-Length\": \"" + str(len(jsonGenerated)) + "\", \"Content-Type\": \"application/json\"}")
+             with open(cached_file_content, 'w') as f:
+                 f.write(jsonGenerated)
+         return True
+     elif (self.path.startswith("/onap/controlloop/v2/commission")) and http_type == "POST":
+         path = self.path.split('?')[0]
+         cached_file_folder = '%s/%s' % (TMP_ROOT, path)
+         print "self.path start with POST new policy API /pdp/api/, copying body to response ..."
+         if not os.path.exists(cached_file_folder):
+             os.makedirs(cached_file_folder, 0777)
+         with open(cached_file_header, 'w+') as f:
+             f.write("{\"Content-Length\": \"" + str(len(self.data_string)) + "\", \"Content-Type\": \""+str(self.headers['Content-Type'])+"\"}")
+         with open(cached_file_content, 'w+') as f:
+             f.write(self.data_string)
+         return True
      else:
         return False
 

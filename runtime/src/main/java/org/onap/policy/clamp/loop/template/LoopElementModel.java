@@ -97,14 +97,14 @@ public class LoopElementModel extends AuditEntity implements Serializable {
      */
     @Expose
     @ManyToMany(
-            fetch = FetchType.EAGER,
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+        fetch = FetchType.EAGER,
+        cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(
-            name = "loopelementmodels_to_policymodels",
-            joinColumns = @JoinColumn(name = "loop_element_name", referencedColumnName = "name"),
-            inverseJoinColumns = {
-                    @JoinColumn(name = "policy_model_type", referencedColumnName = "policy_model_type"),
-                    @JoinColumn(name = "policy_model_version", referencedColumnName = "version")})
+        name = "loopelementmodels_to_policymodels",
+        joinColumns = @JoinColumn(name = "loop_element_name", referencedColumnName = "name"),
+        inverseJoinColumns = {
+            @JoinColumn(name = "policy_model_type", referencedColumnName = "policy_model_type"),
+            @JoinColumn(name = "policy_model_version", referencedColumnName = "version")})
     @SortNatural
     private SortedSet<PolicyModel> policyModels = new TreeSet<>();
 
@@ -212,7 +212,7 @@ public class LoopElementModel extends AuditEntity implements Serializable {
     }
 
     /**
-     *  * @param shortName the shortName to set.
+     * * @param shortName the shortName to set.
      */
     public void setShortName(String shortName) {
         this.shortName = shortName;

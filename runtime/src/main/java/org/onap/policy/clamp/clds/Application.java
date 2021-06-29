@@ -61,7 +61,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @ComponentScan(basePackages = {"org.onap.policy.clamp"})
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class, UserDetailsServiceAutoConfiguration.class,
-        ServletMappingAutoConfiguration.class})
+    ServletMappingAutoConfiguration.class})
 @EnableJpaRepositories(basePackages = {"org.onap.policy.clamp"})
 @EntityScan(basePackages = {"org.onap.policy.clamp"})
 @EnableTransactionManagement
@@ -121,8 +121,8 @@ public class Application extends SpringBootServletInitializer {
     @Bean
     public ServletRegistrationBean<ClampServlet> camelServletRegistrationBean() throws IOException {
         eelfLogger.info(ResourceFileUtils.getResourceAsString("boot-message.txt") + "(v"
-                + ClampVersioning.getCldsVersionFromProps() + ")" + System.getProperty("line.separator")
-                + getSslExpirationDate());
+            + ClampVersioning.getCldsVersionFromProps() + ")" + System.getProperty("line.separator")
+            + getSslExpirationDate());
         var registration = new ServletRegistrationBean<ClampServlet>(new ClampServlet(), "/restservices/clds/*");
         registration.setName("CamelServlet");
         return registration;
@@ -150,7 +150,7 @@ public class Application extends SpringBootServletInitializer {
     private Connector createRedirectConnector(int redirectSecuredPort) {
         if (redirectSecuredPort <= 0) {
             eelfLogger.warn("HTTP port redirection to HTTPS is disabled because the HTTPS port is 0 (random port) or -1"
-                    + " (Connector disabled)");
+                + " (Connector disabled)");
             return null;
         }
         var connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
@@ -167,15 +167,15 @@ public class Application extends SpringBootServletInitializer {
             if (keystoreFile != null) {
                 var keystore = KeyStore.getInstance(keyStoreType);
                 keystore.load(ResourceFileUtils.getResourceAsStream(keystoreFile.replace("classpath:", "")),
-                        PassDecoder.decode(keyStorePass, keyFile).toCharArray());
+                    PassDecoder.decode(keyStorePass, keyFile).toCharArray());
 
                 Enumeration<String> aliases = keystore.aliases();
                 while (aliases.hasMoreElements()) {
                     String alias = aliases.nextElement();
                     if ("X.509".equals(keystore.getCertificate(alias).getType())) {
                         result.append("* " + alias + " expires "
-                                + ((X509Certificate) keystore.getCertificate(alias)).getNotAfter()
-                                + System.getProperty("line.separator"));
+                            + ((X509Certificate) keystore.getCertificate(alias)).getNotAfter()
+                            + System.getProperty("line.separator"));
                     }
                 }
             } else {
