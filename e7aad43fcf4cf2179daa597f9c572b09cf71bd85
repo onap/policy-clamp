@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ea2eeac3_296cbb8d",
+        "filename": "runtime/src/main/resources/clds/camel/routes/loop-flows.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-29T17:19:18Z",
+      "side": 1,
+      "message": "missing newline at end of file",
+      "revId": "e7aad43fcf4cf2179daa597f9c572b09cf71bd85",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4129e5c2_52949ca0",
+        "filename": "runtime/src/main/resources/clds/camel/routes/utils-flows.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-29T17:19:18Z",
+      "side": 1,
+      "message": "missing newline at end of file",
+      "revId": "e7aad43fcf4cf2179daa597f9c572b09cf71bd85",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ed0db9ac_1d41e7ef",
+        "filename": "runtime/src/main/resources/logback-spring.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-29T17:19:18Z",
+      "side": 1,
+      "message": "missing newline at end of file",
+      "revId": "e7aad43fcf4cf2179daa597f9c572b09cf71bd85",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}

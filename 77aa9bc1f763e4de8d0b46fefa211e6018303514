@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4fb63409_59310699",
+        "filename": "participant/participant-impl/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-29T17:19:18Z",
+      "side": 0,
+      "message": "interesting.  I thought at one point that sonar complained about this missing",
+      "revId": "77aa9bc1f763e4de8d0b46fefa211e6018303514",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
