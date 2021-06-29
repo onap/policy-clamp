@@ -1,5 +1,9 @@
 {
     "name": "ControlLoopRuntimeGroup",
+    "supervisionScannerIntervalSec": 1000,
+    "participantStateChangeIntervalSec": 1000,
+    "participantClUpdateIntervalSec": 1000,
+    "participantClStateChangeIntervalSec": 1000,
     "restServerParameters": {
         "host": "0.0.0.0",
         "port": 6969,

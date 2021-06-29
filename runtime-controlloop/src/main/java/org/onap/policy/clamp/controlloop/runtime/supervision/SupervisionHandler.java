@@ -78,6 +78,11 @@ public class SupervisionHandler extends ControlLoopHandler {
     private ParticipantControlLoopUpdatePublisher controlLoopUpdatePublisher;
     private ParticipantControlLoopStateChangePublisher controlLoopStateChangePublisher;
 
+    private long supervisionScannerIntervalSec;
+    private long participantStateChangeIntervalSec;
+    private long participantClUpdateIntervalSec;
+    private long participantClStateChangeIntervalSec;
+
     // Database scanner
     private SupervisionScanner scanner;
 
@@ -112,6 +117,12 @@ public class SupervisionHandler extends ControlLoopHandler {
                             () -> participantProvider = new ParticipantProvider(getDatabaseProviderParameters()),
                             () -> participantProvider = null);
         // @formatter:on
+
+        supervisionScannerIntervalSec = clRuntimeParameterGroup.getSupervisionScannerIntervalSec();
+        participantStateChangeIntervalSec = clRuntimeParameterGroup.getParticipantClStateChangeIntervalSec();
+        participantClUpdateIntervalSec = clRuntimeParameterGroup.getParticipantClUpdateIntervalSec();
+        participantClStateChangeIntervalSec = clRuntimeParameterGroup.getParticipantClStateChangeIntervalSec();
+
     }
 
     /**
@@ -129,8 +140,7 @@ public class SupervisionHandler extends ControlLoopHandler {
 
         if (CollectionUtils.isEmpty(controlLoopIdentifierList)) {
             // This is just to force throwing of the exception in certain circumstances.
-            exceptionOccured(Response.Status.NOT_ACCEPTABLE,
-                    "The list of control loops for supervision is empty");
+            exceptionOccured(Response.Status.NOT_ACCEPTABLE, "The list of control loops for supervision is empty");
         }
 
         for (ToscaConceptIdentifier controlLoopId : controlLoopIdentifierList) {
@@ -153,21 +163,23 @@ public class SupervisionHandler extends ControlLoopHandler {
 
     @Override
     public void startAndRegisterPublishers(List<TopicSink> topicSinks) {
-        // TODO: Use a parameter for the timeout
         // @formatter:off
         this.publisherManager = new ServiceManager()
                 .addAction("Supervision scanner",
-                        () -> scanner = new SupervisionScanner(controlLoopProvider, 10000),
-                        () -> scanner = null)
+                        () -> scanner =
+                        new SupervisionScanner(controlLoopProvider, supervisionScannerIntervalSec),
+                        () -> scanner.close())
                 .addAction("ControlLoopUpdate publisher",
-                        () -> controlLoopUpdatePublisher = new ParticipantControlLoopUpdatePublisher(topicSinks, -1),
+                        () -> controlLoopUpdatePublisher =
+                        new ParticipantControlLoopUpdatePublisher(topicSinks, participantClUpdateIntervalSec),
                         () -> controlLoopUpdatePublisher.terminate())
                 .addAction("StateChange Publisher",
-                        () -> stateChangePublisher = new ParticipantStateChangePublisher(topicSinks, 10000),
+                        () -> stateChangePublisher =
+                        new ParticipantStateChangePublisher(topicSinks, participantStateChangeIntervalSec),
                         () -> stateChangePublisher.terminate())
                 .addAction("ControlLoopStateChange Publisher",
                         () -> controlLoopStateChangePublisher =
-                        new ParticipantControlLoopStateChangePublisher(topicSinks, -1),
+                        new ParticipantControlLoopStateChangePublisher(topicSinks, participantClStateChangeIntervalSec),
                         () -> controlLoopStateChangePublisher.terminate());
         // @formatter:on
         try {
@@ -222,7 +234,7 @@ public class SupervisionHandler extends ControlLoopHandler {
      * @throws PfModelException on accessing models in the database
      * @throws ControlLoopException on supervision errors
      */
-    private void superviseControlLoop(ControlLoop controlLoop) throws ControlLoopException, PfModelException  {
+    private void superviseControlLoop(ControlLoop controlLoop) throws ControlLoopException, PfModelException {
         switch (controlLoop.getOrderedState()) {
             case UNINITIALISED:
                 superviseControlLoopUninitialization(controlLoop);
@@ -351,8 +363,7 @@ public class SupervisionHandler extends ControlLoopHandler {
     private void superviseParticipant(ParticipantStatus participantStatusMessage)
             throws PfModelException, ControlLoopException {
         if (participantStatusMessage.getParticipantId() == null) {
-            exceptionOccured(Response.Status.NOT_FOUND,
-                    "Participant ID on PARTICIPANT_STATUS message is null");
+            exceptionOccured(Response.Status.NOT_FOUND, "Participant ID on PARTICIPANT_STATUS message is null");
         }
 
         List<Participant> participantList =
@@ -378,8 +389,7 @@ public class SupervisionHandler extends ControlLoopHandler {
         }
 
         monitoringProvider = MonitoringHandler.getInstance().getMonitoringProvider();
-        monitoringProvider.createParticipantStatistics(
-                                List.of(participantStatusMessage.getParticipantStatistics()));
+        monitoringProvider.createParticipantStatistics(List.of(participantStatusMessage.getParticipantStatistics()));
     }
 
     private void superviseControlLoops(ParticipantStatus participantStatusMessage)
