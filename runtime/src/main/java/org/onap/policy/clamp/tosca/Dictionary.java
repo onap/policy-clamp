@@ -177,9 +177,9 @@ public class Dictionary extends AuditEntity implements Serializable {
     /**
      * Constructor.
      *
-     * @param name The Dictionary name
+     * @param name                  The Dictionary name
      * @param secondLevelDictionary defines if dictionary is a secondary level
-     * @param subDictionaryType defines the type of secondary level dictionary
+     * @param subDictionaryType     defines the type of secondary level dictionary
      */
     public Dictionary(String name, int secondLevelDictionary, String subDictionaryType) {
         this.name = name;
