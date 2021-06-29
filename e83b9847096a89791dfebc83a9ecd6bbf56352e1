@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "32f007b1_4fe6ebe9",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/loop/template/LoopElementModel.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-29T15:16:36Z",
+      "side": 1,
+      "message": "maybe remove this extra \"*\" altogether",
+      "range": {
+        "startLine": 215,
+        "startChar": 7,
+        "endLine": 215,
+        "endChar": 9
+      },
+      "revId": "e83b9847096a89791dfebc83a9ecd6bbf56352e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "63228de9_7feeda0b",
+        "filename": "runtime/src/main/resources/application-noaaf.properties",
+        "patchSetId": 3
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-29T15:16:36Z",
+      "side": 1,
+      "message": "oops",
+      "range": {
+        "startLine": 138,
+        "startChar": 23,
+        "endLine": 138,
+        "endChar": 32
+      },
+      "revId": "e83b9847096a89791dfebc83a9ecd6bbf56352e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ad6c1ce2_65d242cd",
+        "filename": "runtime/src/test/java/org/onap/policy/clamp/runtime/RuntimeCommissioningResponseTestItCase.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-29T15:16:36Z",
+      "side": 1,
+      "message": "move this before \"equals\" and change \"equals\" to \"isEqualTo\"",
+      "range": {
+        "startLine": 73,
+        "startChar": 94,
+        "endLine": 73,
+        "endChar": 95
+      },
+      "revId": "e83b9847096a89791dfebc83a9ecd6bbf56352e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c4b3ae48_aa8afe40",
+        "filename": "runtime/src/test/resources/http-cache/third_party_proxy.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-29T15:16:36Z",
+      "side": 1,
+      "message": "still need original AT\u0026T license, assuming AT\u0026T originally created this file.  Line 3 should start with \"Modifications\"",
+      "revId": "e83b9847096a89791dfebc83a9ecd6bbf56352e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ea285dca_7f4a0d1a",
+        "filename": "runtime/src/test/resources/http-cache/third_party_proxy.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-29T15:16:36Z",
+      "side": 1,
+      "message": "remove trailing spaces\n\nsame comment through-out this file",
+      "range": {
+        "startLine": 96,
+        "startChar": 0,
+        "endLine": 96,
+        "endChar": 4
+      },
+      "revId": "e83b9847096a89791dfebc83a9ecd6bbf56352e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
