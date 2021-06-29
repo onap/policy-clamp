@@ -1,10 +1,8 @@
 #!/usr/bin/env python2
 ###
 # ============LICENSE_START=======================================================
-# ONAP CLAMP
-# ================================================================================
-# Copyright (C) 2018 AT&T Intellectual Property. All rights
-#                             reserved.
+# Copyright (C) 2018 AT&T Intellectual Property. All rights reserved.
+# Modifications Copyright (C) 2021 Nordix Foundation.
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,6 +15,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
+# SPDX-License-Identifier: Apache-2.0
 # ============LICENSE_END============================================
 # ===================================================================
 #
@@ -26,7 +26,6 @@ import json
 import requests
 import os
 import errno
-import sys
 import SimpleHTTPServer
 import SocketServer
 import argparse
@@ -92,25 +91,26 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
             json.dump(dict(response.raw.headers), f)
     # Entry point of the code
     def _get_cached_file_folder_name(self,folder):
-        cached_file_folder = '%s/%s' % (folder, self.path,)
+        path = self.path.split('?')[0]
+        cached_file_folder = '%s/%s' % (folder, path,)
         print("Cached file name before escaping : %s" % cached_file_folder)
         cached_file_folder = cached_file_folder.replace('<','&#60;').replace('>','&#62;').replace('?','&#63;').replace('*','&#42;').replace('\\','&#42;').replace(':','&#58;').replace('|','&#124;')
         print("Cached file name after escaping (used for cache storage) : %s" % cached_file_folder)
         return cached_file_folder
-    
+
     def _get_cached_content_file_name(self,cached_file_folder):
         return "%s/.file" % (cached_file_folder,)
-    
+
     def _get_cached_header_file_name(self,cached_file_folder):
         return "%s/.header" % (cached_file_folder,)
-    
+
     def _execute_content_generated_cases(self,http_type):
      print("Testing special cases, cache files will be sent to :" +TMP_ROOT)
      cached_file_folder = self._get_cached_file_folder_name(TMP_ROOT)
      cached_file_content = self._get_cached_content_file_name(cached_file_folder)
      cached_file_header = self._get_cached_header_file_name(cached_file_folder)
      _file_available = os.path.exists(cached_file_content)
-    
+
      if self.path.startswith("/dcae-service-types?asdcResourceId=") and http_type == "GET":
         if not _file_available:
             print "self.path start with /dcae-service-types?asdcResourceId=, generating response json..."
@@ -120,7 +120,7 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
             print "typeId generated: " + typeName + " and typeName: "+ typeId
             jsonGenerated = "{\"totalCount\":1, \"items\":[{\"typeId\":\"" + typeId + "\", \"typeName\":\"" + typeName +"\"}]}"
             print "jsonGenerated: " + jsonGenerated
-    
+
             os.makedirs(cached_file_folder, 0777)
             with open(cached_file_header, 'w') as f:
                 f.write("{\"Content-Length\": \"" + str(len(jsonGenerated)) + "\", \"Content-Type\": \"application/json\"}")
@@ -132,14 +132,14 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
             print "self.path start with /dcae-operationstatus/install, generating response json..."
             jsonGenerated =  "{\"operationType\": \"install\", \"status\": \"succeeded\"}"
             print "jsonGenerated: " + jsonGenerated
-    
+
             try:
                 os.makedirs(cached_file_folder, 0777)
             except OSError as e:
                 if e.errno != errno.EEXIST:
                     raise
                 print(cached_file_folder+" already exists")
-    
+
             with open(cached_file_header, 'w') as f:
                 f.write("{\"Content-Length\": \"" + str(len(jsonGenerated)) + "\", \"Content-Type\": \"application/json\"}")
             with open(cached_file_content, 'w') as f:
@@ -150,14 +150,14 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
             print "self.path start with /dcae-operationstatus/uninstall, generating response json..."
             jsonGenerated =  "{\"operationType\": \"uninstall\", \"status\": \"succeeded\"}"
             print "jsonGenerated: " + jsonGenerated
-    
+
             try:
                 os.makedirs(cached_file_folder, 0777)
             except OSError as e:
                 if e.errno != errno.EEXIST:
                     raise
                 print(cached_file_folder+" already exists")
-    
+
             with open(cached_file_header, 'w') as f:
                 f.write("{\"Content-Length\": \"" + str(len(jsonGenerated)) + "\", \"Content-Type\": \"application/json\"}")
             with open(cached_file_content, 'w') as f:
@@ -169,7 +169,7 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
             jsondata = json.loads(self.data_string)
             jsonGenerated = "{\"artifactName\":\"" + jsondata['artifactName'] + "\",\"artifactType\":\"" + jsondata['artifactType'] + "\",\"artifactURL\":\"" + self.path + "\",\"artifactDescription\":\"" + jsondata['description'] + "\",\"artifactChecksum\":\"ZjJlMjVmMWE2M2M1OTM2MDZlODlmNTVmZmYzNjViYzM=\",\"artifactUUID\":\"" + str(uuid.uuid4()) + "\",\"artifactVersion\":\"1\"}"
             print "jsonGenerated: " + jsonGenerated
-    
+
             os.makedirs(cached_file_folder, 0777)
             with open(cached_file_header, 'w') as f:
                 f.write("{\"Content-Length\": \"" + str(len(jsonGenerated)) + "\", \"Content-Type\": \"application/json\"}")
@@ -187,7 +187,7 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
                 f.write("{\"Content-Length\": \"" + str(len(jsonGenerated)) + "\", \"Content-Type\": \"application/json\"}")
             with open(cached_file_content, 'w+') as f:
                 f.write(jsonGenerated)
-        	return True
+            return True
      elif self.path.startswith("/dcae-deployments/") and http_type == "DELETE":
             print "self.path start with /dcae-deployments/ UNDEPLOY, generating response json..."
             #jsondata = json.loads(self.data_string)
@@ -222,7 +222,7 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
         print "self.path start with DELETE new policy API /policy/api/v1/policytypes/ ..."
         if not os.path.exists(cached_file_folder):
             os.makedirs(cached_file_folder, 0777)
-    
+
         with open(cached_file_header, 'w+') as f:
                 f.write("{\"Content-Length\": \"" + str(len("")) + "\", \"Content-Type\": \""+str("")+"\"}")
         with open(cached_file_content, 'w+') as f:
@@ -265,10 +265,37 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
             with open(cached_file_content, 'w') as f:
                 f.write(response)
         return True
+     elif (self.path.startswith("/onap/controlloop/v2/commission/toscaservicetemplate")) and http_type == "GET":
+         path = self.path.split('?')[0]
+         cached_file_folder = '%s/%s' % (TMP_ROOT, path)
+         if not _file_available:
+             print ("cached file folder for onap is %s: ", cached_file_folder)
+             print "self.path start with /onap/controlloop/v2/commission/, generating response json..."
+             jsonGenerated =  "{\"tosca_definitions_version\": \"tosca_simple_yaml_1_1_0\",\"data_types\": {},\"node_types\": {}, \"policy_types\": {}, \"topology_template\": {}, \"name\": \"ToscaServiceTemplateSimple\", \"version\": \"1.0.0\", \"metadata\": {}}"
+             print "jsonGenerated: " + jsonGenerated
+             if not os.path.exists(cached_file_folder):
+                 os.makedirs(cached_file_folder, 0777)
+
+             with open(cached_file_header, 'w') as f:
+                 f.write("{\"Content-Length\": \"" + str(len(jsonGenerated)) + "\", \"Content-Type\": \"application/json\"}")
+             with open(cached_file_content, 'w') as f:
+                 f.write(jsonGenerated)
+         return True
+     elif (self.path.startswith("/onap/controlloop/v2/commission")) and http_type == "POST":
+         path = self.path.split('?')[0]
+         cached_file_folder = '%s/%s' % (TMP_ROOT, path)
+         print "self.path start with POST new policy API /pdp/api/, copying body to response ..."
+         if not os.path.exists(cached_file_folder):
+             os.makedirs(cached_file_folder, 0777)
+         with open(cached_file_header, 'w+') as f:
+             f.write("{\"Content-Length\": \"" + str(len(self.data_string)) + "\", \"Content-Type\": \""+str(self.headers['Content-Type'])+"\"}")
+         with open(cached_file_content, 'w+') as f:
+             f.write(self.data_string)
+         return True
      else:
         return False
 
-    
+
     def do_GET(self):
         cached_file_folder = ""
         cached_file_content =""
@@ -352,7 +379,7 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
         _file_available = os.path.exists(cached_file_content)
 
         if not _file_available:
-        
+
             if not HOST:
                 self.send_response(404)
                 self.end_headers()
@@ -492,6 +519,5 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
 httpd = SocketServer.ForkingTCPServer(('', PORT), Proxy)
 httpd.allow_reuse_address = True
 print "Listening on port "+ str(PORT) + "(Press Ctrl+C/Ctrl+Z to stop HTTPD Caching script)"
-print "Caching folder " + CACHE_ROOT + ", Tmp folder for generated files " + TMP_ROOT 
 signal.signal(signal.SIGINT, signal_handler)
 httpd.serve_forever()
