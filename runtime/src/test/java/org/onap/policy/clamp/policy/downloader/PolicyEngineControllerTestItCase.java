@@ -72,15 +72,15 @@ public class PolicyEngineControllerTestItCase {
         List<PolicyModel> policyModelsList = policyModelsRepository.findAll();
         assertThat(policyModelsList.size()).isGreaterThanOrEqualTo(5);
         assertThat(policyModelsList).contains(new PolicyModel("onap.policies.controlloop.operational.common.Drools",
-                null, "1.0.0"));
+            null, "1.0.0"));
         assertThat(policyModelsList).contains(new PolicyModel("onap.policies.controlloop.operational.common.Apex",
-                null, "1.0.0"));
+            null, "1.0.0"));
         assertThat(policyModelsList)
-                .contains(new PolicyModel("onap.policies.controlloop.guard.common.FrequencyLimiter", null, "1.0.0"));
+            .contains(new PolicyModel("onap.policies.controlloop.guard.common.FrequencyLimiter", null, "1.0.0"));
         assertThat(policyModelsList)
-                .contains(new PolicyModel("onap.policies.controlloop.guard.common.Blacklist", null, "1.0.0"));
+            .contains(new PolicyModel("onap.policies.controlloop.guard.common.Blacklist", null, "1.0.0"));
         assertThat(policyModelsList)
-                .contains(new PolicyModel("onap.policies.controlloop.guard.common.MinMax", null, "2.0.0"));
+            .contains(new PolicyModel("onap.policies.controlloop.guard.common.MinMax", null, "2.0.0"));
 
         // Re-do it to check that there is no issue with duplicate key
         policyController.synchronizeAllPolicies();
@@ -104,9 +104,9 @@ public class PolicyEngineControllerTestItCase {
         assertThat(policyModelsList.size()).isGreaterThanOrEqualTo(2);
 
         PolicyModel policy1 = policyModelsRepository
-                .getOne(new PolicyModelId("onap.policies.monitoring.test", "1.0.0"));
+            .getOne(new PolicyModelId("onap.policies.monitoring.test", "1.0.0"));
         PolicyModel policy2 = policyModelsRepository
-                .getOne(new PolicyModelId("onap.policies.controlloop.Operational", "1.0.0"));
+            .getOne(new PolicyModelId("onap.policies.controlloop.Operational", "1.0.0"));
 
         String expectedRes1 = "{\"supportedPdpGroups\":[{\"monitoring\":[\"xacml\"]}]}";
         JsonObject expectedJson1 = JsonUtils.GSON.fromJson(expectedRes1, JsonObject.class);
