@@ -4,6 +4,7 @@
  * ================================================================================
  * Copyright (C) 2018 AT&T Intellectual Property. All rights
  *                             reserved.
+ * Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -103,8 +104,8 @@ public class LoopElementModel extends AuditEntity implements Serializable {
             name = "loopelementmodels_to_policymodels",
             joinColumns = @JoinColumn(name = "loop_element_name", referencedColumnName = "name"),
             inverseJoinColumns = {
-                    @JoinColumn(name = "policy_model_type", referencedColumnName = "policy_model_type"),
-                    @JoinColumn(name = "policy_model_version", referencedColumnName = "version")})
+                @JoinColumn(name = "policy_model_type", referencedColumnName = "policy_model_type"),
+                @JoinColumn(name = "policy_model_version", referencedColumnName = "version")})
     @SortNatural
     private SortedSet<PolicyModel> policyModels = new TreeSet<>();
 
