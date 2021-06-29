@@ -1,10 +1,10 @@
-package org.onap.policy.clamp.policy.downloader;
 /*-
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
  * Copyright (C) 2020 AT&T Intellectual Property. All rights
  *                             reserved.
+ * Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@ package org.onap.policy.clamp.policy.downloader;
  * ===================================================================
  *
  */
+
+package org.onap.policy.clamp.policy.downloader;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

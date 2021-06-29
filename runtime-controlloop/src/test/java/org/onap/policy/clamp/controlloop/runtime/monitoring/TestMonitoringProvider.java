@@ -169,7 +169,7 @@ public class TestMonitoringProvider {
                 provider.fetchFilteredClElementStatistics(null, null, null, null, null, 0);
             }).hasMessageMatching("name is marked .*null but is null");
 
-            var lists = provider.createClElementStatistics(inputClElementStatistics.getClElementStatistics());
+            provider.createClElementStatistics(inputClElementStatistics.getClElementStatistics());
 
             getResponse = provider.fetchFilteredClElementStatistics("name1", null, null, null, null, 0);
 

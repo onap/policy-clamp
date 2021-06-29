@@ -187,22 +187,18 @@
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-core</artifactId>
-            <version>${version.tomcat}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-el</artifactId>
-            <version>${version.tomcat}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-websocket</artifactId>
-            <version>${version.tomcat}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-annotations-api</artifactId>
-            <version>${version.tomcat}</version>
         </dependency>
         <!-- For CAMEL -->
         <dependency>
@@ -249,7 +245,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-            <version>${version.springboot}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>
@@ -260,7 +255,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
-            <version>${version.springboot}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.glassfish</groupId>
@@ -275,17 +269,14 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
-            <version>${version.springboot}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
-            <version>${version.springboot}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <version>${version.springboot}</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -297,7 +288,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
-            <version>${version.springboot}</version>
         </dependency>
         <!-- Policy dependencies mainly for the models required -->
         <dependency>
@@ -407,7 +397,6 @@
         <dependency>
             <groupId>org.onap.sdc.sdc-tosca</groupId>
             <artifactId>sdc-tosca</artifactId>
-            <version>1.5.1</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.fasterxml.jackson.core</groupId>
@@ -809,7 +798,6 @@
             <plugin>
                 <groupId>io.fabric8</groupId>
                 <artifactId>docker-maven-plugin</artifactId>
-                <version>0.35.0</version>
                 <dependencies>
                     <dependency>
                         <groupId>org.apache.httpcomponents</groupId>
@@ -970,7 +958,6 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>${jacoco.version}</version>
                 <configuration>
                     <dumpOnExit>true</dumpOnExit>
                     <append>true</append>
@@ -1040,7 +1027,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
-                <version>1.3.1</version>
             </plugin>
 
             <plugin>
@@ -1128,12 +1114,10 @@
             <plugin>
                 <groupId>org.sonarsource.scanner.maven</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
-                <version>${sonar.scanner.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>1.3.2</version>
                 <executions>
                     <execution>
                         <id>libIndexCheck</id>
