@@ -20,23 +20,16 @@
 
 package org.onap.policy.clamp.controlloop.participant.intermediary.comm;
 
-import java.io.Closeable;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStateChange;
 import org.onap.policy.clamp.controlloop.participant.intermediary.handler.ParticipantHandler;
-import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
-import org.onap.policy.common.endpoints.listeners.ScoListener;
-import org.onap.policy.common.utils.coder.StandardCoderObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 /**
  * Listener for Participant State Change messages sent by CLAMP.
  *
  */
-public class ParticipantStateChangeListener extends ScoListener<ParticipantStateChange> implements Closeable {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantStateChangeListener.class);
-
-    private final ParticipantHandler participantHandler;
+@Component
+public class ParticipantStateChangeListener extends ParticipantListener<ParticipantStateChange> {
 
     /**
      * Constructs the object.
@@ -44,25 +37,6 @@ public class ParticipantStateChangeListener extends ScoListener<ParticipantState
      * @param participantHandler the handler for managing the state of the participant
      */
     public ParticipantStateChangeListener(final ParticipantHandler participantHandler) {
-        super(ParticipantStateChange.class);
-        this.participantHandler = participantHandler;
-    }
-
-    @Override
-    public void onTopicEvent(final CommInfrastructure infra, final String topic, final StandardCoderObject sco,
-            final ParticipantStateChange participantStateChangeMsg) {
-        LOGGER.debug("Participant State Change received from CLAMP - {}", participantStateChangeMsg);
-
-        if (participantHandler.canHandle(participantStateChangeMsg)) {
-            LOGGER.debug("Message for this participant");
-            participantHandler.handleParticipantStateChange(participantStateChangeMsg);
-        } else {
-            LOGGER.debug("Message not for this participant");
-        }
-    }
-
-    @Override
-    public void close() {
-        // No explicit action on this class
+        super(ParticipantStateChange.class, participantHandler, participantHandler::handleParticipantStateChange);
     }
 }

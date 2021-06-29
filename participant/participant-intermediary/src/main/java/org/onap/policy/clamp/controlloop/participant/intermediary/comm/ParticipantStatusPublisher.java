@@ -20,7 +20,6 @@
 
 package org.onap.policy.clamp.controlloop.participant.intermediary.comm;
 
-import java.io.Closeable;
 import java.util.List;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStatus;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
@@ -32,7 +31,7 @@ import org.slf4j.LoggerFactory;
  * This class is used to send Participant Status messages to clamp using TopicSinkClient.
  *
  */
-public class ParticipantStatusPublisher implements Closeable {
+public class ParticipantStatusPublisher {
     private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantStatusPublisher.class);
 
     private final TopicSinkClient topicSinkClient;
@@ -54,10 +53,5 @@ public class ParticipantStatusPublisher implements Closeable {
     public void send(final ParticipantStatus participantStatus) {
         topicSinkClient.send(participantStatus);
         LOGGER.debug("Sent Participant Status message to CLAMP - {}", participantStatus);
-    }
-
-    @Override
-    public void close() {
-        // No explicit action on this class
     }
 }

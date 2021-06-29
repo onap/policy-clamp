@@ -31,25 +31,12 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantStatistics;
-import org.onap.policy.clamp.controlloop.participant.intermediary.handler.ParticipantHandler;
-import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantIntermediaryParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
  * This interface is used by participant implementations to use the participant intermediary.
  */
 public interface ParticipantIntermediaryApi {
-    /**
-     * Initialise the participant intermediary.
-     *
-     * @param parameters the parameters for the intermediary
-     */
-    void init(ParticipantIntermediaryParameters parameters);
-
-    /**
-     * Close the intermediary.
-     */
-    void close();
 
     /**
      * Register a listener for control loop elements that are mediated by the intermediary.
@@ -128,12 +115,4 @@ public interface ParticipantIntermediaryApi {
      */
     void updateControlLoopElementStatistics(UUID id, ClElementStatistics elementStatistics);
 
-    /**
-     * Return participantHandler, This will not be used in real world, but for junits,
-     * if participantHandler is not returned, there is no way to test state change messages
-     * without dmaap simulator.
-     *
-     * @return the participant handler
-     */
-    ParticipantHandler getParticipantHandler();
 }

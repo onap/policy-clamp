@@ -20,7 +20,6 @@
 
 package org.onap.policy.clamp.controlloop.participant.intermediary.handler;
 
-import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -51,7 +50,7 @@ import org.slf4j.LoggerFactory;
  * This class is responsible for managing the state of all control loops in the participant.
  */
 @NoArgsConstructor
-public class ControlLoopHandler implements Closeable {
+public class ControlLoopHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(ControlLoopHandler.class);
 
     private ToscaConceptIdentifier participantType = null;
@@ -75,11 +74,6 @@ public class ControlLoopHandler implements Closeable {
         this.participantType = parameters.getParticipantType();
         this.participantId = parameters.getParticipantId();
         this.messageSender = messageSender;
-    }
-
-    @Override
-    public void close() {
-        // No explicit action on this class
     }
 
     public void registerControlLoopElementListener(ControlLoopElementListener listener) {

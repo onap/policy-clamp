@@ -40,6 +40,7 @@ import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.Parti
 import org.onap.policy.clamp.controlloop.models.messages.rest.TypedSimpleResponse;
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ControlLoopUpdateListener;
+import org.onap.policy.clamp.controlloop.participant.intermediary.handler.ParticipantHandler;
 import org.onap.policy.clamp.controlloop.participant.simulator.main.parameters.CommonTestData;
 import org.onap.policy.clamp.controlloop.participant.simulator.main.rest.AbstractRestController;
 import org.onap.policy.clamp.controlloop.participant.simulator.main.rest.TestListenerUtils;
@@ -89,6 +90,9 @@ class ParticipantSimulatorTest {
     @Autowired
     private ParticipantIntermediaryApi participantIntermediaryApi;
 
+    @Autowired
+    private ParticipantHandler participantHandler;
+
     private static final Object lockit = new Object();
     private boolean check = false;
 
@@ -97,7 +101,7 @@ class ParticipantSimulatorTest {
             if (!check) {
                 check = true;
                 ControlLoopUpdateListener clUpdateListener =
-                        new ControlLoopUpdateListener(participantIntermediaryApi.getParticipantHandler());
+                        new ControlLoopUpdateListener(participantHandler);
 
                 ParticipantControlLoopUpdate participantControlLoopUpdateMsg =
                         TestListenerUtils.createControlLoopUpdateMsg();

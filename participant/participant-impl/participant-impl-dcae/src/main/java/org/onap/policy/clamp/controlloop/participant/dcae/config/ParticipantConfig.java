@@ -21,29 +21,23 @@
 package org.onap.policy.clamp.controlloop.participant.dcae.config;
 
 import org.onap.policy.clamp.controlloop.participant.dcae.main.handler.ControlLoopElementHandler;
-import org.onap.policy.clamp.controlloop.participant.dcae.main.parameters.ParticipantDcaeParameters;
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryApi;
-import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryFactory;
-import org.springframework.context.annotation.Bean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ParticipantConfig {
 
     /**
-     * Create ParticipantIntermediaryApi.
+     * Register ControlLoopElementListener.
      *
-     * @param parameters the Participant Dcae Parameters
+     * @param intermediaryApi the ParticipantIntermediaryApi
      * @param clElementHandler the ControlLoop Element Handler
-     * @return ParticipantIntermediaryApi
      */
-    @Bean
-    public ParticipantIntermediaryApi participantIntermediaryApi(ParticipantDcaeParameters parameters,
+    @Autowired
+    public void registerControlLoopElementListener(ParticipantIntermediaryApi intermediaryApi,
             ControlLoopElementHandler clElementHandler) {
-        ParticipantIntermediaryApi intermediaryApi = new ParticipantIntermediaryFactory().createApiImplementation();
-        intermediaryApi.init(parameters.getIntermediaryParameters());
         intermediaryApi.registerControlLoopElementListener(clElementHandler);
         clElementHandler.setIntermediaryApi(intermediaryApi);
-        return intermediaryApi;
     }
 }

@@ -20,22 +20,15 @@
 
 package org.onap.policy.clamp.controlloop.participant.intermediary.comm;
 
-import java.io.Closeable;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantHealthCheck;
 import org.onap.policy.clamp.controlloop.participant.intermediary.handler.ParticipantHandler;
-import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
-import org.onap.policy.common.endpoints.listeners.ScoListener;
-import org.onap.policy.common.utils.coder.StandardCoderObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 /**
  * Listener for Participant health status messages sent by CLAMP.
  */
-public class ParticipantHealthCheckListener extends ScoListener<ParticipantHealthCheck> implements Closeable {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantHealthCheckListener.class);
-
-    private final ParticipantHandler participantHandler;
+@Component
+public class ParticipantHealthCheckListener extends ParticipantListener<ParticipantHealthCheck> {
 
     /**
      * Constructs the object.
@@ -43,27 +36,6 @@ public class ParticipantHealthCheckListener extends ScoListener<ParticipantHealt
      * @param participantHandler the handler for managing the state and health of the participant
      */
     public ParticipantHealthCheckListener(final ParticipantHandler participantHandler) {
-        super(ParticipantHealthCheck.class);
-        this.participantHandler = participantHandler;
-    }
-
-    @Override
-    public void onTopicEvent(final CommInfrastructure infra, final String topic, final StandardCoderObject sco,
-            final ParticipantHealthCheck participantHealthCheckMsg) {
-        LOGGER.debug("Participant Health Check message received from CLAMP - {}", participantHealthCheckMsg);
-
-
-        if (participantHandler.canHandle(participantHealthCheckMsg)) {
-            LOGGER.debug("Message for this participant");
-            participantHandler.handleParticipantHealthCheck(participantHealthCheckMsg);
-        } else {
-            LOGGER.debug("Message not for this participant");
-        }
-
-    }
-
-    @Override
-    public void close() {
-        // No explicit action on this class
+        super(ParticipantHealthCheck.class, participantHandler, participantHandler::handleParticipantHealthCheck);
     }
 }

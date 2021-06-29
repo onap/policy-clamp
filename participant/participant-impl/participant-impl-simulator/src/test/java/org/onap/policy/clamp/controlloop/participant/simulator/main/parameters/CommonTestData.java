@@ -65,30 +65,7 @@ public class CommonTestData {
     public Map<String, Object> getParticipantParameterGroupMap(final String name) {
         final Map<String, Object> map = new TreeMap<>();
 
-        map.put("name", name);
         map.put("intermediaryParameters", getIntermediaryParametersMap(false));
-        map.put("databaseProviderParameters", getDatabaseProviderParametersMap(false));
-        return map;
-    }
-
-    /**
-     * Returns a property map for a databaseProviderParameters map for test cases.
-     *
-     * @param isEmpty boolean value to represent that object created should be empty or not
-     * @return a property map suitable for constructing an object
-     */
-    public Map<String, Object> getDatabaseProviderParametersMap(final boolean isEmpty) {
-        final Map<String, Object> map = new TreeMap<>();
-        if (!isEmpty) {
-            map.put("name", "PolicyProviderParameterGroup");
-            map.put("implementation", "org.onap.policy.models.provider.impl.DatabasePolicyModelsProviderImpl");
-            map.put("databaseDriver", "org.h2.Driver");
-            map.put("databaseUrl", "jdbc:h2:mem:testdb");
-            map.put("databaseUser", "policy");
-            map.put("databasePassword", "P01icY");
-            map.put("persistenceUnit", "ToscaConceptTest");
-        }
-
         return map;
     }
 
