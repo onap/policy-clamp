@@ -29,10 +29,14 @@ import org.springframework.context.annotation.ComponentScan;
  * Starter.
  *
  */
+// @formatter:off
 @SpringBootApplication
 @ConfigurationPropertiesScan("org.onap.policy.clamp.controlloop.participant.simulator.main.parameters")
-@ComponentScan({"org.onap.policy.clamp.controlloop.participant.simulator",
-        "org.onap.policy.clamp.controlloop.participant.intermediary"})
+@ComponentScan({
+    "org.onap.policy.clamp.controlloop.participant.simulator",
+    "org.onap.policy.clamp.controlloop.participant.intermediary"
+})
+//@formatter:on
 public class ParticipantSimulatorApplication {
 
     public static void main(String[] args) {

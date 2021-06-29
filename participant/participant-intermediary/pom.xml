@@ -33,11 +33,4 @@
     <description>Common intermediary library for managing DMaaP participant messaging and holding participant and control
      loop state</description>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
-        </dependency>
-    </dependencies>
-
 </project>

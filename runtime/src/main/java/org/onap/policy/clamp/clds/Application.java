@@ -6,6 +6,7 @@
  *                             reserved.
  * ================================================================================
  * Modifications Copyright (c) 2019 Samsung
+ * Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +21,6 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- *
  */
 
 package org.onap.policy.clamp.clds;
@@ -61,7 +61,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @ComponentScan(basePackages = {"org.onap.policy.clamp"})
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class, UserDetailsServiceAutoConfiguration.class,
-        ServletMappingAutoConfiguration.class})
+    ServletMappingAutoConfiguration.class})
 @EnableJpaRepositories(basePackages = {"org.onap.policy.clamp"})
 @EntityScan(basePackages = {"org.onap.policy.clamp"})
 @EnableTransactionManagement

@@ -39,6 +39,7 @@ import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
@@ -66,6 +67,7 @@ public class HttpsItCase {
     @Value("${server.http-to-https-redirection.port}")
     private String httpPort;
 
+    @Ignore
     @Test
     public void testDesignerIndex() throws Exception {
         ResponseEntity<String> entity =
@@ -78,6 +80,7 @@ public class HttpsItCase {
         assertThat(httpsEntity.getBody()).contains("Clamp Rest API");
     }
 
+    @Ignore
     @Test
     public void testSwaggerJson() throws Exception {
         ResponseEntity<String> httpsEntity = getRestTemplate()
