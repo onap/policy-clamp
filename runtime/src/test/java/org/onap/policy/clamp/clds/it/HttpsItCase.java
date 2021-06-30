@@ -39,7 +39,6 @@ import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
@@ -67,27 +66,13 @@ public class HttpsItCase {
     @Value("${server.http-to-https-redirection.port}")
     private String httpPort;
 
-    @Ignore
-    @Test
-    public void testDesignerIndex() throws Exception {
-        ResponseEntity<String> entity =
-                new RestTemplate().getForEntity("http://localhost:" + this.httpPort + "/swagger.html",
-                        String.class);
-        assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.FOUND);
-        ResponseEntity<String> httpsEntity = getRestTemplate()
-                .getForEntity("https://localhost:" + this.httpsPort + "/swagger.html", String.class);
-        assertThat(httpsEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(httpsEntity.getBody()).contains("Clamp Rest API");
-    }
-
-    @Ignore
     @Test
     public void testSwaggerJson() throws Exception {
         ResponseEntity<String> httpsEntity = getRestTemplate()
                 .getForEntity("https://localhost:" + this.httpsPort + "/restservices/clds/api-doc", String.class);
         assertThat(httpsEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(httpsEntity.getBody()).contains("swagger");
-        FileUtils.writeStringToFile(new File("docs/swagger/swagger.json"), httpsEntity.getBody(),
+        FileUtils.writeStringToFile(new File("target/swagger/swagger.json"), httpsEntity.getBody(),
                 Charset.defaultCharset());
     }
 
