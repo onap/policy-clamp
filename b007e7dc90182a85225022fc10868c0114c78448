@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2ee6f26c_287e5555",
+        "filename": "runtime/src/main/resources/application-noaaf.properties",
+        "patchSetId": 4
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-06-30T11:40:15Z",
+      "side": 1,
+      "message": "Please don\u0027t do this kind of thing 😕",
+      "revId": "b007e7dc90182a85225022fc10868c0114c78448",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "25fb5721_dea609f0",
+        "filename": "runtime/src/main/resources/clds/camel/routes/controlloop-flows.xml",
+        "patchSetId": 4
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-06-30T11:40:15Z",
+      "side": 1,
+      "message": "Never implement such flag to test a C++/java code, a camel flow, a javascript or whatever code.... 😊\nThis is a test anti pattern ...\n\nMoreover i\u0027m not sure of the difference between both cases ?",
+      "revId": "b007e7dc90182a85225022fc10868c0114c78448",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7d0fbd90_f230ae3f",
+        "filename": "runtime/src/test/resources/http-cache/third_party_proxy.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-06-30T11:40:15Z",
+      "side": 1,
+      "message": "Are you sure the response can\u0027t be stored in the cache folder directly, you need something special to answer that query ?",
+      "revId": "b007e7dc90182a85225022fc10868c0114c78448",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
