@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "64f66667_70f30463",
+        "filename": "runtime/pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 576,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-30T08:00:03Z",
+      "side": 1,
+      "message": "This plugin generates asciidoc from the swagger.json file. The generation of swagger.json triggers a \"noSUchMethodError\" exception in the build. It is temporarily removed while we investigate the cause.",
+      "range": {
+        "startLine": 576,
+        "startChar": 0,
+        "endLine": 576,
+        "endChar": 4
+      },
+      "revId": "7d04c23c7c51738d68f325e450ac408c1ae9905f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8ec601d5_b399579c",
+        "filename": "runtime/pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 611,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-30T08:00:03Z",
+      "side": 1,
+      "message": "This plugin generates HTML and PDF from the asciidoc generated from the swagger.json file. The generation of swagger.json triggers a \"noSUchMethodError\" exception in the build. It is temporarily removed while we investigate the cause.",
+      "range": {
+        "startLine": 611,
+        "startChar": 0,
+        "endLine": 611,
+        "endChar": 4
+      },
+      "revId": "7d04c23c7c51738d68f325e450ac408c1ae9905f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a566b461_824e5b2a",
+        "filename": "runtime/src/test/java/org/onap/policy/clamp/clds/it/HttpsItCase.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-30T08:00:03Z",
+      "side": 1,
+      "message": "This test checks that the swagger endpoint is working, it triggers a \"noSUchMethodError\" exception in the build. It is temporarily removed while we investigate the cause.",
+      "range": {
+        "startLine": 70,
+        "startChar": 0,
+        "endLine": 70,
+        "endChar": 2
+      },
+      "revId": "7d04c23c7c51738d68f325e450ac408c1ae9905f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "35281634_08645cca",
+        "filename": "runtime/src/test/java/org/onap/policy/clamp/clds/it/HttpsItCase.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-30T08:00:03Z",
+      "side": 1,
+      "message": "This test generates the swagger.json file, it triggers a \"noSUchMethodError\" exception in the build. It is temporarily removed while we investigate the cause.",
+      "revId": "7d04c23c7c51738d68f325e450ac408c1ae9905f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
