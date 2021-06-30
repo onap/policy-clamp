@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "09261187_1ab9ba1a",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/loop/template/LoopElementModel.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-30T15:01:55Z",
+      "side": 1,
+      "message": "I\u0027m surprised this passes checkstyle since it doesn\u0027t start with uppercase.  (And, silly me, I should have suggested replacing this method with lombok, then the comment wouldn\u0027t even be needed.)",
+      "revId": "b007e7dc90182a85225022fc10868c0114c78448",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2ee6f26c_287e5555",
         "filename": "runtime/src/main/resources/application-noaaf.properties",
         "patchSetId": 4
@@ -66,6 +83,29 @@
       "side": 1,
       "message": "Please refer to my previous comment.",
       "parentUuid": "25fb5721_dea609f0",
+      "revId": "b007e7dc90182a85225022fc10868c0114c78448",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "776d471c_bfa5182a",
+        "filename": "runtime/src/test/resources/http-cache/third_party_proxy.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-30T15:01:55Z",
+      "side": 1,
+      "message": "is python happy with this?  seems like continuation lines should be indented\n\nsame comment through-out",
+      "range": {
+        "startLine": 123,
+        "startChar": 16,
+        "endLine": 124,
+        "endChar": 22
+      },
       "revId": "b007e7dc90182a85225022fc10868c0114c78448",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
