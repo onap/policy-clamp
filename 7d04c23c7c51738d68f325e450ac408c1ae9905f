@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "afe10112_eadf2dfc",
+        "filename": "runtime/src/test/java/org/onap/policy/clamp/clds/it/HttpsItCase.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-30T18:52:46Z",
+      "side": 0,
+      "message": "This test can never pass because the swagger.html is generated in a Maven phase that is later in the build than when the unit tests are run.\n\nThe only reason it passsed before is because the swagger.html was stored in the source repo at this location by the previous run of the build.",
+      "revId": "7d04c23c7c51738d68f325e450ac408c1ae9905f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
