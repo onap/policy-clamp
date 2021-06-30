@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e6942a7b_bf61d6c1",
+        "filename": "runtime/pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 576,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-30T12:56:54Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "64f66667_70f30463",
+      "range": {
+        "startLine": 576,
+        "startChar": 0,
+        "endLine": 576,
+        "endChar": 4
+      },
+      "revId": "7d04c23c7c51738d68f325e450ac408c1ae9905f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8ec601d5_b399579c",
         "filename": "runtime/pom.xml",
         "patchSetId": 3
@@ -45,6 +69,30 @@
       "revId": "7d04c23c7c51738d68f325e450ac408c1ae9905f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "94e3e884_9d1099af",
+        "filename": "runtime/pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 611,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-30T12:56:54Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "8ec601d5_b399579c",
+      "range": {
+        "startLine": 611,
+        "startChar": 0,
+        "endLine": 611,
+        "endChar": 4
+      },
+      "revId": "7d04c23c7c51738d68f325e450ac408c1ae9905f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "fef50c76_9e05388d",
+        "filename": "runtime/src/test/java/org/onap/policy/clamp/clds/it/HttpsItCase.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-30T12:56:54Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "a566b461_824e5b2a",
+      "range": {
+        "startLine": 70,
+        "startChar": 0,
+        "endLine": 70,
+        "endChar": 2
+      },
+      "revId": "7d04c23c7c51738d68f325e450ac408c1ae9905f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "35281634_08645cca",
         "filename": "runtime/src/test/java/org/onap/policy/clamp/clds/it/HttpsItCase.java",
         "patchSetId": 3
@@ -85,6 +157,24 @@
       "revId": "7d04c23c7c51738d68f325e450ac408c1ae9905f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bc842149_92f0af96",
+        "filename": "runtime/src/test/java/org/onap/policy/clamp/clds/it/HttpsItCase.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-30T12:56:54Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "35281634_08645cca",
+      "revId": "7d04c23c7c51738d68f325e450ac408c1ae9905f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
