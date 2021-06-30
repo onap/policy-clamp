@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "a6c21b21_7d7a32b5",
+        "filename": "runtime/src/main/resources/application-noaaf.properties",
+        "patchSetId": 4
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-06-30T11:54:08Z",
+      "side": 1,
+      "message": "Hi Seb. In the camel tests, when a \u0027?\u0027 is used to add query params, the emulator does not receive the query. do_GET or do_POST should be triggered but they are not. However, if I specify a url encoded \u0027?\u0027 i.e. namely \"%3F\" the call to the emulator is triggered. That is the reason for this flag. It indicates whether or not the tests are being run so that the camel flow can choose whether to use \"?\" or \"%3F\".\n\nIn dcae-flows.xml, a \";\" is used in place of the \"?\". If I do this in my endpoints, the tests will pass but it will not work in production.\n\nHave you met this issue before?",
+      "parentUuid": "2ee6f26c_287e5555",
+      "revId": "b007e7dc90182a85225022fc10868c0114c78448",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "25fb5721_dea609f0",
         "filename": "runtime/src/main/resources/clds/camel/routes/controlloop-flows.xml",
         "patchSetId": 4
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "97d53451_69867e5a",
+        "filename": "runtime/src/main/resources/clds/camel/routes/controlloop-flows.xml",
+        "patchSetId": 4
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-06-30T11:54:08Z",
+      "side": 1,
+      "message": "Please refer to my previous comment.",
+      "parentUuid": "25fb5721_dea609f0",
+      "revId": "b007e7dc90182a85225022fc10868c0114c78448",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7d0fbd90_f230ae3f",
         "filename": "runtime/src/test/resources/http-cache/third_party_proxy.py",
         "patchSetId": 4
@@ -47,6 +83,24 @@
       "writtenOn": "2021-06-30T11:40:15Z",
       "side": 1,
       "message": "Are you sure the response can\u0027t be stored in the cache folder directly, you need something special to answer that query ?",
+      "revId": "b007e7dc90182a85225022fc10868c0114c78448",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5c5e2b03_3346dad0",
+        "filename": "runtime/src/test/resources/http-cache/third_party_proxy.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-06-30T11:54:08Z",
+      "side": 1,
+      "message": "I have done this to shorten the filename being saved on the emulator. I was hitting an error \"filename too long\". As the URL grows with query params, this is bound to occur. Have you met this before?",
+      "parentUuid": "7d0fbd90_f230ae3f",
       "revId": "b007e7dc90182a85225022fc10868c0114c78448",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
