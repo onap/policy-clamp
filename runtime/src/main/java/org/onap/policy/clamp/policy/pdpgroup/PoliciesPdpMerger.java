@@ -35,7 +35,8 @@ import org.onap.policy.models.pdp.concepts.PdpGroups;
  */
 public class PoliciesPdpMerger {
 
-    private PoliciesPdpMerger() {}
+    private PoliciesPdpMerger() {
+    }
 
     /**
      * This method extract the content of a policy without knowing the key (policy Id).
@@ -65,6 +66,14 @@ public class PoliciesPdpMerger {
         }
     }
 
+    public static PdpGroups convertStringToPdpGroups(String pdpGroupsJson) {
+        return JsonUtils.GSON.fromJson(pdpGroupsJson, PdpGroups.class);
+    }
+
+    public static JsonObject convertStringToJsonObject(String pdpGroupsJson) {
+        return JsonUtils.GSON.fromJson(pdpGroupsJson, JsonObject.class);
+    }
+
     /**
      * This method merges the result of the policy listing and the associated Pdp Group info.
      * It can be seen as an enrichment of the policy listing.
@@ -74,12 +83,12 @@ public class PoliciesPdpMerger {
      * @return It returns a JsonObject containing the policies list enriched with PdpGroup info
      */
     public static JsonObject mergePoliciesAndPdpGroupStates(String jsonPoliciesList, String pdpGroupsJson) {
-        PdpGroups pdpGroups = JsonUtils.GSON.fromJson(pdpGroupsJson, PdpGroups.class);
         JsonObject policiesListJson =
                 JsonUtils.GSON.fromJson(jsonPoliciesList, JsonObject.class).get("topology_template")
                         .getAsJsonObject();
         StreamSupport.stream(policiesListJson.get("policies").getAsJsonArray().spliterator(), true)
-                .forEach(policyJson -> enrichOnePolicy(pdpGroups, getPolicyContentOutOfJsonElement(policyJson)));
+                .forEach(policyJson -> enrichOnePolicy(convertStringToPdpGroups(pdpGroupsJson),
+                        getPolicyContentOutOfJsonElement(policyJson)));
         return policiesListJson;
     }
 
