@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "78afc00b_6c2fe395",
+        "filename": "runtime/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 598,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-07-01T10:37:45Z",
+      "side": 1,
+      "message": "Yes. Of course we will need further future revies to do this completely. Ideally I\u0027d like to do this in the policy parent POM. But this is the first step.",
+      "parentUuid": "e13aafa1_483d036c",
+      "revId": "626761edcb95c968a2042d51dd2ee296f0a6ff91",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "484a057d_cc19c67e",
         "filename": "runtime/pom.xml",
         "patchSetId": 1
@@ -47,6 +65,24 @@
       "writtenOn": "2021-07-01T09:23:45Z",
       "side": 1,
       "message": "Same comment",
+      "revId": "626761edcb95c968a2042d51dd2ee296f0a6ff91",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d7e00ea8_87a780c9",
+        "filename": "runtime/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 662,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-07-01T10:37:45Z",
+      "side": 1,
+      "message": "Yes, this is the first step in auto building the swagger as an artifact.",
+      "parentUuid": "484a057d_cc19c67e",
       "revId": "626761edcb95c968a2042d51dd2ee296f0a6ff91",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
