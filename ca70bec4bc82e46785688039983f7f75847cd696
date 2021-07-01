@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "904fc3e8_52735c76",
+        "filename": "runtime/src/test/java/org/onap/policy/clamp/runtime/RuntimeCommissioningResponseTestItCase.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-07-01T14:26:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a1c692ec_fce0456e",
+      "revId": "ca70bec4bc82e46785688039983f7f75847cd696",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "831edc4f_c3d44112",
         "filename": "runtime/src/test/java/org/onap/policy/clamp/runtime/RuntimeCommissioningResponseTestItCase.java",
         "patchSetId": 5
@@ -72,6 +90,24 @@
     },
     {
       "key": {
+        "uuid": "e8246607_751fbcbf",
+        "filename": "runtime/src/test/java/org/onap/policy/clamp/runtime/RuntimeCommissioningResponseTestItCase.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-07-01T14:26:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cf53574f_f0e1ea44",
+      "revId": "ca70bec4bc82e46785688039983f7f75847cd696",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4735cadd_e237430c",
         "filename": "runtime/src/test/java/org/onap/policy/clamp/runtime/RuntimeCommissioningResponseTestItCase.java",
         "patchSetId": 5
@@ -104,6 +140,24 @@
       "revId": "ca70bec4bc82e46785688039983f7f75847cd696",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b577b6a1_ab286e1f",
+        "filename": "runtime/src/test/java/org/onap/policy/clamp/runtime/RuntimeCommissioningResponseTestItCase.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-07-01T14:26:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "77cfa786_ef68cecf",
+      "revId": "ca70bec4bc82e46785688039983f7f75847cd696",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }

@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9395a01d_4c5a458e",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/loop/template/LoopElementModel.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-07-01T14:26:08Z",
+      "side": 1,
+      "message": "Sorry Jim. What did you want me to do with this? Thanks",
+      "parentUuid": "09261187_1ab9ba1a",
+      "revId": "b007e7dc90182a85225022fc10868c0114c78448",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2ee6f26c_287e5555",
         "filename": "runtime/src/main/resources/application-noaaf.properties",
         "patchSetId": 4
@@ -54,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "ce4217f9_b546d503",
+        "filename": "runtime/src/main/resources/application-noaaf.properties",
+        "patchSetId": 4
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-07-01T14:26:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a6c21b21_7d7a32b5",
+      "revId": "b007e7dc90182a85225022fc10868c0114c78448",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "25fb5721_dea609f0",
         "filename": "runtime/src/main/resources/clds/camel/routes/controlloop-flows.xml",
         "patchSetId": 4
@@ -86,6 +122,24 @@
       "revId": "b007e7dc90182a85225022fc10868c0114c78448",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1c7a74b6_003ed4f1",
+        "filename": "runtime/src/main/resources/clds/camel/routes/controlloop-flows.xml",
+        "patchSetId": 4
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-07-01T14:26:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "97d53451_69867e5a",
+      "revId": "b007e7dc90182a85225022fc10868c0114c78448",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -136,6 +190,30 @@
     },
     {
       "key": {
+        "uuid": "cc384344_a015ce68",
+        "filename": "runtime/src/test/resources/http-cache/third_party_proxy.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-07-01T14:26:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "82de8ce8_d1b2082b",
+      "range": {
+        "startLine": 123,
+        "startChar": 16,
+        "endLine": 124,
+        "endChar": 22
+      },
+      "revId": "b007e7dc90182a85225022fc10868c0114c78448",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a798ea76_0221afd6",
         "filename": "runtime/src/test/resources/http-cache/third_party_proxy.py",
         "patchSetId": 4
@@ -150,6 +228,24 @@
       "revId": "b007e7dc90182a85225022fc10868c0114c78448",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d607b349_a1c8ce82",
+        "filename": "runtime/src/test/resources/http-cache/third_party_proxy.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-07-01T14:26:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a798ea76_0221afd6",
+      "revId": "b007e7dc90182a85225022fc10868c0114c78448",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -200,6 +296,24 @@
       "side": 1,
       "message": "Just wondering, what is the size (Max size) of your URL ?",
       "parentUuid": "5c5e2b03_3346dad0",
+      "revId": "b007e7dc90182a85225022fc10868c0114c78448",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f9beaf10_b125ef68",
+        "filename": "runtime/src/test/resources/http-cache/third_party_proxy.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-07-01T14:26:08Z",
+      "side": 1,
+      "message": "Hi Seb. The size of the current url is 297. The max filename size baked into the container is 255. I have dealt with this by removing all of the extra camel parameters that are being sent with the url.",
+      "parentUuid": "a0e6d91b_76194635",
       "revId": "b007e7dc90182a85225022fc10868c0114c78448",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
