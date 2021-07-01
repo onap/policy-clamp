@@ -1,0 +1,233 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e983c919_d2f497fe",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/handler/ControlLoopElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-01T13:50:54Z",
+      "side": 1,
+      "message": "should this be AccessLevel.PROTECTED or PACKAGE?",
+      "revId": "d7fa5ac73b79213b4f97ee0102fc6819463c59f4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5beace9c_6afdf0ba",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/service/ChartStore.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-01T13:50:54Z",
+      "side": 1,
+      "message": "protected or package?",
+      "revId": "d7fa5ac73b79213b4f97ee0102fc6819463c59f4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "90eec15e_7f1c8906",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/test/java/org.onap.policy.clamp.controlloop.participant.kubernetes/handler/ControlLoopElementHandlerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-01T13:50:54Z",
+      "side": 1,
+      "message": "remove \"public\"?",
+      "range": {
+        "startLine": 58,
+        "startChar": 0,
+        "endLine": 58,
+        "endChar": 7
+      },
+      "revId": "d7fa5ac73b79213b4f97ee0102fc6819463c59f4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "440a013e_41b14312",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/test/java/org.onap.policy.clamp.controlloop.participant.kubernetes/handler/ControlLoopElementHandlerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-01T13:50:54Z",
+      "side": 1,
+      "message": "remove \"public\"?\n\nsame question in the other test files",
+      "range": {
+        "startLine": 77,
+        "startChar": 4,
+        "endLine": 77,
+        "endChar": 11
+      },
+      "revId": "d7fa5ac73b79213b4f97ee0102fc6819463c59f4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "39117d23_98bae012",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/test/java/org.onap.policy.clamp.controlloop.participant.kubernetes/handler/ControlLoopElementHandlerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-01T13:50:54Z",
+      "side": 1,
+      "message": "use assertThat instead",
+      "range": {
+        "startLine": 130,
+        "startChar": 8,
+        "endLine": 130,
+        "endChar": 19
+      },
+      "revId": "d7fa5ac73b79213b4f97ee0102fc6819463c59f4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c8b83b56_7364e69a",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/test/java/org.onap.policy.clamp.controlloop.participant.kubernetes/service/ChartServiceTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-01T13:50:54Z",
+      "side": 1,
+      "message": "is this cast needed?",
+      "range": {
+        "startLine": 73,
+        "startChar": 17,
+        "endLine": 73,
+        "endChar": 34
+      },
+      "revId": "d7fa5ac73b79213b4f97ee0102fc6819463c59f4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9595744c_2090eb97",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/test/java/org.onap.policy.clamp.controlloop.participant.kubernetes/service/ChartServiceTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-01T13:50:54Z",
+      "side": 1,
+      "message": "need to add \".isTrue()\".  Or maybe use this instead?\n\n  assertThat(result).containsAll(charts)",
+      "revId": "d7fa5ac73b79213b4f97ee0102fc6819463c59f4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "60dd34e5_c25c1a4a",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/test/java/org.onap.policy.clamp.controlloop.participant.kubernetes/service/ChartServiceTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-01T13:50:54Z",
+      "side": 1,
+      "message": "change to:\n\n  assertThat(xxx).isEqualTo(yyy)\n\nsame comment below",
+      "range": {
+        "startLine": 94,
+        "startChar": 8,
+        "endLine": 94,
+        "endChar": 18
+      },
+      "revId": "d7fa5ac73b79213b4f97ee0102fc6819463c59f4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "df5f2c4b_20de1837",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/test/java/org.onap.policy.clamp.controlloop.participant.kubernetes/service/ChartStoreTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-01T13:50:54Z",
+      "side": 1,
+      "message": "needed?",
+      "range": {
+        "startLine": 69,
+        "startChar": 17,
+        "endLine": 69,
+        "endChar": 34
+      },
+      "revId": "d7fa5ac73b79213b4f97ee0102fc6819463c59f4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a6cd89f6_8ca61e27",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/test/java/org.onap.policy.clamp.controlloop.participant.kubernetes/service/ChartStoreTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-01T13:50:54Z",
+      "side": 1,
+      "message": "add \".isTrue()\" or change to (preferred):\n\n  assertThat(xxx).endsWith(yyy)\n\nsimilar comment below",
+      "range": {
+        "startLine": 91,
+        "startChar": 8,
+        "endLine": 91,
+        "endChar": 18
+      },
+      "revId": "d7fa5ac73b79213b4f97ee0102fc6819463c59f4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1e4588bb_cfc1a737",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/test/resources/ChartList.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-01T13:50:54Z",
+      "side": 1,
+      "message": "missing newline at the end of the file",
+      "revId": "d7fa5ac73b79213b4f97ee0102fc6819463c59f4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
