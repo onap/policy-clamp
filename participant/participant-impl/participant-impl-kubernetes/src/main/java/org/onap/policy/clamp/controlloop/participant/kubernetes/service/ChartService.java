@@ -53,9 +53,8 @@ public class ChartService {
      * @param name name of the app
      * @param version version of the app
      * @return chart
-     * @throws ServiceException in case of error.
      */
-    public ChartInfo getChart(String name, String version) throws ServiceException {
+    public ChartInfo getChart(String name, String version) {
         return chartStore.getChart(name, version);
     }
 

@@ -149,13 +149,12 @@ public class ChartController {
      * @param name name of the chart
      * @param version version of the chart
      * @return Status of operation
-     * @throws ServiceException in case of error.
      */
     @DeleteMapping(path = "/charts/{name}/{version}")
     @ApiOperation(value = "Delete the chart")
     @ApiResponses(value = {@ApiResponse(code = 204, message = "Chart Deleted")})
     public ResponseEntity<Object> deleteChart(@PathVariable("name") String name,
-            @PathVariable("version") String version) throws ServiceException {
+            @PathVariable("version") String version) {
 
         ChartInfo chart = chartService.getChart(name, version);
         if (chart == null) {
