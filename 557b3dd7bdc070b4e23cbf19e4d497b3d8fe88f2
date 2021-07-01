@@ -94,6 +94,30 @@
       "revId": "557b3dd7bdc070b4e23cbf19e4d497b3d8fe88f2",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ec8da250_6554d3e1",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/test/java/org.onap.policy.clamp.controlloop.participant.kubernetes/handler/ControlLoopElementHandlerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2021-07-01T16:36:47Z",
+      "side": 1,
+      "message": "oh okay. I think we only have containsKey() available. In that case hope the assertion is okay in patch 3?",
+      "parentUuid": "97b42282_4576c7bc",
+      "range": {
+        "startLine": 128,
+        "startChar": 53,
+        "endLine": 128,
+        "endChar": 79
+      },
+      "revId": "557b3dd7bdc070b4e23cbf19e4d497b3d8fe88f2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
