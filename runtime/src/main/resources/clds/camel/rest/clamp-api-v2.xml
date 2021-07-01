@@ -1278,6 +1278,43 @@
             </route>
         </get>
 
+        <get uri="/v2/getPDPGroups" outType="com.google.gson.JsonObject" produces="application/json">
+            <route>
+                <removeHeaders pattern="*"/>
+                <doTry>
+                    <to
+                            uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=startLog(*, 'GET Policies List ')"/>
+                    <to
+                            uri="bean:org.onap.policy.clamp.authorization.AuthorizationController?method=authorize(*,'policies','','read')"/>
+                    <setProperty name="raiseHttpExceptionFlag">
+                        <simple resultType="java.lang.Boolean">true</simple>
+                    </setProperty>
+                    <to uri="direct:get-all-pdp-groups"/>
+                    <setProperty name="pdpGroupInfoResponse">
+                        <simple>${body}</simple>
+                    </setProperty>
+                    <to
+                            uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=endLog()"/>
+                    <doCatch>
+                        <exception>java.lang.Exception</exception>
+                        <handled>
+                            <constant>true</constant>
+                        </handled>
+                        <to
+                                uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=errorLog()"/>
+                        <log loggingLevel="ERROR"
+                             message="GET Policies list JSON request failed: ${exception.stacktrace}"/>
+                        <setHeader name="CamelHttpResponseCode">
+                            <constant>500</constant>
+                        </setHeader>
+                        <setBody>
+                            <simple>GET Policies list JSON FAILED</simple>
+                        </setBody>
+                    </doCatch>
+                </doTry>
+            </route>
+        </get>
+
         <!-- Create a new policy -->
         <post uri="/v2/policies/{policyModelType}/{policyModelVersion}/{policyName}/{policyVersion}"
               type="com.google.gson.JsonElement"
