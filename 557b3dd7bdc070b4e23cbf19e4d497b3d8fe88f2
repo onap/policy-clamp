@@ -46,6 +46,30 @@
       "revId": "557b3dd7bdc070b4e23cbf19e4d497b3d8fe88f2",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "af10197e_28f277ff",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/test/java/org.onap.policy.clamp.controlloop.participant.kubernetes/handler/ControlLoopElementHandlerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2021-07-01T16:30:23Z",
+      "side": 1,
+      "message": "Hi Jim, I am expecting this elementId2 not to be present in the chartMap incase of failure scenario. So i am checking assertThat(controlLoopElementHandler.getChartMap().containsKey(elementId2)).isFalse()\n in PatchSet 3.\n\nWould that be okay? Is that what you meant?",
+      "parentUuid": "c5f3c1b0_157feeb5",
+      "range": {
+        "startLine": 128,
+        "startChar": 53,
+        "endLine": 128,
+        "endChar": 79
+      },
+      "revId": "557b3dd7bdc070b4e23cbf19e4d497b3d8fe88f2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
