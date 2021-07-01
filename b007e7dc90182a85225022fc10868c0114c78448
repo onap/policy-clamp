@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "abba9319_260f7fb8",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/loop/template/LoopElementModel.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-07-01T15:10:12Z",
+      "side": 1,
+      "message": "Ok, have done this.",
+      "parentUuid": "5ede840d_a61670c7",
+      "revId": "b007e7dc90182a85225022fc10868c0114c78448",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2ee6f26c_287e5555",
         "filename": "runtime/src/main/resources/application-noaaf.properties",
         "patchSetId": 4
