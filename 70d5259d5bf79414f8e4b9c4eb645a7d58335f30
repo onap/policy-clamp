@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "65201c38_2f696116",
+        "filename": "runtime/src/test/resources/http-cache/third_party_proxy.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-07-01T14:29:32Z",
+      "side": 1,
+      "message": "When the emulator receives url from Camel that has bee split onto multiple lines, several \u0027+\u0027 characters are added in. This small alteration removes the \u0027+\u0027 from the url to shorten it and allow it to be saved in the cache.",
+      "range": {
+        "startLine": 100,
+        "startChar": 48,
+        "endLine": 100,
+        "endChar": 63
+      },
+      "revId": "70d5259d5bf79414f8e4b9c4eb645a7d58335f30",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
