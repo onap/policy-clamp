@@ -295,6 +295,24 @@
     },
     {
       "key": {
+        "uuid": "531b61b5_d68ab98e",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/test/java/org.onap.policy.clamp.controlloop.participant.kubernetes/service/ChartServiceTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2021-07-01T15:49:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6dea5129_783770fd",
+      "revId": "d7fa5ac73b79213b4f97ee0102fc6819463c59f4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "60dd34e5_c25c1a4a",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/test/java/org.onap.policy.clamp.controlloop.participant.kubernetes/service/ChartServiceTest.java",
         "patchSetId": 1
