@@ -23,12 +23,15 @@ package org.onap.policy.clamp.controlloop.participant.kubernetes;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
+import org.springframework.context.annotation.ComponentScan;
 
 /**
  * Starter.
  *
  */
 @SpringBootApplication
+@ComponentScan({"org.onap.policy.clamp.controlloop.participant.kubernetes",
+    "org.onap.policy.clamp.controlloop.participant.intermediary"})
 @ConfigurationPropertiesScan("org.onap.policy.clamp.controlloop.participant.kubernetes.parameters")
 public class Application {
     /**
