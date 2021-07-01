@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import lombok.Getter;
 import org.onap.policy.clamp.controlloop.participant.kubernetes.exception.ServiceException;
 import org.onap.policy.clamp.controlloop.participant.kubernetes.models.ChartInfo;
 import org.onap.policy.clamp.controlloop.participant.kubernetes.parameters.ParticipantK8sParameters;
@@ -52,10 +53,8 @@ public class ChartStore {
 
     private final ParticipantK8sParameters participantK8sParameters;
 
-    /**
-     * The chartStore map contains chart name as key & ChartInfo as value.
-     */
-    private Map<String, ChartInfo> localChartMap = new ConcurrentHashMap<>();
+    // ChartStore map contains chart name as key & ChartInfo as value.
+    Map<String, ChartInfo> localChartMap = new ConcurrentHashMap<>();
 
     /**
      * Constructor method.
