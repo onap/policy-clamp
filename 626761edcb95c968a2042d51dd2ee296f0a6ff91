@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "56d360f0_63c6bbdd",
+        "filename": "runtime/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 438,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-07-01T10:45:24Z",
+      "side": 1,
+      "message": "No, this dependency is used by the unit tests, specifically the one that generates the swagger.json: HttpsItCase:testSwaggerJson.\n\nI will mark it with scope test.",
+      "parentUuid": "cd83b8f5_ac81b73a",
+      "revId": "626761edcb95c968a2042d51dd2ee296f0a6ff91",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e13aafa1_483d036c",
         "filename": "runtime/pom.xml",
         "patchSetId": 1

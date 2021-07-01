@@ -34,6 +34,24 @@
       "revId": "7d04c23c7c51738d68f325e450ac408c1ae9905f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "994792dd_f11bc939",
+        "filename": "runtime/src/test/java/org/onap/policy/clamp/clds/it/HttpsItCase.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-07-01T10:45:24Z",
+      "side": 0,
+      "message": "OK will do.",
+      "parentUuid": "90c8c475_139580d1",
+      "revId": "7d04c23c7c51738d68f325e450ac408c1ae9905f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
