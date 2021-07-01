@@ -72,6 +72,29 @@
     },
     {
       "key": {
+        "uuid": "dd041ab8_0dac00ba",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/service/ChartStore.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-07-01T15:55:05Z",
+      "side": 1,
+      "message": "Did you mean to delete the @Getter annotation?",
+      "range": {
+        "startLine": 57,
+        "startChar": 5,
+        "endLine": 57,
+        "endChar": 11
+      },
+      "revId": "d7fa5ac73b79213b4f97ee0102fc6819463c59f4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "90eec15e_7f1c8906",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/test/java/org.onap.policy.clamp.controlloop.participant.kubernetes/handler/ControlLoopElementHandlerTest.java",
         "patchSetId": 1
