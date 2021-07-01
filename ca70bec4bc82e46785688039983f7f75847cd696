@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1094d373_48c8d745",
+        "filename": "runtime/src/test/java/org/onap/policy/clamp/runtime/RuntimeCommissioningResponseTestItCase.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-07-01T08:28:29Z",
+      "side": 1,
+      "message": "You are missing the throwExceptionOnFailure \nThat\u0027s why your tests are not working\n\nYou can therefore remove the test flag i the camel flow",
+      "revId": "ca70bec4bc82e46785688039983f7f75847cd696",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "831edc4f_c3d44112",
+        "filename": "runtime/src/test/java/org/onap/policy/clamp/runtime/RuntimeCommissioningResponseTestItCase.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-07-01T08:28:29Z",
+      "side": 1,
+      "message": "You are missing the throwExceptionOnFailure \nThat\u0027s why your tests are not working\n\nYou can therefore remove the test flag i the camel flow",
+      "revId": "ca70bec4bc82e46785688039983f7f75847cd696",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4735cadd_e237430c",
+        "filename": "runtime/src/test/java/org/onap/policy/clamp/runtime/RuntimeCommissioningResponseTestItCase.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-07-01T08:28:29Z",
+      "side": 1,
+      "message": "You are missing the throwExceptionOnFailure \nThat\u0027s why your tests are not working\n\nYou can therefore remove the test flag i the camel flow",
+      "revId": "ca70bec4bc82e46785688039983f7f75847cd696",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
