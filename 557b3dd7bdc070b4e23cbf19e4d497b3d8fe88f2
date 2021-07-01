@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b7f094c4_8d444fa1",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/test/java/org.onap.policy.clamp.controlloop.participant.kubernetes/handler/ControlLoopElementHandlerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-01T15:58:48Z",
+      "side": 1,
+      "message": "use containsKey instead",
+      "range": {
+        "startLine": 128,
+        "startChar": 53,
+        "endLine": 128,
+        "endChar": 79
+      },
+      "revId": "557b3dd7bdc070b4e23cbf19e4d497b3d8fe88f2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
