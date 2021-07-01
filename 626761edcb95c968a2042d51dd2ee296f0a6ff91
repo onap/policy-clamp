@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cd83b8f5_ac81b73a",
+        "filename": "runtime/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 438,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-07-01T09:20:56Z",
+      "side": 1,
+      "message": "If this dependency is only required for a maven plugin, this should be moved inside the plugin section\nIs it the case ?",
+      "revId": "626761edcb95c968a2042d51dd2ee296f0a6ff91",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}

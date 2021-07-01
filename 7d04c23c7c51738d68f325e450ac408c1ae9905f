@@ -16,6 +16,24 @@
       "revId": "7d04c23c7c51738d68f325e450ac408c1ae9905f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "90c8c475_139580d1",
+        "filename": "runtime/src/test/java/org/onap/policy/clamp/clds/it/HttpsItCase.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-07-01T09:20:56Z",
+      "side": 0,
+      "message": "If i remember well the test validates also the redirection to HTTPS feature.\nSo better to keep it, but instead of getting the swagger.html you can replace by /restservices/clds/api-doc",
+      "parentUuid": "afe10112_eadf2dfc",
+      "revId": "7d04c23c7c51738d68f325e450ac408c1ae9905f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
