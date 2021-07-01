@@ -16,6 +16,40 @@
       "revId": "626761edcb95c968a2042d51dd2ee296f0a6ff91",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e13aafa1_483d036c",
+        "filename": "runtime/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 598,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-07-01T09:23:45Z",
+      "side": 1,
+      "message": "So here you are kicking the automatic doc update, i guess the docs will be moved to the policy parent so that\u0027s why you do that right ?",
+      "revId": "626761edcb95c968a2042d51dd2ee296f0a6ff91",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "484a057d_cc19c67e",
+        "filename": "runtime/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 662,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-07-01T09:23:45Z",
+      "side": 1,
+      "message": "Same comment",
+      "revId": "626761edcb95c968a2042d51dd2ee296f0a6ff91",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
