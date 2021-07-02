@@ -33,15 +33,15 @@ node_types:
     properties:
       provider:
         type: string
-        requred: false
+        required: false
         description: Specifies the organization that provides the control loop element
       participant_type:
         type: onap.datatypes.ToscaConceptIdentifier
-        requred: true
+        required: true
         description: The identity of the participant type that hosts this type of Control Loop Element
       start_phase:
         type: integer
-        requred: false
+        required: false
         constraints:
         - greater-or-equal: 0
         description: A value indicating the start phase in which this control loop element will be started, the
@@ -54,7 +54,7 @@ node_types:
     properties:
       provider:
         type: string
-        requred: false
+        required: false
         description: Specifies the organization that provides the control loop element
       elements:
         type: list
