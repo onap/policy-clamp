@@ -27,9 +27,9 @@ import static org.junit.Assert.assertEquals;
 import java.time.Instant;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ClElementStatistics;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ClElementStatisticsList;
 import org.onap.policy.common.utils.coder.Coder;
@@ -38,7 +38,7 @@ import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
-public class ClElementStatisticsProviderTest {
+class ClElementStatisticsProviderTest {
     private static final String LIST_IS_NULL = ".*. is marked .*ull but is null";
     private static final Coder CODER = new StandardCoder();
     private static final String CL_ELEMENT_STATS_JSON = "src/test/resources/providers/TestClElementStatistics.json";
@@ -55,8 +55,8 @@ public class ClElementStatisticsProviderTest {
      *
      * @throws Exception on errors
      */
-    @Before
-    public void beforeSetupDao() throws Exception {
+    @BeforeEach
+    void beforeSetupDao() throws Exception {
 
         parameters = new PolicyModelsProviderParameters();
         parameters.setDatabaseDriver("org.h2.Driver");
@@ -71,13 +71,13 @@ public class ClElementStatisticsProviderTest {
         inputClElementStats = CODER.decode(originalJson, ClElementStatisticsList.class);
     }
 
-    @After
-    public void teardown() {
+    @AfterEach
+    void teardown() {
         clElementStatisticsProvider.close();
     }
 
     @Test
-    public void testClElementStatisticsCreate() throws Exception {
+    void testClElementStatisticsCreate() throws Exception {
         assertThatThrownBy(() -> {
             clElementStatisticsProvider.createClElementStatistics(null);
         }).hasMessageMatching(LIST_IS_NULL);
@@ -91,7 +91,7 @@ public class ClElementStatisticsProviderTest {
     }
 
     @Test
-    public void testGetClElementStatistics() throws Exception {
+    void testGetClElementStatistics() throws Exception {
 
         List<ClElementStatistics> getResponse;
 

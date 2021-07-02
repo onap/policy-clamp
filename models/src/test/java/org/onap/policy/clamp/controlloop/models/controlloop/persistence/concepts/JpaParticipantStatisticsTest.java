@@ -28,7 +28,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.time.Instant;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantHealthStatus;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
@@ -41,12 +41,12 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 /**
  * Test the {@link JpaParticipantStatistics} class.
  */
-public class JpaParticipantStatisticsTest {
+class JpaParticipantStatisticsTest {
 
     private static final String NULL_KEY_ERROR = "key is marked .*ull but is null";
 
     @Test
-    public void testJpaParticipantStatisticsConstructor() {
+    void testJpaParticipantStatisticsConstructor() {
         assertThatThrownBy(() -> {
             new JpaParticipantStatistics((JpaParticipantStatistics) null);
         }).hasMessageMatching("copyConcept is marked .*ull but is null");
@@ -73,7 +73,7 @@ public class JpaParticipantStatisticsTest {
     }
 
     @Test
-    public void testJpaParticipantStatistics() {
+    void testJpaParticipantStatistics() {
         JpaParticipantStatistics testJpaParticipantStatistics = createJpaParticipantStatisticsInstance();
 
         ParticipantStatistics cles = createParticipantStatisticsInstance();
@@ -114,7 +114,7 @@ public class JpaParticipantStatisticsTest {
     }
 
     @Test
-    public void testJpaParticipantStatisticsValidation() {
+    void testJpaParticipantStatisticsValidation() {
         JpaParticipantStatistics testJpaParticipantStatistics = createJpaParticipantStatisticsInstance();
 
         assertThatThrownBy(() -> {
@@ -126,7 +126,7 @@ public class JpaParticipantStatisticsTest {
     }
 
     @Test
-    public void testJpaParticipantStatisticsConmpareTo() {
+    void testJpaParticipantStatisticsConmpareTo() {
         JpaParticipantStatistics testJpaParticipantStatistics = createJpaParticipantStatisticsInstance();
 
         JpaParticipantStatistics otherJpaParticipantStatistics =
@@ -145,7 +145,7 @@ public class JpaParticipantStatisticsTest {
     }
 
     @Test
-    public void testJpaParticipantStatisticsLombok() {
+    void testJpaParticipantStatisticsLombok() {
         assertNotNull(new Participant());
         JpaParticipantStatistics ps0 = new JpaParticipantStatistics();
 

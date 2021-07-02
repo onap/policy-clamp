@@ -27,7 +27,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantHealthStatus;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
@@ -37,12 +37,12 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 /**
  * Test the {@link JpaParticiant} class.
  */
-public class JpaParticipantTest {
+class JpaParticipantTest {
 
     private static final String NULL_KEY_ERROR = "key is marked .*ull but is null";
 
     @Test
-    public void testJpaParticipantConstructor() {
+    void testJpaParticipantConstructor() {
         assertThatThrownBy(() -> {
             new JpaParticipant((JpaParticipant) null);
         }).hasMessageMatching("copyConcept is marked .*ull but is null");
@@ -118,7 +118,7 @@ public class JpaParticipantTest {
     }
 
     @Test
-    public void testJpaParticipant() {
+    void testJpaParticipant() {
         JpaParticipant testJpaParticipant = createJpaParticipantInstance();
 
         Participant participant = createParticipantInstance();
@@ -158,7 +158,7 @@ public class JpaParticipantTest {
     }
 
     @Test
-    public void testJpaParticipantValidation() {
+    void testJpaParticipantValidation() {
         JpaParticipant testJpaParticipant = createJpaParticipantInstance();
 
         assertThatThrownBy(() -> {
@@ -169,7 +169,7 @@ public class JpaParticipantTest {
     }
 
     @Test
-    public void testJpaParticipantCompareTo() {
+    void testJpaParticipantCompareTo() {
         JpaParticipant testJpaParticipant = createJpaParticipantInstance();
 
         JpaParticipant otherJpaParticipant = new JpaParticipant(testJpaParticipant);
@@ -202,7 +202,7 @@ public class JpaParticipantTest {
     }
 
     @Test
-    public void testJpaParticipantLombok() {
+    void testJpaParticipantLombok() {
         assertNotNull(new Participant());
         JpaParticipant p0 = new JpaParticipant();
 

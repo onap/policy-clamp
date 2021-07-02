@@ -26,12 +26,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
-public class ParticipantTest {
+class ParticipantTest {
     @Test
-    public void testParticipant() {
+    void testParticipant() {
 
         Participant p0 = new Participant();
         p0.setDefinition(new ToscaConceptIdentifier("dfName", "1.2.3"));
@@ -45,7 +45,7 @@ public class ParticipantTest {
     }
 
     @Test
-    public void testParticipantLombok() {
+    void testParticipantLombok() {
         assertNotNull(new Participant());
         Participant p0 = new Participant();
 

@@ -25,13 +25,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.UUID;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
-public class ControlLoopStatusTest {
+class ControlLoopStatusTest {
 
     @Test
-    public void testControlLoopStatusLombok() {
+    void testControlLoopStatusLombok() {
         assertNotNull(new ControlLoopStatus());
         assertNotNull(new ControlLoopStatus(UUID.randomUUID(), new ToscaConceptIdentifier()));
 

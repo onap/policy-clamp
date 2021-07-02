@@ -30,7 +30,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.util.UUID;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
@@ -45,12 +45,12 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 /**
  * Test the {@link JpaControlLoopElement} class.
  */
-public class JpaControlLoopElementTest {
+class JpaControlLoopElementTest {
 
     private static final String NULL_KEY_ERROR = "key is marked .*ull but is null";
 
     @Test
-    public void testJpaControlLoopElementConstructor() {
+    void testJpaControlLoopElementConstructor() {
         assertThatThrownBy(() -> {
             new JpaControlLoopElement((JpaControlLoopElement) null);
         }).hasMessageMatching("copyConcept is marked .*ull but is null");
@@ -130,7 +130,7 @@ public class JpaControlLoopElementTest {
     }
 
     @Test
-    public void testJpaControlLoopElement() {
+    void testJpaControlLoopElement() {
         JpaControlLoopElement testJpaControlLoopElement = createJpaControlLoopElementInstance();
 
         ControlLoopElement cle = createControlLoopElementInstance();
@@ -174,7 +174,7 @@ public class JpaControlLoopElementTest {
     }
 
     @Test
-    public void testJpaControlLoopElementOrderedState() throws CoderException {
+    void testJpaControlLoopElementOrderedState() throws CoderException {
         ControlLoopElement testControlLoopElement = createControlLoopElementInstance();
         JpaControlLoopElement testJpaControlLoopElement = createJpaControlLoopElementInstance();
 
@@ -193,7 +193,7 @@ public class JpaControlLoopElementTest {
     }
 
     @Test
-    public void testJpaControlLoopElementValidation() {
+    void testJpaControlLoopElementValidation() {
         JpaControlLoopElement testJpaControlLoopElement = createJpaControlLoopElementInstance();
 
         assertThatThrownBy(() -> {
@@ -204,7 +204,7 @@ public class JpaControlLoopElementTest {
     }
 
     @Test
-    public void testJpaControlLoopElementCompareTo() {
+    void testJpaControlLoopElementCompareTo() {
         JpaControlLoopElement testJpaControlLoopElement = createJpaControlLoopElementInstance();
 
         JpaControlLoopElement otherJpaControlLoopElement = new JpaControlLoopElement(testJpaControlLoopElement);
@@ -249,7 +249,7 @@ public class JpaControlLoopElementTest {
     }
 
     @Test
-    public void testJpaControlLoopElementLombok() {
+    void testJpaControlLoopElementLombok() {
         assertNotNull(new Participant());
         JpaControlLoopElement cle0 = new JpaControlLoopElement();
 

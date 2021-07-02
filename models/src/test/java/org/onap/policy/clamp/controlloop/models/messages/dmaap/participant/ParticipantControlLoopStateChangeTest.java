@@ -26,17 +26,17 @@ import static org.onap.policy.clamp.controlloop.models.messages.dmaap.participan
 
 import java.time.Instant;
 import java.util.UUID;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
  * Test the copy constructor and other methods.
  */
-public class ParticipantControlLoopStateChangeTest {
+class ParticipantControlLoopStateChangeTest {
 
     @Test
-    public void testCopyConstructor() {
+    void testCopyConstructor() {
         assertThatThrownBy(() -> new ParticipantStateChange(null)).isInstanceOf(NullPointerException.class);
 
         ParticipantControlLoopStateChange orig = new ParticipantControlLoopStateChange();

@@ -31,16 +31,16 @@ import com.openpojo.validation.rule.impl.SetterMustExistRule;
 import com.openpojo.validation.test.impl.GetterTester;
 import com.openpojo.validation.test.impl.SetterTester;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.common.utils.test.ToStringTester;
 
 /**
  * Class to perform unit tests of all pojos.
  */
-public class ControlLoopConceptPojosTest {
+class ControlLoopConceptPojosTest {
 
     @Test
-    public void testPojos() {
+    void testPojos() {
         List<PojoClass> pojoClasses =
                 PojoClassFactory.getPojoClasses(ControlLoopConceptPojosTest.class.getPackageName());
 

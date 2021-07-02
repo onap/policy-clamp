@@ -27,12 +27,12 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.time.Instant;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
-public class ParticipantStatisticsTest {
+class ParticipantStatisticsTest {
     @Test
-    public void testParticipantStatisticsLombok() {
+    void testParticipantStatisticsLombok() {
         assertNotNull(new ParticipantStatistics());
         ParticipantStatistics ps0 = new ParticipantStatistics();
 

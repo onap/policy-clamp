@@ -27,9 +27,9 @@ import static org.junit.Assert.assertEquals;
 import java.time.Instant;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantStatistics;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantStatisticsList;
 import org.onap.policy.common.utils.coder.Coder;
@@ -38,7 +38,7 @@ import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
-public class ParticipantStatisticsProviderTest {
+class ParticipantStatisticsProviderTest {
 
     private static final String LIST_IS_NULL = ".*. is marked .*ull but is null";
     private static final Coder CODER = new StandardCoder();
@@ -51,8 +51,8 @@ public class ParticipantStatisticsProviderTest {
     private ParticipantStatisticsList inputParticipantStatistics;
     private String originalJson = ResourceUtils.getResourceAsString(PARTICIPANT_STATS_JSON);
 
-    @Before
-    public void beforeSetupDao() throws Exception {
+    @BeforeEach
+    void beforeSetupDao() throws Exception {
 
         parameters = new PolicyModelsProviderParameters();
         parameters.setDatabaseDriver("org.h2.Driver");
@@ -67,13 +67,13 @@ public class ParticipantStatisticsProviderTest {
         inputParticipantStatistics = CODER.decode(originalJson, ParticipantStatisticsList.class);
     }
 
-    @After
-    public void teardown() {
+    @AfterEach
+    void teardown() {
         participantStatisticsProvider.close();
     }
 
     @Test
-    public void testParticipantStatisticsCreate() throws Exception {
+    void testParticipantStatisticsCreate() throws Exception {
         assertThatThrownBy(() -> {
             participantStatisticsProvider.createParticipantStatistics(null);
         }).hasMessageMatching(LIST_IS_NULL);
@@ -87,7 +87,7 @@ public class ParticipantStatisticsProviderTest {
     }
 
     @Test
-    public void testGetControlLoops() throws Exception {
+    void testGetControlLoops() throws Exception {
         List<ParticipantStatistics> getResponse;
 
         // Return empty list when no data present in db

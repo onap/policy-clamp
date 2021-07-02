@@ -29,7 +29,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.time.Instant;
 import java.util.UUID;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ClElementStatistics;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
@@ -40,12 +40,12 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 /**
  * Test the {@link JpaClElementStatistics} class.
  */
-public class JpaClElementStatisticsTest {
+class JpaClElementStatisticsTest {
 
     private static final String NULL_KEY_ERROR = "key is marked .*ull but is null";
 
     @Test
-    public void testJpaClElementStatisticsConstructor() {
+    void testJpaClElementStatisticsConstructor() {
         assertThatThrownBy(() -> {
             new JpaClElementStatistics((JpaClElementStatistics) null);
         }).hasMessageMatching("copyConcept is marked .*ull but is null");
@@ -72,7 +72,7 @@ public class JpaClElementStatisticsTest {
     }
 
     @Test
-    public void testJpaClElementStatistics() {
+    void testJpaClElementStatistics() {
         JpaClElementStatistics testJpaClElementStatistics = createJpaClElementStatisticsInstance();
 
         ClElementStatistics cles = createClElementStatisticsInstance();
@@ -112,7 +112,7 @@ public class JpaClElementStatisticsTest {
     }
 
     @Test
-    public void testJpaClElementStatisticsValidation() {
+    void testJpaClElementStatisticsValidation() {
         JpaClElementStatistics testJpaClElementStatistics = createJpaClElementStatisticsInstance();
 
         assertThatThrownBy(() -> {
@@ -123,7 +123,7 @@ public class JpaClElementStatisticsTest {
     }
 
     @Test
-    public void testJpaClElementStatisticsCompareTo() {
+    void testJpaClElementStatisticsCompareTo() {
         JpaClElementStatistics testJpaClElementStatistics = createJpaClElementStatisticsInstance();
 
         JpaClElementStatistics otherJpaClElementStatistics = new JpaClElementStatistics(testJpaClElementStatistics);
@@ -141,7 +141,7 @@ public class JpaClElementStatisticsTest {
     }
 
     @Test
-    public void testJpaClElementStatisticsLombok() {
+    void testJpaClElementStatisticsLombok() {
         assertNotNull(new Participant());
         JpaClElementStatistics cles0 = new JpaClElementStatistics();
 

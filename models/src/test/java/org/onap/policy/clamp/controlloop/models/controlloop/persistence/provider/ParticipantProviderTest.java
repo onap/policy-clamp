@@ -27,9 +27,9 @@ import static org.junit.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
 import org.onap.policy.common.utils.coder.Coder;
@@ -38,7 +38,7 @@ import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTypedEntityFilter;
 
-public class ParticipantProviderTest {
+class ParticipantProviderTest {
 
     private static final Coder CODER = new StandardCoder();
     private static final String PARTICIPANT_JSON =
@@ -53,8 +53,8 @@ public class ParticipantProviderTest {
     private Participant updateParticipants;
     private String originalJson = ResourceUtils.getResourceAsString(PARTICIPANT_JSON);
 
-    @Before
-    public void beforeSetupDao() throws Exception {
+    @BeforeEach
+    void beforeSetupDao() throws Exception {
 
         parameters = new PolicyModelsProviderParameters();
         parameters.setDatabaseDriver("org.h2.Driver");
@@ -70,13 +70,13 @@ public class ParticipantProviderTest {
 
     }
 
-    @After
-    public void teardown() {
+    @AfterEach
+    void teardown() {
         participantProvider.close();
     }
 
     @Test
-    public void testParticipantCreate() throws Exception {
+    void testParticipantCreate() throws Exception {
         assertThatThrownBy(() -> {
             participantProvider.createParticipants(null);
         }).hasMessageMatching(LIST_IS_NULL);
@@ -91,7 +91,7 @@ public class ParticipantProviderTest {
 
 
     @Test
-    public void testGetControlLoops() throws Exception {
+    void testGetControlLoops() throws Exception {
 
         List<Participant> getResponse;
 
@@ -117,7 +117,7 @@ public class ParticipantProviderTest {
     }
 
     @Test
-    public void testUpdateParticipant() throws Exception {
+    void testUpdateParticipant() throws Exception {
         assertThatThrownBy(() -> {
             participantProvider.updateParticipants(null);
         }).hasMessageMatching("participants is marked .*ull but is null");
@@ -134,7 +134,7 @@ public class ParticipantProviderTest {
     }
 
     @Test
-    public void testDeleteParticipant() throws Exception {
+    void testDeleteParticipant() throws Exception {
         assertThatThrownBy(() -> {
             participantProvider.deleteParticipant("Invalid_name", "1.0.1");
         }).hasMessageMatching(".*.failed, participant does not exist");

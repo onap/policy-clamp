@@ -26,12 +26,12 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ControlLoopNotificationTest {
+class ControlLoopNotificationTest {
 
     @Test
-    public void testControlLoopNotification() {
+    void testControlLoopNotification() {
         ControlLoopNotification cln0 = new ControlLoopNotification();
 
         List<ControlLoopStatus> addedList = new ArrayList<>();
@@ -61,7 +61,7 @@ public class ControlLoopNotificationTest {
     }
 
     @Test
-    public void testControlLoopNotificationLombok() {
+    void testControlLoopNotificationLombok() {
         assertNotNull(new ControlLoopNotification());
         assertNotNull(new ControlLoopNotification(new ArrayList<>(), new ArrayList<>()));
 
