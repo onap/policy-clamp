@@ -27,16 +27,16 @@ import static org.junit.Assert.assertNotNull;
 import java.io.IOException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.models.errors.concepts.ErrorResponse;
 
-public class ExceptionsTest {
+class ExceptionsTest {
 
     private static final String STRING_TEXT = "String";
     private static final String MESSAGE = "Message";
 
     @Test
-    public void testExceptions() {
+    void testExceptions() {
         assertNotNull(new ControlLoopException(Response.Status.OK, MESSAGE));
         assertNotNull(new ControlLoopException(Response.Status.OK, MESSAGE, STRING_TEXT));
         assertNotNull(new ControlLoopException(Response.Status.OK, MESSAGE, new IOException()));
