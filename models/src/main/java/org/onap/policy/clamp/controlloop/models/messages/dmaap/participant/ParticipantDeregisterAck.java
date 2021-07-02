@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ * Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,34 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.controlloop.models.controlloop.persistence.concepts;
+package org.onap.policy.clamp.controlloop.models.messages.dmaap.participant;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
- * Test class for {@link JpaControlLoop} comparisons.
+ * Class to represent the PARTICIPANT_DEREGISTER_ACK message that control loop runtime sends to the participant.
  */
-class DummyJpaControlLoopChild extends JpaControlLoop {
-    private static final long serialVersionUID = -5101743610779424064L;
+@Getter
+@Setter
+@ToString(callSuper = true)
+public class ParticipantDeregisterAck extends ParticipantAckMessage {
+
+    /**
+     * Constructor for instantiating ParticipantDeregisterAck class with message name.
+     *
+     */
+    public ParticipantDeregisterAck() {
+        super(ParticipantMessageType.PARTICIPANT_DEREGISTER_ACK);
+    }
+
+    /**
+     * Constructs the object, making a deep copy.
+     *
+     * @param source source from which to copy
+     */
+    public ParticipantDeregisterAck(final ParticipantDeregisterAck source) {
+        super(source);
+    }
 }

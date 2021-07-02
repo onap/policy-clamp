@@ -44,6 +44,8 @@ class ParticipantPojosTest {
 
         pojoClasses.remove(PojoClassFactory.getPojoClass(ParticipantMessage.class));
         pojoClasses.remove(PojoClassFactory.getPojoClass(ParticipantMessageTest.class));
+        pojoClasses.remove(PojoClassFactory.getPojoClass(ParticipantAckMessage.class));
+        pojoClasses.remove(PojoClassFactory.getPojoClass(ParticipantAckMessageTest.class));
 
         // @formatter:off
         final Validator validator = ValidatorBuilder
