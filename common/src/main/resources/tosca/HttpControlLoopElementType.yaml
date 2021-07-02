@@ -1,0 +1,82 @@
+# ============LICENSE_START=======================================================
+# Copyright (C) 2021 Nordix Foundation.
+# ================================================================================
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# SPDX-License-Identifier: Apache-2.0
+# ============LICENSE_END=========================================================
+tosca_definitions_version: tosca_simple_yaml_1_3
+data_types:
+  org.onap.datatypes.policy.clamp.controlloop.httpControlLoopElement.RestRequest:
+    version: 1.0.0
+    derived_from: tosca.datatypes.Root
+    properties:
+      restRequestId:
+        type:  onap.datatypes.ToscaConceptIdentifier
+        typeVersion: 1.0.0
+        description: The name and version of a REST request to be sent to a REST endpoint
+        required: true
+      httpMethod:
+        type: string
+        description: The REST method to use
+        required: true
+        constraints:
+          - valid_values: [POST, PUT, GET, DELETE]
+      path:
+        type: string
+        description: The path of the REST request relative to the base URL
+        required: true
+      body:
+        type: string
+        description: The body of the REST request for PUT and POST requests
+        required: false
+      expectedResponse:
+        type: integer
+        description: THe expected HTTP status code for the REST request
+        required: true
+        constraints:
+          - in_range: [100, 599]
+  org.onap.datatypes.policy.clamp.controlloop.httpControlLoopElement.ConfigurationEntity:
+    version: 1.0.0
+    derived_from: tosca.datatypes.Root
+    properties:
+      configurationEntityId:
+        type:  onap.datatypes.ToscaConceptIdentifier
+        typeVersion: 1.0.0
+        description: The name and version of a Configuration Entity to be handled by the HTTP Control Loop Element
+        required: true
+      restSequence:
+        type: list
+        description: A sequence of REST commands to send to the REST endpoint
+        entry_schema:
+          type: org.onap.datatypes.policy.clamp.controlloop.httpControlLoopElement.RestRequest
+          typeVersion: 1.0.0
+node_types:
+  org.onap.policy.clamp.controlloop.HttpControlLoopElement:
+    version: 1.0.1
+    derived_from: org.onap.policy.clamp.controlloop.ControlLoopElement
+    properties:
+      baseUrl:
+        type: string
+        requried: true
+      httpHeaders:
+        type: map
+        required: false
+        entry_schema:
+          type: string
+      configurationEntities:
+        type: map
+        required: true
+        entry_schema:
+          type: org.onap.datatypes.policy.clamp.controlloop.httpControlLoopElement.ConfigurationEntity
+          typeVersion: 1.0.0
