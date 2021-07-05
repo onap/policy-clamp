@@ -18,30 +18,28 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.controlloop.common.handler;
+package org.onap.policy.clamp.controlloop.runtime.config;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import org.onap.policy.clamp.controlloop.runtime.main.web.RequestResponseLoggingFilter;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-import org.junit.jupiter.api.Test;
-import org.onap.policy.models.provider.PolicyModelsProviderParameters;
+@Configuration
+public class FilterConfig {
 
-class ControlLoopHandlerTest {
+    /**
+     * logging Filter configuration.
+     *
+     * @return FilterRegistrationBean
+     */
+    @Bean
+    public FilterRegistrationBean<RequestResponseLoggingFilter> loggingFilter() {
+        FilterRegistrationBean<RequestResponseLoggingFilter> registrationBean = new FilterRegistrationBean<>();
 
-    @Test
-    void testControlLoopHandler() {
-        assertThatThrownBy(() -> new DummyControlLoopHandler(null)).isInstanceOf(NullPointerException.class);
+        registrationBean.setFilter(new RequestResponseLoggingFilter());
+        registrationBean.addUrlPatterns("/onap/controlloop/v2/*");
 
-        assertNotNull(new DummyControlLoopHandler(new PolicyModelsProviderParameters()));
-
-        PolicyModelsProviderParameters pars = new PolicyModelsProviderParameters();
-
-        DummyControlLoopHandler dclh = new DummyControlLoopHandler(pars);
-        assertNotNull(dclh);
-
-        assertEquals(pars, dclh.getDatabaseProviderParameters());
-
-        dclh.close();
+        return registrationBean;
     }
 }
