@@ -40,6 +40,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.SortNatural;
 import org.onap.policy.clamp.clds.tosca.update.ToscaConverterWithDictionarySupport;
 import org.onap.policy.clamp.loop.Loop;
@@ -52,7 +54,8 @@ import org.onap.policy.clamp.policy.operational.OperationalPolicy;
  * This class represents a micro service/operational/... model for a loop template.
  * So it's an element in the flow (a box shown in the loop).
  */
-
+@Getter
+@Setter
 @Entity
 @Table(name = "loop_element_models")
 public class LoopElementModel extends AuditEntity implements Serializable {
@@ -113,15 +116,6 @@ public class LoopElementModel extends AuditEntity implements Serializable {
     private Set<LoopTemplateLoopElementModel> usedByLoopTemplates = new HashSet<>();
 
     /**
-     * policyModels getter.
-     *
-     * @return the policyModel
-     */
-    public SortedSet<PolicyModel> getPolicyModels() {
-        return policyModels;
-    }
-
-    /**
      * Method to add a new policyModel to the list.
      *
      * @param policyModel The policy model
@@ -129,103 +123,6 @@ public class LoopElementModel extends AuditEntity implements Serializable {
     public void addPolicyModel(PolicyModel policyModel) {
         policyModels.add(policyModel);
         policyModel.getUsedByElementModels().add(this);
-    }
-
-    /**
-     * name getter.
-     *
-     * @return the name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * name setter.
-     *
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * blueprint getter.
-     *
-     * @return the blueprint
-     */
-    public String getBlueprint() {
-        return blueprint;
-    }
-
-    /**
-     * blueprint setter.
-     *
-     * @param blueprint the blueprint to set
-     */
-    public void setBlueprint(String blueprint) {
-        this.blueprint = blueprint;
-    }
-
-    /**
-     * dcaeBlueprintId getter.
-     *
-     * @return the dcaeBlueprintId
-     */
-    public String getDcaeBlueprintId() {
-        return dcaeBlueprintId;
-    }
-
-    /**
-     * dcaeBlueprintId setter.
-     *
-     * @param dcaeBlueprintId the dcaeBlueprintId to set
-     */
-    public void setDcaeBlueprintId(String dcaeBlueprintId) {
-        this.dcaeBlueprintId = dcaeBlueprintId;
-    }
-
-    /**
-     * loopElementType getter.
-     *
-     * @return the loopElementType
-     */
-    public String getLoopElementType() {
-        return loopElementType;
-    }
-
-    /**
-     * loopElementType setter.
-     *
-     * @param loopElementType the loopElementType to set
-     */
-    public void setLoopElementType(String loopElementType) {
-        this.loopElementType = loopElementType;
-    }
-
-    /**
-     * shortName getter.
-     *
-     * @return the shortName
-     */
-    public String getShortName() {
-        return shortName;
-    }
-
-    /**
-     *  * @param shortName the shortName to set.
-     */
-    public void setShortName(String shortName) {
-        this.shortName = shortName;
-    }
-
-    /**
-     * usedByLoopTemplates getter.
-     *
-     * @return the usedByLoopTemplates
-     */
-    public Set<LoopTemplateLoopElementModel> getUsedByLoopTemplates() {
-        return usedByLoopTemplates;
     }
 
     /**
