@@ -20,9 +20,7 @@
 
 package org.onap.policy.clamp.controlloop.common.handler;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import lombok.Getter;
 import lombok.NonNull;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
@@ -52,16 +50,6 @@ public abstract class ControlLoopHandler {
 
     public void close() {
         Registry.unregister(this.getClass().getName());
-    }
-
-    /**
-     * Get the provider classes that are used in instantiation.
-     *
-     * @return the provider classes
-     */
-    public Set<Class<?>> getProviderClasses() {
-        // No REST interfaces are the default
-        return new HashSet<>();
     }
 
     /**

@@ -39,6 +39,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationCommand;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationResponse;
 import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningProvider;
+import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
 import org.onap.policy.clamp.controlloop.runtime.supervision.SupervisionHandler;
 import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.common.parameters.ObjectValidationResult;
@@ -46,13 +47,14 @@ import org.onap.policy.common.parameters.ValidationResult;
 import org.onap.policy.common.parameters.ValidationStatus;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
-import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
+import org.springframework.stereotype.Component;
 
 /**
  * This class is dedicated to the Instantiation of Commissioned control loop.
  */
+@Component
 public class ControlLoopInstantiationProvider implements Closeable {
     private final ControlLoopProvider controlLoopProvider;
     private final CommissioningProvider commissioningProvider;
@@ -62,13 +64,15 @@ public class ControlLoopInstantiationProvider implements Closeable {
     /**
      * Create a instantiation provider.
      *
-     * @param databaseProviderParameters the parameters for database access
+     * @param controlLoopParameters the parameters for access to the database
+     * @param commissioningProvider CommissioningProvider
      * @throws PfModelRuntimeException on errors creating a provider
      */
-    public ControlLoopInstantiationProvider(PolicyModelsProviderParameters databaseProviderParameters) {
+    public ControlLoopInstantiationProvider(ClRuntimeParameterGroup controlLoopParameters,
+            CommissioningProvider commissioningProvider) {
+        this.commissioningProvider = commissioningProvider;
         try {
-            controlLoopProvider = new ControlLoopProvider(databaseProviderParameters);
-            commissioningProvider = new CommissioningProvider(databaseProviderParameters);
+            controlLoopProvider = new ControlLoopProvider(controlLoopParameters.getDatabaseProviderParameters());
         } catch (PfModelException e) {
             throw new PfModelRuntimeException(e);
         }
@@ -93,7 +97,7 @@ public class ControlLoopInstantiationProvider implements Closeable {
                 var checkControlLoop = controlLoopProvider.getControlLoop(controlLoop.getKey().asIdentifier());
                 if (checkControlLoop != null) {
                     throw new PfModelException(Response.Status.BAD_REQUEST,
-                        controlLoop.getKey().asIdentifier() + " already defined");
+                            controlLoop.getKey().asIdentifier() + " already defined");
                 }
             }
             BeanValidationResult validationResult = validateControlLoops(controlLoops);
@@ -105,7 +109,7 @@ public class ControlLoopInstantiationProvider implements Closeable {
 
         var response = new InstantiationResponse();
         response.setAffectedControlLoops(controlLoops.getControlLoopList().stream()
-            .map(cl -> cl.getKey().asIdentifier()).collect(Collectors.toList()));
+                .map(cl -> cl.getKey().asIdentifier()).collect(Collectors.toList()));
 
         return response;
     }
@@ -128,7 +132,7 @@ public class ControlLoopInstantiationProvider implements Closeable {
 
         var response = new InstantiationResponse();
         response.setAffectedControlLoops(controlLoops.getControlLoopList().stream()
-            .map(cl -> cl.getKey().asIdentifier()).collect(Collectors.toList()));
+                .map(cl -> cl.getKey().asIdentifier()).collect(Collectors.toList()));
 
         return response;
     }
@@ -148,18 +152,18 @@ public class ControlLoopInstantiationProvider implements Closeable {
             var subResult = new BeanValidationResult("entry " + controlLoop.getDefinition().getName(), controlLoop);
 
             List<ToscaNodeTemplate> toscaNodeTemplates = commissioningProvider.getControlLoopDefinitions(
-                controlLoop.getDefinition().getName(), controlLoop.getDefinition().getVersion());
+                    controlLoop.getDefinition().getName(), controlLoop.getDefinition().getVersion());
 
             if (toscaNodeTemplates.isEmpty()) {
                 subResult.addResult(new ObjectValidationResult("ControlLoop", controlLoop.getDefinition().getName(),
-                    ValidationStatus.INVALID, "Commissioned control loop definition not FOUND"));
+                        ValidationStatus.INVALID, "Commissioned control loop definition not FOUND"));
             } else if (toscaNodeTemplates.size() > 1) {
                 subResult.addResult(new ObjectValidationResult("ControlLoop", controlLoop.getDefinition().getName(),
-                    ValidationStatus.INVALID, "Commissioned control loop definition not VALID"));
+                        ValidationStatus.INVALID, "Commissioned control loop definition not VALID"));
             } else {
 
                 List<ToscaNodeTemplate> clElementDefinitions =
-                    commissioningProvider.getControlLoopElementDefinitions(toscaNodeTemplates.get(0));
+                        commissioningProvider.getControlLoopElementDefinitions(toscaNodeTemplates.get(0));
 
                 // @formatter:off
                 Map<String, ToscaConceptIdentifier> definitions = clElementDefinitions
@@ -185,7 +189,7 @@ public class ControlLoopInstantiationProvider implements Closeable {
      * @return the validation result
      */
     private ValidationResult validateDefinition(Map<String, ToscaConceptIdentifier> definitions,
-        ToscaConceptIdentifier definition) {
+            ToscaConceptIdentifier definition) {
         var result = new BeanValidationResult("entry " + definition.getName(), definition);
         ToscaConceptIdentifier identifier = definitions.get(definition.getName());
         if (identifier == null) {
@@ -214,12 +218,12 @@ public class ControlLoopInstantiationProvider implements Closeable {
             for (ControlLoop controlLoop : controlLoops) {
                 if (!ControlLoopState.UNINITIALISED.equals(controlLoop.getState())) {
                     throw new PfModelException(Response.Status.BAD_REQUEST,
-                        "Control Loop State is still " + controlLoop.getState());
+                            "Control Loop State is still " + controlLoop.getState());
                 }
             }
 
             response.setAffectedControlLoops(Collections
-                .singletonList(controlLoopProvider.deleteControlLoop(name, version).getKey().asIdentifier()));
+                    .singletonList(controlLoopProvider.deleteControlLoop(name, version).getKey().asIdentifier()));
         }
         return response;
     }
@@ -248,7 +252,7 @@ public class ControlLoopInstantiationProvider implements Closeable {
      * @throws ControlLoopException on ordered state invalid
      */
     public InstantiationResponse issueControlLoopCommand(InstantiationCommand command)
-        throws ControlLoopException, PfModelException {
+            throws ControlLoopException, PfModelException {
 
         if (command.getOrderedState() == null) {
             throw new ControlLoopException(Status.BAD_REQUEST, "ordered state invalid or not specified on command");

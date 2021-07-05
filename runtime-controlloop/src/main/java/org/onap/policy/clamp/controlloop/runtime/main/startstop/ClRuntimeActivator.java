@@ -20,36 +20,34 @@
 
 package org.onap.policy.clamp.controlloop.runtime.main.startstop;
 
-import java.util.HashSet;
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.ws.rs.core.Response.Status;
+import lombok.Getter;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopRuntimeException;
 import org.onap.policy.clamp.controlloop.common.handler.ControlLoopHandler;
-import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningHandler;
-import org.onap.policy.clamp.controlloop.runtime.instantiation.InstantiationHandler;
+import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningProvider;
 import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
-import org.onap.policy.clamp.controlloop.runtime.main.rest.ControlLoopAafFilter;
-import org.onap.policy.clamp.controlloop.runtime.monitoring.MonitoringHandler;
+import org.onap.policy.clamp.controlloop.runtime.monitoring.MonitoringProvider;
 import org.onap.policy.clamp.controlloop.runtime.supervision.SupervisionHandler;
 import org.onap.policy.common.endpoints.event.comm.TopicEndpointManager;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
 import org.onap.policy.common.endpoints.event.comm.TopicSource;
-import org.onap.policy.common.endpoints.http.server.RestServer;
 import org.onap.policy.common.endpoints.listeners.MessageTypeDispatcher;
-import org.onap.policy.common.parameters.ParameterService;
 import org.onap.policy.common.utils.services.ServiceManagerContainer;
 
 /**
  * This class activates the control loop runtime component as a complete service together with all its controllers,
  * listeners & handlers.
  */
-public class ClRuntimeActivator extends ServiceManagerContainer {
+public class ClRuntimeActivator extends ServiceManagerContainer implements Closeable {
     // Name of the message type for messages on topics
     private static final String[] MSG_TYPE_NAMES = {"messageType"};
 
-    private final ClRuntimeParameterGroup clRuntimeParameterGroup;
+    @Getter
+    private final ClRuntimeParameterGroup parameterGroup;
 
     // Topics from which the application receives and to which the application sends messages
     private List<TopicSink> topicSinks;
@@ -64,15 +62,13 @@ public class ClRuntimeActivator extends ServiceManagerContainer {
      * Instantiate the activator for the control loop runtime as a complete service.
      *
      * @param clRuntimeParameterGroup the parameters for the control loop runtime service
+     * @param monitoringProvider the MonitoringProvider
+     * @param commissioningProvider the CommissioningProvider
      * @throws ControlLoopRuntimeException if the activator does not start
      */
-    public ClRuntimeActivator(final ClRuntimeParameterGroup clRuntimeParameterGroup) {
-
-        if (clRuntimeParameterGroup == null || !clRuntimeParameterGroup.isValid()) {
-            throw new ControlLoopRuntimeException(Status.INTERNAL_SERVER_ERROR, "ParameterGroup not valid");
-        }
-
-        this.clRuntimeParameterGroup = clRuntimeParameterGroup;
+    public ClRuntimeActivator(final ClRuntimeParameterGroup clRuntimeParameterGroup,
+            MonitoringProvider monitoringProvider, CommissioningProvider commissioningProvider) {
+        this.parameterGroup = clRuntimeParameterGroup;
 
         topicSinks = TopicEndpointManager.getManager()
                 .addTopicSinks(clRuntimeParameterGroup.getTopicParameterGroup().getTopicSinks());
@@ -87,75 +83,30 @@ public class ClRuntimeActivator extends ServiceManagerContainer {
                     "topic message dispatcher failed to start", e);
         }
 
-        final AtomicReference<ControlLoopHandler> commissioningHandler = new AtomicReference<>();
-        final AtomicReference<ControlLoopHandler> instantiationHandler = new AtomicReference<>();
         final AtomicReference<ControlLoopHandler> supervisionHandler = new AtomicReference<>();
-        final AtomicReference<ControlLoopHandler> monitoringHandler = new AtomicReference<>();
-        final AtomicReference<RestServer> restServer = new AtomicReference<>();
 
         // @formatter:off
-        addAction("Control loop runtime parameters",
-            () -> ParameterService.register(clRuntimeParameterGroup),
-            () -> ParameterService.deregister(clRuntimeParameterGroup.getName()));
-
         addAction("Topic endpoint management",
             () -> TopicEndpointManager.getManager().start(),
             () -> TopicEndpointManager.getManager().shutdown());
 
-        addAction("Commissioning Handler",
-                () -> commissioningHandler.set(new CommissioningHandler(clRuntimeParameterGroup)),
-                () -> commissioningHandler.get().close());
-
-        addAction("Instantiation Handler",
-            () -> instantiationHandler.set(new InstantiationHandler(clRuntimeParameterGroup)),
-            () -> instantiationHandler.get().close());
-
         addAction("Supervision Handler",
-            () -> supervisionHandler.set(new SupervisionHandler(clRuntimeParameterGroup)),
+            () -> supervisionHandler.set(
+                    new SupervisionHandler(clRuntimeParameterGroup, monitoringProvider, commissioningProvider)),
             () -> supervisionHandler.get().close());
 
-        addAction("Monitoring Handler",
-            () -> monitoringHandler.set(new MonitoringHandler(clRuntimeParameterGroup)),
-            () -> monitoringHandler.get().close());
-
-        addHandlerActions("Commissioning", commissioningHandler);
-        addHandlerActions("Instantiation", instantiationHandler);
         addHandlerActions("Supervision", supervisionHandler);
-        addHandlerActions("Monitoring", monitoringHandler);
 
         addAction("Topic Message Dispatcher", this::registerMsgDispatcher, this::unregisterMsgDispatcher);
-
-        clRuntimeParameterGroup.getRestServerParameters().setName(clRuntimeParameterGroup.getName());
-
-        addAction("REST server",
-            () -> {
-                Set<Class<?>> providerClasses = new HashSet<>();
-                providerClasses.addAll(commissioningHandler.get().getProviderClasses());
-                providerClasses.addAll(instantiationHandler.get().getProviderClasses());
-                providerClasses.addAll(supervisionHandler.get().getProviderClasses());
-                providerClasses.addAll(monitoringHandler.get().getProviderClasses());
-
-                var server = new RestServer(clRuntimeParameterGroup.getRestServerParameters(),
-                        ControlLoopAafFilter.class,
-                        providerClasses.toArray(new Class<?>[providerClasses.size()]));
-
-                restServer.set(server);
-                restServer.get().start();
-            },
-            () -> restServer.get().stop());
         // @formatter:on
     }
 
     private void addHandlerActions(final String name, final AtomicReference<ControlLoopHandler> handler) {
-        addAction(name + " Providers",
-            () -> handler.get().startProviders(),
-            () -> handler.get().stopProviders());
-        addAction(name + " Listeners",
-            () -> handler.get().startAndRegisterListeners(msgDispatcher),
-            () -> handler.get().stopAndUnregisterListeners(msgDispatcher));
-        addAction(name + " Publishers",
-            () -> handler.get().startAndRegisterPublishers(topicSinks),
-            () -> handler.get().stopAndUnregisterPublishers());
+        addAction(name + " Providers", () -> handler.get().startProviders(), () -> handler.get().stopProviders());
+        addAction(name + " Listeners", () -> handler.get().startAndRegisterListeners(msgDispatcher),
+                () -> handler.get().stopAndUnregisterListeners(msgDispatcher));
+        addAction(name + " Publishers", () -> handler.get().startAndRegisterPublishers(topicSinks),
+                () -> handler.get().stopAndUnregisterPublishers());
     }
 
     /**
@@ -176,12 +127,10 @@ public class ClRuntimeActivator extends ServiceManagerContainer {
         }
     }
 
-    /**
-     * Get the parameters used by the activator.
-     *
-     * @return the parameters of the activator
-     */
-    public ClRuntimeParameterGroup getParameterGroup() {
-        return clRuntimeParameterGroup;
+    @Override
+    public void close() throws IOException {
+        if (isAlive()) {
+            stop();
+        }
     }
 }
