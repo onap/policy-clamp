@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,21 +18,21 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.controlloop.runtime.main.rest;
+package org.onap.policy.clamp.controlloop.runtime.config;
 
-import org.onap.policy.common.endpoints.http.server.aaf.AafGranularAuthFilter;
-import org.onap.policy.common.utils.resources.MessageConstants;
+import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
+import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
+import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterHandler;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-/**
- * Class to manage AAF filters for the control loop runtime component.
- */
-public class ControlLoopAafFilter extends AafGranularAuthFilter {
+@Configuration
+public class PropertiesConfig {
 
-    public static final String AAF_NODETYPE = MessageConstants.POLICY_CLAMP;
-    public static final String AAF_ROOT_PERMISSION = DEFAULT_NAMESPACE + "." + AAF_NODETYPE;
-
-    @Override
-    public String getPermissionTypeRoot() {
-        return AAF_ROOT_PERMISSION;
+    @Bean
+    public ClRuntimeParameterGroup clRuntimeParameterGroup(@Value("${runtime.file}") String file)
+            throws ControlLoopException {
+        return new ClRuntimeParameterHandler().getParameters(file);
     }
 }
