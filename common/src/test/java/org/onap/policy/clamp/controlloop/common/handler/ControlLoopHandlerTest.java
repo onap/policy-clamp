@@ -46,7 +46,6 @@ public class ControlLoopHandlerTest {
         assertNotNull(dclh);
 
         assertEquals(pars, dclh.getDatabaseProviderParameters());
-        assertEquals(0, dclh.getProviderClasses().size());
 
         dclh.close();
         assertThatThrownBy(() -> Registry.get(dummyClassName)).isInstanceOf(IllegalArgumentException.class);

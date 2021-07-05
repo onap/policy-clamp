@@ -20,63 +20,48 @@
 
 package org.onap.policy.clamp.controlloop.runtime.main.startstop;
 
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Test;
-import org.onap.policy.clamp.controlloop.common.exception.ControlLoopRuntimeException;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
 import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterHandler;
+import org.onap.policy.clamp.controlloop.runtime.supervision.SupervisionHandler;
 import org.onap.policy.common.utils.services.Registry;
 
 /**
  * Class to perform unit test of {@link ClRuntimeActivator}}.
  *
  */
-public class ClRuntimeActivatorTest {
+class ClRuntimeActivatorTest {
 
     @Test
-    public void testStartAndStop() throws Exception {
+    void testStartAndStop() throws Exception {
         Registry.newRegistry();
-        final String[] configParameters = {"-c", "src/test/resources/parameters/TestParameters.json"};
-        final ClRuntimeCommandLineArguments arguments = new ClRuntimeCommandLineArguments();
-        arguments.parse(configParameters);
-        ClRuntimeParameterGroup parameterGroup = new ClRuntimeParameterHandler().getParameters(arguments);
-        ClRuntimeActivator activator = new ClRuntimeActivator(parameterGroup);
-        activator.isAlive();
+        final String path = "src/test/resources/parameters/TestParameters.json";
+        ClRuntimeParameterGroup parameterGroup = new ClRuntimeParameterHandler().getParameters(path);
+        var supervisionHandler = Mockito.mock(SupervisionHandler.class);
 
-        assertFalse(activator.isAlive());
-        activator.start();
-        assertTrue(activator.isAlive());
-        assertTrue(activator.getParameterGroup().isValid());
-        assertEquals(activator.getParameterGroup().getName(),
-                activator.getParameterGroup().getRestServerParameters().getName());
+        try (var activator = new ClRuntimeActivator(parameterGroup, supervisionHandler)) {
 
-        // repeat start - should throw an exception
-        assertThatIllegalStateException().isThrownBy(() -> activator.start());
-        assertTrue(activator.isAlive());
-        assertTrue(activator.getParameterGroup().isValid());
+            assertFalse(activator.isAlive());
+            activator.start();
+            assertTrue(activator.isAlive());
+            assertTrue(activator.getParameterGroup().isValid());
 
-        activator.stop();
-        assertFalse(activator.isAlive());
+            // repeat start - should throw an exception
+            assertThatIllegalStateException().isThrownBy(() -> activator.start());
+            assertTrue(activator.isAlive());
+            assertTrue(activator.getParameterGroup().isValid());
 
-        // repeat stop - should throw an exception
-        assertThatIllegalStateException().isThrownBy(() -> activator.stop());
-        assertFalse(activator.isAlive());
-    }
+            activator.stop();
+            assertFalse(activator.isAlive());
 
-    @Test
-    public void testNull() {
-        assertThatExceptionOfType(ControlLoopRuntimeException.class).isThrownBy(() -> new ClRuntimeActivator(null));
-    }
-
-    @Test
-    public void testNotValid() {
-        ClRuntimeParameterGroup parameterGroup = new ClRuntimeParameterGroup("name");
-        assertThatExceptionOfType(ControlLoopRuntimeException.class)
-                .isThrownBy(() -> new ClRuntimeActivator(parameterGroup));
+            // repeat stop - should throw an exception
+            assertThatIllegalStateException().isThrownBy(() -> activator.stop());
+            assertFalse(activator.isAlive());
+        }
     }
 }
