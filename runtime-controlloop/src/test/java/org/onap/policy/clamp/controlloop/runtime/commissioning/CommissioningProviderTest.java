@@ -22,26 +22,23 @@ package org.onap.policy.clamp.controlloop.runtime.commissioning;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.coder.YamlJsonTranslator;
 import org.onap.policy.common.utils.resources.ResourceUtils;
-import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
-public class CommissioningProviderTest {
+class CommissioningProviderTest {
     private static final String TOSCA_SERVICE_TEMPLATE_YAML =
             "src/test/resources/rest/servicetemplates/pmsh_multiple_cl_tosca.yaml";
     private static final String TEMPLATE_IS_NULL = ".*serviceTemplate is marked non-null but is null";
@@ -49,7 +46,6 @@ public class CommissioningProviderTest {
     private static final YamlJsonTranslator yamlTranslator = new YamlJsonTranslator();
     private static int dbNum = 0;
     private static final Object lockit = new Object();
-    private PolicyModelsProviderParameters databaseProviderParameters;
 
     private static String getParameterGroupAsString() {
         dbNum++;
@@ -58,15 +54,13 @@ public class CommissioningProviderTest {
     }
 
     /**
-     * Sets up db provider parameters before each test.
+     * return a Cl Runtime Parameters.
      *
      * @throws CoderException .
      */
-    @Before
-    public void setupDbProviderParameters() throws CoderException {
+    public ClRuntimeParameterGroup getClRuntimeParameterGroup() throws CoderException {
         synchronized (lockit) {
-            databaseProviderParameters = CODER.decode(getParameterGroupAsString(), ClRuntimeParameterGroup.class)
-                    .getDatabaseProviderParameters();
+            return CODER.decode(getParameterGroupAsString(), ClRuntimeParameterGroup.class);
         }
     }
 
@@ -76,35 +70,34 @@ public class CommissioningProviderTest {
      * @throws Exception .
      */
     @Test
-    public void testGetControlLoopDefinitions() throws Exception {
+    void testGetControlLoopDefinitions() throws Exception {
         List<ToscaNodeTemplate> listOfTemplates;
+        ClRuntimeParameterGroup clRuntimeParameterGroup = getClRuntimeParameterGroup();
 
-        try (CommissioningProvider provider = new CommissioningProvider(databaseProviderParameters)) {
-            ToscaServiceTemplate serviceTemplate = yamlTranslator
-                    .fromYaml(ResourceUtils.getResourceAsString(TOSCA_SERVICE_TEMPLATE_YAML),
-                            ToscaServiceTemplate.class);
+        CommissioningProvider provider = new CommissioningProvider(clRuntimeParameterGroup);
+        ToscaServiceTemplate serviceTemplate = yamlTranslator
+                .fromYaml(ResourceUtils.getResourceAsString(TOSCA_SERVICE_TEMPLATE_YAML), ToscaServiceTemplate.class);
 
+        listOfTemplates = provider.getControlLoopDefinitions(null, null);
+        assertThat(listOfTemplates).isEmpty();
 
-            listOfTemplates = provider.getControlLoopDefinitions(null, null);
-            assertThat(listOfTemplates).isEmpty();
+        provider.createControlLoopDefinitions(serviceTemplate);
+        listOfTemplates = provider.getControlLoopDefinitions(null, null);
+        assertThat(listOfTemplates).hasSize(2);
 
-            provider.createControlLoopDefinitions(serviceTemplate);
-            listOfTemplates = provider.getControlLoopDefinitions(null, null);
-            assertThat(listOfTemplates).hasSize(2);
-
-            //Test Filtering
-            listOfTemplates = provider.getControlLoopDefinitions("org.onap.domain.pmsh.PMSHControlLoopDefinition",
-                    "1.2.3");
-            assertThat(listOfTemplates).hasSize(1);
-            for (ToscaNodeTemplate template : listOfTemplates) {
-                //Other CL elements contain PMSD instead of PMSH in their name
-                assertFalse(template.getName().contains("PMSD"));
-            }
-
-            //Test Wrong Name
-            listOfTemplates = provider.getControlLoopDefinitions("WrongControlLoopName", "0.0.0");
-            assertThat(listOfTemplates).isEmpty();
+        // Test Filtering
+        listOfTemplates = provider.getControlLoopDefinitions("org.onap.domain.pmsh.PMSHControlLoopDefinition", "1.2.3");
+        assertThat(listOfTemplates).hasSize(1);
+        for (ToscaNodeTemplate template : listOfTemplates) {
+            // Other CL elements contain PMSD instead of PMSH in their name
+            assertThat(template.getName()).doesNotContain("PMSD");
         }
+
+        // Test Wrong Name
+        listOfTemplates = provider.getControlLoopDefinitions("WrongControlLoopName", "0.0.0");
+        assertThat(listOfTemplates).isEmpty();
+
+        provider.close();
     }
 
     /**
@@ -113,26 +106,27 @@ public class CommissioningProviderTest {
      * @throws Exception .
      */
     @Test
-    public void testCreateControlLoopDefinitions() throws Exception {
+    void testCreateControlLoopDefinitions() throws Exception {
         List<ToscaNodeTemplate> listOfTemplates;
+        ClRuntimeParameterGroup clRuntimeParameterGroup = getClRuntimeParameterGroup();
 
-        try (CommissioningProvider provider = new CommissioningProvider(databaseProviderParameters)) {
-            //Test Service template is null
-            assertThatThrownBy(() -> provider.createControlLoopDefinitions(null)).hasMessageMatching(TEMPLATE_IS_NULL);
-            listOfTemplates = provider.getControlLoopDefinitions(null, null);
-            assertThat(listOfTemplates).isEmpty();
+        CommissioningProvider provider = new CommissioningProvider(clRuntimeParameterGroup);
+        // Test Service template is null
+        assertThatThrownBy(() -> provider.createControlLoopDefinitions(null)).hasMessageMatching(TEMPLATE_IS_NULL);
+        listOfTemplates = provider.getControlLoopDefinitions(null, null);
+        assertThat(listOfTemplates).isEmpty();
 
-            ToscaServiceTemplate serviceTemplate = yamlTranslator
-                    .fromYaml(ResourceUtils.getResourceAsString(TOSCA_SERVICE_TEMPLATE_YAML),
-                            ToscaServiceTemplate.class);
+        ToscaServiceTemplate serviceTemplate = yamlTranslator
+                .fromYaml(ResourceUtils.getResourceAsString(TOSCA_SERVICE_TEMPLATE_YAML), ToscaServiceTemplate.class);
 
-            // Response should return the number of node templates present in the service template
-            List<ToscaConceptIdentifier> affectedDefinitions =
-                    provider.createControlLoopDefinitions(serviceTemplate).getAffectedControlLoopDefinitions();
-            assertThat(affectedDefinitions).hasSize(13);
-            listOfTemplates = provider.getControlLoopDefinitions(null, null);
-            assertThat(listOfTemplates).hasSize(2);
-        }
+        // Response should return the number of node templates present in the service template
+        List<ToscaConceptIdentifier> affectedDefinitions =
+                provider.createControlLoopDefinitions(serviceTemplate).getAffectedControlLoopDefinitions();
+        assertThat(affectedDefinitions).hasSize(13);
+        listOfTemplates = provider.getControlLoopDefinitions(null, null);
+        assertThat(listOfTemplates).hasSize(2);
+
+        provider.close();
     }
 
     /**
@@ -141,25 +135,26 @@ public class CommissioningProviderTest {
      * @throws Exception .
      */
     @Test
-    public void testDeleteControlLoopDefinitions() throws Exception {
+    void testDeleteControlLoopDefinitions() throws Exception {
         List<ToscaNodeTemplate> listOfTemplates;
+        ClRuntimeParameterGroup clRuntimeParameterGroup = getClRuntimeParameterGroup();
 
-        try (CommissioningProvider provider = new CommissioningProvider(databaseProviderParameters)) {
-            ToscaServiceTemplate serviceTemplate = yamlTranslator
-                    .fromYaml(ResourceUtils.getResourceAsString(TOSCA_SERVICE_TEMPLATE_YAML),
-                            ToscaServiceTemplate.class);
+        CommissioningProvider provider = new CommissioningProvider(clRuntimeParameterGroup);
+        ToscaServiceTemplate serviceTemplate = yamlTranslator
+                .fromYaml(ResourceUtils.getResourceAsString(TOSCA_SERVICE_TEMPLATE_YAML), ToscaServiceTemplate.class);
 
-            listOfTemplates = provider.getControlLoopDefinitions(null, null);
-            assertThat(listOfTemplates).isEmpty();
+        listOfTemplates = provider.getControlLoopDefinitions(null, null);
+        assertThat(listOfTemplates).isEmpty();
 
-            provider.createControlLoopDefinitions(serviceTemplate);
-            listOfTemplates = provider.getControlLoopDefinitions(null, null);
-            assertThat(listOfTemplates).hasSize(2);
+        provider.createControlLoopDefinitions(serviceTemplate);
+        listOfTemplates = provider.getControlLoopDefinitions(null, null);
+        assertThat(listOfTemplates).hasSize(2);
 
-            provider.deleteControlLoopDefinition(serviceTemplate.getName(), serviceTemplate.getVersion());
-            listOfTemplates = provider.getControlLoopDefinitions(null, null);
-            assertThat(listOfTemplates).isEmpty();
-        }
+        provider.deleteControlLoopDefinition(serviceTemplate.getName(), serviceTemplate.getVersion());
+        listOfTemplates = provider.getControlLoopDefinitions(null, null);
+        assertThat(listOfTemplates).isEmpty();
+
+        provider.close();
     }
 
     /**
@@ -168,29 +163,29 @@ public class CommissioningProviderTest {
      * @throws Exception .
      */
     @Test
-    public void testGetControlLoopElementDefinitions() throws Exception {
-        try (CommissioningProvider provider = new CommissioningProvider(databaseProviderParameters)) {
-            ToscaServiceTemplate serviceTemplate = yamlTranslator
-                    .fromYaml(ResourceUtils.getResourceAsString(TOSCA_SERVICE_TEMPLATE_YAML),
-                            ToscaServiceTemplate.class);
+    void testGetControlLoopElementDefinitions() throws Exception {
+        ClRuntimeParameterGroup clRuntimeParameterGroup = getClRuntimeParameterGroup();
+        CommissioningProvider provider = new CommissioningProvider(clRuntimeParameterGroup);
+        ToscaServiceTemplate serviceTemplate = yamlTranslator
+                .fromYaml(ResourceUtils.getResourceAsString(TOSCA_SERVICE_TEMPLATE_YAML), ToscaServiceTemplate.class);
 
-            provider.getControlLoopDefinitions(null, null);
+        provider.getControlLoopDefinitions(null, null);
 
-            provider.createControlLoopDefinitions(serviceTemplate);
-            List<ToscaNodeTemplate> controlLoopDefinitionList = provider.getControlLoopDefinitions(
-                    "org.onap.domain.pmsh.PMSHControlLoopDefinition", "1.2.3");
+        provider.createControlLoopDefinitions(serviceTemplate);
+        List<ToscaNodeTemplate> controlLoopDefinitionList =
+                provider.getControlLoopDefinitions("org.onap.domain.pmsh.PMSHControlLoopDefinition", "1.2.3");
 
-            List<ToscaNodeTemplate> controlLoopElementNodeTemplates =
-                    provider.getControlLoopElementDefinitions(controlLoopDefinitionList.get(0));
+        List<ToscaNodeTemplate> controlLoopElementNodeTemplates =
+                provider.getControlLoopElementDefinitions(controlLoopDefinitionList.get(0));
 
-            // 4 PMSH control loop elements definitions.
-            assertThat(controlLoopElementNodeTemplates).hasSize(4);
+        // 4 PMSH control loop elements definitions.
+        assertThat(controlLoopElementNodeTemplates).hasSize(4);
 
-            List<ToscaNodeType> derivedTypes = getDerivedNodeTypes(serviceTemplate);
-            for (ToscaNodeTemplate template : controlLoopElementNodeTemplates) {
-                assertTrue(checkNodeType(template, derivedTypes));
-            }
+        List<ToscaNodeType> derivedTypes = getDerivedNodeTypes(serviceTemplate);
+        for (ToscaNodeTemplate template : controlLoopElementNodeTemplates) {
+            assertTrue(checkNodeType(template, derivedTypes));
         }
+        provider.close();
     }
 
     private boolean checkNodeType(ToscaNodeTemplate template, List<ToscaNodeType> derivedNodeTypes) {

@@ -45,7 +45,7 @@ class CommonCommandLineArgumentsTest {
     @Test
     void testHelp() {
         assertThat(cli.help("DummyClass", new Options()))
-                .contains("DummyClass [options...]\noptions");
+                .contains("DummyClass [options...]" + System.lineSeparator() + "options");
     }
 
     @Test

@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.controlloop.runtime.monitoring.rest;
+package org.onap.policy.clamp.controlloop.runtime.main.rest;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -30,37 +30,38 @@ import io.swagger.annotations.ExtensionProperty;
 import io.swagger.annotations.ResponseHeader;
 import java.time.Instant;
 import java.util.UUID;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Response;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ClElementStatisticsList;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantStatisticsList;
-import org.onap.policy.clamp.controlloop.runtime.main.rest.RestController;
-import org.onap.policy.clamp.controlloop.runtime.monitoring.MonitoringHandler;
+import org.onap.policy.clamp.controlloop.runtime.main.web.AbstractRestController;
 import org.onap.policy.clamp.controlloop.runtime.monitoring.MonitoringProvider;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * This class handles REST endpoints for CL Statistics monitoring.
  */
-public class MonitoringQueryController extends RestController {
+@RestController
+public class MonitoringQueryController extends AbstractRestController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MonitoringQueryController.class);
     private final MonitoringProvider provider;
 
     /**
      * Create Monitoring Controller.
+     *
+     * @param provider the MonitoringProvider
      */
-    public MonitoringQueryController() {
-        this.provider = MonitoringHandler.getInstance().getMonitoringProvider();
+    public MonitoringQueryController(MonitoringProvider provider) {
+        this.provider = provider;
     }
-
 
     /**
      * Queries details of control loop participants statistics.
@@ -74,8 +75,8 @@ public class MonitoringQueryController extends RestController {
      * @return the participant statistics
      */
     // @formatter:off
-    @GET
-    @Path("/monitoring/participant")
+    @GetMapping(value = "/monitoring/participant",
+            produces = {MediaType.APPLICATION_JSON_VALUE, APPLICATION_YAML})
     @ApiOperation(value = "Query details of the requested participant stats",
         notes = "Queries details of the requested participant stats, returning all participant stats",
         response = ParticipantStatisticsList.class,
@@ -112,18 +113,26 @@ public class MonitoringQueryController extends RestController {
         }
     )
     // @formatter:on
-    public Response queryParticipantStatistics(@HeaderParam(REQUEST_ID_NAME)
-                                               @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-                                               @ApiParam(value = "Control Loop participant name", required = true)
-                                               @QueryParam("name") final String name,
-                                               @ApiParam(value = "Control Loop participant version", required = true)
-                                               @QueryParam("version") final String version,
-                                               @ApiParam(value = "Record count", required = false) @DefaultValue("0")
-                                               @QueryParam("recordCount") final int recordCount,
-                                               @ApiParam(value = "start time", required = false)
-                                               @QueryParam("startTime") final String startTime,
-                                               @ApiParam(value = "end time", required = false)
-                                               @QueryParam("endTime") final String endTime) {
+    public ResponseEntity<ParticipantStatisticsList> queryParticipantStatistics(
+            @RequestHeader(
+                    name = REQUEST_ID_NAME,
+                    required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+            @ApiParam(value = "Control Loop participant name") @RequestParam(
+                    value = "name",
+                    required = false) final String name,
+            @ApiParam(value = "Control Loop participant version", required = false) @RequestParam(
+                    value = "version",
+                    required = false) final String version,
+            @ApiParam(value = "Record count", required = false) @RequestParam(
+                    value = "recordCount",
+                    required = false,
+                    defaultValue = "0") final int recordCount,
+            @ApiParam(value = "start time", required = false) @RequestParam(
+                    value = "startTime",
+                    required = false) final String startTime,
+            @ApiParam(value = "end time", required = false) @RequestParam(
+                    value = "endTime",
+                    required = false) final String endTime) {
 
         try {
             Instant startTimestamp = null;
@@ -135,16 +144,12 @@ public class MonitoringQueryController extends RestController {
             if (endTime != null) {
                 endTimestamp = Instant.parse(endTime);
             }
-            ParticipantStatisticsList response = provider.fetchFilteredParticipantStatistics(name, version, recordCount,
-                startTimestamp, endTimestamp);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-                .entity(response)
-                .build();
+            return ResponseEntity.ok().body(provider.fetchFilteredParticipantStatistics(name, version, recordCount,
+                    startTimestamp, endTimestamp));
 
         } catch (PfModelRuntimeException e) {
             LOGGER.warn("Monitoring of participants statistics failed", e);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(e.getErrorResponse().getResponseCode())),
-                requestId).build();
+            return ResponseEntity.status(e.getErrorResponse().getResponseCode().getStatusCode()).build();
         }
 
     }
@@ -158,8 +163,8 @@ public class MonitoringQueryController extends RestController {
      * @return the control loop element statistics
      */
     // @formatter:off
-    @GET
-    @Path("/monitoring/participants/controlloop")
+    @GetMapping(value = "/monitoring/participants/controlloop",
+            produces = {MediaType.APPLICATION_JSON_VALUE, APPLICATION_YAML})
     @ApiOperation(value = "Query details of all the participant stats in a control loop",
         notes = "Queries details of the participant stats, returning all participant stats",
         response = ClElementStatisticsList.class,
@@ -195,28 +200,26 @@ public class MonitoringQueryController extends RestController {
         }
     )
     // @formatter:on
-    public Response queryParticipantStatisticsPerControlLoop(@HeaderParam(REQUEST_ID_NAME)
-                                                             @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-                                                             @ApiParam(value = "Control Loop name", required = true)
-                                                             @QueryParam("name") final String name,
-                                                             @ApiParam(value = "Control Loop version", required = true)
-                                                             @QueryParam("version") final String version) {
+    public ResponseEntity<ParticipantStatisticsList> queryParticipantStatisticsPerControlLoop(
+            @RequestHeader(
+                    name = REQUEST_ID_NAME,
+                    required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+            @ApiParam(value = "Control Loop name", required = true) @RequestParam(
+                    value = "name",
+                    required = false) final String name,
+            @ApiParam(value = "Control Loop version", required = true) @RequestParam(
+                    value = "version",
+                    required = false) final String version) {
 
         try {
-            ParticipantStatisticsList response = provider.fetchParticipantStatsPerControlLoop(name, version);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-                .entity(response)
-                .build();
+            return ResponseEntity.ok().body(provider.fetchParticipantStatsPerControlLoop(name, version));
 
         } catch (PfModelRuntimeException e) {
             LOGGER.warn("Monitoring of Cl participant statistics failed", e);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(e.getErrorResponse().getResponseCode())),
-                requestId).build();
+            return ResponseEntity.status(e.getErrorResponse().getResponseCode().getStatusCode()).build();
         }
 
     }
-
-
 
     /**
      * Queries details of all control loop element statistics per control loop.
@@ -227,8 +230,8 @@ public class MonitoringQueryController extends RestController {
      * @return the control loop element statistics
      */
     // @formatter:off
-    @GET
-    @Path("/monitoring/clelements/controlloop")
+    @GetMapping(value = "/monitoring/clelements/controlloop",
+            produces = {MediaType.APPLICATION_JSON_VALUE, APPLICATION_YAML})
     @ApiOperation(value = "Query details of the requested cl element stats in a control loop",
         notes = "Queries details of the requested cl element stats, returning all clElement stats",
         response = ClElementStatisticsList.class,
@@ -264,29 +267,26 @@ public class MonitoringQueryController extends RestController {
         }
     )
     // @formatter:on
-    public Response queryElementStatisticsPerControlLoop(@HeaderParam(REQUEST_ID_NAME)
-                                                         @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-                                                         @ApiParam(value = "Control Loop name", required = true)
-                                                         @QueryParam("name") final String name,
-                                                         @ApiParam(value = "Control Loop version", required = true)
-                                                         @QueryParam("version") final String version) {
+    public ResponseEntity<ClElementStatisticsList> queryElementStatisticsPerControlLoop(
+            @RequestHeader(
+                    name = REQUEST_ID_NAME,
+                    required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+            @ApiParam(value = "Control Loop name", required = true) @RequestParam(
+                    value = "name",
+                    required = false) final String name,
+            @ApiParam(value = "Control Loop version", required = true) @RequestParam(
+                    value = "version",
+                    required = false) final String version) {
 
         try {
-            ClElementStatisticsList response = provider.fetchClElementStatsPerControlLoop(name, version);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-                .entity(response)
-                .build();
+            return ResponseEntity.ok().body(provider.fetchClElementStatsPerControlLoop(name, version));
 
         } catch (PfModelRuntimeException e) {
             LOGGER.warn("Monitoring of Cl Element statistics failed", e);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(e.getErrorResponse().getResponseCode())),
-                requestId).build();
+            return ResponseEntity.status(e.getErrorResponse().getResponseCode().getStatusCode()).build();
         }
 
     }
-
-
-
 
     /**
      * Queries details of all control loop element statistics per control loop.
@@ -301,8 +301,8 @@ public class MonitoringQueryController extends RestController {
      * @return the control loop element statistics
      */
     // @formatter:off
-    @GET
-    @Path("/monitoring/clelement")
+    @GetMapping(value = "/monitoring/clelement",
+            produces = {MediaType.APPLICATION_JSON_VALUE, APPLICATION_YAML})
     @ApiOperation(value = "Query details of the requested cl element stats",
         notes = "Queries details of the requested cl element stats, returning all clElement stats",
         response = ClElementStatisticsList.class,
@@ -338,20 +338,29 @@ public class MonitoringQueryController extends RestController {
         }
     )
     // @formatter:on
-    public Response queryElementStatistics(@HeaderParam(REQUEST_ID_NAME)
-                                           @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-                                           @ApiParam(value = "Participant name", required = true)
-                                           @QueryParam("name") final String name,
-                                           @ApiParam(value = "Participant version", required = true)
-                                           @QueryParam("version") final String version,
-                                           @ApiParam(value = "Record count", required = false)
-                                           @DefaultValue("0") @QueryParam("recordCount") final int recordCount,
-                                           @ApiParam(value = "Control Loop element id", required = false)
-                                           @QueryParam("id") final String id,
-                                           @ApiParam(value = "start time", required = false)
-                                           @QueryParam("startTime") final String startTime,
-                                           @ApiParam(value = "end time", required = false)
-                                           @QueryParam("endTime") final String endTime) {
+    public ResponseEntity<ClElementStatisticsList> queryElementStatistics(
+            @RequestHeader(
+                    name = REQUEST_ID_NAME,
+                    required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+            @ApiParam(value = "Participant name", required = true) @RequestParam(
+                    value = "name",
+                    required = false) final String name,
+            @ApiParam(value = "Participant version", required = true) @RequestParam(
+                    value = "version",
+                    required = false) final String version,
+            @ApiParam(value = "Record count", required = false) @RequestParam(
+                    value = "recordCount",
+                    required = false,
+                    defaultValue = "0") final int recordCount,
+            @ApiParam(value = "Control Loop element id", required = false) @RequestParam(
+                    value = "id",
+                    required = false) final String id,
+            @ApiParam(value = "start time", required = false) @RequestParam(
+                    value = "startTime",
+                    required = false) final String startTime,
+            @ApiParam(value = "end time", required = false) @RequestParam(
+                    value = "endTime",
+                    required = false) final String endTime) {
 
         try {
             Instant startTimestamp = null;
@@ -363,16 +372,12 @@ public class MonitoringQueryController extends RestController {
             if (endTime != null) {
                 endTimestamp = Instant.parse(endTime);
             }
-            ClElementStatisticsList response = provider.fetchFilteredClElementStatistics(name, version, id,
-                startTimestamp, endTimestamp, recordCount);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(Response.Status.OK)), requestId)
-                .entity(response)
-                .build();
+            return ResponseEntity.ok().body(provider.fetchFilteredClElementStatistics(name, version, id, startTimestamp,
+                    endTimestamp, recordCount));
 
         } catch (PfModelRuntimeException | PfModelException e) {
             LOGGER.warn("Monitoring of Cl Element statistics failed", e);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(e.getErrorResponse().getResponseCode())),
-                requestId).build();
+            return ResponseEntity.status(e.getErrorResponse().getResponseCode().getStatusCode()).build();
         }
 
     }
