@@ -23,7 +23,7 @@
         "name": "PolicyProviderParameterGroup",
         "implementation": "org.onap.policy.models.provider.impl.DatabasePolicyModelsProviderImpl",
         "databaseDriver": "org.mariadb.jdbc.Driver",
-        "databaseUrl": "jdbc:mariadb://localhost:3306/controlloop",
+        "databaseUrl": "jdbc:mariadb://mariadb:3306/controlloop",
         "databaseUser": "policy",
         "databasePassword": "P01icY",
         "persistenceUnit": "CommissioningMariaDb"

@@ -18,30 +18,15 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.controlloop.common.handler;
+package org.onap.policy.clamp.controlloop.runtime;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import org.junit.jupiter.api.Test;
-import org.onap.policy.models.provider.PolicyModelsProviderParameters;
+@SpringBootApplication
+public class Application {
 
-class ControlLoopHandlerTest {
-
-    @Test
-    void testControlLoopHandler() {
-        assertThatThrownBy(() -> new DummyControlLoopHandler(null)).isInstanceOf(NullPointerException.class);
-
-        assertNotNull(new DummyControlLoopHandler(new PolicyModelsProviderParameters()));
-
-        PolicyModelsProviderParameters pars = new PolicyModelsProviderParameters();
-
-        DummyControlLoopHandler dclh = new DummyControlLoopHandler(pars);
-        assertNotNull(dclh);
-
-        assertEquals(pars, dclh.getDatabaseProviderParameters());
-
-        dclh.close();
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
     }
 }

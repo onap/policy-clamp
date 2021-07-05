@@ -18,30 +18,30 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.controlloop.common.handler;
+package org.onap.policy.clamp.controlloop.runtime.config;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
-import org.junit.jupiter.api.Test;
-import org.onap.policy.models.provider.PolicyModelsProviderParameters;
+@Configuration
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-class ControlLoopHandlerTest {
+    @Value("${security.enable-csrf:true}")
+    private boolean csrfEnabled = true;
 
-    @Test
-    void testControlLoopHandler() {
-        assertThatThrownBy(() -> new DummyControlLoopHandler(null)).isInstanceOf(NullPointerException.class);
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        // @formatter:off
+        http.authorizeRequests()
+            .antMatchers().authenticated()
+            .anyRequest().authenticated()
+            .and().httpBasic();
+        // @formatter:on
 
-        assertNotNull(new DummyControlLoopHandler(new PolicyModelsProviderParameters()));
-
-        PolicyModelsProviderParameters pars = new PolicyModelsProviderParameters();
-
-        DummyControlLoopHandler dclh = new DummyControlLoopHandler(pars);
-        assertNotNull(dclh);
-
-        assertEquals(pars, dclh.getDatabaseProviderParameters());
-
-        dclh.close();
+        if (!csrfEnabled) {
+            http.csrf().disable();
+        }
     }
 }
