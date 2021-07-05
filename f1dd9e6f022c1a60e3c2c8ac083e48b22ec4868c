@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "772e1ef0_24b1634d",
+        "filename": "common/src/main/resources/tosca/ControlLoopTOSCAServiceTemplateTypes.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-07-05T07:35:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8d43e10e_12784eec",
+      "range": {
+        "startLine": 36,
+        "startChar": 8,
+        "endLine": 36,
+        "endChar": 16
+      },
+      "revId": "f1dd9e6f022c1a60e3c2c8ac083e48b22ec4868c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9ff959ed_88f70c27",
         "filename": "common/src/main/resources/tosca/PolicyControlLoopElementType.yaml",
         "patchSetId": 1
@@ -45,6 +69,30 @@
       "revId": "f1dd9e6f022c1a60e3c2c8ac083e48b22ec4868c",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f9a6445c_c0524d3f",
+        "filename": "common/src/main/resources/tosca/PolicyControlLoopElementType.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-07-05T07:35:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9ff959ed_88f70c27",
+      "range": {
+        "startLine": 26,
+        "startChar": 8,
+        "endLine": 26,
+        "endChar": 16
+      },
+      "revId": "f1dd9e6f022c1a60e3c2c8ac083e48b22ec4868c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
