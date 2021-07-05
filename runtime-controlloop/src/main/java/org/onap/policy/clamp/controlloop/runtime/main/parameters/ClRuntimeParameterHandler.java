@@ -23,7 +23,6 @@ package org.onap.policy.clamp.controlloop.runtime.main.parameters;
 import java.io.File;
 import javax.ws.rs.core.Response;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
-import org.onap.policy.clamp.controlloop.runtime.main.startstop.ClRuntimeCommandLineArguments;
 import org.onap.policy.common.parameters.ValidationResult;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
@@ -39,37 +38,33 @@ public class ClRuntimeParameterHandler {
     /**
      * Read the parameters from the parameter file.
      *
-     * @param arguments the arguments passed to control loop runtime
+     * @param path the path passed to control loop runtime
      * @return the parameters read from the configuration file
      * @throws ControlLoopException on parameter exceptions
      */
-    public ClRuntimeParameterGroup getParameters(final ClRuntimeCommandLineArguments arguments)
-            throws ControlLoopException {
+    public ClRuntimeParameterGroup getParameters(final String path) throws ControlLoopException {
         ClRuntimeParameterGroup clRuntimeParameterGroup = null;
 
         // Read the parameters
         try {
             // Read the parameters from JSON
-            File file = new File(arguments.getFullConfigurationFilePath());
+            File file = new File(path);
             clRuntimeParameterGroup = CODER.decode(file, ClRuntimeParameterGroup.class);
         } catch (final CoderException e) {
-            throw new ControlLoopException(
-                    Response.Status.NOT_ACCEPTABLE, "error reading parameters from \""
-                            + arguments.getConfigurationFilePath() + "\"\n" + "(" + e.getClass().getSimpleName() + ")",
-                    e);
+            throw new ControlLoopException(Response.Status.NOT_ACCEPTABLE,
+                    "error reading parameters from \"" + path + "\"\n" + "(" + e.getClass().getSimpleName() + ")", e);
         }
 
         // The JSON processing returns null if there is an empty file
         if (clRuntimeParameterGroup == null) {
-            throw new ControlLoopException(Response.Status.NOT_ACCEPTABLE,
-                    "no parameters found in \"" + arguments.getConfigurationFilePath() + "\"");
+            throw new ControlLoopException(Response.Status.NOT_ACCEPTABLE, "no parameters found in \"" + path + "\"");
         }
 
         // validate the parameters
         final ValidationResult validationResult = clRuntimeParameterGroup.validate();
         if (!validationResult.isValid()) {
-            throw new ControlLoopException(Response.Status.NOT_ACCEPTABLE, "validation error(s) on parameters from \""
-                    + arguments.getConfigurationFilePath() + "\"\n" + validationResult.getResult());
+            throw new ControlLoopException(Response.Status.NOT_ACCEPTABLE,
+                    "validation error(s) on parameters from \"" + path + "\"\n" + validationResult.getResult());
         }
 
         return clRuntimeParameterGroup;

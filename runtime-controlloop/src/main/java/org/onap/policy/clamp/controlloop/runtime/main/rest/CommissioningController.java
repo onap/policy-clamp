@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.controlloop.runtime.commissioning.rest;
+package org.onap.policy.clamp.controlloop.runtime.main.rest;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -30,39 +30,43 @@ import io.swagger.annotations.ExtensionProperty;
 import io.swagger.annotations.ResponseHeader;
 import java.util.List;
 import java.util.UUID;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import org.onap.policy.clamp.controlloop.models.messages.rest.commissioning.CommissioningResponse;
-import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningHandler;
 import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningProvider;
-import org.onap.policy.clamp.controlloop.runtime.main.rest.RestController;
+import org.onap.policy.clamp.controlloop.runtime.main.web.AbstractRestController;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Class to provide REST end points for creating, deleting, querying commissioned control loops.
  */
-public class CommissioningController extends RestController {
+@RestController
+public class CommissioningController extends AbstractRestController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CommissioningController.class);
 
     private final CommissioningProvider provider;
 
     /**
-     * create Commissioning Controller.
+     * Create Commissioning Controller.
+     *
+     * @param provider the CommissioningProvider
      */
-    public CommissioningController() {
-        this.provider = CommissioningHandler.getInstance().getProvider();
+    public CommissioningController(CommissioningProvider provider) {
+        this.provider = provider;
     }
 
     /**
@@ -73,8 +77,9 @@ public class CommissioningController extends RestController {
      * @return a response
      */
     // @formatter:off
-    @POST
-    @Path("/commission")
+    @PostMapping(value = "/commission",
+            consumes = {MediaType.APPLICATION_JSON_VALUE, APPLICATION_YAML},
+            produces = {MediaType.APPLICATION_JSON_VALUE, APPLICATION_YAML})
     @ApiOperation(
             value = "Commissions control loop definitions",
             notes = "Commissions control loop definitions, returning the commissioned control loop definition IDs",
@@ -118,19 +123,19 @@ public class CommissioningController extends RestController {
             }
     )
     // @formatter:on
-    public Response create(@HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-        @ApiParam(value = "Entity Body of Control Loop", required = true) ToscaServiceTemplate body) {
-
+    public ResponseEntity<CommissioningResponse> create(
+            @RequestHeader(
+                    name = REQUEST_ID_NAME,
+                    required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+            @ApiParam(value = "Entity Body of Control Loop", required = true) @RequestBody ToscaServiceTemplate body) {
         try {
-            CommissioningResponse response = provider.createControlLoopDefinitions(body);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(Status.OK)), requestId).entity(response)
-                .build();
+            return ResponseEntity.ok().body(provider.createControlLoopDefinitions(body));
 
         } catch (PfModelRuntimeException | PfModelException e) {
             LOGGER.warn("Commissioning of the control loops failed", e);
             var resp = new CommissioningResponse();
             resp.setErrorDetails(e.getErrorResponse().getErrorMessage());
-            return returnResponse(e.getErrorResponse().getResponseCode(), requestId, resp);
+            return ResponseEntity.status(e.getErrorResponse().getResponseCode().getStatusCode()).body(resp);
         }
 
     }
@@ -144,8 +149,8 @@ public class CommissioningController extends RestController {
      * @return a response
      */
     // @formatter:off
-    @DELETE
-    @Path("/commission")
+    @DeleteMapping(value = "/commission",
+            produces = {MediaType.APPLICATION_JSON_VALUE, APPLICATION_YAML})
     @ApiOperation(value = "Delete a commissioned control loop",
             notes = "Deletes a Commissioned Control Loop, returning optional error details",
             response = CommissioningResponse.class,
@@ -187,20 +192,24 @@ public class CommissioningController extends RestController {
         }
     )
     // @formatter:on
-    public Response delete(@HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-        @ApiParam(value = "Control Loop definition name", required = true) @QueryParam("name") String name,
-        @ApiParam(value = "Control Loop definition version", required = true) @QueryParam("version") String version) {
+    public ResponseEntity<CommissioningResponse> delete(
+            @RequestHeader(
+                    name = REQUEST_ID_NAME,
+                    required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+            @ApiParam(value = "Control Loop definition name", required = true) @RequestParam(
+                    value = "name") String name,
+            @ApiParam(
+                    value = "Control Loop definition version",
+                    required = true) @RequestParam("version") String version) {
 
         try {
-            CommissioningResponse response = provider.deleteControlLoopDefinition(name, version);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(Status.OK)), requestId).entity(response)
-                .build();
+            return ResponseEntity.ok().body(provider.deleteControlLoopDefinition(name, version));
 
         } catch (PfModelRuntimeException | PfModelException e) {
             LOGGER.warn("Decommisssioning of control loop failed", e);
             var resp = new CommissioningResponse();
             resp.setErrorDetails(e.getErrorResponse().getErrorMessage());
-            return returnResponse(e.getErrorResponse().getResponseCode(), requestId, resp);
+            return ResponseEntity.status(e.getErrorResponse().getResponseCode().getStatusCode()).body(resp);
         }
 
     }
@@ -214,8 +223,8 @@ public class CommissioningController extends RestController {
      * @return the control loop definitions
      */
     // @formatter:off
-    @GET
-    @Path("/commission")
+    @GetMapping(value = "/commission",
+            produces = {MediaType.APPLICATION_JSON_VALUE, APPLICATION_YAML})
     @ApiOperation(value = "Query details of the requested commissioned control loop definitions",
             notes = "Queries details of the requested commissioned control loop definitions, "
                     + "returning all control loop details",
@@ -251,20 +260,25 @@ public class CommissioningController extends RestController {
         }
     )
     // @formatter:on
-    public Response query(@HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-        @ApiParam(value = "Control Loop definition name", required = true) @QueryParam("name") String name,
-        @ApiParam(value = "Control Loop definition version", required = true) @QueryParam("version") String version) {
+    public ResponseEntity<?> query(
+            @RequestHeader(
+                    name = REQUEST_ID_NAME,
+                    required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+            @ApiParam(value = "Control Loop definition name", required = false) @RequestParam(
+                    value = "name",
+                    required = false) String name,
+            @ApiParam(value = "Control Loop definition version", required = false) @RequestParam(
+                    value = "version",
+                    required = false) String version) {
 
         try {
-            List<ToscaNodeTemplate> response = provider.getControlLoopDefinitions(name, version);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(Status.OK)), requestId).entity(response)
-                .build();
+            return ResponseEntity.ok().body(provider.getControlLoopDefinitions(name, version));
 
         } catch (PfModelRuntimeException | PfModelException e) {
             LOGGER.warn("Get of control loop definitions failed", e);
             var resp = new CommissioningResponse();
             resp.setErrorDetails(e.getErrorResponse().getErrorMessage());
-            return returnResponse(e.getErrorResponse().getResponseCode(), requestId, resp);
+            return ResponseEntity.status(e.getErrorResponse().getResponseCode().getStatusCode()).body(resp);
         }
 
     }
@@ -278,8 +292,8 @@ public class CommissioningController extends RestController {
      * @return the specified tosca service template
      */
     // @formatter:off
-    @GET
-    @Path("/commission/toscaservicetemplate")
+    @GetMapping(value = "/commission/toscaservicetemplate",
+            produces = {MediaType.APPLICATION_JSON_VALUE, APPLICATION_YAML})
     @ApiOperation(value = "Query details of the requested tosca service templates",
             notes = "Queries details of the requested commissioned tosca service template, "
                     + "returning all tosca service template details",
@@ -315,21 +329,25 @@ public class CommissioningController extends RestController {
         }
     )
     // @formatter:on
-    public Response queryToscaServiceTemplate(
-        @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-        @ApiParam(value = "Tosca service template name", required = true) @QueryParam("name") String name,
-        @ApiParam(value = "Tosca service template version", required = true) @QueryParam("version") String version) {
+    public ResponseEntity<?> queryToscaServiceTemplate(
+            @RequestHeader(
+                    name = REQUEST_ID_NAME,
+                    required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+            @ApiParam(value = "Tosca service template name", required = false) @RequestParam(
+                    value = "name",
+                    required = false) String name,
+            @ApiParam(value = "Tosca service template version", required = true) @RequestParam(
+                    value = "version",
+                    required = false) String version) {
 
         try {
-            var response = provider.getToscaServiceTemplate(name, version);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(Status.OK)), requestId).entity(response)
-                .build();
+            return ResponseEntity.ok().body(provider.getToscaServiceTemplate(name, version));
 
         } catch (PfModelRuntimeException | PfModelException e) {
             LOGGER.warn("Get of tosca service template failed", e);
             var resp = new CommissioningResponse();
             resp.setErrorDetails(e.getErrorResponse().getErrorMessage());
-            return returnResponse(e.getErrorResponse().getResponseCode(), requestId, resp);
+            return ResponseEntity.status(e.getErrorResponse().getResponseCode().getStatusCode()).body(resp);
         }
 
     }
@@ -343,8 +361,8 @@ public class CommissioningController extends RestController {
      * @return the control loop element definitions
      */
     // @formatter:off
-    @GET
-    @Path("/commission/elements")
+    @GetMapping(value = "/commission/elements",
+            produces = {MediaType.APPLICATION_JSON_VALUE, APPLICATION_YAML})
     @ApiOperation(value = "Query details of the requested commissioned control loop element definitions",
             notes = "Queries details of the requested commissioned control loop element definitions, "
                     + "returning all control loop elements' details",
@@ -380,9 +398,16 @@ public class CommissioningController extends RestController {
         }
     )
     // @formatter:on
-    public Response queryElements(@HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-        @ApiParam(value = "Control Loop definition name", required = true) @QueryParam("name") String name,
-        @ApiParam(value = "Control Loop definition version", required = true) @QueryParam("version") String version) {
+    public ResponseEntity<?> queryElements(
+            @RequestHeader(
+                    name = REQUEST_ID_NAME,
+                    required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+            @ApiParam(value = "Control Loop definition name", required = false) @RequestParam(
+                    value = "name",
+                    required = false) String name,
+            @ApiParam(value = "Control Loop definition version", required = true) @RequestParam(
+                    value = "version",
+                    required = false) String version) {
 
         try {
             List<ToscaNodeTemplate> nodeTemplate = provider.getControlLoopDefinitions(name, version);
@@ -390,23 +415,18 @@ public class CommissioningController extends RestController {
             if (nodeTemplate.size() > 1) {
                 var resp = new CommissioningResponse();
                 resp.setErrorDetails("Multiple ControlLoops are not supported");
-                return returnResponse(Response.Status.NOT_ACCEPTABLE, requestId, resp);
+                return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(resp);
             }
 
             List<ToscaNodeTemplate> response = provider.getControlLoopElementDefinitions(nodeTemplate.get(0));
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(Status.OK)), requestId).entity(response)
-                .build();
+            return ResponseEntity.ok().body(response);
 
         } catch (PfModelRuntimeException | PfModelException e) {
             LOGGER.warn("Get of control loop element definitions failed", e);
             var resp = new CommissioningResponse();
             resp.setErrorDetails(e.getErrorResponse().getErrorMessage());
-            return returnResponse(e.getErrorResponse().getResponseCode(), requestId, resp);
+            return ResponseEntity.status(e.getErrorResponse().getResponseCode().getStatusCode()).body(resp);
         }
 
-    }
-
-    private Response returnResponse(Response.Status status, UUID requestId, CommissioningResponse resp) {
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(status)), requestId).entity(resp).build();
     }
 }

@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.controlloop.runtime.main.rest;
+package org.onap.policy.clamp.controlloop.runtime.main.web;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.BasicAuthDefinition;
@@ -27,30 +27,26 @@ import io.swagger.annotations.SecurityDefinition;
 import io.swagger.annotations.SwaggerDefinition;
 import io.swagger.annotations.Tag;
 import java.net.HttpURLConnection;
-import java.util.UUID;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response.ResponseBuilder;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * Common superclass to provide REST endpoints for the control loop service.
+ * Common superclass to provide REST endpoints for the participant simulator.
  */
 // @formatter:off
-@Path("/onap/controlloop/v2")
-@Api(value = "Control Loop API")
-@Produces({MediaType.APPLICATION_JSON, RestController.APPLICATION_YAML})
+@RequestMapping(value = "/v2", produces = {MediaType.APPLICATION_JSON, AbstractRestController.APPLICATION_YAML})
+@Api(value = "Control Loop Commissioning API")
 @SwaggerDefinition(
-    info = @Info(description =
-                    "Control Loop Service", version = "v1.0",
-                    title = "Control Loop"),
-    consumes = {MediaType.APPLICATION_JSON, RestController.APPLICATION_YAML},
-    produces = {MediaType.APPLICATION_JSON, RestController.APPLICATION_YAML},
-    schemes = {SwaggerDefinition.Scheme.HTTP, SwaggerDefinition.Scheme.HTTPS},
-    tags = {@Tag(name = "controlloop", description = "Control Loop Service")},
-    securityDefinition = @SecurityDefinition(basicAuthDefinitions = {@BasicAuthDefinition(key = "basicAuth")}))
+        info = @Info(description =
+                        "Control Loop Service", version = "v1.0",
+                        title = "Control Loop"),
+        consumes = {MediaType.APPLICATION_JSON, AbstractRestController.APPLICATION_YAML},
+        produces = {MediaType.APPLICATION_JSON, AbstractRestController.APPLICATION_YAML},
+        schemes = {SwaggerDefinition.Scheme.HTTP, SwaggerDefinition.Scheme.HTTPS},
+        tags = {@Tag(name = "controlloop", description = "Control Loop Service")},
+        securityDefinition = @SecurityDefinition(basicAuthDefinitions = {@BasicAuthDefinition(key = "basicAuth")}))
 // @formatter:on
-public class RestController {
+public abstract class AbstractRestController {
     public static final String APPLICATION_YAML = "application/yaml";
 
     public static final String EXTENSION_NAME = "interface info";
@@ -63,12 +59,12 @@ public class RestController {
 
     public static final String VERSION_MINOR_NAME = "X-MinorVersion";
     public static final String VERSION_MINOR_DESCRIPTION =
-                    "Used to request or communicate a MINOR version back from the client"
-                                    + " to the server, and from the server back to the client";
+            "Used to request or communicate a MINOR version back from the client"
+                    + " to the server, and from the server back to the client";
 
     public static final String VERSION_PATCH_NAME = "X-PatchVersion";
     public static final String VERSION_PATCH_DESCRIPTION = "Used only to communicate a PATCH version in a response for"
-                    + " troubleshooting purposes only, and will not be provided by" + " the client on request";
+            + " troubleshooting purposes only, and will not be provided by" + " the client on request";
 
     public static final String VERSION_LATEST_NAME = "X-LatestVersion";
     public static final String VERSION_LATEST_DESCRIPTION = "Used only to communicate an API's latest version";
@@ -88,29 +84,8 @@ public class RestController {
     public static final String SERVER_ERROR_MESSAGE = "Internal Server Error";
 
     /**
-     * Adds version headers to the response.
-     *
-     * @param respBuilder response builder
-     * @return the response builder, with version headers
+     * Constructor.
      */
-    public ResponseBuilder addVersionControlHeaders(ResponseBuilder respBuilder) {
-        return respBuilder.header(VERSION_MINOR_NAME, "0").header(VERSION_PATCH_NAME, "0").header(VERSION_LATEST_NAME,
-                        API_VERSION);
-    }
-
-    /**
-     * Adds logging headers to the response.
-     *
-     * @param respBuilder response builder
-     * @param requestId unique ID for this request
-     * @return the response builder, with version logging
-     */
-    public ResponseBuilder addLoggingHeaders(ResponseBuilder respBuilder, UUID requestId) {
-        if (requestId == null) {
-            // Generate a random uuid if client does not embed requestId in rest request
-            return respBuilder.header(REQUEST_ID_NAME, UUID.randomUUID());
-        }
-
-        return respBuilder.header(REQUEST_ID_NAME, requestId);
+    protected AbstractRestController() {
     }
 }

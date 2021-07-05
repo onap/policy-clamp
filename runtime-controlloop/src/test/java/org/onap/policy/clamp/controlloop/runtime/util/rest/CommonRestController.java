@@ -20,14 +20,9 @@
 
 package org.onap.policy.clamp.controlloop.runtime.util.rest;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -37,15 +32,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
-import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
-import org.onap.policy.clamp.controlloop.runtime.main.startstop.Main;
-import org.onap.policy.clamp.controlloop.runtime.util.CommonTestData;
 import org.onap.policy.common.gson.GsonMessageBodyHandler;
 import org.onap.policy.common.utils.network.NetworkUtil;
-import org.onap.policy.common.utils.services.Registry;
-import org.onap.policy.models.provider.PolicyModelsProviderParameters;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Class to perform Rest unit tests.
@@ -53,46 +41,10 @@ import org.slf4j.LoggerFactory;
  */
 public class CommonRestController {
 
-    private static final String CONFIG_FILE = "src/test/resources/parameters/RuntimeConfigParameters%d.json";
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(CommonRestController.class);
-
     public static final String SELF = NetworkUtil.getHostname();
     public static final String ENDPOINT_PREFIX = "onap/controlloop/v2/";
 
-    private static int port;
     private static String httpPrefix;
-    private static Main main;
-
-    /**
-     * Allocates a port for the server, writes a config file, and then starts Main.
-     *
-     * @param dbName database name
-     * @throws Exception if an error occurs
-     */
-    public static void setUpBeforeClass(final String dbName) throws Exception {
-        port = NetworkUtil.allocPort();
-
-        httpPrefix = "http://" + SELF + ":" + port + "/";
-
-        makeConfigFile(dbName);
-        startMain();
-    }
-
-    /**
-     * Stops Main.
-     */
-    public static void teardownAfterClass() {
-        try {
-            stopMain();
-        } catch (Exception ex) {
-            LOGGER.error("cannot stop main", ex);
-        }
-    }
-
-    protected static PolicyModelsProviderParameters getParameters() {
-        return main.getParameters().getDatabaseProviderParameters();
-    }
 
     /**
      * Verifies that an endpoint appears within the swagger response.
@@ -101,71 +53,10 @@ public class CommonRestController {
      * @throws Exception if an error occurs
      */
     protected void testSwagger(final String endpoint) throws Exception {
-        final Invocation.Builder invocationBuilder = sendFqeRequest(httpPrefix + "swagger.yaml", true);
+        final Invocation.Builder invocationBuilder = sendRequest("api-docs");
         final String resp = invocationBuilder.get(String.class);
 
-        assertTrue(resp.contains(ENDPOINT_PREFIX + endpoint + ":"));
-    }
-
-    /**
-     * Makes a parameter configuration file.
-     *
-     * @param dbName database name
-     * @throws IOException if an error occurs writing the configuration file
-     * @throws FileNotFoundException if an error occurs writing the configuration file
-     */
-    private static void makeConfigFile(final String dbName) throws FileNotFoundException, IOException {
-        String json = CommonTestData.getParameterGroupAsString(port, dbName);
-
-        File file = new File(String.format(CONFIG_FILE, port));
-        file.deleteOnExit();
-
-        try (FileOutputStream output = new FileOutputStream(file)) {
-            output.write(json.getBytes(StandardCharsets.UTF_8));
-        }
-    }
-
-    /**
-     * Starts the "Main".
-     *
-     * @throws InterruptedException if the NetworkUtil method calls are interrupted
-     * @throws IllegalStateException if a controller cannot be started on the requested port
-     */
-    protected static void startMain() throws InterruptedException {
-        Registry.newRegistry();
-
-        // make sure port is available
-        if (NetworkUtil.isTcpPortOpen(SELF, port, 1, 1L)) {
-            throw new IllegalStateException("port " + port + " is not available");
-        }
-
-        final String[] configParameters = {"-c", String.format(CONFIG_FILE, port)};
-
-        main = new Main(configParameters);
-
-        if (!NetworkUtil.isTcpPortOpen(SELF, port, 40, 250L)) {
-            throw new IllegalStateException("server is not listening on port " + port);
-        }
-    }
-
-    /**
-     * Stops the "Main".
-     *
-     * @throws ControlLoopException if an error occurs shutting down the controller
-     * @throws InterruptedException if the NetworkUtil method calls are interrupted
-     * @throws IllegalStateException if a controller cannot be started on the requested port
-     */
-    private static void stopMain() throws ControlLoopException, InterruptedException {
-        if (main != null) {
-            Main main2 = main;
-            main = null;
-
-            main2.shutdown();
-        }
-        // make sure port is close
-        if (NetworkUtil.isTcpPortOpen(SELF, port, 1, 1L)) {
-            throw new IllegalStateException("port " + port + " is still in use");
-        }
+        assertThat(resp).contains(endpoint);
     }
 
     /**
@@ -211,7 +102,7 @@ public class CommonRestController {
 
         final WebTarget webTarget = client.target(fullyQualifiedEndpoint);
 
-        return webTarget.request(MediaType.APPLICATION_JSON);
+        return webTarget.request(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
     }
 
     /**
@@ -258,5 +149,14 @@ public class CommonRestController {
     protected void assertUnauthorizedDelete(final String endPoint) throws Exception {
         Response rawresp = sendNoAuthRequest(endPoint).delete();
         assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), rawresp.getStatus());
+    }
+
+    /**
+     * Set Up httpPrefix.
+     *
+     * @param port the port
+     */
+    protected void setHttpPrefix(int port) {
+        httpPrefix = "http://" + SELF + ":" + port + "/";
     }
 }

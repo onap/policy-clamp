@@ -6,8 +6,7 @@
     "participantClStateChangeIntervalSec": 1000,
     "restServerParameters": {
         "host": "0.0.0.0",
-        "port": ${port
-        },
+        "port": ${port},
         "userName": "healthcheck",
         "password": "zb!XztG34",
         "https": false,

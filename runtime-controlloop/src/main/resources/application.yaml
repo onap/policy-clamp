@@ -1,0 +1,19 @@
+spring:
+  security:
+    user:
+      name: healthcheck
+      password: zb!XztG34
+  http:
+    converters:
+      preferred-json-mapper: gson
+
+server:
+  port: 6969
+  servlet:
+    context-path: /onap/controlloop
+  error:
+    path: /error
+
+
+runtime:
+  file: src/main/resources/parameters/ParametersMariaDB.json
