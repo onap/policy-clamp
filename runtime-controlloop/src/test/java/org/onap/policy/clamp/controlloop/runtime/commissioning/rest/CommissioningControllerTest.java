@@ -21,27 +21,38 @@
 package org.onap.policy.clamp.controlloop.runtime.commissioning.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.Response;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.onap.policy.clamp.controlloop.models.messages.rest.commissioning.CommissioningResponse;
+import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
 import org.onap.policy.clamp.controlloop.runtime.util.rest.CommonRestController;
 import org.onap.policy.common.utils.coder.YamlJsonTranslator;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.provider.PolicyModelsProviderFactory;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-public class CommissioningControllerTest extends CommonRestController {
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@TestPropertySource(locations = {"classpath:application_test.properties"})
+class CommissioningControllerTest extends CommonRestController {
 
     private static final String TOSCA_SERVICE_TEMPLATE_YAML =
             "src/test/resources/rest/servicetemplates/pmsh_multiple_cl_tosca.yaml";
@@ -49,62 +60,67 @@ public class CommissioningControllerTest extends CommonRestController {
     private static final String COMMISSIONING_ENDPOINT = "commission";
     private static ToscaServiceTemplate serviceTemplate = new ToscaServiceTemplate();
 
+    @Autowired
+    private ClRuntimeParameterGroup clRuntimeParameterGroup;
+
+    @LocalServerPort
+    private int randomServerPort;
+
     /**
      * starts Main and inserts a commissioning template.
      *
      * @throws Exception if an error occurs
      */
-    @BeforeClass
+    @BeforeAll
     public static void setUpBeforeClass() throws Exception {
-        CommonRestController.setUpBeforeClass("CommissioningApi");
 
         serviceTemplate = yamlTranslator.fromYaml(ResourceUtils.getResourceAsString(TOSCA_SERVICE_TEMPLATE_YAML),
                 ToscaServiceTemplate.class);
     }
 
-    @AfterClass
-    public static void teardownAfterClass() {
-        CommonRestController.teardownAfterClass();
+    @BeforeEach
+    public void setUpPort() {
+        super.setHttpPrefix(randomServerPort);
     }
 
     @Test
-    public void testSwagger() throws Exception {
+    void testSwagger() throws Exception {
         super.testSwagger(COMMISSIONING_ENDPOINT);
     }
 
     @Test
-    public void testUnauthorizedCreate() throws Exception {
+    void testUnauthorizedCreate() throws Exception {
         assertUnauthorizedPost(COMMISSIONING_ENDPOINT, Entity.json(serviceTemplate));
     }
 
     @Test
-    public void testUnauthorizedQuery() throws Exception {
+    void testUnauthorizedQuery() throws Exception {
         assertUnauthorizedGet(COMMISSIONING_ENDPOINT);
     }
 
     @Test
-    public void testUnauthorizedQueryElements() throws Exception {
+    void testUnauthorizedQueryElements() throws Exception {
         assertUnauthorizedGet(COMMISSIONING_ENDPOINT + "/elements");
     }
 
     @Test
-    public void testUnauthorizedDelete() throws Exception {
+    void testUnauthorizedDelete() throws Exception {
         assertUnauthorizedDelete(COMMISSIONING_ENDPOINT);
     }
 
     @Test
-    public void testCreateBadRequest() throws Exception {
+    void testCreateBadRequest() throws Exception {
         Invocation.Builder invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT);
         Response resp = invocationBuilder.post(Entity.json("NotToscaServiceTempalte"));
 
-        assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), resp.getStatus());
+        assertThat(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).isEqualTo(resp.getStatus());
         CommissioningResponse commissioningResponse = resp.readEntity(CommissioningResponse.class);
-        assertNotNull(commissioningResponse.getErrorDetails());
-        assertNull(commissioningResponse.getAffectedControlLoopDefinitions());
+        assertThat(commissioningResponse.getErrorDetails()).isNotNull();
+        assertThat(commissioningResponse.getAffectedControlLoopDefinitions()).isNull();
     }
 
     @Test
-    public void testCreate() throws Exception {
+    void testCreate() throws Exception {
         Invocation.Builder invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT);
         Response resp = invocationBuilder.post(Entity.json(serviceTemplate));
         assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
@@ -121,7 +137,7 @@ public class CommissioningControllerTest extends CommonRestController {
     }
 
     @Test
-    public void testQuery_NoResultWithThisName() throws Exception {
+    void testQuery_NoResultWithThisName() throws Exception {
         createEntryInDB();
 
         Invocation.Builder invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT + "?name=noResultWithThisName");
@@ -132,7 +148,7 @@ public class CommissioningControllerTest extends CommonRestController {
     }
 
     @Test
-    public void testQuery() throws Exception {
+    void testQuery() throws Exception {
         createEntryInDB();
 
         Invocation.Builder invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT);
@@ -144,7 +160,7 @@ public class CommissioningControllerTest extends CommonRestController {
     }
 
     @Test
-    public void testQueryElementsBadRequest() throws Exception {
+    void testQueryElementsBadRequest() throws Exception {
         createEntryInDB();
 
         //Call get elements with no info
@@ -154,7 +170,7 @@ public class CommissioningControllerTest extends CommonRestController {
     }
 
     @Test
-    public void testQueryElements() throws Exception {
+    void testQueryElements() throws Exception {
         createEntryInDB();
 
         Invocation.Builder invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT + "/elements"
@@ -167,17 +183,17 @@ public class CommissioningControllerTest extends CommonRestController {
     }
 
     @Test
-    public void testDeleteBadRequest() throws Exception {
+    void testDeleteBadRequest() throws Exception {
         createEntryInDB();
 
         Invocation.Builder invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT);
         //Call delete with no info
         Response resp = invocationBuilder.delete();
-        assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), resp.getStatus());
+        assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), resp.getStatus());
     }
 
     @Test
-    public void testDelete() throws Exception {
+    void testDelete() throws Exception {
         createEntryInDB();
 
         Invocation.Builder invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT + "?name="
@@ -187,7 +203,7 @@ public class CommissioningControllerTest extends CommonRestController {
         assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
 
         try (PolicyModelsProvider modelsProvider = new PolicyModelsProviderFactory()
-                .createPolicyModelsProvider(CommonRestController.getParameters())) {
+                .createPolicyModelsProvider(clRuntimeParameterGroup.getDatabaseProviderParameters())) {
             List<ToscaServiceTemplate> templatesInDB = modelsProvider.getServiceTemplateList(null, null);
             assertThat(templatesInDB).isEmpty();
         }
@@ -195,7 +211,7 @@ public class CommissioningControllerTest extends CommonRestController {
 
     private synchronized void createEntryInDB() throws Exception {
         try (PolicyModelsProvider modelsProvider = new PolicyModelsProviderFactory()
-                .createPolicyModelsProvider(CommonRestController.getParameters())) {
+                .createPolicyModelsProvider(clRuntimeParameterGroup.getDatabaseProviderParameters())) {
             modelsProvider.createServiceTemplate(serviceTemplate);
         }
     }

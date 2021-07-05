@@ -25,7 +25,6 @@ import org.onap.policy.clamp.controlloop.runtime.supervision.SupervisionHandler;
 import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
 import org.onap.policy.common.endpoints.listeners.ScoListener;
 import org.onap.policy.common.utils.coder.StandardCoderObject;
-import org.onap.policy.common.utils.services.Registry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,13 +34,14 @@ import org.slf4j.LoggerFactory;
 public class ParticipantStatusListener extends ScoListener<ParticipantStatus> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantStatusListener.class);
 
-    private final SupervisionHandler supervisionHandler = Registry.get(SupervisionHandler.class.getName());
+    private final SupervisionHandler supervisionHandler;
 
     /**
      * Constructs the object.
      */
-    public ParticipantStatusListener() {
+    public ParticipantStatusListener(SupervisionHandler supervisionHandler) {
         super(ParticipantStatus.class);
+        this.supervisionHandler = supervisionHandler;
     }
 
     @Override

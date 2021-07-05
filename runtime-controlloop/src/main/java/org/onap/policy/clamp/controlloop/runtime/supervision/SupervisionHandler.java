@@ -38,9 +38,8 @@ import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.Parti
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopUpdate;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageType;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStatus;
-import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningHandler;
+import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningProvider;
 import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
-import org.onap.policy.clamp.controlloop.runtime.monitoring.MonitoringHandler;
 import org.onap.policy.clamp.controlloop.runtime.monitoring.MonitoringProvider;
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantControlLoopStateChangePublisher;
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantControlLoopUpdatePublisher;
@@ -48,19 +47,20 @@ import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantSta
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantStatusListener;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
 import org.onap.policy.common.endpoints.listeners.MessageTypeDispatcher;
-import org.onap.policy.common.utils.services.Registry;
 import org.onap.policy.common.utils.services.ServiceManager;
 import org.onap.policy.common.utils.services.ServiceManagerException;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 /**
  * This class handles supervision of control loop instances, so only one object of this type should be built at a time.
  *
  * <p/> It is effectively a singleton that is started at system start.
  */
+@Component
 public class SupervisionHandler extends ControlLoopHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(SupervisionHandler.class);
 
@@ -71,7 +71,8 @@ public class SupervisionHandler extends ControlLoopHandler {
 
     private ControlLoopProvider controlLoopProvider;
     private ParticipantProvider participantProvider;
-    private MonitoringProvider monitoringProvider;
+    private final MonitoringProvider monitoringProvider;
+    private final CommissioningProvider commissioningProvider;
 
     // Publishers for participant communication
     private ParticipantStateChangePublisher stateChangePublisher;
@@ -93,21 +94,18 @@ public class SupervisionHandler extends ControlLoopHandler {
     private ServiceManager publisherManager;
 
     /**
-     * Gets the SupervisionHandler.
-     *
-     * @return SupervisionHandler
-     */
-    public static SupervisionHandler getInstance() {
-        return Registry.get(SupervisionHandler.class.getName());
-    }
-
-    /**
      * Create a handler.
      *
      * @param clRuntimeParameterGroup the parameters for the control loop runtime
+     * @param monitoringProvider the MonitoringProvider
+     * @param commissioningProvider the CommissioningProvider
      */
-    public SupervisionHandler(ClRuntimeParameterGroup clRuntimeParameterGroup) {
+    public SupervisionHandler(ClRuntimeParameterGroup clRuntimeParameterGroup, MonitoringProvider monitoringProvider,
+            CommissioningProvider commissioningProvider) {
         super(clRuntimeParameterGroup.getDatabaseProviderParameters());
+        this.monitoringProvider = monitoringProvider;
+        this.commissioningProvider = commissioningProvider;
+
         // @formatter:off
         this.manager = new ServiceManager()
                         .addAction("ControlLoop Provider",
@@ -128,7 +126,8 @@ public class SupervisionHandler extends ControlLoopHandler {
     /**
      * Supervision trigger called when a command is issued on control loops.
      *
-     * </p> Causes supervision to start or continue supervision on the control loops in question.
+     * </p>
+     * Causes supervision to start or continue supervision on the control loops in question.
      *
      * @param controlLoopIdentifierList the control loops for which the supervision command has been issued
      * @throws ControlLoopException on supervision triggering exceptions
@@ -158,7 +157,7 @@ public class SupervisionHandler extends ControlLoopHandler {
 
     @Override
     public void startAndRegisterListeners(MessageTypeDispatcher msgDispatcher) {
-        msgDispatcher.register(ParticipantMessageType.PARTICIPANT_STATUS.name(), new ParticipantStatusListener());
+        msgDispatcher.register(ParticipantMessageType.PARTICIPANT_STATUS.name(), new ParticipantStatusListener(this));
     }
 
     @Override
@@ -250,7 +249,7 @@ public class SupervisionHandler extends ControlLoopHandler {
 
             default:
                 exceptionOccured(Response.Status.NOT_ACCEPTABLE,
-                    "A control loop cannot be commanded to go into state " + controlLoop.getOrderedState().name());
+                        "A control loop cannot be commanded to go into state " + controlLoop.getOrderedState().name());
         }
     }
 
@@ -346,7 +345,6 @@ public class SupervisionHandler extends ControlLoopHandler {
         pclu.setControlLoop(controlLoop);
         // TODO: We should look up the correct TOSCA node template here for the control loop
         // Tiny hack implemented to return the tosca service template entry from the database and be passed onto dmaap
-        var commissioningProvider = CommissioningHandler.getInstance().getProvider();
         pclu.setControlLoopDefinition(commissioningProvider.getToscaServiceTemplate(null, null));
         controlLoopUpdatePublisher.send(pclu);
     }
@@ -388,7 +386,6 @@ public class SupervisionHandler extends ControlLoopHandler {
             participantProvider.updateParticipants(participantList);
         }
 
-        monitoringProvider = MonitoringHandler.getInstance().getMonitoringProvider();
         monitoringProvider.createParticipantStatistics(List.of(participantStatusMessage.getParticipantStatistics()));
     }
 
@@ -401,14 +398,14 @@ public class SupervisionHandler extends ControlLoopHandler {
         for (ControlLoop controlLoop : participantStatusMessage.getControlLoops().getControlLoopList()) {
             if (controlLoop == null) {
                 exceptionOccured(Response.Status.NOT_FOUND,
-                    "PARTICIPANT_STATUS message references unknown control loop: " + controlLoop);
+                        "PARTICIPANT_STATUS message references unknown control loop: " + controlLoop);
             }
 
             var dbControlLoop = controlLoopProvider
                     .getControlLoop(new ToscaConceptIdentifier(controlLoop.getName(), controlLoop.getVersion()));
             if (dbControlLoop == null) {
                 exceptionOccured(Response.Status.NOT_FOUND,
-                    "PARTICIPANT_STATUS control loop not found in database: " + controlLoop);
+                        "PARTICIPANT_STATUS control loop not found in database: " + controlLoop);
             }
 
             for (ControlLoopElement element : controlLoop.getElements().values()) {
@@ -425,7 +422,6 @@ public class SupervisionHandler extends ControlLoopHandler {
             controlLoopProvider.updateControlLoop(dbControlLoop);
         }
 
-        monitoringProvider = MonitoringHandler.getInstance().getMonitoringProvider();
         for (ControlLoop controlLoop : participantStatusMessage.getControlLoops().getControlLoopList()) {
             monitoringProvider.createClElementStatistics(controlLoop.getControlLoopElementStatisticsList(controlLoop));
         }
