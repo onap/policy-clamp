@@ -20,25 +20,22 @@
 
 package org.onap.policy.clamp.controlloop.runtime.instantiation;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
-import org.junit.Assert;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoops;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationCommand;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationResponse;
+import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningProvider;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.coder.YamlJsonTranslator;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.provider.PolicyModelsProvider;
-import org.onap.policy.models.provider.PolicyModelsProviderFactory;
-import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
@@ -91,9 +88,9 @@ public class InstantiationUtils {
      * @param controlLoops ControlLoops
      */
     public static void assertInstantiationResponse(InstantiationResponse response, ControlLoops controlLoops) {
-        assertNotNull(response);
-        Assert.assertNull(response.getErrorDetails());
-        assertEquals(response.getAffectedControlLoops().size(), controlLoops.getControlLoopList().size());
+        assertThat(response).isNotNull();
+        assertThat(response.getErrorDetails()).isNull();
+        assertThat(response.getAffectedControlLoops().size()).isEqualTo(controlLoops.getControlLoopList().size());
         for (ControlLoop controlLoop : controlLoops.getControlLoopList()) {
             assertTrue(response.getAffectedControlLoops().stream()
                     .filter(ac -> ac.equals(controlLoop.getKey().asIdentifier())).findAny().isPresent());
@@ -107,7 +104,7 @@ public class InstantiationUtils {
      * @param command InstantiationCommand
      */
     public static void assertInstantiationResponse(InstantiationResponse response, InstantiationCommand command) {
-        assertNotNull(response);
+        assertThat(response).isNotNull();
         assertEquals(response.getAffectedControlLoops().size(), command.getControlLoopIdentifierList().size());
         for (ToscaConceptIdentifier toscaConceptIdentifier : command.getControlLoopIdentifierList()) {
             assertTrue(response.getAffectedControlLoops().stream()
@@ -122,8 +119,8 @@ public class InstantiationUtils {
      * @param controlLoop ControlLoop
      */
     public static void assertInstantiationResponse(InstantiationResponse response, ControlLoop controlLoop) {
-        assertNotNull(response);
-        Assert.assertNull(response.getErrorDetails());
+        assertThat(response).isNotNull();
+        assertThat(response.getErrorDetails()).isNull();
         assertEquals(1, response.getAffectedControlLoops().size());
         assertEquals(0, response.getAffectedControlLoops().get(0).compareTo(controlLoop.getKey().asIdentifier()));
     }
@@ -132,18 +129,15 @@ public class InstantiationUtils {
      * Store ToscaServiceTemplate from resource to DB.
      *
      * @param path path of the resource
-     * @param parameters The parameters for the implementation of the PolicyModelProvider
+     * @param commissioningProvider The CommissioningProvider
      * @throws PfModelException if an error occurs
      */
-    public static void storeToscaServiceTemplate(String path, PolicyModelsProviderParameters parameters)
+    public static void storeToscaServiceTemplate(String path, CommissioningProvider commissioningProvider)
             throws PfModelException {
 
         ToscaServiceTemplate template =
                 yamlTranslator.fromYaml(ResourceUtils.getResourceAsString(path), ToscaServiceTemplate.class);
 
-        try (PolicyModelsProvider modelsProvider =
-                new PolicyModelsProviderFactory().createPolicyModelsProvider(parameters)) {
-            modelsProvider.createServiceTemplate(template);
-        }
+        commissioningProvider.createControlLoopDefinitions(template);
     }
 }

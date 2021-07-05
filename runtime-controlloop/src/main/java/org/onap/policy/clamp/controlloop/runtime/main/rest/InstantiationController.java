@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.controlloop.runtime.instantiation.rest;
+package org.onap.policy.clamp.controlloop.runtime.main.rest;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -29,32 +29,33 @@ import io.swagger.annotations.Extension;
 import io.swagger.annotations.ExtensionProperty;
 import io.swagger.annotations.ResponseHeader;
 import java.util.UUID;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoops;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationCommand;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationResponse;
 import org.onap.policy.clamp.controlloop.runtime.instantiation.ControlLoopInstantiationProvider;
-import org.onap.policy.clamp.controlloop.runtime.instantiation.InstantiationHandler;
-import org.onap.policy.clamp.controlloop.runtime.main.rest.RestController;
+import org.onap.policy.clamp.controlloop.runtime.main.web.AbstractRestController;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.errors.concepts.ErrorResponseInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Class to provide REST end points for creating, deleting, query and commanding a control loop definition.
  */
-public class InstantiationController extends RestController {
+@RestController
+public class InstantiationController extends AbstractRestController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(InstantiationController.class);
 
@@ -62,10 +63,12 @@ public class InstantiationController extends RestController {
     private final ControlLoopInstantiationProvider provider;
 
     /**
-     * create Instantiation Controller.
+     * Create Instantiation Controller.
+     *
+     * @param provider the ControlLoopInstantiationProvider
      */
-    public InstantiationController() {
-        this.provider = InstantiationHandler.getInstance().getControlLoopInstantiationProvider();
+    public InstantiationController(ControlLoopInstantiationProvider provider) {
+        this.provider = provider;
     }
 
     /**
@@ -76,8 +79,9 @@ public class InstantiationController extends RestController {
      * @return a response
      */
     // @formatter:off
-    @POST
-    @Path("/instantiation")
+    @PostMapping(value = "/instantiation",
+            produces = {MediaType.APPLICATION_JSON_VALUE, APPLICATION_YAML},
+            consumes = {MediaType.APPLICATION_JSON_VALUE, APPLICATION_YAML})
     @ApiOperation(
             value = "Commissions control loop definitions",
             notes = "Commissions control loop definitions, returning the control loop IDs",
@@ -121,18 +125,18 @@ public class InstantiationController extends RestController {
             }
         )
     // @formatter:on
-    public Response create(
-            @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-            @ApiParam(value = "Entity Body of Control Loop", required = true) ControlLoops controlLoops) {
+    public ResponseEntity<InstantiationResponse> create(
+            @RequestHeader(name = REQUEST_ID_NAME, required = false)
+            @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+            @ApiParam(value = "Entity Body of Control Loop", required = true)
+            @RequestBody ControlLoops controlLoops) {
 
         try {
-            InstantiationResponse response = provider.createControlLoops(controlLoops);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(Status.OK)), requestId).entity(response)
-                    .build();
+            return ResponseEntity.ok().body(provider.createControlLoops(controlLoops));
 
         } catch (PfModelRuntimeException | PfModelException e) {
             LOGGER.warn("creation of control loop failed", e);
-            return createInstantiationErrorResponse(e, requestId);
+            return createInstantiationErrorResponse(e);
         }
     }
 
@@ -145,8 +149,8 @@ public class InstantiationController extends RestController {
      * @return the control loops
      */
     // @formatter:off
-    @GET
-    @Path("/instantiation")
+    @GetMapping(value = "/instantiation",
+            produces = {MediaType.APPLICATION_JSON_VALUE, APPLICATION_YAML})
     @ApiOperation(value = "Query details of the requested control loops",
             notes = "Queries details of the requested control loops, returning all control loop details",
             response = ControlLoops.class,
@@ -183,20 +187,20 @@ public class InstantiationController extends RestController {
             }
         )
     // @formatter:on
-    public Response query(
-            @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-            @ApiParam(value = "Control Loop definition name", required = true) @QueryParam("name") String name,
-            @ApiParam(value = "Control Loop definition version",
-                    required = true) @QueryParam("version") String version) {
+    public ResponseEntity<?> query(
+            @RequestHeader(name = REQUEST_ID_NAME, required = false)
+            @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+            @ApiParam(value = "Control Loop definition name", required = false)
+            @RequestParam(value = "name", required = false) String name,
+            @ApiParam(value = "Control Loop definition version", required = false)
+            @RequestParam(value = "version", required = false) String version) {
 
         try {
-            var response = provider.getControlLoops(name, version);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(Status.OK)), requestId).entity(response)
-                    .build();
+            return ResponseEntity.ok().body(provider.getControlLoops(name, version));
 
         } catch (PfModelRuntimeException | PfModelException e) {
             LOGGER.warn("commisssioning of control loop failed", e);
-            return createInstantiationErrorResponse(e, requestId);
+            return createInstantiationErrorResponse(e);
         }
 
     }
@@ -209,8 +213,9 @@ public class InstantiationController extends RestController {
      * @return a response
      */
     // @formatter:off
-    @PUT
-    @Path("/instantiation")
+    @PutMapping(value = "/instantiation",
+            produces = {MediaType.APPLICATION_JSON_VALUE, APPLICATION_YAML},
+            consumes = {MediaType.APPLICATION_JSON_VALUE, APPLICATION_YAML})
     @ApiOperation(
             value = "Updates control loop definitions",
             notes = "Updates control loop definitions, returning the updated control loop definition IDs",
@@ -256,18 +261,18 @@ public class InstantiationController extends RestController {
             }
         )
     // @formatter:on
-    public Response update(
-            @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-            @ApiParam(value = "Entity Body of Control Loop", required = true) ControlLoops controlLoops) {
+    public ResponseEntity<InstantiationResponse> update(
+            @RequestHeader(name = REQUEST_ID_NAME, required = false)
+            @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+            @ApiParam(value = "Entity Body of Control Loop", required = true)
+            @RequestBody ControlLoops controlLoops) {
 
         try {
-            InstantiationResponse response = provider.updateControlLoops(controlLoops);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(Status.OK)), requestId).entity(response)
-                    .build();
+            return ResponseEntity.ok().body(provider.updateControlLoops(controlLoops));
 
         } catch (PfModelRuntimeException | PfModelException e) {
             LOGGER.warn("update of control loops failed", e);
-            return createInstantiationErrorResponse(e, requestId);
+            return createInstantiationErrorResponse(e);
         }
     }
 
@@ -280,8 +285,8 @@ public class InstantiationController extends RestController {
      * @return a response
      */
     // @formatter:off
-    @DELETE
-    @Path("/instantiation")
+    @DeleteMapping(value = "/instantiation",
+            produces = {MediaType.APPLICATION_JSON_VALUE, APPLICATION_YAML})
     @ApiOperation(value = "Delete a control loop",
             notes = "Deletes a control loop, returning optional error details",
             response = InstantiationResponse.class,
@@ -326,20 +331,20 @@ public class InstantiationController extends RestController {
     )
     // @formatter:on
 
-    public Response delete(
-            @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-            @ApiParam(value = "Control Loop definition name", required = true) @QueryParam("name") String name,
-            @ApiParam(value = "Control Loop definition version", required = true)
-                    @QueryParam("version") String version) {
+    public ResponseEntity<InstantiationResponse> delete(
+            @RequestHeader(name = REQUEST_ID_NAME, required = false)
+            @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+            @ApiParam(value = "Control Loop definition name", required = true)
+            @RequestParam("name") String name,
+            @ApiParam(value = "Control Loop definition version")
+            @RequestParam(value = "version", required = false) String version) {
 
         try {
-            InstantiationResponse response = provider.deleteControlLoop(name, version);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(Status.OK)), requestId).entity(response)
-                    .build();
+            return ResponseEntity.ok().body(provider.deleteControlLoop(name, version));
 
         } catch (PfModelRuntimeException | PfModelException e) {
             LOGGER.warn("delete of control loop failed", e);
-            return createInstantiationErrorResponse(e, requestId);
+            return createInstantiationErrorResponse(e);
         }
     }
 
@@ -351,8 +356,9 @@ public class InstantiationController extends RestController {
      * @return the control loop definitions
      */
     // @formatter:off
-    @PUT
-    @Path("/instantiation/command")
+    @PutMapping(value = "/instantiation/command",
+            produces = {MediaType.APPLICATION_JSON_VALUE, APPLICATION_YAML},
+            consumes = {MediaType.APPLICATION_JSON_VALUE, APPLICATION_YAML})
     @ApiOperation(value = "Issue a command to the requested control loops",
             notes = "Issues a command to a control loop, ordering a state change on the control loop",
             response = InstantiationResponse.class,
@@ -389,32 +395,30 @@ public class InstantiationController extends RestController {
             }
         )
     // @formatter:on
-    public Response issueControlLoopCommand(
-            @HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-            @ApiParam(value = "Entity Body of control loop command", required = true) InstantiationCommand command) {
+    public ResponseEntity<InstantiationResponse> issueControlLoopCommand(
+            @RequestHeader(name = REQUEST_ID_NAME, required = false)
+            @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+            @ApiParam(value = "Entity Body of control loop command", required = true)
+            @RequestBody InstantiationCommand command) {
 
         try {
-            InstantiationResponse response = provider.issueControlLoopCommand(command);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(Status.ACCEPTED)), requestId)
-                    .entity(response).build();
+            return ResponseEntity.accepted().body(provider.issueControlLoopCommand(command));
 
         } catch (PfModelRuntimeException | PfModelException | ControlLoopException e) {
             LOGGER.warn("creation of control loop failed", e);
-            return createInstantiationErrorResponse(e, requestId);
+            return createInstantiationErrorResponse(e);
         }
     }
 
     /**
      * create a Instantiation Response from an exception.
+     *
      * @param e the error
-     * @param requestId request ID used in ONAP logging
      * @return the Instantiation Response
      */
-    private Response createInstantiationErrorResponse(ErrorResponseInfo e, UUID requestId) {
+    private ResponseEntity<InstantiationResponse> createInstantiationErrorResponse(ErrorResponseInfo e) {
         var resp = new InstantiationResponse();
         resp.setErrorDetails(e.getErrorResponse().getErrorMessage());
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(e.getErrorResponse().getResponseCode())),
-            requestId).entity(resp).build();
+        return ResponseEntity.status(e.getErrorResponse().getResponseCode().getStatusCode()).body(resp);
     }
 }
-

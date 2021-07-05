@@ -21,29 +21,40 @@
 package org.onap.policy.clamp.controlloop.runtime.monitoring.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.File;
 import java.time.Instant;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.Response;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ClElementStatisticsList;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantStatisticsList;
+import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
 import org.onap.policy.clamp.controlloop.runtime.monitoring.MonitoringProvider;
 import org.onap.policy.clamp.controlloop.runtime.util.rest.CommonRestController;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.StandardCoder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-public class MonitoringQueryControllerTest extends CommonRestController {
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@TestPropertySource(locations = {"classpath:application_test.properties"})
+class MonitoringQueryControllerTest extends CommonRestController {
 
     private static final String CL_PARTICIPANT_STATISTICS_JSON =
-        "src/test/resources/rest/monitoring/TestParticipantStatistics.json";
+            "src/test/resources/rest/monitoring/TestParticipantStatistics.json";
     private static final String CL_ELEMENT_STATISTICS_JSON =
-        "src/test/resources/rest/monitoring/TestClElementStatistics.json";
+            "src/test/resources/rest/monitoring/TestClElementStatistics.json";
 
     private static final Coder CODER = new StandardCoder();
 
@@ -51,64 +62,68 @@ public class MonitoringQueryControllerTest extends CommonRestController {
     private static ClElementStatisticsList inputClElementStatistics;
 
     private static ParticipantStatisticsList participantStatisticsList;
-    private static  ClElementStatisticsList clElementStatisticsList;
+    private static ClElementStatisticsList clElementStatisticsList;
 
     private static final String CLELEMENT_STATS_ENDPOINT = "monitoring/clelement";
     private static final String PARTICIPANT_STATS_ENDPOINT = "monitoring/participant";
     private static final String PARTICIPANT_STATS_PER_CL_ENDPOINT = "monitoring/participants/controlloop";
     private static final String CLELEMENT_STATS_PER_CL_ENDPOINT = "monitoring/clelements/controlloop";
 
+    @Autowired
+    private ClRuntimeParameterGroup clRuntimeParameterGroup;
+
+    @LocalServerPort
+    private int randomServerPort;
 
     /**
      * starts Main.
      *
      * @throws Exception if an error occurs
      */
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        CommonRestController.setUpBeforeClass("testStatisticsQuery");
-        inputParticipantStatistics = CODER.decode(new File(CL_PARTICIPANT_STATISTICS_JSON),
-            ParticipantStatisticsList.class);
-        inputClElementStatistics = CODER.decode(new File(CL_ELEMENT_STATISTICS_JSON),
-            ClElementStatisticsList.class);
+    @BeforeAll
+    public static void setUpBeforeAll() throws Exception {
 
-        try (MonitoringProvider monitoringProvider = new MonitoringProvider(getParameters())) {
+        inputParticipantStatistics =
+                CODER.decode(new File(CL_PARTICIPANT_STATISTICS_JSON), ParticipantStatisticsList.class);
+        inputClElementStatistics = CODER.decode(new File(CL_ELEMENT_STATISTICS_JSON), ClElementStatisticsList.class);
+    }
+
+    @BeforeEach
+    public void setUpBeforeEach() throws Exception {
+        super.setHttpPrefix(randomServerPort);
+
+        try (var monitoringProvider = new MonitoringProvider(clRuntimeParameterGroup)) {
             // Insert Participant statistics to DB
-            participantStatisticsList = monitoringProvider.createParticipantStatistics(inputParticipantStatistics
-                .getStatisticsList());
+            participantStatisticsList =
+                    monitoringProvider.createParticipantStatistics(inputParticipantStatistics.getStatisticsList());
             // Insert CL Element statistics to DB
-            clElementStatisticsList = monitoringProvider.createClElementStatistics(inputClElementStatistics
-                .getClElementStatistics());
+            clElementStatisticsList =
+                    monitoringProvider.createClElementStatistics(inputClElementStatistics.getClElementStatistics());
         }
     }
 
-    @AfterClass
-    public static void teardownAfterClass() {
-        CommonRestController.teardownAfterClass();
-    }
-
     @Test
-    public void testQuery_Unauthorized_for_ClElementStats() throws Exception {
+    void testQuery_Unauthorized_for_ClElementStats() throws Exception {
         assertUnauthorizedGet(CLELEMENT_STATS_ENDPOINT);
     }
 
     @Test
-    public void testQuery_Unauthorized_for_ClParticipantStats() throws Exception {
+    void testQuery_Unauthorized_for_ClParticipantStats() throws Exception {
         assertUnauthorizedGet(PARTICIPANT_STATS_ENDPOINT);
     }
 
     @Test
-    public void testQuery_Unauthorized_for_ParticipantStatsPerCl() throws Exception {
+    void testQuery_Unauthorized_for_ParticipantStatsPerCl() throws Exception {
         assertUnauthorizedGet(PARTICIPANT_STATS_PER_CL_ENDPOINT);
     }
 
     @Test
-    public void testQuery_Unauthorized_for_ClElementStatsPerCl() throws Exception {
+    void testQuery_Unauthorized_for_ClElementStatsPerCl() throws Exception {
         assertUnauthorizedGet(CLELEMENT_STATS_PER_CL_ENDPOINT);
     }
 
     @Test
-    public void testSwagger_ClStats() throws Exception {
+    void testSwagger_ClStats() throws Exception {
         super.testSwagger(CLELEMENT_STATS_ENDPOINT);
         super.testSwagger(PARTICIPANT_STATS_ENDPOINT);
         super.testSwagger(CLELEMENT_STATS_PER_CL_ENDPOINT);
@@ -116,13 +131,12 @@ public class MonitoringQueryControllerTest extends CommonRestController {
     }
 
     @Test
-    public void testClElementStatisticsEndpoint() throws Exception {
+    void testClElementStatisticsEndpoint() throws Exception {
         // Filter statistics only based on participant Id and UUID
-        Invocation.Builder invokeRequest1 =
-            super.sendRequest(CLELEMENT_STATS_ENDPOINT + "?name=" + clElementStatisticsList
-                .getClElementStatistics().get(0).getParticipantId().getName() + "&version=" + clElementStatisticsList
-                .getClElementStatistics().get(0).getParticipantId().getVersion() + "&id=" + clElementStatisticsList
-                .getClElementStatistics().get(0).getId().toString());
+        Invocation.Builder invokeRequest1 = super.sendRequest(CLELEMENT_STATS_ENDPOINT + "?name="
+                + clElementStatisticsList.getClElementStatistics().get(0).getParticipantId().getName() + "&version="
+                + clElementStatisticsList.getClElementStatistics().get(0).getParticipantId().getVersion() + "&id="
+                + clElementStatisticsList.getClElementStatistics().get(0).getId().toString());
         Response response1 = invokeRequest1.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), response1.getStatus());
 
@@ -130,55 +144,49 @@ public class MonitoringQueryControllerTest extends CommonRestController {
 
         assertNotNull(result1);
         assertThat(result1.getClElementStatistics()).hasSize(2);
-        assertEquals(result1.getClElementStatistics().get(0), clElementStatisticsList
-            .getClElementStatistics().get(0));
+        assertEquals(result1.getClElementStatistics().get(0), clElementStatisticsList.getClElementStatistics().get(0));
 
         // Filter statistics based on timestamp
-        Invocation.Builder invokeRequest2 =
-            super.sendRequest(CLELEMENT_STATS_ENDPOINT + "?name=" + clElementStatisticsList
-                .getClElementStatistics().get(1).getParticipantId().getName() + "&version=" + clElementStatisticsList
-                .getClElementStatistics().get(1).getParticipantId().getVersion() + "&startTime="
-                + Instant.parse("2021-01-10T13:00:00.000Z") + "&endTime=" + Instant.parse("2021-01-10T14:00:00.000Z"));
+        Invocation.Builder invokeRequest2 = super.sendRequest(CLELEMENT_STATS_ENDPOINT + "?name="
+                + clElementStatisticsList.getClElementStatistics().get(1).getParticipantId().getName() + "&version="
+                + clElementStatisticsList.getClElementStatistics().get(1).getParticipantId().getVersion()
+                + "&startTime=" + Instant.parse("2021-01-10T13:00:00.000Z") + "&endTime="
+                + Instant.parse("2021-01-10T14:00:00.000Z"));
         Response response2 = invokeRequest2.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), response2.getStatus());
         ClElementStatisticsList result2 = response2.readEntity(ClElementStatisticsList.class);
 
         assertNotNull(result2);
         assertThat(result2.getClElementStatistics()).hasSize(1);
-        assertEquals(result1.getClElementStatistics().get(0), clElementStatisticsList
-            .getClElementStatistics().get(0));
+        assertEquals(result1.getClElementStatistics().get(0), clElementStatisticsList.getClElementStatistics().get(0));
     }
 
     @Test
-    public void testClElementStats_BadRequest() throws Exception {
-        Invocation.Builder invokeRequest1 =
-            super.sendRequest(CLELEMENT_STATS_ENDPOINT + "?version=1.0.0");
+    void testClElementStats_BadRequest() throws Exception {
+        Invocation.Builder invokeRequest1 = super.sendRequest(CLELEMENT_STATS_ENDPOINT + "?version=1.0.0");
         Response response1 = invokeRequest1.buildGet().invoke();
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), response1.getStatus());
     }
 
     @Test
-    public void testParticipantStatisticsEndpoint() throws Exception {
+    void testParticipantStatisticsEndpoint() throws Exception {
 
         // Filter statistics only based on participant Id
-        Invocation.Builder invokeRequest1 =
-            super.sendRequest(PARTICIPANT_STATS_ENDPOINT + "?name=" + participantStatisticsList
-                .getStatisticsList().get(0).getParticipantId().getName() + "&version=" + participantStatisticsList
-                .getStatisticsList().get(0).getParticipantId().getVersion());
+        Invocation.Builder invokeRequest1 = super.sendRequest(PARTICIPANT_STATS_ENDPOINT + "?name="
+                + participantStatisticsList.getStatisticsList().get(0).getParticipantId().getName() + "&version="
+                + participantStatisticsList.getStatisticsList().get(0).getParticipantId().getVersion());
         Response response1 = invokeRequest1.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), response1.getStatus());
         ParticipantStatisticsList result1 = response1.readEntity(ParticipantStatisticsList.class);
 
         assertNotNull(result1);
         assertThat(result1.getStatisticsList()).hasSize(2);
-        assertEquals(result1.getStatisticsList().get(0), participantStatisticsList
-            .getStatisticsList().get(0));
+        assertEquals(result1.getStatisticsList().get(0), participantStatisticsList.getStatisticsList().get(0));
 
         // Filter statistics based on timestamp
-        Invocation.Builder invokeRequest2 =
-            super.sendRequest(PARTICIPANT_STATS_ENDPOINT + "?name=" + participantStatisticsList
-                .getStatisticsList().get(1).getParticipantId().getName() + "&version=" + participantStatisticsList
-                .getStatisticsList().get(1).getParticipantId().getVersion() + "&startTime="
+        Invocation.Builder invokeRequest2 = super.sendRequest(PARTICIPANT_STATS_ENDPOINT + "?name="
+                + participantStatisticsList.getStatisticsList().get(1).getParticipantId().getName() + "&version="
+                + participantStatisticsList.getStatisticsList().get(1).getParticipantId().getVersion() + "&startTime="
                 + Instant.parse("2021-01-10T13:00:00.000Z") + "&endTime=" + Instant.parse("2021-01-10T14:00:00.000Z"));
         Response response2 = invokeRequest2.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), response2.getStatus());
@@ -186,22 +194,20 @@ public class MonitoringQueryControllerTest extends CommonRestController {
 
         assertNotNull(result2);
         assertThat(result2.getStatisticsList()).hasSize(1);
-        assertEquals(result1.getStatisticsList().get(0), participantStatisticsList
-            .getStatisticsList().get(0));
+        assertEquals(result1.getStatisticsList().get(0), participantStatisticsList.getStatisticsList().get(0));
     }
 
     @Test
-    public void testParticipantStats_BadRequest() throws Exception {
-        Invocation.Builder invokeRequest1 =
-            super.sendRequest(PARTICIPANT_STATS_ENDPOINT + "?version=0.0");
+    void testParticipantStats_BadRequest() throws Exception {
+        Invocation.Builder invokeRequest1 = super.sendRequest(PARTICIPANT_STATS_ENDPOINT + "?version=0.0");
         Response response1 = invokeRequest1.buildGet().invoke();
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), response1.getStatus());
     }
 
     @Test
-    public void testParticipantStatsPerClEndpoint() throws Exception {
+    void testParticipantStatsPerClEndpoint() throws Exception {
         Invocation.Builder invokeRequest1 =
-            super.sendRequest(PARTICIPANT_STATS_PER_CL_ENDPOINT + "?name=dummyName&version=1.001");
+                super.sendRequest(PARTICIPANT_STATS_PER_CL_ENDPOINT + "?name=dummyName&version=1.001");
         Response response1 = invokeRequest1.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), response1.getStatus());
         ParticipantStatisticsList result1 = response1.readEntity(ParticipantStatisticsList.class);
@@ -209,17 +215,16 @@ public class MonitoringQueryControllerTest extends CommonRestController {
     }
 
     @Test
-    public void testParticipantStatsPerCl_BadRequest() throws Exception {
-        Invocation.Builder invokeRequest1 =
-            super.sendRequest(PARTICIPANT_STATS_PER_CL_ENDPOINT);
+    void testParticipantStatsPerCl_BadRequest() throws Exception {
+        Invocation.Builder invokeRequest1 = super.sendRequest(PARTICIPANT_STATS_PER_CL_ENDPOINT);
         Response response1 = invokeRequest1.buildGet().invoke();
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), response1.getStatus());
     }
 
     @Test
-    public void testClElementStatisticsPerClEndpoint() throws Exception {
+    void testClElementStatisticsPerClEndpoint() throws Exception {
         Invocation.Builder invokeRequest1 =
-            super.sendRequest(CLELEMENT_STATS_PER_CL_ENDPOINT + "?name=dummyName&version=1.001");
+                super.sendRequest(CLELEMENT_STATS_PER_CL_ENDPOINT + "?name=dummyName&version=1.001");
         Response response1 = invokeRequest1.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), response1.getStatus());
         ClElementStatisticsList result1 = response1.readEntity(ClElementStatisticsList.class);
@@ -227,9 +232,8 @@ public class MonitoringQueryControllerTest extends CommonRestController {
     }
 
     @Test
-    public void testClElementStatsPerCl_BadRequest() throws Exception {
-        Invocation.Builder invokeRequest1 =
-            super.sendRequest(CLELEMENT_STATS_PER_CL_ENDPOINT);
+    void testClElementStatsPerCl_BadRequest() throws Exception {
+        Invocation.Builder invokeRequest1 = super.sendRequest(CLELEMENT_STATS_PER_CL_ENDPOINT);
         Response response1 = invokeRequest1.buildGet().invoke();
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), response1.getStatus());
     }
