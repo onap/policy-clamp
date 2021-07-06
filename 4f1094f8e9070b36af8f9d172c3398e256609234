@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "23c89398_17926a53",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoopElementDefinition.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-06T13:44:53Z",
+      "side": 1,
+      "message": "could try UnaryOperator::identity, to avoid copying the string",
+      "range": {
+        "startLine": 60,
+        "startChar": 91,
+        "endLine": 60,
+        "endChar": 102
+      },
+      "revId": "4f1094f8e9070b36af8f9d172c3398e256609234",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "63d978e8_444c4dd2",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ParticipantUpdate.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-06T13:44:53Z",
+      "side": 1,
+      "message": "I\u0027m unclear how this relates to participantDefinitionUpdateMap.  Kind of appears that this would be a subset of participantDefinitionUpdateMap",
+      "revId": "4f1094f8e9070b36af8f9d172c3398e256609234",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "af1237e3_e0850638",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ParticipantUpdate.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-06T13:44:53Z",
+      "side": 1,
+      "message": "need to make a copy of this map",
+      "revId": "4f1094f8e9070b36af8f9d172c3398e256609234",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9ce4200b_b9f70a9c",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ParticipantUpdate.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-06T13:44:53Z",
+      "side": 1,
+      "message": "can identity map instead",
+      "range": {
+        "startLine": 84,
+        "startChar": 78,
+        "endLine": 84,
+        "endChar": 89
+      },
+      "revId": "4f1094f8e9070b36af8f9d172c3398e256609234",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
