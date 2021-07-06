@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fb96cfef_648a1c65",
+        "filename": "runtime/src/main/resources/clds/camel/routes/controlloop-flows.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-07-06T13:36:56Z",
+      "side": 1,
+      "message": "All for a blank space!",
+      "range": {
+        "startLine": 48,
+        "startChar": 97,
+        "endLine": 48,
+        "endChar": 98
+      },
+      "revId": "df3c682053a4b93e371f52f71c07e1f842a980f7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
