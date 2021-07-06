@@ -24,14 +24,14 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.common.utils.services.Registry;
 import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 
-public class ControlLoopHandlerTest {
+class ControlLoopHandlerTest {
 
     @Test
-    public void testControlLoopHandler() {
+    void testControlLoopHandler() {
         assertThatThrownBy(() -> new DummyControlLoopHandler(null)).isInstanceOf(NullPointerException.class);
 
         assertNotNull(new DummyControlLoopHandler(new PolicyModelsProviderParameters()));
