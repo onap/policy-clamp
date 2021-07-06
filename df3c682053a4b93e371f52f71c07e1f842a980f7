@@ -22,6 +22,30 @@
       "revId": "df3c682053a4b93e371f52f71c07e1f842a980f7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ab809db_dd22754c",
+        "filename": "runtime/src/main/resources/clds/camel/routes/controlloop-flows.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-07-06T13:55:27Z",
+      "side": 1,
+      "message": "Yes, the emulator didn\u0027t like something about the way Camel was encoding the endpoint. A space solved the issue.",
+      "parentUuid": "fb96cfef_648a1c65",
+      "range": {
+        "startLine": 48,
+        "startChar": 97,
+        "endLine": 48,
+        "endChar": 98
+      },
+      "revId": "df3c682053a4b93e371f52f71c07e1f842a980f7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
