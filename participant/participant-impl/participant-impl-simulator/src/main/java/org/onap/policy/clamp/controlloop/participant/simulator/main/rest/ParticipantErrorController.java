@@ -20,7 +20,6 @@
 
 package org.onap.policy.clamp.controlloop.participant.simulator.main.rest;
 
-import io.swagger.v3.oas.annotations.Hidden;
 import java.util.Map;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
@@ -38,7 +37,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.ServletWebRequest;
 
 @Controller
-@Hidden
 public class ParticipantErrorController implements ErrorController {
 
     private final ErrorAttributes errorAttributes;
