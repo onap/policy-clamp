@@ -18,7 +18,7 @@
 
 package org.onap.policy.clamp.controlloop.participant.kubernetes.models;
 
-import java.util.Collection;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,5 +27,5 @@ import lombok.Setter;
 @Setter
 @Builder
 public class ChartList {
-    private Collection<ChartInfo> charts;
+    private List<ChartInfo> charts;
 }

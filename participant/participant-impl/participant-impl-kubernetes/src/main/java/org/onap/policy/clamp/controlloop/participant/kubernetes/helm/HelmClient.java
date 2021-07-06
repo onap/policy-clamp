@@ -75,12 +75,33 @@ public class HelmClient {
      */
     public String findChartRepository(ChartInfo chart) throws ServiceException, IOException {
         updateHelmRepo();
+        String repository = verifyConfiguredRepo(chart);
+        if (repository != null) {
+            return repository;
+        }
+        var localHelmChartDir = chartStore.getAppPath(chart.getChartName(), chart.getVersion()).toString();
+        logger.info("Chart not found in helm repositories, verifying local repo {} ", localHelmChartDir);
+        if (verifyLocalHelmRepo(localHelmChartDir + "/" + chart.getChartName())) {
+            repository = localHelmChartDir;
+        }
+
+        return repository;
+    }
+
+    /**
+     * Verify helm chart in configured repositories.
+     * @param chart chartInfo
+     * @return repo name
+     * @throws IOException incase of error
+     * @throws ServiceException incase of error
+     */
+    public String verifyConfiguredRepo(ChartInfo chart) throws IOException, ServiceException {
         logger.info("Looking for helm chart {} in all the configured helm repositories", chart.getChartName());
         String repository = null;
-
-        var process = helmRepoVerifyCommand(chart.getChartName()).start();
-
-        try (var reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+        var builder = helmRepoVerifyCommand(chart.getChartName());
+        String output = executeCommand(builder);
+        try (var reader = new BufferedReader(new InputStreamReader(IOUtils.toInputStream(output,
+                StandardCharsets.UTF_8)))) {
             String line = reader.readLine();
             while (line != null) {
                 if (line.contains(chart.getChartName())) {
@@ -91,13 +112,6 @@ public class HelmClient {
                 line = reader.readLine();
             }
         }
-
-        var localHelmChartDir = chartStore.getAppPath(chart.getChartName(), chart.getVersion()).toString();
-        logger.info("Chart not found in helm repositories, verifying local repo {} ", localHelmChartDir);
-        if (verifyLocalHelmRepo(localHelmChartDir + "/" + chart.getChartName())) {
-            repository = localHelmChartDir;
-        }
-
         return repository;
     }
 
@@ -111,7 +125,13 @@ public class HelmClient {
         executeCommand(prepareUnInstallCommand(chart));
     }
 
-    static String executeCommand(ProcessBuilder processBuilder) throws ServiceException {
+    /**
+     * Execute helm cli bash commands .
+     * @param processBuilder processbuilder
+     * @return string output
+     * @throws ServiceException incase of error.
+     */
+    public static String executeCommand(ProcessBuilder processBuilder) throws ServiceException {
         var commandStr = toString(processBuilder);
 
         try {
@@ -123,13 +143,15 @@ public class HelmClient {
                 var error = IOUtils.toString(process.getErrorStream(), StandardCharsets.UTF_8);
                 throw new ServiceException("Command execution failed: " + commandStr + " " + error);
             }
+
             var output = IOUtils.toString(process.getInputStream(), StandardCharsets.UTF_8);
             logger.debug("Command <{}> execution, output: {}", commandStr, output);
             return output;
+
         } catch (InterruptedException ie) {
             Thread.currentThread().interrupt();
             throw new ServiceException("Failed to execute the Command: " + commandStr + ", the command was interrupted",
-                ie);
+                    ie);
         } catch (Exception exc) {
             throw new ServiceException("Failed to execute the Command: " + commandStr, exc);
         }
@@ -140,12 +162,12 @@ public class HelmClient {
         // @formatter:off
         List<String> helmArguments = new ArrayList<>(
                 Arrays.asList(
-                    "helm",
-                    "install", chart.getReleaseName(), chart.getRepository() + "/" + chart.getChartName(),
-                    "--version", chart.getVersion(),
-                    "--namespace", chart.getNamespace()
+                        "helm",
+                        "install", chart.getReleaseName(), chart.getRepository() + "/" + chart.getChartName(),
+                        "--version", chart.getVersion(),
+                        "--namespace", chart.getNamespace()
                 )
-            );
+        );
         // @formatter:on
 
         // Verify if values.yaml available for the chart
@@ -176,9 +198,7 @@ public class HelmClient {
 
     private void updateHelmRepo() throws ServiceException {
         logger.info("Updating local helm repositories before verifying the chart");
-        List<String> helmArguments = Arrays.asList("helm", "repo", "update");
-
-        executeCommand(new ProcessBuilder().command(helmArguments));
+        executeCommand(new ProcessBuilder().command("helm", "repo", "update"));
         logger.debug("Helm repositories updated successfully");
     }
 

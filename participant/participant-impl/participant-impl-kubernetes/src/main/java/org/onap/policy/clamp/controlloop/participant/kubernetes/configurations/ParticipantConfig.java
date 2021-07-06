@@ -31,7 +31,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
  * Bean Factory class for helm client.
  */
 @Configuration
-public class BeanFactory {
+public class ParticipantConfig {
 
     @Value("${server.http-port}")
     private int httpPort = 0;
