@@ -29,13 +29,13 @@ import static org.junit.Assert.assertNull;
 
 import java.util.LinkedHashMap;
 import java.util.UUID;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.models.base.PfKey;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
-public class ControlLoopTest {
+class ControlLoopTest {
     @Test
-    public void testControlLoop() {
+    void testControlLoop() {
         ControlLoop cl0 = new ControlLoop();
         cl0.setDefinition(new ToscaConceptIdentifier("dfName", "1.2.3"));
         assertEquals("dfName", cl0.getType());
@@ -48,7 +48,7 @@ public class ControlLoopTest {
     }
 
     @Test
-    public void testControlLoopLombok() {
+    void testControlLoopLombok() {
         assertNotNull(new ControlLoop());
         ControlLoop cl0 = new ControlLoop();
         cl0.setElements(new LinkedHashMap<>());

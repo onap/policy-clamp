@@ -28,12 +28,12 @@ import static org.junit.Assert.assertNotNull;
 
 import java.time.Instant;
 import java.util.UUID;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
-public class ClElementStatisticsTest {
+class ClElementStatisticsTest {
     @Test
-    public void testClElementStatisticsLombok() {
+    void testClElementStatisticsLombok() {
         assertNotNull(new ClElementStatistics());
         ClElementStatistics cles0 = new ClElementStatistics();
 

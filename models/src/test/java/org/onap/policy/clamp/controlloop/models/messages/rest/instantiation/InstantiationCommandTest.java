@@ -26,12 +26,12 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.ArrayList;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 
-public class InstantiationCommandTest {
+class InstantiationCommandTest {
     @Test
-    public void testInstantiationCommandLombok() {
+    void testInstantiationCommandLombok() {
         assertNotNull(new InstantiationCommand());
         InstantiationCommand ic0 = new InstantiationCommand();
 

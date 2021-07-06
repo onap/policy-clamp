@@ -27,9 +27,9 @@ import static org.junit.Assert.assertNull;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoops;
@@ -40,7 +40,7 @@ import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTypedEntityFilter;
 
-public class ControlLoopProviderTest {
+class ControlLoopProviderTest {
 
     private static final String LIST_IS_NULL = "controlLoops is marked .*ull but is null";
     private static final Coder CODER = new StandardCoder();
@@ -56,8 +56,8 @@ public class ControlLoopProviderTest {
     private String originalJson = ResourceUtils.getResourceAsString(CONTROL_LOOP_JSON);
     private String updateClJson = ResourceUtils.getResourceAsString(UPDATE_CL_JSON);
 
-    @Before
-    public void beforeSetupDao() throws Exception {
+    @BeforeEach
+    void beforeSetupDao() throws Exception {
 
         parameters = new PolicyModelsProviderParameters();
         parameters.setDatabaseDriver("org.h2.Driver");
@@ -74,13 +74,13 @@ public class ControlLoopProviderTest {
         updateControlLoops = CODER.decode(updateClJson, ControlLoops.class);
     }
 
-    @After
-    public void teardown() {
+    @AfterEach
+    void teardown() {
         controlLoopProvider.close();
     }
 
     @Test
-    public void testControlLoopCreate() throws Exception {
+    void testControlLoopCreate() throws Exception {
         assertThatThrownBy(() -> {
             controlLoopProvider.createControlLoops(null);
         }).hasMessageMatching(LIST_IS_NULL);
@@ -93,7 +93,7 @@ public class ControlLoopProviderTest {
     }
 
     @Test
-    public void testGetControlLoops() throws Exception {
+    void testGetControlLoops() throws Exception {
 
         List<ControlLoop> getResponse;
 
@@ -122,7 +122,7 @@ public class ControlLoopProviderTest {
     }
 
     @Test
-    public void testUpdateControlLoops() throws Exception {
+    void testUpdateControlLoops() throws Exception {
         assertThatThrownBy(() -> {
             controlLoopProvider.updateControlLoops(null);
         }).hasMessageMatching("controlLoops is marked .*ull but is null");
@@ -137,7 +137,7 @@ public class ControlLoopProviderTest {
     }
 
     @Test
-    public void testDeleteControlLoop() throws Exception {
+    void testDeleteControlLoop() throws Exception {
         assertThatThrownBy(() -> {
             controlLoopProvider.deleteControlLoop("Invalid_name", "1.0.1");
         }).hasMessageMatching(".*.failed, control loop does not exist");

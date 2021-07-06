@@ -27,12 +27,12 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.UUID;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
-public class ControlLoopElementTest {
+class ControlLoopElementTest {
     @Test
-    public void testControlLoopElement() {
+    void testControlLoopElement() {
 
         ControlLoopElement cle0 = new ControlLoopElement();
 
@@ -41,7 +41,7 @@ public class ControlLoopElementTest {
     }
 
     @Test
-    public void testControlLoopElementLombok() {
+    void testControlLoopElementLombok() {
         assertNotNull(new ControlLoopElement());
         ControlLoopElement cle0 = new ControlLoopElement();
 

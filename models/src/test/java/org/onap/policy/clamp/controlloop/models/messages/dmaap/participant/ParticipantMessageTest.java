@@ -27,14 +27,14 @@ import static org.junit.Assert.assertTrue;
 
 import java.time.Instant;
 import java.util.UUID;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
-public class ParticipantMessageTest {
+class ParticipantMessageTest {
     private ParticipantMessage message;
 
     @Test
-    public void testCopyConstructor() {
+    void testCopyConstructor() {
         assertThatThrownBy(() -> new ParticipantMessage((ParticipantMessage) null))
                 .isInstanceOf(NullPointerException.class);
 
@@ -54,7 +54,7 @@ public class ParticipantMessageTest {
     }
 
     @Test
-    public void testAppliesTo_NullParticipantId() {
+    void testAppliesTo_NullParticipantId() {
         message = makeMessage();
 
         assertThatThrownBy(() -> message.appliesTo(null, null)).isInstanceOf(NullPointerException.class);
@@ -65,7 +65,7 @@ public class ParticipantMessageTest {
     }
 
     @Test
-    public void testAppliesTo_ParticipantIdMatches() {
+    void testAppliesTo_ParticipantIdMatches() {
         message = makeMessage();
 
         // ParticipantId matches
@@ -78,7 +78,7 @@ public class ParticipantMessageTest {
     }
 
     @Test
-    public void testAppliesTo_ParticipantIdNoMatch() {
+    void testAppliesTo_ParticipantIdNoMatch() {
         message = makeMessage();
 
         // ParticipantId does not match
