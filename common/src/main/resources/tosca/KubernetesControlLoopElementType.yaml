@@ -24,26 +24,26 @@ data_types:
       chartId:
         type:  onap.datatypes.ToscaConceptIdentifier
         typeVersion: 1.0.0
-        description: The name and version of the chart
         required: true
+        description: The name and version of the chart
       releaseName:
         type: string
-        description: The name of the release of the chart
         required: true
+        description: The name of the release of the chart
       repository:
         type: string
-        description: The name of the repository where the chart is stored
         required: false
+        description: The name of the repository where the chart is stored
       namespace:
         type: string
-        description: The name space of the chart
         required: true
+        description: The name space of the chart
       overrideParams:
         type: map
-        description: A map of override settings for parameters in the chart
         required: false
         entry_schema:
           type: string
+        description: A map of override settings for parameters in the chart
 node_types:
   org.onap.policy.clamp.controlloop.KubernetesControlLoopElement:
     version: 1.0.1
@@ -52,25 +52,25 @@ node_types:
       chart:
         type: org.onap.datatypes.policy.clamp.controlloop.kubernetesControlLoopElement.Chart
         typeVersion: 1.0.0
-        description: The helm chart for the microservice
         required: true
+        description: The helm chart for the microservice
       configs:
         type: list
-        description: The configurations for the microservice
         required: false
         entry_schema:
           type: string
+        description: The configurations for the microservice
       requirements:
         type: string
-        description: The requirements for the microservice
         required: false
+        description: The requirements for the microservice
       templates:
         type: list
-        description: The templates for the microservice
         required: false
         entry_schema:
           type: string
+        description: The templates for the microservice
       values:
         type: string
+        required: false
         description: The values for the microservice
-        required: true
