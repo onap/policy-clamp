@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e87954ff_3fd48f2b",
+        "filename": "common/src/main/resources/tosca/HttpControlLoopElementType.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-07T19:54:07Z",
+      "side": 1,
+      "message": "trailing space",
+      "range": {
+        "startLine": 72,
+        "startChar": 107,
+        "endLine": 72,
+        "endChar": 108
+      },
+      "revId": "18e5ee6813f076eea4f59015ae23f7102a2a8569",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
