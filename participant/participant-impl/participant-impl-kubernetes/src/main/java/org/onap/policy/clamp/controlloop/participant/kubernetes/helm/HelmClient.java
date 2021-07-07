@@ -19,6 +19,7 @@
 package org.onap.policy.clamp.controlloop.participant.kubernetes.helm;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.invoke.MethodHandles;
@@ -26,6 +27,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import org.apache.commons.io.IOUtils;
 import org.onap.policy.clamp.controlloop.participant.kubernetes.exception.ServiceException;
 import org.onap.policy.clamp.controlloop.participant.kubernetes.models.ChartInfo;
@@ -60,9 +62,10 @@ public class HelmClient {
             logger.warn("Namespace not created", e);
         }
         processBuilder = prepareInstallCommand(chart);
-        logger.info("Installing helm chart {} from the repository {} ", chart.getChartName(), chart.getRepository());
+        logger.info("Installing helm chart {} from the repository {} ", chart.getChartId().getName(),
+            chart.getRepository());
         executeCommand(processBuilder);
-        logger.info("Chart {} installed successfully", chart.getChartName());
+        logger.info("Chart {} installed successfully", chart.getChartId().getName());
     }
 
     /**
@@ -79,9 +82,9 @@ public class HelmClient {
         if (repository != null) {
             return repository;
         }
-        var localHelmChartDir = chartStore.getAppPath(chart.getChartName(), chart.getVersion()).toString();
+        var localHelmChartDir = chartStore.getAppPath(chart.getChartId()).toString();
         logger.info("Chart not found in helm repositories, verifying local repo {} ", localHelmChartDir);
-        if (verifyLocalHelmRepo(localHelmChartDir + "/" + chart.getChartName())) {
+        if (verifyLocalHelmRepo(new File(localHelmChartDir + "/" + chart.getChartId().getName()))) {
             repository = localHelmChartDir;
         }
 
@@ -96,15 +99,15 @@ public class HelmClient {
      * @throws ServiceException incase of error
      */
     public String verifyConfiguredRepo(ChartInfo chart) throws IOException, ServiceException {
-        logger.info("Looking for helm chart {} in all the configured helm repositories", chart.getChartName());
+        logger.info("Looking for helm chart {} in all the configured helm repositories", chart.getChartId().getName());
         String repository = null;
-        var builder = helmRepoVerifyCommand(chart.getChartName());
+        var builder = helmRepoVerifyCommand(chart.getChartId().getName());
         String output = executeCommand(builder);
         try (var reader = new BufferedReader(new InputStreamReader(IOUtils.toInputStream(output,
-                StandardCharsets.UTF_8)))) {
+            StandardCharsets.UTF_8)))) {
             String line = reader.readLine();
             while (line != null) {
-                if (line.contains(chart.getChartName())) {
+                if (line.contains(chart.getChartId().getName())) {
                     repository = line.split("/")[0];
                     logger.info("Helm chart located in the repository {} ", repository);
                     return repository;
@@ -125,6 +128,7 @@ public class HelmClient {
         executeCommand(prepareUnInstallCommand(chart));
     }
 
+
     /**
      * Execute helm cli bash commands .
      * @param processBuilder processbuilder
@@ -141,7 +145,9 @@ public class HelmClient {
 
             if (exitValue != 0) {
                 var error = IOUtils.toString(process.getErrorStream(), StandardCharsets.UTF_8);
-                throw new ServiceException("Command execution failed: " + commandStr + " " + error);
+                if (! error.isEmpty()) {
+                    throw new ServiceException("Command execution failed: " + commandStr + " " + error);
+                }
             }
 
             var output = IOUtils.toString(process.getInputStream(), StandardCharsets.UTF_8);
@@ -151,7 +157,7 @@ public class HelmClient {
         } catch (InterruptedException ie) {
             Thread.currentThread().interrupt();
             throw new ServiceException("Failed to execute the Command: " + commandStr + ", the command was interrupted",
-                    ie);
+                ie);
         } catch (Exception exc) {
             throw new ServiceException("Failed to execute the Command: " + commandStr, exc);
         }
@@ -161,27 +167,34 @@ public class HelmClient {
 
         // @formatter:off
         List<String> helmArguments = new ArrayList<>(
-                Arrays.asList(
-                        "helm",
-                        "install", chart.getReleaseName(), chart.getRepository() + "/" + chart.getChartName(),
-                        "--version", chart.getVersion(),
-                        "--namespace", chart.getNamespace()
-                )
+            List.of(
+                "helm",
+                "install", chart.getReleaseName(), chart.getRepository() + "/" + chart.getChartId().getName(),
+                "--version", chart.getChartId().getVersion(),
+                "--namespace", chart.getNamespace()
+            )
         );
         // @formatter:on
 
-        // Verify if values.yaml available for the chart
-        var overrideFile = chartStore.getOverrideFile(chart).getPath();
-        if (verifyLocalHelmRepo(overrideFile)) {
-            logger.info("Override yaml file available for the helm chart");
-            helmArguments.addAll(Arrays.asList("--values", overrideFile));
+        // Verify if values.yaml/override parameters available for the chart
+        var localOverrideYaml = chartStore.getOverrideFile(chart);
+
+        if (verifyLocalHelmRepo(localOverrideYaml)) {
+            logger.info("Override yaml available for the helm chart");
+            helmArguments.addAll(List.of("--values", localOverrideYaml.getPath()));
         }
 
+        if (chart.getOverrideParams() != null) {
+            for (Map.Entry<String, String> entry : chart.getOverrideParams().entrySet()) {
+                helmArguments.addAll(List.of("--set", entry.getKey() + "=" + entry.getValue()));
+            }
+        }
         return new ProcessBuilder().command(helmArguments);
     }
 
     private ProcessBuilder prepareUnInstallCommand(ChartInfo chart) {
-        return new ProcessBuilder("helm", "delete", chart.getReleaseName(), "--namespace", chart.getNamespace());
+        return new ProcessBuilder("helm", "delete", chart.getReleaseName(), "--namespace",
+            chart.getNamespace());
     }
 
     private ProcessBuilder prepareCreateNamespaceCommand(String namespace) {
@@ -189,12 +202,9 @@ public class HelmClient {
     }
 
     private ProcessBuilder helmRepoVerifyCommand(String chartName) {
-        return new ProcessBuilder().command("bash", "-c", "helm search repo | grep " + chartName);
+        return new ProcessBuilder().command("sh", "-c", "helm search repo | grep " + chartName);
     }
 
-    private ProcessBuilder localRepoVerifyCommand(String localFile) {
-        return new ProcessBuilder().command("bash", "-c", "ls " + localFile);
-    }
 
     private void updateHelmRepo() throws ServiceException {
         logger.info("Updating local helm repositories before verifying the chart");
@@ -202,16 +212,8 @@ public class HelmClient {
         logger.debug("Helm repositories updated successfully");
     }
 
-    private boolean verifyLocalHelmRepo(String localFile) {
-        var isVerified = false;
-        var processBuilder = localRepoVerifyCommand(localFile);
-        try {
-            executeCommand(processBuilder);
-            isVerified = true;
-        } catch (ServiceException e) {
-            logger.error("Unable to verify file in local repository", e);
-        }
-        return isVerified;
+    private boolean verifyLocalHelmRepo(File localFile) {
+        return localFile.exists();
     }
 
     protected static String toString(ProcessBuilder processBuilder) {
