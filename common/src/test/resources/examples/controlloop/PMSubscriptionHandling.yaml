@@ -309,24 +309,24 @@ node_types:
     properties:
       provider:
         type: string
-        requred: false
+        required: false
   org.onap.policy.clamp.controlloop.ControlLoopElement:
     version: 1.0.1
     derived_from: tosca.nodetypes.Root
     properties:
       provider:
         type: string
-        requred: false
+        required: false
       participant_id:
         type: onap.datatypes.ToscaConceptIdentifier
-        requred: true
+        required: true
   org.onap.policy.clamp.controlloop.ControlLoop:
     version: 1.0.1
     derived_from: tosca.nodetypes.Root
     properties:
       provider:
         type: string
-        requred: false
+        required: false
       elements:
         type: list
         required: true
@@ -338,10 +338,10 @@ node_types:
     properties:
       dcae_blueprint_id:
         type: onap.datatypes.ToscaConceptIdentifier
-        requred: false
+        required: false
       dcae_blueprint:
         type: onap.dcae.cloudify_blueprint
-        requred: false
+        required: false
       consul_info:
         type: list
         required: false
@@ -353,17 +353,17 @@ node_types:
     properties:
       policy_type_id:
         type: onap.datatypes.ToscaConceptIdentifier
-        requred: true
+        required: true
       policy_id:
         type: onap.datatypes.ToscaConceptIdentifier
-        requred: false
+        required: false
   org.onap.policy.clamp.controlloop.CDSControlLoopElement:
     version: 1.0.1
     derived_from: org.onap.policy.clamp.controlloop.ControlLoopElement
     properties:
       cds_blueprint_id:
         type: onap.datatypes.ToscaConceptIdentifier
-        requred: true
+        required: true
 topology_template:
   inputs:
     pmsh_monitoring_policy:

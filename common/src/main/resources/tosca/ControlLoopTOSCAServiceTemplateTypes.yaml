@@ -34,20 +34,62 @@ node_types:
       provider:
         type: string
         required: false
+        metadata:
+            common: true
         description: Specifies the organization that provides the control loop element
-      participant_type:
+      participantType:
         type: onap.datatypes.ToscaConceptIdentifier
         required: true
+        metadata:
+            common: true
         description: The identity of the participant type that hosts this type of Control Loop Element
-      start_phase:
+      startPhase:
         type: integer
         required: false
         constraints:
         - greater-or-equal: 0
+        metadata:
+            common: true
         description: A value indicating the start phase in which this control loop element will be started, the
                      first start phase is zero. Control Loop Elements are started in their start_phase order and stopped
                      in reverse start phase order. Control Loop Elements with the same start phase are started and
                      stopped simultaneously
+      uninitializedToPassiveTimeout:
+        type: integer
+        required: false
+        constraints:
+        - greater-or-equal: 0
+        default: 60
+        metadata:
+            common: true
+        description: The maximum time in seconds to wait for a state chage from uninitialized to passive
+      passiveToRunningTimeout:
+        type: integer
+        required: false
+        constraints:
+        - greater-or-equal: 0
+        default: 60
+        metadata:
+            common: true
+        description: The maximum time in seconds to wait for a state chage from passive to running
+      runningToPassiveTimeout:
+        type: integer
+        required: false
+        constraints:
+        - greater-or-equal: 0
+        default: 60
+        metadata:
+            common: true
+        description: The maximum time in seconds to wait for a state chage from running to passive
+      passiveToUninitializedTimeout:
+        type: integer
+        required: false
+        constraints:
+        - greater-or-equal: 0
+        default: 60
+        metadata:
+            common: true
+        description: The maximum time in seconds to wait for a state chage from passive to uninitialized
   org.onap.policy.clamp.controlloop.ControlLoop:
     version: 1.0.1
     derived_from: tosca.nodetypes.Root
@@ -55,11 +97,15 @@ node_types:
       provider:
         type: string
         required: false
+        metadata:
+            common: true
         description: Specifies the organization that provides the control loop element
       elements:
         type: list
         required: true
-        description: Specifies a list of control loop element definitions that make up this control loop definition
+        metadata:
+            common: true
         entry_schema:
           type: onap.datatypes.ToscaConceptIdentifier
+        description: Specifies a list of control loop element definitions that make up this control loop definition
 
