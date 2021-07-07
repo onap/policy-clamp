@@ -120,6 +120,24 @@
     },
     {
       "key": {
+        "uuid": "f5602189_93b23479",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ParticipantUpdate.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-07T14:53:36Z",
+      "side": 1,
+      "message": "if controlLoopElementDefinitionMap is contained within participantDefinitionUpdateMap, then could eliminate controlLoopElementDefinitionMap and simply store a field containing the ToscaConceptIdentifier by which it can be found in participantDefinitionUpdateMap",
+      "parentUuid": "d6cf9169_8a58e665",
+      "revId": "4f1094f8e9070b36af8f9d172c3398e256609234",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "af1237e3_e0850638",
         "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ParticipantUpdate.java",
         "patchSetId": 1
