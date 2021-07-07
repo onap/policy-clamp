@@ -46,6 +46,7 @@ import org.onap.policy.clamp.controlloop.participant.kubernetes.parameters.Parti
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.util.FileSystemUtils;
 
@@ -88,7 +89,7 @@ class ChartStoreTest {
     void test_getHelmChartFile() {
         File file = chartStore.getHelmChartFile(charts.get(0));
         assertNotNull(file);
-        assertThat(file.getPath()).endsWith(charts.get(0).getChartName());
+        assertThat(file.getPath()).endsWith(charts.get(0).getChartId().getName());
     }
 
     @Test
@@ -103,10 +104,10 @@ class ChartStoreTest {
         MockMultipartFile mockChartFile = new MockMultipartFile("chart", "dummy".getBytes());
         MockMultipartFile mockOverrideFile = new MockMultipartFile("override", "dummy".getBytes());
         ChartInfo testChart = charts.get(0);
-        testChart.setChartName("testChart");
+        testChart.setChartId(new ToscaConceptIdentifier("testChart", "1.0.0"));
         ChartInfo result = chartStore.saveChart(charts.get(0), mockChartFile, mockOverrideFile);
 
-        assertThat(result.getChartName()).isEqualTo("testChart");
+        assertThat(result.getChartId().getName()).isEqualTo("testChart");
         assertThat(chartStore.getLocalChartMap()).hasSize(1);
 
         assertThatThrownBy(() -> chartStore.saveChart(charts.get(0), mockChartFile, mockOverrideFile))
@@ -116,11 +117,12 @@ class ChartStoreTest {
 
     @Test
     void test_getChart() {
-        assertNull(chartStore.getChart(charts.get(0).getChartName(), charts.get(0).getVersion()));
-        chartStore.getLocalChartMap().put(charts.get(0).getChartName() + "_" + charts.get(0).getVersion(),
-            charts.get(0));
-        ChartInfo chart = chartStore.getChart(charts.get(0).getChartName(), charts.get(0).getVersion());
-        assertThat(chart.getChartName()).isEqualTo(charts.get(0).getChartName());
+        assertNull(chartStore.getChart(charts.get(0).getChartId().getName(), charts.get(0).getChartId().getVersion()));
+        chartStore.getLocalChartMap().put(charts.get(0).getChartId().getName() + "_" + charts.get(0).getChartId()
+                .getVersion(), charts.get(0));
+        ChartInfo chart = chartStore.getChart(charts.get(0).getChartId().getName(),
+            charts.get(0).getChartId().getVersion());
+        assertThat(chart.getChartId().getName()).isEqualTo(charts.get(0).getChartId().getName());
     }
 
     @Test
@@ -129,7 +131,8 @@ class ChartStoreTest {
         assertThat(chartStore.getAllCharts()).isEmpty();
 
         for (ChartInfo chart : charts) {
-            chartStore.getLocalChartMap().put(chart.getChartName() + "_" + chart.getVersion(), chart);
+            chartStore.getLocalChartMap().put(chart.getChartId().getName() + "_" + chart.getChartId().getVersion(),
+                chart);
         }
         List<ChartInfo> retrievedChartList = chartStore.getAllCharts();
         assertThat(retrievedChartList).isNotEmpty();
@@ -138,8 +141,8 @@ class ChartStoreTest {
 
     @Test
     void test_deleteChart() {
-        chartStore.getLocalChartMap().put(charts.get(0).getChartName() + "_" + charts.get(0).getVersion(),
-            charts.get(0));
+        chartStore.getLocalChartMap().put(charts.get(0).getChartId().getName() + "_" + charts.get(0).getChartId()
+                .getVersion(), charts.get(0));
         assertThat(chartStore.getLocalChartMap()).hasSize(1);
         chartStore.deleteChart(charts.get(0));
         assertThat(chartStore.getLocalChartMap()).isEmpty();
@@ -147,9 +150,9 @@ class ChartStoreTest {
 
     @Test
     void test_getAppPath() {
-        Path path = chartStore.getAppPath(charts.get(0).getChartName(), charts.get(0).getVersion());
+        Path path = chartStore.getAppPath(charts.get(0).getChartId());
         assertNotNull(path);
-        assertThat(path.toString()).endsWith(charts.get(0).getVersion());
+        assertThat(path.toString()).endsWith(charts.get(0).getChartId().getVersion());
         assertThat(path.toString()).startsWith("target");
     }
 
@@ -158,13 +161,14 @@ class ChartStoreTest {
         MockMultipartFile mockChartFile = new MockMultipartFile("HelmChartFile", "dummyData".getBytes());
         MockMultipartFile mockOverrideFile = new MockMultipartFile("overrideFile.yaml", "dummyData".getBytes());
         ChartInfo testChart = charts.get(0);
-        testChart.setChartName("dummyChart");
+        testChart.setChartId(new ToscaConceptIdentifier("dummyChart", "1.0.0"));
 
         //Creating a dummy chart in local dir.
         chartStore.saveChart(charts.get(0), mockChartFile, mockOverrideFile);
 
         //Instantiating a new chartStore object with pre available chart in local.
         ChartStore chartStore2 = new ChartStore(parameters);
-        assertThat(chartStore2.getLocalChartMap()).hasSize(1).containsKey("dummyChart_" + charts.get(0).getVersion());
+        assertThat(chartStore2.getLocalChartMap()).hasSize(1).containsKey("dummyChart_" + charts.get(0).getChartId()
+            .getVersion());
     }
 }

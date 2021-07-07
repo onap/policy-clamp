@@ -93,7 +93,7 @@ class ChartControllerTest {
     @BeforeEach
     void mockServiceClass() {
         when(chartService.getAllCharts()).thenReturn(charts);
-        when(chartService.getChart(charts.get(0).getChartName(), charts.get(0).getVersion()))
+        when(chartService.getChart(charts.get(0).getChartId().getName(), charts.get(0).getChartId().getVersion()))
             .thenReturn(charts.get(0));
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.context).build();
@@ -110,7 +110,7 @@ class ChartControllerTest {
 
         mockMvc.perform(requestBuilder).andExpect(status().isOk())
             .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.charts.[0].chartName", is("HelloWorld")));
+            .andExpect(jsonPath("$.charts.[0].chartId.name", is("HelloWorld")));
     }
 
     /**
@@ -125,7 +125,7 @@ class ChartControllerTest {
         doNothing().when(chartService).installChart(charts.get(0));
 
         requestBuilder = MockMvcRequestBuilders.post(INSTALL_CHART_URL).accept(MediaType.APPLICATION_JSON_VALUE)
-            .content(getInstallationJson(charts.get(0).getChartName(), charts.get(0).getVersion()))
+            .content(getInstallationJson(charts.get(0).getChartId().getName(), charts.get(0).getChartId().getVersion()))
             .contentType(MediaType.APPLICATION_JSON_VALUE);
 
         mockMvc.perform(requestBuilder).andExpect(status().isCreated());
@@ -149,9 +149,9 @@ class ChartControllerTest {
         //Mocking successful scenario for void uninstall method
         doNothing().when(chartService).uninstallChart(charts.get(0));
 
-        requestBuilder = MockMvcRequestBuilders.delete(UNINSTALL_CHART_URL + charts.get(0).getChartName()
-            + "/" + charts.get(0).getVersion()).accept(MediaType.APPLICATION_JSON_VALUE)
-            .contentType(MediaType.APPLICATION_JSON_VALUE);
+        requestBuilder = MockMvcRequestBuilders.delete(UNINSTALL_CHART_URL + charts.get(0)
+            .getChartId().getName() + "/" + charts.get(0).getChartId().getVersion())
+            .accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE);
 
         mockMvc.perform(requestBuilder).andExpect(status().isNoContent());
 
@@ -196,8 +196,9 @@ class ChartControllerTest {
         //Mocking successful scenario for void uninstall method
         doNothing().when(chartService).deleteChart(charts.get(0));
 
-        requestBuilder = MockMvcRequestBuilders.delete(DEFAULT_CHART_URL + "/" + charts.get(0).getChartName()
-            + "/" + charts.get(0).getVersion()).accept(MediaType.APPLICATION_JSON_VALUE)
+        requestBuilder = MockMvcRequestBuilders.delete(DEFAULT_CHART_URL + "/" + charts.get(0)
+            .getChartId().getName() + "/" + charts.get(0).getChartId().getVersion())
+            .accept(MediaType.APPLICATION_JSON_VALUE)
             .contentType(MediaType.APPLICATION_JSON_VALUE);
 
         mockMvc.perform(requestBuilder).andExpect(status().isNoContent());
@@ -219,8 +220,8 @@ class ChartControllerTest {
 
     private String getChartInfoJson() {
         JSONObject jsonObj = new JSONObject();
-        jsonObj.put("chartName", charts.get(0).getChartName());
-        jsonObj.put("version", charts.get(0).getVersion());
+        jsonObj.put("chartName", charts.get(0).getChartId().getName());
+        jsonObj.put("version", charts.get(0).getChartId().getVersion());
         jsonObj.put("namespace", charts.get(0).getNamespace());
         jsonObj.put("repository", charts.get(0).getRepository());
         jsonObj.put("releaseName", charts.get(0).getReleaseName());

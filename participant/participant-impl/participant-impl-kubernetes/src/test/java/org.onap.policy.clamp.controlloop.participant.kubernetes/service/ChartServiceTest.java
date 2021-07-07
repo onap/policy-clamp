@@ -88,8 +88,8 @@ class ChartServiceTest {
         assertNull(chartService.getChart("dummyName", "dummyversion"));
 
         doReturn(charts.get(0)).when(chartStore).getChart(any(), any());
-        ChartInfo chart = chartService.getChart(charts.get(0).getChartName(),
-            charts.get(0).getVersion());
+        ChartInfo chart = chartService.getChart(charts.get(0).getChartId().getName(),
+            charts.get(0).getChartId().getVersion());
         assertNotNull(chart);
         assertThat(chart.getNamespace()).isEqualTo(charts.get(0).getNamespace());
     }
@@ -107,7 +107,7 @@ class ChartServiceTest {
 
         ChartInfo chart = chartService.saveChart(charts.get(0), mockChartFile, mockOverrideFile);
         assertNotNull(chart);
-        assertThat(chart.getChartName()).isEqualTo(charts.get(0).getChartName());
+        assertThat(chart.getChartId().getName()).isEqualTo(charts.get(0).getChartId().getName());
 
     }
 

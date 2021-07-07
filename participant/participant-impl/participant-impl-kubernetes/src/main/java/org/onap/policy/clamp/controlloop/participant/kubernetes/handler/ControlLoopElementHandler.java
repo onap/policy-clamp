@@ -26,6 +26,7 @@ import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,8 +36,12 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ControlLoopElementListener;
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.controlloop.participant.kubernetes.exception.ServiceException;
+import org.onap.policy.clamp.controlloop.participant.kubernetes.helm.PodStatusValidator;
 import org.onap.policy.clamp.controlloop.participant.kubernetes.models.ChartInfo;
 import org.onap.policy.clamp.controlloop.participant.kubernetes.service.ChartService;
+import org.onap.policy.common.utils.coder.Coder;
+import org.onap.policy.common.utils.coder.CoderException;
+import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
@@ -45,12 +50,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+
 /**
  * This class handles implementation of controlLoopElement updates.
  */
 @Component
 public class ControlLoopElementHandler implements ControlLoopElementListener {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
+    // Map of helm installation and the status of corresponding pods
+    @Getter
+    private static Map<String, Map<String, String>> podStatusMap = new ConcurrentHashMap<>();
+    private static final Coder CODER = new StandardCoder();
 
     @Autowired
     private ChartService chartService;
@@ -62,6 +73,12 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
     @Getter(AccessLevel.PACKAGE)
     private final Map<UUID, ChartInfo> chartMap = new HashMap<>();
 
+    // Default thread config values
+    private static class ThreadConfig {
+        private int uninitializedToPassiveTimeout = 60;
+        private int podStatusCheckInterval = 30;
+    }
+
     /**
      * Callback method to handle a control loop element state change.
      *
@@ -71,7 +88,7 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
      */
     @Override
     public synchronized void controlLoopElementStateChange(UUID controlLoopElementId, ControlLoopState currentState,
-            ControlLoopOrderedState newState) {
+                                                           ControlLoopOrderedState newState) {
         switch (newState) {
             case UNINITIALISED:
                 ChartInfo chart = chartMap.get(controlLoopElementId);
@@ -80,7 +97,9 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
                     try {
                         chartService.uninstallChart(chart);
                         intermediaryApi.updateControlLoopElementState(controlLoopElementId, newState,
-                                ControlLoopState.UNINITIALISED);
+                            ControlLoopState.UNINITIALISED);
+                        chartMap.remove(controlLoopElementId);
+                        podStatusMap.remove(chart.getReleaseName());
                     } catch (ServiceException se) {
                         LOGGER.warn("deletion of Helm deployment failed", se);
                     }
@@ -108,34 +127,47 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
      */
     @Override
     public synchronized void controlLoopElementUpdate(ControlLoopElement element,
-            ToscaServiceTemplate controlLoopDefinition) throws PfModelException {
+                                                      ToscaServiceTemplate controlLoopDefinition)
+        throws PfModelException {
 
         for (Map.Entry<String, ToscaNodeTemplate> nodeTemplate : controlLoopDefinition.getToscaTopologyTemplate()
-                .getNodeTemplates().entrySet()) {
+            .getNodeTemplates().entrySet()) {
 
             // Fetching the node template of corresponding CL element
             if (element.getDefinition().getName().equals(nodeTemplate.getKey())
-                    && nodeTemplate.getValue().getProperties().containsKey("chart")) {
+                && nodeTemplate.getValue().getProperties().containsKey("chart")) {
                 @SuppressWarnings("unchecked")
                 Map<String, Object> chartData =
-                        (Map<String, Object>) nodeTemplate.getValue().getProperties().get("chart");
+                    (Map<String, Object>) nodeTemplate.getValue().getProperties().get("chart");
 
                 LOGGER.info("Installation request received for the Helm Chart {} ", chartData);
-                var chart = new ChartInfo(String.valueOf(chartData.get("release_name")),
-                        String.valueOf(chartData.get("chart_name")), String.valueOf(chartData.get("version")),
-                        String.valueOf(chartData.get("namespace")));
                 try {
+                    var chartInfo =  CODER.decode(String.valueOf(chartData), ChartInfo.class);
                     var repositoryValue = chartData.get("repository");
                     if (repositoryValue != null) {
-                        chart.setRepository(String.valueOf(repositoryValue));
+                        chartInfo.setRepository(repositoryValue.toString());
                     }
-                    chartService.installChart(chart);
-                    chartMap.put(element.getId(), chart);
-                } catch (IOException | ServiceException ise) {
-                    LOGGER.warn("installation of Helm chart failed", ise);
+                    chartService.installChart(chartInfo);
+                    chartMap.put(element.getId(), chartInfo);
+
+                    var config = CODER.convert(nodeTemplate.getValue().getProperties(), ThreadConfig.class);
+                    checkPodStatus(chartInfo, config.uninitializedToPassiveTimeout, config.podStatusCheckInterval);
+
+                } catch (ServiceException | CoderException | IOException e) {
+                    LOGGER.warn("Installation of Helm chart failed", e);
                 }
             }
         }
+    }
+
+    /**
+     * Invoke a new thread to check the status of deployed pods.
+     * @param chart ChartInfo
+     */
+    public void checkPodStatus(ChartInfo chart, int timeout, int podStatusCheckInterval) {
+        // Invoke runnable thread to check pod status
+        var runnableThread = new Thread(new PodStatusValidator(chart, timeout, podStatusCheckInterval));
+        runnableThread.start();
     }
 
     /**
