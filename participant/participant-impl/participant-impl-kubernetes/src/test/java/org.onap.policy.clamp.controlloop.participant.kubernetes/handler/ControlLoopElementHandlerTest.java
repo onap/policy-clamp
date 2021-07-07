@@ -22,6 +22,7 @@ package org.onap.policy.clamp.controlloop.participant.kubernetes.handler;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 
@@ -35,6 +36,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
@@ -64,6 +66,7 @@ class ControlLoopElementHandlerTest {
 
 
     @InjectMocks
+    @Spy
     private ControlLoopElementHandler controlLoopElementHandler = new ControlLoopElementHandler();
 
     @Mock
@@ -107,7 +110,7 @@ class ControlLoopElementHandlerTest {
 
     @Test
     void test_ControlLoopElementUpdate() throws PfModelException, IOException, ServiceException {
-
+        doNothing().when(controlLoopElementHandler).checkPodStatus(any());
         UUID elementId1 = UUID.randomUUID();
         ControlLoopElement element = new ControlLoopElement();
         element.setId(elementId1);
