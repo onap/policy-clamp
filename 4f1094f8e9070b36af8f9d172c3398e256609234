@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "755cf7b8_5b37f98f",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoopElementDefinition.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-07-07T10:29:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "23c89398_17926a53",
+      "range": {
+        "startLine": 60,
+        "startChar": 91,
+        "endLine": 60,
+        "endChar": 102
+      },
+      "revId": "4f1094f8e9070b36af8f9d172c3398e256609234",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "63d978e8_444c4dd2",
         "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ParticipantUpdate.java",
         "patchSetId": 1
@@ -36,6 +60,24 @@
       "writtenOn": "2021-07-06T13:44:53Z",
       "side": 1,
       "message": "I\u0027m unclear how this relates to participantDefinitionUpdateMap.  Kind of appears that this would be a subset of participantDefinitionUpdateMap",
+      "revId": "4f1094f8e9070b36af8f9d172c3398e256609234",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1e07d3b5_6bdcdeb2",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ParticipantUpdate.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-07-07T10:29:08Z",
+      "side": 1,
+      "message": "https://wiki.onap.org/display/DW/The+CLAMP+Control+Loop+Participant+Protocol\n@Liam: Can you please reply here, if my understanding on the message parameters is different.\n\nparticipantDefinitionUpdateMap is a map that contains entries for each participant, where ParticipantID as key, and its controlLoopElementDefinitionMap as value, as each participant can hold data about multiple controlLoopElements.",
+      "parentUuid": "63d978e8_444c4dd2",
       "revId": "4f1094f8e9070b36af8f9d172c3398e256609234",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
@@ -59,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "c4e753be_e33e8da0",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ParticipantUpdate.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-07-07T10:29:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "af1237e3_e0850638",
+      "revId": "4f1094f8e9070b36af8f9d172c3398e256609234",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9ce4200b_b9f70a9c",
         "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ParticipantUpdate.java",
         "patchSetId": 1
@@ -79,6 +139,30 @@
       "revId": "4f1094f8e9070b36af8f9d172c3398e256609234",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e454bca9_f325af59",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ParticipantUpdate.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-07-07T10:29:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9ce4200b_b9f70a9c",
+      "range": {
+        "startLine": 84,
+        "startChar": 78,
+        "endLine": 84,
+        "endChar": 89
+      },
+      "revId": "4f1094f8e9070b36af8f9d172c3398e256609234",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
