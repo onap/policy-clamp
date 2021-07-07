@@ -10,7 +10,7 @@ participant:
   localChartDirectory: /var/helm-manager/local-charts
   infoFileName: CHART_INFO.json
   intermediaryParameters:
-    reportingTimeInterval: 120000
+    reportingTimeIntervalMs: 120000
     description: Participant Description
     participantId:
       name: K8sParticipant0

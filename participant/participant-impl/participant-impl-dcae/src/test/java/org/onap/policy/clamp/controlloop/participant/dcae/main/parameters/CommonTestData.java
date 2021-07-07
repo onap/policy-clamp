@@ -172,7 +172,7 @@ public class CommonTestData {
         final Map<String, Object> map = new TreeMap<>();
         if (!isEmpty) {
             map.put("name", "Participant parameters");
-            map.put("reportingTimeInterval", TIME_INTERVAL);
+            map.put("reportingTimeIntervalMs", TIME_INTERVAL);
             map.put("description", DESCRIPTION);
             map.put("participantId", getParticipantId());
             map.put("participantType", getParticipantId());

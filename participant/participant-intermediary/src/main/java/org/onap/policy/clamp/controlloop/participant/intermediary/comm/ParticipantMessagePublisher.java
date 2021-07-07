@@ -90,4 +90,14 @@ public class ParticipantMessagePublisher {
         topicSinkClient.send(participantUpdateAck);
         LOGGER.debug("Sent Participant Update Ack message to CLAMP - {}", participantUpdateAck);
     }
+
+    /**
+     * Method to send Participant heartbeat to clamp on demand.
+     *
+     * @param participantStatus the Participant Status
+     */
+    public void sendHeartbeat(final ParticipantStatus participantStatus) {
+        topicSinkClient.send(participantStatus);
+        LOGGER.debug("Sent Participant heartbeat to CLAMP - {}", participantStatus);
+    }
 }
