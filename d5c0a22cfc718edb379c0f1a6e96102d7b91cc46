@@ -160,6 +160,24 @@
       "revId": "d5c0a22cfc718edb379c0f1a6e96102d7b91cc46",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0c57e2c4_90022af9",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-07T14:26:06Z",
+      "side": 1,
+      "message": "I was thinking we\u0027d exclude it in policy-parent, and then explicitly include it in policy-clamp.  Or since the java package names are different, we don\u0027t necessarily need to exclude it at all.  Instead, we could just modify that one new class in policy-common to use the new swagger-models/annotations, while leaving the old policy-endpoints code alone (i.e., using the old annotations).\n\nOr is that the rub?  policy-clamp needs policy-endpoints, but with the new annotations?  If so, we could use both the old AND new annotations in policy-endpoints, but hopefully limit such as mess to that one jar.",
+      "parentUuid": "5c2a7cb4_6fd4d010",
+      "revId": "d5c0a22cfc718edb379c0f1a6e96102d7b91cc46",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
