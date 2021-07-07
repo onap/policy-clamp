@@ -178,6 +178,24 @@
       "revId": "d5c0a22cfc718edb379c0f1a6e96102d7b91cc46",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a02a3ee0_99ac86ab",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-07-07T14:59:23Z",
+      "side": 1,
+      "message": "It\u0027s only the Springboot/Springfox that\u0027s using the new annotations. None of our direct classes are using the new annotations at the moment (the next patch takes out the only usage).",
+      "parentUuid": "0c57e2c4_90022af9",
+      "revId": "d5c0a22cfc718edb379c0f1a6e96102d7b91cc46",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
