@@ -26,14 +26,14 @@ data_types:
         name: consulUrl
         type: string
         typeVersion: 0.0.0
-        description: Consul url for this entry
         required: true
+        description: Consul url for this entry
       consulBody:
         name: consulBody
         type: string
         typeVersion: 0.0.0
-        description: Body of Consul entry
         required: true
+        description: Body of Consul entry
 node_types:
   org.onap.policy.clamp.controlloop.DCAEMicroserviceControlLoopElement:
     version: 1.0.1
@@ -42,8 +42,10 @@ node_types:
       dcaeBlueprint:
         type: string
         required: true
+        description: The DCAE blueprint for the DCAE microservice this control loop element is managing.
       consulInfo:
         type: list
         required: false
         entry_schema:
           type: org.onap.datatypes.policy.clamp.controlloop.DCAEControlLoopElementConsulInfo
+        description: The information to be sent to Consul for the microservice this control loop element is managing.
