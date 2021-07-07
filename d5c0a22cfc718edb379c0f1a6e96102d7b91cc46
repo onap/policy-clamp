@@ -34,6 +34,24 @@
       "revId": "d5c0a22cfc718edb379c0f1a6e96102d7b91cc46",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "da17c512_ad9b7eef",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-07-07T00:49:41Z",
+      "side": 1,
+      "message": "In theory, the springfox-boot-starter library (line 39) pulls transitively versions of older swagger-models versions (1.5.X) so this may not be needed if you are not using policy-endpoints or other base, that pulls the 1.6.x versions pulled in by other libraries ie. policy-endpoints.   I discovered that recently as in the case of drools-apps, the 1.5.x swagger-modesl are picked up transitively into the classpath and were in conflict with 1.6.x swagger libraries from policy-common breaking the telemetry api in honolulu and master.  FYI, as here you may end up in classpath with similar configuration with this library, conflicting with the one pulled in in an older version from line 139.",
+      "parentUuid": "d14fb1a1_dd4022b2",
+      "revId": "d5c0a22cfc718edb379c0f1a6e96102d7b91cc46",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
