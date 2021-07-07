@@ -1,15 +1,21 @@
 {
   "charts" : [
     {
-      "chartName" : "HelloWorld",
-      "version" :   "1.0",
+      "chartId" : {
+        "name" : "HelloWorld",
+        "version" :   "1.0"
+      },
       "namespace" : "onap",
-      "repository" : "chartMuseum"
+      "repository" : "chartMuseum",
+      "releaseName" : "helloworld"
     },
     {
-      "chartName" : "nginx",
-      "version" :   "1.1",
-      "namespace" : "onap"
+      "chartId" : {
+        "name" : "nginx",
+        "version" :   "1.1"
+      },
+      "namespace" : "onap",
+      "releaseName" : "nginxapp"
     }
   ]
 }

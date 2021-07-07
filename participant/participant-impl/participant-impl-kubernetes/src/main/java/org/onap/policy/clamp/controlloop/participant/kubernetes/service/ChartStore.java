@@ -73,8 +73,8 @@ public class ChartStore {
      * @return the chart file.
      */
     public File getHelmChartFile(ChartInfo chart) {
-        var appPath = getAppPath(chart.getChartName(), chart.getVersion());
-        return new File(appPath.toFile(), chart.getChartName());
+        var appPath = getAppPath(chart.getChartId().getName(), chart.getChartId().getVersion());
+        return new File(appPath.toFile(), chart.getChartId().getName());
     }
 
     /**
@@ -84,7 +84,7 @@ public class ChartStore {
      * @return the override yaml file
      */
     public File getOverrideFile(ChartInfo chart) {
-        var appPath = getAppPath(chart.getChartName(), chart.getVersion());
+        var appPath = getAppPath(chart.getChartId().getName(), chart.getChartId().getVersion());
         return new File(appPath.toFile(), "values.yaml");
     }
 
@@ -100,11 +100,11 @@ public class ChartStore {
      * @throws ServiceException incase of error.
      */
     public synchronized ChartInfo saveChart(ChartInfo chartInfo, MultipartFile chartFile, MultipartFile overrideFile)
-            throws IOException, ServiceException {
-        if (localChartMap.containsKey(key(chartInfo.getChartName(), chartInfo.getVersion()))) {
+        throws IOException, ServiceException {
+        if (localChartMap.containsKey(key(chartInfo.getChartId().getName(), chartInfo.getChartId().getVersion()))) {
             throw new ServiceException("Chart already exist");
         }
-        var appPath = getAppPath(chartInfo.getChartName(), chartInfo.getVersion());
+        var appPath = getAppPath(chartInfo.getChartId().getName(), chartInfo.getChartId().getVersion());
         Files.createDirectories(appPath);
 
         chartFile.transferTo(getHelmChartFile(chartInfo));
@@ -143,7 +143,7 @@ public class ChartStore {
      * @param chart chart info
      */
     public synchronized void deleteChart(ChartInfo chart) {
-        var appPath = getAppPath(chart.getChartName(), chart.getVersion());
+        var appPath = getAppPath(chart.getChartId().getName(), chart.getChartId().getVersion());
         try {
             FileSystemUtils.deleteRecursively(appPath);
         } catch (IOException exc) {
@@ -168,12 +168,12 @@ public class ChartStore {
         try (var out = new PrintStream(new FileOutputStream(getFile(chart)))) {
             out.print(STANDARD_CODER.encode(chart));
         } catch (Exception exc) {
-            LOGGER.warn("Could not store chart: {} {}", chart.getChartName(), exc);
+            LOGGER.warn("Could not store chart: {} {}", chart.getChartId(), exc);
         }
     }
 
     private File getFile(ChartInfo chart) {
-        var appPath = getAppPath(chart.getChartName(), chart.getVersion()).toString();
+        var appPath = getAppPath(chart.getChartId().getName(), chart.getChartId().getVersion()).toString();
         return Path.of(appPath, participantK8sParameters.getInfoFileName()).toFile();
     }
 
@@ -188,7 +188,7 @@ public class ChartStore {
     }
 
     private synchronized void restoreFromLocalFileSystem(Path localChartDirectoryPath)
-            throws IOException {
+        throws IOException {
 
         Files.walkFileTree(localChartDirectoryPath, new SimpleFileVisitor<Path>() {
             @Override
@@ -208,11 +208,10 @@ public class ChartStore {
     }
 
     private String key(ChartInfo chart) {
-        return key(chart.getChartName(), chart.getVersion());
+        return key(chart.getChartId().getName(), chart.getChartId().getVersion());
     }
 
     private String key(String chartName, String chartVersion) {
         return chartName + "_" + chartVersion;
     }
-
 }

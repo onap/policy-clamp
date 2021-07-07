@@ -18,10 +18,12 @@
 
 package org.onap.policy.clamp.controlloop.participant.kubernetes.models;
 
+import java.util.HashMap;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.immutables.gson.Gson;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 @Data
 @RequiredArgsConstructor
@@ -32,14 +34,13 @@ public class ChartInfo {
     private String releaseName;
 
     @NonNull
-    private String chartName;
-
-    @NonNull
-    private String version;
+    private ToscaConceptIdentifier chartId;
 
     @NonNull
     private String namespace;
 
     private String repository;
+
+    private HashMap<String, String> overrideParams;
 
 }
