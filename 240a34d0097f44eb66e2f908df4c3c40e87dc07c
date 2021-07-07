@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1c7b3873_df831a07",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-07T11:54:29Z",
+      "side": 1,
+      "message": "these lines are too long",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 78
+      },
+      "revId": "240a34d0097f44eb66e2f908df4c3c40e87dc07c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e9c710ef_ba397a03",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ParticipantUpdate.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-07T11:54:29Z",
+      "side": 1,
+      "message": "I think we still need to make a deep copy here",
+      "range": {
+        "startLine": 80,
+        "startChar": 16,
+        "endLine": 80,
+        "endChar": 40
+      },
+      "revId": "240a34d0097f44eb66e2f908df4c3c40e87dc07c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5d1d6c90_ce348175",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ParticipantUpdate.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-07T11:54:29Z",
+      "side": 1,
+      "message": "I think we still need to make a copy here",
+      "range": {
+        "startLine": 82,
+        "startChar": 71,
+        "endLine": 82,
+        "endChar": 95
+      },
+      "revId": "240a34d0097f44eb66e2f908df4c3c40e87dc07c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
