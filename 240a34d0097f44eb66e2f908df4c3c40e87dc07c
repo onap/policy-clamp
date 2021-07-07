@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "55797ba9_b56d8379",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-07-07T14:26:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1c7b3873_df831a07",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 78
+      },
+      "revId": "240a34d0097f44eb66e2f908df4c3c40e87dc07c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e9c710ef_ba397a03",
         "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ParticipantUpdate.java",
         "patchSetId": 2
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "f17b6472_af40820e",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ParticipantUpdate.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-07-07T14:26:38Z",
+      "side": 1,
+      "message": "mapMap in PfUtils.java is doing a copy of the map, when i used UnaryOperator.identity()\n\npublic static \u003cK, T, R\u003e Map\u003cK, R\u003e mapMap(Map\u003cK, T\u003e source, Function\u003cT, R\u003e mapFunc,\n            Map\u003cK, R\u003e defaultValue) {\n        if (source \u003d\u003d null) {\n            return defaultValue;\n        }\n\n        Map\u003cK, R\u003e map \u003d new LinkedHashMap\u003c\u003e();\n        for (Entry\u003cK, T\u003e ent : source.entrySet()) {\n            map.put(ent.getKey(), mapFunc.apply(ent.getValue()));\n        }\n\n        return map;\n    }\n\nIn a testcase testCopyConstructor in ParticipantUpdateTest, I am able to see that the maps are copied correctly with the usage of UnaryOperator.identity()\nParticipantUpdate other \u003d new ParticipantUpdate(orig);\n\nAm i missing something here? I am using UnaryOperator for the first time.",
+      "parentUuid": "e9c710ef_ba397a03",
+      "range": {
+        "startLine": 80,
+        "startChar": 16,
+        "endLine": 80,
+        "endChar": 40
+      },
+      "revId": "240a34d0097f44eb66e2f908df4c3c40e87dc07c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5d1d6c90_ce348175",
         "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ParticipantUpdate.java",
         "patchSetId": 2
@@ -59,6 +107,30 @@
       "writtenOn": "2021-07-07T11:54:29Z",
       "side": 1,
       "message": "I think we still need to make a copy here",
+      "range": {
+        "startLine": 82,
+        "startChar": 71,
+        "endLine": 82,
+        "endChar": 95
+      },
+      "revId": "240a34d0097f44eb66e2f908df4c3c40e87dc07c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "166e5653_b28aa4b3",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ParticipantUpdate.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-07-07T14:26:38Z",
+      "side": 1,
+      "message": "Same comment as above please",
+      "parentUuid": "5d1d6c90_ce348175",
       "range": {
         "startLine": 82,
         "startChar": 71,
