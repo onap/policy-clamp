@@ -1,0 +1,76 @@
+# ============LICENSE_START=======================================================
+# Copyright (C) 2021 Nordix Foundation.
+# ================================================================================
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# SPDX-License-Identifier: Apache-2.0
+# ============LICENSE_END=========================================================
+tosca_definitions_version: tosca_simple_yaml_1_3
+data_types:
+  org.onap.datatypes.policy.clamp.controlloop.kubernetesControlLoopElement.Chart:
+    version: 1.0.0
+    derived_from: tosca.datatypes.Root
+    properties:
+      chartId:
+        type:  onap.datatypes.ToscaConceptIdentifier
+        typeVersion: 1.0.0
+        description: The name and version of the chart
+        required: true
+      releaseName:
+        type: string
+        description: The name of the release of the chart
+        required: true
+      repository:
+        type: string
+        description: The name of the repository where the chart is stored
+        required: false
+      namespace:
+        type: string
+        description: The name space of the chart
+        required: true
+      overrideParams:
+        type: map
+        description: A map of override settings for parameters in the chart
+        required: false
+        entry_schema:
+          type: string
+node_types:
+  org.onap.policy.clamp.controlloop.KubernetesControlLoopElement:
+    version: 1.0.1
+    derived_from: org.onap.policy.clamp.controlloop.ControlLoopElement
+    properties:
+      chart:
+        type: org.onap.datatypes.policy.clamp.controlloop.kubernetesControlLoopElement.Chart
+        typeVersion: 1.0.0
+        description: The helm chart for the microservice
+        required: true
+      configs:
+        type: list
+        description: The configurations for the microservice
+        required: false
+        entry_schema:
+          type: string
+      requirements:
+        type: string
+        description: The requirements for the microservice
+        required: false
+      templates:
+        type: list
+        description: The templates for the microservice
+        required: false
+        entry_schema:
+          type: string
+      values:
+        type: string
+        description: The values for the microservice
+        required: true
