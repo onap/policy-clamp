@@ -43,6 +43,7 @@ import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.Parti
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantResponseDetails;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantResponseStatus;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStateChange;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStatus;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdate;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdateAck;
 import org.onap.policy.clamp.controlloop.participant.intermediary.comm.MessageSender;
@@ -85,7 +86,8 @@ public class ParticipantHandler implements Closeable {
         this.participantType = parameters.getIntermediaryParameters().getParticipantType();
         this.participantId = parameters.getIntermediaryParameters().getParticipantId();
         this.sender =
-                new MessageSender(this, publisher, parameters.getIntermediaryParameters().getReportingTimeInterval());
+                new MessageSender(this, publisher,
+                        parameters.getIntermediaryParameters().getReportingTimeIntervalMs());
         this.controlLoopHandler = new ControlLoopHandler(parameters.getIntermediaryParameters(), sender);
         this.participantStatistics = new ParticipantStatistics();
     }
@@ -343,5 +345,18 @@ public class ParticipantHandler implements Closeable {
         participantUpdateAck.setResult(true);
 
         sender.sendParticipantUpdateAck(participantUpdateAck);
+    }
+
+    /**
+     * Method to send heartbeat to controlloop runtime.
+     */
+    public ParticipantStatus makeHeartbeat() {
+        ParticipantStatus heartbeat = new ParticipantStatus();
+        heartbeat.setParticipantId(participantId);
+        heartbeat.setParticipantStatistics(participantStatistics);
+        heartbeat.setParticipantType(participantType);
+        heartbeat.setHealthStatus(healthStatus);
+        heartbeat.setMessage("Participant heartbeat message sent from -> " + participantId.getName());
+        return heartbeat;
     }
 }

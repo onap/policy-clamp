@@ -50,7 +50,8 @@ public class ParticipantIntermediaryParameters {
     private ToscaConceptIdentifier participantType;
 
     // The time interval for periodic reporting of status to the CLAMP control loop server
-    private long reportingTimeInterval;
+    @Valid
+    private long reportingTimeIntervalMs;
 
     @NotNull
     @ParameterGroupConstraint

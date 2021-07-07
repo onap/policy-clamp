@@ -68,7 +68,7 @@ public class CommonTestData {
         map.put("participantId", getParticipantId());
         map.put("description", DESCRIPTION);
         map.put("participantType", getParticipantId());
-        map.put("reportingTimeInterval", TIME_INTERVAL);
+        map.put("reportingTimeIntervalMs", TIME_INTERVAL);
         map.put("clampControlLoopTopics", getTopicParametersMap(false));
 
         return map;
