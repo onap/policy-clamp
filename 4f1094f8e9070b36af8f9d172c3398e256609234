@@ -138,6 +138,24 @@
     },
     {
       "key": {
+        "uuid": "173df98c_b427f85b",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ParticipantUpdate.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-07-07T19:20:05Z",
+      "side": 1,
+      "message": "I\u0027ll comment on this tomorrow.....There are two types of parameters now. Common parameters like say a timeout value for a microservice to come up that should have the same values for all microservices of a certain type.Instance specific parameters are parameters that can have different values for each instance of a control loop, such as a threshold percentage to cross.\n\nThe CLAMP GUI will set common parameters when the control loop type is imported (A new dialogue but using the existing CLAMP code).\n\nThe CLAMP GUI already sets instance specific parameters when a control loop instance is created.\n\nLet me think some more on how we should represent those separate concepts when we pass them to participants.",
+      "parentUuid": "f5602189_93b23479",
+      "revId": "4f1094f8e9070b36af8f9d172c3398e256609234",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "af1237e3_e0850638",
         "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ParticipantUpdate.java",
         "patchSetId": 1
