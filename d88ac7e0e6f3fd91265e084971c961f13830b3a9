@@ -1,0 +1,210 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4c57ed54_dff2c3c4",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProvider.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-07T17:35:16Z",
+      "side": 1,
+      "message": "does it still need to implement Closeable?  Will Spring call the close() method?",
+      "range": {
+        "startLine": 51,
+        "startChar": 46,
+        "endLine": 51,
+        "endChar": 55
+      },
+      "revId": "d88ac7e0e6f3fd91265e084971c961f13830b3a9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "975c2ab1_d6e92ddd",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/config/CoderHttpMesageConverter.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-07T17:35:16Z",
+      "side": 1,
+      "message": "need to pass \"e\", so the stack trace isn\u0027t lost\n\nsame comment below",
+      "range": {
+        "startLine": 57,
+        "startChar": 79,
+        "endLine": 57,
+        "endChar": 93
+      },
+      "revId": "d88ac7e0e6f3fd91265e084971c961f13830b3a9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "589e657d_b87fd452",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/config/FilterConfig.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-07T17:35:16Z",
+      "side": 1,
+      "message": "capitalize",
+      "range": {
+        "startLine": 32,
+        "startChar": 7,
+        "endLine": 32,
+        "endChar": 15
+      },
+      "revId": "d88ac7e0e6f3fd91265e084971c961f13830b3a9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cce99486_5dffc692",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/config/SecurityConfig.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-07T17:35:16Z",
+      "side": 1,
+      "message": "sonar: csrf should be enabled by default",
+      "range": {
+        "startLine": 36,
+        "startChar": 37,
+        "endLine": 36,
+        "endChar": 41
+      },
+      "revId": "d88ac7e0e6f3fd91265e084971c961f13830b3a9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fc2dbb41_9a7496f5",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/config/YamlHttpMessageConverter.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-07T17:35:16Z",
+      "side": 1,
+      "message": "try using the YamlCoder instead\n\nin fact, this class and CoderHttpMesageConverter could be combined into a single class, where the media type string (i.e., \"json\" or \"yaml\") and the coder are passed to the constructor",
+      "revId": "d88ac7e0e6f3fd91265e084971c961f13830b3a9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a2b21c99_e6144fc3",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/web/RuntimeErrorController.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-07T17:35:16Z",
+      "side": 1,
+      "message": "sonar: log the exception",
+      "revId": "d88ac7e0e6f3fd91265e084971c961f13830b3a9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dbd55e82_3ac425be",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/web/RuntimeErrorController.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-07T17:35:16Z",
+      "side": 1,
+      "message": "maybe split into two separate append() calls",
+      "revId": "d88ac7e0e6f3fd91265e084971c961f13830b3a9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d6c6709e_d9e16b62",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionHandler.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-07T17:35:16Z",
+      "side": 1,
+      "message": "\"/p\" \u003d\u003e \"p/\"",
+      "range": {
+        "startLine": 129,
+        "startChar": 8,
+        "endLine": 129,
+        "endChar": 10
+      },
+      "revId": "d88ac7e0e6f3fd91265e084971c961f13830b3a9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ba346ba4_2aa450b2",
+        "filename": "runtime-controlloop/src/main/resources/application.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-07T17:35:16Z",
+      "side": 1,
+      "message": "this content seems odd for something under src/main",
+      "revId": "d88ac7e0e6f3fd91265e084971c961f13830b3a9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b5519c95_16647470",
+        "filename": "runtime-controlloop/src/test/java/org/onap/policy/clamp/controlloop/runtime/util/rest/CommonRestController.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-07T17:35:16Z",
+      "side": 1,
+      "message": "change to:\n\n  assertThat(xxx).contains(yyy)",
+      "range": {
+        "startLine": 59,
+        "startChar": 8,
+        "endLine": 59,
+        "endChar": 43
+      },
+      "revId": "d88ac7e0e6f3fd91265e084971c961f13830b3a9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
