@@ -106,6 +106,24 @@
       "revId": "d5c0a22cfc718edb379c0f1a6e96102d7b91cc46",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7146da90_4ff2ca0d",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-07-07T12:58:12Z",
+      "side": 1,
+      "message": "@Jim it should build now that Saul\u0027s review is merged\n@Jorge the springboot is pulling in the 2.1.2 in CLAMP, it\u0027s coming in springfox-boot-starter\n    \u003cgroupId\u003eio.swagger.core.v3\u003c/groupId\u003e\n    \u003cartifactId\u003eswagger-models\u003c/artifactId\u003e\n\nThis looks like a right mess.\n\nThis review fixes our problems in CLAMP for now, could we pull it in and then investigate he Swagger issues in a separate JIRA?",
+      "parentUuid": "ecd703c2_8b69e7a6",
+      "revId": "d5c0a22cfc718edb379c0f1a6e96102d7b91cc46",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
