@@ -33,6 +33,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -49,6 +50,7 @@ import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.util.FileSystemUtils;
 
 
 @ExtendWith(SpringExtension.class)
@@ -74,6 +76,11 @@ class HelmClientTest {
         mockedClient = mockStatic(HelmClient.class);
     }
 
+    @AfterAll
+    public static void close() {
+        mockedClient.close();
+    }
+
     @Test
     void test_installChart() throws IOException {
         mockedClient.when(() -> HelmClient.executeCommand(any()))
@@ -85,21 +92,23 @@ class HelmClientTest {
 
     @Test
     void test_findChartRepository() throws IOException, ServiceException {
+        String tmpPath = "target/tmp/dummyChart/1.0/";
         mockedClient.when(() -> HelmClient.executeCommand(Mockito.any()))
             .thenReturn("nginx-stable/nginx-ingress\t0.9.3\t1.11.3"
                 + " \tNGINX Ingress Controller");
         String configuredRepo = helmClient.findChartRepository(charts.get(1));
-
         assertThat(configuredRepo).isEqualTo("nginx-stable");
 
-        doReturn(Path.of("/target/tmp/dummyChart/1.0")).when(chartStore).getAppPath(charts.get(1).getChartName(),
-            charts.get(1).getVersion());
+        File tmpFile = new File(tmpPath + charts.get(1).getChartId().getName());
+        tmpFile.mkdirs();
+        doReturn(Path.of(tmpPath)).when(chartStore).getAppPath(charts.get(1).getChartId());
 
         doReturn(null).when(helmClient).verifyConfiguredRepo(charts.get(1));
 
         String localRepoName = helmClient.findChartRepository(charts.get(1));
         assertNotNull(localRepoName);
-        assertThat(localRepoName).endsWith(charts.get(0).getVersion());
+        assertThat(localRepoName).endsWith(charts.get(0).getChartId().getVersion());
+        FileSystemUtils.deleteRecursively(Path.of("target/tmp"));
     }
 
     @Test

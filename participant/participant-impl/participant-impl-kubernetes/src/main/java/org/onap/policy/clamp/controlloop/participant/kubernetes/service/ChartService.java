@@ -68,7 +68,7 @@ public class ChartService {
      * @throws ServiceException in case of error
      */
     public ChartInfo saveChart(ChartInfo chartInfo, MultipartFile chartFile, MultipartFile overrideFile)
-            throws IOException, ServiceException {
+        throws IOException, ServiceException {
         return chartStore.saveChart(chartInfo, chartFile, overrideFile);
     }
 
@@ -91,7 +91,7 @@ public class ChartService {
             String repository = findChartRepo(chart);
             if (repository == null) {
                 logger.error("Chart repository could not be found. Skipping chart Installation "
-                        + "for the chart {} ", chart.getChartName());
+                    + "for the chart {} ", chart.getChartId().getName());
                 return;
             } else {
                 chart.setRepository(repository);
@@ -108,7 +108,7 @@ public class ChartService {
      * @throws IOException in case of IO errors
      */
     public String findChartRepo(ChartInfo chart) throws ServiceException, IOException {
-        logger.info("Fetching helm chart repository for the given chart {} ", chart.getChartName());
+        logger.info("Fetching helm chart repository for the given chart {} ", chart.getChartId().getName());
         return helmClient.findChartRepository(chart);
     }
 
@@ -121,5 +121,4 @@ public class ChartService {
         logger.info("Uninstalling helm deployment {}", chart.getReleaseName());
         helmClient.uninstallChart(chart);
     }
-
 }
