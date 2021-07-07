@@ -52,6 +52,24 @@
       "revId": "d5c0a22cfc718edb379c0f1a6e96102d7b91cc46",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b5d638c0_04acd8fa",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-07-07T10:17:11Z",
+      "side": 1,
+      "message": "I dug into this for the last few hours. It seems that Swagger has changed its group name from \"io.swagger\" to \"io.swagger.core.v3\". 1.6.2 is the last version of the \"io.swagger\" group but \"2.1.10\" is the latest version of the \"io.swagger.core.v3\" group.\n\nFor example 1.6.2 See:\nhttps://mvnrepository.com/artifact/io.swagger/swagger-annotations\nand:\n2.1.10 https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-annotations\n\nNow, the Swagger dependencies are used in common and models as well as CLAMP. I will upgrade swagger for all the components in subsequent reviews.\n\nHowever, this issue is blocking us in CLAMP, we can\u0027t get our builds and tests to work without this change so would it be OK to merge this change to bring everything up to 1.6.2 and I\u0027ll upgrade the swagger on everything in later reviews?",
+      "parentUuid": "da17c512_ad9b7eef",
+      "revId": "d5c0a22cfc718edb379c0f1a6e96102d7b91cc46",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
