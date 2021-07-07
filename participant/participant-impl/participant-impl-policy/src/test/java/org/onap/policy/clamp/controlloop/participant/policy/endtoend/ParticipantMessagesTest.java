@@ -30,6 +30,8 @@ import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.Parti
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregisterAck;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantRegister;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantRegisterAck;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantResponseDetails;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStatus;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdate;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdateAck;
 import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ParticipantDeregisterAckListener;
@@ -138,6 +140,22 @@ class ParticipantMessagesTest {
             participantMessagePublisher.sendParticipantUpdateAck(participantUpdateAckMsg);
         }
     }
+
+    @Test
+    void testParticipantStatusHeartbeat() throws Exception {
+        final ParticipantStatus heartbeat = new ParticipantStatus();
+        heartbeat.setMessage("ParticipantStatus message");
+        heartbeat.setResponse(new ParticipantResponseDetails());
+        heartbeat.setParticipantId(getParticipantId());
+
+        synchronized (lockit) {
+            ParticipantMessagePublisher publisher =
+                    new ParticipantMessagePublisher(Collections.singletonList(Mockito.mock(TopicSink.class)));
+            publisher.sendHeartbeat(heartbeat);
+        }
+
+    }
+
 
     private ToscaConceptIdentifier getParticipantId() {
         return new ToscaConceptIdentifier("org.onap.PM_Policy", "1.0.0");
