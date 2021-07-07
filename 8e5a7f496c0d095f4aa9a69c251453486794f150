@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a37b0dd3_11b8c120",
+        "filename": "models/src/test/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ParticipantDeregisterAckTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-07T14:42:15Z",
+      "side": 1,
+      "message": "sonar: when using junit5, remove \"public\" on the class\n\nsame comment in the subsequent files",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 7
+      },
+      "revId": "8e5a7f496c0d095f4aa9a69c251453486794f150",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bd226476_cd08ecfb",
+        "filename": "models/src/test/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ParticipantDeregisterAckTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-07T14:42:15Z",
+      "side": 1,
+      "message": "sonar: when using junit5, remove \"public\" on each test method\n\nsame comment in the subsequent files",
+      "range": {
+        "startLine": 34,
+        "startChar": 4,
+        "endLine": 34,
+        "endChar": 10
+      },
+      "revId": "8e5a7f496c0d095f4aa9a69c251453486794f150",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}

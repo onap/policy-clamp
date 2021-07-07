@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "cd45b53e_1e1fdf50",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ParticipantUpdate.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-07T14:42:15Z",
+      "side": 1,
+      "message": "the identity() method just copies the reference; it doesn\u0027t create a deep copy of the map.  The problem is that the invoker can still modify their copy of the map, which would modify this map, too, because it\u0027s just a copy-by-reference.  So this one is a bit more complicated, as it must make a copy of the outer map AND it must make a copy of each inner map, something like the following:\n\n  PfUtils.mapMap(source.map, innerMap -\u003e PfUtils.mapMap(innerMap, ControlLoopElementDefinition::new))",
+      "parentUuid": "f17b6472_af40820e",
+      "range": {
+        "startLine": 80,
+        "startChar": 16,
+        "endLine": 80,
+        "endChar": 40
+      },
+      "revId": "240a34d0097f44eb66e2f908df4c3c40e87dc07c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5d1d6c90_ce348175",
         "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ParticipantUpdate.java",
         "patchSetId": 2
@@ -131,6 +155,30 @@
       "side": 1,
       "message": "Same comment as above please",
       "parentUuid": "5d1d6c90_ce348175",
+      "range": {
+        "startLine": 82,
+        "startChar": 71,
+        "endLine": 82,
+        "endChar": 95
+      },
+      "revId": "240a34d0097f44eb66e2f908df4c3c40e87dc07c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8707bd9e_35b452cf",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ParticipantUpdate.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-07T14:42:15Z",
+      "side": 1,
+      "message": "It\u0027s the same issue.  In this case, I believe the way it was originally coded will work, as it makes a deep copy of the definition:\n\n  ControlLoopElementDefinition::new",
+      "parentUuid": "166e5653_b28aa4b3",
       "range": {
         "startLine": 82,
         "startChar": 71,
