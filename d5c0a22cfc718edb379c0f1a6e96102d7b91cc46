@@ -88,6 +88,24 @@
       "revId": "d5c0a22cfc718edb379c0f1a6e96102d7b91cc46",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5b2f07a8_a823312e",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-07-07T12:13:15Z",
+      "side": 1,
+      "message": "Liam, the spring-boot-starter in line 139 pulls in the 1.5.20 versions of swagger-common and swagger-annotations (not the 2.1.10 from io.swagger.core.v3), those must be received if you see them from something else, which would be a 3 way conflict, 1.5.20, 1.6.2x, and 2.1.x.   1.5.x and 1.6.2x have incompatibilities which is the problem I was hitting.",
+      "parentUuid": "ecd703c2_8b69e7a6",
+      "revId": "d5c0a22cfc718edb379c0f1a6e96102d7b91cc46",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
