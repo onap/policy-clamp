@@ -98,11 +98,12 @@ topology_template:
           name: org.onap.k8s.controlloop.K8SControlLoopParticipant
           version: 2.3.4
         chart:
-          release_name: helloworld
-          chart_name: hello
-          version: 0.1.0
-          repository: chartMuseum
+          chartId:
+            name: hello
+            version: 0.1.0
+          releaseName: helloworld
           namespace: onap
+          repository: chartMuseum
 
     org.onap.domain.database.PMSH_K8SMicroserviceControlLoopElement:
       # Chart from local file system
@@ -116,10 +117,13 @@ topology_template:
           name: org.onap.k8s.controlloop.K8SControlLoopParticipant
           version: 2.3.4
         chart:
-          release_name: pmshmicroservice
-          chart_name: test
-          version: 1.0.1
+          chartId:
+            name: dcae-pmsh
+            version: 8.0.0
           namespace: onap
+          releaseName: pmshms
+          overrideParams:
+            global.masterPassword: test
 
     org.onap.domain.database.Local_K8SMicroserviceControlLoopElement:
       # Chart installation without passing repository name
@@ -133,9 +137,10 @@ topology_template:
           name: org.onap.k8s.controlloop.K8SControlLoopParticipant
           version: 2.3.4
         chart:
-          release_name: nginxms
-          chart_name: nginx-ingress
-          version: 0.9.1
+          chartId:
+            name: nginx-ingress
+            version: 0.9.1
+          releaseName: nginxms
           namespace: onap
 
     org.onap.domain.sample.GenericK8s_ControlLoopDefinition:
