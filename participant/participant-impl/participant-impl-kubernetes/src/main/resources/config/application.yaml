@@ -1,6 +1,10 @@
 spring:
-  profiles:
-    active: prod
+  security:
+    user:
+      name: healthcheck
+      password: zb!XztG34
+security:
+  enable-csrf: false
 
 participant:
   localChartDirectory: /var/helm-manager/local-charts
