@@ -21,6 +21,13 @@ node_types:
     version: 1.0.1
     derived_from: org.onap.policy.clamp.controlloop.ControlLoopElement
     properties:
-      policyId:
+      policyType:
         type: onap.datatypes.ToscaConceptIdentifier
         required: true
+        description: The policy type of the policy that this control loop element is managing
+      policyId:
+        type: onap.datatypes.ToscaConceptIdentifier
+        required: false
+        description: The policy that this control loop element is managing, if the policy ID is specified, the policy
+                     is either already in the Policy Framework database or is specified in the "policies" part of the
+                     TOSCA service template of the Control Loop definition

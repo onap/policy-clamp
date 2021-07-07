@@ -24,3 +24,4 @@ node_types:
       cdsBlueprint:
         type: string
         required: true
+        description: The CDS blueprint that this control loop element is managing.
