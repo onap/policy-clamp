@@ -149,6 +149,38 @@
                             </build>
                         </image>
                         <image>
+                            <name>onap/kubernetes-participant</name>
+                            <alias>onap-kubernetes-participant</alias>
+                            <build>
+                                <cleanup>try</cleanup>
+                                <dockerFile>KubernetesParticipantDockerfile</dockerFile>
+                                <tags>
+                                    <tag>${project.version}</tag>
+                                    <tag>${project.version}-${maven.build.timestamp}</tag>
+                                    <tag>${project.docker.latest.minmax.tag.version}</tag>
+                                </tags>
+                                <assembly>
+                                    <inline>
+                                        <dependencySets>
+                                            <dependencySet>
+                                                <includes>
+                                                    <include>org.onap.policy.clamp:policy-clamp-tarball</include>
+                                                </includes>
+                                                <outputDirectory>/lib</outputDirectory>
+                                                <outputFileNameMapping>kubernetes-participant.tar.gz</outputFileNameMapping>
+                                            </dependencySet>
+                                            <dependencySet>
+                                                <includes>
+                                                    <include>org.onap.policy.clamp.participant:policy-clamp-participant-impl-kubernetes</include>
+                                                </includes>
+                                                <outputFileNameMapping>app.jar</outputFileNameMapping>
+                                            </dependencySet>
+                                        </dependencySets>
+                                    </inline>
+                                </assembly>
+                            </build>
+                        </image>
+                        <image>
                             <name>onap/dcae-participant</name>
                             <alias>onap-dcae-participant</alias>
                             <build>
@@ -243,6 +275,11 @@
         <dependency>
             <groupId>org.onap.policy.clamp.participant</groupId>
             <artifactId>policy-clamp-participant-impl-dcae</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.onap.policy.clamp.participant</groupId>
+            <artifactId>policy-clamp-participant-impl-kubernetes</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
