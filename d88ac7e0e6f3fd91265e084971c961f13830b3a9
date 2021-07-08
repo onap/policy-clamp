@@ -166,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "355fd70f_8942ff17",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/config/SecurityConfig.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-07-08T12:26:18Z",
+      "side": 1,
+      "message": "I have created a parameter to enable/disable csrf",
+      "parentUuid": "cce99486_5dffc692",
+      "range": {
+        "startLine": 36,
+        "startChar": 37,
+        "endLine": 36,
+        "endChar": 41
+      },
+      "revId": "d88ac7e0e6f3fd91265e084971c961f13830b3a9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fc2dbb41_9a7496f5",
         "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/config/YamlHttpMessageConverter.java",
         "patchSetId": 5
