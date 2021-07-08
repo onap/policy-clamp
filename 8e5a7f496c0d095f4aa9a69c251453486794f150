@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "637090e3_f4b35c7a",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ParticipantUpdate.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-07-08T11:32:59Z",
+      "side": 1,
+      "message": "These fields are subsumed into the ControlLoopElementDefinition class, so you don\u0027t need them as fields here.\n\nsee: https://wiki.onap.org/display/DW/The+CLAMP+Control+Loop+Participant+Protocol",
+      "revId": "8e5a7f496c0d095f4aa9a69c251453486794f150",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a37b0dd3_11b8c120",
         "filename": "models/src/test/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ParticipantDeregisterAckTest.java",
         "patchSetId": 3
