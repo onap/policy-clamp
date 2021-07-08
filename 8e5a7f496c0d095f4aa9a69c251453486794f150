@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "58976653_a5de236b",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ParticipantUpdate.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-07-08T13:18:03Z",
+      "side": 1,
+      "message": "I mean the fields from line 49 to 62",
+      "parentUuid": "637090e3_f4b35c7a",
+      "revId": "8e5a7f496c0d095f4aa9a69c251453486794f150",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a37b0dd3_11b8c120",
         "filename": "models/src/test/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ParticipantDeregisterAckTest.java",
         "patchSetId": 3
