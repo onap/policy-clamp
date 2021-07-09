@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "f6a5f694_a771bead",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProvider.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-07-09T17:17:40Z",
+      "side": 1,
+      "message": "spring invokes this method automatically",
+      "parentUuid": "3842a463_b042ca6e",
+      "revId": "ed4a7be31891480cf6b1e0096f95810a0815d133",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0050108e_59c7f88e",
         "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/config/CoderHttpMesageConverter.java",
         "patchSetId": 8
@@ -39,6 +57,30 @@
       "revId": "ed4a7be31891480cf6b1e0096f95810a0815d133",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c0178b42_560fe4e0",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/config/CoderHttpMesageConverter.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-07-09T17:17:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0050108e_59c7f88e",
+      "range": {
+        "startLine": 67,
+        "startChar": 13,
+        "endLine": 67,
+        "endChar": 32
+      },
+      "revId": "ed4a7be31891480cf6b1e0096f95810a0815d133",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
