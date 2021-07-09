@@ -20,6 +20,11 @@
 
 package org.onap.policy.clamp.controlloop.runtime.commissioning;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
+import com.fasterxml.jackson.module.jsonSchema.factories.SchemaFactoryWrapper;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,10 +41,16 @@ import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.provider.PolicyModelsProviderFactory;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaCapabilityType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaDataType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeType;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaRelationshipType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplates;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTypedEntityFilter;
 import org.springframework.stereotype.Component;
 
@@ -206,5 +217,50 @@ public class CommissioningProvider implements Closeable {
         var serviceTemplates = new ToscaServiceTemplates();
         serviceTemplates.setServiceTemplates(modelsProvider.getServiceTemplateList(name, version));
         return serviceTemplates.getServiceTemplates().get(0);
+    }
+
+    /**
+     * Get the requested json schema.
+     *
+     * @param section section of the tosca service template to get schema for
+     * @return the specified tosca service template or section Json Schema
+     * @throws PfModelException on errors with retrieving the classes
+     * @throws JsonProcessingException on errors generating the schema
+     */
+    public String getToscaServiceTemplateSchema(String section) throws PfModelException, JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
+        SchemaFactoryWrapper visitor = new SchemaFactoryWrapper();
+
+        switch (section) {
+            case "data_types":
+                mapper.acceptJsonFormatVisitor(mapper.constructType(ToscaDataType.class), visitor);
+                break;
+            case "capability_types":
+                mapper.acceptJsonFormatVisitor(mapper.constructType(ToscaCapabilityType.class), visitor);
+                break;
+            case "node_types":
+                mapper.acceptJsonFormatVisitor(mapper.constructType(ToscaNodeType.class), visitor);
+                break;
+            case "relationship_types":
+                mapper.acceptJsonFormatVisitor(mapper.constructType(ToscaRelationshipType.class), visitor);
+                break;
+            case "policy_types":
+                mapper.acceptJsonFormatVisitor(mapper.constructType(ToscaPolicyType.class), visitor);
+                break;
+            case "topology_template":
+                mapper.acceptJsonFormatVisitor(mapper.constructType(ToscaTopologyTemplate.class), visitor);
+                break;
+            case "node_templates":
+                mapper.acceptJsonFormatVisitor(mapper.constructType(ToscaNodeTemplate.class), visitor);
+                break;
+            default:
+                mapper.acceptJsonFormatVisitor(mapper.constructType(ToscaServiceTemplate.class), visitor);
+        }
+
+        JsonSchema jsonSchema = visitor.finalSchema();
+        String response = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonSchema);
+
+        return response;
     }
 }

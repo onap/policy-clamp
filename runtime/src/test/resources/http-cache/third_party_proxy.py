@@ -283,6 +283,21 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
              with open(cached_file_content, 'w+') as f:
                  f.write(jsonGenerated)
          return True
+     elif (self.path.startswith("/onap/controlloop/v2/commission/toscaServiceTemplateSchema")) and http_type == "GET":
+         if not _file_available:
+             cached_file_folder = cached_file_folder.split('bridgeEndpoint')[0]
+             print ("cached file folder for onap is %s: ", cached_file_folder)
+             print "self.path start with /onap/controlloop/v2/commission/, generating response json..."
+             jsonGenerated =  "{\"tosca_definitions_version\": \"tosca_simple_yaml_1_1_0\",\"data_types\": {},\"node_types\": {}, \"policy_types\": {}, \"topology_template\": {}, \"name\": \"ToscaServiceTemplateSimple\", \"version\": \"1.0.0\", \"metadata\": {}}"
+             print "jsonGenerated: " + jsonGenerated
+             if not os.path.exists(cached_file_folder):
+                 os.makedirs(cached_file_folder, 0777)
+
+             with open(cached_file_header, 'w+') as f:
+                 f.write("{\"Content-Length\": \"" + str(len(jsonGenerated)) + "\", \"Content-Type\": \"application/json\"}")
+             with open(cached_file_content, 'w+') as f:
+                 f.write(jsonGenerated)
+         return True
      elif (self.path.startswith("/onap/controlloop/v2/commission")) and http_type == "POST":
          print "self.path start with POST /onap/controlloop/v2/commission, copying body to response ..."
          if not os.path.exists(cached_file_folder):

@@ -20,6 +20,11 @@
 
 package org.onap.policy.clamp.controlloop.runtime.main.rest;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
+import com.fasterxml.jackson.module.jsonSchema.factories.SchemaFactoryWrapper;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
@@ -30,6 +35,7 @@ import io.swagger.annotations.ExtensionProperty;
 import io.swagger.annotations.ResponseHeader;
 import java.util.List;
 import java.util.UUID;
+import javax.ws.rs.core.Response.Status;
 import org.onap.policy.clamp.controlloop.models.messages.rest.commissioning.CommissioningResponse;
 import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningProvider;
 import org.onap.policy.clamp.controlloop.runtime.main.web.AbstractRestController;
@@ -81,39 +87,39 @@ public class CommissioningController extends AbstractRestController {
             consumes = {MediaType.APPLICATION_JSON_VALUE, APPLICATION_YAML},
             produces = {MediaType.APPLICATION_JSON_VALUE, APPLICATION_YAML})
     @ApiOperation(
-            value = "Commissions control loop definitions",
-            notes = "Commissions control loop definitions, returning the commissioned control loop definition IDs",
-            response = CommissioningResponse.class,
-            tags = {"Control Loop Commissioning API"},
-            authorizations = @Authorization(value = AUTHORIZATION_TYPE),
-            responseHeaders = {
-                @ResponseHeader(
-                    name = VERSION_MINOR_NAME,
-                    description = VERSION_MINOR_DESCRIPTION,
-                    response = String.class),
-                @ResponseHeader(
-                    name = VERSION_PATCH_NAME,
-                    description = VERSION_PATCH_DESCRIPTION,
-                    response = String.class),
-                @ResponseHeader(
-                    name = VERSION_LATEST_NAME,
-                    description = VERSION_LATEST_DESCRIPTION,
-                    response = String.class),
-                @ResponseHeader(
-                    name = REQUEST_ID_NAME,
-                    description = REQUEST_ID_HDR_DESCRIPTION,
-                    response = UUID.class)
-            },
-            extensions = {
-                @Extension
-                    (
-                        name = EXTENSION_NAME,
-                        properties = {
-                            @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
-                            @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
-                        }
-                    )
-            }
+        value = "Commissions control loop definitions",
+        notes = "Commissions control loop definitions, returning the commissioned control loop definition IDs",
+        response = CommissioningResponse.class,
+        tags = {"Control Loop Commissioning API"},
+        authorizations = @Authorization(value = AUTHORIZATION_TYPE),
+        responseHeaders = {
+            @ResponseHeader(
+                name = VERSION_MINOR_NAME,
+                description = VERSION_MINOR_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(
+                name = VERSION_PATCH_NAME,
+                description = VERSION_PATCH_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(
+                name = VERSION_LATEST_NAME,
+                description = VERSION_LATEST_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(
+                name = REQUEST_ID_NAME,
+                description = REQUEST_ID_HDR_DESCRIPTION,
+                response = UUID.class)
+        },
+        extensions = {
+            @Extension
+                (
+                    name = EXTENSION_NAME,
+                    properties = {
+                        @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                        @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
+                    }
+                )
+        }
     )
     @ApiResponses(
             value = {
@@ -152,37 +158,37 @@ public class CommissioningController extends AbstractRestController {
     @DeleteMapping(value = "/commission",
             produces = {MediaType.APPLICATION_JSON_VALUE, APPLICATION_YAML})
     @ApiOperation(value = "Delete a commissioned control loop",
-            notes = "Deletes a Commissioned Control Loop, returning optional error details",
-            response = CommissioningResponse.class,
-            tags = {"Clamp Control Loop Commissioning API"},
-            authorizations = @Authorization(value = AUTHORIZATION_TYPE),
-            responseHeaders = {
-                @ResponseHeader(
-                    name = VERSION_MINOR_NAME,
-                    description = VERSION_MINOR_DESCRIPTION,
-                    response = String.class),
-                @ResponseHeader(
-                    name = VERSION_PATCH_NAME,
-                    description = VERSION_PATCH_DESCRIPTION,
-                    response = String.class),
-                @ResponseHeader(
-                    name = VERSION_LATEST_NAME,
-                    description = VERSION_LATEST_DESCRIPTION,
-                    response = String.class),
-                @ResponseHeader(
-                            name = REQUEST_ID_NAME,
-                            description = REQUEST_ID_HDR_DESCRIPTION,
-                            response = UUID.class)},
-            extensions = {
-                @Extension
-                    (
-                        name = EXTENSION_NAME,
-                        properties = {
-                            @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
-                            @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
-                        }
-                    )
-            }
+        notes = "Deletes a Commissioned Control Loop, returning optional error details",
+        response = CommissioningResponse.class,
+        tags = {"Clamp Control Loop Commissioning API"},
+        authorizations = @Authorization(value = AUTHORIZATION_TYPE),
+        responseHeaders = {
+            @ResponseHeader(
+                name = VERSION_MINOR_NAME,
+                description = VERSION_MINOR_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(
+                name = VERSION_PATCH_NAME,
+                description = VERSION_PATCH_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(
+                name = VERSION_LATEST_NAME,
+                description = VERSION_LATEST_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(
+                name = REQUEST_ID_NAME,
+                description = REQUEST_ID_HDR_DESCRIPTION,
+                response = UUID.class)},
+        extensions = {
+            @Extension
+                (
+                    name = EXTENSION_NAME,
+                    properties = {
+                        @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                        @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
+                    }
+                )
+        }
     )
     @ApiResponses(
         value = {
@@ -226,21 +232,21 @@ public class CommissioningController extends AbstractRestController {
     @GetMapping(value = "/commission",
             produces = {MediaType.APPLICATION_JSON_VALUE, APPLICATION_YAML})
     @ApiOperation(value = "Query details of the requested commissioned control loop definitions",
-            notes = "Queries details of the requested commissioned control loop definitions, "
-                    + "returning all control loop details",
-            response = ToscaNodeTemplate.class,
-            tags = {"Clamp Control Loop Commissioning API"},
-            authorizations = @Authorization(value = AUTHORIZATION_TYPE),
-            responseHeaders = {
-                @ResponseHeader(
-                        name = VERSION_MINOR_NAME, description = VERSION_MINOR_DESCRIPTION,
-                        response = String.class),
-                @ResponseHeader(name = VERSION_PATCH_NAME, description = VERSION_PATCH_DESCRIPTION,
-                        response = String.class),
-                @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
-                        response = String.class),
-                @ResponseHeader(name = REQUEST_ID_NAME, description = REQUEST_ID_HDR_DESCRIPTION,
-                        response = UUID.class)},
+        notes = "Queries details of the requested commissioned control loop definitions, "
+            + "returning all control loop details",
+        response = ToscaNodeTemplate.class,
+        tags = {"Clamp Control Loop Commissioning API"},
+        authorizations = @Authorization(value = AUTHORIZATION_TYPE),
+        responseHeaders = {
+            @ResponseHeader(
+                name = VERSION_MINOR_NAME, description = VERSION_MINOR_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(name = VERSION_PATCH_NAME, description = VERSION_PATCH_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(name = REQUEST_ID_NAME, description = REQUEST_ID_HDR_DESCRIPTION,
+                response = UUID.class)},
         extensions = {
             @Extension
                 (
@@ -295,31 +301,31 @@ public class CommissioningController extends AbstractRestController {
     @GetMapping(value = "/commission/toscaservicetemplate",
             produces = {MediaType.APPLICATION_JSON_VALUE, APPLICATION_YAML})
     @ApiOperation(value = "Query details of the requested tosca service templates",
-            notes = "Queries details of the requested commissioned tosca service template, "
-                    + "returning all tosca service template details",
-            response = ToscaServiceTemplate.class,
-            tags = {"Clamp Control Loop Commissioning API"},
-            authorizations = @Authorization(value = AUTHORIZATION_TYPE),
-            responseHeaders = {
-                @ResponseHeader(
-                    name = VERSION_MINOR_NAME, description = VERSION_MINOR_DESCRIPTION,
-                    response = String.class),
-                @ResponseHeader(name = VERSION_PATCH_NAME, description = VERSION_PATCH_DESCRIPTION,
-                    response = String.class),
-                @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
-                    response = String.class),
-                @ResponseHeader(name = REQUEST_ID_NAME, description = REQUEST_ID_HDR_DESCRIPTION,
-                    response = UUID.class)},
-            extensions = {
-                @Extension
-                    (
-                        name = EXTENSION_NAME,
-                        properties = {
-                            @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
-                            @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
-                        }
-                    )
-            }
+        notes = "Queries details of the requested commissioned tosca service template, "
+            + "returning all tosca service template details",
+        response = ToscaServiceTemplate.class,
+        tags = {"Clamp Control Loop Commissioning API"},
+        authorizations = @Authorization(value = AUTHORIZATION_TYPE),
+        responseHeaders = {
+            @ResponseHeader(
+                name = VERSION_MINOR_NAME, description = VERSION_MINOR_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(name = VERSION_PATCH_NAME, description = VERSION_PATCH_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(name = REQUEST_ID_NAME, description = REQUEST_ID_HDR_DESCRIPTION,
+                response = UUID.class)},
+        extensions = {
+            @Extension
+                (
+                    name = EXTENSION_NAME,
+                    properties = {
+                        @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                        @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
+                    }
+                )
+        }
     )
     @ApiResponses(
         value = {
@@ -353,6 +359,74 @@ public class CommissioningController extends AbstractRestController {
     }
 
     /**
+     * Retrieves the Json Schema for the specified Tosca Service Template.
+     *
+     * @param requestId request ID used in ONAP logging
+     * @param section section of the tosca service template to get schema for
+     * @return the specified tosca service template or section Json Schema
+     */
+    // @formatter:off
+    @GetMapping(value = "/commission/toscaServiceTemplateSchema",
+        produces = {MediaType.APPLICATION_JSON_VALUE, APPLICATION_YAML})
+    @ApiOperation(value = "Query details of the requested tosca service template json schema",
+        notes = "Queries details of the requested commissioned tosca service template json schema, "
+            + "returning all tosca service template json schema details",
+        response = ToscaServiceTemplate.class,
+        tags = {"Clamp Control Loop Commissioning API"},
+        authorizations = @Authorization(value = AUTHORIZATION_TYPE),
+        responseHeaders = {
+            @ResponseHeader(
+                name = VERSION_MINOR_NAME, description = VERSION_MINOR_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(name = VERSION_PATCH_NAME, description = VERSION_PATCH_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(name = REQUEST_ID_NAME, description = REQUEST_ID_HDR_DESCRIPTION,
+                response = UUID.class)},
+        extensions = {
+            @Extension
+                (
+                    name = EXTENSION_NAME,
+                    properties = {
+                        @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                        @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
+                    }
+                )
+        }
+    )
+    @ApiResponses(
+        value = {
+            @ApiResponse(code = AUTHENTICATION_ERROR_CODE, message = AUTHENTICATION_ERROR_MESSAGE),
+            @ApiResponse(code = AUTHORIZATION_ERROR_CODE, message = AUTHORIZATION_ERROR_MESSAGE),
+            @ApiResponse(code = SERVER_ERROR_CODE, message = SERVER_ERROR_MESSAGE)
+        }
+    )
+    // @formatter:on
+    public ResponseEntity<?> queryToscaServiceTemplateJsonSchema(
+        @RequestHeader(
+            name = REQUEST_ID_NAME,
+            required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+        @ApiParam(value = "Section of Template schema is desired for", required = false) @RequestParam(
+            value = "section",
+            required = false, defaultValue = "all") String section) {
+        try {
+            return ResponseEntity.ok().body(provider.getToscaServiceTemplateSchema(section));
+
+        } catch (PfModelRuntimeException | PfModelException e) {
+            LOGGER.warn("Get of tosca service template json schema failed", e);
+            var resp = new CommissioningResponse();
+            resp.setErrorDetails(e.getErrorResponse().getErrorMessage());
+            return ResponseEntity.status(e.getErrorResponse().getResponseCode().getStatusCode()).body(resp);
+        } catch (JsonProcessingException e) {
+            LOGGER.warn("Get of tosca service template json schema failed", e);
+            var resp = new CommissioningResponse();
+            resp.setErrorDetails(e.getMessage());
+            return ResponseEntity.status(Status.BAD_REQUEST.getStatusCode()).body(resp);
+        }
+    }
+
+    /**
      * Queries the elements of a specific control loop.
      *
      * @param requestId request ID used in ONAP logging
@@ -364,31 +438,31 @@ public class CommissioningController extends AbstractRestController {
     @GetMapping(value = "/commission/elements",
             produces = {MediaType.APPLICATION_JSON_VALUE, APPLICATION_YAML})
     @ApiOperation(value = "Query details of the requested commissioned control loop element definitions",
-            notes = "Queries details of the requested commissioned control loop element definitions, "
-                    + "returning all control loop elements' details",
-            response = ToscaNodeTemplate.class,
-            tags = {"Clamp Control Loop Commissioning API"},
-            authorizations = @Authorization(value = AUTHORIZATION_TYPE),
-            responseHeaders = {
-                @ResponseHeader(
-                    name = VERSION_MINOR_NAME, description = VERSION_MINOR_DESCRIPTION,
-                    response = String.class),
-                @ResponseHeader(name = VERSION_PATCH_NAME, description = VERSION_PATCH_DESCRIPTION,
-                    response = String.class),
-                @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
-                    response = String.class),
-                @ResponseHeader(name = REQUEST_ID_NAME, description = REQUEST_ID_HDR_DESCRIPTION,
-                    response = UUID.class)},
-            extensions = {
-                @Extension
-                    (
-                        name = EXTENSION_NAME,
-                        properties = {
-                            @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
-                            @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
-                        }
-                    )
-            }
+        notes = "Queries details of the requested commissioned control loop element definitions, "
+            + "returning all control loop elements' details",
+        response = ToscaNodeTemplate.class,
+        tags = {"Clamp Control Loop Commissioning API"},
+        authorizations = @Authorization(value = AUTHORIZATION_TYPE),
+        responseHeaders = {
+            @ResponseHeader(
+                name = VERSION_MINOR_NAME, description = VERSION_MINOR_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(name = VERSION_PATCH_NAME, description = VERSION_PATCH_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(name = REQUEST_ID_NAME, description = REQUEST_ID_HDR_DESCRIPTION,
+                response = UUID.class)},
+        extensions = {
+            @Extension
+                (
+                    name = EXTENSION_NAME,
+                    properties = {
+                        @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                        @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
+                    }
+                )
+        }
     )
     @ApiResponses(
         value = {
