@@ -93,6 +93,23 @@
     },
     {
       "key": {
+        "uuid": "7a910b22_6b121a8e",
+        "filename": "runtime-controlloop/src/main/resources/parameters/ParametersMariaDB.json",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4903
+      },
+      "writtenOn": "2021-07-09T15:21:09Z",
+      "side": 1,
+      "message": "The file name is ParametersMariaDB, but seems to have everything like REST/DMaaP parameters. So, should the file name be updated?",
+      "revId": "ecbcf0f08e4f836659150a6eb6ddaaadc72fd771",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "75d2dbe7_6c22841d",
         "filename": "runtime-controlloop/src/main/resources/parameters/ParametersMariaDB.json",
         "patchSetId": 7
