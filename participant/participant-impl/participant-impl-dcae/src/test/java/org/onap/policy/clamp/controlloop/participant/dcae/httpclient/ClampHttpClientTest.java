@@ -22,6 +22,7 @@ package org.onap.policy.clamp.controlloop.participant.dcae.httpclient;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
@@ -98,6 +99,17 @@ class ClampHttpClientTest {
     }
 
     @Test
+    void test_create() throws Exception {
+        try (ClampHttpClient client = new ClampHttpClient(parameters)) {
+
+            assertThat(client.create(LOOP, null)).isNull();
+
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
     void test_deploy() throws Exception {
         try (ClampHttpClient client = new ClampHttpClient(parameters)) {
 
@@ -127,5 +139,27 @@ class ClampHttpClientTest {
     @Test
     void test_getStatusEmptyMap() {
         assertThat(ClampHttpClient.getStatusCode(new Loop())).isEqualTo(ClampHttpClient.STATUS_NOT_FOUND);
+    }
+
+    @Test
+    void test_stop() throws Exception {
+        try (ClampHttpClient client = new ClampHttpClient(parameters)) {
+
+            assertFalse(client.stop(LOOP));
+
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
+    void test_delete() throws Exception {
+        try (ClampHttpClient client = new ClampHttpClient(parameters)) {
+
+            assertFalse(client.delete(LOOP));
+
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
     }
 }
