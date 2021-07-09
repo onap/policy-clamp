@@ -1,0 +1,135 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a267e8f1_a6040a3d",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/config/CoderHttpMesageConverter.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-09T13:29:02Z",
+      "side": 1,
+      "message": "let\u0027s do this once and save the result in a field",
+      "revId": "ecbcf0f08e4f836659150a6eb6ddaaadc72fd771",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "53e294e8_932f45b0",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/config/CoderHttpMesageConverter.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-09T13:29:02Z",
+      "side": 1,
+      "message": "should probably specify UTF-8\n\nmay also want to use try-with-resources to ensure the reader is closed",
+      "range": {
+        "startLine": 63,
+        "startChar": 36,
+        "endLine": 63,
+        "endChar": 53
+      },
+      "revId": "ecbcf0f08e4f836659150a6eb6ddaaadc72fd771",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "55825404_949b2509",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/web/RuntimeErrorController.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-09T13:29:02Z",
+      "side": 1,
+      "message": "add \"ex\" to the argument list so the stack trace is not lost",
+      "revId": "ecbcf0f08e4f836659150a6eb6ddaaadc72fd771",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "40bd1b9a_f584303f",
+        "filename": "runtime-controlloop/src/main/resources/application.yaml",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-09T13:29:02Z",
+      "side": 1,
+      "message": "can this file be overridden via helm charts?",
+      "revId": "ecbcf0f08e4f836659150a6eb6ddaaadc72fd771",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7f8a28dd_16cc22d9",
+        "filename": "runtime-controlloop/src/main/resources/application.yaml",
+        "patchSetId": 7
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-09T13:29:02Z",
+      "side": 1,
+      "message": "since this file is in src/main, this should probably be \"true\"",
+      "revId": "ecbcf0f08e4f836659150a6eb6ddaaadc72fd771",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "75d2dbe7_6c22841d",
+        "filename": "runtime-controlloop/src/main/resources/parameters/ParametersMariaDB.json",
+        "patchSetId": 7
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-09T13:29:02Z",
+      "side": 1,
+      "message": "since this file is in src/main, these should be correct values for a standard installation - e.g., \"message-router\"\n\nsame comment through-out this file",
+      "range": {
+        "startLine": 30,
+        "startChar": 39,
+        "endLine": 30,
+        "endChar": 48
+      },
+      "revId": "ecbcf0f08e4f836659150a6eb6ddaaadc72fd771",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1e0322c2_dee797bb",
+        "filename": "runtime-controlloop/src/test/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProviderTest.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-09T13:29:02Z",
+      "side": 1,
+      "message": "technically, should ensure this is invoked even if one of the previous assertions fails.  Can do that with an AfterEach method, or could put the \"implements Closeable\" back in and restore the try-with-resources.  Either is fine with me",
+      "revId": "ecbcf0f08e4f836659150a6eb6ddaaadc72fd771",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
