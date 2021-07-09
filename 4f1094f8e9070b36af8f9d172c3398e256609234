@@ -156,6 +156,24 @@
     },
     {
       "key": {
+        "uuid": "dfd4ef9f_b7da83c7",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ParticipantUpdate.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-07-09T10:22:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "173df98c_b427f85b",
+      "revId": "4f1094f8e9070b36af8f9d172c3398e256609234",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "af1237e3_e0850638",
         "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ParticipantUpdate.java",
         "patchSetId": 1
