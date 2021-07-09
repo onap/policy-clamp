@@ -138,6 +138,24 @@
     },
     {
       "key": {
+        "uuid": "2e1f7350_9b1b56ff",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/rest/CommissioningController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-09T16:53:50Z",
+      "side": 1,
+      "message": "OK, though it seems like there may be some cases where camel case is used instead",
+      "parentUuid": "c9d3c08c_b6896fe0",
+      "revId": "80adc1dd04d5fd4d130dae489d047f87f7fe892c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1164d52f_9ea8d42c",
         "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/rest/CommissioningController.java",
         "patchSetId": 1
