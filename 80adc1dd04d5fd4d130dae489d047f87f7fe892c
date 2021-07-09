@@ -156,6 +156,24 @@
     },
     {
       "key": {
+        "uuid": "c8d1c359_a439314c",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/rest/CommissioningController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-07-09T17:14:20Z",
+      "side": 1,
+      "message": "I have gone through the output of each of the generated json schemas for that endpoint and all was using snake case. Any particular class you are referring to?",
+      "parentUuid": "2e1f7350_9b1b56ff",
+      "revId": "80adc1dd04d5fd4d130dae489d047f87f7fe892c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1164d52f_9ea8d42c",
         "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/rest/CommissioningController.java",
         "patchSetId": 1
