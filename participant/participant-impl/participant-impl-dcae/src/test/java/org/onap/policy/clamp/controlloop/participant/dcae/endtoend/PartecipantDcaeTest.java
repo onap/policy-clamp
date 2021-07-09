@@ -22,6 +22,7 @@ package org.onap.policy.clamp.controlloop.participant.dcae.endtoend;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
@@ -159,5 +160,17 @@ class PartecipantDcaeTest {
         // Verify the content in participantHandler
         assertEquals(participantHandler.getParticipantId(), participantControlLoopUpdateMsg.getParticipantId());
         assertEquals(1, participantHandler.getControlLoopHandler().getControlLoops().getControlLoopList().size());
+    }
+
+    @Test
+    void testControlLoopUpdateListenerString() throws CoderException {
+        ParticipantControlLoopUpdate participantControlLoopUpdateMsg = TestListenerUtils.createControlLoopUpdateMsg();
+        participantControlLoopUpdateMsg.getControlLoop().setOrderedState(ControlLoopOrderedState.UNINITIALISED);
+
+        assertTrue(participantControlLoopUpdateMsg.toString().contains("state=UNINITIALISED"));
+        ParticipantControlLoopUpdate copyParticipantControlLoopUpdateMsg =
+                TestListenerUtils.createCopyControlLoopUpdateMsg(participantControlLoopUpdateMsg);
+        assertTrue(copyParticipantControlLoopUpdateMsg.toString().contains("state=UNINITIALISED"));
+        assertNotEquals(participantControlLoopUpdateMsg, copyParticipantControlLoopUpdateMsg);
     }
 }

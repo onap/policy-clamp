@@ -98,6 +98,17 @@ class ClampHttpClientTest {
     }
 
     @Test
+    void test_create() throws Exception {
+        try (ClampHttpClient client = new ClampHttpClient(parameters)) {
+
+            assertThat(client.create(LOOP, null)).isNull();
+
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
     void test_deploy() throws Exception {
         try (ClampHttpClient client = new ClampHttpClient(parameters)) {
 
@@ -127,5 +138,27 @@ class ClampHttpClientTest {
     @Test
     void test_getStatusEmptyMap() {
         assertThat(ClampHttpClient.getStatusCode(new Loop())).isEqualTo(ClampHttpClient.STATUS_NOT_FOUND);
+    }
+
+    @Test
+    void test_stop() throws Exception {
+        try (ClampHttpClient client = new ClampHttpClient(parameters)) {
+
+            assertTrue(!client.stop(LOOP));
+
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
+    void test_delete() throws Exception {
+        try (ClampHttpClient client = new ClampHttpClient(parameters)) {
+
+            assertTrue(!client.delete(LOOP));
+
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
     }
 }

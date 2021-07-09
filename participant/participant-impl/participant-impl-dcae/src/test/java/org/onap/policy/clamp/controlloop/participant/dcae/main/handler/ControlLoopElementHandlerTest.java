@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.controlloop.participant.dcae.main.handler;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -29,6 +30,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.UUID;
+import lombok.Setter;
 import org.json.JSONException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -59,6 +61,9 @@ class ControlLoopElementHandlerTest {
     private static final String BLUEPRINT_DEPLOYED = "BLUEPRINT_DEPLOYED";
     private static final String MICROSERVICE_INSTALLED_SUCCESSFULLY = "MICROSERVICE_INSTALLED_SUCCESSFULLY";
 
+    @Setter
+    private ParticipantIntermediaryApi intermediaryApi;
+
     public static final Coder CODER = new StandardCoder();
     private CommonTestData commonTestData = new CommonTestData();
 
@@ -74,10 +79,13 @@ class ControlLoopElementHandlerTest {
         ParticipantIntermediaryApi intermediaryApi = mock(ParticipantIntermediaryApi.class);
         controlLoopElementHandler.setIntermediaryApi(intermediaryApi);
 
-        controlLoopElementHandler.controlLoopElementStateChange(UUID.randomUUID(), ControlLoopState.PASSIVE,
+        UUID controlLoopElementId = UUID.randomUUID();
+        controlLoopElementHandler.controlLoopElementStateChange(controlLoopElementId, ControlLoopState.PASSIVE,
                 ControlLoopOrderedState.UNINITIALISED);
 
         verify(clampClient).undeploy(eq(LOOP));
+        controlLoopElementHandler.handleStatistics(controlLoopElementId);
+        assertThat(intermediaryApi.getControlLoopElement(controlLoopElementId)).isNull();
     }
 
     @Test
