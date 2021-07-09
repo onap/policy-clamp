@@ -44,5 +44,10 @@
             <artifactId>policy-clamp-models</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-jsonSchema</artifactId>
+            <version>${version.jackson}</version>
+        </dependency>
     </dependencies>
 </project>
