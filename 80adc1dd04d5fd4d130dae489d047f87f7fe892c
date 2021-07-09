@@ -102,6 +102,24 @@
     },
     {
       "key": {
+        "uuid": "500e9270_37faf4ab",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/rest/CommissioningController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-09T16:14:41Z",
+      "side": 1,
+      "message": "oh, it isn\u0027t using jackson to translate data, it\u0027s using it to dump a schema.  Then probably ok to use it.  However, these classes do not typically have any jackson annotations, so may not yield correct output.  For example, a lot of these classes are subclasses of ToscaEntity, which contains a \"derivedFrom\" field, which is serialized as \"derived_from\".  Does that should up correctly in the output from the \"schema\" method below?  (And I don\u0027t want to introduce jackson into policy-models, if we can avoid it, because that may force us to deal with vulnerability issues reported on IQ.  Though just including the jackson annotations jar for models might be ok.)",
+      "parentUuid": "80914689_b90fc311",
+      "revId": "80adc1dd04d5fd4d130dae489d047f87f7fe892c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1164d52f_9ea8d42c",
         "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/rest/CommissioningController.java",
         "patchSetId": 1
@@ -134,6 +152,24 @@
       "revId": "80adc1dd04d5fd4d130dae489d047f87f7fe892c",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e89d0560_8bc6dd5b",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/rest/CommissioningController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 409,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-09T16:14:41Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "b2993e06_97ed34df",
+      "revId": "80adc1dd04d5fd4d130dae489d047f87f7fe892c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
