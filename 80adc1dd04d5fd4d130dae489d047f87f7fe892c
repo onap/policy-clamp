@@ -120,6 +120,24 @@
     },
     {
       "key": {
+        "uuid": "c9d3c08c_b6896fe0",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/rest/CommissioningController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-07-09T16:22:27Z",
+      "side": 1,
+      "message": "That will be ok I think. I am converting the camel case in the output Json Schema to snake case in the endpoint function. So derivedFrom gets changed to derived_from\n\nObjectMapper mapper \u003d new ObjectMapper();\nmapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);\n\nThat gets me what I want. Won\u0027t need to change the models I don\u0027t think.",
+      "parentUuid": "500e9270_37faf4ab",
+      "revId": "80adc1dd04d5fd4d130dae489d047f87f7fe892c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1164d52f_9ea8d42c",
         "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/rest/CommissioningController.java",
         "patchSetId": 1
