@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7c79ef43_c0872140",
+        "filename": "runtime-controlloop/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-07-09T14:26:34Z",
+      "side": 1,
+      "message": "Ok, will do",
+      "parentUuid": "f6a3f7bc_8916be26",
+      "range": {
+        "startLine": 50,
+        "startChar": 21,
+        "endLine": 50,
+        "endChar": 27
+      },
+      "revId": "80adc1dd04d5fd4d130dae489d047f87f7fe892c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "138b0823_b78447e5",
         "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/rest/CommissioningController.java",
         "patchSetId": 1
@@ -42,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "86f08eea_51a9db9c",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/rest/CommissioningController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-07-09T14:26:34Z",
+      "side": 1,
+      "message": "Do you mean just for the exception here Jim? I am using Jackson because it has the Json Schema converter I need.",
+      "parentUuid": "138b0823_b78447e5",
+      "revId": "80adc1dd04d5fd4d130dae489d047f87f7fe892c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1164d52f_9ea8d42c",
         "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/rest/CommissioningController.java",
         "patchSetId": 1
@@ -53,6 +95,24 @@
       "writtenOn": "2021-07-09T14:04:36Z",
       "side": 1,
       "message": "need to handle case where section\u003dnull?",
+      "revId": "80adc1dd04d5fd4d130dae489d047f87f7fe892c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b2993e06_97ed34df",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/rest/CommissioningController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 409,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-07-09T14:26:34Z",
+      "side": 1,
+      "message": "section has a default value of \"all\", so it shouldn\u0027t be null. That will be caught by the \"default\" case.",
+      "parentUuid": "1164d52f_9ea8d42c",
       "revId": "80adc1dd04d5fd4d130dae489d047f87f7fe892c",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
