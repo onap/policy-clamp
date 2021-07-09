@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "50e8cf7d_8527a8ad",
+        "filename": "packages/policy-clamp-docker/src/main/docker/KubernetesParticipantDockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-09T15:43:02Z",
+      "side": 1,
+      "message": "put chmod on a new line\n\nsimilar comment for other \"\u0026\u0026\" cases below",
+      "range": {
+        "startLine": 45,
+        "startChar": 32,
+        "endLine": 45,
+        "endChar": 38
+      },
+      "revId": "b2130afb37edc8d14a1b45628a5f7b38b91b8d3c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8271238a_56c63716",
+        "filename": "packages/policy-clamp-docker/src/main/docker/KubernetesParticipantDockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-09T15:43:02Z",
+      "side": 1,
+      "message": "join all of these lines together as a single \"RUN\"",
+      "range": {
+        "startLine": 44,
+        "startChar": 0,
+        "endLine": 55,
+        "endChar": 57
+      },
+      "revId": "b2130afb37edc8d14a1b45628a5f7b38b91b8d3c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "11abeadb_519e6b0b",
+        "filename": "packages/policy-clamp-docker/src/main/docker/kubernetes-participant.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-09T15:43:02Z",
+      "side": 1,
+      "message": "what\u0027s the purpose of this line?",
+      "revId": "b2130afb37edc8d14a1b45628a5f7b38b91b8d3c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
