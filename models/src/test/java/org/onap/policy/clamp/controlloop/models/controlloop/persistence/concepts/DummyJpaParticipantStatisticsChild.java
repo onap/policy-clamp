@@ -23,6 +23,6 @@ package org.onap.policy.clamp.controlloop.models.controlloop.persistence.concept
 /**
  * Test class for {@link JpaParticipantStatistics} comparisons.
  */
-public class DummyJpaParticipantStatisticsChild extends JpaParticipantStatistics {
+class DummyJpaParticipantStatisticsChild extends JpaParticipantStatistics {
     private static final long serialVersionUID = -5101743610779424064L;
 }

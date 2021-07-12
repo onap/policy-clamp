@@ -31,26 +31,57 @@ public enum ParticipantMessageType {
     PARTICIPANT_STATUS,
 
     /**
-     * Used by the control loop runtime to change the state of participants, triggers a PARTICIPANT_STATUS message with
-     * the result of the PARTICIPANT_STATE_CHANGE operation.
+     * Used by the controlloop runtime to change the state of participants, triggers a
+     * PARTICIPANT_STATUS message with the result of the PARTICIPANT_STATE_CHANGE operation.
      */
     PARTICIPANT_STATE_CHANGE,
 
     /**
-     * Used by the control loop runtime to update the control loops running on participants, triggers a
+     * Used by controlloop runtime to update the controlloops running on participants, triggers a
      * PARTICIPANT_STATUS message with the result of the PARTICIPANT_CONTROL_LOOP_UPDATE operation.
      */
     PARTICIPANT_CONTROL_LOOP_UPDATE,
 
     /**
-     * Used by the control loop runtime to change the state of control loops in participants, triggers a
-     * PARTICIPANT_STATUS message with the result of the PARTICIPANT_CONTROL_LOOP_STATE_CHANGE operation.
+     * Used by controlloop runtime to change the state of controlloops in participants, triggers a
+     * PARTICIPANT_STATUS message with result of PARTICIPANT_CONTROL_LOOP_STATE_CHANGE operation.
      */
     PARTICIPANT_CONTROL_LOOP_STATE_CHANGE,
 
     /**
-     * Used by the control loop runtime to order a health check on participants, triggers a PARTICIPANT_STATUS message
-     * with the result of the PARTICIPANT_HEALTH_CHECK operation.
+     * Used by the control loop runtime to order a health check on participants, triggers a
+     * PARTICIPANT_STATUS message with the result of the PARTICIPANT_HEALTH_CHECK operation.
      */
-    PARTICIPANT_HEALTH_CHECK
+    PARTICIPANT_HEALTH_CHECK,
+
+    /**
+     * Used by participant to register itself with control loop runtime.
+     */
+    PARTICIPANT_REGISTER,
+
+    /**
+     * Used by control loop runtime to respond to participant registration.
+     */
+    PARTICIPANT_REGISTER_ACK,
+
+    /**
+     * Used by participant to deregister itself with control loop runtime.
+     */
+    PARTICIPANT_DEREGISTER,
+
+    /**
+     * Used by control loop runtime to respond to participant deregistration.
+     */
+    PARTICIPANT_DEREGISTER_ACK,
+
+    /**
+     * Used by control loop runtime to send ToscaServiceTemplate to participant.
+     */
+    PARTICIPANT_UPDATE,
+
+    /**
+     * Used by participant to acknowledge the receipt of Participant_Update message
+     * from control loop runtime.
+     */
+    PARTICIPANT_UPDATE_ACK
 }
