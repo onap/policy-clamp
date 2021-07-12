@@ -20,14 +20,11 @@
 
 package org.onap.policy.clamp.controlloop.common.handler;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import lombok.Getter;
 import lombok.NonNull;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
 import org.onap.policy.common.endpoints.listeners.MessageTypeDispatcher;
-import org.onap.policy.common.utils.services.Registry;
 import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 
 /**
@@ -47,21 +44,9 @@ public abstract class ControlLoopHandler {
     protected ControlLoopHandler(@NonNull PolicyModelsProviderParameters databaseProviderParameters) {
         this.databaseProviderParameters = databaseProviderParameters;
 
-        Registry.register(this.getClass().getName(), this);
     }
 
     public void close() {
-        Registry.unregister(this.getClass().getName());
-    }
-
-    /**
-     * Get the provider classes that are used in instantiation.
-     *
-     * @return the provider classes
-     */
-    public Set<Class<?>> getProviderClasses() {
-        // No REST interfaces are the default
-        return new HashSet<>();
     }
 
     /**

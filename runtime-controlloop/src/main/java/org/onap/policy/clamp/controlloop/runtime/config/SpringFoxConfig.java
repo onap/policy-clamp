@@ -18,30 +18,28 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.controlloop.common.handler;
+package org.onap.policy.clamp.controlloop.runtime.config;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import org.onap.policy.clamp.controlloop.runtime.main.rest.MonitoringQueryController;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
 
-import org.junit.jupiter.api.Test;
-import org.onap.policy.models.provider.PolicyModelsProviderParameters;
+@Configuration
+public class SpringFoxConfig {
 
-class ControlLoopHandlerTest {
-
-    @Test
-    void testControlLoopHandler() {
-        assertThatThrownBy(() -> new DummyControlLoopHandler(null)).isInstanceOf(NullPointerException.class);
-
-        assertNotNull(new DummyControlLoopHandler(new PolicyModelsProviderParameters()));
-
-        PolicyModelsProviderParameters pars = new PolicyModelsProviderParameters();
-
-        DummyControlLoopHandler dclh = new DummyControlLoopHandler(pars);
-        assertNotNull(dclh);
-
-        assertEquals(pars, dclh.getDatabaseProviderParameters());
-
-        dclh.close();
+    /**
+     * Docket Spring Fox Config.
+     *
+     * @return Docket
+     */
+    @Bean
+    public Docket api() {
+        return new Docket(DocumentationType.SWAGGER_2).select()
+                .apis(RequestHandlerSelectors.basePackage(MonitoringQueryController.class.getPackageName()))
+                .paths(PathSelectors.any()).build();
     }
 }
