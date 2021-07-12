@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "789e24d3_91df459c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2021-07-12T16:36:33Z",
+      "side": 1,
+      "message": "too long\npls refer - https://wiki.onap.org/display/DW/Commit+Messages",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 8,
+        "endChar": 26
+      },
+      "revId": "d51332614674cb122336f06ffebe831b454e04a2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f2087619_c8b1287b",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/HelmClient.java",
         "patchSetId": 3
