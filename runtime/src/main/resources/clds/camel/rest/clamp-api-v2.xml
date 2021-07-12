@@ -1576,6 +1576,49 @@
             </route>
         </get>
 
+        <post uri="/v2/toscaControlLoop/postToscaInstantiation"
+              type="java.lang.String"
+              consumes="plain/text"
+              outType="java.lang.String"
+              produces="application/json"
+              bindingMode="off">
+            <route>
+                <removeHeaders pattern="*"/>
+                <setProperty name="raiseHttpExceptionFlag">
+                    <simple resultType="java.lang.Boolean">true</simple>
+                </setProperty>
+                <setHeader name="Content-Type">
+                    <constant>application/json</constant>
+                </setHeader>
+                <doTry>
+                    <to
+                            uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=startLog(*, 'Update the global properties')"/>
+                    <to
+                            uri="bean:org.onap.policy.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')"/>
+                    <to uri="direct:post-tosca-instantiation"/>
+                    <to
+                            uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=endLog()"/>
+                    <doCatch>
+                        <exception>java.lang.Exception</exception>
+                        <handled>
+                            <constant>true</constant>
+                        </handled>
+                        <to
+                                uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=errorLog()"/>
+                        <log loggingLevel="ERROR"
+                             message="Create Tosca Instantiation Service FAILED"/>
+
+                        <setHeader name="CamelHttpResponseCode">
+                            <constant>500</constant>
+                        </setHeader>
+                        <setBody>
+                            <simple>Create Tosca Instantiation Service FAILED</simple>
+                        </setBody>
+                    </doCatch>
+                </doTry>
+            </route>
+        </post>
+
         <get uri="/v2/clampInformation" outType="org.onap.policy.clamp.clds.model.ClampInformation"
              produces="application/json">
             <route>
