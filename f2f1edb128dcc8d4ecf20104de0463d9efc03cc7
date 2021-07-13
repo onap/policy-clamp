@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "fcaf82f1_db13e286",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/resources/config/application.yaml",
+        "patchSetId": 4
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-13T15:16:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cfb74282_75291dc5",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 8,
+        "endChar": 2
+      },
+      "revId": "f2f1edb128dcc8d4ecf20104de0463d9efc03cc7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "75a521f4_720b94cf",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/test/java/org.onap.policy.clamp.controlloop.participant.kubernetes/helm/HelmClientTest.java",
         "patchSetId": 4
@@ -39,6 +63,24 @@
       "revId": "f2f1edb128dcc8d4ecf20104de0463d9efc03cc7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "09fff886_bcb143fc",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/test/java/org.onap.policy.clamp.controlloop.participant.kubernetes/helm/HelmClientTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-13T15:16:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "75a521f4_720b94cf",
+      "revId": "f2f1edb128dcc8d4ecf20104de0463d9efc03cc7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }

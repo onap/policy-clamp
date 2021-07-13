@@ -285,6 +285,30 @@
     },
     {
       "key": {
+        "uuid": "599ce2fe_41922527",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/handler/ControlLoopElementHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-13T15:16:46Z",
+      "side": 1,
+      "message": "ah, that makes sense",
+      "parentUuid": "991b96bf_2b4a587c",
+      "range": {
+        "startLine": 91,
+        "startChar": 43,
+        "endLine": 91,
+        "endChar": 46
+      },
+      "revId": "d51332614674cb122336f06ffebe831b454e04a2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "af7d40b4_803d37d1",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/handler/ControlLoopElementHandler.java",
         "patchSetId": 3
@@ -769,6 +793,30 @@
     },
     {
       "key": {
+        "uuid": "ce5fb79f_76321afc",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/PodStatusValidator.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-13T15:16:46Z",
+      "side": 1,
+      "message": "still seems like it could be configurable.  need not be in TOSCA; could be in a Spring config file.  OTOH, maybe the time it takes some pods to come up differ, depending on the TOSCA, so might make sense to put it in the TOSCA",
+      "parentUuid": "483941ec_a5fd59ba",
+      "range": {
+        "startLine": 78,
+        "startChar": 33,
+        "endLine": 78,
+        "endChar": 38
+      },
+      "revId": "d51332614674cb122336f06ffebe831b454e04a2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "93abb4a6_f300023c",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/PodStatusValidator.java",
         "patchSetId": 3
@@ -955,6 +1003,30 @@
       "revId": "d51332614674cb122336f06ffebe831b454e04a2",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e87f55b3_aff8ec01",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/PodStatusValidator.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-13T15:16:46Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "97220d1b_bf16f6e0",
+      "range": {
+        "startLine": 104,
+        "startChar": 55,
+        "endLine": 104,
+        "endChar": 56
+      },
+      "revId": "d51332614674cb122336f06ffebe831b454e04a2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -1303,6 +1375,30 @@
       "revId": "d51332614674cb122336f06ffebe831b454e04a2",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "914faac1_f2cc6b9c",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/resources/config/application.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-13T15:16:46Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "18e91c08_394724b5",
+      "range": {
+        "startLine": 7,
+        "startChar": 15,
+        "endLine": 7,
+        "endChar": 20
+      },
+      "revId": "d51332614674cb122336f06ffebe831b454e04a2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
