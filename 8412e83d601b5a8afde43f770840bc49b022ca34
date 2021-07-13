@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4d664d1c_55bb25a1",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/test/java/org/onap/policy/clamp/controlloop/participant/dcae/endtoend/PartecipantDcaeTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-13T14:29:43Z",
+      "side": 1,
+      "message": "use assertThat(xxx).contains(yyy)\n\nsame comment below",
+      "range": {
+        "startLine": 170,
+        "startChar": 8,
+        "endLine": 170,
+        "endChar": 18
+      },
+      "revId": "8412e83d601b5a8afde43f770840bc49b022ca34",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ff988621_857e86a2",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/test/java/org/onap/policy/clamp/controlloop/participant/dcae/httpclient/ClampHttpClientTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-13T14:29:43Z",
+      "side": 1,
+      "message": "change to assertFalse()\n\nsame comment below",
+      "range": {
+        "startLine": 147,
+        "startChar": 12,
+        "endLine": 147,
+        "endChar": 24
+      },
+      "revId": "8412e83d601b5a8afde43f770840bc49b022ca34",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8208bd76_4718914e",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/test/java/org/onap/policy/clamp/controlloop/participant/dcae/main/handler/ControlLoopElementHandlerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-13T14:29:43Z",
+      "side": 1,
+      "message": "this doesn\u0027t appear to be used",
+      "revId": "8412e83d601b5a8afde43f770840bc49b022ca34",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "df3b1139_e63fe6c8",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/test/java/org/onap/policy/clamp/controlloop/participant/dcae/main/rest/TestListenerUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-13T14:29:43Z",
+      "side": 1,
+      "message": "maybe just return it without storing in an intermediate variable",
+      "range": {
+        "startLine": 191,
+        "startChar": 8,
+        "endLine": 192,
+        "endChar": 27
+      },
+      "revId": "8412e83d601b5a8afde43f770840bc49b022ca34",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
