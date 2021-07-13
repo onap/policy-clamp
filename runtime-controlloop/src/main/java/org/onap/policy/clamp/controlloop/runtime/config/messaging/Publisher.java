@@ -18,30 +18,17 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.controlloop.common.handler;
+package org.onap.policy.clamp.controlloop.runtime.config.messaging;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import java.util.List;
+import org.onap.policy.common.endpoints.event.comm.TopicSink;
 
-import org.junit.jupiter.api.Test;
-import org.onap.policy.models.provider.PolicyModelsProviderParameters;
+/**
+ * Publisher.
+ */
+public interface Publisher {
 
-class ControlLoopHandlerTest {
+    void active(List<TopicSink> topicSinks);
 
-    @Test
-    void testControlLoopHandler() {
-        assertThatThrownBy(() -> new DummyControlLoopHandler(null)).isInstanceOf(NullPointerException.class);
-
-        assertNotNull(new DummyControlLoopHandler(new PolicyModelsProviderParameters()));
-
-        PolicyModelsProviderParameters pars = new PolicyModelsProviderParameters();
-
-        DummyControlLoopHandler dclh = new DummyControlLoopHandler(pars);
-        assertNotNull(dclh);
-
-        assertEquals(pars, dclh.getDatabaseProviderParameters());
-
-        dclh.close();
-    }
+    void stop();
 }

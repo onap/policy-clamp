@@ -20,22 +20,42 @@
 
 package org.onap.policy.clamp.controlloop.runtime.supervision.comm;
 
-import java.util.List;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopUpdate;
-import org.onap.policy.common.endpoints.event.comm.TopicSink;
+import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningProvider;
+import org.onap.policy.models.base.PfModelException;
+import org.springframework.stereotype.Component;
 
 /**
  * This class is used to send ParticipantControlLoopUpdate messages to participants on DMaaP.
  */
+@Component
 public class ParticipantControlLoopUpdatePublisher extends AbstractParticipantPublisher<ParticipantControlLoopUpdate> {
 
+    private final CommissioningProvider commissioningProvider;
+
     /**
-     * Constructor for instantiating ParticipantUpdatePublisher.
+     * Constructor.
      *
-     * @param topicSinks the topic sinks
-     * @param interval time interval to send ParticipantControlLoopUpdate messages
+     * @param commissioningProvider the CommissioningProvider
      */
-    public ParticipantControlLoopUpdatePublisher(final List<TopicSink> topicSinks, final long interval) {
-        super(topicSinks, interval);
+    public ParticipantControlLoopUpdatePublisher(CommissioningProvider commissioningProvider) {
+        this.commissioningProvider = commissioningProvider;
+    }
+
+    /**
+     * Send ControlLoopUpdate to Participant.
+     *
+     * @param controlLoop the ControlLoop
+     * @throws PfModelException on errors getting the Control Loop Definition
+     */
+    public void send(ControlLoop controlLoop) throws PfModelException {
+        var pclu = new ParticipantControlLoopUpdate();
+        pclu.setControlLoopId(controlLoop.getKey().asIdentifier());
+        pclu.setControlLoop(controlLoop);
+        // TODO: We should look up the correct TOSCA node template here for the control loop
+        // Tiny hack implemented to return the tosca service template entry from the database and be passed onto dmaap
+        pclu.setControlLoopDefinition(commissioningProvider.getToscaServiceTemplate(null, null));
+        super.send(pclu);
     }
 }

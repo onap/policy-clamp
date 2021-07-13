@@ -18,53 +18,47 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.controlloop.runtime.main.startstop;
+package org.onap.policy.clamp.controlloop.runtime.config.messaging;
 
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Stream;
 import javax.ws.rs.core.Response.Status;
 import lombok.Getter;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopRuntimeException;
 import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
-import org.onap.policy.clamp.controlloop.runtime.supervision.SupervisionHandler;
 import org.onap.policy.common.endpoints.event.comm.TopicEndpointManager;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
 import org.onap.policy.common.endpoints.event.comm.TopicSource;
 import org.onap.policy.common.endpoints.listeners.MessageTypeDispatcher;
 import org.onap.policy.common.utils.services.ServiceManagerContainer;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
 
-/**
- * This class activates the control loop runtime component as a complete service together with all its controllers,
- * listeners & handlers.
- */
-public class ClRuntimeActivator extends ServiceManagerContainer implements Closeable {
-    // Name of the message type for messages on topics
+@Component
+public class MessageDispatcherActivator extends ServiceManagerContainer implements Closeable {
+
     private static final String[] MSG_TYPE_NAMES = {"messageType"};
-
-    @Getter
-    private final ClRuntimeParameterGroup parameterGroup;
 
     // Topics from which the application receives and to which the application sends messages
     private List<TopicSink> topicSinks;
     private List<TopicSource> topicSources;
 
-    /**
-     * Listens for messages on the topic, decodes them into a message, and then dispatches them.
-     */
+    @Getter
     private final MessageTypeDispatcher msgDispatcher;
 
     /**
-     * Instantiate the activator for the control loop runtime as a complete service.
+     * Constructor.
      *
      * @param clRuntimeParameterGroup the parameters for the control loop runtime service
-     * @param supervisionHandler SupervisionHandler
+     * @param publishers array of Publishers
+     * @param listeners array of Listeners
      * @throws ControlLoopRuntimeException if the activator does not start
      */
-    public ClRuntimeActivator(final ClRuntimeParameterGroup clRuntimeParameterGroup,
-            SupervisionHandler supervisionHandler) {
-        this.parameterGroup = clRuntimeParameterGroup;
-
+    public MessageDispatcherActivator(final ClRuntimeParameterGroup clRuntimeParameterGroup, Publisher[] publishers,
+            Listener[] listeners) {
         topicSinks = TopicEndpointManager.getManager()
                 .addTopicSinks(clRuntimeParameterGroup.getTopicParameterGroup().getTopicSinks());
 
@@ -80,15 +74,18 @@ public class ClRuntimeActivator extends ServiceManagerContainer implements Close
 
         // @formatter:off
         addAction("Topic endpoint management",
-            () -> TopicEndpointManager.getManager().start(),
-            () -> TopicEndpointManager.getManager().shutdown());
+                () -> TopicEndpointManager.getManager().start(),
+                () -> TopicEndpointManager.getManager().shutdown());
 
-        addAction("Supervision Providers", () -> supervisionHandler.startProviders(),
-                () -> supervisionHandler.stopProviders());
-        addAction("Supervision Listeners", () -> supervisionHandler.startAndRegisterListeners(msgDispatcher),
-                () -> supervisionHandler.stopAndUnregisterListeners(msgDispatcher));
-        addAction("Supervision Publishers", () -> supervisionHandler.startAndRegisterPublishers(topicSinks),
-                () -> supervisionHandler.stopAndUnregisterPublishers());
+        Stream.of(publishers).forEach(publisher ->
+            addAction("Publisher " + publisher.getClass().getSimpleName(),
+                () -> publisher.active(topicSinks),
+                () -> publisher.stop()));
+
+        Stream.of(listeners).forEach(listener ->
+            addAction("Listener " + listener.getClass().getSimpleName(),
+                    () -> msgDispatcher.register(listener.getType(), listener.getScoListener()),
+                    () -> msgDispatcher.unregister(listener.getType())));
 
         addAction("Topic Message Dispatcher", this::registerMsgDispatcher, this::unregisterMsgDispatcher);
         // @formatter:on
@@ -109,6 +106,18 @@ public class ClRuntimeActivator extends ServiceManagerContainer implements Close
     private void unregisterMsgDispatcher() {
         for (final TopicSource source : topicSources) {
             source.unregister(msgDispatcher);
+        }
+    }
+
+    /**
+     * Start Manager after the application is Started.
+     *
+     * @param cre Refreshed Event
+     */
+    @EventListener
+    public void handleContextStart(ContextRefreshedEvent cre) {
+        if (!isAlive()) {
+            start();
         }
     }
 

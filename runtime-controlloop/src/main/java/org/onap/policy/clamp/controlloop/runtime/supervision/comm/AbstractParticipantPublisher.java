@@ -21,35 +21,17 @@
 package org.onap.policy.clamp.controlloop.runtime.supervision.comm;
 
 import java.util.List;
-import lombok.Getter;
+import javax.ws.rs.core.Response.Status;
+import org.onap.policy.clamp.controlloop.common.exception.ControlLoopRuntimeException;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessage;
+import org.onap.policy.clamp.controlloop.runtime.config.messaging.Publisher;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
 
-public abstract class AbstractParticipantPublisher<E extends ParticipantMessage> {
+public abstract class AbstractParticipantPublisher<E extends ParticipantMessage> implements Publisher {
 
-    private final TopicSinkClient topicSinkClient;
-
-    @Getter
-    private final long intervalSec;
-
-    /**
-     * Constructor.
-     *
-     * @param topicSinks the topic sinks
-     * @param intervalSec time interval to send ParticipantStateChange messages
-     */
-    protected AbstractParticipantPublisher(final List<TopicSink> topicSinks, long intervalSec) {
-        this.topicSinkClient = new TopicSinkClient(topicSinks.get(0));
-        this.intervalSec = intervalSec;
-    }
-
-    /**
-     * Terminates the current timer.
-     */
-    public void terminate() {
-        // Nothing to terminate, this publisher does not have a timer
-    }
+    private TopicSinkClient topicSinkClient;
+    private boolean active = false;
 
     /**
      * Method to send Participant message to participants on demand.
@@ -57,6 +39,24 @@ public abstract class AbstractParticipantPublisher<E extends ParticipantMessage>
      * @param participantMessage the Participant message
      */
     public void send(final E participantMessage) {
+        if (!active) {
+            throw new ControlLoopRuntimeException(Status.NOT_ACCEPTABLE, "Not Active!");
+        }
         topicSinkClient.send(participantMessage);
+    }
+
+
+    @Override
+    public void active(List<TopicSink> topicSinks) {
+        if (topicSinks.size() != 1) {
+            throw new IllegalArgumentException("Topic Sink must be one");
+        }
+        this.topicSinkClient = new TopicSinkClient(topicSinks.get(0));
+        active = true;
+    }
+
+    @Override
+    public void stop() {
+        active = false;
     }
 }

@@ -33,10 +33,12 @@ import org.onap.policy.models.base.PfTimestampKey;
 import org.onap.policy.models.dao.PfFilterParameters;
 import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.provider.impl.AbstractModelsProvider;
+import org.springframework.stereotype.Component;
 
 /**
  * This class provides the provision of information on participant statistics in the database to callers.
  */
+@Component
 public class ParticipantStatisticsProvider extends AbstractModelsProvider {
 
     /**

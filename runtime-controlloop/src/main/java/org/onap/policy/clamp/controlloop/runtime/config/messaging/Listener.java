@@ -1,6 +1,6 @@
-/*
+/*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,28 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.controlloop.common;
+package org.onap.policy.clamp.controlloop.runtime.config.messaging;
 
-/**
- * Names of various items contained in the Registry.
- */
-public class ControlLoopConstants {
+import org.onap.policy.common.endpoints.listeners.ScoListener;
 
-    // Registry keys
-    public static final String REG_CLRUNTIME_ACTIVATOR = "object:activator/clruntime";
+public interface Listener {
 
-    private ControlLoopConstants() {
-        super();
-    }
+    /**
+     * Get the type of message of interest to the listener.
+     *
+     * @return type of message of interest to the listener
+     */
+    String getType();
+
+    /**
+     * Get listener to register.
+     *
+     * @return listener to register
+     */
+    <T> ScoListener<T> getScoListener();
 }

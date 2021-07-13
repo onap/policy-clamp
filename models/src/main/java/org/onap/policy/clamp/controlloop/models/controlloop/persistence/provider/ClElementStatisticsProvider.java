@@ -33,12 +33,14 @@ import org.onap.policy.models.base.PfReferenceTimestampKey;
 import org.onap.policy.models.dao.PfFilterParameters;
 import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.provider.impl.AbstractModelsProvider;
+import org.springframework.stereotype.Component;
 
 /**
  * This class provides the provision of information on control loop element statistics in the database to callers.
  *
  * @author Ramesh Murugan Iyer (ramesh.murugan.iyer@est.tech)
  */
+@Component
 public class ClElementStatisticsProvider extends AbstractModelsProvider {
 
     /**

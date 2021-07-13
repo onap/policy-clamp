@@ -20,22 +20,13 @@
 
 package org.onap.policy.clamp.controlloop.runtime.supervision.comm;
 
-import java.util.List;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStateChange;
-import org.onap.policy.common.endpoints.event.comm.TopicSink;
+import org.springframework.stereotype.Component;
 
 /**
  * This class is used to send ParticipantStateChange messages to participants on DMaaP.
  */
+@Component
 public class ParticipantStateChangePublisher extends AbstractParticipantPublisher<ParticipantStateChange> {
 
-    /**
-     * Constructor for instantiating ParticipantStateChangePublisher.
-     *
-     * @param topicSinks the topic sinks
-     * @param interval time interval to send ParticipantStateChange messages
-     */
-    public ParticipantStateChangePublisher(List<TopicSink> topicSinks, long interval) {
-        super(topicSinks, interval);
-    }
 }

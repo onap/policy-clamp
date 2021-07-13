@@ -21,26 +21,25 @@
 package org.onap.policy.clamp.controlloop.runtime.config;
 
 import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
-import org.onap.policy.clamp.controlloop.runtime.main.startstop.ClRuntimeActivator;
-import org.onap.policy.clamp.controlloop.runtime.supervision.SupervisionHandler;
+import org.onap.policy.models.base.PfModelException;
+import org.onap.policy.models.provider.PolicyModelsProvider;
+import org.onap.policy.models.provider.PolicyModelsProviderFactory;
+import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class ActivatorConfig {
+public class PolicyModelConfig {
 
-    /**
-     * Create and start ClRuntimeActivator.
-     *
-     * @param clRuntimeParameterGroup the parameters for the control loop runtime service
-     * @param supervisionHandler the SupervisionHandler
-     * @return ClRuntimeActivator
-     */
     @Bean
-    public ClRuntimeActivator clRuntimeActivator(ClRuntimeParameterGroup clRuntimeParameterGroup,
-            SupervisionHandler supervisionHandler) {
-        var clRuntimeActivator = new ClRuntimeActivator(clRuntimeParameterGroup, supervisionHandler);
-        clRuntimeActivator.start();
-        return clRuntimeActivator;
+    public PolicyModelsProviderParameters policyModelsProviderParameters(
+            ClRuntimeParameterGroup clRuntimeParameterGroup) {
+        return clRuntimeParameterGroup.getDatabaseProviderParameters();
+    }
+
+    @Bean
+    public PolicyModelsProvider policyModelsProvider(PolicyModelsProviderParameters policyModelsProviderParameters)
+            throws PfModelException {
+        return new PolicyModelsProviderFactory().createPolicyModelsProvider(policyModelsProviderParameters);
     }
 }

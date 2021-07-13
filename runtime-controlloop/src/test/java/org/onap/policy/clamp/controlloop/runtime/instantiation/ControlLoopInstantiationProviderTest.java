@@ -25,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -33,15 +33,21 @@ import org.onap.policy.clamp.controlloop.common.exception.ControlLoopRuntimeExce
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoops;
+import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ClElementStatisticsProvider;
+import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ControlLoopProvider;
+import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ParticipantProvider;
+import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ParticipantStatisticsProvider;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationCommand;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationResponse;
 import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningProvider;
 import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
 import org.onap.policy.clamp.controlloop.runtime.monitoring.MonitoringProvider;
 import org.onap.policy.clamp.controlloop.runtime.supervision.SupervisionHandler;
+import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantControlLoopStateChangePublisher;
+import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantControlLoopUpdatePublisher;
 import org.onap.policy.clamp.controlloop.runtime.util.CommonTestData;
-import org.onap.policy.common.endpoints.event.comm.TopicSink;
 import org.onap.policy.models.base.PfModelException;
+import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
@@ -79,9 +85,10 @@ class ControlLoopInstantiationProviderTest {
             + "    item \"ControlLoop\" value \"org.onap.domain.PMSHControlLoopDefinition\" INVALID,"
             + " Commissioned control loop definition not FOUND\n";
 
-    private static ClRuntimeParameterGroup controlLoopParameters;
     private static SupervisionHandler supervisionHandler;
     private static CommissioningProvider commissioningProvider;
+    private static ControlLoopProvider clProvider;
+    private static PolicyModelsProvider modelsProvider;
 
     /**
      * setup Db Provider Parameters.
@@ -90,12 +97,29 @@ class ControlLoopInstantiationProviderTest {
      */
     @BeforeAll
     public static void setupDbProviderParameters() throws PfModelException {
-        controlLoopParameters = CommonTestData.geParameterGroup(0, "instantproviderdb");
-        commissioningProvider = new CommissioningProvider(controlLoopParameters);
-        var monitoringProvider = new MonitoringProvider(controlLoopParameters);
-        supervisionHandler = new SupervisionHandler(controlLoopParameters, monitoringProvider, commissioningProvider);
-        supervisionHandler.startProviders();
-        supervisionHandler.startAndRegisterPublishers(Collections.singletonList(Mockito.mock(TopicSink.class)));
+        ClRuntimeParameterGroup controlLoopParameters = CommonTestData.geParameterGroup(0, "instantproviderdb");
+
+        modelsProvider =
+                CommonTestData.getPolicyModelsProvider(controlLoopParameters.getDatabaseProviderParameters());
+        clProvider = new ControlLoopProvider(controlLoopParameters.getDatabaseProviderParameters());
+        var participantStatisticsProvider =
+                new ParticipantStatisticsProvider(controlLoopParameters.getDatabaseProviderParameters());
+        var clElementStatisticsProvider =
+                new ClElementStatisticsProvider(controlLoopParameters.getDatabaseProviderParameters());
+        commissioningProvider = new CommissioningProvider(modelsProvider, clProvider);
+        var monitoringProvider =
+                new MonitoringProvider(participantStatisticsProvider, clElementStatisticsProvider, clProvider);
+        var participantProvider = new ParticipantProvider(controlLoopParameters.getDatabaseProviderParameters());
+        var controlLoopUpdatePublisher = Mockito.mock(ParticipantControlLoopUpdatePublisher.class);
+        var controlLoopStateChangePublisher = Mockito.mock(ParticipantControlLoopStateChangePublisher.class);
+        supervisionHandler = new SupervisionHandler(clProvider, participantProvider, monitoringProvider,
+                controlLoopUpdatePublisher, controlLoopStateChangePublisher);
+    }
+
+    @AfterAll
+    public static void closeDbProvider() throws PfModelException {
+        clProvider.close();
+        modelsProvider.close();
     }
 
     @Test
@@ -104,77 +128,75 @@ class ControlLoopInstantiationProviderTest {
                 InstantiationUtils.getControlLoopsFromResource(CL_INSTANTIATION_CREATE_JSON, "Crud");
         ControlLoops controlLoopsDb = getControlLoopsFromDb(controlLoopsCreate);
         assertThat(controlLoopsDb.getControlLoopList()).isEmpty();
-        try (ControlLoopInstantiationProvider instantiationProvider = new ControlLoopInstantiationProvider(
-                controlLoopParameters, commissioningProvider, supervisionHandler)) {
+        var instantiationProvider =
+                new ControlLoopInstantiationProvider(clProvider, commissioningProvider, supervisionHandler);
 
-            // to validate control Loop, it needs to define ToscaServiceTemplate
-            InstantiationUtils.storeToscaServiceTemplate(TOSCA_TEMPLATE_YAML, commissioningProvider);
+        // to validate control Loop, it needs to define ToscaServiceTemplate
+        InstantiationUtils.storeToscaServiceTemplate(TOSCA_TEMPLATE_YAML, commissioningProvider);
 
-            InstantiationResponse instantiationResponse = instantiationProvider.createControlLoops(controlLoopsCreate);
-            InstantiationUtils.assertInstantiationResponse(instantiationResponse, controlLoopsCreate);
+        InstantiationResponse instantiationResponse = instantiationProvider.createControlLoops(controlLoopsCreate);
+        InstantiationUtils.assertInstantiationResponse(instantiationResponse, controlLoopsCreate);
 
-            controlLoopsDb = getControlLoopsFromDb(controlLoopsCreate);
-            assertThat(controlLoopsDb.getControlLoopList()).isNotEmpty();
-            assertThat(controlLoopsCreate).isEqualTo(controlLoopsDb);
+        controlLoopsDb = getControlLoopsFromDb(controlLoopsCreate);
+        assertThat(controlLoopsDb.getControlLoopList()).isNotEmpty();
+        assertThat(controlLoopsCreate).isEqualTo(controlLoopsDb);
 
-            for (ControlLoop controlLoop : controlLoopsCreate.getControlLoopList()) {
-                ControlLoops controlLoopsGet =
-                        instantiationProvider.getControlLoops(controlLoop.getName(), controlLoop.getVersion());
-                assertThat(controlLoopsGet.getControlLoopList()).hasSize(1);
-                assertThat(controlLoop).isEqualTo(controlLoopsGet.getControlLoopList().get(0));
-            }
-
-            ControlLoops controlLoopsUpdate =
-                    InstantiationUtils.getControlLoopsFromResource(CL_INSTANTIATION_UPDATE_JSON, "Crud");
-            assertThat(controlLoopsUpdate).isNotEqualTo(controlLoopsDb);
-
-            instantiationResponse = instantiationProvider.updateControlLoops(controlLoopsUpdate);
-            InstantiationUtils.assertInstantiationResponse(instantiationResponse, controlLoopsUpdate);
-
-            controlLoopsDb = getControlLoopsFromDb(controlLoopsCreate);
-            assertThat(controlLoopsDb.getControlLoopList()).isNotEmpty();
-            assertThat(controlLoopsUpdate).isEqualTo(controlLoopsDb);
-
-            InstantiationCommand instantiationCommand =
-                    InstantiationUtils.getInstantiationCommandFromResource(CL_INSTANTIATION_CHANGE_STATE_JSON, "Crud");
-            instantiationResponse = instantiationProvider.issueControlLoopCommand(instantiationCommand);
-            InstantiationUtils.assertInstantiationResponse(instantiationResponse, instantiationCommand);
-
-            for (ToscaConceptIdentifier toscaConceptIdentifier : instantiationCommand.getControlLoopIdentifierList()) {
-                ControlLoops controlLoopsGet = instantiationProvider.getControlLoops(toscaConceptIdentifier.getName(),
-                        toscaConceptIdentifier.getVersion());
-                assertThat(controlLoopsGet.getControlLoopList()).hasSize(1);
-                assertThat(instantiationCommand.getOrderedState())
-                        .isEqualTo(controlLoopsGet.getControlLoopList().get(0).getOrderedState());
-            }
-
-            // in order to delete a controlLoop the state must be UNINITIALISED
-            controlLoopsCreate.getControlLoopList().forEach(cl -> cl.setState(ControlLoopState.UNINITIALISED));
-            instantiationProvider.updateControlLoops(controlLoopsCreate);
-
-            for (ControlLoop controlLoop : controlLoopsCreate.getControlLoopList()) {
-                instantiationProvider.deleteControlLoop(controlLoop.getName(), controlLoop.getVersion());
-            }
-
-            controlLoopsDb = getControlLoopsFromDb(controlLoopsCreate);
-            assertThat(controlLoopsDb.getControlLoopList()).isEmpty();
+        for (ControlLoop controlLoop : controlLoopsCreate.getControlLoopList()) {
+            ControlLoops controlLoopsGet =
+                    instantiationProvider.getControlLoops(controlLoop.getName(), controlLoop.getVersion());
+            assertThat(controlLoopsGet.getControlLoopList()).hasSize(1);
+            assertThat(controlLoop).isEqualTo(controlLoopsGet.getControlLoopList().get(0));
         }
+
+        ControlLoops controlLoopsUpdate =
+                InstantiationUtils.getControlLoopsFromResource(CL_INSTANTIATION_UPDATE_JSON, "Crud");
+        assertThat(controlLoopsUpdate).isNotEqualTo(controlLoopsDb);
+
+        instantiationResponse = instantiationProvider.updateControlLoops(controlLoopsUpdate);
+        InstantiationUtils.assertInstantiationResponse(instantiationResponse, controlLoopsUpdate);
+
+        controlLoopsDb = getControlLoopsFromDb(controlLoopsCreate);
+        assertThat(controlLoopsDb.getControlLoopList()).isNotEmpty();
+        assertThat(controlLoopsUpdate).isEqualTo(controlLoopsDb);
+
+        InstantiationCommand instantiationCommand =
+                InstantiationUtils.getInstantiationCommandFromResource(CL_INSTANTIATION_CHANGE_STATE_JSON, "Crud");
+        instantiationResponse = instantiationProvider.issueControlLoopCommand(instantiationCommand);
+        InstantiationUtils.assertInstantiationResponse(instantiationResponse, instantiationCommand);
+
+        for (ToscaConceptIdentifier toscaConceptIdentifier : instantiationCommand.getControlLoopIdentifierList()) {
+            ControlLoops controlLoopsGet = instantiationProvider.getControlLoops(toscaConceptIdentifier.getName(),
+                    toscaConceptIdentifier.getVersion());
+            assertThat(controlLoopsGet.getControlLoopList()).hasSize(1);
+            assertThat(instantiationCommand.getOrderedState())
+                    .isEqualTo(controlLoopsGet.getControlLoopList().get(0).getOrderedState());
+        }
+
+        // in order to delete a controlLoop the state must be UNINITIALISED
+        controlLoopsCreate.getControlLoopList().forEach(cl -> cl.setState(ControlLoopState.UNINITIALISED));
+        instantiationProvider.updateControlLoops(controlLoopsCreate);
+
+        for (ControlLoop controlLoop : controlLoopsCreate.getControlLoopList()) {
+            instantiationProvider.deleteControlLoop(controlLoop.getName(), controlLoop.getVersion());
+        }
+
+        controlLoopsDb = getControlLoopsFromDb(controlLoopsCreate);
+        assertThat(controlLoopsDb.getControlLoopList()).isEmpty();
     }
 
     private ControlLoops getControlLoopsFromDb(ControlLoops controlLoopsSource) throws Exception {
         ControlLoops controlLoopsDb = new ControlLoops();
         controlLoopsDb.setControlLoopList(new ArrayList<>());
 
-        try (ControlLoopInstantiationProvider instantiationProvider = new ControlLoopInstantiationProvider(
-                controlLoopParameters, commissioningProvider, supervisionHandler)) {
+        var instantiationProvider =
+                new ControlLoopInstantiationProvider(clProvider, commissioningProvider, supervisionHandler);
 
-            for (ControlLoop controlLoop : controlLoopsSource.getControlLoopList()) {
-                ControlLoops controlLoopsFromDb =
-                        instantiationProvider.getControlLoops(controlLoop.getName(), controlLoop.getVersion());
-                controlLoopsDb.getControlLoopList().addAll(controlLoopsFromDb.getControlLoopList());
-            }
-            return controlLoopsDb;
+        for (ControlLoop controlLoop : controlLoopsSource.getControlLoopList()) {
+            ControlLoops controlLoopsFromDb =
+                    instantiationProvider.getControlLoops(controlLoop.getName(), controlLoop.getVersion());
+            controlLoopsDb.getControlLoopList().addAll(controlLoopsFromDb.getControlLoopList());
         }
+        return controlLoopsDb;
     }
 
     @Test
@@ -185,37 +207,36 @@ class ControlLoopInstantiationProviderTest {
 
         ControlLoop controlLoop0 = controlLoops.getControlLoopList().get(0);
 
-        try (ControlLoopInstantiationProvider instantiationProvider = new ControlLoopInstantiationProvider(
-                controlLoopParameters, commissioningProvider, supervisionHandler)) {
+        var instantiationProvider =
+                new ControlLoopInstantiationProvider(clProvider, commissioningProvider, supervisionHandler);
 
-            // to validate control Loop, it needs to define ToscaServiceTemplate
-            InstantiationUtils.storeToscaServiceTemplate(TOSCA_TEMPLATE_YAML, commissioningProvider);
+        // to validate control Loop, it needs to define ToscaServiceTemplate
+        InstantiationUtils.storeToscaServiceTemplate(TOSCA_TEMPLATE_YAML, commissioningProvider);
 
-            assertThatThrownBy(
-                    () -> instantiationProvider.deleteControlLoop(controlLoop0.getName(), controlLoop0.getVersion()))
-                            .hasMessageMatching(CONTROL_LOOP_NOT_FOUND);
+        assertThatThrownBy(
+                () -> instantiationProvider.deleteControlLoop(controlLoop0.getName(), controlLoop0.getVersion()))
+                        .hasMessageMatching(CONTROL_LOOP_NOT_FOUND);
 
-            InstantiationUtils.assertInstantiationResponse(instantiationProvider.createControlLoops(controlLoops),
-                    controlLoops);
+        InstantiationUtils.assertInstantiationResponse(instantiationProvider.createControlLoops(controlLoops),
+                controlLoops);
 
-            for (ControlLoopState state : ControlLoopState.values()) {
-                if (!ControlLoopState.UNINITIALISED.equals(state)) {
-                    assertThatDeleteThrownBy(controlLoops, state);
-                }
+        for (ControlLoopState state : ControlLoopState.values()) {
+            if (!ControlLoopState.UNINITIALISED.equals(state)) {
+                assertThatDeleteThrownBy(controlLoops, state);
             }
+        }
 
-            controlLoop0.setState(ControlLoopState.UNINITIALISED);
-            instantiationProvider.updateControlLoops(controlLoops);
+        controlLoop0.setState(ControlLoopState.UNINITIALISED);
+        instantiationProvider.updateControlLoops(controlLoops);
 
-            for (ControlLoop controlLoop : controlLoops.getControlLoopList()) {
-                instantiationProvider.deleteControlLoop(controlLoop.getName(), controlLoop.getVersion());
-            }
+        for (ControlLoop controlLoop : controlLoops.getControlLoopList()) {
+            instantiationProvider.deleteControlLoop(controlLoop.getName(), controlLoop.getVersion());
+        }
 
-            for (ControlLoop controlLoop : controlLoops.getControlLoopList()) {
-                ControlLoops controlLoopsGet =
-                        instantiationProvider.getControlLoops(controlLoop.getName(), controlLoop.getVersion());
-                assertThat(controlLoopsGet.getControlLoopList()).isEmpty();
-            }
+        for (ControlLoop controlLoop : controlLoops.getControlLoopList()) {
+            ControlLoops controlLoopsGet =
+                    instantiationProvider.getControlLoops(controlLoop.getName(), controlLoop.getVersion());
+            assertThat(controlLoopsGet.getControlLoopList()).isEmpty();
         }
     }
 
@@ -224,14 +245,13 @@ class ControlLoopInstantiationProviderTest {
 
         controlLoop.setState(state);
 
-        try (ControlLoopInstantiationProvider instantiationProvider = new ControlLoopInstantiationProvider(
-                controlLoopParameters, commissioningProvider, supervisionHandler)) {
+        var instantiationProvider =
+                new ControlLoopInstantiationProvider(clProvider, commissioningProvider, supervisionHandler);
 
-            instantiationProvider.updateControlLoops(controlLoops);
-            assertThatThrownBy(
-                    () -> instantiationProvider.deleteControlLoop(controlLoop.getName(), controlLoop.getVersion()))
-                            .hasMessageMatching(String.format(DELETE_BAD_REQUEST, state));
-        }
+        instantiationProvider.updateControlLoops(controlLoops);
+        assertThatThrownBy(
+                () -> instantiationProvider.deleteControlLoop(controlLoop.getName(), controlLoop.getVersion()))
+                        .hasMessageMatching(String.format(DELETE_BAD_REQUEST, state));
     }
 
     @Test
@@ -242,21 +262,20 @@ class ControlLoopInstantiationProviderTest {
         ControlLoops controlLoopsDb = getControlLoopsFromDb(controlLoopsCreate);
         assertThat(controlLoopsDb.getControlLoopList()).isEmpty();
 
-        try (ControlLoopInstantiationProvider instantiationProvider = new ControlLoopInstantiationProvider(
-                controlLoopParameters, commissioningProvider, supervisionHandler)) {
+        var instantiationProvider =
+                new ControlLoopInstantiationProvider(clProvider, commissioningProvider, supervisionHandler);
 
-            // to validate control Loop, it needs to define ToscaServiceTemplate
-            InstantiationUtils.storeToscaServiceTemplate(TOSCA_TEMPLATE_YAML, commissioningProvider);
+        // to validate control Loop, it needs to define ToscaServiceTemplate
+        InstantiationUtils.storeToscaServiceTemplate(TOSCA_TEMPLATE_YAML, commissioningProvider);
 
-            InstantiationResponse instantiationResponse = instantiationProvider.createControlLoops(controlLoopsCreate);
-            InstantiationUtils.assertInstantiationResponse(instantiationResponse, controlLoopsCreate);
+        InstantiationResponse instantiationResponse = instantiationProvider.createControlLoops(controlLoopsCreate);
+        InstantiationUtils.assertInstantiationResponse(instantiationResponse, controlLoopsCreate);
 
-            assertThatThrownBy(() -> instantiationProvider.createControlLoops(controlLoopsCreate)).hasMessageMatching(
-                    controlLoopsCreate.getControlLoopList().get(0).getKey().asIdentifier() + " already defined");
+        assertThatThrownBy(() -> instantiationProvider.createControlLoops(controlLoopsCreate)).hasMessageMatching(
+                controlLoopsCreate.getControlLoopList().get(0).getKey().asIdentifier() + " already defined");
 
-            for (ControlLoop controlLoop : controlLoopsCreate.getControlLoopList()) {
-                instantiationProvider.deleteControlLoop(controlLoop.getName(), controlLoop.getVersion());
-            }
+        for (ControlLoop controlLoop : controlLoopsCreate.getControlLoopList()) {
+            instantiationProvider.deleteControlLoop(controlLoop.getName(), controlLoop.getVersion());
         }
     }
 
@@ -265,17 +284,15 @@ class ControlLoopInstantiationProviderTest {
         ControlLoops controlLoops = InstantiationUtils
                 .getControlLoopsFromResource(CL_INSTANTIATION_DEFINITION_NAME_NOT_FOUND_JSON, "ClElementNotFound");
 
-        try (ControlLoopInstantiationProvider provider = new ControlLoopInstantiationProvider(controlLoopParameters,
-                commissioningProvider, supervisionHandler)) {
+        var provider = new ControlLoopInstantiationProvider(clProvider, commissioningProvider, supervisionHandler);
 
-            // to validate control Loop, it needs to define ToscaServiceTemplate
-            InstantiationUtils.storeToscaServiceTemplate(TOSCA_TEMPLATE_YAML, commissioningProvider);
+        // to validate control Loop, it needs to define ToscaServiceTemplate
+        InstantiationUtils.storeToscaServiceTemplate(TOSCA_TEMPLATE_YAML, commissioningProvider);
 
-            assertThat(getControlLoopsFromDb(controlLoops).getControlLoopList()).isEmpty();
+        assertThat(getControlLoopsFromDb(controlLoops).getControlLoopList()).isEmpty();
 
-            assertThatThrownBy(() -> provider.createControlLoops(controlLoops))
-                    .hasMessageMatching(CONTROLLOOP_ELEMENT_NAME_NOT_FOUND);
-        }
+        assertThatThrownBy(() -> provider.createControlLoops(controlLoops))
+                .hasMessageMatching(CONTROLLOOP_ELEMENT_NAME_NOT_FOUND);
     }
 
     @Test
@@ -285,20 +302,17 @@ class ControlLoopInstantiationProviderTest {
 
         assertThat(getControlLoopsFromDb(controlLoops).getControlLoopList()).isEmpty();
 
-        try (ControlLoopInstantiationProvider provider = new ControlLoopInstantiationProvider(controlLoopParameters,
-                commissioningProvider, supervisionHandler)) {
-            assertThatThrownBy(() -> provider.createControlLoops(controlLoops))
-                    .hasMessageMatching(CONTROLLOOP_DEFINITION_NOT_FOUND);
-        }
+        var provider = new ControlLoopInstantiationProvider(clProvider, commissioningProvider, supervisionHandler);
+        assertThatThrownBy(() -> provider.createControlLoops(controlLoops))
+                .hasMessageMatching(CONTROLLOOP_DEFINITION_NOT_FOUND);
     }
 
     @Test
     void testIssueControlLoopCommand_OrderedStateInvalid() throws ControlLoopRuntimeException, IOException {
-        try (ControlLoopInstantiationProvider instantiationProvider = new ControlLoopInstantiationProvider(
-                controlLoopParameters, commissioningProvider, supervisionHandler)) {
-            assertThatThrownBy(() -> instantiationProvider.issueControlLoopCommand(new InstantiationCommand()))
-                    .hasMessageMatching(ORDERED_STATE_INVALID);
-        }
+        var instantiationProvider =
+                new ControlLoopInstantiationProvider(clProvider, commissioningProvider, supervisionHandler);
+        assertThatThrownBy(() -> instantiationProvider.issueControlLoopCommand(new InstantiationCommand()))
+                .hasMessageMatching(ORDERED_STATE_INVALID);
     }
 
     @Test
@@ -309,61 +323,60 @@ class ControlLoopInstantiationProviderTest {
                 InstantiationUtils.getControlLoopsFromResource(CL_INSTANTIATION_CREATE_JSON, "V1");
         assertThat(getControlLoopsFromDb(controlLoopsV1).getControlLoopList()).isEmpty();
 
-        try (ControlLoopInstantiationProvider instantiationProvider = new ControlLoopInstantiationProvider(
-                controlLoopParameters, commissioningProvider, supervisionHandler)) {
+        var instantiationProvider =
+                new ControlLoopInstantiationProvider(clProvider, commissioningProvider, supervisionHandler);
 
-            // to validate control Loop, it needs to define ToscaServiceTemplate
-            InstantiationUtils.storeToscaServiceTemplate(TOSCA_TEMPLATE_YAML, commissioningProvider);
+        // to validate control Loop, it needs to define ToscaServiceTemplate
+        InstantiationUtils.storeToscaServiceTemplate(TOSCA_TEMPLATE_YAML, commissioningProvider);
 
-            InstantiationUtils.assertInstantiationResponse(instantiationProvider.createControlLoops(controlLoopsV1),
-                    controlLoopsV1);
+        InstantiationUtils.assertInstantiationResponse(instantiationProvider.createControlLoops(controlLoopsV1),
+                controlLoopsV1);
 
-            // create controlLoops V2
-            ControlLoops controlLoopsV2 =
-                    InstantiationUtils.getControlLoopsFromResource(CL_INSTANTIATION_CREATE_JSON, "V2");
-            assertThat(getControlLoopsFromDb(controlLoopsV2).getControlLoopList()).isEmpty();
-            InstantiationUtils.assertInstantiationResponse(instantiationProvider.createControlLoops(controlLoopsV2),
-                    controlLoopsV2);
+        // create controlLoops V2
+        ControlLoops controlLoopsV2 =
+                InstantiationUtils.getControlLoopsFromResource(CL_INSTANTIATION_CREATE_JSON, "V2");
+        assertThat(getControlLoopsFromDb(controlLoopsV2).getControlLoopList()).isEmpty();
+        InstantiationUtils.assertInstantiationResponse(instantiationProvider.createControlLoops(controlLoopsV2),
+                controlLoopsV2);
 
-            // GET controlLoops V2
-            for (ControlLoop controlLoop : controlLoopsV2.getControlLoopList()) {
-                ControlLoops controlLoopsGet =
-                        instantiationProvider.getControlLoops(controlLoop.getName(), controlLoop.getVersion());
-                assertThat(controlLoopsGet.getControlLoopList()).hasSize(1);
-                assertThat(controlLoop).isEqualTo(controlLoopsGet.getControlLoopList().get(0));
-            }
+        // GET controlLoops V2
+        for (ControlLoop controlLoop : controlLoopsV2.getControlLoopList()) {
+            ControlLoops controlLoopsGet =
+                    instantiationProvider.getControlLoops(controlLoop.getName(), controlLoop.getVersion());
+            assertThat(controlLoopsGet.getControlLoopList()).hasSize(1);
+            assertThat(controlLoop).isEqualTo(controlLoopsGet.getControlLoopList().get(0));
+        }
 
-            // DELETE controlLoops V1
-            for (ControlLoop controlLoop : controlLoopsV1.getControlLoopList()) {
-                instantiationProvider.deleteControlLoop(controlLoop.getName(), controlLoop.getVersion());
-            }
+        // DELETE controlLoops V1
+        for (ControlLoop controlLoop : controlLoopsV1.getControlLoopList()) {
+            instantiationProvider.deleteControlLoop(controlLoop.getName(), controlLoop.getVersion());
+        }
 
-            // GET controlLoops V1 is not available
-            for (ControlLoop controlLoop : controlLoopsV1.getControlLoopList()) {
-                ControlLoops controlLoopsGet =
-                        instantiationProvider.getControlLoops(controlLoop.getName(), controlLoop.getVersion());
-                assertThat(controlLoopsGet.getControlLoopList()).isEmpty();
-            }
+        // GET controlLoops V1 is not available
+        for (ControlLoop controlLoop : controlLoopsV1.getControlLoopList()) {
+            ControlLoops controlLoopsGet =
+                    instantiationProvider.getControlLoops(controlLoop.getName(), controlLoop.getVersion());
+            assertThat(controlLoopsGet.getControlLoopList()).isEmpty();
+        }
 
-            // GET controlLoops V2 is still available
-            for (ControlLoop controlLoop : controlLoopsV2.getControlLoopList()) {
-                ControlLoops controlLoopsGet =
-                        instantiationProvider.getControlLoops(controlLoop.getName(), controlLoop.getVersion());
-                assertThat(controlLoopsGet.getControlLoopList()).hasSize(1);
-                assertThat(controlLoop).isEqualTo(controlLoopsGet.getControlLoopList().get(0));
-            }
+        // GET controlLoops V2 is still available
+        for (ControlLoop controlLoop : controlLoopsV2.getControlLoopList()) {
+            ControlLoops controlLoopsGet =
+                    instantiationProvider.getControlLoops(controlLoop.getName(), controlLoop.getVersion());
+            assertThat(controlLoopsGet.getControlLoopList()).hasSize(1);
+            assertThat(controlLoop).isEqualTo(controlLoopsGet.getControlLoopList().get(0));
+        }
 
-            // DELETE controlLoops V2
-            for (ControlLoop controlLoop : controlLoopsV2.getControlLoopList()) {
-                instantiationProvider.deleteControlLoop(controlLoop.getName(), controlLoop.getVersion());
-            }
+        // DELETE controlLoops V2
+        for (ControlLoop controlLoop : controlLoopsV2.getControlLoopList()) {
+            instantiationProvider.deleteControlLoop(controlLoop.getName(), controlLoop.getVersion());
+        }
 
-            // GET controlLoops V2 is not available
-            for (ControlLoop controlLoop : controlLoopsV2.getControlLoopList()) {
-                ControlLoops controlLoopsGet =
-                        instantiationProvider.getControlLoops(controlLoop.getName(), controlLoop.getVersion());
-                assertThat(controlLoopsGet.getControlLoopList()).isEmpty();
-            }
+        // GET controlLoops V2 is not available
+        for (ControlLoop controlLoop : controlLoopsV2.getControlLoopList()) {
+            ControlLoops controlLoopsGet =
+                    instantiationProvider.getControlLoops(controlLoop.getName(), controlLoop.getVersion());
+            assertThat(controlLoopsGet.getControlLoopList()).isEmpty();
         }
     }
 }

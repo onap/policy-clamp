@@ -34,7 +34,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ClElementStatisticsList;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantStatisticsList;
-import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
 import org.onap.policy.clamp.controlloop.runtime.monitoring.MonitoringProvider;
 import org.onap.policy.clamp.controlloop.runtime.util.rest.CommonRestController;
 import org.onap.policy.common.utils.coder.Coder;
@@ -70,7 +69,7 @@ class MonitoringQueryControllerTest extends CommonRestController {
     private static final String CLELEMENT_STATS_PER_CL_ENDPOINT = "monitoring/clelements/controlloop";
 
     @Autowired
-    private ClRuntimeParameterGroup clRuntimeParameterGroup;
+    private MonitoringProvider monitoringProvider;
 
     @LocalServerPort
     private int randomServerPort;
@@ -92,14 +91,12 @@ class MonitoringQueryControllerTest extends CommonRestController {
     public void setUpBeforeEach() throws Exception {
         super.setHttpPrefix(randomServerPort);
 
-        try (var monitoringProvider = new MonitoringProvider(clRuntimeParameterGroup)) {
-            // Insert Participant statistics to DB
-            participantStatisticsList =
-                    monitoringProvider.createParticipantStatistics(inputParticipantStatistics.getStatisticsList());
-            // Insert CL Element statistics to DB
-            clElementStatisticsList =
-                    monitoringProvider.createClElementStatistics(inputClElementStatistics.getClElementStatistics());
-        }
+        // Insert Participant statistics to DB
+        participantStatisticsList =
+                monitoringProvider.createParticipantStatistics(inputParticipantStatistics.getStatisticsList());
+        // Insert CL Element statistics to DB
+        clElementStatisticsList =
+                monitoringProvider.createClElementStatistics(inputClElementStatistics.getClElementStatistics());
     }
 
     @Test
