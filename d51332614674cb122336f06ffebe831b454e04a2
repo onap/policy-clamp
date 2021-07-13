@@ -817,6 +817,30 @@
     },
     {
       "key": {
+        "uuid": "bbf031ed_22ce20f6",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/PodStatusValidator.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2021-07-13T15:55:21Z",
+      "side": 1,
+      "message": "Yes, I agree. Have included it in TOSCA.",
+      "parentUuid": "ce5fb79f_76321afc",
+      "range": {
+        "startLine": 78,
+        "startChar": 33,
+        "endLine": 78,
+        "endChar": 38
+      },
+      "revId": "d51332614674cb122336f06ffebe831b454e04a2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "93abb4a6_f300023c",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/PodStatusValidator.java",
         "patchSetId": 3
