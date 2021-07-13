@@ -22,8 +22,10 @@ package org.onap.policy.clamp.controlloop.runtime;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
 @SpringBootApplication
+@ConfigurationPropertiesScan("org.onap.policy.clamp.controlloop.runtime.main.parameters")
 public class Application {
 
     public static void main(String[] args) {
