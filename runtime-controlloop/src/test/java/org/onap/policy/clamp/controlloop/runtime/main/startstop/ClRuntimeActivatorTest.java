@@ -27,8 +27,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
-import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterHandler;
 import org.onap.policy.clamp.controlloop.runtime.supervision.SupervisionHandler;
+import org.onap.policy.clamp.controlloop.runtime.util.CommonTestData;
 
 /**
  * Class to perform unit test of {@link ClRuntimeActivator}}.
@@ -38,8 +38,7 @@ class ClRuntimeActivatorTest {
 
     @Test
     void testStartAndStop() throws Exception {
-        final String path = "src/test/resources/parameters/TestParameters.json";
-        ClRuntimeParameterGroup parameterGroup = new ClRuntimeParameterHandler().getParameters(path);
+        ClRuntimeParameterGroup parameterGroup = CommonTestData.geParameterGroup("Activator");
         var supervisionHandler = Mockito.mock(SupervisionHandler.class);
 
         try (var activator = new ClRuntimeActivator(parameterGroup, supervisionHandler)) {
@@ -47,12 +46,10 @@ class ClRuntimeActivatorTest {
             assertFalse(activator.isAlive());
             activator.start();
             assertTrue(activator.isAlive());
-            assertTrue(activator.getParameterGroup().isValid());
 
             // repeat start - should throw an exception
             assertThatIllegalStateException().isThrownBy(() -> activator.start());
             assertTrue(activator.isAlive());
-            assertTrue(activator.getParameterGroup().isValid());
 
             activator.stop();
             assertFalse(activator.isAlive());

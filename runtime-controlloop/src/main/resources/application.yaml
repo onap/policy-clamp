@@ -19,4 +19,37 @@ server:
 
 
 runtime:
-  file: src/main/resources/parameters/ClRuntimeParameters.json
+  supervisionScannerIntervalSec: 1000
+  participantStateChangeIntervalSec: 1000
+  participantClUpdateIntervalSec: 1000
+  participantClStateChangeIntervalSec: 1000
+  participantParameters:
+    heartBeatMs: 120000
+    updateParameters:
+      maxRetryCount: 1
+      maxWaitMs: 30000
+    stateChangeParameters:
+      maxRetryCount: 1
+      maxWaitMs: 30000
+  databaseProviderParameters:
+    name: PolicyProviderParameterGroup
+    implementation: org.onap.policy.models.provider.impl.DatabasePolicyModelsProviderImpl
+    databaseDriver: org.mariadb.jdbc.Driver
+    databaseUrl: jdbc:mariadb://${mariadb.host:mariadb}:${mariadb.port:3306}/controlloop
+    databaseUser: policy
+    databasePassword: P01icY
+    persistenceUnit: CommissioningMariaDb
+  topicParameterGroup:
+    topicSources[0]:
+      topic: POLICY-CLRUNTIME-PARTICIPANT
+      servers[0]: ${topicServer:message-router}
+      topicCommInfrastructure: dmaap
+      fetchTimeout: 15000
+    topicSinks[0]:
+      topic: POLICY-CLRUNTIME-PARTICIPANT
+      servers[0]: ${topicServer:message-router}
+      topicCommInfrastructure: dmaap
+    topicSinks[1]:
+      topic: POLICY-NOTIFICATION
+      servers[0]: ${topicServer:message-router}
+      topicCommInfrastructure: dmaap

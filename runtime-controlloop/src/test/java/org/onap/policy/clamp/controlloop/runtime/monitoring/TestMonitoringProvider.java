@@ -23,6 +23,7 @@ package org.onap.policy.clamp.controlloop.runtime.monitoring;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
@@ -32,6 +33,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -80,7 +82,7 @@ class TestMonitoringProvider {
 
     @Test
     void testCreateParticipantStatistics() throws Exception {
-        ClRuntimeParameterGroup parameters = CommonTestData.geParameterGroup(0, "createparStat");
+        ClRuntimeParameterGroup parameters = CommonTestData.geParameterGroup("createparStat");
 
         try (MonitoringProvider provider = new MonitoringProvider(parameters)) {
             // Creating statistics data in db with null input
@@ -104,7 +106,7 @@ class TestMonitoringProvider {
 
     @Test
     void testGetParticipantStatistics() throws Exception {
-        ClRuntimeParameterGroup parameters = CommonTestData.geParameterGroup(0, "getparStat");
+        ClRuntimeParameterGroup parameters = CommonTestData.geParameterGroup("getparStat");
         try (MonitoringProvider provider = new MonitoringProvider(parameters)) {
             ParticipantStatisticsList getResponse;
 
@@ -134,7 +136,7 @@ class TestMonitoringProvider {
 
     @Test
     void testCreateClElementStatistics() throws Exception {
-        ClRuntimeParameterGroup parameters = CommonTestData.geParameterGroup(0, "createelemstat");
+        ClRuntimeParameterGroup parameters = CommonTestData.geParameterGroup("createelemstat");
 
         try (MonitoringProvider provider = new MonitoringProvider(parameters)) {
             // Creating statistics data in db with null input
@@ -158,10 +160,9 @@ class TestMonitoringProvider {
 
     @Test
     void testGetClElementStatistics() throws Exception {
-        ClRuntimeParameterGroup parameters = CommonTestData.geParameterGroup(0, "getelemstat");
+        ClRuntimeParameterGroup parameters = CommonTestData.geParameterGroup("getelemstat");
 
         try (MonitoringProvider provider = new MonitoringProvider(parameters)) {
-            ClElementStatisticsList getResponse;
 
             assertThatThrownBy(() -> {
                 provider.fetchFilteredClElementStatistics(null, null, null, null, null, 0);
@@ -169,7 +170,8 @@ class TestMonitoringProvider {
 
             provider.createClElementStatistics(inputClElementStatistics.getClElementStatistics());
 
-            getResponse = provider.fetchFilteredClElementStatistics("name1", null, null, null, null, 0);
+            ClElementStatisticsList getResponse =
+                    provider.fetchFilteredClElementStatistics("name1", null, null, null, null, 0);
 
             assertThat(getResponse.getClElementStatistics()).hasSize(2);
             assertEquals(getResponse.getClElementStatistics().get(0).toString().replaceAll("\\s+", ""),
@@ -189,17 +191,26 @@ class TestMonitoringProvider {
 
     @Test
     void testGetParticipantStatsPerCL() throws Exception {
-        ClRuntimeParameterGroup parameters = CommonTestData.geParameterGroup(0, "getparStatCL");
+        ClRuntimeParameterGroup parameters = CommonTestData.geParameterGroup("getparStatCL");
 
-        try (MonitoringProvider provider = Mockito.spy(new MonitoringProvider(parameters))) {
-
+        try (MonitoringProvider provider = new MonitoringProvider(parameters)) {
             provider.createParticipantStatistics(inputParticipantStatistics.getStatisticsList());
             // Mock the response for fetching participant conceptIdentifiers per control loop
             List<ToscaConceptIdentifier> conceptIdentifiers = new ArrayList<>();
             conceptIdentifiers.add(new ToscaConceptIdentifier("name1", "1.001"));
-            when(provider.getAllParticipantIdsPerControlLoop("testName", "1.001")).thenReturn(conceptIdentifiers);
-            ParticipantStatisticsList getResponse;
-            getResponse = provider.fetchParticipantStatsPerControlLoop("testName", "1.001");
+
+            var controlLoop = new ControlLoop();
+            var element = new ControlLoopElement();
+            element.setParticipantId(new ToscaConceptIdentifier("name1", "1.001"));
+            controlLoop.setElements(Map.of(UUID.randomUUID(), element));
+            ControlLoopProvider mockClProvider = Mockito.mock(ControlLoopProvider.class);
+            when(mockClProvider.getControlLoop(eq(new ToscaConceptIdentifier("testName", "1.001"))))
+                    .thenReturn(controlLoop);
+            Field controlLoopProviderField = provider.getClass().getDeclaredField(CL_PROVIDER_FIELD);
+            controlLoopProviderField.setAccessible(true);
+            controlLoopProviderField.set(provider, mockClProvider);
+
+            ParticipantStatisticsList getResponse = provider.fetchParticipantStatsPerControlLoop("testName", "1.001");
             assertThat(getResponse.getStatisticsList()).hasSize(2);
             assertEquals(getResponse.getStatisticsList().get(0).toString().replaceAll("\\s+", ""),
                     inputParticipantStatistics.getStatisticsList().get(0).toString().replaceAll("\\s+", ""));
@@ -211,7 +222,7 @@ class TestMonitoringProvider {
 
     @Test
     void testClElementStatsPerCL() throws Exception {
-        ClRuntimeParameterGroup parameters = CommonTestData.geParameterGroup(0, "getelemstatPerCL");
+        ClRuntimeParameterGroup parameters = CommonTestData.geParameterGroup("getelemstatPerCL");
 
         // Setup a dummy Control loop data
         ControlLoopElement mockClElement = new ControlLoopElement();

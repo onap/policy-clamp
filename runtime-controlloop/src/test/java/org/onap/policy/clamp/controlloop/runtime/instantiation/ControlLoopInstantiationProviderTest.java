@@ -90,7 +90,7 @@ class ControlLoopInstantiationProviderTest {
      */
     @BeforeAll
     public static void setupDbProviderParameters() throws PfModelException {
-        controlLoopParameters = CommonTestData.geParameterGroup(0, "instantproviderdb");
+        controlLoopParameters = CommonTestData.geParameterGroup("instantproviderdb");
         commissioningProvider = new CommissioningProvider(controlLoopParameters);
         var monitoringProvider = new MonitoringProvider(controlLoopParameters);
         supervisionHandler = new SupervisionHandler(controlLoopParameters, monitoringProvider, commissioningProvider);
