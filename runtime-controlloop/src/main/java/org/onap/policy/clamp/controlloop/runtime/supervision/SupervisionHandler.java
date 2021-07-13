@@ -21,34 +21,19 @@
 package org.onap.policy.clamp.controlloop.runtime.supervision;
 
 import java.util.List;
-import java.util.UUID;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import org.apache.commons.collections4.CollectionUtils;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
-import org.onap.policy.clamp.controlloop.common.exception.ControlLoopRuntimeException;
-import org.onap.policy.clamp.controlloop.common.handler.ControlLoopHandler;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ControlLoopProvider;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ParticipantProvider;
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopStateChange;
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopUpdate;
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageType;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStatus;
-import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningProvider;
-import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
 import org.onap.policy.clamp.controlloop.runtime.monitoring.MonitoringProvider;
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantControlLoopStateChangePublisher;
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantControlLoopUpdatePublisher;
-import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantStateChangePublisher;
-import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantStatusListener;
-import org.onap.policy.common.endpoints.event.comm.TopicSink;
-import org.onap.policy.common.endpoints.listeners.MessageTypeDispatcher;
-import org.onap.policy.common.utils.services.ServiceManager;
-import org.onap.policy.common.utils.services.ServiceManagerException;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.slf4j.Logger;
@@ -58,10 +43,11 @@ import org.springframework.stereotype.Component;
 /**
  * This class handles supervision of control loop instances, so only one object of this type should be built at a time.
  *
- * <p/> It is effectively a singleton that is started at system start.
+ * <p/>
+ * It is effectively a singleton that is started at system start.
  */
 @Component
-public class SupervisionHandler extends ControlLoopHandler {
+public class SupervisionHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(SupervisionHandler.class);
 
     private static final String CONTROL_LOOP_CANNOT_TRANSITION_FROM_STATE = "Control loop can't transition from state ";
@@ -69,58 +55,31 @@ public class SupervisionHandler extends ControlLoopHandler {
     private static final String TO_STATE = " to state ";
     private static final String AND_TRANSITIONING_TO_STATE = " and transitioning to state ";
 
-    private ControlLoopProvider controlLoopProvider;
-    private ParticipantProvider participantProvider;
+    private final ControlLoopProvider controlLoopProvider;
+    private final ParticipantProvider participantProvider;
     private final MonitoringProvider monitoringProvider;
-    private final CommissioningProvider commissioningProvider;
 
     // Publishers for participant communication
-    private ParticipantStateChangePublisher stateChangePublisher;
-    private ParticipantControlLoopUpdatePublisher controlLoopUpdatePublisher;
-    private ParticipantControlLoopStateChangePublisher controlLoopStateChangePublisher;
-
-    private long supervisionScannerIntervalSec;
-    private long participantStateChangeIntervalSec;
-    private long participantClUpdateIntervalSec;
-    private long participantClStateChangeIntervalSec;
-
-    // Database scanner
-    private SupervisionScanner scanner;
-
-    /**
-     * Used to manage the services.
-     */
-    private ServiceManager manager;
-    private ServiceManager publisherManager;
+    private final ParticipantControlLoopUpdatePublisher controlLoopUpdatePublisher;
+    private final ParticipantControlLoopStateChangePublisher controlLoopStateChangePublisher;
 
     /**
      * Create a handler.
      *
-     * @param clRuntimeParameterGroup the parameters for the control loop runtime
      * @param monitoringProvider the MonitoringProvider
-     * @param commissioningProvider the CommissioningProvider
+     * @param controlLoopProvider the ControlLoopProvider
+     * @param participantProvider the ParticipantProvider
+     * @param controlLoopUpdatePublisher the ParticipantControlLoopUpdatePublisher
+     * @param controlLoopStateChangePublisher the ParticipantControlLoopStateChangePublisher
      */
-    public SupervisionHandler(ClRuntimeParameterGroup clRuntimeParameterGroup, MonitoringProvider monitoringProvider,
-            CommissioningProvider commissioningProvider) {
-        super(clRuntimeParameterGroup.getDatabaseProviderParameters());
+    public SupervisionHandler(MonitoringProvider monitoringProvider, ControlLoopProvider controlLoopProvider,
+            ParticipantProvider participantProvider, ParticipantControlLoopUpdatePublisher controlLoopUpdatePublisher,
+            ParticipantControlLoopStateChangePublisher controlLoopStateChangePublisher) {
         this.monitoringProvider = monitoringProvider;
-        this.commissioningProvider = commissioningProvider;
-
-        // @formatter:off
-        this.manager = new ServiceManager()
-                        .addAction("ControlLoop Provider",
-                            () -> controlLoopProvider = new ControlLoopProvider(getDatabaseProviderParameters()),
-                            () -> controlLoopProvider = null)
-                        .addAction("Participant Provider",
-                            () -> participantProvider = new ParticipantProvider(getDatabaseProviderParameters()),
-                            () -> participantProvider = null);
-        // @formatter:on
-
-        supervisionScannerIntervalSec = clRuntimeParameterGroup.getSupervisionScannerIntervalSec();
-        participantStateChangeIntervalSec = clRuntimeParameterGroup.getParticipantClStateChangeIntervalSec();
-        participantClUpdateIntervalSec = clRuntimeParameterGroup.getParticipantClUpdateIntervalSec();
-        participantClStateChangeIntervalSec = clRuntimeParameterGroup.getParticipantClStateChangeIntervalSec();
-
+        this.controlLoopProvider = controlLoopProvider;
+        this.participantProvider = participantProvider;
+        this.controlLoopUpdatePublisher = controlLoopUpdatePublisher;
+        this.controlLoopStateChangePublisher = controlLoopStateChangePublisher;
     }
 
     /**
@@ -153,55 +112,6 @@ public class SupervisionHandler extends ControlLoopHandler {
                 throw new ControlLoopException(pfme.getErrorResponse().getResponseCode(), pfme.getMessage(), pfme);
             }
         }
-    }
-
-    @Override
-    public void startAndRegisterListeners(MessageTypeDispatcher msgDispatcher) {
-        msgDispatcher.register(ParticipantMessageType.PARTICIPANT_STATUS.name(), new ParticipantStatusListener(this));
-    }
-
-    @Override
-    public void startAndRegisterPublishers(List<TopicSink> topicSinks) {
-        // @formatter:off
-        this.publisherManager = new ServiceManager()
-                .addAction("Supervision scanner",
-                        () -> scanner =
-                        new SupervisionScanner(controlLoopProvider, supervisionScannerIntervalSec),
-                        () -> scanner.close())
-                .addAction("ControlLoopUpdate publisher",
-                        () -> controlLoopUpdatePublisher =
-                        new ParticipantControlLoopUpdatePublisher(topicSinks, participantClUpdateIntervalSec),
-                        () -> controlLoopUpdatePublisher.terminate())
-                .addAction("StateChange Publisher",
-                        () -> stateChangePublisher =
-                        new ParticipantStateChangePublisher(topicSinks, participantStateChangeIntervalSec),
-                        () -> stateChangePublisher.terminate())
-                .addAction("ControlLoopStateChange Publisher",
-                        () -> controlLoopStateChangePublisher =
-                        new ParticipantControlLoopStateChangePublisher(topicSinks, participantClStateChangeIntervalSec),
-                        () -> controlLoopStateChangePublisher.terminate());
-        // @formatter:on
-        try {
-            publisherManager.start();
-        } catch (final ServiceManagerException exp) {
-            throw new ControlLoopRuntimeException(Status.INTERNAL_SERVER_ERROR,
-                    "Supervision handler start of publishers or scanner failed", exp);
-        }
-    }
-
-    @Override
-    public void stopAndUnregisterPublishers() {
-        try {
-            publisherManager.stop();
-        } catch (final ServiceManagerException exp) {
-            throw new ControlLoopRuntimeException(Status.INTERNAL_SERVER_ERROR,
-                    "Supervision handler stop of publishers or scanner failed", exp);
-        }
-    }
-
-    @Override
-    public void stopAndUnregisterListeners(MessageTypeDispatcher msgDispatcher) {
-        msgDispatcher.unregister(ParticipantMessageType.PARTICIPANT_STATUS.name());
     }
 
     /**
@@ -270,7 +180,7 @@ public class SupervisionHandler extends ControlLoopHandler {
             case UNINITIALISED2PASSIVE:
             case PASSIVE:
                 controlLoop.setState(ControlLoopState.PASSIVE2UNINITIALISED);
-                sendControlLoopStateChange(controlLoop);
+                controlLoopStateChangePublisher.send(controlLoop);
                 break;
 
             case PASSIVE2UNINITIALISED:
@@ -294,7 +204,7 @@ public class SupervisionHandler extends ControlLoopHandler {
                 break;
             case UNINITIALISED:
                 controlLoop.setState(ControlLoopState.UNINITIALISED2PASSIVE);
-                sendControlLoopUpdate(controlLoop);
+                controlLoopUpdatePublisher.send(controlLoop);
                 break;
 
             case UNINITIALISED2PASSIVE:
@@ -305,7 +215,7 @@ public class SupervisionHandler extends ControlLoopHandler {
 
             case RUNNING:
                 controlLoop.setState(ControlLoopState.RUNNING2PASSIVE);
-                sendControlLoopStateChange(controlLoop);
+                controlLoopStateChangePublisher.send(controlLoop);
                 break;
 
             default:
@@ -329,7 +239,7 @@ public class SupervisionHandler extends ControlLoopHandler {
 
             case PASSIVE:
                 controlLoop.setState(ControlLoopState.PASSIVE2RUNNING);
-                sendControlLoopStateChange(controlLoop);
+                controlLoopStateChangePublisher.send(controlLoop);
                 break;
 
             default:
@@ -337,25 +247,6 @@ public class SupervisionHandler extends ControlLoopHandler {
                         + controlLoop.getState().name() + TO_STATE + controlLoop.getOrderedState());
                 break;
         }
-    }
-
-    private void sendControlLoopUpdate(ControlLoop controlLoop) throws PfModelException {
-        var pclu = new ParticipantControlLoopUpdate();
-        pclu.setControlLoopId(controlLoop.getKey().asIdentifier());
-        pclu.setControlLoop(controlLoop);
-        // TODO: We should look up the correct TOSCA node template here for the control loop
-        // Tiny hack implemented to return the tosca service template entry from the database and be passed onto dmaap
-        pclu.setControlLoopDefinition(commissioningProvider.getToscaServiceTemplate(null, null));
-        controlLoopUpdatePublisher.send(pclu);
-    }
-
-    private void sendControlLoopStateChange(ControlLoop controlLoop) {
-        var clsc = new ParticipantControlLoopStateChange();
-        clsc.setControlLoopId(controlLoop.getKey().asIdentifier());
-        clsc.setMessageId(UUID.randomUUID());
-        clsc.setOrderedState(controlLoop.getOrderedState());
-
-        controlLoopStateChangePublisher.send(clsc);
     }
 
     private void superviseParticipant(ParticipantStatus participantStatusMessage)
@@ -424,26 +315,6 @@ public class SupervisionHandler extends ControlLoopHandler {
 
         for (ControlLoop controlLoop : participantStatusMessage.getControlLoops().getControlLoopList()) {
             monitoringProvider.createClElementStatistics(controlLoop.getControlLoopElementStatisticsList(controlLoop));
-        }
-    }
-
-    @Override
-    public void startProviders() {
-        try {
-            manager.start();
-        } catch (final ServiceManagerException exp) {
-            throw new ControlLoopRuntimeException(Status.INTERNAL_SERVER_ERROR,
-                    "Supervision handler start of providers failed", exp);
-        }
-    }
-
-    @Override
-    public void stopProviders() {
-        try {
-            manager.stop();
-        } catch (final ServiceManagerException exp) {
-            throw new ControlLoopRuntimeException(Status.INTERNAL_SERVER_ERROR,
-                    "Supervision handler stop of providers failed", exp);
         }
     }
 

@@ -26,33 +26,36 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.onap.policy.clamp.controlloop.runtime.config.messaging.Listener;
+import org.onap.policy.clamp.controlloop.runtime.config.messaging.MessageDispatcherActivator;
+import org.onap.policy.clamp.controlloop.runtime.config.messaging.Publisher;
 import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
 import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterHandler;
 import org.onap.policy.clamp.controlloop.runtime.supervision.SupervisionHandler;
+import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantStatusListener;
 
 /**
- * Class to perform unit test of {@link ClRuntimeActivator}}.
+ * Class to perform unit test of {@link MessageDispatcherActivator}}.
  *
  */
-class ClRuntimeActivatorTest {
+class MessageDispatcherActivatorTest {
 
     @Test
     void testStartAndStop() throws Exception {
         final String path = "src/test/resources/parameters/TestParameters.json";
         ClRuntimeParameterGroup parameterGroup = new ClRuntimeParameterHandler().getParameters(path);
-        var supervisionHandler = Mockito.mock(SupervisionHandler.class);
+        var publishers = new Publisher[] {Mockito.mock(Publisher.class)};
+        var listeners = new Listener[] {new ParticipantStatusListener(Mockito.mock(SupervisionHandler.class))};
 
-        try (var activator = new ClRuntimeActivator(parameterGroup, supervisionHandler)) {
+        try (var activator = new MessageDispatcherActivator(parameterGroup, publishers, listeners)) {
 
             assertFalse(activator.isAlive());
             activator.start();
             assertTrue(activator.isAlive());
-            assertTrue(activator.getParameterGroup().isValid());
 
             // repeat start - should throw an exception
             assertThatIllegalStateException().isThrownBy(() -> activator.start());
             assertTrue(activator.isAlive());
-            assertTrue(activator.getParameterGroup().isValid());
 
             activator.stop();
             assertFalse(activator.isAlive());

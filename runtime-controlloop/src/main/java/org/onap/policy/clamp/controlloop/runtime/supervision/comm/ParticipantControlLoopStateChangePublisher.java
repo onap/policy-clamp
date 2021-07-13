@@ -20,23 +20,30 @@
 
 package org.onap.policy.clamp.controlloop.runtime.supervision.comm;
 
-import java.util.List;
+import java.util.UUID;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopStateChange;
-import org.onap.policy.common.endpoints.event.comm.TopicSink;
+import org.springframework.stereotype.Component;
 
 /**
  * This class is used to send ParticipantControlLoopStateChangePublisher messages to participants on DMaaP.
  */
+@Component
 public class ParticipantControlLoopStateChangePublisher
         extends AbstractParticipantPublisher<ParticipantControlLoopStateChange> {
 
     /**
-     * Constructor for instantiating ParticipantControlLoopStateChangePublisherPublisher.
+     * Send ControlLoopStateChange to Participant.
      *
-     * @param topicSinks the topic sinks
-     * @param interval time interval to send ParticipantControlLoopStateChangePublisher messages
+     * @param controlLoop the ControlLoop
      */
-    public ParticipantControlLoopStateChangePublisher(final List<TopicSink> topicSinks, final long interval) {
-        super(topicSinks, interval);
+    public void send(ControlLoop controlLoop) {
+        var clsc = new ParticipantControlLoopStateChange();
+        clsc.setControlLoopId(controlLoop.getKey().asIdentifier());
+        clsc.setMessageId(UUID.randomUUID());
+        clsc.setOrderedState(controlLoop.getOrderedState());
+
+        super.send(clsc);
     }
+
 }

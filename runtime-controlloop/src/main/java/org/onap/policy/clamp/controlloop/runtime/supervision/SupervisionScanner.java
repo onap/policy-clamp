@@ -27,13 +27,16 @@ import java.util.concurrent.TimeUnit;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ControlLoopProvider;
+import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
 import org.onap.policy.models.base.PfModelException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 /**
  * This class is used to scan the control loops in the database and check if they are in the correct state.
  */
+@Component
 public class SupervisionScanner implements Runnable, Closeable {
     private static final Logger LOGGER = LoggerFactory.getLogger(SupervisionScanner.class);
 
@@ -43,15 +46,17 @@ public class SupervisionScanner implements Runnable, Closeable {
     /**
      * Constructor for instantiating SupervisionScanner.
      *
+     * @param clRuntimeParameterGroup the parameters for the control loop runtime
      * @param controlLoopProvider the provider to use to read control loops from the database
-     * @param interval time interval to perform scans
      */
-    public SupervisionScanner(final ControlLoopProvider controlLoopProvider, final long interval) {
+    public SupervisionScanner(final ControlLoopProvider controlLoopProvider,
+            ClRuntimeParameterGroup clRuntimeParameterGroup) {
         this.controlLoopProvider = controlLoopProvider;
 
         // Kick off the timer
         timerPool = makeTimerPool();
-        timerPool.scheduleAtFixedRate(this, 0, interval, TimeUnit.SECONDS);
+        timerPool.scheduleAtFixedRate(this, 0, clRuntimeParameterGroup.getSupervisionScannerIntervalSec(),
+                TimeUnit.SECONDS);
     }
 
     @Override

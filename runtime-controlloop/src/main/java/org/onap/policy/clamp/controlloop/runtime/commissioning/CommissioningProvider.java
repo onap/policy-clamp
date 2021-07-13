@@ -25,8 +25,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.factories.SchemaFactoryWrapper;
-import java.io.Closeable;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -36,11 +34,8 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ControlLoopProvider;
 import org.onap.policy.clamp.controlloop.models.messages.rest.commissioning.CommissioningResponse;
-import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.provider.PolicyModelsProvider;
-import org.onap.policy.models.provider.PolicyModelsProviderFactory;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaCapabilityType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaDataType;
@@ -59,7 +54,7 @@ import org.springframework.stereotype.Component;
  * the callers.
  */
 @Component
-public class CommissioningProvider implements Closeable {
+public class CommissioningProvider {
     public static final String CONTROL_LOOP_NODE_TYPE = "org.onap.policy.clamp.controlloop.ControlLoop";
 
     private final PolicyModelsProvider modelsProvider;
@@ -70,32 +65,12 @@ public class CommissioningProvider implements Closeable {
     /**
      * Create a commissioning provider.
      *
-     * @param controlLoopParameters the parameters for access to the database
-     * @throws PfModelRuntimeException on errors creating the database provider
+     * @param modelsProvider the PolicyModelsProvider
+     * @param clProvider the ControlLoopProvider
      */
-    public CommissioningProvider(ClRuntimeParameterGroup controlLoopParameters) {
-        try {
-            modelsProvider = new PolicyModelsProviderFactory()
-                    .createPolicyModelsProvider(controlLoopParameters.getDatabaseProviderParameters());
-        } catch (PfModelException e) {
-            throw new PfModelRuntimeException(e);
-        }
-
-        try {
-            clProvider = new ControlLoopProvider(controlLoopParameters.getDatabaseProviderParameters());
-        } catch (PfModelException e) {
-            throw new PfModelRuntimeException(e);
-        }
-    }
-
-    @Override
-    public void close() throws IOException {
-        try {
-            modelsProvider.close();
-            clProvider.close();
-        } catch (PfModelException e) {
-            throw new IOException("error closing modelsProvider", e);
-        }
+    public CommissioningProvider(PolicyModelsProvider modelsProvider, ControlLoopProvider clProvider) {
+        this.modelsProvider = modelsProvider;
+        this.clProvider = clProvider;
     }
 
     /**

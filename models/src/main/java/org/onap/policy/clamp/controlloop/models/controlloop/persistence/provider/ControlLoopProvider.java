@@ -40,10 +40,12 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaEntity;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTypedEntityFilter;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaNodeTemplate;
+import org.springframework.stereotype.Component;
 
 /**
  * This class provides information on control loop concepts in the database to callers.
  */
+@Component
 public class ControlLoopProvider extends AbstractModelsProvider {
 
     /**

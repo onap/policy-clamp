@@ -22,8 +22,11 @@ package org.onap.policy.clamp.controlloop.runtime;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
+@ComponentScan({"org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider",
+    "org.onap.policy.clamp.controlloop.runtime"})
 public class Application {
 
     public static void main(String[] args) {

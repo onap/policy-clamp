@@ -20,8 +20,6 @@
 
 package org.onap.policy.clamp.controlloop.runtime.instantiation;
 
-import java.io.Closeable;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -39,14 +37,12 @@ import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationCommand;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationResponse;
 import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningProvider;
-import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
 import org.onap.policy.clamp.controlloop.runtime.supervision.SupervisionHandler;
 import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.common.parameters.ObjectValidationResult;
 import org.onap.policy.common.parameters.ValidationResult;
 import org.onap.policy.common.parameters.ValidationStatus;
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.springframework.stereotype.Component;
@@ -55,7 +51,7 @@ import org.springframework.stereotype.Component;
  * This class is dedicated to the Instantiation of Commissioned control loop.
  */
 @Component
-public class ControlLoopInstantiationProvider implements Closeable {
+public class ControlLoopInstantiationProvider {
     private final ControlLoopProvider controlLoopProvider;
     private final CommissioningProvider commissioningProvider;
     private final SupervisionHandler supervisionHandler;
@@ -65,25 +61,15 @@ public class ControlLoopInstantiationProvider implements Closeable {
     /**
      * Create a instantiation provider.
      *
-     * @param controlLoopParameters the parameters for access to the database
+     * @param controlLoopProvider ControlLoopProvider
      * @param commissioningProvider CommissioningProvider
      * @param supervisionHandler SupervisionHandler
-     * @throws PfModelRuntimeException on errors creating a provider
      */
-    public ControlLoopInstantiationProvider(ClRuntimeParameterGroup controlLoopParameters,
+    public ControlLoopInstantiationProvider(ControlLoopProvider controlLoopProvider,
             CommissioningProvider commissioningProvider, SupervisionHandler supervisionHandler) {
+        this.controlLoopProvider = controlLoopProvider;
         this.commissioningProvider = commissioningProvider;
         this.supervisionHandler = supervisionHandler;
-        try {
-            controlLoopProvider = new ControlLoopProvider(controlLoopParameters.getDatabaseProviderParameters());
-        } catch (PfModelException e) {
-            throw new PfModelRuntimeException(e);
-        }
-    }
-
-    @Override
-    public void close() throws IOException {
-        controlLoopProvider.close();
     }
 
     /**
