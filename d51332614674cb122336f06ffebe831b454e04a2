@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "611d96c8_61cdddcf",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/handler/ControlLoopElementHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-13T14:21:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "34c0ffaf_5af673b0",
+      "range": {
+        "startLine": 74,
+        "startChar": 24,
+        "endLine": 74,
+        "endChar": 30
+      },
+      "revId": "d51332614674cb122336f06ffebe831b454e04a2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4383c4dd_4e99b00e",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/handler/ControlLoopElementHandler.java",
         "patchSetId": 3
@@ -175,6 +199,30 @@
         "id": 6070
       },
       "writtenOn": "2021-07-13T14:19:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "abebd0c7_3b6c1bd2",
+      "range": {
+        "startLine": 77,
+        "startChar": 18,
+        "endLine": 77,
+        "endChar": 20
+      },
+      "revId": "d51332614674cb122336f06ffebe831b454e04a2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9e2deccc_df3b0b95",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/handler/ControlLoopElementHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-13T14:21:46Z",
       "side": 1,
       "message": "Done",
       "parentUuid": "abebd0c7_3b6c1bd2",
@@ -284,6 +332,30 @@
     },
     {
       "key": {
+        "uuid": "6599050e_b0957658",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/handler/ControlLoopElementHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-13T14:21:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "af7d40b4_803d37d1",
+      "range": {
+        "startLine": 146,
+        "startChar": 48,
+        "endLine": 146,
+        "endChar": 79
+      },
+      "revId": "d51332614674cb122336f06ffebe831b454e04a2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "91a5a5c7_415aaea2",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/handler/ControlLoopElementHandler.java",
         "patchSetId": 3
@@ -310,6 +382,24 @@
         "id": 6070
       },
       "writtenOn": "2021-07-13T14:19:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "91a5a5c7_415aaea2",
+      "revId": "d51332614674cb122336f06ffebe831b454e04a2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "09fe7b9c_1834757a",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/handler/ControlLoopElementHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-13T14:21:46Z",
       "side": 1,
       "message": "Done",
       "parentUuid": "91a5a5c7_415aaea2",
@@ -366,6 +456,30 @@
     },
     {
       "key": {
+        "uuid": "35c6fb59_ec356287",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/HelmClient.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-13T14:21:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9b96695e_61da3489",
+      "range": {
+        "startLine": 185,
+        "startChar": 33,
+        "endLine": 185,
+        "endChar": 46
+      },
+      "revId": "d51332614674cb122336f06ffebe831b454e04a2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f2087619_c8b1287b",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/HelmClient.java",
         "patchSetId": 3
@@ -398,6 +512,30 @@
         "id": 6070
       },
       "writtenOn": "2021-07-13T14:19:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f2087619_c8b1287b",
+      "range": {
+        "startLine": 217,
+        "startChar": 8,
+        "endLine": 221,
+        "endChar": 27
+      },
+      "revId": "d51332614674cb122336f06ffebe831b454e04a2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f14c31d0_8d4c1226",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/HelmClient.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-13T14:21:46Z",
       "side": 1,
       "message": "Done",
       "parentUuid": "f2087619_c8b1287b",
@@ -507,6 +645,30 @@
     },
     {
       "key": {
+        "uuid": "aa9e9838_18e87586",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/PodStatusValidator.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-13T14:21:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b176c552_266b0671",
+      "range": {
+        "startLine": 67,
+        "startChar": 35,
+        "endLine": 67,
+        "endChar": 54
+      },
+      "revId": "d51332614674cb122336f06ffebe831b454e04a2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e5452470_28a7240c",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/PodStatusValidator.java",
         "patchSetId": 3
@@ -533,6 +695,24 @@
         "id": 6070
       },
       "writtenOn": "2021-07-13T14:19:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e5452470_28a7240c",
+      "revId": "d51332614674cb122336f06ffebe831b454e04a2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "db1fc188_96feebe9",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/PodStatusValidator.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-13T14:21:46Z",
       "side": 1,
       "message": "Done",
       "parentUuid": "e5452470_28a7240c",
@@ -636,6 +816,30 @@
     },
     {
       "key": {
+        "uuid": "098c3d9f_793b9237",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/PodStatusValidator.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-13T14:21:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "93abb4a6_f300023c",
+      "range": {
+        "startLine": 92,
+        "startChar": 35,
+        "endLine": 92,
+        "endChar": 39
+      },
+      "revId": "d51332614674cb122336f06ffebe831b454e04a2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fae1b120_61c03833",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/PodStatusValidator.java",
         "patchSetId": 3
@@ -668,6 +872,30 @@
         "id": 6070
       },
       "writtenOn": "2021-07-13T14:19:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fae1b120_61c03833",
+      "range": {
+        "startLine": 103,
+        "startChar": 49,
+        "endLine": 103,
+        "endChar": 54
+      },
+      "revId": "d51332614674cb122336f06ffebe831b454e04a2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a9fc3b7_f5bf3c78",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/PodStatusValidator.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-13T14:21:46Z",
       "side": 1,
       "message": "Done",
       "parentUuid": "fae1b120_61c03833",
@@ -777,6 +1005,30 @@
     },
     {
       "key": {
+        "uuid": "a1beff04_1961c5b7",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/models/ChartInfo.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-13T14:21:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "67dfa8bd_0f80deb8",
+      "range": {
+        "startLine": 30,
+        "startChar": 0,
+        "endLine": 30,
+        "endChar": 18
+      },
+      "revId": "d51332614674cb122336f06ffebe831b454e04a2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "12075e39_57716249",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/models/ChartInfo.java",
         "patchSetId": 3
@@ -809,6 +1061,30 @@
         "id": 6070
       },
       "writtenOn": "2021-07-13T14:19:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "12075e39_57716249",
+      "range": {
+        "startLine": 44,
+        "startChar": 12,
+        "endLine": 44,
+        "endChar": 19
+      },
+      "revId": "d51332614674cb122336f06ffebe831b454e04a2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37d23770_fb60ae34",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/models/ChartInfo.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-13T14:21:46Z",
       "side": 1,
       "message": "Done",
       "parentUuid": "12075e39_57716249",
@@ -871,6 +1147,30 @@
     },
     {
       "key": {
+        "uuid": "f200058e_59b85047",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/service/ChartStore.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-13T14:21:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9ce83b54_69848266",
+      "range": {
+        "startLine": 104,
+        "startChar": 38,
+        "endLine": 104,
+        "endChar": 112
+      },
+      "revId": "d51332614674cb122336f06ffebe831b454e04a2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c091c73c_cf376289",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/service/ChartStore.java",
         "patchSetId": 3
@@ -903,6 +1203,30 @@
         "id": 6070
       },
       "writtenOn": "2021-07-13T14:19:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c091c73c_cf376289",
+      "range": {
+        "startLine": 107,
+        "startChar": 22,
+        "endLine": 107,
+        "endChar": 32
+      },
+      "revId": "d51332614674cb122336f06ffebe831b454e04a2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2773d941_9e5aaf2f",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/service/ChartStore.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-13T14:21:46Z",
       "side": 1,
       "message": "Done",
       "parentUuid": "c091c73c_cf376289",
@@ -1052,6 +1376,30 @@
       "side": 1,
       "message": "Seems like the actual exception message in PodStatusValidator doesn\u0027t have a space on it. So didnt change this one.",
       "parentUuid": "28a710de_1c217c21",
+      "range": {
+        "startLine": 102,
+        "startChar": 99,
+        "endLine": 102,
+        "endChar": 101
+      },
+      "revId": "d51332614674cb122336f06ffebe831b454e04a2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "52fa7855_cdeda39f",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/test/java/org.onap.policy.clamp.controlloop.participant.kubernetes/helm/PodStatusValidatorTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-13T14:21:46Z",
+      "side": 1,
+      "message": "should fix it in the validator class",
+      "parentUuid": "1d0f2c29_4e48bfbb",
       "range": {
         "startLine": 102,
         "startChar": 99,
