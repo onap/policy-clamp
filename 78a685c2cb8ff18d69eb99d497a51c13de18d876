@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9387b312_e4959993",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/handler/ControlLoopElementHandler.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-13T17:37:49Z",
+      "side": 1,
+      "message": "don\u0027t think these are needed, as local variables are probably sufficient",
+      "range": {
+        "startLine": 81,
+        "startChar": 3,
+        "endLine": 84,
+        "endChar": 0
+      },
+      "revId": "78a685c2cb8ff18d69eb99d497a51c13de18d876",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9a268e23_17fd0208",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/handler/ControlLoopElementHandler.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-13T17:37:49Z",
+      "side": 1,
+      "message": "why not just use Integer.parseInt?\n\na better option might be to declare a small nested static parameter class containing these two fields (with their default values) and then use the CODER.convert method to do the decoding:\n\n  public static class Config {\n    private int threadTimeout \u003d 60;\n    private int podStatusCheckInterval \u003d 30;\n  }\n\n  var config \u003d CODER.convert(getProperties(), Config.class)\n\nno more need for string constants, Float.parse, etc.",
+      "range": {
+        "startLine": 162,
+        "startChar": 49,
+        "endLine": 162,
+        "endChar": 71
+      },
+      "revId": "78a685c2cb8ff18d69eb99d497a51c13de18d876",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
