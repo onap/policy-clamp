@@ -4,14 +4,6 @@
     "participantStateChangeIntervalSec": 1000,
     "participantClUpdateIntervalSec": 1000,
     "participantClStateChangeIntervalSec": 1000,
-    "restServerParameters": {
-        "host": "0.0.0.0",
-        "port": 6969,
-        "userName": "healthcheck",
-        "password": "zb!XztG34",
-        "https": false,
-        "aaf": false
-    },
     "participantParameters": {
         "heartBeatMs": 120000,
         "updateParameters": {
@@ -27,10 +19,10 @@
         "name": "PolicyProviderParameterGroup",
         "implementation": "org.onap.policy.models.provider.impl.DatabasePolicyModelsProviderImpl",
         "databaseDriver": "org.h2.Driver",
-        "databaseUrl": "jdbc:h2:mem:testdb",
+        "databaseUrl": "${dbName}",
         "databaseUser": "policy",
         "databasePassword": "P01icY",
-        "persistenceUnit": "ToscaConceptTest"
+        "persistenceUnit": "InstantiationTests"
     },
     "topicParameterGroup": {
         "topicSources": [
@@ -46,13 +38,6 @@
         "topicSinks": [
             {
                 "topic": "POLICY-CLRUNTIME-PARTICIPANT",
-                "servers": [
-                    "localhost"
-                ],
-                "topicCommInfrastructure": "dmaap"
-            },
-            {
-                "topic": "POLICY-NOTIFICATION",
                 "servers": [
                     "localhost"
                 ],

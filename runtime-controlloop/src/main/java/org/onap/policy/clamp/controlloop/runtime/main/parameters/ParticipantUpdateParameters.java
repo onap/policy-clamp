@@ -18,19 +18,18 @@
 
 package org.onap.policy.clamp.controlloop.runtime.main.parameters;
 
+import javax.validation.constraints.Min;
 import lombok.Getter;
-import org.onap.policy.common.parameters.ParameterGroupImpl;
-import org.onap.policy.common.parameters.annotations.Min;
-import org.onap.policy.common.parameters.annotations.NotBlank;
-import org.onap.policy.common.parameters.annotations.NotNull;
+import lombok.Setter;
+import org.springframework.validation.annotation.Validated;
 
 /**
  * Parameters for Participant UPDATE requests.
  */
-@NotNull
-@NotBlank
 @Getter
-public class ParticipantUpdateParameters extends ParameterGroupImpl {
+@Setter
+@Validated
+public class ParticipantUpdateParameters {
 
     /**
      * Maximum number of times to re-send a request to a PDP.
@@ -44,11 +43,4 @@ public class ParticipantUpdateParameters extends ParameterGroupImpl {
     @Min(value = 0)
     private long maxWaitMs;
 
-    /**
-     * Constructs the object.
-     */
-    public ParticipantUpdateParameters() {
-        super(ParticipantUpdateParameters.class.getSimpleName());
-    }
 }
-

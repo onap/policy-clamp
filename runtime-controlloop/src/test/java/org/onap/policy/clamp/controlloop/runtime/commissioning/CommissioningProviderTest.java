@@ -28,9 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
-import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
+import org.onap.policy.clamp.controlloop.runtime.util.CommonTestData;
 import org.onap.policy.common.utils.coder.YamlJsonTranslator;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -42,27 +40,7 @@ class CommissioningProviderTest {
     private static final String TOSCA_SERVICE_TEMPLATE_YAML =
             "src/test/resources/rest/servicetemplates/pmsh_multiple_cl_tosca.yaml";
     private static final String TEMPLATE_IS_NULL = ".*serviceTemplate is marked non-null but is null";
-    private static final Coder CODER = new StandardCoder();
     private static final YamlJsonTranslator yamlTranslator = new YamlJsonTranslator();
-    private static int dbNum = 0;
-    private static final Object lockit = new Object();
-
-    private static String getParameterGroupAsString() {
-        dbNum++;
-        return ResourceUtils.getResourceAsString("src/test/resources/parameters/TestParameters.json")
-                .replace("jdbc:h2:mem:testdb", "jdbc:h2:mem:commissioningdb" + dbNum);
-    }
-
-    /**
-     * return a Cl Runtime Parameters.
-     *
-     * @throws CoderException .
-     */
-    public ClRuntimeParameterGroup getClRuntimeParameterGroup() throws CoderException {
-        synchronized (lockit) {
-            return CODER.decode(getParameterGroupAsString(), ClRuntimeParameterGroup.class);
-        }
-    }
 
     /**
      * Test the fetching of control loop definitions (ToscaServiceTemplates).
@@ -72,7 +50,7 @@ class CommissioningProviderTest {
     @Test
     void testGetControlLoopDefinitions() throws Exception {
         List<ToscaNodeTemplate> listOfTemplates;
-        ClRuntimeParameterGroup clRuntimeParameterGroup = getClRuntimeParameterGroup();
+        ClRuntimeParameterGroup clRuntimeParameterGroup = CommonTestData.geParameterGroup("getCLDefinitions");
 
         try (var provider = new CommissioningProvider(clRuntimeParameterGroup)) {
             ToscaServiceTemplate serviceTemplate = yamlTranslator.fromYaml(
@@ -108,7 +86,7 @@ class CommissioningProviderTest {
     @Test
     void testCreateControlLoopDefinitions() throws Exception {
         List<ToscaNodeTemplate> listOfTemplates;
-        ClRuntimeParameterGroup clRuntimeParameterGroup = getClRuntimeParameterGroup();
+        ClRuntimeParameterGroup clRuntimeParameterGroup = CommonTestData.geParameterGroup("createCLDefinitions");
 
         try (var provider = new CommissioningProvider(clRuntimeParameterGroup)) {
             // Test Service template is null
@@ -136,7 +114,7 @@ class CommissioningProviderTest {
     @Test
     void testDeleteControlLoopDefinitions() throws Exception {
         List<ToscaNodeTemplate> listOfTemplates;
-        ClRuntimeParameterGroup clRuntimeParameterGroup = getClRuntimeParameterGroup();
+        ClRuntimeParameterGroup clRuntimeParameterGroup = CommonTestData.geParameterGroup("deleteCLDefinitions");
 
         try (var provider = new CommissioningProvider(clRuntimeParameterGroup)) {
             ToscaServiceTemplate serviceTemplate = yamlTranslator.fromYaml(
@@ -162,7 +140,7 @@ class CommissioningProviderTest {
      */
     @Test
     void testGetControlLoopElementDefinitions() throws Exception {
-        ClRuntimeParameterGroup clRuntimeParameterGroup = getClRuntimeParameterGroup();
+        ClRuntimeParameterGroup clRuntimeParameterGroup = CommonTestData.geParameterGroup("getCLElDefinitions");
         try (var provider = new CommissioningProvider(clRuntimeParameterGroup)) {
             ToscaServiceTemplate serviceTemplate = yamlTranslator.fromYaml(
                     ResourceUtils.getResourceAsString(TOSCA_SERVICE_TEMPLATE_YAML), ToscaServiceTemplate.class);
@@ -207,3 +185,4 @@ class CommissioningProviderTest {
         return nodeTypes;
     }
 }
+

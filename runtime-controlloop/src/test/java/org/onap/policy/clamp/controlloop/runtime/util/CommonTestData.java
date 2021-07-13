@@ -33,19 +33,18 @@ import org.onap.policy.common.utils.resources.ResourceUtils;
  *
  */
 public class CommonTestData {
-    private static final Coder coder = new StandardCoder();
+    private static final Coder CODER = new StandardCoder();
 
     /**
      * Gets the standard Control Loop parameters.
      *
-     * @param port port to be inserted into the parameters
      * @param dbName the database name
      * @return the standard Control Loop parameters
      * @throws ControlLoopRuntimeException on errors reading the control loop parameters
      */
-    public static ClRuntimeParameterGroup geParameterGroup(final int port, final String dbName) {
+    public static ClRuntimeParameterGroup geParameterGroup(final String dbName) {
         try {
-            return coder.decode(getParameterGroupAsString(port, dbName), ClRuntimeParameterGroup.class);
+            return CODER.convert(getParameterGroupAsString(dbName), ClRuntimeParameterGroup.class);
 
         } catch (CoderException e) {
             throw new ControlLoopRuntimeException(Status.NOT_ACCEPTABLE, "cannot read Control Loop parameters", e);
@@ -55,12 +54,11 @@ public class CommonTestData {
     /**
      * Gets the standard Control Loop parameters, as a String.
      *
-     * @param port port to be inserted into the parameters
      * @param dbName the database name
      * @return the standard Control Loop parameters as string
      */
-    public static String getParameterGroupAsString(final int port, final String dbName) {
-        return ResourceUtils.getResourceAsString("src/test/resources/parameters/InstantiationConfigParametersStd.json")
-                .replace("${port}", String.valueOf(port)).replace("${dbName}", "jdbc:h2:mem:" + dbName);
+    public static String getParameterGroupAsString(final String dbName) {
+        return ResourceUtils.getResourceAsString("src/test/resources/parameters/TestParameters.json")
+                .replace("${dbName}", "jdbc:h2:mem:" + dbName);
     }
 }
