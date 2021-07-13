@@ -33,8 +33,8 @@ import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
-import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterHandler;
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantStatusListener;
+import org.onap.policy.clamp.controlloop.runtime.util.CommonTestData;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.coder.StandardCoderObject;
@@ -52,8 +52,7 @@ class MessageDispatcherActivatorTest {
 
     @Test
     void testStartAndStop() throws Exception {
-        final String path = "src/test/resources/parameters/TestParameters.json";
-        ClRuntimeParameterGroup parameterGroup = new ClRuntimeParameterHandler().getParameters(path);
+        ClRuntimeParameterGroup parameterGroup = CommonTestData.geParameterGroup("dbtest");
 
         var publisherFirst = spy(mock(Publisher.class));
         var publisherSecond = spy(mock(Publisher.class));

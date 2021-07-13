@@ -97,7 +97,7 @@ class TestMonitoringProvider {
 
     @Test
     void testCreateParticipantStatistics() throws Exception {
-        ClRuntimeParameterGroup parameters = CommonTestData.geParameterGroup(0, "createparStat");
+        ClRuntimeParameterGroup parameters = CommonTestData.geParameterGroup("createparStat");
         participantStatisticsProvider = new ParticipantStatisticsProvider(parameters.getDatabaseProviderParameters());
         clElementStatisticsProvider = new ClElementStatisticsProvider(parameters.getDatabaseProviderParameters());
         clProvider = new ControlLoopProvider(parameters.getDatabaseProviderParameters());
@@ -123,7 +123,7 @@ class TestMonitoringProvider {
 
     @Test
     void testGetParticipantStatistics() throws Exception {
-        ClRuntimeParameterGroup parameters = CommonTestData.geParameterGroup(0, "getparStat");
+        ClRuntimeParameterGroup parameters = CommonTestData.geParameterGroup("getparStat");
         participantStatisticsProvider = new ParticipantStatisticsProvider(parameters.getDatabaseProviderParameters());
         clElementStatisticsProvider = new ClElementStatisticsProvider(parameters.getDatabaseProviderParameters());
         clProvider = new ControlLoopProvider(parameters.getDatabaseProviderParameters());
@@ -156,7 +156,7 @@ class TestMonitoringProvider {
 
     @Test
     void testCreateClElementStatistics() throws Exception {
-        ClRuntimeParameterGroup parameters = CommonTestData.geParameterGroup(0, "createelemstat");
+        ClRuntimeParameterGroup parameters = CommonTestData.geParameterGroup("createelemstat");
         participantStatisticsProvider = new ParticipantStatisticsProvider(parameters.getDatabaseProviderParameters());
         clElementStatisticsProvider = new ClElementStatisticsProvider(parameters.getDatabaseProviderParameters());
         clProvider = new ControlLoopProvider(parameters.getDatabaseProviderParameters());
@@ -183,14 +183,13 @@ class TestMonitoringProvider {
 
     @Test
     void testGetClElementStatistics() throws Exception {
-        ClRuntimeParameterGroup parameters = CommonTestData.geParameterGroup(0, "getelemstat");
+        ClRuntimeParameterGroup parameters = CommonTestData.geParameterGroup("getelemstat");
         participantStatisticsProvider = new ParticipantStatisticsProvider(parameters.getDatabaseProviderParameters());
         clElementStatisticsProvider = new ClElementStatisticsProvider(parameters.getDatabaseProviderParameters());
         clProvider = new ControlLoopProvider(parameters.getDatabaseProviderParameters());
 
         MonitoringProvider provider =
                 new MonitoringProvider(participantStatisticsProvider, clElementStatisticsProvider, clProvider);
-
         assertThatThrownBy(() -> {
             provider.fetchFilteredClElementStatistics(null, null, null, null, null, 0);
         }).hasMessageMatching("name is marked .*null but is null");
@@ -217,7 +216,7 @@ class TestMonitoringProvider {
 
     @Test
     void testGetParticipantStatsPerCL() throws Exception {
-        ClRuntimeParameterGroup parameters = CommonTestData.geParameterGroup(0, "getparStatCL");
+        ClRuntimeParameterGroup parameters = CommonTestData.geParameterGroup("getparStatCL");
         participantStatisticsProvider = new ParticipantStatisticsProvider(parameters.getDatabaseProviderParameters());
         clElementStatisticsProvider = new ClElementStatisticsProvider(parameters.getDatabaseProviderParameters());
         var mockClProvider = Mockito.mock(ControlLoopProvider.class);
@@ -253,7 +252,7 @@ class TestMonitoringProvider {
         mockCL.setElements(new LinkedHashMap<>());
         mockCL.getElements().put(mockClElement.getId(), mockClElement);
 
-        ClRuntimeParameterGroup parameters = CommonTestData.geParameterGroup(0, "getelemstatPerCL");
+        ClRuntimeParameterGroup parameters = CommonTestData.geParameterGroup("getelemstatPerCL");
         participantStatisticsProvider = new ParticipantStatisticsProvider(parameters.getDatabaseProviderParameters());
         clElementStatisticsProvider = new ClElementStatisticsProvider(parameters.getDatabaseProviderParameters());
         ControlLoopProvider mockClProvider = Mockito.mock(ControlLoopProvider.class);
@@ -265,8 +264,8 @@ class TestMonitoringProvider {
 
         monitoringProvider.createClElementStatistics(inputClElementStatistics.getClElementStatistics());
 
-        ClElementStatisticsList getResponse;
-        getResponse = monitoringProvider.fetchClElementStatsPerControlLoop("testCLName", "1.001");
+        ClElementStatisticsList getResponse =
+                monitoringProvider.fetchClElementStatsPerControlLoop("testCLName", "1.001");
 
         assertThat(getResponse.getClElementStatistics()).hasSize(2);
         assertEquals(getResponse.getClElementStatistics().get(1).toString().replaceAll("\\s+", ""),

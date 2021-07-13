@@ -97,7 +97,7 @@ class ControlLoopInstantiationProviderTest {
      */
     @BeforeAll
     public static void setupDbProviderParameters() throws PfModelException {
-        ClRuntimeParameterGroup controlLoopParameters = CommonTestData.geParameterGroup(0, "instantproviderdb");
+        ClRuntimeParameterGroup controlLoopParameters = CommonTestData.geParameterGroup("instantproviderdb");
 
         modelsProvider =
                 CommonTestData.getPolicyModelsProvider(controlLoopParameters.getDatabaseProviderParameters());
