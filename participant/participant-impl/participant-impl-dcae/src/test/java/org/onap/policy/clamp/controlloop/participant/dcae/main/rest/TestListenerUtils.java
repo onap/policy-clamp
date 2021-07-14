@@ -183,6 +183,15 @@ public class TestListenerUtils {
     }
 
     /**
+     * Method to create a deep copy of ControlLoopUpdateMsg.
+     *
+     * @return ParticipantControlLoopUpdate message
+     */
+    public static ParticipantControlLoopUpdate createCopyControlLoopUpdateMsg(ParticipantControlLoopUpdate cpy) {
+        return new ParticipantControlLoopUpdate(cpy);
+    }
+
+    /**
      * Method to create ParticipantHealthCheck message.
      *
      * @return ParticipantHealthCheck message
