@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7c0dd1b3_6acf5163",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/handler/ControlLoopElementHandler.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2021-07-14T16:36:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9387b312_e4959993",
+      "range": {
+        "startLine": 81,
+        "startChar": 3,
+        "endLine": 84,
+        "endChar": 0
+      },
+      "revId": "78a685c2cb8ff18d69eb99d497a51c13de18d876",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a268e23_17fd0208",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/handler/ControlLoopElementHandler.java",
         "patchSetId": 6
@@ -156,6 +180,30 @@
       "side": 1,
       "message": "don\u0027t need a separate map - getProperties() already returns a Map which appears to have two items in it (among others).  The convert() method will map those two items into the Config structure, thus it will expect to find  uninitializedToPassiveTimeout and podStatusCheckInterval.  If it doesn\u0027t find them, then they will be left with their default values, as defined in the class.\n\nBasically, any time you want to extract configuration items from a Map, all you have to do is define a class containing the relevant items and then invoke CODER.convert(map, MyClass.class).  The coder will handle type conversions for you.  If you wanted to validate the values (not necessarily needed in this case), then you could add validation annotations to the class and use the BeanValidator to check it.  This approach eliminates all of the gross code for extracting, parsing, and validating items in a Map.  When there\u0027s only one item, we typically do it the old-fashioned way, but once you hit two or more items, this is the preferred approach.  (Even with just one item, if validation is needed, then this approach is preferred.)",
       "parentUuid": "9bb67efb_5fcf9fc3",
+      "range": {
+        "startLine": 162,
+        "startChar": 49,
+        "endLine": 162,
+        "endChar": 71
+      },
+      "revId": "78a685c2cb8ff18d69eb99d497a51c13de18d876",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a14e44fe_e0aac443",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/handler/ControlLoopElementHandler.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2021-07-14T16:36:43Z",
+      "side": 1,
+      "message": "Thanks Jim. Learnt about CODER.convert(). Have explored only decode/encode methods so far. This really simplified the task. \n\nprivate static ToscaServiceTemplate testControlLoopYamlSerialization(String controlLoopFilePath) {\n        String controlLoopString \u003d ResourceUtils.getResourceAsString(controlLoopFilePath);\n        ToscaServiceTemplate serviceTemplate \u003d yamlTranslator.fromYaml(controlLoopString, ToscaServiceTemplate.class);\n        return serviceTemplate;\n    }\n\nThe yamlTranslator in the above method in TestUtils.java was actually causing the decimal value.",
+      "parentUuid": "4a83adcc_4b6487e9",
       "range": {
         "startLine": 162,
         "startChar": 49,
