@@ -20,7 +20,10 @@
 
 package org.onap.policy.clamp.controlloop.runtime.supervision;
 
+import java.time.Instant;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -30,21 +33,31 @@ import org.onap.policy.clamp.controlloop.common.exception.ControlLoopRuntimeExce
 import org.onap.policy.clamp.controlloop.common.handler.ControlLoopHandler;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElementDefinition;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ControlLoopProvider;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ParticipantProvider;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopStateChange;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopUpdate;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregister;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregisterAck;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageType;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantRegister;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantRegisterAck;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStatus;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdate;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdateAck;
 import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningProvider;
 import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
 import org.onap.policy.clamp.controlloop.runtime.monitoring.MonitoringProvider;
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantControlLoopStateChangePublisher;
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantControlLoopUpdatePublisher;
+import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantDeregisterAckPublisher;
+import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantRegisterAckPublisher;
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantStateChangePublisher;
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantStatusListener;
+import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantUpdatePublisher;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
 import org.onap.policy.common.endpoints.listeners.MessageTypeDispatcher;
 import org.onap.policy.common.utils.services.ServiceManager;
@@ -78,11 +91,17 @@ public class SupervisionHandler extends ControlLoopHandler {
     private ParticipantStateChangePublisher stateChangePublisher;
     private ParticipantControlLoopUpdatePublisher controlLoopUpdatePublisher;
     private ParticipantControlLoopStateChangePublisher controlLoopStateChangePublisher;
+    private ParticipantRegisterAckPublisher participantRegisterAckPublisher;
+    private ParticipantDeregisterAckPublisher participantDeregisterAckPublisher;
+    private ParticipantUpdatePublisher participantUpdatePublisher;
 
     private long supervisionScannerIntervalSec;
     private long participantStateChangeIntervalSec;
     private long participantClUpdateIntervalSec;
     private long participantClStateChangeIntervalSec;
+    private long participantRegisterAckIntervalSec;
+    private long participantDeregisterAckIntervalSec;
+    private long participantUpdateIntervalSec;
 
     // Database scanner
     private SupervisionScanner scanner;
@@ -120,7 +139,9 @@ public class SupervisionHandler extends ControlLoopHandler {
         participantStateChangeIntervalSec = clRuntimeParameterGroup.getParticipantClStateChangeIntervalSec();
         participantClUpdateIntervalSec = clRuntimeParameterGroup.getParticipantClUpdateIntervalSec();
         participantClStateChangeIntervalSec = clRuntimeParameterGroup.getParticipantClStateChangeIntervalSec();
-
+        participantRegisterAckIntervalSec = clRuntimeParameterGroup.getParticipantRegisterAckIntervalSec();
+        participantDeregisterAckIntervalSec = clRuntimeParameterGroup.getParticipantDeregisterAckIntervalSec();
+        participantUpdateIntervalSec = clRuntimeParameterGroup.getParticipantUpdateIntervalSec();
     }
 
     /**
@@ -179,7 +200,19 @@ public class SupervisionHandler extends ControlLoopHandler {
                 .addAction("ControlLoopStateChange Publisher",
                         () -> controlLoopStateChangePublisher =
                         new ParticipantControlLoopStateChangePublisher(topicSinks, participantClStateChangeIntervalSec),
-                        () -> controlLoopStateChangePublisher.terminate());
+                        () -> controlLoopStateChangePublisher.terminate())
+                .addAction("ParticipantRegisterAck Publisher",
+                        () -> participantRegisterAckPublisher =
+                        new ParticipantRegisterAckPublisher(topicSinks, participantRegisterAckIntervalSec),
+                        () -> participantRegisterAckPublisher.terminate())
+                .addAction("ParticipantDeregisterAck Publisher",
+                        () -> participantDeregisterAckPublisher =
+                        new ParticipantDeregisterAckPublisher(topicSinks, participantDeregisterAckIntervalSec),
+                        () -> participantDeregisterAckPublisher.terminate())
+                .addAction("ParticipantUpdate Publisher",
+                        () -> participantUpdatePublisher =
+                        new ParticipantUpdatePublisher(topicSinks, participantUpdateIntervalSec),
+                        () -> participantUpdatePublisher.terminate());
         // @formatter:on
         try {
             publisherManager.start();
@@ -209,9 +242,8 @@ public class SupervisionHandler extends ControlLoopHandler {
      *
      * @param participantStatusMessage the ParticipantStatus message received from a participant
      */
-    public void handleParticipantStatusMessage(ParticipantStatus participantStatusMessage) {
+    public void handleParticipantMessage(ParticipantStatus participantStatusMessage) {
         LOGGER.debug("Participant Status received {}", participantStatusMessage);
-
         try {
             superviseParticipant(participantStatusMessage);
         } catch (PfModelException | ControlLoopException svExc) {
@@ -224,6 +256,36 @@ public class SupervisionHandler extends ControlLoopHandler {
         } catch (PfModelException | ControlLoopException svExc) {
             LOGGER.warn("error supervising participant {}", participantStatusMessage.getParticipantId(), svExc);
         }
+    }
+
+    /**
+     * Handle a ParticipantRegister message from a participant.
+     *
+     * @param participantRegisterMessage the ParticipantRegister message received from a participant
+     */
+    public void handleParticipantMessage(ParticipantRegister participantRegisterMessage) {
+        LOGGER.debug("Participant Register received {}", participantRegisterMessage);
+        sendParticipantAckMessage(participantRegisterMessage);
+        sendParticipantUpdate(participantRegisterMessage);
+    }
+
+    /**
+     * Handle a ParticipantDeregister message from a participant.
+     *
+     * @param participantDeregisterMessage the ParticipantDeregister message received from a participant
+     */
+    public void handleParticipantMessage(ParticipantDeregister participantDeregisterMessage) {
+        LOGGER.debug("Participant Deregister received {}", participantDeregisterMessage);
+        sendParticipantAckMessage(participantDeregisterMessage);
+    }
+
+    /**
+     * Handle a ParticipantUpdateAck message from a participant.
+     *
+     * @param participantUpdateAckMessage the ParticipantUpdateAck message received from a participant
+     */
+    public void handleParticipantMessage(ParticipantUpdateAck participantUpdateAckMessage) {
+        LOGGER.debug("Participant Update Ack received {}", participantUpdateAckMessage);
     }
 
     /**
@@ -354,8 +416,53 @@ public class SupervisionHandler extends ControlLoopHandler {
         clsc.setControlLoopId(controlLoop.getKey().asIdentifier());
         clsc.setMessageId(UUID.randomUUID());
         clsc.setOrderedState(controlLoop.getOrderedState());
-
         controlLoopStateChangePublisher.send(clsc);
+    }
+
+    private void sendParticipantUpdate(ParticipantRegister participantRegisterMessage) {
+        var message = new ParticipantUpdate();
+        message.setParticipantId(participantRegisterMessage.getParticipantId());
+        message.setParticipantType(participantRegisterMessage.getParticipantType());
+        message.setTimestamp(Instant.now());
+
+        ControlLoopElementDefinition clDefinition = new ControlLoopElementDefinition();
+        clDefinition.setId(UUID.randomUUID());
+
+        try {
+            clDefinition.setControlLoopElementToscaServiceTemplate(commissioningProvider
+                    .getToscaServiceTemplate(null, null));
+        } catch (PfModelException pfme) {
+            LOGGER.warn("Get of tosca service template failed, cannot send participantupdate", pfme);
+            return;
+        }
+
+        Map<UUID, ControlLoopElementDefinition> controlLoopElementDefinitionMap = new LinkedHashMap<>();
+        controlLoopElementDefinitionMap.put(UUID.randomUUID(), clDefinition);
+
+        Map<ToscaConceptIdentifier, Map<UUID, ControlLoopElementDefinition>>
+            participantDefinitionUpdateMap = new LinkedHashMap<>();
+        participantDefinitionUpdateMap.put(participantRegisterMessage.getParticipantId(),
+                      controlLoopElementDefinitionMap);
+        message.setParticipantDefinitionUpdateMap(participantDefinitionUpdateMap);
+
+        LOGGER.debug("Participant Update sent", message);
+        participantUpdatePublisher.send(message);
+    }
+
+    private void sendParticipantAckMessage(ParticipantRegister participantRegisterMessage) {
+        var message = new ParticipantRegisterAck();
+        message.setResponseTo(participantRegisterMessage.getMessageId());
+        message.setMessage("Participant Register Ack");
+        message.setResult(true);
+        participantRegisterAckPublisher.send(message);
+    }
+
+    private void sendParticipantAckMessage(ParticipantDeregister participantDeregisterMessage) {
+        var message = new ParticipantDeregisterAck();
+        message.setResponseTo(participantDeregisterMessage.getMessageId());
+        message.setMessage("Participant Deregister Ack");
+        message.setResult(true);
+        participantDeregisterAckPublisher.send(message);
     }
 
     private void superviseParticipant(ParticipantStatus participantStatusMessage)

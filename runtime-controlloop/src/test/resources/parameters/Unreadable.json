@@ -50,13 +50,6 @@
                     "localhost"
                 ],
                 "topicCommInfrastructure": "dmaap"
-            },
-            {
-                "topic": "POLICY-NOTIFICATION",
-                "servers": [
-                    "localhost"
-                ],
-                "topicCommInfrastructure": "dmaap"
             }
         ]
     }
