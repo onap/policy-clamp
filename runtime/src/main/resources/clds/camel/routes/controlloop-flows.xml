@@ -104,4 +104,29 @@
             </doFinally>
         </doTry>
     </route>
+    <route id="put-tosca-instantiation">
+        <from uri="direct:put-tosca-instantiation"/>
+        <doTry>
+            <log loggingLevel="INFO"
+                 message="Change the tosca instantiation state service"/>
+            <to
+                    uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('Controlloop', 'Change the tosca instantiation state service')"/>
+            <setHeader name="CamelHttpMethod">
+                <constant>PUT</constant>
+            </setHeader>
+            <setHeader name="Content-Type">
+                <constant>application/json</constant>
+            </setHeader>
+            <log loggingLevel="INFO"
+                 message="Endpoint to send Tosca Instantiation state change Service: {{clamp.config.controlloop.runtime.url}}/onap/controlloop/v2/instantiation/command"></log>
+            <toD
+                    uri="{{clamp.config.controlloop.runtime.url}}/onap/controlloop/v2/instantiation/command?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.controlloop.runtime.userName}}&amp;authPassword={{clamp.config.controlloop.runtime.password}}&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+            <convertBodyTo type="java.lang.String"/>
+            <doFinally>
+                <to uri="direct:reset-raise-http-exception-flag"/>
+                <to
+                        uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
+            </doFinally>
+        </doTry>
+    </route>
 </routes>
