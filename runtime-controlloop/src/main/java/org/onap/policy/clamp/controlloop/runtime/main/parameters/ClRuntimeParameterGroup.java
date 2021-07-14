@@ -45,6 +45,9 @@ public class ClRuntimeParameterGroup extends ParameterGroupImpl {
     private long participantStateChangeIntervalSec;
     private long participantClUpdateIntervalSec;
     private long participantClStateChangeIntervalSec;
+    private long participantRegisterAckIntervalSec;
+    private long participantDeregisterAckIntervalSec;
+    private long participantUpdateIntervalSec;
 
     /**
      * Create the Control Loop parameter group.
