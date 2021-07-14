@@ -46,6 +46,16 @@ public interface ParticipantIntermediaryApi {
     void registerControlLoopElementListener(ControlLoopElementListener controlLoopElementListener);
 
     /**
+     * Send participant register message to controlloop runtime.
+     */
+    void sendParticipantRegister();
+
+    /**
+     * Send participant deregister message to controlloop runtime.
+     */
+    void sendParticipantDeregister();
+
+    /**
      * Get participants loops from the intermediary API.
      *
      * @param name the participant name, null for all
@@ -114,5 +124,4 @@ public interface ParticipantIntermediaryApi {
      * @param elementStatistics the updated statistics
      */
     void updateControlLoopElementStatistics(UUID id, ClElementStatistics elementStatistics);
-
 }

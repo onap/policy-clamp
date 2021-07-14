@@ -24,10 +24,14 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.util.List;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageType;
+import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ControlLoopStateChangeListener;
 import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ControlLoopUpdateListener;
+import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ParticipantDeregisterAckListener;
 import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ParticipantHealthCheckListener;
+import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ParticipantRegisterAckListener;
 import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ParticipantStateChangeListener;
+import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ParticipantUpdateListener;
 import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantParameters;
 import org.onap.policy.common.endpoints.event.comm.TopicEndpointManager;
 import org.onap.policy.common.endpoints.event.comm.TopicSource;
@@ -50,14 +54,18 @@ public class IntermediaryActivator extends ServiceManagerContainer implements Cl
     // Topics from which the participant receives and to which the participant sends messages
     private List<TopicSource> topicSources;
 
+    ParticipantIntermediaryApi participantIntermediaryApi;
+
     /**
      * Instantiate the activator for participant.
      *
      * @param applicationContext ApplicationContext
      * @param parameters the ParticipantParameters
      */
-    public IntermediaryActivator(final ApplicationContext applicationContext, final ParticipantParameters parameters) {
+    public IntermediaryActivator(final ApplicationContext applicationContext, final ParticipantParameters parameters,
+            ParticipantIntermediaryApi participantIntermediaryApi) {
         this.applicationContext = applicationContext;
+        this.participantIntermediaryApi = participantIntermediaryApi;
 
         topicSources = TopicEndpointManager.getManager()
                 .addTopicSources(parameters.getIntermediaryParameters().getClampControlLoopTopics().getTopicSources());
@@ -81,6 +89,7 @@ public class IntermediaryActivator extends ServiceManagerContainer implements Cl
     public void handleContextRefreshEvent(ContextRefreshedEvent ctxRefreshedEvent) {
         if (!isAlive()) {
             start();
+            sendParticipantRegister();
         }
     }
 
@@ -92,8 +101,17 @@ public class IntermediaryActivator extends ServiceManagerContainer implements Cl
     @EventListener
     public void handleContextClosedEvent(ContextClosedEvent ctxClosedEvent) {
         if (isAlive()) {
+            sendParticipantDeregister();
             stop();
         }
+    }
+
+    private void sendParticipantRegister() {
+        participantIntermediaryApi.sendParticipantRegister();
+    }
+
+    private void sendParticipantDeregister() {
+        participantIntermediaryApi.sendParticipantDeregister();
     }
 
     /**
@@ -113,6 +131,15 @@ public class IntermediaryActivator extends ServiceManagerContainer implements Cl
 
         msgDispatcher.register(ParticipantMessageType.PARTICIPANT_CONTROL_LOOP_UPDATE.name(),
                 applicationContext.getBean(ControlLoopUpdateListener.class));
+
+        msgDispatcher.register(ParticipantMessageType.PARTICIPANT_REGISTER_ACK.name(),
+                applicationContext.getBean(ParticipantRegisterAckListener.class));
+
+        msgDispatcher.register(ParticipantMessageType.PARTICIPANT_DEREGISTER_ACK.name(),
+                applicationContext.getBean(ParticipantDeregisterAckListener.class));
+
+        msgDispatcher.register(ParticipantMessageType.PARTICIPANT_UPDATE.name(),
+                applicationContext.getBean(ParticipantUpdateListener.class));
 
         for (final TopicSource source : topicSources) {
             source.register(msgDispatcher);
