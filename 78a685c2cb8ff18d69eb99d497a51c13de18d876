@@ -93,6 +93,30 @@
       "revId": "78a685c2cb8ff18d69eb99d497a51c13de18d876",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d074cba9_b76c382c",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/handler/ControlLoopElementHandler.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-14T14:47:21Z",
+      "side": 1,
+      "message": "oh, and the threadTimeout field should be renamed to uninitializedToPassiveTimeout, to match the property name",
+      "parentUuid": "41148955_2c5fb6a9",
+      "range": {
+        "startLine": 162,
+        "startChar": 49,
+        "endLine": 162,
+        "endChar": 71
+      },
+      "revId": "78a685c2cb8ff18d69eb99d497a51c13de18d876",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
