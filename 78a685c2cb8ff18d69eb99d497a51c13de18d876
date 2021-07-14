@@ -45,6 +45,30 @@
       "revId": "78a685c2cb8ff18d69eb99d497a51c13de18d876",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9c4ef95d_e31f77d8",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/handler/ControlLoopElementHandler.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2021-07-14T12:39:12Z",
+      "side": 1,
+      "message": "Hi Jim, Actually this code is to fetch the values passed in TOSCA. I can make a nested class for the default values but still we will need this parsing code to fetch values coming from TOSCA.  Float.parse was used because in Junits, I noticed, the value from TOSCA was parsed as 180.0 which caused exception in Integer.parse",
+      "parentUuid": "9a268e23_17fd0208",
+      "range": {
+        "startLine": 162,
+        "startChar": 49,
+        "endLine": 162,
+        "endChar": 71
+      },
+      "revId": "78a685c2cb8ff18d69eb99d497a51c13de18d876",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
