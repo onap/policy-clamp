@@ -151,6 +151,106 @@
                 <docker.skip>false</docker.skip>
             </properties>
         </profile>
+        <profile>
+            <id>generateSwaggerDocs</id>
+            <activation>
+                <property>
+                    <name>!skipTests</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+            <!-- Read the swagger.json file and the definition from SwaggerConfig.java; generate
+                a list of .adoc files containing the APIs info in more structured way -->
+                    <plugin>
+                        <groupId>io.github.swagger2markup</groupId>
+                        <artifactId>swagger2markup-maven-plugin</artifactId>
+                        <version>1.3.3</version>
+                        <dependencies>
+                            <dependency>
+                                <groupId>io.github.swagger2markup</groupId>
+                                <artifactId>swagger2markup-import-files-ext</artifactId>
+                                <version>1.3.3</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>io.github.swagger2markup</groupId>
+                                <artifactId>swagger2markup-spring-restdocs-ext</artifactId>
+                                <version>1.3.3</version>
+                            </dependency>
+                        </dependencies>
+                        <configuration>
+                            <swaggerInput>${project.build.directory}/swagger/swagger.json</swaggerInput>
+                            <outputDir>${project.build.directory}/asciidoc/generated</outputDir>
+                            <config>
+                                <swagger2markup.markupLanguage>ASCIIDOC</swagger2markup.markupLanguage>
+                            </config>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>convertSwagger2markup</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+            <!-- Run the generated asciidoc through Asciidoctor to generate other documentation
+                types, such as PDFs or HTML5 -->
+                    <plugin>
+                        <groupId>org.asciidoctor</groupId>
+                        <artifactId>asciidoctor-maven-plugin</artifactId>
+                        <version>1.5.7.1</version>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.asciidoctor</groupId>
+                                <artifactId>asciidoctorj-pdf</artifactId>
+                                <version>1.5.0-alpha.10.1</version>
+                            </dependency>
+                        </dependencies>
+                        <configuration>
+                            <sourceDirectory>${project.basedir}/src/main/resources/asciidoc</sourceDirectory>
+                            <sourceDocumentName>swagger.adoc</sourceDocumentName>
+                            <attributes>
+                                <doctype>book</doctype>
+                                <toc>left</toc>
+                                <toclevels>3</toclevels>
+                                <numbered />
+                                <hardbreaks />
+                                <sectlinks />
+                                <sectanchors />
+                                <generated>${project.build.directory}/asciidoc/generated</generated>
+                            </attributes>
+                        </configuration>
+
+                        <executions>
+                            <execution>
+                                <id>output-html</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>process-asciidoc</goal>
+                                </goals>
+                                <configuration>
+                                    <backend>html5</backend>
+                                    <outputDirectory>${project.build.directory}/swagger</outputDirectory>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>output-pdf</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>process-asciidoc</goal>
+                                </goals>
+                                <configuration>
+                                    <backend>pdf</backend>
+                                    <outputDirectory>${project.build.directory}/swagger</outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
     <dependencyManagement>
         <dependencies>
@@ -570,94 +670,7 @@
                 </executions>
 
             </plugin>
-            <!-- Read the swagger.json file and the definition from SwaggerConfig.java; generate
-                a list of .adoc files containing the APIs info in more structured way -->
-            <plugin>
-                <groupId>io.github.swagger2markup</groupId>
-                <artifactId>swagger2markup-maven-plugin</artifactId>
-                <version>1.3.3</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>io.github.swagger2markup</groupId>
-                        <artifactId>swagger2markup-import-files-ext</artifactId>
-                        <version>1.3.3</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>io.github.swagger2markup</groupId>
-                        <artifactId>swagger2markup-spring-restdocs-ext</artifactId>
-                        <version>1.3.3</version>
-                    </dependency>
-                </dependencies>
-                <configuration>
-                    <swaggerInput>${project.build.directory}/swagger/swagger.json</swaggerInput>
-                    <outputDir>${project.build.directory}/asciidoc/generated</outputDir>
-                    <config>
-                        <swagger2markup.markupLanguage>ASCIIDOC</swagger2markup.markupLanguage>
-                    </config>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>convertSwagger2markup</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
 
-            <!-- Run the generated asciidoc through Asciidoctor to generate other documentation
-                types, such as PDFs or HTML5 -->
-            <plugin>
-                <groupId>org.asciidoctor</groupId>
-                <artifactId>asciidoctor-maven-plugin</artifactId>
-                <version>1.5.7.1</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.asciidoctor</groupId>
-                        <artifactId>asciidoctorj-pdf</artifactId>
-                        <version>1.5.0-alpha.10.1</version>
-                    </dependency>
-                </dependencies>
-                <configuration>
-                    <sourceDirectory>${project.basedir}/src/main/resources/asciidoc</sourceDirectory>
-                    <sourceDocumentName>swagger.adoc</sourceDocumentName>
-                    <attributes>
-                        <doctype>book</doctype>
-                        <toc>left</toc>
-                        <toclevels>3</toclevels>
-                        <numbered/>
-                        <hardbreaks/>
-                        <sectlinks/>
-                        <sectanchors/>
-                        <generated>${project.build.directory}/asciidoc/generated</generated>
-                    </attributes>
-                </configuration>
-
-                <executions>
-                    <execution>
-                        <id>output-html</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>process-asciidoc</goal>
-                        </goals>
-                        <configuration>
-                            <backend>html5</backend>
-                            <outputDirectory>${project.build.directory}/swagger</outputDirectory>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>output-pdf</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>process-asciidoc</goal>
-                        </goals>
-                        <configuration>
-                            <backend>pdf</backend>
-                            <outputDirectory>${project.build.directory}/swagger</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>org.codehaus.groovy.maven</groupId>
                 <artifactId>gmaven-plugin</artifactId>
