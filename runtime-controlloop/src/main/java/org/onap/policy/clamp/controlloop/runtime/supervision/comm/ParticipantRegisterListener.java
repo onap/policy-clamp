@@ -21,7 +21,7 @@
 package org.onap.policy.clamp.controlloop.runtime.supervision.comm;
 
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageType;
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStatus;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantRegister;
 import org.onap.policy.clamp.controlloop.runtime.config.messaging.Listener;
 import org.onap.policy.clamp.controlloop.runtime.supervision.SupervisionHandler;
 import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
@@ -32,36 +32,36 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
- * Listener for ParticipantStatus messages sent by participants.
+ * Listener for ParticipantRegister messages sent by participants.
  */
 @Component
-public class ParticipantStatusListener extends ScoListener<ParticipantStatus> implements Listener {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantStatusListener.class);
+public class ParticipantRegisterListener extends ScoListener<ParticipantRegister> implements Listener {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantRegisterListener.class);
 
     private final SupervisionHandler supervisionHandler;
 
     /**
      * Constructs the object.
      */
-    public ParticipantStatusListener(SupervisionHandler supervisionHandler) {
-        super(ParticipantStatus.class);
+    public ParticipantRegisterListener(SupervisionHandler supervisionHandler) {
+        super(ParticipantRegister.class);
         this.supervisionHandler = supervisionHandler;
     }
 
     @Override
     public void onTopicEvent(final CommInfrastructure infra, final String topic, final StandardCoderObject sco,
-            final ParticipantStatus participantStatusMessage) {
-        LOGGER.debug("ParticipantStatus message received from participant - {}", participantStatusMessage);
-        supervisionHandler.handleParticipantMessage(participantStatusMessage);
+            final ParticipantRegister participantRegisterMessage) {
+        LOGGER.debug("ParticipantRegister message received from participant - {}", participantRegisterMessage);
+        supervisionHandler.handleParticipantMessage(participantRegisterMessage);
     }
 
     @Override
     public String getType() {
-        return ParticipantMessageType.PARTICIPANT_STATUS.name();
+        return ParticipantMessageType.PARTICIPANT_REGISTER.name();
     }
 
     @Override
-    public ScoListener<ParticipantStatus> getScoListener() {
+    public ScoListener<ParticipantRegister> getScoListener() {
         return this;
     }
 }

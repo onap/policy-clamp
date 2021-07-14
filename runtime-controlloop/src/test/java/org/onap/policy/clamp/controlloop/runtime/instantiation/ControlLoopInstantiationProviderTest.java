@@ -45,6 +45,9 @@ import org.onap.policy.clamp.controlloop.runtime.monitoring.MonitoringProvider;
 import org.onap.policy.clamp.controlloop.runtime.supervision.SupervisionHandler;
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantControlLoopStateChangePublisher;
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantControlLoopUpdatePublisher;
+import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantDeregisterAckPublisher;
+import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantRegisterAckPublisher;
+import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantUpdatePublisher;
 import org.onap.policy.clamp.controlloop.runtime.util.CommonTestData;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.provider.PolicyModelsProvider;
@@ -112,8 +115,12 @@ class ControlLoopInstantiationProviderTest {
         var participantProvider = new ParticipantProvider(controlLoopParameters.getDatabaseProviderParameters());
         var controlLoopUpdatePublisher = Mockito.mock(ParticipantControlLoopUpdatePublisher.class);
         var controlLoopStateChangePublisher = Mockito.mock(ParticipantControlLoopStateChangePublisher.class);
+        var participantRegisterAckPublisher = Mockito.mock(ParticipantRegisterAckPublisher.class);
+        var participantDeregisterAckPublisher = Mockito.mock(ParticipantDeregisterAckPublisher.class);
+        var participantUpdatePublisher = Mockito.mock(ParticipantUpdatePublisher.class);
         supervisionHandler = new SupervisionHandler(clProvider, participantProvider, monitoringProvider,
-                controlLoopUpdatePublisher, controlLoopStateChangePublisher);
+                        commissioningProvider, controlLoopUpdatePublisher, controlLoopStateChangePublisher,
+                        participantRegisterAckPublisher, participantDeregisterAckPublisher, participantUpdatePublisher);
     }
 
     @AfterAll
