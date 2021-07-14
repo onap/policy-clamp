@@ -117,6 +117,30 @@
       "revId": "78a685c2cb8ff18d69eb99d497a51c13de18d876",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9bb67efb_5fcf9fc3",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/handler/ControlLoopElementHandler.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2021-07-14T15:28:34Z",
+      "side": 1,
+      "message": "properties:\n        provider: ONAP\n        participant_id:\n          name: org.onap.k8s.controlloop.K8SControlLoopParticipant\n          version: 2.3.4\n        uninitializedToPassiveTimeout: 180\n        podStatusCheckInterval: 30\n        chart:\n          chartId:\n            name: hello\n            version: 0.1.0\n          releaseName: helloworld\n          namespace: onap\n          repository: chartMuseum\n\nCurrently uninitializedToPassiveTimeout and podStatusCheckInterval are added under properties of a CL element as per the yaml definitions added as part of this review. https://gerrit.nordix.org/c/onap/policy/clamp/+/9535/4/common/src/main/resources/tosca/ControlLoopTOSCAServiceTemplateTypes.yaml \n\nI can add a separate map \u0027config\u0027 under the properties to be decoded as Config.class?",
+      "parentUuid": "d074cba9_b76c382c",
+      "range": {
+        "startLine": 162,
+        "startChar": 49,
+        "endLine": 162,
+        "endChar": 71
+      },
+      "revId": "78a685c2cb8ff18d69eb99d497a51c13de18d876",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
