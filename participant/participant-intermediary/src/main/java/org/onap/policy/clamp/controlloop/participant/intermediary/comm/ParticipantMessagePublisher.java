@@ -21,7 +21,10 @@
 package org.onap.policy.clamp.controlloop.participant.intermediary.comm;
 
 import java.util.List;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregister;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantRegister;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStatus;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdateAck;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
 import org.slf4j.Logger;
@@ -31,17 +34,17 @@ import org.slf4j.LoggerFactory;
  * This class is used to send Participant Status messages to clamp using TopicSinkClient.
  *
  */
-public class ParticipantStatusPublisher {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantStatusPublisher.class);
+public class ParticipantMessagePublisher {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantMessagePublisher.class);
 
     private final TopicSinkClient topicSinkClient;
 
     /**
-     * Constructor for instantiating ParticipantStatusPublisher.
+     * Constructor for instantiating ParticipantMessagePublisher.
      *
      * @param topicSinks the topic sinks
      */
-    public ParticipantStatusPublisher(List<TopicSink> topicSinks) {
+    public ParticipantMessagePublisher(List<TopicSink> topicSinks) {
         this.topicSinkClient = new TopicSinkClient(topicSinks.get(0));
     }
 
@@ -50,8 +53,38 @@ public class ParticipantStatusPublisher {
      *
      * @param participantStatus the Participant Status
      */
-    public void send(final ParticipantStatus participantStatus) {
+    public void sendParticipantStatus(final ParticipantStatus participantStatus) {
         topicSinkClient.send(participantStatus);
         LOGGER.debug("Sent Participant Status message to CLAMP - {}", participantStatus);
+    }
+
+    /**
+     * Method to send Participant Status message to clamp on demand.
+     *
+     * @param participantRegister the Participant Status
+     */
+    public void sendParticipantRegister(final ParticipantRegister participantRegister) {
+        topicSinkClient.send(participantRegister);
+        LOGGER.debug("Sent Participant Register message to CLAMP - {}", participantRegister);
+    }
+
+    /**
+     * Method to send Participant Status message to clamp on demand.
+     *
+     * @param participantDeregister the Participant Status
+     */
+    public void sendParticipantDeregister(final ParticipantDeregister participantDeregister) {
+        topicSinkClient.send(participantDeregister);
+        LOGGER.debug("Sent Participant Deregister message to CLAMP - {}", participantDeregister);
+    }
+
+    /**
+     * Method to send Participant Update Ack message to runtime.
+     *
+     * @param participantUpdateAck the Participant Update Ack
+     */
+    public void sendParticipantUpdateAck(final ParticipantUpdateAck participantUpdateAck) {
+        topicSinkClient.send(participantUpdateAck);
+        LOGGER.debug("Sent Participant Update Ack message to CLAMP - {}", participantUpdateAck);
     }
 }

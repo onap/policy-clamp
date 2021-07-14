@@ -21,7 +21,7 @@
 package org.onap.policy.clamp.controlloop.participant.intermediary.config;
 
 import java.util.List;
-import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ParticipantStatusPublisher;
+import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantParameters;
 import org.onap.policy.common.endpoints.event.comm.TopicEndpointManager;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
@@ -36,16 +36,16 @@ public class BeanFactory {
     private static final String[] MSG_TYPE_NAMES = {"messageType"};
 
     /**
-     * create ParticipantStatusPublisher.
+     * create ParticipantMessagePublisher.
      *
      * @param parameters the ParticipantParameters
-     * @return ParticipantStatusPublisher
+     * @return ParticipantMessagePublisher
      */
     @Bean
-    public ParticipantStatusPublisher publisher(final ParticipantParameters parameters) {
+    public ParticipantMessagePublisher publisher(final ParticipantParameters parameters) {
         List<TopicSink> topicSinks = TopicEndpointManager.getManager()
                 .addTopicSinks(parameters.getIntermediaryParameters().getClampControlLoopTopics().getTopicSinks());
-        return new ParticipantStatusPublisher(topicSinks);
+        return new ParticipantMessagePublisher(topicSinks);
     }
 
     @Bean

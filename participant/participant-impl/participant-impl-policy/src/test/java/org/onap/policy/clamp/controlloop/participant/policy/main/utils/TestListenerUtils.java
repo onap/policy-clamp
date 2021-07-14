@@ -31,6 +31,7 @@ import java.util.Set;
 import java.util.UUID;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElementDefinition;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
@@ -38,6 +39,7 @@ import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.Parti
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopUpdate;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantHealthCheck;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStateChange;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdate;
 import org.onap.policy.clamp.controlloop.participant.policy.main.parameters.CommonTestData;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
@@ -190,6 +192,47 @@ public class TestListenerUtils {
         clUpdateMsg.setControlLoopDefinition(toscaServiceTemplate);
 
         return clUpdateMsg;
+    }
+
+    /**
+     * Method to create participantUpdateMsg.
+     *
+     * @return ParticipantUpdate message
+     */
+    public static ParticipantUpdate createParticipantUpdateMsg() {
+        final ParticipantUpdate participantUpdateMsg = new ParticipantUpdate();
+        ToscaConceptIdentifier participantId = new ToscaConceptIdentifier("org.onap.PM_Policy", "1.0.0");
+        ToscaConceptIdentifier participantType = new ToscaConceptIdentifier(
+                        "org.onap.policy.controlloop.PolicyControlLoopParticipant", "2.3.1");
+
+        participantUpdateMsg.setParticipantId(participantId);
+        participantUpdateMsg.setTimestamp(Instant.now());
+        participantUpdateMsg.setParticipantType(participantType);
+        participantUpdateMsg.setTimestamp(Instant.ofEpochMilli(3000));
+        participantUpdateMsg.setMessageId(UUID.randomUUID());
+
+        ToscaServiceTemplate toscaServiceTemplate = new ToscaServiceTemplate();
+        toscaServiceTemplate.setName("serviceTemplate");
+        toscaServiceTemplate.setDerivedFrom("parentServiceTemplate");
+        toscaServiceTemplate.setDescription("Description of serviceTemplate");
+        toscaServiceTemplate.setVersion("1.2.3");
+
+        ControlLoopElementDefinition clDefinition = new ControlLoopElementDefinition();
+        clDefinition.setId(UUID.randomUUID());
+        clDefinition.setControlLoopElementToscaServiceTemplate(toscaServiceTemplate);
+        Map<String, String> commonPropertiesMap = new LinkedHashMap<>();
+        commonPropertiesMap.put("Prop1", "PropValue");
+        clDefinition.setCommonPropertiesMap(commonPropertiesMap);
+
+        Map<UUID, ControlLoopElementDefinition> controlLoopElementDefinitionMap = new LinkedHashMap<>();
+        controlLoopElementDefinitionMap.put(UUID.randomUUID(), clDefinition);
+
+        Map<ToscaConceptIdentifier, Map<UUID, ControlLoopElementDefinition>>
+            participantDefinitionUpdateMap = new LinkedHashMap<>();
+        participantDefinitionUpdateMap.put(participantId, controlLoopElementDefinitionMap);
+        participantUpdateMsg.setParticipantDefinitionUpdateMap(participantDefinitionUpdateMap);
+
+        return participantUpdateMsg;
     }
 
     /**

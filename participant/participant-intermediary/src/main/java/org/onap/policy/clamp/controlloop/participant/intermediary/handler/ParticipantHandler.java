@@ -21,23 +21,37 @@
 package org.onap.policy.clamp.controlloop.participant.intermediary.handler;
 
 import java.io.Closeable;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElementDefinition;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantHealthStatus;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantStatistics;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopStateChange;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopUpdate;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregister;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregisterAck;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantHealthCheck;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessage;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageType;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantRegister;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantRegisterAck;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantResponseDetails;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantResponseStatus;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStateChange;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdate;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdateAck;
+import org.onap.policy.clamp.controlloop.participant.intermediary.api.ControlLoopElementListener;
 import org.onap.policy.clamp.controlloop.participant.intermediary.comm.MessageSender;
-import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ParticipantStatusPublisher;
+import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantParameters;
+import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,13 +77,15 @@ public class ParticipantHandler implements Closeable {
     @Setter
     private ParticipantHealthStatus healthStatus = ParticipantHealthStatus.UNKNOWN;
 
+    private final Map<UUID, ControlLoopElementDefinition> clElementDefsOnThisParticipant = new LinkedHashMap<>();
+
     /**
      * Constructor, set the participant ID and sender.
      *
      * @param parameters the parameters of the participant
      * @param publisher the publisher for sending responses to messages
      */
-    public ParticipantHandler(ParticipantParameters parameters, ParticipantStatusPublisher publisher) {
+    public ParticipantHandler(ParticipantParameters parameters, ParticipantMessagePublisher publisher) {
         this.participantType = parameters.getIntermediaryParameters().getParticipantType();
         this.participantId = parameters.getIntermediaryParameters().getParticipantId();
         this.sender =
@@ -249,20 +265,88 @@ public class ParticipantHandler implements Closeable {
     /**
      * Check if a participant message applies to this participant handler.
      *
-     * @param partipantMsg the message to check
+     * @param participantMsg the message to check
      * @return true if it applies, false otherwise
      */
-    public boolean canHandle(ParticipantMessage partipantMsg) {
-        return partipantMsg.appliesTo(participantType, participantId);
+    public boolean appliesTo(ParticipantMessage participantMsg) {
+        return participantMsg.appliesTo(participantType, participantId);
     }
 
     /**
-     * Check if a participant message applies to this participant handler.
-     *
-     * @param partipantMsg the message to check
-     * @return true if it applies, false otherwise
+     * Method to send ParticipantRegister message to controlloop runtime.
      */
-    public boolean appliesTo(ParticipantMessage partipantMsg) {
-        return partipantMsg.appliesTo(participantType, participantId);
+    public void sendParticipantRegister() {
+        var participantRegister = new ParticipantRegister();
+        participantRegister.setParticipantId(participantId);
+        participantRegister.setParticipantType(participantType);
+
+        sender.sendParticipantRegister(participantRegister);
+    }
+
+    /**
+     * Handle a participantRegister Ack message.
+     *
+     * @param participantRegisterAckMsg the participantRegisterAck message
+     */
+    public void handleParticipantRegisterAck(ParticipantRegisterAck participantRegisterAckMsg) {
+        LOGGER.debug("ParticipantRegisterAck message received as responseTo {}",
+            participantRegisterAckMsg.getResponseTo());
+    }
+
+    /**
+     * Method to send ParticipantDeregister message to controlloop runtime.
+     */
+    public void sendParticipantDeregister() {
+        var participantDeregister = new ParticipantDeregister();
+        participantDeregister.setParticipantId(participantId);
+        participantDeregister.setParticipantType(participantType);
+
+        sender.sendParticipantDeregister(participantDeregister);
+    }
+
+    /**
+     * Handle a participantDeregister Ack message.
+     *
+     * @param participantDeregisterAckMsg the participantDeregisterAck message
+     */
+    public void handleParticipantDeregisterAck(ParticipantDeregisterAck participantDeregisterAckMsg) {
+        LOGGER.debug("ParticipantDeregisterAck message received as responseTo {}",
+            participantDeregisterAckMsg.getResponseTo());
+    }
+
+    /**
+     * Handle a ParticipantUpdate message.
+     *
+     * @param participantUpdateMsg the ParticipantUpdate message
+     */
+    public void handleParticipantUpdate(ParticipantUpdate participantUpdateMsg) {
+        LOGGER.debug("ParticipantUpdate message received for participantId {}",
+            participantUpdateMsg.getParticipantId());
+
+        if (!participantUpdateMsg.appliesTo(participantType, participantId)) {
+            return;
+        }
+
+        Map<UUID, ControlLoopElementDefinition> clDefinitionMap =
+                participantUpdateMsg.getParticipantDefinitionUpdateMap().get(participantUpdateMsg.getParticipantId());
+
+        for (ControlLoopElementDefinition element : clDefinitionMap.values()) {
+            clElementDefsOnThisParticipant.put(element.getId(), element);
+        }
+
+        sendParticipantUpdateAck(participantUpdateMsg.getMessageId());
+    }
+
+    /**
+     * Method to send ParticipantUpdateAck message to controlloop runtime.
+     */
+    public void sendParticipantUpdateAck(UUID messageId) {
+        var participantUpdateAck = new ParticipantUpdateAck();
+        participantUpdateAck.setResponseTo(messageId);
+        participantUpdateAck.setMessageType(ParticipantMessageType.PARTICIPANT_UPDATE_ACK);
+        participantUpdateAck.setMessage("Particpant Update Ack message");
+        participantUpdateAck.setResult(true);
+
+        sender.sendParticipantUpdateAck(participantUpdateAck);
     }
 }

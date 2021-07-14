@@ -63,6 +63,16 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
     }
 
     @Override
+    public void sendParticipantRegister() {
+        participantHandler.sendParticipantRegister();
+    }
+
+    @Override
+    public void sendParticipantDeregister() {
+        participantHandler.sendParticipantDeregister();
+    }
+
+    @Override
     public List<Participant> getParticipants(String name, String version) {
         return List.of(participantHandler.getParticipant(name, version));
     }
