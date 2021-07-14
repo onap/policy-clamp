@@ -22,11 +22,11 @@ package org.onap.policy.clamp.controlloop.runtime.supervision.comm;
 
 import java.util.List;
 import lombok.Getter;
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessage;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantAckMessage;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
 
-public abstract class AbstractParticipantPublisher<E extends ParticipantMessage> {
+public abstract class AbstractParticipantAckPublisher<E extends ParticipantAckMessage> {
 
     private final TopicSinkClient topicSinkClient;
 
@@ -39,7 +39,7 @@ public abstract class AbstractParticipantPublisher<E extends ParticipantMessage>
      * @param topicSinks the topic sinks
      * @param intervalSec time interval to send ParticipantStateChange messages
      */
-    protected AbstractParticipantPublisher(final List<TopicSink> topicSinks, long intervalSec) {
+    protected AbstractParticipantAckPublisher(final List<TopicSink> topicSinks, long intervalSec) {
         if (topicSinks.size() != 1) {
             throw new IllegalArgumentException("Configuration unsupported, Topic sinks greater than 1");
         }
@@ -57,9 +57,9 @@ public abstract class AbstractParticipantPublisher<E extends ParticipantMessage>
     /**
      * Method to send Participant message to participants on demand.
      *
-     * @param participantMessage the Participant message
+     * @param participantAckMessage the Participant message
      */
-    public void send(final E participantMessage) {
-        topicSinkClient.send(participantMessage);
+    public void send(final E participantAckMessage) {
+        topicSinkClient.send(participantAckMessage);
     }
 }
