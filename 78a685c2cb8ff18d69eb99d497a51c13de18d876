@@ -213,6 +213,30 @@
       "revId": "78a685c2cb8ff18d69eb99d497a51c13de18d876",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b35d6798_ef874283",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/handler/ControlLoopElementHandler.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-14T19:36:08Z",
+      "side": 1,
+      "message": "glad it helped.\n\nnice thing is that this works whether or not it\u0027s 180.0, but it\u0027s good to know that this only happens in junit tests - thanks!",
+      "parentUuid": "a14e44fe_e0aac443",
+      "range": {
+        "startLine": 162,
+        "startChar": 49,
+        "endLine": 162,
+        "endChar": 71
+      },
+      "revId": "78a685c2cb8ff18d69eb99d497a51c13de18d876",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
