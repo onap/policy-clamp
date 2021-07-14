@@ -69,6 +69,30 @@
       "revId": "78a685c2cb8ff18d69eb99d497a51c13de18d876",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "41148955_2c5fb6a9",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/handler/ControlLoopElementHandler.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-14T14:45:03Z",
+      "side": 1,
+      "message": "the sample code above is designed to extract the values from TOSCA; it assumes that getProperties() returns a Map, which it then decodes into the Config class.  If you try it, it will probably work.  (Also, looks like it will still work even if it\u0027s declared as \"private static\" instead of \"public static\".)\n\nI\u0027d like to know how the \"180.0\" is being created - sounds like we may have an issue in the code that decodes the TOSCA.  Nevertheless, using the CODER as in the example code should work (gson is smart enough to strip off any trailing \".0\"), provided it\u0027s a Number and not a String.",
+      "parentUuid": "9c4ef95d_e31f77d8",
+      "range": {
+        "startLine": 162,
+        "startChar": 49,
+        "endLine": 162,
+        "endChar": 71
+      },
+      "revId": "78a685c2cb8ff18d69eb99d497a51c13de18d876",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
