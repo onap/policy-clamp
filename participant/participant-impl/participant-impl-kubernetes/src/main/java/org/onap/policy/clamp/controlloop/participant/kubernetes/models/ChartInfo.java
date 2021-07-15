@@ -18,28 +18,27 @@
 
 package org.onap.policy.clamp.controlloop.participant.kubernetes.models;
 
+import java.util.Map;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.immutables.gson.Gson;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 @Data
 @RequiredArgsConstructor
-@Gson.TypeAdapters
 public class ChartInfo {
 
     @NonNull
     private String releaseName;
 
     @NonNull
-    private String chartName;
-
-    @NonNull
-    private String version;
+    private ToscaConceptIdentifier chartId;
 
     @NonNull
     private String namespace;
 
     private String repository;
+
+    private Map<String, String> overrideParams;
 
 }
