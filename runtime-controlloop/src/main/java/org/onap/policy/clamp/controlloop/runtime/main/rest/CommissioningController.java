@@ -23,8 +23,6 @@ package org.onap.policy.clamp.controlloop.runtime.main.rest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
-import com.fasterxml.jackson.module.jsonSchema.factories.SchemaFactoryWrapper;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
@@ -347,15 +345,24 @@ public class CommissioningController extends AbstractRestController {
                     required = false) String version) {
 
         try {
-            return ResponseEntity.ok().body(provider.getToscaServiceTemplate(name, version));
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
+            String response = mapper.writerWithDefaultPrettyPrinter()
+                .writeValueAsString(provider.getToscaServiceTemplate(name, version));
+
+            return ResponseEntity.ok().body(response);
 
         } catch (PfModelRuntimeException | PfModelException e) {
             LOGGER.warn("Get of tosca service template failed", e);
             var resp = new CommissioningResponse();
             resp.setErrorDetails(e.getErrorResponse().getErrorMessage());
             return ResponseEntity.status(e.getErrorResponse().getResponseCode().getStatusCode()).body(resp);
+        } catch (JsonProcessingException e) {
+            LOGGER.warn("Get of tosca service template failed", e);
+            var resp = new CommissioningResponse();
+            resp.setErrorDetails(e.getMessage());
+            return ResponseEntity.status(Status.BAD_REQUEST.getStatusCode()).body(resp);
         }
-
     }
 
     /**

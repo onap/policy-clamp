@@ -298,6 +298,30 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
              with open(cached_file_content, 'w+') as f:
                  f.write(jsonGenerated)
          return True
+     elif (self.path.startswith("/onap/controlloop/v2/commission/elements")) and http_type == "GET":
+         print "self.path start with /commission/elements Control Loop Elements, generating response json..."
+         #jsondata = json.loads(self.data_string)
+         jsonGenerated = "[{\"name\": ,\"org.onap.domain.pmsh.PMSH_DCAEMicroservice\": [{ \"version\": \"1.2.3\", \"derived_from\": null }]}]"
+         print "jsonGenerated: " + jsonGenerated
+         if not os.path.exists(cached_file_folder):
+             os.makedirs(cached_file_folder, 0777)
+         with open(cached_file_header, 'w+') as f:
+             f.write("{\"Content-Length\": \"" + str(len(jsonGenerated)) + "\", \"Content-Type\": \"application/json\"}")
+         with open(cached_file_content, 'w+') as f:
+             f.write(jsonGenerated)
+         return True
+     elif (self.path.startswith("/onap/controlloop/v2/commission")) and http_type == "GET":
+         print "self.path start with /commission control loop definition, generating response json..."
+         #jsondata = json.loads(self.data_string)
+         jsonGenerated = "[{\"name\": ,\"org.onap.domain.pmsh.PMSHControlLoopDefinition\": [{ \"version\": \"1.2.3\", \"derived_from\": null }]}]"
+         print "jsonGenerated: " + jsonGenerated
+         if not os.path.exists(cached_file_folder):
+             os.makedirs(cached_file_folder, 0777)
+         with open(cached_file_header, 'w+') as f:
+             f.write("{\"Content-Length\": \"" + str(len(jsonGenerated)) + "\", \"Content-Type\": \"application/json\"}")
+         with open(cached_file_content, 'w+') as f:
+             f.write(jsonGenerated)
+         return True
      elif (self.path.startswith("/onap/controlloop/v2/commission")) and http_type == "POST":
          print "self.path start with POST /onap/controlloop/v2/commission, copying body to response ..."
          if not os.path.exists(cached_file_folder):
@@ -306,6 +330,18 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
              f.write("{\"Content-Length\": \"" + str(len(self.data_string)) + "\", \"Content-Type\": \""+str(self.headers['Content-Type'])+"\"}")
          with open(cached_file_content, 'w+') as f:
              f.write(self.data_string)
+         return True
+     elif (self.path.startswith("/onap/controlloop/v2/commission")) and http_type == "DELETE":
+         print "self.path start with /commission Decommissioning, generating response json..."
+         #jsondata = json.loads(self.data_string)
+         jsonGenerated = "{\"errorDetails\": null,\"affectedControlLoopDefinitions\": [{ \"name\": \"ToscaServiceTemplateSimple\", \"version\": \"1.0.0\" }]}"
+         print "jsonGenerated: " + jsonGenerated
+         if not os.path.exists(cached_file_folder):
+             os.makedirs(cached_file_folder, 0777)
+         with open(cached_file_header, 'w+') as f:
+             f.write("{\"Content-Length\": \"" + str(len(jsonGenerated)) + "\", \"Content-Type\": \"application/json\"}")
+         with open(cached_file_content, 'w+') as f:
+             f.write(jsonGenerated)
          return True
      else:
         return False
