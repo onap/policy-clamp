@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "05bed796_f431609e",
+        "filename": "participant/participant-impl/participant-impl-policy/src/test/java/org/onap/policy/clamp/controlloop/participant/policy/endtoend/ParticipantMessagesTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-15T15:08:39Z",
+      "side": 1,
+      "message": "maybe just return without storing in a variable",
+      "range": {
+        "startLine": 147,
+        "startChar": 8,
+        "endLine": 147,
+        "endChar": 46
+      },
+      "revId": "5006e7fc046cf3ace9b55865a9c26312b1af0731",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c2010608_223be990",
+        "filename": "participant/participant-impl/participant-impl-policy/src/test/java/org/onap/policy/clamp/controlloop/participant/policy/endtoend/ParticipantMessagesTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-15T15:08:39Z",
+      "side": 1,
+      "message": "maybe just return without storing in a variable",
+      "range": {
+        "startLine": 152,
+        "startChar": 8,
+        "endLine": 152,
+        "endChar": 48
+      },
+      "revId": "5006e7fc046cf3ace9b55865a9c26312b1af0731",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "856262f9_8c8e77b9",
+        "filename": "participant/participant-impl/participant-impl-policy/src/test/java/org/onap/policy/clamp/controlloop/participant/policy/main/utils/TestListenerUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-15T15:08:39Z",
+      "side": 1,
+      "message": "will Map.of(...) work instead?\n\nsame question for all of these maps",
+      "range": {
+        "startLine": 223,
+        "startChar": 8,
+        "endLine": 224,
+        "endChar": 54
+      },
+      "revId": "5006e7fc046cf3ace9b55865a9c26312b1af0731",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ccbfd931_6db966d0",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/comm/ParticipantMessagePublisher.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-15T15:08:39Z",
+      "side": 1,
+      "message": "maybe throw IllegalArgument if size() !\u003d 1",
+      "range": {
+        "startLine": 48,
+        "startChar": 51,
+        "endLine": 48,
+        "endChar": 68
+      },
+      "revId": "5006e7fc046cf3ace9b55865a9c26312b1af0731",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9049d82a_bce26acf",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ParticipantHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 346,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-15T15:08:39Z",
+      "side": 1,
+      "message": "hmm.  seems like this should not have to be set, as it should be the default behavior on line 344.\n\nthis comment would apply to all of the message subclasses; their constructor should set the message type so it doesn\u0027t have to be done by the invoker, resulting in errors if the invoker sets it incorrectly",
+      "range": {
+        "startLine": 346,
+        "startChar": 44,
+        "endLine": 346,
+        "endChar": 89
+      },
+      "revId": "5006e7fc046cf3ace9b55865a9c26312b1af0731",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b3e4ce02_60c1302e",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ParticipantHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-15T15:08:39Z",
+      "side": 1,
+      "message": "\"Particpant\" \u003d\u003e \"Participant\"",
+      "range": {
+        "startLine": 347,
+        "startChar": 41,
+        "endLine": 347,
+        "endChar": 52
+      },
+      "revId": "5006e7fc046cf3ace9b55865a9c26312b1af0731",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
