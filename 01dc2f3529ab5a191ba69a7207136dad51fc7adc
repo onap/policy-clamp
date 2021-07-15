@@ -1,0 +1,157 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8b54aea8_ca236646",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/config/messaging/MessageDispatcherActivator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-15T13:02:24Z",
+      "side": 1,
+      "message": "do the publishers have names?  if so, may want to include the publisher name as part of the name of the action\n\nsame comment for the listeners",
+      "revId": "01dc2f3529ab5a191ba69a7207136dad51fc7adc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "416b4306_aecaf5ac",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-15T13:02:24Z",
+      "side": 1,
+      "message": "maybe use lombok AllArgsConstructor instead",
+      "revId": "01dc2f3529ab5a191ba69a7207136dad51fc7adc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "230d8eaf_46ccfe76",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/monitoring/MonitoringProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-15T13:02:24Z",
+      "side": 1,
+      "message": "use lombok instead",
+      "revId": "01dc2f3529ab5a191ba69a7207136dad51fc7adc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1db122bc_0cb8bb0d",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-15T13:02:24Z",
+      "side": 1,
+      "message": "use lombok (though the invoker will have to re-order its arguments)",
+      "revId": "01dc2f3529ab5a191ba69a7207136dad51fc7adc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d32621fe_48572f8b",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/comm/AbstractParticipantPublisher.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-15T13:02:24Z",
+      "side": 1,
+      "message": "maybe throw IllegalArgument if size() !\u003d 1",
+      "revId": "01dc2f3529ab5a191ba69a7207136dad51fc7adc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "db7add33_1c9000d8",
+        "filename": "runtime-controlloop/src/test/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProviderTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-15T13:02:24Z",
+      "side": 1,
+      "message": "since this block is repeated in every test, should make these variables into fields and move this block to an @After.  That will eliminate the need for a try/catch\n\nsame comment below",
+      "revId": "01dc2f3529ab5a191ba69a7207136dad51fc7adc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6d2a2b7c_acc4d858",
+        "filename": "runtime-controlloop/src/test/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/MessageDispatcherActivatorTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-15T13:02:24Z",
+      "side": 1,
+      "message": "maybe include two publishers and two listeners",
+      "revId": "01dc2f3529ab5a191ba69a7207136dad51fc7adc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "95e10764_74847341",
+        "filename": "runtime-controlloop/src/test/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/MessageDispatcherActivatorTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-15T13:02:24Z",
+      "side": 1,
+      "message": "should include code to verify that the publishers and listeners are properly configured after this",
+      "revId": "01dc2f3529ab5a191ba69a7207136dad51fc7adc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3163b220_4a9c3a23",
+        "filename": "runtime-controlloop/src/test/java/org/onap/policy/clamp/controlloop/runtime/monitoring/TestMonitoringProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-15T13:02:24Z",
+      "side": 1,
+      "message": "same comment as with the other test class - move this block to an @After method",
+      "revId": "01dc2f3529ab5a191ba69a7207136dad51fc7adc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
