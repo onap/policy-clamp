@@ -1475,7 +1475,7 @@
                         <constant>application/json</constant>
                     </setHeader>
                     <setProperty name="raiseHttpExceptionFlag">
-                        <simple resultType="java.lang.Boolean">true</simple>
+                        <simple resultType="java.lang.Boolean">false</simple>
                     </setProperty>
                     <to uri="direct:get-service-template"/>
                     <to
@@ -1509,7 +1509,7 @@
             <route>
                 <removeHeaders pattern="*"/>
                 <setProperty name="raiseHttpExceptionFlag">
-                    <simple resultType="java.lang.Boolean">true</simple>
+                    <simple resultType="java.lang.Boolean">false</simple>
                 </setProperty>
                 <setHeader name="Content-Type">
                     <constant>application/json</constant>
@@ -1542,6 +1542,50 @@
                 </doTry>
             </route>
         </post>
+
+        <delete uri="/v2/toscaControlLoop/decommissionToscaTemplate"
+              type="java.lang.String"
+              consumes="plain/text"
+              outType="java.lang.String"
+              produces="application/json"
+              bindingMode="off">
+            <route>
+                <removeHeaders pattern="*"
+                               excludePattern="name|version|requestId"/>
+                <setProperty name="raiseHttpExceptionFlag">
+                    <simple resultType="java.lang.Boolean">true</simple>
+                </setProperty>
+                <setHeader name="Content-Type">
+                    <constant>application/json</constant>
+                </setHeader>
+                <doTry>
+                    <to
+                            uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=startLog(*, 'Delete Tosca Service Template')"/>
+                    <to
+                            uri="bean:org.onap.policy.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')"/>
+                    <to uri="direct:decommission-service-template"/>
+                    <to
+                            uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=endLog()"/>
+                    <doCatch>
+                        <exception>java.lang.Exception</exception>
+                        <handled>
+                            <constant>true</constant>
+                        </handled>
+                        <to
+                                uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=errorLog()"/>
+                        <log loggingLevel="ERROR"
+                             message="Decommissioning of Tosca Service Template FAILED"/>
+
+                        <setHeader name="CamelHttpResponseCode">
+                            <constant>500</constant>
+                        </setHeader>
+                        <setBody>
+                            <simple>Decommissioning Tosca Service Template FAILED</simple>
+                        </setBody>
+                    </doCatch>
+                </doTry>
+            </route>
+        </delete>
 
         <get uri="/v2/toscaControlLoop/getToscaInstantiation" outType="java.lang.String" bindingMode="off" produces="application/json">
             <route>
@@ -1604,6 +1648,76 @@
                         </setHeader>
                         <setBody>
                             <simple>GET JSON Schema FAILED</simple>
+                        </setBody>
+                    </doCatch>
+                </doTry>
+            </route>
+        </get>
+
+        <get uri="/v2/toscaControlLoop/getElementDefinitions" outType="java.lang.String" bindingMode="off" produces="application/json">
+            <route>
+                <removeHeaders pattern="*"
+                               excludePattern="name|version|requestId"/>
+                <doTry>
+                    <to uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=startLog(*, 'GET Json Schema ')"/>
+                    <to uri="bean:org.onap.policy.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','read')"/>
+                    <setHeader name="Content-Type">
+                        <constant>application/json</constant>
+                    </setHeader>
+                    <setProperty name="raiseHttpExceptionFlag">
+                        <simple resultType="java.lang.Boolean">true</simple>
+                    </setProperty>
+                    <to uri="direct:get-element-definitions"/>
+                    <to uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=endLog()"/>
+                    <doCatch>
+                        <exception>java.lang.Exception</exception>
+                        <handled>
+                            <constant>true</constant>
+                        </handled>
+                        <to
+                                uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=errorLog()"/>
+                        <log loggingLevel="ERROR"
+                             message="GET Element Definitions request failed: ${exception.stacktrace}"/>
+                        <setHeader name="CamelHttpResponseCode">
+                            <constant>500</constant>
+                        </setHeader>
+                        <setBody>
+                            <simple>GET JSON Schema FAILED</simple>
+                        </setBody>
+                    </doCatch>
+                </doTry>
+            </route>
+        </get>
+
+        <get uri="/v2/toscaControlLoop/getControlLoopDefinitions" outType="java.lang.String" bindingMode="off" produces="application/json">
+            <route>
+                <removeHeaders pattern="*"
+                               excludePattern="name|version|requestId"/>
+                <doTry>
+                    <to uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=startLog(*, 'GET Json Schema ')"/>
+                    <to uri="bean:org.onap.policy.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','read')"/>
+                    <setHeader name="Content-Type">
+                        <constant>application/json</constant>
+                    </setHeader>
+                    <setProperty name="raiseHttpExceptionFlag">
+                        <simple resultType="java.lang.Boolean">true</simple>
+                    </setProperty>
+                    <to uri="direct:get-control-loop-definitions"/>
+                    <to uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=endLog()"/>
+                    <doCatch>
+                        <exception>java.lang.Exception</exception>
+                        <handled>
+                            <constant>true</constant>
+                        </handled>
+                        <to
+                                uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=errorLog()"/>
+                        <log loggingLevel="ERROR"
+                             message="GET Control Loop Definitions request failed: ${exception.stacktrace}"/>
+                        <setHeader name="CamelHttpResponseCode">
+                            <constant>500</constant>
+                        </setHeader>
+                        <setBody>
+                            <simple>GET Control Loop Definitions FAILED</simple>
                         </setBody>
                     </doCatch>
                 </doTry>
