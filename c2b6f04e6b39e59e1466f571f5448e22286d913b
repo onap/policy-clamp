@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "124d985c_435ea660",
+        "filename": "runtime-controlloop/src/test/resources/parameters/TestParameters.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-15T19:17:22Z",
+      "side": 1,
+      "message": "missing newline at the end of the file",
+      "revId": "c2b6f04e6b39e59e1466f571f5448e22286d913b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
