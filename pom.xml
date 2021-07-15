@@ -57,6 +57,7 @@
     <modules>
         <module>common</module>
         <module>models</module>
+        <module>packages</module>
         <module>runtime</module>
         <module>runtime-controlloop</module>
         <module>participant</module>
