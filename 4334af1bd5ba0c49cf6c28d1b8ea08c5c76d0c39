@@ -22,6 +22,30 @@
       "revId": "4334af1bd5ba0c49cf6c28d1b8ea08c5c76d0c39",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f26527c7_fb266da4",
+        "filename": "packages/policy-clamp-docker/src/main/docker/kubernetes-participant.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2021-07-16T13:20:52Z",
+      "side": 1,
+      "message": "Hi Jim, This prefix works for Spring. K8s-participant only interacts with the kubernetes cluster. Policy end points topics are not used.",
+      "parentUuid": "5123ce3f_ad6570f1",
+      "range": {
+        "startLine": 45,
+        "startChar": 22,
+        "endLine": 45,
+        "endChar": 28
+      },
+      "revId": "4334af1bd5ba0c49cf6c28d1b8ea08c5c76d0c39",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
