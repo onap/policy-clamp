@@ -57,7 +57,7 @@ RUN chown -R policy:policy * && \
     chmod +x kubectl && \
     mv kubectl /usr/local/bin/kubectl
 
-EXPOSE 8080
+EXPOSE 8083
 
 USER policy
 WORKDIR $POLICY_HOME/bin

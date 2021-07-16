@@ -42,8 +42,8 @@ if [ -f "${POLICY_HOME}/etc/mounted/logback.xml" ]; then
     cp -f "${POLICY_HOME}"/etc/mounted/logback*.xml "${POLICY_HOME}"/etc/
 fi
 
-$JAVA_HOME/bin/java -Djavax.net.ssl.keyStore="${KEYSTORE}" \
-    -Djavax.net.ssl.keyStorePassword="${KEYSTORE_PASSWD}" \
-    -Djavax.net.ssl.trustStore="${TRUSTSTORE}" \
-    -Djavax.net.ssl.trustStorePassword="${TRUSTSTORE_PASSWD}" \
+$JAVA_HOME/bin/java -Dserver.ssl.keyStore="${KEYSTORE}" \
+    -Dserver.ssl.keyStorePassword="${KEYSTORE_PASSWD}" \
+    -Dserver.ssl.trustStore="${TRUSTSTORE}" \
+    -Dserver.ssl.trustStorePassword="${TRUSTSTORE_PASSWD}" \
     -jar /app/app.jar

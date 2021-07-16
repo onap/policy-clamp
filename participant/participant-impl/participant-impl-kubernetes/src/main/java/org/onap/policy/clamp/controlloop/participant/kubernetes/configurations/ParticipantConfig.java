@@ -33,30 +33,6 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 @Configuration
 public class ParticipantConfig {
 
-    @Value("${server.http-port}")
-    private int httpPort = 0;
-
-    /**
-     * Method to create servlet container bean.
-     * @return webserver factory
-     */
-    @Bean
-    public ServletWebServerFactory servletContainer() {
-        var tomcat = new TomcatServletWebServerFactory();
-        if (httpPort > 0) {
-            tomcat.addAdditionalTomcatConnectors(getHttpConnector(httpPort));
-        }
-        return tomcat;
-    }
-
-    private static Connector getHttpConnector(int httpPort) {
-        var connector = new Connector(TomcatServletWebServerFactory.DEFAULT_PROTOCOL);
-        connector.setScheme("http");
-        connector.setPort(httpPort);
-        connector.setSecure(false);
-        return connector;
-    }
-
     /**
      * Method to create multipartResolver bean.
      * @return MultipartResolver
@@ -67,5 +43,4 @@ public class ParticipantConfig {
         multipartResolver.setMaxUploadSize(100000);
         return multipartResolver;
     }
-
 }

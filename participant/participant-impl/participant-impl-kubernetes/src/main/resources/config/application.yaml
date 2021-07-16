@@ -41,7 +41,7 @@ management:
 server:
   # Configuration of the HTTP/REST server. The parameters are defined and handled by the springboot framework.
   # See springboot documentation.
-  http-port : 8083
+  port: 8083
 
 logging:
   # Configuration of logging
