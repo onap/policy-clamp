@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5123ce3f_ad6570f1",
+        "filename": "packages/policy-clamp-docker/src/main/docker/kubernetes-participant.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-16T12:53:27Z",
+      "side": 1,
+      "message": "I assume this is the correct prefix for spring?\n\ndoes any of this code use policy-endpoints topics?  if so, I would think the javax.net values would still be needed, too, to configure the client side when connecting to the server",
+      "range": {
+        "startLine": 45,
+        "startChar": 22,
+        "endLine": 45,
+        "endChar": 28
+      },
+      "revId": "4334af1bd5ba0c49cf6c28d1b8ea08c5c76d0c39",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
