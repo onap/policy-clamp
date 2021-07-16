@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2507392a_3c89dcb8",
+        "filename": "participant/participant-intermediary/src/test/java/org/onap/policy/clamp/controlloop/participant/intermediary/main/parameters/TestCommonData.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-16T12:56:00Z",
+      "side": 1,
+      "message": "since this is a test utility and not a junit class, perhaps rename it to \"CommonTestData\"",
+      "range": {
+        "startLine": 37,
+        "startChar": 13,
+        "endLine": 37,
+        "endChar": 27
+      },
+      "revId": "548cb79e0b72f3f99bfc361296f7fe51c79686a3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e5c50a65_baf6735a",
+        "filename": "participant/participant-intermediary/src/test/java/org/onap/policy/clamp/controlloop/participant/intermediary/main/parameters/TestCommonData.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-16T12:56:00Z",
+      "side": 1,
+      "message": "just return, without using a local variable",
+      "range": {
+        "startLine": 111,
+        "startChar": 8,
+        "endLine": 112,
+        "endChar": 29
+      },
+      "revId": "548cb79e0b72f3f99bfc361296f7fe51c79686a3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
