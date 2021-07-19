@@ -93,6 +93,30 @@
       "revId": "acb16526233cec22321ec0de90a09fc38e3627d2",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f128764f_6b3977dc",
+        "filename": "runtime/src/test/resources/http-cache/third_party_proxy.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-19T16:08:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f06c3c74_ea58a39b",
+      "range": {
+        "startLine": 314,
+        "startChar": 9,
+        "endLine": 323,
+        "endChar": 35
+      },
+      "revId": "acb16526233cec22321ec0de90a09fc38e3627d2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
