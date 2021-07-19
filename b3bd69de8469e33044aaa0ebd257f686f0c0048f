@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "b840fe59_7dd357b4",
+        "filename": "runtime-controlloop/src/test/java/org/onap/policy/clamp/controlloop/runtime/monitoring/TestMonitoringProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-07-19T09:42:54Z",
+      "side": 1,
+      "message": "these issues will be fixed by resolving conflicts with POLICY-3463",
+      "parentUuid": "2172d5e2_b5d0b9c7",
+      "range": {
+        "startLine": 209,
+        "startChar": 11,
+        "endLine": 211,
+        "endChar": 67
+      },
+      "revId": "b3bd69de8469e33044aaa0ebd257f686f0c0048f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "786a13bc_c76697dd",
         "filename": "runtime-controlloop/src/test/java/org/onap/policy/clamp/controlloop/runtime/util/CommonTestData.java",
         "patchSetId": 1
