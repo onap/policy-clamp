@@ -33,10 +33,12 @@ import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.provider.impl.AbstractModelsProvider;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTypedEntityFilter;
+import org.springframework.stereotype.Component;
 
 /**
  * This class provides information on participant concepts in the database to callers.
  */
+@Component
 public class ParticipantProvider extends AbstractModelsProvider {
     /**
      * Create a provider for participants.

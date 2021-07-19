@@ -20,18 +20,22 @@
 
 package org.onap.policy.clamp.controlloop.runtime.supervision.comm;
 
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageType;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStatus;
+import org.onap.policy.clamp.controlloop.runtime.config.messaging.Listener;
 import org.onap.policy.clamp.controlloop.runtime.supervision.SupervisionHandler;
 import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
 import org.onap.policy.common.endpoints.listeners.ScoListener;
 import org.onap.policy.common.utils.coder.StandardCoderObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 /**
  * Listener for ParticipantStatus messages sent by participants.
  */
-public class ParticipantStatusListener extends ScoListener<ParticipantStatus> {
+@Component
+public class ParticipantStatusListener extends ScoListener<ParticipantStatus> implements Listener {
     private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantStatusListener.class);
 
     private final SupervisionHandler supervisionHandler;
@@ -49,5 +53,15 @@ public class ParticipantStatusListener extends ScoListener<ParticipantStatus> {
             final ParticipantStatus participantStatusMessage) {
         LOGGER.debug("ParticipantStatus message received from participant - {}", participantStatusMessage);
         supervisionHandler.handleParticipantStatusMessage(participantStatusMessage);
+    }
+
+    @Override
+    public String getType() {
+        return ParticipantMessageType.PARTICIPANT_STATUS.name();
+    }
+
+    @Override
+    public ScoListener<ParticipantStatus> getScoListener() {
+        return this;
     }
 }

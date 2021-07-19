@@ -27,6 +27,11 @@ import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
+import org.onap.policy.models.base.PfModelException;
+import org.onap.policy.models.base.PfModelRuntimeException;
+import org.onap.policy.models.provider.PolicyModelsProvider;
+import org.onap.policy.models.provider.PolicyModelsProviderFactory;
+import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 
 /**
  * Class to hold/create all parameters for test cases.
@@ -62,5 +67,20 @@ public class CommonTestData {
     public static String getParameterGroupAsString(final int port, final String dbName) {
         return ResourceUtils.getResourceAsString("src/test/resources/parameters/InstantiationConfigParametersStd.json")
                 .replace("${port}", String.valueOf(port)).replace("${dbName}", "jdbc:h2:mem:" + dbName);
+    }
+
+    /**
+     * Create a new PolicyModelsProvider.
+     *
+     * @param databaseProviderParameters the database Provider Parameters
+     * @return a new PolicyModelsProvider
+     */
+    public static PolicyModelsProvider getPolicyModelsProvider(
+            PolicyModelsProviderParameters databaseProviderParameters) {
+        try {
+            return new PolicyModelsProviderFactory().createPolicyModelsProvider(databaseProviderParameters);
+        } catch (PfModelException e) {
+            throw new PfModelRuntimeException(e);
+        }
     }
 }

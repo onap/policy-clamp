@@ -20,13 +20,12 @@
 
 package org.onap.policy.clamp.controlloop.runtime.monitoring;
 
-import java.io.Closeable;
-import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ClElementStatistics;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ClElementStatisticsList;
@@ -36,7 +35,6 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ClElementStatisticsProvider;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ControlLoopProvider;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ParticipantStatisticsProvider;
-import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -46,38 +44,13 @@ import org.springframework.stereotype.Component;
  * This class provides information about statistics data of CL elements and CL Participants in database to callers.
  */
 @Component
-public class MonitoringProvider implements Closeable {
+@AllArgsConstructor
+public class MonitoringProvider {
 
     private static final String DESC_ORDER = "DESC";
     private final ParticipantStatisticsProvider participantStatisticsProvider;
     private final ClElementStatisticsProvider clElementStatisticsProvider;
     private final ControlLoopProvider controlLoopProvider;
-
-    /**
-     * Create a Monitoring provider.
-     *
-     * @param controlLoopParameters the parameters for access to the database
-     * @throws PfModelRuntimeException on errors creating the provider
-     */
-    public MonitoringProvider(ClRuntimeParameterGroup controlLoopParameters) {
-
-        try {
-            participantStatisticsProvider =
-                    new ParticipantStatisticsProvider(controlLoopParameters.getDatabaseProviderParameters());
-            clElementStatisticsProvider =
-                    new ClElementStatisticsProvider(controlLoopParameters.getDatabaseProviderParameters());
-            controlLoopProvider = new ControlLoopProvider(controlLoopParameters.getDatabaseProviderParameters());
-        } catch (PfModelException e) {
-            throw new PfModelRuntimeException(e);
-        }
-    }
-
-    @Override
-    public void close() throws IOException {
-        controlLoopProvider.close();
-        clElementStatisticsProvider.close();
-        participantStatisticsProvider.close();
-    }
 
     /**
      * Create participant statistics.
