@@ -30,9 +30,12 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoops;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantStatistics;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregister;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantRegister;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantResponseDetails;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantResponseStatus;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStatus;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdateAck;
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ControlLoopElementListener;
 import org.onap.policy.clamp.controlloop.participant.intermediary.handler.ParticipantHandler;
 import org.onap.policy.models.base.PfModelException;
@@ -47,7 +50,7 @@ public class MessageSender extends TimerTask implements Closeable {
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageSender.class);
 
     private final ParticipantHandler participantHandler;
-    private final ParticipantStatusPublisher publisher;
+    private final ParticipantMessagePublisher publisher;
     private ScheduledExecutorService timerPool;
 
     /**
@@ -57,7 +60,7 @@ public class MessageSender extends TimerTask implements Closeable {
      * @param publisher the publisher to use for sending messages
      * @param interval time interval to send Participant Status periodic messages
      */
-    public MessageSender(ParticipantHandler participantHandler, ParticipantStatusPublisher publisher,
+    public MessageSender(ParticipantHandler participantHandler, ParticipantMessagePublisher publisher,
             long interval) {
         this.participantHandler = participantHandler;
         this.publisher = publisher;
@@ -127,11 +130,38 @@ public class MessageSender extends TimerTask implements Closeable {
 
         status.setControlLoops(controlLoops);
 
-        publisher.send(status);
+        publisher.sendParticipantStatus(status);
     }
 
     /**
-     * Update ControlLoopElement statistics. The control loop elements listening will be 
+     * Send a ParticipantRegister message for this participant.
+     *
+     * @param message the participantRegister message
+     */
+    public void sendParticipantRegister(ParticipantRegister message) {
+        publisher.sendParticipantRegister(message);
+    }
+
+    /**
+     * Send a ParticipantDeregister message for this participant.
+     *
+     * @param message the participantDeRegister message
+     */
+    public void sendParticipantDeregister(ParticipantDeregister message) {
+        publisher.sendParticipantDeregister(message);
+    }
+
+    /**
+     * Send a ParticipantUpdateAck message for this participant update.
+     *
+     * @param message the participantUpdateAck message
+     */
+    public void sendParticipantUpdateAck(ParticipantUpdateAck message) {
+        publisher.sendParticipantUpdateAck(message);
+    }
+
+    /**
+     * Update ControlLoopElement statistics. The control loop elements listening will be
      * notified to retrieve statistics from respective controlloop elements, and controlloopelements
      * data on the handler will be updated.
      *

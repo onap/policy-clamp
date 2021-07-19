@@ -46,10 +46,6 @@ participant:
         topic: POLICY-CLRUNTIME-PARTICIPANT
         servers[0]: ${topicServer:message-router}
         topicCommInfrastructure: dmaap
-      topicSinks[1]:
-        topic: POLICY-NOTIFICATION
-        servers[0]: ${topicServer:message-router}
-        topicCommInfrastructure: dmaap
   checkCount: 10
   secCount: 10
   jsonBodyConsulPath: src/main/resources/parameters/consul.json
