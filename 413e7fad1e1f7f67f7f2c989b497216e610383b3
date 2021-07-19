@@ -22,6 +22,30 @@
       "revId": "413e7fad1e1f7f67f7f2c989b497216e610383b3",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "563f4ab1_d1fffe67",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/comm/AbstractParticipantPublisher.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-07-19T16:52:01Z",
+      "side": 1,
+      "message": "TopicSinks from the json is listed as an array. There can be more topicSinks such as POLICY_NOTIFICATION etc that can be used as further enhancement. We are now using only one TopicSink for publishing the events from runtime towards Dmaap, this could be a provision to use more for specific purposes in later commits.",
+      "parentUuid": "f8a5b007_5204a91a",
+      "range": {
+        "startLine": 42,
+        "startChar": 43,
+        "endLine": 42,
+        "endChar": 75
+      },
+      "revId": "413e7fad1e1f7f67f7f2c989b497216e610383b3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
