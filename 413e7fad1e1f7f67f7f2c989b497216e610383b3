@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f8a5b007_5204a91a",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/comm/AbstractParticipantPublisher.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-07-19T12:49:21Z",
+      "side": 1,
+      "message": "Why pass as a list? Or do you not have a choice?",
+      "range": {
+        "startLine": 42,
+        "startChar": 43,
+        "endLine": 42,
+        "endChar": 75
+      },
+      "revId": "413e7fad1e1f7f67f7f2c989b497216e610383b3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
