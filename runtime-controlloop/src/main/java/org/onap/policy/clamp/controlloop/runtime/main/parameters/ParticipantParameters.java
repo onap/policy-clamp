@@ -19,19 +19,20 @@
 package org.onap.policy.clamp.controlloop.runtime.main.parameters;
 
 import java.util.concurrent.TimeUnit;
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import lombok.Getter;
-import org.onap.policy.common.parameters.ParameterGroupImpl;
-import org.onap.policy.common.parameters.annotations.Min;
-import org.onap.policy.common.parameters.annotations.NotBlank;
-import org.onap.policy.common.parameters.annotations.NotNull;
+import lombok.Setter;
+import org.springframework.validation.annotation.Validated;
 
 /**
  * Parameters for communicating with participants.
  */
-@NotNull
-@NotBlank
 @Getter
-public class ParticipantParameters extends ParameterGroupImpl {
+@Setter
+@Validated
+public class ParticipantParameters {
 
     /**
      * Default maximum message age, in milliseconds, that should be examined. Any message
@@ -39,21 +40,18 @@ public class ParticipantParameters extends ParameterGroupImpl {
      */
     public static final long DEFAULT_MAX_AGE_MS = TimeUnit.MILLISECONDS.convert(10, TimeUnit.MINUTES);
 
-
     @Min(1)
     private long heartBeatMs;
 
     @Min(1)
     private long maxMessageAgeMs =  DEFAULT_MAX_AGE_MS;
 
+    @Valid
+    @NotNull
     private ParticipantUpdateParameters updateParameters;
+
+    @Valid
+    @NotNull
     private ParticipantStateChangeParameters stateChangeParameters;
 
-
-    /**
-     * Constructs the object.
-     */
-    public ParticipantParameters() {
-        super(ParticipantParameters.class.getSimpleName());
-    }
 }

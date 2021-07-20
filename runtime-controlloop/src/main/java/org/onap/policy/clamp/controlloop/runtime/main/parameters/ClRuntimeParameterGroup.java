@@ -20,41 +20,52 @@
 
 package org.onap.policy.clamp.controlloop.runtime.main.parameters;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import lombok.Getter;
-import org.onap.policy.common.endpoints.parameters.RestServerParameters;
+import lombok.Setter;
 import org.onap.policy.common.endpoints.parameters.TopicParameterGroup;
-import org.onap.policy.common.parameters.ParameterGroupImpl;
-import org.onap.policy.common.parameters.annotations.NotNull;
+import org.onap.policy.common.parameters.validation.ParameterGroupConstraint;
 import org.onap.policy.models.provider.PolicyModelsProviderParameters;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.validation.annotation.Validated;
 
 /**
  * Class to hold all parameters needed for the Control Loop runtime component.
  *
  */
-@NotNull
-@NotBlank
+@Validated
 @Getter
-public class ClRuntimeParameterGroup extends ParameterGroupImpl {
-    private RestServerParameters restServerParameters;
+@Setter
+@ConfigurationProperties(prefix = "runtime")
+public class ClRuntimeParameterGroup {
+
+    @NotNull
+    @ParameterGroupConstraint
     private PolicyModelsProviderParameters databaseProviderParameters;
+
+    @Valid
+    @NotNull
     private ParticipantParameters participantParameters;
+
+    @NotNull
+    @ParameterGroupConstraint
     private TopicParameterGroup topicParameterGroup;
 
+    @Min(value = 0)
     private long supervisionScannerIntervalSec;
+
+    @Min(value = 0)
     private long participantStateChangeIntervalSec;
+
+    @Min(value = 0)
     private long participantClUpdateIntervalSec;
+
+    @Min(value = 0)
     private long participantClStateChangeIntervalSec;
     private long participantRegisterAckIntervalSec;
     private long participantDeregisterAckIntervalSec;
     private long participantUpdateIntervalSec;
 
-    /**
-     * Create the Control Loop parameter group.
-     *
-     * @param name the parameter group name
-     */
-    public ClRuntimeParameterGroup(final String name) {
-        super(name);
-    }
 }

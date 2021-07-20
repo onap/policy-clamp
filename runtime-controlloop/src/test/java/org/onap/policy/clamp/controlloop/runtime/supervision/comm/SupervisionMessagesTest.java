@@ -20,8 +20,6 @@
 
 package org.onap.policy.clamp.controlloop.runtime.supervision.comm;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
@@ -79,7 +77,7 @@ class SupervisionMessagesTest extends CommonRestController {
      */
     @BeforeAll
     public static void setupDbProviderParameters() throws PfModelException {
-        ClRuntimeParameterGroup controlLoopParameters = CommonTestData.geParameterGroup(0, "instantproviderdb");
+        ClRuntimeParameterGroup controlLoopParameters = CommonTestData.geParameterGroup("instantproviderdb");
 
         modelsProvider =
                 CommonTestData.getPolicyModelsProvider(controlLoopParameters.getDatabaseProviderParameters());
