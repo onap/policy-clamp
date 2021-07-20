@@ -423,7 +423,7 @@
                  message="Endpoint to get policy model: {{clamp.config.policy.pap.url}}/policy/pap/v1/pdps"></log>
             <toD
                     uri="{{clamp.config.policy.pap.url}}/policy/pap/v1/pdps?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
-            <convertBodyTo type="java.lang.String"/>
+<!--            <convertBodyTo type="java.lang.String"/>-->
             <doFinally>
                 <to uri="direct:reset-raise-http-exception-flag"/>
                 <to
