@@ -62,6 +62,8 @@ public class CommissioningController extends AbstractRestController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CommissioningController.class);
 
+    private static final String TAGS = "Clamp Control Loop Commissioning API";
+
     private final CommissioningProvider provider;
 
     /**
@@ -88,7 +90,7 @@ public class CommissioningController extends AbstractRestController {
         value = "Commissions control loop definitions",
         notes = "Commissions control loop definitions, returning the commissioned control loop definition IDs",
         response = CommissioningResponse.class,
-        tags = {"Control Loop Commissioning API"},
+        tags = {TAGS},
         authorizations = @Authorization(value = AUTHORIZATION_TYPE),
         responseHeaders = {
             @ResponseHeader(
@@ -158,7 +160,7 @@ public class CommissioningController extends AbstractRestController {
     @ApiOperation(value = "Delete a commissioned control loop",
         notes = "Deletes a Commissioned Control Loop, returning optional error details",
         response = CommissioningResponse.class,
-        tags = {"Clamp Control Loop Commissioning API"},
+        tags = {TAGS},
         authorizations = @Authorization(value = AUTHORIZATION_TYPE),
         responseHeaders = {
             @ResponseHeader(
@@ -233,7 +235,7 @@ public class CommissioningController extends AbstractRestController {
         notes = "Queries details of the requested commissioned control loop definitions, "
             + "returning all control loop details",
         response = ToscaNodeTemplate.class,
-        tags = {"Clamp Control Loop Commissioning API"},
+        tags = {TAGS},
         authorizations = @Authorization(value = AUTHORIZATION_TYPE),
         responseHeaders = {
             @ResponseHeader(
@@ -302,7 +304,7 @@ public class CommissioningController extends AbstractRestController {
         notes = "Queries details of the requested commissioned tosca service template, "
             + "returning all tosca service template details",
         response = ToscaServiceTemplate.class,
-        tags = {"Clamp Control Loop Commissioning API"},
+        tags = {TAGS},
         authorizations = @Authorization(value = AUTHORIZATION_TYPE),
         responseHeaders = {
             @ResponseHeader(
@@ -379,7 +381,7 @@ public class CommissioningController extends AbstractRestController {
         notes = "Queries details of the requested commissioned tosca service template json schema, "
             + "returning all tosca service template json schema details",
         response = ToscaServiceTemplate.class,
-        tags = {"Clamp Control Loop Commissioning API"},
+        tags = {TAGS},
         authorizations = @Authorization(value = AUTHORIZATION_TYPE),
         responseHeaders = {
             @ResponseHeader(
@@ -448,7 +450,7 @@ public class CommissioningController extends AbstractRestController {
         notes = "Queries details of the requested commissioned control loop element definitions, "
             + "returning all control loop elements' details",
         response = ToscaNodeTemplate.class,
-        tags = {"Clamp Control Loop Commissioning API"},
+        tags = {TAGS},
         authorizations = @Authorization(value = AUTHORIZATION_TYPE),
         responseHeaders = {
             @ResponseHeader(

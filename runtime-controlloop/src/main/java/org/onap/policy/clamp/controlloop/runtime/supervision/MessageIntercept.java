@@ -18,22 +18,15 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.controlloop.runtime;
+package org.onap.policy.clamp.controlloop.runtime.supervision;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.scheduling.annotation.EnableScheduling;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-@EnableScheduling
-@SpringBootApplication
-@ComponentScan({"org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider",
-    "org.onap.policy.clamp.controlloop.runtime"})
-@ConfigurationPropertiesScan("org.onap.policy.clamp.controlloop.runtime.main.parameters")
-public class Application {
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface MessageIntercept {
 
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
-    }
 }

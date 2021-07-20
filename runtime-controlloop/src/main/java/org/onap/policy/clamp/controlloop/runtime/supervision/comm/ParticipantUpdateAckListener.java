@@ -21,7 +21,6 @@
 package org.onap.policy.clamp.controlloop.runtime.supervision.comm;
 
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageType;
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantRegister;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdateAck;
 import org.onap.policy.clamp.controlloop.runtime.config.messaging.Listener;
 import org.onap.policy.clamp.controlloop.runtime.supervision.SupervisionHandler;
