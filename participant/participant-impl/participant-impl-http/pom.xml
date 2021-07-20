@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!--
   ============LICENSE_START=======================================================
   Copyright (C) 2021 Nordix Foundation.
@@ -19,35 +18,33 @@
   ============LICENSE_END=========================================================
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>org.onap.policy.clamp.participant</groupId>
-        <artifactId>policy-clamp-participant</artifactId>
+        <artifactId>policy-clamp-participant-impl</artifactId>
         <version>6.1.2-SNAPSHOT</version>
     </parent>
 
-    <artifactId>policy-clamp-participant-impl</artifactId>
+    <artifactId>policy-clamp-participant-impl-http</artifactId>
     <name>${project.artifactId}</name>
-    <packaging>pom</packaging>
-
-    <modules>
-        <module>participant-impl-simulator</module>
-        <module>participant-impl-dcae</module>
-        <module>participant-impl-policy</module>
-        <module>participant-impl-cds</module>
-        <module>participant-impl-kubernetes</module>
-        <module>participant-impl-http</module>
-    </modules>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.onap.policy.clamp.participant</groupId>
-            <artifactId>policy-clamp-participant-intermediary</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-    </dependencies>
+    <description>HTTP participant, that performs CRUD operations on Microservices through REST</description>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                        <phase>package</phase>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

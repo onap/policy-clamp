@@ -1,0 +1,27 @@
+participant:
+  intermediaryParameters:
+    reportingTimeInterval: 120000
+    description: Participant Description
+    participantId:
+      name: HttpParticipant0
+      version: 1.0.0
+    participantType:
+      name: org.onap.k8s.controlloop.HttpControlLoopParticipant
+      version: 2.3.4
+    clampControlLoopTopics:
+      topicSources:
+        - topic: POLICY-CLRUNTIME-PARTICIPANT
+          servers:
+            - ${topicServer:message-router}
+          topicCommInfrastructure: dmaap
+          fetchTimeout: 15000
+      topicSinks:
+        - topic: POLICY-CLRUNTIME-PARTICIPANT
+          servers:
+            - ${topicServer:message-router}
+          topicCommInfrastructure: dmaap
+
+        - topic: POLICY-NOTIFICATION
+          servers:
+            - ${topicServer:message-router}
+          topicCommInfrastructure: dmaap
