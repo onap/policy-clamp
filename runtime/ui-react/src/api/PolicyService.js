@@ -21,31 +21,56 @@
  */
 
 export default class PolicyService {
-  static getPoliciesList() {
-    return fetch(window.location.pathname + 'restservices/clds/v2/policies', {
-        method: 'GET',
-        credentials: 'same-origin'
+    static getPoliciesList() {
+        return fetch(window.location.pathname + 'restservices/clds/v2/policies', {
+            method: 'GET',
+            credentials: 'same-origin'
         })
-        .then(function(response) {
-            console.debug("getPoliciesList response received: ", response.status);
-            if (response.ok) {
-                console.info("getPoliciesList query successful");
-                return response.json();
-            } else {
-                return response.text().then(responseBody => {
-                    throw new Error("HTTP " + response.status + "," + responseBody);
-                })
-            }
+            .then(function(response) {
+                console.debug("getPoliciesList response received: ", response.status);
+                if (response.ok) {
+                    console.info("getPoliciesList query successful");
+                    return response.json();
+                } else {
+                    return response.text().then(responseBody => {
+                        throw new Error("HTTP " + response.status + "," + responseBody);
+                    })
+                }
+            })
+            .catch(function(error) {
+                console.error("getPoliciesList error occurred ", error);
+                alert("getPoliciesList error occurred " + error);
+                return undefined;
+            });
+    }
+
+    static getPDPList() {
+        return fetch(window.location.pathname + 'restservices/clds/v2/getPDPGroups', {
+            method: 'GET',
+            credentials: 'same-origin'
         })
-        .catch(function(error) {
-            console.error("getPoliciesList error occurred ", error);
-            alert("getPoliciesList error occurred " + error);
-            return undefined;
-        });
-  }
-  static createNewPolicy(policyModelType, policyModelVersion, policyName, policyVersion, policyJson) {
-    return fetch(window.location.pathname + 'restservices/clds/v2/policies/' + policyModelType + '/'
-                    + policyModelVersion + '/' + policyName + '/' + policyVersion, {
+            .then(function(response) {
+                console.debug("getPDPList response received: ", response.status);
+                if (response.ok) {
+                    console.info("getPDPList query successful");
+                    return JSON.parse(response.text());
+                } else {
+                    return response.text().then(responseBody => {
+                        throw new Error("HTTP " + response.status + "," + responseBody);
+                    })
+                }
+            })
+            .catch(function(error) {
+                console.error("getPDPList error occurred ", error);
+                alert("getPDPList error occurred " + error);
+                return undefined;
+            });
+    }
+
+
+    static createNewPolicy(policyModelType, policyModelVersion, policyName, policyVersion, policyJson) {
+        return fetch(window.location.pathname + 'restservices/clds/v2/policies/' + policyModelType + '/'
+            + policyModelVersion + '/' + policyName + '/' + policyVersion, {
             method: 'POST',
             credentials: 'same-origin',
             headers: {
@@ -53,48 +78,48 @@ export default class PolicyService {
             },
             body: JSON.stringify(policyJson)
         })
-        .then(function (response) {
-            console.debug("createNewPolicy response received: ", response.status);
-            if (response.ok) {
-                console.info("createNewPolicy query successful");
-                return response.text();
-            } else {
-               return response.text().then(responseBody => {
-                    throw new Error("HTTP " + response.status + "," + responseBody);
-                })
-            }
-        })
-        .catch(function (error) {
-            console.error("createNewPolicy error occurred ", error);
-            alert ("createNewPolicy error occurred " + error);
-            return undefined;
-        });
-  }
-  static deletePolicy(policyModelType, policyModelVersion, policyName, policyVersion) {
-    return fetch(window.location.pathname + 'restservices/clds/v2/policies/' + policyModelType + '/'
-        + policyModelVersion + '/' + policyName + '/' + policyVersion, {
+            .then(function (response) {
+                console.debug("createNewPolicy response received: ", response.status);
+                if (response.ok) {
+                    console.info("createNewPolicy query successful");
+                    return response.text();
+                } else {
+                    return response.text().then(responseBody => {
+                        throw new Error("HTTP " + response.status + "," + responseBody);
+                    })
+                }
+            })
+            .catch(function (error) {
+                console.error("createNewPolicy error occurred ", error);
+                alert ("createNewPolicy error occurred " + error);
+                return undefined;
+            });
+    }
+    static deletePolicy(policyModelType, policyModelVersion, policyName, policyVersion) {
+        return fetch(window.location.pathname + 'restservices/clds/v2/policies/' + policyModelType + '/'
+            + policyModelVersion + '/' + policyName + '/' + policyVersion, {
             method: 'DELETE',
             credentials: 'same-origin'
         })
-        .then(function (response) {
-            console.debug("deletePolicy response received: ", response.status);
-            if (response.ok) {
-                console.info("deletePolicy query successful");
-                return response.text();
-            } else {
-                return response.text().then(responseBody => {
-                    throw new Error("HTTP " + response.status + "," + responseBody);
-                })
-            }
-        })
-        .catch(function (error) {
-            console.error("deletePolicy error occurred ", error);
-            alert ("deletePolicy error occurred " + error);
-            return undefined;
-        });
-  }
-  static updatePdpDeployment(pdpOperationsList) {
-    return fetch(window.location.pathname + 'restservices/clds/v2/policies/pdpDeployment', {
+            .then(function (response) {
+                console.debug("deletePolicy response received: ", response.status);
+                if (response.ok) {
+                    console.info("deletePolicy query successful");
+                    return response.text();
+                } else {
+                    return response.text().then(responseBody => {
+                        throw new Error("HTTP " + response.status + "," + responseBody);
+                    })
+                }
+            })
+            .catch(function (error) {
+                console.error("deletePolicy error occurred ", error);
+                alert ("deletePolicy error occurred " + error);
+                return undefined;
+            });
+    }
+    static updatePdpDeployment(pdpOperationsList) {
+        return fetch(window.location.pathname + 'restservices/clds/v2/policies/pdpDeployment', {
             method: 'PUT',
             credentials: 'same-origin',
             headers: {
@@ -102,47 +127,47 @@ export default class PolicyService {
             },
             body: JSON.stringify(pdpOperationsList)
         })
-        .then(function (response) {
-            console.debug("updatePdpDeployment response received: ", response.status);
-            if (response.ok) {
-                console.info("updatePdpDeployment query successful");
-                return response.text();
-            } else {
-               return response.text().then(responseBody => {
-                    throw new Error("HTTP " + response.status + "," + responseBody);
-                })
-            }
-        })
-        .catch(function (error) {
-            console.error("updatePdpDeployment error occurred ", error);
-            alert ("updatePdpDeployment error occurred " + error);
-            return undefined;
-        });
-  }
-  static sendNewPolicyModel(newPolicyModel) {
-      return fetch(window.location.pathname + 'restservices/clds/v2/policies/policytype', {
-              method: 'POST',
-              credentials: 'same-origin',
-              headers: {
+            .then(function (response) {
+                console.debug("updatePdpDeployment response received: ", response.status);
+                if (response.ok) {
+                    console.info("updatePdpDeployment query successful");
+                    return response.text();
+                } else {
+                    return response.text().then(responseBody => {
+                        throw new Error("HTTP " + response.status + "," + responseBody);
+                    })
+                }
+            })
+            .catch(function (error) {
+                console.error("updatePdpDeployment error occurred ", error);
+                alert ("updatePdpDeployment error occurred " + error);
+                return undefined;
+            });
+    }
+    static sendNewPolicyModel(newPolicyModel) {
+        return fetch(window.location.pathname + 'restservices/clds/v2/policies/policytype', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
                 "Content-Type": "plain/text"
-              },
-              body: newPolicyModel
-          })
-          .then(function (response) {
-              console.debug("sendNewPolicyModel response received: ", response.status);
-              if (response.ok) {
-                  console.info("sendNewPolicyModel query successful");
-                  return response.text();
-              } else {
-                 return response.text().then(responseBody => {
-                      throw new Error("HTTP " + response.status + "," + responseBody);
-                  })
-              }
-          })
-          .catch(function (error) {
-              console.error("sendNewPolicyModel error occurred ", error);
-              alert ("sendNewPolicyModel error occurred " + error);
-              return undefined;
-          });
+            },
+            body: newPolicyModel
+        })
+            .then(function (response) {
+                console.debug("sendNewPolicyModel response received: ", response.status);
+                if (response.ok) {
+                    console.info("sendNewPolicyModel query successful");
+                    return response.text();
+                } else {
+                    return response.text().then(responseBody => {
+                        throw new Error("HTTP " + response.status + "," + responseBody);
+                    })
+                }
+            })
+            .catch(function (error) {
+                console.error("sendNewPolicyModel error occurred ", error);
+                alert ("sendNewPolicyModel error occurred " + error);
+                return undefined;
+            });
     }
 }

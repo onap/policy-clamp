@@ -56,6 +56,7 @@ import PolicyEditor from './PolicyEditor';
 import ToscaViewer from './ToscaViewer';
 import PolicyDeploymentEditor from './PolicyDeploymentEditor';
 import PoliciesTreeViewer from './PoliciesTreeViewer';
+import PDPTreeViewer from './PDPTreeViewer';
 import PolicyToscaFileSelector from './PolicyToscaFileSelector';
 
 const DivWhiteSpaceStyled = styled.div`
@@ -104,6 +105,7 @@ export default class ViewAllPolicies extends React.Component {
         policiesListDataFiltered: [],
         toscaModelsListData: [],
         toscaModelsListDataFiltered: [],
+        pdpListData: [],
         jsonEditorForPolicy: new Map(),
         showSuccessAlert: false,
         showFailAlert: false,
@@ -194,6 +196,7 @@ export default class ViewAllPolicies extends React.Component {
         this.handleDeletePolicy = this.handleDeletePolicy.bind(this);
         this.disableAlert = this.disableAlert.bind(this);
         this.getAllPolicies = this.getAllPolicies.bind(this);
+        this.getAllPDP = this.getAllPDP.bind(this);
         this.getAllToscaModels = this.getAllToscaModels.bind(this);
         this.generateAdditionalPolicyColumns = this.generateAdditionalPolicyColumns.bind(this);
         this.filterPolicies = this.filterPolicies.bind(this);
@@ -202,7 +205,10 @@ export default class ViewAllPolicies extends React.Component {
         this.disableFileSelector = this.disableFileSelector.bind(this);
         this.getAllPolicies();
         this.getAllToscaModels();
+        this.getAllPDP();
     }
+
+
 
     generateAdditionalPolicyColumns(policiesData) {
         policiesData.forEach(policy => {
@@ -238,6 +244,8 @@ export default class ViewAllPolicies extends React.Component {
         });
     }
 
+
+
     getAllPolicies() {
         PolicyService.getPoliciesList().then(allPolicies => {
             this.generateAdditionalPolicyColumns(allPolicies["policies"])
@@ -246,6 +254,15 @@ export default class ViewAllPolicies extends React.Component {
             })
         });
 
+    }
+
+
+
+
+    getAllPDP() {
+        PolicyService.getPDPList().then(allPDP => {// allPDP will return as a JSON if no error occurs, otherwise it will be a string displaying an error
+        this.setState({pdpListData:allPDP}) //tree will contain the "Groups" and "Subgroups" keys, use those to access information
+     });
     }
 
     handleClose() {
@@ -442,6 +459,25 @@ export default class ViewAllPolicies extends React.Component {
         );
     }
 
+    renderPDPGroupsTab() {  //new tab added by Manov Jain 2021
+        return (
+            <Tab eventKey="pdp" title="PDP Groups"> {/* This will show the title of the tab */}
+                <Modal.Body>
+                    <div>
+                       <h1>PDP Data</h1>
+                        <PDPTreeViewer pdpData = {this.state.pdpListData}/>
+
+                        <p>{this.state.pdpListData}</p>
+
+                    </div>
+                </Modal.Body>
+                    {/*<div> /!* inside here you will add the code to display the tree of the PDP groups. *!/*/}
+                    {/*    <p>Tree will be here</p>*/}
+                    {/*</div>*/}
+            </Tab>
+        );
+    }
+
     render() {
         return (
         <React.Fragment>
@@ -451,6 +487,7 @@ export default class ViewAllPolicies extends React.Component {
                 <Tabs id="controlled-tab-example" activeKey={this.state.key} onSelect={key => this.setState({ key, selectedRowData: {} })}>
                     {this.renderPoliciesTab()}
                     {this.renderToscaTab()}
+                    {this.renderPDPGroupsTab()}
                 </Tabs>
                 <Alert variant="success" show={this.state.showSuccessAlert} onClose={this.disableAlert} dismissible>
                     <DivWhiteSpaceStyled>
