@@ -1,0 +1,101 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0de8a2e7_cf8664ac",
+        "filename": "participant/participant-impl/participant-impl-policy/src/test/java/org/onap/policy/clamp/controlloop/participant/policy/endtoend/ParticipantMessagesTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-20T15:20:28Z",
+      "side": 1,
+      "message": "sonar: missing assertion; what are we trying to test here?  maybe verify that the mock\u0027s send() method is invoked?",
+      "revId": "a979eac1a6df737928e8d388096fbc531fc967df",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ee0ab737_e6cf9a2f",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/comm/MessageSender.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-20T15:20:28Z",
+      "side": 1,
+      "message": "this doesn\u0027t appear to be used",
+      "revId": "a979eac1a6df737928e8d388096fbc531fc967df",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fb900dc3_dc6303f1",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ParticipantHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 353,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-20T15:20:28Z",
+      "side": 1,
+      "message": "seems more like \"makeHeartbeat\" or \"genHeartbeat\"; \"handle\" implies it\u0027s handling something that was received",
+      "range": {
+        "startLine": 353,
+        "startChar": 29,
+        "endLine": 353,
+        "endChar": 44
+      },
+      "revId": "a979eac1a6df737928e8d388096fbc531fc967df",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "67adf725_8c5920d6",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/parameters/ParticipantIntermediaryParameters.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-20T15:20:28Z",
+      "side": 1,
+      "message": "NotNull has no impact on \"long\" values.  Perhaps use this?\n\n  @Min(1)",
+      "revId": "a979eac1a6df737928e8d388096fbc531fc967df",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8550c108_63177517",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/parameters/ParticipantIntermediaryParameters.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-20T15:20:28Z",
+      "side": 1,
+      "message": "maybe add \"Ms\", \"Millis\", \"Sec\", etc., to make the units more clear",
+      "range": {
+        "startLine": 55,
+        "startChar": 17,
+        "endLine": 55,
+        "endChar": 38
+      },
+      "revId": "a979eac1a6df737928e8d388096fbc531fc967df",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
