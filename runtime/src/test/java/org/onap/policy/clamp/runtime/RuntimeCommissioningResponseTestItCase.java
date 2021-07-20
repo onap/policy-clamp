@@ -102,4 +102,49 @@ public class RuntimeCommissioningResponseTestItCase {
         assertThat(HttpStatus.valueOf((Integer) exchangeResponse.getIn().getHeader(Exchange.HTTP_RESPONSE_CODE))
             .is2xxSuccessful()).isTrue();
     }
+
+    @Test
+    public void testDecommissioningOfToscaServiceTemplateStatus() {
+        ProducerTemplate prodTemplate = camelContext.createProducerTemplate();
+
+        Exchange exchangeResponse =
+            prodTemplate.send("direct:decommission-service-template", ExchangeBuilder.anExchange(camelContext)
+                .withProperty("name", "ToscaServiceTemplate")
+                .withProperty("version", "1.0.0")
+                .withProperty("raiseHttpExceptionFlag", "true")
+                .build());
+
+        assertThat(HttpStatus.valueOf((Integer) exchangeResponse.getIn().getHeader(Exchange.HTTP_RESPONSE_CODE))
+            .is2xxSuccessful()).isTrue();
+    }
+
+    @Test
+    public void testGetControlLoopDefinitions() {
+        ProducerTemplate prodTemplate = camelContext.createProducerTemplate();
+
+        Exchange exchangeResponse =
+            prodTemplate.send("direct:get-control-loop-definitions", ExchangeBuilder.anExchange(camelContext)
+                .withProperty("name", "ToscaServiceTemplate")
+                .withProperty("version", "1.0.0")
+                .withProperty("raiseHttpExceptionFlag", "true")
+                .build());
+
+        assertThat(HttpStatus.valueOf((Integer) exchangeResponse.getIn().getHeader(Exchange.HTTP_RESPONSE_CODE))
+            .is2xxSuccessful()).isTrue();
+    }
+
+    @Test
+    public void testGetControlLoopElementDefinitions() {
+        ProducerTemplate prodTemplate = camelContext.createProducerTemplate();
+
+        Exchange exchangeResponse =
+            prodTemplate.send("direct:get-element-definitions", ExchangeBuilder.anExchange(camelContext)
+                .withProperty("name", "ToscaServiceTemplate")
+                .withProperty("version", "1.0.0")
+                .withProperty("raiseHttpExceptionFlag", "true")
+                .build());
+
+        assertThat(HttpStatus.valueOf((Integer) exchangeResponse.getIn().getHeader(Exchange.HTTP_RESPONSE_CODE))
+            .is2xxSuccessful()).isTrue();
+    }
 }

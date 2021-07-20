@@ -227,7 +227,8 @@ public class CommissioningProvider {
                 mapper.acceptJsonFormatVisitor(mapper.constructType(ToscaTopologyTemplate.class), visitor);
                 break;
             case "node_templates":
-                mapper.acceptJsonFormatVisitor(mapper.constructType(ToscaNodeTemplate.class), visitor);
+                mapper.acceptJsonFormatVisitor(mapper.getTypeFactory()
+                    .constructCollectionType(List.class, ToscaNodeTemplate.class), visitor);
                 break;
             default:
                 mapper.acceptJsonFormatVisitor(mapper.constructType(ToscaServiceTemplate.class), visitor);
