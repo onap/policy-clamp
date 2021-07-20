@@ -119,7 +119,7 @@ class ControlLoopInstantiationProviderTest {
         var participantDeregisterAckPublisher = Mockito.mock(ParticipantDeregisterAckPublisher.class);
         var participantUpdatePublisher = Mockito.mock(ParticipantUpdatePublisher.class);
         supervisionHandler = new SupervisionHandler(clProvider, participantProvider, monitoringProvider,
-                        commissioningProvider, controlLoopUpdatePublisher, controlLoopStateChangePublisher,
+                        controlLoopUpdatePublisher, controlLoopStateChangePublisher,
                         participantRegisterAckPublisher, participantDeregisterAckPublisher, participantUpdatePublisher);
     }
 

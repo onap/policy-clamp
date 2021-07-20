@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.controlloop.runtime.supervision.comm;
 
+import java.util.UUID;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregisterAck;
 import org.springframework.stereotype.Component;
 
@@ -29,4 +30,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class ParticipantDeregisterAckPublisher extends AbstractParticipantAckPublisher<ParticipantDeregisterAck> {
 
+    /**
+     * Sent ParticipantDeregisterAck to Participant.
+     *
+     * @param responseTo the original request id in the request.
+     */
+    public void send(UUID responseTo) {
+        var message = new ParticipantDeregisterAck();
+        message.setResponseTo(responseTo);
+        message.setMessage("Participant Deregister Ack");
+        message.setResult(true);
+        super.send(message);
+    }
 }

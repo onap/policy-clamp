@@ -27,9 +27,6 @@ runtime:
     updateParameters:
       maxRetryCount: 1
       maxWaitMs: 30000
-    stateChangeParameters:
-      maxRetryCount: 1
-      maxWaitMs: 30000
   databaseProviderParameters:
     name: PolicyProviderParameterGroup
     implementation: org.onap.policy.models.provider.impl.DatabasePolicyModelsProviderImpl

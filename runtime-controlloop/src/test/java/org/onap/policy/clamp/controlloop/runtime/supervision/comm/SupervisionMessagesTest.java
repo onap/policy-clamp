@@ -96,7 +96,7 @@ class SupervisionMessagesTest extends CommonRestController {
         var participantDeregisterAckPublisher = Mockito.mock(ParticipantDeregisterAckPublisher.class);
         var participantUpdatePublisher = Mockito.mock(ParticipantUpdatePublisher.class);
         supervisionHandler = new SupervisionHandler(clProvider, participantProvider, monitoringProvider,
-                        commissioningProvider, controlLoopUpdatePublisher, controlLoopStateChangePublisher,
+                        controlLoopUpdatePublisher, controlLoopStateChangePublisher,
                         participantRegisterAckPublisher, participantDeregisterAckPublisher, participantUpdatePublisher);
     }
 
@@ -196,7 +196,7 @@ class SupervisionMessagesTest extends CommonRestController {
         participantUpdateMsg.setParticipantDefinitionUpdateMap(participantDefinitionUpdateMap);
 
         synchronized (lockit) {
-            ParticipantUpdatePublisher clUpdatePublisher = new ParticipantUpdatePublisher();
+            ParticipantUpdatePublisher clUpdatePublisher = new ParticipantUpdatePublisher(commissioningProvider);
             clUpdatePublisher.active(Collections.singletonList(Mockito.mock(TopicSink.class)));
             clUpdatePublisher.send(participantUpdateMsg);
         }

@@ -59,6 +59,8 @@ public class InstantiationController extends AbstractRestController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(InstantiationController.class);
 
+    private static final String TAGS = "Clamp Control Loop Instantiation API";
+
     // The CL provider for instantiation requests
     private final ControlLoopInstantiationProvider provider;
 
@@ -86,7 +88,7 @@ public class InstantiationController extends AbstractRestController {
             value = "Commissions control loop definitions",
             notes = "Commissions control loop definitions, returning the control loop IDs",
             response = InstantiationResponse.class,
-            tags = {"Control Loop Instantiation API"},
+            tags = {TAGS},
             authorizations = @Authorization(value = AUTHORIZATION_TYPE),
             responseHeaders = {
                 @ResponseHeader(
@@ -154,9 +156,7 @@ public class InstantiationController extends AbstractRestController {
     @ApiOperation(value = "Query details of the requested control loops",
             notes = "Queries details of the requested control loops, returning all control loop details",
             response = ControlLoops.class,
-            tags = {
-                "Clamp control loop Instantiation API"
-            },
+            tags = {TAGS},
             authorizations = @Authorization(value = AUTHORIZATION_TYPE),
             responseHeaders = {
                 @ResponseHeader(
@@ -220,9 +220,7 @@ public class InstantiationController extends AbstractRestController {
             value = "Updates control loop definitions",
             notes = "Updates control loop definitions, returning the updated control loop definition IDs",
             response = InstantiationResponse.class,
-            tags = {
-                "Control Loop Instantiation API"
-                },
+            tags = {TAGS},
             authorizations = @Authorization(value = AUTHORIZATION_TYPE),
             responseHeaders = {
                 @ResponseHeader(
@@ -290,9 +288,7 @@ public class InstantiationController extends AbstractRestController {
     @ApiOperation(value = "Delete a control loop",
             notes = "Deletes a control loop, returning optional error details",
             response = InstantiationResponse.class,
-            tags = {
-                "Clamp Control Loop Instantiation API"
-                },
+            tags = {TAGS},
             authorizations = @Authorization(value = AUTHORIZATION_TYPE),
             responseHeaders = {
                 @ResponseHeader(
@@ -362,9 +358,7 @@ public class InstantiationController extends AbstractRestController {
     @ApiOperation(value = "Issue a command to the requested control loops",
             notes = "Issues a command to a control loop, ordering a state change on the control loop",
             response = InstantiationResponse.class,
-            tags = {
-                "Clamp Control Loop Instantiation API"
-            },
+            tags = {TAGS},
             authorizations = @Authorization(value = AUTHORIZATION_TYPE),
             responseHeaders = {
                 @ResponseHeader(
