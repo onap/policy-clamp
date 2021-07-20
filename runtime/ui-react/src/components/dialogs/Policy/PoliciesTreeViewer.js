@@ -44,16 +44,16 @@ export default class PoliciesTreeViewer extends React.Component {
     }
 
     state = {
-            policiesTreeData: this.createPoliciesTree(this.props.policiesData),
+        policiesTreeData: this.createPoliciesTree(this.props.policiesData),
     }
 
     componentDidUpdate(prevProps) {
-      if (prevProps.policiesData !== this.props.policiesData) {
-        this.setState({policiesTreeData: this.createPoliciesTree(this.props.policiesData)})
-      }
+        if (prevProps.policiesData !== this.props.policiesData) {
+            this.setState({policiesTreeData: this.createPoliciesTree(this.props.policiesData)})
+        }
     }
 
-    createPoliciesTree(policiesArray) {
+    createPoliciesTree(policiesArray) { //creates the JSON
         // put my policies array in a Json
         let nodeId = 1;
         let root = {id:nodeId, policyCount:0, name:"ROOT", children:[], parent: undefined};
@@ -92,18 +92,18 @@ export default class PoliciesTreeViewer extends React.Component {
 
     renderTreeItems(nodes) {
         return (<TreeItem key={nodes.id} nodeId={nodes.id} label={nodes.name + "("+ nodes.policyCount + ")"} onNodeSelect={this.handleTreeItemClick}>
-          {
-            Array.isArray(nodes.children) ? nodes.children.map((node) => this.renderTreeItems(node)) : null
-          }
+            {
+                Array.isArray(nodes.children) ? nodes.children.map((node) => this.renderTreeItems(node)) : null
+            }
         </TreeItem>);
     };
 
     render() {
-         return (
-                <TreeView defaultExpanded={['root']} defaultCollapseIcon={<FolderOpenIcon />}
-                defaultExpandIcon={<FolderIcon />} defaultEndIcon={<DescriptionIcon />} onNodeSelect={this.handleTreeItemClick} multiSelect>
-                  {this.renderTreeItems(this.state.policiesTreeData)}
-                </TreeView>
-          );
+        return (
+            <TreeView defaultExpanded={['root']} defaultCollapseIcon={<FolderOpenIcon />}
+                      defaultExpandIcon={<FolderIcon />} defaultEndIcon={<DescriptionIcon />} onNodeSelect={this.handleTreeItemClick} multiSelect>
+                {this.renderTreeItems(this.state.policiesTreeData)}
+            </TreeView>
+        );
     }
 }
