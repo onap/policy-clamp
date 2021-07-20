@@ -54,3 +54,4 @@ export { default as ViewAllPolicies } from './src/components/dialogs/Policy/View
 export { default as PolicyDeploymentEditor } from './src/components/dialogs/Policy/PolicyDeploymentEditor';
 export { default as PoliciesTreeViewer } from './src/components/dialogs/Policy/PoliciesTreeViewer';
 export { default as PolicyToscaFileSelector } from './src/components/dialogs/Policy/PolicyToscaFileSelector';
+export { default as PDPTreeViewer } from  './src/components/dialogs/Policy/PDPTreeViewer';

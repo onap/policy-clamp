@@ -53,7 +53,7 @@ export default class PoliciesTreeViewer extends React.Component {
       }
     }
 
-    createPoliciesTree(policiesArray) {
+    createPoliciesTree(policiesArray) { //creates the JSON
         // put my policies array in a Json
         let nodeId = 1;
         let root = {id:nodeId, policyCount:0, name:"ROOT", children:[], parent: undefined};
