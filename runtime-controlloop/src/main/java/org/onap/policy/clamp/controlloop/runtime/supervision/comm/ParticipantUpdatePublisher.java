@@ -20,13 +20,63 @@
 
 package org.onap.policy.clamp.controlloop.runtime.supervision.comm;
 
+import java.time.Instant;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.UUID;
+import lombok.AllArgsConstructor;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElementDefinition;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdate;
+import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningProvider;
+import org.onap.policy.models.base.PfModelException;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
  * This class is used to send ParticipantUpdate messages to participants on DMaaP.
  */
 @Component
+@AllArgsConstructor
 public class ParticipantUpdatePublisher extends AbstractParticipantPublisher<ParticipantUpdate> {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantUpdatePublisher.class);
+
+    private final CommissioningProvider commissioningProvider;
+
+    /**
+     * Send ParticipantUpdate to Participant.
+     *
+     * @param participantId the participant Id
+     * @param participantType the participant Type
+     */
+    public void send(ToscaConceptIdentifier participantId, ToscaConceptIdentifier participantType) {
+        var message = new ParticipantUpdate();
+        message.setParticipantId(participantId);
+        message.setParticipantType(participantType);
+        message.setTimestamp(Instant.now());
+
+        var clDefinition = new ControlLoopElementDefinition();
+        clDefinition.setId(UUID.randomUUID());
+
+        try {
+            clDefinition.setControlLoopElementToscaServiceTemplate(
+                    commissioningProvider.getToscaServiceTemplate(null, null));
+        } catch (PfModelException pfme) {
+            LOGGER.warn("Get of tosca service template failed, cannot send participantupdate", pfme);
+            return;
+        }
+
+        Map<UUID, ControlLoopElementDefinition> controlLoopElementDefinitionMap = new LinkedHashMap<>();
+        controlLoopElementDefinitionMap.put(UUID.randomUUID(), clDefinition);
+
+        Map<ToscaConceptIdentifier, Map<UUID, ControlLoopElementDefinition>> participantDefinitionUpdateMap =
+                new LinkedHashMap<>();
+        participantDefinitionUpdateMap.put(participantId, controlLoopElementDefinitionMap);
+        message.setParticipantDefinitionUpdateMap(participantDefinitionUpdateMap);
+
+        LOGGER.debug("Participant Update sent {}", message);
+        super.send(message);
+    }
 }
