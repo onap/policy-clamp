@@ -52,6 +52,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MonitoringQueryController extends AbstractRestController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MonitoringQueryController.class);
+    private static final String TAGS = "Clamp Control Loop Monitoring API";
     private final MonitoringProvider provider;
 
     /**
@@ -80,9 +81,7 @@ public class MonitoringQueryController extends AbstractRestController {
     @ApiOperation(value = "Query details of the requested participant stats",
         notes = "Queries details of the requested participant stats, returning all participant stats",
         response = ParticipantStatisticsList.class,
-        tags = {
-            "Clamp control loop Monitoring API"
-        },
+        tags = {TAGS},
         authorizations = @Authorization(value = AUTHORIZATION_TYPE),
         responseHeaders = {
             @ResponseHeader(
@@ -168,9 +167,7 @@ public class MonitoringQueryController extends AbstractRestController {
     @ApiOperation(value = "Query details of all the participant stats in a control loop",
         notes = "Queries details of the participant stats, returning all participant stats",
         response = ClElementStatisticsList.class,
-        tags = {
-            "Clamp control loop Monitoring API"
-        },
+        tags = {TAGS},
         authorizations = @Authorization(value = AUTHORIZATION_TYPE),
         responseHeaders = {
             @ResponseHeader(
@@ -235,9 +232,7 @@ public class MonitoringQueryController extends AbstractRestController {
     @ApiOperation(value = "Query details of the requested cl element stats in a control loop",
         notes = "Queries details of the requested cl element stats, returning all clElement stats",
         response = ClElementStatisticsList.class,
-        tags = {
-            "Clamp control loop Monitoring API"
-        },
+        tags = {TAGS},
         authorizations = @Authorization(value = AUTHORIZATION_TYPE),
         responseHeaders = {
             @ResponseHeader(
@@ -306,9 +301,7 @@ public class MonitoringQueryController extends AbstractRestController {
     @ApiOperation(value = "Query details of the requested cl element stats",
         notes = "Queries details of the requested cl element stats, returning all clElement stats",
         response = ClElementStatisticsList.class,
-        tags = {
-            "Clamp control loop Monitoring API"
-        },
+        tags = {TAGS},
         authorizations = @Authorization(value = AUTHORIZATION_TYPE),
         responseHeaders = {
             @ResponseHeader(
