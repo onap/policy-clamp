@@ -22,6 +22,30 @@
       "revId": "911206259948d8d5982fcafd8b6565e98bea08b2",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "18718b45_52672c50",
+        "filename": "common/src/main/resources/tosca/PolicyControlLoopElementType.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-07-21T12:12:45Z",
+      "side": 1,
+      "message": "Nice catch, hard one to see...",
+      "parentUuid": "83e9aac5_c002d582",
+      "range": {
+        "startLine": 34,
+        "startChar": 6,
+        "endLine": 34,
+        "endChar": 14
+      },
+      "revId": "911206259948d8d5982fcafd8b6565e98bea08b2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
