@@ -57,9 +57,6 @@ public class ClRuntimeParameterGroup {
     private long supervisionScannerIntervalSec;
 
     @Min(value = 0)
-    private long participantStateChangeIntervalSec;
-
-    @Min(value = 0)
     private long participantClUpdateIntervalSec;
 
     @Min(value = 0)
