@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockserver.integration.ClientAndServer;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopStateChange;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopStateChange;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopUpdate;
 import org.onap.policy.clamp.controlloop.participant.dcae.main.parameters.CommonTestData;
 import org.onap.policy.clamp.controlloop.participant.dcae.main.rest.TestListenerUtils;
@@ -103,23 +103,23 @@ class PartecipantDcaeTest {
     }
 
     @Test
-    void testParticipantControlLoopStateChangeMessageListener() {
-        ParticipantControlLoopStateChange participantControlLoopStateChangeMsg =
+    void testControlLoopStateChangeMessageListener() {
+        ControlLoopStateChange controlLoopStateChangeMsg =
                 TestListenerUtils.createControlLoopStateChangeMsg(ControlLoopOrderedState.UNINITIALISED);
-        participantControlLoopStateChangeMsg.setOrderedState(ControlLoopOrderedState.PASSIVE);
+        controlLoopStateChangeMsg.setOrderedState(ControlLoopOrderedState.PASSIVE);
 
         ControlLoopStateChangeListener clStateChangeListener = new ControlLoopStateChangeListener(participantHandler);
 
-        clStateChangeListener.onTopicEvent(INFRA, TOPIC, null, participantControlLoopStateChangeMsg);
-        assertEquals(ControlLoopOrderedState.PASSIVE, participantControlLoopStateChangeMsg.getOrderedState());
+        clStateChangeListener.onTopicEvent(INFRA, TOPIC, null, controlLoopStateChangeMsg);
+        assertEquals(ControlLoopOrderedState.PASSIVE, controlLoopStateChangeMsg.getOrderedState());
 
-        participantControlLoopStateChangeMsg.setOrderedState(ControlLoopOrderedState.RUNNING);
-        clStateChangeListener.onTopicEvent(INFRA, TOPIC, null, participantControlLoopStateChangeMsg);
-        assertEquals(ControlLoopOrderedState.RUNNING, participantControlLoopStateChangeMsg.getOrderedState());
+        controlLoopStateChangeMsg.setOrderedState(ControlLoopOrderedState.RUNNING);
+        clStateChangeListener.onTopicEvent(INFRA, TOPIC, null, controlLoopStateChangeMsg);
+        assertEquals(ControlLoopOrderedState.RUNNING, controlLoopStateChangeMsg.getOrderedState());
 
-        participantControlLoopStateChangeMsg.setOrderedState(ControlLoopOrderedState.RUNNING);
-        clStateChangeListener.onTopicEvent(INFRA, TOPIC, null, participantControlLoopStateChangeMsg);
-        assertEquals(ControlLoopOrderedState.RUNNING, participantControlLoopStateChangeMsg.getOrderedState());
+        controlLoopStateChangeMsg.setOrderedState(ControlLoopOrderedState.RUNNING);
+        clStateChangeListener.onTopicEvent(INFRA, TOPIC, null, controlLoopStateChangeMsg);
+        assertEquals(ControlLoopOrderedState.RUNNING, controlLoopStateChangeMsg.getOrderedState());
     }
 
     @Test

@@ -36,7 +36,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ControlLoopProvider;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ParticipantProvider;
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopStateChange;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopStateChange;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopUpdate;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregister;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregisterAck;
@@ -49,7 +49,7 @@ import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.Parti
 import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningProvider;
 import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
 import org.onap.policy.clamp.controlloop.runtime.monitoring.MonitoringProvider;
-import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantControlLoopStateChangePublisher;
+import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ControlLoopStateChangePublisher;
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantControlLoopUpdatePublisher;
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantDeregisterAckPublisher;
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantRegisterAckPublisher;
@@ -89,7 +89,7 @@ public class SupervisionHandler {
 
     // Publishers for participant communication
     private final ParticipantControlLoopUpdatePublisher controlLoopUpdatePublisher;
-    private final ParticipantControlLoopStateChangePublisher controlLoopStateChangePublisher;
+    private final ControlLoopStateChangePublisher controlLoopStateChangePublisher;
     private final ParticipantRegisterAckPublisher participantRegisterAckPublisher;
     private final ParticipantDeregisterAckPublisher participantDeregisterAckPublisher;
     private final ParticipantUpdatePublisher participantUpdatePublisher;
@@ -301,7 +301,7 @@ public class SupervisionHandler {
     }
 
     private void sendControlLoopStateChange(ControlLoop controlLoop) {
-        var clsc = new ParticipantControlLoopStateChange();
+        var clsc = new ControlLoopStateChange();
         clsc.setControlLoopId(controlLoop.getKey().asIdentifier());
         clsc.setMessageId(UUID.randomUUID());
         clsc.setOrderedState(controlLoop.getOrderedState());

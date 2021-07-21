@@ -26,7 +26,7 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopStateChange;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopStateChange;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopUpdate;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdate;
 import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ControlLoopStateChangeListener;
@@ -112,10 +112,10 @@ class ParticipantPolicyTest {
         assertEquals("org.onap.PM_Policy", participantHandler.getParticipantId().getName());
 
         ControlLoopStateChangeListener clStateChangeListener = new ControlLoopStateChangeListener(participantHandler);
-        ParticipantControlLoopStateChange participantControlLoopStateChangeMsg =
+        ControlLoopStateChange controlLoopStateChangeMsg =
                 TestListenerUtils.createControlLoopStateChangeMsg(ControlLoopOrderedState.UNINITIALISED);
-        participantControlLoopStateChangeMsg.setOrderedState(ControlLoopOrderedState.UNINITIALISED);
-        clStateChangeListener.onTopicEvent(INFRA, TOPIC, null, participantControlLoopStateChangeMsg);
+        controlLoopStateChangeMsg.setOrderedState(ControlLoopOrderedState.UNINITIALISED);
+        clStateChangeListener.onTopicEvent(INFRA, TOPIC, null, controlLoopStateChangeMsg);
 
         // Verify the result of GET participants with what is stored
         assertEquals("org.onap.PM_Policy", participantHandler.getParticipantId().getName());

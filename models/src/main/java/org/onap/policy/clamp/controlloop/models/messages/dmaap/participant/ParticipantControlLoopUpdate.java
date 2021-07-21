@@ -29,7 +29,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 /**
  * Class to represent the PARTICIPANT_CONTROL_LOOP_UPDATE message that the control loop runtime sends to a participant.
  * When a participant receives this message, it creates the control loop elements contained in the message and sets them
- * to state PASSIVE. subsequent PARTICIPANT_CONTROL_LOOP_STATE_CHANGE messages are used to activate the control loops.
+ * to state PASSIVE. subsequent CONTROL_LOOP_STATE_CHANGE messages are used to activate the control loops.
  */
 @Getter
 @Setter

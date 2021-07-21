@@ -22,15 +22,15 @@ package org.onap.policy.clamp.controlloop.runtime.supervision.comm;
 
 import java.util.UUID;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopStateChange;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopStateChange;
 import org.springframework.stereotype.Component;
 
 /**
- * This class is used to send ParticipantControlLoopStateChangePublisher messages to participants on DMaaP.
+ * This class is used to send ControlLoopStateChangePublisher messages to participants on DMaaP.
  */
 @Component
-public class ParticipantControlLoopStateChangePublisher
-        extends AbstractParticipantPublisher<ParticipantControlLoopStateChange> {
+public class ControlLoopStateChangePublisher
+        extends AbstractParticipantPublisher<ControlLoopStateChange> {
 
     /**
      * Send ControlLoopStateChange to Participant.
@@ -38,7 +38,7 @@ public class ParticipantControlLoopStateChangePublisher
      * @param controlLoop the ControlLoop
      */
     public void send(ControlLoop controlLoop) {
-        var clsc = new ParticipantControlLoopStateChange();
+        var clsc = new ControlLoopStateChange();
         clsc.setControlLoopId(controlLoop.getKey().asIdentifier());
         clsc.setMessageId(UUID.randomUUID());
         clsc.setOrderedState(controlLoop.getOrderedState());
