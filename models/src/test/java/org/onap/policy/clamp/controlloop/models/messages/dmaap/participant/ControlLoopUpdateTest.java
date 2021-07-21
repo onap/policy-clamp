@@ -35,12 +35,12 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 /**
  * Test the copy constructor.
  */
-class ParticipantControlLoopUpdateTest {
+class ControlLoopUpdateTest {
     @Test
     void testCopyConstructor() {
-        assertThatThrownBy(() -> new ParticipantControlLoopUpdate(null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> new ControlLoopUpdate(null)).isInstanceOf(NullPointerException.class);
 
-        ParticipantControlLoopUpdate orig = new ParticipantControlLoopUpdate();
+        ControlLoopUpdate orig = new ControlLoopUpdate();
         // verify with all values
         ToscaConceptIdentifier id = new ToscaConceptIdentifier();
         id.setName("id");
@@ -60,7 +60,7 @@ class ParticipantControlLoopUpdateTest {
         orig.setControlLoopDefinition(toscaServiceTemplate);
         orig.setControlLoop(controlLoop);
 
-        ParticipantControlLoopUpdate other = new ParticipantControlLoopUpdate(orig);
+        ControlLoopUpdate other = new ControlLoopUpdate(orig);
 
         assertEquals(removeVariableFields(orig.toString()), removeVariableFields(other.toString()));
 

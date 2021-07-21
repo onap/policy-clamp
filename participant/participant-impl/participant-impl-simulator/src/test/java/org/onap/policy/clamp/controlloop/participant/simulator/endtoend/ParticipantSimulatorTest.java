@@ -36,7 +36,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopUpdate;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopUpdate;
 import org.onap.policy.clamp.controlloop.models.messages.rest.TypedSimpleResponse;
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ControlLoopUpdateListener;
@@ -103,10 +103,10 @@ class ParticipantSimulatorTest {
                 ControlLoopUpdateListener clUpdateListener =
                         new ControlLoopUpdateListener(participantHandler);
 
-                ParticipantControlLoopUpdate participantControlLoopUpdateMsg =
+                ControlLoopUpdate controlLoopUpdateMsg =
                         TestListenerUtils.createControlLoopUpdateMsg();
-                participantControlLoopUpdateMsg.getControlLoop().setOrderedState(ControlLoopOrderedState.PASSIVE);
-                clUpdateListener.onTopicEvent(INFRA, TOPIC, null, participantControlLoopUpdateMsg);
+                controlLoopUpdateMsg.getControlLoop().setOrderedState(ControlLoopOrderedState.PASSIVE);
+                clUpdateListener.onTopicEvent(INFRA, TOPIC, null, controlLoopUpdateMsg);
 
             }
         }

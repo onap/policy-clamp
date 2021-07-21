@@ -32,8 +32,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockserver.integration.ClientAndServer;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopUpdate;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopStateChange;
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopUpdate;
 import org.onap.policy.clamp.controlloop.participant.dcae.main.parameters.CommonTestData;
 import org.onap.policy.clamp.controlloop.participant.dcae.main.rest.TestListenerUtils;
 import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ControlLoopStateChangeListener;
@@ -50,7 +50,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @TestPropertySource(locations = {"classpath:application_test.properties"})
-class PartecipantDcaeTest {
+class ParticipantDcaeTest {
 
     private static final CommInfrastructure INFRA = CommInfrastructure.NOOP;
     private static final String TOPIC = "my-topic";
@@ -124,53 +124,53 @@ class PartecipantDcaeTest {
 
     @Test
     void testControlLoopUpdateListener_ParticipantIdNoMatch() throws CoderException {
-        ParticipantControlLoopUpdate participantControlLoopUpdateMsg = TestListenerUtils.createControlLoopUpdateMsg();
-        participantControlLoopUpdateMsg.getParticipantId().setName("DummyName");
-        participantControlLoopUpdateMsg.getControlLoop().setOrderedState(ControlLoopOrderedState.PASSIVE);
+        ControlLoopUpdate controlLoopUpdateMsg = TestListenerUtils.createControlLoopUpdateMsg();
+        controlLoopUpdateMsg.getParticipantId().setName("DummyName");
+        controlLoopUpdateMsg.getControlLoop().setOrderedState(ControlLoopOrderedState.PASSIVE);
 
         ControlLoopUpdateListener clUpdateListener = new ControlLoopUpdateListener(participantHandler);
-        clUpdateListener.onTopicEvent(INFRA, TOPIC, null, participantControlLoopUpdateMsg);
+        clUpdateListener.onTopicEvent(INFRA, TOPIC, null, controlLoopUpdateMsg);
 
         // Verify the content in participantHandler
-        assertNotEquals(participantControlLoopUpdateMsg.getParticipantId().getName(),
+        assertNotEquals(controlLoopUpdateMsg.getParticipantId().getName(),
                 participantHandler.getParticipantId().getName());
     }
 
     @Test
     void testControlLoopUpdateListenerPassive() throws CoderException {
-        ParticipantControlLoopUpdate participantControlLoopUpdateMsg = TestListenerUtils.createControlLoopUpdateMsg();
-        participantControlLoopUpdateMsg.getControlLoop().setOrderedState(ControlLoopOrderedState.PASSIVE);
+        ControlLoopUpdate controlLoopUpdateMsg = TestListenerUtils.createControlLoopUpdateMsg();
+        controlLoopUpdateMsg.getControlLoop().setOrderedState(ControlLoopOrderedState.PASSIVE);
 
         ControlLoopUpdateListener clUpdateListener = new ControlLoopUpdateListener(participantHandler);
-        clUpdateListener.onTopicEvent(INFRA, TOPIC, null, participantControlLoopUpdateMsg);
+        clUpdateListener.onTopicEvent(INFRA, TOPIC, null, controlLoopUpdateMsg);
 
         // Verify the content in participantHandler
-        assertEquals(participantHandler.getParticipantId(), participantControlLoopUpdateMsg.getParticipantId());
+        assertEquals(participantHandler.getParticipantId(), controlLoopUpdateMsg.getParticipantId());
         assertEquals(1, participantHandler.getControlLoopHandler().getControlLoops().getControlLoopList().size());
     }
 
     @Test
     void testControlLoopUpdateListenerUninitialised() throws CoderException {
-        ParticipantControlLoopUpdate participantControlLoopUpdateMsg = TestListenerUtils.createControlLoopUpdateMsg();
-        participantControlLoopUpdateMsg.getControlLoop().setOrderedState(ControlLoopOrderedState.UNINITIALISED);
+        ControlLoopUpdate controlLoopUpdateMsg = TestListenerUtils.createControlLoopUpdateMsg();
+        controlLoopUpdateMsg.getControlLoop().setOrderedState(ControlLoopOrderedState.UNINITIALISED);
 
         ControlLoopUpdateListener clUpdateListener = new ControlLoopUpdateListener(participantHandler);
-        clUpdateListener.onTopicEvent(INFRA, TOPIC, null, participantControlLoopUpdateMsg);
+        clUpdateListener.onTopicEvent(INFRA, TOPIC, null, controlLoopUpdateMsg);
 
         // Verify the content in participantHandler
-        assertEquals(participantHandler.getParticipantId(), participantControlLoopUpdateMsg.getParticipantId());
+        assertEquals(participantHandler.getParticipantId(), controlLoopUpdateMsg.getParticipantId());
         assertEquals(1, participantHandler.getControlLoopHandler().getControlLoops().getControlLoopList().size());
     }
 
     @Test
     void testControlLoopUpdateListenerString() throws CoderException {
-        ParticipantControlLoopUpdate participantControlLoopUpdateMsg = TestListenerUtils.createControlLoopUpdateMsg();
-        participantControlLoopUpdateMsg.getControlLoop().setOrderedState(ControlLoopOrderedState.UNINITIALISED);
+        ControlLoopUpdate controlLoopUpdateMsg = TestListenerUtils.createControlLoopUpdateMsg();
+        controlLoopUpdateMsg.getControlLoop().setOrderedState(ControlLoopOrderedState.UNINITIALISED);
 
-        assertThat(participantControlLoopUpdateMsg.toString()).contains("state=UNINITIALISED");
-        ParticipantControlLoopUpdate copyParticipantControlLoopUpdateMsg =
-                TestListenerUtils.createCopyControlLoopUpdateMsg(participantControlLoopUpdateMsg);
-        assertThat(copyParticipantControlLoopUpdateMsg.toString()).contains("state=UNINITIALISED");
-        assertNotEquals(participantControlLoopUpdateMsg, copyParticipantControlLoopUpdateMsg);
+        assertThat(controlLoopUpdateMsg.toString()).contains("state=UNINITIALISED");
+        ControlLoopUpdate copyControlLoopUpdateMsg =
+                TestListenerUtils.createCopyControlLoopUpdateMsg(controlLoopUpdateMsg);
+        assertThat(copyControlLoopUpdateMsg.toString()).contains("state=UNINITIALISED");
+        assertNotEquals(controlLoopUpdateMsg, copyControlLoopUpdateMsg);
     }
 }

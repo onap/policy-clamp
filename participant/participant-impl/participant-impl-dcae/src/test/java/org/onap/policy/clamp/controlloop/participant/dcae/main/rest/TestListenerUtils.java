@@ -30,8 +30,8 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopUpdate;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopStateChange;
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopUpdate;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantHealthCheck;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStateChange;
 import org.onap.policy.common.utils.coder.Coder;
@@ -137,10 +137,10 @@ public class TestListenerUtils {
     /**
      * Method to create ControlLoopUpdateMsg.
      *
-     * @return ParticipantControlLoopUpdate message
+     * @return ControlLoopUpdate message
      */
-    public static ParticipantControlLoopUpdate createControlLoopUpdateMsg() {
-        final ParticipantControlLoopUpdate clUpdateMsg = new ParticipantControlLoopUpdate();
+    public static ControlLoopUpdate createControlLoopUpdateMsg() {
+        final ControlLoopUpdate clUpdateMsg = new ControlLoopUpdate();
         ToscaConceptIdentifier controlLoopId = new ToscaConceptIdentifier();
         controlLoopId.setName("PMSHInstance0");
         controlLoopId.setVersion("1.0.0");
@@ -185,10 +185,10 @@ public class TestListenerUtils {
     /**
      * Method to create a deep copy of ControlLoopUpdateMsg.
      *
-     * @return ParticipantControlLoopUpdate message
+     * @return ControlLoopUpdate message
      */
-    public static ParticipantControlLoopUpdate createCopyControlLoopUpdateMsg(ParticipantControlLoopUpdate cpy) {
-        return new ParticipantControlLoopUpdate(cpy);
+    public static ControlLoopUpdate createCopyControlLoopUpdateMsg(ControlLoopUpdate cpy) {
+        return new ControlLoopUpdate(cpy);
     }
 
     /**
@@ -215,18 +215,18 @@ public class TestListenerUtils {
     }
 
     /**
-     * Method to create ParticipantControlLoopUpdate using the arguments passed.
+     * Method to create ControlLoopUpdate using the arguments passed.
      *
      * @param jsonFilePath the path of the controlloop content
      *
-     * @return ParticipantControlLoopUpdate message
+     * @return ControlLoopUpdate message
      * @throws CoderException exception while reading the file to object
      */
-    public static ParticipantControlLoopUpdate createParticipantClUpdateMsgFromJson(String jsonFilePath)
+    public static ControlLoopUpdate createParticipantClUpdateMsgFromJson(String jsonFilePath)
             throws CoderException {
-        ParticipantControlLoopUpdate participantControlLoopUpdateMsg =
-                CODER.decode(new File(jsonFilePath), ParticipantControlLoopUpdate.class);
-        return participantControlLoopUpdateMsg;
+        ControlLoopUpdate controlLoopUpdateMsg =
+                CODER.decode(new File(jsonFilePath), ControlLoopUpdate.class);
+        return controlLoopUpdateMsg;
     }
 
     private static ToscaServiceTemplate testControlLoopRead() {

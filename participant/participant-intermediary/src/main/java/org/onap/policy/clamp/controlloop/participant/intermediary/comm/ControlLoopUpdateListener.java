@@ -20,7 +20,7 @@
 
 package org.onap.policy.clamp.controlloop.participant.intermediary.comm;
 
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopUpdate;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopUpdate;
 import org.onap.policy.clamp.controlloop.participant.intermediary.handler.ParticipantHandler;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +28,7 @@ import org.springframework.stereotype.Component;
  * Listener for Control Loop Update messages sent by CLAMP.
  */
 @Component
-public class ControlLoopUpdateListener extends ParticipantListener<ParticipantControlLoopUpdate> {
+public class ControlLoopUpdateListener extends ParticipantListener<ControlLoopUpdate> {
 
     /**
      * Constructs the object.
@@ -36,6 +36,6 @@ public class ControlLoopUpdateListener extends ParticipantListener<ParticipantCo
      * @param participantHandler the handler for managing the state of the participant
      */
     public ControlLoopUpdateListener(final ParticipantHandler participantHandler) {
-        super(ParticipantControlLoopUpdate.class, participantHandler, participantHandler::handleControlLoopUpdate);
+        super(ControlLoopUpdate.class, participantHandler, participantHandler::handleControlLoopUpdate);
     }
 }

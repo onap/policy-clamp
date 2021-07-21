@@ -36,8 +36,8 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ControlLoopProvider;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ParticipantProvider;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopUpdate;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopStateChange;
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopUpdate;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregister;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregisterAck;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageType;
@@ -49,8 +49,8 @@ import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.Parti
 import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningProvider;
 import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
 import org.onap.policy.clamp.controlloop.runtime.monitoring.MonitoringProvider;
+import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ControlLoopUpdatePublisher;
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantControlLoopStateChangePublisher;
-import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantControlLoopUpdatePublisher;
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantDeregisterAckPublisher;
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantRegisterAckPublisher;
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantStateChangePublisher;
@@ -88,7 +88,7 @@ public class SupervisionHandler {
     private final CommissioningProvider commissioningProvider;
 
     // Publishers for participant communication
-    private final ParticipantControlLoopUpdatePublisher controlLoopUpdatePublisher;
+    private final ControlLoopUpdatePublisher controlLoopUpdatePublisher;
     private final ParticipantControlLoopStateChangePublisher controlLoopStateChangePublisher;
     private final ParticipantRegisterAckPublisher participantRegisterAckPublisher;
     private final ParticipantDeregisterAckPublisher participantDeregisterAckPublisher;
@@ -291,13 +291,13 @@ public class SupervisionHandler {
     }
 
     private void sendControlLoopUpdate(ControlLoop controlLoop) throws PfModelException {
-        var pclu = new ParticipantControlLoopUpdate();
-        pclu.setControlLoopId(controlLoop.getKey().asIdentifier());
-        pclu.setControlLoop(controlLoop);
+        var controlLoopUpdateMsg = new ControlLoopUpdate();
+        controlLoopUpdateMsg.setControlLoopId(controlLoop.getKey().asIdentifier());
+        controlLoopUpdateMsg.setControlLoop(controlLoop);
         // TODO: We should look up the correct TOSCA node template here for the control loop
         // Tiny hack implemented to return the tosca service template entry from the database and be passed onto dmaap
-        pclu.setControlLoopDefinition(commissioningProvider.getToscaServiceTemplate(null, null));
-        controlLoopUpdatePublisher.send(pclu);
+        controlLoopUpdateMsg.setControlLoopDefinition(commissioningProvider.getToscaServiceTemplate(null, null));
+        controlLoopUpdatePublisher.send(controlLoopUpdateMsg);
     }
 
     private void sendControlLoopStateChange(ControlLoop controlLoop) {

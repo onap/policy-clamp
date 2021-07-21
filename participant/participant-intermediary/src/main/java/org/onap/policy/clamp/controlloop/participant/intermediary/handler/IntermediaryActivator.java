@@ -129,7 +129,7 @@ public class IntermediaryActivator extends ServiceManagerContainer implements Cl
         msgDispatcher.register(ParticipantMessageType.PARTICIPANT_CONTROL_LOOP_STATE_CHANGE.name(),
                 applicationContext.getBean(ControlLoopStateChangeListener.class));
 
-        msgDispatcher.register(ParticipantMessageType.PARTICIPANT_CONTROL_LOOP_UPDATE.name(),
+        msgDispatcher.register(ParticipantMessageType.CONTROL_LOOP_UPDATE.name(),
                 applicationContext.getBean(ControlLoopUpdateListener.class));
 
         msgDispatcher.register(ParticipantMessageType.PARTICIPANT_REGISTER_ACK.name(),
