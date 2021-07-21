@@ -42,7 +42,6 @@ import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.Parti
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantRegisterAck;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantResponseDetails;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantResponseStatus;
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStateChange;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdate;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdateAck;
 import org.onap.policy.clamp.controlloop.participant.intermediary.comm.MessageSender;
@@ -96,46 +95,6 @@ public class ParticipantHandler implements Closeable {
     }
 
     /**
-     * Method which handles a participant state change event from clamp.
-     *
-     * @param stateChangeMsg participant state change message
-     */
-    public void handleParticipantStateChange(final ParticipantStateChange stateChangeMsg) {
-
-        if (!stateChangeMsg.appliesTo(participantType, participantId)) {
-            return;
-        }
-
-        var response = new ParticipantResponseDetails(stateChangeMsg);
-
-        switch (stateChangeMsg.getState()) {
-            case PASSIVE:
-                handlePassiveState(response);
-                break;
-            case ACTIVE:
-                handleActiveState(response);
-                break;
-            case SAFE:
-                handleSafeState(response);
-                break;
-            case TEST:
-                handleTestState(response);
-                break;
-            case TERMINATED:
-                handleTerminatedState(response);
-                break;
-            default:
-                LOGGER.debug("StateChange message has no state, state is null {}", stateChangeMsg.getParticipantId());
-                response.setResponseStatus(ParticipantResponseStatus.FAIL);
-                response.setResponseMessage(
-                        "StateChange message has invalid state for participantId " + stateChangeMsg.getParticipantId());
-                break;
-        }
-
-        sender.sendResponse(response);
-    }
-
-    /**
      * Method which handles a participant health check event from clamp.
      *
      * @param healthCheckMsg participant health check message
@@ -164,51 +123,6 @@ public class ParticipantHandler implements Closeable {
      */
     public void handleControlLoopStateChange(ParticipantControlLoopStateChange stateChangeMsg) {
         controlLoopHandler.handleControlLoopStateChange(stateChangeMsg);
-    }
-
-    /**
-     * Method to handle when the new state from participant is active.
-     *
-     * @param response participant response
-     */
-    private void handleActiveState(final ParticipantResponseDetails response) {
-        handleStateChange(ParticipantState.ACTIVE, response);
-    }
-
-    /**
-     * Method to handle when the new state from participant is passive.
-     *
-     * @param response participant response
-     */
-    private void handlePassiveState(final ParticipantResponseDetails response) {
-        handleStateChange(ParticipantState.PASSIVE, response);
-    }
-
-    /**
-     * Method to handle when the new state from participant is safe.
-     *
-     * @param response participant response
-     */
-    private void handleSafeState(final ParticipantResponseDetails response) {
-        handleStateChange(ParticipantState.SAFE, response);
-    }
-
-    /**
-     * Method to handle when the new state from participant is TEST.
-     *
-     * @param response participant response
-     */
-    private void handleTestState(final ParticipantResponseDetails response) {
-        handleStateChange(ParticipantState.TEST, response);
-    }
-
-    /**
-     * Method to handle when the new state from participant is Terminated.
-     *
-     * @param response participant response
-     */
-    private void handleTerminatedState(final ParticipantResponseDetails response) {
-        handleStateChange(ParticipantState.TERMINATED, response);
     }
 
     private void handleStateChange(ParticipantState newParticipantState, ParticipantResponseDetails response) {

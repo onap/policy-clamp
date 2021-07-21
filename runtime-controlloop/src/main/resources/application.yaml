@@ -20,7 +20,6 @@ server:
 
 runtime:
   supervisionScannerIntervalSec: 1000
-  participantStateChangeIntervalSec: 1000
   participantClUpdateIntervalSec: 1000
   participantClStateChangeIntervalSec: 1000
   participantParameters:

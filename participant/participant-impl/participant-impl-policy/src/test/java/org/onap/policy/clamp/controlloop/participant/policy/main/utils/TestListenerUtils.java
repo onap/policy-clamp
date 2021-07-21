@@ -38,7 +38,6 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopStateChange;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopUpdate;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantHealthCheck;
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStateChange;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdate;
 import org.onap.policy.clamp.controlloop.participant.policy.main.parameters.CommonTestData;
 import org.onap.policy.common.utils.coder.Coder;
@@ -97,26 +96,6 @@ public class TestListenerUtils {
         controlLoop.setDefinition(definition);
 
         return controlLoop;
-    }
-
-    /**
-     * Method to create ParticipantStateChange message from the arguments passed.
-     *
-     * @param participantState participant State
-     *
-     * @return ParticipantStateChange message
-     */
-    public static ParticipantStateChange createParticipantStateChangeMsg(final ParticipantState participantState) {
-        final ParticipantStateChange participantStateChangeMsg = new ParticipantStateChange();
-        ToscaConceptIdentifier participantId = new ToscaConceptIdentifier();
-        participantId.setName("org.onap.PM_Policy");
-        participantId.setVersion("0.0.0");
-
-        participantStateChangeMsg.setParticipantId(participantId);
-        participantStateChangeMsg.setTimestamp(Instant.now());
-        participantStateChangeMsg.setState(participantState);
-
-        return participantStateChangeMsg;
     }
 
     /**

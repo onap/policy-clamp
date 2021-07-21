@@ -53,7 +53,6 @@ import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantCon
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantControlLoopUpdatePublisher;
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantDeregisterAckPublisher;
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantRegisterAckPublisher;
-import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantStateChangePublisher;
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantStatusListener;
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantUpdatePublisher;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
