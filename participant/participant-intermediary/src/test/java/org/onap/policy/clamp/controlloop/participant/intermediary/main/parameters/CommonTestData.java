@@ -21,10 +21,16 @@
 package org.onap.policy.clamp.controlloop.participant.intermediary.main.parameters;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import org.mockito.Mockito;
+import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ParticipantMessagePublisher;
+import org.onap.policy.clamp.controlloop.participant.intermediary.handler.ControlLoopHandler;
+import org.onap.policy.clamp.controlloop.participant.intermediary.handler.DummyParticipantParameters;
 import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantIntermediaryParameters;
+import org.onap.policy.common.endpoints.event.comm.TopicSink;
 import org.onap.policy.common.endpoints.parameters.TopicParameters;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
@@ -41,6 +47,7 @@ public class CommonTestData {
     public static final List<TopicParameters> TOPIC_PARAMS = Arrays.asList(getTopicParams());
 
     public static final Coder CODER = new StandardCoder();
+    private static final Object lockit = new Object();
 
     /**
      * Get ParticipantIntermediaryParameters.
@@ -57,12 +64,38 @@ public class CommonTestData {
     }
 
     /**
+     * Get ParticipantParameters.
+     *
+     * @return ParticipantParameters
+     */
+    public static DummyParticipantParameters getParticipantParameters() {
+        try {
+            return CODER.convert(getParametersMap(PARTICIPANT_GROUP_NAME),
+                    DummyParticipantParameters.class);
+        } catch (final CoderException e) {
+            throw new RuntimeException("cannot create ParticipantSimulatorParameters from map", e);
+        }
+    }
+
+    /**
+     * Returns a property map for a Parameters map for test cases.
+     *
+     * @param name name of the parameters
+     * @return a property map suitable for constructing an object
+     */
+    public static Map<String, Object> getParametersMap(final String name) {
+        final Map<String, Object> map = new TreeMap<>();
+        map.put("intermediaryParameters", getIntermediaryParametersMap(name));
+        return map;
+    }
+
+    /**
      * Returns a property map for a intermediaryParameters map for test cases.
      *
      * @param name name of the parameters
      * @return a property map suitable for constructing an object
      */
-    public Map<String, Object> getIntermediaryParametersMap(final String name) {
+    public static Map<String, Object> getIntermediaryParametersMap(final String name) {
         final Map<String, Object> map = new TreeMap<>();
         map.put("name", name);
         map.put("participantId", getParticipantId());
@@ -80,7 +113,7 @@ public class CommonTestData {
      * @param isEmpty boolean value to represent that object created should be empty or not
      * @return a property map suitable for constructing an object
      */
-    public Map<String, Object> getTopicParametersMap(final boolean isEmpty) {
+    public static Map<String, Object> getTopicParametersMap(final boolean isEmpty) {
         final Map<String, Object> map = new TreeMap<>();
         if (!isEmpty) {
             map.put("topicSources", TOPIC_PARAMS);
@@ -109,5 +142,30 @@ public class CommonTestData {
      */
     public static ToscaConceptIdentifier getParticipantId() {
         return new ToscaConceptIdentifier("org.onap.PM_CDS_Blueprint", "1.0.1");
+    }
+
+    /**
+     * Returns a participantMessagePublisher for MessageSender.
+     *
+     * @return participant Message Publisher
+     */
+    private ParticipantMessagePublisher getParticipantMessagePublisher() {
+        synchronized (lockit) {
+            ParticipantMessagePublisher participantMessagePublisher =
+                    new ParticipantMessagePublisher();
+            participantMessagePublisher.active(Collections.singletonList(Mockito.mock(TopicSink.class)));
+            return participantMessagePublisher;
+        }
+    }
+
+    /**
+     * Returns a mocked ControlLoopHandler for test cases.
+     *
+     * @return ControlLoopHandler
+     */
+    public ControlLoopHandler getMockControlLoopHandler() {
+        return new ControlLoopHandler(
+                getParticipantParameters(),
+                getParticipantMessagePublisher());
     }
 }
