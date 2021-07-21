@@ -31,3 +31,9 @@ node_types:
         description: The policy that this control loop element is managing, if the policy ID is specified, the policy
                      is either already in the Policy Framework database or is specified in the "policies" part of the
                      TOSCA service template of the Control Loop definition
+      pddGroup:
+        type: string
+        required: false
+        default: defaultGroup
+        description: The PDP group to which the policy should be deployed. This parameter is used when the policy is
+                     deployed to PAP. The value defaults to the "defaultGroup", which always exists.
