@@ -24,6 +24,7 @@ package org.onap.policy.clamp.controlloop.participant.intermediary.handler;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.List;
+import lombok.Getter;
 import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantParameters;
 import org.onap.policy.common.endpoints.event.comm.TopicEndpointManager;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
@@ -49,6 +50,7 @@ public class IntermediaryActivator extends ServiceManagerContainer implements Cl
 
     private ParticipantHandler participantHandler;
 
+    @Getter
     private final MessageTypeDispatcher msgDispatcher;
 
     /**
