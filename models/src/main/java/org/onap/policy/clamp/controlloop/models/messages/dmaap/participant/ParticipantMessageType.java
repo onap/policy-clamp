@@ -44,9 +44,9 @@ public enum ParticipantMessageType {
 
     /**
      * Used by controlloop runtime to change the state of controlloops in participants, triggers a
-     * PARTICIPANT_STATUS message with result of PARTICIPANT_CONTROL_LOOP_STATE_CHANGE operation.
+     * PARTICIPANT_STATUS message with result of CONTROL_LOOP_STATE_CHANGE operation.
      */
-    PARTICIPANT_CONTROL_LOOP_STATE_CHANGE,
+    CONTROL_LOOP_STATE_CHANGE,
 
     /**
      * Used by the control loop runtime to order a health check on participants, triggers a

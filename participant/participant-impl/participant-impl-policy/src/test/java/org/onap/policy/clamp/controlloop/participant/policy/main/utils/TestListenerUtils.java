@@ -35,8 +35,8 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopStateChange;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopUpdate;
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopStateChange;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantHealthCheck;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdate;
 import org.onap.policy.clamp.controlloop.participant.policy.main.parameters.CommonTestData;
@@ -103,11 +103,11 @@ public class TestListenerUtils {
      *
      * @param controlLoopOrderedState controlLoopOrderedState
      *
-     * @return ParticipantControlLoopStateChange message
+     * @return ControlLoopStateChange message
      */
-    public static ParticipantControlLoopStateChange createControlLoopStateChangeMsg(
+    public static ControlLoopStateChange createControlLoopStateChangeMsg(
             final ControlLoopOrderedState controlLoopOrderedState) {
-        final ParticipantControlLoopStateChange participantClStateChangeMsg = new ParticipantControlLoopStateChange();
+        final ControlLoopStateChange clStateChangeMsg = new ControlLoopStateChange();
 
         ToscaConceptIdentifier controlLoopId = new ToscaConceptIdentifier();
         controlLoopId.setName("PMSHInstance0");
@@ -117,12 +117,12 @@ public class TestListenerUtils {
         participantId.setName("org.onap.PM_Policy");
         participantId.setVersion("0.0.0");
 
-        participantClStateChangeMsg.setControlLoopId(controlLoopId);
-        participantClStateChangeMsg.setParticipantId(participantId);
-        participantClStateChangeMsg.setTimestamp(Instant.now());
-        participantClStateChangeMsg.setOrderedState(controlLoopOrderedState);
+        clStateChangeMsg.setControlLoopId(controlLoopId);
+        clStateChangeMsg.setParticipantId(participantId);
+        clStateChangeMsg.setTimestamp(Instant.now());
+        clStateChangeMsg.setOrderedState(controlLoopOrderedState);
 
-        return participantClStateChangeMsg;
+        return clStateChangeMsg;
     }
 
     /**

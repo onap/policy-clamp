@@ -33,17 +33,17 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 /**
  * Test the copy constructor and other methods.
  */
-class ParticipantControlLoopStateChangeTest {
+class ControlLoopStateChangeTest {
 
     @Test
     void testCopyConstructor() {
-        assertThatThrownBy(() -> new ParticipantControlLoopStateChange(null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> new ControlLoopStateChange(null)).isInstanceOf(NullPointerException.class);
 
-        ParticipantControlLoopStateChange orig = new ParticipantControlLoopStateChange();
+        ControlLoopStateChange orig = new ControlLoopStateChange();
 
         // verify with null values
         assertEquals(removeVariableFields(orig.toString()),
-                removeVariableFields(new ParticipantControlLoopStateChange(orig).toString()));
+                removeVariableFields(new ControlLoopStateChange(orig).toString()));
 
         // verify with all values
         ToscaConceptIdentifier id = new ToscaConceptIdentifier();
@@ -56,6 +56,6 @@ class ParticipantControlLoopStateChangeTest {
         orig.setTimestamp(Instant.ofEpochMilli(3000));
 
         assertEquals(removeVariableFields(orig.toString()),
-                removeVariableFields(new ParticipantControlLoopStateChange(orig).toString()));
+                removeVariableFields(new ControlLoopStateChange(orig).toString()));
     }
 }

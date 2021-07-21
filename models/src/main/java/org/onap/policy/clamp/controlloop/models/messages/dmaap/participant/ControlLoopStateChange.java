@@ -26,21 +26,21 @@ import lombok.ToString;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 
 /**
- * Class to represent the PARTICIPANT_CONTROL_LOOP_STATE_CHANGE message that the control loop runtime will send to
+ * Class to represent the CONTROL_LOOP_STATE_CHANGE message that the control loop runtime will send to
  * participants to change the state of a control loop they are running.
  */
 @Getter
 @Setter
 @ToString(callSuper = true)
-public class ParticipantControlLoopStateChange extends ParticipantMessage {
+public class ControlLoopStateChange extends ParticipantMessage {
     private ControlLoopOrderedState orderedState;
 
     /**
-     * Constructor for instantiating ParticipantControlLoopStateChange class with message name.
+     * Constructor for instantiating ControlLoopStateChange class with message name.
      *
      */
-    public ParticipantControlLoopStateChange() {
-        super(ParticipantMessageType.PARTICIPANT_CONTROL_LOOP_STATE_CHANGE);
+    public ControlLoopStateChange() {
+        super(ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
     }
 
     /**
@@ -48,7 +48,7 @@ public class ParticipantControlLoopStateChange extends ParticipantMessage {
      *
      * @param source source from which to copy
      */
-    public ParticipantControlLoopStateChange(ParticipantControlLoopStateChange source) {
+    public ControlLoopStateChange(ControlLoopStateChange source) {
         super(source);
 
         this.orderedState = source.orderedState;

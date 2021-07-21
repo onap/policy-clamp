@@ -32,8 +32,8 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantHealthStatus;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantStatistics;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopStateChange;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopUpdate;
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopStateChange;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregister;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregisterAck;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantHealthCheck;
@@ -123,7 +123,7 @@ public class ParticipantHandler implements Closeable {
      *
      * @param stateChangeMsg the state change message
      */
-    public void handleControlLoopStateChange(ParticipantControlLoopStateChange stateChangeMsg) {
+    public void handleControlLoopStateChange(ControlLoopStateChange stateChangeMsg) {
         controlLoopHandler.handleControlLoopStateChange(stateChangeMsg);
     }
 

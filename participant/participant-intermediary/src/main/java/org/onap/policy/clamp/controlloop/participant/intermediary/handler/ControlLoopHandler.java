@@ -34,8 +34,8 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoops;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopStateChange;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopUpdate;
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopStateChange;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantResponseDetails;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantResponseStatus;
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ControlLoopElementListener;
@@ -130,7 +130,7 @@ public class ControlLoopHandler {
      *
      * @param stateChangeMsg the state change message
      */
-    public void handleControlLoopStateChange(ParticipantControlLoopStateChange stateChangeMsg) {
+    public void handleControlLoopStateChange(ControlLoopStateChange stateChangeMsg) {
         if (stateChangeMsg.getControlLoopId() == null) {
             return;
         }
