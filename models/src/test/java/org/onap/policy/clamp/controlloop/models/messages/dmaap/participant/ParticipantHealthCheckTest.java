@@ -37,7 +37,7 @@ class ParticipantHealthCheckTest {
 
     @Test
     void testCopyConstructor() {
-        assertThatThrownBy(() -> new ParticipantStateChange(null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> new ParticipantHealthCheck(null)).isInstanceOf(NullPointerException.class);
 
         ParticipantHealthCheck orig = new ParticipantHealthCheck();
 

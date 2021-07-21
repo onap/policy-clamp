@@ -49,9 +49,4 @@ public class ParticipantParameters {
     @Valid
     @NotNull
     private ParticipantUpdateParameters updateParameters;
-
-    @Valid
-    @NotNull
-    private ParticipantStateChangeParameters stateChangeParameters;
-
 }

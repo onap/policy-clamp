@@ -36,7 +36,6 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopUpdate;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopStateChange;
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStateChange;
 import org.onap.policy.clamp.controlloop.participant.simulator.main.parameters.CommonTestData;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
@@ -95,24 +94,6 @@ public class TestListenerUtils {
         controlLoop.setDefinition(definition);
 
         return controlLoop;
-    }
-
-    /**
-     * Method to create ParticipantStateChange message from the arguments passed.
-     *
-     * @param participantState participant State
-     *
-     * @return ParticipantStateChange message
-     */
-    public static ParticipantStateChange createParticipantStateChangeMsg(final ParticipantState participantState) {
-        final ParticipantStateChange participantStateChangeMsg = new ParticipantStateChange();
-        ToscaConceptIdentifier participantId = new ToscaConceptIdentifier("org.onap.PM_CDS_Blueprint", "1.0.0");
-
-        participantStateChangeMsg.setParticipantId(participantId);
-        participantStateChangeMsg.setTimestamp(Instant.now());
-        participantStateChangeMsg.setState(participantState);
-
-        return participantStateChangeMsg;
     }
 
     /**

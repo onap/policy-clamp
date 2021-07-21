@@ -37,7 +37,7 @@ class ParticipantControlLoopStateChangeTest {
 
     @Test
     void testCopyConstructor() {
-        assertThatThrownBy(() -> new ParticipantStateChange(null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> new ParticipantControlLoopStateChange(null)).isInstanceOf(NullPointerException.class);
 
         ParticipantControlLoopStateChange orig = new ParticipantControlLoopStateChange();
 
