@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bd8ab9fc_bef90f09",
+        "filename": "participant/participant-impl/participant-impl-policy/src/test/java/org/onap/policy/clamp/controlloop/participant/policy/endtoend/ParticipantMessagesTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-21T12:08:19Z",
+      "side": 1,
+      "message": "should probably put this just around line 156, otherwise sonar will probably complain about doing multiple calls in a single assertion",
+      "revId": "53a7381bcf1b730b5e87f268f243957fea9192ea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4a395c48_f55843ab",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/parameters/ParticipantIntermediaryParameters.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-21T12:08:19Z",
+      "side": 1,
+      "message": "the Valid annotation has no effect on primitive types, though it doesn\u0027t hurt anything either",
+      "revId": "53a7381bcf1b730b5e87f268f243957fea9192ea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "37056c30_333642ba",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/parameters/ParticipantIntermediaryParameters.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-21T12:08:19Z",
+      "side": 1,
+      "message": "so we don\u0027t care if this is negative or zero?",
+      "revId": "53a7381bcf1b730b5e87f268f243957fea9192ea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
