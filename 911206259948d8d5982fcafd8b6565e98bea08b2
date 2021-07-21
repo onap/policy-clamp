@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "83e9aac5_c002d582",
+        "filename": "common/src/main/resources/tosca/PolicyControlLoopElementType.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-21T12:09:54Z",
+      "side": 1,
+      "message": "\"pddGroup\" \u003d\u003e \"pdbGroup\" ?",
+      "range": {
+        "startLine": 34,
+        "startChar": 6,
+        "endLine": 34,
+        "endChar": 14
+      },
+      "revId": "911206259948d8d5982fcafd8b6565e98bea08b2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
