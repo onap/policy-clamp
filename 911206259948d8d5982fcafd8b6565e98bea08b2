@@ -46,6 +46,30 @@
       "revId": "911206259948d8d5982fcafd8b6565e98bea08b2",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1abb306f_2b98e7fc",
+        "filename": "common/src/main/resources/tosca/PolicyControlLoopElementType.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 4903
+      },
+      "writtenOn": "2021-07-22T09:02:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "18718b45_52672c50",
+      "range": {
+        "startLine": 34,
+        "startChar": 6,
+        "endLine": 34,
+        "endChar": 14
+      },
+      "revId": "911206259948d8d5982fcafd8b6565e98bea08b2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
