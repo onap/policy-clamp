@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "a59132fb_4dd3cc5f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-07-22T09:12:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f1601e09_2233efaf",
+      "revId": "121928cc8beca6d1fc922186bd519ac554518616",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b8ac765d_402d9f7f",
         "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionAspect.java",
         "patchSetId": 4
@@ -39,6 +57,30 @@
       "revId": "121928cc8beca6d1fc922186bd519ac554518616",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5650c5ec_5617b6ae",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionAspect.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-07-22T09:12:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b8ac765d_402d9f7f",
+      "range": {
+        "startLine": 48,
+        "startChar": 96,
+        "endLine": 48,
+        "endChar": 101
+      },
+      "revId": "121928cc8beca6d1fc922186bd519ac554518616",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "dcf7e208_8de325b1",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionAspect.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-07-22T09:12:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa9077a3_cc467703",
+      "range": {
+        "startLine": 50,
+        "startChar": 25,
+        "endLine": 50,
+        "endChar": 37
+      },
+      "revId": "121928cc8beca6d1fc922186bd519ac554518616",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d9dac113_de9b30a6",
         "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionScanner.java",
         "patchSetId": 4
@@ -79,6 +145,24 @@
       "revId": "121928cc8beca6d1fc922186bd519ac554518616",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "15694eab_223df03d",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionScanner.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-07-22T09:12:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d9dac113_de9b30a6",
+      "revId": "121928cc8beca6d1fc922186bd519ac554518616",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -105,6 +189,30 @@
     },
     {
       "key": {
+        "uuid": "59be3dae_1307f40a",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionScanner.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-07-22T09:12:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ae9aecb5_449f87ca",
+      "range": {
+        "startLine": 66,
+        "startChar": 19,
+        "endLine": 66,
+        "endChar": 38
+      },
+      "revId": "121928cc8beca6d1fc922186bd519ac554518616",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fe9d7b9a_9981fb74",
         "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionScanner.java",
         "patchSetId": 4
@@ -128,6 +236,30 @@
     },
     {
       "key": {
+        "uuid": "561e8220_ee11df74",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionScanner.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-07-22T09:12:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fe9d7b9a_9981fb74",
+      "range": {
+        "startLine": 104,
+        "startChar": 35,
+        "endLine": 104,
+        "endChar": 42
+      },
+      "revId": "121928cc8beca6d1fc922186bd519ac554518616",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4aa4ef95_567961f7",
         "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionScanner.java",
         "patchSetId": 4
@@ -148,6 +280,30 @@
       "revId": "121928cc8beca6d1fc922186bd519ac554518616",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e6cd379d_2d55454f",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionScanner.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-07-22T09:12:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4aa4ef95_567961f7",
+      "range": {
+        "startLine": 168,
+        "startChar": 8,
+        "endLine": 170,
+        "endChar": 57
+      },
+      "revId": "121928cc8beca6d1fc922186bd519ac554518616",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
