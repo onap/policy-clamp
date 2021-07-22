@@ -6,9 +6,8 @@ $ docker run -p 3904:3904 --volume //c/Users/${USER}/Github/simulator/distributi
 
 Run DMaaP simulator using Maven
 Check out policy models
-Go to policy/models/models-sim/models-sim-dmaap
-mvn exec:java  -Dexec.mainClass=org.onap.policy.models.sim.dmaap.startstop.Main -Dexec.args="-c src/main/resources/etc/DefaultConfig.json"
-
+Go to policy/models/models-sim/policy-models-simulators
+mvn exec:java  -Dexec.mainClass=org.onap.policy.models.simulators.Main -Dexec.args="src/test/resources/simParameters.json"
 
 Run CL from command line
 Go to clamp/runtime-controlloop
