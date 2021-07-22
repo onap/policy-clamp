@@ -28,7 +28,7 @@ participant:
     aaf: false
   intermediaryParameters:
     name: Participant parameters
-    reportingTimeInterval: 120000
+    reportingTimeIntervalMs: 120000
     description: Participant Description
     participantId:
       name: DCAEParticipant0

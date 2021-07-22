@@ -23,6 +23,7 @@ package org.onap.policy.clamp.controlloop.participant.intermediary.parameters;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.Setter;
 import org.onap.policy.common.endpoints.parameters.TopicParameterGroup;
@@ -50,7 +51,9 @@ public class ParticipantIntermediaryParameters {
     private ToscaConceptIdentifier participantType;
 
     // The time interval for periodic reporting of status to the CLAMP control loop server
-    private long reportingTimeInterval;
+    @Valid
+    @Positive
+    private long reportingTimeIntervalMs;
 
     @NotNull
     @ParameterGroupConstraint

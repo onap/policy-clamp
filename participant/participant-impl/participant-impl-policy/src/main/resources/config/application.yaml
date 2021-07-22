@@ -9,7 +9,7 @@ participant:
     https: true
     allowSelfSignedCerts: true
   intermediaryParameters:
-    reportingTimeInterval: 120000
+    reportingTimeIntervalMs: 120000
     description: Participant Description
     participantId:
       name: org.onap.PM_Policy

@@ -67,18 +67,13 @@ public class MessageSender extends TimerTask implements Closeable {
 
         // Kick off the timer
         timerPool = makeTimerPool();
-        timerPool.scheduleAtFixedRate(this, 0, interval, TimeUnit.SECONDS);
+        timerPool.scheduleAtFixedRate(this, 0, interval, TimeUnit.MILLISECONDS);
     }
 
     @Override
     public void run() {
         LOGGER.debug("Sent heartbeat to CLAMP");
-
-        var response = new ParticipantResponseDetails();
-
-        response.setResponseTo(null);
-        response.setResponseStatus(ParticipantResponseStatus.PERIODIC);
-        response.setResponseMessage("Periodic response from participant");
+        this.sendHeartbeat();
     }
 
     @Override
@@ -158,6 +153,13 @@ public class MessageSender extends TimerTask implements Closeable {
      */
     public void sendParticipantUpdateAck(ParticipantUpdateAck message) {
         publisher.sendParticipantUpdateAck(message);
+    }
+
+    /**
+     * Dispatch a heartbeat for this participant.
+     */
+    public void sendHeartbeat() {
+        publisher.sendHeartbeat(participantHandler.makeHeartbeat());
     }
 
     /**
