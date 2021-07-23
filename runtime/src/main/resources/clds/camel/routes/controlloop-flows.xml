@@ -238,4 +238,32 @@
             </doFinally>
         </doTry>
     </route>
+    <route id="get-common-or-instance-properties">
+        <from uri="direct:get-common-or-instance-properties"/>
+        <doTry>
+            <log loggingLevel="INFO"
+                 message="Getting Common Or Instance Properties"/>
+            <to
+                    uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('ControlLoop', 'Getting Common Or Instance Properties')"/>
+            <setHeader name="CamelHttpMethod">
+                <constant>GET</constant>
+            </setHeader>
+            <setHeader name="Content-Type">
+                <constant>application/json</constant>
+            </setHeader>
+            <setProperty name="common">
+                <simple>${header.common}</simple>
+            </setProperty>
+            <log loggingLevel="INFO"
+                 message="Endpoint to get Common Or Instance Properties: {{clamp.config.controlloop.runtime.url}}/onap/controlloop/v2/commission/getCommonOrInstanceProperties"></log>
+            <toD
+                    uri="{{clamp.config.controlloop.runtime.url}}/onap/controlloop/v2/commission/getCommonOrInstanceProperties?common=${exchangeProperty[common]}&amp;bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.controlloop.runtime.userName}}&amp;authPassword={{clamp.config.controlloop.runtime.password}}&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+            <convertBodyTo type="java.lang.String"/>
+            <doFinally>
+                <to uri="direct:reset-raise-http-exception-flag"/>
+                <to
+                        uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
+            </doFinally>
+        </doTry>
+    </route>
 </routes>
