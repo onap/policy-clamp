@@ -294,16 +294,24 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
              self._create_cache(jsonGenerated, cached_file_folder, cached_file_header, cached_file_content)
          return True
      elif (self.path.startswith("/onap/controlloop/v2/commission/elements")) and http_type == "GET":
-         print "self.path start with /commission/elements Control Loop Elements, generating response json..."
-         #jsondata = json.loads(self.data_string)
-         jsonGenerated = "[{\"name\": ,\"org.onap.domain.pmsh.PMSH_DCAEMicroservice\": [{ \"version\": \"1.2.3\", \"derived_from\": null }]}]"
-         self._create_cache(jsonGenerated, cached_file_folder, cached_file_header, cached_file_content)
+         if not _file_available:
+             print "self.path start with /commission/elements Control Loop Elements, generating response json..."
+             jsonGenerated = "[{\"name\": ,\"org.onap.domain.pmsh.PMSH_DCAEMicroservice\": [{ \"version\": \"1.2.3\", \"derived_from\": null }]}]"
+             self._create_cache(jsonGenerated, cached_file_folder, cached_file_header, cached_file_content)
          return True
      elif (self.path.startswith("/onap/controlloop/v2/commission")) and http_type == "GET":
-         print "self.path start with /commission control loop definition, generating response json..."
-         #jsondata = json.loads(self.data_string)
-         jsonGenerated = "[{\"name\": ,\"org.onap.domain.pmsh.PMSHControlLoopDefinition\": [{ \"version\": \"1.2.3\", \"derived_from\": null }]}]"
-         self._create_cache(jsonGenerated, cached_file_folder, cached_file_header, cached_file_content)
+         if not _file_available:
+             print "self.path start with /commission control loop definition, generating response json..."
+             #jsondata = json.loads(self.data_string)
+             jsonGenerated = "[{\"name\": ,\"org.onap.domain.pmsh.PMSHControlLoopDefinition\": [{ \"version\": \"1.2.3\", \"derived_from\": null }]}]"
+             self._create_cache(jsonGenerated, cached_file_folder, cached_file_header, cached_file_content)
+         return True
+     elif (self.path.startswith("/onap/controlloop/v2/commission/getCommonOrInstanceProperties")) and http_type == "GET":
+         if not _file_available:
+             print "self.path start with /commission getting common properties, generating response json..."
+             with open("example/node_template.json", "r") as f:
+                 jsonGenerated = f.read()
+             self._create_cache(jsonGenerated, cached_file_folder, cached_file_header, cached_file_content)
          return True
      elif (self.path.startswith("/onap/controlloop/v2/commission")) and http_type == "POST":
          print "self.path start with POST /onap/controlloop/v2/commission, copying body to response ..."
@@ -318,7 +326,6 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
          print "self.path start with /commission Decommissioning, generating response json..."
          jsonGenerated = "{\"errorDetails\": null,\"affectedControlLoopDefinitions\": [{ \"name\": \"ToscaServiceTemplateSimple\", \"version\": \"1.0.0\" }]}"
          self._create_cache(jsonGenerated, cached_file_folder, cached_file_header, cached_file_content)
-
          return True
      else:
         return False
