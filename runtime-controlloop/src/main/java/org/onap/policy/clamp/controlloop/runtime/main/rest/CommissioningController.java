@@ -348,7 +348,7 @@ public class CommissioningController extends AbstractRestController {
             ObjectMapper mapper = new ObjectMapper();
             mapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
             String response = mapper.writerWithDefaultPrettyPrinter()
-                .writeValueAsString(provider.getToscaServiceTemplate(name, version));
+                .writeValueAsString(provider.getToscaServiceTemplateReduced(name, version));
 
             return ResponseEntity.ok().body(response);
 
@@ -430,6 +430,79 @@ public class CommissioningController extends AbstractRestController {
             var resp = new CommissioningResponse();
             resp.setErrorDetails(e.getMessage());
             return ResponseEntity.status(Status.BAD_REQUEST.getStatusCode()).body(resp);
+        }
+    }
+
+    /**
+     * Retrieves the Common or Instance Properties for the specified Tosca Service Template.
+     *
+     * @param requestId request ID used in ONAP logging
+     * @param common a flag, true to get common properties, false to get instance properties
+     * @param name the name of the tosca service template to retrieve
+     * @param version the version of the tosca service template to get
+     * @return the specified tosca service template or section Json Schema
+     */
+    // @formatter:off
+    @GetMapping(value = "/commission/getCommonOrInstanceProperties",
+        produces = {MediaType.APPLICATION_JSON_VALUE, APPLICATION_YAML})
+    @ApiOperation(value = "Query details of the requested tosca service template common or instance properties",
+        notes = "Queries details of the requested commissioned tosca service template json common"
+            + "or instance properties, returning all tosca service template common or instance property details",
+        response = ToscaServiceTemplate.class,
+        tags = {"Clamp Control Loop Commissioning API"},
+        authorizations = @Authorization(value = AUTHORIZATION_TYPE),
+        responseHeaders = {
+            @ResponseHeader(
+                name = VERSION_MINOR_NAME, description = VERSION_MINOR_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(name = VERSION_PATCH_NAME, description = VERSION_PATCH_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(name = REQUEST_ID_NAME, description = REQUEST_ID_HDR_DESCRIPTION,
+                response = UUID.class)},
+        extensions = {
+            @Extension
+                (
+                    name = EXTENSION_NAME,
+                    properties = {
+                        @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                        @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
+                    }
+                )
+        }
+    )
+    @ApiResponses(
+        value = {
+            @ApiResponse(code = AUTHENTICATION_ERROR_CODE, message = AUTHENTICATION_ERROR_MESSAGE),
+            @ApiResponse(code = AUTHORIZATION_ERROR_CODE, message = AUTHORIZATION_ERROR_MESSAGE),
+            @ApiResponse(code = SERVER_ERROR_CODE, message = SERVER_ERROR_MESSAGE)
+        }
+    )
+    // @formatter:on
+    public ResponseEntity<?> queryToscaServiceCommonOrInstanceProperties(
+        @RequestHeader(
+            name = REQUEST_ID_NAME,
+            required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+        @ApiParam(value = "Flag, true for common properties, false for instance", required = false) @RequestParam(
+            value = "common",
+            defaultValue = "false",
+            required = false) boolean common,
+        @ApiParam(value = "Tosca service template name", required = false) @RequestParam(
+            value = "name",
+            required = false) String name,
+        @ApiParam(value = "Tosca service template version", required = true) @RequestParam(
+            value = "version",
+            required = false) String version) {
+        try {
+            return ResponseEntity.ok().body(provider.getNodeTemplatesWithCommonOrInstanceProperties(
+                common, name, version));
+
+        } catch (PfModelRuntimeException | PfModelException e) {
+            LOGGER.warn("Get of common or instance properties failed", e);
+            var resp = new CommissioningResponse();
+            resp.setErrorDetails(e.getErrorResponse().getErrorMessage());
+            return ResponseEntity.status(e.getErrorResponse().getResponseCode().getStatusCode()).body(resp);
         }
     }
 
