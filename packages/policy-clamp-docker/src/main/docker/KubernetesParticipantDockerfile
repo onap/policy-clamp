@@ -36,8 +36,7 @@ RUN mkdir -p $POLICY_LOGS $POLICY_HOME $POLICY_HOME/bin && \
 COPY /maven/lib/kubernetes-participant.tar.gz /packages
 
 RUN tar xvfz /packages/kubernetes-participant.tar.gz --directory $POLICY_HOME && \
-    rm /packages/kubernetes-participant.tar.gz && \
-    rm -rf $POLICY_HOME/lib
+    rm /packages/kubernetes-participant.tar.gz
 
 WORKDIR $POLICY_HOME
 COPY kubernetes-participant.sh  bin/.

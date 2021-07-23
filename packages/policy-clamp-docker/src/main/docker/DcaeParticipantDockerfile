@@ -34,15 +34,16 @@ RUN mkdir -p $POLICY_LOGS $POLICY_HOME $POLICY_HOME/bin && \
     chown -R policy:policy $POLICY_HOME $POLICY_LOGS && \
     mkdir /packages
 COPY /maven/lib/dcae-participant.tar.gz /packages
+
 RUN tar xvfz /packages/dcae-participant.tar.gz --directory $POLICY_HOME && \
-    rm /packages/dcae-participant.tar.gz && \
-    rm -rf $POLICY_HOME/lib
+    rm /packages/dcae-participant.tar.gz
 
 WORKDIR $POLICY_HOME
 COPY dcae-participant.sh  bin/.
 COPY /maven/app.jar /app
 
-RUN chown -R policy:policy * && chmod 755 bin/*.sh && \
+RUN chown -R policy:policy * && \
+    chmod 755 bin/*.sh && \
     chown -R policy:policy /app
 
 USER policy

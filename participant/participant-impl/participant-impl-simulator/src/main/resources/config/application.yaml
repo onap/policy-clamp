@@ -5,7 +5,7 @@ spring:
       password: zb!XztG34
 
 server:
-  port: 6969
+  port: 8084
   servlet:
     context-path: /onap/participantsim
   error:
@@ -22,12 +22,16 @@ participant:
       name: org.onap.PM_CDS_Blueprint
       version: 1.0.0
     clampControlLoopTopics:
-      topicSources[0]:
-        topic: POLICY-CLRUNTIME-PARTICIPANT
-        servers[0]: ${topicServer:message-router}
-        topicCommInfrastructure: dmaap
-        fetchTimeout: 15000
-      topicSinks[0]:
-        topic: POLICY-CLRUNTIME-PARTICIPANT
-        servers[0]: ${topicServer:message-router}
-        topicCommInfrastructure: dmaap
+      topicSources:
+        -
+          topic: POLICY-CLRUNTIME-PARTICIPANT
+          servers:
+            - ${topicServer:localhost}
+          topicCommInfrastructure: dmaap
+          fetchTimeout: 15000
+      topicSinks:
+        -
+          topic: POLICY-CLRUNTIME-PARTICIPANT
+          servers:
+            - ${topicServer:localhost}
+          topicCommInfrastructure: dmaap

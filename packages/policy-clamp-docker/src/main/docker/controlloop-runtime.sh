@@ -32,7 +32,7 @@ else
 fi
 
 if [ -z "$CONFIG_FILE" ]; then
-    CONFIG_FILE="${POLICY_HOME}/etc/ClRuntimeParameters.json"
+    CONFIG_FILE="${POLICY_HOME}/etc/ClRuntimeParameters.yaml"
 fi
 
 echo "Policy clamp config file: $CONFIG_FILE"
@@ -48,15 +48,17 @@ if [ -f "${POLICY_HOME}/etc/mounted/policy-keystore" ]; then
 fi
 
 if [ -f "${POLICY_HOME}/etc/mounted/logback.xml" ]; then
-    echo "overriding logback.xml"
-    cp -f "${POLICY_HOME}"/etc/mounted/logback.xml "${POLICY_HOME}"/etc/
+    echo "overriding logback xml files"
+    cp -f "${POLICY_HOME}"/etc/mounted/logback*.xml "${POLICY_HOME}"/etc/
 fi
 
-$JAVA_HOME/bin/java -cp "${POLICY_HOME}/etc:${POLICY_HOME}/lib/*" \
-    -Dlogback.configurationFile="${POLICY_HOME}/etc/logback.xml" \
-    -Djavax.net.ssl.keyStore="${KEYSTORE}" \
+touch /app/app.jar
+mkdir -p "${POLICY_HOME}"/config/
+cp -f "${CONFIG_FILE}" "${POLICY_HOME}"/config/ClRuntimeParameters.yaml
+
+$JAVA_HOME/bin/java -Djavax.net.ssl.keyStore="${KEYSTORE}" \
     -Djavax.net.ssl.keyStorePassword="${KEYSTORE_PASSWD}" \
     -Djavax.net.ssl.trustStore="${TRUSTSTORE}" \
     -Djavax.net.ssl.trustStorePassword="${TRUSTSTORE_PASSWD}" \
-    org.onap.policy.clamp.controlloop.runtime.main.startstop.Main \
-    -c "${CONFIG_FILE}"
+    -jar /app/app.jar \
+    --spring.config.location="${POLICY_HOME}/config/ClRuntimeParameters.yaml"
