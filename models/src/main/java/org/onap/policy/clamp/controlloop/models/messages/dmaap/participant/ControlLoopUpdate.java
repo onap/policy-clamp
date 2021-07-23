@@ -27,14 +27,14 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 /**
- * Class to represent the PARTICIPANT_CONTROL_LOOP_UPDATE message that the control loop runtime sends to a participant.
+ * Class to represent the CONTROL_LOOP_UPDATE message that the control loop runtime sends to a participant.
  * When a participant receives this message, it creates the control loop elements contained in the message and sets them
  * to state PASSIVE. subsequent PARTICIPANT_CONTROL_LOOP_STATE_CHANGE messages are used to activate the control loops.
  */
 @Getter
 @Setter
 @ToString(callSuper = true)
-public class ParticipantControlLoopUpdate extends ParticipantMessage {
+public class ControlLoopUpdate extends ParticipantMessage {
     // The control loop
     private ControlLoop controlLoop;
 
@@ -42,11 +42,11 @@ public class ParticipantControlLoopUpdate extends ParticipantMessage {
     private ToscaServiceTemplate controlLoopDefinition;
 
     /**
-     * Constructor for instantiating ParticipantControlLoopUpdate class with message name.
+     * Constructor for instantiating ControlLoopUpdate class with message name.
      *
      */
-    public ParticipantControlLoopUpdate() {
-        super(ParticipantMessageType.PARTICIPANT_CONTROL_LOOP_UPDATE);
+    public ControlLoopUpdate() {
+        super(ParticipantMessageType.CONTROL_LOOP_UPDATE);
     }
 
     /**
@@ -54,7 +54,7 @@ public class ParticipantControlLoopUpdate extends ParticipantMessage {
      *
      * @param source source from which to copy
      */
-    public ParticipantControlLoopUpdate(ParticipantControlLoopUpdate source) {
+    public ControlLoopUpdate(ControlLoopUpdate source) {
         super(source);
 
         this.controlLoop = new ControlLoop(source.controlLoop);

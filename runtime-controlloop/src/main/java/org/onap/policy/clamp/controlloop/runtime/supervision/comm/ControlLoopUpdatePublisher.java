@@ -21,16 +21,16 @@
 package org.onap.policy.clamp.controlloop.runtime.supervision.comm;
 
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopUpdate;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopUpdate;
 import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningProvider;
 import org.onap.policy.models.base.PfModelException;
 import org.springframework.stereotype.Component;
 
 /**
- * This class is used to send ParticipantControlLoopUpdate messages to participants on DMaaP.
+ * This class is used to send ControlLoopUpdate messages to participants on DMaaP.
  */
 @Component
-public class ParticipantControlLoopUpdatePublisher extends AbstractParticipantPublisher<ParticipantControlLoopUpdate> {
+public class ControlLoopUpdatePublisher extends AbstractParticipantPublisher<ControlLoopUpdate> {
 
     private final CommissioningProvider commissioningProvider;
 
@@ -39,7 +39,7 @@ public class ParticipantControlLoopUpdatePublisher extends AbstractParticipantPu
      *
      * @param commissioningProvider the CommissioningProvider
      */
-    public ParticipantControlLoopUpdatePublisher(CommissioningProvider commissioningProvider) {
+    public ControlLoopUpdatePublisher(CommissioningProvider commissioningProvider) {
         this.commissioningProvider = commissioningProvider;
     }
 
@@ -50,7 +50,7 @@ public class ParticipantControlLoopUpdatePublisher extends AbstractParticipantPu
      * @throws PfModelException on errors getting the Control Loop Definition
      */
     public void send(ControlLoop controlLoop) throws PfModelException {
-        var pclu = new ParticipantControlLoopUpdate();
+        var pclu = new ControlLoopUpdate();
         pclu.setControlLoopId(controlLoop.getKey().asIdentifier());
         pclu.setControlLoop(controlLoop);
         // TODO: We should look up the correct TOSCA node template here for the control loop
