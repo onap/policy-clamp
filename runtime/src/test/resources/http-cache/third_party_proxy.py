@@ -305,6 +305,12 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
          jsonGenerated = "[{\"name\": ,\"org.onap.domain.pmsh.PMSHControlLoopDefinition\": [{ \"version\": \"1.2.3\", \"derived_from\": null }]}]"
          self._create_cache(jsonGenerated, cached_file_folder, cached_file_header, cached_file_content)
          return True
+     elif (self.path.startswith("/onap/controlloop/v2/commission/getCommonOrInstanceProperties")) and http_type == "GET":
+         print "self.path start with /commission getting common properties, generating response json..."
+         with open("example/node_template.json", "r") as f:
+             jsonGenerated = f.read()
+         self._create_cache(jsonGenerated, cached_file_folder, cached_file_header, cached_file_content)
+         return True
      elif (self.path.startswith("/onap/controlloop/v2/commission")) and http_type == "POST":
          print "self.path start with POST /onap/controlloop/v2/commission, copying body to response ..."
          if not os.path.exists(cached_file_folder):
