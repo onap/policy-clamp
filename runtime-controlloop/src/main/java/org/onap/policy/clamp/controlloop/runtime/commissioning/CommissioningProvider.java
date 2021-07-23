@@ -27,6 +27,7 @@ import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.factories.SchemaFactoryWrapper;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -42,11 +43,14 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaDataType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaProperty;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaRelationshipType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplates;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTypedEntityFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -56,6 +60,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CommissioningProvider {
     public static final String CONTROL_LOOP_NODE_TYPE = "org.onap.policy.clamp.controlloop.ControlLoop";
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommissioningProvider.class);
 
     private final PolicyModelsProvider modelsProvider;
     private final ControlLoopProvider clProvider;
@@ -97,6 +102,63 @@ public class CommissioningProvider {
 
         return response;
     }
+
+    /**
+     * Correct constraints null arrays before sending back the tosca service template.
+     *
+     * @param template the tosca service template where null array constraints need to be removed
+     * @return the template with null-constraint arrays corrected
+     * @throws PfModelException on errors getting new template
+     */
+    private ToscaServiceTemplate correctToscaTemplateNullConstraint(ToscaServiceTemplate template) {
+        Map<String, ToscaNodeType> nodeTypes = template.getNodeTypes();
+        for (Map.Entry<String, ToscaNodeType> nodeType: nodeTypes.entrySet()) {
+            Map<String, ToscaProperty> properties = nodeType.getValue().getProperties();
+            Map<String, ToscaProperty> newProperties = this.parseProperties(properties);
+            nodeType.getValue().setProperties(newProperties);
+        }
+        template.setNodeTypes(nodeTypes);
+
+        return template;
+    }
+
+    /**
+     * Correct constraints for a give set of properties from node templates.
+     *
+     * @param properties the properties from a given node template
+     * @return the new set of properties with null-constraint arrays corrected
+     * @throws PfModelException on errors correcting the properties
+     */
+    private Map<String, ToscaProperty> parseProperties(Map<String, ToscaProperty> properties) {
+        Map<String, ToscaProperty> newProperties = new HashMap<String, ToscaProperty>();
+        for (Map.Entry<String, ToscaProperty> propType: properties.entrySet()) {
+            ToscaProperty newProp = this.removeNullArrayFromConstraintsIfPresent(propType.getValue());
+            newProperties.put(propType.getKey(), newProp);
+        }
+
+        return newProperties;
+    }
+
+    /**
+     * Remove the null from inside the constraints array.
+     *
+     * @param prop a single property from a given node template
+     * @return corrected properties
+     * @throws PfModelException on errors correcting the single property
+     */
+    private ToscaProperty removeNullArrayFromConstraintsIfPresent(ToscaProperty prop) {
+        ToscaProperty newProp = prop;
+
+        if (newProp.getConstraints() != null && newProp.getConstraints().size() == 1) {
+            if (newProp.getConstraints().get(0) == null) {
+                newProp.setConstraints(null);
+            }
+
+        }
+        return newProp;
+    }
+
+
 
     /**
      * Delete the control loop definition with the given name and version.
@@ -181,6 +243,169 @@ public class CommissioningProvider {
     }
 
     /**
+     * Get the initial node types with common properties.
+     *
+     * @param fullNodeTypes map of all the node types in the specified template
+     * @param common boolean to indicate whether common or instance properties are required
+     * @return node types map that only has common properties
+     * @throws PfModelException on errors getting node type with common properties
+     */
+    private Map<String, ToscaNodeType> getInitialNodeTypesMap(
+        Map<String, ToscaNodeType> fullNodeTypes, boolean common) {
+
+        Map<String, ToscaNodeType> tempNodeTypesMap = new HashMap<String, ToscaNodeType>();
+
+        fullNodeTypes.forEach((key, nodeType) -> {
+            ToscaNodeType tempToscaNodeType = new ToscaNodeType();
+            tempToscaNodeType.setName(key);
+            Map<String, ToscaProperty> tempCommonPropertyMap = new HashMap<String, ToscaProperty>();
+            Map<String, ToscaProperty> tempInstancePropertyMap = new HashMap<String, ToscaProperty>();
+            nodeType.getProperties().forEach((propKey, prop) -> {
+
+                if (prop.getMetadata() != null) {
+                    prop.getMetadata().forEach((k, v) -> {
+                        if (k.equals("common") && v.equals("true") && common) {
+                            tempCommonPropertyMap.put(propKey, prop);
+                        } else if (k.equals("common") && v.equals("false") && !common) {
+                            tempInstancePropertyMap.put(propKey, prop);
+                        }
+
+                    });
+                } else {
+                    tempInstancePropertyMap.put(propKey, prop);
+                }
+            });
+            if (!tempCommonPropertyMap.isEmpty() && common) {
+                tempToscaNodeType.setProperties(tempCommonPropertyMap);
+                tempNodeTypesMap.put(key, tempToscaNodeType);
+            }
+
+            if (!tempInstancePropertyMap.isEmpty() && !common) {
+                tempToscaNodeType.setProperties(tempInstancePropertyMap);
+                tempNodeTypesMap.put(key, tempToscaNodeType);
+            }
+
+        });
+
+        return tempNodeTypesMap;
+    }
+
+    /**
+     * Get the node types derived from those that have common properties.
+     *
+     * @param initialNodeTypes map of all the node types in the specified template
+     * @param filteredNodeTypes map of all the node types that have common properties
+     * @return all node types that have common properties including their children
+     * @throws PfModelException on errors getting node type with common properties
+     */
+    private Map<String, ToscaNodeType> getFinalNodeTypesMap(
+        Map<String, ToscaNodeType> initialNodeTypes,
+        Map<String, ToscaNodeType> filteredNodeTypes) {
+
+        initialNodeTypes.forEach((key, nodeType) -> {
+            ToscaNodeType tempToscaNodeType = new ToscaNodeType();
+            tempToscaNodeType.setName(key);
+
+            if (filteredNodeTypes.get(nodeType.getDerivedFrom()) != null) {
+                tempToscaNodeType.setName(key);
+                Map<String, ToscaProperty> mergedProps = new HashMap<String, ToscaProperty>();
+                Map<String, ToscaProperty> finalMergedProps = mergedProps;
+                filteredNodeTypes.get(nodeType.getDerivedFrom()).getProperties().forEach((propKey, prop) -> {
+                    finalMergedProps.putIfAbsent(propKey, prop);
+                });
+                tempToscaNodeType.setProperties(finalMergedProps);
+            } else {
+                return;
+            }
+            filteredNodeTypes.put(key, tempToscaNodeType);
+        });
+        return filteredNodeTypes;
+    }
+
+    /**
+     * Get the requested node types with common or instance properties.
+     *
+     * @param common boolean indicating common or instance properties
+     * @param name the name of the definition to get, null for all definitions
+     * @param version the version of the definition to get, null for all definitions
+     * @return the node types with common or instance properties
+     * @throws PfModelException on errors getting node type properties
+     */
+    private Map<String, ToscaNodeType> getCommonOrInstancePropertiesFromNodeTypes(
+        boolean common, String name, String version)
+        throws PfModelException {
+        var serviceTemplates = new ToscaServiceTemplates();
+        serviceTemplates.setServiceTemplates(modelsProvider.getServiceTemplateList(name, version));
+        Map<String, ToscaNodeType> tempNodeTypesMap =
+            this.getInitialNodeTypesMap(serviceTemplates.getServiceTemplates().get(0).getNodeTypes(), common);
+
+        Map<String, ToscaNodeType> finalNodeTypesMap = this.getFinalNodeTypesMap(
+            serviceTemplates.getServiceTemplates().get(0).getNodeTypes(), tempNodeTypesMap);
+
+        return finalNodeTypesMap;
+    }
+
+    /**
+     * Get node templates with appropriate common or instance properties added.
+     *
+     * @param initialNodeTemplates map of all the node templates in the specified template
+     * @param nodeTypeProps map of all the node types that have common or instance properties including children
+     * @return all node templates with appropriate common or instance properties added
+     * @throws PfModelException on errors getting map of node templates with common or instance properties added
+     */
+    private Map<String, ToscaNodeTemplate> getDerivedCommonOrInstanceNodeTemplates(
+        Map<String, ToscaNodeTemplate> initialNodeTemplates,
+        Map<String, ToscaNodeType> nodeTypeProps) {
+
+        Map<String, ToscaNodeTemplate> finalNodeTemplatesMap = new HashMap<String, ToscaNodeTemplate>();
+
+        initialNodeTemplates.forEach((templateKey, template) -> {
+            if (nodeTypeProps.containsKey(template.getType())) {
+                Map<String, Object> mergedProps = new HashMap<String, Object>();
+                mergedProps = template.getProperties();
+                Map<String, Object> finalMergedProps = new HashMap<String, Object>();
+
+                nodeTypeProps.get(template.getType()).getProperties().forEach((propKey, prop) -> {
+                    finalMergedProps.putIfAbsent(propKey, prop);
+                });
+
+                template.setProperties(null);
+                template.setProperties(finalMergedProps);
+
+                finalNodeTemplatesMap.put(templateKey, template);
+            } else {
+                return;
+            }
+        });
+        return finalNodeTemplatesMap;
+    }
+
+    /**
+     * Get node templates with common properties added.
+     *
+     * @param common boolean indicating common or instance properties to be used
+     * @param name the name of the definition to use, null for all definitions
+     * @param version the version of the definition to use, null for all definitions
+     * @return the nodes templates with common or instance properties
+     * @throws PfModelException on errors getting common or instance properties from node_templates
+     */
+    public Map<String, ToscaNodeTemplate> getNodeTemplatesWithCommonOrInstanceProperties(
+        boolean common, String name, String version) throws PfModelException {
+
+        Map<String, ToscaNodeType> commonOrInstanceNodeTypeProps =
+            this.getCommonOrInstancePropertiesFromNodeTypes(common, name, version);
+
+        var serviceTemplates = new ToscaServiceTemplates();
+        serviceTemplates.setServiceTemplates(modelsProvider.getServiceTemplateList(name, version));
+
+        Map<String, ToscaNodeTemplate> finalNodeTemplatesMap = this.getDerivedCommonOrInstanceNodeTemplates(
+            serviceTemplates.getServiceTemplates().get(0).getToscaTopologyTemplate().getNodeTemplates(),
+            commonOrInstanceNodeTypeProps);
+
+        return finalNodeTemplatesMap;
+    }
+
+    /**
      * Get the requested control loop definitions.
      *
      * @param name the name of the definition to get, null for all definitions
@@ -192,6 +417,35 @@ public class CommissioningProvider {
         var serviceTemplates = new ToscaServiceTemplates();
         serviceTemplates.setServiceTemplates(modelsProvider.getServiceTemplateList(name, version));
         return serviceTemplates.getServiceTemplates().get(0);
+    }
+
+    /**
+     * Get the tosca service template with only required sections.
+     *
+     * @param name the name of the template to get, null for all definitions
+     * @param version the version of the template to get, null for all definitions
+     * @return the tosca service template
+     * @throws PfModelException on errors getting tosca service template
+     */
+    public Map<String, Object> getToscaServiceTemplateReduced(String name, String version) throws PfModelException {
+        var serviceTemplates = new ToscaServiceTemplates();
+        serviceTemplates.setServiceTemplates(modelsProvider.getServiceTemplateList(name, version));
+
+        // This is needed because the constraints in some cases have an array with a null in it
+        // This is not acceptable for the commissioning endpoint
+        // TODO This should be fixed in a more permanent way elsewhere
+        ToscaServiceTemplate parsedToscaServiceTemplate = this.correctToscaTemplateNullConstraint(
+            serviceTemplates.getServiceTemplates().get(0));
+
+
+        Map<String, Object> template = new HashMap<String, Object>();
+        template.put("tosca_definitions_version", parsedToscaServiceTemplate.getToscaDefinitionsVersion());
+        template.put("data_types", parsedToscaServiceTemplate.getDataTypes());
+        template.put("policy_types", parsedToscaServiceTemplate.getPolicyTypes());
+        template.put("node_types", parsedToscaServiceTemplate.getNodeTypes());
+        template.put("topology_template", parsedToscaServiceTemplate.getToscaTopologyTemplate());
+
+        return template;
     }
 
     /**

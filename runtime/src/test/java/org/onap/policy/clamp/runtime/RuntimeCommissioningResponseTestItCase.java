@@ -147,4 +147,20 @@ public class RuntimeCommissioningResponseTestItCase {
         assertThat(HttpStatus.valueOf((Integer) exchangeResponse.getIn().getHeader(Exchange.HTTP_RESPONSE_CODE))
             .is2xxSuccessful()).isTrue();
     }
+
+    @Test
+    public void testGetCommonOrInstanceProperties() {
+        ProducerTemplate prodTemplate = camelContext.createProducerTemplate();
+
+        Exchange exchangeResponse =
+            prodTemplate.send("direct:get-common-or-instance-properties", ExchangeBuilder.anExchange(camelContext)
+                .withProperty("name", "ToscaServiceTemplate")
+                .withProperty("version", "1.0.0")
+                .withProperty("common", true)
+                .withProperty("raiseHttpExceptionFlag", "true")
+                .build());
+
+        assertThat(HttpStatus.valueOf((Integer) exchangeResponse.getIn().getHeader(Exchange.HTTP_RESPONSE_CODE))
+            .is2xxSuccessful()).isTrue();
+    }
 }
