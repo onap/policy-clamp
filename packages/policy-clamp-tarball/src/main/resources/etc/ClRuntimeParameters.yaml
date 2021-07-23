@@ -34,17 +34,17 @@ runtime:
     name: PolicyProviderParameterGroup
     implementation: org.onap.policy.models.provider.impl.DatabasePolicyModelsProviderImpl
     databaseDriver: org.mariadb.jdbc.Driver
-    databaseUrl: jdbc:mariadb://${mariadb.host:localhost}:${mariadb.port:3306}/controlloop
+    databaseUrl: jdbc:mariadb://${mariadb.host:mariadb}:${mariadb.port:3306}/controlloop
     databaseUser: policy
     databasePassword: P01icY
     persistenceUnit: CommissioningMariaDb
   topicParameterGroup:
     topicSources[0]:
       topic: POLICY-CLRUNTIME-PARTICIPANT
-      servers[0]: ${topicServer:localhost}
+      servers[0]: ${topicServer:message-router}
       topicCommInfrastructure: dmaap
       fetchTimeout: 15000
     topicSinks[0]:
       topic: POLICY-CLRUNTIME-PARTICIPANT
-      servers[0]: ${topicServer:localhost}
+      servers[0]: ${topicServer:message-router}
       topicCommInfrastructure: dmaap

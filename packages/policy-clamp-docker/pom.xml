@@ -111,6 +111,12 @@
                                                 <outputDirectory>/lib</outputDirectory>
                                                 <outputFileNameMapping>policy-controlloop-runtime.tar.gz</outputFileNameMapping>
                                             </dependencySet>
+                                            <dependencySet>
+                                                <includes>
+                                                    <include>org.onap.policy.clamp:policy-clamp-runtime-controlloop</include>
+                                                </includes>
+                                                <outputFileNameMapping>app.jar</outputFileNameMapping>
+                                            </dependencySet>
                                         </dependencySets>
                                     </inline>
                                 </assembly>

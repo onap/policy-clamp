@@ -24,24 +24,13 @@
         <format>tar.gz</format>
     </formats>
     <includeBaseDirectory>false</includeBaseDirectory>
-    <dependencySets>
-        <dependencySet>
-            <useProjectArtifact>true</useProjectArtifact>
-            <outputDirectory>${file.separator}lib</outputDirectory>
-            <unpack>false</unpack>
-            <scope>runtime</scope>
-            <includes>
-                <include>*:jar</include>
-            </includes>
-        </dependencySet>
-    </dependencySets>
     <fileSets>
         <fileSet>
             <directory>${project.basedir}/src/main/resources/etc
             </directory>
             <includes>
-                <include>*.json</include>
                 <include>*.xml</include>
+                <include>*.yaml</include>
             </includes>
             <outputDirectory>${file.separator}etc</outputDirectory>
             <lineEnding>unix</lineEnding>
