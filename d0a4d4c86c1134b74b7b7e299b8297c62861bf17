@@ -1,0 +1,95 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d6905c6e_f6421be5",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-26T13:34:41Z",
+      "side": 1,
+      "message": "question: why not just use validation to reject the data if a constraint array contains a \"null\"?",
+      "revId": "d0a4d4c86c1134b74b7b7e299b8297c62861bf17",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fcba4ce2_4ce79f82",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-26T13:34:41Z",
+      "side": 1,
+      "message": "don\u0027t need this local variable",
+      "revId": "d0a4d4c86c1134b74b7b7e299b8297c62861bf17",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "93a4c7a9_1b2a6a1f",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-26T13:34:41Z",
+      "side": 1,
+      "message": "what if it contains multiple constraints, several of which are null?",
+      "revId": "d0a4d4c86c1134b74b7b7e299b8297c62861bf17",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "956729c5_982a5633",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/rest/CommissioningController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-26T13:34:41Z",
+      "side": 1,
+      "message": "should this maybe default to \"false\"?",
+      "range": {
+        "startLine": 489,
+        "startChar": 28,
+        "endLine": 489,
+        "endChar": 32
+      },
+      "revId": "d0a4d4c86c1134b74b7b7e299b8297c62861bf17",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5a03258b_6557e0f8",
+        "filename": "runtime/src/test/resources/http-cache/third_party_proxy.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-26T13:34:41Z",
+      "side": 1,
+      "message": "could we load this from a file instead, or use python\u0027s triple-quote mechanism so no escape sequences are needed?",
+      "revId": "d0a4d4c86c1134b74b7b7e299b8297c62861bf17",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
