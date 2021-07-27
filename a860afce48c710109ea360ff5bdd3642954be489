@@ -16,6 +16,24 @@
       "revId": "a860afce48c710109ea360ff5bdd3642954be489",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4632696f_9884bf76",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-07-27T12:24:37Z",
+      "side": 1,
+      "message": "Have removed this Pam. Thanks",
+      "parentUuid": "eb17fac8_7f26b121",
+      "revId": "a860afce48c710109ea360ff5bdd3642954be489",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
