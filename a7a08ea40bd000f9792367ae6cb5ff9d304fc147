@@ -46,6 +46,30 @@
       "revId": "a7a08ea40bd000f9792367ae6cb5ff9d304fc147",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a5f42d89_b20d8d17",
+        "filename": "packages/policy-clamp-tarball/src/main/resources/etc/ClRuntimeParameters.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-07-27T15:36:20Z",
+      "side": 1,
+      "message": "topicSources is a list (of TopicParameters), so I have changed it to:\n    topicSources:\n      -\n        topic: POLICY-CLRUNTIME-PARTICIPANT",
+      "parentUuid": "bcd8b58f_786eb7fe",
+      "range": {
+        "startLine": 41,
+        "startChar": 2,
+        "endLine": 43,
+        "endChar": 41
+      },
+      "revId": "a7a08ea40bd000f9792367ae6cb5ff9d304fc147",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
