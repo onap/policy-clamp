@@ -23,8 +23,6 @@
 
 package org.onap.policy.clamp.clds.filter;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -44,12 +42,14 @@ import javax.servlet.http.HttpServletRequest;
 import org.onap.aaf.cadi.config.Config;
 import org.onap.aaf.cadi.filter.CadiFilter;
 import org.onap.policy.clamp.clds.util.ResourceFileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 
 public class ClampCadiFilter extends CadiFilter {
-    private static final EELFLogger logger = EELFManager.getInstance().getLogger(ClampCadiFilter.class);
+    private static final Logger logger = LoggerFactory.getLogger(ClampCadiFilter.class);
 
     @Autowired
     private ApplicationContext appContext;

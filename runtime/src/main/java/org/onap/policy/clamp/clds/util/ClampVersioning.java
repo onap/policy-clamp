@@ -24,10 +24,10 @@
 
 package org.onap.policy.clamp.clds.util;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import java.io.InputStream;
 import java.util.Properties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class give a way to know the Clamp version easily, the version in that
@@ -37,7 +37,7 @@ import java.util.Properties;
 public class ClampVersioning {
     private static final String RESOURCE_NAME = "clds-version.properties";
     private static final String CLDS_VERSION_PROPERTY = "clds.version";
-    private static final EELFLogger LOGGER = EELFManager.getInstance().getLogger(ClampVersioning.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClampVersioning.class);
 
     private ClampVersioning() {
     }

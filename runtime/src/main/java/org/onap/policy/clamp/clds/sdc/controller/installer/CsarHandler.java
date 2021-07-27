@@ -23,8 +23,6 @@
 
 package org.onap.policy.clamp.clds.sdc.controller.installer;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -50,6 +48,8 @@ import org.onap.sdc.api.results.IDistributionClientDownloadResult;
 import org.onap.sdc.tosca.parser.api.ISdcCsarHelper;
 import org.onap.sdc.tosca.parser.exceptions.SdcToscaParserException;
 import org.onap.sdc.tosca.parser.impl.SdcToscaParserFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * CsarDescriptor that will be used to deploy file in CLAMP file system. Some
@@ -57,7 +57,7 @@ import org.onap.sdc.tosca.parser.impl.SdcToscaParserFactory;
  */
 public class CsarHandler {
 
-    private static final EELFLogger logger = EELFManager.getInstance().getLogger(CsarHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(CsarHandler.class);
     private IArtifactInfo artifactElement;
     private String csarFilePath;
     private String controllerName;
