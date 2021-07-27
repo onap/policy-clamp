@@ -25,14 +25,14 @@
 
 package org.onap.policy.clamp.authorization;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import java.util.Date;
 import org.apache.camel.Exchange;
 import org.onap.policy.clamp.clds.config.ClampProperties;
 import org.onap.policy.clamp.clds.exception.NotAuthorizedException;
 import org.onap.policy.clamp.clds.model.ClampInformation;
 import org.onap.policy.clamp.clds.util.LoggingUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -47,10 +47,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuthorizationController {
 
-    protected static final EELFLogger logger =
-            EELFManager.getInstance().getLogger(AuthorizationController.class);
-    protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
-    protected static final EELFLogger securityLogger = EELFManager.getInstance().getSecurityLogger();
+    protected static final Logger logger = LoggerFactory.getLogger(AuthorizationController.class);
 
     // By default we'll set it to a default handler
     @Autowired
@@ -106,12 +103,12 @@ public class AuthorizationController {
         Date startTime = new Date();
         LoggingUtils.setTargetContext("Clamp", "authorize");
         LoggingUtils.setTimeContext(startTime, new Date());
-        securityLogger.debug("checking if {} has permission: {}", principalName, perm);
+        logger.debug(LoggingUtils.SECURITY_LOG_MARKER, "checking if {} has permission: {}", principalName, perm);
 
         if (!isUserPermitted(perm)) {
             String msg = principalName + " does not have permission: " + perm;
             LoggingUtils.setErrorContext("100", "Authorization Error");
-            securityLogger.warn(msg);
+            logger.warn(LoggingUtils.SECURITY_LOG_MARKER, msg);
             throw new NotAuthorizedException(msg);
         }
     }
@@ -128,18 +125,20 @@ public class AuthorizationController {
         // check if the user has the permission key or the permission key with a
         // combination of all instance and/or all action.
         if (hasRole(inPermission.getKey()) || hasRole(inPermission.getKeyAllInstance())) {
-            auditLogger.info("{} authorized because user has permission with * for instance: {}",
+            logger.info(LoggingUtils.AUDIT_LOG_MARKER,
+                    "{} authorized because user has permission with * for instance: {}",
                     principalName, inPermission.getKey().replace("|", ":"));
             return true;
             // the rest of these don't seem to be required - isUserInRole method
             // appears to take * as a wildcard
         } else if (hasRole(inPermission.getKeyAllInstanceAction())) {
-            auditLogger.info(
+            logger.info(LoggingUtils.AUDIT_LOG_MARKER,
                     "{} authorized because user has permission with * for instance and * for action: {}",
                     principalName, inPermission.getKey().replace("|", ":"));
             return true;
         } else if (hasRole(inPermission.getKeyAllAction())) {
-            auditLogger.info("{} authorized because user has permission with * for action: {}",
+            logger.info(LoggingUtils.AUDIT_LOG_MARKER,
+                    "{} authorized because user has permission with * for action: {}",
                     principalName, inPermission.getKey().replace("|", ":"));
             return true;
         } else {

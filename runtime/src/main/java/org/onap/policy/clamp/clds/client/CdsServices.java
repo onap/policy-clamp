@@ -26,8 +26,6 @@ package org.onap.policy.clamp.clds.client;
 
 import static java.lang.Boolean.parseBoolean;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -42,6 +40,8 @@ import org.onap.policy.clamp.clds.exception.cds.CdsParametersException;
 import org.onap.policy.clamp.clds.model.cds.CdsBpWorkFlowListResponse;
 import org.onap.policy.clamp.clds.util.JsonUtils;
 import org.onap.policy.clamp.clds.util.LoggingUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -55,7 +55,7 @@ public class CdsServices {
     @Autowired
     CamelContext camelContext;
 
-    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(CdsServices.class);
+    protected static final Logger logger = LoggerFactory.getLogger(CdsServices.class);
 
     private static final String TYPE = "type";
     private static final String PROPERTIES = "properties";

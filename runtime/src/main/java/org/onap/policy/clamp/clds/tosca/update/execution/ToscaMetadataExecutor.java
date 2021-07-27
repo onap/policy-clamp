@@ -23,8 +23,6 @@
 
 package org.onap.policy.clamp.clds.tosca.update.execution;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import com.google.gson.JsonObject;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,6 +30,8 @@ import javax.annotation.PostConstruct;
 import org.onap.policy.clamp.clds.tosca.update.execution.cds.ToscaMetadataCdsProcess;
 import org.onap.policy.clamp.loop.service.Service;
 import org.onap.policy.clamp.tosca.DictionaryService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -41,8 +41,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class ToscaMetadataExecutor {
 
-    private static final EELFLogger logger =
-            EELFManager.getInstance().getLogger(ToscaMetadataExecutor.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(ToscaMetadataExecutor.class);
 
     @Autowired
     private DictionaryService dictionaryService;
