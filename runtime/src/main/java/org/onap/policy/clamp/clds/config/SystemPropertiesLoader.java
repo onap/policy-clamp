@@ -23,24 +23,24 @@
 
 package org.onap.policy.clamp.clds.config;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import java.util.Properties;
 import javax.annotation.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 @Component
 public class SystemPropertiesLoader implements ApplicationListener<ContextRefreshedEvent> {
-    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(SystemPropertiesLoader.class);
+    protected static final Logger logger = LoggerFactory.getLogger(SystemPropertiesLoader.class);
 
     @Resource(name = "mapper")
     private Properties myTranslator;
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-        logger.info("Loading additional JVM properties:" + myTranslator.toString());
+        logger.info("Loading additional JVM properties: {}", myTranslator.toString());
         System.getProperties().putAll(myTranslator);
     }
 }

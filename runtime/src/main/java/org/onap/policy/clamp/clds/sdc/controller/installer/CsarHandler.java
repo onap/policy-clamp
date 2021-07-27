@@ -23,8 +23,6 @@
 
 package org.onap.policy.clamp.clds.sdc.controller.installer;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -50,6 +48,8 @@ import org.onap.sdc.api.results.IDistributionClientDownloadResult;
 import org.onap.sdc.tosca.parser.api.ISdcCsarHelper;
 import org.onap.sdc.tosca.parser.exceptions.SdcToscaParserException;
 import org.onap.sdc.tosca.parser.impl.SdcToscaParserFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * CsarDescriptor that will be used to deploy file in CLAMP file system. Some
@@ -57,7 +57,7 @@ import org.onap.sdc.tosca.parser.impl.SdcToscaParserFactory;
  */
 public class CsarHandler {
 
-    private static final EELFLogger logger = EELFManager.getInstance().getLogger(CsarHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(CsarHandler.class);
     private IArtifactInfo artifactElement;
     private String csarFilePath;
     private String controllerName;
@@ -108,7 +108,7 @@ public class CsarHandler {
     public synchronized void save(IDistributionClientDownloadResult resultArtifact)
             throws SdcArtifactInstallerException, SdcToscaParserException {
         try {
-            logger.info("Writing CSAR file to: " + csarFilePath + " UUID " + artifactElement.getArtifactUUID() + ")");
+            logger.info("Writing CSAR file to: {}  UUID )", csarFilePath, artifactElement.getArtifactUUID());
             Path path = Paths.get(csarFilePath);
             Files.createDirectories(path.getParent());
             // Create or replace the file
@@ -155,12 +155,12 @@ public class CsarHandler {
                                     + RESOURCE_INSTANCE_NAME_PREFIX.length(),
                             entry.getName().indexOf(RESOURCE_INSTANCE_NAME_SUFFIX))));
                     this.mapOfBlueprints.put(blueprintArtifact.getBlueprintArtifactName(), blueprintArtifact);
-                    logger.info("Found a blueprint entry in the CSAR " + blueprintArtifact.getBlueprintArtifactName()
-                            + " for resource instance Name "
-                            + blueprintArtifact.getResourceAttached().getResourceInstanceName());
+                    logger.info("Found a blueprint entry in the CSAR {}  for resource instance Name {}",
+                            blueprintArtifact.getBlueprintArtifactName(),
+                            blueprintArtifact.getResourceAttached().getResourceInstanceName());
                 }
             }
-            logger.info(this.mapOfBlueprints.size() + " blueprint(s) will be converted to closed loop");
+            logger.info("{} blueprint(s) will be converted to closed loop", this.mapOfBlueprints.size());
         }
     }
 
@@ -211,7 +211,7 @@ public class CsarHandler {
                     result = IOUtils.toString(zipFile.getInputStream(entry), StandardCharsets.UTF_8);
                 }
             } else {
-                logger.info("Policy model not found inside the CSAR file: " + csarFilePath);
+                logger.info("Policy model not found inside the CSAR file: {}", csarFilePath);
             }
             return Optional.ofNullable(result);
         }

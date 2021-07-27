@@ -23,6 +23,7 @@
 
 package org.onap.policy.clamp.clds.util;
 
+import ch.qos.logback.classic.LoggerContext;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URLConnection;
@@ -43,6 +44,8 @@ import org.onap.policy.clamp.authorization.AuthorizationController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 import org.slf4j.event.Level;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -57,6 +60,41 @@ public class LoggingUtils {
     private static final DateFormat DATE_FORMAT = createDateFormat();
 
     private static final String DATE_FORMATTER_ISO = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
+
+    /**
+     * ROOT logger.
+     */
+    public static final String ROOT_LOGGER = "ROOT";
+
+    /**
+     * Metric logger.
+     */
+    public static final String METRIC_LOG_MARKER_NAME = "metric";
+
+    /**
+     * Audit Log Marker Name.
+     */
+    public static final String AUDIT_LOG_MARKER_NAME = "audit";
+
+    /**
+     * Security Log Marker Name.
+     */
+    public static final String SECURITY_LOG_MARKER_NAME = "security";
+
+    /**
+     * Marks a logging record for metric.
+     */
+    public static final Marker METRIC_LOG_MARKER = MarkerFactory.getMarker(METRIC_LOG_MARKER_NAME);
+
+    /**
+     * Marks a logging record for security.
+     */
+    public static final Marker SECURITY_LOG_MARKER = MarkerFactory.getMarker(SECURITY_LOG_MARKER_NAME);
+
+    /**
+     * Marks a logging record for audit.
+     */
+    public static final Marker AUDIT_LOG_MARKER = MarkerFactory.getMarker(AUDIT_LOG_MARKER_NAME);
 
     /**
      * String constant for messages <tt>ENTERING</tt>, <tt>EXITING</tt>, etc.
@@ -78,6 +116,32 @@ public class LoggingUtils {
      */
     public LoggingUtils(final Logger loggerP) {
         this.mlogger = checkNotNull(loggerP);
+    }
+
+    /**
+     * Set the log level of a logger.
+     *
+     * @param loggerName logger name
+     * @param loggerLevel logger level
+     */
+    public static String setLevel(String loggerName, String loggerLevel) {
+        if (!(LoggerFactory.getILoggerFactory() instanceof LoggerContext)) {
+            throw new IllegalStateException("The SLF4J logger factory is not configured for logback");
+        }
+
+        final LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
+        final var loggerContext = context.getLogger(loggerName);
+        if (loggerContext == null) {
+            throw new IllegalArgumentException("no logger " + loggerName);
+        }
+
+        logger.warn("setting {} logger to level {}", loggerName, loggerLevel);
+
+        // use the current log level if the string provided cannot be converted to a valid Level.
+
+        loggerContext.setLevel(ch.qos.logback.classic.Level.toLevel(loggerLevel, loggerContext.getLevel()));
+
+        return loggerContext.getLevel().toString();
     }
 
     /**

@@ -22,11 +22,11 @@
 
 package org.onap.policy.clamp.util;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import java.io.IOException;
 import org.onap.aaf.cadi.Symm;
 import org.onap.policy.clamp.clds.util.ResourceFileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * PassDecoder for decrypting the truststore and keystore password.
@@ -39,7 +39,7 @@ public class PassDecoder {
     /**
      * Used to log PassDecoder class.
      */
-    private static final EELFLogger logger = EELFManager.getInstance().getLogger(PassDecoder.class);
+    private static final Logger logger = LoggerFactory.getLogger(PassDecoder.class);
 
     /**
      * Decode the password.
