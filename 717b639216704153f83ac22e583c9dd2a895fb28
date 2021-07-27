@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a978fca_80d6b041",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProvider.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-27T17:16:58Z",
+      "side": 1,
+      "message": "do we need a loop here, in case the derived-from hierarchy is more than one deep?",
+      "revId": "717b639216704153f83ac22e583c9dd2a895fb28",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "47e4c495_fe1a9b00",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProvider.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 314,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-27T17:16:58Z",
+      "side": 1,
+      "message": "delete this line",
+      "revId": "717b639216704153f83ac22e583c9dd2a895fb28",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
