@@ -23,8 +23,6 @@
 
 package org.onap.policy.clamp.policy.operational;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -32,6 +30,8 @@ import org.onap.policy.clamp.clds.tosca.update.ToscaConverterWithDictionarySuppo
 import org.onap.policy.clamp.loop.Loop;
 import org.onap.policy.clamp.loop.template.PolicyModelsRepository;
 import org.onap.policy.clamp.policy.PolicyService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +42,7 @@ public class OperationalPolicyService implements PolicyService<OperationalPolicy
 
     private final PolicyModelsRepository policyModelsRepository;
 
-    private static final EELFLogger logger = EELFManager.getInstance().getLogger(OperationalPolicyService.class);
+    private static final Logger logger = LoggerFactory.getLogger(OperationalPolicyService.class);
 
     @Autowired
     public OperationalPolicyService(OperationalPolicyRepository repository,

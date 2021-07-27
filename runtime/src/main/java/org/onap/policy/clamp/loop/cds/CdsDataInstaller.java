@@ -24,8 +24,6 @@
 
 package org.onap.policy.clamp.loop.cds;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import com.google.gson.JsonObject;
 import org.onap.policy.clamp.clds.client.CdsServices;
 import org.onap.policy.clamp.clds.model.cds.CdsBpWorkFlowListResponse;
@@ -34,6 +32,8 @@ import org.onap.policy.clamp.loop.service.Service;
 import org.onap.policy.clamp.loop.service.ServicesRepository;
 import org.onap.sdc.tosca.parser.enums.SdcTypes;
 import org.onap.sdc.toscaparser.api.NodeTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -46,7 +46,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 public class CdsDataInstaller {
 
-    private static final EELFLogger logger = EELFManager.getInstance().getLogger(CdsDataInstaller.class);
+    private static final Logger logger = LoggerFactory.getLogger(CdsDataInstaller.class);
 
     @Autowired
     CdsServices cdsServices;

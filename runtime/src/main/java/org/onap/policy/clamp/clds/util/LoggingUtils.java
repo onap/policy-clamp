@@ -43,6 +43,8 @@ import org.onap.policy.clamp.authorization.AuthorizationController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 import org.slf4j.event.Level;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -57,6 +59,37 @@ public class LoggingUtils {
     private static final DateFormat DATE_FORMAT = createDateFormat();
 
     private static final String DATE_FORMATTER_ISO = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
+
+    /**
+     * Root logger.
+     */
+    public static final String METRIC_LOG_MARKER_NAME = "metric";
+
+    /**
+     * Audit Log Marker Name.
+     */
+    public static final String AUDIT_LOG_MARKER_NAME = "audit";
+
+    /**
+     * Security Log Marker Name.
+     */
+    public static final String SECURITY_LOG_MARKER_NAME = "security";
+    
+    /**
+     * Marks a logging record for metric.
+     */
+    public static final Marker METRIC_LOG_MARKER = MarkerFactory.getMarker(METRIC_LOG_MARKER_NAME);
+
+
+    /**
+     * Marks a logging record for security.å
+     */
+    public static final Marker SECURITY_LOG_MARKER = MarkerFactory.getMarker(SECURITY_LOG_MARKER_NAME);
+
+    /**
+     * Marks a logging record for audit.
+     */
+    public static final Marker AUDIT_LOG_MARKER = MarkerFactory.getMarker(AUDIT_LOG_MARKER_NAME);
 
     /**
      * String constant for messages <tt>ENTERING</tt>, <tt>EXITING</tt>, etc.
