@@ -83,5 +83,22 @@ public enum ParticipantMessageType {
      * Used by participant to acknowledge the receipt of Participant_Update message
      * from control loop runtime.
      */
-    PARTICIPANT_UPDATE_ACK
+    PARTICIPANT_UPDATE_ACK,
+
+    /**
+     * Used by participant to acknowledge the receipt of ControlLoop_Update message
+     * from control loop runtime.
+     */
+    CONTROLLOOP_UPDATE_ACK,
+
+    /**
+     * Used by participant to acknowledge the receipt of ControlLoop_StateChange message
+     * from control loop runtime.
+     */
+    CONTROLLOOP_STATECHANGE_ACK,
+
+    /**
+     * Used by control loop runtime to request for ParticipantStatus message immediately.
+     */
+    PARTICIPANT_STATUS_REQ
 }
