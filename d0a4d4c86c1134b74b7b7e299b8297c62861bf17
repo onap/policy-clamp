@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e530e96a_1e714ccb",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-07-27T10:54:15Z",
+      "side": 1,
+      "message": "Have removed this and other related methods altogether. The specification of the constraint in the tosca service template we were using was wrong. That was what was causing the errors.",
+      "parentUuid": "d6905c6e_f6421be5",
+      "revId": "d0a4d4c86c1134b74b7b7e299b8297c62861bf17",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "fcba4ce2_4ce79f82",
         "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProvider.java",
         "patchSetId": 2
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "513906d8_40f27057",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-07-27T10:54:15Z",
+      "side": 1,
+      "message": "Removed this.",
+      "parentUuid": "fcba4ce2_4ce79f82",
+      "revId": "d0a4d4c86c1134b74b7b7e299b8297c62861bf17",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "93a4c7a9_1b2a6a1f",
         "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProvider.java",
         "patchSetId": 2
@@ -47,6 +83,24 @@
       "writtenOn": "2021-07-26T13:34:41Z",
       "side": 1,
       "message": "what if it contains multiple constraints, several of which are null?",
+      "revId": "d0a4d4c86c1134b74b7b7e299b8297c62861bf17",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2c6d3f2e_b441dd90",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-07-27T10:54:15Z",
+      "side": 1,
+      "message": "As stated above. These methods were all removed.",
+      "parentUuid": "93a4c7a9_1b2a6a1f",
       "revId": "d0a4d4c86c1134b74b7b7e299b8297c62861bf17",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
@@ -76,6 +130,30 @@
     },
     {
       "key": {
+        "uuid": "64f8c957_250a355b",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/rest/CommissioningController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-07-27T10:54:15Z",
+      "side": 1,
+      "message": "Did this.",
+      "parentUuid": "956729c5_982a5633",
+      "range": {
+        "startLine": 489,
+        "startChar": 28,
+        "endLine": 489,
+        "endChar": 32
+      },
+      "revId": "d0a4d4c86c1134b74b7b7e299b8297c62861bf17",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5a03258b_6557e0f8",
         "filename": "runtime/src/test/resources/http-cache/third_party_proxy.py",
         "patchSetId": 2
@@ -87,6 +165,24 @@
       "writtenOn": "2021-07-26T13:34:41Z",
       "side": 1,
       "message": "could we load this from a file instead, or use python\u0027s triple-quote mechanism so no escape sequences are needed?",
+      "revId": "d0a4d4c86c1134b74b7b7e299b8297c62861bf17",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "df12db71_f8985117",
+        "filename": "runtime/src/test/resources/http-cache/third_party_proxy.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-07-27T10:54:15Z",
+      "side": 1,
+      "message": "I have put this json in a file as you suggested. The file has been added to this review.",
+      "parentUuid": "5a03258b_6557e0f8",
       "revId": "d0a4d4c86c1134b74b7b7e299b8297c62861bf17",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
