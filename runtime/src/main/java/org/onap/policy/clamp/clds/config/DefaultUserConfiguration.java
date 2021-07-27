@@ -25,12 +25,12 @@
 
 package org.onap.policy.clamp.clds.config;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import java.io.IOException;
 import org.onap.policy.clamp.authorization.CldsUser;
 import org.onap.policy.clamp.clds.exception.CldsConfigException;
 import org.onap.policy.clamp.clds.exception.CldsUsersException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -52,7 +52,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Profile("clamp-default-user")
 public class DefaultUserConfiguration extends WebSecurityConfigurerAdapter {
 
-    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(DefaultUserConfiguration.class);
+    protected static final Logger logger = LoggerFactory.getLogger(DefaultUserConfiguration.class);
 
     private static final String SETUP_WEB_USERS_EXCEPTION_MSG = "Exception occurred during the "
             + " setup of the Web users in memory";

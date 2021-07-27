@@ -23,12 +23,12 @@
 
 package org.onap.policy.clamp.policy.downloader;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import java.time.Instant;
 import org.json.simple.parser.ParseException;
 import org.onap.policy.clamp.loop.template.PolicyModelsRepository;
 import org.onap.policy.clamp.policy.PolicyEngineServices;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -43,9 +43,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 @Profile("clamp-policy-controller")
 public class PolicyEngineController {
 
-    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(PolicyEngineController.class);
-    protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
-    protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
+    protected static final Logger logger = LoggerFactory.getLogger(PolicyEngineController.class);
     public static final String POLICY_RETRY_INTERVAL = "policy.retry.interval";
     public static final String POLICY_RETRY_LIMIT = "policy.retry.limit";
 

@@ -25,8 +25,6 @@ package org.onap.policy.clamp.clds.it;
 
 import static org.apache.commons.io.FileUtils.copyInputStreamToFile;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.BuildImageResultCallback;
 import com.github.dockerjava.api.command.CreateContainerResponse;
@@ -46,6 +44,8 @@ import org.codehaus.plexus.util.FileUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -61,7 +61,7 @@ public class RobotItCase {
     @Value("${server.port}")
     private String httpPort;
     private static final int TIMEOUT_S = 150;
-    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(RobotItCase.class);
+    protected static final Logger logger = LoggerFactory.getLogger(RobotItCase.class);
 
     @Test
     public void robotTests() throws Exception {

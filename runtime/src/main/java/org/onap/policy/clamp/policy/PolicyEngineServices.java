@@ -23,8 +23,6 @@
 
 package org.onap.policy.clamp.policy;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import org.apache.camel.CamelContext;
@@ -36,6 +34,8 @@ import org.onap.policy.clamp.clds.util.JsonUtils;
 import org.onap.policy.clamp.loop.template.PolicyModel;
 import org.onap.policy.clamp.loop.template.PolicyModelsService;
 import org.onap.policy.models.pdp.concepts.PdpGroups;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -58,7 +58,7 @@ public class PolicyEngineServices {
 
     private static final String RAISE_EXCEPTION_FLAG = "raiseHttpExceptionFlag";
 
-    private static final EELFLogger logger = EELFManager.getInstance().getLogger(PolicyEngineServices.class);
+    private static final Logger logger = LoggerFactory.getLogger(PolicyEngineServices.class);
     private int retryInterval = 0;
     private int retryLimit = 1;
 

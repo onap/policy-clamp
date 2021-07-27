@@ -24,8 +24,6 @@
 
 package org.onap.policy.clamp.clds.sdc.controller.installer;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -39,6 +37,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import org.json.JSONObject;
 import org.onap.policy.clamp.clds.exception.sdc.controller.BlueprintParserException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
 public class BlueprintParser {
@@ -59,7 +59,7 @@ public class BlueprintParser {
     private static final String TARGET = "target";
     public static final String DEFAULT_VERSION = "1.0.0";
 
-    private static final EELFLogger logger = EELFManager.getInstance().getLogger(BlueprintParser.class);
+    private static final Logger logger = LoggerFactory.getLogger(BlueprintParser.class);
 
     private BlueprintParser() {
 
