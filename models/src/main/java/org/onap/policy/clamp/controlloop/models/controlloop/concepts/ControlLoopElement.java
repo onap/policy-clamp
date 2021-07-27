@@ -20,12 +20,16 @@
 
 package org.onap.policy.clamp.controlloop.models.controlloop.concepts;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.UnaryOperator;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.ToString;
 import org.onap.policy.models.base.PfConceptKey;
+import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
@@ -57,6 +61,10 @@ public class ControlLoopElement {
 
     private ClElementStatistics clElementStatistics;
 
+    // A map indexed by the property name. Each map entry is the serialized value of the property,
+    // which can be deserialized into an instance of the type of the property.
+    private Map<String, String> commonPropertiesMap = new LinkedHashMap<>();
+
     /**
      * Copy constructor, does a deep copy but as all fields here are immutable, it's just a regular copy.
      *
@@ -71,5 +79,6 @@ public class ControlLoopElement {
         this.orderedState = otherElement.orderedState;
         this.description = otherElement.description;
         this.clElementStatistics = otherElement.clElementStatistics;
+        this.commonPropertiesMap = PfUtils.mapMap(otherElement.commonPropertiesMap, UnaryOperator.identity());
     }
 }

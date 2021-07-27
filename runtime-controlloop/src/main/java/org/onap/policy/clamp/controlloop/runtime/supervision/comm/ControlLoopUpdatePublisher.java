@@ -23,8 +23,6 @@ package org.onap.policy.clamp.controlloop.runtime.supervision.comm;
 import lombok.AllArgsConstructor;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopUpdate;
-import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningProvider;
-import org.onap.policy.models.base.PfModelException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -38,8 +36,6 @@ public class ControlLoopUpdatePublisher extends AbstractParticipantPublisher<Con
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ControlLoopUpdatePublisher.class);
 
-    private final CommissioningProvider commissioningProvider;
-
     /**
      * Send ControlLoopUpdate to Participant.
      *
@@ -49,14 +45,7 @@ public class ControlLoopUpdatePublisher extends AbstractParticipantPublisher<Con
         var controlLoopUpdateMsg = new ControlLoopUpdate();
         controlLoopUpdateMsg.setControlLoopId(controlLoop.getKey().asIdentifier());
         controlLoopUpdateMsg.setControlLoop(controlLoop);
-        // TODO: We should look up the correct TOSCA node template here for the control loop
-        // Tiny hack implemented to return the tosca service template entry from the database and be passed onto dmaap
-        try {
-            controlLoopUpdateMsg.setControlLoopDefinition(commissioningProvider.getToscaServiceTemplate(null, null));
-        } catch (PfModelException pfme) {
-            LOGGER.warn("Get of tosca service template failed, cannot send ParticipantControlLoopUpdate", pfme);
-            return;
-        }
+        LOGGER.debug("ControlLoopUpdate message sent", controlLoopUpdateMsg);
         super.send(controlLoopUpdateMsg);
     }
 }
