@@ -24,8 +24,6 @@
 
 package org.onap.policy.clamp.policy.operational;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -36,11 +34,13 @@ import java.util.Set;
 import org.onap.policy.clamp.clds.util.JsonUtils;
 import org.onap.policy.clamp.clds.util.ResourceFileUtils;
 import org.onap.policy.clamp.loop.service.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OperationalPolicyRepresentationBuilder {
 
-    private static final EELFLogger logger =
-            EELFManager.getInstance().getLogger(OperationalPolicyRepresentationBuilder.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(OperationalPolicyRepresentationBuilder.class);
 
     public static final String PROPERTIES = "properties";
     public static final String ITEMS = "items";

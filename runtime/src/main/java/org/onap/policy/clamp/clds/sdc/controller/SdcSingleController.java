@@ -24,8 +24,6 @@
 
 package org.onap.policy.clamp.clds.sdc.controller;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import java.security.SecureRandom;
 import java.util.Date;
 import java.util.Map.Entry;
@@ -52,13 +50,15 @@ import org.onap.sdc.impl.DistributionClientFactory;
 import org.onap.sdc.tosca.parser.exceptions.SdcToscaParserException;
 import org.onap.sdc.utils.DistributionActionResultEnum;
 import org.onap.sdc.utils.DistributionStatusEnum;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class handles one sdc controller defined in the config.
  */
 public class SdcSingleController {
 
-    private static final EELFLogger logger = EELFManager.getInstance().getLogger(SdcSingleController.class);
+    private static final Logger logger = LoggerFactory.getLogger(SdcSingleController.class);
     private boolean isSdcClientAutoManaged = false;
     private CsarInstaller csarInstaller;
     private ClampProperties refProp;
