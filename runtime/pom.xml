@@ -165,21 +165,6 @@
     </dependencyManagement>
     <dependencies>
         <dependency>
-            <groupId>com.att.eelf</groupId>
-            <artifactId>eelf-core</artifactId>
-            <version>${version.eelf.core}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.powermock</groupId>
-                    <artifactId>powermock-module-junit4</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.powermock</groupId>
-                    <artifactId>powermock-api-mockito</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>org.codehaus.janino</groupId>
             <artifactId>janino</artifactId>
         </dependency>

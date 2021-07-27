@@ -25,8 +25,6 @@
 
 package org.onap.policy.clamp.clds;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import java.io.IOException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -39,6 +37,8 @@ import org.apache.catalina.connector.Connector;
 import org.onap.policy.clamp.clds.util.ClampVersioning;
 import org.onap.policy.clamp.clds.util.ResourceFileUtils;
 import org.onap.policy.clamp.util.PassDecoder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -71,7 +71,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableJpaAuditing
 public class Application extends SpringBootServletInitializer {
 
-    protected static final EELFLogger eelfLogger = EELFManager.getInstance().getLogger(Application.class);
+    protected static final Logger logger = LoggerFactory.getLogger(Application.class);
     // This settings is an additional one to Spring config,
     // only if we want to have an additional port automatically redirected to
     // HTTPS
@@ -120,9 +120,9 @@ public class Application extends SpringBootServletInitializer {
      */
     @Bean
     public ServletRegistrationBean<ClampServlet> camelServletRegistrationBean() throws IOException {
-        eelfLogger.info(ResourceFileUtils.getResourceAsString("boot-message.txt") + "(v"
-            + ClampVersioning.getCldsVersionFromProps() + ")" + System.getProperty("line.separator")
-            + getSslExpirationDate());
+        logger.info("{} (v {} ), {}, {}", ResourceFileUtils.getResourceAsString("boot-message.txt"),
+            ClampVersioning.getCldsVersionFromProps(), System.getProperty("line.separator"),
+            getSslExpirationDate());
         var registration = new ServletRegistrationBean<ClampServlet>(new ClampServlet(), "/restservices/clds/*");
         registration.setName("CamelServlet");
         return registration;
@@ -149,8 +149,9 @@ public class Application extends SpringBootServletInitializer {
 
     private Connector createRedirectConnector(int redirectSecuredPort) {
         if (redirectSecuredPort <= 0) {
-            eelfLogger.warn("HTTP port redirection to HTTPS is disabled because the HTTPS port is 0 (random port) or -1"
-                + " (Connector disabled)");
+            logger.warn(
+                    "HTTP port redirection to HTTPS is disabled because the HTTPS"
+                    + " port is 0 (random port) or -1 (Connector disabled)");
             return null;
         }
         var connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
@@ -182,7 +183,7 @@ public class Application extends SpringBootServletInitializer {
                 result.append("* NONE HAS been configured");
             }
         } catch (CertificateException | NoSuchAlgorithmException | KeyStoreException e) {
-            eelfLogger.warn("SSL certificate access error ", e);
+            logger.warn("SSL certificate access error", e);
 
         }
         return result.toString();

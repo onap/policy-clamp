@@ -23,8 +23,6 @@
 
 package org.onap.policy.clamp.clds.tosca.update;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import com.google.gson.JsonObject;
 import java.io.IOException;
 import org.onap.policy.clamp.clds.config.ClampProperties;
@@ -33,6 +31,8 @@ import org.onap.policy.clamp.clds.tosca.update.parser.metadata.ToscaMetadataPars
 import org.onap.policy.clamp.clds.tosca.update.templates.JsonTemplateManager;
 import org.onap.policy.clamp.clds.util.JsonUtils;
 import org.onap.policy.clamp.loop.service.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -46,8 +46,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class ToscaConverterWithDictionarySupport {
 
-    private static final EELFLogger logger =
-            EELFManager.getInstance().getLogger(ToscaConverterWithDictionarySupport.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(ToscaConverterWithDictionarySupport.class);
 
     private ClampProperties clampProperties;
     private ToscaMetadataParser metadataParser;

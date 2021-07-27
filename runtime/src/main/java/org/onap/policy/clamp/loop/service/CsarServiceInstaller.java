@@ -24,8 +24,6 @@
 
 package org.onap.policy.clamp.loop.service;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import com.google.gson.JsonObject;
 import java.util.Map.Entry;
 import org.onap.policy.clamp.clds.exception.sdc.controller.SdcArtifactInstallerException;
@@ -38,6 +36,8 @@ import org.onap.sdc.tosca.parser.enums.EntityTemplateType;
 import org.onap.sdc.tosca.parser.enums.SdcTypes;
 import org.onap.sdc.toscaparser.api.NodeTemplate;
 import org.onap.sdc.toscaparser.api.Property;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -47,7 +47,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @Qualifier("csarInstaller")
 public class CsarServiceInstaller {
-    private static final EELFLogger logger = EELFManager.getInstance().getLogger(CsarServiceInstaller.class);
+    private static final Logger logger = LoggerFactory.getLogger(CsarServiceInstaller.class);
 
     @Autowired
     ServicesRepository serviceRepository;

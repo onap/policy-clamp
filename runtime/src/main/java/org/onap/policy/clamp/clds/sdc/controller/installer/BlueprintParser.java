@@ -24,8 +24,6 @@
 
 package org.onap.policy.clamp.clds.sdc.controller.installer;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -39,6 +37,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import org.json.JSONObject;
 import org.onap.policy.clamp.clds.exception.sdc.controller.BlueprintParserException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
 public class BlueprintParser {
@@ -59,7 +59,7 @@ public class BlueprintParser {
     private static final String TARGET = "target";
     public static final String DEFAULT_VERSION = "1.0.0";
 
-    private static final EELFLogger logger = EELFManager.getInstance().getLogger(BlueprintParser.class);
+    private static final Logger logger = LoggerFactory.getLogger(BlueprintParser.class);
 
     private BlueprintParser() {
 
@@ -86,12 +86,14 @@ public class BlueprintParser {
                 if (!microService.getModelType().isBlank()) {
                     microServices.add(microService);
                 } else {
-                    logger.warn("Microservice " + microService.getName()
-                            + " will NOT be used by CLAMP as the model type is not defined or has not been found");
+                    logger.warn(
+                        "Microservice {} will NOT be used by CLAMP as the model"
+                          + "type is not defined or has not been found",
+                            microService.getName());
                 }
             }
         }
-        logger.debug("Those microservices have been found in the blueprint:" + microServices);
+        logger.debug("Those microservices have been found in the blueprint: {}", microServices);
         return microServices;
     }
 
@@ -195,11 +197,11 @@ public class BlueprintParser {
         String versionFound = getPropertyValue(POLICY_MODEL_VERSION, nodeTemplateEntry, blueprintNodeTemplateList,
                 blueprintInputList);
         if (modelIdFound.isBlank()) {
-            logger.warn("policy_model_id is not defined for the node template:" + nodeTemplateEntry.getKey());
+            logger.warn("policy_model_id is not defined for the node template: {}", nodeTemplateEntry.getKey());
         }
         if (versionFound.isBlank()) {
-            logger.warn("policy_model_version is not defined (setting it to a default value) for the node template:"
-                    + nodeTemplateEntry.getKey());
+            logger.warn("policy_model_version is not defined (setting it to a default value) for the node template: {}",
+                    nodeTemplateEntry.getKey());
         }
         return new BlueprintMicroService(getName(nodeTemplateEntry), modelIdFound, getInput(nodeTemplateEntry),
                 !versionFound.isBlank() ? versionFound : DEFAULT_VERSION);

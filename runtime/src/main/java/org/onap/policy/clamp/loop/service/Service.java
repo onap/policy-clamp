@@ -23,8 +23,6 @@
 
 package org.onap.policy.clamp.loop.service;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import java.io.Serializable;
@@ -38,6 +36,8 @@ import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 import org.onap.policy.clamp.clds.util.JsonUtils;
 import org.onap.policy.clamp.dao.model.jsontype.StringJsonUserType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Entity
 @Table(name = "services")
@@ -50,7 +50,7 @@ public class Service implements Serializable {
     private static final long serialVersionUID = 1331119060272760758L;
 
     @Transient
-    private static final EELFLogger logger = EELFManager.getInstance().getLogger(Service.class);
+    private static final Logger logger = LoggerFactory.getLogger(Service.class);
 
     @Id
     @Column(name = "service_uuid", unique = true)
