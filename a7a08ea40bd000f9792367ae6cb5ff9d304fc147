@@ -22,6 +22,30 @@
       "revId": "a7a08ea40bd000f9792367ae6cb5ff9d304fc147",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bcd8b58f_786eb7fe",
+        "filename": "packages/policy-clamp-tarball/src/main/resources/etc/ClRuntimeParameters.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-27T13:37:43Z",
+      "side": 1,
+      "message": "agreed\n\nsame comment in all of these yaml files",
+      "parentUuid": "4e2c2d81_85bc9c39",
+      "range": {
+        "startLine": 41,
+        "startChar": 2,
+        "endLine": 43,
+        "endChar": 41
+      },
+      "revId": "a7a08ea40bd000f9792367ae6cb5ff9d304fc147",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
