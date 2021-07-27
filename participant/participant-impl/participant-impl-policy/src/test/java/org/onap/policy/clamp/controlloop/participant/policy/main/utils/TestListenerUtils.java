@@ -168,7 +168,6 @@ public class TestListenerUtils {
         controlLoop.setVersion("1.0.0");
         controlLoop.setDefinition(controlLoopId);
         clUpdateMsg.setControlLoop(controlLoop);
-        clUpdateMsg.setControlLoopDefinition(toscaServiceTemplate);
 
         return clUpdateMsg;
     }
@@ -190,11 +189,9 @@ public class TestListenerUtils {
         participantUpdateMsg.setTimestamp(Instant.ofEpochMilli(3000));
         participantUpdateMsg.setMessageId(UUID.randomUUID());
 
-        ToscaServiceTemplate toscaServiceTemplate = new ToscaServiceTemplate();
-        toscaServiceTemplate.setName("serviceTemplate");
-        toscaServiceTemplate.setDerivedFrom("parentServiceTemplate");
-        toscaServiceTemplate.setDescription("Description of serviceTemplate");
-        toscaServiceTemplate.setVersion("1.2.3");
+        ToscaServiceTemplate toscaServiceTemplate = testControlLoopRead();
+        // Add policies to the toscaServiceTemplate
+        TestListenerUtils.addPoliciesToToscaServiceTemplate(toscaServiceTemplate);
 
         ControlLoopElementDefinition clDefinition = new ControlLoopElementDefinition();
         clDefinition.setId(UUID.randomUUID());

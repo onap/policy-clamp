@@ -21,17 +21,14 @@
 package org.onap.policy.clamp.controlloop.participant.policy.endtoend;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopStateChange;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopUpdate;
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdate;
 import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ControlLoopStateChangeListener;
 import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ControlLoopUpdateListener;
-import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ParticipantUpdateListener;
 import org.onap.policy.clamp.controlloop.participant.intermediary.handler.ParticipantHandler;
 import org.onap.policy.clamp.controlloop.participant.policy.main.utils.TestListenerUtils;
 import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
@@ -58,9 +55,6 @@ class ParticipantPolicyTest {
         ControlLoopUpdate controlLoopUpdateMsg = TestListenerUtils.createControlLoopUpdateMsg();
         controlLoopUpdateMsg.getControlLoop().setOrderedState(ControlLoopOrderedState.PASSIVE);
 
-        // Verify that the ToscaServicetemplate has policy_types
-        assertNotNull(controlLoopUpdateMsg.getControlLoopDefinition().getPolicyTypes());
-
         synchronized (lockit) {
             ControlLoopUpdateListener clUpdateListener = new ControlLoopUpdateListener(participantHandler);
 
@@ -75,13 +69,6 @@ class ParticipantPolicyTest {
         ControlLoopUpdate controlLoopUpdateMsg = TestListenerUtils.createControlLoopUpdateMsg();
         controlLoopUpdateMsg.getControlLoop().setOrderedState(ControlLoopOrderedState.PASSIVE);
 
-        // Add policies to the toscaServiceTemplate
-        TestListenerUtils.addPoliciesToToscaServiceTemplate(controlLoopUpdateMsg.getControlLoopDefinition());
-
-        // Verify that the ToscaServicetemplate has policies
-        assertNotNull(
-                controlLoopUpdateMsg.getControlLoopDefinition().getToscaTopologyTemplate().getPolicies());
-
         synchronized (lockit) {
             ControlLoopUpdateListener clUpdateListener = new ControlLoopUpdateListener(participantHandler);
 
@@ -95,13 +82,6 @@ class ParticipantPolicyTest {
     void testDeletePoliciesAndPolicyTypes() throws Exception {
         ControlLoopUpdate controlLoopUpdateMsg = TestListenerUtils.createControlLoopUpdateMsg();
         controlLoopUpdateMsg.getControlLoop().setOrderedState(ControlLoopOrderedState.PASSIVE);
-
-        // Add policies to the toscaServiceTemplate
-        TestListenerUtils.addPoliciesToToscaServiceTemplate(controlLoopUpdateMsg.getControlLoopDefinition());
-
-        // Verify that the ToscaServicetemplate has policies
-        assertNotNull(
-                controlLoopUpdateMsg.getControlLoopDefinition().getToscaTopologyTemplate().getPolicies());
 
         synchronized (lockit) {
             ControlLoopUpdateListener clUpdateListener = new ControlLoopUpdateListener(participantHandler);
