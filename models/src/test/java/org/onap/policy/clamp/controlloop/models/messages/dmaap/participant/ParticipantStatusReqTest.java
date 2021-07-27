@@ -22,40 +22,36 @@ package org.onap.policy.clamp.controlloop.models.messages.dmaap.participant;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 import static org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageUtils.removeVariableFields;
 
 import java.time.Instant;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElementDefinition;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 /**
- * Test the copy constructor and other methods.
+ * Test the copy constructor.
  */
-class ControlLoopStateChangeTest {
-
+class ParticipantStatusReqTest {
     @Test
     void testCopyConstructor() {
-        assertThatThrownBy(() -> new ControlLoopStateChange(null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> new ParticipantStatusReq(null)).isInstanceOf(NullPointerException.class);
 
-        ControlLoopStateChange orig = new ControlLoopStateChange();
-
-        // verify with null values
-        assertEquals(removeVariableFields(orig.toString()),
-                removeVariableFields(new ControlLoopStateChange(orig).toString()));
-
+        ParticipantStatusReq orig = new ParticipantStatusReq();
         // verify with all values
         ToscaConceptIdentifier id = new ToscaConceptIdentifier("id", "1.2.3");
-        orig.setControlLoopId(id);
         orig.setParticipantId(id);
+        orig.setControlLoopId(null);
+        orig.setParticipantType(null);
         orig.setMessageId(UUID.randomUUID());
-        orig.setOrderedState(ControlLoopOrderedState.RUNNING);
-        orig.setCurrentState(ControlLoopState.PASSIVE);
         orig.setTimestamp(Instant.ofEpochMilli(3000));
 
-        assertEquals(removeVariableFields(orig.toString()),
-                removeVariableFields(new ControlLoopStateChange(orig).toString()));
+        ParticipantStatusReq other = new ParticipantStatusReq(orig);
+        assertEquals(removeVariableFields(orig.toString()), removeVariableFields(other.toString()));
     }
 }

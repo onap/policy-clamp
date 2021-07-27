@@ -24,38 +24,45 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
 import static org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageUtils.removeVariableFields;
 
-import java.time.Instant;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.UUID;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElementDefinition;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
-/**
- * Test the copy constructor and other methods.
- */
-class ControlLoopStateChangeTest {
+class ControlLoopStateChangeAckTest {
 
     @Test
     void testCopyConstructor() {
-        assertThatThrownBy(() -> new ControlLoopStateChange(null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> new ControlLoopStateChangeAck(null)).isInstanceOf(NullPointerException.class);
 
-        ControlLoopStateChange orig = new ControlLoopStateChange();
+        final ControlLoopStateChangeAck orig = new ControlLoopStateChangeAck();
 
         // verify with null values
         assertEquals(removeVariableFields(orig.toString()),
-                removeVariableFields(new ControlLoopStateChange(orig).toString()));
+                removeVariableFields(new ControlLoopStateChangeAck(orig).toString()));
 
         // verify with all values
         ToscaConceptIdentifier id = new ToscaConceptIdentifier("id", "1.2.3");
         orig.setControlLoopId(id);
         orig.setParticipantId(id);
-        orig.setMessageId(UUID.randomUUID());
-        orig.setOrderedState(ControlLoopOrderedState.RUNNING);
-        orig.setCurrentState(ControlLoopState.PASSIVE);
-        orig.setTimestamp(Instant.ofEpochMilli(3000));
+        orig.setParticipantType(id);
+
+        Map<UUID, Boolean> clElementResult = new LinkedHashMap<>();
+        clElementResult.put(UUID.randomUUID(), true);
+        clElementResult.put(UUID.randomUUID(), false);
+        final Map<UUID, Map<UUID, Boolean>> controlLoopResultMap = new LinkedHashMap<>();
+        controlLoopResultMap.put(UUID.randomUUID(), clElementResult);
+        orig.setControlLoopResultMap(controlLoopResultMap);
+
+        orig.setResponseTo(UUID.randomUUID());
+        orig.setResult(true);
+        orig.setMessage("Successfully processed message");
 
         assertEquals(removeVariableFields(orig.toString()),
-                removeVariableFields(new ControlLoopStateChange(orig).toString()));
+                removeVariableFields(new ControlLoopStateChangeAck(orig).toString()));
     }
 }

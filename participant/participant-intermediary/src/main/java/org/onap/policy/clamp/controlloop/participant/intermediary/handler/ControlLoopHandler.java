@@ -31,6 +31,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ClElementStatistics;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElementDefinition;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoops;
@@ -177,7 +178,8 @@ public class ControlLoopHandler {
      *
      * @param updateMsg the update message
      */
-    public void handleControlLoopUpdate(ControlLoopUpdate updateMsg) {
+    public void handleControlLoopUpdate(ControlLoopUpdate updateMsg,
+                Map<UUID, ControlLoopElementDefinition> clElementDefinitions) {
 
         if (!updateMsg.appliesTo(participantType, participantId)) {
             return;
@@ -211,7 +213,8 @@ public class ControlLoopHandler {
         for (ControlLoopElementListener clElementListener : listeners) {
             try {
                 for (ControlLoopElement element : updateMsg.getControlLoop().getElements().values()) {
-                    clElementListener.controlLoopElementUpdate(element, updateMsg.getControlLoopDefinition());
+                    clElementListener.controlLoopElementUpdate(element,
+                        clElementDefinitions.get(element.getId()).getControlLoopElementToscaServiceTemplate());
                 }
             } catch (PfModelException e) {
                 LOGGER.debug("Control loop element update failed {}", updateMsg.getControlLoopId());

@@ -158,7 +158,6 @@ public class TestListenerUtils {
         controlLoop.setVersion("1.0.0");
         controlLoop.setDefinition(controlLoopId);
         clUpdateMsg.setControlLoop(controlLoop);
-        clUpdateMsg.setControlLoopDefinition(toscaServiceTemplate);
 
         return clUpdateMsg;
     }

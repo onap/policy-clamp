@@ -22,15 +22,18 @@ package org.onap.policy.clamp.controlloop.models.messages.dmaap.participant;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
 import static org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageUtils.removeVariableFields;
 
 import java.time.Instant;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 /**
  * Test the copy constructor.
@@ -42,30 +45,42 @@ class ControlLoopUpdateTest {
 
         ControlLoopUpdate orig = new ControlLoopUpdate();
         // verify with all values
-        ToscaConceptIdentifier id = new ToscaConceptIdentifier();
-        id.setName("id");
-        id.setVersion("1.2.3");
+        ToscaConceptIdentifier id = new ToscaConceptIdentifier("id", "1.2.3");
         orig.setControlLoopId(id);
-        orig.setParticipantId(id);
+        orig.setParticipantId(null);
         orig.setMessageId(UUID.randomUUID());
         orig.setTimestamp(Instant.ofEpochMilli(3000));
 
+        ControlLoopElement clElement = new ControlLoopElement();
+        clElement.setId(UUID.randomUUID());
+        clElement.setDefinition(id);
+        clElement.setDescription("Description");
+        clElement.setOrderedState(ControlLoopOrderedState.PASSIVE);
+        clElement.setState(ControlLoopState.PASSIVE);
+        clElement.setParticipantId(id);
+        clElement.setParticipantType(id);
+
         ControlLoop controlLoop = new ControlLoop();
         controlLoop.setName("controlLoop");
-        ToscaServiceTemplate toscaServiceTemplate = new ToscaServiceTemplate();
-        toscaServiceTemplate.setName("serviceTemplate");
-        toscaServiceTemplate.setDerivedFrom("parentServiceTemplate");
-        toscaServiceTemplate.setDescription("Description of serviceTemplate");
-        toscaServiceTemplate.setVersion("1.2.3");
-        orig.setControlLoopDefinition(toscaServiceTemplate);
+        Map<UUID, ControlLoopElement> elements = new LinkedHashMap<>();
+        elements.put(clElement.getId(), clElement);
+        controlLoop.setElements(elements);
         orig.setControlLoop(controlLoop);
+
+        Map<String, String> commonPropertiesMap = new LinkedHashMap<>();
+        commonPropertiesMap.put("Prop1", "PropValue");
+        clElement.setCommonPropertiesMap(commonPropertiesMap);
+
+        Map<UUID, ControlLoopElement> controlLoopElementMap = new LinkedHashMap<>();
+        controlLoopElementMap.put(UUID.randomUUID(), clElement);
+
+        Map<ToscaConceptIdentifier, Map<UUID, ControlLoopElement>>
+            participantUpdateMap = new LinkedHashMap<>();
+        participantUpdateMap.put(id, controlLoopElementMap);
+        orig.setParticipantUpdateMap(participantUpdateMap);
 
         ControlLoopUpdate other = new ControlLoopUpdate(orig);
 
         assertEquals(removeVariableFields(orig.toString()), removeVariableFields(other.toString()));
-
-        // ensure list and items are not the same object
-        assertNotSame(other.getControlLoop(), controlLoop);
-        assertNotSame(other.getControlLoopDefinition(), toscaServiceTemplate);
     }
 }
