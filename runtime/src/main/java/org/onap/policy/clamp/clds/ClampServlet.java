@@ -25,8 +25,6 @@
 
 package org.onap.policy.clamp.clds;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
@@ -40,6 +38,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.camel.component.servlet.CamelHttpTransportServlet;
 import org.apache.commons.lang3.StringUtils;
 import org.onap.policy.clamp.authorization.SecureServicePermission;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -58,7 +58,7 @@ public class ClampServlet extends CamelHttpTransportServlet {
      */
     private static final long serialVersionUID = -4198841134910211542L;
 
-    private static final EELFLogger logger = EELFManager.getInstance().getLogger(ClampServlet.class);
+    private static final Logger logger = LoggerFactory.getLogger(ClampServlet.class);
     private static final String PERM_INSTANCE = "clamp.config.security.permission.instance";
     private static final String PERM_CL = "clamp.config.security.permission.type.cl";
     private static final String PERM_TEMPLATE = "clamp.config.security.permission.type.template";

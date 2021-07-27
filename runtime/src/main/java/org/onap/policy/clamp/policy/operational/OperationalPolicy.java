@@ -24,8 +24,6 @@
 
 package org.onap.policy.clamp.policy.operational;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import java.io.Serializable;
@@ -49,6 +47,8 @@ import org.onap.policy.clamp.loop.service.Service;
 import org.onap.policy.clamp.loop.template.LoopElementModel;
 import org.onap.policy.clamp.loop.template.PolicyModel;
 import org.onap.policy.clamp.policy.Policy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Entity
 @Table(name = "operational_policies")
@@ -60,7 +60,7 @@ public class OperationalPolicy extends Policy implements Serializable {
     private static final long serialVersionUID = 6117076450841538255L;
 
     @Transient
-    private static final EELFLogger logger = EELFManager.getInstance().getLogger(OperationalPolicy.class);
+    private static final Logger logger = LoggerFactory.getLogger(OperationalPolicy.class);
 
     @Id
     @Expose

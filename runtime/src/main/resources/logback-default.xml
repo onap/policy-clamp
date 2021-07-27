@@ -93,7 +93,7 @@
             <totalSizeCap>1GB</totalSizeCap>
         </rollingPolicy>
     </appender>
-    <appender name="asyncEELFAudit" class="ch.qos.logback.classic.AsyncAppender">
+    <appender name="asyncAudit" class="ch.qos.logback.classic.AsyncAppender">
         <queueSize>256</queueSize>
         <appender-ref ref="AUDIT" />
     </appender>
@@ -121,7 +121,7 @@
         </rollingPolicy>
     </appender>
 
-    <appender name="asyncEELFMetrics" class="ch.qos.logback.classic.AsyncAppender">
+    <appender name="asyncMetrics" class="ch.qos.logback.classic.AsyncAppender">
         <queueSize>256</queueSize>
         <appender-ref ref="METRIC" />
     </appender>
@@ -143,7 +143,7 @@
         </rollingPolicy>
     </appender>
 
-    <appender name="asyncEELFSecurity" class="ch.qos.logback.classic.AsyncAppender">
+    <appender name="asyncSecurity" class="ch.qos.logback.classic.AsyncAppender">
         <queueSize>256</queueSize>
         <appender-ref ref="SECURITY" />
     </appender>
@@ -202,20 +202,6 @@
     <logger name="org.onap.policy.clamp" level="DEBUG">
         <appender-ref ref="ERROR" />
         <appender-ref ref="DEBUG" />
-    </logger>
-
-    <logger name="com.att.eelf.error" level="OFF">
-        <appender-ref ref="ERROR" />
-    </logger>
-    <!-- EELF related loggers -->
-    <logger name="com.att.eelf.audit" level="INFO" additivity="false">
-        <appender-ref ref="asyncEELFAudit" />
-    </logger>
-    <logger name="com.att.eelf.metrics" level="DEBUG" additivity="false">
-        <appender-ref ref="asyncEELFMetrics" />
-    </logger>
-    <logger name="com.att.eelf.security" level="DEBUG" additivity="false">
-        <appender-ref ref="asyncEELFSecurity" />
     </logger>
 
     <!-- logback internals logging -->

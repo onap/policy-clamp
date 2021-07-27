@@ -23,8 +23,6 @@
 
 package org.onap.policy.clamp.loop.components.external;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import com.google.gson.JsonObject;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -41,6 +39,8 @@ import org.onap.policy.clamp.clds.model.dcae.DcaeOperationStatusResponse;
 import org.onap.policy.clamp.clds.util.JsonUtils;
 import org.onap.policy.clamp.loop.Loop;
 import org.onap.policy.clamp.policy.microservice.MicroServicePolicy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DcaeComponent extends ExternalComponent {
     private static final String INSTALL = "install";
@@ -49,7 +49,7 @@ public class DcaeComponent extends ExternalComponent {
     private static final String UNINSTALL = "uninstall";
 
     @Transient
-    private static final EELFLogger logger = EELFManager.getInstance().getLogger(DcaeComponent.class);
+    private static final Logger logger = LoggerFactory.getLogger(DcaeComponent.class);
 
     private static final String DCAE_DEPLOYMENT_PREFIX = "CLAMP_";
     private static final String DEPLOYMENT_PARAMETER = "dcaeDeployParameters";
