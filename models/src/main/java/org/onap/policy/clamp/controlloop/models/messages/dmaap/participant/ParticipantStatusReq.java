@@ -23,26 +23,21 @@ package org.onap.policy.clamp.controlloop.models.messages.dmaap.participant;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 
 /**
- * Class to represent the CONTROL_LOOP_STATE_CHANGE message that the control loop runtime will send to
- * participants to change the state of a control loop they are running.
+ * Class to represent the PARTICIPANT_STATUS_REQ message that controlloop runtime
+ * sends to participants for an immediate ParticipantStatus from participants.
  */
 @Getter
 @Setter
 @ToString(callSuper = true)
-public class ControlLoopStateChange extends ParticipantMessage {
-    private ControlLoopOrderedState orderedState;
-    private ControlLoopState currentState;
+public class ParticipantStatusReq extends ParticipantMessage {
 
     /**
-     * Constructor for instantiating ControlLoopStateChange class with message name.
-     *
+     * Constructor for instantiating a participant status request class.
      */
-    public ControlLoopStateChange() {
-        super(ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
+    public ParticipantStatusReq() {
+        super(ParticipantMessageType.PARTICIPANT_STATUS_REQ);
     }
 
     /**
@@ -50,10 +45,7 @@ public class ControlLoopStateChange extends ParticipantMessage {
      *
      * @param source source from which to copy
      */
-    public ControlLoopStateChange(ControlLoopStateChange source) {
+    public ParticipantStatusReq(final ParticipantStatusReq source) {
         super(source);
-
-        this.orderedState = source.orderedState;
-        this.currentState = source.currentState;
     }
 }

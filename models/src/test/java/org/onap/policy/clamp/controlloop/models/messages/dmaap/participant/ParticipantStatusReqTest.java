@@ -25,52 +25,28 @@ import static org.junit.Assert.assertEquals;
 import static org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageUtils.removeVariableFields;
 
 import java.time.Instant;
-import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElementDefinition;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 /**
  * Test the copy constructor.
  */
-class ParticipantUpdateTest {
+class ParticipantStatusReqTest {
     @Test
     void testCopyConstructor() {
-        assertThatThrownBy(() -> new ParticipantUpdate(null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> new ParticipantStatusReq(null)).isInstanceOf(NullPointerException.class);
 
-        ParticipantUpdate orig = new ParticipantUpdate();
+        ParticipantStatusReq orig = new ParticipantStatusReq();
         // verify with all values
-        ToscaConceptIdentifier id = new ToscaConceptIdentifier();
-        id.setName("id");
-        id.setVersion("1.2.3");
-        orig.setControlLoopId(id);
+        ToscaConceptIdentifier id = new ToscaConceptIdentifier("id", "1.2.3");
         orig.setParticipantId(id);
-        orig.setParticipantType(id);
+        orig.setControlLoopId(null);
+        orig.setParticipantType(null);
         orig.setMessageId(UUID.randomUUID());
         orig.setTimestamp(Instant.ofEpochMilli(3000));
 
-        ToscaServiceTemplate toscaServiceTemplate = new ToscaServiceTemplate();
-        toscaServiceTemplate.setName("serviceTemplate");
-        toscaServiceTemplate.setDerivedFrom("parentServiceTemplate");
-        toscaServiceTemplate.setDescription("Description of serviceTemplate");
-        toscaServiceTemplate.setVersion("1.2.3");
-
-        ControlLoopElementDefinition clDefinition = new ControlLoopElementDefinition();
-        clDefinition.setId(UUID.randomUUID());
-        clDefinition.setControlLoopElementToscaServiceTemplate(toscaServiceTemplate);
-        Map<String, String> commonPropertiesMap = Map.of("Prop1", "PropValue");
-        clDefinition.setCommonPropertiesMap(commonPropertiesMap);
-
-        Map<UUID, ControlLoopElementDefinition> clElementDefinitionMap = Map.of(UUID.randomUUID(), clDefinition);
-
-        Map<ToscaConceptIdentifier, Map<UUID, ControlLoopElementDefinition>>
-            participantDefinitionUpdateMap = Map.of(id, clElementDefinitionMap);
-        orig.setParticipantDefinitionUpdateMap(participantDefinitionUpdateMap);
-
-        ParticipantUpdate other = new ParticipantUpdate(orig);
-
+        ParticipantStatusReq other = new ParticipantStatusReq(orig);
         assertEquals(removeVariableFields(orig.toString()), removeVariableFields(other.toString()));
     }
 }
