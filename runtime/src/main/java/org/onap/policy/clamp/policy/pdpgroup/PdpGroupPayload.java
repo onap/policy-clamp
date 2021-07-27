@@ -23,8 +23,6 @@
 
 package org.onap.policy.clamp.policy.pdpgroup;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import com.google.gson.JsonElement;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,6 +31,8 @@ import org.onap.policy.models.pdp.concepts.DeploymentGroup;
 import org.onap.policy.models.pdp.concepts.DeploymentGroups;
 import org.onap.policy.models.pdp.concepts.DeploymentSubGroup;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This is an utility class that build the PDP group policy payload.
@@ -42,7 +42,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
  */
 public class PdpGroupPayload {
 
-    private static final EELFLogger logger = EELFManager.getInstance().getLogger(PdpGroupPayload.class);
+    private static final Logger logger = LoggerFactory.getLogger(PdpGroupPayload.class);
 
     /**
      * The default node that will contain the actions array.
@@ -90,7 +90,7 @@ public class PdpGroupPayload {
             if (opParams.length == 5) {
                 this.updatePdpGroupMap(opParams[1], opParams[2], opParams[3], opParams[4], opParams[0]);
             } else {
-                logger.error("One PDP push command does not contain the right number of arguments: " + action);
+                logger.error("One PDP push command does not contain the right number of arguments: {}", action);
                 throw new PdpGroupPayloadException(
                         "One PDP push command does not contain the right number of arguments: " + action);
             }
@@ -135,7 +135,7 @@ public class PdpGroupPayload {
      */
     public String generatePdpGroupPayload() {
         String payload = JsonUtils.GSON.toJson(this.deploymentGroups);
-        logger.info("PdpGroup policy payload: " + payload);
+        logger.info("PdpGroup policy payload: {}", payload);
         return payload;
     }
 }

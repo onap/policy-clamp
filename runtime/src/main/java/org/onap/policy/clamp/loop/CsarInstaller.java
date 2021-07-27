@@ -23,8 +23,6 @@
 
 package org.onap.policy.clamp.loop;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
@@ -47,6 +45,8 @@ import org.onap.policy.clamp.loop.template.LoopTemplate;
 import org.onap.policy.clamp.loop.template.LoopTemplatesRepository;
 import org.onap.policy.clamp.loop.template.PolicyModelsRepository;
 import org.onap.policy.clamp.policy.PolicyEngineServices;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -60,7 +60,7 @@ import org.springframework.stereotype.Component;
 @Qualifier("csarInstaller")
 public class CsarInstaller {
 
-    private static final EELFLogger logger = EELFManager.getInstance().getLogger(CsarInstaller.class);
+    private static final Logger logger = LoggerFactory.getLogger(CsarInstaller.class);
 
     @Autowired
     private PolicyModelsRepository policyModelsRepository;
@@ -114,12 +114,12 @@ public class CsarInstaller {
      */
     public void installTheCsar(CsarHandler csar)
             throws SdcArtifactInstallerException, InterruptedException, BlueprintParserException {
-        logger.info("Installing the CSAR " + csar.getFilePath());
+        logger.info("Installing the CSAR {}", csar.getFilePath());
         var associatedService = csarServiceInstaller.installTheService(csar);
         cdsDataInstaller.installCdsServiceProperties(csar, associatedService);
 
         installTheLoopTemplates(csar, associatedService);
-        logger.info("Successfully installed the CSAR " + csar.getFilePath());
+        logger.info("Successfully installed the CSAR {}", csar.getFilePath());
     }
 
     /**
@@ -137,7 +137,7 @@ public class CsarInstaller {
         try {
             logger.info("Installing the Loops");
             for (Entry<String, BlueprintArtifact> blueprint : csar.getMapOfBlueprints().entrySet()) {
-                logger.info("Processing blueprint " + blueprint.getValue().getBlueprintArtifactName());
+                logger.info("Processing blueprint {}", blueprint.getValue().getBlueprintArtifactName());
                 loopTemplatesRepository.save(createLoopTemplateFromBlueprint(csar, blueprint.getValue(), service));
             }
             logger.info("Successfully installed the Loops ");

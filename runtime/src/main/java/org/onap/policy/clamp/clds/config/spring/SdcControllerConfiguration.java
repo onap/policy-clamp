@@ -23,8 +23,6 @@
 
 package org.onap.policy.clamp.clds.config.spring;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -35,6 +33,8 @@ import org.onap.policy.clamp.clds.exception.sdc.controller.SdcControllerExceptio
 import org.onap.policy.clamp.clds.sdc.controller.SdcSingleController;
 import org.onap.policy.clamp.clds.sdc.controller.SdcSingleControllerStatus;
 import org.onap.policy.clamp.loop.CsarInstaller;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -46,7 +46,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 @Profile("clamp-sdc-controller")
 public class SdcControllerConfiguration {
 
-    private static final EELFLogger logger = EELFManager.getInstance().getLogger(SdcControllerConfiguration.class);
+    private static final Logger logger = LoggerFactory.getLogger(SdcControllerConfiguration.class);
     private List<SdcSingleController> sdcControllersList = new ArrayList<>();
     private final ClampProperties clampProp;
     private final CsarInstaller csarInstaller;
@@ -65,7 +65,7 @@ public class SdcControllerConfiguration {
     public void loadSdcControllers() {
         SdcControllersConfiguration sdcControllersConfig = getSdcControllersConfiguration();
         sdcControllersConfig.getAllDefinedControllers().forEach((key, value) -> {
-            logger.info("Creating controller instance:" + key);
+            logger.info("Creating controller instance: {}", key);
             SdcSingleController sdcController = new SdcSingleController(clampProp, csarInstaller, value, null);
             sdcControllersList.add(sdcController);
         });

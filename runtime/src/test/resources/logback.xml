@@ -71,12 +71,6 @@
 
     <!-- CLDS related loggers -->
     <logger
-        name="com.att.eelf.error"
-        level="OFF">
-        <appender-ref ref="STDOUT" />
-    </logger>
-   
-    <logger
         name="ch.qos.logback.classic"
         level="INFO" >
         <appender-ref ref="STDOUT" />
