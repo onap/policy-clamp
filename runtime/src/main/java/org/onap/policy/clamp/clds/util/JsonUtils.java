@@ -23,8 +23,6 @@
 
 package org.onap.policy.clamp.clds.util;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.time.Instant;
@@ -32,13 +30,15 @@ import org.onap.policy.clamp.authorization.SecureServicePermission;
 import org.onap.policy.clamp.authorization.SecureServicePermissionDeserializer;
 import org.onap.policy.clamp.dao.model.gson.converter.InstantDeserializer;
 import org.onap.policy.clamp.dao.model.gson.converter.InstantSerializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class is used to access the GSON with restricted type access.
  */
 public class JsonUtils {
 
-    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(JsonUtils.class);
+    protected static final Logger logger = LoggerFactory.getLogger(JsonUtils.class);
 
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting()
             .registerTypeAdapter(SecureServicePermission.class, new SecureServicePermissionDeserializer()).create();

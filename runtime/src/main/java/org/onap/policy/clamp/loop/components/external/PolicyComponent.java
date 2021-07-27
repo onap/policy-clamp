@@ -23,12 +23,12 @@
 
 package org.onap.policy.clamp.loop.components.external;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import javax.persistence.Transient;
 import org.apache.camel.Exchange;
 import org.onap.policy.clamp.loop.Loop;
 import org.onap.policy.clamp.policy.pdpgroup.PdpGroupPayload;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class represents the policy state according to all policies involved in the control loop.
@@ -38,7 +38,7 @@ import org.onap.policy.clamp.policy.pdpgroup.PdpGroupPayload;
 public class PolicyComponent extends ExternalComponent {
 
     @Transient
-    private static final EELFLogger logger = EELFManager.getInstance().getLogger(PolicyComponent.class);
+    private static final Logger logger = LoggerFactory.getLogger(PolicyComponent.class);
 
     public static final ExternalComponentState IN_ERROR = new ExternalComponentState("IN_ERROR",
             "There was an error during the sending to policy, the policy engine may be corrupted or inconsistent", 100);

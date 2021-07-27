@@ -23,8 +23,6 @@
 
 package org.onap.policy.clamp.policy;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.io.UnsupportedEncodingException;
@@ -32,6 +30,8 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.onap.policy.clamp.clds.util.JsonUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
 /**
@@ -39,7 +39,7 @@ import org.yaml.snakeyaml.Yaml;
  */
 public class PolicyPayload {
 
-    private static final EELFLogger logger = EELFManager.getInstance().getLogger(PolicyPayload.class);
+    private static final Logger logger = LoggerFactory.getLogger(PolicyPayload.class);
 
     private static JsonObject createJsonFromPolicyTosca(String toscaContent) {
         Map<String, Object> map =

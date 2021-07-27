@@ -22,6 +22,7 @@
 package org.onap.policy.clamp.clds.util;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -130,6 +131,25 @@ public class LoggingUtilsTest {
         assertTrue(checkMapKeys(mdc, keys));
         assertEquals(targetEntity, mdc.get(OnapLogConstants.Mdcs.TARGET_ENTITY));
         assertEquals(targetServiceName, mdc.get(OnapLogConstants.Mdcs.TARGET_SERVICE_NAME));
+    }
+
+    @Test
+    public void testMarker() {
+
+        assertTrue(logger.isInfoEnabled());
+
+        logger.info("line 1");
+        logger.info(LoggingUtils.METRIC_LOG_MARKER, "line 1 Metric");
+        logger.info(LoggingUtils.AUDIT_LOG_MARKER, "line 1 Audit");
+        logger.info(LoggingUtils.SECURITY_LOG_MARKER, "line 1 Security");
+
+        LoggingUtils.setLevel(LoggingUtils.ROOT_LOGGER, "debug");
+        logger.debug("line 2");
+        logger.debug(LoggingUtils.METRIC_LOG_MARKER, "line 2 Metric");
+        logger.debug(LoggingUtils.AUDIT_LOG_MARKER, "line 2 Audit");
+        logger.debug(LoggingUtils.SECURITY_LOG_MARKER, "line 2 Security");
+
+        assertTrue(logger.isDebugEnabled());
     }
 
     private boolean checkMapKeys(Map<String, String> map, String[] keys) {
