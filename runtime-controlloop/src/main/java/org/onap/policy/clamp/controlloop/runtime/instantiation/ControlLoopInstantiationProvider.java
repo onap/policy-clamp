@@ -37,6 +37,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ControlLoopProvider;
 import org.onap.policy.clamp.controlloop.models.messages.rest.GenericNameVersion;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.ControlLoopOrderStateResponse;
+import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstancePropertiesResponse;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationCommand;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationResponse;
 import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningProvider;
@@ -48,6 +49,7 @@ import org.onap.policy.common.parameters.ValidationStatus;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.stereotype.Component;
 
 /**
@@ -61,6 +63,44 @@ public class ControlLoopInstantiationProvider {
     private final SupervisionHandler supervisionHandler;
 
     private static final Object lockit = new Object();
+
+    private static final String CL_ELEMENT_NAME = "name";
+
+    /**
+     * Create Instance Properties.
+     *
+     * @param serviceTemplate the service template
+     * @return the result of the instantiation operation
+     * @throws PfModelException on creation errors
+     */
+    public InstancePropertiesResponse saveInstanceProperties(ToscaServiceTemplate serviceTemplate) {
+
+        String instanceName = generateSequentialInstanceName();
+
+        Map<String, ToscaNodeTemplate> nodeTemplates = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
+
+        nodeTemplates.forEach((key, template) -> {
+            String name = key + instanceName;
+            String description = template.getDescription() + instanceName;
+            template.setName(name);
+            template.setDescription(description);
+
+            changeInstanceElementsName(template, instanceName);
+
+        });
+
+        Map<String, ToscaNodeTemplate> toscaSavedNodeTemplate = controlLoopProvider
+            .saveInstanceProperties(serviceTemplate);
+
+        var response = new InstancePropertiesResponse();
+
+        // @formatter:off
+        response.setAffectedInstanceProperties(toscaSavedNodeTemplate.values().stream().map(template ->
+            template.getKey().asIdentifier()).collect(Collectors.toList()));
+        // @formatter:on
+
+        return response;
+    }
 
     /**
      * Create control loops.
@@ -277,5 +317,45 @@ public class ControlLoopInstantiationProvider {
         });
 
         return response;
+    }
+
+    /**
+     * Creates instance element name.
+     *
+     * @param serviceTemplate the service serviceTemplate
+     * @param instanceName    to amend to the element name
+     */
+    private void changeInstanceElementsName(ToscaNodeTemplate serviceTemplate, String instanceName) {
+
+        @SuppressWarnings("unchecked")
+        List<Map<String, String>> controlLoopElements = (List<Map<String, String>>) serviceTemplate.getProperties()
+            .get("elements");
+
+        if (controlLoopElements != null) {
+            controlLoopElements.forEach(clElement -> {
+                String name = clElement.get(CL_ELEMENT_NAME) + instanceName;
+                clElement.replace(CL_ELEMENT_NAME, name);
+            });
+        }
+    }
+
+
+    /**
+     * Generates Instance Name in sequential order and return it to append to the Node Template Name.
+     *
+     * @return instanceName
+     */
+    private String generateSequentialInstanceName() {
+        List<ToscaNodeTemplate> nodeTemplates = controlLoopProvider.getNodeTemplates(null, null);
+
+        int instanceNumber =
+            nodeTemplates.stream().map(ToscaNodeTemplate::getName)
+                .filter(name -> name.contains("_Instance")).map(n -> {
+                    String[] defNameArr = n.split("_Instance");
+
+                    return Integer.parseInt(defNameArr[1]);
+                }).reduce(0, Math::max);
+
+        return "_Instance" + (instanceNumber + 1);
     }
 }
