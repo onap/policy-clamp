@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "2f418dc0_ad558d02",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProvider.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-07-28T16:36:56Z",
+      "side": 1,
+      "message": "I have looked at this solution for a little while and it is nice. After implementing, I realised that it does not deal with the case where a node type with a derived_from type that has not been added to the filtered array yet is processed. It results in these sub-types being skipped unless they are \"looped through\" in the correct order (which cannot be guaranteed).\n\nThe solution I had, loops through the intialNodeTypes array several times yes but this is to ensure that all these types are added - even if they are not in a particular order.",
+      "parentUuid": "c8b763e9_e5a93269",
+      "revId": "717b639216704153f83ac22e583c9dd2a895fb28",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "47e4c495_fe1a9b00",
         "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProvider.java",
         "patchSetId": 5

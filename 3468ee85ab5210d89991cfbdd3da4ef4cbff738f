@@ -16,6 +16,24 @@
       "revId": "3468ee85ab5210d89991cfbdd3da4ef4cbff738f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "54b9d86c_b02e493b",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProvider.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-07-28T16:36:56Z",
+      "side": 1,
+      "message": "As mentioned in the previous comment, I do this to ensure that there are not types skipped due to the fact that their derived_from types have not been added to the filteredNodeTypes yet. note that the filtered node types are needed because they represent those node types that have common properties associated with them.\n\nThis does not cause duplication of entry into the filteredNodeTypes either as the putIfAbsent method is employed.",
+      "parentUuid": "616ef12c_08124778",
+      "revId": "3468ee85ab5210d89991cfbdd3da4ef4cbff738f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
