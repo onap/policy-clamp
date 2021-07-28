@@ -43,5 +43,10 @@ public enum ParticipantHealthStatus {
     /**
      * The health status of the Participant is unknown.
      */
-    UNKNOWN
+    UNKNOWN,
+
+    /**
+     * The health status of the Participant is off line.
+     */
+    OFF_LINE
 }
