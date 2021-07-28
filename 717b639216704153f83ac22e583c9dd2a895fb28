@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "c8b763e9_e5a93269",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProvider.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-28T14:39:21Z",
+      "side": 1,
+      "message": "what I was thinking was more like:\n\n  from \u003d getDerivedFrom()\n  while (from !\u003d null) {    // or from !\u003d \"Root type\"\n    process \"from\" node type\n    from \u003d from.getDerivedFrom()\n  }",
+      "parentUuid": "6b65a4b9_7714772f",
+      "revId": "717b639216704153f83ac22e583c9dd2a895fb28",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "47e4c495_fe1a9b00",
         "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProvider.java",
         "patchSetId": 5

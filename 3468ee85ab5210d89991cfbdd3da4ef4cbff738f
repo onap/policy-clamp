@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "616ef12c_08124778",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProvider.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-28T14:39:21Z",
+      "side": 1,
+      "message": "not sure this helps, as it appears to just re-processes the same initialNodeTypes over and over",
+      "revId": "3468ee85ab5210d89991cfbdd3da4ef4cbff738f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
