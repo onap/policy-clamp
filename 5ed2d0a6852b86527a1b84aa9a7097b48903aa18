@@ -54,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "d725b26e_3103764c",
+        "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/main/handler/ControlLoopElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-28T18:00:50Z",
+      "side": 1,
+      "message": "ClHttpClient calls back into here to get the map via getRestResponseMap().  All I\u0027m suggesting is to avoid that call by passing the map to the ClHttpClient constructor.  That would eliminate the need to make it static (unless there is more than one ControlLoopElementHandler), and it also provides better information encapsulation/hiding.\n\nThe behavior is the same with either approach, so no impact on threading.\n\nI reeeealy don\u0027t like static data, as it\u0027s basically just global data wrapped in a namespace (i.e., class).  You can find my comments about in at: https://wiki.onap.org/display/DW/Policy+Project+Team+Developer+Contribution+Requirements",
+      "parentUuid": "02bebeb1_7c41735d",
+      "revId": "5ed2d0a6852b86527a1b84aa9a7097b48903aa18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e18059c0_b3e06b10",
         "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/main/handler/ControlLoopElementHandler.java",
         "patchSetId": 1
@@ -83,6 +101,24 @@
       "side": 1,
       "message": "Kubernetes-participant and http-participant are using this same block of code to convert the node template\u0027s properties to the corresponding instances. Should we move this code to a different common module for both?",
       "parentUuid": "e18059c0_b3e06b10",
+      "revId": "5ed2d0a6852b86527a1b84aa9a7097b48903aa18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "03f4289d_2c3b47c0",
+        "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/main/handler/ControlLoopElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-28T18:00:50Z",
+      "side": 1,
+      "message": "makes sense to me",
+      "parentUuid": "bd7d59f9_e05218d2",
       "revId": "5ed2d0a6852b86527a1b84aa9a7097b48903aa18",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
