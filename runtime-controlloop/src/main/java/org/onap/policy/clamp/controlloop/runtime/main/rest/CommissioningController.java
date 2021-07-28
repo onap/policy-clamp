@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.UUID;
 import javax.ws.rs.core.Response.Status;
 import lombok.RequiredArgsConstructor;
+import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
 import org.onap.policy.clamp.controlloop.models.messages.rest.commissioning.CommissioningResponse;
 import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningProvider;
 import org.onap.policy.clamp.controlloop.runtime.main.web.AbstractRestController;
@@ -120,7 +121,7 @@ public class CommissioningController extends AbstractRestController {
                     name = REQUEST_ID_NAME,
                     required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
             @ApiParam(value = "Entity Body of Control Loop", required = true) @RequestBody ToscaServiceTemplate body)
-            throws PfModelException {
+        throws PfModelException, ControlLoopException {
 
         return ResponseEntity.ok().body(provider.createControlLoopDefinitions(body));
     }
@@ -187,7 +188,7 @@ public class CommissioningController extends AbstractRestController {
             @ApiParam(
                     value = "Control Loop definition version",
                     required = true) @RequestParam("version") String version)
-            throws PfModelException {
+        throws PfModelException, ControlLoopException {
 
         return ResponseEntity.ok().body(provider.deleteControlLoopDefinition(name, version));
     }
