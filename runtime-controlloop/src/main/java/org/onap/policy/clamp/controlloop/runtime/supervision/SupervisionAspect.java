@@ -28,6 +28,8 @@ import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -62,6 +64,11 @@ public class SupervisionAspect implements Closeable {
             LOGGER.debug("Add scanning Message");
             executor.execute(() -> supervisionScanner.run(false));
         }
+    }
+
+    @Before("@annotation(MessageIntercept) && args(participantStatusMessage,..)")
+    public void handleParticipantStatus(ParticipantStatus participantStatusMessage) {
+        executor.execute(() -> supervisionScanner.handleParticipantStatus(participantStatusMessage.getParticipantId()));
     }
 
     @Override
