@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.UnaryOperator;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -35,6 +36,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoops;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ControlLoopProvider;
+import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstancePropertiesResponse;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationCommand;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationResponse;
 import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningProvider;
@@ -46,6 +48,7 @@ import org.onap.policy.common.parameters.ValidationStatus;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.stereotype.Component;
 
 /**
@@ -61,6 +64,42 @@ public class ControlLoopInstantiationProvider {
     private static final Object lockit = new Object();
 
     /**
+     * Create Instance Properties.
+     *
+     * @param serviceTemplate the service template
+     * @return the result of the instantiation operation
+     * @throws PfModelException on creation errors
+     */
+    public InstancePropertiesResponse saveInstanceProperties(ToscaServiceTemplate serviceTemplate) {
+
+        String instanceName = generateSequentialInstanceName();
+
+        Map<String, ToscaNodeTemplate> nodeTemplates = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
+
+        nodeTemplates.forEach((key, template) -> {
+            String name = key + instanceName;
+            String description = template.getDescription() + instanceName;
+            template.setName(name);
+            template.setDescription(description);
+
+            changeInstanceElementsName(template, instanceName);
+
+        });
+
+        Map<String, ToscaNodeTemplate> toscaSavedNodeTemplate = controlLoopProvider
+            .saveInstanceProperties(serviceTemplate);
+
+        var response = new InstancePropertiesResponse();
+
+        // @formatter:off
+        response.setAffectedInstanceProperties(toscaSavedNodeTemplate.values().stream().map(template ->
+            template.getKey().asIdentifier()).collect(Collectors.toList()));
+        // @formatter:on
+
+        return response;
+    }
+
+    /**
      * Create control loops.
      *
      * @param controlLoops the control loop
@@ -74,7 +113,7 @@ public class ControlLoopInstantiationProvider {
                 var checkControlLoop = controlLoopProvider.getControlLoop(controlLoop.getKey().asIdentifier());
                 if (checkControlLoop != null) {
                     throw new PfModelException(Response.Status.BAD_REQUEST,
-                            controlLoop.getKey().asIdentifier() + " already defined");
+                        controlLoop.getKey().asIdentifier() + " already defined");
                 }
             }
             BeanValidationResult validationResult = validateControlLoops(controlLoops);
@@ -86,7 +125,7 @@ public class ControlLoopInstantiationProvider {
 
         var response = new InstantiationResponse();
         response.setAffectedControlLoops(controlLoops.getControlLoopList().stream()
-                .map(cl -> cl.getKey().asIdentifier()).collect(Collectors.toList()));
+            .map(cl -> cl.getKey().asIdentifier()).collect(Collectors.toList()));
 
         return response;
     }
@@ -250,5 +289,77 @@ public class ControlLoopInstantiationProvider {
         response.setAffectedControlLoops(command.getControlLoopIdentifierList());
 
         return response;
+    }
+
+    /**
+     * Creates instance element name.
+     *
+     * @param serviceTemplate the service serviceTemplate
+     * @param instanceName to amend to the element name
+     */
+    private void changeInstanceElementsName(ToscaNodeTemplate serviceTemplate, String instanceName) {
+
+        @SuppressWarnings("unchecked")
+        List<Map<String, String>> controlLoopElements = (List<Map<String, String>>) serviceTemplate.getProperties()
+            .get("elements");
+
+        if (controlLoopElements != null) {
+            controlLoopElements.forEach(clElement -> {
+                String name = clElement.get("name") + instanceName;
+                clElement.replace("name", name);
+            });
+        }
+    }
+
+
+    /**
+     * Generates Instance Name in sequential order and return it to append to the Node Template Name.
+     *
+     * @return instanceName
+     */
+    private String generateSequentialInstanceName() {
+        List<ToscaNodeTemplate> savedNodeTemplates = controlLoopProvider.getNodeTemplates(null, null);
+
+        List<String> instanceNameList = new ArrayList<>();
+
+        Map<String, String> savedNodeFilteredTemplateMap = savedNodeTemplates.stream()
+            .collect(Collectors.toMap(ToscaNodeTemplate::getName, ToscaNodeTemplate::getVersion)).entrySet().stream()
+            .filter(e -> e.getKey().contains("_Instance")).collect(Collectors.toMap(
+                Map.Entry::getKey,
+                Map.Entry::getValue));
+
+        if (savedNodeFilteredTemplateMap.isEmpty()) {
+            instanceNameList.add("_Instance1");
+
+        } else {
+            Collections.sort(instanceNameList);
+
+            savedNodeFilteredTemplateMap.keySet().forEach(key -> {
+                String[] instances = key.split("_Instance");
+
+                for (String instance : instances) {
+                    if (isNumeric(instance)) {
+                        instanceNameList.add("_Instance" + (Integer.parseInt(instance) + 1));
+                    }
+                }
+            });
+        }
+
+        return instanceNameList.get(instanceNameList.size() - 1);
+    }
+
+    /**
+     * Validates if a string is numeric.
+     * @param strNum an alpha or numeric string
+     * @return true if the string is of numeric value
+     */
+    private boolean isNumeric(String strNum) {
+        Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
+
+        if (strNum == null) {
+            return false;
+        }
+
+        return pattern.matcher(strNum).matches();
     }
 }

@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
 import javax.ws.rs.core.Response.Status;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
+import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ControlLoopProvider;
 import org.onap.policy.clamp.controlloop.models.messages.rest.commissioning.CommissioningResponse;
 import org.onap.policy.models.base.PfModelException;
@@ -85,7 +86,13 @@ public class CommissioningProvider {
      * @throws PfModelException on creation errors
      */
     public CommissioningResponse createControlLoopDefinitions(ToscaServiceTemplate serviceTemplate)
-            throws PfModelException {
+        throws PfModelException, ControlLoopException {
+
+        if (verifyIfInstancePropertiesExists()) {
+            throw new ControlLoopException(Status.BAD_REQUEST,
+                "Delete instances, to commission control loop definitions");
+        }
+
         synchronized (lockit) {
             modelsProvider.createServiceTemplate(serviceTemplate);
         }
@@ -110,7 +117,14 @@ public class CommissioningProvider {
      * @return the result of the deletion
      * @throws PfModelException on deletion errors
      */
-    public CommissioningResponse deleteControlLoopDefinition(String name, String version) throws PfModelException {
+    public CommissioningResponse deleteControlLoopDefinition(String name, String version)
+        throws PfModelException, ControlLoopException {
+
+        if (verifyIfInstancePropertiesExists()) {
+            throw new ControlLoopException(Status.BAD_REQUEST,
+                "Delete instances, to commission control loop definitions");
+        }
+
         synchronized (lockit) {
             modelsProvider.deleteServiceTemplate(name, version);
         }
@@ -365,7 +379,9 @@ public class CommissioningProvider {
      * @return the tosca service template
      * @throws PfModelException on errors getting tosca service template
      */
-    public String getToscaServiceTemplateReduced(String name, String version) throws PfModelException {
+    public String getToscaServiceTemplateReduced(String name, String version)
+        throws PfModelException {
+
         var serviceTemplates = new ToscaServiceTemplates();
         serviceTemplates.setServiceTemplates(modelsProvider.getServiceTemplateList(name, version));
 
@@ -430,5 +446,18 @@ public class CommissioningProvider {
         } catch (JsonProcessingException e) {
             throw new PfModelException(Status.BAD_REQUEST, "Converion to Json Schema failed", e);
         }
+    }
+
+    /**
+     * Validates to see if there is any instance properties saved.
+     *
+     * @return true if exists instance properties
+     */
+    private Boolean verifyIfInstancePropertiesExists() {
+        List<ToscaNodeTemplate> savedNodeTemplates = clProvider.getNodeTemplates(null, null);
+
+        return savedNodeTemplates.stream()
+            .collect(Collectors.toMap(ToscaNodeTemplate::getName, ToscaNodeTemplate::getVersion)).entrySet()
+            .stream().anyMatch(e -> e.getKey().contains("_Instance"));
     }
 }
