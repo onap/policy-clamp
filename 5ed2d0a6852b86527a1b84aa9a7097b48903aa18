@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "02bebeb1_7c41735d",
+        "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/main/handler/ControlLoopElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2021-07-28T17:27:48Z",
+      "side": 1,
+      "message": "Hi Jim, If we pass the value from the thread response, then should we make this main thread wait until the http requests are finished executing for a single request? Future().get going to be blocking right?",
+      "parentUuid": "34a8801b_6a2ab02f",
+      "revId": "5ed2d0a6852b86527a1b84aa9a7097b48903aa18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e18059c0_b3e06b10",
         "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/main/handler/ControlLoopElementHandler.java",
         "patchSetId": 1
@@ -47,6 +65,24 @@
       "writtenOn": "2021-07-27T21:55:53Z",
       "side": 1,
       "message": "do other participant-impl-xxx handlers have a block of code like this?  if so, it should be refactored to a common superclass",
+      "revId": "5ed2d0a6852b86527a1b84aa9a7097b48903aa18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bd7d59f9_e05218d2",
+        "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/main/handler/ControlLoopElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2021-07-28T17:27:48Z",
+      "side": 1,
+      "message": "Kubernetes-participant and http-participant are using this same block of code to convert the node template\u0027s properties to the corresponding instances. Should we move this code to a different common module for both?",
+      "parentUuid": "e18059c0_b3e06b10",
       "revId": "5ed2d0a6852b86527a1b84aa9a7097b48903aa18",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
