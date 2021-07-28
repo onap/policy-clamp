@@ -24,8 +24,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import javax.validation.constraints.Max;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import lombok.AllArgsConstructor;
@@ -35,6 +39,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoops;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ControlLoopProvider;
+import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstancePropertiesResponse;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationCommand;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationResponse;
 import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningProvider;
@@ -46,6 +51,7 @@ import org.onap.policy.common.parameters.ValidationStatus;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.stereotype.Component;
 
 /**
@@ -59,6 +65,44 @@ public class ControlLoopInstantiationProvider {
     private final SupervisionHandler supervisionHandler;
 
     private static final Object lockit = new Object();
+
+    private static final String CL_ELEMENT_NAME = "name";
+
+    /**
+     * Create Instance Properties.
+     *
+     * @param serviceTemplate the service template
+     * @return the result of the instantiation operation
+     * @throws PfModelException on creation errors
+     */
+    public InstancePropertiesResponse saveInstanceProperties(ToscaServiceTemplate serviceTemplate) {
+
+        String instanceName = generateSequentialInstanceName();
+
+        Map<String, ToscaNodeTemplate> nodeTemplates = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
+
+        nodeTemplates.forEach((key, template) -> {
+            String name = key + instanceName;
+            String description = template.getDescription() + instanceName;
+            template.setName(name);
+            template.setDescription(description);
+
+            changeInstanceElementsName(template, instanceName);
+
+        });
+
+        Map<String, ToscaNodeTemplate> toscaSavedNodeTemplate = controlLoopProvider
+            .saveInstanceProperties(serviceTemplate);
+
+        var response = new InstancePropertiesResponse();
+
+        // @formatter:off
+        response.setAffectedInstanceProperties(toscaSavedNodeTemplate.values().stream().map(template ->
+            template.getKey().asIdentifier()).collect(Collectors.toList()));
+        // @formatter:on
+
+        return response;
+    }
 
     /**
      * Create control loops.
@@ -74,7 +118,7 @@ public class ControlLoopInstantiationProvider {
                 var checkControlLoop = controlLoopProvider.getControlLoop(controlLoop.getKey().asIdentifier());
                 if (checkControlLoop != null) {
                     throw new PfModelException(Response.Status.BAD_REQUEST,
-                            controlLoop.getKey().asIdentifier() + " already defined");
+                        controlLoop.getKey().asIdentifier() + " already defined");
                 }
             }
             BeanValidationResult validationResult = validateControlLoops(controlLoops);
@@ -86,7 +130,7 @@ public class ControlLoopInstantiationProvider {
 
         var response = new InstantiationResponse();
         response.setAffectedControlLoops(controlLoops.getControlLoopList().stream()
-                .map(cl -> cl.getKey().asIdentifier()).collect(Collectors.toList()));
+            .map(cl -> cl.getKey().asIdentifier()).collect(Collectors.toList()));
 
         return response;
     }
@@ -109,7 +153,7 @@ public class ControlLoopInstantiationProvider {
 
         var response = new InstantiationResponse();
         response.setAffectedControlLoops(controlLoops.getControlLoopList().stream()
-                .map(cl -> cl.getKey().asIdentifier()).collect(Collectors.toList()));
+            .map(cl -> cl.getKey().asIdentifier()).collect(Collectors.toList()));
 
         return response;
     }
@@ -129,24 +173,24 @@ public class ControlLoopInstantiationProvider {
             var subResult = new BeanValidationResult("entry " + controlLoop.getDefinition().getName(), controlLoop);
 
             List<ToscaNodeTemplate> toscaNodeTemplates = commissioningProvider.getControlLoopDefinitions(
-                    controlLoop.getDefinition().getName(), controlLoop.getDefinition().getVersion());
+                controlLoop.getDefinition().getName(), controlLoop.getDefinition().getVersion());
 
             if (toscaNodeTemplates.isEmpty()) {
                 subResult.addResult(new ObjectValidationResult("ControlLoop", controlLoop.getDefinition().getName(),
-                        ValidationStatus.INVALID, "Commissioned control loop definition not FOUND"));
+                    ValidationStatus.INVALID, "Commissioned control loop definition not FOUND"));
             } else if (toscaNodeTemplates.size() > 1) {
                 subResult.addResult(new ObjectValidationResult("ControlLoop", controlLoop.getDefinition().getName(),
-                        ValidationStatus.INVALID, "Commissioned control loop definition not VALID"));
+                    ValidationStatus.INVALID, "Commissioned control loop definition not VALID"));
             } else {
 
                 List<ToscaNodeTemplate> clElementDefinitions =
-                        commissioningProvider.getControlLoopElementDefinitions(toscaNodeTemplates.get(0));
+                    commissioningProvider.getControlLoopElementDefinitions(toscaNodeTemplates.get(0));
 
                 // @formatter:off
                 Map<String, ToscaConceptIdentifier> definitions = clElementDefinitions
-                        .stream()
-                        .map(nodeTemplate -> nodeTemplate.getKey().asIdentifier())
-                        .collect(Collectors.toMap(ToscaConceptIdentifier::getName, UnaryOperator.identity()));
+                    .stream()
+                    .map(nodeTemplate -> nodeTemplate.getKey().asIdentifier())
+                    .collect(Collectors.toMap(ToscaConceptIdentifier::getName, UnaryOperator.identity()));
                 // @formatter:on
 
                 for (ControlLoopElement element : controlLoop.getElements().values()) {
@@ -162,11 +206,11 @@ public class ControlLoopInstantiationProvider {
      * Validate ToscaConceptIdentifier, checking if exist in ToscaConceptIdentifiers map.
      *
      * @param definitions map of all ToscaConceptIdentifiers
-     * @param definition ToscaConceptIdentifier to validate
+     * @param definition  ToscaConceptIdentifier to validate
      * @return the validation result
      */
     private ValidationResult validateDefinition(Map<String, ToscaConceptIdentifier> definitions,
-            ToscaConceptIdentifier definition) {
+                                                ToscaConceptIdentifier definition) {
         var result = new BeanValidationResult("entry " + definition.getName(), definition);
         ToscaConceptIdentifier identifier = definitions.get(definition.getName());
         if (identifier == null) {
@@ -180,7 +224,7 @@ public class ControlLoopInstantiationProvider {
     /**
      * Delete the control loop with the given name and version.
      *
-     * @param name the name of the control loop to delete
+     * @param name    the name of the control loop to delete
      * @param version the version of the control loop to delete
      * @return the result of the deletion
      * @throws PfModelException on deletion errors
@@ -195,12 +239,12 @@ public class ControlLoopInstantiationProvider {
             for (ControlLoop controlLoop : controlLoops) {
                 if (!ControlLoopState.UNINITIALISED.equals(controlLoop.getState())) {
                     throw new PfModelException(Response.Status.BAD_REQUEST,
-                            "Control Loop State is still " + controlLoop.getState());
+                        "Control Loop State is still " + controlLoop.getState());
                 }
             }
 
             response.setAffectedControlLoops(Collections
-                    .singletonList(controlLoopProvider.deleteControlLoop(name, version).getKey().asIdentifier()));
+                .singletonList(controlLoopProvider.deleteControlLoop(name, version).getKey().asIdentifier()));
         }
         return response;
     }
@@ -208,7 +252,7 @@ public class ControlLoopInstantiationProvider {
     /**
      * Get the requested control loops.
      *
-     * @param name the name of the control loop to get, null for all control loops
+     * @param name    the name of the control loop to get, null for all control loops
      * @param version the version of the control loop to get, null for all control loops
      * @return the control loops
      * @throws PfModelException on errors getting control loops
@@ -225,11 +269,11 @@ public class ControlLoopInstantiationProvider {
      *
      * @param command the command to issue to control loops
      * @return the result of the initiation command
-     * @throws PfModelException on errors setting the ordered state on the control loops
+     * @throws PfModelException     on errors setting the ordered state on the control loops
      * @throws ControlLoopException on ordered state invalid
      */
     public InstantiationResponse issueControlLoopCommand(InstantiationCommand command)
-            throws ControlLoopException, PfModelException {
+        throws ControlLoopException, PfModelException {
 
         if (command.getOrderedState() == null) {
             throw new ControlLoopException(Status.BAD_REQUEST, "ordered state invalid or not specified on command");
@@ -250,5 +294,52 @@ public class ControlLoopInstantiationProvider {
         response.setAffectedControlLoops(command.getControlLoopIdentifierList());
 
         return response;
+    }
+
+    /**
+     * Creates instance element name.
+     *
+     * @param serviceTemplate the service serviceTemplate
+     * @param instanceName    to amend to the element name
+     */
+    private void changeInstanceElementsName(ToscaNodeTemplate serviceTemplate, String instanceName) {
+
+        @SuppressWarnings("unchecked")
+        List<Map<String, String>> controlLoopElements = (List<Map<String, String>>) serviceTemplate.getProperties()
+            .get("elements");
+
+        if (controlLoopElements != null) {
+            controlLoopElements.forEach(clElement -> {
+                String name = clElement.get(CL_ELEMENT_NAME) + instanceName;
+                clElement.replace(CL_ELEMENT_NAME, name);
+            });
+        }
+    }
+
+
+    /**
+     * Generates Instance Name in sequential order and return it to append to the Node Template Name.
+     *
+     * @return instanceName
+     */
+    private String generateSequentialInstanceName() {
+        List<ToscaNodeTemplate> nodeTemplates = controlLoopProvider.getNodeTemplates(null, null);
+
+        int instanceNumber = Integer.parseInt(nodeTemplates.stream().map(ToscaNodeTemplate::getName)
+            .reduce("0", (sequenceNumber, definitionName) -> {
+                if (definitionName.contains("_Instance")) {
+                    String[] defNameArr = definitionName.split("_Instance");
+
+                    int sequenceNum = sequenceNumber.contains("_Instance")
+                        ? Integer.parseInt(sequenceNumber.split("_Instance")[1]) : Integer.parseInt(sequenceNumber);
+                    int currentNum = Integer.parseInt(defNameArr[1]);
+
+                    return Math.max(sequenceNum, currentNum) + "";
+                }
+
+                return sequenceNumber;
+            }));
+
+        return "_Instance" + (instanceNumber + 1);
     }
 }
