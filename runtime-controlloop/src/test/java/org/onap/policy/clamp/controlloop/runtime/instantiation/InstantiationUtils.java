@@ -25,8 +25,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
+import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoops;
+import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstancePropertiesResponse;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationCommand;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationResponse;
 import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningProvider;
@@ -133,11 +135,30 @@ public class InstantiationUtils {
      * @throws PfModelException if an error occurs
      */
     public static void storeToscaServiceTemplate(String path, CommissioningProvider commissioningProvider)
-            throws PfModelException {
+        throws PfModelException, ControlLoopException {
 
         ToscaServiceTemplate template =
                 yamlTranslator.fromYaml(ResourceUtils.getResourceAsString(path), ToscaServiceTemplate.class);
 
         commissioningProvider.createControlLoopDefinitions(template);
+    }
+
+    /**
+     * Assert that instance properties has been properly saved.
+     *
+     * @param response InstancePropertiesResponse
+     * @throws PfModelException if an error occurs
+     */
+    public static void assertInstancePropertiesResponse(InstancePropertiesResponse response) throws PfModelException {
+
+        assertThat(response).isNotNull();
+        assertThat(response.getErrorDetails()).isNull();
+        assertThat(response.getAffectedInstanceProperties()).hasSize(8);
+
+        boolean containsInstance = response.getAffectedInstanceProperties().stream()
+            .anyMatch(identifier -> identifier.getName().contains("_Instance"));
+
+        assertThat(containsInstance).isTrue();
+
     }
 }
