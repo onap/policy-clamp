@@ -22,12 +22,15 @@ package org.onap.policy.clamp.controlloop.models.controlloop.persistence.provide
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.Response;
 import lombok.NonNull;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.concepts.JpaControlLoop;
+import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationResponse;
 import org.onap.policy.models.base.PfAuthorative;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfKey;
@@ -38,6 +41,7 @@ import org.onap.policy.models.provider.impl.AbstractModelsProvider;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaEntity;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTypedEntityFilter;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaNodeTemplate;
 import org.springframework.stereotype.Component;
@@ -184,6 +188,27 @@ public class ControlLoopProvider extends AbstractModelsProvider {
     }
 
     /**
+     * Saves Instance Properties to the database.
+     * @param serviceTemplate the service template
+     * @return a Map of tosca node templates
+     */
+    public Map<String, ToscaNodeTemplate> saveInstanceProperties(ToscaServiceTemplate serviceTemplate) {
+
+        Map<String, ToscaNodeTemplate> nodeTemplates = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
+        Map<String, ToscaNodeTemplate> savedNodeTemplates = new HashMap<>();
+
+        nodeTemplates.forEach((key, template) -> {
+            JpaToscaNodeTemplate jpaToscaNodeTemplate = new JpaToscaNodeTemplate(template);
+
+            getPfDao().create(jpaToscaNodeTemplate);
+
+            savedNodeTemplates.put(key, template);
+        });
+
+        return savedNodeTemplates;
+    }
+
+    /**
      * Get Node Templates.
      *
      * @param name the name of the node template to get, null to get all node templates
@@ -220,4 +245,5 @@ public class ControlLoopProvider extends AbstractModelsProvider {
     private <T extends ToscaEntity, J extends PfAuthorative<T>> List<T> asEntityList(List<J> jpaEntityList) {
         return jpaEntityList.stream().map(J::toAuthorative).collect(Collectors.toList());
     }
+
 }

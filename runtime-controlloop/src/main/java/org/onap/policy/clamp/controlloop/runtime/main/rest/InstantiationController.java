@@ -32,11 +32,18 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoops;
+import org.onap.policy.clamp.controlloop.models.messages.rest.commissioning.CommissioningResponse;
+import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstancePropertiesResponse;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationCommand;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationResponse;
 import org.onap.policy.clamp.controlloop.runtime.instantiation.ControlLoopInstantiationProvider;
 import org.onap.policy.clamp.controlloop.runtime.main.web.AbstractRestController;
 import org.onap.policy.models.base.PfModelException;
+import org.onap.policy.models.base.PfModelRuntimeException;
+import org.onap.policy.models.errors.concepts.ErrorResponseInfo;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -123,6 +130,70 @@ public class InstantiationController extends AbstractRestController {
             throws PfModelException {
 
         return ResponseEntity.ok().body(provider.createControlLoops(controlLoops));
+    }
+
+    /**
+     * Saves instance properties.
+     *
+     * @param requestId request ID used in ONAP logging
+     * @param body the body of control loop following TOSCA definition
+     * @return a response
+     */
+    // @formatter:off
+    @PostMapping(value = "/instanceProperties",
+        consumes = {MediaType.APPLICATION_JSON_VALUE, APPLICATION_YAML},
+        produces = {MediaType.APPLICATION_JSON_VALUE, APPLICATION_YAML})
+    @ApiOperation(
+        value = "Saves instance properties",
+        notes = "Saves instance properties, returning the saved instances properties and it's version",
+        response = InstancePropertiesResponse.class,
+        tags = {TAGS},
+        authorizations = @Authorization(value = AUTHORIZATION_TYPE),
+        responseHeaders = {
+            @ResponseHeader(
+                name = VERSION_MINOR_NAME,
+                description = VERSION_MINOR_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(
+                name = VERSION_PATCH_NAME,
+                description = VERSION_PATCH_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(
+                name = VERSION_LATEST_NAME,
+                description = VERSION_LATEST_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(
+                name = REQUEST_ID_NAME,
+                description = REQUEST_ID_HDR_DESCRIPTION,
+                response = UUID.class)
+        },
+        extensions = {
+            @Extension
+                (
+                    name = EXTENSION_NAME,
+                    properties = {
+                        @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                        @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
+                    }
+                )
+        }
+    )
+    @ApiResponses(
+        value = {
+            @ApiResponse(code = AUTHENTICATION_ERROR_CODE, message = AUTHENTICATION_ERROR_MESSAGE),
+            @ApiResponse(code = AUTHORIZATION_ERROR_CODE, message = AUTHORIZATION_ERROR_MESSAGE),
+            @ApiResponse(code = SERVER_ERROR_CODE, message = SERVER_ERROR_MESSAGE)
+        }
+    )
+    // @formatter:on
+    public ResponseEntity<InstancePropertiesResponse> createInstanceProperties(
+            @RequestHeader(
+                name = REQUEST_ID_NAME,
+                required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+            @ApiParam(value = "Body of instance properties", required = true) @RequestBody ToscaServiceTemplate body)
+        throws PfModelException {
+
+        return ResponseEntity.ok().body(provider.saveInstanceProperties(body));
     }
 
     /**
@@ -375,5 +446,17 @@ public class InstantiationController extends AbstractRestController {
             throws ControlLoopException, PfModelException {
 
         return ResponseEntity.accepted().body(provider.issueControlLoopCommand(command));
+    }
+
+    /**
+     * create a Instance Properties Response from an exception.
+     *
+     * @param e the error
+     * @return the Instance Properties Response
+     */
+    private ResponseEntity<InstancePropertiesResponse> createInstancePropertiesErrorResponse(ErrorResponseInfo e) {
+        var resp = new InstancePropertiesResponse();
+        resp.setErrorDetails(e.getErrorResponse().getErrorMessage());
+        return ResponseEntity.status(e.getErrorResponse().getResponseCode().getStatusCode()).body(resp);
     }
 }
