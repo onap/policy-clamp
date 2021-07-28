@@ -34,6 +34,24 @@
       "revId": "3468ee85ab5210d89991cfbdd3da4ef4cbff738f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "76fa51e7_8f9a7d78",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProvider.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-28T20:50:58Z",
+      "side": 1,
+      "message": "I don\u0027t see any merging happening here, as lines 259-262 simply make a copy of the derivedFrom type\u0027s properties.  Merging of properties can be done by creating a copy of the derivedFrom\u0027s properties and invoking putAll to add the current type\u0027s properties to the copy.  This avoids the need for the forEach on line 262.\n\nAlso, it looks to me like if initial only contained one node and filtered contained a hierarchy of 3+ types, then the properties of the types in filtered would not be merged into the types further down; only those found in initial would be merged down.\n\nAn alternative to using this O(N^2) loop would be to use a recursive function that looks up a given [derivedFrom] type in filterNodes and, not finding that, looks it up in initialNodes.  In the former case, it would simply return the properties that it found.  In the latter case, it would build the merged properties for the new type.",
+      "parentUuid": "54b9d86c_b02e493b",
+      "revId": "3468ee85ab5210d89991cfbdd3da4ef4cbff738f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
