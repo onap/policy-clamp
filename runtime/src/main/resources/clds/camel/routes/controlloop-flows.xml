@@ -110,6 +110,31 @@
             </doFinally>
         </doTry>
     </route>
+    <route id="post-tosca-instance-properties">
+        <from uri="direct:post-tosca-instance-properties"/>
+        <doTry>
+            <log loggingLevel="INFO"
+                 message="Creating the tosca instance properties"/>
+            <to
+                    uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('Controlloop', 'Creating the tosca instance properties')"/>
+            <setHeader name="CamelHttpMethod">
+                <constant>POST</constant>
+            </setHeader>
+            <setHeader name="Content-Type">
+                <constant>application/json</constant>
+            </setHeader>
+            <log loggingLevel="INFO"
+                 message="Endpoint to send Tosca Instance Properties: {{clamp.config.controlloop.runtime.url}}/onap/controlloop/v2/instanceProperties"></log>
+            <toD
+                    uri="{{clamp.config.controlloop.runtime.url}}/onap/controlloop/v2/instanceProperties? bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.controlloop.runtime.userName}}&amp;authPassword={{clamp.config.controlloop.runtime.password}}&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+            <convertBodyTo type="java.lang.String"/>
+            <doFinally>
+                <to uri="direct:reset-raise-http-exception-flag"/>
+                <to
+                        uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
+            </doFinally>
+        </doTry>
+    </route>
     <route id="post-tosca-instantiation">
         <from uri="direct:post-tosca-instantiation"/>
         <doTry>
