@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f109aa20_e08ccaf9",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ControlLoopUpdateAck.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-28T14:32:22Z",
+      "side": 1,
+      "message": "looks identical to state-change Ack - maybe refactor a common superclass, or just merge the two into a single, generic class",
+      "revId": "04efa3ccb45e1ae03fbf9e93366e9e94e85e9c94",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9d087f1f_23e35bd5",
+        "filename": "models/src/test/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ControlLoopStateChangeAckTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-28T14:32:22Z",
+      "side": 1,
+      "message": "maybe use Map.of() instead\n\nsame comment below",
+      "revId": "04efa3ccb45e1ae03fbf9e93366e9e94e85e9c94",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0d6dfe05_7afe6fc3",
+        "filename": "models/src/test/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ControlLoopUpdateAckTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-28T14:32:22Z",
+      "side": 1,
+      "message": "Map.of()",
+      "revId": "04efa3ccb45e1ae03fbf9e93366e9e94e85e9c94",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ca3f76b5_eb6f4b8b",
+        "filename": "models/src/test/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ControlLoopUpdateTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-28T14:32:22Z",
+      "side": 1,
+      "message": "Map.of()\n\nsame comment below",
+      "revId": "04efa3ccb45e1ae03fbf9e93366e9e94e85e9c94",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
