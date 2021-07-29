@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "56c1bde7_250ebe8f",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/util/LoggerMarkerFilter.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 2477
+      },
+      "writtenOn": "2021-07-29T22:05:01Z",
+      "side": 1,
+      "message": "I was thinking about that too. like to get more consensus...",
+      "parentUuid": "16c9b44f_79b48cc8",
+      "revId": "d46e0f7b2f74311b35a2efa22e936d2d523a71f4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4abc37c0_1c679e31",
         "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/util/LoggingUtils.java",
         "patchSetId": 7
@@ -30,6 +48,24 @@
       "writtenOn": "2021-07-29T21:31:39Z",
       "side": 1,
       "message": "Same Q as before for this class and the counterpart drools one (https://git.onap.org/policy/drools-pdp/tree/policy-utils/src/main/java/org/onap/policy/drools/utils/logging/LoggerUtil.java).   Can we consolidate in commons for the other projects to reuse in the future?",
+      "revId": "d46e0f7b2f74311b35a2efa22e936d2d523a71f4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ed9a0ead_a790585b",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/util/LoggingUtils.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 2477
+      },
+      "writtenOn": "2021-07-29T22:05:01Z",
+      "side": 1,
+      "message": "same as the previous comment...",
+      "parentUuid": "4abc37c0_1c679e31",
       "revId": "d46e0f7b2f74311b35a2efa22e936d2d523a71f4",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
