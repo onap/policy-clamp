@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a3edb28b_7883b7eb",
+        "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/main/handler/ControlLoopElementHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-29T14:07:52Z",
+      "side": 1,
+      "message": "can remove the getter now",
+      "revId": "e106c282f23a1a4bb32facb5070a6748e285b38d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c9b7abb0_023132d0",
+        "filename": "participant/participant-impl/participant-impl-http/src/test/java/webclient/ClHttpClientTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-29T14:07:52Z",
+      "side": 1,
+      "message": "don\u0027t need this - just create a map and use that.  Then lines 48-51 can be deleted (though you might need a BeforeEach instead 😊)",
+      "revId": "e106c282f23a1a4bb32facb5070a6748e285b38d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
