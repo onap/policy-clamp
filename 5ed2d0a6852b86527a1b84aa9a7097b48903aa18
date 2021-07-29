@@ -72,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "5a824a32_f2888059",
+        "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/main/handler/ControlLoopElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2021-07-29T14:01:31Z",
+      "side": 1,
+      "message": "Thanks Jim, I agree with the proposed solution. I have made the Map, instance variable as discussed. Please verify.",
+      "parentUuid": "d725b26e_3103764c",
+      "revId": "5ed2d0a6852b86527a1b84aa9a7097b48903aa18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e18059c0_b3e06b10",
         "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/main/handler/ControlLoopElementHandler.java",
         "patchSetId": 1
@@ -119,6 +137,24 @@
       "side": 1,
       "message": "makes sense to me",
       "parentUuid": "bd7d59f9_e05218d2",
+      "revId": "5ed2d0a6852b86527a1b84aa9a7097b48903aa18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "029916f7_443115f8",
+        "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/main/handler/ControlLoopElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2021-07-29T14:01:31Z",
+      "side": 1,
+      "message": "Participant Intermediary is the common module being used by both participants. But I don\u0027t see a better place to keep the common code which parses the TOSCA to the java objects. Would it be okay if we create a JIRA for the refactoring tasks and handle it in a separate review?",
+      "parentUuid": "03f4289d_2c3b47c0",
       "revId": "5ed2d0a6852b86527a1b84aa9a7097b48903aa18",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
