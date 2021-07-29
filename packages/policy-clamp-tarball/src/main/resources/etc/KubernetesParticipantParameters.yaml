@@ -23,14 +23,14 @@ participant:
         -
           topic: POLICY-CLRUNTIME-PARTICIPANT
           servers:
-            - ${topicServer:localhost}
+            - ${topicServer:message-router}
           topicCommInfrastructure: dmaap
           fetchTimeout: 15000
       topicSinks:
         -
           topic: POLICY-CLRUNTIME-PARTICIPANT
           servers:
-            - ${topicServer:localhost}
+            - ${topicServer:message-router}
           topicCommInfrastructure: dmaap
 
 management:

@@ -34,15 +34,16 @@ RUN mkdir -p $POLICY_LOGS $POLICY_HOME $POLICY_HOME/bin && \
     chown -R policy:policy $POLICY_HOME $POLICY_LOGS && \
     mkdir /packages
 COPY /maven/lib/policy-participant.tar.gz /packages
+
 RUN tar xvfz /packages/policy-participant.tar.gz --directory $POLICY_HOME && \
-    rm /packages/policy-participant.tar.gz && \
-    rm -rf $POLICY_HOME/lib
+    rm /packages/policy-participant.tar.gz
 
 WORKDIR $POLICY_HOME
 COPY policy-participant.sh  bin/.
 COPY /maven/app.jar /app
 
-RUN chown -R policy:policy * && chmod 755 bin/*.sh && \
+RUN chown -R policy:policy * && \
+    chmod 755 bin/*.sh && \
     chown -R policy:policy /app
 
 USER policy

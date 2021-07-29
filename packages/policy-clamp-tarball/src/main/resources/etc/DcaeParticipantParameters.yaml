@@ -1,5 +1,3 @@
-server:
-  port: 8081
 
 participant:
   name: ControlLoopParticipantDcae
@@ -43,14 +41,14 @@ participant:
         -
           topic: POLICY-CLRUNTIME-PARTICIPANT
           servers:
-            - ${topicServer:localhost}
+            - ${topicServer:message-router}
           topicCommInfrastructure: dmaap
           fetchTimeout: 15000
       topicSinks:
         -
           topic: POLICY-CLRUNTIME-PARTICIPANT
           servers:
-            - ${topicServer:localhost}
+            - ${topicServer:message-router}
           topicCommInfrastructure: dmaap
   checkCount: 10
   secCount: 10

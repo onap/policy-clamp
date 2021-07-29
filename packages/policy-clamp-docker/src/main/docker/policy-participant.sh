@@ -32,7 +32,7 @@ else
 fi
 
 if [ -z "$CONFIG_FILE" ]; then
-    CONFIG_FILE="${POLICY_HOME}/etc/PolicyParticipantParameters.json"
+    CONFIG_FILE="${POLICY_HOME}/etc/PolicyParticipantParameters.yaml"
 fi
 
 echo "Policy clamp config file: $CONFIG_FILE"
@@ -54,11 +54,11 @@ fi
 
 touch /app/app.jar
 mkdir -p "${POLICY_HOME}"/config/
-cp -f "${CONFIG_FILE}" "${POLICY_HOME}"/config/
+cp -f "${CONFIG_FILE}" "${POLICY_HOME}"/config/PolicyParticipantParameters.yaml
 
 $JAVA_HOME/bin/java -Djavax.net.ssl.keyStore="${KEYSTORE}" \
     -Djavax.net.ssl.keyStorePassword="${KEYSTORE_PASSWD}" \
     -Djavax.net.ssl.trustStore="${TRUSTSTORE}" \
     -Djavax.net.ssl.trustStorePassword="${TRUSTSTORE_PASSWD}" \
     -jar /app/app.jar \
-    --participant.file="${POLICY_HOME}/config/PolicyParticipantParameters.json"
+    --spring.config.location="${POLICY_HOME}/config/PolicyParticipantParameters.yaml"
