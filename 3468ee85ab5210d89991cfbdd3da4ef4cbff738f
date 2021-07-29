@@ -52,6 +52,24 @@
       "revId": "3468ee85ab5210d89991cfbdd3da4ef4cbff738f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d49e73d8_7a6321e9",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProvider.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-07-29T10:02:56Z",
+      "side": 1,
+      "message": "Hi Jim.\n\nI have added the changes you suggested for 259-262. Thanks for that.\n\nFor the second paragraph of your comment, filtered will never contain more than initial. Initial is a list of all node types. At the start filtered is a list of those node types that have common properties associated with them and a \"Root\" type. Filtered is added to with derived types yes but will never be bigger than initial.\n\nI take your point on the recursion. Is it possible to leave this for a review when I come back from leave?",
+      "parentUuid": "76fa51e7_8f9a7d78",
+      "revId": "3468ee85ab5210d89991cfbdd3da4ef4cbff738f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
