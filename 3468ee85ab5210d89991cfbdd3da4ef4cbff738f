@@ -70,6 +70,24 @@
       "revId": "3468ee85ab5210d89991cfbdd3da4ef4cbff738f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "913fb107_72176d32",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProvider.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-29T12:49:40Z",
+      "side": 1,
+      "message": "yes, this can be addressed later, though I wouldn\u0027t even remember this discussion after returning from leave! :-)",
+      "parentUuid": "d49e73d8_7a6321e9",
+      "revId": "3468ee85ab5210d89991cfbdd3da4ef4cbff738f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }

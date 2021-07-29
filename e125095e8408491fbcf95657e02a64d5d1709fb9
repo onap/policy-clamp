@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2b874437_f95ada0e",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProvider.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-29T12:49:40Z",
+      "side": 1,
+      "message": "lines 259-262 can be combined into a single line:\n\n  var merged \u003d new HashMap\u003c...\u003e(filtered.get(derived).properties())\n\nas I mentioned before, there is no \"merging\" going on here - I would kind of expect it to combine nodeType.properties with derivedFrom.properties, but guess that isn\u0027t the point",
+      "revId": "e125095e8408491fbcf95657e02a64d5d1709fb9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
