@@ -34,6 +34,24 @@
       "revId": "a899f6d9ff90e0112a3c8ff413b379c3a0769e9d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5b882eaf_c91e7235",
+        "filename": "participant/participant-impl/participant-impl-http/src/test/java/webclient/ClHttpClientTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-29T15:23:40Z",
+      "side": 1,
+      "message": "I\u0027m pretty sure that junit recreates an instance of this class (i.e., ClHttpClientTest) for each test, thus it will get a new, empty map each time.  As a result, there is no need to clear it",
+      "parentUuid": "ddefd991_7f68c0e6",
+      "revId": "a899f6d9ff90e0112a3c8ff413b379c3a0769e9d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
