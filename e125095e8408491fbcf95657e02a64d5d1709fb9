@@ -16,6 +16,24 @@
       "revId": "e125095e8408491fbcf95657e02a64d5d1709fb9",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "96d3a47d_6b3a3024",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProvider.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-07-29T12:59:36Z",
+      "side": 1,
+      "message": "Yes, I will do that.\n\nYea, there is no merging - that is just bad naming on my part I think. I will fix it.",
+      "parentUuid": "2b874437_f95ada0e",
+      "revId": "e125095e8408491fbcf95657e02a64d5d1709fb9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
