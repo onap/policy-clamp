@@ -16,6 +16,24 @@
       "revId": "a899f6d9ff90e0112a3c8ff413b379c3a0769e9d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ddefd991_7f68c0e6",
+        "filename": "participant/participant-impl/participant-impl-http/src/test/java/webclient/ClHttpClientTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2021-07-29T15:13:46Z",
+      "side": 1,
+      "message": "For now , the test data is using the same requestId details for valid and invalid scenarios. So the values get overridden in the Map. But in future if we add more tests with different test data for new functionalities I feel its better to clear the Map before every test .",
+      "parentUuid": "2d021807_39e1b73f",
+      "revId": "a899f6d9ff90e0112a3c8ff413b379c3a0769e9d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
