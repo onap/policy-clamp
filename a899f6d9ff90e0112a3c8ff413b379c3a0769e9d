@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2d021807_39e1b73f",
+        "filename": "participant/participant-impl/participant-impl-http/src/test/java/webclient/ClHttpClientTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-29T15:03:43Z",
+      "side": 1,
+      "message": "actually, I doubt this is even needed",
+      "revId": "a899f6d9ff90e0112a3c8ff413b379c3a0769e9d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
