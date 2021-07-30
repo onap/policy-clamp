@@ -567,6 +567,24 @@
     },
     {
       "key": {
+        "uuid": "2d41194f_1f9de5b1",
+        "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/main/webclient/ClHttpClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-30T15:54:02Z",
+      "side": 1,
+      "message": "I meant to mark this \"resolved\" - it\u0027s short enough now that it need not be refactored",
+      "parentUuid": "20cf54de_3636fd5b",
+      "revId": "5ed2d0a6852b86527a1b84aa9a7097b48903aa18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d7b0461c_e427b56e",
         "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/main/webclient/ClHttpClient.java",
         "patchSetId": 1

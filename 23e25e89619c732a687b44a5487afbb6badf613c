@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "2e019602_68aca500",
+        "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/main/models/ConfigRequest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-30T15:54:02Z",
+      "side": 1,
+      "message": "so we don\u0027t need this?\n\n  private List\u003c@NotNull @Valid ConfigurationEntity\u003e configurationEntities;\n\nI\u0027m not sure that this will cause validation of the values contained within the list:\n\n  @Valid private List\u003cXXX\u003e yyy;",
+      "parentUuid": "ae3fabfc_45d46a17",
+      "range": {
+        "startLine": 45,
+        "startChar": 17,
+        "endLine": 45,
+        "endChar": 36
+      },
+      "revId": "23e25e89619c732a687b44a5487afbb6badf613c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "73a83631_f1d6f9aa",
         "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/main/models/ConfigurationEntity.java",
         "patchSetId": 5
@@ -60,6 +84,30 @@
       "writtenOn": "2021-07-30T13:24:32Z",
       "side": 1,
       "message": "add @Valid to parameter?",
+      "range": {
+        "startLine": 39,
+        "startChar": 17,
+        "endLine": 39,
+        "endChar": 27
+      },
+      "revId": "23e25e89619c732a687b44a5487afbb6badf613c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3d1bd79a_2ab68bdb",
+        "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/main/models/ConfigurationEntity.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-30T15:54:02Z",
+      "side": 1,
+      "message": "so we don\u0027t need this?\n\n  private List\u003c@NotNull @Valid RestParams\u003e restSequence;",
+      "parentUuid": "73a83631_f1d6f9aa",
       "range": {
         "startLine": 39,
         "startChar": 17,
@@ -101,6 +149,24 @@
       "side": 1,
       "message": "I think CODER is ignoring the Map entry if the value is not present in TOSCA. In that case we don\u0027t require annotation for values.",
       "parentUuid": "e865defd_324c32e0",
+      "revId": "23e25e89619c732a687b44a5487afbb6badf613c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f82ba75e_23a1818f",
+        "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/main/models/RestParams.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-30T15:54:02Z",
+      "side": 1,
+      "message": "is that true even if a \"null\" value is provided in TOSCA?",
+      "parentUuid": "6c375e60_52d8427e",
       "revId": "23e25e89619c732a687b44a5487afbb6badf613c",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
