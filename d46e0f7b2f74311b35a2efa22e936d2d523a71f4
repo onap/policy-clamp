@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "9009dafb_9374ae10",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/util/LoggerMarkerFilter.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-30T13:35:40Z",
+      "side": 1,
+      "message": "good idea for another review",
+      "parentUuid": "56c1bde7_250ebe8f",
+      "revId": "d46e0f7b2f74311b35a2efa22e936d2d523a71f4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4abc37c0_1c679e31",
         "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/util/LoggingUtils.java",
         "patchSetId": 7
@@ -69,6 +87,24 @@
       "revId": "d46e0f7b2f74311b35a2efa22e936d2d523a71f4",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e545d75a_38954330",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/util/LoggingUtils.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-30T13:35:40Z",
+      "side": 1,
+      "message": "yes",
+      "parentUuid": "ed9a0ead_a790585b",
+      "revId": "d46e0f7b2f74311b35a2efa22e936d2d523a71f4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
