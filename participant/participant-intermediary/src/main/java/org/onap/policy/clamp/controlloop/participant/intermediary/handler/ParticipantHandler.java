@@ -115,7 +115,7 @@ public class ParticipantHandler implements Closeable {
      * @param updateMsg the update message
      */
     public void handleControlLoopUpdate(ControlLoopUpdate updateMsg) {
-        controlLoopHandler.handleControlLoopUpdate(updateMsg);
+        controlLoopHandler.handleControlLoopUpdate(updateMsg, clElementDefsOnThisParticipant);
     }
 
     /**

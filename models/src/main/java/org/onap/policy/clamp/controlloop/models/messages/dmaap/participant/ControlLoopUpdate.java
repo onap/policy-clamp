@@ -20,11 +20,16 @@
 
 package org.onap.policy.clamp.controlloop.models.messages.dmaap.participant;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
+import org.onap.policy.models.base.PfUtils;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
  * Class to represent the CONTROL_LOOP_UPDATE message that the control loop runtime sends to a participant.
@@ -35,11 +40,13 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 @Setter
 @ToString(callSuper = true)
 public class ControlLoopUpdate extends ParticipantMessage {
+
     // The control loop
     private ControlLoop controlLoop;
 
-    // A service template containing a complete definition of the control loop
-    private ToscaServiceTemplate controlLoopDefinition;
+    // A map with Participant ID as its key, and a map of ControlLoopElements as value.
+    private Map<ToscaConceptIdentifier, Map<UUID, ControlLoopElement>>
+            participantUpdateMap = new LinkedHashMap<>();
 
     /**
      * Constructor for instantiating ControlLoopUpdate class with message name.
@@ -57,7 +64,8 @@ public class ControlLoopUpdate extends ParticipantMessage {
     public ControlLoopUpdate(ControlLoopUpdate source) {
         super(source);
 
-        this.controlLoop = new ControlLoop(source.controlLoop);
-        this.controlLoopDefinition = new ToscaServiceTemplate(source.controlLoopDefinition);
+        this.controlLoop = source.controlLoop;
+        this.participantUpdateMap = PfUtils.mapMap(source.participantUpdateMap,
+                clElementMap -> PfUtils.mapMap(clElementMap, ControlLoopElement::new));
     }
 }
