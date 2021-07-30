@@ -97,6 +97,30 @@
     },
     {
       "key": {
+        "uuid": "d8a7a02b_009a84ab",
+        "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/main/models/ConfigRequest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-30T16:48:32Z",
+      "side": 1,
+      "message": "cool, thx for the education - I had missed this from the Valid annotation javadoc, \"This behavior is applied recursively.\"",
+      "parentUuid": "9bc6baf2_e7cfea3f",
+      "range": {
+        "startLine": 45,
+        "startChar": 17,
+        "endLine": 45,
+        "endChar": 36
+      },
+      "revId": "23e25e89619c732a687b44a5487afbb6badf613c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "73a83631_f1d6f9aa",
         "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/main/models/ConfigurationEntity.java",
         "patchSetId": 5
@@ -168,6 +192,30 @@
     },
     {
       "key": {
+        "uuid": "298775fa_cbd52b5d",
+        "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/main/models/ConfigurationEntity.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-30T16:48:32Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "752b4f63_6fd699aa",
+      "range": {
+        "startLine": 39,
+        "startChar": 17,
+        "endLine": 39,
+        "endChar": 27
+      },
+      "revId": "23e25e89619c732a687b44a5487afbb6badf613c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e865defd_324c32e0",
         "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/main/models/RestParams.java",
         "patchSetId": 5
@@ -236,6 +284,24 @@
       "revId": "23e25e89619c732a687b44a5487afbb6badf613c",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ef8b4c3e_d6954401",
+        "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/main/models/RestParams.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-30T16:48:32Z",
+      "side": 1,
+      "message": "good to know - thx",
+      "parentUuid": "990fa56e_f8724ea6",
+      "revId": "23e25e89619c732a687b44a5487afbb6badf613c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
