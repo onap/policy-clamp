@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5e637fdb_d69e3e3a",
+        "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/Application.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-30T13:24:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d3fe7208_307125be",
+      "revId": "5ed2d0a6852b86527a1b84aa9a7097b48903aa18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "34a8801b_6a2ab02f",
         "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/main/handler/ControlLoopElementHandler.java",
         "patchSetId": 1
@@ -87,6 +105,24 @@
       "revId": "5ed2d0a6852b86527a1b84aa9a7097b48903aa18",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "93a29c61_8433ecd2",
+        "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/main/handler/ControlLoopElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-30T13:24:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a824a32_f2888059",
+      "revId": "5ed2d0a6852b86527a1b84aa9a7097b48903aa18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -214,6 +250,24 @@
     },
     {
       "key": {
+        "uuid": "97c033dc_3d7c0a9f",
+        "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/main/handler/ControlLoopElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-30T13:24:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ad6c76e0_9a91db7a",
+      "revId": "5ed2d0a6852b86527a1b84aa9a7097b48903aa18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "25c2ddc0_6bc73539",
         "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/main/models/ConfigRequest.java",
         "patchSetId": 1
@@ -231,6 +285,24 @@
     },
     {
       "key": {
+        "uuid": "0a5c172c_3b073763",
+        "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/main/models/ConfigRequest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-30T13:24:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "25c2ddc0_6bc73539",
+      "revId": "5ed2d0a6852b86527a1b84aa9a7097b48903aa18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e611e7bb_fe8942a6",
         "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/main/webclient/ClHttpClient.java",
         "patchSetId": 1
@@ -245,6 +317,24 @@
       "revId": "5ed2d0a6852b86527a1b84aa9a7097b48903aa18",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a602531a_61a6b8ce",
+        "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/main/webclient/ClHttpClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-30T13:24:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e611e7bb_fe8942a6",
+      "revId": "5ed2d0a6852b86527a1b84aa9a7097b48903aa18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -271,6 +361,30 @@
     },
     {
       "key": {
+        "uuid": "086d6e0a_8570c696",
+        "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/main/webclient/ClHttpClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-30T13:24:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c72ace1f_8f65a765",
+      "range": {
+        "startLine": 49,
+        "startChar": 33,
+        "endLine": 49,
+        "endChar": 35
+      },
+      "revId": "5ed2d0a6852b86527a1b84aa9a7097b48903aa18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "91962ab1_42fd39fe",
         "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/main/webclient/ClHttpClient.java",
         "patchSetId": 1
@@ -291,6 +405,30 @@
       "revId": "5ed2d0a6852b86527a1b84aa9a7097b48903aa18",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "74b96dc7_165749ff",
+        "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/main/webclient/ClHttpClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-30T13:24:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "91962ab1_42fd39fe",
+      "range": {
+        "startLine": 69,
+        "startChar": 26,
+        "endLine": 69,
+        "endChar": 58
+      },
+      "revId": "5ed2d0a6852b86527a1b84aa9a7097b48903aa18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -317,6 +455,30 @@
     },
     {
       "key": {
+        "uuid": "31632433_6adcef5c",
+        "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/main/webclient/ClHttpClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-30T13:24:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed52d9ed_76ccfcb8",
+      "range": {
+        "startLine": 81,
+        "startChar": 95,
+        "endLine": 81,
+        "endChar": 109
+      },
+      "revId": "5ed2d0a6852b86527a1b84aa9a7097b48903aa18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e48d1548_8a67e54f",
         "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/main/webclient/ClHttpClient.java",
         "patchSetId": 1
@@ -331,6 +493,24 @@
       "revId": "5ed2d0a6852b86527a1b84aa9a7097b48903aa18",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4211e169_f803403e",
+        "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/main/webclient/ClHttpClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-30T13:24:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e48d1548_8a67e54f",
+      "revId": "5ed2d0a6852b86527a1b84aa9a7097b48903aa18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -351,6 +531,24 @@
     },
     {
       "key": {
+        "uuid": "78940401_831833cc",
+        "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/main/webclient/ClHttpClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-30T13:24:32Z",
+      "side": 1,
+      "message": "leaving as is",
+      "parentUuid": "59ef6053_1b347f75",
+      "revId": "5ed2d0a6852b86527a1b84aa9a7097b48903aa18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d7b0461c_e427b56e",
         "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/main/webclient/ClHttpClient.java",
         "patchSetId": 1
@@ -368,6 +566,24 @@
     },
     {
       "key": {
+        "uuid": "fccf6202_3cccf49e",
+        "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/main/webclient/ClHttpClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-30T13:24:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d7b0461c_e427b56e",
+      "revId": "5ed2d0a6852b86527a1b84aa9a7097b48903aa18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "87c1d065_61d8d9e6",
         "filename": "participant/participant-impl/participant-impl-http/src/main/resources/config/application.yaml",
         "patchSetId": 1
@@ -382,6 +598,24 @@
       "revId": "5ed2d0a6852b86527a1b84aa9a7097b48903aa18",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8abbddf7_0fc97bf9",
+        "filename": "participant/participant-impl/participant-impl-http/src/main/resources/config/application.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-30T13:24:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "87c1d065_61d8d9e6",
+      "revId": "5ed2d0a6852b86527a1b84aa9a7097b48903aa18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -408,6 +642,30 @@
     },
     {
       "key": {
+        "uuid": "67712a7f_9a2364e6",
+        "filename": "participant/participant-impl/participant-impl-http/src/test/java/utils/CommonTestData.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-30T13:24:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "58451d26_71ba3449",
+      "range": {
+        "startLine": 46,
+        "startChar": 13,
+        "endLine": 46,
+        "endChar": 23
+      },
+      "revId": "5ed2d0a6852b86527a1b84aa9a7097b48903aa18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "571d95d9_dee5071c",
         "filename": "participant/participant-impl/participant-impl-http/src/test/java/utils/CommonTestData.java",
         "patchSetId": 1
@@ -428,6 +686,30 @@
       "revId": "5ed2d0a6852b86527a1b84aa9a7097b48903aa18",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "18caf0c2_4ebc7c61",
+        "filename": "participant/participant-impl/participant-impl-http/src/test/java/utils/CommonTestData.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-30T13:24:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "571d95d9_dee5071c",
+      "range": {
+        "startLine": 60,
+        "startChar": 8,
+        "endLine": 60,
+        "endChar": 27
+      },
+      "revId": "5ed2d0a6852b86527a1b84aa9a7097b48903aa18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -474,6 +756,54 @@
       "revId": "5ed2d0a6852b86527a1b84aa9a7097b48903aa18",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4d5bbcec_f4db4464",
+        "filename": "participant/participant-impl/participant-impl-http/src/test/java/utils/ToscaUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-30T13:24:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ceb42385_104d7a82",
+      "range": {
+        "startLine": 30,
+        "startChar": 13,
+        "endLine": 30,
+        "endChar": 23
+      },
+      "revId": "5ed2d0a6852b86527a1b84aa9a7097b48903aa18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d64f4661_82278894",
+        "filename": "participant/participant-impl/participant-impl-http/src/test/java/utils/ToscaUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-07-30T13:24:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d4bf72ab_dd4df383",
+      "range": {
+        "startLine": 40,
+        "startChar": 39,
+        "endLine": 40,
+        "endChar": 58
+      },
+      "revId": "5ed2d0a6852b86527a1b84aa9a7097b48903aa18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
