@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "88aad08b_82391f04",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/config/SystemPropertiesLoader.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 2477
+      },
+      "writtenOn": "2021-08-01T13:54:12Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "4d928545_01941281",
+      "range": {
+        "startLine": 43,
+        "startChar": 73,
+        "endLine": 43,
+        "endChar": 84
+      },
+      "revId": "e973d6f8d425627f680075aea2905a4d9de6c050",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c8f55326_7236a42b",
         "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/sdc/controller/SdcSingleController.java",
         "patchSetId": 8
@@ -45,6 +69,30 @@
       "revId": "e973d6f8d425627f680075aea2905a4d9de6c050",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9a769663_3df39547",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/sdc/controller/SdcSingleController.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 339,
+      "author": {
+        "id": 2477
+      },
+      "writtenOn": "2021-08-01T13:54:12Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "c8f55326_7236a42b",
+      "range": {
+        "startLine": 339,
+        "startChar": 89,
+        "endLine": 339,
+        "endChar": 90
+      },
+      "revId": "e973d6f8d425627f680075aea2905a4d9de6c050",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "fa6b8a0e_6e4e0b5f",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/sdc/controller/SdcSingleController.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 2477
+      },
+      "writtenOn": "2021-08-01T13:54:12Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "3b7fa9d3_3aaa48d8",
+      "range": {
+        "startLine": 376,
+        "startChar": 62,
+        "endLine": 376,
+        "endChar": 66
+      },
+      "revId": "e973d6f8d425627f680075aea2905a4d9de6c050",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "91e315b5_15b5be0c",
         "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/sdc/controller/SdcSingleController.java",
         "patchSetId": 8
@@ -91,6 +163,30 @@
       "revId": "e973d6f8d425627f680075aea2905a4d9de6c050",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d31dfe3d_b2f64960",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/sdc/controller/SdcSingleController.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 378,
+      "author": {
+        "id": 2477
+      },
+      "writtenOn": "2021-08-01T13:54:12Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "91e315b5_15b5be0c",
+      "range": {
+        "startLine": 378,
+        "startChar": 53,
+        "endLine": 378,
+        "endChar": 56
+      },
+      "revId": "e973d6f8d425627f680075aea2905a4d9de6c050",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "3cda0e4a_de723e9c",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/sdc/controller/installer/CsarHandler.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 2477
+      },
+      "writtenOn": "2021-08-01T13:54:12Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "2b8ee823_979d868c",
+      "range": {
+        "startLine": 111,
+        "startChar": 56,
+        "endLine": 111,
+        "endChar": 57
+      },
+      "revId": "e973d6f8d425627f680075aea2905a4d9de6c050",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "63c905e6_25090a99",
         "filename": "runtime/src/main/java/org/onap/policy/clamp/loop/components/external/DcaeComponent.java",
         "patchSetId": 8
@@ -137,6 +257,30 @@
       "revId": "e973d6f8d425627f680075aea2905a4d9de6c050",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e8ff2496_03a53eaa",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/loop/components/external/DcaeComponent.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 2477
+      },
+      "writtenOn": "2021-08-01T13:54:12Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "63c905e6_25090a99",
+      "range": {
+        "startLine": 153,
+        "startChar": 78,
+        "endLine": 153,
+        "endChar": 89
+      },
+      "revId": "e973d6f8d425627f680075aea2905a4d9de6c050",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
