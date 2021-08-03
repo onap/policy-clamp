@@ -28,8 +28,8 @@ import org.onap.policy.clamp.controlloop.participant.intermediary.api.Participan
 import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ControlLoopStateChangeListener;
 import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ControlLoopUpdateListener;
 import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ParticipantDeregisterAckListener;
-import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ParticipantHealthCheckListener;
 import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ParticipantRegisterAckListener;
+import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ParticipantStatusReqListener;
 import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ParticipantUpdateListener;
 import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantParameters;
 import org.onap.policy.common.endpoints.event.comm.TopicEndpointManager;
@@ -119,8 +119,8 @@ public class IntermediaryActivator extends ServiceManagerContainer implements Cl
     private void registerMsgDispatcher() {
         MessageTypeDispatcher msgDispatcher = applicationContext.getBean(MessageTypeDispatcher.class);
 
-        msgDispatcher.register(ParticipantMessageType.PARTICIPANT_HEALTH_CHECK.name(),
-                applicationContext.getBean(ParticipantHealthCheckListener.class));
+        msgDispatcher.register(ParticipantMessageType.PARTICIPANT_STATUS_REQ.name(),
+                applicationContext.getBean(ParticipantStatusReqListener.class));
 
         msgDispatcher.register(ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE.name(),
                 applicationContext.getBean(ControlLoopStateChangeListener.class));

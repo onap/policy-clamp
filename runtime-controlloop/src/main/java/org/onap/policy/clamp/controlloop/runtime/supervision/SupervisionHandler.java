@@ -21,12 +21,14 @@
 package org.onap.policy.clamp.controlloop.runtime.supervision;
 
 import java.util.List;
+import java.util.Map;
 import javax.ws.rs.core.Response;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopInfo;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ControlLoopProvider;
@@ -310,39 +312,17 @@ public class SupervisionHandler {
 
     private void superviseControlLoops(ParticipantStatus participantStatusMessage)
             throws PfModelException, ControlLoopException {
-        if (CollectionUtils.isEmpty(participantStatusMessage.getControlLoops().getControlLoopList())) {
-            return;
-        }
-
-        for (ControlLoop controlLoop : participantStatusMessage.getControlLoops().getControlLoopList()) {
-            if (controlLoop == null) {
-                exceptionOccured(Response.Status.NOT_FOUND,
-                        "PARTICIPANT_STATUS message references unknown control loop: " + controlLoop);
-            }
-
-            var dbControlLoop = controlLoopProvider
-                    .getControlLoop(new ToscaConceptIdentifier(controlLoop.getName(), controlLoop.getVersion()));
+        for (Map.Entry<ToscaConceptIdentifier, ControlLoopInfo> clEntry :
+                participantStatusMessage.getControlLoopInfoMap().entrySet()) {
+            var dbControlLoop = controlLoopProvider.getControlLoop(new ToscaConceptIdentifier(
+                                clEntry.getKey().getName(), clEntry.getKey().getVersion()));
             if (dbControlLoop == null) {
                 exceptionOccured(Response.Status.NOT_FOUND,
-                        "PARTICIPANT_STATUS control loop not found in database: " + controlLoop);
+                        "PARTICIPANT_STATUS control loop not found in database: " + clEntry.getKey());
             }
-
-            for (ControlLoopElement element : controlLoop.getElements().values()) {
-                ControlLoopElement dbElement = dbControlLoop.getElements().get(element.getId());
-
-                if (dbElement == null) {
-                    exceptionOccured(Response.Status.NOT_FOUND,
-                            "PARTICIPANT_STATUS message references unknown control loop element: " + element);
-                }
-
-                // Replace element entry in the database
-                dbControlLoop.getElements().put(element.getId(), element);
-            }
-            controlLoopProvider.updateControlLoop(dbControlLoop);
-        }
-
-        for (ControlLoop controlLoop : participantStatusMessage.getControlLoops().getControlLoopList()) {
-            monitoringProvider.createClElementStatistics(controlLoop.getControlLoopElementStatisticsList(controlLoop));
+            dbControlLoop.setState(clEntry.getValue().getState());
+            monitoringProvider.createClElementStatistics(clEntry.getValue()
+                .getControlLoopStatistics().getClElementStatisticsList().getClElementStatistics());
         }
     }
 

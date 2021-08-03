@@ -25,10 +25,20 @@ import static org.junit.Assert.assertEquals;
 import static org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageUtils.removeVariableFields;
 
 import java.time.Instant;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ClElementStatistics;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ClElementStatisticsList;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElementDefinition;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopInfo;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopStatistics;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantHealthStatus;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 class ParticipantStatusTest {
 
@@ -43,20 +53,64 @@ class ParticipantStatusTest {
                 removeVariableFields(new ParticipantStatus(orig).toString()));
 
         // verify with all values
-        ToscaConceptIdentifier id = new ToscaConceptIdentifier();
-        id.setName("id");
-        id.setVersion("1.2.3");
+        ToscaConceptIdentifier id = new ToscaConceptIdentifier("id", "1.2.3");
         orig.setControlLoopId(id);
         orig.setParticipantId(id);
+        orig.setParticipantType(id);
         orig.setMessageId(UUID.randomUUID());
         orig.setState(ParticipantState.ACTIVE);
+        orig.setHealthStatus(ParticipantHealthStatus.HEALTHY);
         orig.setTimestamp(Instant.ofEpochMilli(3000));
 
-        final ParticipantResponseDetails resp = new ParticipantResponseDetails();
-        resp.setResponseMessage("my-response");
-        orig.setResponse(resp);
+        ControlLoopInfo clInfo = getControlLoopInfo(id);
+        orig.setControlLoopInfoMap(Map.of(id, clInfo));
+
+        ControlLoopElementDefinition clDefinition = getClElementDefinition();
+        Map<UUID, ControlLoopElementDefinition> clElementDefinitionMap = Map.of(UUID.randomUUID(), clDefinition);
+        Map<ToscaConceptIdentifier, Map<UUID, ControlLoopElementDefinition>>
+            participantDefinitionUpdateMap = Map.of(id, clElementDefinitionMap);
+        orig.setParticipantDefinitionUpdateMap(participantDefinitionUpdateMap);
 
         assertEquals(removeVariableFields(orig.toString()),
                 removeVariableFields(new ParticipantStatus(orig).toString()));
+    }
+
+    private ControlLoopInfo getControlLoopInfo(ToscaConceptIdentifier id) {
+        ControlLoopInfo clInfo = new ControlLoopInfo();
+        clInfo.setState(ControlLoopState.PASSIVE2RUNNING);
+
+        ControlLoopStatistics clStatistics = new ControlLoopStatistics();
+        clStatistics.setControlLoopId(id);
+        clStatistics.setAverageExecutionTime(12345);
+        clStatistics.setEventCount(12345);
+        clStatistics.setLastEnterTime(12345);
+        clStatistics.setLastExecutionTime(12345);
+        clStatistics.setLastStart(12345);
+        clStatistics.setTimeStamp(Instant.ofEpochMilli(3000));
+        clStatistics.setUpTime(12345);
+        ClElementStatisticsList clElementStatisticsList = new ClElementStatisticsList();
+        ClElementStatistics clElementStatistics = new ClElementStatistics();
+        clElementStatistics.setParticipantId(new ToscaConceptIdentifier("defName", "0.0.1"));
+        clElementStatistics.setTimeStamp(Instant.now());
+        clElementStatisticsList.setClElementStatistics(List.of(clElementStatistics));
+        clStatistics.setClElementStatisticsList(clElementStatisticsList);
+
+        clInfo.setControlLoopStatistics(clStatistics);
+        return clInfo;
+    }
+
+    private ControlLoopElementDefinition getClElementDefinition() {
+        ToscaServiceTemplate toscaServiceTemplate = new ToscaServiceTemplate();
+        toscaServiceTemplate.setName("serviceTemplate");
+        toscaServiceTemplate.setDerivedFrom("parentServiceTemplate");
+        toscaServiceTemplate.setDescription("Description of serviceTemplate");
+        toscaServiceTemplate.setVersion("1.2.3");
+
+        ControlLoopElementDefinition clDefinition = new ControlLoopElementDefinition();
+        clDefinition.setId(UUID.randomUUID());
+        clDefinition.setControlLoopElementToscaServiceTemplate(toscaServiceTemplate);
+        Map<String, String> commonPropertiesMap = Map.of("Prop1", "PropValue");
+        clDefinition.setCommonPropertiesMap(commonPropertiesMap);
+        return clDefinition;
     }
 }

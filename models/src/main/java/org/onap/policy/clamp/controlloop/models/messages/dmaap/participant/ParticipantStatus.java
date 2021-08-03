@@ -20,13 +20,19 @@
 
 package org.onap.policy.clamp.controlloop.models.messages.dmaap.participant;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoops;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElementDefinition;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopInfo;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantHealthStatus;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantStatistics;
+import org.onap.policy.models.base.PfUtils;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
  * Class to represent the PARTICIPANT_STATUS message that all the participants send to the control loop runtime.
@@ -35,21 +41,21 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant
 @Setter
 @ToString(callSuper = true)
 public class ParticipantStatus extends ParticipantMessage {
-    // The response should be completed if this message is a response to a request from the Control Loop Runtime
-    private ParticipantResponseDetails response;
 
     // State and health status of the participant
     private ParticipantState state;
     private ParticipantHealthStatus healthStatus;
 
-    // Control Loops on the participant
-    private ControlLoops controlLoops;
-
     // Participant statistics
     private ParticipantStatistics participantStatistics;
 
-    // Description. May be left {@code null}.
-    private String message;
+    // A map with Participant ID as its key, and a map of ControlLoopElements as value.
+    // Returned in response to ParticipantStatusReq only
+    private Map<ToscaConceptIdentifier, Map<UUID, ControlLoopElementDefinition>>
+            participantDefinitionUpdateMap = new LinkedHashMap<>();
+
+    // Map of ControlLoopInfo types indexed by ControlLoopId, one entry for each control loop
+    private Map<ToscaConceptIdentifier, ControlLoopInfo> controlLoopInfoMap;
 
     /**
      * Constructor for instantiating ParticipantStatus class with message name.
@@ -69,8 +75,10 @@ public class ParticipantStatus extends ParticipantMessage {
 
         this.state = source.state;
         this.healthStatus = source.healthStatus;
-        this.message = source.message;
-        this.controlLoops = (source.controlLoops == null ? null : new ControlLoops(source.controlLoops));
-        this.response = (source.response == null ? null : new ParticipantResponseDetails(source.response));
+        this.participantStatistics = (source.participantStatistics == null ? null : new ParticipantStatistics());
+        this.participantDefinitionUpdateMap = PfUtils.mapMap(source.participantDefinitionUpdateMap,
+                clElementDefinitionMap -> PfUtils.mapMap(clElementDefinitionMap,
+                        ControlLoopElementDefinition::new));
+        this.controlLoopInfoMap = PfUtils.mapMap(source.controlLoopInfoMap, ControlLoopInfo::new);
     }
 }

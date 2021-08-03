@@ -26,6 +26,7 @@ import static org.onap.policy.clamp.controlloop.models.messages.dmaap.participan
 
 import java.util.Map;
 import java.util.UUID;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
@@ -48,8 +49,8 @@ class ControlLoopAckTest {
         orig.setParticipantId(id);
         orig.setParticipantType(id);
 
-        Map<UUID, Boolean> clElementResult = Map.of(UUID.randomUUID(), true);
-        final Map<UUID, Map<UUID, Boolean>> controlLoopResultMap = Map.of(UUID.randomUUID(), clElementResult);
+        Pair<Boolean, String> clElementResult = Pair.of(true, "ControlLoopElement result");
+        final Map<UUID, Pair<Boolean, String>> controlLoopResultMap = Map.of(UUID.randomUUID(), clElementResult);
         orig.setControlLoopResultMap(controlLoopResultMap);
 
         orig.setResponseTo(UUID.randomUUID());

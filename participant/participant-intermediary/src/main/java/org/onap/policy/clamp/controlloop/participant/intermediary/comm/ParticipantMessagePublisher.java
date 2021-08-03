@@ -21,6 +21,7 @@
 package org.onap.policy.clamp.controlloop.participant.intermediary.comm;
 
 import java.util.List;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopAck;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregister;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantRegister;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStatus;
@@ -89,6 +90,16 @@ public class ParticipantMessagePublisher {
     public void sendParticipantUpdateAck(final ParticipantUpdateAck participantUpdateAck) {
         topicSinkClient.send(participantUpdateAck);
         LOGGER.debug("Sent Participant Update Ack message to CLAMP - {}", participantUpdateAck);
+    }
+
+    /**
+     * Method to send ControlLoop Update/StateChange Ack message to runtime.
+     *
+     * @param controlLoopAck ControlLoop Update/StateChange Ack
+     */
+    public void sendControlLoopAck(final ControlLoopAck controlLoopAck) {
+        topicSinkClient.send(controlLoopAck);
+        LOGGER.debug("Sent ControlLoop Update/StateChange Ack to runtime - {}", controlLoopAck);
     }
 
     /**

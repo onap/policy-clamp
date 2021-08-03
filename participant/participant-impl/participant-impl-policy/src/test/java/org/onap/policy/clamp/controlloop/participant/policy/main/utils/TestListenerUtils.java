@@ -37,7 +37,6 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopStateChange;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopUpdate;
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantHealthCheck;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdate;
 import org.onap.policy.clamp.controlloop.participant.policy.main.parameters.CommonTestData;
 import org.onap.policy.common.utils.coder.Coder;
@@ -156,6 +155,7 @@ public class TestListenerUtils {
             clElementParticipantId.setName(toscaInputEntry.getKey());
             clElementParticipantId.setVersion(toscaInputEntry.getValue().getVersion());
             clElement.setParticipantId(clElementParticipantId);
+            clElement.setParticipantType(clElementParticipantId);
 
             clElement.setDefinition(clElementParticipantId);
             clElement.setState(ControlLoopState.UNINITIALISED);
@@ -207,29 +207,6 @@ public class TestListenerUtils {
         participantUpdateMsg.setParticipantDefinitionUpdateMap(participantDefinitionUpdateMap);
 
         return participantUpdateMsg;
-    }
-
-    /**
-     * Method to create ParticipantHealthCheck message.
-     *
-     * @return ParticipantHealthCheck message
-     */
-    public static ParticipantHealthCheck createParticipantHealthCheckMsg() {
-        ToscaConceptIdentifier participantId = new ToscaConceptIdentifier();
-        participantId.setName("org.onap.PM_Policy");
-        participantId.setVersion("0.0.0");
-
-        ToscaConceptIdentifier controlLoopId = new ToscaConceptIdentifier();
-        controlLoopId.setName("PMSHInstance0");
-        controlLoopId.setVersion("1.0.0");
-
-        final ParticipantHealthCheck participantHealthCheckMsg = new ParticipantHealthCheck();
-        participantHealthCheckMsg.setParticipantId(participantId);
-        participantHealthCheckMsg.setControlLoopId(controlLoopId);
-        participantHealthCheckMsg.setTimestamp(Instant.now());
-        participantHealthCheckMsg.setState(ParticipantState.PASSIVE);
-
-        return participantHealthCheckMsg;
     }
 
     /**

@@ -24,15 +24,22 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 
 import java.time.Instant;
 import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ClElementStatistics;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ClElementStatisticsList;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElementDefinition;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopInfo;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopStatistics;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregister;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregisterAck;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantRegister;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantRegisterAck;
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantResponseDetails;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStatus;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdate;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdateAck;
@@ -45,6 +52,7 @@ import org.onap.policy.clamp.controlloop.participant.policy.main.utils.TestListe
 import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -146,9 +154,16 @@ class ParticipantMessagesTest {
     @Test
     void testParticipantStatusHeartbeat() throws Exception {
         final ParticipantStatus heartbeat = new ParticipantStatus();
-        heartbeat.setMessage("ParticipantStatus message");
-        heartbeat.setResponse(new ParticipantResponseDetails());
         heartbeat.setParticipantId(getParticipantId());
+        ControlLoopInfo clInfo = getControlLoopInfo(getControlLoopId());
+        heartbeat.setControlLoopInfoMap(Map.of(getControlLoopId(), clInfo));
+
+        ControlLoopElementDefinition clDefinition = getClElementDefinition();
+        Map<UUID, ControlLoopElementDefinition> clElementDefinitionMap = Map.of(UUID.randomUUID(), clDefinition);
+        Map<ToscaConceptIdentifier, Map<UUID, ControlLoopElementDefinition>>
+            participantDefinitionUpdateMap = Map.of(getParticipantId(), clElementDefinitionMap);
+        heartbeat.setParticipantDefinitionUpdateMap(participantDefinitionUpdateMap);
+
         synchronized (lockit) {
             ParticipantMessagePublisher publisher =
                     new ParticipantMessagePublisher(Collections.singletonList(Mockito.mock(TopicSink.class)));
@@ -156,12 +171,54 @@ class ParticipantMessagesTest {
         }
     }
 
-
     private ToscaConceptIdentifier getParticipantId() {
         return new ToscaConceptIdentifier("org.onap.PM_Policy", "1.0.0");
     }
 
     private ToscaConceptIdentifier getParticipantType() {
         return new ToscaConceptIdentifier("org.onap.policy.controlloop.PolicyControlLoopParticipant", "2.3.1");
+    }
+
+    private ToscaConceptIdentifier getControlLoopId() {
+        return new ToscaConceptIdentifier("PMSHInstance0", "1.0.0");
+    }
+
+    private ControlLoopInfo getControlLoopInfo(ToscaConceptIdentifier id) {
+        ControlLoopInfo clInfo = new ControlLoopInfo();
+        clInfo.setState(ControlLoopState.PASSIVE2RUNNING);
+
+        ControlLoopStatistics clStatistics = new ControlLoopStatistics();
+        clStatistics.setControlLoopId(id);
+        clStatistics.setAverageExecutionTime(12345);
+        clStatistics.setEventCount(12345);
+        clStatistics.setLastEnterTime(12345);
+        clStatistics.setLastExecutionTime(12345);
+        clStatistics.setLastStart(12345);
+        clStatistics.setTimeStamp(Instant.ofEpochMilli(3000));
+        clStatistics.setUpTime(12345);
+        ClElementStatisticsList clElementStatisticsList = new ClElementStatisticsList();
+        ClElementStatistics clElementStatistics = new ClElementStatistics();
+        clElementStatistics.setParticipantId(new ToscaConceptIdentifier("defName", "0.0.1"));
+        clElementStatistics.setTimeStamp(Instant.now());
+        clElementStatisticsList.setClElementStatistics(List.of(clElementStatistics));
+        clStatistics.setClElementStatisticsList(clElementStatisticsList);
+
+        clInfo.setControlLoopStatistics(clStatistics);
+        return clInfo;
+    }
+
+    private ControlLoopElementDefinition getClElementDefinition() {
+        ToscaServiceTemplate toscaServiceTemplate = new ToscaServiceTemplate();
+        toscaServiceTemplate.setName("serviceTemplate");
+        toscaServiceTemplate.setDerivedFrom("parentServiceTemplate");
+        toscaServiceTemplate.setDescription("Description of serviceTemplate");
+        toscaServiceTemplate.setVersion("1.2.3");
+
+        ControlLoopElementDefinition clDefinition = new ControlLoopElementDefinition();
+        clDefinition.setId(UUID.randomUUID());
+        clDefinition.setControlLoopElementToscaServiceTemplate(toscaServiceTemplate);
+        Map<String, String> commonPropertiesMap = Map.of("Prop1", "PropValue");
+        clDefinition.setCommonPropertiesMap(commonPropertiesMap);
+        return clDefinition;
     }
 }

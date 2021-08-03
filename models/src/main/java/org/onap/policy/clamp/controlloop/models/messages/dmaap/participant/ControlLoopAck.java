@@ -28,7 +28,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.apache.commons.lang3.tuple.Pair;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElementDefinition;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
@@ -59,7 +58,7 @@ public class ControlLoopAck extends ParticipantAckMessage {
 
     // A map with ControlLoopElementID as its key, and a pair of result and message as value per
     // ControlLoopElement.
-    private Map<UUID, Map<UUID, Boolean>> controlLoopResultMap = new LinkedHashMap<>();
+    private Map<UUID, Pair<Boolean, String>> controlLoopResultMap = new LinkedHashMap<>();
 
     /**
      * Constructor for instantiating ParticipantRegisterAck class with message name.
@@ -79,7 +78,6 @@ public class ControlLoopAck extends ParticipantAckMessage {
         this.participantId = source.participantId;
         this.participantType = source.participantType;
         this.controlLoopId = source.controlLoopId;
-        this.controlLoopResultMap = PfUtils.mapMap(source.controlLoopResultMap,
-                clElementResultMap -> PfUtils.mapMap(clElementResultMap, UnaryOperator.identity()));
+        this.controlLoopResultMap = PfUtils.mapMap(source.controlLoopResultMap, UnaryOperator.identity());
     }
 }

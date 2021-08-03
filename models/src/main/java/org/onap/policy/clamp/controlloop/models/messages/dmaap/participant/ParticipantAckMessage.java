@@ -24,6 +24,7 @@ import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
  * Class to represent participant Ack message.
@@ -45,6 +46,16 @@ public class ParticipantAckMessage {
     private ParticipantMessageType messageType;
 
     /**
+     * Participant Type, or {@code null} for messages from participants.
+     */
+    private ToscaConceptIdentifier participantType;
+
+    /**
+     * Participant ID, or {@code null} for messages from participants.
+     */
+    private ToscaConceptIdentifier participantId;
+
+    /**
      * Constructor for instantiating a participant ack message class.
      *
      * @param messageType the message type
@@ -63,5 +74,7 @@ public class ParticipantAckMessage {
         this.result = source.result;
         this.message = source.message;
         this.messageType = source.messageType;
+        this.participantType = source.participantType;
+        this.participantId = source.participantId;
     }
 }
