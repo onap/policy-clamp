@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7ca9d9e8_5bbf14bb",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/HandleCounter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-03T16:49:14Z",
+      "side": 1,
+      "message": "hmm.  It feels like the mapXxx fields should not be directly accessible, even via getter methods",
+      "revId": "242a5f5406591684116a3293f519e22a2242ead4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b8f9e360_e682713c",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/HandleCounter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-03T16:49:14Z",
+      "side": 1,
+      "message": "so if there\u0027s no entry, then line 41 will return the total elapsed time since epoch 0 - I assume that\u0027s what we want",
+      "range": {
+        "startLine": 41,
+        "startChar": 72,
+        "endLine": 41,
+        "endChar": 74
+      },
+      "revId": "242a5f5406591684116a3293f519e22a2242ead4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
