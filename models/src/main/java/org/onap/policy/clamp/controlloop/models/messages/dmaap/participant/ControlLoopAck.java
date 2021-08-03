@@ -59,7 +59,7 @@ public class ControlLoopAck extends ParticipantAckMessage {
 
     // A map with ControlLoopElementID as its key, and a pair of result and message as value per
     // ControlLoopElement.
-    private Map<UUID, Map<UUID, Boolean>> controlLoopResultMap = new LinkedHashMap<>();
+    private Map<UUID, Map<Boolean, String>> controlLoopResultMap = new LinkedHashMap<>();
 
     /**
      * Constructor for instantiating ParticipantRegisterAck class with message name.

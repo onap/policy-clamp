@@ -35,10 +35,12 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoops;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopAck;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopStateChange;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopUpdate;
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantResponseDetails;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageType;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantResponseStatus;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdateAck;
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ControlLoopElementListener;
 import org.onap.policy.clamp.controlloop.participant.intermediary.comm.MessageSender;
 import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantIntermediaryParameters;
@@ -60,6 +62,7 @@ public class ControlLoopHandler {
 
     private final Map<ToscaConceptIdentifier, ControlLoop> controlLoopMap = new LinkedHashMap<>();
 
+    @Getter
     private final Map<UUID, ControlLoopElement> elementsOnThisParticipant = new LinkedHashMap<>();
 
     @Getter
@@ -93,21 +96,23 @@ public class ControlLoopHandler {
             ControlLoopState newState) {
 
         if (id == null) {
-            return null;
+            LOGGER.warn("Cannot update Control loop element state, id is null");
         }
 
+        ControlLoopAck controlLoopStateChangeAck =
+                new ControlLoopAck(ParticipantMessageType.CONTROLLOOP_STATECHANGE_ACK);
         ControlLoopElement clElement = elementsOnThisParticipant.get(id);
         if (clElement != null) {
             clElement.setOrderedState(orderedState);
             clElement.setState(newState);
+            controlLoopStateChangeAck.getControlLoopResultMap().put(clElement.getId(),
+                Map.of(true, "Control loop element {} state changed to {}\", id, newState)"));
             LOGGER.debug("Control loop element {} state changed to {}", id, newState);
-            var response = new ParticipantResponseDetails();
-            response.setResponseStatus(ParticipantResponseStatus.SUCCESS);
-            response.setResponseMessage("ControlLoopElement state changed to {} " + newState);
-            messageSender.sendResponse(response);
+            controlLoopStateChangeAck.setMessage("ControlLoopElement state changed to {} " + newState);
+            controlLoopStateChangeAck.setResult(true);
+            messageSender.sendAckResponse(controlLoopStateChangeAck);
             return clElement;
         }
-
         return null;
     }
 
@@ -143,9 +148,11 @@ public class ControlLoopHandler {
             return;
         }
 
-        var response = new ParticipantResponseDetails(stateChangeMsg);
-        handleState(controlLoop, response, stateChangeMsg.getOrderedState());
-        messageSender.sendResponse(response);
+        var controlLoopStateChangeAck = new ControlLoopAck(ParticipantMessageType.CONTROLLOOP_STATECHANGE_ACK);
+        controlLoopStateChangeAck.setResponseTo(stateChangeMsg.getMessageId());
+        controlLoopStateChangeAck.setControlLoopId(stateChangeMsg.getControlLoopId());
+        handleState(controlLoop, controlLoopStateChangeAck, stateChangeMsg.getOrderedState());
+        messageSender.sendAckResponse(controlLoopStateChangeAck);
     }
 
     /**
@@ -155,7 +162,7 @@ public class ControlLoopHandler {
      * @param response participant response
      * @param orderedState controlloop ordered state
      */
-    private void handleState(final ControlLoop controlLoop, final ParticipantResponseDetails response,
+    private void handleState(final ControlLoop controlLoop, final ControlLoopAck response,
             ControlLoopOrderedState orderedState) {
         switch (orderedState) {
             case UNINITIALISED:
@@ -187,16 +194,17 @@ public class ControlLoopHandler {
 
         var controlLoop = controlLoopMap.get(updateMsg.getControlLoopId());
 
-        var response = new ParticipantResponseDetails(updateMsg);
+        var controlLoopUpdateAck = new ControlLoopAck(ParticipantMessageType.CONTROLLOOP_UPDATE_ACK);
 
         // TODO: Updates to existing ControlLoops are not supported yet (Addition/Removal of ControlLoop
         // elements to existing ControlLoop has to be supported).
         if (controlLoop != null) {
-            response.setResponseStatus(ParticipantResponseStatus.FAIL);
-            response.setResponseMessage("Control loop " + updateMsg.getControlLoopId()
-                    + " already defined on participant " + participantId);
-
-            messageSender.sendResponse(response);
+            controlLoopUpdateAck.setResponseTo(updateMsg.getMessageId());
+            controlLoopUpdateAck.setControlLoopId(updateMsg.getControlLoopId());
+            controlLoopUpdateAck.setMessage("Control loop " + updateMsg.getControlLoopId()
+                + " already defined on participant " + participantId);
+            controlLoopUpdateAck.setResult(false);
+            messageSender.sendAckResponse(controlLoopUpdateAck);
             return;
         }
 
@@ -221,11 +229,12 @@ public class ControlLoopHandler {
             }
         }
 
-        response.setResponseStatus(ParticipantResponseStatus.SUCCESS);
-        response.setResponseMessage(
-                "Control loop " + updateMsg.getControlLoopId() + " defined on participant " + participantId);
-
-        messageSender.sendResponse(response);
+        controlLoopUpdateAck.setResponseTo(updateMsg.getMessageId());
+        controlLoopUpdateAck.setControlLoopId(updateMsg.getControlLoopId());
+        controlLoopUpdateAck.setMessage("Control loop " + updateMsg.getControlLoopId()
+                + " defined on participant " + participantId);
+        controlLoopUpdateAck.setResult(true);
+        messageSender.sendAckResponse(controlLoopUpdateAck);
     }
 
     /**
@@ -236,7 +245,7 @@ public class ControlLoopHandler {
      * @param response participant response
      */
     private void handleUninitialisedState(final ControlLoop controlLoop, final ControlLoopOrderedState orderedState,
-            final ParticipantResponseDetails response) {
+            final ControlLoopAck response) {
         handleStateChange(controlLoop, orderedState, ControlLoopState.UNINITIALISED, response);
         controlLoopMap.remove(controlLoop.getKey().asIdentifier());
 
@@ -259,7 +268,7 @@ public class ControlLoopHandler {
      * @param response participant response
      */
     private void handlePassiveState(final ControlLoop controlLoop, final ControlLoopOrderedState orderedState,
-            final ParticipantResponseDetails response) {
+            final ControlLoopAck response) {
         handleStateChange(controlLoop, orderedState, ControlLoopState.PASSIVE, response);
     }
 
@@ -271,7 +280,7 @@ public class ControlLoopHandler {
      * @param response participant response
      */
     private void handleRunningState(final ControlLoop controlLoop, final ControlLoopOrderedState orderedState,
-            final ParticipantResponseDetails response) {
+            final ControlLoopAck response) {
         handleStateChange(controlLoop, orderedState, ControlLoopState.RUNNING, response);
     }
 
@@ -284,11 +293,11 @@ public class ControlLoopHandler {
      * @param response the response to the state change request
      */
     private void handleStateChange(ControlLoop controlLoop, final ControlLoopOrderedState orderedState,
-            ControlLoopState newState, ParticipantResponseDetails response) {
+            ControlLoopState newState, ControlLoopAck response) {
 
         if (orderedState.equals(controlLoop.getOrderedState())) {
-            response.setResponseStatus(ParticipantResponseStatus.SUCCESS);
-            response.setResponseMessage("Control loop is already in state " + orderedState);
+            response.setMessage("Control loop is already in state " + orderedState);
+            response.setResult(false);
             return;
         }
 
@@ -299,9 +308,8 @@ public class ControlLoopHandler {
             });
         }
 
-        response.setResponseStatus(ParticipantResponseStatus.SUCCESS);
-        response.setResponseMessage(
-                "ControlLoop state changed from " + controlLoop.getOrderedState() + " to " + orderedState);
+        response.setMessage("ControlLoop state changed from " + controlLoop.getOrderedState() + " to " + orderedState);
+        response.setResult(true);
         controlLoop.setOrderedState(orderedState);
     }
 

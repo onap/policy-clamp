@@ -32,7 +32,6 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopStateChange;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopUpdate;
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantHealthCheck;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -167,29 +166,6 @@ public class TestListenerUtils {
      */
     public static ControlLoopUpdate createCopyControlLoopUpdateMsg(ControlLoopUpdate cpy) {
         return new ControlLoopUpdate(cpy);
-    }
-
-    /**
-     * Method to create ParticipantHealthCheck message.
-     *
-     * @return ParticipantHealthCheck message
-     */
-    public static ParticipantHealthCheck createParticipantHealthCheckMsg() {
-        ToscaConceptIdentifier participantId = new ToscaConceptIdentifier();
-        participantId.setName("DCAEParticipant0");
-        participantId.setVersion("1.0.0");
-
-        ToscaConceptIdentifier controlLoopId = new ToscaConceptIdentifier();
-        controlLoopId.setName("PMSHInstance0");
-        controlLoopId.setVersion("1.0.0");
-
-        final ParticipantHealthCheck participantHealthCheckMsg = new ParticipantHealthCheck();
-        participantHealthCheckMsg.setParticipantId(participantId);
-        participantHealthCheckMsg.setControlLoopId(controlLoopId);
-        participantHealthCheckMsg.setTimestamp(Instant.now());
-        participantHealthCheckMsg.setState(ParticipantState.PASSIVE);
-
-        return participantHealthCheckMsg;
     }
 
     /**

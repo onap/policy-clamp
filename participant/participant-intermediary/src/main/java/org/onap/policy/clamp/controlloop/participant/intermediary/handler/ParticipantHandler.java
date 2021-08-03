@@ -32,17 +32,18 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantHealthStatus;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantStatistics;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopAck;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopStateChange;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopUpdate;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregister;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregisterAck;
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantHealthCheck;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessage;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageType;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantRegister;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantRegisterAck;
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantResponseDetails;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantResponseStatus;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStatus;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStatusReq;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdate;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdateAck;
 import org.onap.policy.clamp.controlloop.participant.intermediary.comm.MessageSender;
@@ -99,14 +100,15 @@ public class ParticipantHandler implements Closeable {
     /**
      * Method which handles a participant health check event from clamp.
      *
-     * @param healthCheckMsg participant health check message
+     * @param participantStatusReqMsg participant participantStatusReq message
      */
-    public void handleParticipantHealthCheck(final ParticipantHealthCheck healthCheckMsg) {
-        var response = new ParticipantResponseDetails(healthCheckMsg);
-        response.setResponseStatus(ParticipantResponseStatus.SUCCESS);
-        response.setResponseMessage(healthStatus.toString());
-
-        sender.sendResponse(response);
+    public void handleParticipantStatusReq(final ParticipantStatusReq participantStatusReqMsg) {
+        ParticipantStatus participantStatus = new ParticipantStatus();
+        participantStatus.setParticipantId(participantId);
+        participantStatus.setParticipantStatistics(participantStatistics);
+        participantStatus.setParticipantType(participantType);
+        participantStatus.setHealthStatus(healthStatus);
+        sender.sendParticipantStatus(participantStatus);
     }
 
     /**
@@ -127,13 +129,13 @@ public class ParticipantHandler implements Closeable {
         controlLoopHandler.handleControlLoopStateChange(stateChangeMsg);
     }
 
-    private void handleStateChange(ParticipantState newParticipantState, ParticipantResponseDetails response) {
+    private void handleStateChange(ParticipantState newParticipantState, ParticipantUpdateAck response) {
         if (state.equals(newParticipantState)) {
-            response.setResponseStatus(ParticipantResponseStatus.SUCCESS);
-            response.setResponseMessage("Participant already in state " + newParticipantState);
+            response.setResult(false);
+            response.setMessage("Participant already in state " + newParticipantState);
         } else {
-            response.setResponseStatus(ParticipantResponseStatus.SUCCESS);
-            response.setResponseMessage("Participant state changed from " + state + " to " + newParticipantState);
+            response.setResult(true);
+            response.setMessage("Participant state changed from " + state + " to " + newParticipantState);
             state = newParticipantState;
         }
     }
@@ -150,9 +152,10 @@ public class ParticipantHandler implements Closeable {
             LOGGER.debug("No participant with this ID {}", definition.getName());
             return null;
         }
-        var response = new ParticipantResponseDetails();
-        handleStateChange(participantState, response);
-        sender.sendResponse(response);
+
+        var participantUpdateAck = new ParticipantUpdateAck();
+        handleStateChange(participantState, participantUpdateAck);
+        sender.sendParticipantUpdateAck(participantUpdateAck);
         return getParticipant(definition.getName(), definition.getVersion());
     }
 
@@ -257,6 +260,8 @@ public class ParticipantHandler implements Closeable {
         participantUpdateAck.setResponseTo(messageId);
         participantUpdateAck.setMessage("Participant Update Ack message");
         participantUpdateAck.setResult(true);
+        participantUpdateAck.setParticipantId(participantId);
+        participantUpdateAck.setParticipantType(participantType);
 
         sender.sendParticipantUpdateAck(participantUpdateAck);
     }
@@ -270,7 +275,6 @@ public class ParticipantHandler implements Closeable {
         heartbeat.setParticipantStatistics(participantStatistics);
         heartbeat.setParticipantType(participantType);
         heartbeat.setHealthStatus(healthStatus);
-        heartbeat.setMessage("Participant heartbeat message sent from -> " + participantId.getName());
         return heartbeat;
     }
 }

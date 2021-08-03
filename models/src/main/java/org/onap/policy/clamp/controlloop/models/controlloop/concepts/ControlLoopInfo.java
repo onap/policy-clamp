@@ -18,39 +18,31 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.controlloop.models.messages.dmaap.participant;
+package org.onap.policy.clamp.controlloop.models.controlloop.concepts;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
 
 /**
- * Class to represent the PARTICIPANT_HEALTHCHECK message that the control loop runtime will send to
- * participants to change the state of a control loop they are running.
+ * Class to represent a control loop info instance.
  */
-@Getter
-@Setter
-@ToString(callSuper = true)
-public class ParticipantHealthCheck extends ParticipantMessage {
-    private ParticipantState state;
+@NoArgsConstructor
+@Data
+@ToString
+public class ControlLoopInfo {
+
+    private ControlLoopState state = ControlLoopState.UNINITIALISED;
+
+    private ControlLoopStatistics controlLoopStatistics;
 
     /**
-     * Constructor for instantiating ParticipantHealthCheck class with message name.
+     * Copy constructor, does a deep copy but as all fields here are immutable, it's just a regular copy.
      *
+     * @param otherElement the other element to copy from
      */
-    public ParticipantHealthCheck() {
-        super(ParticipantMessageType.PARTICIPANT_HEALTH_CHECK);
-    }
-
-    /**
-     * Constructs the object, making a deep copy.
-     *
-     * @param source source from which to copy
-     */
-    public ParticipantHealthCheck(ParticipantHealthCheck source) {
-        super(source);
-
-        this.state = source.state;
+    public ControlLoopInfo(final ControlLoopInfo otherElement) {
+        this.state = otherElement.state;
+        this.controlLoopStatistics = otherElement.controlLoopStatistics;
     }
 }

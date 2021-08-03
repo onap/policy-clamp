@@ -48,8 +48,8 @@ class ControlLoopAckTest {
         orig.setParticipantId(id);
         orig.setParticipantType(id);
 
-        Map<UUID, Boolean> clElementResult = Map.of(UUID.randomUUID(), true);
-        final Map<UUID, Map<UUID, Boolean>> controlLoopResultMap = Map.of(UUID.randomUUID(), clElementResult);
+        Map<Boolean, String> clElementResult = Map.of(true, "ControlLoopElement result");
+        final Map<UUID, Map<Boolean, String>> controlLoopResultMap = Map.of(UUID.randomUUID(), clElementResult);
         orig.setControlLoopResultMap(controlLoopResultMap);
 
         orig.setResponseTo(UUID.randomUUID());

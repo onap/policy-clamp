@@ -20,22 +20,22 @@
 
 package org.onap.policy.clamp.controlloop.participant.intermediary.comm;
 
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantHealthCheck;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStatusReq;
 import org.onap.policy.clamp.controlloop.participant.intermediary.handler.ParticipantHandler;
 import org.springframework.stereotype.Component;
 
 /**
- * Listener for Participant health status messages sent by CLAMP.
+ * Listener for Participant status request messages sent by runtime to all/one participant.
  */
 @Component
-public class ParticipantHealthCheckListener extends ParticipantListener<ParticipantHealthCheck> {
+public class ParticipantStatusReqListener extends ParticipantListener<ParticipantStatusReq> {
 
     /**
      * Constructs the object.
      *
      * @param participantHandler the handler for managing the state and health of the participant
      */
-    public ParticipantHealthCheckListener(final ParticipantHandler participantHandler) {
-        super(ParticipantHealthCheck.class, participantHandler, participantHandler::handleParticipantHealthCheck);
+    public ParticipantStatusReqListener(final ParticipantHandler participantHandler) {
+        super(ParticipantStatusReq.class, participantHandler, participantHandler::handleParticipantStatusReq);
     }
 }
