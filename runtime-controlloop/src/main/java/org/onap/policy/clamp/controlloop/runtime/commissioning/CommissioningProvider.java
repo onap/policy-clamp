@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import javax.ws.rs.core.Response.Status;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ControlLoopProvider;
@@ -60,6 +61,7 @@ public class CommissioningProvider {
 
     private final PolicyModelsProvider modelsProvider;
     private final ControlLoopProvider clProvider;
+    private final ObjectMapper mapper = new ObjectMapper();
 
     private static final Object lockit = new Object();
 
@@ -72,6 +74,7 @@ public class CommissioningProvider {
     public CommissioningProvider(PolicyModelsProvider modelsProvider, ControlLoopProvider clProvider) {
         this.modelsProvider = modelsProvider;
         this.clProvider = clProvider;
+        mapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
     }
 
     /**
@@ -189,8 +192,8 @@ public class CommissioningProvider {
      * @return node types map that only has common properties
      * @throws PfModelException on errors getting node type with common properties
      */
-    private Map<String, ToscaNodeType> getInitialNodeTypesMap(
-        Map<String, ToscaNodeType> fullNodeTypes, boolean common) {
+    private Map<String, ToscaNodeType> getInitialNodeTypesMap(Map<String, ToscaNodeType> fullNodeTypes,
+            boolean common) {
 
         var tempNodeTypesMap = new HashMap<String, ToscaNodeType>();
 
@@ -198,8 +201,7 @@ public class CommissioningProvider {
             var tempToscaNodeType = new ToscaNodeType();
             tempToscaNodeType.setName(key);
 
-            var resultantPropertyMap = findCommonOrInstancePropsInNodeTypes(
-                nodeType, common);
+            var resultantPropertyMap = findCommonOrInstancePropsInNodeTypes(nodeType, common);
 
             if (!resultantPropertyMap.isEmpty()) {
                 tempToscaNodeType.setProperties(resultantPropertyMap);
@@ -209,8 +211,7 @@ public class CommissioningProvider {
         return tempNodeTypesMap;
     }
 
-    private Map<String, ToscaProperty> findCommonOrInstancePropsInNodeTypes(
-        ToscaNodeType nodeType, boolean common) {
+    private Map<String, ToscaProperty> findCommonOrInstancePropsInNodeTypes(ToscaNodeType nodeType, boolean common) {
 
         var tempCommonPropertyMap = new HashMap<String, ToscaProperty>();
         var tempInstancePropertyMap = new HashMap<String, ToscaProperty>();
@@ -246,9 +247,8 @@ public class CommissioningProvider {
      * @return all node types that have common properties including their children
      * @throws PfModelException on errors getting node type with common properties
      */
-    private Map<String, ToscaNodeType> getFinalNodeTypesMap(
-        Map<String, ToscaNodeType> initialNodeTypes,
-        Map<String, ToscaNodeType> filteredNodeTypes) {
+    private Map<String, ToscaNodeType> getFinalNodeTypesMap(Map<String, ToscaNodeType> initialNodeTypes,
+            Map<String, ToscaNodeType> filteredNodeTypes) {
         for (var i = 0; i < initialNodeTypes.size(); i++) {
             initialNodeTypes.forEach((key, nodeType) -> {
                 var tempToscaNodeType = new ToscaNodeType();
@@ -258,7 +258,7 @@ public class CommissioningProvider {
                     tempToscaNodeType.setName(key);
 
                     var finalProps = new HashMap<String, ToscaProperty>(
-                        filteredNodeTypes.get(nodeType.getDerivedFrom()).getProperties());
+                            filteredNodeTypes.get(nodeType.getDerivedFrom()).getProperties());
 
                     tempToscaNodeType.setProperties(finalProps);
                 } else {
@@ -280,16 +280,15 @@ public class CommissioningProvider {
      * @return the node types with common or instance properties
      * @throws PfModelException on errors getting node type properties
      */
-    private Map<String, ToscaNodeType> getCommonOrInstancePropertiesFromNodeTypes(
-        boolean common, String name, String version)
-        throws PfModelException {
+    private Map<String, ToscaNodeType> getCommonOrInstancePropertiesFromNodeTypes(boolean common, String name,
+            String version) throws PfModelException {
         var serviceTemplates = new ToscaServiceTemplates();
         serviceTemplates.setServiceTemplates(modelsProvider.getServiceTemplateList(name, version));
         var tempNodeTypesMap =
-            this.getInitialNodeTypesMap(serviceTemplates.getServiceTemplates().get(0).getNodeTypes(), common);
+                this.getInitialNodeTypesMap(serviceTemplates.getServiceTemplates().get(0).getNodeTypes(), common);
 
-        return this.getFinalNodeTypesMap(
-            serviceTemplates.getServiceTemplates().get(0).getNodeTypes(), tempNodeTypesMap);
+        return this.getFinalNodeTypesMap(serviceTemplates.getServiceTemplates().get(0).getNodeTypes(),
+                tempNodeTypesMap);
 
     }
 
@@ -302,8 +301,7 @@ public class CommissioningProvider {
      * @throws PfModelException on errors getting map of node templates with common or instance properties added
      */
     private Map<String, ToscaNodeTemplate> getDerivedCommonOrInstanceNodeTemplates(
-        Map<String, ToscaNodeTemplate> initialNodeTemplates,
-        Map<String, ToscaNodeType> nodeTypeProps) {
+            Map<String, ToscaNodeTemplate> initialNodeTemplates, Map<String, ToscaNodeType> nodeTypeProps) {
 
         var finalNodeTemplatesMap = new HashMap<String, ToscaNodeTemplate>();
 
@@ -332,18 +330,17 @@ public class CommissioningProvider {
      * @return the nodes templates with common or instance properties
      * @throws PfModelException on errors getting common or instance properties from node_templates
      */
-    public Map<String, ToscaNodeTemplate> getNodeTemplatesWithCommonOrInstanceProperties(
-        boolean common, String name, String version) throws PfModelException {
+    public Map<String, ToscaNodeTemplate> getNodeTemplatesWithCommonOrInstanceProperties(boolean common, String name,
+            String version) throws PfModelException {
 
-        var commonOrInstanceNodeTypeProps =
-            this.getCommonOrInstancePropertiesFromNodeTypes(common, name, version);
+        var commonOrInstanceNodeTypeProps = this.getCommonOrInstancePropertiesFromNodeTypes(common, name, version);
 
         var serviceTemplates = new ToscaServiceTemplates();
         serviceTemplates.setServiceTemplates(modelsProvider.getServiceTemplateList(name, version));
 
         return this.getDerivedCommonOrInstanceNodeTemplates(
-            serviceTemplates.getServiceTemplates().get(0).getToscaTopologyTemplate().getNodeTemplates(),
-            commonOrInstanceNodeTypeProps);
+                serviceTemplates.getServiceTemplates().get(0).getToscaTopologyTemplate().getNodeTemplates(),
+                commonOrInstanceNodeTypeProps);
     }
 
     /**
@@ -368,7 +365,7 @@ public class CommissioningProvider {
      * @return the tosca service template
      * @throws PfModelException on errors getting tosca service template
      */
-    public Map<String, Object> getToscaServiceTemplateReduced(String name, String version) throws PfModelException {
+    public String getToscaServiceTemplateReduced(String name, String version) throws PfModelException {
         var serviceTemplates = new ToscaServiceTemplates();
         serviceTemplates.setServiceTemplates(modelsProvider.getServiceTemplateList(name, version));
 
@@ -381,7 +378,12 @@ public class CommissioningProvider {
         template.put("node_types", fullTemplate.getNodeTypes());
         template.put("topology_template", fullTemplate.getToscaTopologyTemplate());
 
-        return template;
+        try {
+            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(template);
+
+        } catch (JsonProcessingException e) {
+            throw new PfModelException(Status.BAD_REQUEST, "Converion to Json Schema failed", e);
+        }
     }
 
     /**
@@ -390,41 +392,43 @@ public class CommissioningProvider {
      * @param section section of the tosca service template to get schema for
      * @return the specified tosca service template or section Json Schema
      * @throws PfModelException on errors with retrieving the classes
-     * @throws JsonProcessingException on errors generating the schema
      */
-    public String getToscaServiceTemplateSchema(String section) throws PfModelException, JsonProcessingException {
-        var mapper = new ObjectMapper();
-        mapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
+    public String getToscaServiceTemplateSchema(String section) throws PfModelException {
         var visitor = new SchemaFactoryWrapper();
 
-        switch (section) {
-            case "data_types":
-                mapper.acceptJsonFormatVisitor(mapper.constructType(ToscaDataType.class), visitor);
-                break;
-            case "capability_types":
-                mapper.acceptJsonFormatVisitor(mapper.constructType(ToscaCapabilityType.class), visitor);
-                break;
-            case "node_types":
-                mapper.acceptJsonFormatVisitor(mapper.constructType(ToscaNodeType.class), visitor);
-                break;
-            case "relationship_types":
-                mapper.acceptJsonFormatVisitor(mapper.constructType(ToscaRelationshipType.class), visitor);
-                break;
-            case "policy_types":
-                mapper.acceptJsonFormatVisitor(mapper.constructType(ToscaPolicyType.class), visitor);
-                break;
-            case "topology_template":
-                mapper.acceptJsonFormatVisitor(mapper.constructType(ToscaTopologyTemplate.class), visitor);
-                break;
-            case "node_templates":
-                mapper.acceptJsonFormatVisitor(mapper.getTypeFactory()
-                    .constructCollectionType(List.class, ToscaNodeTemplate.class), visitor);
-                break;
-            default:
-                mapper.acceptJsonFormatVisitor(mapper.constructType(ToscaServiceTemplate.class), visitor);
-        }
+        try {
+            switch (section) {
+                case "data_types":
+                    mapper.acceptJsonFormatVisitor(mapper.constructType(ToscaDataType.class), visitor);
+                    break;
+                case "capability_types":
+                    mapper.acceptJsonFormatVisitor(mapper.constructType(ToscaCapabilityType.class), visitor);
+                    break;
+                case "node_types":
+                    mapper.acceptJsonFormatVisitor(mapper.constructType(ToscaNodeType.class), visitor);
+                    break;
+                case "relationship_types":
+                    mapper.acceptJsonFormatVisitor(mapper.constructType(ToscaRelationshipType.class), visitor);
+                    break;
+                case "policy_types":
+                    mapper.acceptJsonFormatVisitor(mapper.constructType(ToscaPolicyType.class), visitor);
+                    break;
+                case "topology_template":
+                    mapper.acceptJsonFormatVisitor(mapper.constructType(ToscaTopologyTemplate.class), visitor);
+                    break;
+                case "node_templates":
+                    mapper.acceptJsonFormatVisitor(
+                            mapper.getTypeFactory().constructCollectionType(List.class, ToscaNodeTemplate.class),
+                            visitor);
+                    break;
+                default:
+                    mapper.acceptJsonFormatVisitor(mapper.constructType(ToscaServiceTemplate.class), visitor);
+            }
 
-        var jsonSchema = visitor.finalSchema();
-        return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonSchema);
+            var jsonSchema = visitor.finalSchema();
+            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonSchema);
+        } catch (JsonProcessingException e) {
+            throw new PfModelException(Status.BAD_REQUEST, "Converion to Json Schema failed", e);
+        }
     }
 }

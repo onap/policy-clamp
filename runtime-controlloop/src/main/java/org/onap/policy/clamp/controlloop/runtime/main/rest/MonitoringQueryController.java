@@ -30,14 +30,12 @@ import io.swagger.annotations.ExtensionProperty;
 import io.swagger.annotations.ResponseHeader;
 import java.time.Instant;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ClElementStatisticsList;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantStatisticsList;
 import org.onap.policy.clamp.controlloop.runtime.main.web.AbstractRestController;
 import org.onap.policy.clamp.controlloop.runtime.monitoring.MonitoringProvider;
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.base.PfModelRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,20 +47,11 @@ import org.springframework.web.bind.annotation.RestController;
  * This class handles REST endpoints for CL Statistics monitoring.
  */
 @RestController
+@RequiredArgsConstructor
 public class MonitoringQueryController extends AbstractRestController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MonitoringQueryController.class);
     private static final String TAGS = "Clamp Control Loop Monitoring API";
     private final MonitoringProvider provider;
-
-    /**
-     * Create Monitoring Controller.
-     *
-     * @param provider the MonitoringProvider
-     */
-    public MonitoringQueryController(MonitoringProvider provider) {
-        this.provider = provider;
-    }
 
     /**
      * Queries details of control loop participants statistics.
@@ -133,24 +122,17 @@ public class MonitoringQueryController extends AbstractRestController {
                     value = "endTime",
                     required = false) final String endTime) {
 
-        try {
-            Instant startTimestamp = null;
-            Instant endTimestamp = null;
+        Instant startTimestamp = null;
+        Instant endTimestamp = null;
 
-            if (startTime != null) {
-                startTimestamp = Instant.parse(startTime);
-            }
-            if (endTime != null) {
-                endTimestamp = Instant.parse(endTime);
-            }
-            return ResponseEntity.ok().body(provider.fetchFilteredParticipantStatistics(name, version, recordCount,
-                    startTimestamp, endTimestamp));
-
-        } catch (PfModelRuntimeException e) {
-            LOGGER.warn("Monitoring of participants statistics failed", e);
-            return ResponseEntity.status(e.getErrorResponse().getResponseCode().getStatusCode()).build();
+        if (startTime != null) {
+            startTimestamp = Instant.parse(startTime);
         }
-
+        if (endTime != null) {
+            endTimestamp = Instant.parse(endTime);
+        }
+        return ResponseEntity.ok().body(
+                provider.fetchFilteredParticipantStatistics(name, version, recordCount, startTimestamp, endTimestamp));
     }
 
     /**
@@ -208,14 +190,7 @@ public class MonitoringQueryController extends AbstractRestController {
                     value = "version",
                     required = false) final String version) {
 
-        try {
-            return ResponseEntity.ok().body(provider.fetchParticipantStatsPerControlLoop(name, version));
-
-        } catch (PfModelRuntimeException e) {
-            LOGGER.warn("Monitoring of Cl participant statistics failed", e);
-            return ResponseEntity.status(e.getErrorResponse().getResponseCode().getStatusCode()).build();
-        }
-
+        return ResponseEntity.ok().body(provider.fetchParticipantStatsPerControlLoop(name, version));
     }
 
     /**
@@ -273,14 +248,7 @@ public class MonitoringQueryController extends AbstractRestController {
                     value = "version",
                     required = false) final String version) {
 
-        try {
-            return ResponseEntity.ok().body(provider.fetchClElementStatsPerControlLoop(name, version));
-
-        } catch (PfModelRuntimeException e) {
-            LOGGER.warn("Monitoring of Cl Element statistics failed", e);
-            return ResponseEntity.status(e.getErrorResponse().getResponseCode().getStatusCode()).build();
-        }
-
+        return ResponseEntity.ok().body(provider.fetchClElementStatsPerControlLoop(name, version));
     }
 
     /**
@@ -294,6 +262,7 @@ public class MonitoringQueryController extends AbstractRestController {
      * @param startTime the time from which to get statistics
      * @param endTime the time to which to get statistics
      * @return the control loop element statistics
+     * @throws PfModelException on errors getting details of all control loop element statistics per control loop
      */
     // @formatter:off
     @GetMapping(value = "/monitoring/clelement",
@@ -353,26 +322,20 @@ public class MonitoringQueryController extends AbstractRestController {
                     required = false) final String startTime,
             @ApiParam(value = "end time", required = false) @RequestParam(
                     value = "endTime",
-                    required = false) final String endTime) {
+                    required = false) final String endTime)
+            throws PfModelException {
 
-        try {
-            Instant startTimestamp = null;
-            Instant endTimestamp = null;
+        Instant startTimestamp = null;
+        Instant endTimestamp = null;
 
-            if (startTime != null) {
-                startTimestamp = Instant.parse(startTime);
-            }
-            if (endTime != null) {
-                endTimestamp = Instant.parse(endTime);
-            }
-            return ResponseEntity.ok().body(provider.fetchFilteredClElementStatistics(name, version, id, startTimestamp,
-                    endTimestamp, recordCount));
-
-        } catch (PfModelRuntimeException | PfModelException e) {
-            LOGGER.warn("Monitoring of Cl Element statistics failed", e);
-            return ResponseEntity.status(e.getErrorResponse().getResponseCode().getStatusCode()).build();
+        if (startTime != null) {
+            startTimestamp = Instant.parse(startTime);
         }
-
+        if (endTime != null) {
+            endTimestamp = Instant.parse(endTime);
+        }
+        return ResponseEntity.ok().body(provider.fetchFilteredClElementStatistics(name, version, id, startTimestamp,
+                endTimestamp, recordCount));
     }
 
 }
