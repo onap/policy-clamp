@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "75175b6d_47619d0a",
+        "filename": "runtime-controlloop/src/test/java/org/onap/policy/clamp/controlloop/runtime/supervision/HandleCounterTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-04T12:25:02Z",
+      "side": 1,
+      "message": "sonar: don\u0027t use sleep in junit tests\n\nsome alternatives:\n1) modify the class to use a protected method for retrieving the current time.\n   Then override the method in the junit via spy() or subclassing.\n2) modify the class to use policy/common CurrentTime class to get current time\n   and provide a method to change it to a TestTime object for use in junit test.",
+      "revId": "760787f2976884fc14f8ef817920056b9231352f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
