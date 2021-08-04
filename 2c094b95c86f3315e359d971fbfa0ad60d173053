@@ -70,6 +70,30 @@
       "revId": "2c094b95c86f3315e359d971fbfa0ad60d173053",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fad3b9a1_25f4f463",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ControlLoopAck.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-08-04T14:45:36Z",
+      "side": 1,
+      "message": "True, Handling still needs to be taken care of. I will update handling for these messages in upcoming commits. There is more work to do be done on these messages, which will be pushed in future commits.",
+      "parentUuid": "dcf3f49d_dd8f67ca",
+      "range": {
+        "startLine": 61,
+        "startChar": 27,
+        "endLine": 61,
+        "endChar": 34
+      },
+      "revId": "2c094b95c86f3315e359d971fbfa0ad60d173053",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
