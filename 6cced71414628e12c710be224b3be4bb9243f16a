@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d9d13ec6_9ba49190",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoopStatistics.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-04T12:44:31Z",
+      "side": 1,
+      "message": "\"private\"\n\nNonNull?",
+      "revId": "6cced71414628e12c710be224b3be4bb9243f16a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a3a33e35_54e84ed1",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ControlLoopAck.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-04T12:44:31Z",
+      "side": 1,
+      "message": "\"Map\" \u003d\u003e \"Pair\"?",
+      "range": {
+        "startLine": 62,
+        "startChar": 22,
+        "endLine": 62,
+        "endChar": 25
+      },
+      "revId": "6cced71414628e12c710be224b3be4bb9243f16a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f04cff0a_4c0d2a5c",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ParticipantStatus.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-04T12:44:31Z",
+      "side": 1,
+      "message": "is a Map needed here, or would a Pair be sufficient?",
+      "range": {
+        "startLine": 54,
+        "startChar": 40,
+        "endLine": 54,
+        "endChar": 43
+      },
+      "revId": "6cced71414628e12c710be224b3be4bb9243f16a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "931f6d60_091ff4a8",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 315,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-04T12:44:31Z",
+      "side": 1,
+      "message": "delete this block - it isn\u0027t needed",
+      "revId": "6cced71414628e12c710be224b3be4bb9243f16a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
