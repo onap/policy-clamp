@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6ec21aa7_aa27df13",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ControlLoopAck.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-04T14:00:50Z",
+      "side": 1,
+      "message": "question: do we ever put \"false\" into this?  Or do we think we might in the future?  If not, then could eliminate the Pair and just store the String value",
+      "range": {
+        "startLine": 61,
+        "startChar": 27,
+        "endLine": 61,
+        "endChar": 34
+      },
+      "revId": "2c094b95c86f3315e359d971fbfa0ad60d173053",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}

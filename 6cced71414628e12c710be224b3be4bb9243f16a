@@ -131,6 +131,30 @@
     },
     {
       "key": {
+        "uuid": "34fb48a4_20085fc6",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ParticipantStatus.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-04T14:00:50Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "a0201f2f_32cf4c03",
+      "range": {
+        "startLine": 54,
+        "startChar": 40,
+        "endLine": 54,
+        "endChar": 43
+      },
+      "revId": "6cced71414628e12c710be224b3be4bb9243f16a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "931f6d60_091ff4a8",
         "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionHandler.java",
         "patchSetId": 1
