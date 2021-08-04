@@ -46,6 +46,30 @@
       "revId": "2c094b95c86f3315e359d971fbfa0ad60d173053",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dcf3f49d_dd8f67ca",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ControlLoopAck.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-04T14:13:31Z",
+      "side": 1,
+      "message": "OK.  I wasn\u0027t sure, because I didn\u0027t notice any code wherein Pair.of(false, xxx) was being added to the Map",
+      "parentUuid": "f61d279e_d471e56d",
+      "range": {
+        "startLine": 61,
+        "startChar": 27,
+        "endLine": 61,
+        "endChar": 34
+      },
+      "revId": "2c094b95c86f3315e359d971fbfa0ad60d173053",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
