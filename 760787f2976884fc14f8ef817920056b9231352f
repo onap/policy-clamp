@@ -16,6 +16,24 @@
       "revId": "760787f2976884fc14f8ef817920056b9231352f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "28593b09_be725751",
+        "filename": "runtime-controlloop/src/test/java/org/onap/policy/clamp/controlloop/runtime/supervision/HandleCounterTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-08-04T13:55:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "75175b6d_47619d0a",
+      "revId": "760787f2976884fc14f8ef817920056b9231352f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
