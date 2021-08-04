@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "651a17d4_94354b89",
+        "filename": "pom.xml",
+        "patchSetId": 9
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-08-04T01:30:46Z",
+      "side": 1,
+      "message": "see my comment in drools-pdp wrt. policy/common changes and these changes.   We should avoid using this library as it introduces eelf back transitively which this review is trying to remove.",
+      "revId": "756a3c1071d9bf4b731eda1e3097efbcea4eebee",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
