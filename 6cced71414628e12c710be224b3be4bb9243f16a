@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9a2f19a3_ff36dace",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoopStatistics.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-08-04T13:49:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d9d13ec6_9ba49190",
+      "revId": "6cced71414628e12c710be224b3be4bb9243f16a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a3a33e35_54e84ed1",
         "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ControlLoopAck.java",
         "patchSetId": 1
@@ -39,6 +57,30 @@
       "revId": "6cced71414628e12c710be224b3be4bb9243f16a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "00dbc7d7_c1c6b8f0",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ControlLoopAck.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-08-04T13:49:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a3a33e35_54e84ed1",
+      "range": {
+        "startLine": 62,
+        "startChar": 22,
+        "endLine": 62,
+        "endChar": 25
+      },
+      "revId": "6cced71414628e12c710be224b3be4bb9243f16a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "a0201f2f_32cf4c03",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ParticipantStatus.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-08-04T13:49:09Z",
+      "side": 1,
+      "message": "Map will be the choice here.\nparticipantDefinitionUpdateMap as defined in the Wiki needs a External Map with ParticipantId as Key, and the value of the external map\nis also a Map (ControlLoopElementDefintionMap), which has several ControlLoopElementDefinitions keyed with Control Loop Element Definition ID\n\nReference from wiki:\nParticipantDefinitionUpdateMap\tMap with Participant ID as its key, each value on the map is a ControlLoopElementDefintionMap\nControlLoopElementDefintionMap\tList of ControlLoopElementDefinition values for a particular participant, keyed by its Control Loop Element Definition ID\nControlLoopElementDefinition\tA ControlLoopElementToscaServiceTemplate containing the definition of the Control Loop Element and a CommonPropertiesMap with the values of the common property values for Control Loop Elements of this type\nControlLoopElementToscaServiceTemplate\tThe definition of the Control Loop Element in TOSCA\nCommonPropertiesMap\tA \u003cString, String\u003e map indexed by the property name. Each map entry is the serialized value of the property, which can be deserialized into an instance of the type of the property.",
+      "parentUuid": "f04cff0a_4c0d2a5c",
+      "range": {
+        "startLine": 54,
+        "startChar": 40,
+        "endLine": 54,
+        "endChar": 43
+      },
+      "revId": "6cced71414628e12c710be224b3be4bb9243f16a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "931f6d60_091ff4a8",
         "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionHandler.java",
         "patchSetId": 1
@@ -79,6 +145,24 @@
       "revId": "6cced71414628e12c710be224b3be4bb9243f16a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "38b3adc2_c271b326",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 315,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-08-04T13:49:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "931f6d60_091ff4a8",
+      "revId": "6cced71414628e12c710be224b3be4bb9243f16a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
