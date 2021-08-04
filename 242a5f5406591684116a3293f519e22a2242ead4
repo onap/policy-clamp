@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "c896ffe6_2315fa42",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/HandleCounter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-08-04T10:05:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7ca9d9e8_5bbf14bb",
+      "revId": "242a5f5406591684116a3293f519e22a2242ead4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b8f9e360_e682713c",
         "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/HandleCounter.java",
         "patchSetId": 1
@@ -39,6 +57,30 @@
       "revId": "242a5f5406591684116a3293f519e22a2242ead4",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d95ac02a_01e4ed21",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/HandleCounter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-08-04T10:05:24Z",
+      "side": 1,
+      "message": "I changed it using optimistic approach",
+      "parentUuid": "b8f9e360_e682713c",
+      "range": {
+        "startLine": 41,
+        "startChar": 72,
+        "endLine": 41,
+        "endChar": 74
+      },
+      "revId": "242a5f5406591684116a3293f519e22a2242ead4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
