@@ -22,6 +22,30 @@
       "revId": "2c094b95c86f3315e359d971fbfa0ad60d173053",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f61d279e_d471e56d",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ControlLoopAck.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-08-04T14:10:42Z",
+      "side": 1,
+      "message": "Yes, We can have either true or false, depending on whether the statechange succeeded or failed for a respective controlLoopElement on a particular participant. For example: {(CLElementID1, (true, \"ControlLoop State changed from PASSIVE to RUNNING\")), (CLElementID2, (false, \"ControlLoop State change failed\"))}",
+      "parentUuid": "6ec21aa7_aa27df13",
+      "range": {
+        "startLine": 61,
+        "startChar": 27,
+        "endLine": 61,
+        "endChar": 34
+      },
+      "revId": "2c094b95c86f3315e359d971fbfa0ad60d173053",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
