@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f98a9af8_09000cb5",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/web/GlobalControllerExceptionHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-05T13:05:55Z",
+      "side": 1,
+      "message": "maybe we should create a JIRA for Jakarta to create exception superclasses for both caught and uncaught exceptions that contain a code and message.  Then one of these methods could be removed.  In fact, at that point, this whole class could potentially be moved to policy/common so that all of the controllers can make use of it.",
+      "revId": "612c43517adedd53466d919fa3c9088b23ef4c7c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
