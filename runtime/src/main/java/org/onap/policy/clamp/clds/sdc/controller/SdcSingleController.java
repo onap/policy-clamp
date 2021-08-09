@@ -24,8 +24,6 @@
 
 package org.onap.policy.clamp.clds.sdc.controller;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import java.security.SecureRandom;
 import java.util.Date;
 import java.util.Map.Entry;
@@ -52,13 +50,15 @@ import org.onap.sdc.impl.DistributionClientFactory;
 import org.onap.sdc.tosca.parser.exceptions.SdcToscaParserException;
 import org.onap.sdc.utils.DistributionActionResultEnum;
 import org.onap.sdc.utils.DistributionStatusEnum;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class handles one sdc controller defined in the config.
  */
 public class SdcSingleController {
 
-    private static final EELFLogger logger = EELFManager.getInstance().getLogger(SdcSingleController.class);
+    private static final Logger logger = LoggerFactory.getLogger(SdcSingleController.class);
     private boolean isSdcClientAutoManaged = false;
     private CsarInstaller csarInstaller;
     private ClampProperties refProp;
@@ -94,8 +94,8 @@ public class SdcSingleController {
         @Override
         public void activateCallback(INotificationData notificationData) {
             Date startTime = new Date();
-            logger.info("Receive a callback notification in SDC, nb of resources: "
-                    + notificationData.getResources().size());
+            logger.info("Receive a callback notification in SDC, nb of resources: {}",
+                    notificationData.getResources().size());
             sdcController.treatNotification(notificationData);
             LoggingUtils.setTimeContext(startTime, new Date());
             LoggingUtils.setResponseContext("0", "SDC Notification received and processed successfully",
@@ -176,7 +176,7 @@ public class SdcSingleController {
      *                                is done when already initialized
      */
     public void initSdc() throws SdcControllerException {
-        logger.info("Attempt to initialize the SDC Controller: " + sdcConfig.getSdcControllerName());
+        logger.info("Attempt to initialize the SDC Controller: {}", sdcConfig.getSdcControllerName());
         if (this.getControllerStatus() != SdcSingleControllerStatus.STOPPED) {
             throw new SdcControllerException("The controller is already initialized, call the closeSDC method first");
         }
@@ -185,13 +185,13 @@ public class SdcSingleController {
         }
         IDistributionClientResult result = distributionClient.init(sdcConfig, new SdcNotificationCallBack(this));
         if (!result.getDistributionActionResult().equals(DistributionActionResultEnum.SUCCESS)) {
-            logger.error("SDC distribution client init failed with reason:" + result.getDistributionMessageResult());
+            logger.error("SDC distribution client init failed with reason: {}", result.getDistributionMessageResult());
             this.changeControllerStatus(SdcSingleControllerStatus.STOPPED);
             throw new SdcControllerException("Initialization of the SDC Controller failed with reason: "
                     + result.getDistributionMessageResult());
         }
-        logger.info("SDC Controller successfully initialized: " + sdcConfig.getSdcControllerName());
-        logger.info("Attempt to start the SDC Controller: " + sdcConfig.getSdcControllerName());
+        logger.info("SDC Controller successfully initialized: {}", sdcConfig.getSdcControllerName());
+        logger.info("Attempt to start the SDC Controller: {}", sdcConfig.getSdcControllerName());
         result = this.distributionClient.start();
         if (!result.getDistributionActionResult().equals(DistributionActionResultEnum.SUCCESS)) {
             logger.error("SDC distribution client start failed with reason:" + result.getDistributionMessageResult());
@@ -199,7 +199,7 @@ public class SdcSingleController {
             throw new SdcControllerException(
                     "Startup of the SDC Controller failed with reason: " + result.getDistributionMessageResult());
         }
-        logger.info("SDC Controller successfully started: " + sdcConfig.getSdcControllerName());
+        logger.info("SDC Controller successfully started: {}", sdcConfig.getSdcControllerName());
         this.changeControllerStatus(SdcSingleControllerStatus.IDLE);
     }
 
@@ -262,7 +262,7 @@ public class SdcSingleController {
             // wait for a random time, so that 2 running Clamp will not treat
             // the same Notification at the same time
             Thread.sleep((new SecureRandom().nextInt(10) + 1) * 1000L);
-            logger.info("Notification received for service UUID:" + notificationData.getServiceUUID());
+            logger.info("Notification received for service UUID: {}", notificationData.getServiceUUID());
             this.changeControllerStatus(SdcSingleControllerStatus.BUSY);
             csar = new CsarHandler(notificationData, this.sdcConfig.getSdcControllerName(),
                     refProp.getStringValue(CONFIG_SDC_FOLDER));
@@ -323,8 +323,8 @@ public class SdcSingleController {
     }
 
     private IDistributionClientDownloadResult downloadTheArtifact(IArtifactInfo artifact) throws SdcDownloadException {
-        logger.info("Trying to download the artifact : " + artifact.getArtifactURL() + " UUID: "
-                + artifact.getArtifactUUID());
+        logger.info("Trying to download the artifact : {}  UUID: {}",
+              artifact.getArtifactURL(), artifact.getArtifactUUID());
         IDistributionClientDownloadResult downloadResult;
         try {
             downloadResult = distributionClient.download(artifact);
@@ -336,8 +336,8 @@ public class SdcSingleController {
             throw new SdcDownloadException("Exception caught when downloading the artifact", e);
         }
         if (DistributionActionResultEnum.SUCCESS.equals(downloadResult.getDistributionActionResult())) {
-            logger.info("Successfully downloaded the artifact " + artifact.getArtifactURL() + " UUID "
-                    + artifact.getArtifactUUID() + "Size of payload " + downloadResult.getArtifactPayload().length);
+            logger.info("Successfully downloaded the artifact {} UUID {} Size of payload {}", artifact.getArtifactURL(),
+                    artifact.getArtifactUUID(), downloadResult.getArtifactPayload().length);
         } else {
             throw new SdcDownloadException("Artifact " + artifact.getArtifactName()
                     + " could not be downloaded from SDC URL " + artifact.getArtifactURL() + " UUID "
@@ -373,9 +373,9 @@ public class SdcSingleController {
                     break;
             }
         } catch (RuntimeException e) {
-            logger.warn("Unable to send the SDC Notification (" + action + ") due to an exception", e);
+            logger.warn("Unable to send the SDC Notification ({}) due to an exception", action, e);
         }
-        logger.info("SDC Notification sent successfully(" + action + ")");
+        logger.info("SDC Notification sent successfully ({})", action);
     }
 
     private void sendComponentStatus(INotificationData notificationData, DistributionStatusEnum status,
@@ -415,9 +415,9 @@ public class SdcSingleController {
                 this.distributionClient.sendComponentDoneStatus(message);
             }
         } catch (RuntimeException e) {
-            logger.warn("Unable to send the SDC Notification (" + status.name() + ") due to an exception", e);
+            logger.warn("Unable to send the SDC Notification ({}) due to an exception", status.name(), e);
         }
-        logger.info("SDC Notification sent successfully(" + status.name() + ")");
+        logger.info("SDC Notification sent successfully ({})", status.name());
     }
 
     private void sendDownloadStatus(IDistributionStatusMessage message, String errorReason) {

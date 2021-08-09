@@ -53,6 +53,10 @@
             <totalSizeCap>1GB</totalSizeCap>
         </rollingPolicy>
     </appender>
+    <appender name="asyncError" class="ch.qos.logback.classic.AsyncAppender">
+        <queueSize>256</queueSize>
+        <appender-ref ref="ERROR" />
+    </appender>
 
     <appender name="DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${logDirectory}/debug.log</file>
@@ -69,19 +73,14 @@
             <totalSizeCap>1GB</totalSizeCap>
         </rollingPolicy>
     </appender>
-
+    <appender name="asyncDebug" class="ch.qos.logback.classic.AsyncAppender">
+        <queueSize>256</queueSize>
+        <appender-ref ref="DEBUG" />
+    </appender>
 
     <appender name="AUDIT" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
-            <evaluator class="ch.qos.logback.classic.boolex.OnMarkerEvaluator">
-                <marker>ENTRY</marker>
-                <marker>EXIT</marker>
-            </evaluator>
-            <onMismatch>DENY</onMismatch>
-            <onMatch>ACCEPT</onMatch>
-        </filter>
+        <filter class="org.onap.policy.clamp.clds.util.LoggerMarkerFilter$AuditLoggerMarkerFilter" />
         <file>${logDirectory}/audit.log</file>
-        <append>true</append>
         <encoder>
             <pattern>${auditPattern}</pattern>
         </encoder>
@@ -93,22 +92,14 @@
             <totalSizeCap>1GB</totalSizeCap>
         </rollingPolicy>
     </appender>
-    <appender name="asyncEELFAudit" class="ch.qos.logback.classic.AsyncAppender">
+    <appender name="asyncAudit" class="ch.qos.logback.classic.AsyncAppender">
         <queueSize>256</queueSize>
         <appender-ref ref="AUDIT" />
     </appender>
 
     <appender name="METRIC" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
-            <evaluator class="ch.qos.logback.classic.boolex.OnMarkerEvaluator">
-                <marker>INVOKE</marker>
-                <marker>INVOKE-RETURN</marker>
-            </evaluator>
-            <onMismatch>DENY</onMismatch>
-            <onMatch>ACCEPT</onMatch>
-        </filter>
+        <filter class="org.onap.policy.clamp.clds.util.LoggerMarkerFilter$MetricLoggerMarkerFilter" />
         <file>${logDirectory}/metric.log</file>
-        <append>true</append>
         <encoder>
             <pattern>${metricPattern}</pattern>
         </encoder>
@@ -120,16 +111,15 @@
             <totalSizeCap>1GB</totalSizeCap>
         </rollingPolicy>
     </appender>
-
-    <appender name="asyncEELFMetrics" class="ch.qos.logback.classic.AsyncAppender">
+    <appender name="asyncMetric" class="ch.qos.logback.classic.AsyncAppender">
         <queueSize>256</queueSize>
         <appender-ref ref="METRIC" />
     </appender>
 
     <!-- SECURITY related loggers -->
     <appender name="SECURITY" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="org.onap.policy.clamp.clds.util.LoggerMarkerFilter$SecurityLoggerMarkerFilter" />
         <file>${logDirectory}/security.log</file>
-        <append>true</append>
         <encoder>
             <pattern>%X{EntryTimestamp}|%date{yyyy-MM-dd'T'HH:mm:ss.SSSXXX,UTC}|%X{RequestID}|%X{ServiceInstanceId}|%.20thread|%X{VirtualServerName}|%X{ServiceName}|%X{PartnerName}|%X{StatusCode}|%X{ResponseCode}|%X{ResponseDescription}|%X{InstanceUUID}|%.-5level|%X{AlertSeverity}|%X{ServerIPAddress}|%X{ElapsedTime}|%X{ServerFQDN}|%X{RemoteHost}|%X{ClassName}|%X{Unused}|%X{ProcessKey}|%X{CustomField1}|%X{CustomField2}|%X{CustomField3}|%X{CustomField4}|%msg%n
             </pattern>
@@ -142,11 +132,11 @@
             <totalSizeCap>1GB</totalSizeCap>
         </rollingPolicy>
     </appender>
-
-    <appender name="asyncEELFSecurity" class="ch.qos.logback.classic.AsyncAppender">
+    <appender name="asyncSecurity" class="ch.qos.logback.classic.AsyncAppender">
         <queueSize>256</queueSize>
         <appender-ref ref="SECURITY" />
     </appender>
+
     <!-- logback jms appenders & loggers definition starts here -->
     <appender name="auditLogs" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
@@ -204,20 +194,6 @@
         <appender-ref ref="DEBUG" />
     </logger>
 
-    <logger name="com.att.eelf.error" level="OFF">
-        <appender-ref ref="ERROR" />
-    </logger>
-    <!-- EELF related loggers -->
-    <logger name="com.att.eelf.audit" level="INFO" additivity="false">
-        <appender-ref ref="asyncEELFAudit" />
-    </logger>
-    <logger name="com.att.eelf.metrics" level="DEBUG" additivity="false">
-        <appender-ref ref="asyncEELFMetrics" />
-    </logger>
-    <logger name="com.att.eelf.security" level="DEBUG" additivity="false">
-        <appender-ref ref="asyncEELFSecurity" />
-    </logger>
-
     <!-- logback internals logging -->
     <logger name="ch.qos.logback.classic" level="INFO" />
     <logger name="ch.qos.logback.core" level="INFO" />
@@ -233,10 +209,10 @@
     <!-- logback jms appenders & loggers definition ends here -->
 
     <root level="DEBUG">
-        <appender-ref ref="DEBUG" />
-        <appender-ref ref="STDOUT" />
-        <appender-ref ref="AUDIT" />
-        <appender-ref ref="METRIC" />
-        <appender-ref ref="ERROR" />
+        <appender-ref ref="asyncDebug" />
+        <appender-ref ref="asyncError" />
+        <appender-ref ref="asyncAudit" />
+        <appender-ref ref="asyncMetric" />
+        <appender-ref ref="asyncSecurity" />
     </root>
 </included>

@@ -25,8 +25,6 @@
 
 package org.onap.policy.clamp.policy;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import java.io.UnsupportedEncodingException;
@@ -44,13 +42,15 @@ import org.onap.policy.clamp.loop.common.AuditEntity;
 import org.onap.policy.clamp.loop.service.Service;
 import org.onap.policy.clamp.loop.template.LoopElementModel;
 import org.onap.policy.clamp.loop.template.PolicyModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @MappedSuperclass
 @TypeDef(name = "json", typeClass = StringJsonUserType.class)
 public abstract class Policy extends AuditEntity {
 
     @Transient
-    private static final EELFLogger logger = EELFManager.getInstance().getLogger(Policy.class);
+    private static final Logger logger = LoggerFactory.getLogger(Policy.class);
 
     @Expose
     @Type(type = "json")

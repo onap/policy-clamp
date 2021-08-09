@@ -23,8 +23,6 @@
 
 package org.onap.policy.clamp.policy;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import org.apache.camel.CamelContext;
@@ -36,6 +34,8 @@ import org.onap.policy.clamp.clds.util.JsonUtils;
 import org.onap.policy.clamp.loop.template.PolicyModel;
 import org.onap.policy.clamp.loop.template.PolicyModelsService;
 import org.onap.policy.models.pdp.concepts.PdpGroups;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -58,7 +58,7 @@ public class PolicyEngineServices {
 
     private static final String RAISE_EXCEPTION_FLAG = "raiseHttpExceptionFlag";
 
-    private static final EELFLogger logger = EELFManager.getInstance().getLogger(PolicyEngineServices.class);
+    private static final Logger logger = LoggerFactory.getLogger(PolicyEngineServices.class);
     private int retryInterval = 0;
     private int retryLimit = 1;
 
@@ -106,8 +106,8 @@ public class PolicyEngineServices {
                 return null;
             }
         } else {
-            logger.info("Skipping policy model download as it exists already in the database " + policyType
-                    + "/" + policyVersion);
+            logger.info("Skipping policy model download as it exists already in the database {} / {}",
+                policyType, policyVersion);
             return policyModelFound;
         }
     }
@@ -161,7 +161,8 @@ public class PolicyEngineServices {
      * @return A string with the whole policy tosca model
      */
     public String downloadOnePolicyToscaModel(String policyType, String policyVersion) {
-        logger.info("Downloading the policy tosca model " + policyType + "/" + policyVersion);
+        logger.info("Downloading the policy tosca model {} / {}",
+             policyType, policyVersion);
         var options = new DumperOptions();
         options.setDefaultScalarStyle(DumperOptions.ScalarStyle.PLAIN);
         options.setIndent(4);
@@ -207,13 +208,13 @@ public class PolicyEngineServices {
                         .is2xxSuccessful()) {
                     return (String) exchangeResponse.getIn().getBody();
                 } else {
-                    logger.info(logMsg + " query " + retryInterval + "ms before retrying ...");
+                    logger.info("{} query ms before retrying {} ...", logMsg, retryInterval);
                     // wait for a while and try to connect to DCAE again
                     Thread.sleep(retryInterval);
 
                 }
             } catch (IOException e) {
-                logger.error("IOException caught when trying to call Camel flow:" + camelFlow, e);
+                logger.error("IOException caught when trying to call Camel flow: {}", camelFlow, e);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }

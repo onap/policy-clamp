@@ -24,8 +24,6 @@
 
 package org.onap.policy.clamp.clds.client;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import java.io.IOException;
 import java.util.Date;
 import org.apache.camel.CamelContext;
@@ -40,6 +38,9 @@ import org.onap.policy.clamp.clds.config.ClampProperties;
 import org.onap.policy.clamp.clds.model.dcae.DcaeInventoryResponse;
 import org.onap.policy.clamp.clds.util.JsonUtils;
 import org.onap.policy.clamp.clds.util.LoggingUtils;
+import org.onap.policy.common.utils.logging.LoggerUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -53,9 +54,8 @@ public class DcaeInventoryServices {
     @Autowired
     CamelContext camelContext;
 
-    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(DcaeInventoryServices.class);
-    protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
-    protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
+    protected static final Logger logger = LoggerFactory.getLogger(DcaeInventoryServices.class);
+
     public static final String DCAE_INVENTORY_URL = "dcae.inventory.url";
     public static final String DCAE_INVENTORY_RETRY_INTERVAL = "dcae.intentory.retry.interval";
     public static final String DCAE_INVENTORY_RETRY_LIMIT = "dcae.intentory.retry.limit";
@@ -109,7 +109,7 @@ public class DcaeInventoryServices {
             retryInterval = Integer.valueOf(refProp.getStringValue(DCAE_INVENTORY_RETRY_INTERVAL));
         }
         for (int i = 0; i < retryLimit; i++) {
-            metricsLogger.info("Attempt n°" + i + " to contact DCAE inventory");
+            logger.info(LoggerUtils.METRIC_LOG_MARKER, "Attempt n° {} to contact DCAE inventory", i);
             try (ProducerTemplate producerTemplate = camelContext.createProducerTemplate()) {
                 Exchange exchangeResponse = producerTemplate
                         .send("direct:get-dcae-blueprint-inventory", ExchangeBuilder.anExchange(camelContext)
@@ -122,23 +122,24 @@ public class DcaeInventoryServices {
                         .is2xxSuccessful()) {
                     String dcaeResponse = (String) exchangeResponse.getIn().getBody();
                     int totalCount = getTotalCountFromDcaeInventoryResponse(dcaeResponse);
-                    metricsLogger.info("getDcaeInformation complete: totalCount returned=" + totalCount);
+                    logger.info(LoggerUtils.METRIC_LOG_MARKER,
+                          "getDcaeInformation complete: totalCount returned= {}", totalCount);
                     if (totalCount > 0) {
-                        logger.info("getDcaeInformation, answer from DCAE inventory:" + dcaeResponse);
+                        logger.info("getDcaeInformation, answer from DCAE inventory: {}", dcaeResponse);
                         LoggingUtils.setResponseContext("0", "Get Dcae Information success", this.getClass().getName());
                         Date startTime = new Date();
                         LoggingUtils.setTimeContext(startTime, new Date());
                         return getItemsFromDcaeInventoryResponse(dcaeResponse);
                     } else {
-                        logger.info("Dcae inventory totalCount returned is 0, so waiting " + retryInterval
-                                + "ms before retrying ...");
+                        logger.info("Dcae inventory totalCount returned is 0, so waiting {} ms before retrying ...",
+                             retryInterval);
                         // wait for a while and try to connect to DCAE again
                         Thread.sleep(retryInterval);
                     }
                 }
             }
         }
-        logger.warn("Dcae inventory totalCount returned is still 0, after " + retryLimit + " attempts, returning NULL");
+        logger.warn("Dcae inventory totalCount returned is still 0, after {} attempts, returning NULL", retryLimit);
         return null;
     }
 }
