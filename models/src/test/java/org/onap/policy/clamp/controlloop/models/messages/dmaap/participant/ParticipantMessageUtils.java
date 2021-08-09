@@ -20,6 +20,11 @@
 
 package org.onap.policy.clamp.controlloop.models.messages.dmaap.participant;
 
+import static org.junit.Assert.assertEquals;
+
+import org.onap.policy.common.utils.coder.CoderException;
+import org.onap.policy.common.utils.coder.StandardCoder;
+
 /**
  * Utility class for tests of ParticipantMessage subclasses.
  */
@@ -31,5 +36,20 @@ public class ParticipantMessageUtils {
 
     public static String removeVariableFields(String text) {
         return text.replaceAll("messageId=[^,]*", "messageId=xxx").replaceAll("timestamp=[^,]*", "timestamp=nnn");
+    }
+
+    /**
+     * Check if object is Serializable.
+     *
+     * @param object the Object
+     * @param clazz the class of the Object
+     * @throws CoderException if object is not Serializable
+     */
+    public static <T> void assertSerializable(Object object, Class<T> clazz) throws CoderException {
+        var standardCoder = new StandardCoder();
+        var json = standardCoder.encode(object);
+        var other = standardCoder.decode(json, clazz);
+
+        assertEquals(removeVariableFields(object.toString()), removeVariableFields(other.toString()));
     }
 }

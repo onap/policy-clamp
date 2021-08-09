@@ -22,11 +22,13 @@ package org.onap.policy.clamp.controlloop.models.messages.dmaap.participant;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
+import static org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageUtils.assertSerializable;
 import static org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageUtils.removeVariableFields;
 
 import java.time.Instant;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
@@ -34,7 +36,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
  */
 class ParticipantStatusReqTest {
     @Test
-    void testCopyConstructor() {
+    void testCopyConstructor() throws CoderException {
         assertThatThrownBy(() -> new ParticipantStatusReq(null)).isInstanceOf(NullPointerException.class);
 
         ParticipantStatusReq orig = new ParticipantStatusReq();
@@ -48,5 +50,7 @@ class ParticipantStatusReqTest {
 
         ParticipantStatusReq other = new ParticipantStatusReq(orig);
         assertEquals(removeVariableFields(orig.toString()), removeVariableFields(other.toString()));
+
+        assertSerializable(orig, ParticipantStatusReq.class);
     }
 }

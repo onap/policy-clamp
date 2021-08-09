@@ -34,7 +34,6 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElementDefinition;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopStateChange;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopUpdate;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdate;
@@ -181,7 +180,7 @@ public class TestListenerUtils {
         final ParticipantUpdate participantUpdateMsg = new ParticipantUpdate();
         ToscaConceptIdentifier participantId = new ToscaConceptIdentifier("org.onap.PM_Policy", "1.0.0");
         ToscaConceptIdentifier participantType = new ToscaConceptIdentifier(
-                        "org.onap.policy.controlloop.PolicyControlLoopParticipant", "2.3.1");
+                "org.onap.policy.controlloop.PolicyControlLoopParticipant", "2.3.1");
 
         participantUpdateMsg.setParticipantId(participantId);
         participantUpdateMsg.setTimestamp(Instant.now());
@@ -200,10 +199,10 @@ public class TestListenerUtils {
         clDefinition.setCommonPropertiesMap(commonPropertiesMap);
 
         Map<UUID, ControlLoopElementDefinition> controlLoopElementDefinitionMap =
-            Map.of(UUID.randomUUID(), clDefinition);
+                Map.of(UUID.randomUUID(), clDefinition);
 
-        Map<ToscaConceptIdentifier, Map<UUID, ControlLoopElementDefinition>>
-            participantDefinitionUpdateMap = Map.of(participantId, controlLoopElementDefinitionMap);
+        Map<String, Map<UUID, ControlLoopElementDefinition>> participantDefinitionUpdateMap =
+                Map.of(participantId.toString(), controlLoopElementDefinitionMap);
         participantUpdateMsg.setParticipantDefinitionUpdateMap(participantDefinitionUpdateMap);
 
         return participantUpdateMsg;
@@ -217,10 +216,8 @@ public class TestListenerUtils {
      * @return ControlLoopUpdate message
      * @throws CoderException exception while reading the file to object
      */
-    public static ControlLoopUpdate createParticipantClUpdateMsgFromJson(String jsonFilePath)
-            throws CoderException {
-        ControlLoopUpdate controlLoopUpdateMsg =
-                CODER.decode(new File(jsonFilePath), ControlLoopUpdate.class);
+    public static ControlLoopUpdate createParticipantClUpdateMsgFromJson(String jsonFilePath) throws CoderException {
+        ControlLoopUpdate controlLoopUpdateMsg = CODER.decode(new File(jsonFilePath), ControlLoopUpdate.class);
         return controlLoopUpdateMsg;
     }
 
@@ -254,7 +251,7 @@ public class TestListenerUtils {
             String policyTypeString = ResourceUtils.getResourceAsString(policyTypeFilePath);
 
             ToscaServiceTemplate foundPolicyTypeSt =
-                yamlTranslator.fromYaml(policyTypeString, ToscaServiceTemplate.class);
+                    yamlTranslator.fromYaml(policyTypeString, ToscaServiceTemplate.class);
 
             toscaServiceTemplate.setDerivedFrom(foundPolicyTypeSt.getDerivedFrom());
             toscaServiceTemplate.setDescription(foundPolicyTypeSt.getDescription());
@@ -291,7 +288,7 @@ public class TestListenerUtils {
             String policiesString = ResourceUtils.getResourceAsString(policiesFilePath);
 
             ToscaServiceTemplate foundPoliciesSt =
-                yamlTranslator.fromYaml(policiesString, ToscaServiceTemplate.class);
+                    yamlTranslator.fromYaml(policiesString, ToscaServiceTemplate.class);
             toscaServiceTemplate.getToscaTopologyTemplate().setPolicies(
                     foundPoliciesSt.getToscaTopologyTemplate().getPolicies());
         }
@@ -305,7 +302,7 @@ public class TestListenerUtils {
             }
 
             ToscaServiceTemplate serviceTemplate = yamlTranslator.fromYaml(
-                        controlLoopString, ToscaServiceTemplate.class);
+                    controlLoopString, ToscaServiceTemplate.class);
             return serviceTemplate;
         } catch (FileNotFoundException e) {
             LOGGER.error("cannot find YAML file", controlLoopFilePath);

@@ -22,15 +22,17 @@ package org.onap.policy.clamp.controlloop.models.messages.dmaap.participant;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
+import static org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageUtils.assertSerializable;
 
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.common.utils.coder.CoderException;
 
 class ParticipantAckMessageTest {
     private ParticipantAckMessage message;
 
     @Test
-    void testCopyConstructor() {
+    void testCopyConstructor() throws CoderException {
         assertThatThrownBy(() -> new ParticipantAckMessage((ParticipantAckMessage) null))
                 .isInstanceOf(NullPointerException.class);
 
@@ -45,6 +47,8 @@ class ParticipantAckMessageTest {
         newmsg = new ParticipantAckMessage(message);
         newmsg.setResponseTo(message.getResponseTo());
         assertEquals(message.toString(), newmsg.toString());
+
+        assertSerializable(message, ParticipantAckMessage.class);
     }
 
     private ParticipantAckMessage makeMessage() {

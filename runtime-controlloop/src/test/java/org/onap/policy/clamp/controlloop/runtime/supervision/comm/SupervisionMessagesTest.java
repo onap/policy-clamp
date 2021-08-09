@@ -79,8 +79,7 @@ class SupervisionMessagesTest extends CommonRestController {
     public static void setupDbProviderParameters() throws PfModelException {
         ClRuntimeParameterGroup controlLoopParameters = CommonTestData.geParameterGroup("instantproviderdb");
 
-        modelsProvider =
-                CommonTestData.getPolicyModelsProvider(controlLoopParameters.getDatabaseProviderParameters());
+        modelsProvider = CommonTestData.getPolicyModelsProvider(controlLoopParameters.getDatabaseProviderParameters());
         clProvider = new ControlLoopProvider(controlLoopParameters.getDatabaseProviderParameters());
         var participantStatisticsProvider =
                 new ParticipantStatisticsProvider(controlLoopParameters.getDatabaseProviderParameters());
@@ -96,8 +95,8 @@ class SupervisionMessagesTest extends CommonRestController {
         var participantDeregisterAckPublisher = Mockito.mock(ParticipantDeregisterAckPublisher.class);
         var participantUpdatePublisher = Mockito.mock(ParticipantUpdatePublisher.class);
         supervisionHandler = new SupervisionHandler(clProvider, participantProvider, monitoringProvider,
-                        controlLoopUpdatePublisher, controlLoopStateChangePublisher,
-                        participantRegisterAckPublisher, participantDeregisterAckPublisher, participantUpdatePublisher);
+                controlLoopUpdatePublisher, controlLoopStateChangePublisher, participantRegisterAckPublisher,
+                participantDeregisterAckPublisher, participantUpdatePublisher);
     }
 
     @AfterAll
@@ -116,8 +115,8 @@ class SupervisionMessagesTest extends CommonRestController {
         synchronized (lockit) {
             ParticipantRegisterListener participantRegisterListener =
                     new ParticipantRegisterListener(supervisionHandler);
-            ToscaServiceTemplate serviceTemplate = yamlTranslator
-                .fromYaml(ResourceUtils.getResourceAsString(TOSCA_SERVICE_TEMPLATE_YAML), ToscaServiceTemplate.class);
+            ToscaServiceTemplate serviceTemplate = yamlTranslator.fromYaml(
+                    ResourceUtils.getResourceAsString(TOSCA_SERVICE_TEMPLATE_YAML), ToscaServiceTemplate.class);
 
             List<ToscaNodeTemplate> listOfTemplates = commissioningProvider.getControlLoopDefinitions(null, null);
             commissioningProvider.createControlLoopDefinitions(serviceTemplate);
@@ -189,10 +188,10 @@ class SupervisionMessagesTest extends CommonRestController {
         clDefinition.setCommonPropertiesMap(commonPropertiesMap);
 
         Map<UUID, ControlLoopElementDefinition> controlLoopElementDefinitionMap =
-            Map.of(UUID.randomUUID(), clDefinition);
+                Map.of(UUID.randomUUID(), clDefinition);
 
-        Map<ToscaConceptIdentifier, Map<UUID, ControlLoopElementDefinition>>
-            participantDefinitionUpdateMap = Map.of(getParticipantId(), controlLoopElementDefinitionMap);
+        Map<String, Map<UUID, ControlLoopElementDefinition>> participantDefinitionUpdateMap =
+                Map.of(getParticipantId().toString(), controlLoopElementDefinitionMap);
         participantUpdateMsg.setParticipantDefinitionUpdateMap(participantDefinitionUpdateMap);
 
         synchronized (lockit) {
