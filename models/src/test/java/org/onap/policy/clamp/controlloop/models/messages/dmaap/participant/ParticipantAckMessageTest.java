@@ -22,15 +22,18 @@ package org.onap.policy.clamp.controlloop.models.messages.dmaap.participant;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
+import static org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageUtils.removeVariableFields;
 
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.common.utils.coder.CoderException;
+import org.onap.policy.common.utils.coder.StandardCoder;
 
 class ParticipantAckMessageTest {
     private ParticipantAckMessage message;
 
     @Test
-    void testCopyConstructor() {
+    void testCopyConstructor() throws CoderException {
         assertThatThrownBy(() -> new ParticipantAckMessage((ParticipantAckMessage) null))
                 .isInstanceOf(NullPointerException.class);
 
@@ -45,6 +48,13 @@ class ParticipantAckMessageTest {
         newmsg = new ParticipantAckMessage(message);
         newmsg.setResponseTo(message.getResponseTo());
         assertEquals(message.toString(), newmsg.toString());
+
+        var standardCoder = new StandardCoder();
+        var json = standardCoder.encode(message);
+        var other = standardCoder.decode(json, ParticipantAckMessage.class);
+
+        assertEquals(removeVariableFields(message.toString()),
+                removeVariableFields(other.toString()));
     }
 
     private ParticipantAckMessage makeMessage() {

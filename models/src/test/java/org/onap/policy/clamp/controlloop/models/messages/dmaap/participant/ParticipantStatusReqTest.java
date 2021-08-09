@@ -27,6 +27,8 @@ import static org.onap.policy.clamp.controlloop.models.messages.dmaap.participan
 import java.time.Instant;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.common.utils.coder.CoderException;
+import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
@@ -34,7 +36,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
  */
 class ParticipantStatusReqTest {
     @Test
-    void testCopyConstructor() {
+    void testCopyConstructor() throws CoderException {
         assertThatThrownBy(() -> new ParticipantStatusReq(null)).isInstanceOf(NullPointerException.class);
 
         ParticipantStatusReq orig = new ParticipantStatusReq();
@@ -48,5 +50,12 @@ class ParticipantStatusReqTest {
 
         ParticipantStatusReq other = new ParticipantStatusReq(orig);
         assertEquals(removeVariableFields(orig.toString()), removeVariableFields(other.toString()));
+
+        var standardCoder = new StandardCoder();
+        var json = standardCoder.encode(orig);
+        other = standardCoder.decode(json, ParticipantStatusReq.class);
+
+        assertEquals(removeVariableFields(orig.toString()),
+                removeVariableFields(other.toString()));
     }
 }

@@ -29,6 +29,8 @@ import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElementDefinition;
+import org.onap.policy.common.utils.coder.CoderException;
+import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
@@ -37,7 +39,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
  */
 class ParticipantUpdateTest {
     @Test
-    void testCopyConstructor() {
+    void testCopyConstructor() throws CoderException {
         assertThatThrownBy(() -> new ParticipantUpdate(null)).isInstanceOf(NullPointerException.class);
 
         ParticipantUpdate orig = new ParticipantUpdate();
@@ -65,12 +67,19 @@ class ParticipantUpdateTest {
 
         Map<UUID, ControlLoopElementDefinition> clElementDefinitionMap = Map.of(UUID.randomUUID(), clDefinition);
 
-        Map<ToscaConceptIdentifier, Map<UUID, ControlLoopElementDefinition>>
-            participantDefinitionUpdateMap = Map.of(id, clElementDefinitionMap);
+        Map<String, Map<UUID, ControlLoopElementDefinition>> participantDefinitionUpdateMap =
+                Map.of(id.toString(), clElementDefinitionMap);
         orig.setParticipantDefinitionUpdateMap(participantDefinitionUpdateMap);
 
         ParticipantUpdate other = new ParticipantUpdate(orig);
 
         assertEquals(removeVariableFields(orig.toString()), removeVariableFields(other.toString()));
+
+        var standardCoder = new StandardCoder();
+        var json = standardCoder.encode(orig);
+        other = standardCoder.decode(json, ParticipantUpdate.class);
+
+        assertEquals(removeVariableFields(orig.toString()),
+                removeVariableFields(other.toString()));
     }
 }

@@ -26,12 +26,14 @@ import static org.onap.policy.clamp.controlloop.models.messages.dmaap.participan
 
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.common.utils.coder.CoderException;
+import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class ParticipantUpdateAckTest {
 
     @Test
-    void testCopyConstructor() {
+    void testCopyConstructor() throws CoderException {
         assertThatThrownBy(() -> new ParticipantUpdateAck(null)).isInstanceOf(NullPointerException.class);
 
         final ParticipantUpdateAck orig = new ParticipantUpdateAck();
@@ -51,5 +53,12 @@ class ParticipantUpdateAckTest {
 
         assertEquals(removeVariableFields(orig.toString()),
                 removeVariableFields(new ParticipantUpdateAck(orig).toString()));
+
+        var standardCoder = new StandardCoder();
+        var json = standardCoder.encode(orig);
+        var other = standardCoder.decode(json, ParticipantUpdateAck.class);
+
+        assertEquals(removeVariableFields(orig.toString()),
+                removeVariableFields(other.toString()));
     }
 }

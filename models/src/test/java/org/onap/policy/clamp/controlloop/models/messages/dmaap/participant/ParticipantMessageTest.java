@@ -24,17 +24,20 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageUtils.removeVariableFields;
 
 import java.time.Instant;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.common.utils.coder.CoderException;
+import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class ParticipantMessageTest {
     private ParticipantMessage message;
 
     @Test
-    void testCopyConstructor() {
+    void testCopyConstructor() throws CoderException {
         assertThatThrownBy(() -> new ParticipantMessage((ParticipantMessage) null))
                 .isInstanceOf(NullPointerException.class);
 
@@ -51,6 +54,13 @@ class ParticipantMessageTest {
         newmsg.setMessageId(message.getMessageId());
         newmsg.setTimestamp(message.getTimestamp());
         assertEquals(message.toString(), newmsg.toString());
+
+        var standardCoder = new StandardCoder();
+        var json = standardCoder.encode(message);
+        var other = standardCoder.decode(json, ParticipantMessage.class);
+
+        assertEquals(removeVariableFields(message.toString()),
+                removeVariableFields(other.toString()));
     }
 
     @Test

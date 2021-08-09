@@ -29,6 +29,8 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
+import org.onap.policy.common.utils.coder.CoderException;
+import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
@@ -37,7 +39,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 class ControlLoopStateChangeTest {
 
     @Test
-    void testCopyConstructor() {
+    void testCopyConstructor() throws CoderException {
         assertThatThrownBy(() -> new ControlLoopStateChange(null)).isInstanceOf(NullPointerException.class);
 
         ControlLoopStateChange orig = new ControlLoopStateChange();
@@ -57,5 +59,12 @@ class ControlLoopStateChangeTest {
 
         assertEquals(removeVariableFields(orig.toString()),
                 removeVariableFields(new ControlLoopStateChange(orig).toString()));
+
+        var standardCoder = new StandardCoder();
+        var json = standardCoder.encode(orig);
+        var other = standardCoder.decode(json, ControlLoopStateChange.class);
+
+        assertEquals(removeVariableFields(orig.toString()),
+                removeVariableFields(other.toString()));
     }
 }

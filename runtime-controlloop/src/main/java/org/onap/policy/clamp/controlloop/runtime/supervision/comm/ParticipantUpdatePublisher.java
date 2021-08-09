@@ -71,9 +71,8 @@ public class ParticipantUpdatePublisher extends AbstractParticipantPublisher<Par
         Map<UUID, ControlLoopElementDefinition> controlLoopElementDefinitionMap = new LinkedHashMap<>();
         controlLoopElementDefinitionMap.put(UUID.randomUUID(), clDefinition);
 
-        Map<ToscaConceptIdentifier, Map<UUID, ControlLoopElementDefinition>> participantDefinitionUpdateMap =
-                new LinkedHashMap<>();
-        participantDefinitionUpdateMap.put(participantId, controlLoopElementDefinitionMap);
+        Map<String, Map<UUID, ControlLoopElementDefinition>> participantDefinitionUpdateMap = new LinkedHashMap<>();
+        participantDefinitionUpdateMap.put(participantId.toString(), controlLoopElementDefinitionMap);
         message.setParticipantDefinitionUpdateMap(participantDefinitionUpdateMap);
 
         LOGGER.debug("Participant Update sent {}", message);

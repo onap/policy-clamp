@@ -37,13 +37,15 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopStatistics;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantHealthStatus;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
+import org.onap.policy.common.utils.coder.CoderException;
+import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 class ParticipantStatusTest {
 
     @Test
-    void testCopyConstructor() {
+    void testCopyConstructor() throws CoderException {
         assertThatThrownBy(() -> new ParticipantStatus(null)).isInstanceOf(NullPointerException.class);
 
         final ParticipantStatus orig = new ParticipantStatus();
@@ -63,16 +65,23 @@ class ParticipantStatusTest {
         orig.setTimestamp(Instant.ofEpochMilli(3000));
 
         ControlLoopInfo clInfo = getControlLoopInfo(id);
-        orig.setControlLoopInfoMap(Map.of(id, clInfo));
+        orig.setControlLoopInfoMap(Map.of(id.toString(), clInfo));
 
         ControlLoopElementDefinition clDefinition = getClElementDefinition();
         Map<UUID, ControlLoopElementDefinition> clElementDefinitionMap = Map.of(UUID.randomUUID(), clDefinition);
-        Map<ToscaConceptIdentifier, Map<UUID, ControlLoopElementDefinition>>
-            participantDefinitionUpdateMap = Map.of(id, clElementDefinitionMap);
+        Map<String, Map<UUID, ControlLoopElementDefinition>>
+            participantDefinitionUpdateMap = Map.of(id.toString(), clElementDefinitionMap);
         orig.setParticipantDefinitionUpdateMap(participantDefinitionUpdateMap);
 
         assertEquals(removeVariableFields(orig.toString()),
                 removeVariableFields(new ParticipantStatus(orig).toString()));
+
+        var standardCoder = new StandardCoder();
+        var json = standardCoder.encode(orig);
+        var other = standardCoder.decode(json, ParticipantStatus.class);
+
+        assertEquals(removeVariableFields(orig.toString()),
+                removeVariableFields(other.toString()));
     }
 
     private ControlLoopInfo getControlLoopInfo(ToscaConceptIdentifier id) {
