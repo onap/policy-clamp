@@ -105,7 +105,6 @@ class ParticipantSimulatorTest {
 
                 ControlLoopUpdate controlLoopUpdateMsg =
                         TestListenerUtils.createControlLoopUpdateMsg();
-                controlLoopUpdateMsg.getControlLoop().setOrderedState(ControlLoopOrderedState.PASSIVE);
                 clUpdateListener.onTopicEvent(INFRA, TOPIC, null, controlLoopUpdateMsg);
 
             }
@@ -275,10 +274,6 @@ class ParticipantSimulatorTest {
         UUID uuid = controlLoopElements.keySet().iterator().next();
         ControlLoopElement controlLoopElement = controlLoopElements.get(uuid);
 
-        // Check the initial state on the ControlLoopElement, which is UNINITIALISED
-        assertEquals(ControlLoopOrderedState.UNINITIALISED, controlLoopElement.getOrderedState());
-
-        // Change the state of the ControlLoopElement to PASSIVE from UNINITIALISED
         controlLoopElement.setOrderedState(ControlLoopOrderedState.PASSIVE);
 
         // PUT REST call for updating ControlLoopElement

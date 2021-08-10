@@ -20,9 +20,19 @@
 
 package org.onap.policy.clamp.controlloop.runtime.supervision.comm;
 
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantDefinition;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantUpdates;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopUpdate;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -44,8 +54,43 @@ public class ControlLoopUpdatePublisher extends AbstractParticipantPublisher<Con
     public void send(ControlLoop controlLoop) {
         var controlLoopUpdateMsg = new ControlLoopUpdate();
         controlLoopUpdateMsg.setControlLoopId(controlLoop.getKey().asIdentifier());
-        controlLoopUpdateMsg.setControlLoop(controlLoop);
+        controlLoopUpdateMsg.setMessageId(UUID.randomUUID());
+        controlLoopUpdateMsg.setTimestamp(Instant.now());
+
+        List<ParticipantUpdates> participantUpdates = new ArrayList<>();
+        for (ControlLoopElement element : controlLoop.getElements().values()) {
+            prepareParticipantUpdate(element, participantUpdates);
+        }
+        controlLoopUpdateMsg.setParticipantUpdatesList(participantUpdates);
+
         LOGGER.debug("ControlLoopUpdate message sent", controlLoopUpdateMsg);
         super.send(controlLoopUpdateMsg);
+    }
+
+    private void prepareParticipantUpdate(ControlLoopElement clElement,
+        List<ParticipantUpdates> participantUpdates) {
+        if (participantUpdates.isEmpty()) {
+            participantUpdates.add(getControlLoopElementList(clElement));
+        } else {
+            boolean participantExists = false;
+            for (ParticipantUpdates participantUpdate : participantUpdates) {
+                if (participantUpdate.getParticipantId().equals(clElement.getParticipantId())) {
+                    participantUpdate.getControlLoopElementList().add(clElement);
+                    participantExists = true;
+                }
+            }
+            if (!participantExists) {
+                participantUpdates.add(getControlLoopElementList(clElement));
+            }
+        }
+    }
+
+    private ParticipantUpdates getControlLoopElementList(ControlLoopElement clElement) {
+        ParticipantUpdates participantUpdate = new ParticipantUpdates();
+        List<ControlLoopElement> controlLoopElementList = new ArrayList<>();
+        participantUpdate.setParticipantId(clElement.getParticipantId());
+        controlLoopElementList.add(clElement);
+        participantUpdate.setControlLoopElementList(controlLoopElementList);
+        return participantUpdate;
     }
 }

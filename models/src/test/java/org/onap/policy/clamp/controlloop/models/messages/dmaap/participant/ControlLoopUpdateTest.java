@@ -25,13 +25,16 @@ import static org.junit.Assert.assertEquals;
 import static org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageUtils.removeVariableFields;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElementDefinition;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantDefinition;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantUpdates;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
@@ -59,19 +62,13 @@ class ControlLoopUpdateTest {
         clElement.setParticipantId(id);
         clElement.setParticipantType(id);
 
-        ControlLoop controlLoop = new ControlLoop();
-        controlLoop.setName("controlLoop");
-        Map<UUID, ControlLoopElement> elements = Map.of(clElement.getId(), clElement);
-        controlLoop.setElements(elements);
-        orig.setControlLoop(controlLoop);
-
         Map<String, String> commonPropertiesMap = Map.of("Prop1", "PropValue");
         clElement.setCommonPropertiesMap(commonPropertiesMap);
 
-        Map<UUID, ControlLoopElement> controlLoopElementMap = Map.of(UUID.randomUUID(), clElement);
-        Map<ToscaConceptIdentifier, Map<UUID, ControlLoopElement>>
-            participantUpdateMap = Map.of(id, controlLoopElementMap);
-        orig.setParticipantUpdateMap(participantUpdateMap);
+        ParticipantUpdates participantUpdates = new ParticipantUpdates();
+        participantUpdates.setParticipantId(id);
+        participantUpdates.setControlLoopElementList(List.of(clElement));
+        orig.setParticipantUpdatesList(List.of(participantUpdates));
 
         ControlLoopUpdate other = new ControlLoopUpdate(orig);
 

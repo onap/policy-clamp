@@ -129,7 +129,7 @@ topology_template:
       description: Control loop element for CDS for Performance Management Subscription Handling
       properties:
         provider: Ericsson
-        participant_Id:
+        participant_id:
           name: org.onap.ccsdk.cds.controlloop.CdsControlLoopParticipant
           version: 3.2.1
         cds_blueprint_id:
@@ -197,7 +197,7 @@ topology_template:
       description: Control loop element for CDS for Performance Management Subscription Handling
       properties:
         provider: Ericsson
-        participant_Id:
+        participant_id:
           name: org.onap.ccsdk.cds.controlloop.CdsControlLoopParticipant
           version: 3.2.1
         cds_blueprint_id:

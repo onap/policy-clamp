@@ -20,33 +20,37 @@
 
 package org.onap.policy.clamp.controlloop.models.controlloop.concepts;
 
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
- * Class to represent a control loop info instance.
+ * Class to represent a participant definition update instance.
  */
+@Getter
 @NoArgsConstructor
 @Data
 @ToString
-public class ControlLoopInfo {
+public class ParticipantUpdates {
 
-    private ToscaConceptIdentifier controlLoopId;
+    private ToscaConceptIdentifier participantId;
 
-    private ControlLoopState state = ControlLoopState.UNINITIALISED;
-
-    private ControlLoopStatistics controlLoopStatistics;
+    // List of ControlLoopElement values for a particular participant
+    private List<ControlLoopElement> controlLoopElementList = new ArrayList<>();
 
     /**
      * Copy constructor, does a deep copy but as all fields here are immutable, it's just a regular copy.
      *
-     * @param otherElement the other element to copy from
+     * @param participantUpdates the participant with updates to copy from
      */
-    public ControlLoopInfo(final ControlLoopInfo otherElement) {
-        this.controlLoopId = otherElement.controlLoopId;
-        this.state = otherElement.state;
-        this.controlLoopStatistics = otherElement.controlLoopStatistics;
+    public ParticipantUpdates(final ParticipantUpdates participantUpdates) {
+        this.participantId = participantUpdates.participantId;
+        this.controlLoopElementList = PfUtils.mapList(
+            participantUpdates.controlLoopElementList, ControlLoopElement::new);
     }
 }

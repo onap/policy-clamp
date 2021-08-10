@@ -36,7 +36,7 @@ import org.onap.policy.clamp.controlloop.participant.intermediary.api.ControlLoo
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -136,11 +136,11 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
      * Callback method to handle an update on a control loop element.
      *
      * @param element the information on the control loop element
-     * @param controlLoopDefinition toscaServiceTemplate
+     * @param nodeTemplate toscaNodeTemplate
      * @throws PfModelException in case of an exception
      */
     @Override
-    public void controlLoopElementUpdate(ControlLoopElement element, ToscaServiceTemplate controlLoopDefinition)
+    public void controlLoopElementUpdate(ControlLoopElement element, ToscaNodeTemplate nodeTemplate)
             throws PfModelException {
         try {
             Loop loop = getStatus();
