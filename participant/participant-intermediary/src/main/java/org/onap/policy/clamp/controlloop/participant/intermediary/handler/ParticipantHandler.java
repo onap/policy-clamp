@@ -32,16 +32,13 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantHealthStatus;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantStatistics;
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopAck;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopStateChange;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopUpdate;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregister;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregisterAck;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessage;
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageType;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantRegister;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantRegisterAck;
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantResponseStatus;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStatus;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStatusReq;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdate;
@@ -50,6 +47,7 @@ import org.onap.policy.clamp.controlloop.participant.intermediary.comm.MessageSe
 import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -74,7 +72,10 @@ public class ParticipantHandler implements Closeable {
     @Setter
     private ParticipantHealthStatus healthStatus = ParticipantHealthStatus.UNKNOWN;
 
-    private final Map<UUID, ControlLoopElementDefinition> clElementDefsOnThisParticipant = new LinkedHashMap<>();
+    private Map<ToscaConceptIdentifier, ControlLoopElementDefinition> clElementDefsOnThisParticipant =
+            new LinkedHashMap<>();
+
+    public ToscaServiceTemplate toscaServiceTemplate = new ToscaServiceTemplate();
 
     /**
      * Constructor, set the participant ID and sender.
@@ -242,13 +243,8 @@ public class ParticipantHandler implements Closeable {
             return;
         }
 
-        Map<UUID, ControlLoopElementDefinition> clDefinitionMap =
-                participantUpdateMsg.getParticipantDefinitionUpdateMap().get(participantUpdateMsg.getParticipantId());
-
-        for (ControlLoopElementDefinition element : clDefinitionMap.values()) {
-            clElementDefsOnThisParticipant.put(element.getId(), element);
-        }
-
+        toscaServiceTemplate = participantUpdateMsg.getToscaServiceTemplate();
+        clElementDefsOnThisParticipant = participantUpdateMsg.getParticipantDefinitionUpdateMap().get(participantType);
         sendParticipantUpdateAck(participantUpdateMsg.getMessageId());
     }
 

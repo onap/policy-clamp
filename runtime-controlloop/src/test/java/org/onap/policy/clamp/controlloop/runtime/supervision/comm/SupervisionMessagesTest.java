@@ -22,7 +22,7 @@ package org.onap.policy.clamp.controlloop.runtime.supervision.comm;
 
 import java.time.Instant;
 import java.util.Collections;
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterAll;
@@ -41,6 +41,7 @@ import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.Parti
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdate;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdateAck;
 import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningProvider;
+import org.onap.policy.clamp.controlloop.runtime.instantiation.InstantiationUtils;
 import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
 import org.onap.policy.clamp.controlloop.runtime.monitoring.MonitoringProvider;
 import org.onap.policy.clamp.controlloop.runtime.supervision.SupervisionHandler;
@@ -48,6 +49,9 @@ import org.onap.policy.clamp.controlloop.runtime.util.CommonTestData;
 import org.onap.policy.clamp.controlloop.runtime.util.rest.CommonRestController;
 import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
+import org.onap.policy.common.utils.coder.Coder;
+import org.onap.policy.common.utils.coder.CoderException;
+import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.coder.YamlJsonTranslator;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfModelException;
@@ -63,12 +67,15 @@ class SupervisionMessagesTest extends CommonRestController {
     private static final Object lockit = new Object();
     private static final CommInfrastructure INFRA = CommInfrastructure.NOOP;
     private static final String TOPIC = "my-topic";
-    private static final long interval = 1000;
     private static SupervisionHandler supervisionHandler;
     private static CommissioningProvider commissioningProvider;
     private static ControlLoopProvider clProvider;
     private static PolicyModelsProvider modelsProvider;
     private static final YamlJsonTranslator yamlTranslator = new YamlJsonTranslator();
+    private static final String TOSCA_TEMPLATE_YAML =
+            "src/test/resources/rest/servicetemplates/pmsh_multiple_cl_tosca.yaml";
+    private static final String CONTROL_LOOP_ELEMENT = "ControlLoopElement";
+    private static final Coder CODER = new StandardCoder();
 
     /**
      * setup Db Provider Parameters.
@@ -119,7 +126,6 @@ class SupervisionMessagesTest extends CommonRestController {
             ToscaServiceTemplate serviceTemplate = yamlTranslator
                 .fromYaml(ResourceUtils.getResourceAsString(TOSCA_SERVICE_TEMPLATE_YAML), ToscaServiceTemplate.class);
 
-            List<ToscaNodeTemplate> listOfTemplates = commissioningProvider.getControlLoopDefinitions(null, null);
             commissioningProvider.createControlLoopDefinitions(serviceTemplate);
             participantRegisterListener.onTopicEvent(INFRA, TOPIC, null, participantRegisterMsg);
         }
@@ -169,6 +175,9 @@ class SupervisionMessagesTest extends CommonRestController {
 
     @Test
     void testSendParticipantUpdate() throws Exception {
+        InstantiationUtils.storeToscaServiceTemplate(TOSCA_TEMPLATE_YAML, commissioningProvider);
+        commissioningProvider.getToscaServiceTemplate(null, null);
+
         final ParticipantUpdate participantUpdateMsg = new ParticipantUpdate();
         participantUpdateMsg.setParticipantId(getParticipantId());
         participantUpdateMsg.setTimestamp(Instant.now());
@@ -176,29 +185,48 @@ class SupervisionMessagesTest extends CommonRestController {
         participantUpdateMsg.setTimestamp(Instant.ofEpochMilli(3000));
         participantUpdateMsg.setMessageId(UUID.randomUUID());
 
-        ToscaServiceTemplate toscaServiceTemplate = new ToscaServiceTemplate();
-        toscaServiceTemplate.setName("serviceTemplate");
-        toscaServiceTemplate.setDerivedFrom("parentServiceTemplate");
-        toscaServiceTemplate.setDescription("Description of serviceTemplate");
-        toscaServiceTemplate.setVersion("1.2.3");
+        ToscaServiceTemplate toscaServiceTemplate = commissioningProvider.getToscaServiceTemplate(null, null);
+        Map<ToscaConceptIdentifier, Map<ToscaConceptIdentifier, ControlLoopElementDefinition>>
+            participantDefinitionUpdateMap = new LinkedHashMap<>();
+        for (Map.Entry<String, ToscaNodeTemplate> toscaInputEntry :
+            toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates().entrySet()) {
+            if (toscaInputEntry.getValue().getType().contains(CONTROL_LOOP_ELEMENT)) {
+                Map<ToscaConceptIdentifier, ControlLoopElementDefinition> controlLoopElementDefinitionMap =
+                    new LinkedHashMap<>();
+                ToscaConceptIdentifier clParticipantId;
+                try {
+                    clParticipantId = CODER.decode(
+                            toscaInputEntry.getValue().getProperties().get("participant_id").toString(),
+                            ToscaConceptIdentifier.class);
+                } catch (CoderException e) {
+                    throw new RuntimeException("cannot get ParticipantId from toscaNodeTemplate", e);
+                }
 
-        ControlLoopElementDefinition clDefinition = new ControlLoopElementDefinition();
-        clDefinition.setId(UUID.randomUUID());
-        clDefinition.setControlLoopElementToscaServiceTemplate(toscaServiceTemplate);
-        Map<String, String> commonPropertiesMap = Map.of("Prop1", "PropValue");
-        clDefinition.setCommonPropertiesMap(commonPropertiesMap);
+                var clDefinition = new ControlLoopElementDefinition();
+                clDefinition.setControlLoopElementToscaNodeTemplate(toscaInputEntry.getValue());
+                clDefinition.setCommonPropertiesMap(Map.of("Prop1", "PrpValuue1"));
 
-        Map<UUID, ControlLoopElementDefinition> controlLoopElementDefinitionMap =
-            Map.of(UUID.randomUUID(), clDefinition);
+                if (!participantDefinitionUpdateMap.containsKey(clParticipantId)) {
+                    controlLoopElementDefinitionMap.put(
+                        new ToscaConceptIdentifier(toscaInputEntry.getKey(), toscaInputEntry.getValue().getVersion()),
+                        clDefinition);
+                    participantDefinitionUpdateMap.put(clParticipantId, controlLoopElementDefinitionMap);
+                } else {
+                    controlLoopElementDefinitionMap = participantDefinitionUpdateMap.get(clParticipantId);
+                    controlLoopElementDefinitionMap.put(
+                        new ToscaConceptIdentifier(toscaInputEntry.getKey(), toscaInputEntry.getValue().getVersion()),
+                        clDefinition);
+                }
+            }
+        }
 
-        Map<ToscaConceptIdentifier, Map<UUID, ControlLoopElementDefinition>>
-            participantDefinitionUpdateMap = Map.of(getParticipantId(), controlLoopElementDefinitionMap);
         participantUpdateMsg.setParticipantDefinitionUpdateMap(participantDefinitionUpdateMap);
-
+        participantUpdateMsg.setToscaServiceTemplate(toscaServiceTemplate);
         synchronized (lockit) {
-            ParticipantUpdatePublisher clUpdatePublisher = new ParticipantUpdatePublisher(commissioningProvider);
-            clUpdatePublisher.active(Collections.singletonList(Mockito.mock(TopicSink.class)));
-            clUpdatePublisher.send(participantUpdateMsg);
+            ParticipantUpdatePublisher participantUpdatePublisher =
+                new ParticipantUpdatePublisher(commissioningProvider);
+            participantUpdatePublisher.active(Collections.singletonList(Mockito.mock(TopicSink.class)));
+            participantUpdatePublisher.send(participantUpdateMsg);
         }
     }
 

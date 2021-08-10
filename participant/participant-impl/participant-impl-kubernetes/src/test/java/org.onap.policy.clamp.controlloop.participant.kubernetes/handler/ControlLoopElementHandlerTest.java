@@ -30,6 +30,7 @@ import static org.mockito.Mockito.doThrow;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -52,6 +53,7 @@ import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -64,6 +66,8 @@ class ControlLoopElementHandlerTest {
     private static final String KEY_NAME = "org.onap.domain.database.HelloWorld_K8SMicroserviceControlLoopElement";
     private static List<ChartInfo> charts;
     private static ToscaServiceTemplate toscaServiceTemplate;
+    private static final String K8S_CONTROL_LOOP_ELEMENT =
+        "org.onap.domain.database.PMSH_K8SMicroserviceControlLoopElement";
 
 
     @InjectMocks
@@ -118,7 +122,9 @@ class ControlLoopElementHandlerTest {
         element.setDefinition(new ToscaConceptIdentifier(KEY_NAME, "1.0.1"));
         element.setOrderedState(ControlLoopOrderedState.PASSIVE);
 
-        controlLoopElementHandler.controlLoopElementUpdate(element, toscaServiceTemplate);
+        Map<String, ToscaNodeTemplate> nodeTemplatesMap =
+                toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates();
+        controlLoopElementHandler.controlLoopElementUpdate(element, nodeTemplatesMap.get(K8S_CONTROL_LOOP_ELEMENT));
 
         assertThat(controlLoopElementHandler.getChartMap()).hasSize(1).containsKey(elementId1);
 
@@ -127,7 +133,7 @@ class ControlLoopElementHandlerTest {
 
         UUID elementId2 = UUID.randomUUID();
         element.setId(elementId2);
-        controlLoopElementHandler.controlLoopElementUpdate(element, toscaServiceTemplate);
+        controlLoopElementHandler.controlLoopElementUpdate(element, nodeTemplatesMap.get(K8S_CONTROL_LOOP_ELEMENT));
 
         assertThat(controlLoopElementHandler.getChartMap().containsKey(elementId2)).isFalse();
     }

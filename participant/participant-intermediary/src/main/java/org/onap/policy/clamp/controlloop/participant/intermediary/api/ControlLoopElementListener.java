@@ -25,7 +25,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 
 /**
  * This interface is implemented by participant implementations to receive updates on control loop elements.
@@ -46,11 +46,11 @@ public interface ControlLoopElementListener {
      * Handle an update on a control loop element.
      *
      * @param element the information on the control loop element
-     * @param controlLoopDefinition toscaServiceTemplate
+     * @param controlLoopElementDefinition toscaNodeTemplate
      * @throws PfModelException from Policy framework
      */
     public void controlLoopElementUpdate(ControlLoopElement element,
-            ToscaServiceTemplate controlLoopDefinition) throws PfModelException;
+            ToscaNodeTemplate controlLoopElementDefinition) throws PfModelException;
 
     /**
      * Handle controlLoopElement statistics.

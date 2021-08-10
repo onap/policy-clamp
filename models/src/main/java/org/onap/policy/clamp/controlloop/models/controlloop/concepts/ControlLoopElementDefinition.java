@@ -22,28 +22,25 @@ package org.onap.policy.clamp.controlloop.models.controlloop.concepts;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.function.UnaryOperator;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.ToString;
 import org.onap.policy.models.base.PfUtils;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 
 /**
  * Class to represent a control loop element definition instance.
  */
+@Getter
 @NoArgsConstructor
 @Data
 @ToString
 public class ControlLoopElementDefinition {
 
-    @NonNull
-    private UUID id = UUID.randomUUID();
-
     // The definition of the Control Loop Element in TOSCA
-    private ToscaServiceTemplate controlLoopElementToscaServiceTemplate;
+    private ToscaNodeTemplate controlLoopElementToscaNodeTemplate;
 
     // A map indexed by the property name. Each map entry is the serialized value of the property,
     // which can be deserialized into an instance of the type of the property.
@@ -55,9 +52,8 @@ public class ControlLoopElementDefinition {
      * @param clElementDefinition the controlloop element definition to copy from
      */
     public ControlLoopElementDefinition(final ControlLoopElementDefinition clElementDefinition) {
-        this.id = clElementDefinition.id;
-        this.controlLoopElementToscaServiceTemplate =
-                new ToscaServiceTemplate(clElementDefinition.controlLoopElementToscaServiceTemplate);
+        this.controlLoopElementToscaNodeTemplate =
+                new ToscaNodeTemplate(clElementDefinition.controlLoopElementToscaNodeTemplate);
         this.commonPropertiesMap = PfUtils.mapMap(clElementDefinition.commonPropertiesMap, UnaryOperator.identity());
     }
 }

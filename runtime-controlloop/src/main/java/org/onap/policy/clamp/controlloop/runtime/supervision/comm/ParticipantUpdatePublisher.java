@@ -23,13 +23,17 @@ package org.onap.policy.clamp.controlloop.runtime.supervision.comm;
 import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElementDefinition;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdate;
 import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningProvider;
+import org.onap.policy.common.utils.coder.Coder;
+import org.onap.policy.common.utils.coder.CoderException;
+import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -42,8 +46,9 @@ import org.springframework.stereotype.Component;
 public class ParticipantUpdatePublisher extends AbstractParticipantPublisher<ParticipantUpdate> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantUpdatePublisher.class);
-
+    private static final String CONTROL_LOOP_ELEMENT = "org.onap.policy.clamp.controlloop.ControlLoopElement";
     private final CommissioningProvider commissioningProvider;
+    private static final Coder CODER = new StandardCoder();
 
     /**
      * Send ParticipantUpdate to Participant.
@@ -57,25 +62,49 @@ public class ParticipantUpdatePublisher extends AbstractParticipantPublisher<Par
         message.setParticipantType(participantType);
         message.setTimestamp(Instant.now());
 
-        var clDefinition = new ControlLoopElementDefinition();
-        clDefinition.setId(UUID.randomUUID());
-
+        ToscaServiceTemplate toscaServiceTemplate;
         try {
-            clDefinition.setControlLoopElementToscaServiceTemplate(
-                    commissioningProvider.getToscaServiceTemplate(null, null));
+            toscaServiceTemplate = commissioningProvider.getToscaServiceTemplate(null, null);
         } catch (PfModelException pfme) {
             LOGGER.warn("Get of tosca service template failed, cannot send participantupdate", pfme);
             return;
         }
 
-        Map<UUID, ControlLoopElementDefinition> controlLoopElementDefinitionMap = new LinkedHashMap<>();
-        controlLoopElementDefinitionMap.put(UUID.randomUUID(), clDefinition);
+        Map<ToscaConceptIdentifier, Map<ToscaConceptIdentifier, ControlLoopElementDefinition>>
+            participantDefinitionUpdateMap = new LinkedHashMap<>();
+        for (Map.Entry<String, ToscaNodeTemplate> toscaInputEntry :
+            toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates().entrySet()) {
+            if (toscaInputEntry.getValue().getType().contains(CONTROL_LOOP_ELEMENT)) {
+                Map<ToscaConceptIdentifier, ControlLoopElementDefinition> controlLoopElementDefinitionMap =
+                    new LinkedHashMap<>();
+                ToscaConceptIdentifier clParticipantId;
+                try {
+                    clParticipantId = CODER.decode(
+                            toscaInputEntry.getValue().getProperties().get("participant_id").toString(),
+                            ToscaConceptIdentifier.class);
+                } catch (CoderException e) {
+                    throw new RuntimeException("cannot get ParticipantId from toscaNodeTemplate", e);
+                }
 
-        Map<ToscaConceptIdentifier, Map<UUID, ControlLoopElementDefinition>> participantDefinitionUpdateMap =
-                new LinkedHashMap<>();
-        participantDefinitionUpdateMap.put(participantId, controlLoopElementDefinitionMap);
+                var clDefinition = new ControlLoopElementDefinition();
+                clDefinition.setControlLoopElementToscaNodeTemplate(toscaInputEntry.getValue());
+
+                if (!participantDefinitionUpdateMap.containsKey(clParticipantId)) {
+                    controlLoopElementDefinitionMap.put(
+                        new ToscaConceptIdentifier(toscaInputEntry.getKey(), toscaInputEntry.getValue().getVersion()),
+                        clDefinition);
+                    participantDefinitionUpdateMap.put(clParticipantId, controlLoopElementDefinitionMap);
+                } else {
+                    controlLoopElementDefinitionMap = participantDefinitionUpdateMap.get(clParticipantId);
+                    controlLoopElementDefinitionMap.put(
+                        new ToscaConceptIdentifier(toscaInputEntry.getKey(), toscaInputEntry.getValue().getVersion()),
+                        clDefinition);
+                }
+            }
+        }
+
         message.setParticipantDefinitionUpdateMap(participantDefinitionUpdateMap);
-
+        message.setToscaServiceTemplate(toscaServiceTemplate);
         LOGGER.debug("Participant Update sent {}", message);
         super.send(message);
     }
