@@ -35,6 +35,7 @@ import org.onap.policy.clamp.controlloop.participant.intermediary.api.Participan
 import org.onap.policy.clamp.controlloop.participant.policy.client.PolicyApiHttpClient;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
@@ -115,32 +116,35 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
      * Callback method to handle an update on a control loop element.
      *
      * @param element the information on the control loop element
-     * @param controlLoopDefinition toscaServiceTemplate
+     * @param clElementDefinition toscaNodeTemplate
      * @throws PfModelException in case of an exception
      */
     @Override
-    public void controlLoopElementUpdate(ControlLoopElement element, ToscaServiceTemplate controlLoopDefinition)
+    public void controlLoopElementUpdate(ControlLoopElement element, ToscaNodeTemplate clElementDefinition)
             throws PfModelException {
         intermediaryApi.updateControlLoopElementState(element.getId(), element.getOrderedState(),
                 ControlLoopState.PASSIVE);
-        if (controlLoopDefinition.getPolicyTypes() != null) {
-            for (ToscaPolicyType policyType : controlLoopDefinition.getPolicyTypes().values()) {
-                policyTypeMap.put(policyType.getName(), policyType.getVersion());
-            }
-            LOGGER.debug("Found Policy Types in control loop definition: {} , Creating Policy Types",
-                    controlLoopDefinition.getName());
-            apiHttpClient.createPolicyType(controlLoopDefinition);
-        }
-        if (controlLoopDefinition.getToscaTopologyTemplate().getPolicies() != null) {
-            for (Map<String, ToscaPolicy> foundPolicyMap : controlLoopDefinition.getToscaTopologyTemplate()
-                    .getPolicies()) {
-                for (ToscaPolicy policy : foundPolicyMap.values()) {
-                    policyMap.put(policy.getName(), policy.getVersion());
+        ToscaServiceTemplate controlLoopDefinition = intermediaryApi.getToscaServiceTemplate();
+        if (controlLoopDefinition.getToscaTopologyTemplate() != null) {
+            if (controlLoopDefinition.getPolicyTypes() != null) {
+                for (ToscaPolicyType policyType : controlLoopDefinition.getPolicyTypes().values()) {
+                    policyTypeMap.put(policyType.getName(), policyType.getVersion());
                 }
+                LOGGER.debug("Found Policy Types in control loop definition: {} , Creating Policy Types",
+                        controlLoopDefinition.getName());
+                apiHttpClient.createPolicyType(controlLoopDefinition);
             }
-            LOGGER.debug("Found Policies in control loop definition: {} , Creating Policies",
-                    controlLoopDefinition.getName());
-            apiHttpClient.createPolicy(controlLoopDefinition);
+            if (controlLoopDefinition.getToscaTopologyTemplate().getPolicies() != null) {
+                for (Map<String, ToscaPolicy> foundPolicyMap : controlLoopDefinition.getToscaTopologyTemplate()
+                        .getPolicies()) {
+                    for (ToscaPolicy policy : foundPolicyMap.values()) {
+                        policyMap.put(policy.getName(), policy.getVersion());
+                    }
+                }
+                LOGGER.debug("Found Policies in control loop definition: {} , Creating Policies",
+                        controlLoopDefinition.getName());
+                apiHttpClient.createPolicy(controlLoopDefinition);
+            }
         }
     }
 

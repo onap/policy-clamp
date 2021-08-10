@@ -26,12 +26,15 @@ import static org.onap.policy.clamp.controlloop.models.messages.dmaap.participan
 import static org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageUtils.removeVariableFields;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElementDefinition;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantDefinition;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 /**
@@ -44,9 +47,7 @@ class ParticipantUpdateTest {
 
         ParticipantUpdate orig = new ParticipantUpdate();
         // verify with all values
-        ToscaConceptIdentifier id = new ToscaConceptIdentifier();
-        id.setName("id");
-        id.setVersion("1.2.3");
+        ToscaConceptIdentifier id = new ToscaConceptIdentifier("id", "1.2.3");
         orig.setControlLoopId(id);
         orig.setParticipantId(id);
         orig.setParticipantType(id);
@@ -59,22 +60,37 @@ class ParticipantUpdateTest {
         toscaServiceTemplate.setDescription("Description of serviceTemplate");
         toscaServiceTemplate.setVersion("1.2.3");
 
-        ControlLoopElementDefinition clDefinition = new ControlLoopElementDefinition();
-        clDefinition.setId(UUID.randomUUID());
-        clDefinition.setControlLoopElementToscaServiceTemplate(toscaServiceTemplate);
-        Map<String, String> commonPropertiesMap = Map.of("Prop1", "PropValue");
-        clDefinition.setCommonPropertiesMap(commonPropertiesMap);
+        ToscaNodeTemplate toscaNodeTemplate = new ToscaNodeTemplate();
+        toscaNodeTemplate.setName("nodeTemplate");
+        toscaNodeTemplate.setDerivedFrom("parentNodeTemplate");
+        toscaNodeTemplate.setDescription("Description of nodeTemplate");
+        toscaNodeTemplate.setVersion("1.2.3");
 
-        Map<UUID, ControlLoopElementDefinition> clElementDefinitionMap = Map.of(UUID.randomUUID(), clDefinition);
-
-        Map<String, Map<UUID, ControlLoopElementDefinition>> participantDefinitionUpdateMap =
-                Map.of(id.toString(), clElementDefinitionMap);
-        orig.setParticipantDefinitionUpdateMap(participantDefinitionUpdateMap);
+        ParticipantDefinition participantDefinitionUpdate = new ParticipantDefinition();
+        participantDefinitionUpdate.setParticipantId(id);
+        ControlLoopElementDefinition clDefinition = getClElementDefinition(id);
+        participantDefinitionUpdate.setControlLoopElementDefinitionList(List.of(clDefinition));
+        orig.setParticipantDefinitionUpdates(List.of(participantDefinitionUpdate));
 
         ParticipantUpdate other = new ParticipantUpdate(orig);
 
         assertEquals(removeVariableFields(orig.toString()), removeVariableFields(other.toString()));
 
         assertSerializable(orig, ParticipantUpdate.class);
+    }
+
+    private ControlLoopElementDefinition getClElementDefinition(ToscaConceptIdentifier id) {
+        ToscaNodeTemplate toscaNodeTemplate = new ToscaNodeTemplate();
+        toscaNodeTemplate.setName("nodeTemplate");
+        toscaNodeTemplate.setDerivedFrom("parentNodeTemplate");
+        toscaNodeTemplate.setDescription("Description of nodeTemplate");
+        toscaNodeTemplate.setVersion("1.2.3");
+
+        ControlLoopElementDefinition clDefinition = new ControlLoopElementDefinition();
+        clDefinition.setClElementDefinitionId(id);
+        clDefinition.setControlLoopElementToscaNodeTemplate(toscaNodeTemplate);
+        Map<String, String> commonPropertiesMap = Map.of("Prop1", "PropValue");
+        clDefinition.setCommonPropertiesMap(commonPropertiesMap);
+        return clDefinition;
     }
 }

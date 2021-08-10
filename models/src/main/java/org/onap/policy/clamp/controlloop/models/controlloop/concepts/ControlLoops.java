@@ -37,7 +37,7 @@ public class ControlLoops {
     private List<ControlLoop> controlLoopList;
 
     /**
-     * Copy contructor, does a deep copy.
+     * Copy constructor, does a deep copy.
      *
      * @param otherControlLoops the other element to copy from
      */

@@ -20,14 +20,13 @@
 
 package org.onap.policy.clamp.controlloop.models.messages.dmaap.participant;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElementDefinition;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopInfo;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantHealthStatus;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantStatistics;
@@ -45,16 +44,13 @@ public class ParticipantStatus extends ParticipantMessage {
     private ParticipantState state;
     private ParticipantHealthStatus healthStatus;
 
-    // Participant statistics
     private ParticipantStatistics participantStatistics;
 
-    // A map with Participant ID as its key, and a map of ControlLoopElements as value.
-    // Returned in response to ParticipantStatusReq only
-    private Map<String, Map<UUID, ControlLoopElementDefinition>>
-            participantDefinitionUpdateMap = new LinkedHashMap<>();
+    // A list of ParticipantDefinition updates, returned in response to ParticipantStatusReq only
+    private List<ParticipantDefinition> participantDefinitionUpdates = new ArrayList<>();
 
-    // Map of ControlLoopInfo types indexed by ControlLoopId, one entry for each control loop
-    private Map<String, ControlLoopInfo> controlLoopInfoMap;
+    // List of ControlLoopInfo types with ControlLoopId, its state and statistics
+    private List<ControlLoopInfo> controlLoopInfoList = new ArrayList<>();
 
     /**
      * Constructor for instantiating ParticipantStatus class with message name.
@@ -75,9 +71,8 @@ public class ParticipantStatus extends ParticipantMessage {
         this.state = source.state;
         this.healthStatus = source.healthStatus;
         this.participantStatistics = (source.participantStatistics == null ? null : new ParticipantStatistics());
-        this.participantDefinitionUpdateMap = PfUtils.mapMap(source.participantDefinitionUpdateMap,
-                clElementDefinitionMap -> PfUtils.mapMap(clElementDefinitionMap,
-                        ControlLoopElementDefinition::new));
-        this.controlLoopInfoMap = PfUtils.mapMap(source.controlLoopInfoMap, ControlLoopInfo::new);
+        this.participantDefinitionUpdates = PfUtils.mapList(source.participantDefinitionUpdates,
+            ParticipantDefinition::new);
+        this.controlLoopInfoList = PfUtils.mapList(source.controlLoopInfoList, ControlLoopInfo::new);
     }
 }

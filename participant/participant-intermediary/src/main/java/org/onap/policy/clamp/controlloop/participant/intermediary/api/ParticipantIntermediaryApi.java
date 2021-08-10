@@ -32,6 +32,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantStatistics;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 /**
  * This interface is used by participant implementations to use the participant intermediary.
@@ -97,6 +98,13 @@ public interface ParticipantIntermediaryApi {
      * @return the control loop elements
      */
     Map<UUID, ControlLoopElement> getControlLoopElements(String name, String version);
+
+    /**
+     * Get ToscaServiceTemplate from the intermediary API.
+     *
+     * @return the control loop element
+     */
+    ToscaServiceTemplate getToscaServiceTemplate();
 
     /**
      * Get control loop element from the intermediary API.

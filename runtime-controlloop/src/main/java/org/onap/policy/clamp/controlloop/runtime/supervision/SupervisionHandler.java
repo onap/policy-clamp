@@ -311,18 +311,16 @@ public class SupervisionHandler {
 
     private void superviseControlLoops(ParticipantStatus participantStatusMessage)
             throws PfModelException, ControlLoopException {
-        if (participantStatusMessage.getControlLoopInfoMap() != null) {
-            for (Map.Entry<String, ControlLoopInfo> clEntry : participantStatusMessage.getControlLoopInfoMap()
-                    .entrySet()) {
-                String[] key = clEntry.getKey().split(" ");
+        if (participantStatusMessage.getControlLoopInfoList() != null) {
+            for (ControlLoopInfo clEntry : participantStatusMessage.getControlLoopInfoList()) {
                 var dbControlLoop = controlLoopProvider.getControlLoop(
-                        new ToscaConceptIdentifier(key[0], key[1]));
+                        new ToscaConceptIdentifier(clEntry.getControlLoopId()));
                 if (dbControlLoop == null) {
                     exceptionOccured(Response.Status.NOT_FOUND,
-                            "PARTICIPANT_STATUS control loop not found in database: " + clEntry.getKey());
+                            "PARTICIPANT_STATUS control loop not found in database: " + clEntry.getControlLoopId());
                 }
-                dbControlLoop.setState(clEntry.getValue().getState());
-                monitoringProvider.createClElementStatistics(clEntry.getValue().getControlLoopStatistics()
+                dbControlLoop.setState(clEntry.getState());
+                monitoringProvider.createClElementStatistics(clEntry.getControlLoopStatistics()
                         .getClElementStatisticsList().getClElementStatistics());
             }
         }
