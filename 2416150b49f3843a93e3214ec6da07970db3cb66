@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8871e5a5_7e7dd0fd",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ParticipantHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-08-10T14:26:30Z",
+      "side": 1,
+      "message": "I\u0027m just checking that there is no need for making a call to setTimeStamp in this method and the other on line 281?",
+      "revId": "2416150b49f3843a93e3214ec6da07970db3cb66",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
