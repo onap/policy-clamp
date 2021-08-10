@@ -21,6 +21,7 @@
 package org.onap.policy.clamp.controlloop.participant.intermediary.handler;
 
 import java.io.Closeable;
+import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -32,16 +33,13 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantHealthStatus;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantStatistics;
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopAck;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopStateChange;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopUpdate;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregister;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregisterAck;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessage;
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageType;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantRegister;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantRegisterAck;
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantResponseStatus;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStatus;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStatusReq;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdate;
@@ -90,6 +88,10 @@ public class ParticipantHandler implements Closeable {
                         parameters.getIntermediaryParameters().getReportingTimeIntervalMs());
         this.controlLoopHandler = new ControlLoopHandler(parameters.getIntermediaryParameters(), sender);
         this.participantStatistics = new ParticipantStatistics();
+        this.participantStatistics.setParticipantId(participantId);
+        this.participantStatistics.setState(state);
+        this.participantStatistics.setHealthStatus(healthStatus);
+        this.participantStatistics.setTimeStamp(Instant.now());
     }
 
     @Override
@@ -108,6 +110,7 @@ public class ParticipantHandler implements Closeable {
         participantStatus.setParticipantStatistics(participantStatistics);
         participantStatus.setParticipantType(participantType);
         participantStatus.setHealthStatus(healthStatus);
+        participantStatus.setState(state);
         sender.sendParticipantStatus(participantStatus);
     }
 
@@ -275,6 +278,7 @@ public class ParticipantHandler implements Closeable {
         heartbeat.setParticipantStatistics(participantStatistics);
         heartbeat.setParticipantType(participantType);
         heartbeat.setHealthStatus(healthStatus);
+        heartbeat.setState(state);
         return heartbeat;
     }
 }
