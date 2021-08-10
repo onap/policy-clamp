@@ -22,7 +22,6 @@ package org.onap.policy.clamp.controlloop.models.messages.dmaap.participant;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -51,7 +50,7 @@ public class ParticipantStatus extends ParticipantMessage {
 
     // A map with Participant ID as its key, and a map of ControlLoopElements as value.
     // Returned in response to ParticipantStatusReq only
-    private Map<ToscaConceptIdentifier, Map<UUID, ControlLoopElementDefinition>>
+    private Map<ToscaConceptIdentifier, Map<ToscaConceptIdentifier, ControlLoopElementDefinition>>
             participantDefinitionUpdateMap = new LinkedHashMap<>();
 
     // Map of ControlLoopInfo types indexed by ControlLoopId, one entry for each control loop

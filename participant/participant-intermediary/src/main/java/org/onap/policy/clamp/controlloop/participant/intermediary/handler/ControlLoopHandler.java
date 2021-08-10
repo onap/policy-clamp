@@ -185,7 +185,7 @@ public class ControlLoopHandler {
      * @param updateMsg the update message
      */
     public void handleControlLoopUpdate(ControlLoopUpdate updateMsg,
-                Map<UUID, ControlLoopElementDefinition> clElementDefinitions) {
+                Map<ToscaConceptIdentifier, ControlLoopElementDefinition> clElementDefinitions) {
 
         if (!updateMsg.appliesTo(participantType, participantId)) {
             return;
@@ -207,21 +207,22 @@ public class ControlLoopHandler {
             return;
         }
 
-        controlLoop = updateMsg.getControlLoop();
-        controlLoop.getElements().values().removeIf(element -> !participantType.equals(element.getParticipantType()));
-
-        controlLoopMap.put(updateMsg.getControlLoopId(), controlLoop);
-        for (ControlLoopElement element : updateMsg.getControlLoop().getElements().values()) {
-            element.setState(element.getOrderedState().asState());
-            element.setParticipantId(participantId);
+        Map<UUID, ControlLoopElement> clElementMap =
+            prepareClElementMap(updateMsg.getParticipantUpdateMap().get(participantType));
+        for (ControlLoopElement element : clElementMap.values()) {
             elementsOnThisParticipant.put(element.getId(), element);
         }
+        controlLoop = new ControlLoop();
+        controlLoop.setDefinition(updateMsg.getControlLoopId());
+        controlLoop.setElements(clElementMap);
+        controlLoopMap.put(updateMsg.getControlLoopId(), controlLoop);
 
         for (ControlLoopElementListener clElementListener : listeners) {
             try {
-                for (ControlLoopElement element : updateMsg.getControlLoop().getElements().values()) {
+                for (ControlLoopElement element : clElementMap.values()) {
                     clElementListener.controlLoopElementUpdate(element,
-                        clElementDefinitions.get(element.getId()).getControlLoopElementToscaServiceTemplate());
+                        clElementDefinitions.get(element.getDefinition())
+                        .getControlLoopElementToscaNodeTemplate());
                 }
             } catch (PfModelException e) {
                 LOGGER.debug("Control loop element update failed {}", updateMsg.getControlLoopId());
@@ -234,6 +235,15 @@ public class ControlLoopHandler {
                 + " defined on participant " + participantId);
         controlLoopUpdateAck.setResult(true);
         messageSender.sendAckResponse(controlLoopUpdateAck);
+    }
+
+    private Map<UUID, ControlLoopElement> prepareClElementMap(
+        Map<ToscaConceptIdentifier, ControlLoopElement> clElementsFromUpdateMessage) {
+        Map<UUID, ControlLoopElement> clElementMap = new LinkedHashMap<>();
+        for (ControlLoopElement element : clElementsFromUpdateMessage.values()) {
+            clElementMap.put(element.getId(), element);
+        }
+        return clElementMap;
     }
 
     /**

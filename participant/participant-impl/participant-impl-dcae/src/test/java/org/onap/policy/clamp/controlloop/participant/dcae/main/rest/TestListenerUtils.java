@@ -27,11 +27,12 @@ import java.util.Map;
 import java.util.UUID;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElementDefinition;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopStateChange;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopUpdate;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdate;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -46,6 +47,7 @@ public class TestListenerUtils {
     private static final YamlJsonTranslator yamlTranslator = new YamlJsonTranslator();
     private static final Coder CODER = new StandardCoder();
     private static final String TOSCA_TEMPLATE_YAML = "examples/controlloop/PMSubscriptionHandling.yaml";
+    private static final String CONTROL_LOOP_ELEMENT = "ControlLoopElement";
 
     /**
      * Method to create a controlLoop from a yaml file.
@@ -119,44 +121,116 @@ public class TestListenerUtils {
      */
     public static ControlLoopUpdate createControlLoopUpdateMsg() {
         final ControlLoopUpdate clUpdateMsg = new ControlLoopUpdate();
-        ToscaConceptIdentifier controlLoopId = new ToscaConceptIdentifier();
-        controlLoopId.setName("PMSHInstance0");
-        controlLoopId.setVersion("1.0.0");
-
-        ToscaConceptIdentifier participantId = new ToscaConceptIdentifier();
-        participantId.setName("DCAEParticipant0");
-        participantId.setVersion("1.0.0");
+        ToscaConceptIdentifier controlLoopId =
+            new ToscaConceptIdentifier("PMSHInstance0", "1.0.0");
+        ToscaConceptIdentifier participantId =
+            new ToscaConceptIdentifier("DCAEParticipant0", "1.0.0");
 
         clUpdateMsg.setControlLoopId(controlLoopId);
         clUpdateMsg.setParticipantId(participantId);
+        clUpdateMsg.setMessageId(UUID.randomUUID());
+        clUpdateMsg.setTimestamp(Instant.now());
 
-        ControlLoop controlLoop = new ControlLoop();
         Map<UUID, ControlLoopElement> elements = new LinkedHashMap<>();
         ToscaServiceTemplate toscaServiceTemplate = testControlLoopRead();
         Map<String, ToscaNodeTemplate> nodeTemplatesMap =
                 toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates();
         for (Map.Entry<String, ToscaNodeTemplate> toscaInputEntry : nodeTemplatesMap.entrySet()) {
-            ControlLoopElement clElement = new ControlLoopElement();
-            clElement.setId(UUID.randomUUID());
+            if (toscaInputEntry.getValue().getType().contains(CONTROL_LOOP_ELEMENT)) {
+                ControlLoopElement clElement = new ControlLoopElement();
+                clElement.setId(UUID.randomUUID());
+                ToscaConceptIdentifier clParticipantId;
+                try {
+                    clParticipantId = CODER.decode(
+                            toscaInputEntry.getValue().getProperties().get("participant_id").toString(),
+                            ToscaConceptIdentifier.class);
+                } catch (CoderException e) {
+                    throw new RuntimeException("cannot get ParticipantId from toscaNodeTemplate", e);
+                }
 
-            ToscaConceptIdentifier clElementParticipantId = new ToscaConceptIdentifier();
-            clElementParticipantId.setName(toscaInputEntry.getKey());
-            clElementParticipantId.setVersion(toscaInputEntry.getValue().getVersion());
-            clElement.setParticipantId(clElementParticipantId);
+                clElement.setParticipantId(clParticipantId);
+                clElement.setParticipantType(clParticipantId);
 
-            clElement.setDefinition(clElementParticipantId);
-            clElement.setState(ControlLoopState.UNINITIALISED);
-            clElement.setDescription(toscaInputEntry.getValue().getDescription());
-            clElement.setOrderedState(ControlLoopOrderedState.UNINITIALISED);
-            elements.put(clElement.getId(), clElement);
+                clElement.setDefinition(new ToscaConceptIdentifier(toscaInputEntry.getKey(),
+                    toscaInputEntry.getValue().getVersion()));
+                clElement.setState(ControlLoopState.UNINITIALISED);
+                clElement.setDescription(toscaInputEntry.getValue().getDescription());
+                clElement.setOrderedState(ControlLoopOrderedState.PASSIVE);
+                elements.put(clElement.getId(), clElement);
+            }
         }
-        controlLoop.setElements(elements);
-        controlLoop.setName("PMSHInstance0");
-        controlLoop.setVersion("1.0.0");
-        controlLoop.setDefinition(controlLoopId);
-        clUpdateMsg.setControlLoop(controlLoop);
+
+        Map<ToscaConceptIdentifier, Map<ToscaConceptIdentifier, ControlLoopElement>> participantUpdateMap =
+                new LinkedHashMap<>();
+        for (ControlLoopElement element : elements.values()) {
+            Map<ToscaConceptIdentifier, ControlLoopElement> clElementMap = new LinkedHashMap<>();
+            if (!participantUpdateMap.containsKey(element.getParticipantId())) {
+                clElementMap.put(element.getDefinition(), element);
+                participantUpdateMap.put(element.getParticipantId(), clElementMap);
+            } else {
+                clElementMap = participantUpdateMap.get(element.getParticipantId());
+                clElementMap.put(element.getDefinition(), element);
+            }
+        }
+        clUpdateMsg.setParticipantUpdateMap(participantUpdateMap);
 
         return clUpdateMsg;
+    }
+
+    /**
+     * Method to create participantUpdateMsg.
+     *
+     * @return ParticipantUpdate message
+     */
+    public static ParticipantUpdate createParticipantUpdateMsg() {
+        final ParticipantUpdate participantUpdateMsg = new ParticipantUpdate();
+        ToscaConceptIdentifier participantId = new ToscaConceptIdentifier("org.onap.PM_Policy", "1.0.0");
+        ToscaConceptIdentifier participantType = new ToscaConceptIdentifier(
+                        "DCAEParticipant0", "1.0.0");
+
+        participantUpdateMsg.setParticipantId(participantId);
+        participantUpdateMsg.setTimestamp(Instant.now());
+        participantUpdateMsg.setParticipantType(participantType);
+        participantUpdateMsg.setTimestamp(Instant.ofEpochMilli(3000));
+        participantUpdateMsg.setMessageId(UUID.randomUUID());
+
+        ToscaServiceTemplate toscaServiceTemplate = testControlLoopRead();
+
+        Map<ToscaConceptIdentifier, Map<ToscaConceptIdentifier, ControlLoopElementDefinition>>
+            participantDefinitionUpdateMap = new LinkedHashMap<>();
+        for (Map.Entry<String, ToscaNodeTemplate> toscaInputEntry :
+            toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates().entrySet()) {
+            if (toscaInputEntry.getValue().getType().contains(CONTROL_LOOP_ELEMENT)) {
+                Map<ToscaConceptIdentifier, ControlLoopElementDefinition> controlLoopElementDefinitionMap =
+                    new LinkedHashMap<>();
+                ToscaConceptIdentifier clParticipantId;
+                try {
+                    clParticipantId = CODER.decode(
+                            toscaInputEntry.getValue().getProperties().get("participant_id").toString(),
+                            ToscaConceptIdentifier.class);
+                } catch (CoderException e) {
+                    throw new RuntimeException("cannot get ParticipantId from toscaNodeTemplate", e);
+                }
+
+                var clDefinition = new ControlLoopElementDefinition();
+                clDefinition.setControlLoopElementToscaNodeTemplate(toscaInputEntry.getValue());
+                clDefinition.setCommonPropertiesMap(Map.of("Prop1", "PrpValuue1"));
+
+                if (!participantDefinitionUpdateMap.containsKey(clParticipantId)) {
+                    controlLoopElementDefinitionMap.put(
+                        new ToscaConceptIdentifier(toscaInputEntry.getKey(), toscaInputEntry.getValue().getVersion()),
+                        clDefinition);
+                    participantDefinitionUpdateMap.put(clParticipantId, controlLoopElementDefinitionMap);
+                } else {
+                    controlLoopElementDefinitionMap = participantDefinitionUpdateMap.get(clParticipantId);
+                    controlLoopElementDefinitionMap.put(
+                        new ToscaConceptIdentifier(toscaInputEntry.getKey(), toscaInputEntry.getValue().getVersion()),
+                        clDefinition);
+                }
+            }
+        }
+        participantUpdateMsg.setParticipantDefinitionUpdateMap(participantDefinitionUpdateMap);
+        return participantUpdateMsg;
     }
 
     /**

@@ -22,8 +22,6 @@ package org.onap.policy.clamp.controlloop.models.messages.dmaap.participant;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.UUID;
-import java.util.function.UnaryOperator;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -42,8 +40,10 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 public class ParticipantUpdate extends ParticipantMessage {
 
     // A map with Participant ID as its key, and a map of ControlLoopElements as value.
-    private Map<ToscaConceptIdentifier, Map<UUID, ControlLoopElementDefinition>>
+    private Map<ToscaConceptIdentifier, Map<ToscaConceptIdentifier, ControlLoopElementDefinition>>
             participantDefinitionUpdateMap = new LinkedHashMap<>();
+
+    ToscaServiceTemplate toscaServiceTemplate = new ToscaServiceTemplate();
 
     /**
      * Constructor for instantiating ParticipantUpdate class with message name.
@@ -64,5 +64,6 @@ public class ParticipantUpdate extends ParticipantMessage {
         this.participantDefinitionUpdateMap = PfUtils.mapMap(source.participantDefinitionUpdateMap,
                 clElementDefinitionMap -> PfUtils.mapMap(clElementDefinitionMap,
                         ControlLoopElementDefinition::new));
+        this.toscaServiceTemplate = source.toscaServiceTemplate;
     }
 }

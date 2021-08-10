@@ -20,9 +20,15 @@
 
 package org.onap.policy.clamp.controlloop.runtime.supervision.comm;
 
+import java.time.Instant;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopUpdate;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -44,7 +50,24 @@ public class ControlLoopUpdatePublisher extends AbstractParticipantPublisher<Con
     public void send(ControlLoop controlLoop) {
         var controlLoopUpdateMsg = new ControlLoopUpdate();
         controlLoopUpdateMsg.setControlLoopId(controlLoop.getKey().asIdentifier());
-        controlLoopUpdateMsg.setControlLoop(controlLoop);
+        controlLoopUpdateMsg.setMessageId(UUID.randomUUID());
+        controlLoopUpdateMsg.setTimestamp(Instant.now());
+
+        Map<ToscaConceptIdentifier, Map<ToscaConceptIdentifier, ControlLoopElement>> participantUpdateMap =
+                new LinkedHashMap<>();
+        for (ControlLoopElement element : controlLoop.getElements().values()) {
+            Map<ToscaConceptIdentifier, ControlLoopElement> clElementMap = new LinkedHashMap<>();
+
+            if (!participantUpdateMap.containsKey(element.getParticipantId())) {
+                clElementMap.put(element.getDefinition(), element);
+                participantUpdateMap.put(element.getParticipantId(), clElementMap);
+            } else {
+                clElementMap = participantUpdateMap.get(element.getParticipantId());
+                clElementMap.put(element.getDefinition(), element);
+            }
+        }
+        controlLoopUpdateMsg.setParticipantUpdateMap(participantUpdateMap);
+
         LOGGER.debug("ControlLoopUpdate message sent", controlLoopUpdateMsg);
         super.send(controlLoopUpdateMsg);
     }

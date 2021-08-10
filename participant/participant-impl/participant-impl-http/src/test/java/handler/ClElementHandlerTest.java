@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 
+import java.util.Map;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,6 +33,7 @@ import org.mockito.Spy;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
 import org.onap.policy.clamp.controlloop.participant.http.main.handler.ControlLoopElementHandler;
 import org.onap.policy.common.utils.coder.CoderException;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import utils.CommonTestData;
@@ -47,6 +49,8 @@ class ClElementHandlerTest {
     private CommonTestData commonTestData = new CommonTestData();
 
     private static ToscaServiceTemplate serviceTemplate;
+    private static final String HTTP_CONTROL_LOOP_ELEMENT =
+            "org.onap.domain.database.Http_PMSHMicroserviceControlLoopElement";
 
     @BeforeAll
     static void init() throws CoderException {
@@ -57,7 +61,11 @@ class ClElementHandlerTest {
     void test_ControlLoopElementUpdate() {
         doNothing().when(controlLoopElementHandler).invokeHttpClient(any());
         ControlLoopElement element = commonTestData.getControlLoopElement();
+
+        Map<String, ToscaNodeTemplate> nodeTemplatesMap =
+            serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
+
         assertDoesNotThrow(() -> controlLoopElementHandler
-            .controlLoopElementUpdate(element, serviceTemplate));
+            .controlLoopElementUpdate(element, nodeTemplatesMap.get(HTTP_CONTROL_LOOP_ELEMENT)));
     }
 }

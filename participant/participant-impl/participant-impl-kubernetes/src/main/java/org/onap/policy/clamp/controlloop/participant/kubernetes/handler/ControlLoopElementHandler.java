@@ -44,7 +44,6 @@ import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,41 +121,32 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
      * Callback method to handle an update on a control loop element.
      *
      * @param element the information on the control loop element
-     * @param controlLoopDefinition toscaServiceTemplate
+     * @param nodeTemplate toscaNodeTemplate
      * @throws PfModelException in case of an exception
      */
     @Override
     public synchronized void controlLoopElementUpdate(ControlLoopElement element,
-                                                      ToscaServiceTemplate controlLoopDefinition)
+                                                      ToscaNodeTemplate nodeTemplate)
         throws PfModelException {
+        @SuppressWarnings("unchecked")
+        Map<String, Object> chartData =
+            (Map<String, Object>) nodeTemplate.getProperties().get("chart");
 
-        for (Map.Entry<String, ToscaNodeTemplate> nodeTemplate : controlLoopDefinition.getToscaTopologyTemplate()
-            .getNodeTemplates().entrySet()) {
-
-            // Fetching the node template of corresponding CL element
-            if (element.getDefinition().getName().equals(nodeTemplate.getKey())
-                && nodeTemplate.getValue().getProperties().containsKey("chart")) {
-                @SuppressWarnings("unchecked")
-                Map<String, Object> chartData =
-                    (Map<String, Object>) nodeTemplate.getValue().getProperties().get("chart");
-
-                LOGGER.info("Installation request received for the Helm Chart {} ", chartData);
-                try {
-                    var chartInfo =  CODER.decode(String.valueOf(chartData), ChartInfo.class);
-                    var repositoryValue = chartData.get("repository");
-                    if (repositoryValue != null) {
-                        chartInfo.setRepository(repositoryValue.toString());
-                    }
-                    chartService.installChart(chartInfo);
-                    chartMap.put(element.getId(), chartInfo);
-
-                    var config = CODER.convert(nodeTemplate.getValue().getProperties(), ThreadConfig.class);
-                    checkPodStatus(chartInfo, config.uninitializedToPassiveTimeout, config.podStatusCheckInterval);
-
-                } catch (ServiceException | CoderException | IOException e) {
-                    LOGGER.warn("Installation of Helm chart failed", e);
-                }
+        LOGGER.info("Installation request received for the Helm Chart {} ", chartData);
+        try {
+            var chartInfo =  CODER.decode(String.valueOf(chartData), ChartInfo.class);
+            var repositoryValue = chartData.get("repository");
+            if (repositoryValue != null) {
+                chartInfo.setRepository(repositoryValue.toString());
             }
+            chartService.installChart(chartInfo);
+            chartMap.put(element.getId(), chartInfo);
+
+            var config = CODER.convert(nodeTemplate.getProperties(), ThreadConfig.class);
+            checkPodStatus(chartInfo, config.uninitializedToPassiveTimeout, config.podStatusCheckInterval);
+
+        } catch (ServiceException | CoderException | IOException e) {
+            LOGGER.warn("Installation of Helm chart failed", e);
         }
     }
 

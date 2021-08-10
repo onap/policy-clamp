@@ -22,11 +22,9 @@ package org.onap.policy.clamp.controlloop.models.messages.dmaap.participant;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -41,11 +39,8 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 @ToString(callSuper = true)
 public class ControlLoopUpdate extends ParticipantMessage {
 
-    // The control loop
-    private ControlLoop controlLoop;
-
     // A map with Participant ID as its key, and a map of ControlLoopElements as value.
-    private Map<ToscaConceptIdentifier, Map<UUID, ControlLoopElement>>
+    private Map<ToscaConceptIdentifier, Map<ToscaConceptIdentifier, ControlLoopElement>>
             participantUpdateMap = new LinkedHashMap<>();
 
     /**
@@ -64,7 +59,6 @@ public class ControlLoopUpdate extends ParticipantMessage {
     public ControlLoopUpdate(ControlLoopUpdate source) {
         super(source);
 
-        this.controlLoop = source.controlLoop;
         this.participantUpdateMap = PfUtils.mapMap(source.participantUpdateMap,
                 clElementMap -> PfUtils.mapMap(clElementMap, ControlLoopElement::new));
     }

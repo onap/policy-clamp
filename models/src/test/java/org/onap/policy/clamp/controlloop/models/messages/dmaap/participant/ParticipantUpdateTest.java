@@ -30,6 +30,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElementDefinition;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 /**
@@ -57,17 +58,24 @@ class ParticipantUpdateTest {
         toscaServiceTemplate.setDescription("Description of serviceTemplate");
         toscaServiceTemplate.setVersion("1.2.3");
 
+        ToscaNodeTemplate toscaNodeTemplate = new ToscaNodeTemplate();
+        toscaNodeTemplate.setName("nodeTemplate");
+        toscaNodeTemplate.setDerivedFrom("parentNodeTemplate");
+        toscaNodeTemplate.setDescription("Description of nodeTemplate");
+        toscaNodeTemplate.setVersion("1.2.3");
+
         ControlLoopElementDefinition clDefinition = new ControlLoopElementDefinition();
-        clDefinition.setId(UUID.randomUUID());
-        clDefinition.setControlLoopElementToscaServiceTemplate(toscaServiceTemplate);
+        clDefinition.setControlLoopElementToscaNodeTemplate(toscaNodeTemplate);
         Map<String, String> commonPropertiesMap = Map.of("Prop1", "PropValue");
         clDefinition.setCommonPropertiesMap(commonPropertiesMap);
 
-        Map<UUID, ControlLoopElementDefinition> clElementDefinitionMap = Map.of(UUID.randomUUID(), clDefinition);
+        Map<ToscaConceptIdentifier, ControlLoopElementDefinition> clElementDefinitionMap =
+            Map.of(id, clDefinition);
 
-        Map<ToscaConceptIdentifier, Map<UUID, ControlLoopElementDefinition>>
+        Map<ToscaConceptIdentifier, Map<ToscaConceptIdentifier, ControlLoopElementDefinition>>
             participantDefinitionUpdateMap = Map.of(id, clElementDefinitionMap);
         orig.setParticipantDefinitionUpdateMap(participantDefinitionUpdateMap);
+        orig.setToscaServiceTemplate(toscaServiceTemplate);
 
         ParticipantUpdate other = new ParticipantUpdate(orig);
 

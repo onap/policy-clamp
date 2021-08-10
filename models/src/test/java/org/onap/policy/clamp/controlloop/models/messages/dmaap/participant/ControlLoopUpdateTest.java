@@ -28,7 +28,6 @@ import java.time.Instant;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
@@ -59,17 +58,11 @@ class ControlLoopUpdateTest {
         clElement.setParticipantId(id);
         clElement.setParticipantType(id);
 
-        ControlLoop controlLoop = new ControlLoop();
-        controlLoop.setName("controlLoop");
-        Map<UUID, ControlLoopElement> elements = Map.of(clElement.getId(), clElement);
-        controlLoop.setElements(elements);
-        orig.setControlLoop(controlLoop);
-
         Map<String, String> commonPropertiesMap = Map.of("Prop1", "PropValue");
         clElement.setCommonPropertiesMap(commonPropertiesMap);
 
-        Map<UUID, ControlLoopElement> controlLoopElementMap = Map.of(UUID.randomUUID(), clElement);
-        Map<ToscaConceptIdentifier, Map<UUID, ControlLoopElement>>
+        Map<ToscaConceptIdentifier, ControlLoopElement> controlLoopElementMap = Map.of(id, clElement);
+        Map<ToscaConceptIdentifier, Map<ToscaConceptIdentifier, ControlLoopElement>>
             participantUpdateMap = Map.of(id, controlLoopElementMap);
         orig.setParticipantUpdateMap(participantUpdateMap);
 

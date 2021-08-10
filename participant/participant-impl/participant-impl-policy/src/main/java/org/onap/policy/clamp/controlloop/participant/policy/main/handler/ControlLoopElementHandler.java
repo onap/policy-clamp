@@ -35,6 +35,7 @@ import org.onap.policy.clamp.controlloop.participant.intermediary.api.Participan
 import org.onap.policy.clamp.controlloop.participant.policy.client.PolicyApiHttpClient;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
@@ -115,14 +116,15 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
      * Callback method to handle an update on a control loop element.
      *
      * @param element the information on the control loop element
-     * @param controlLoopDefinition toscaServiceTemplate
+     * @param clElementDefinition toscaNodeTemplate
      * @throws PfModelException in case of an exception
      */
     @Override
-    public void controlLoopElementUpdate(ControlLoopElement element, ToscaServiceTemplate controlLoopDefinition)
+    public void controlLoopElementUpdate(ControlLoopElement element, ToscaNodeTemplate clElementDefinition)
             throws PfModelException {
         intermediaryApi.updateControlLoopElementState(element.getId(), element.getOrderedState(),
                 ControlLoopState.PASSIVE);
+        ToscaServiceTemplate controlLoopDefinition = intermediaryApi.getToscaServiceTemplate();
         if (controlLoopDefinition.getPolicyTypes() != null) {
             for (ToscaPolicyType policyType : controlLoopDefinition.getPolicyTypes().values()) {
                 policyTypeMap.put(policyType.getName(), policyType.getVersion());
