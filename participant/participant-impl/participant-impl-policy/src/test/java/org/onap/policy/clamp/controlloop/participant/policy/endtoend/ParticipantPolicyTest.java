@@ -22,13 +22,16 @@ package org.onap.policy.clamp.controlloop.participant.policy.endtoend;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.FixMethodOrder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopStateChange;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopUpdate;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdate;
 import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ControlLoopStateChangeListener;
 import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ControlLoopUpdateListener;
+import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ParticipantUpdateListener;
 import org.onap.policy.clamp.controlloop.participant.intermediary.handler.ParticipantHandler;
 import org.onap.policy.clamp.controlloop.participant.policy.main.utils.TestListenerUtils;
 import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
@@ -51,9 +54,18 @@ class ParticipantPolicyTest {
     private ParticipantHandler participantHandler;
 
     @Test
+    void testParticipantUpdate() {
+        ParticipantUpdate participantUpdateMsg = TestListenerUtils.createParticipantUpdateMsg();
+
+        synchronized (lockit) {
+            ParticipantUpdateListener participantUpdateListener = new ParticipantUpdateListener(participantHandler);
+            participantUpdateListener.onTopicEvent(INFRA, TOPIC, null, participantUpdateMsg);
+        }
+    }
+
+    @Test
     void testUpdatePolicyTypes() {
         ControlLoopUpdate controlLoopUpdateMsg = TestListenerUtils.createControlLoopUpdateMsg();
-        controlLoopUpdateMsg.getControlLoop().setOrderedState(ControlLoopOrderedState.PASSIVE);
 
         synchronized (lockit) {
             ControlLoopUpdateListener clUpdateListener = new ControlLoopUpdateListener(participantHandler);
@@ -63,11 +75,10 @@ class ParticipantPolicyTest {
         // Verify the result of GET participants with what is stored
         assertEquals("org.onap.PM_Policy", participantHandler.getParticipantId().getName());
     }
-
+    
     @Test
     void testUpdatePolicies() throws Exception {
         ControlLoopUpdate controlLoopUpdateMsg = TestListenerUtils.createControlLoopUpdateMsg();
-        controlLoopUpdateMsg.getControlLoop().setOrderedState(ControlLoopOrderedState.PASSIVE);
 
         synchronized (lockit) {
             ControlLoopUpdateListener clUpdateListener = new ControlLoopUpdateListener(participantHandler);
@@ -81,7 +92,6 @@ class ParticipantPolicyTest {
     @Test
     void testDeletePoliciesAndPolicyTypes() throws Exception {
         ControlLoopUpdate controlLoopUpdateMsg = TestListenerUtils.createControlLoopUpdateMsg();
-        controlLoopUpdateMsg.getControlLoop().setOrderedState(ControlLoopOrderedState.PASSIVE);
 
         synchronized (lockit) {
             ControlLoopUpdateListener clUpdateListener = new ControlLoopUpdateListener(participantHandler);

@@ -42,16 +42,6 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 public class ControlLoopAck extends ParticipantAckMessage {
 
     /**
-     * Participant ID, or {@code null} for messages from participants.
-     */
-    private ToscaConceptIdentifier participantId;
-
-    /**
-     * Participant Type, or {@code null} for messages from participants.
-     */
-    private ToscaConceptIdentifier participantType;
-
-    /**
      * Control loop ID, or {@code null} for messages to participants.
      */
     private ToscaConceptIdentifier controlLoopId;
@@ -75,8 +65,6 @@ public class ControlLoopAck extends ParticipantAckMessage {
      */
     public ControlLoopAck(final ControlLoopAck source) {
         super(source);
-        this.participantId = source.participantId;
-        this.participantType = source.participantType;
         this.controlLoopId = source.controlLoopId;
         this.controlLoopResultMap = PfUtils.mapMap(source.controlLoopResultMap, UnaryOperator.identity());
     }

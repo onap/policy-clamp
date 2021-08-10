@@ -22,14 +22,15 @@ package org.onap.policy.clamp.controlloop.participant.intermediary.handler;
 
 import java.io.Closeable;
 import java.time.Instant;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElementDefinition;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantHealthStatus;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantStatistics;
@@ -48,6 +49,7 @@ import org.onap.policy.clamp.controlloop.participant.intermediary.comm.MessageSe
 import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -72,7 +74,10 @@ public class ParticipantHandler implements Closeable {
     @Setter
     private ParticipantHealthStatus healthStatus = ParticipantHealthStatus.UNKNOWN;
 
-    private final Map<UUID, ControlLoopElementDefinition> clElementDefsOnThisParticipant = new LinkedHashMap<>();
+    private List<ControlLoopElementDefinition> clElementDefsOnThisParticipant =
+            new ArrayList<>();
+
+    public ToscaServiceTemplate toscaServiceTemplate = new ToscaServiceTemplate();
 
     /**
      * Constructor, set the participant ID and sender.
@@ -239,13 +244,12 @@ public class ParticipantHandler implements Closeable {
             return;
         }
 
-        Map<UUID, ControlLoopElementDefinition> clDefinitionMap = participantUpdateMsg
-                .getParticipantDefinitionUpdateMap().get(participantUpdateMsg.getParticipantId().toString());
-
-        for (ControlLoopElementDefinition element : clDefinitionMap.values()) {
-            clElementDefsOnThisParticipant.put(element.getId(), element);
+        toscaServiceTemplate = participantUpdateMsg.getToscaServiceTemplate();
+        for (ParticipantDefinition participantDefinition : participantUpdateMsg.getParticipantDefinitionUpdates()) {
+            if (participantDefinition.getParticipantId().equals(participantType)) {
+                clElementDefsOnThisParticipant = participantDefinition.getControlLoopElementDefinitionList();
+            }
         }
-
         sendParticipantUpdateAck(participantUpdateMsg.getMessageId());
     }
 

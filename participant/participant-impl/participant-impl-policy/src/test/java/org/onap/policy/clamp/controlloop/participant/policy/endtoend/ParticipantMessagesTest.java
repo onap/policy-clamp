@@ -23,6 +23,7 @@ package org.onap.policy.clamp.controlloop.participant.policy.endtoend;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopInfo;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopStatistics;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregister;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregisterAck;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantRegister;
@@ -52,7 +54,7 @@ import org.onap.policy.clamp.controlloop.participant.policy.main.utils.TestListe
 import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -156,13 +158,17 @@ class ParticipantMessagesTest {
         final ParticipantStatus heartbeat = new ParticipantStatus();
         heartbeat.setParticipantId(getParticipantId());
         ControlLoopInfo clInfo = getControlLoopInfo(getControlLoopId());
-        heartbeat.setControlLoopInfoMap(Map.of(getControlLoopId().toString(), clInfo));
+        clInfo.setControlLoopId(getControlLoopId());
+        heartbeat.setControlLoopInfoList(List.of(clInfo));
 
         ControlLoopElementDefinition clDefinition = getClElementDefinition();
-        Map<UUID, ControlLoopElementDefinition> clElementDefinitionMap = Map.of(UUID.randomUUID(), clDefinition);
-        Map<String, Map<UUID, ControlLoopElementDefinition>>
-            participantDefinitionUpdateMap = Map.of(getParticipantId().toString(), clElementDefinitionMap);
-        heartbeat.setParticipantDefinitionUpdateMap(participantDefinitionUpdateMap);
+        List<ControlLoopElementDefinition> controlLoopElementDefinitionList =
+            List.of(clDefinition);
+        List<ParticipantDefinition> participantDefinitionUpdates = new ArrayList<>();
+        ParticipantDefinition participantDefinition = new ParticipantDefinition();
+        participantDefinition.setParticipantId(getParticipantId());
+        participantDefinition.setControlLoopElementDefinitionList(controlLoopElementDefinitionList);
+        heartbeat.setParticipantDefinitionUpdates(participantDefinitionUpdates);
 
         synchronized (lockit) {
             ParticipantMessagePublisher publisher =
@@ -208,15 +214,15 @@ class ParticipantMessagesTest {
     }
 
     private ControlLoopElementDefinition getClElementDefinition() {
-        ToscaServiceTemplate toscaServiceTemplate = new ToscaServiceTemplate();
-        toscaServiceTemplate.setName("serviceTemplate");
-        toscaServiceTemplate.setDerivedFrom("parentServiceTemplate");
-        toscaServiceTemplate.setDescription("Description of serviceTemplate");
-        toscaServiceTemplate.setVersion("1.2.3");
+        ToscaNodeTemplate toscaNodeTemplate = new ToscaNodeTemplate();
+        toscaNodeTemplate.setName("serviceTemplate");
+        toscaNodeTemplate.setDerivedFrom("parentServiceTemplate");
+        toscaNodeTemplate.setDescription("Description of serviceTemplate");
+        toscaNodeTemplate.setVersion("1.2.3");
 
         ControlLoopElementDefinition clDefinition = new ControlLoopElementDefinition();
-        clDefinition.setId(UUID.randomUUID());
-        clDefinition.setControlLoopElementToscaServiceTemplate(toscaServiceTemplate);
+        clDefinition.setCommonPropertiesMap(Map.of("Prop1", "Prop1Value"));
+        clDefinition.setControlLoopElementToscaNodeTemplate(toscaNodeTemplate);
         Map<String, String> commonPropertiesMap = Map.of("Prop1", "PropValue");
         clDefinition.setCommonPropertiesMap(commonPropertiesMap);
         return clDefinition;

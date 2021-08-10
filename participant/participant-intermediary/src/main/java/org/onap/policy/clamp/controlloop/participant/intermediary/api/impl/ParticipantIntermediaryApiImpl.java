@@ -37,6 +37,7 @@ import org.onap.policy.clamp.controlloop.participant.intermediary.api.ControlLoo
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.controlloop.participant.intermediary.handler.ParticipantHandler;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.stereotype.Component;
 
 /**
@@ -117,6 +118,11 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
             }
         }
         return null;
+    }
+
+    @Override
+    public ToscaServiceTemplate getToscaServiceTemplate() {
+        return participantHandler.getToscaServiceTemplate();
     }
 
     @Override
