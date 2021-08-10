@@ -20,14 +20,18 @@
 
 package org.onap.policy.clamp.controlloop.models.messages.dmaap.participant;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElementDefinition;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantDefinition;
 import org.onap.policy.models.base.PfUtils;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 /**
  * Class to represent the PARTICIPANT_UPDATE message that the control loop runtime sends to a participant.
@@ -38,9 +42,11 @@ import org.onap.policy.models.base.PfUtils;
 @ToString(callSuper = true)
 public class ParticipantUpdate extends ParticipantMessage {
 
-    // A map with Participant ID as its key, and a map of ControlLoopElements as value.
-    private Map<String, Map<UUID, ControlLoopElementDefinition>>
-            participantDefinitionUpdateMap = new LinkedHashMap<>();
+    // A list of participantDefinitionUpdates with Participant ID and a list of ControlLoopElementDefinitions
+    // Returned in response to ParticipantStatusReq only
+    private List<ParticipantDefinition> participantDefinitionUpdates = new ArrayList<>();
+
+    ToscaServiceTemplate toscaServiceTemplate = new ToscaServiceTemplate();
 
     /**
      * Constructor for instantiating ParticipantUpdate class with message name.
@@ -58,8 +64,8 @@ public class ParticipantUpdate extends ParticipantMessage {
     public ParticipantUpdate(ParticipantUpdate source) {
         super(source);
 
-        this.participantDefinitionUpdateMap = PfUtils.mapMap(source.participantDefinitionUpdateMap,
-                clElementDefinitionMap -> PfUtils.mapMap(clElementDefinitionMap,
-                        ControlLoopElementDefinition::new));
+        this.participantDefinitionUpdates = PfUtils.mapList(source.participantDefinitionUpdates,
+            ParticipantDefinition::new);
+        this.toscaServiceTemplate = source.toscaServiceTemplate;
     }
 }

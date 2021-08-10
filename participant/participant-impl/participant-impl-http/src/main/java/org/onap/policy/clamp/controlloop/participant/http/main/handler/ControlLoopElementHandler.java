@@ -32,7 +32,6 @@ import java.util.concurrent.Executors;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.ValidationException;
-import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.tuple.Pair;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
@@ -48,7 +47,6 @@ import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -99,29 +97,22 @@ public class ControlLoopElementHandler implements ControlLoopElementListener, Cl
      * Callback method to handle an update on a control loop element.
      *
      * @param element the information on the control loop element
-     * @param controlLoopDefinition toscaServiceTemplate
+     * @param nodeTemplate toscaNodeTemplate
      */
     @Override
-    public void controlLoopElementUpdate(ControlLoopElement element, ToscaServiceTemplate controlLoopDefinition) {
-
-        for (Map.Entry<String, ToscaNodeTemplate> nodeTemplate : controlLoopDefinition.getToscaTopologyTemplate()
-            .getNodeTemplates().entrySet()) {
-            // Fetching the node template of corresponding CL element
-            if (element.getDefinition().getName().equals(nodeTemplate.getKey())) {
-                try {
-                    var configRequest = CODER.convert(nodeTemplate.getValue().getProperties(), ConfigRequest.class);
-                    Set<ConstraintViolation<ConfigRequest>> violations = Validation.buildDefaultValidatorFactory()
-                        .getValidator().validate(configRequest);
-                    if (violations.isEmpty()) {
-                        invokeHttpClient(configRequest);
-                    } else {
-                        LOGGER.error("Violations found in the config request parameters: {}", violations);
-                        throw new ValidationException("Constraint violations in the config request");
-                    }
-                } catch (CoderException | ValidationException e) {
-                    LOGGER.error("Error invoking the http request for the config ", e);
-                }
+    public void controlLoopElementUpdate(ControlLoopElement element, ToscaNodeTemplate nodeTemplate) {
+        try {
+            var configRequest = CODER.convert(nodeTemplate.getProperties(), ConfigRequest.class);
+            Set<ConstraintViolation<ConfigRequest>> violations = Validation.buildDefaultValidatorFactory()
+                .getValidator().validate(configRequest);
+            if (violations.isEmpty()) {
+                invokeHttpClient(configRequest);
+            } else {
+                LOGGER.error("Violations found in the config request parameters: {}", violations);
+                throw new ValidationException("Constraint violations in the config request");
             }
+        } catch (CoderException | ValidationException e) {
+            LOGGER.error("Error invoking the http request for the config ", e);
         }
     }
 
