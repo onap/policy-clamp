@@ -79,7 +79,7 @@
     </appender>
 
     <appender name="AUDIT" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <filter class="org.onap.policy.clamp.clds.util.LoggerMarkerFilter$AuditLoggerMarkerFilter" />
+        <filter class="org.onap.policy.common.utils.logging.LoggerMarkerFilter$AuditLoggerMarkerFilter" />
         <file>${logDirectory}/audit.log</file>
         <encoder>
             <pattern>${auditPattern}</pattern>
@@ -98,7 +98,7 @@
     </appender>
 
     <appender name="METRIC" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <filter class="org.onap.policy.clamp.clds.util.LoggerMarkerFilter$MetricLoggerMarkerFilter" />
+        <filter class="org.onap.policy.common.utils.logging.LoggerMarkerFilter$MetricLoggerMarkerFilter" />
         <file>${logDirectory}/metric.log</file>
         <encoder>
             <pattern>${metricPattern}</pattern>
@@ -118,7 +118,7 @@
 
     <!-- SECURITY related loggers -->
     <appender name="SECURITY" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <filter class="org.onap.policy.clamp.clds.util.LoggerMarkerFilter$SecurityLoggerMarkerFilter" />
+        <filter class="org.onap.policy.common.utils.logging.LoggerMarkerFilter$SecurityLoggerMarkerFilter" />
         <file>${logDirectory}/security.log</file>
         <encoder>
             <pattern>%X{EntryTimestamp}|%date{yyyy-MM-dd'T'HH:mm:ss.SSSXXX,UTC}|%X{RequestID}|%X{ServiceInstanceId}|%.20thread|%X{VirtualServerName}|%X{ServiceName}|%X{PartnerName}|%X{StatusCode}|%X{ResponseCode}|%X{ResponseDescription}|%X{InstanceUUID}|%.-5level|%X{AlertSeverity}|%X{ServerIPAddress}|%X{ElapsedTime}|%X{ServerFQDN}|%X{RemoteHost}|%X{ClassName}|%X{Unused}|%X{ProcessKey}|%X{CustomField1}|%X{CustomField2}|%X{CustomField3}|%X{CustomField4}|%msg%n
