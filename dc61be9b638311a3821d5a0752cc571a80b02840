@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "86da3058_c5d2b95a",
+        "filename": "models/src/test/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ControlLoopStateChangeTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2021-08-11T14:12:30Z",
+      "side": 1,
+      "message": "May be you could have created a parent class and added a method to do this instead of repeating in all classes.",
+      "range": {
+        "startLine": 63,
+        "startChar": 8,
+        "endLine": 68,
+        "endChar": 56
+      },
+      "revId": "dc61be9b638311a3821d5a0752cc571a80b02840",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
