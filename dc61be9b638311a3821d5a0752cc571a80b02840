@@ -22,6 +22,30 @@
       "revId": "dc61be9b638311a3821d5a0752cc571a80b02840",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6a523ada_6b3ea7ff",
+        "filename": "models/src/test/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ControlLoopStateChangeTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-08-11T15:43:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "86da3058_c5d2b95a",
+      "range": {
+        "startLine": 63,
+        "startChar": 8,
+        "endLine": 68,
+        "endChar": 56
+      },
+      "revId": "dc61be9b638311a3821d5a0752cc571a80b02840",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
