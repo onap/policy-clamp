@@ -21,22 +21,16 @@
 package org.onap.policy.clamp.controlloop.participant.intermediary.comm;
 
 import java.io.Closeable;
-import java.time.Instant;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.TimerTask;
-import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoops;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantStatistics;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopAck;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregister;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantRegister;
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantResponseStatus;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStatus;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdateAck;
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ControlLoopElementListener;
@@ -70,7 +64,7 @@ public class MessageSender extends TimerTask implements Closeable {
 
         // Kick off the timer
         timerPool = makeTimerPool();
-        timerPool.scheduleAtFixedRate(this, 0, interval, TimeUnit.MILLISECONDS);
+        timerPool.scheduleAtFixedRate(this, interval, interval, TimeUnit.MILLISECONDS);
     }
 
     @Override
