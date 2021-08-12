@@ -22,31 +22,48 @@ package org.onap.policy.clamp.controlloop.runtime.commissioning;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.module.jsonSchema.factories.SchemaFactoryWrapper;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ControlLoopProvider;
 import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
 import org.onap.policy.clamp.controlloop.runtime.util.CommonTestData;
+import org.onap.policy.common.utils.coder.Coder;
+import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.coder.YamlJsonTranslator;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.provider.PolicyModelsProvider;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaCapabilityType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaDataType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeType;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaRelationshipType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
 
 class CommissioningProviderTest {
     private static final String TOSCA_SERVICE_TEMPLATE_YAML =
             "src/test/resources/rest/servicetemplates/pmsh_multiple_cl_tosca.yaml";
+    private static final String COMMON_TOSCA_SERVICE_TEMPLATE_YAML =
+        "src/test/resources/rest/servicetemplates/full-tosca-with-common-properties.yaml";
     private static final String TEMPLATE_IS_NULL = ".*serviceTemplate is marked non-null but is null";
     private static final YamlJsonTranslator yamlTranslator = new YamlJsonTranslator();
 
     private PolicyModelsProvider modelsProvider = null;
     private ControlLoopProvider clProvider = null;
+    private static final Coder CODER = new StandardCoder();
+    private final ObjectMapper mapper = new ObjectMapper();
+
 
     @AfterEach
     void close() throws Exception {
@@ -122,6 +139,113 @@ class CommissioningProviderTest {
         assertThat(affectedDefinitions).hasSize(13);
         listOfTemplates = provider.getControlLoopDefinitions(null, null);
         assertThat(listOfTemplates).hasSize(2);
+    }
+
+    /**
+     * Test the fetching of a full ToscaServiceTemplate object - as opposed to the reduced template that is being
+     * tested in the testGetToscaServiceTemplateReduced() test.
+     *
+     */
+    @Test
+    void testGetToscaServiceTemplate() throws Exception {
+        ClRuntimeParameterGroup clRuntimeParameterGroup = CommonTestData.geParameterGroup("getCLDefinitions");
+        modelsProvider =
+            CommonTestData.getPolicyModelsProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
+        clProvider = new ControlLoopProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
+
+        CommissioningProvider provider = new CommissioningProvider(modelsProvider, clProvider);
+        ToscaServiceTemplate serviceTemplate = yamlTranslator
+            .fromYaml(ResourceUtils
+                .getResourceAsString(COMMON_TOSCA_SERVICE_TEMPLATE_YAML), ToscaServiceTemplate.class);
+
+        provider.createControlLoopDefinitions(serviceTemplate);
+
+        ToscaServiceTemplate returnedServiceTemplate = provider.getToscaServiceTemplate(null, null);
+        assertNotNull(returnedServiceTemplate);
+
+        Map<String, ToscaNodeTemplate> nodeTemplates = returnedServiceTemplate
+            .getToscaTopologyTemplate().getNodeTemplates();
+
+        assertThat(nodeTemplates).hasSize(8);
+    }
+
+    /**
+     * Test the fetching of a reduced ToscaServiceTemplate with only some of the objects from the full template.
+     * The reduced template does not contain: DataTypesAsMap or PolicyTypesAsMap.
+     *
+     */
+    @Test
+    void testGetToscaServiceTemplateReduced() throws Exception {
+        ClRuntimeParameterGroup clRuntimeParameterGroup = CommonTestData.geParameterGroup("getCLDefinitions");
+        modelsProvider =
+            CommonTestData.getPolicyModelsProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
+        clProvider = new ControlLoopProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
+
+        CommissioningProvider provider = new CommissioningProvider(modelsProvider, clProvider);
+        ToscaServiceTemplate serviceTemplate = yamlTranslator
+            .fromYaml(ResourceUtils
+                .getResourceAsString(COMMON_TOSCA_SERVICE_TEMPLATE_YAML), ToscaServiceTemplate.class);
+
+        provider.createControlLoopDefinitions(serviceTemplate);
+
+        String returnedServiceTemplate = provider.getToscaServiceTemplateReduced(null, null);
+        assertNotNull(returnedServiceTemplate);
+        ToscaServiceTemplate parsedServiceTemplate = CODER.decode(returnedServiceTemplate, ToscaServiceTemplate.class);
+
+        assertThat(parsedServiceTemplate.getToscaTopologyTemplate().getNodeTemplates()).hasSize(8);
+    }
+
+    /**
+     * Tests the different schemas being returned from the schema endpoint. As schemas of the different
+     * sections of the Tosca Service Templates can be returned by the API, this test must cover all of the
+     * different sections.
+     *
+     */
+    @Test
+    void testGetToscaServiceTemplateSchema() throws Exception {
+
+        ClRuntimeParameterGroup clRuntimeParameterGroup = CommonTestData.geParameterGroup("getCLDefinitions");
+        modelsProvider =
+            CommonTestData.getPolicyModelsProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
+        clProvider = new ControlLoopProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
+
+        CommissioningProvider provider = new CommissioningProvider(modelsProvider, clProvider);
+        ToscaServiceTemplate serviceTemplate = yamlTranslator
+            .fromYaml(ResourceUtils
+                .getResourceAsString(COMMON_TOSCA_SERVICE_TEMPLATE_YAML), ToscaServiceTemplate.class);
+
+        provider.createControlLoopDefinitions(serviceTemplate);
+
+        mapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
+
+        Map<String, Class> sections = Map.of(
+            "all", ToscaServiceTemplate.class,
+            "data_types", ToscaDataType.class,
+            "capability_types", ToscaCapabilityType.class,
+            "node_types", ToscaNodeType.class,
+            "relationship_types", ToscaRelationshipType.class,
+            "policy_types", ToscaPolicyType.class,
+            "topology_template", ToscaTopologyTemplate.class,
+            "node_templates", List.class);
+
+        for (Map.Entry<String, Class> entry : sections.entrySet()) {
+            String returnedServiceTemplateSchema = provider.getToscaServiceTemplateSchema(entry.getKey());
+            assertNotNull(returnedServiceTemplateSchema);
+
+            var visitor = new SchemaFactoryWrapper();
+
+            if (entry.getKey().equals("node_templates")) {
+                mapper.acceptJsonFormatVisitor(
+                    mapper.getTypeFactory().constructCollectionType(List.class, ToscaNodeTemplate.class),
+                    visitor);
+            } else {
+                mapper.acceptJsonFormatVisitor(mapper.constructType(entry.getValue()), visitor);
+            }
+
+            var jsonSchema = visitor.finalSchema();
+            String localServiceTemplateSchema = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonSchema);
+            assertThat(localServiceTemplateSchema).isEqualTo(returnedServiceTemplateSchema);
+        }
     }
 
     /**
