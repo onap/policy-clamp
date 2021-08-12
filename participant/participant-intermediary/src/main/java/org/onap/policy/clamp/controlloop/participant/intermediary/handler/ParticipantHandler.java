@@ -202,7 +202,7 @@ public class ParticipantHandler implements Closeable {
      */
     public void handleParticipantRegisterAck(ParticipantRegisterAck participantRegisterAckMsg) {
         LOGGER.debug("ParticipantRegisterAck message received as responseTo {}",
-            participantRegisterAckMsg.getResponseTo());
+                participantRegisterAckMsg.getResponseTo());
     }
 
     /**
@@ -223,7 +223,7 @@ public class ParticipantHandler implements Closeable {
      */
     public void handleParticipantDeregisterAck(ParticipantDeregisterAck participantDeregisterAckMsg) {
         LOGGER.debug("ParticipantDeregisterAck message received as responseTo {}",
-            participantDeregisterAckMsg.getResponseTo());
+                participantDeregisterAckMsg.getResponseTo());
     }
 
     /**
@@ -233,14 +233,14 @@ public class ParticipantHandler implements Closeable {
      */
     public void handleParticipantUpdate(ParticipantUpdate participantUpdateMsg) {
         LOGGER.debug("ParticipantUpdate message received for participantId {}",
-            participantUpdateMsg.getParticipantId());
+                participantUpdateMsg.getParticipantId());
 
         if (!participantUpdateMsg.appliesTo(participantType, participantId)) {
             return;
         }
 
-        Map<UUID, ControlLoopElementDefinition> clDefinitionMap =
-                participantUpdateMsg.getParticipantDefinitionUpdateMap().get(participantUpdateMsg.getParticipantId());
+        Map<UUID, ControlLoopElementDefinition> clDefinitionMap = participantUpdateMsg
+                .getParticipantDefinitionUpdateMap().get(participantUpdateMsg.getParticipantId().toString());
 
         for (ControlLoopElementDefinition element : clDefinitionMap.values()) {
             clElementDefsOnThisParticipant.put(element.getId(), element);

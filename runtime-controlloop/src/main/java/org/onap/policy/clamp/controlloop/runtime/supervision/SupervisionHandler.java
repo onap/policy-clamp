@@ -311,17 +311,20 @@ public class SupervisionHandler {
 
     private void superviseControlLoops(ParticipantStatus participantStatusMessage)
             throws PfModelException, ControlLoopException {
-        for (Map.Entry<ToscaConceptIdentifier, ControlLoopInfo> clEntry :
-                participantStatusMessage.getControlLoopInfoMap().entrySet()) {
-            var dbControlLoop = controlLoopProvider.getControlLoop(new ToscaConceptIdentifier(
-                                clEntry.getKey().getName(), clEntry.getKey().getVersion()));
-            if (dbControlLoop == null) {
-                exceptionOccured(Response.Status.NOT_FOUND,
-                        "PARTICIPANT_STATUS control loop not found in database: " + clEntry.getKey());
+        if (participantStatusMessage.getControlLoopInfoMap() != null) {
+            for (Map.Entry<String, ControlLoopInfo> clEntry : participantStatusMessage.getControlLoopInfoMap()
+                    .entrySet()) {
+                String[] key = clEntry.getKey().split(" ");
+                var dbControlLoop = controlLoopProvider.getControlLoop(
+                        new ToscaConceptIdentifier(key[0], key[1]));
+                if (dbControlLoop == null) {
+                    exceptionOccured(Response.Status.NOT_FOUND,
+                            "PARTICIPANT_STATUS control loop not found in database: " + clEntry.getKey());
+                }
+                dbControlLoop.setState(clEntry.getValue().getState());
+                monitoringProvider.createClElementStatistics(clEntry.getValue().getControlLoopStatistics()
+                        .getClElementStatisticsList().getClElementStatistics());
             }
-            dbControlLoop.setState(clEntry.getValue().getState());
-            monitoringProvider.createClElementStatistics(clEntry.getValue()
-                .getControlLoopStatistics().getClElementStatisticsList().getClElementStatistics());
         }
     }
 

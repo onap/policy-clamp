@@ -32,7 +32,6 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantStatistics;
 import org.onap.policy.models.base.PfUtils;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
  * Class to represent the PARTICIPANT_STATUS message that all the participants send to the control loop runtime.
@@ -51,11 +50,11 @@ public class ParticipantStatus extends ParticipantMessage {
 
     // A map with Participant ID as its key, and a map of ControlLoopElements as value.
     // Returned in response to ParticipantStatusReq only
-    private Map<ToscaConceptIdentifier, Map<UUID, ControlLoopElementDefinition>>
+    private Map<String, Map<UUID, ControlLoopElementDefinition>>
             participantDefinitionUpdateMap = new LinkedHashMap<>();
 
     // Map of ControlLoopInfo types indexed by ControlLoopId, one entry for each control loop
-    private Map<ToscaConceptIdentifier, ControlLoopInfo> controlLoopInfoMap;
+    private Map<String, ControlLoopInfo> controlLoopInfoMap;
 
     /**
      * Constructor for instantiating ParticipantStatus class with message name.

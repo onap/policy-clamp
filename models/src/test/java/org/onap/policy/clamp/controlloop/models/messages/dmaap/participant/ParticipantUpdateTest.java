@@ -22,6 +22,7 @@ package org.onap.policy.clamp.controlloop.models.messages.dmaap.participant;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
+import static org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageUtils.assertSerializable;
 import static org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageUtils.removeVariableFields;
 
 import java.time.Instant;
@@ -29,6 +30,7 @@ import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElementDefinition;
+import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
@@ -37,7 +39,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
  */
 class ParticipantUpdateTest {
     @Test
-    void testCopyConstructor() {
+    void testCopyConstructor() throws CoderException {
         assertThatThrownBy(() -> new ParticipantUpdate(null)).isInstanceOf(NullPointerException.class);
 
         ParticipantUpdate orig = new ParticipantUpdate();
@@ -65,12 +67,14 @@ class ParticipantUpdateTest {
 
         Map<UUID, ControlLoopElementDefinition> clElementDefinitionMap = Map.of(UUID.randomUUID(), clDefinition);
 
-        Map<ToscaConceptIdentifier, Map<UUID, ControlLoopElementDefinition>>
-            participantDefinitionUpdateMap = Map.of(id, clElementDefinitionMap);
+        Map<String, Map<UUID, ControlLoopElementDefinition>> participantDefinitionUpdateMap =
+                Map.of(id.toString(), clElementDefinitionMap);
         orig.setParticipantDefinitionUpdateMap(participantDefinitionUpdateMap);
 
         ParticipantUpdate other = new ParticipantUpdate(orig);
 
         assertEquals(removeVariableFields(orig.toString()), removeVariableFields(other.toString()));
+
+        assertSerializable(orig, ParticipantUpdate.class);
     }
 }

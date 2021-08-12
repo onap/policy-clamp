@@ -156,12 +156,12 @@ class ParticipantMessagesTest {
         final ParticipantStatus heartbeat = new ParticipantStatus();
         heartbeat.setParticipantId(getParticipantId());
         ControlLoopInfo clInfo = getControlLoopInfo(getControlLoopId());
-        heartbeat.setControlLoopInfoMap(Map.of(getControlLoopId(), clInfo));
+        heartbeat.setControlLoopInfoMap(Map.of(getControlLoopId().toString(), clInfo));
 
         ControlLoopElementDefinition clDefinition = getClElementDefinition();
         Map<UUID, ControlLoopElementDefinition> clElementDefinitionMap = Map.of(UUID.randomUUID(), clDefinition);
-        Map<ToscaConceptIdentifier, Map<UUID, ControlLoopElementDefinition>>
-            participantDefinitionUpdateMap = Map.of(getParticipantId(), clElementDefinitionMap);
+        Map<String, Map<UUID, ControlLoopElementDefinition>>
+            participantDefinitionUpdateMap = Map.of(getParticipantId().toString(), clElementDefinitionMap);
         heartbeat.setParticipantDefinitionUpdateMap(participantDefinitionUpdateMap);
 
         synchronized (lockit) {

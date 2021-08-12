@@ -22,6 +22,7 @@ package org.onap.policy.clamp.controlloop.models.messages.dmaap.participant;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
+import static org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageUtils.assertSerializable;
 import static org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageUtils.removeVariableFields;
 
 import java.time.Instant;
@@ -37,13 +38,14 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopStatistics;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantHealthStatus;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
+import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 class ParticipantStatusTest {
 
     @Test
-    void testCopyConstructor() {
+    void testCopyConstructor() throws CoderException {
         assertThatThrownBy(() -> new ParticipantStatus(null)).isInstanceOf(NullPointerException.class);
 
         final ParticipantStatus orig = new ParticipantStatus();
@@ -63,16 +65,18 @@ class ParticipantStatusTest {
         orig.setTimestamp(Instant.ofEpochMilli(3000));
 
         ControlLoopInfo clInfo = getControlLoopInfo(id);
-        orig.setControlLoopInfoMap(Map.of(id, clInfo));
+        orig.setControlLoopInfoMap(Map.of(id.toString(), clInfo));
 
         ControlLoopElementDefinition clDefinition = getClElementDefinition();
         Map<UUID, ControlLoopElementDefinition> clElementDefinitionMap = Map.of(UUID.randomUUID(), clDefinition);
-        Map<ToscaConceptIdentifier, Map<UUID, ControlLoopElementDefinition>>
-            participantDefinitionUpdateMap = Map.of(id, clElementDefinitionMap);
+        Map<String, Map<UUID, ControlLoopElementDefinition>>
+            participantDefinitionUpdateMap = Map.of(id.toString(), clElementDefinitionMap);
         orig.setParticipantDefinitionUpdateMap(participantDefinitionUpdateMap);
 
         assertEquals(removeVariableFields(orig.toString()),
                 removeVariableFields(new ParticipantStatus(orig).toString()));
+
+        assertSerializable(orig, ParticipantStatus.class);
     }
 
     private ControlLoopInfo getControlLoopInfo(ToscaConceptIdentifier id) {

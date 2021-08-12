@@ -22,16 +22,18 @@ package org.onap.policy.clamp.controlloop.models.messages.dmaap.participant;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
+import static org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageUtils.assertSerializable;
 import static org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageUtils.removeVariableFields;
 
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class ParticipantRegisterAckTest {
 
     @Test
-    void testCopyConstructor() {
+    void testCopyConstructor() throws CoderException {
         assertThatThrownBy(() -> new ParticipantRegisterAck(null)).isInstanceOf(NullPointerException.class);
 
         final ParticipantRegisterAck orig = new ParticipantRegisterAck();
@@ -51,5 +53,7 @@ class ParticipantRegisterAckTest {
 
         assertEquals(removeVariableFields(orig.toString()),
                 removeVariableFields(new ParticipantRegisterAck(orig).toString()));
+
+        assertSerializable(orig, ParticipantRegisterAck.class);
     }
 }
