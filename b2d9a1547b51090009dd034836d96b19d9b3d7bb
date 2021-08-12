@@ -22,6 +22,23 @@
       "revId": "b2d9a1547b51090009dd034836d96b19d9b3d7bb",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3f5f1dec_288ea723",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 357,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-08-12T14:28:40Z",
+      "side": 1,
+      "message": "Make this a private static so it is only run once.",
+      "revId": "b2d9a1547b51090009dd034836d96b19d9b3d7bb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
