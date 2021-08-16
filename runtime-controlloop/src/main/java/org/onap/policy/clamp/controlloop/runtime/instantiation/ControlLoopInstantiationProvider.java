@@ -32,9 +32,12 @@ import lombok.AllArgsConstructor;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoops;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ControlLoopProvider;
+import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.ControlLoopNameVersion;
+import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.ControlLoopOrderStateResponse;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationCommand;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationResponse;
 import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningProvider;
@@ -248,6 +251,30 @@ public class ControlLoopInstantiationProvider {
         supervisionHandler.triggerControlLoopSupervision(command.getControlLoopIdentifierList());
         var response = new InstantiationResponse();
         response.setAffectedControlLoops(command.getControlLoopIdentifierList());
+
+        return response;
+    }
+
+    /**
+     * Gets a list of control loops with it's ordered state.
+     *
+     * @param name the name of the control loop to get, null for all control loops
+     * @param version the version of the control loop to get, null for all control loops
+     * @return a list of Instantiation Command
+     * @throws PfModelException on errors getting control loops
+     */
+    public ControlLoopOrderStateResponse getIssueControlLoopOrderedState(String name, String version)
+        throws PfModelException {
+
+        List<ControlLoop> controlLoops = controlLoopProvider.getControlLoops(name, version);
+        ControlLoopOrderStateResponse response = new ControlLoopOrderStateResponse();
+
+        controlLoops.forEach(controlLoop -> {
+            ControlLoopNameVersion controlLoopNameVersion = new ControlLoopNameVersion();
+            controlLoopNameVersion.setName(controlLoop.getName());
+            controlLoopNameVersion.setVersion(controlLoop.getVersion());
+            response.getControlLoopIdentifierList().add(controlLoopNameVersion);
+        });
 
         return response;
     }

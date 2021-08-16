@@ -160,6 +160,31 @@
             </doFinally>
         </doTry>
     </route>
+    <route id="get-tosca-instantiation-order-state">
+        <from uri="direct:get-tosca-instantiation-order-state"/>
+        <doTry>
+            <log loggingLevel="INFO"
+                 message="Getting the Tosca Instantiation Order State"/>
+            <to
+                    uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('ControlLoop', 'Getting the Tosca Instantiation Order State')"/>
+            <setHeader name="CamelHttpMethod">
+                <constant>GET</constant>
+            </setHeader>
+            <setHeader name="Content-Type">
+                <constant>application/json</constant>
+            </setHeader>
+            <log loggingLevel="INFO"
+                 message="Endpoint to get Tosca Instantiation Order State: {{clamp.config.controlloop.runtime.url}}/onap/controlloop/v2/instantiationState"></log>
+            <toD
+                    uri="{{clamp.config.controlloop.runtime.url}}/onap/controlloop/v2/instantiationState?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.controlloop.runtime.userName}}&amp;authPassword={{clamp.config.controlloop.runtime.password}}&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+            <convertBodyTo type="java.lang.String"/>
+            <doFinally>
+                <to uri="direct:reset-raise-http-exception-flag"/>
+                <to
+                        uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
+            </doFinally>
+        </doTry>
+    </route>
     <route id="get-json-schema">
         <from uri="direct:get-json-schema"/>
         <doTry>

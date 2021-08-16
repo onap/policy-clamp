@@ -28,10 +28,12 @@ import io.swagger.annotations.Authorization;
 import io.swagger.annotations.Extension;
 import io.swagger.annotations.ExtensionProperty;
 import io.swagger.annotations.ResponseHeader;
+import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoops;
+import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.ControlLoopOrderStateResponse;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationCommand;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationResponse;
 import org.onap.policy.clamp.controlloop.runtime.instantiation.ControlLoopInstantiationProvider;
@@ -375,5 +377,66 @@ public class InstantiationController extends AbstractRestController {
             throws ControlLoopException, PfModelException {
 
         return ResponseEntity.accepted().body(provider.issueControlLoopCommand(command));
+    }
+
+    /**
+     * Queries details of all control loops.
+     *
+     * @param requestId request ID used in ONAP logging
+     * @param name the name of the control loop to get, null for all control loops
+     * @param version the version of the control loop to get, null for all control loops
+     * @return the control loops
+     * @throws PfModelException on errors getting commissioning of control loop
+     */
+    // @formatter:off
+    @GetMapping(value = "/instantiationState",
+        produces = {MediaType.APPLICATION_JSON_VALUE, APPLICATION_YAML})
+    @ApiOperation(value = "Query details of the requested control loops",
+        notes = "Queries details of the requested control loops, returning all control loop details",
+        response = ControlLoops.class,
+        tags = {TAGS},
+        authorizations = @Authorization(value = AUTHORIZATION_TYPE),
+        responseHeaders = {
+            @ResponseHeader(
+                name = VERSION_MINOR_NAME, description = VERSION_MINOR_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(name = VERSION_PATCH_NAME, description = VERSION_PATCH_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(name = REQUEST_ID_NAME, description = REQUEST_ID_HDR_DESCRIPTION,
+                response = UUID.class)},
+        extensions = {
+            @Extension
+                (
+                    name = EXTENSION_NAME,
+                    properties = {
+                        @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                        @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
+                    }
+                )
+        }
+    )
+    @ApiResponses(
+        value = {
+            @ApiResponse(code = AUTHENTICATION_ERROR_CODE, message = AUTHENTICATION_ERROR_MESSAGE),
+            @ApiResponse(code = AUTHORIZATION_ERROR_CODE, message = AUTHORIZATION_ERROR_MESSAGE),
+            @ApiResponse(code = SERVER_ERROR_CODE, message = SERVER_ERROR_MESSAGE)
+        }
+    )
+    // @formatter:on
+    public ResponseEntity<ControlLoopOrderStateResponse> getIssueControlLoopOrderedState(
+        @RequestHeader(
+            name = REQUEST_ID_NAME,
+            required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+        @ApiParam(value = "Control Loop definition name", required = false) @RequestParam(
+            value = "name",
+            required = false) String name,
+        @ApiParam(value = "Control Loop definition version", required = false) @RequestParam(
+            value = "version",
+            required = false) String version)
+        throws PfModelException {
+
+        return ResponseEntity.ok().body(provider.getIssueControlLoopOrderedState(name, version));
     }
 }
