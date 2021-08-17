@@ -185,7 +185,6 @@ public class LoggingUtils {
      * @param serviceName service name
      */
     public void entering(HttpServletRequest request, String serviceName) {
-        // MDC.clear();
         checkNotNull(request);
         // Extract MDC values from standard HTTP headers.
         final String requestId =

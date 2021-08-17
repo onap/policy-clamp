@@ -2,6 +2,8 @@
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
+ * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -93,7 +95,7 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
             ControlLoopOrderedState newState) {
         switch (newState) {
             case UNINITIALISED:
-                Loop loop = clampClient.getstatus(LOOP);
+                var loop = clampClient.getstatus(LOOP);
                 if (loop != null) {
                     clampClient.undeploy(LOOP);
                     intermediaryApi.updateControlLoopElementState(controlLoopElementId, newState,
@@ -113,7 +115,7 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
     }
 
     private Loop getStatus() throws PfModelException {
-        Loop loop = clampClient.getstatus(LOOP);
+        var loop = clampClient.getstatus(LOOP);
         if (loop == null) {
             loop = clampClient.create(LOOP, TEMPLATE);
         }
@@ -143,12 +145,12 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
     public void controlLoopElementUpdate(ControlLoopElement element, ToscaNodeTemplate nodeTemplate)
             throws PfModelException {
         try {
-            Loop loop = getStatus();
+            var loop = getStatus();
 
             if (BLUEPRINT_DEPLOYED.equals(ClampHttpClient.getStatusCode(loop))) {
                 deploy();
-                boolean deployedFlag = false;
-                for (int i = 0; i < checkCount; i++) {
+                var deployedFlag = false;
+                for (var i = 0; i < checkCount; i++) {
                     // sleep 10 seconds
                     TimeUnit.SECONDS.sleep(secCount);
                     loop = getStatus();
@@ -168,6 +170,9 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
             }
         } catch (PfModelException e) {
             throw e;
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new PfModelException(null, e.getMessage(), e);
         } catch (Exception e) {
             throw new PfModelException(null, e.getMessage(), e);
         }
@@ -180,9 +185,9 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
      */
     @Override
     public void handleStatistics(UUID controlLoopElementId) {
-        ControlLoopElement clElement = intermediaryApi.getControlLoopElement(controlLoopElementId);
+        var clElement = intermediaryApi.getControlLoopElement(controlLoopElementId);
         if (clElement != null) {
-            ClElementStatistics clElementStatistics = new ClElementStatistics();
+            var clElementStatistics = new ClElementStatistics();
             clElementStatistics.setControlLoopState(clElement.getState());
             clElementStatistics.setTimeStamp(Instant.now());
             intermediaryApi.updateControlLoopElementStatistics(controlLoopElementId, clElementStatistics);
