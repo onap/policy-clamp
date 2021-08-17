@@ -2,6 +2,126 @@
   "comments": [
     {
       "key": {
+        "uuid": "d0c554af_88311863",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoopElementDefinition.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-17T18:58:24Z",
+      "side": 1,
+      "message": "this comment doesn\u0027t appear to add any value\n\nsame comment for some of the fields in other files (e.g., participantId)",
+      "revId": "04036dfcc09a6f48a7b8575fc9e7bdcaf4dc27e4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f20ab805_ccbe880e",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ParticipantDefinition.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-17T18:58:24Z",
+      "side": 1,
+      "message": "this doesn\u0027t sound right - I don\u0027t see a Map or a Key",
+      "revId": "04036dfcc09a6f48a7b8575fc9e7bdcaf4dc27e4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "68c53bce_bb53ffba",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ParticipantUpdates.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-17T18:58:24Z",
+      "side": 1,
+      "message": "invalid comment?",
+      "revId": "04036dfcc09a6f48a7b8575fc9e7bdcaf4dc27e4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4acb5037_7bb39c8e",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ControlLoopUpdate.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-17T18:58:24Z",
+      "side": 1,
+      "message": "no longer applicable?",
+      "range": {
+        "startLine": 46,
+        "startChar": 56,
+        "endLine": 46,
+        "endChar": 99
+      },
+      "revId": "04036dfcc09a6f48a7b8575fc9e7bdcaf4dc27e4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b7e0cf07_fa3b32b5",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ParticipantStatus.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-17T18:58:24Z",
+      "side": 1,
+      "message": "no longer applicable?",
+      "range": {
+        "startLine": 54,
+        "startChar": 66,
+        "endLine": 54,
+        "endChar": 109
+      },
+      "revId": "04036dfcc09a6f48a7b8575fc9e7bdcaf4dc27e4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8a6025a2_ee125d23",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ParticipantUpdate.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-17T18:58:24Z",
+      "side": 1,
+      "message": "delete?",
+      "range": {
+        "startLine": 45,
+        "startChar": 66,
+        "endLine": 45,
+        "endChar": 109
+      },
+      "revId": "04036dfcc09a6f48a7b8575fc9e7bdcaf4dc27e4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7616f384_e0724578",
         "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ParticipantUpdate.java",
         "patchSetId": 4
@@ -19,6 +139,126 @@
         "endLine": 49,
         "endChar": 24
       },
+      "revId": "04036dfcc09a6f48a7b8575fc9e7bdcaf4dc27e4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b59861ce_4684d63c",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/handler/ControlLoopElementHandler.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-17T18:58:24Z",
+      "side": 1,
+      "message": "maybe indent this line or add a blank line below it to set it apart from the method body",
+      "revId": "04036dfcc09a6f48a7b8575fc9e7bdcaf4dc27e4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2da16719_72d361e2",
+        "filename": "participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/main/handler/ControlLoopElementHandler.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-17T18:58:24Z",
+      "side": 1,
+      "message": "so this is no longer needed (other than to fullfill the API of the interface)?",
+      "range": {
+        "startLine": 123,
+        "startChar": 87,
+        "endLine": 123,
+        "endChar": 106
+      },
+      "revId": "04036dfcc09a6f48a7b8575fc9e7bdcaf4dc27e4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f9d38015_3d46902b",
+        "filename": "participant/participant-impl/participant-impl-policy/src/test/java/org/onap/policy/clamp/controlloop/participant/policy/endtoend/ParticipantMessagesTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-17T18:58:24Z",
+      "side": 1,
+      "message": "duplicate lines",
+      "range": {
+        "startLine": 146,
+        "startChar": 7,
+        "endLine": 147,
+        "endChar": 92
+      },
+      "revId": "04036dfcc09a6f48a7b8575fc9e7bdcaf4dc27e4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e573ddde_8f323278",
+        "filename": "participant/participant-impl/participant-impl-policy/src/test/java/org/onap/policy/clamp/controlloop/participant/policy/endtoend/ParticipantMessagesTest.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-17T18:58:24Z",
+      "side": 1,
+      "message": "perhaps this should be List.of(participantDefinition) (as participantDefinition is never added to the list)",
+      "range": {
+        "startLine": 175,
+        "startChar": 67,
+        "endLine": 175,
+        "endChar": 84
+      },
+      "revId": "04036dfcc09a6f48a7b8575fc9e7bdcaf4dc27e4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "99573d7b_b01757e2",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ControlLoopHandler.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-17T18:58:24Z",
+      "side": 1,
+      "message": "perhaps invert these two loops so this look-up only has to be performed once per element instead of once for every listener/element pair",
+      "revId": "04036dfcc09a6f48a7b8575fc9e7bdcaf4dc27e4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e886000c_3b7612a6",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ControlLoopHandler.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-17T18:58:24Z",
+      "side": 1,
+      "message": "indent or add a blank line after\n\nsame comment below",
       "revId": "04036dfcc09a6f48a7b8575fc9e7bdcaf4dc27e4",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
