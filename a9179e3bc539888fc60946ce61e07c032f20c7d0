@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f9fac527_8ef4dd7e",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/handler/ControlLoopElementHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-17T21:50:35Z",
+      "side": 1,
+      "message": "need to throw new PfModelException",
+      "revId": "a9179e3bc539888fc60946ce61e07c032f20c7d0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "98dd2be2_81a29303",
+        "filename": "participant/participant-impl/participant-impl-simulator/src/main/java/org/onap/policy/clamp/controlloop/participant/simulator/main/rest/RequestResponseLoggingFilter.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-17T21:50:35Z",
+      "side": 1,
+      "message": "maybe move this comment before line 53, and add this to the front of it: \"Disabling sonar because\"",
+      "range": {
+        "startLine": 55,
+        "startChar": 7,
+        "endLine": 59,
+        "endChar": 0
+      },
+      "revId": "a9179e3bc539888fc60946ce61e07c032f20c7d0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e25bba20_42cde98f",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/web/RequestResponseLoggingFilter.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-17T21:50:35Z",
+      "side": 1,
+      "message": "same comment as before",
+      "range": {
+        "startLine": 55,
+        "startChar": 8,
+        "endLine": 58,
+        "endChar": 0
+      },
+      "revId": "a9179e3bc539888fc60946ce61e07c032f20c7d0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
