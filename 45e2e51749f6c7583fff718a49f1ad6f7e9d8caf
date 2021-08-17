@@ -1,0 +1,152 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a7df3765_b9c612b2",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ControlLoopProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-17T15:46:22Z",
+      "side": 1,
+      "message": "does this return a template?  if so, maybe that should be stuffed into line 205 instead of the original \"template\"?",
+      "revId": "45e2e51749f6c7583fff718a49f1ad6f7e9d8caf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0a40b2ff_0022744b",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-17T15:46:22Z",
+      "side": 1,
+      "message": "these methods should probably take a ToscaConceptIdentifier, but that can be done in a separate review\n\nsame comment below",
+      "range": {
+        "startLine": 120,
+        "startChar": 61,
+        "endLine": 120,
+        "endChar": 88
+      },
+      "revId": "45e2e51749f6c7583fff718a49f1ad6f7e9d8caf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6646d1c6_e0fc61e9",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 460,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-17T15:46:22Z",
+      "side": 1,
+      "message": "if all we care about is the name, then why use toMap()?  for that matter, why use collect()?",
+      "revId": "45e2e51749f6c7583fff718a49f1ad6f7e9d8caf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "46ba5efc_677cee32",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-17T15:46:22Z",
+      "side": 1,
+      "message": "can it really contain a decimal point?",
+      "range": {
+        "startLine": 68,
+        "startChar": 66,
+        "endLine": 68,
+        "endChar": 75
+      },
+      "revId": "45e2e51749f6c7583fff718a49f1ad6f7e9d8caf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "60b23899_5d0de4ab",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-17T15:46:22Z",
+      "side": 1,
+      "message": "why create a list rather than just keeping track of the best entry?  In fact reduce() could be used instead, replacing most of the method (and thus eliminating the need for the check on line 335)",
+      "revId": "45e2e51749f6c7583fff718a49f1ad6f7e9d8caf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "83cbaf0a_e8986070",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-17T15:46:22Z",
+      "side": 1,
+      "message": "seems like this line isn\u0027t needed - can just pass the node template to lines 331-333",
+      "revId": "45e2e51749f6c7583fff718a49f1ad6f7e9d8caf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6ddae518_56041b5e",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 342,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-17T15:46:22Z",
+      "side": 1,
+      "message": "can a given key contain more than one \"_Instance\"?  if not, perhaps use lastIndexOf and then extract a substring.  For that matter, could include the \"_Instance\" in the pattern and then, if it matches, just extract matcher.group(1) (i.e., the numeric part)",
+      "revId": "45e2e51749f6c7583fff718a49f1ad6f7e9d8caf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f315d11f_61e501e5",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/rest/CommissioningController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-17T15:46:22Z",
+      "side": 1,
+      "message": "sonar: should only throw one type of exception",
+      "revId": "45e2e51749f6c7583fff718a49f1ad6f7e9d8caf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
