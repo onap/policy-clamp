@@ -22,8 +22,6 @@ package org.onap.policy.clamp.controlloop.participant.intermediary.comm;
 
 import java.util.function.Consumer;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantAckMessage;
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessage;
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantRegisterAck;
 import org.onap.policy.clamp.controlloop.participant.intermediary.handler.ParticipantHandler;
 import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
 import org.onap.policy.common.endpoints.listeners.ScoListener;

@@ -98,7 +98,7 @@ public class ControlLoopHandler {
             LOGGER.warn("Cannot update Control loop element state, id is null");
         }
 
-        ControlLoopAck controlLoopStateChangeAck =
+        var controlLoopStateChangeAck =
                 new ControlLoopAck(ParticipantMessageType.CONTROLLOOP_STATECHANGE_ACK);
         ControlLoopElement clElement = elementsOnThisParticipant.get(id);
         if (clElement != null) {
