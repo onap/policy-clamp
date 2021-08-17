@@ -115,7 +115,7 @@ public class ClampHttpClient extends AbstractHttpClient {
         if (loop == null || loop.getComponents() == null || loop.getComponents().isEmpty()) {
             return STATUS_NOT_FOUND;
         }
-        ExternalComponent externalComponent = loop.getComponents().get("DCAE");
+        var externalComponent = loop.getComponents().get("DCAE");
         if (externalComponent == null || externalComponent.getComponentState() == null) {
             return STATUS_NOT_FOUND;
         }

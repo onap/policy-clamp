@@ -152,7 +152,7 @@ public class JpaControlLoopElement extends PfConcept implements PfAuthorative<Co
 
     @Override
     public ControlLoopElement toAuthorative() {
-        ControlLoopElement element = new ControlLoopElement();
+        var element = new ControlLoopElement();
 
         element.setId(UUID.fromString(getKey().getLocalName()));
         element.setDefinition(new ToscaConceptIdentifier(definition));

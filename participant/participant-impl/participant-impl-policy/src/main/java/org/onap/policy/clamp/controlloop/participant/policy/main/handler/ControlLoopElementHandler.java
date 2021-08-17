@@ -97,7 +97,7 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
         }
     }
 
-    private void deletePolicyData(UUID controlLoopElementId, ControlLoopOrderedState newState) throws PfModelException {
+    private void deletePolicyData(UUID controlLoopElementId, ControlLoopOrderedState newState) {
         // Delete all policies of this controlLoop from policy framework
         for (Entry<String, String> policy : policyMap.entrySet()) {
             apiHttpClient.deletePolicy(policy.getKey(), policy.getValue());
@@ -151,9 +151,9 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
      */
     @Override
     public void handleStatistics(UUID controlLoopElementId) throws PfModelException {
-        ControlLoopElement clElement = intermediaryApi.getControlLoopElement(controlLoopElementId);
+        var clElement = intermediaryApi.getControlLoopElement(controlLoopElementId);
         if (clElement != null) {
-            ClElementStatistics clElementStatistics = new ClElementStatistics();
+            var clElementStatistics = new ClElementStatistics();
             clElementStatistics.setControlLoopState(clElement.getState());
             clElementStatistics.setTimeStamp(Instant.now());
             intermediaryApi.updateControlLoopElementStatistics(controlLoopElementId, clElementStatistics);

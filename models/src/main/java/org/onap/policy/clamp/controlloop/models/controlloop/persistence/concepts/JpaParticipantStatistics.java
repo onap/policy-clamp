@@ -189,7 +189,7 @@ public class JpaParticipantStatistics extends PfConcept implements PfAuthorative
 
     @Override
     public ParticipantStatistics toAuthorative() {
-        ParticipantStatistics participantStatistics = new ParticipantStatistics();
+        var participantStatistics = new ParticipantStatistics();
         participantStatistics.setTimeStamp(key.getTimeStamp().toInstant());
         participantStatistics.setParticipantId(new ToscaConceptIdentifier(participantId));
         participantStatistics.setState(state);
