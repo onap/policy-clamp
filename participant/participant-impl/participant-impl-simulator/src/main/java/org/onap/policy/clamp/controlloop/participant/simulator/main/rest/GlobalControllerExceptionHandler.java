@@ -41,7 +41,7 @@ public class GlobalControllerExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<CommissioningResponse> handleBadRequest(ControlLoopException ex) {
 
-        CommissioningResponse resp = new CommissioningResponse();
+        var resp = new CommissioningResponse();
         resp.setErrorDetails(ex.getErrorResponse().getErrorMessage());
 
         return ResponseEntity.status(ex.getErrorResponse().getResponseCode().getStatusCode()).body(resp);

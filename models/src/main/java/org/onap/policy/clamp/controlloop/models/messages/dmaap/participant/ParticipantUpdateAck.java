@@ -23,10 +23,6 @@ package org.onap.policy.clamp.controlloop.models.messages.dmaap.participant;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoops;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantHealthStatus;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantStatistics;
 
 /**
  * Class to represent the PARTICIPANT_UPDATE_ACK message that registered participant sends to controlloop runtime.
