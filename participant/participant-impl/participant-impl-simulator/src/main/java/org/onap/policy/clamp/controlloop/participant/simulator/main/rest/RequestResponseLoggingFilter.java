@@ -2,6 +2,8 @@
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
+ * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -50,8 +52,12 @@ public class RequestResponseLoggingFilter implements Filter {
         HttpServletResponse res = (HttpServletResponse) response;
         HttpServletRequest req = (HttpServletRequest) request;
 
+        /*
+         * Disabling sonar because of ONAP requires the request ID to be copied from the request
+         * to the response, and just a simulator used during testing.
+         */
         String requestId = req.getHeader(REQUEST_ID_NAME);
-        res.addHeader(REQUEST_ID_NAME, requestId != null ? requestId : UUID.randomUUID().toString());
+        res.addHeader(REQUEST_ID_NAME, requestId != null ? requestId : UUID.randomUUID().toString()); // NOSONAR
 
         res.addHeader(VERSION_MINOR_NAME, "0");
         res.addHeader(VERSION_PATCH_NAME, "0");
