@@ -168,7 +168,7 @@ public class ChartStore {
         try (var out = new PrintStream(new FileOutputStream(getFile(chart)))) {
             out.print(STANDARD_CODER.encode(chart));
         } catch (Exception exc) {
-            LOGGER.warn("Could not store chart: {} {}", chart.getChartId(), exc);
+            LOGGER.warn("Could not store chart: {}", chart.getChartId(), exc);
         }
     }
 
@@ -179,11 +179,11 @@ public class ChartStore {
 
     private synchronized void restoreFromLocalFileSystem() {
         try {
-            Path localChartDirectoryPath = Paths.get(participantK8sParameters.getLocalChartDirectory());
+            var localChartDirectoryPath = Paths.get(participantK8sParameters.getLocalChartDirectory());
             Files.createDirectories(localChartDirectoryPath);
             restoreFromLocalFileSystem(localChartDirectoryPath);
         } catch (Exception ioe) {
-            LOGGER.warn("Could not restore charts from local file system: {}", ioe);
+            LOGGER.warn("Could not restore charts from local file system", ioe);
         }
     }
 

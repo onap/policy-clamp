@@ -271,7 +271,7 @@ public class ParticipantHandler implements Closeable {
         this.participantStatistics.setHealthStatus(healthStatus);
         this.participantStatistics.setTimeStamp(Instant.now());
 
-        ParticipantStatus heartbeat = new ParticipantStatus();
+        var heartbeat = new ParticipantStatus();
         heartbeat.setParticipantId(participantId);
         heartbeat.setParticipantStatistics(participantStatistics);
         heartbeat.setParticipantType(participantType);

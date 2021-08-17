@@ -70,7 +70,7 @@ class ControlLoopElementHandlerTest {
         ControlLoopElementHandler controlLoopElementHandler =
                 new ControlLoopElementHandler(clampClient, consulClient, commonTestData.getParticipantDcaeParameters());
 
-        when(clampClient.getstatus(eq(LOOP))).thenReturn(new Loop());
+        when(clampClient.getstatus(LOOP)).thenReturn(new Loop());
 
         ParticipantIntermediaryApi intermediaryApi = mock(ParticipantIntermediaryApi.class);
         controlLoopElementHandler.setIntermediaryApi(intermediaryApi);
@@ -79,7 +79,7 @@ class ControlLoopElementHandlerTest {
         controlLoopElementHandler.controlLoopElementStateChange(controlLoopElementId, ControlLoopState.PASSIVE,
                 ControlLoopOrderedState.UNINITIALISED);
 
-        verify(clampClient).undeploy(eq(LOOP));
+        verify(clampClient).undeploy(LOOP);
         controlLoopElementHandler.handleStatistics(controlLoopElementId);
         assertThat(intermediaryApi.getControlLoopElement(controlLoopElementId)).isNull();
     }
@@ -88,12 +88,12 @@ class ControlLoopElementHandlerTest {
     void testCreate_ControlLoopElementUpdate() throws PfModelException, JSONException, CoderException {
         ClampHttpClient clampClient = spy(mock(ClampHttpClient.class));
         Loop loopDeployed = CODER.convert(CommonTestData.createJsonStatus(BLUEPRINT_DEPLOYED), Loop.class);
-        when(clampClient.create(eq(LOOP), eq(TEMPLATE))).thenReturn(loopDeployed);
-        when(clampClient.deploy(eq(LOOP))).thenReturn(true);
+        when(clampClient.create(LOOP, TEMPLATE)).thenReturn(loopDeployed);
+        when(clampClient.deploy(LOOP)).thenReturn(true);
 
         Loop loopInstalled =
                 CODER.convert(CommonTestData.createJsonStatus(MICROSERVICE_INSTALLED_SUCCESSFULLY), Loop.class);
-        when(clampClient.getstatus(eq(LOOP))).thenReturn(null, loopInstalled);
+        when(clampClient.getstatus(LOOP)).thenReturn(null, loopInstalled);
 
         ConsulDcaeHttpClient consulClient = spy(mock(ConsulDcaeHttpClient.class));
         when(consulClient.deploy(any(String.class), any(String.class))).thenReturn(true);
@@ -111,9 +111,9 @@ class ControlLoopElementHandlerTest {
         final ToscaServiceTemplate controlLoopDefinition = new ToscaServiceTemplate();
         controlLoopElementHandler.controlLoopElementUpdate(element, controlLoopDefinition);
 
-        verify(clampClient).create(eq(LOOP), eq(TEMPLATE));
+        verify(clampClient).create(LOOP, TEMPLATE);
         verify(consulClient).deploy(any(String.class), any(String.class));
-        verify(clampClient).deploy(eq(LOOP));
+        verify(clampClient).deploy(LOOP);
     }
 
     @Test
@@ -122,8 +122,8 @@ class ControlLoopElementHandlerTest {
         Loop loopDeployed = CODER.convert(CommonTestData.createJsonStatus(BLUEPRINT_DEPLOYED), Loop.class);
         Loop loopInstalled =
                 CODER.convert(CommonTestData.createJsonStatus(MICROSERVICE_INSTALLED_SUCCESSFULLY), Loop.class);
-        when(clampClient.getstatus(eq(LOOP))).thenReturn(loopDeployed, loopInstalled);
-        when(clampClient.deploy(eq(LOOP))).thenReturn(true);
+        when(clampClient.getstatus(LOOP)).thenReturn(loopDeployed, loopInstalled);
+        when(clampClient.deploy(LOOP)).thenReturn(true);
 
         ConsulDcaeHttpClient consulClient = spy(mock(ConsulDcaeHttpClient.class));
         when(consulClient.deploy(any(String.class), any(String.class))).thenReturn(true);
@@ -141,8 +141,8 @@ class ControlLoopElementHandlerTest {
         ToscaServiceTemplate controlLoopDefinition = new ToscaServiceTemplate();
         controlLoopElementHandler.controlLoopElementUpdate(element, controlLoopDefinition);
 
-        verify(clampClient, times(0)).create(eq(LOOP), eq(TEMPLATE));
+        verify(clampClient, times(0)).create(LOOP, TEMPLATE);
         verify(consulClient).deploy(any(String.class), any(String.class));
-        verify(clampClient).deploy(eq(LOOP));
+        verify(clampClient).deploy(LOOP);
     }
 }

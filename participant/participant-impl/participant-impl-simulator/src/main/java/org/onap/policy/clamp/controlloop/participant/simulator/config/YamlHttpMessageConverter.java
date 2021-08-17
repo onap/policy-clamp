@@ -45,15 +45,15 @@ public class YamlHttpMessageConverter<T> extends AbstractHttpMessageConverter<T>
     @Override
     protected T readInternal(Class<? extends T> clazz, HttpInputMessage inputMessage)
             throws IOException, HttpMessageNotReadableException {
-        Yaml yaml = new Yaml();
+        var yaml = new Yaml();
         return yaml.loadAs(inputMessage.getBody(), clazz);
     }
 
     @Override
     protected void writeInternal(T t, HttpOutputMessage outputMessage)
             throws IOException, HttpMessageNotWritableException {
-        Yaml yaml = new Yaml();
-        try (OutputStreamWriter writer = new OutputStreamWriter(outputMessage.getBody(), StandardCharsets.UTF_8)) {
+        var yaml = new Yaml();
+        try (var writer = new OutputStreamWriter(outputMessage.getBody(), StandardCharsets.UTF_8)) {
             yaml.dump(t, writer);
         }
     }

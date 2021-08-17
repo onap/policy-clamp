@@ -51,7 +51,10 @@ public class RequestResponseLoggingFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
 
         String requestId = req.getHeader(REQUEST_ID_NAME);
-        res.addHeader(REQUEST_ID_NAME, requestId != null ? requestId : UUID.randomUUID().toString());
+        res.addHeader(REQUEST_ID_NAME, requestId != null ? requestId : UUID.randomUUID().toString()); // NOSONAR
+        /*
+         * ONAP requires the request ID to be copied from the request to the response,
+         */
 
         res.addHeader(VERSION_MINOR_NAME, "0");
         res.addHeader(VERSION_PATCH_NAME, "0");

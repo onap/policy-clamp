@@ -76,7 +76,7 @@ public class ParticipantErrorController implements ErrorController {
         Map<String, Object> map = this.errorAttributes.getErrorAttributes(new ServletWebRequest(request),
                 ErrorAttributeOptions.defaults());
 
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
         final Object error = map.get("error");
         if (error != null) {
             sb.append(error.toString() + " ");
