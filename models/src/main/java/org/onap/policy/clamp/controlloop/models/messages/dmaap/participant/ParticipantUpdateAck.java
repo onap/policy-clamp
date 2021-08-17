@@ -2,6 +2,8 @@
  * ============LICENSE_START=======================================================
  * Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
+ * Modifications Copyright (C) 2021 AT&T
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -23,10 +25,6 @@ package org.onap.policy.clamp.controlloop.models.messages.dmaap.participant;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoops;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantHealthStatus;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantStatistics;
 
 /**
  * Class to represent the PARTICIPANT_UPDATE_ACK message that registered participant sends to controlloop runtime.

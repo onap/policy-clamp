@@ -2,6 +2,8 @@
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
+ * Modifications Copyright (C) 2021 AT&T
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -271,7 +273,7 @@ public class ParticipantHandler implements Closeable {
         this.participantStatistics.setHealthStatus(healthStatus);
         this.participantStatistics.setTimeStamp(Instant.now());
 
-        ParticipantStatus heartbeat = new ParticipantStatus();
+        var heartbeat = new ParticipantStatus();
         heartbeat.setParticipantId(participantId);
         heartbeat.setParticipantStatistics(participantStatistics);
         heartbeat.setParticipantType(participantType);

@@ -2,6 +2,8 @@
  * ============LICENSE_START=======================================================
  * Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
+ * Modifications Copyright (C) 2021 AT&T
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -152,7 +154,7 @@ public class JpaControlLoopElement extends PfConcept implements PfAuthorative<Co
 
     @Override
     public ControlLoopElement toAuthorative() {
-        ControlLoopElement element = new ControlLoopElement();
+        var element = new ControlLoopElement();
 
         element.setId(UUID.fromString(getKey().getLocalName()));
         element.setDefinition(new ToscaConceptIdentifier(definition));

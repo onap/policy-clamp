@@ -2,6 +2,8 @@
  * ========================LICENSE_START=================================
  * Copyright (C) 2021 Nordix Foundation. All rights reserved.
  * ======================================================================
+ * Modifications Copyright (C) 2021 AT&T
+ * ======================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,10 +20,6 @@
 
 package org.onap.policy.clamp.controlloop.participant.kubernetes.configurations;
 
-import org.apache.catalina.connector.Connector;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
-import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.multipart.MultipartResolver;

@@ -2,6 +2,8 @@
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
+ * Modifications Copyright (C) 2021 AT&T
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -115,7 +117,7 @@ public class ClampHttpClient extends AbstractHttpClient {
         if (loop == null || loop.getComponents() == null || loop.getComponents().isEmpty()) {
             return STATUS_NOT_FOUND;
         }
-        ExternalComponent externalComponent = loop.getComponents().get("DCAE");
+        var externalComponent = loop.getComponents().get("DCAE");
         if (externalComponent == null || externalComponent.getComponentState() == null) {
             return STATUS_NOT_FOUND;
         }
