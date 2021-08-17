@@ -2,6 +2,8 @@
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
+ * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -96,7 +98,7 @@ class ControlLoopElementHandlerTest {
         ControlLoopElementHandler controlLoopElementHandler =
                 new ControlLoopElementHandler(clampClient, consulClient, commonTestData.getParticipantDcaeParameters());
 
-        when(clampClient.getstatus(eq(LOOP))).thenReturn(new Loop());
+        when(clampClient.getstatus(LOOP)).thenReturn(new Loop());
 
         ParticipantIntermediaryApi intermediaryApi = mock(ParticipantIntermediaryApi.class);
         controlLoopElementHandler.setIntermediaryApi(intermediaryApi);
@@ -105,7 +107,7 @@ class ControlLoopElementHandlerTest {
         controlLoopElementHandler.controlLoopElementStateChange(controlLoopElementId, ControlLoopState.PASSIVE,
                 ControlLoopOrderedState.UNINITIALISED);
 
-        verify(clampClient).undeploy(eq(LOOP));
+        verify(clampClient).undeploy(LOOP);
         controlLoopElementHandler.handleStatistics(controlLoopElementId);
         assertThat(intermediaryApi.getControlLoopElement(controlLoopElementId)).isNull();
     }
@@ -114,12 +116,12 @@ class ControlLoopElementHandlerTest {
     void testCreate_ControlLoopElementUpdate() throws PfModelException, JSONException, CoderException {
         ClampHttpClient clampClient = spy(mock(ClampHttpClient.class));
         Loop loopDeployed = CODER.convert(CommonTestData.createJsonStatus(BLUEPRINT_DEPLOYED), Loop.class);
-        when(clampClient.create(eq(LOOP), eq(TEMPLATE))).thenReturn(loopDeployed);
-        when(clampClient.deploy(eq(LOOP))).thenReturn(true);
+        when(clampClient.create(LOOP, TEMPLATE)).thenReturn(loopDeployed);
+        when(clampClient.deploy(LOOP)).thenReturn(true);
 
         Loop loopInstalled =
                 CODER.convert(CommonTestData.createJsonStatus(MICROSERVICE_INSTALLED_SUCCESSFULLY), Loop.class);
-        when(clampClient.getstatus(eq(LOOP))).thenReturn(null, loopInstalled);
+        when(clampClient.getstatus(LOOP)).thenReturn(null, loopInstalled);
 
         ConsulDcaeHttpClient consulClient = spy(mock(ConsulDcaeHttpClient.class));
         when(consulClient.deploy(any(String.class), any(String.class))).thenReturn(true);
@@ -139,9 +141,9 @@ class ControlLoopElementHandlerTest {
             controlLoopDefinition.getToscaTopologyTemplate().getNodeTemplates()
             .get("org.onap.domain.pmsh.PMSH_DCAEMicroservice"));
 
-        verify(clampClient).create(eq(LOOP), eq(TEMPLATE));
+        verify(clampClient).create(LOOP, TEMPLATE);
         verify(consulClient).deploy(any(String.class), any(String.class));
-        verify(clampClient).deploy(eq(LOOP));
+        verify(clampClient).deploy(LOOP);
     }
 
     @Test
@@ -150,8 +152,8 @@ class ControlLoopElementHandlerTest {
         Loop loopDeployed = CODER.convert(CommonTestData.createJsonStatus(BLUEPRINT_DEPLOYED), Loop.class);
         Loop loopInstalled =
                 CODER.convert(CommonTestData.createJsonStatus(MICROSERVICE_INSTALLED_SUCCESSFULLY), Loop.class);
-        when(clampClient.getstatus(eq(LOOP))).thenReturn(loopDeployed, loopInstalled);
-        when(clampClient.deploy(eq(LOOP))).thenReturn(true);
+        when(clampClient.getstatus(LOOP)).thenReturn(loopDeployed, loopInstalled);
+        when(clampClient.deploy(LOOP)).thenReturn(true);
 
         ConsulDcaeHttpClient consulClient = spy(mock(ConsulDcaeHttpClient.class));
         when(consulClient.deploy(any(String.class), any(String.class))).thenReturn(true);
@@ -171,8 +173,8 @@ class ControlLoopElementHandlerTest {
                 controlLoopDefinition.getToscaTopologyTemplate().getNodeTemplates()
                 .get("org.onap.domain.pmsh.PMSH_DCAEMicroservice"));
 
-        verify(clampClient, times(0)).create(eq(LOOP), eq(TEMPLATE));
+        verify(clampClient, times(0)).create(LOOP, TEMPLATE);
         verify(consulClient).deploy(any(String.class), any(String.class));
-        verify(clampClient).deploy(eq(LOOP));
+        verify(clampClient).deploy(LOOP);
     }
 }
