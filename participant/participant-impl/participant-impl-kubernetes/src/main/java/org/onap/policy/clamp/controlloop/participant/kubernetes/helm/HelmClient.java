@@ -2,6 +2,8 @@
  * ========================LICENSE_START=================================
  * Copyright (C) 2021 Nordix Foundation. All rights reserved.
  * ======================================================================
+ * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
+ * ======================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -25,7 +27,6 @@ import java.io.InputStreamReader;
 import java.lang.invoke.MethodHandles;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.io.IOUtils;

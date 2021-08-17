@@ -2,6 +2,8 @@
  * ========================LICENSE_START=================================
  * Copyright (C) 2021 Nordix Foundation. All rights reserved.
  * ======================================================================
+ * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
+ * ======================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -168,7 +170,7 @@ public class ChartStore {
         try (var out = new PrintStream(new FileOutputStream(getFile(chart)))) {
             out.print(STANDARD_CODER.encode(chart));
         } catch (Exception exc) {
-            LOGGER.warn("Could not store chart: {} {}", chart.getChartId(), exc);
+            LOGGER.warn("Could not store chart: {}", chart.getChartId(), exc);
         }
     }
 
@@ -179,11 +181,11 @@ public class ChartStore {
 
     private synchronized void restoreFromLocalFileSystem() {
         try {
-            Path localChartDirectoryPath = Paths.get(participantK8sParameters.getLocalChartDirectory());
+            var localChartDirectoryPath = Paths.get(participantK8sParameters.getLocalChartDirectory());
             Files.createDirectories(localChartDirectoryPath);
             restoreFromLocalFileSystem(localChartDirectoryPath);
         } catch (Exception ioe) {
-            LOGGER.warn("Could not restore charts from local file system: {}", ioe);
+            LOGGER.warn("Could not restore charts from local file system", ioe);
         }
     }
 
