@@ -1,0 +1,118 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9aef662f_330c4151",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/rest/instantiation/ControlLoopNameVersion.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-17T15:12:16Z",
+      "side": 1,
+      "message": "could we use ToscaConceptIdentifier instead?",
+      "revId": "1b579af5769e8fc14d34d2de24b31ce3a7b027c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7cc4b861_a53f5c68",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/rest/instantiation/ControlLoopOrderStateResponse.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-17T15:12:16Z",
+      "side": 1,
+      "message": "move methods after variable declarations\n\nactually, this whole method can be deleted and the initializers added to the variable declarations",
+      "revId": "1b579af5769e8fc14d34d2de24b31ce3a7b027c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b42d3baa_6bd95cf5",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/rest/instantiation/ControlLoopOrderStateResponse.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-17T15:12:16Z",
+      "side": 1,
+      "message": "add \"private\"",
+      "revId": "1b579af5769e8fc14d34d2de24b31ce3a7b027c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2b862276_05588dfd",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-17T15:12:16Z",
+      "side": 1,
+      "message": "should probably pass a ToscaConceptIdentifier instead",
+      "range": {
+        "startLine": 266,
+        "startChar": 73,
+        "endLine": 266,
+        "endChar": 100
+      },
+      "revId": "1b579af5769e8fc14d34d2de24b31ce3a7b027c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e5dd5e1d_90101a78",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-17T15:12:16Z",
+      "side": 1,
+      "message": "this should probably be changed to take a ToscaConceptIdentifier, though that can be done in a subsequent review",
+      "range": {
+        "startLine": 269,
+        "startChar": 77,
+        "endLine": 269,
+        "endChar": 90
+      },
+      "revId": "1b579af5769e8fc14d34d2de24b31ce3a7b027c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e9dca6de_92a32a2c",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-17T15:12:16Z",
+      "side": 1,
+      "message": "ToscaConceptIdentifier has a constructor which takes name \u0026 version so this can be done on one line",
+      "revId": "1b579af5769e8fc14d34d2de24b31ce3a7b027c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
