@@ -21,6 +21,7 @@
 package org.onap.policy.clamp.controlloop.participant.intermediary.comm;
 
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregisterAck;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageType;
 import org.onap.policy.clamp.controlloop.participant.intermediary.handler.ParticipantHandler;
 import org.springframework.stereotype.Component;
 
@@ -38,5 +39,10 @@ public class ParticipantDeregisterAckListener extends ParticipantAckListener<Par
      */
     public ParticipantDeregisterAckListener(final ParticipantHandler participantHandler) {
         super(ParticipantDeregisterAck.class, participantHandler, participantHandler::handleParticipantDeregisterAck);
+    }
+
+    @Override
+    public String getType() {
+        return ParticipantMessageType.PARTICIPANT_DEREGISTER_ACK.name();
     }
 }

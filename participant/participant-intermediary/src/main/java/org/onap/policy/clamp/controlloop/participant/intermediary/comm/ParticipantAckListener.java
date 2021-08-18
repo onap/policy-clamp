@@ -24,6 +24,7 @@ package org.onap.policy.clamp.controlloop.participant.intermediary.comm;
 
 import java.util.function.Consumer;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantAckMessage;
+import org.onap.policy.clamp.controlloop.participant.intermediary.handler.Listener;
 import org.onap.policy.clamp.controlloop.participant.intermediary.handler.ParticipantHandler;
 import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
 import org.onap.policy.common.endpoints.listeners.ScoListener;
@@ -32,7 +33,8 @@ import org.onap.policy.common.utils.coder.StandardCoderObject;
 /**
  * Abstract Listener for Participant Ack messages sent by runtime.
  */
-public abstract class ParticipantAckListener<T extends ParticipantAckMessage> extends ScoListener<T> {
+public abstract class ParticipantAckListener<T extends ParticipantAckMessage> extends ScoListener<T>
+        implements Listener {
 
     private final ParticipantHandler participantHandler;
     private final Consumer<T> consumer;
@@ -52,6 +54,13 @@ public abstract class ParticipantAckListener<T extends ParticipantAckMessage> ex
 
     @Override
     public void onTopicEvent(CommInfrastructure infra, String topic, StandardCoderObject sco, T message) {
-        consumer.accept(message);
+        if (participantHandler.appliesTo(message)) {
+            consumer.accept(message);
+        }
+    }
+
+    @Override
+    public ScoListener<T> getScoListener() {
+        return this;
     }
 }
