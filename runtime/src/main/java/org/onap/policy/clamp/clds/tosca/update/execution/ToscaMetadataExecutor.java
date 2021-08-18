@@ -58,10 +58,15 @@ public class ToscaMetadataExecutor {
      */
     public void executeTheProcess(String processInfo, JsonObject childObject, Service serviceModel) {
         String[] processParameters = (processInfo + "/ ").split("/");
+        String trimStr = processParameters[1].trim();
         logger.info("Executing the Tosca clamp process {} with parameters {}",
-               processParameters[0], processParameters[1].trim());
+                   processParameters[0], trimStr); // NOSONAR
+        /*
+         * NOTE: Already added / in line 60, hence there is no need
+         * to add a conditional for line 62.
+         */
         mapOfProcesses.get(processParameters[0].trim())
-                .executeProcess(processParameters[1].trim(), childObject, serviceModel);
+                .executeProcess(trimStr, childObject, serviceModel);
     }
 
     /**

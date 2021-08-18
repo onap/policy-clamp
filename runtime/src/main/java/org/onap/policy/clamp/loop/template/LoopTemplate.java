@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights
+ * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -234,8 +234,7 @@ public class LoopTemplate extends AuditEntity implements Serializable {
      * @param listPosition     The position in the flow
      */
     public void addLoopElementModel(LoopElementModel loopElementModel, Integer listPosition) {
-        LoopTemplateLoopElementModel jointEntry =
-                new LoopTemplateLoopElementModel(this, loopElementModel, listPosition);
+        var jointEntry = new LoopTemplateLoopElementModel(this, loopElementModel, listPosition);
         this.loopElementModelsUsed.add(jointEntry);
         loopElementModel.getUsedByLoopTemplates().add(jointEntry);
     }
@@ -294,8 +293,8 @@ public class LoopTemplate extends AuditEntity implements Serializable {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
+        final var prime = 31;
+        var result = 1;
         result = prime * result + ((name == null) ? 0 : name.hashCode());
         return result;
     }
@@ -336,6 +335,6 @@ public class LoopTemplate extends AuditEntity implements Serializable {
         StringBuilder buffer = new StringBuilder("LOOP_TEMPLATE_").append(serviceName).append("_v")
                 .append(serviceVersion).append("_").append(resourceName).append("_")
                 .append(blueprintFileName.replaceAll(".yaml", ""));
-        return buffer.toString().replace('.', '_').replaceAll(" ", "");
+        return buffer.toString().replace('.', '_').replace(" ", "");
     }
 }

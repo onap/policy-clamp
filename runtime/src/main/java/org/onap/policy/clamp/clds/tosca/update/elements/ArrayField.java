@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2020 AT&T Intellectual Property. All rights
+ * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -46,7 +46,7 @@ public class ArrayField {
      */
     public JsonArray deploy() {
 
-        JsonArray subPropertyValuesArray = new JsonArray();
+        var subPropertyValuesArray = new JsonArray();
         for (Object arrayElement : complexFields) {
             //Cast for each Primitive Type
             String typeValue = arrayElement.getClass().getSimpleName();

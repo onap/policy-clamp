@@ -100,14 +100,14 @@ public class OperationalPolicyRepresentationBuilder {
 
     private static JsonObject createSchemaProperty(String title, String type, String defaultValue, String readOnlyFlag,
                                                    String[] enumArray) {
-        JsonObject property = new JsonObject();
+        var property = new JsonObject();
         property.addProperty(TITLE, title);
         property.addProperty(TYPE, type);
         property.addProperty(DEFAULT, defaultValue);
         property.addProperty("readOnly", readOnlyFlag);
 
         if (enumArray != null) {
-            JsonArray jsonArray = new JsonArray();
+            var jsonArray = new JsonArray();
             property.add("enum", jsonArray);
             for (String val : enumArray) {
                 jsonArray.add(val);
@@ -117,13 +117,13 @@ public class OperationalPolicyRepresentationBuilder {
     }
 
     private static JsonArray createVnfSchema(Service modelService, boolean generateType) {
-        JsonArray vnfSchemaArray = new JsonArray();
+        var vnfSchemaArray = new JsonArray();
         JsonObject modelVnfs = modelService.getResourceByType("VF");
 
         for (Entry<String, JsonElement> entry : modelVnfs.entrySet()) {
-            JsonObject vnfOneOfSchema = new JsonObject();
+            var vnfOneOfSchema = new JsonObject();
             vnfOneOfSchema.addProperty(TITLE, "VNF" + "-" + entry.getKey());
-            JsonObject properties = new JsonObject();
+            var properties = new JsonObject();
             if (generateType) {
                 properties.add(TYPE, createSchemaProperty("Type", STRING, "VNF", "True", null));
             }
@@ -137,8 +137,8 @@ public class OperationalPolicyRepresentationBuilder {
     }
 
     private static JsonArray createBlankEntry() {
-        JsonArray result = new JsonArray();
-        JsonObject blankObject = new JsonObject();
+        var result = new JsonArray();
+        var blankObject = new JsonObject();
         blankObject.addProperty(TITLE, "User defined");
         blankObject.add(PROPERTIES, new JsonObject());
         result.add(blankObject);
@@ -146,13 +146,13 @@ public class OperationalPolicyRepresentationBuilder {
     }
 
     private static JsonArray createVfModuleSchema(Service modelService, boolean generateType) {
-        JsonArray vfModuleOneOfSchemaArray = new JsonArray();
+        var vfModuleOneOfSchemaArray = new JsonArray();
         JsonObject modelVfModules = modelService.getResourceByType("VFModule");
 
         for (Entry<String, JsonElement> entry : modelVfModules.entrySet()) {
-            JsonObject vfModuleOneOfSchema = new JsonObject();
+            var vfModuleOneOfSchema = new JsonObject();
             vfModuleOneOfSchema.addProperty(TITLE, "VFMODULE" + "-" + entry.getKey());
-            JsonObject properties = new JsonObject();
+            var properties = new JsonObject();
             if (generateType) {
                 properties.add(TYPE, createSchemaProperty("Type", STRING, "VFMODULE", "True", null));
             }
@@ -196,7 +196,7 @@ public class OperationalPolicyRepresentationBuilder {
      * @return A JsonArray with everything inside
      */
     public static JsonArray createAnyOfArray(Service modelJson, boolean generateType) {
-        JsonArray targetOneOfStructure = new JsonArray();
+        var targetOneOfStructure = new JsonArray();
         // First entry must be user defined
         targetOneOfStructure.addAll(createBlankEntry());
         targetOneOfStructure.addAll(createVnfSchema(modelJson, generateType));
@@ -205,22 +205,22 @@ public class OperationalPolicyRepresentationBuilder {
     }
 
     private static JsonArray createAnyOfArrayForCdsRecipe(Service modelJson) {
-        JsonArray anyOfStructure = new JsonArray();
+        var anyOfStructure = new JsonArray();
         anyOfStructure.addAll(createAnyOfCdsRecipe(modelJson.getResourceDetails().getAsJsonObject("VF")));
         anyOfStructure.addAll(createAnyOfCdsRecipe(modelJson.getResourceDetails().getAsJsonObject("PNF")));
         return anyOfStructure;
     }
 
     private static JsonArray createAnyOfCdsRecipe(JsonObject jsonObject) {
-        JsonArray schemaArray = new JsonArray();
+        var schemaArray = new JsonArray();
         for (Entry<String, JsonElement> entry : jsonObject.entrySet()) {
-            JsonObject controllerProperties = entry.getValue().getAsJsonObject()
+            var controllerProperties = entry.getValue().getAsJsonObject()
                     .getAsJsonObject("controllerProperties");
 
             if (controllerProperties != null && controllerProperties.getAsJsonObject("workflows") != null) {
-                JsonObject workflows = controllerProperties.getAsJsonObject("workflows");
+                var workflows = controllerProperties.getAsJsonObject("workflows");
                 for (Entry<String, JsonElement> workflowsEntry : workflows.entrySet()) {
-                    JsonObject obj = new JsonObject();
+                    var obj = new JsonObject();
                     obj.addProperty(TITLE, workflowsEntry.getKey());
                     obj.addProperty(TYPE, TYPE_OBJECT);
                     obj.add(PROPERTIES, createPayloadProperty(workflowsEntry.getValue().getAsJsonObject(),
@@ -235,23 +235,23 @@ public class OperationalPolicyRepresentationBuilder {
 
     private static JsonObject createPayloadProperty(JsonObject workFlow,
                                                     JsonObject controllerProperties, String workFlowName) {
-        JsonObject payload = new JsonObject();
+        var payload = new JsonObject();
         payload.addProperty(TITLE, "Payload");
         payload.addProperty(TYPE, TYPE_OBJECT);
         payload.add(PROPERTIES, createInputPropertiesForPayload(workFlow, controllerProperties,
                                                                 workFlowName));
-        JsonObject properties = new JsonObject();
+        var properties = new JsonObject();
         properties.add(RECIPE, createRecipeForCdsWorkflow(workFlowName));
         properties.add("payload", payload);
         return properties;
     }
 
     private static JsonObject createRecipeForCdsWorkflow(String workflow) {
-        JsonObject recipe = new JsonObject();
+        var recipe = new JsonObject();
         recipe.addProperty(TITLE, RECIPE);
         recipe.addProperty(TYPE, STRING);
         recipe.addProperty(DEFAULT, workflow);
-        JsonObject options = new JsonObject();
+        var options = new JsonObject();
         options.addProperty("hidden", true);
         recipe.add("options", options);
         return recipe;
@@ -269,10 +269,10 @@ public class OperationalPolicyRepresentationBuilder {
     public static JsonObject createInputPropertiesForPayload(JsonObject workFlow,
                                                              JsonObject controllerProperties,
                                                              String workFlowName) {
-        String artifactName = controllerProperties.get("sdnc_model_name").getAsString();
-        String artifactVersion = controllerProperties.get("sdnc_model_version").getAsString();
-        JsonObject inputs = workFlow.getAsJsonObject("inputs");
-        JsonObject jsonObject = new JsonObject();
+        var artifactName = controllerProperties.get("sdnc_model_name").getAsString();
+        var artifactVersion = controllerProperties.get("sdnc_model_version").getAsString();
+        var inputs = workFlow.getAsJsonObject("inputs");
+        var jsonObject = new JsonObject();
         jsonObject.add("artifact_name", createSchemaProperty(
                 "artifact name", STRING, artifactName, "True", null));
         jsonObject.add("artifact_version", createSchemaProperty(
@@ -284,9 +284,9 @@ public class OperationalPolicyRepresentationBuilder {
     }
 
     private static JsonObject createDataProperty(JsonObject inputs, String workflowName) {
-        JsonObject data = new JsonObject();
+        var data = new JsonObject();
         data.addProperty(TITLE, "data");
-        JsonObject dataObj = new JsonObject();
+        var dataObj = new JsonObject();
         addDataFields(inputs, dataObj, workflowName);
         data.add(PROPERTIES, dataObj);
         return data;
@@ -298,7 +298,7 @@ public class OperationalPolicyRepresentationBuilder {
         Set<Map.Entry<String, JsonElement>> entrySet = inputs.entrySet();
         for (Map.Entry<String, JsonElement> entry : entrySet) {
             String key = entry.getKey();
-            JsonObject inputProperty = inputs.getAsJsonObject(key);
+            var inputProperty = inputs.getAsJsonObject(key);
             if (key.equalsIgnoreCase(workFlowName + "-properties")) {
                 addDataFields(entry.getValue().getAsJsonObject().get(PROPERTIES).getAsJsonObject(),
                         dataObj, workFlowName);
@@ -314,13 +314,13 @@ public class OperationalPolicyRepresentationBuilder {
                                                      String type,
                                                      String defaultValue,
                                                      JsonObject cdsProperty) {
-        JsonObject property = new JsonObject();
+        var property = new JsonObject();
         property.addProperty(TITLE, title);
 
         if (TYPE_LIST.equalsIgnoreCase(type)) {
             property.addProperty(TYPE, TYPE_ARRAY);
             if (cdsProperty != null && cdsProperty.get(PROPERTIES) != null) {
-                JsonObject listProperties = new JsonObject();
+                var listProperties = new JsonObject();
                 listProperties.add(PROPERTIES, getProperties(cdsProperty.get(PROPERTIES).getAsJsonObject()));
                 property.add(ITEMS, listProperties);
             }
@@ -341,7 +341,7 @@ public class OperationalPolicyRepresentationBuilder {
         if (inputProperties == null) {
             return null;
         }
-        JsonObject dataObject = new JsonObject();
+        var dataObject = new JsonObject();
         addDataFields(inputProperties, dataObject, null);
         return dataObject;
     }
