@@ -4,7 +4,9 @@
  * ================================================================================
  * Copyright (C) 2020 AT&T Intellectual Property. All rights
  *                             reserved.
+ * ================================================================================
  * Modifications Copyright (C) 2020 Huawei Technologies Co., Ltd.
+ * Modifications Copyright (C) 2021 AT&T
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,7 +70,7 @@ public class CsarServiceInstaller {
         JsonObject resourcesProp = createServicePropertiesByType(csar);
         resourcesProp.add("VFModule", createVfModuleProperties(csar));
 
-        Service modelService = new Service(serviceDetails, resourcesProp,
+        var modelService = new Service(serviceDetails, resourcesProp,
                 csar.getSdcNotification().getServiceVersion());
 
         serviceRepository.save(modelService);
@@ -77,10 +79,10 @@ public class CsarServiceInstaller {
     }
 
     private JsonObject createServicePropertiesByType(CsarHandler csar) {
-        JsonObject resourcesProp = new JsonObject();
+        var resourcesProp = new JsonObject();
         // Iterate on all types defined in the tosca lib
         for (SdcTypes type : SdcTypes.values()) {
-            JsonObject resourcesPropByType = new JsonObject();
+            var resourcesPropByType = new JsonObject();
             // For each type, get the metadata of each nodetemplate
             for (NodeTemplate nodeTemplate : csar.getSdcCsarHelper().getServiceNodeTemplateBySdcType(type)) {
                 resourcesPropByType.add(nodeTemplate.getName(),
@@ -92,7 +94,7 @@ public class CsarServiceInstaller {
     }
 
     private static JsonObject createVfModuleProperties(CsarHandler csar) {
-        JsonObject vfModuleProps = new JsonObject();
+        var vfModuleProps = new JsonObject();
         // Loop on all Groups defined in the service (VFModule entries type:
         // org.openecomp.groups.VfModule)
         for (IEntityDetails entity : csar.getSdcCsarHelper().getEntity(
@@ -120,7 +122,7 @@ public class CsarServiceInstaller {
      */
     public boolean isServiceAlreadyDeployed(CsarHandler csar) throws SdcArtifactInstallerException {
         boolean alreadyInstalled = true;
-        JsonObject serviceDetails = JsonUtils.GSON.fromJson(
+        var serviceDetails = JsonUtils.GSON.fromJson(
                 JsonUtils.GSON.toJson(csar.getSdcCsarHelper().getServiceMetadataAllProperties()), JsonObject.class);
         alreadyInstalled = serviceRepository.existsById(serviceDetails.get("UUID").getAsString());
 

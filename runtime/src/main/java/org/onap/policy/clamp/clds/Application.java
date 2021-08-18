@@ -7,6 +7,7 @@
  * ================================================================================
  * Modifications Copyright (c) 2019 Samsung
  * Modifications Copyright (C) 2021 Nordix Foundation.
+ * Modifications Copyright (C) AT&T
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,7 +72,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableJpaAuditing
 public class Application extends SpringBootServletInitializer {
 
-    protected static final Logger logger = LoggerFactory.getLogger(Application.class);
+    protected static final Logger appLogger = LoggerFactory.getLogger(Application.class);
     // This settings is an additional one to Spring config,
     // only if we want to have an additional port automatically redirected to
     // HTTPS
@@ -120,7 +121,7 @@ public class Application extends SpringBootServletInitializer {
      */
     @Bean
     public ServletRegistrationBean<ClampServlet> camelServletRegistrationBean() throws IOException {
-        logger.info("{} (v {} ), {}, {}", ResourceFileUtils.getResourceAsString("boot-message.txt"),
+        appLogger.info("{} (v {} ), {}, {}", ResourceFileUtils.getResourceAsString("boot-message.txt"),
             ClampVersioning.getCldsVersionFromProps(), System.getProperty("line.separator"),
             getSslExpirationDate());
         var registration = new ServletRegistrationBean<ClampServlet>(new ClampServlet(), "/restservices/clds/*");
@@ -149,7 +150,7 @@ public class Application extends SpringBootServletInitializer {
 
     private Connector createRedirectConnector(int redirectSecuredPort) {
         if (redirectSecuredPort <= 0) {
-            logger.warn(
+            appLogger.warn(
                     "HTTP port redirection to HTTPS is disabled because the HTTPS"
                     + " port is 0 (random port) or -1 (Connector disabled)");
             return null;
@@ -183,7 +184,7 @@ public class Application extends SpringBootServletInitializer {
                 result.append("* NONE HAS been configured");
             }
         } catch (CertificateException | NoSuchAlgorithmException | KeyStoreException e) {
-            logger.warn("SSL certificate access error", e);
+            appLogger.warn("SSL certificate access error", e);
 
         }
         return result.toString();

@@ -6,6 +6,7 @@
  *                             reserved.
  * ================================================================================
  * Modifications Copyright (c) 2019 Samsung
+ * Modifications Copyright (c) 2021 AT&T
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -89,8 +90,8 @@ public class AuthorizationController {
      */
     public void authorize(Exchange camelExchange, String typeVar, String instanceVar,
                           String action) {
-        String type = refProp.getStringValue(PERM_PREFIX + typeVar);
-        String instance = refProp.getStringValue(PERM_INSTANCE);
+        var type = refProp.getStringValue(PERM_PREFIX + typeVar);
+        var instance = refProp.getStringValue(PERM_INSTANCE);
 
         if (null == type || type.isEmpty()) {
             // authorization is turned off, since the permission is not defined
@@ -100,8 +101,8 @@ public class AuthorizationController {
             instance = instanceVar;
         }
         String principalName = AuthorizationController.getPrincipalName(SecurityContextHolder.getContext());
-        SecureServicePermission perm = SecureServicePermission.create(type, instance, action);
-        Date startTime = new Date();
+        var perm = SecureServicePermission.create(type, instance, action);
+        var startTime = new Date();
         LoggingUtils.setTargetContext("Clamp", "authorize");
         LoggingUtils.setTimeContext(startTime, new Date());
         logger.debug(LoggerUtils.SECURITY_LOG_MARKER, "checking if {} has permission: {}", principalName, perm);
@@ -148,7 +149,7 @@ public class AuthorizationController {
     }
 
     protected boolean hasRole(String role) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
             return false;
         }
@@ -168,8 +169,8 @@ public class AuthorizationController {
      * @return the clds info
      */
     public ClampInformation getClampInformation() {
-        ClampInformation clampInfo = new ClampInformation();
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        var clampInfo = new ClampInformation();
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
             return new ClampInformation();
         }

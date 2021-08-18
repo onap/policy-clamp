@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights
+ * Copyright (C) 2018, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,6 +24,10 @@
 package org.onap.policy.clamp.clds.tosca;
 
 public class ToscaSchemaConstants {
+
+    private ToscaSchemaConstants() {
+        // empty constructor
+    }
 
     // Data types in TOSCA Schema
     public static final String TYPE_LIST = "list";

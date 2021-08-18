@@ -69,7 +69,7 @@ public class SdcControllersConfiguration {
      */
     @PostConstruct
     public void loadConfiguration() throws IOException {
-        try (InputStreamReader controllerFile = new InputStreamReader(
+        try (var controllerFile = new InputStreamReader(
                 appContext.getResource(sdcControllerFile).getInputStream(), StandardCharsets.UTF_8)) {
             jsonRootNode = JsonUtils.GSON.fromJson(controllerFile, JsonObject.class);
         }

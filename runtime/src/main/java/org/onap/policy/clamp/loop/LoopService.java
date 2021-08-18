@@ -115,9 +115,9 @@ public class LoopService {
      * @param policyVersion The policy model  version
      * @return The loop modified
      */
-    Loop addOperationalPolicy(String loopName, String policyType, String policyVersion) throws IOException {
-        Loop loop = getLoop(loopName);
-        PolicyModel policyModel = policyModelsService.getPolicyModel(policyType, policyVersion);
+    Loop addOperationalPolicy(String loopName, String policyType, String policyVersion) {
+        var loop = getLoop(loopName);
+        var policyModel = policyModelsService.getPolicyModel(policyType, policyVersion);
         Set<OperationalPolicy> opPolicySet = loop.getOperationalPolicies();
         for (OperationalPolicy opPolicy : opPolicySet) {
             if (opPolicy.getPolicyModel().equals(policyModel)) {
@@ -142,8 +142,8 @@ public class LoopService {
      * @return The loop modified
      */
     Loop removeOperationalPolicy(String loopName, String policyType, String policyVersion) {
-        Loop loop = getLoop(loopName);
-        PolicyModel policyModel = policyModelsService.getPolicyModel(policyType, policyVersion);
+        var loop = getLoop(loopName);
+        var policyModel = policyModelsService.getPolicyModel(policyType, policyVersion);
         if (policyModel == null) {
             return null;
         }
@@ -158,27 +158,27 @@ public class LoopService {
     }
 
     Loop updateAndSaveOperationalPolicies(String loopName, List<OperationalPolicy> newOperationalPolicies) {
-        Loop loop = findClosedLoopByName(loopName);
+        var loop = findClosedLoopByName(loopName);
         Set<OperationalPolicy> newPolicies = operationalPolicyService.updatePolicies(loop, newOperationalPolicies);
         loop.setOperationalPolicies(newPolicies);
         return loopsRepository.save(loop);
     }
 
     Loop updateAndSaveMicroservicePolicies(String loopName, List<MicroServicePolicy> newMicroservicePolicies) {
-        Loop loop = findClosedLoopByName(loopName);
+        var loop = findClosedLoopByName(loopName);
         Set<MicroServicePolicy> newPolicies = microservicePolicyService.updatePolicies(loop, newMicroservicePolicies);
         loop.setMicroServicePolicies(newPolicies);
         return loopsRepository.save(loop);
     }
 
     Loop updateAndSaveGlobalPropertiesJson(String loopName, JsonObject newGlobalPropertiesJson) {
-        Loop loop = findClosedLoopByName(loopName);
+        var loop = findClosedLoopByName(loopName);
         loop.setGlobalPropertiesJson(newGlobalPropertiesJson);
         return loopsRepository.save(loop);
     }
 
     MicroServicePolicy updateMicroservicePolicy(String loopName, MicroServicePolicy newMicroservicePolicy) {
-        Loop loop = findClosedLoopByName(loopName);
+        var loop = findClosedLoopByName(loopName);
         return microservicePolicyService.getAndUpdateMicroServicePolicy(loop, newMicroservicePolicy);
     }
 

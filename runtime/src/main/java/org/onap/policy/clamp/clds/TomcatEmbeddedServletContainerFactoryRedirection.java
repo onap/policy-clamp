@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -43,9 +43,9 @@ public class TomcatEmbeddedServletContainerFactoryRedirection extends TomcatServ
      */
     @Override
     protected void postProcessContext(Context context) {
-        SecurityConstraint securityConstraint = new SecurityConstraint();
+        var securityConstraint = new SecurityConstraint();
         securityConstraint.setUserConstraint("CONFIDENTIAL");
-        SecurityCollection collection = new SecurityCollection();
+        var collection = new SecurityCollection();
         collection.addPattern("/*");
         securityConstraint.addCollection(collection);
         context.addConstraint(securityConstraint);

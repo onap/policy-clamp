@@ -242,6 +242,6 @@ public abstract class Policy extends AuditEntity {
         StringBuilder buffer = new StringBuilder(policyType).append("_").append(serviceName).append("_v")
                 .append(serviceVersion).append("_").append(resourceName).append("_")
                 .append(blueprintFilename.replaceAll(".yaml", ""));
-        return buffer.toString().replace('.', '_').replaceAll(" ", "");
+        return buffer.toString().replace('.', '_').replace(" ", "");
     }
 }
