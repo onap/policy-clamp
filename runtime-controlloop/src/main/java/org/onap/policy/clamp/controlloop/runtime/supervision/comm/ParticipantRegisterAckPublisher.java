@@ -22,6 +22,7 @@ package org.onap.policy.clamp.controlloop.runtime.supervision.comm;
 
 import java.util.UUID;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantRegisterAck;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.springframework.stereotype.Component;
 
 /**
@@ -34,9 +35,13 @@ public class ParticipantRegisterAckPublisher extends AbstractParticipantAckPubli
      * Send ParticipantRegisterAck to Participant.
      *
      * @param responseTo the original request id in the request.
+     * @param participantId the participant Id
+     * @param participantType the participant Type
      */
-    public void send(UUID responseTo) {
+    public void send(UUID responseTo, ToscaConceptIdentifier participantId, ToscaConceptIdentifier participantType) {
         var message = new ParticipantRegisterAck();
+        message.setParticipantId(participantId);
+        message.setParticipantType(participantType);
         message.setResponseTo(responseTo);
         message.setMessage("Participant Register Ack");
         message.setResult(true);

@@ -21,35 +21,43 @@
 package org.onap.policy.clamp.controlloop.participant.intermediary.comm;
 
 import java.util.List;
+import javax.ws.rs.core.Response.Status;
+import org.onap.policy.clamp.controlloop.common.exception.ControlLoopRuntimeException;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopAck;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregister;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantRegister;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStatus;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdateAck;
+import org.onap.policy.clamp.controlloop.participant.intermediary.handler.Publisher;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 /**
  * This class is used to send Participant Status messages to clamp using TopicSinkClient.
  *
  */
-public class ParticipantMessagePublisher {
+@Component
+public class ParticipantMessagePublisher implements Publisher {
     private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantMessagePublisher.class);
 
-    private final TopicSinkClient topicSinkClient;
+    private boolean active = false;
+    private TopicSinkClient topicSinkClient;
 
     /**
      * Constructor for instantiating ParticipantMessagePublisher.
      *
      * @param topicSinks the topic sinks
      */
-    public ParticipantMessagePublisher(List<TopicSink> topicSinks) {
+    @Override
+    public void active(List<TopicSink> topicSinks) {
         if (topicSinks.size() != 1) {
             throw new IllegalArgumentException("Configuration unsupported, Topic sinks greater than 1");
         }
         this.topicSinkClient = new TopicSinkClient(topicSinks.get(0));
+        active = true;
     }
 
     /**
@@ -58,6 +66,9 @@ public class ParticipantMessagePublisher {
      * @param participantStatus the Participant Status
      */
     public void sendParticipantStatus(final ParticipantStatus participantStatus) {
+        if (!active) {
+            throw new ControlLoopRuntimeException(Status.NOT_ACCEPTABLE, "Not Active!");
+        }
         topicSinkClient.send(participantStatus);
         LOGGER.debug("Sent Participant Status message to CLAMP - {}", participantStatus);
     }
@@ -68,6 +79,9 @@ public class ParticipantMessagePublisher {
      * @param participantRegister the Participant Status
      */
     public void sendParticipantRegister(final ParticipantRegister participantRegister) {
+        if (!active) {
+            throw new ControlLoopRuntimeException(Status.NOT_ACCEPTABLE, "Not Active!");
+        }
         topicSinkClient.send(participantRegister);
         LOGGER.debug("Sent Participant Register message to CLAMP - {}", participantRegister);
     }
@@ -78,6 +92,9 @@ public class ParticipantMessagePublisher {
      * @param participantDeregister the Participant Status
      */
     public void sendParticipantDeregister(final ParticipantDeregister participantDeregister) {
+        if (!active) {
+            throw new ControlLoopRuntimeException(Status.NOT_ACCEPTABLE, "Not Active!");
+        }
         topicSinkClient.send(participantDeregister);
         LOGGER.debug("Sent Participant Deregister message to CLAMP - {}", participantDeregister);
     }
@@ -88,6 +105,9 @@ public class ParticipantMessagePublisher {
      * @param participantUpdateAck the Participant Update Ack
      */
     public void sendParticipantUpdateAck(final ParticipantUpdateAck participantUpdateAck) {
+        if (!active) {
+            throw new ControlLoopRuntimeException(Status.NOT_ACCEPTABLE, "Not Active!");
+        }
         topicSinkClient.send(participantUpdateAck);
         LOGGER.debug("Sent Participant Update Ack message to CLAMP - {}", participantUpdateAck);
     }
@@ -98,6 +118,9 @@ public class ParticipantMessagePublisher {
      * @param controlLoopAck ControlLoop Update/StateChange Ack
      */
     public void sendControlLoopAck(final ControlLoopAck controlLoopAck) {
+        if (!active) {
+            throw new ControlLoopRuntimeException(Status.NOT_ACCEPTABLE, "Not Active!");
+        }
         topicSinkClient.send(controlLoopAck);
         LOGGER.debug("Sent ControlLoop Update/StateChange Ack to runtime - {}", controlLoopAck);
     }
@@ -108,7 +131,15 @@ public class ParticipantMessagePublisher {
      * @param participantStatus the Participant Status
      */
     public void sendHeartbeat(final ParticipantStatus participantStatus) {
+        if (!active) {
+            throw new ControlLoopRuntimeException(Status.NOT_ACCEPTABLE, "Not Active!");
+        }
         topicSinkClient.send(participantStatus);
         LOGGER.debug("Sent Participant heartbeat to CLAMP - {}", participantStatus);
+    }
+
+    @Override
+    public void stop() {
+        active = false;
     }
 }
