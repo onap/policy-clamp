@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f56b967b_c2214f14",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-18T18:35:50Z",
+      "side": 1,
+      "message": "don\u0027t need this - just use the result from the reduce() operation",
+      "revId": "8fb9bec449398801a2a0463cbb73671000696189",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6be38bc0_e1c6a65f",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 331,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-18T18:35:50Z",
+      "side": 1,
+      "message": "start with 0 as the initial value",
+      "range": {
+        "startLine": 331,
+        "startChar": 79,
+        "endLine": 331,
+        "endChar": 81
+      },
+      "revId": "8fb9bec449398801a2a0463cbb73671000696189",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "12e9c5ac_4158e622",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 339,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-18T18:35:50Z",
+      "side": 1,
+      "message": "just return the larger of s1 and sequenceNumber - can use Math.max()",
+      "range": {
+        "startLine": 339,
+        "startChar": 23,
+        "endLine": 339,
+        "endChar": 25
+      },
+      "revId": "8fb9bec449398801a2a0463cbb73671000696189",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a2295d64_9df9c017",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 343,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-18T18:35:50Z",
+      "side": 1,
+      "message": "just return s1",
+      "range": {
+        "startLine": 343,
+        "startChar": 19,
+        "endLine": 343,
+        "endChar": 21
+      },
+      "revId": "8fb9bec449398801a2a0463cbb73671000696189",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
