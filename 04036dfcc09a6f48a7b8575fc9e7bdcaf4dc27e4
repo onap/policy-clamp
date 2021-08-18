@@ -377,6 +377,30 @@
     },
     {
       "key": {
+        "uuid": "dbe9d37a_026f6f40",
+        "filename": "participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/main/handler/ControlLoopElementHandler.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-18T13:33:16Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "b186dfe9_eac98844",
+      "range": {
+        "startLine": 123,
+        "startChar": 87,
+        "endLine": 123,
+        "endChar": 106
+      },
+      "revId": "04036dfcc09a6f48a7b8575fc9e7bdcaf4dc27e4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f9d38015_3d46902b",
         "filename": "participant/participant-impl/participant-impl-policy/src/test/java/org/onap/policy/clamp/controlloop/participant/policy/endtoend/ParticipantMessagesTest.java",
         "patchSetId": 4

@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1060b4ce_c4d4cb06",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ControlLoopHandler.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-18T13:33:16Z",
+      "side": 1,
+      "message": "move this line before line 216 so it only has to be done once",
+      "revId": "f919b3ac2a9d352365526e8447448ec693d28379",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
