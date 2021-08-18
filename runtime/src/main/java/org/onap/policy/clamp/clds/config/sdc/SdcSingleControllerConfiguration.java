@@ -108,7 +108,7 @@ public class SdcSingleControllerConfiguration implements IConfiguration {
 
     private String getStringConfig(String key) {
         if (jsonRootNode != null && jsonRootNode.get(key) != null) {
-            String config = jsonRootNode.get(key).getAsString();
+            var config = jsonRootNode.get(key).getAsString();
             return config.isEmpty() ? null : config;
         }
         return null;
@@ -138,7 +138,7 @@ public class SdcSingleControllerConfiguration implements IConfiguration {
     @Override
     public String getConsumerGroup() {
         if (jsonRootNode != null && jsonRootNode.get(CONSUMER_GROUP_ATTRIBUTE_NAME) != null) {
-            String config = jsonRootNode.get(CONSUMER_GROUP_ATTRIBUTE_NAME).getAsString();
+            var config = jsonRootNode.get(CONSUMER_GROUP_ATTRIBUTE_NAME).getAsString();
             return "NULL".equals(config) || config.isEmpty() ? null : config;
         }
         return null;

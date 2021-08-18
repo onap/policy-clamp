@@ -45,7 +45,7 @@ public class ExternalComponent {
         return null;
     }
 
-    public ExternalComponentState computeState(Exchange camelExchange) {
+    public ExternalComponentState computeState() {
         return new ExternalComponentState("INIT", "no desc", 0);
     }
 

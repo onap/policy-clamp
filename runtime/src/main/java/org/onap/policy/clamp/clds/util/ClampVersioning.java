@@ -48,8 +48,8 @@ public class ClampVersioning {
      * @return Clds version from properties
      */
     public static String getCldsVersionFromProps() {
-        String cldsVersion = "";
-        Properties props = new Properties();
+        var cldsVersion = "";
+        var props = new Properties();
         try (InputStream resourceStream = ResourceFileUtils.getResourceAsStream(RESOURCE_NAME)) {
             props.load(resourceStream);
             cldsVersion = props.getProperty(CLDS_VERSION_PROPERTY);

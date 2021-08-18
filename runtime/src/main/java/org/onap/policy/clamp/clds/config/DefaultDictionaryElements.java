@@ -49,40 +49,40 @@ public class DefaultDictionaryElements {
 
     private void preProvisionDefaultActors() {
         // Set up dictionary elements
-        Dictionary actorDictionary = new Dictionary();
+        var actorDictionary = new Dictionary();
         actorDictionary.setName("DefaultActors");
         actorDictionary.setSecondLevelDictionary(0);
         actorDictionary.setSubDictionaryType("");
 
-        DictionaryElement elementSo = new DictionaryElement();
+        var elementSo = new DictionaryElement();
         elementSo.setName("SO");
         elementSo.setShortName("SO");
         elementSo.setType("string");
         elementSo.setDescription("SO component");
         actorDictionary.addDictionaryElements(elementSo);
 
-        DictionaryElement elementSdnc = new DictionaryElement();
+        var elementSdnc = new DictionaryElement();
         elementSdnc.setName("SDNC");
         elementSdnc.setShortName("SDNC");
         elementSdnc.setType("string");
         elementSdnc.setDescription("SDNC component");
         actorDictionary.addDictionaryElements(elementSdnc);
 
-        DictionaryElement elementAppc = new DictionaryElement();
+        var elementAppc = new DictionaryElement();
         elementAppc.setName("APPC");
         elementAppc.setShortName("APPC");
         elementAppc.setType("string");
         elementAppc.setDescription("APPC component");
         actorDictionary.addDictionaryElements(elementAppc);
 
-        DictionaryElement elementVfc = new DictionaryElement();
+        var elementVfc = new DictionaryElement();
         elementVfc.setName("VFC");
         elementVfc.setShortName("VFC");
         elementVfc.setType("string");
         elementVfc.setDescription("VFC component");
         actorDictionary.addDictionaryElements(elementVfc);
 
-        DictionaryElement elementSdnr = new DictionaryElement();
+        var elementSdnr = new DictionaryElement();
         elementSdnr.setName("SDNR");
         elementSdnr.setShortName("SDNR");
         elementSdnr.setType("string");
@@ -94,68 +94,68 @@ public class DefaultDictionaryElements {
 
     private void preProvisionDefaultOperations() {
         // Set up dictionary elements
-        Dictionary operationDictionary = new Dictionary();
+        var operationDictionary = new Dictionary();
         operationDictionary.setName("DefaultOperations");
         operationDictionary.setSecondLevelDictionary(0);
         operationDictionary.setSubDictionaryType("");
 
-        DictionaryElement elementRestart = new DictionaryElement();
+        var elementRestart = new DictionaryElement();
         elementRestart.setName("Restart");
         elementRestart.setShortName("Restart (APPC operation)");
         elementRestart.setType("string");
         elementRestart.setDescription("APPC operation");
         operationDictionary.addDictionaryElements(elementRestart);
 
-        DictionaryElement elementRebuild = new DictionaryElement();
+        var elementRebuild = new DictionaryElement();
         elementRebuild.setName("Rebuild");
         elementRebuild.setShortName("Rebuild (APPC operation)");
         elementRebuild.setType("string");
         elementRebuild.setDescription("APPC operation");
         operationDictionary.addDictionaryElements(elementRebuild);
 
-        DictionaryElement elementMigrate = new DictionaryElement();
+        var elementMigrate = new DictionaryElement();
         elementMigrate.setName("Migrate");
         elementMigrate.setShortName("Migrate (APPC operation)");
         elementMigrate.setType("string");
         elementMigrate.setDescription("APPC operation");
         operationDictionary.addDictionaryElements(elementMigrate);
 
-        DictionaryElement elementHealthCheck = new DictionaryElement();
+        var elementHealthCheck = new DictionaryElement();
         elementHealthCheck.setName("Health-Check");
         elementHealthCheck.setShortName("Health-Check (APPC operation)");
         elementHealthCheck.setType("string");
         elementHealthCheck.setDescription("APPC operation");
         operationDictionary.addDictionaryElements(elementHealthCheck);
 
-        DictionaryElement elementModifyConfig = new DictionaryElement();
+        var elementModifyConfig = new DictionaryElement();
         elementModifyConfig.setName("ModifyConfig");
         elementModifyConfig.setShortName("ModifyConfig (APPC/VFC operation)");
         elementModifyConfig.setType("string");
         elementModifyConfig.setDescription("APPC/VFC operation");
         operationDictionary.addDictionaryElements(elementModifyConfig);
 
-        DictionaryElement elementVfModuleCreate = new DictionaryElement();
+        var elementVfModuleCreate = new DictionaryElement();
         elementVfModuleCreate.setName("VF Module Create");
         elementVfModuleCreate.setShortName("VF Module Create (SO operation)");
         elementVfModuleCreate.setType("string");
         elementVfModuleCreate.setDescription("SO operation");
         operationDictionary.addDictionaryElements(elementVfModuleCreate);
 
-        DictionaryElement elementVfModuleDelete = new DictionaryElement();
+        var elementVfModuleDelete = new DictionaryElement();
         elementVfModuleDelete.setName("VF Module Delete");
         elementVfModuleDelete.setShortName("VF Module Delete (SO operation)");
         elementVfModuleDelete.setType("string");
         elementVfModuleDelete.setDescription("SO operation");
         operationDictionary.addDictionaryElements(elementVfModuleDelete);
 
-        DictionaryElement elementReroute = new DictionaryElement();
+        var elementReroute = new DictionaryElement();
         elementReroute.setName("Reroute");
         elementReroute.setShortName("Reroute (SDNC operation)");
         elementReroute.setType("string");
         elementReroute.setDescription("SDNC operation");
         operationDictionary.addDictionaryElements(elementReroute);
 
-        DictionaryElement elementBandwidthOnDemand = new DictionaryElement();
+        var elementBandwidthOnDemand = new DictionaryElement();
         elementBandwidthOnDemand.setName("BandwidthOnDemand");
         elementBandwidthOnDemand.setShortName("BandwidthOnDemand (SDNC operation)");
         elementBandwidthOnDemand.setType("string");

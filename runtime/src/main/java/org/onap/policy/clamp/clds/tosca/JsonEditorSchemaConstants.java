@@ -25,6 +25,10 @@ package org.onap.policy.clamp.clds.tosca;
 
 public class JsonEditorSchemaConstants {
 
+    private JsonEditorSchemaConstants() {
+        // empty constructor
+    }
+
     //Data types in JSON Schema
     public static final String TYPE_OBJECT = "object";
     public static final String TYPE_ARRAY = "array";

@@ -81,7 +81,7 @@ public final class OnapLogConstants {
          * @return detached Marker.
          */
         private static Marker build(final String m1, final String m2) {
-            final Marker marker = MarkerFactory.getDetachedMarker(m1);
+            final var marker = MarkerFactory.getDetachedMarker(m1);
             marker.add(MarkerFactory.getDetachedMarker(m2));
             return marker;
         }

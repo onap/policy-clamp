@@ -136,7 +136,7 @@ public class CdsDataInstaller {
     private JsonObject createCdsArtifactProperties(String sdncModelName, String sdncModelVersion) {
         if (sdncModelName != null && !"null".equals(sdncModelName)
                 && sdncModelVersion != null && !"null".equals(sdncModelVersion)) {
-            JsonObject controllerProperties = new JsonObject();
+            var controllerProperties = new JsonObject();
             controllerProperties.addProperty(SDNC_MODEL_NAME, sdncModelName);
             controllerProperties.addProperty(SDNC_MODEL_VERSION, sdncModelVersion);
 
@@ -146,7 +146,7 @@ public class CdsDataInstaller {
                 return controllerProperties;
             }
 
-            JsonObject workFlowProps = new JsonObject();
+            var workFlowProps = new JsonObject();
             for (String workFlow : response.getWorkflows()) {
                 logger.info("Found CDS workflow {} for model name {} and version {}",
                      workFlow, sdncModelName, sdncModelVersion);

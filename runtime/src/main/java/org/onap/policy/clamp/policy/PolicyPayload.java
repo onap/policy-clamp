@@ -41,6 +41,10 @@ public class PolicyPayload {
 
     private static final Logger logger = LoggerFactory.getLogger(PolicyPayload.class);
 
+    private PolicyPayload () {
+         // Empty Constructor
+    }
+
     private static JsonObject createJsonFromPolicyTosca(String toscaContent) {
         Map<String, Object> map =
                 new Yaml().load(!StringUtils.isEmpty(toscaContent) ? toscaContent : "");
@@ -56,28 +60,28 @@ public class PolicyPayload {
     public static String createPolicyPayload(String policyModelType, String policyModelVersion, String policyName,
                                              String policyVersion, JsonObject policyProperties, String toscaContent)
             throws UnsupportedEncodingException {
-        JsonObject policyPayloadResult = new JsonObject();
+        var policyPayloadResult = new JsonObject();
 
         policyPayloadResult.add("tosca_definitions_version",
                 createJsonFromPolicyTosca(toscaContent).get("tosca_definitions_version"));
 
-        JsonObject topologyTemplateNode = new JsonObject();
+        var topologyTemplateNode = new JsonObject();
         policyPayloadResult.add("topology_template", topologyTemplateNode);
 
-        JsonArray policiesArray = new JsonArray();
+        var policiesArray = new JsonArray();
         topologyTemplateNode.add("policies", policiesArray);
 
-        JsonObject thisPolicy = new JsonObject();
+        var thisPolicy = new JsonObject();
         policiesArray.add(thisPolicy);
 
-        JsonObject policyDetails = new JsonObject();
+        var policyDetails = new JsonObject();
         thisPolicy.add(policyName, policyDetails);
         policyDetails.addProperty("type", policyModelType);
         policyDetails.addProperty("type_version", policyModelVersion);
         policyDetails.addProperty("version", policyVersion);
         policyDetails.addProperty("name", policyName);
 
-        JsonObject policyMetadata = new JsonObject();
+        var policyMetadata = new JsonObject();
         policyDetails.add("metadata", policyMetadata);
         policyMetadata.addProperty("policy-id", policyName);
         policyMetadata.addProperty("policy-version", policyVersion);

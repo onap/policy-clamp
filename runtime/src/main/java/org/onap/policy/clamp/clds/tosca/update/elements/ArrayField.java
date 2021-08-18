@@ -46,7 +46,7 @@ public class ArrayField {
      */
     public JsonArray deploy() {
 
-        JsonArray subPropertyValuesArray = new JsonArray();
+        var subPropertyValuesArray = new JsonArray();
         for (Object arrayElement : complexFields) {
             //Cast for each Primitive Type
             String typeValue = arrayElement.getClass().getSimpleName();
