@@ -43,9 +43,9 @@ public class TomcatEmbeddedServletContainerFactoryRedirection extends TomcatServ
      */
     @Override
     protected void postProcessContext(Context context) {
-        SecurityConstraint securityConstraint = new SecurityConstraint();
+        var securityConstraint = new SecurityConstraint();
         securityConstraint.setUserConstraint("CONFIDENTIAL");
-        SecurityCollection collection = new SecurityCollection();
+        var collection = new SecurityCollection();
         collection.addPattern("/*");
         securityConstraint.addCollection(collection);
         context.addConstraint(securityConstraint);

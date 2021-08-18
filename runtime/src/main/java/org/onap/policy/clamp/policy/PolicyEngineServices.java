@@ -101,8 +101,8 @@ public class PolicyEngineServices {
                 return policyModelsService.savePolicyModelInNewTransaction(
                         new PolicyModel(policyType, policyTosca, policyVersion));
             } else {
-                logger.error("Policy not found in the Policy Engine, returning null: " + policyType
-                        + "/" + policyVersion);
+                logger.error("Policy not found in the Policy Engine, returning null: {} / {}",
+                    policyType, policyVersion);
                 return null;
             }
         } else {

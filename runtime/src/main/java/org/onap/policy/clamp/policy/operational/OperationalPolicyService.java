@@ -5,6 +5,8 @@
  * Copyright (C) 2019 Nokia Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
+ * Modifications Copyright (C) 2021 AT&T.
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -40,15 +42,10 @@ public class OperationalPolicyService implements PolicyService<OperationalPolicy
 
     private final OperationalPolicyRepository operationalPolicyRepository;
 
-    private final PolicyModelsRepository policyModelsRepository;
-
-    private static final Logger logger = LoggerFactory.getLogger(OperationalPolicyService.class);
-
     @Autowired
     public OperationalPolicyService(OperationalPolicyRepository repository,
                                     PolicyModelsRepository policyModelsRepository) {
         this.operationalPolicyRepository = repository;
-        this.policyModelsRepository = policyModelsRepository;
     }
 
     @Override

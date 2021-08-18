@@ -4,7 +4,9 @@
  * ================================================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights
  *                             reserved.
+ * ================================================================================
  * Modifications Copyright (C) 2020 Huawei Technologies Co., Ltd.
+ * Modifications Copyright (C) 2021 AT&T.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,7 +54,7 @@ import org.slf4j.LoggerFactory;
 
 @Entity
 @Table(name = "operational_policies")
-@TypeDefs({@TypeDef(name = "json", typeClass = StringJsonUserType.class)})
+@TypeDef(name = "json", typeClass = StringJsonUserType.class)
 public class OperationalPolicy extends Policy implements Serializable {
     /**
      * The serial version ID.
@@ -165,24 +167,21 @@ public class OperationalPolicy extends Policy implements Serializable {
 
     @Override
     public void updateJsonRepresentation(ToscaConverterWithDictionarySupport toscaConverter, Service serviceModel) {
-        {
-            this.setJsonRepresentation(new JsonObject());
-            if (this.getPolicyModel() == null) {
-                return;
-            }
-
-            // Generic Case
-            this.setJsonRepresentation(toscaConverter.convertToscaToJsonSchemaObject(
-                    this.getPolicyModel().getPolicyModelTosca(),
-                    this.getPolicyModel().getPolicyModelType(), serviceModel));
-
+        this.setJsonRepresentation(new JsonObject());
+        if (this.getPolicyModel() == null) {
+            return;
         }
+
+        // Generic Case
+        this.setJsonRepresentation(toscaConverter.convertToscaToJsonSchemaObject(
+                this.getPolicyModel().getPolicyModelTosca(),
+                this.getPolicyModel().getPolicyModelType(), serviceModel));
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
+        final var prime = 31;
+        var result = 1;
         result = prime * result + ((name == null) ? 0 : name.hashCode());
         return result;
     }

@@ -38,7 +38,7 @@ public class CdsBpWorkFlowListResponse {
     private String version;
 
     @Expose
-    private List<String> workflows = new LinkedList<String>();
+    private List<String> workflows = new LinkedList<>();
 
     public String getBlueprintName() {
         return blueprintName;

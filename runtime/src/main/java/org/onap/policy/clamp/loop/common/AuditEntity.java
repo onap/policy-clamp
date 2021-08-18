@@ -141,6 +141,7 @@ public class AuditEntity {
      * Empty constructor.
      */
     public AuditEntity() {
+        // Empty Constructor
     }
 
 }

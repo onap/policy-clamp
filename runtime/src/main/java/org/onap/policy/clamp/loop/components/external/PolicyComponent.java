@@ -77,7 +77,7 @@ public class PolicyComponent extends ExternalComponent {
      * @return The json, payload to send
      */
     public static String createPoliciesPayloadPdpGroup(Loop loop, String action) {
-        PdpGroupPayload pdpGroupPayload = new PdpGroupPayload();
+        var pdpGroupPayload = new PdpGroupPayload();
         loop.getOperationalPolicies().stream().forEach(opPolicy -> pdpGroupPayload
                 .updatePdpGroupMap(opPolicy.getPdpGroup(), opPolicy.getPdpSubgroup(), opPolicy.getName(), "1.0.0",
                         action));
