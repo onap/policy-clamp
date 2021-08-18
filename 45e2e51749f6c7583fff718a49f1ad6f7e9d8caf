@@ -42,6 +42,30 @@
     },
     {
       "key": {
+        "uuid": "977e8f8f_32c5fe16",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 7660
+      },
+      "writtenOn": "2021-08-18T16:57:41Z",
+      "side": 1,
+      "message": "I agree, I think we should put these changes for the Jackarta Release, I will see about opening up a Jira for this.",
+      "parentUuid": "0a40b2ff_0022744b",
+      "range": {
+        "startLine": 120,
+        "startChar": 61,
+        "endLine": 120,
+        "endChar": 88
+      },
+      "revId": "45e2e51749f6c7583fff718a49f1ad6f7e9d8caf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6646d1c6_e0fc61e9",
         "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProvider.java",
         "patchSetId": 3
@@ -56,6 +80,24 @@
       "revId": "45e2e51749f6c7583fff718a49f1ad6f7e9d8caf",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "684e4656_950f3b83",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 460,
+      "author": {
+        "id": 7660
+      },
+      "writtenOn": "2021-08-18T16:57:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6646d1c6_e0fc61e9",
+      "revId": "45e2e51749f6c7583fff718a49f1ad6f7e9d8caf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -99,6 +141,24 @@
     },
     {
       "key": {
+        "uuid": "1156c836_a58c25f6",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 7660
+      },
+      "writtenOn": "2021-08-18T16:57:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "60b23899_5d0de4ab",
+      "revId": "45e2e51749f6c7583fff718a49f1ad6f7e9d8caf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "83cbaf0a_e8986070",
         "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
         "patchSetId": 3
@@ -116,6 +176,24 @@
     },
     {
       "key": {
+        "uuid": "3ab00cab_a5b7e2c4",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 7660
+      },
+      "writtenOn": "2021-08-18T16:57:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "83cbaf0a_e8986070",
+      "revId": "45e2e51749f6c7583fff718a49f1ad6f7e9d8caf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6ddae518_56041b5e",
         "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
         "patchSetId": 3
@@ -130,6 +208,24 @@
       "revId": "45e2e51749f6c7583fff718a49f1ad6f7e9d8caf",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c0240974_0401144d",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 342,
+      "author": {
+        "id": 7660
+      },
+      "writtenOn": "2021-08-18T16:57:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6ddae518_56041b5e",
+      "revId": "45e2e51749f6c7583fff718a49f1ad6f7e9d8caf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
