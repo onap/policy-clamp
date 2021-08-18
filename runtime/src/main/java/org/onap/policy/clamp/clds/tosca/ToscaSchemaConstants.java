@@ -25,6 +25,10 @@ package org.onap.policy.clamp.clds.tosca;
 
 public class ToscaSchemaConstants {
 
+    private ToscaSchemaConstants() {
+        // empty constructor
+    }
+
     // Data types in TOSCA Schema
     public static final String TYPE_LIST = "list";
     public static final String TYPE_MAP = "map";

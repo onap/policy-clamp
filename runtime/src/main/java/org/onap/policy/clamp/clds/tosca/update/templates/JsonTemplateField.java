@@ -98,7 +98,7 @@ public class JsonTemplateField {
             return false;
         }
 
-        JsonTemplateField jsonTemplateField = (JsonTemplateField) otherField;
+        var jsonTemplateField = (JsonTemplateField) otherField;
 
         if (title != null ? !title.equals(jsonTemplateField.title) : jsonTemplateField.title != null) {
             return false;
@@ -122,7 +122,7 @@ public class JsonTemplateField {
             return false;
         }
 
-        JsonTemplateField jsonTemplateField = (JsonTemplateField) object;
+        var jsonTemplateField = (JsonTemplateField) object;
 
         return title != null ? title.equals(jsonTemplateField.title) : jsonTemplateField.title == null;
     }

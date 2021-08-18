@@ -51,7 +51,7 @@ public class ToscaMetadataCdsProcess extends ToscaMetadataProcess {
         }
         switch (parameters) {
             case "actor":
-                JsonArray jsonArray = new JsonArray();
+                var jsonArray = new JsonArray();
                 jsonArray.add("CDS");
                 addToJsonArray(childObject, "enum", jsonArray);
                 break;
@@ -66,7 +66,7 @@ public class ToscaMetadataCdsProcess extends ToscaMetadataProcess {
     }
 
     private static void generatePayload(JsonObject childObject, Service serviceModel) {
-        JsonArray schemaAnyOf = new JsonArray();
+        var schemaAnyOf = new JsonArray();
         schemaAnyOf.addAll(createBlankEntry());
         schemaAnyOf.addAll(generatePayloadPerResource("VF", serviceModel));
         schemaAnyOf.addAll(generatePayloadPerResource("PNF", serviceModel));
@@ -80,14 +80,14 @@ public class ToscaMetadataCdsProcess extends ToscaMetadataProcess {
 
     private static void generateOperationPerResource(JsonObject childObject, String resourceName,
                                                      Service serviceModel) {
-        JsonArray schemaEnum = new JsonArray();
-        JsonArray schemaTitle = new JsonArray();
+        var schemaEnum = new JsonArray();
+        var schemaTitle = new JsonArray();
         for (Map.Entry<String, JsonElement> entry : serviceModel.getResourceDetails().getAsJsonObject(resourceName)
                 .entrySet()) {
-            JsonObject controllerProperties = entry.getValue().getAsJsonObject()
+            var controllerProperties = entry.getValue().getAsJsonObject()
                     .getAsJsonObject("controllerProperties");
             if (controllerProperties != null && controllerProperties.getAsJsonObject("workflows") != null) {
-                for (String workflowsEntry : controllerProperties.getAsJsonObject("workflows").keySet()) {
+                for (var workflowsEntry : controllerProperties.getAsJsonObject("workflows").keySet()) {
                     schemaEnum.add(workflowsEntry);
                     schemaTitle.add(workflowsEntry + " (CDS operation)");
                 }
@@ -95,7 +95,7 @@ public class ToscaMetadataCdsProcess extends ToscaMetadataProcess {
         }
         addToJsonArray(childObject, "enum", schemaEnum);
         if (childObject.get("options") == null) {
-            JsonObject optionsSection = new JsonObject();
+            var optionsSection = new JsonObject();
             childObject.add("options", optionsSection);
         }
         addToJsonArray(childObject.getAsJsonObject("options"), "enum_titles", schemaTitle);
@@ -104,16 +104,16 @@ public class ToscaMetadataCdsProcess extends ToscaMetadataProcess {
 
     private static JsonArray generatePayloadPerResource(String resourceName,
                                                         Service serviceModel) {
-        JsonArray schemaAnyOf = new JsonArray();
+        var schemaAnyOf = new JsonArray();
 
         for (Map.Entry<String, JsonElement> entry : serviceModel.getResourceDetails().getAsJsonObject(resourceName)
                 .entrySet()) {
-            JsonObject controllerProperties = entry.getValue().getAsJsonObject()
+            var controllerProperties = entry.getValue().getAsJsonObject()
                     .getAsJsonObject("controllerProperties");
             if (controllerProperties != null && controllerProperties.getAsJsonObject("workflows") != null) {
                 for (Map.Entry<String, JsonElement> workflowsEntry : controllerProperties.getAsJsonObject("workflows")
                         .entrySet()) {
-                    JsonObject obj = new JsonObject();
+                    var obj = new JsonObject();
                     obj.addProperty("title", workflowsEntry.getKey());
                     obj.add("properties",
                             createInputPropertiesForPayload(workflowsEntry.getValue().getAsJsonObject(),
@@ -127,8 +127,8 @@ public class ToscaMetadataCdsProcess extends ToscaMetadataProcess {
     }
 
     private static JsonArray createBlankEntry() {
-        JsonArray result = new JsonArray();
-        JsonObject blankObject = new JsonObject();
+        var result = new JsonArray();
+        var blankObject = new JsonObject();
         blankObject.addProperty("title", "User defined");
         blankObject.add("properties", new JsonObject());
         result.add(blankObject);
@@ -138,7 +138,7 @@ public class ToscaMetadataCdsProcess extends ToscaMetadataProcess {
     private static JsonObject createAnyOfJsonProperty(String name,
                                                       String defaultValue,
                                                       boolean readOnlyFlag) {
-        JsonObject result = new JsonObject();
+        var result = new JsonObject();
         result.addProperty("title", name);
         result.addProperty("type", "string");
         result.addProperty("default", defaultValue);
@@ -166,10 +166,10 @@ public class ToscaMetadataCdsProcess extends ToscaMetadataProcess {
     public static JsonObject createInputPropertiesForPayload(JsonObject workFlow,
                                                              JsonObject controllerProperties,
                                                              String workFlowName) {
-        String artifactName = controllerProperties.get("sdnc_model_name").getAsString();
-        String artifactVersion = controllerProperties.get("sdnc_model_version").getAsString();
-        JsonObject inputs = workFlow.getAsJsonObject("inputs");
-        JsonObject jsonObject = new JsonObject();
+        var artifactName = controllerProperties.get("sdnc_model_name").getAsString();
+        var artifactVersion = controllerProperties.get("sdnc_model_version").getAsString();
+        var inputs = workFlow.getAsJsonObject("inputs");
+        var jsonObject = new JsonObject();
         jsonObject.add("artifact_name", createAnyOfJsonProperty(
                 "artifact name", artifactName, true));
         jsonObject.add("artifact_version", createAnyOfJsonProperty(
@@ -181,11 +181,11 @@ public class ToscaMetadataCdsProcess extends ToscaMetadataProcess {
     }
 
     private static JsonObject createDataProperty(JsonObject inputs, String workFlowName) {
-        JsonObject data = new JsonObject();
+        var data = new JsonObject();
         data.addProperty("title", "data");
         data.addProperty("type", "string");
         data.addProperty("format", "textarea");
-        JsonObject defaultValue = new JsonObject();
+        var defaultValue = new JsonObject();
         addDefaultValueForData(inputs, defaultValue, workFlowName);
         data.addProperty("default", defaultValue.toString());
         return data;
@@ -197,12 +197,12 @@ public class ToscaMetadataCdsProcess extends ToscaMetadataProcess {
         Set<Map.Entry<String, JsonElement>> entrySet = inputs.entrySet();
         for (Map.Entry<String, JsonElement> entry : entrySet) {
             String key = entry.getKey();
-            JsonObject inputProperty = inputs.getAsJsonObject(key);
+            var inputProperty = inputs.getAsJsonObject(key);
             if (key.equalsIgnoreCase(workFlowName + "-properties")) {
                 addDefaultValueForData(entry.getValue().getAsJsonObject().get("properties")
                         .getAsJsonObject(), defaultValue, workFlowName);
             } else if ("object".equalsIgnoreCase(inputProperty.get(ToscaSchemaConstants.TYPE).getAsString())) {
-                JsonObject object = new JsonObject();
+                var object = new JsonObject();
                 addDefaultValueForData(entry.getValue().getAsJsonObject().get("properties")
                         .getAsJsonObject(), object, workFlowName);
                 defaultValue.add(entry.getKey(), object);
@@ -218,11 +218,11 @@ public class ToscaMetadataCdsProcess extends ToscaMetadataProcess {
     private static JsonArray handleListType(JsonObject inputs,
                                             String workFlowName) {
 
-        JsonObject object = new JsonObject();
+        var object = new JsonObject();
         if (inputs.get("properties") != null) {
             addDefaultValueForData(inputs.get("properties").getAsJsonObject(), object, workFlowName);
         }
-        JsonArray arr = new JsonArray();
+        var arr = new JsonArray();
         arr.add(object);
         return arr;
     }
