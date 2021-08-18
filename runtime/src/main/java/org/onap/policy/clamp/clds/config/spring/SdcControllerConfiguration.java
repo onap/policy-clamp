@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights
+ * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -63,10 +63,10 @@ public class SdcControllerConfiguration {
      */
     @PostConstruct
     public void loadSdcControllers() {
-        SdcControllersConfiguration sdcControllersConfig = getSdcControllersConfiguration();
+        var sdcControllersConfig = getSdcControllersConfiguration();
         sdcControllersConfig.getAllDefinedControllers().forEach((key, value) -> {
             logger.info("Creating controller instance: {}", key);
-            SdcSingleController sdcController = new SdcSingleController(clampProp, csarInstaller, value, null);
+            var sdcController = new SdcSingleController(clampProp, csarInstaller, value, null);
             sdcControllersList.add(sdcController);
         });
     }

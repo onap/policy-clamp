@@ -4,6 +4,8 @@
  * ================================================================================
  * Copyright (C) 2020 Huawei Technologies Co., Ltd.
  * ================================================================================
+ * Modifications Copyright (c) 2021 AT&T Intellectual Property. All rights reserved.
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -38,7 +40,7 @@ public class CdsBpWorkFlowListResponse {
     private String version;
 
     @Expose
-    private List<String> workflows = new LinkedList<String>();
+    private List<String> workflows = new LinkedList<>();
 
     public String getBlueprintName() {
         return blueprintName;

@@ -73,7 +73,7 @@ public class ClampServlet extends CamelHttpTransportServlet {
     private static List<SecureServicePermission> permissionList;
 
     private synchronized List<String> loadDynamicAuthenticationClasses() {
-        WebApplicationContext webAppContext = WebApplicationContextUtils.getWebApplicationContext(getServletContext());
+        var webAppContext = WebApplicationContextUtils.getWebApplicationContext(getServletContext());
         if (webAppContext != null) {
             String authClassProperty = webAppContext.getEnvironment().getProperty(AUTHENTICATION_CLASS);
             if (!StringUtils.isBlank(authClassProperty)) {
@@ -130,14 +130,14 @@ public class ClampServlet extends CamelHttpTransportServlet {
      */
     @Override
     protected void doService(HttpServletRequest request, HttpServletResponse response) {
-        Principal principal = request.getUserPrincipal();
+        var principal = request.getUserPrincipal();
         if (principal != null && loadDynamicAuthenticationClasses().stream()
                 .anyMatch(className -> className.equals(principal.getClass().getName()))) {
             // When AAF is enabled, there is a need to provision the permissions to Spring
             // system
             List<GrantedAuthority> grantedAuths = new ArrayList<>();
             for (SecureServicePermission perm : getPermissionList()) {
-                String permString = perm.toString();
+                var permString = perm.toString();
                 if (request.isUserInRole(permString)) {
                     grantedAuths.add(new SimpleGrantedAuthority(permString));
                 }

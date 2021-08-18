@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights
+ * Copyright (C) 2018, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -99,7 +99,7 @@ public class CsarHandler {
 
     /**
      * This saves the notification to disk and database.
-     * 
+     *
      * @param resultArtifact The artifact to install
      * @throws SdcArtifactInstallerException In case of issues with the installation
      * @throws SdcToscaParserException       In case of issues with the parsing of
@@ -109,10 +109,10 @@ public class CsarHandler {
             throws SdcArtifactInstallerException, SdcToscaParserException {
         try {
             logger.info("Writing CSAR file to: {} UUID {}", csarFilePath, artifactElement.getArtifactUUID());
-            Path path = Paths.get(csarFilePath);
+            var path = Paths.get(csarFilePath);
             Files.createDirectories(path.getParent());
             // Create or replace the file
-            try (OutputStream out = Files.newOutputStream(path)) {
+            try (var out = Files.newOutputStream(path)) {
                 out.write(resultArtifact.getArtifactPayload(), 0, resultArtifact.getArtifactPayload().length);
             }
             sdcCsarHelper = factory.getSdcCsarHelper(csarFilePath);
@@ -126,8 +126,8 @@ public class CsarHandler {
     private IResourceInstance searchForResourceByInstanceName(String blueprintResourceInstanceName)
             throws SdcArtifactInstallerException {
         for (IResourceInstance resource : this.sdcNotification.getResources()) {
-            String filteredString = resource.getResourceInstanceName().replaceAll("-", "");
-            filteredString = filteredString.replaceAll(" ", "");
+            var filteredString = resource.getResourceInstanceName().replace("-", "");
+            filteredString = filteredString.replace(" ", "");
             if (filteredString.equalsIgnoreCase(blueprintResourceInstanceName)) {
                 return resource;
             }
@@ -137,17 +137,17 @@ public class CsarHandler {
     }
 
     private void loadDcaeBlueprint() throws IOException, SdcArtifactInstallerException {
-        try (ZipFile zipFile = new ZipFile(csarFilePath)) {
+        try (var zipFile = new ZipFile(csarFilePath)) {
             Enumeration<? extends ZipEntry> entries = zipFile.entries();
             while (entries.hasMoreElements()) {
                 ZipEntry entry = entries.nextElement();
                 if (!entry.isDirectory() && entry.getName().contains(BLUEPRINT_TYPE)) {
-                    BlueprintArtifact blueprintArtifact = new BlueprintArtifact();
+                    var blueprintArtifact = new BlueprintArtifact();
                     blueprintArtifact.setBlueprintArtifactName(
                             entry.getName().substring(entry.getName().lastIndexOf('/') + 1, entry.getName().length()));
                     blueprintArtifact
                             .setBlueprintInvariantServiceUuid(this.getSdcNotification().getServiceInvariantUUID());
-                    try (InputStream stream = zipFile.getInputStream(entry)) {
+                    try (var stream = zipFile.getInputStream(entry)) {
                         blueprintArtifact.setDcaeBlueprint(IOUtils.toString(stream, StandardCharsets.UTF_8));
                     }
                     blueprintArtifact.setResourceAttached(searchForResourceByInstanceName(entry.getName().substring(
@@ -173,7 +173,8 @@ public class CsarHandler {
     }
 
     public String setFilePath(String newPath) {
-        return csarFilePath = newPath;
+        csarFilePath = newPath;
+        return csarFilePath;
     }
 
     public synchronized ISdcCsarHelper getSdcCsarHelper() {
@@ -191,20 +192,20 @@ public class CsarHandler {
     /**
      * Get the whole policy model Yaml. It combines the content of policies.yaml and
      * data.yaml.
-     * 
+     *
      * @return The whole policy model yaml
      * @throws IOException The IO Exception
      */
     public Optional<String> getPolicyModelYaml() throws IOException {
         String result = null;
-        try (ZipFile zipFile = new ZipFile(csarFilePath)) {
+        try (var zipFile = new ZipFile(csarFilePath)) {
             ZipEntry entry = zipFile.getEntry(POLICY_DEFINITION_NAME_SUFFIX);
             if (entry != null) {
                 ZipEntry data = zipFile.getEntry(DATA_DEFINITION_NAME_SUFFIX);
                 if (data != null) {
-                    String dataStr = IOUtils.toString(zipFile.getInputStream(data), StandardCharsets.UTF_8);
-                    String dataStrWithoutHeader = dataStr.substring(dataStr.indexOf(DATA_DEFINITION_KEY));
-                    String policyStr = IOUtils.toString(zipFile.getInputStream(entry), StandardCharsets.UTF_8);
+                    var dataStr = IOUtils.toString(zipFile.getInputStream(data), StandardCharsets.UTF_8);
+                    var dataStrWithoutHeader = dataStr.substring(dataStr.indexOf(DATA_DEFINITION_KEY));
+                    var policyStr = IOUtils.toString(zipFile.getInputStream(entry), StandardCharsets.UTF_8);
                     StringUtils.chomp(policyStr);
                     result = policyStr.concat(dataStrWithoutHeader);
                 } else {

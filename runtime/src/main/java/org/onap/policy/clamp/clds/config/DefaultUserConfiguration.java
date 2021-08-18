@@ -95,7 +95,7 @@ public class DefaultUserConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) {
         // configure algorithm used for password hashing
-        final PasswordEncoder passwordEncoder = getPasswordEncoder();
+        final var passwordEncoder = getPasswordEncoder();
 
         try {
             CldsUser[] usersList = loadUsers();
@@ -138,3 +138,4 @@ public class DefaultUserConfiguration extends WebSecurityConfigurerAdapter {
         }
     }
 }
+

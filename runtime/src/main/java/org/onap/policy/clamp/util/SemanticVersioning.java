@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2020 AT&T Intellectual Property. All rights
+ * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,10 +23,14 @@
 
 package org.onap.policy.clamp.util;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 /**
  * This class is the base class for object that requires semantic versioning.
  * ... This class supports also a.b.c.d... etc ... as a version.
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SemanticVersioning {
     public static final int BEFORE = -1;
     public static final int EQUAL = 0;
@@ -57,7 +61,7 @@ public class SemanticVersioning {
 
         int smalestStringLength = Math.min(arg0Array.length, arg1Array.length);
 
-        for (int currentVersionIndex =
+        for (var currentVersionIndex =
              0; currentVersionIndex < smalestStringLength; ++currentVersionIndex) {
             if (Integer.parseInt(arg0Array[currentVersionIndex]) < Integer
                     .parseInt(arg1Array[currentVersionIndex])) {
