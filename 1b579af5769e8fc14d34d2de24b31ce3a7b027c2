@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9e5393df_1943fd67",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/rest/instantiation/ControlLoopNameVersion.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 7660
+      },
+      "writtenOn": "2021-08-18T08:52:04Z",
+      "side": 1,
+      "message": "Hello Jim,\n\nTo be able to change the sate of the Control Loop the rest endpoint accepts a list of Control Loop name and version, and not the definition name and version, but when I retrieve the ToscaConceptIdentifier it will bring the definition name and version and it will not affect the state change.\n\nI had two options to address this, this way or I had to change the original rest endpoint where it accepts a put method and change the state by the ToscaConceptIdentifier.",
+      "parentUuid": "9aef662f_330c4151",
+      "revId": "1b579af5769e8fc14d34d2de24b31ce3a7b027c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7cc4b861_a53f5c68",
         "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/rest/instantiation/ControlLoopOrderStateResponse.java",
         "patchSetId": 1
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "746d6ec2_19a37977",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/rest/instantiation/ControlLoopOrderStateResponse.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 7660
+      },
+      "writtenOn": "2021-08-18T08:52:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7cc4b861_a53f5c68",
+      "revId": "1b579af5769e8fc14d34d2de24b31ce3a7b027c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b42d3baa_6bd95cf5",
         "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/rest/instantiation/ControlLoopOrderStateResponse.java",
         "patchSetId": 1
@@ -50,6 +86,24 @@
       "revId": "1b579af5769e8fc14d34d2de24b31ce3a7b027c2",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "125c9512_f50d74aa",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/rest/instantiation/ControlLoopOrderStateResponse.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 7660
+      },
+      "writtenOn": "2021-08-18T08:52:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b42d3baa_6bd95cf5",
+      "revId": "1b579af5769e8fc14d34d2de24b31ce3a7b027c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -99,6 +153,30 @@
     },
     {
       "key": {
+        "uuid": "85903058_86669b9e",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 7660
+      },
+      "writtenOn": "2021-08-18T08:52:04Z",
+      "side": 1,
+      "message": "I replied bellow.",
+      "parentUuid": "e5dd5e1d_90101a78",
+      "range": {
+        "startLine": 269,
+        "startChar": 77,
+        "endLine": 269,
+        "endChar": 90
+      },
+      "revId": "1b579af5769e8fc14d34d2de24b31ce3a7b027c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e9dca6de_92a32a2c",
         "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
         "patchSetId": 1
@@ -110,6 +188,24 @@
       "writtenOn": "2021-08-17T15:12:16Z",
       "side": 1,
       "message": "ToscaConceptIdentifier has a constructor which takes name \u0026 version so this can be done on one line",
+      "revId": "1b579af5769e8fc14d34d2de24b31ce3a7b027c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "950d97a6_69d582fe",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 7660
+      },
+      "writtenOn": "2021-08-18T08:52:04Z",
+      "side": 1,
+      "message": "The reason I had to put the Control Loop Name is that the /instantiation/command endpoint receives a PUT request, and the body receives a Control Loop Name and version and not the Definition name and version, this is why I had to apply it differently.\n\nI might suggest change the /instantiation/command endpoint to receive the Tosca Concept Identifier instead of the Control Loop Name and version.  But since we need to get this functionality ready for Istanbul I could open up a ticket to correct this in the Jackarta Release?\n\nBellow is the JSON schema the endpoint receives.\n\n{\n    \"orderedState\": \"UNINITIALISED\",\n    \"controlLoopIdentifierList\": [\n        {\n            \"name\": \"PMSHInstance1\",\n            \"version\": \"1.0.1\"\n        }\n    ]\n}",
+      "parentUuid": "e9dca6de_92a32a2c",
       "revId": "1b579af5769e8fc14d34d2de24b31ce3a7b027c2",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
