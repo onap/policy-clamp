@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "ffa8d09d_f8ec585f",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/rest/instantiation/ControlLoopNameVersion.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-18T18:26:52Z",
+      "side": 1,
+      "message": "we can re-examine this issue in Jakarta.",
+      "parentUuid": "4b4e1541_118c58aa",
+      "revId": "1b579af5769e8fc14d34d2de24b31ce3a7b027c2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7cc4b861_a53f5c68",
         "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/rest/instantiation/ControlLoopOrderStateResponse.java",
         "patchSetId": 1
