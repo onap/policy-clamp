@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -43,12 +43,12 @@ public class CldsConfiguration {
 
     /**
      * This loads the file system.properties.
-     * 
+     *
      * @return The PropertiesFactoryBean
      */
     @Bean(name = "mapper")
     public PropertiesFactoryBean mapper() {
-        PropertiesFactoryBean bean = new PropertiesFactoryBean();
+        var bean = new PropertiesFactoryBean();
         bean.setLocation(appContext.getResource(refProp.getStringValue("files.systemProperties")));
         return bean;
     }

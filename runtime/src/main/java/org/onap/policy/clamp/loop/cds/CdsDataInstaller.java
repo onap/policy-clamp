@@ -2,9 +2,10 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights
+ * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights
  *                             reserved.
- *  * Modifications Copyright (C) 2020 Huawei Technologies Co., Ltd.
+ * ================================================================================
+ * Modifications Copyright (C) 2020 Huawei Technologies Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -136,7 +137,7 @@ public class CdsDataInstaller {
     private JsonObject createCdsArtifactProperties(String sdncModelName, String sdncModelVersion) {
         if (sdncModelName != null && !"null".equals(sdncModelName)
                 && sdncModelVersion != null && !"null".equals(sdncModelVersion)) {
-            JsonObject controllerProperties = new JsonObject();
+            var controllerProperties = new JsonObject();
             controllerProperties.addProperty(SDNC_MODEL_NAME, sdncModelName);
             controllerProperties.addProperty(SDNC_MODEL_VERSION, sdncModelVersion);
 
@@ -146,7 +147,7 @@ public class CdsDataInstaller {
                 return controllerProperties;
             }
 
-            JsonObject workFlowProps = new JsonObject();
+            var workFlowProps = new JsonObject();
             for (String workFlow : response.getWorkflows()) {
                 logger.info("Found CDS workflow {} for model name {} and version {}",
                      workFlow, sdncModelName, sdncModelVersion);

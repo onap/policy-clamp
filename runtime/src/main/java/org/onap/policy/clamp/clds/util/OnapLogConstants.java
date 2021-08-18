@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights
+ * Copyright (C) 2018, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -81,7 +81,7 @@ public final class OnapLogConstants {
          * @return detached Marker.
          */
         private static Marker build(final String m1, final String m2) {
-            final Marker marker = MarkerFactory.getDetachedMarker(m1);
+            final var marker = MarkerFactory.getDetachedMarker(m1);
             marker.add(MarkerFactory.getDetachedMarker(m2));
             return marker;
         }

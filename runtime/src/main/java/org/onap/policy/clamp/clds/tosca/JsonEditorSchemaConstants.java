@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2018-2019 AT&T Intellectual Property. All rights
+ * Copyright (C) 2018-2019, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +23,11 @@
 
 package org.onap.policy.clamp.clds.tosca;
 
-public class JsonEditorSchemaConstants {
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class JsonEditorSchemaConstants {
 
     //Data types in JSON Schema
     public static final String TYPE_OBJECT = "object";

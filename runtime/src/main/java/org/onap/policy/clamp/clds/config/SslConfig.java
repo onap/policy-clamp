@@ -51,11 +51,11 @@ public class SslConfig {
     @Bean
     WebServerFactoryCustomizer<TomcatServletWebServerFactory> tomcatCustomizer(ServerProperties serverProperties,
                                                                                ResourceLoader resourceLoader) {
-        return (tomcat) -> tomcat.setSslStoreProvider(new SslStoreProvider() {
+        return tomcat -> tomcat.setSslStoreProvider(new SslStoreProvider() {
             @Override
             public KeyStore getKeyStore() throws KeyStoreException,
                     NoSuchAlgorithmException, CertificateException, IOException {
-                KeyStore keystore = KeyStore.getInstance(env.getProperty("server.ssl.key-store-type"));
+                var keystore = KeyStore.getInstance(env.getProperty("server.ssl.key-store-type"));
                 String password = PassDecoder.decode(env.getProperty("server.ssl.key-store-password"),
                         env.getProperty("clamp.config.keyFile"));
                 keystore.load(ResourceFileUtils.getResourceAsStream(env.getProperty("server.ssl.key-store")),
@@ -66,7 +66,7 @@ public class SslConfig {
             @Override
             public KeyStore getTrustStore() throws KeyStoreException,
                     NoSuchAlgorithmException, CertificateException, IOException {
-                KeyStore truststore = KeyStore.getInstance("JKS");
+                var truststore = KeyStore.getInstance("JKS");
                 String password = PassDecoder.decode(env.getProperty("server.ssl.trust-store-password"),
                         env.getProperty("clamp.config.keyFile"));
                 truststore.load(
@@ -81,7 +81,7 @@ public class SslConfig {
     @Bean
     WebServerFactoryCustomizer<TomcatServletWebServerFactory> tomcatSslCustomizer(ServerProperties serverProperties,
                                                                                   ResourceLoader resourceLoader) {
-        return (tomcat) -> tomcat.setSsl(new Ssl() {
+        return tomcat -> tomcat.setSsl(new Ssl() {
             @Override
             public String getKeyPassword() {
                 return PassDecoder.decode(env.getProperty("server.ssl.key-password"),
@@ -95,3 +95,4 @@ public class SslConfig {
         });
     }
 }
+

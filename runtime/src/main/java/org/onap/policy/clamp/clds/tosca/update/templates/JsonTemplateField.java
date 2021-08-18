@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2020 AT&T Intellectual Property. All rights
+ * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -98,7 +98,7 @@ public class JsonTemplateField {
             return false;
         }
 
-        JsonTemplateField jsonTemplateField = (JsonTemplateField) otherField;
+        var jsonTemplateField = (JsonTemplateField) otherField;
 
         if (title != null ? !title.equals(jsonTemplateField.title) : jsonTemplateField.title != null) {
             return false;
@@ -122,7 +122,7 @@ public class JsonTemplateField {
             return false;
         }
 
-        JsonTemplateField jsonTemplateField = (JsonTemplateField) object;
+        var jsonTemplateField = (JsonTemplateField) object;
 
         return title != null ? title.equals(jsonTemplateField.title) : jsonTemplateField.title == null;
     }
