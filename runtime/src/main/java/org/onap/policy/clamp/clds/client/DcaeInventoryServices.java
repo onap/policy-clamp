@@ -70,7 +70,7 @@ public class DcaeInventoryServices {
     }
 
     private int getTotalCountFromDcaeInventoryResponse(String responseStr) throws ParseException {
-        JSONParser parser = new JSONParser();
+        var parser = new JSONParser();
         Object obj0 = parser.parse(responseStr);
         JSONObject jsonObj = (JSONObject) obj0;
         Long totalCount = (Long) jsonObj.get("totalCount");
@@ -78,7 +78,7 @@ public class DcaeInventoryServices {
     }
 
     private DcaeInventoryResponse getItemsFromDcaeInventoryResponse(String responseStr) throws ParseException {
-        JSONParser parser = new JSONParser();
+        var parser = new JSONParser();
         Object obj0 = parser.parse(responseStr);
         JSONObject jsonObj = (JSONObject) obj0;
         JSONArray itemsArray = (JSONArray) jsonObj.get("items");
@@ -100,18 +100,18 @@ public class DcaeInventoryServices {
             throws IOException, ParseException, InterruptedException {
         LoggingUtils.setTargetContext("DCAE", "getDcaeInformation");
 
-        int retryInterval = 0;
-        int retryLimit = 1;
+        var retryInterval = 0;
+        var retryLimit = 1;
         if (refProp.getStringValue(DCAE_INVENTORY_RETRY_LIMIT) != null) {
             retryLimit = Integer.valueOf(refProp.getStringValue(DCAE_INVENTORY_RETRY_LIMIT));
         }
         if (refProp.getStringValue(DCAE_INVENTORY_RETRY_INTERVAL) != null) {
             retryInterval = Integer.valueOf(refProp.getStringValue(DCAE_INVENTORY_RETRY_INTERVAL));
         }
-        for (int i = 0; i < retryLimit; i++) {
+        for (var i = 0; i < retryLimit; i++) {
             logger.info(LoggerUtils.METRIC_LOG_MARKER, "Attempt n° {} to contact DCAE inventory", i);
-            try (ProducerTemplate producerTemplate = camelContext.createProducerTemplate()) {
-                Exchange exchangeResponse = producerTemplate
+            try (var producerTemplate = camelContext.createProducerTemplate()) {
+                var exchangeResponse = producerTemplate
                         .send("direct:get-dcae-blueprint-inventory", ExchangeBuilder.anExchange(camelContext)
                                 .withProperty("blueprintResourceId", resourceUuid)
                                 .withProperty("blueprintServiceId", serviceUuid)
@@ -127,7 +127,7 @@ public class DcaeInventoryServices {
                     if (totalCount > 0) {
                         logger.info("getDcaeInformation, answer from DCAE inventory: {}", dcaeResponse);
                         LoggingUtils.setResponseContext("0", "Get Dcae Information success", this.getClass().getName());
-                        Date startTime = new Date();
+                        var startTime = new Date();
                         LoggingUtils.setTimeContext(startTime, new Date());
                         return getItemsFromDcaeInventoryResponse(dcaeResponse);
                     } else {

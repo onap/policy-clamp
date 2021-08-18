@@ -48,7 +48,7 @@ public class CldsConfiguration {
      */
     @Bean(name = "mapper")
     public PropertiesFactoryBean mapper() {
-        PropertiesFactoryBean bean = new PropertiesFactoryBean();
+        var bean = new PropertiesFactoryBean();
         bean.setLocation(appContext.getResource(refProp.getStringValue("files.systemProperties")));
         return bean;
     }

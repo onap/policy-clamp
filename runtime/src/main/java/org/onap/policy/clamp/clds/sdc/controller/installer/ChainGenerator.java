@@ -62,7 +62,7 @@ public class ChainGenerator {
     }
 
     private boolean postValidate(LinkedList<BlueprintMicroService> microServices) {
-        for (int i = 1; i < microServices.size() - 1; i++) {
+        for (var i = 1; i < microServices.size() - 1; i++) {
             BlueprintMicroService prev = microServices.get(i - 1);
             BlueprintMicroService current = microServices.get(i);
             if (!current.getInputFrom().equals(prev.getName())) {
@@ -74,8 +74,8 @@ public class ChainGenerator {
 
     private void insertNodeTemplateIntoChain(BlueprintMicroService microServicetoInsert,
             LinkedList<BlueprintMicroService> chainOfMicroServices) {
-        int insertIndex = 0;
-        for (int i = 0; i < chainOfMicroServices.size(); i++) {
+        var insertIndex = 0;
+        for (var i = 0; i < chainOfMicroServices.size(); i++) {
             BlueprintMicroService current = chainOfMicroServices.get(i);
             if (microServicetoInsert.getName().equals(current.getInputFrom())) {
                 insertIndex = i;

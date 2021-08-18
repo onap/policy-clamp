@@ -147,7 +147,7 @@ public class ClampCadiFilter extends CadiFilter {
         try {
             String certHeader = ((HttpServletRequest) request).getHeader("X-SSL-Cert");
             if (certHeader != null) {
-                CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+                var certificateFactory = CertificateFactory.getInstance("X.509");
                 X509Certificate cert = (X509Certificate) certificateFactory
                         .generateCertificate(new ByteArrayInputStream(
                                 URLDecoder.decode(certHeader, StandardCharsets.UTF_8.toString()).getBytes()));
@@ -173,9 +173,9 @@ public class ClampCadiFilter extends CadiFilter {
     }
 
     private String convertSpringToPath(String fileName) {
-        try (InputStream ioFile = appContext.getResource(fileName).getInputStream()) {
+        try (var ioFile = appContext.getResource(fileName).getInputStream()) {
             if (!fileName.contains("file:")) {
-                File targetFile = new File(appContext.getResource(fileName).getFilename());
+                var targetFile = new File(appContext.getResource(fileName).getFilename());
                 java.nio.file.Files.copy(ioFile, targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
                 return targetFile.getPath();
             } else {

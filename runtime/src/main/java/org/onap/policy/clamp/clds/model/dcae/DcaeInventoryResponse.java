@@ -95,8 +95,15 @@ public class DcaeInventoryResponse implements Comparable<DcaeInventoryResponse> 
 
     @Override
     public int compareTo(DcaeInventoryResponse otherResponse) {
-        int thisResourceId = Integer.parseInt(this.asdcResourceId);
-        int otherResourceId = Integer.parseInt(otherResponse.getAsdcResourceId());
-        return (thisResourceId < otherResourceId ? -1 : (thisResourceId > otherResourceId ? 1 : 0));
+        var thisResourceId = Integer.parseInt(this.asdcResourceId);
+        var otherResourceId = Integer.parseInt(otherResponse.getAsdcResourceId());
+        if (thisResourceId < otherResourceId) {
+            return -1;
+        }
+        if (thisResourceId > otherResourceId) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 }

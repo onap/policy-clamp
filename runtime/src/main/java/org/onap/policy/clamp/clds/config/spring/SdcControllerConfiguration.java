@@ -63,10 +63,10 @@ public class SdcControllerConfiguration {
      */
     @PostConstruct
     public void loadSdcControllers() {
-        SdcControllersConfiguration sdcControllersConfig = getSdcControllersConfiguration();
+        var sdcControllersConfig = getSdcControllersConfiguration();
         sdcControllersConfig.getAllDefinedControllers().forEach((key, value) -> {
             logger.info("Creating controller instance: {}", key);
-            SdcSingleController sdcController = new SdcSingleController(clampProp, csarInstaller, value, null);
+            var sdcController = new SdcSingleController(clampProp, csarInstaller, value, null);
             sdcControllersList.add(sdcController);
         });
     }
