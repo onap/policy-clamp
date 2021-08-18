@@ -103,11 +103,6 @@ public class ParticipantMessage {
         }
 
         // Targeted message at this specific participant
-        if (participantType.equals(this.participantType) && participantId.equals(this.participantId)) {
-            return true;
-        }
-
-        // Message is not for this participant
-        return false;
+        return participantType.equals(this.participantType) && participantId.equals(this.participantId);
     }
 }

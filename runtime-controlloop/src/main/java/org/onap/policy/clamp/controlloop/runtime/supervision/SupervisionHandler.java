@@ -21,7 +21,6 @@
 package org.onap.policy.clamp.controlloop.runtime.supervision;
 
 import java.util.List;
-import java.util.Map;
 import javax.ws.rs.core.Response;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
@@ -138,7 +137,8 @@ public class SupervisionHandler {
     public void handleParticipantMessage(ParticipantRegister participantRegisterMessage) {
         LOGGER.debug("Participant Register received {}", participantRegisterMessage);
 
-        participantRegisterAckPublisher.send(participantRegisterMessage.getMessageId());
+        participantRegisterAckPublisher.send(participantRegisterMessage.getMessageId(),
+                participantRegisterMessage.getParticipantId(), participantRegisterMessage.getParticipantType());
 
         participantUpdatePublisher.send(participantRegisterMessage.getParticipantId(),
                 participantRegisterMessage.getParticipantType());
@@ -313,15 +313,15 @@ public class SupervisionHandler {
             throws PfModelException, ControlLoopException {
         if (participantStatusMessage.getControlLoopInfoList() != null) {
             for (ControlLoopInfo clEntry : participantStatusMessage.getControlLoopInfoList()) {
-                var dbControlLoop = controlLoopProvider.getControlLoop(
-                        new ToscaConceptIdentifier(clEntry.getControlLoopId()));
+                var dbControlLoop =
+                        controlLoopProvider.getControlLoop(new ToscaConceptIdentifier(clEntry.getControlLoopId()));
                 if (dbControlLoop == null) {
                     exceptionOccured(Response.Status.NOT_FOUND,
                             "PARTICIPANT_STATUS control loop not found in database: " + clEntry.getControlLoopId());
                 }
                 dbControlLoop.setState(clEntry.getState());
-                monitoringProvider.createClElementStatistics(clEntry.getControlLoopStatistics()
-                        .getClElementStatisticsList().getClElementStatistics());
+                monitoringProvider.createClElementStatistics(
+                        clEntry.getControlLoopStatistics().getClElementStatisticsList().getClElementStatistics());
             }
         }
     }

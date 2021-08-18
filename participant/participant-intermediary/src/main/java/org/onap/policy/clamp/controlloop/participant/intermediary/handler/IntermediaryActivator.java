@@ -23,20 +23,16 @@ package org.onap.policy.clamp.controlloop.participant.intermediary.handler;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.List;
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageType;
+import java.util.stream.Stream;
+import javax.ws.rs.core.Response.Status;
+import org.onap.policy.clamp.controlloop.common.exception.ControlLoopRuntimeException;
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryApi;
-import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ControlLoopStateChangeListener;
-import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ControlLoopUpdateListener;
-import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ParticipantDeregisterAckListener;
-import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ParticipantRegisterAckListener;
-import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ParticipantStatusReqListener;
-import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ParticipantUpdateListener;
 import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantParameters;
 import org.onap.policy.common.endpoints.event.comm.TopicEndpointManager;
+import org.onap.policy.common.endpoints.event.comm.TopicSink;
 import org.onap.policy.common.endpoints.event.comm.TopicSource;
 import org.onap.policy.common.endpoints.listeners.MessageTypeDispatcher;
 import org.onap.policy.common.utils.services.ServiceManagerContainer;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
@@ -48,32 +44,54 @@ import org.springframework.stereotype.Component;
 @Component
 public class IntermediaryActivator extends ServiceManagerContainer implements Closeable {
 
-    private final ApplicationContext applicationContext;
+    private static final String[] MSG_TYPE_NAMES = {"messageType"};
 
     // Topics from which the participant receives and to which the participant sends messages
+    private List<TopicSink> topicSinks;
     private List<TopicSource> topicSources;
 
     ParticipantIntermediaryApi participantIntermediaryApi;
 
+    private final MessageTypeDispatcher msgDispatcher;
+
     /**
      * Instantiate the activator for participant.
      *
-     * @param applicationContext ApplicationContext
      * @param parameters the ParticipantParameters
+     * @param publishers array of Publishers
+     * @param listeners array of Listeners
      */
-    public IntermediaryActivator(final ApplicationContext applicationContext, final ParticipantParameters parameters,
-            ParticipantIntermediaryApi participantIntermediaryApi) {
-        this.applicationContext = applicationContext;
+    public IntermediaryActivator(final ParticipantParameters parameters,
+            ParticipantIntermediaryApi participantIntermediaryApi, Publisher[] publishers, Listener[] listeners) {
         this.participantIntermediaryApi = participantIntermediaryApi;
+
+        topicSinks = TopicEndpointManager.getManager()
+                .addTopicSinks(parameters.getIntermediaryParameters().getClampControlLoopTopics().getTopicSinks());
 
         topicSources = TopicEndpointManager.getManager()
                 .addTopicSources(parameters.getIntermediaryParameters().getClampControlLoopTopics().getTopicSources());
 
-        // @formatter:off
+        try {
+            msgDispatcher = new MessageTypeDispatcher(MSG_TYPE_NAMES);
+        } catch (final RuntimeException e) {
+            throw new ControlLoopRuntimeException(Status.INTERNAL_SERVER_ERROR,
+                    "topic message dispatcher failed to start", e);
+        }
 
+        // @formatter:off
         addAction("Topic endpoint management",
-            () -> TopicEndpointManager.getManager().start(),
-            () -> TopicEndpointManager.getManager().shutdown());
+                () -> TopicEndpointManager.getManager().start(),
+                () -> TopicEndpointManager.getManager().shutdown());
+
+        Stream.of(publishers).forEach(publisher ->
+            addAction("Publisher " + publisher.getClass().getSimpleName(),
+                () -> publisher.active(topicSinks),
+                publisher::stop));
+
+        Stream.of(listeners).forEach(listener ->
+            addAction("Listener " + listener.getClass().getSimpleName(),
+                    () -> msgDispatcher.register(listener.getType(), listener.getScoListener()),
+                    () -> msgDispatcher.unregister(listener.getType())));
 
         addAction("Topic Message Dispatcher", this::registerMsgDispatcher, this::unregisterMsgDispatcher);
         // @formatter:on
@@ -117,26 +135,6 @@ public class IntermediaryActivator extends ServiceManagerContainer implements Cl
      * Registers the dispatcher with the topic source(s).
      */
     private void registerMsgDispatcher() {
-        MessageTypeDispatcher msgDispatcher = applicationContext.getBean(MessageTypeDispatcher.class);
-
-        msgDispatcher.register(ParticipantMessageType.PARTICIPANT_STATUS_REQ.name(),
-                applicationContext.getBean(ParticipantStatusReqListener.class));
-
-        msgDispatcher.register(ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE.name(),
-                applicationContext.getBean(ControlLoopStateChangeListener.class));
-
-        msgDispatcher.register(ParticipantMessageType.CONTROL_LOOP_UPDATE.name(),
-                applicationContext.getBean(ControlLoopUpdateListener.class));
-
-        msgDispatcher.register(ParticipantMessageType.PARTICIPANT_REGISTER_ACK.name(),
-                applicationContext.getBean(ParticipantRegisterAckListener.class));
-
-        msgDispatcher.register(ParticipantMessageType.PARTICIPANT_DEREGISTER_ACK.name(),
-                applicationContext.getBean(ParticipantDeregisterAckListener.class));
-
-        msgDispatcher.register(ParticipantMessageType.PARTICIPANT_UPDATE.name(),
-                applicationContext.getBean(ParticipantUpdateListener.class));
-
         for (final TopicSource source : topicSources) {
             source.register(msgDispatcher);
         }
@@ -146,8 +144,6 @@ public class IntermediaryActivator extends ServiceManagerContainer implements Cl
      * Unregisters the dispatcher from the topic source(s).
      */
     private void unregisterMsgDispatcher() {
-        MessageTypeDispatcher msgDispatcher = applicationContext.getBean(MessageTypeDispatcher.class);
-
         for (final TopicSource source : topicSources) {
             source.unregister(msgDispatcher);
         }

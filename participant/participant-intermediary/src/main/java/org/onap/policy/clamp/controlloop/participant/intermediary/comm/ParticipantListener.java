@@ -22,6 +22,7 @@ package org.onap.policy.clamp.controlloop.participant.intermediary.comm;
 
 import java.util.function.Consumer;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessage;
+import org.onap.policy.clamp.controlloop.participant.intermediary.handler.Listener;
 import org.onap.policy.clamp.controlloop.participant.intermediary.handler.ParticipantHandler;
 import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
 import org.onap.policy.common.endpoints.listeners.ScoListener;
@@ -30,7 +31,7 @@ import org.onap.policy.common.utils.coder.StandardCoderObject;
 /**
  * Abstract Listener for Participant messages sent by CLAMP.
  */
-public abstract class ParticipantListener<T extends ParticipantMessage> extends ScoListener<T> {
+public abstract class ParticipantListener<T extends ParticipantMessage> extends ScoListener<T> implements Listener {
 
     private final ParticipantHandler participantHandler;
     private final Consumer<T> consumer;
@@ -53,5 +54,10 @@ public abstract class ParticipantListener<T extends ParticipantMessage> extends 
         if (participantHandler.appliesTo(message)) {
             consumer.accept(message);
         }
+    }
+
+    @Override
+    public ScoListener<T> getScoListener() {
+        return this;
     }
 }

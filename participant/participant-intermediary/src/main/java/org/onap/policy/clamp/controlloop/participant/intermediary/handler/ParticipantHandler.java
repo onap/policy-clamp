@@ -38,6 +38,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantStatistics;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopStateChange;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopUpdate;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantAckMessage;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregister;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregisterAck;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessage;
@@ -188,6 +189,16 @@ public class ParticipantHandler implements Closeable {
      * @return true if it applies, false otherwise
      */
     public boolean appliesTo(ParticipantMessage participantMsg) {
+        return participantMsg.appliesTo(participantType, participantId);
+    }
+
+    /**
+     * Check if a participant message applies to this participant handler.
+     *
+     * @param participantMsg the message to check
+     * @return true if it applies, false otherwise
+     */
+    public boolean appliesTo(ParticipantAckMessage participantMsg) {
         return participantMsg.appliesTo(participantType, participantId);
     }
 

@@ -21,6 +21,7 @@
 package org.onap.policy.clamp.controlloop.participant.intermediary.comm;
 
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopUpdate;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageType;
 import org.onap.policy.clamp.controlloop.participant.intermediary.handler.ParticipantHandler;
 import org.springframework.stereotype.Component;
 
@@ -37,5 +38,10 @@ public class ControlLoopUpdateListener extends ParticipantListener<ControlLoopUp
      */
     public ControlLoopUpdateListener(final ParticipantHandler participantHandler) {
         super(ControlLoopUpdate.class, participantHandler, participantHandler::handleControlLoopUpdate);
+    }
+
+    @Override
+    public String getType() {
+        return ParticipantMessageType.CONTROL_LOOP_UPDATE.name();
     }
 }
