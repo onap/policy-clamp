@@ -80,7 +80,7 @@ public class PolicyModelsService {
      * @return A JsonObject with the json schema describing the tosca
      */
     public JsonObject getPolicyModelJson(String policyType, String policyTypeVersion) {
-        PolicyModel thePolicyModel = getPolicyModel(policyType, policyTypeVersion);
+        var thePolicyModel = getPolicyModel(policyType, policyTypeVersion);
         // In the following use case we are not in the context of a closed loop, so the enrichment
         // of the json cannot be done, that's why the serviceModel provided is NULL.
         return toscaConverterWithDictionarySupport

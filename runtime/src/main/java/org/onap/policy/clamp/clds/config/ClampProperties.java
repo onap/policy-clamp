@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -63,7 +63,7 @@ public class ClampProperties {
      * @return The string with the value
      */
     public String getStringValue(String key1, String key2) {
-        String value = getStringValue(key1 + "." + key2);
+        var value = getStringValue(key1 + "." + key2);
         if (value == null || value.length() == 0) {
             value = getStringValue(key1);
         }
@@ -79,7 +79,7 @@ public class ClampProperties {
      * @throws IOException In case of issues with the JSON parser
      */
     public String getFileContent(String key) throws IOException {
-        String fileReference = getStringValue(key);
+        var fileReference = getStringValue(key);
         return (fileReference != null) ? getFileContentFromPath(fileReference) : null;
     }
 
@@ -94,12 +94,12 @@ public class ClampProperties {
      * @throws IOException In case of issues with the JSON parser
      */
     public String getFileContent(String key1, String key2) throws IOException {
-        String fileReference = getStringValue(key1, key2);
+        var fileReference = getStringValue(key1, key2);
         return (fileReference != null) ? getFileContentFromPath(fileReference) : null;
     }
 
     private String getFileContentFromPath(String filepath) throws IOException {
-        URL url = appContext.getResource(filepath).getURL();
+        var url = appContext.getResource(filepath).getURL();
         return IOUtils.toString(url, StandardCharsets.UTF_8);
     }
 }

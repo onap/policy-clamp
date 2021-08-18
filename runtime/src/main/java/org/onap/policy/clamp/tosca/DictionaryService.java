@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2020 AT&T Intellectual Property. All rights
+ * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -60,7 +60,7 @@ public class DictionaryService {
      * @return updated Dictionary object with all dictionary elements
      */
     public Dictionary saveOrUpdateDictionaryElement(String dictionaryName, Dictionary dictionary) {
-        Dictionary dict = getDictionary(dictionaryName);
+        var dict = getDictionary(dictionaryName);
 
         Set<DictionaryElement> newDictionaryElements = dictionary.getDictionaryElements();
 
@@ -122,7 +122,7 @@ public class DictionaryService {
             DictionaryElement element =
                 dictionaryElementsRepository.findById(dictionaryElementShortName).orElse(null);
             if (element != null) {
-                Dictionary dict = getDictionary(dictionaryName);
+                var dict = getDictionary(dictionaryName);
                 dict.removeDictionaryElement(element);
                 dictionaryRepository.saveAndFlush(dict);
             }

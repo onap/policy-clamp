@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights
+ * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -49,7 +49,7 @@ import org.onap.policy.clamp.util.SemanticVersioning;
 @Entity
 @Table(name = "policy_models")
 @IdClass(PolicyModelId.class)
-@TypeDefs({@TypeDef(name = "json", typeClass = StringJsonUserType.class)})
+@TypeDef(name = "json", typeClass = StringJsonUserType.class)
 public class PolicyModel extends AuditEntity implements Serializable, Comparable<PolicyModel> {
 
     /**
@@ -232,8 +232,8 @@ public class PolicyModel extends AuditEntity implements Serializable, Comparable
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
+        final var prime = 31;
+        var result = 1;
         result = prime * result + ((policyModelType == null) ? 0 : policyModelType.hashCode());
         result = prime * result + ((version == null) ? 0 : version.hashCode());
         return result;

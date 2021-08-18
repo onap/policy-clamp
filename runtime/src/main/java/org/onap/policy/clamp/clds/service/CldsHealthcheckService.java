@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -52,9 +52,9 @@ public class CldsHealthcheckService {
      * @return CldsHealthCheck class containing healthcheck info
      */
     public CldsHealthCheck gethealthcheck() {
-        CldsHealthCheck cldsHealthCheck = new CldsHealthCheck();
-        Date startTime = new Date();
-        LoggingUtils util = new LoggingUtils(logger);
+        var cldsHealthCheck = new CldsHealthCheck();
+        var startTime = new Date();
+        var util = new LoggingUtils(logger);
         LoggingUtils.setRequestContext("CldsService: GET healthcheck", "Clamp-Health-Check");
         LoggingUtils.setTimeContext(startTime, new Date());
         try {

@@ -93,7 +93,7 @@ public class SdcSingleController {
          */
         @Override
         public void activateCallback(INotificationData notificationData) {
-            Date startTime = new Date();
+            var startTime = new Date();
             logger.info("Receive a callback notification in SDC, nb of resources: {}",
                     notificationData.getResources().size());
             sdcController.treatNotification(notificationData);
@@ -194,7 +194,7 @@ public class SdcSingleController {
         logger.info("Attempt to start the SDC Controller: {}", sdcConfig.getSdcControllerName());
         result = this.distributionClient.start();
         if (!result.getDistributionActionResult().equals(DistributionActionResultEnum.SUCCESS)) {
-            logger.error("SDC distribution client start failed with reason:" + result.getDistributionMessageResult());
+            logger.error("SDC distribution client start failed with reason: {}", result.getDistributionMessageResult());
             this.changeControllerStatus(SdcSingleControllerStatus.STOPPED);
             throw new SdcControllerException(
                     "Startup of the SDC Controller failed with reason: " + result.getDistributionMessageResult());
@@ -329,7 +329,7 @@ public class SdcSingleController {
         try {
             downloadResult = distributionClient.download(artifact);
             if (null == downloadResult) {
-                logger.info("downloadResult is Null for: " + artifact.getArtifactUUID());
+                logger.info("downloadResult is Null for: {}", artifact.getArtifactUUID());
                 return null;
             }
         } catch (RuntimeException e) {
@@ -356,7 +356,7 @@ public class SdcSingleController {
             event = event + "(" + errorReason + ")";
         }
         logger.info(event);
-        String action = "";
+        var action = "";
         try {
             IDistributionStatusMessage message = new DistributionStatusMessage(artifactUrl, consumerId, distributionId,
                     status, timestamp);
@@ -417,7 +417,9 @@ public class SdcSingleController {
         } catch (RuntimeException e) {
             logger.warn("Unable to send the SDC Notification ({}) due to an exception", status.name(), e);
         }
-        logger.info("SDC Notification sent successfully ({})", status.name());
+        if (status.name() != null) {
+            logger.info("SDC Notification sent successfully ({})", status.name());
+        }
     }
 
     private void sendDownloadStatus(IDistributionStatusMessage message, String errorReason) {

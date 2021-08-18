@@ -33,6 +33,10 @@ public class SemanticVersioning {
     public static final int AFTER = 1;
     public static final String DEFAULT_VERSION = "1.0.0";
 
+    private SemanticVersioning() {
+        // Empty Constructor
+    }
+
     /**
      * The compare method that compare arg0 to arg1.
      *
@@ -57,7 +61,7 @@ public class SemanticVersioning {
 
         int smalestStringLength = Math.min(arg0Array.length, arg1Array.length);
 
-        for (int currentVersionIndex =
+        for (var currentVersionIndex =
              0; currentVersionIndex < smalestStringLength; ++currentVersionIndex) {
             if (Integer.parseInt(arg0Array[currentVersionIndex]) < Integer
                     .parseInt(arg1Array[currentVersionIndex])) {

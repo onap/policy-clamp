@@ -58,8 +58,10 @@ public class ToscaMetadataExecutor {
      */
     public void executeTheProcess(String processInfo, JsonObject childObject, Service serviceModel) {
         String[] processParameters = (processInfo + "/ ").split("/");
-        logger.info("Executing the Tosca clamp process {} with parameters {}",
-               processParameters[0], processParameters[1].trim());
+        if (processParameters[1].trim() != null) {
+            logger.info("Executing the Tosca clamp process {} with parameters {}",
+                   processParameters[0], processParameters[1].trim());
+        }
         mapOfProcesses.get(processParameters[0].trim())
                 .executeProcess(processParameters[1].trim(), childObject, serviceModel);
     }
