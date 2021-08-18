@@ -85,7 +85,8 @@ class ParticipantMessagesTest {
 
         synchronized (lockit) {
             ParticipantMessagePublisher participantMessagePublisher =
-                    new ParticipantMessagePublisher(Collections.singletonList(Mockito.mock(TopicSink.class)));
+                    new ParticipantMessagePublisher();
+            participantMessagePublisher.active(Collections.singletonList(Mockito.mock(TopicSink.class)));
             participantMessagePublisher.sendParticipantRegister(participantRegisterMsg);
         }
     }
@@ -113,7 +114,8 @@ class ParticipantMessagesTest {
 
         synchronized (lockit) {
             ParticipantMessagePublisher participantMessagePublisher =
-                    new ParticipantMessagePublisher(Collections.singletonList(Mockito.mock(TopicSink.class)));
+                    new ParticipantMessagePublisher();
+            participantMessagePublisher.active(Collections.singletonList(Mockito.mock(TopicSink.class)));
             participantMessagePublisher.sendParticipantDeregister(participantDeregisterMsg);
         }
     }
@@ -153,8 +155,8 @@ class ParticipantMessagesTest {
         participantUpdateAckMsg.setResult(true);
 
         synchronized (lockit) {
-            ParticipantMessagePublisher participantMessagePublisher =
-                    new ParticipantMessagePublisher(Collections.singletonList(Mockito.mock(TopicSink.class)));
+            ParticipantMessagePublisher participantMessagePublisher = new ParticipantMessagePublisher();
+            participantMessagePublisher.active(Collections.singletonList(Mockito.mock(TopicSink.class)));
             participantMessagePublisher.sendParticipantUpdateAck(participantUpdateAckMsg);
         }
     }
@@ -163,8 +165,8 @@ class ParticipantMessagesTest {
     void testParticipantStatusHeartbeat() throws Exception {
         final ParticipantStatus heartbeat = participantHandler.makeHeartbeat(true);
         synchronized (lockit) {
-            ParticipantMessagePublisher publisher =
-                    new ParticipantMessagePublisher(Collections.singletonList(Mockito.mock(TopicSink.class)));
+            ParticipantMessagePublisher publisher = new ParticipantMessagePublisher();
+            publisher.active(Collections.singletonList(Mockito.mock(TopicSink.class)));
             assertThatCode(() -> publisher.sendHeartbeat(heartbeat)).doesNotThrowAnyException();
         }
     }

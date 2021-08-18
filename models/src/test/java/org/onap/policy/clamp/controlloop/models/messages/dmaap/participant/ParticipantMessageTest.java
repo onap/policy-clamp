@@ -35,6 +35,11 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 class ParticipantMessageTest {
     private ParticipantMessage message;
 
+    private static final ToscaConceptIdentifier PTYPE_456 = new ToscaConceptIdentifier("PType", "4.5.6");
+    private static final ToscaConceptIdentifier PTYPE_457 = new ToscaConceptIdentifier("PType", "4.5.7");
+    private static final ToscaConceptIdentifier ID_123 = new ToscaConceptIdentifier("id", "1.2.3");
+    private static final ToscaConceptIdentifier ID_124 = new ToscaConceptIdentifier("id", "1.2.4");
+
     @Test
     void testCopyConstructor() throws CoderException {
         assertThatThrownBy(() -> new ParticipantMessage((ParticipantMessage) null))
@@ -62,10 +67,8 @@ class ParticipantMessageTest {
         message = makeMessage();
 
         assertThatThrownBy(() -> message.appliesTo(null, null)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> message.appliesTo(new ToscaConceptIdentifier("PType", "4.5.6"), null))
-                .isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> message.appliesTo(null, new ToscaConceptIdentifier("id", "1.2.3")))
-                .isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> message.appliesTo(PTYPE_456, null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> message.appliesTo(null, ID_123)).isInstanceOf(NullPointerException.class);
     }
 
     @Test
@@ -73,12 +76,9 @@ class ParticipantMessageTest {
         message = makeMessage();
 
         // ParticipantId matches
-        assertTrue(message.appliesTo(new ToscaConceptIdentifier("PType", "4.5.6"),
-                new ToscaConceptIdentifier("id", "1.2.3")));
-        assertFalse(message.appliesTo(new ToscaConceptIdentifier("PType", "4.5.6"),
-                new ToscaConceptIdentifier("id", "1.2.4")));
-        assertFalse(message.appliesTo(new ToscaConceptIdentifier("PType", "4.5.7"),
-                new ToscaConceptIdentifier("id", "1.2.3")));
+        assertTrue(message.appliesTo(PTYPE_456, ID_123));
+        assertFalse(message.appliesTo(PTYPE_456, ID_124));
+        assertFalse(message.appliesTo(PTYPE_457, ID_123));
     }
 
     @Test
@@ -97,8 +97,8 @@ class ParticipantMessageTest {
     private ParticipantMessage makeMessage() {
         ParticipantMessage msg = new ParticipantMessage(ParticipantMessageType.PARTICIPANT_STATE_CHANGE);
 
-        msg.setParticipantType(new ToscaConceptIdentifier("PType", "4.5.6"));
-        msg.setParticipantId(new ToscaConceptIdentifier("id", "1.2.3"));
+        msg.setParticipantType(PTYPE_456);
+        msg.setParticipantId(ID_123);
         msg.setMessageId(UUID.randomUUID());
         msg.setTimestamp(Instant.ofEpochMilli(3000));
 

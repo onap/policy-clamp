@@ -31,6 +31,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantStatusListener;
@@ -56,7 +57,7 @@ class MessageDispatcherActivatorTest {
 
         var publisherFirst = spy(mock(Publisher.class));
         var publisherSecond = spy(mock(Publisher.class));
-        var publishers = new Publisher[] {publisherFirst, publisherSecond};
+        var publishers = List.of(publisherFirst, publisherSecond);
 
         var listenerFirst = spy(mock(ParticipantStatusListener.class));
         when(listenerFirst.getType()).thenReturn(TOPIC_FIRST);
@@ -66,7 +67,7 @@ class MessageDispatcherActivatorTest {
         when(listenerSecond.getType()).thenReturn(TOPIC_SECOND);
         when(listenerSecond.getScoListener()).thenReturn(listenerSecond);
 
-        var listeners = new Listener[] {listenerFirst, listenerSecond};
+        List<Listener> listeners = List.of(listenerFirst, listenerSecond);
 
         try (var activator = new MessageDispatcherActivator(parameterGroup, publishers, listeners)) {
 

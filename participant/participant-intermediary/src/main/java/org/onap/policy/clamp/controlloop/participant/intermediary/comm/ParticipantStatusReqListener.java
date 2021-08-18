@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.controlloop.participant.intermediary.comm;
 
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageType;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStatusReq;
 import org.onap.policy.clamp.controlloop.participant.intermediary.handler.ParticipantHandler;
 import org.springframework.stereotype.Component;
@@ -37,5 +38,10 @@ public class ParticipantStatusReqListener extends ParticipantListener<Participan
      */
     public ParticipantStatusReqListener(final ParticipantHandler participantHandler) {
         super(ParticipantStatusReq.class, participantHandler, participantHandler::handleParticipantStatusReq);
+    }
+
+    @Override
+    public String getType() {
+        return ParticipantMessageType.PARTICIPANT_STATUS_REQ.name();
     }
 }

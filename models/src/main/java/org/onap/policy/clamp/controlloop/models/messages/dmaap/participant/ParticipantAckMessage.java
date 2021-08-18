@@ -22,6 +22,7 @@ package org.onap.policy.clamp.controlloop.models.messages.dmaap.participant;
 
 import java.util.UUID;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -76,5 +77,32 @@ public class ParticipantAckMessage {
         this.messageType = source.messageType;
         this.participantType = source.participantType;
         this.participantId = source.participantId;
+    }
+
+    /**
+     * Determines if this message applies to this participant type.
+     *
+     * @param participantType type of the participant to match against
+     * @param participantId id of the participant to match against
+     * @return {@code true} if this message applies to this participant, {@code false} otherwise
+     */
+    public boolean appliesTo(@NonNull final ToscaConceptIdentifier participantType,
+            @NonNull final ToscaConceptIdentifier participantId) {
+        // Broadcast message to all participants
+        if (this.participantType == null) {
+            return true;
+        }
+
+        if (!participantType.equals(this.participantType)) {
+            return false;
+        }
+
+        // Broadcast message to all control loop elements on this participant
+        if (this.participantId == null) {
+            return true;
+        }
+
+        // Targeted message at this specific participant
+        return participantId.equals(this.participantId);
     }
 }

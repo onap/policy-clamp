@@ -23,8 +23,6 @@ package org.onap.policy.clamp.controlloop.runtime.config.messaging;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Stream;
-import javax.ws.rs.core.Response.Status;
 import lombok.Getter;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopRuntimeException;
 import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
@@ -33,6 +31,7 @@ import org.onap.policy.common.endpoints.event.comm.TopicSink;
 import org.onap.policy.common.endpoints.event.comm.TopicSource;
 import org.onap.policy.common.endpoints.listeners.MessageTypeDispatcher;
 import org.onap.policy.common.utils.services.ServiceManagerContainer;
+import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -53,36 +52,31 @@ public class MessageDispatcherActivator extends ServiceManagerContainer implemen
      * Constructor.
      *
      * @param clRuntimeParameterGroup the parameters for the control loop runtime service
-     * @param publishers array of Publishers
-     * @param listeners array of Listeners
+     * @param publishers list of Publishers
+     * @param listeners list of Listeners
      * @throws ControlLoopRuntimeException if the activator does not start
      */
-    public MessageDispatcherActivator(final ClRuntimeParameterGroup clRuntimeParameterGroup, Publisher[] publishers,
-            Listener[] listeners) {
+    public MessageDispatcherActivator(final ClRuntimeParameterGroup clRuntimeParameterGroup, List<Publisher> publishers,
+            List<Listener> listeners) {
         topicSinks = TopicEndpointManager.getManager()
                 .addTopicSinks(clRuntimeParameterGroup.getTopicParameterGroup().getTopicSinks());
 
         topicSources = TopicEndpointManager.getManager()
                 .addTopicSources(clRuntimeParameterGroup.getTopicParameterGroup().getTopicSources());
 
-        try {
-            msgDispatcher = new MessageTypeDispatcher(MSG_TYPE_NAMES);
-        } catch (final RuntimeException e) {
-            throw new ControlLoopRuntimeException(Status.INTERNAL_SERVER_ERROR,
-                    "topic message dispatcher failed to start", e);
-        }
+        msgDispatcher = new MessageTypeDispatcher(MSG_TYPE_NAMES);
 
         // @formatter:off
         addAction("Topic endpoint management",
                 () -> TopicEndpointManager.getManager().start(),
                 () -> TopicEndpointManager.getManager().shutdown());
 
-        Stream.of(publishers).forEach(publisher ->
+        publishers.forEach(publisher ->
             addAction("Publisher " + publisher.getClass().getSimpleName(),
                 () -> publisher.active(topicSinks),
-                () -> publisher.stop()));
+                publisher::stop));
 
-        Stream.of(listeners).forEach(listener ->
+        listeners.forEach(listener ->
             addAction("Listener " + listener.getClass().getSimpleName(),
                     () -> msgDispatcher.register(listener.getType(), listener.getScoListener()),
                     () -> msgDispatcher.unregister(listener.getType())));
@@ -121,10 +115,22 @@ public class MessageDispatcherActivator extends ServiceManagerContainer implemen
         }
     }
 
+    /**
+     * Handle ContextClosedEvent.
+     *
+     * @param ctxClosedEvent ContextClosedEvent
+     */
+    @EventListener
+    public void handleContextClosedEvent(ContextClosedEvent ctxClosedEvent) {
+        if (isAlive()) {
+            stop();
+        }
+    }
+
     @Override
     public void close() throws IOException {
         if (isAlive()) {
-            stop();
+            super.shutdown();
         }
     }
 }
