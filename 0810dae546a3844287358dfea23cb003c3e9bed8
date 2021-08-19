@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "50296153_1c9d6f83",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaClElementStatistics.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-19T17:50:33Z",
+      "side": 1,
+      "message": "per our legal team, this should be:\n\n  Modifications Copyright (C) 2021 AT\u0026T Intellectual Property. All rights reserved.\n\nNot sure why it really matters, given that it\u0027s the apache 2.0 license, which waives all rights 😄",
+      "revId": "0810dae546a3844287358dfea23cb003c3e9bed8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
