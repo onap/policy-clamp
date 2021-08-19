@@ -46,6 +46,30 @@
       "revId": "1cf21bafca989f37661d08705fd19f2c6e2052f5",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5ed89ebe_54b72b87",
+        "filename": "runtime-controlloop/src/test/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProviderTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-08-19T13:14:35Z",
+      "side": 1,
+      "message": "That change has been made.",
+      "parentUuid": "32296052_697c7abb",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 25,
+        "endChar": 61
+      },
+      "revId": "1cf21bafca989f37661d08705fd19f2c6e2052f5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
