@@ -44,7 +44,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles({"clamp-default", "clamp-default-user", "clamp-sdc-controller"})
-public class SdcControllersConfigurationItCase {
+public class SdcControllersConfigurationItTest {
 
     @Autowired
     private SdcControllersConfiguration sdcControllersConfiguration;
@@ -59,7 +59,7 @@ public class SdcControllersConfigurationItCase {
         loadFile("classpath:clds/sdc-controllers-config.json");
         Map<String, SdcSingleControllerConfiguration> mapResult = sdcControllersConfiguration
                 .getAllDefinedControllers();
-        assertTrue(mapResult.size() == 2);
+        assertEquals(2, mapResult.size());
         assertEquals("sdc-controller1", mapResult.get("sdc-controller1").getSdcControllerName());
         assertEquals("sdc-controller2", mapResult.get("sdc-controller2").getSdcControllerName());
     }

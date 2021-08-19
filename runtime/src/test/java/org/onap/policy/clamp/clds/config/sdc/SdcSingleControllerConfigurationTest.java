@@ -74,8 +74,8 @@ public class SdcSingleControllerConfigurationTest {
         assertEquals(10, sdcConfig.getPollingInterval());
         assertEquals(30, sdcConfig.getPollingTimeout());
 
-        assertThat(SdcSingleControllerConfiguration.SUPPORTED_ARTIFACT_TYPES_LIST)
-                .hasSameSizeAs(sdcConfig.getRelevantArtifactTypes());
+        assertThat(sdcConfig.getRelevantArtifactTypes())
+                .hasSameSizeAs(SdcSingleControllerConfiguration.SUPPORTED_ARTIFACT_TYPES_LIST);
         assertEquals("ThePassword", sdcConfig.getKeyStorePassword());
         assertTrue(sdcConfig.activateServerTLSAuth());
         assertThat(sdcConfig.getMsgBusAddress()).contains("localhost");
@@ -103,6 +103,6 @@ public class SdcSingleControllerConfigurationTest {
     public final void testConsumerGroupWithNull() throws IOException {
         SdcSingleControllerConfiguration sdcConfig = loadControllerConfiguration("clds/sdc-controller-config-NULL.json",
                 "sdc-controller1");
-        assertTrue(sdcConfig.getConsumerGroup() == null);
+        assertNull(sdcConfig.getConsumerGroup());
     }
 }

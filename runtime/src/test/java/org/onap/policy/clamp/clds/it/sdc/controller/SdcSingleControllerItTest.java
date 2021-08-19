@@ -6,6 +6,7 @@
  *                             reserved.
  * ================================================================================
  * Modifications Copyright (c) 2019 Samsung
+ * Modifications Copyright (c) 2021 AT&T
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,7 +59,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles({"clamp-default", "clamp-default-user", "clamp-sdc-controller"})
-public class SdcSingleControllerItCase {
+public class SdcSingleControllerItTest {
 
     private static final String CSAR_ARTIFACT_NAME = "testArtifact.csar";
     private static final String SERVICE_UUID = "serviceUUID";

@@ -7,6 +7,7 @@
  * ================================================================================
  * Modifications Copyright (c) 2019 Samsung
  * Modifications Copyright (C) 2020 Nordix Foundation.
+ * Modifications Copyright (C) 2021 AT&T.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +57,7 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class AuthorizationControllerItCase {
+public class AuthorizationControllerItTest {
 
     @Autowired
     private AuthorizationController auth;
