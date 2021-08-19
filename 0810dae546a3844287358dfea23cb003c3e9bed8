@@ -16,6 +16,24 @@
       "revId": "0810dae546a3844287358dfea23cb003c3e9bed8",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "36849645_1e2fca56",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaClElementStatistics.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 2477
+      },
+      "writtenOn": "2021-08-19T18:03:18Z",
+      "side": 1,
+      "message": "Most of our files in our policy Repos do not include \"Intellectual Property. All rights reserved.\", some files have it...",
+      "parentUuid": "50296153_1c9d6f83",
+      "revId": "0810dae546a3844287358dfea23cb003c3e9bed8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
