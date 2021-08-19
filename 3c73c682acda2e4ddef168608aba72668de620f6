@@ -1,0 +1,496 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "823939fb_7449ed10",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/authorization/AuthorizationController.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-19T21:50:46Z",
+      "side": 1,
+      "message": "same comment on license",
+      "revId": "3c73c682acda2e4ddef168608aba72668de620f6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2b594bb6_4dbfee44",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/config/DefaultUserConfiguration.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-19T21:50:46Z",
+      "side": 1,
+      "message": "missing newline at end of file",
+      "revId": "3c73c682acda2e4ddef168608aba72668de620f6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d2a06eb9_bd53cbe0",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/config/SslConfig.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-19T21:50:46Z",
+      "side": 1,
+      "message": "missing newline at end of file",
+      "revId": "3c73c682acda2e4ddef168608aba72668de620f6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f955aee9_8ac576e5",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/config/spring/CldsConfiguration.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-19T21:50:46Z",
+      "side": 1,
+      "message": "trailing space",
+      "range": {
+        "startLine": 46,
+        "startChar": 6,
+        "endLine": 46,
+        "endChar": 7
+      },
+      "revId": "3c73c682acda2e4ddef168608aba72668de620f6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "785e2d3b_0b2a3488",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/model/dcae/DcaeInventoryResponse.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-19T21:50:46Z",
+      "side": 1,
+      "message": "use Integer.compare() instead",
+      "range": {
+        "startLine": 102,
+        "startChar": 8,
+        "endLine": 109,
+        "endChar": 9
+      },
+      "revId": "3c73c682acda2e4ddef168608aba72668de620f6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5698ccaa_40439dc1",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/sdc/controller/installer/BlueprintParser.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-19T21:50:46Z",
+      "side": 1,
+      "message": "trailing space (should probably set the option in the IDE to remove trailing spaces when saving a file)",
+      "range": {
+        "startLine": 72,
+        "startChar": 6,
+        "endLine": 72,
+        "endChar": 7
+      },
+      "revId": "3c73c682acda2e4ddef168608aba72668de620f6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b6125415_5611f69e",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/sdc/controller/installer/BlueprintParser.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-19T21:50:46Z",
+      "side": 1,
+      "message": "trailing space",
+      "range": {
+        "startLine": 104,
+        "startChar": 6,
+        "endLine": 104,
+        "endChar": 7
+      },
+      "revId": "3c73c682acda2e4ddef168608aba72668de620f6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "37c4b45d_f3499be8",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/sdc/controller/installer/CsarHandler.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-19T21:50:46Z",
+      "side": 1,
+      "message": "trailing space",
+      "range": {
+        "startLine": 102,
+        "startChar": 6,
+        "endLine": 102,
+        "endChar": 7
+      },
+      "revId": "3c73c682acda2e4ddef168608aba72668de620f6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ce211998_d61df3c3",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/sdc/controller/installer/CsarHandler.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-19T21:50:46Z",
+      "side": 1,
+      "message": "trailing space",
+      "range": {
+        "startLine": 195,
+        "startChar": 6,
+        "endLine": 195,
+        "endChar": 7
+      },
+      "revId": "3c73c682acda2e4ddef168608aba72668de620f6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7d4eb644_bb8b04c2",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/tosca/JsonEditorSchemaConstants.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-19T21:50:46Z",
+      "side": 1,
+      "message": "make \"final\"",
+      "range": {
+        "startLine": 26,
+        "startChar": 7,
+        "endLine": 26,
+        "endChar": 12
+      },
+      "revId": "3c73c682acda2e4ddef168608aba72668de620f6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "81cd1454_5d3541fd",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/tosca/JsonEditorSchemaConstants.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-19T21:50:46Z",
+      "side": 1,
+      "message": "use lombok NoArgsConstructor(PRIVATE)",
+      "range": {
+        "startLine": 28,
+        "startChar": 3,
+        "endLine": 30,
+        "endChar": 5
+      },
+      "revId": "3c73c682acda2e4ddef168608aba72668de620f6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c6597f75_7048155d",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/tosca/ToscaSchemaConstants.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-19T21:50:46Z",
+      "side": 1,
+      "message": "make \"final\"",
+      "range": {
+        "startLine": 26,
+        "startChar": 7,
+        "endLine": 26,
+        "endChar": 12
+      },
+      "revId": "3c73c682acda2e4ddef168608aba72668de620f6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ebe9e4e6_9b053db7",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/tosca/ToscaSchemaConstants.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-19T21:50:46Z",
+      "side": 1,
+      "message": "use lombok",
+      "range": {
+        "startLine": 28,
+        "startChar": 3,
+        "endLine": 30,
+        "endChar": 5
+      },
+      "revId": "3c73c682acda2e4ddef168608aba72668de620f6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f217bbbe_21c89fca",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/tosca/update/execution/ToscaMetadataExecutor.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-19T21:50:46Z",
+      "side": 1,
+      "message": "since we\u0027re appending a \"/\", I think we can just mark it NOSONAR, then we don\u0027t need the check on line 61\n\nshould store param[1].trim() into a variable and reuse it in both calls below.",
+      "revId": "3c73c682acda2e4ddef168608aba72668de620f6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3115a066_0427f620",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/loop/common/AuditEntity.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-19T21:50:46Z",
+      "side": 1,
+      "message": "let\u0027s just delete this method",
+      "range": {
+        "startLine": 143,
+        "startChar": 3,
+        "endLine": 145,
+        "endChar": 5
+      },
+      "revId": "3c73c682acda2e4ddef168608aba72668de620f6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7f42a4c1_c0995859",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/loop/log/LoopLogService.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-19T21:50:46Z",
+      "side": 1,
+      "message": "can probably remove this file from the review",
+      "revId": "3c73c682acda2e4ddef168608aba72668de620f6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6b326bea_e02260e2",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/loop/service/CsarServiceInstaller.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-19T21:50:46Z",
+      "side": 1,
+      "message": "delete this line and add 2021 to line 5",
+      "revId": "3c73c682acda2e4ddef168608aba72668de620f6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cb81d505_49a42dfc",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/loop/template/LoopElementModel.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-19T21:50:46Z",
+      "side": 1,
+      "message": "add to line 5",
+      "revId": "3c73c682acda2e4ddef168608aba72668de620f6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d4ef731b_b892ee72",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/policy/PolicyPayload.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-19T21:50:46Z",
+      "side": 1,
+      "message": "make \"final\"",
+      "range": {
+        "startLine": 40,
+        "startChar": 7,
+        "endLine": 40,
+        "endChar": 13
+      },
+      "revId": "3c73c682acda2e4ddef168608aba72668de620f6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "436131c5_39df8176",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/policy/PolicyPayload.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-19T21:50:46Z",
+      "side": 1,
+      "message": "use lombok",
+      "range": {
+        "startLine": 44,
+        "startChar": 4,
+        "endLine": 47,
+        "endChar": 0
+      },
+      "revId": "3c73c682acda2e4ddef168608aba72668de620f6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cd30c090_6d29f2b3",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/policy/PolicyPayload.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-19T21:50:46Z",
+      "side": 1,
+      "message": "missing newline at end of file",
+      "revId": "3c73c682acda2e4ddef168608aba72668de620f6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d8573bf9_38184508",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/policy/operational/OperationalPolicy.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-19T21:50:46Z",
+      "side": 1,
+      "message": "add to line 5",
+      "revId": "3c73c682acda2e4ddef168608aba72668de620f6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7d3ee9d6_9121b576",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/policy/pdpgroup/PoliciesPdpMerger.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-19T21:50:46Z",
+      "side": 1,
+      "message": "missing newline at end of file",
+      "revId": "3c73c682acda2e4ddef168608aba72668de620f6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "28b2a01f_79c858eb",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/util/SemanticVersioning.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-19T21:50:46Z",
+      "side": 1,
+      "message": "use lombok\n\nbased on the comment on line 27, this class is intended to be a superclass for others.  With that in mind, the constructor should probably be protected rather than private",
+      "range": {
+        "startLine": 36,
+        "startChar": 4,
+        "endLine": 38,
+        "endChar": 5
+      },
+      "revId": "3c73c682acda2e4ddef168608aba72668de620f6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
