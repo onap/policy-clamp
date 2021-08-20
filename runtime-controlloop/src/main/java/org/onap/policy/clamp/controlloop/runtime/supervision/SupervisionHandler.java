@@ -21,7 +21,6 @@
 package org.onap.policy.clamp.controlloop.runtime.supervision;
 
 import java.util.List;
-import java.util.Map;
 import javax.ws.rs.core.Response;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
@@ -225,7 +224,7 @@ public class SupervisionHandler {
     }
 
     private void superviseControlLoopPassivation(ControlLoop controlLoop)
-            throws ControlLoopException, PfModelException {
+            throws ControlLoopException {
         switch (controlLoop.getState()) {
             case PASSIVE:
                 exceptionOccured(Response.Status.NOT_ACCEPTABLE,

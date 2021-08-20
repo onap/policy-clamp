@@ -27,6 +27,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
@@ -250,13 +251,13 @@ public class ControlLoopHandler {
     }
 
     private List<ControlLoopElement> storeElementsOnThisParticipant(List<ParticipantUpdates> participantUpdates) {
-        List<ControlLoopElement> clElementMap = new ArrayList<>();
-        for (ParticipantUpdates participantUpdate : participantUpdates) {
-            if (participantUpdate.getParticipantId().equals(participantType)) {
-                clElementMap = participantUpdate.getControlLoopElementList();
-            }
-        }
-        for (ControlLoopElement element : clElementMap) {
+        var clElementMap =
+                participantUpdates.stream()
+                .flatMap(participantUpdate -> participantUpdate.getControlLoopElementList().stream())
+                .filter(element -> participantType.equals(element.getParticipantType()))
+                .collect(Collectors.toList());
+
+        for (var element : clElementMap) {
             elementsOnThisParticipant.put(element.getId(), element);
         }
         return clElementMap;

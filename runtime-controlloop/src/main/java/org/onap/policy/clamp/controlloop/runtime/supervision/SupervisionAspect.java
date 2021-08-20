@@ -26,10 +26,13 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantRegister;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStatus;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdateAck;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -69,6 +72,18 @@ public class SupervisionAspect implements Closeable {
     @Before("@annotation(MessageIntercept) && args(participantStatusMessage,..)")
     public void handleParticipantStatus(ParticipantStatus participantStatusMessage) {
         executor.execute(() -> supervisionScanner.handleParticipantStatus(participantStatusMessage.getParticipantId()));
+    }
+
+    @Before("@annotation(MessageIntercept) && args(participantRegisterMessage,..)")
+    public void handleParticipantRegister(ParticipantRegister participantRegisterMessage) {
+        executor.execute(() -> supervisionScanner.handleParticipantRegister(new ImmutablePair<>(
+                participantRegisterMessage.getParticipantId(), participantRegisterMessage.getParticipantType())));
+    }
+
+    @Before("@annotation(MessageIntercept) && args(participantUpdateAckMessage,..)")
+    public void handleParticipantUpdateAck(ParticipantUpdateAck participantUpdateAckMessage) {
+        executor.execute(() -> supervisionScanner.handleParticipantUpdateAck(new ImmutablePair<>(
+                participantUpdateAckMessage.getParticipantId(), participantUpdateAckMessage.getParticipantType())));
     }
 
     @Override
