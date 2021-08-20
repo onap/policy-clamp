@@ -57,6 +57,17 @@ public class HandleCounter<K> {
         mapTimer.put(id, getEpochMilli());
     }
 
+    /**
+     * Remove counter, timer and fault by id.
+     *
+     * @param id the id
+     */
+    public void remove(K id) {
+        mapFault.remove(id);
+        mapCounter.remove(id);
+        mapTimer.remove(id);
+    }
+
     public void setFault(K id) {
         mapCounter.put(id, 0);
         mapFault.add(id);
@@ -87,5 +98,9 @@ public class HandleCounter<K> {
 
     protected long getEpochMilli() {
         return Instant.now().toEpochMilli();
+    }
+
+    public Set<K> keySet() {
+        return mapCounter.keySet();
     }
 }
