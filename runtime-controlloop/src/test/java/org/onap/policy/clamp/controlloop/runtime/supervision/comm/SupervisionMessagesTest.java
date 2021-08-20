@@ -23,7 +23,6 @@ package org.onap.policy.clamp.controlloop.runtime.supervision.comm;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -77,7 +76,7 @@ class SupervisionMessagesTest extends CommonRestController {
     private static final YamlJsonTranslator yamlTranslator = new YamlJsonTranslator();
     private static final String TOSCA_TEMPLATE_YAML =
             "src/test/resources/rest/servicetemplates/pmsh_multiple_cl_tosca.yaml";
-    private static final String CONTROL_LOOP_ELEMENT = "ControlLoopElement";
+    private static final String CONTROL_LOOP_ELEMENT = "org.onap.policy.clamp.controlloop.ControlLoopElement";
     private static final Coder CODER = new StandardCoder();
 
     /**

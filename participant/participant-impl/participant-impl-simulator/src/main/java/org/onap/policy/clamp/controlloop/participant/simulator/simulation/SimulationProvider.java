@@ -27,6 +27,7 @@ import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoops;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageType;
 import org.onap.policy.clamp.controlloop.models.messages.rest.TypedSimpleResponse;
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.springframework.stereotype.Service;
@@ -79,7 +80,7 @@ public class SimulationProvider {
     public TypedSimpleResponse<ControlLoopElement> updateControlLoopElement(ControlLoopElement element) {
         TypedSimpleResponse<ControlLoopElement> response = new TypedSimpleResponse<>();
         response.setResponse(intermediaryApi.updateControlLoopElementState(element.getId(), element.getOrderedState(),
-                element.getState()));
+                element.getState(), ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE));
         return response;
     }
 

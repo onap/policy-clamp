@@ -59,7 +59,7 @@ public class TestListenerUtils {
     private static final Coder CODER = new StandardCoder();
     static CommonTestData commonTestData = new CommonTestData();
     private static final Logger LOGGER = LoggerFactory.getLogger(TestListenerUtils.class);
-    private static final String CONTROL_LOOP_ELEMENT = "ControlLoopElement";
+    private static final String CONTROL_LOOP_ELEMENT = "org.onap.policy.clamp.controlloop.ControlLoopElement";
 
     private TestListenerUtils() {}
 
