@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "793ec3dd_33d0102c",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/authorization/AuthorizationController.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-20T12:52:41Z",
+      "side": 1,
+      "message": "oh right, since line 5 already has 2021, this line is not needed",
+      "parentUuid": "d4f0d56d_40cc7f66",
+      "revId": "3c73c682acda2e4ddef168608aba72668de620f6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2b594bb6_4dbfee44",
         "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/config/DefaultUserConfiguration.java",
         "patchSetId": 5
@@ -705,6 +723,24 @@
     },
     {
       "key": {
+        "uuid": "db9f568b_22fc5078",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/loop/service/CsarServiceInstaller.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-20T12:52:41Z",
+      "side": 1,
+      "message": "yes, just add 2021 to line 5 and delete this line.  (don\u0027t really need line 7 either)",
+      "parentUuid": "ed79c5b8_c22e0dfc",
+      "revId": "3c73c682acda2e4ddef168608aba72668de620f6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "cb81d505_49a42dfc",
         "filename": "runtime/src/main/java/org/onap/policy/clamp/loop/template/LoopElementModel.java",
         "patchSetId": 5
@@ -734,6 +770,24 @@
       "side": 1,
       "message": "same comment above",
       "parentUuid": "cb81d505_49a42dfc",
+      "revId": "3c73c682acda2e4ddef168608aba72668de620f6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a28e5a38_6c0f8a03",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/loop/template/LoopElementModel.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-20T12:52:41Z",
+      "side": 1,
+      "message": "same answer 😊",
+      "parentUuid": "ae132320_618d7d8a",
       "revId": "3c73c682acda2e4ddef168608aba72668de620f6",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
@@ -880,6 +934,24 @@
       "side": 1,
       "message": "same comment above",
       "parentUuid": "d8573bf9_38184508",
+      "revId": "3c73c682acda2e4ddef168608aba72668de620f6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d511fbae_59a66b4e",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/policy/operational/OperationalPolicy.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-20T12:52:41Z",
+      "side": 1,
+      "message": "same answer 😊",
+      "parentUuid": "557e9400_888678be",
       "revId": "3c73c682acda2e4ddef168608aba72668de620f6",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
