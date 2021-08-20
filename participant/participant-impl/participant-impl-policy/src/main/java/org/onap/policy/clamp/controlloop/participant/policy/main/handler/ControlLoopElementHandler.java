@@ -32,6 +32,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ClElementSt
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageType;
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ControlLoopElementListener;
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.controlloop.participant.policy.client.PolicyApiHttpClient;
@@ -89,10 +90,12 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
                 }
                 break;
             case PASSIVE:
-                intermediaryApi.updateControlLoopElementState(controlLoopElementId, newState, ControlLoopState.PASSIVE);
+                intermediaryApi.updateControlLoopElementState(controlLoopElementId, newState, ControlLoopState.PASSIVE,
+                    ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
                 break;
             case RUNNING:
-                intermediaryApi.updateControlLoopElementState(controlLoopElementId, newState, ControlLoopState.RUNNING);
+                intermediaryApi.updateControlLoopElementState(controlLoopElementId, newState, ControlLoopState.RUNNING,
+                    ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
                 break;
             default:
                 LOGGER.debug("Unknown orderedstate {}", newState);
@@ -111,7 +114,8 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
             apiHttpClient.deletePolicyType(policyType.getKey(), policyType.getValue());
         }
         policyTypeMap.clear();
-        intermediaryApi.updateControlLoopElementState(controlLoopElementId, newState, ControlLoopState.UNINITIALISED);
+        intermediaryApi.updateControlLoopElementState(controlLoopElementId, newState, ControlLoopState.UNINITIALISED,
+            ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
     }
 
     /**
@@ -125,7 +129,7 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
     public void controlLoopElementUpdate(ControlLoopElement element, ToscaNodeTemplate clElementDefinition)
             throws PfModelException {
         intermediaryApi.updateControlLoopElementState(element.getId(), element.getOrderedState(),
-                ControlLoopState.PASSIVE);
+                ControlLoopState.PASSIVE, ParticipantMessageType.CONTROL_LOOP_UPDATE);
         ToscaServiceTemplate controlLoopDefinition = intermediaryApi.getToscaServiceTemplate();
         if (controlLoopDefinition.getToscaTopologyTemplate() != null) {
             if (controlLoopDefinition.getPolicyTypes() != null) {

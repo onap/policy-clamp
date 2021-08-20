@@ -33,6 +33,7 @@ import lombok.Setter;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageType;
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ControlLoopElementListener;
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.controlloop.participant.kubernetes.exception.ServiceException;
@@ -96,7 +97,7 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
                     try {
                         chartService.uninstallChart(chart);
                         intermediaryApi.updateControlLoopElementState(controlLoopElementId, newState,
-                            ControlLoopState.UNINITIALISED);
+                            ControlLoopState.UNINITIALISED, ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
                         chartMap.remove(controlLoopElementId);
                         podStatusMap.remove(chart.getReleaseName());
                     } catch (ServiceException se) {
@@ -105,10 +106,12 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
                 }
                 break;
             case PASSIVE:
-                intermediaryApi.updateControlLoopElementState(controlLoopElementId, newState, ControlLoopState.PASSIVE);
+                intermediaryApi.updateControlLoopElementState(controlLoopElementId, newState, ControlLoopState.PASSIVE,
+                    ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
                 break;
             case RUNNING:
-                intermediaryApi.updateControlLoopElementState(controlLoopElementId, newState, ControlLoopState.RUNNING);
+                intermediaryApi.updateControlLoopElementState(controlLoopElementId, newState, ControlLoopState.RUNNING,
+                    ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
                 break;
             default:
                 LOGGER.warn("cannot transition from state {} to state {}", currentState, newState);

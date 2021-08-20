@@ -26,11 +26,16 @@ import java.io.Closeable;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ClElementStatisticsList;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElementDefinition;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopInfo;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopStatistics;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantHealthStatus;
@@ -112,7 +117,7 @@ public class ParticipantHandler implements Closeable {
      * @param participantStatusReqMsg participant participantStatusReq message
      */
     public void handleParticipantStatusReq(final ParticipantStatusReq participantStatusReqMsg) {
-        sender.sendParticipantStatus(makeHeartbeat());
+        sender.sendParticipantStatus(makeHeartbeat(true));
     }
 
     /**
@@ -247,10 +252,16 @@ public class ParticipantHandler implements Closeable {
         }
 
         toscaServiceTemplate = participantUpdateMsg.getToscaServiceTemplate();
-        for (ParticipantDefinition participantDefinition : participantUpdateMsg.getParticipantDefinitionUpdates()) {
-            if (participantDefinition.getParticipantId().equals(participantType)) {
-                clElementDefsOnThisParticipant = participantDefinition.getControlLoopElementDefinitionList();
+        if (toscaServiceTemplate != null) {
+            // This message is to commission the controlloop
+            for (ParticipantDefinition participantDefinition : participantUpdateMsg.getParticipantDefinitionUpdates()) {
+                if (participantDefinition.getParticipantId().equals(participantType)) {
+                    clElementDefsOnThisParticipant = participantDefinition.getControlLoopElementDefinitionList();
+                }
             }
+        } else {
+            // This message is to decommision the controlloop
+            clElementDefsOnThisParticipant.clear();
         }
         sendParticipantUpdateAck(participantUpdateMsg.getMessageId());
     }
@@ -272,7 +283,7 @@ public class ParticipantHandler implements Closeable {
     /**
      * Method to send heartbeat to controlloop runtime.
      */
-    public ParticipantStatus makeHeartbeat() {
+    public ParticipantStatus makeHeartbeat(boolean responseToParticipantStatusReq) {
         this.participantStatistics.setState(state);
         this.participantStatistics.setHealthStatus(healthStatus);
         this.participantStatistics.setTimeStamp(Instant.now());
@@ -283,6 +294,35 @@ public class ParticipantHandler implements Closeable {
         heartbeat.setParticipantType(participantType);
         heartbeat.setHealthStatus(healthStatus);
         heartbeat.setState(state);
+        heartbeat.setControlLoopInfoList(getControlLoopInfoList());
+
+        if (responseToParticipantStatusReq) {
+            List<ParticipantDefinition> participantDefinitionUpdates = new ArrayList<>();
+            ParticipantDefinition participantDefinition = new ParticipantDefinition();
+            participantDefinition.setParticipantId(participantId);
+            participantDefinition.setControlLoopElementDefinitionList(clElementDefsOnThisParticipant);
+            participantDefinitionUpdates.add(participantDefinition);
+            heartbeat.setParticipantDefinitionUpdates(participantDefinitionUpdates);
+        }
+
         return heartbeat;
+    }
+
+    private List<ControlLoopInfo> getControlLoopInfoList() {
+        List<ControlLoopInfo> controlLoopInfoList = new ArrayList<>();
+        for (Map.Entry<ToscaConceptIdentifier, ControlLoop> entry :
+                controlLoopHandler.getControlLoopMap().entrySet()) {
+            ControlLoopInfo clInfo = new ControlLoopInfo();
+            clInfo.setControlLoopId(entry.getKey());
+            ControlLoopStatistics clStatitistics = new ControlLoopStatistics();
+            clStatitistics.setControlLoopId(entry.getKey());
+            ClElementStatisticsList clElementStatisticsList = new ClElementStatisticsList();
+            clElementStatisticsList.setClElementStatistics(
+                entry.getValue().getControlLoopElementStatisticsList(entry.getValue()));
+            clStatitistics.setClElementStatisticsList(clElementStatisticsList);
+            clInfo.setControlLoopStatistics(clStatitistics);
+            clInfo.setState(entry.getValue().getState());
+        }
+        return controlLoopInfoList;
     }
 }

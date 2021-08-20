@@ -51,7 +51,7 @@ public class TestListenerUtils {
     private static final YamlJsonTranslator yamlTranslator = new YamlJsonTranslator();
     private static final Coder CODER = new StandardCoder();
     private static final String TOSCA_TEMPLATE_YAML = "examples/controlloop/PMSubscriptionHandling.yaml";
-    private static final String CONTROL_LOOP_ELEMENT = "ControlLoopElement";
+    private static final String CONTROL_LOOP_ELEMENT = "org.onap.policy.clamp.controlloop.ControlLoopElement";
 
     /**
      * Method to create a controlLoop from a yaml file.

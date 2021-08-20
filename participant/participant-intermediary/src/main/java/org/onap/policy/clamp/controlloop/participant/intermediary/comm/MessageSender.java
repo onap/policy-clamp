@@ -146,7 +146,7 @@ public class MessageSender extends TimerTask implements Closeable {
      * Dispatch a heartbeat for this participant.
      */
     public void sendHeartbeat() {
-        publisher.sendHeartbeat(participantHandler.makeHeartbeat());
+        publisher.sendHeartbeat(participantHandler.makeHeartbeat(false));
     }
 
     /**

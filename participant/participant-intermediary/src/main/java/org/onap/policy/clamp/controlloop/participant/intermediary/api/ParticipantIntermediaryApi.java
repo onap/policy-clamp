@@ -31,6 +31,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantStatistics;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
@@ -123,7 +124,7 @@ public interface ParticipantIntermediaryApi {
      * @return ControlLoopElement updated control loop element
      */
     ControlLoopElement updateControlLoopElementState(UUID id, ControlLoopOrderedState currentState,
-            ControlLoopState newState);
+            ControlLoopState newState, ParticipantMessageType messageType);
 
     /**
      * Update the control loop element statistics.

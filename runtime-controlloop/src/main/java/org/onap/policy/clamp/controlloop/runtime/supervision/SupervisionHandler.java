@@ -21,7 +21,6 @@
 package org.onap.policy.clamp.controlloop.runtime.supervision;
 
 import java.util.List;
-import java.util.Map;
 import javax.ws.rs.core.Response;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
@@ -32,6 +31,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ControlLoopProvider;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ParticipantProvider;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopAck;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregister;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantRegister;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStatus;
@@ -141,7 +141,7 @@ public class SupervisionHandler {
         participantRegisterAckPublisher.send(participantRegisterMessage.getMessageId());
 
         participantUpdatePublisher.send(participantRegisterMessage.getParticipantId(),
-                participantRegisterMessage.getParticipantType());
+                participantRegisterMessage.getParticipantType(), true);
     }
 
     /**
@@ -163,6 +163,26 @@ public class SupervisionHandler {
     @MessageIntercept
     public void handleParticipantMessage(ParticipantUpdateAck participantUpdateAckMessage) {
         LOGGER.debug("Participant Update Ack received {}", participantUpdateAckMessage);
+    }
+
+    /**
+     * Handle a ControlLoop update acknowledge message from a participant.
+     *
+     * @param controlLoopAckMessage the ControlLoopAck message received from a participant
+     */
+    @MessageIntercept
+    public void handleControlLoopUpdateAckMessage(ControlLoopAck controlLoopAckMessage) {
+        LOGGER.debug("ControlLoop Update Ack message received {}", controlLoopAckMessage);
+    }
+
+    /**
+     * Handle a ControlLoop statechange acknowledge message from a participant.
+     *
+     * @param controlLoopAckMessage the ControlLoopAck message received from a participant
+     */
+    @MessageIntercept
+    public void handleControlLoopStateChangeAckMessage(ControlLoopAck controlLoopAckMessage) {
+        LOGGER.debug("ControlLoop StateChange Ack message received {}", controlLoopAckMessage);
     }
 
     /**

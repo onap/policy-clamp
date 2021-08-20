@@ -22,11 +22,9 @@ package org.onap.policy.clamp.controlloop.runtime.supervision.comm;
 
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.AllArgsConstructor;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElementDefinition;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdate;
@@ -50,7 +48,7 @@ import org.springframework.stereotype.Component;
 public class ParticipantUpdatePublisher extends AbstractParticipantPublisher<ParticipantUpdate> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantUpdatePublisher.class);
-    private static final String CONTROL_LOOP_ELEMENT = "ControlLoopElement";
+    private static final String CONTROL_LOOP_ELEMENT = "org.onap.policy.clamp.controlloop.ControlLoopElement";
     private final CommissioningProvider commissioningProvider;
     private static final Coder CODER = new StandardCoder();
 
@@ -60,7 +58,8 @@ public class ParticipantUpdatePublisher extends AbstractParticipantPublisher<Par
      * @param participantId the participant Id
      * @param participantType the participant Type
      */
-    public void send(ToscaConceptIdentifier participantId, ToscaConceptIdentifier participantType) {
+    public void send(ToscaConceptIdentifier participantId, ToscaConceptIdentifier participantType,
+            boolean commissionFlag) {
         var message = new ParticipantUpdate();
         message.setParticipantId(participantId);
         message.setParticipantType(participantType);
@@ -91,8 +90,15 @@ public class ParticipantUpdatePublisher extends AbstractParticipantPublisher<Par
             }
         }
 
-        message.setParticipantDefinitionUpdates(participantDefinitionUpdates);
-        message.setToscaServiceTemplate(toscaServiceTemplate);
+        if (commissionFlag) {
+            // Commission the controlloop but sending participantdefinitions to participants
+            message.setParticipantDefinitionUpdates(participantDefinitionUpdates);
+            message.setToscaServiceTemplate(toscaServiceTemplate);
+        } else {
+            // DeCommission the controlloop but deleting participantdefinitions on participants
+            message.setParticipantDefinitionUpdates(null);
+            message.setToscaServiceTemplate(null);
+        }
         LOGGER.debug("Participant Update sent {}", message);
         super.send(message);
     }
