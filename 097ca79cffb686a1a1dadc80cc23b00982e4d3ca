@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5d98f008_501ee373",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-20T13:03:35Z",
+      "side": 1,
+      "message": "I don\u0027t see a need for the collect().stream()",
+      "range": {
+        "startLine": 328,
+        "startChar": 87,
+        "endLine": 328,
+        "endChar": 114
+      },
+      "revId": "097ca79cffb686a1a1dadc80cc23b00982e4d3ca",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b3333dbc_3d305877",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-20T13:03:35Z",
+      "side": 1,
+      "message": "just make this an Integer",
+      "range": {
+        "startLine": 328,
+        "startChar": 8,
+        "endLine": 328,
+        "endChar": 15
+      },
+      "revId": "097ca79cffb686a1a1dadc80cc23b00982e4d3ca",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
