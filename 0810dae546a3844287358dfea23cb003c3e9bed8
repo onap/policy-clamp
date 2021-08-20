@@ -88,6 +88,24 @@
       "revId": "0810dae546a3844287358dfea23cb003c3e9bed8",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "375de6ac_d8183623",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaClElementStatistics.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 2477
+      },
+      "writtenOn": "2021-08-20T13:52:02Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "834604a0_cb287a55",
+      "revId": "0810dae546a3844287358dfea23cb003c3e9bed8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
