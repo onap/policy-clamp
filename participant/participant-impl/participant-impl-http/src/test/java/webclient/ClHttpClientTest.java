@@ -22,16 +22,26 @@ package webclient;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockserver.model.HttpRequest.request;
+import static org.mockserver.model.HttpResponse.response;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.tuple.Pair;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockserver.integration.ClientAndServer;
+import org.mockserver.model.Parameter;
 import org.onap.policy.clamp.controlloop.participant.http.main.models.ConfigRequest;
 import org.onap.policy.clamp.controlloop.participant.http.main.models.ConfigurationEntity;
 import org.onap.policy.clamp.controlloop.participant.http.main.webclient.ClHttpClient;
+import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import utils.CommonTestData;
@@ -39,11 +49,45 @@ import utils.CommonTestData;
 @ExtendWith(SpringExtension.class)
 class ClHttpClientTest {
 
-    private CommonTestData commonTestData = new CommonTestData();
+    private static CommonTestData commonTestData;
 
-    private String testBaseUrl = "https://httpbin.org";
+    private static int mockServerPort;
+
+    private String testMockUrl = "http://localhost";
 
     private Map<ToscaConceptIdentifier, Pair<Integer, String>> responseMap = new HashMap<>();
+
+    private static ClientAndServer mockServer;
+
+    /**
+     * Set up Mock server.
+     */
+    @BeforeAll
+    static void setUpMockServer() throws IOException {
+        mockServerPort = NetworkUtil.allocPort();
+        mockServer = ClientAndServer.startClientAndServer(mockServerPort);
+        commonTestData = new CommonTestData();
+        List<Parameter> queryParams = new ArrayList<>();
+        commonTestData.getQueryParams().forEach((k, v) -> queryParams.add(new Parameter(k, v)));
+
+        mockServer.when(request().withMethod("GET").withPath("/get")
+            .withHeader("Content-type", MediaType.APPLICATION_JSON)
+            .withHeader("Accept", MediaType.APPLICATION_JSON).withQueryStringParameters(queryParams))
+            .respond(response().withBody("dummy body").withStatusCode(200)
+                .withHeader("Content-Type", MediaType.APPLICATION_JSON));
+
+        mockServer.when(request().withMethod("POST").withPath("/post")
+            .withHeader("Content-type", MediaType.APPLICATION_JSON)
+            .withHeader("Accept", MediaType.APPLICATION_JSON).withQueryStringParameters(queryParams)
+            .withBody("Test body"))
+            .respond(response().withStatusCode(200));
+    }
+
+    @AfterAll
+    public static void stopServer() {
+        mockServer.stop();
+        mockServer = null;
+    }
 
 
     @Test
@@ -52,7 +96,7 @@ class ClHttpClientTest {
         ConfigurationEntity configurationEntity = commonTestData.getConfigurationEntity();
 
         Map<String, String> headers = commonTestData.getHeaders();
-        ConfigRequest configRequest = new ConfigRequest(testBaseUrl, headers,
+        ConfigRequest configRequest = new ConfigRequest(testMockUrl + ":" + mockServerPort, headers,
             List.of(configurationEntity), 10);
 
         ClHttpClient client = new ClHttpClient(configRequest, responseMap);
@@ -71,7 +115,7 @@ class ClHttpClientTest {
         ConfigurationEntity configurationEntity = commonTestData.getInvalidConfigurationEntity();
 
         Map<String, String> headers = commonTestData.getHeaders();
-        ConfigRequest configRequest = new ConfigRequest(testBaseUrl, headers,
+        ConfigRequest configRequest = new ConfigRequest(testMockUrl + ":" + mockServerPort, headers,
             List.of(configurationEntity), 10);
 
         ClHttpClient client = new ClHttpClient(configRequest, responseMap);
