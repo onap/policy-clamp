@@ -70,6 +70,24 @@
       "revId": "0810dae546a3844287358dfea23cb003c3e9bed8",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "834604a0_cb287a55",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaClElementStatistics.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-20T12:54:02Z",
+      "side": 1,
+      "message": "probably a good idea, but not sure I\u0027d worry about it right now; let\u0027s just make sure we do it right going forward",
+      "parentUuid": "c373aee4_c9cb09ba",
+      "revId": "0810dae546a3844287358dfea23cb003c3e9bed8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
