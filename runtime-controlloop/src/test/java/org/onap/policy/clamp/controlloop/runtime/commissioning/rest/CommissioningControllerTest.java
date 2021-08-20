@@ -27,13 +27,17 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
+import java.util.Map;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.Response;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.onap.policy.clamp.controlloop.models.messages.rest.commissioning.CommissioningResponse;
 import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
 import org.onap.policy.clamp.controlloop.runtime.util.rest.CommonRestController;
@@ -41,6 +45,7 @@ import org.onap.policy.common.utils.coder.YamlJsonTranslator;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.provider.PolicyModelsProviderFactory;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -52,13 +57,17 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @TestPropertySource(locations = {"classpath:application_test.properties"})
+@Execution(ExecutionMode.SAME_THREAD)
 class CommissioningControllerTest extends CommonRestController {
 
     private static final String TOSCA_SERVICE_TEMPLATE_YAML =
             "src/test/resources/rest/servicetemplates/pmsh_multiple_cl_tosca.yaml";
+    private static final String COMMON_TOSCA_SERVICE_TEMPLATE_YAML =
+        "src/test/resources/rest/servicetemplates/full-tosca-with-common-properties.yaml";
     private static final YamlJsonTranslator yamlTranslator = new YamlJsonTranslator();
     private static final String COMMISSIONING_ENDPOINT = "commission";
     private static ToscaServiceTemplate serviceTemplate = new ToscaServiceTemplate();
+    private static ToscaServiceTemplate commonPropertiesServiceTemplate = new ToscaServiceTemplate();
 
     @Autowired
     private ClRuntimeParameterGroup clRuntimeParameterGroup;
@@ -76,11 +85,20 @@ class CommissioningControllerTest extends CommonRestController {
 
         serviceTemplate = yamlTranslator.fromYaml(ResourceUtils.getResourceAsString(TOSCA_SERVICE_TEMPLATE_YAML),
                 ToscaServiceTemplate.class);
+        commonPropertiesServiceTemplate = yamlTranslator.fromYaml(ResourceUtils
+                .getResourceAsString(COMMON_TOSCA_SERVICE_TEMPLATE_YAML),
+            ToscaServiceTemplate.class);
     }
 
     @BeforeEach
     public void setUpPort() {
         super.setHttpPrefix(randomServerPort);
+    }
+
+    @AfterEach
+    public void cleanDatabase() throws Exception {
+        deleteEntryInDB(serviceTemplate.getName(), serviceTemplate.getVersion());
+        deleteEntryInDB(commonPropertiesServiceTemplate.getName(), commonPropertiesServiceTemplate.getVersion());
     }
 
     @Test
@@ -109,6 +127,62 @@ class CommissioningControllerTest extends CommonRestController {
     }
 
     @Test
+    void testUnauthorizedQueryToscaServiceTemplate() throws Exception {
+        assertUnauthorizedGet(COMMISSIONING_ENDPOINT + "/toscaservicetemplate");
+    }
+
+    @Test
+    void testUnauthorizedQueryToscaServiceTemplateSchema() throws Exception {
+        assertUnauthorizedGet(COMMISSIONING_ENDPOINT + "/toscaServiceTemplateSchema");
+    }
+
+    @Test
+    void testUnauthorizedQueryToscaServiceCommonOrInstanceProperties() throws Exception {
+        assertUnauthorizedGet(COMMISSIONING_ENDPOINT + "/getCommonOrInstanceProperties");
+    }
+
+    @Test
+    void testQueryToscaServiceTemplate() throws Exception {
+        createFullEntryInDbWithCommonProps();
+
+        Invocation.Builder invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT
+            + "/toscaservicetemplate");
+        Response rawresp = invocationBuilder.buildGet().invoke();
+        assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
+        ToscaServiceTemplate template = rawresp.readEntity(ToscaServiceTemplate.class);
+        assertNotNull(template);
+        assertThat(template.getNodeTypes()).hasSize(8);
+
+    }
+
+    @Test
+    void testQueryToscaServiceTemplateSchema() throws Exception {
+        createFullEntryInDbWithCommonProps();
+
+        Invocation.Builder invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT
+            + "/toscaServiceTemplateSchema");
+        Response rawresp = invocationBuilder.buildGet().invoke();
+        assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
+        String schema = rawresp.readEntity(String.class);
+        assertNotNull(schema);
+
+    }
+
+    @Test
+    void testQueryCommonOrInstanceProperties() throws Exception {
+        createFullEntryInDbWithCommonProps();
+
+        Invocation.Builder invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT
+            + "/getCommonOrInstanceProperties" + "?common=true&name=ToscaServiceTemplateSimple&version=1.0.0");
+        Response rawresp = invocationBuilder.buildGet().invoke();
+        assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
+        Map<String, ToscaNodeTemplate> commonProperties = rawresp.readEntity(Map.class);
+        assertNotNull(commonProperties);
+        assertThat(commonProperties).hasSize(6);
+
+    }
+
+    @Test
     void testCreateBadRequest() throws Exception {
         Invocation.Builder invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT);
         Response resp = invocationBuilder.post(Entity.json("NotToscaServiceTempalte"));
@@ -134,6 +208,7 @@ class CommissioningControllerTest extends CommonRestController {
             assertTrue(commissioningResponse.getAffectedControlLoopDefinitions().stream()
                     .anyMatch(ac -> ac.getName().equals(nodeTemplateName)));
         }
+
     }
 
     @Test
@@ -145,6 +220,7 @@ class CommissioningControllerTest extends CommonRestController {
         assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
         List<?> entityList = rawresp.readEntity(List.class);
         assertThat(entityList).isEmpty();
+
     }
 
     @Test
@@ -157,6 +233,7 @@ class CommissioningControllerTest extends CommonRestController {
         List<?> entityList = rawresp.readEntity(List.class);
         assertNotNull(entityList);
         assertThat(entityList).hasSize(2);
+
     }
 
     @Test
@@ -167,6 +244,7 @@ class CommissioningControllerTest extends CommonRestController {
         Invocation.Builder invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT + "/elements");
         Response resp = invocationBuilder.buildGet().invoke();
         assertEquals(Response.Status.NOT_ACCEPTABLE.getStatusCode(), resp.getStatus());
+
     }
 
     @Test
@@ -180,6 +258,7 @@ class CommissioningControllerTest extends CommonRestController {
         List<?> entityList = rawresp.readEntity(List.class);
         assertNotNull(entityList);
         assertThat(entityList).hasSize(4);
+
     }
 
     @Test
@@ -190,6 +269,7 @@ class CommissioningControllerTest extends CommonRestController {
         //Call delete with no info
         Response resp = invocationBuilder.delete();
         assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), resp.getStatus());
+
     }
 
     @Test
@@ -207,12 +287,32 @@ class CommissioningControllerTest extends CommonRestController {
             List<ToscaServiceTemplate> templatesInDB = modelsProvider.getServiceTemplateList(null, null);
             assertThat(templatesInDB).isEmpty();
         }
+
     }
 
     private synchronized void createEntryInDB() throws Exception {
         try (PolicyModelsProvider modelsProvider = new PolicyModelsProviderFactory()
                 .createPolicyModelsProvider(clRuntimeParameterGroup.getDatabaseProviderParameters())) {
+            deleteEntryInDB(commonPropertiesServiceTemplate.getName(), commonPropertiesServiceTemplate.getVersion());
             modelsProvider.createServiceTemplate(serviceTemplate);
+        }
+    }
+
+    // Delete entries from the DB after relevant tests
+    private synchronized void deleteEntryInDB(String name, String version) throws Exception {
+        try (PolicyModelsProvider modelsProvider = new PolicyModelsProviderFactory()
+            .createPolicyModelsProvider(clRuntimeParameterGroup.getDatabaseProviderParameters())) {
+            if (!modelsProvider.getServiceTemplateList(null, null).isEmpty()) {
+                modelsProvider.deleteServiceTemplate(name, version);
+            }
+        }
+    }
+
+    private synchronized void createFullEntryInDbWithCommonProps() throws Exception {
+        try (PolicyModelsProvider modelsProvider = new PolicyModelsProviderFactory()
+            .createPolicyModelsProvider(clRuntimeParameterGroup.getDatabaseProviderParameters())) {
+            deleteEntryInDB(commonPropertiesServiceTemplate.getName(), commonPropertiesServiceTemplate.getVersion());
+            modelsProvider.createServiceTemplate(commonPropertiesServiceTemplate);
         }
     }
 }
