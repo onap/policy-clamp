@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c4413d90_8023612c",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 7660
+      },
+      "writtenOn": "2021-08-20T15:12:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dffd3f8e_cc4aad54",
+      "range": {
+        "startLine": 328,
+        "startChar": 29,
+        "endLine": 328,
+        "endChar": 46
+      },
+      "revId": "7456041c544b5149b125b6e35c39c2e77e9de365",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "533b35e5_7f55f897",
         "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
         "patchSetId": 6
