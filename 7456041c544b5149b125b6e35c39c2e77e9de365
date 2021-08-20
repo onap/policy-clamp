@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "c64e570a_a9051b67",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 329,
+      "author": {
+        "id": 7660
+      },
+      "writtenOn": "2021-08-20T14:49:34Z",
+      "side": 1,
+      "message": "Because it\u0027s a Map of String\u0027s the reduce stream it returns a String instead of a Integer, I can\u0027t return an Integer because of it. I can only covert it outside the reduce stream.  So the instance number has to be a type of String or I need to convert the reduce stream to an Integer.  Also my IDE is suggesting to use Integer.parseInt instead of Integer.valueOf.  But it still works both ways.",
+      "parentUuid": "533b35e5_7f55f897",
+      "range": {
+        "startLine": 329,
+        "startChar": 20,
+        "endLine": 329,
+        "endChar": 23
+      },
+      "revId": "7456041c544b5149b125b6e35c39c2e77e9de365",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4f192566_97c55299",
         "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
         "patchSetId": 6
@@ -68,6 +92,30 @@
       "revId": "7456041c544b5149b125b6e35c39c2e77e9de365",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c4bd968f_790b96b4",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 337,
+      "author": {
+        "id": 7660
+      },
+      "writtenOn": "2021-08-20T14:49:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4f192566_97c55299",
+      "range": {
+        "startLine": 337,
+        "startChar": 60,
+        "endLine": 337,
+        "endChar": 65
+      },
+      "revId": "7456041c544b5149b125b6e35c39c2e77e9de365",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
