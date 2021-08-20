@@ -49,9 +49,9 @@ import org.springframework.stereotype.Component;
 public class ParticipantUpdatePublisher extends AbstractParticipantPublisher<ParticipantUpdate> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantUpdatePublisher.class);
-    private static final String CONTROL_LOOP_ELEMENT = "ControlLoopElement";
-    private final PolicyModelsProvider modelsProvider;
+    private static final String CONTROL_LOOP_ELEMENT = "org.onap.policy.clamp.controlloop.ControlLoopElement";
     private static final Coder CODER = new StandardCoder();
+    private final PolicyModelsProvider modelsProvider;
 
     /**
      * Send ParticipantUpdate to Participant.
@@ -60,7 +60,7 @@ public class ParticipantUpdatePublisher extends AbstractParticipantPublisher<Par
      * @param participantType the participant Type
      */
     public void send(ToscaConceptIdentifier participantId, ToscaConceptIdentifier participantType,
-                     boolean commissionFlag) {
+            boolean commissionFlag) {
         var message = new ParticipantUpdate();
         message.setParticipantId(participantId);
         message.setParticipantType(participantType);

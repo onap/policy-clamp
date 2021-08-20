@@ -33,6 +33,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantStatistics;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageType;
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ControlLoopElementListener;
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.controlloop.participant.intermediary.handler.ParticipantHandler;
@@ -127,8 +128,9 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
 
     @Override
     public ControlLoopElement updateControlLoopElementState(UUID id, ControlLoopOrderedState currentState,
-            ControlLoopState newState) {
-        return participantHandler.getControlLoopHandler().updateControlLoopElementState(id, currentState, newState);
+            ControlLoopState newState, ParticipantMessageType messageType) {
+        return participantHandler.getControlLoopHandler().updateControlLoopElementState(id, currentState, newState,
+            messageType);
     }
 
     @Override

@@ -161,21 +161,7 @@ class ParticipantMessagesTest {
 
     @Test
     void testParticipantStatusHeartbeat() throws Exception {
-        final ParticipantStatus heartbeat = new ParticipantStatus();
-        heartbeat.setParticipantId(getParticipantId());
-        ControlLoopInfo clInfo = getControlLoopInfo(getControlLoopId());
-        clInfo.setControlLoopId(getControlLoopId());
-        heartbeat.setControlLoopInfoList(List.of(clInfo));
-
-        ControlLoopElementDefinition clDefinition = getClElementDefinition();
-        List<ControlLoopElementDefinition> controlLoopElementDefinitionList =
-            List.of(clDefinition);
-        ParticipantDefinition participantDefinition = new ParticipantDefinition();
-        participantDefinition.setParticipantId(getParticipantId());
-        participantDefinition.setControlLoopElementDefinitionList(controlLoopElementDefinitionList);
-        List<ParticipantDefinition> participantDefinitionUpdates = List.of(participantDefinition);
-        heartbeat.setParticipantDefinitionUpdates(participantDefinitionUpdates);
-
+        final ParticipantStatus heartbeat = participantHandler.makeHeartbeat(true);
         synchronized (lockit) {
             ParticipantMessagePublisher publisher =
                     new ParticipantMessagePublisher(Collections.singletonList(Mockito.mock(TopicSink.class)));

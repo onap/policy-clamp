@@ -77,7 +77,7 @@ class SupervisionMessagesTest extends CommonRestController {
     private static final YamlJsonTranslator yamlTranslator = new YamlJsonTranslator();
     private static final String TOSCA_TEMPLATE_YAML =
             "src/test/resources/rest/servicetemplates/pmsh_multiple_cl_tosca.yaml";
-    private static final String CONTROL_LOOP_ELEMENT = "ControlLoopElement";
+    private static final String CONTROL_LOOP_ELEMENT = "org.onap.policy.clamp.controlloop.ControlLoopElement";
     private static final Coder CODER = new StandardCoder();
 
     /**

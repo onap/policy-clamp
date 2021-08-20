@@ -31,6 +31,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ControlLoopProvider;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ParticipantProvider;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopAck;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregister;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantRegister;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStatus;
@@ -187,6 +188,26 @@ public class SupervisionHandler {
 
         participantUpdatePublisher.send(participantUpdateMessage.getParticipantId(),
             participantUpdateMessage.getParticipantType(), false);
+    }
+
+    /**
+     * Handle a ControlLoop update acknowledge message from a participant.
+     *
+     * @param controlLoopAckMessage the ControlLoopAck message received from a participant
+     */
+    @MessageIntercept
+    public void handleControlLoopUpdateAckMessage(ControlLoopAck controlLoopAckMessage) {
+        LOGGER.debug("ControlLoop Update Ack message received {}", controlLoopAckMessage);
+    }
+
+    /**
+     * Handle a ControlLoop statechange acknowledge message from a participant.
+     *
+     * @param controlLoopAckMessage the ControlLoopAck message received from a participant
+     */
+    @MessageIntercept
+    public void handleControlLoopStateChangeAckMessage(ControlLoopAck controlLoopAckMessage) {
+        LOGGER.debug("ControlLoop StateChange Ack message received {}", controlLoopAckMessage);
     }
 
     /**

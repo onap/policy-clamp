@@ -30,6 +30,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ClElementSt
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageType;
 import org.onap.policy.clamp.controlloop.participant.dcae.httpclient.ClampHttpClient;
 import org.onap.policy.clamp.controlloop.participant.dcae.httpclient.ConsulDcaeHttpClient;
 import org.onap.policy.clamp.controlloop.participant.dcae.main.parameters.ParticipantDcaeParameters;
@@ -99,14 +100,16 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
                 if (loop != null) {
                     clampClient.undeploy(LOOP);
                     intermediaryApi.updateControlLoopElementState(controlLoopElementId, newState,
-                            ControlLoopState.UNINITIALISED);
+                            ControlLoopState.UNINITIALISED, ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
                 }
                 break;
             case PASSIVE:
-                intermediaryApi.updateControlLoopElementState(controlLoopElementId, newState, ControlLoopState.PASSIVE);
+                intermediaryApi.updateControlLoopElementState(controlLoopElementId, newState, ControlLoopState.PASSIVE,
+                    ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
                 break;
             case RUNNING:
-                intermediaryApi.updateControlLoopElementState(controlLoopElementId, newState, ControlLoopState.RUNNING);
+                intermediaryApi.updateControlLoopElementState(controlLoopElementId, newState, ControlLoopState.RUNNING,
+                    ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
                 break;
             default:
                 LOGGER.debug("Unknown orderedstate {}", newState);
@@ -157,7 +160,7 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
                     String status = ClampHttpClient.getStatusCode(loop);
                     if (MICROSERVICE_INSTALLED_SUCCESSFULLY.equals(status)) {
                         intermediaryApi.updateControlLoopElementState(element.getId(), element.getOrderedState(),
-                                ControlLoopState.PASSIVE);
+                                ControlLoopState.PASSIVE, ParticipantMessageType.CONTROL_LOOP_UPDATE);
                         deployedFlag = true;
                         break;
                     }
@@ -165,7 +168,7 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
                 if (!deployedFlag) {
                     LOGGER.warn("DCAE is not deployed properly, ClElement state will be UNINITIALISED2PASSIVE");
                     intermediaryApi.updateControlLoopElementState(element.getId(), element.getOrderedState(),
-                            ControlLoopState.UNINITIALISED2PASSIVE);
+                            ControlLoopState.UNINITIALISED2PASSIVE, ParticipantMessageType.CONTROL_LOOP_UPDATE);
                 }
             }
         } catch (PfModelException e) {
