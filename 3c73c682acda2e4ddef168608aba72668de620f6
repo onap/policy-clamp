@@ -801,6 +801,24 @@
     },
     {
       "key": {
+        "uuid": "24d66ac2_38fa9309",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/loop/service/CsarServiceInstaller.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 2477
+      },
+      "writtenOn": "2021-08-23T14:29:28Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "db9f568b_22fc5078",
+      "revId": "3c73c682acda2e4ddef168608aba72668de620f6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cb81d505_49a42dfc",
         "filename": "runtime/src/main/java/org/onap/policy/clamp/loop/template/LoopElementModel.java",
         "patchSetId": 5
