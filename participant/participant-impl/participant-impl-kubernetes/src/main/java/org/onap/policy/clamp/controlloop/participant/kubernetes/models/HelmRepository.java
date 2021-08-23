@@ -18,27 +18,22 @@
 
 package org.onap.policy.clamp.controlloop.participant.kubernetes.models;
 
-import java.util.Map;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 @Data
-@RequiredArgsConstructor
-public class ChartInfo {
+@Builder
+public class HelmRepository {
 
-    @NonNull
-    private String releaseName;
+    private String repoName;
 
-    @NonNull
-    private ToscaConceptIdentifier chartId;
+    private String protocol;
 
-    @NonNull
-    private String namespace;
+    private String address;
 
-    private HelmRepository repository;
+    private String port;
 
-    private Map<String, String> overrideParams;
+    private String userName;
 
+    private String password;
 }
