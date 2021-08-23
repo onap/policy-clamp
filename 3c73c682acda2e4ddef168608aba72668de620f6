@@ -872,6 +872,24 @@
     },
     {
       "key": {
+        "uuid": "5d6a472b_ef067ebc",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/loop/template/LoopElementModel.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 2477
+      },
+      "writtenOn": "2021-08-23T14:35:52Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "a28e5a38_6c0f8a03",
+      "revId": "3c73c682acda2e4ddef168608aba72668de620f6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d4ef731b_b892ee72",
         "filename": "runtime/src/main/java/org/onap/policy/clamp/policy/PolicyPayload.java",
         "patchSetId": 5
@@ -983,6 +1001,24 @@
     },
     {
       "key": {
+        "uuid": "6aefbdae_68ea9adf",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/policy/PolicyPayload.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 2477
+      },
+      "writtenOn": "2021-08-23T14:35:52Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "cd30c090_6d29f2b3",
+      "revId": "3c73c682acda2e4ddef168608aba72668de620f6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d8573bf9_38184508",
         "filename": "runtime/src/main/java/org/onap/policy/clamp/policy/operational/OperationalPolicy.java",
         "patchSetId": 5
@@ -1033,6 +1069,24 @@
       "revId": "3c73c682acda2e4ddef168608aba72668de620f6",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ae9ad1c8_9e120a4e",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/policy/operational/OperationalPolicy.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 2477
+      },
+      "writtenOn": "2021-08-23T14:35:52Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "d511fbae_59a66b4e",
+      "revId": "3c73c682acda2e4ddef168608aba72668de620f6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
