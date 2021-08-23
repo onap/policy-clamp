@@ -20,18 +20,16 @@
 
 package org.onap.policy.clamp.controlloop.participant.kubernetes.helm;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.lang.invoke.MethodHandles;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.io.IOUtils;
 import org.onap.policy.clamp.controlloop.participant.kubernetes.exception.ServiceException;
 import org.onap.policy.clamp.controlloop.participant.kubernetes.models.ChartInfo;
+import org.onap.policy.clamp.controlloop.participant.kubernetes.models.HelmRepository;
 import org.onap.policy.clamp.controlloop.participant.kubernetes.service.ChartStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,18 +54,33 @@ public class HelmClient {
      * @throws ServiceException incase of error
      */
     public void installChart(ChartInfo chart) throws ServiceException {
-        var processBuilder = prepareCreateNamespaceCommand(chart.getNamespace());
-        try {
+        if (! checkNamespaceExists(chart.getNamespace())) {
+            var processBuilder = prepareCreateNamespaceCommand(chart.getNamespace());
             executeCommand(processBuilder);
-        } catch (ServiceException e) {
-            logger.warn("Namespace not created", e);
         }
-        processBuilder = prepareInstallCommand(chart);
+        var processBuilder = prepareInstallCommand(chart);
         logger.info("Installing helm chart {} from the repository {} ", chart.getChartId().getName(),
-            chart.getRepository());
+            chart.getRepository().getRepoName());
         executeCommand(processBuilder);
         logger.info("Chart {} installed successfully", chart.getChartId().getName());
     }
+
+    /**
+     * Add repository if doesn't exist.
+     * @param repo HelmRepository
+     * @throws ServiceException incase of error
+     */
+    public void addRepository(HelmRepository repo) throws ServiceException {
+        String output = executeCommand(prepareVerifyRepoCommand(repo));
+        if (output.isEmpty()) {
+            logger.info("Adding repository to helm client");
+            executeCommand(prepareRepoAddCommand(repo));
+            logger.debug("Added repository {} to the helm client", repo.getRepoName());
+        } else {
+            logger.info("Repository already exists");
+        }
+    }
+
 
     /**
      * Finds helm chart repository for the chart.
@@ -81,6 +94,7 @@ public class HelmClient {
         updateHelmRepo();
         String repository = verifyConfiguredRepo(chart);
         if (repository != null) {
+            logger.info("Helm chart located in the repository {} ", repository);
             return repository;
         }
         var localHelmChartDir = chartStore.getAppPath(chart.getChartId()).toString();
@@ -88,7 +102,6 @@ public class HelmClient {
         if (verifyLocalHelmRepo(new File(localHelmChartDir + "/" + chart.getChartId().getName()))) {
             repository = localHelmChartDir;
         }
-
         return repository;
     }
 
@@ -104,18 +117,7 @@ public class HelmClient {
         String repository = null;
         var builder = helmRepoVerifyCommand(chart.getChartId().getName());
         String output = executeCommand(builder);
-        try (var reader = new BufferedReader(new InputStreamReader(IOUtils.toInputStream(output,
-            StandardCharsets.UTF_8)))) {
-            String line = reader.readLine();
-            while (line != null) {
-                if (line.contains(chart.getChartId().getName())) {
-                    repository = line.split("/")[0];
-                    logger.info("Helm chart located in the repository {} ", repository);
-                    return repository;
-                }
-                line = reader.readLine();
-            }
-        }
+        repository = verifyOutput(output, chart.getChartId().getName());
         return repository;
     }
 
@@ -164,17 +166,57 @@ public class HelmClient {
         }
     }
 
+    private boolean checkNamespaceExists(String namespace) throws ServiceException {
+        logger.info("Check if namespace {} exists on the cluster", namespace);
+        String output = executeCommand(prepareVerifyNamespaceCommand(namespace));
+        return !output.isEmpty();
+    }
+
+    private String verifyOutput(String output, String value) {
+        for (var line: output.split("\\R")) {
+            if (line.contains(value)) {
+                String result = line.split("/")[0];
+                return result;
+            }
+        }
+        return null;
+    }
+
+    private ProcessBuilder prepareRepoAddCommand(HelmRepository repo) {
+        // @formatter:off
+        List<String> helmArguments =
+                List.of(
+                        "helm",
+                        "repo",
+                        "add", repo.getRepoName(), repo.getProtocol() + "://" + repo.getAddress() + ":" + repo.getPort()
+                );
+        if (repo.getUserName() != null && repo.getPassword() != null) {
+            helmArguments.addAll(List.of("--username", repo.getUserName(), "--password",  repo.getPassword()));
+        }
+        return new ProcessBuilder().command(helmArguments);
+    }
+
+    private ProcessBuilder prepareVerifyRepoCommand(HelmRepository repo) {
+        List<String> helmArguments = List.of("sh", "-c", "helm repo ls | grep " + repo.getRepoName());
+        return new ProcessBuilder().command(helmArguments);
+    }
+
+    private ProcessBuilder prepareVerifyNamespaceCommand(String namespace) {
+        List<String> helmArguments = List.of("sh", "-c", "kubectl get ns | grep " + namespace);
+        return new ProcessBuilder().command(helmArguments);
+    }
+
     private ProcessBuilder prepareInstallCommand(ChartInfo chart) {
 
         // @formatter:off
-        List<String> helmArguments = new ArrayList<>(
+        List<String> helmArguments =
             List.of(
                 "helm",
-                "install", chart.getReleaseName(), chart.getRepository() + "/" + chart.getChartId().getName(),
+                "install", chart.getReleaseName(), chart.getRepository().getRepoName() + "/"
+                            + chart.getChartId().getName(),
                 "--version", chart.getChartId().getVersion(),
                 "--namespace", chart.getNamespace()
-            )
-        );
+            );
         // @formatter:on
 
         // Verify if values.yaml/override parameters available for the chart

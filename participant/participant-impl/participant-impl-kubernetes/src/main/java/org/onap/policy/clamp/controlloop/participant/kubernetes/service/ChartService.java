@@ -24,6 +24,7 @@ import java.util.Collection;
 import org.onap.policy.clamp.controlloop.participant.kubernetes.exception.ServiceException;
 import org.onap.policy.clamp.controlloop.participant.kubernetes.helm.HelmClient;
 import org.onap.policy.clamp.controlloop.participant.kubernetes.models.ChartInfo;
+import org.onap.policy.clamp.controlloop.participant.kubernetes.models.HelmRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,16 +89,32 @@ public class ChartService {
      */
     public void installChart(ChartInfo chart) throws ServiceException, IOException {
         if (chart.getRepository() == null) {
-            String repository = findChartRepo(chart);
-            if (repository == null) {
+            String repoName = findChartRepo(chart);
+            if (repoName == null) {
                 logger.error("Chart repository could not be found. Skipping chart Installation "
                     + "for the chart {} ", chart.getChartId().getName());
                 return;
             } else {
-                chart.setRepository(repository);
+                HelmRepository repo = HelmRepository.builder().repoName(repoName).build();
+                chart.setRepository(repo);
             }
+        } else {
+            // Add remote repository if passed via TOSCA
+            configureRepository(chart.getRepository());
         }
         helmClient.installChart(chart);
+    }
+
+
+    /**
+     * Configure remote repository.
+     * @param repo HelmRepository
+     * @throws ServiceException incase of error
+     */
+    public void configureRepository(HelmRepository repo) throws ServiceException {
+        if (repo.getAddress() != null && repo.getPort() != null) {
+            helmClient.addRepository(repo);
+        }
     }
 
     /**
