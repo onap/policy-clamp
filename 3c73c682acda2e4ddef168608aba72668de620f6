@@ -307,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "87915aa6_181969b9",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/sdc/controller/installer/BlueprintParser.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 2477
+      },
+      "writtenOn": "2021-08-23T14:01:19Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "b6125415_5611f69e",
+      "range": {
+        "startLine": 104,
+        "startChar": 6,
+        "endLine": 104,
+        "endChar": 7
+      },
+      "revId": "3c73c682acda2e4ddef168608aba72668de620f6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37c4b45d_f3499be8",
         "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/sdc/controller/installer/CsarHandler.java",
         "patchSetId": 5
