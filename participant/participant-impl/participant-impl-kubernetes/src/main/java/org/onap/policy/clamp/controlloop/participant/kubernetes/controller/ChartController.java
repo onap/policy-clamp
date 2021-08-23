@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import org.onap.policy.clamp.controlloop.participant.kubernetes.exception.ServiceException;
 import org.onap.policy.clamp.controlloop.participant.kubernetes.models.ChartInfo;
 import org.onap.policy.clamp.controlloop.participant.kubernetes.models.ChartList;
+import org.onap.policy.clamp.controlloop.participant.kubernetes.models.HelmRepository;
 import org.onap.policy.clamp.controlloop.participant.kubernetes.models.InstallationInfo;
 import org.onap.policy.clamp.controlloop.participant.kubernetes.service.ChartService;
 import org.onap.policy.common.utils.coder.CoderException;
@@ -48,7 +49,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController("chartController")
 @RequestMapping("helm")
-@Api(tags = {"chart"})
+@Api(tags = {"k8s-participant"})
 public class ChartController {
 
     @Autowired
@@ -124,7 +125,7 @@ public class ChartController {
      * @throws ServiceException in case of error
      * @throws IOException in case of IO error
      */
-    @PostMapping(path = "/charts", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+    @PostMapping(path = "/onboard/chart", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Onboard the Chart")
     @ApiResponses(value = {@ApiResponse(code = 201, message = "Chart Onboarded")})
@@ -150,7 +151,7 @@ public class ChartController {
      * @param version version of the chart
      * @return Status of operation
      */
-    @DeleteMapping(path = "/charts/{name}/{version}")
+    @DeleteMapping(path = "/chart/{name}/{version}")
     @ApiOperation(value = "Delete the chart")
     @ApiResponses(value = {@ApiResponse(code = 204, message = "Chart Deleted")})
     public ResponseEntity<Object> deleteChart(@PathVariable("name") String name,
@@ -163,5 +164,30 @@ public class ChartController {
 
         chartService.deleteChart(chart);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    /**
+     * REST endpoint to configure a helm Repository.
+     *
+     * @param repo Helm repository to be configured
+     * @return Status of the operation
+     * @throws ServiceException in case of error
+     * @throws IOException in case of IO error
+     */
+    @PostMapping(path = "/repo", consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Configure helm repository")
+    @ApiResponses(value = {@ApiResponse(code = 201, message = "Repository added")})
+    public ResponseEntity<Object> configureRepo(@RequestBody String repo)
+            throws ServiceException, IOException {
+        HelmRepository repository;
+        try {
+            repository = CODER.decode(repo, HelmRepository.class);
+        } catch (CoderException e) {
+            throw new ServiceException("Error parsing the repository information", e);
+        }
+        chartService.configureRepository(repository);
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }
