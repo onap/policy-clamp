@@ -295,6 +295,30 @@
     },
     {
       "key": {
+        "uuid": "1442ab5c_96e832be",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/HelmClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2021-08-23T20:04:30Z",
+      "side": 1,
+      "message": "Hi Jim, Usually its not the case. Repo names will be distinct.",
+      "parentUuid": "3c727a1a_cd22713d",
+      "range": {
+        "startLine": 210,
+        "startChar": 89,
+        "endLine": 210,
+        "endChar": 94
+      },
+      "revId": "57f77de7b5e71aed838866a7d12737d4c4259abe",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3e3b1525_89292400",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/HelmClient.java",
         "patchSetId": 1
