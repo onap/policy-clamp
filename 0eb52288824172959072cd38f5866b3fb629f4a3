@@ -22,6 +22,30 @@
       "revId": "0eb52288824172959072cd38f5866b3fb629f4a3",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f4ebb6c9_fecdcd8a",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/loop/cds/CdsDataInstaller.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 2477
+      },
+      "writtenOn": "2021-08-23T19:47:41Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "c2cac320_7e34d55f",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 26
+      },
+      "revId": "0eb52288824172959072cd38f5866b3fb629f4a3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
