@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f8c57bde_058e4465",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 7660
+      },
+      "writtenOn": "2021-08-23T12:59:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba3df50b_66e7bc8a",
+      "range": {
+        "startLine": 310,
+        "startChar": 8,
+        "endLine": 310,
+        "endChar": 37
+      },
+      "revId": "b891efd4b6aa7c35e27bfdb126733d13f72ece97",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "96eea40f_585ef4fe",
         "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
         "patchSetId": 9
@@ -45,6 +69,30 @@
       "revId": "b891efd4b6aa7c35e27bfdb126733d13f72ece97",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7350b198_59b30ff7",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 7660
+      },
+      "writtenOn": "2021-08-23T12:59:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "96eea40f_585ef4fe",
+      "range": {
+        "startLine": 313,
+        "startChar": 12,
+        "endLine": 313,
+        "endChar": 30
+      },
+      "revId": "b891efd4b6aa7c35e27bfdb126733d13f72ece97",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
