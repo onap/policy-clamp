@@ -319,6 +319,30 @@
     },
     {
       "key": {
+        "uuid": "486649b6_a543b498",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/HelmClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-23T20:35:52Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "1442ab5c_96e832be",
+      "range": {
+        "startLine": 210,
+        "startChar": 89,
+        "endLine": 210,
+        "endChar": 94
+      },
+      "revId": "57f77de7b5e71aed838866a7d12737d4c4259abe",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3e3b1525_89292400",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/HelmClient.java",
         "patchSetId": 1
