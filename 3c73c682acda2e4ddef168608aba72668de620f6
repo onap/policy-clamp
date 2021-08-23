@@ -590,6 +590,30 @@
     },
     {
       "key": {
+        "uuid": "9dedb79b_c6af500c",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/tosca/ToscaSchemaConstants.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 2477
+      },
+      "writtenOn": "2021-08-23T17:05:02Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "bf6e1d70_4a1edf19",
+      "range": {
+        "startLine": 26,
+        "startChar": 7,
+        "endLine": 26,
+        "endChar": 12
+      },
+      "revId": "3c73c682acda2e4ddef168608aba72668de620f6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ebe9e4e6_9b053db7",
         "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/tosca/ToscaSchemaConstants.java",
         "patchSetId": 5
