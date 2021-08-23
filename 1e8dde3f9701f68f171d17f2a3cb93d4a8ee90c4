@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c4bbef4b_3f5d470a",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/tosca/update/execution/ToscaMetadataExecutor.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-23T16:36:20Z",
+      "side": 1,
+      "message": "this should probably be on line 61",
+      "range": {
+        "startLine": 63,
+        "startChar": 51,
+        "endLine": 63,
+        "endChar": 61
+      },
+      "revId": "1e8dde3f9701f68f171d17f2a3cb93d4a8ee90c4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fe6cea3f_3579b318",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/tosca/update/execution/ToscaMetadataExecutor.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-23T16:36:20Z",
+      "side": 1,
+      "message": "move this before line 61 and include something like \"Disabling sonar, because...\"",
+      "range": {
+        "startLine": 64,
+        "startChar": 8,
+        "endLine": 67,
+        "endChar": 11
+      },
+      "revId": "1e8dde3f9701f68f171d17f2a3cb93d4a8ee90c4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "207df6d1_3cafe257",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/loop/cds/CdsDataInstaller.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-23T16:36:20Z",
+      "side": 1,
+      "message": "delete this line and add \"2021\" to line 5",
+      "revId": "1e8dde3f9701f68f171d17f2a3cb93d4a8ee90c4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
