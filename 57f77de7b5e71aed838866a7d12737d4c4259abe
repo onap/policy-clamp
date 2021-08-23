@@ -1,0 +1,182 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "592db24d_9e2dbcea",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/controller/ChartController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-23T16:56:06Z",
+      "side": 1,
+      "message": "since infoJson is a String, we should use decode() instead of convert\n\nsame comment below",
+      "range": {
+        "startLine": 138,
+        "startChar": 25,
+        "endLine": 138,
+        "endChar": 32
+      },
+      "revId": "57f77de7b5e71aed838866a7d12737d4c4259abe",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f151bb76_df81b72d",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/HelmClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-23T16:56:06Z",
+      "side": 1,
+      "message": "sonar doesn\u0027t like public methods throwing more than one exception type",
+      "range": {
+        "startLine": 59,
+        "startChar": 53,
+        "endLine": 59,
+        "endChar": 64
+      },
+      "revId": "57f77de7b5e71aed838866a7d12737d4c4259abe",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a5154454_150695d6",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/HelmClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-23T16:56:06Z",
+      "side": 1,
+      "message": "\"exist\" \u003d\u003e \"exists\"",
+      "range": {
+        "startLine": 83,
+        "startChar": 44,
+        "endLine": 83,
+        "endChar": 49
+      },
+      "revId": "57f77de7b5e71aed838866a7d12737d4c4259abe",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "53302391_34adff1a",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/HelmClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-23T16:56:06Z",
+      "side": 1,
+      "message": "can combine this with line 185 and modify 191 to just return null",
+      "revId": "57f77de7b5e71aed838866a7d12737d4c4259abe",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ce3c3685_d1c9385a",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/HelmClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-23T16:56:06Z",
+      "side": 1,
+      "message": "maybe just use:\n\n  new StringReader(\n\nan alternative would be to change lines 180-183 to:\n\n  for (var line: output.split(\"\\\\R\")) {",
+      "range": {
+        "startLine": 180,
+        "startChar": 45,
+        "endLine": 180,
+        "endChar": 88
+      },
+      "revId": "57f77de7b5e71aed838866a7d12737d4c4259abe",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3c727a1a_cd22713d",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/HelmClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-23T16:56:06Z",
+      "side": 1,
+      "message": "question: can one repo name be a prefix of another repo name?  if so, this grep may return more than one match",
+      "range": {
+        "startLine": 210,
+        "startChar": 89,
+        "endLine": 210,
+        "endChar": 94
+      },
+      "revId": "57f77de7b5e71aed838866a7d12737d4c4259abe",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2f75cae9_ae18e889",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/HelmClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-23T16:56:06Z",
+      "side": 1,
+      "message": "don\u0027t think we need to re-wrap it",
+      "range": {
+        "startLine": 210,
+        "startChar": 37,
+        "endLine": 210,
+        "endChar": 52
+      },
+      "revId": "57f77de7b5e71aed838866a7d12737d4c4259abe",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3e3b1525_89292400",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/HelmClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-23T16:56:06Z",
+      "side": 1,
+      "message": "don\u0027t think we need to re-wrap it",
+      "range": {
+        "startLine": 215,
+        "startChar": 37,
+        "endLine": 215,
+        "endChar": 52
+      },
+      "revId": "57f77de7b5e71aed838866a7d12737d4c4259abe",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
