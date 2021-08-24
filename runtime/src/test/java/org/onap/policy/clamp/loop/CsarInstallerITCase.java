@@ -75,7 +75,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
 @ActiveProfiles({"clamp-default", "clamp-default-user", "clamp-sdc-controller"})
-public class CsarInstallerItCase {
+public class CsarInstallerITCase {
 
     private static final String CSAR_ARTIFACT_NAME_CDS = "example/sdc/service_Vloadbalancerms_cds.csar";
     private static final String CSAR_ARTIFACT_NAME_NO_CDS = "example/sdc/service_Vloadbalancerms_no_cds.csar";

@@ -47,7 +47,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = Application.class)
 @ActiveProfiles({"clamp-default", "clamp-default-user", "default-dictionary-elements"})
-public class ToscaConverterWithDictionarySupportItCase {
+public class ToscaConverterWithDictionarySupportITCase {
 
     @Autowired
     private DictionaryService dictionaryService;

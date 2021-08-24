@@ -53,7 +53,7 @@ public class DcaeInventoryResponseTest {
 
         int value = 0;
         for (DcaeInventoryResponse inventoryResponse : responseSet) {
-            assertThat(Integer.valueOf(inventoryResponse.getAsdcResourceId()) == value++).isTrue();
+            assertThat(Integer.valueOf(inventoryResponse.getAsdcResourceId())).isSameAs(value++);
         }
     }
 }
