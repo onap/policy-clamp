@@ -4,7 +4,7 @@
  * ================================================================================
  * Copyright (C) 2020 Huawei Technologies Co., Ltd.
  * ================================================================================
- * Modifications Copyright (C) 2021 AT&T.
+ * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,8 +71,8 @@ public class CdsServices {
     public CdsBpWorkFlowListResponse getBlueprintWorkflowList(String blueprintName, String blueprintVersion) {
         LoggingUtils.setTargetContext("CDS", "getBlueprintWorkflowList");
 
-        try (ProducerTemplate producerTemplate = camelContext.createProducerTemplate()) {
-            Exchange exchangeResponse =
+        try (var producerTemplate = camelContext.createProducerTemplate()) {
+            var exchangeResponse =
                     producerTemplate.send("direct:get-blueprint-workflow-list", ExchangeBuilder.anExchange(camelContext)
                             .withProperty("blueprintName", blueprintName)
                             .withProperty("blueprintVersion", blueprintVersion)
@@ -83,7 +83,7 @@ public class CdsServices {
                 String cdsResponse = (String) exchangeResponse.getIn().getBody();
                 logger.info("getBlueprintWorkflowList, response from CDS: {}", cdsResponse);
                 LoggingUtils.setResponseContext("0", "Get Blueprint workflow list", this.getClass().getName());
-                Date startTime = new Date();
+                var startTime = new Date();
                 LoggingUtils.setTimeContext(startTime, new Date());
                 return JsonUtils.GSON_JPA_MODEL.fromJson(cdsResponse, CdsBpWorkFlowListResponse.class);
             } else {
@@ -107,8 +107,8 @@ public class CdsServices {
                                                  String workflow) {
         LoggingUtils.setTargetContext("CDS", "getWorkflowInputProperties");
 
-        try (ProducerTemplate producerTemplate = camelContext.createProducerTemplate()) {
-            Exchange exchangeResponse = producerTemplate
+        try (var producerTemplate = camelContext.createProducerTemplate()) {
+            var exchangeResponse = producerTemplate
                     .send("direct:get-blueprint-workflow-input-properties", ExchangeBuilder.anExchange(camelContext)
                             .withBody(getCdsPayloadForWorkFlow(blueprintName, blueprintVersion, workflow))
                             .withProperty("raiseHttpExceptionFlag", false).build());
@@ -118,7 +118,7 @@ public class CdsServices {
                 logger.info("getWorkflowInputProperties, response from CDS: {}", cdsResponse);
                 LoggingUtils
                         .setResponseContext("0", "Get Blueprint workflow input properties", this.getClass().getName());
-                Date startTime = new Date();
+                var startTime = new Date();
                 LoggingUtils.setTimeContext(startTime, new Date());
                 return parseCdsResponse(cdsResponse);
             } else {
@@ -131,11 +131,11 @@ public class CdsServices {
     }
 
     protected JsonObject parseCdsResponse(String response) {
-        JsonObject root = JsonParser.parseString(response).getAsJsonObject();
-        JsonObject inputs = root.getAsJsonObject("workFlowData").getAsJsonObject("inputs");
-        JsonObject dataTypes = root.getAsJsonObject("dataTypes");
+        var root = JsonParser.parseString(response).getAsJsonObject();
+        var inputs = root.getAsJsonObject("workFlowData").getAsJsonObject("inputs");
+        var dataTypes = root.getAsJsonObject("dataTypes");
 
-        JsonObject workFlowProperties = new JsonObject();
+        var workFlowProperties = new JsonObject();
         workFlowProperties.add("inputs", getInputProperties(inputs, dataTypes, new JsonObject()));
         return workFlowProperties;
     }
@@ -147,8 +147,8 @@ public class CdsServices {
 
         for (Map.Entry<String, JsonElement> entry : inputs.entrySet()) {
             String key = entry.getKey();
-            JsonObject inputProperty = inputs.getAsJsonObject(key);
-            String type = inputProperty.get(TYPE).getAsString();
+            var inputProperty = inputs.getAsJsonObject(key);
+            var type = inputProperty.get(TYPE).getAsString();
             if (isComplexType(type, dataTypes)) {
                 inputObject.add(key, handleComplexType(type, dataTypes));
             } else if (LIST.equalsIgnoreCase(type)) {
@@ -168,10 +168,10 @@ public class CdsServices {
             throw new CdsParametersException("Entry schema is null for " + propertyName);
         }
 
-        String type = inputProperty.get("entry_schema").getAsJsonObject().get(
+        var type = inputProperty.get("entry_schema").getAsJsonObject().get(
                 TYPE).getAsString();
         if (dataTypes != null && dataTypes.get(type) != null) {
-            JsonObject jsonObject = new JsonObject();
+            var jsonObject = new JsonObject();
             jsonObject.addProperty(TYPE, LIST);
             jsonObject.add(PROPERTIES, getPropertiesObject(type, dataTypes));
             inputObject.add(propertyName, jsonObject);
@@ -181,15 +181,15 @@ public class CdsServices {
     }
 
     private JsonObject handleComplexType(String key, JsonObject dataTypes) {
-        JsonObject jsonObject = new JsonObject();
+        var jsonObject = new JsonObject();
         jsonObject.addProperty(TYPE, "object");
         jsonObject.add(PROPERTIES, getPropertiesObject(key, dataTypes));
         return jsonObject;
     }
 
     private JsonObject getPropertiesObject(String key, JsonObject dataTypes) {
-        JsonObject properties = dataTypes.get(key).getAsJsonObject().get(PROPERTIES).getAsJsonObject();
-        JsonObject object = new JsonObject();
+        var properties = dataTypes.get(key).getAsJsonObject().get(PROPERTIES).getAsJsonObject();
+        var object = new JsonObject();
         getInputProperties(properties, dataTypes, object);
         return object;
     }
@@ -218,7 +218,7 @@ public class CdsServices {
      * @return returns payload in json format
      */
     public String getCdsPayloadForWorkFlow(String blueprintName, String version, String workflow) {
-        JsonObject jsonObject = new JsonObject();
+        var jsonObject = new JsonObject();
         jsonObject.addProperty("blueprintName", blueprintName);
         jsonObject.addProperty("version", version);
         jsonObject.addProperty("returnContent", "json");

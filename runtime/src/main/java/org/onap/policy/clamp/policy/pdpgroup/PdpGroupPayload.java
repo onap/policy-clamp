@@ -111,7 +111,7 @@ public class PdpGroupPayload {
                                   String policyName,
                                   String policyVersion, String action) {
         // create subgroup
-        DeploymentSubGroup newSubGroup = new DeploymentSubGroup();
+        var newSubGroup = new DeploymentSubGroup();
         newSubGroup.setPdpType(pdpSubGroup);
         newSubGroup.setAction(DeploymentSubGroup.Action.valueOf(action));
         newSubGroup.setPolicies(Arrays.asList(new ToscaConceptIdentifier(policyName, policyVersion)));
@@ -120,7 +120,7 @@ public class PdpGroupPayload {
                 group.getName().equals(pdpGroup)).findFirst()
                 .ifPresentOrElse(group -> group.getDeploymentSubgroups().add(newSubGroup),
                         () -> {
-                            DeploymentGroup newGroup = new DeploymentGroup();
+                            var newGroup = new DeploymentGroup();
                             newGroup.setName(pdpGroup);
                             newGroup.setDeploymentSubgroups(new ArrayList<>(Arrays.asList(newSubGroup)));
                             this.deploymentGroups.getGroups().add(newGroup);

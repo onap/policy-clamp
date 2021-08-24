@@ -74,8 +74,8 @@ public class PoliciesPdpMerger {
      * @return It returns a JsonObject containing the policies list enriched with PdpGroup info
      */
     public static JsonObject mergePoliciesAndPdpGroupStates(String jsonPoliciesList, String pdpGroupsJson) {
-        PdpGroups pdpGroups = JsonUtils.GSON.fromJson(pdpGroupsJson, PdpGroups.class);
-        JsonObject policiesListJson =
+        var pdpGroups = JsonUtils.GSON.fromJson(pdpGroupsJson, PdpGroups.class);
+        var policiesListJson =
                 JsonUtils.GSON.fromJson(jsonPoliciesList, JsonObject.class).get("topology_template")
                         .getAsJsonObject();
         StreamSupport.stream(policiesListJson.get("policies").getAsJsonArray().spliterator(), true)
@@ -90,7 +90,7 @@ public class PoliciesPdpMerger {
      * @param policyJsonNode The policy json node that must be enriched
      */
     private static void enrichOnePolicy(PdpGroups pdpGroups, JsonObject policyJsonNode) {
-        PdpGroupsAnalyzer pdpGroupAnalyzer = new PdpGroupsAnalyzer(pdpGroups);
+        var pdpGroupAnalyzer = new PdpGroupsAnalyzer(pdpGroups);
         JsonObject deploymentPdpJson = pdpGroupAnalyzer
                 .getPdpGroupsForPolicy(policyJsonNode.get("name").getAsString(),
                         policyJsonNode.get("version").getAsString());
@@ -102,3 +102,4 @@ public class PoliciesPdpMerger {
         mergeJsonElement(policyJsonNode, supportedPdpGroupsJson);
     }
 }
+

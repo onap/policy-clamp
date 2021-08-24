@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights
+ * Copyright (C) 2018, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -48,8 +48,8 @@ public class ClampVersioning {
      * @return Clds version from properties
      */
     public static String getCldsVersionFromProps() {
-        String cldsVersion = "";
-        Properties props = new Properties();
+        var cldsVersion = "";
+        var props = new Properties();
         try (InputStream resourceStream = ResourceFileUtils.getResourceAsStream(RESOURCE_NAME)) {
             props.load(resourceStream);
             cldsVersion = props.getProperty(CLDS_VERSION_PROPERTY);

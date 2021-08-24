@@ -5,7 +5,7 @@
  * Copyright (C) 2019 Nokia Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
- * Modifications Copyright (C) 2021 AT&T
+ * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -242,6 +242,6 @@ public abstract class Policy extends AuditEntity {
         StringBuilder buffer = new StringBuilder(policyType).append("_").append(serviceName).append("_v")
                 .append(serviceVersion).append("_").append(resourceName).append("_")
                 .append(blueprintFilename.replaceAll(".yaml", ""));
-        return buffer.toString().replace('.', '_').replaceAll(" ", "");
+        return buffer.toString().replace('.', '_').replace(" ", "");
     }
 }

@@ -58,10 +58,15 @@ public class ToscaMetadataExecutor {
      */
     public void executeTheProcess(String processInfo, JsonObject childObject, Service serviceModel) {
         String[] processParameters = (processInfo + "/ ").split("/");
+        /*
+         * NOTE: Disabling sonar, because already added / above, hence there is no need
+         * to invoke method only conditionally, as sonar suggested.
+         */
+        String trimStr = processParameters[1].trim();  // NOSONAR
         logger.info("Executing the Tosca clamp process {} with parameters {}",
-               processParameters[0], processParameters[1].trim());
+                   processParameters[0], trimStr);
         mapOfProcesses.get(processParameters[0].trim())
-                .executeProcess(processParameters[1].trim(), childObject, serviceModel);
+                .executeProcess(trimStr, childObject, serviceModel);
     }
 
     /**

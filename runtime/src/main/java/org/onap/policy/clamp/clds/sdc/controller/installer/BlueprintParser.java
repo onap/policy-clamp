@@ -5,6 +5,8 @@
  * Copyright (C) 2019 Nokia Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
+ * Modifications Copyright (c) 2021 AT&T Intellectual Property. All rights reserved.
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -67,7 +69,7 @@ public class BlueprintParser {
 
     /**
      * Get all micro services from blueprint.
-     * 
+     *
      * @param blueprintString the blueprint in a String
      * @return A set of MircoService
      * @throws BlueprintParserException In case of issues with the parsing
@@ -75,11 +77,11 @@ public class BlueprintParser {
     public static Set<BlueprintMicroService> getMicroServices(String blueprintString) throws BlueprintParserException {
         Set<BlueprintMicroService> microServices = new HashSet<>();
         JsonObject blueprintJson = BlueprintParser.convertToJson(blueprintString);
-        JsonObject nodeTemplateList = blueprintJson.get(NODE_TEMPLATES).getAsJsonObject();
-        JsonObject inputList = blueprintJson.get(INPUT).getAsJsonObject();
+        var nodeTemplateList = blueprintJson.get(NODE_TEMPLATES).getAsJsonObject();
+        var inputList = blueprintJson.get(INPUT).getAsJsonObject();
 
         for (Entry<String, JsonElement> entry : nodeTemplateList.entrySet()) {
-            JsonObject nodeTemplate = entry.getValue().getAsJsonObject();
+            var nodeTemplate = entry.getValue().getAsJsonObject();
             if (!nodeTemplate.get(TYPE).getAsString().contains(DCAE_NODES_POLICY)
                     && nodeTemplate.get(TYPE).getAsString().contains(DCAE_NODES)) {
                 BlueprintMicroService microService = getNodeRepresentation(entry, nodeTemplateList, inputList);
@@ -99,7 +101,7 @@ public class BlueprintParser {
 
     /**
      * Does a fallback to TCA.
-     * 
+     *
      * @return The list of microservices
      */
     public static List<BlueprintMicroService> fallbackToOneMicroService() {
@@ -109,9 +111,9 @@ public class BlueprintParser {
 
     static String getName(Entry<String, JsonElement> entry) {
         String microServiceYamlName = entry.getKey();
-        JsonObject ob = entry.getValue().getAsJsonObject();
+        var ob = entry.getValue().getAsJsonObject();
         if (ob.has(PROPERTIES)) {
-            JsonObject properties = ob.get(PROPERTIES).getAsJsonObject();
+            var properties = ob.get(PROPERTIES).getAsJsonObject();
             if (properties.has(NAME)) {
                 return properties.get(NAME).getAsString();
             }
@@ -120,9 +122,9 @@ public class BlueprintParser {
     }
 
     static String getInput(Entry<String, JsonElement> entry) {
-        JsonObject ob = entry.getValue().getAsJsonObject();
+        var ob = entry.getValue().getAsJsonObject();
         if (ob.has(RELATIONSHIPS)) {
-            JsonArray relationships = ob.getAsJsonArray(RELATIONSHIPS);
+            var relationships = ob.getAsJsonArray(RELATIONSHIPS);
             for (JsonElement element : relationships) {
                 String target = getTarget(element.getAsJsonObject());
                 if (!target.isEmpty()) {
@@ -142,7 +144,7 @@ public class BlueprintParser {
                                 + elem.getAsJsonObject().get(TARGET).getAsString());
             } else {
                 String property = getPropertyValue(propertyName,
-                        new AbstractMap.SimpleEntry<String, JsonElement>(
+                        new AbstractMap.SimpleEntry<>(
                                 elem.getAsJsonObject().get(TARGET).getAsString(), blueprintNodeTemplateList
                                         .get(elem.getAsJsonObject().get(TARGET).getAsString()).getAsJsonObject()),
                         blueprintNodeTemplateList, blueprintInputList);
@@ -156,7 +158,7 @@ public class BlueprintParser {
 
     static String getDirectOrInputPropertyValue(String propertyName, JsonObject blueprintInputList,
             JsonObject nodeTemplateContent) {
-        JsonObject properties = nodeTemplateContent.get(PROPERTIES).getAsJsonObject();
+        var properties = nodeTemplateContent.get(PROPERTIES).getAsJsonObject();
         if (properties.has(propertyName)) {
             if (properties.get(propertyName).isJsonObject()) {
                 // it's a blueprint parameter
@@ -173,7 +175,7 @@ public class BlueprintParser {
 
     static String getPropertyValue(String propertyName, Entry<String, JsonElement> nodeTemplateEntry,
             JsonObject blueprintNodeTemplateList, JsonObject blueprintIputList) throws BlueprintParserException {
-        JsonObject nodeTemplateContent = nodeTemplateEntry.getValue().getAsJsonObject();
+        var nodeTemplateContent = nodeTemplateEntry.getValue().getAsJsonObject();
         // Search first in this node template
         if (nodeTemplateContent.has(PROPERTIES)) {
             String propValue = getDirectOrInputPropertyValue(propertyName, blueprintIputList, nodeTemplateContent);

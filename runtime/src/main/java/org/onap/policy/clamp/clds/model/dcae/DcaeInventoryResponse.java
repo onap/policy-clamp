@@ -6,6 +6,8 @@
  * Copyright (C) 2019 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
+ * Modifications Copyright (c) 2021 AT&T Intellectual Property. All rights reserved.
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -95,8 +97,8 @@ public class DcaeInventoryResponse implements Comparable<DcaeInventoryResponse> 
 
     @Override
     public int compareTo(DcaeInventoryResponse otherResponse) {
-        int thisResourceId = Integer.parseInt(this.asdcResourceId);
-        int otherResourceId = Integer.parseInt(otherResponse.getAsdcResourceId());
-        return (thisResourceId < otherResourceId ? -1 : (thisResourceId > otherResourceId ? 1 : 0));
+        var thisResourceId = Integer.parseInt(this.asdcResourceId);
+        var otherResourceId = Integer.parseInt(otherResponse.getAsdcResourceId());
+        return Integer.compare(thisResourceId, otherResourceId);
     }
 }
