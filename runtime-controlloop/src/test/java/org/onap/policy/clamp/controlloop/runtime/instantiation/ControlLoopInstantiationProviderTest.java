@@ -26,6 +26,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.io.IOException;
 import java.util.ArrayList;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -49,9 +50,14 @@ import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantDer
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantRegisterAckPublisher;
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantUpdatePublisher;
 import org.onap.policy.clamp.controlloop.runtime.util.CommonTestData;
+import org.onap.policy.common.utils.coder.YamlJsonTranslator;
+import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.provider.PolicyModelsProvider;
+import org.onap.policy.models.provider.PolicyModelsProviderFactory;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Class to perform unit test of {@link ControlLoopInstantiationProvider}}.
@@ -88,10 +94,21 @@ class ControlLoopInstantiationProviderTest {
             + "    item \"ControlLoop\" value \"org.onap.domain.PMSHControlLoopDefinition\" INVALID,"
             + " Commissioned control loop definition not FOUND\n";
 
+    private static ToscaServiceTemplate serviceTemplate = new ToscaServiceTemplate();
+
+    private static final YamlJsonTranslator yamlTranslator = new YamlJsonTranslator();
+
     private static SupervisionHandler supervisionHandler;
     private static CommissioningProvider commissioningProvider;
     private static ControlLoopProvider clProvider;
     private static PolicyModelsProvider modelsProvider;
+    private static ParticipantProvider participantProvider;
+
+    @BeforeAll
+    public static void setUpBeforeClass() throws Exception {
+        serviceTemplate = yamlTranslator.fromYaml(ResourceUtils.getResourceAsString(TOSCA_TEMPLATE_YAML),
+            ToscaServiceTemplate.class);
+    }
 
     /**
      * setup Db Provider Parameters.
@@ -105,11 +122,13 @@ class ControlLoopInstantiationProviderTest {
         modelsProvider =
                 CommonTestData.getPolicyModelsProvider(controlLoopParameters.getDatabaseProviderParameters());
         clProvider = new ControlLoopProvider(controlLoopParameters.getDatabaseProviderParameters());
+        participantProvider = new ParticipantProvider(controlLoopParameters.getDatabaseProviderParameters());
+
         var participantStatisticsProvider =
                 new ParticipantStatisticsProvider(controlLoopParameters.getDatabaseProviderParameters());
         var clElementStatisticsProvider =
                 new ClElementStatisticsProvider(controlLoopParameters.getDatabaseProviderParameters());
-        commissioningProvider = new CommissioningProvider(modelsProvider, clProvider);
+        commissioningProvider = new CommissioningProvider(modelsProvider, clProvider, null, participantProvider);
         var monitoringProvider =
                 new MonitoringProvider(participantStatisticsProvider, clElementStatisticsProvider, clProvider);
         var participantProvider = new ParticipantProvider(controlLoopParameters.getDatabaseProviderParameters());
@@ -129,18 +148,21 @@ class ControlLoopInstantiationProviderTest {
         modelsProvider.close();
     }
 
+    @AfterEach
+    public void cleanDatabase() throws Exception {
+        deleteEntryInDB(serviceTemplate.getName(), serviceTemplate.getVersion());
+    }
+
     @Test
     void testInstantiationCrud() throws Exception {
+        createEntryInDB();
+
         ControlLoops controlLoopsCreate =
                 InstantiationUtils.getControlLoopsFromResource(CL_INSTANTIATION_CREATE_JSON, "Crud");
         ControlLoops controlLoopsDb = getControlLoopsFromDb(controlLoopsCreate);
         assertThat(controlLoopsDb.getControlLoopList()).isEmpty();
         var instantiationProvider =
                 new ControlLoopInstantiationProvider(clProvider, commissioningProvider, supervisionHandler);
-
-        // to validate control Loop, it needs to define ToscaServiceTemplate
-        InstantiationUtils.storeToscaServiceTemplate(TOSCA_TEMPLATE_YAML, commissioningProvider);
-
         InstantiationResponse instantiationResponse = instantiationProvider.createControlLoops(controlLoopsCreate);
         InstantiationUtils.assertInstantiationResponse(instantiationResponse, controlLoopsCreate);
 
@@ -192,11 +214,13 @@ class ControlLoopInstantiationProviderTest {
     }
 
     private ControlLoops getControlLoopsFromDb(ControlLoops controlLoopsSource) throws Exception {
+        createEntryInDB();
+
         ControlLoops controlLoopsDb = new ControlLoops();
         controlLoopsDb.setControlLoopList(new ArrayList<>());
 
-        var instantiationProvider =
-                new ControlLoopInstantiationProvider(clProvider, commissioningProvider, supervisionHandler);
+        var instantiationProvider = new ControlLoopInstantiationProvider(clProvider,
+            commissioningProvider, supervisionHandler);
 
         for (ControlLoop controlLoop : controlLoopsSource.getControlLoopList()) {
             ControlLoops controlLoopsFromDb =
@@ -208,6 +232,8 @@ class ControlLoopInstantiationProviderTest {
 
     @Test
     void testInstantiationDelete() throws Exception {
+        createEntryInDB();
+
         ControlLoops controlLoops =
                 InstantiationUtils.getControlLoopsFromResource(CL_INSTANTIATION_CREATE_JSON, "Delete");
         assertThat(getControlLoopsFromDb(controlLoops).getControlLoopList()).isEmpty();
@@ -216,9 +242,6 @@ class ControlLoopInstantiationProviderTest {
 
         var instantiationProvider =
                 new ControlLoopInstantiationProvider(clProvider, commissioningProvider, supervisionHandler);
-
-        // to validate control Loop, it needs to define ToscaServiceTemplate
-        InstantiationUtils.storeToscaServiceTemplate(TOSCA_TEMPLATE_YAML, commissioningProvider);
 
         assertThatThrownBy(
                 () -> instantiationProvider.deleteControlLoop(controlLoop0.getName(), controlLoop0.getVersion()))
@@ -263,6 +286,8 @@ class ControlLoopInstantiationProviderTest {
 
     @Test
     void testCreateControlLoops_NoDuplicates() throws Exception {
+        createEntryInDB();
+
         ControlLoops controlLoopsCreate =
                 InstantiationUtils.getControlLoopsFromResource(CL_INSTANTIATION_CREATE_JSON, "NoDuplicates");
 
@@ -271,9 +296,6 @@ class ControlLoopInstantiationProviderTest {
 
         var instantiationProvider =
                 new ControlLoopInstantiationProvider(clProvider, commissioningProvider, supervisionHandler);
-
-        // to validate control Loop, it needs to define ToscaServiceTemplate
-        InstantiationUtils.storeToscaServiceTemplate(TOSCA_TEMPLATE_YAML, commissioningProvider);
 
         InstantiationResponse instantiationResponse = instantiationProvider.createControlLoops(controlLoopsCreate);
         InstantiationUtils.assertInstantiationResponse(instantiationResponse, controlLoopsCreate);
@@ -288,13 +310,15 @@ class ControlLoopInstantiationProviderTest {
 
     @Test
     void testCreateControlLoops_CommissionedClElementNotFound() throws Exception {
+        createEntryInDB();
+
         ControlLoops controlLoops = InstantiationUtils
                 .getControlLoopsFromResource(CL_INSTANTIATION_DEFINITION_NAME_NOT_FOUND_JSON, "ClElementNotFound");
 
         var provider = new ControlLoopInstantiationProvider(clProvider, commissioningProvider, supervisionHandler);
 
         // to validate control Loop, it needs to define ToscaServiceTemplate
-        InstantiationUtils.storeToscaServiceTemplate(TOSCA_TEMPLATE_YAML, commissioningProvider);
+        //        InstantiationUtils.storeToscaServiceTemplate(TOSCA_TEMPLATE_YAML, commissioningProvider);
 
         assertThat(getControlLoopsFromDb(controlLoops).getControlLoopList()).isEmpty();
 
@@ -324,7 +348,7 @@ class ControlLoopInstantiationProviderTest {
 
     @Test
     void testInstantiationVersions() throws Exception {
-
+        createEntryInDB();
         // create controlLoops V1
         ControlLoops controlLoopsV1 =
                 InstantiationUtils.getControlLoopsFromResource(CL_INSTANTIATION_CREATE_JSON, "V1");
@@ -332,9 +356,6 @@ class ControlLoopInstantiationProviderTest {
 
         var instantiationProvider =
                 new ControlLoopInstantiationProvider(clProvider, commissioningProvider, supervisionHandler);
-
-        // to validate control Loop, it needs to define ToscaServiceTemplate
-        InstantiationUtils.storeToscaServiceTemplate(TOSCA_TEMPLATE_YAML, commissioningProvider);
 
         InstantiationUtils.assertInstantiationResponse(instantiationProvider.createControlLoops(controlLoopsV1),
                 controlLoopsV1);
@@ -384,6 +405,25 @@ class ControlLoopInstantiationProviderTest {
             ControlLoops controlLoopsGet =
                     instantiationProvider.getControlLoops(controlLoop.getName(), controlLoop.getVersion());
             assertThat(controlLoopsGet.getControlLoopList()).isEmpty();
+        }
+    }
+
+    private synchronized void deleteEntryInDB(String name, String version) throws Exception {
+        try {
+            if (!modelsProvider.getServiceTemplateList(null, null).isEmpty()) {
+                modelsProvider.deleteServiceTemplate(name, version);
+            }
+        } catch (PfModelException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private synchronized void createEntryInDB() throws Exception {
+        try {
+            deleteEntryInDB(serviceTemplate.getName(), serviceTemplate.getVersion());
+            modelsProvider.createServiceTemplate(serviceTemplate);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
