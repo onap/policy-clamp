@@ -52,7 +52,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
-public class LoopControllerTestItCase {
+public class LoopControllerItTestCase {
 
     private static final String EXAMPLE_LOOP_NAME = "ClosedLoopTest";
     private static final String EXAMPLE_JSON = "{\"testName\":\"testValue\"}";
