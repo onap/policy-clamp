@@ -1,0 +1,95 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a914fbff_cd043a7e",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ParticipantAckMessage.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-24T17:01:11Z",
+      "side": 1,
+      "message": "maybe add a test and return false if !participantType.equals(this.participantType)\n\nthen we can avoid doing that check in the two cases below",
+      "revId": "2be4204852eb3328704b467e37a26ebbd95d7c08",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2297e08e_f930f15a",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ParticipantMessage.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-24T17:01:11Z",
+      "side": 1,
+      "message": "same comment as before about doing the participantType check once",
+      "revId": "2be4204852eb3328704b467e37a26ebbd95d7c08",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "558f585a_028f3226",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/IntermediaryActivator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-24T17:01:11Z",
+      "side": 1,
+      "message": "can this actually happen?",
+      "revId": "2be4204852eb3328704b467e37a26ebbd95d7c08",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a98d7ca3_8e0691f7",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/IntermediaryActivator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-24T17:01:11Z",
+      "side": 1,
+      "message": "why not just:\n\n  publishers.forEach\n\nsame comment for listeners",
+      "range": {
+        "startLine": 86,
+        "startChar": 8,
+        "endLine": 86,
+        "endChar": 37
+      },
+      "revId": "2be4204852eb3328704b467e37a26ebbd95d7c08",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fcb67326_92ae203f",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/Listener.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-24T17:01:11Z",
+      "side": 1,
+      "message": "looks like we could subclass ScoListener and implement Listener to provide a default implementation of this method so the subclasses don\u0027t all have to implement it",
+      "revId": "2be4204852eb3328704b467e37a26ebbd95d7c08",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
