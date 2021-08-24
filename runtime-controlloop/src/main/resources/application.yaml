@@ -50,3 +50,9 @@ runtime:
         servers:
           - ${topicServer:localhost}
         topicCommInfrastructure: dmaap
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, metrics, prometheus

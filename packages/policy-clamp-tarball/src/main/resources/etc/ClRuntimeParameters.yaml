@@ -50,3 +50,9 @@ runtime:
         servers:
           - ${topicServer:message-router}
         topicCommInfrastructure: dmaap
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, metrics, prometheus
