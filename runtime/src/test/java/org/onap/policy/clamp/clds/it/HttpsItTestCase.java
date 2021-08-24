@@ -59,7 +59,7 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @TestPropertySource(locations = "classpath:https/https-test.properties")
 @DirtiesContext
-public class HttpsItCase {
+public class HttpsItTestCase {
 
     @Value("${server.port}")
     private String httpsPort;

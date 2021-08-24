@@ -39,7 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = Application.class)
-public class DictionaryRepositoriesTestItCase {
+public class DictionaryRepositoriesTestItTestCase {
     @Autowired
     private DictionaryRepository dictionaryRepository;
 

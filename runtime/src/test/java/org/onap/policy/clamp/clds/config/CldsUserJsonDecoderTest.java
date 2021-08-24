@@ -6,6 +6,7 @@
  *                             reserved.
  * ================================================================================
  * Modifications Copyright (c) 2019 Samsung
+ * Modifications Copyright (c) 2021 AT&T
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,7 +72,7 @@ public class CldsUserJsonDecoderTest {
         assertThat(usersArray).hasSize(1);
         CldsUser user = usersArray[0];
         assertThat(user.getUser()).isEqualTo(user1);
-        assertThat(user.getPassword()).isEqualTo(null);
+        assertThat(user.getPassword()).isNull();
         assertThat(user.getPermissionsString()).isEmpty();
     }
 
