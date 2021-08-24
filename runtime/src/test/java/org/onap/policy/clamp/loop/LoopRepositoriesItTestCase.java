@@ -58,7 +58,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = Application.class)
-public class LoopRepositoriesItCase {
+public class LoopRepositoriesItTestCase {
 
     private Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
 
@@ -177,21 +177,21 @@ public class LoopRepositoriesItCase {
 
         assertThat(loopInDb).isEqualToIgnoringGivenFields(loopTest, "components", "createdDate", "updatedDate",
                 "createdBy", "updatedBy");
-        assertThat(loopRepository.existsById(loopTest.getName())).isEqualTo(true);
-        assertThat(operationalPolicyService.isExisting(opPolicy.getName())).isEqualTo(true);
-        assertThat(microServicePolicyService.isExisting(microServicePolicy.getName())).isEqualTo(true);
+        assertThat(loopRepository.existsById(loopTest.getName())).isTrue();
+        assertThat(operationalPolicyService.isExisting(opPolicy.getName())).isTrue();
+        assertThat(microServicePolicyService.isExisting(microServicePolicy.getName())).isTrue();
         assertThat(loopLogRepository.existsById(loopLog.getId())).isEqualTo(true);
-        assertThat(loopTemplateRepository.existsById(loopInDb.getLoopTemplate().getName())).isEqualTo(true);
-        assertThat(loopTemplateRepository.existsById(loopInDb.getLoopTemplate().getName())).isEqualTo(true);
-        assertThat(servicesRepository.existsById(loopInDb.getModelService().getServiceUuid())).isEqualTo(true);
+        assertThat(loopTemplateRepository.existsById(loopInDb.getLoopTemplate().getName())).isTrue();
+        assertThat(loopTemplateRepository.existsById(loopInDb.getLoopTemplate().getName())).isTrue();
+        assertThat(servicesRepository.existsById(loopInDb.getModelService().getServiceUuid())).isTrue();
         assertThat(microServiceModelsRepository.existsById(
                 loopInDb.getLoopTemplate().getLoopElementModelsUsed().first().getLoopElementModel().getName()))
-                .isEqualTo(true);
+                .isTrue();
         assertThat(policyModelsRepository.existsById(new PolicyModelId(
                 loopInDb.getLoopTemplate().getLoopElementModelsUsed().first().getLoopElementModel().getPolicyModels()
                         .first().getPolicyModelType(),
                 loopInDb.getLoopTemplate().getLoopElementModelsUsed().first().getLoopElementModel().getPolicyModels()
-                        .first().getVersion()))).isEqualTo(true);
+                        .first().getVersion()))).isTrue();
 
         // Now attempt to read from database
         Loop loopInDbRetrieved = loopRepository.findById(loopTest.getName()).get();
@@ -238,21 +238,21 @@ public class LoopRepositoriesItCase {
         // Attempt to delete the object and check it has well been cascaded
 
         loopRepository.delete(loopInDbRetrieved);
-        assertThat(loopRepository.existsById(loopTest.getName())).isEqualTo(false);
-        assertThat(operationalPolicyService.isExisting(opPolicy.getName())).isEqualTo(false);
-        assertThat(microServicePolicyService.isExisting(microServicePolicy.getName())).isEqualTo(true);
-        assertThat(loopLogRepository.existsById(loopLog.getId())).isEqualTo(false);
-        assertThat(loopTemplateRepository.existsById(loopInDb.getLoopTemplate().getName())).isEqualTo(true);
-        assertThat(servicesRepository.existsById(loopInDb.getModelService().getServiceUuid())).isEqualTo(true);
+        assertThat(loopRepository.existsById(loopTest.getName())).isFalse();
+        assertThat(operationalPolicyService.isExisting(opPolicy.getName())).isFalse();
+        assertThat(microServicePolicyService.isExisting(microServicePolicy.getName())).isTrue();
+        assertThat(loopLogRepository.existsById(loopLog.getId())).isFalse();
+        assertThat(loopTemplateRepository.existsById(loopInDb.getLoopTemplate().getName())).isTrue();
+        assertThat(servicesRepository.existsById(loopInDb.getModelService().getServiceUuid())).isTrue();
         assertThat(microServiceModelsRepository.existsById(
                 loopInDb.getLoopTemplate().getLoopElementModelsUsed().first().getLoopElementModel().getName()))
-                .isEqualTo(true);
+                .isTrue();
 
         assertThat(policyModelsRepository.existsById(new PolicyModelId(
                 loopInDb.getLoopTemplate().getLoopElementModelsUsed().first().getLoopElementModel().getPolicyModels()
                         .first().getPolicyModelType(),
                 loopInDb.getLoopTemplate().getLoopElementModelsUsed().first().getLoopElementModel().getPolicyModels()
-                        .first().getVersion()))).isEqualTo(true);
+                        .first().getVersion()))).isTrue();
 
     }
 }

@@ -61,9 +61,9 @@ public class SemanticVersioningTest {
      */
     @Test
     public void compareEqualsTest() {
-        assertThat(SemanticVersioning.compare("1.0.0", "1.0.0")).isEqualTo(0);
+        assertThat(SemanticVersioning.compare("1.0.0", "1.0.0")).isZero();
         assertThat(SemanticVersioning.compare("1.0.0.0", "1.0.0")).isEqualTo(1);
-        assertThat(SemanticVersioning.compare("1.2.3", "1.2.3")).isEqualTo(0);
+        assertThat(SemanticVersioning.compare("1.2.3", "1.2.3")).isZero();
         assertThat(SemanticVersioning.compare("1.2.3", "1.2.3.0")).isEqualTo(-1);
 
     }
@@ -73,7 +73,7 @@ public class SemanticVersioningTest {
      */
     @Test
     public void compareNullTest() {
-        assertThat(SemanticVersioning.compare(null, null)).isEqualTo(0);
+        assertThat(SemanticVersioning.compare(null, null)).isZero();
         assertThat(SemanticVersioning.compare(null, "1.0")).isEqualTo(-1);
         assertThat(SemanticVersioning.compare("1.0", null)).isEqualTo(1);
     }
