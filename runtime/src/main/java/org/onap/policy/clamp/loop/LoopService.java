@@ -26,13 +26,11 @@
 package org.onap.policy.clamp.loop;
 
 import com.google.gson.JsonObject;
-import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 import javax.persistence.EntityNotFoundException;
 import org.onap.policy.clamp.clds.tosca.update.ToscaConverterWithDictionarySupport;
 import org.onap.policy.clamp.loop.template.LoopTemplatesService;
-import org.onap.policy.clamp.loop.template.PolicyModel;
 import org.onap.policy.clamp.loop.template.PolicyModelsService;
 import org.onap.policy.clamp.policy.microservice.MicroServicePolicy;
 import org.onap.policy.clamp.policy.microservice.MicroServicePolicyService;

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2020 AT&T Intellectual Property. All rights
+ * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,6 +24,7 @@
 package org.onap.policy.clamp.tosca;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -39,7 +40,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
-public class DictionaryServiceItCase {
+public class DictionaryServiceItTestCase {
 
     @Autowired
     private DictionaryService dictionaryService;
@@ -124,7 +125,7 @@ public class DictionaryServiceItCase {
         assertTrue(updatedDictionary2.getDictionaryElements().contains(dictionaryElement));
         updatedDictionary2.getDictionaryElements().forEach(element -> {
             if (element.equals(dictionaryElement)) {
-                assertTrue(element.getDescription().equals(dictionaryElement.getDescription()));
+                assertEquals(dictionaryElement.getDescription(), element.getDescription());
             }
         });
 
@@ -172,7 +173,7 @@ public class DictionaryServiceItCase {
             dictionaryService.getDictionary("Test");
         } catch (Exception e) {
             assertThat(e).isInstanceOf(EntityNotFoundException.class);
-            assertTrue(e.getMessage().equals("Couldn't find Dictionary named: Test"));
+            assertEquals("Couldn't find Dictionary named: Test", e.getMessage());
         }
     }
 
@@ -189,7 +190,7 @@ public class DictionaryServiceItCase {
         try {
             dictionaryService.getDictionary("Dictionary1");
         } catch (EntityNotFoundException e) {
-            assertTrue(e.getMessage().equals("Couldn't find Dictionary named: Dictionary1"));
+            assertEquals("Couldn't find Dictionary named: Dictionary1", e.getMessage());
         }
     }
 
@@ -205,7 +206,7 @@ public class DictionaryServiceItCase {
         try {
             dictionaryService.getDictionary("Dictionary1");
         } catch (EntityNotFoundException e) {
-            assertTrue(e.getMessage().equals("Couldn't find Dictionary named: Dictionary1"));
+            assertEquals("Couldn't find Dictionary named: Dictionary1", e.getMessage());
         }
     }
 

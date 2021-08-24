@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights
+ * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -44,11 +44,11 @@ public class ServiceTest {
 
         Service service2 = new Service(JsonUtils.GSON.fromJson(serviceStr2, JsonObject.class), null, "1.0");
 
-        Service service3 = new Service(JsonUtils.GSON.fromJson(serviceStr3, JsonObject.class), 
+        Service service3 = new Service(JsonUtils.GSON.fromJson(serviceStr3, JsonObject.class),
                 JsonUtils.GSON.fromJson(resourceStr, JsonObject.class), "1.0");
 
-        assertThat(service1.equals(service2)).isEqualTo(true);
-        assertThat(service1.equals(service3)).isEqualTo(false);
+        assertThat(service2).isEqualTo(service1);
+        assertThat(service3).isNotEqualTo(service1);
     }
 
 }

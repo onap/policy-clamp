@@ -4,6 +4,8 @@
  * ================================================================================
  * Copyright (C) 2019 Huawei Technologies Co., Ltd.
  * ================================================================================
+ * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -41,7 +43,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
-public class LoopLogServiceTestItCase {
+public class LoopLogServiceItTestCase {
 
     private static final String EXAMPLE_LOOP_NAME = "ClosedLoopTest";
     private static final String EXAMPLE_JSON = "{\"testName\":\"testValue\"}";

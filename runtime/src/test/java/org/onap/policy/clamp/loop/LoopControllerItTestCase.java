@@ -4,7 +4,9 @@
  * ================================================================================
  * Copyright (C) 2019 Nokia Intellectual Property. All rights
  *                             reserved.
+ * ================================================================================
  * Modifications Copyright (C) 2019 Huawei Technologies Co., Ltd.
+ * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,7 +54,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
-public class LoopControllerTestItCase {
+public class LoopControllerItTestCase {
 
     private static final String EXAMPLE_LOOP_NAME = "ClosedLoopTest";
     private static final String EXAMPLE_JSON = "{\"testName\":\"testValue\"}";
@@ -161,7 +163,7 @@ public class LoopControllerTestItCase {
         Set<OperationalPolicy> opPolicyList = newLoop.getOperationalPolicies();
         assertThat(opPolicyList.size()).isEqualTo(1);
         for (OperationalPolicy policy : opPolicyList) {
-            assertThat(policy.getName().contains("OPERATIONAL_serviceName")).isTrue();
+            assertThat(policy.getName()).contains("OPERATIONAL_serviceName");
             Assertions.assertThat(policy.getPolicyModel().getPolicyModelType()).isEqualTo("testPolicyModel");
             Assertions.assertThat(policy.getPolicyModel().getVersion()).isEqualTo("1.0.0");
         }
