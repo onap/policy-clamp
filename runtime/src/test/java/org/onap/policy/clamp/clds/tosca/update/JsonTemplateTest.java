@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2020 AT&T Intellectual Property. All rights
+ * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -60,10 +60,9 @@ public class JsonTemplateTest extends TestCase {
         toTest.updateValueField("moreField", "testValue");
         
         assertTrue(toTest.isVisible("moreField"));
-        assertTrue(toTest.getSpecificField("moreField").getValue().equals("testValue"));
+        assertEquals("testValue", toTest.getSpecificField("moreField").getValue());
         assertTrue(toTest.fieldStaticStatus("moreField"));
-        assertTrue(toTest.toString()
-            .equals(" templateFields : [type null null null, description null null null, "
-            + "enum null null null, moreField testValue true true]"));
+        assertEquals(" templateFields : [type null null null, description null null null, "
+                + "enum null null null, moreField testValue true true]", toTest.toString());
     }
 }

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights
+ * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -53,7 +53,7 @@ public class DcaeInventoryResponseTest {
 
         int value = 0;
         for (DcaeInventoryResponse inventoryResponse : responseSet) {
-            assertThat(Integer.valueOf(inventoryResponse.getAsdcResourceId()) == value++).isTrue();
+            assertThat(Integer.valueOf(inventoryResponse.getAsdcResourceId())).isSameAs(value++);
         }
     }
 }

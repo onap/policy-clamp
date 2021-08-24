@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights
+ * Copyright (C) 2019-2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Modifications Copyright (c) 2019 Samsung
@@ -56,7 +56,7 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class AuthorizationControllerItCase {
+public class AuthorizationControllerItTestCase {
 
     @Autowired
     private AuthorizationController auth;

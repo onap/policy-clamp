@@ -40,7 +40,6 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
 import org.onap.policy.clamp.clds.tosca.update.ToscaConverterWithDictionarySupport;
 import org.onap.policy.clamp.dao.model.jsontype.StringJsonUserType;
 import org.onap.policy.clamp.loop.Loop;

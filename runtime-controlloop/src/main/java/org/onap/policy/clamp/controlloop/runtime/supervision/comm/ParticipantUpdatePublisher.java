@@ -2,6 +2,8 @@
  * ============LICENSE_START=======================================================
  * Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
+ * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -36,7 +38,6 @@ import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -117,7 +118,7 @@ public class ParticipantUpdatePublisher extends AbstractParticipantPublisher<Par
             participantDefinitionUpdates.add(getParticipantDefinition(clDefinition, clParticipantId,
                 controlLoopElementDefinitionList));
         } else {
-            boolean participantExists = false;
+            var participantExists = false;
             for (ParticipantDefinition participantDefinitionUpdate : participantDefinitionUpdates) {
                 if (participantDefinitionUpdate.getParticipantId().equals(clParticipantId)) {
                     participantDefinitionUpdate.getControlLoopElementDefinitionList().add(clDefinition);
