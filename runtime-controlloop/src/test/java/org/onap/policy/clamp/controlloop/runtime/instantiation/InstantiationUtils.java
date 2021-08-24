@@ -140,6 +140,8 @@ public class InstantiationUtils {
         ToscaServiceTemplate template =
                 yamlTranslator.fromYaml(ResourceUtils.getResourceAsString(path), ToscaServiceTemplate.class);
 
+        commissioningProvider.deleteControlLoopDefinition(null, null);
+
         commissioningProvider.createControlLoopDefinitions(template);
     }
 

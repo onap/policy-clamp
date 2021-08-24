@@ -23,7 +23,6 @@ package org.onap.policy.clamp.controlloop.runtime.supervision.comm;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -44,7 +43,6 @@ import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.Parti
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdate;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdateAck;
 import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningProvider;
-import org.onap.policy.clamp.controlloop.runtime.instantiation.InstantiationUtils;
 import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
 import org.onap.policy.clamp.controlloop.runtime.monitoring.MonitoringProvider;
 import org.onap.policy.clamp.controlloop.runtime.supervision.SupervisionHandler;
@@ -70,10 +68,12 @@ class SupervisionMessagesTest extends CommonRestController {
     private static final Object lockit = new Object();
     private static final CommInfrastructure INFRA = CommInfrastructure.NOOP;
     private static final String TOPIC = "my-topic";
+    private static final long interval = 1000;
     private static SupervisionHandler supervisionHandler;
     private static CommissioningProvider commissioningProvider;
     private static ControlLoopProvider clProvider;
     private static PolicyModelsProvider modelsProvider;
+    private static ParticipantProvider participantProvider;
     private static final YamlJsonTranslator yamlTranslator = new YamlJsonTranslator();
     private static final String TOSCA_TEMPLATE_YAML =
             "src/test/resources/rest/servicetemplates/pmsh_multiple_cl_tosca.yaml";
@@ -91,11 +91,13 @@ class SupervisionMessagesTest extends CommonRestController {
 
         modelsProvider = CommonTestData.getPolicyModelsProvider(controlLoopParameters.getDatabaseProviderParameters());
         clProvider = new ControlLoopProvider(controlLoopParameters.getDatabaseProviderParameters());
+        participantProvider = new ParticipantProvider(controlLoopParameters.getDatabaseProviderParameters());
+
         var participantStatisticsProvider =
                 new ParticipantStatisticsProvider(controlLoopParameters.getDatabaseProviderParameters());
         var clElementStatisticsProvider =
                 new ClElementStatisticsProvider(controlLoopParameters.getDatabaseProviderParameters());
-        commissioningProvider = new CommissioningProvider(modelsProvider, clProvider);
+        commissioningProvider = new CommissioningProvider(modelsProvider, clProvider, null, participantProvider);
         var monitoringProvider =
                 new MonitoringProvider(participantStatisticsProvider, clElementStatisticsProvider, clProvider);
         var participantProvider = new ParticipantProvider(controlLoopParameters.getDatabaseProviderParameters());
@@ -128,6 +130,7 @@ class SupervisionMessagesTest extends CommonRestController {
             ToscaServiceTemplate serviceTemplate = yamlTranslator.fromYaml(
                     ResourceUtils.getResourceAsString(TOSCA_SERVICE_TEMPLATE_YAML), ToscaServiceTemplate.class);
 
+            // List<ToscaNodeTemplate> listOfTemplates = commissioningProvider.getControlLoopDefinitions(null, null);
             commissioningProvider.createControlLoopDefinitions(serviceTemplate);
             participantRegisterListener.onTopicEvent(INFRA, TOPIC, null, participantRegisterMsg);
         }
@@ -177,9 +180,6 @@ class SupervisionMessagesTest extends CommonRestController {
 
     @Test
     void testSendParticipantUpdate() throws Exception {
-        InstantiationUtils.storeToscaServiceTemplate(TOSCA_TEMPLATE_YAML, commissioningProvider);
-        commissioningProvider.getToscaServiceTemplate(null, null);
-
         final ParticipantUpdate participantUpdateMsg = new ParticipantUpdate();
         participantUpdateMsg.setParticipantId(getParticipantId());
         participantUpdateMsg.setTimestamp(Instant.now());
@@ -209,7 +209,7 @@ class SupervisionMessagesTest extends CommonRestController {
         participantUpdateMsg.setToscaServiceTemplate(toscaServiceTemplate);
         synchronized (lockit) {
             ParticipantUpdatePublisher participantUpdatePublisher =
-                new ParticipantUpdatePublisher(commissioningProvider);
+                new ParticipantUpdatePublisher(modelsProvider);
             participantUpdatePublisher.active(Collections.singletonList(Mockito.mock(TopicSink.class)));
             participantUpdatePublisher.send(participantUpdateMsg);
         }

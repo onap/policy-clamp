@@ -28,6 +28,9 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.Response;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,12 +38,17 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoops;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationCommand;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationResponse;
-import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningProvider;
 import org.onap.policy.clamp.controlloop.runtime.instantiation.ControlLoopInstantiationProvider;
 import org.onap.policy.clamp.controlloop.runtime.instantiation.InstantiationUtils;
+import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
 import org.onap.policy.clamp.controlloop.runtime.main.rest.InstantiationController;
 import org.onap.policy.clamp.controlloop.runtime.util.rest.CommonRestController;
+import org.onap.policy.common.utils.coder.YamlJsonTranslator;
+import org.onap.policy.common.utils.resources.ResourceUtils;
+import org.onap.policy.models.provider.PolicyModelsProvider;
+import org.onap.policy.models.provider.PolicyModelsProviderFactory;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -72,29 +80,39 @@ class InstantiationControllerTest extends CommonRestController {
 
     private static final String INSTANTIATION_COMMAND_ENDPOINT = "instantiation/command";
 
-    @Autowired
-    private ControlLoopInstantiationProvider instantiationProvider;
+    private static ToscaServiceTemplate serviceTemplate = new ToscaServiceTemplate();
+
+    private static final YamlJsonTranslator yamlTranslator = new YamlJsonTranslator();
+
 
     @Autowired
-    private CommissioningProvider commissioningProvider;
+    private ClRuntimeParameterGroup clRuntimeParameterGroup;
+
+    @Autowired
+    private ControlLoopInstantiationProvider instantiationProvider;
 
     @LocalServerPort
     private int randomServerPort;
 
-    /**
-     * starts Main and inserts a commissioning template.
-     *
-     * @throws Exception if an error occurs
-     */
+    @BeforeAll
+    public static void setUpBeforeClass() throws Exception {
+        serviceTemplate = yamlTranslator.fromYaml(ResourceUtils.getResourceAsString(TOSCA_TEMPLATE_YAML),
+            ToscaServiceTemplate.class);
+    }
+
     @BeforeEach
-    public void setUpBeforeClass() throws Exception {
-        // to validate control Loop, it needs to define ToscaServiceTemplate
-        InstantiationUtils.storeToscaServiceTemplate(TOSCA_TEMPLATE_YAML, commissioningProvider);
+    public void populateDb() throws Exception {
+        createEntryInDB();
     }
 
     @BeforeEach
     public void setUpPort() {
         super.setHttpPrefix(randomServerPort);
+    }
+
+    @AfterEach
+    public void cleanDatabase() throws Exception {
+        deleteEntryInDB(serviceTemplate.getName(), serviceTemplate.getVersion());
     }
 
     @Test
@@ -138,6 +156,7 @@ class InstantiationControllerTest extends CommonRestController {
 
     @Test
     void testCreate() throws Exception {
+
         ControlLoops controlLoopsFromRsc =
                 InstantiationUtils.getControlLoopsFromResource(CL_INSTANTIATION_CREATE_JSON, "Create");
 
@@ -159,6 +178,7 @@ class InstantiationControllerTest extends CommonRestController {
 
     @Test
     void testCreateBadRequest() throws Exception {
+
         ControlLoops controlLoopsFromRsc =
                 InstantiationUtils.getControlLoopsFromResource(CL_INSTANTIATION_CREATE_JSON, "CreateBadRequest");
 
@@ -185,7 +205,7 @@ class InstantiationControllerTest extends CommonRestController {
 
     @Test
     void testQuery() throws Exception {
-        // inserts a ControlLoops to DB
+
         var controlLoops = InstantiationUtils.getControlLoopsFromResource(CL_INSTANTIATION_CREATE_JSON, "Query");
         instantiationProvider.createControlLoops(controlLoops);
 
@@ -203,6 +223,7 @@ class InstantiationControllerTest extends CommonRestController {
 
     @Test
     void testUpdate() throws Exception {
+
         ControlLoops controlLoopsCreate =
                 InstantiationUtils.getControlLoopsFromResource(CL_INSTANTIATION_CREATE_JSON, "Update");
 
@@ -238,6 +259,7 @@ class InstantiationControllerTest extends CommonRestController {
 
     @Test
     void testDelete() throws Exception {
+
         ControlLoops controlLoopsFromRsc =
                 InstantiationUtils.getControlLoopsFromResource(CL_INSTANTIATION_CREATE_JSON, "Delete");
 
@@ -259,6 +281,7 @@ class InstantiationControllerTest extends CommonRestController {
 
     @Test
     void testDeleteBadRequest() throws Exception {
+
         ControlLoops controlLoopsFromRsc =
                 InstantiationUtils.getControlLoopsFromResource(CL_INSTANTIATION_CREATE_JSON, "DelBadRequest");
 
@@ -293,6 +316,7 @@ class InstantiationControllerTest extends CommonRestController {
 
     @Test
     void testCommand() throws Exception {
+
         var controlLoops = InstantiationUtils.getControlLoopsFromResource(CL_INSTANTIATION_CREATE_JSON, "Command");
         instantiationProvider.createControlLoops(controlLoops);
 
@@ -311,6 +335,23 @@ class InstantiationControllerTest extends CommonRestController {
                     toscaConceptIdentifier.getVersion());
             assertThat(controlLoopsGet.getControlLoopList()).hasSize(1);
             assertEquals(command.getOrderedState(), controlLoopsGet.getControlLoopList().get(0).getOrderedState());
+        }
+    }
+
+    private synchronized void deleteEntryInDB(String name, String version) throws Exception {
+        try (PolicyModelsProvider modelsProvider = new PolicyModelsProviderFactory()
+                .createPolicyModelsProvider(clRuntimeParameterGroup.getDatabaseProviderParameters())) {
+            if (!modelsProvider.getServiceTemplateList(null, null).isEmpty()) {
+                modelsProvider.deleteServiceTemplate(name, version);
+            }
+        }
+    }
+
+    private synchronized void createEntryInDB() throws Exception {
+        try (PolicyModelsProvider modelsProvider = new PolicyModelsProviderFactory()
+                .createPolicyModelsProvider(clRuntimeParameterGroup.getDatabaseProviderParameters())) {
+            deleteEntryInDB(serviceTemplate.getName(), serviceTemplate.getVersion());
+            modelsProvider.createServiceTemplate(serviceTemplate);
         }
     }
 }
