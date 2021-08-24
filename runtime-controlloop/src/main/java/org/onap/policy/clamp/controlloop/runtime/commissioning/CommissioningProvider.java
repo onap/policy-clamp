@@ -34,8 +34,12 @@ import javax.ws.rs.core.Response.Status;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ControlLoopProvider;
+import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ParticipantProvider;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdate;
 import org.onap.policy.clamp.controlloop.models.messages.rest.commissioning.CommissioningResponse;
+import org.onap.policy.clamp.controlloop.runtime.supervision.SupervisionHandler;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaCapabilityType;
@@ -63,6 +67,8 @@ public class CommissioningProvider {
     private final PolicyModelsProvider modelsProvider;
     private final ControlLoopProvider clProvider;
     private final ObjectMapper mapper = new ObjectMapper();
+    private final ParticipantProvider participantProvider;
+    private final SupervisionHandler supervisionHandler;
 
     private static final Object lockit = new Object();
 
@@ -72,9 +78,14 @@ public class CommissioningProvider {
      * @param modelsProvider the PolicyModelsProvider
      * @param clProvider the ControlLoopProvider
      */
-    public CommissioningProvider(PolicyModelsProvider modelsProvider, ControlLoopProvider clProvider) {
+    public CommissioningProvider(PolicyModelsProvider modelsProvider,
+                                 ControlLoopProvider clProvider,
+                                 SupervisionHandler supervisionHandler,
+                                 ParticipantProvider participantProvider) {
         this.modelsProvider = modelsProvider;
         this.clProvider = clProvider;
+        this.supervisionHandler = supervisionHandler;
+        this.participantProvider = participantProvider;
         mapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
     }
 
@@ -95,6 +106,24 @@ public class CommissioningProvider {
 
         synchronized (lockit) {
             modelsProvider.createServiceTemplate(serviceTemplate);
+            List<Participant> participantList =
+                participantProvider.getParticipants(null,
+                    null);
+
+            if (participantList != null) {
+                for (Participant participant: participantList) {
+                    var participantType = new ToscaConceptIdentifier();
+                    participantType.setName(participant.getType());
+                    participantType.setVersion(participant.getTypeVersion());
+
+                    var participantUpdate = new ParticipantUpdate();
+                    participantUpdate.setParticipantId(participant.getDefinition());
+                    participantUpdate.setParticipantType(participantType);
+
+                    this.supervisionHandler.handleSendCommissionMessage(participantUpdate);
+                }
+            }
+
         }
 
         var response = new CommissioningResponse();
@@ -126,6 +155,24 @@ public class CommissioningProvider {
         }
 
         synchronized (lockit) {
+            List<Participant> participantList =
+                participantProvider.getParticipants(null,
+                    null);
+
+            if (participantList != null) {
+                for (Participant participant : participantList) {
+                    var participantType = new ToscaConceptIdentifier();
+                    participantType.setName(participant.getType());
+                    participantType.setVersion(participant.getTypeVersion());
+
+                    var participantUpdate = new ParticipantUpdate();
+                    participantUpdate.setParticipantId(participant.getDefinition());
+                    participantUpdate.setParticipantType(participantType);
+
+                    this.supervisionHandler.handleSendDeCommissionMessage(participantUpdate);
+                }
+            }
+
             modelsProvider.deleteServiceTemplate(name, version);
         }
 

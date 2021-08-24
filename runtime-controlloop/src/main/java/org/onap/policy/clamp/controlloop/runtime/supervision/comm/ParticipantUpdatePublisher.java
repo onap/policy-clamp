@@ -22,22 +22,21 @@ package org.onap.policy.clamp.controlloop.runtime.supervision.comm;
 
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.AllArgsConstructor;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElementDefinition;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdate;
-import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningProvider;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.base.PfModelException;
+import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -51,7 +50,7 @@ public class ParticipantUpdatePublisher extends AbstractParticipantPublisher<Par
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantUpdatePublisher.class);
     private static final String CONTROL_LOOP_ELEMENT = "ControlLoopElement";
-    private final CommissioningProvider commissioningProvider;
+    private final PolicyModelsProvider modelsProvider;
     private static final Coder CODER = new StandardCoder();
 
     /**
@@ -60,7 +59,8 @@ public class ParticipantUpdatePublisher extends AbstractParticipantPublisher<Par
      * @param participantId the participant Id
      * @param participantType the participant Type
      */
-    public void send(ToscaConceptIdentifier participantId, ToscaConceptIdentifier participantType) {
+    public void send(ToscaConceptIdentifier participantId, ToscaConceptIdentifier participantType,
+                     boolean commissionFlag) {
         var message = new ParticipantUpdate();
         message.setParticipantId(participantId);
         message.setParticipantType(participantType);
@@ -68,7 +68,7 @@ public class ParticipantUpdatePublisher extends AbstractParticipantPublisher<Par
 
         ToscaServiceTemplate toscaServiceTemplate;
         try {
-            toscaServiceTemplate = commissioningProvider.getToscaServiceTemplate(null, null);
+            toscaServiceTemplate = modelsProvider.getServiceTemplateList(null, null).get(0);
         } catch (PfModelException pfme) {
             LOGGER.warn("Get of tosca service template failed, cannot send participantupdate", pfme);
             return;
@@ -91,8 +91,15 @@ public class ParticipantUpdatePublisher extends AbstractParticipantPublisher<Par
             }
         }
 
-        message.setParticipantDefinitionUpdates(participantDefinitionUpdates);
-        message.setToscaServiceTemplate(toscaServiceTemplate);
+        if (commissionFlag) {
+            // Commission the controlloop but sending participantdefinitions to participants
+            message.setParticipantDefinitionUpdates(participantDefinitionUpdates);
+            message.setToscaServiceTemplate(toscaServiceTemplate);
+        } else {
+            // DeCommission the controlloop but deleting participantdefinitions on participants
+            message.setParticipantDefinitionUpdates(null);
+            message.setToscaServiceTemplate(null);
+        }
         LOGGER.debug("Participant Update sent {}", message);
         super.send(message);
     }
@@ -127,7 +134,7 @@ public class ParticipantUpdatePublisher extends AbstractParticipantPublisher<Par
     private ParticipantDefinition getParticipantDefinition(ControlLoopElementDefinition clDefinition,
         ToscaConceptIdentifier clParticipantId,
         List<ControlLoopElementDefinition> controlLoopElementDefinitionList) {
-        ParticipantDefinition participantDefinition = new ParticipantDefinition();
+        var participantDefinition = new ParticipantDefinition();
         participantDefinition.setParticipantId(clParticipantId);
         controlLoopElementDefinitionList.add(clDefinition);
         participantDefinition.setControlLoopElementDefinitionList(controlLoopElementDefinitionList);
