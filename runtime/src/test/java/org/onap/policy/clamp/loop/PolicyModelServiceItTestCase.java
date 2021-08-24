@@ -55,7 +55,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
-public class PolicyModelServiceItCase {
+public class PolicyModelServiceItTestCase {
 
     @Autowired
     PolicyModelsService policyModelsService;
@@ -98,8 +98,7 @@ public class PolicyModelServiceItCase {
         PolicyModel actualPolicyModel = policyModelsService.saveOrUpdatePolicyModel(policyModel);
 
         // then
-        assertThat(actualPolicyModel).isNotNull();
-        assertThat(actualPolicyModel).isEqualTo(policyModelsRepository
+        assertThat(actualPolicyModel).isNotNull().isEqualTo(policyModelsRepository
                 .findById(new PolicyModelId(actualPolicyModel.getPolicyModelType(),
                         actualPolicyModel.getVersion()))
                 .get());

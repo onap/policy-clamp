@@ -26,7 +26,6 @@ package org.onap.policy.clamp.clds.filter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.StandardCopyOption;

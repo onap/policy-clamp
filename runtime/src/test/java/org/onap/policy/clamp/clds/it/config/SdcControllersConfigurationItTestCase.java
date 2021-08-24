@@ -20,8 +20,8 @@
 
 package org.onap.policy.clamp.clds.it.config;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import com.google.gson.JsonSyntaxException;
@@ -44,7 +44,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles({"clamp-default", "clamp-default-user", "clamp-sdc-controller"})
-public class SdcControllersConfigurationItCase {
+public class SdcControllersConfigurationItTestCase {
 
     @Autowired
     private SdcControllersConfiguration sdcControllersConfiguration;
@@ -59,7 +59,7 @@ public class SdcControllersConfigurationItCase {
         loadFile("classpath:clds/sdc-controllers-config.json");
         Map<String, SdcSingleControllerConfiguration> mapResult = sdcControllersConfiguration
                 .getAllDefinedControllers();
-        assertTrue(mapResult.size() == 2);
+        assertThat(mapResult).hasSize(2);
         assertEquals("sdc-controller1", mapResult.get("sdc-controller1").getSdcControllerName());
         assertEquals("sdc-controller2", mapResult.get("sdc-controller2").getSdcControllerName());
     }

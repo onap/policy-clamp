@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2020 AT&T Intellectual Property. All rights
+ * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * Modifications Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
@@ -48,7 +48,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
 @ActiveProfiles({"clamp-default", "clamp-policy-controller"})
-public class PolicyEngineControllerTestItCase {
+public class PolicyEngineControllerItTestCase {
 
     @Autowired
     PolicyEngineController policyController;
@@ -72,9 +72,8 @@ public class PolicyEngineControllerTestItCase {
         List<PolicyModel> policyModelsList = policyModelsRepository.findAll();
         assertThat(policyModelsList.size()).isGreaterThanOrEqualTo(5);
         assertThat(policyModelsList).contains(new PolicyModel("onap.policies.controlloop.operational.common.Drools",
-            null, "1.0.0"));
-        assertThat(policyModelsList).contains(new PolicyModel("onap.policies.controlloop.operational.common.Apex",
-            null, "1.0.0"));
+                null, "1.0.0"))
+            .contains(new PolicyModel("onap.policies.controlloop.operational.common.Apex", null, "1.0.0"));
         assertThat(policyModelsList)
             .contains(new PolicyModel("onap.policies.controlloop.guard.common.FrequencyLimiter", null, "1.0.0"));
         assertThat(policyModelsList)

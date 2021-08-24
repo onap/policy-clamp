@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2020 AT&T Intellectual Property. All rights
+ * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -148,9 +148,9 @@ public class JsonTemplate {
      * @return a boolean
      */
     public boolean checkFields(JsonTemplate jsonTemplate) {
-        boolean duplicateFields = false;
+        var duplicateFields = false;
         if (jsonTemplate.getJsonTemplateFields().size() == this.getJsonTemplateFields().size()) {
-            int countMatchingFields = 0;
+            var countMatchingFields = 0;
             //loop each component of first
             for (JsonTemplateField jsonTemplateFieldToCheck : jsonTemplate.getJsonTemplateFields()) {
                 for (JsonTemplateField jsonTemplateField : this.getJsonTemplateFields()) {

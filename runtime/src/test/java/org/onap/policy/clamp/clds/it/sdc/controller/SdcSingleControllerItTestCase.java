@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights
+ * Copyright (C) 2018, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Modifications Copyright (c) 2019 Samsung
@@ -58,7 +58,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles({"clamp-default", "clamp-default-user", "clamp-sdc-controller"})
-public class SdcSingleControllerItCase {
+public class SdcSingleControllerItTestCase {
 
     private static final String CSAR_ARTIFACT_NAME = "testArtifact.csar";
     private static final String SERVICE_UUID = "serviceUUID";
@@ -115,7 +115,7 @@ public class SdcSingleControllerItCase {
         // when
         sdcSingleController.treatNotification(buildFakeSdcNotification());
         // then
-        Assertions.assertThat(sdcSingleController.getNbOfNotificationsOngoing()).isEqualTo(0);
+        Assertions.assertThat(sdcSingleController.getNbOfNotificationsOngoing()).isZero();
     }
 
     @Test

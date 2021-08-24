@@ -2,6 +2,8 @@
  * ============LICENSE_START=======================================================
  * Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
+ * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -59,7 +61,7 @@ public class ControlLoopUpdatePublisher extends AbstractParticipantPublisher<Con
         }
         controlLoopUpdateMsg.setParticipantUpdatesList(participantUpdates);
 
-        LOGGER.debug("ControlLoopUpdate message sent", controlLoopUpdateMsg);
+        LOGGER.debug("ControlLoopUpdate message sent {}", controlLoopUpdateMsg);
         super.send(controlLoopUpdateMsg);
     }
 
@@ -68,7 +70,7 @@ public class ControlLoopUpdatePublisher extends AbstractParticipantPublisher<Con
         if (participantUpdates.isEmpty()) {
             participantUpdates.add(getControlLoopElementList(clElement));
         } else {
-            boolean participantExists = false;
+            var participantExists = false;
             for (ParticipantUpdates participantUpdate : participantUpdates) {
                 if (participantUpdate.getParticipantId().equals(clElement.getParticipantId())) {
                     participantUpdate.getControlLoopElementList().add(clElement);
@@ -82,7 +84,7 @@ public class ControlLoopUpdatePublisher extends AbstractParticipantPublisher<Con
     }
 
     private ParticipantUpdates getControlLoopElementList(ControlLoopElement clElement) {
-        ParticipantUpdates participantUpdate = new ParticipantUpdates();
+        var participantUpdate = new ParticipantUpdates();
         List<ControlLoopElement> controlLoopElementList = new ArrayList<>();
         participantUpdate.setParticipantId(clElement.getParticipantId());
         controlLoopElementList.add(clElement);
