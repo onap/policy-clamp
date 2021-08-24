@@ -42,7 +42,9 @@ import org.onap.policy.common.utils.network.NetworkUtil;
 public class CommonRestController {
 
     public static final String SELF = NetworkUtil.getHostname();
-    public static final String ENDPOINT_PREFIX = "onap/controlloop/v2/";
+    public static final String CONTEXT_PATH = "onap/controlloop";
+    public static final String ENDPOINT_PREFIX = CONTEXT_PATH + "/v2/";
+    public static final String ACTUATOR_ENDPOINT = CONTEXT_PATH + "/actuator/";
 
     private static String httpPrefix;
 
@@ -71,7 +73,18 @@ public class CommonRestController {
     }
 
     /**
-     * Sends a request to an endpoint, without any authorization header.
+     * Sends a request to an actuator endpoint.
+     *
+     * @param endpoint the target endpoint
+     * @return a request builder
+     * @throws Exception if an error occurs
+     */
+    protected Invocation.Builder sendActRequest(final String endpoint) throws Exception {
+        return sendFqeRequest(httpPrefix + ACTUATOR_ENDPOINT + endpoint, true);
+    }
+
+    /**
+     * Sends a request to an Rest Api endpoint, without any authorization header.
      *
      * @param endpoint the target endpoint
      * @return a request builder
@@ -79,6 +92,17 @@ public class CommonRestController {
      */
     protected Invocation.Builder sendNoAuthRequest(final String endpoint) throws Exception {
         return sendFqeRequest(httpPrefix + ENDPOINT_PREFIX + endpoint, false);
+    }
+
+    /**
+     * Sends a request to an actuator endpoint, without any authorization header.
+     *
+     * @param endpoint the target endpoint
+     * @return a request builder
+     * @throws Exception if an error occurs
+     */
+    protected Invocation.Builder sendNoAuthActRequest(final String endpoint) throws Exception {
+        return sendFqeRequest(httpPrefix + ACTUATOR_ENDPOINT + endpoint, false);
     }
 
     /**
@@ -102,7 +126,7 @@ public class CommonRestController {
 
         final WebTarget webTarget = client.target(fullyQualifiedEndpoint);
 
-        return webTarget.request(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
+        return webTarget.request(MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN);
     }
 
     /**
@@ -141,6 +165,17 @@ public class CommonRestController {
     }
 
     /**
+     * Assert that GET call to actuator endpoint is Unauthorized.
+     *
+     * @param endPoint the endpoint
+     * @throws Exception if an error occurs
+     */
+    protected void assertUnauthorizedActGet(final String endPoint) throws Exception {
+        Response rawresp = sendNoAuthActRequest(endPoint).buildGet().invoke();
+        assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), rawresp.getStatus());
+    }
+
+    /**
      * Assert that DELETE call is Unauthorized.
      *
      * @param endPoint the endpoint
@@ -158,5 +193,9 @@ public class CommonRestController {
      */
     protected void setHttpPrefix(int port) {
         httpPrefix = "http://" + SELF + ":" + port + "/";
+    }
+
+    protected String getHttpPrefix() {
+        return httpPrefix;
     }
 }
