@@ -33,7 +33,6 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
 import org.onap.policy.clamp.clds.util.JsonUtils;
 import org.onap.policy.clamp.dao.model.jsontype.StringJsonUserType;
 import org.slf4j.Logger;

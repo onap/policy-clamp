@@ -2,6 +2,8 @@
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
+ * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -37,7 +39,7 @@ class SupervisionAspectTest {
         var supervisionScanner = spy(mock(SupervisionScanner.class));
         try (var supervisionAspect = new SupervisionAspect(supervisionScanner)) {
             supervisionAspect.schedule();
-            verify(supervisionScanner, timeout(500)).run(eq(true));
+            verify(supervisionScanner, timeout(500)).run(true);
         }
     }
 
@@ -47,7 +49,7 @@ class SupervisionAspectTest {
         try (var supervisionAspect = new SupervisionAspect(supervisionScanner)) {
             supervisionAspect.doCheck();
             supervisionAspect.doCheck();
-            verify(supervisionScanner, timeout(500).times(2)).run(eq(false));
+            verify(supervisionScanner, timeout(500).times(2)).run(false);
         }
     }
 
@@ -60,7 +62,7 @@ class SupervisionAspectTest {
 
         try (var supervisionAspect = new SupervisionAspect(supervisionScanner)) {
             supervisionAspect.handleParticipantStatus(participantStatusMessage);
-            verify(supervisionScanner, timeout(500)).handleParticipantStatus(eq(identifier));
+            verify(supervisionScanner, timeout(500)).handleParticipantStatus(identifier);
         }
     }
 }

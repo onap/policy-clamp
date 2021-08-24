@@ -120,7 +120,7 @@ public class CsarServiceInstaller {
      * @throws SdcArtifactInstallerException The SdcArtifactInstallerException
      */
     public boolean isServiceAlreadyDeployed(CsarHandler csar) throws SdcArtifactInstallerException {
-        boolean alreadyInstalled = true;
+        var alreadyInstalled = true;
         var serviceDetails = JsonUtils.GSON.fromJson(
                 JsonUtils.GSON.toJson(csar.getSdcCsarHelper().getServiceMetadataAllProperties()), JsonObject.class);
         alreadyInstalled = serviceRepository.existsById(serviceDetails.get("UUID").getAsString());
