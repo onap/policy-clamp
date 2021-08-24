@@ -49,7 +49,7 @@ public class JsonTemplateFieldTest extends TestCase {
      * Test equals method.
      */
     public void testEqualsMethod() {
-        assertTrue(field1.equals(field2));
+        assertEquals(field1, field2);
         assertTrue(field1.equals(field3));
         assertTrue(field1.equals(field4));
         assertTrue(field1.equals(field5));
