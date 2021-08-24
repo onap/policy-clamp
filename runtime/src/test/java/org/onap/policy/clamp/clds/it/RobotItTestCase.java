@@ -56,12 +56,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestPropertySource(locations = "classpath:robotframework/robotframework-test.properties")
 @DirtiesContext
-public class RobotItCase {
+public class RobotItTestCase {
 
     @Value("${server.port}")
     private String httpPort;
     private static final int TIMEOUT_S = 150;
-    protected static final Logger logger = LoggerFactory.getLogger(RobotItCase.class);
+    protected static final Logger logger = LoggerFactory.getLogger(RobotItTestCase.class);
 
     @Test
     public void robotTests() throws Exception {
