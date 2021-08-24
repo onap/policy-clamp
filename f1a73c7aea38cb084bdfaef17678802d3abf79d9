@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f1eeea3_a8cbf2e5",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ControlLoopHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 322,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-24T13:48:16Z",
+      "side": 1,
+      "message": "so we treat it as a failure if it\u0027s already in the desired state?  will the client making the request be OK with that?",
+      "revId": "f1a73c7aea38cb084bdfaef17678802d3abf79d9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a62800ad_26b36ace",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ParticipantHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-24T13:48:16Z",
+      "side": 1,
+      "message": "should there only be one match (i.e., should this use flatMap similar to a previous file in this review)?  If not, maybe add \"break\" after line 259",
+      "revId": "f1a73c7aea38cb084bdfaef17678802d3abf79d9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
