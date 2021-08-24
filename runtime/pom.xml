@@ -685,7 +685,7 @@
                                 </additionalClasspathElement>
                             </additionalClasspathElements>
                             <includes>
-                                <include>**/*ItCase.java</include>
+                                <include>**/*ItTestCase.java</include>
                             </includes>
                             <forkCount>1C</forkCount>
                             <reuseForks>true</reuseForks>
