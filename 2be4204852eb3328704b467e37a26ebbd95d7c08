@@ -90,6 +90,24 @@
       "revId": "2be4204852eb3328704b467e37a26ebbd95d7c08",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1785d07a_ef7a1a46",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/Listener.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-24T17:09:47Z",
+      "side": 1,
+      "message": "for that matter we could refactor an interface out of ScoListener, and then this Listener could extend from there eliminate the need for the getScoListener method",
+      "parentUuid": "fcb67326_92ae203f",
+      "revId": "2be4204852eb3328704b467e37a26ebbd95d7c08",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
