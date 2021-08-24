@@ -57,6 +57,30 @@
       "revId": "fac4d61d64ba56fac26bf7806318b70705b2fc2c",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4597102e_9e7bd643",
+        "filename": "runtime-controlloop/src/main/resources/application.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-08-24T14:11:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d09e2194_1cc8282b",
+      "range": {
+        "startLine": 27,
+        "startChar": 21,
+        "endLine": 27,
+        "endChar": 28
+      },
+      "revId": "fac4d61d64ba56fac26bf7806318b70705b2fc2c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
