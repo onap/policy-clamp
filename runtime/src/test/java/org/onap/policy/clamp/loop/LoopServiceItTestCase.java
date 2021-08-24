@@ -51,7 +51,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
-public class LoopServiceTestItCase {
+public class LoopServiceItTestCase {
 
     private static final String EXAMPLE_LOOP_NAME = "ClosedLoopTest";
     private static final String EXAMPLE_JSON = "{\"testName\":\"testValue\"}";
@@ -330,10 +330,10 @@ public class LoopServiceTestItCase {
         loopService.updateAndSaveMicroservicePolicies(EXAMPLE_LOOP_NAME, Lists.newArrayList(microServicePolicy));
 
         // Verify it's there
-        assertThat(loopsRepository.findById(EXAMPLE_LOOP_NAME).orElse(null)).isNotNull();
+        assertThat(loopsRepository.findById(EXAMPLE_LOOP_NAME)).isPresent();
         loopService.deleteLoop(EXAMPLE_LOOP_NAME);
         // Verify it's well deleted and has been cascaded, except for Microservice
-        assertThat(loopsRepository.findById(EXAMPLE_LOOP_NAME).orElse(null)).isNull();
+        assertThat(loopsRepository.findById(EXAMPLE_LOOP_NAME)).isPresent();
         assertThat(microServicePolicyService.isExisting("microPolicy")).isTrue();
         assertThat(operationalPolicyService.isExisting("opPolicy")).isFalse();
         assertThat(loopLogService.isExisting(((LoopLog) loop.getLoopLogs().toArray()[0]).getId())).isFalse();

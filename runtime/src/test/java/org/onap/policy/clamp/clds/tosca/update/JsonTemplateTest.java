@@ -60,10 +60,9 @@ public class JsonTemplateTest extends TestCase {
         toTest.updateValueField("moreField", "testValue");
         
         assertTrue(toTest.isVisible("moreField"));
-        assertTrue(toTest.getSpecificField("moreField").getValue().equals("testValue"));
+        assertEquals("testValue", toTest.getSpecificField("moreField").getValue());
         assertTrue(toTest.fieldStaticStatus("moreField"));
-        assertTrue(toTest.toString()
-            .equals(" templateFields : [type null null null, description null null null, "
-            + "enum null null null, moreField testValue true true]"));
+        assertEquals(" templateFields : [type null null null, description null null null, "
+                + "enum null null null, moreField testValue true true]", toTest.toString());
     }
 }

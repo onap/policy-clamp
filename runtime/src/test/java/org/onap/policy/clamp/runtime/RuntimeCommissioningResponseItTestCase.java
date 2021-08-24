@@ -36,7 +36,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
-public class RuntimeCommissioningResponseTestItCase {
+public class RuntimeCommissioningResponseItTestCase {
     @Autowired
     CamelContext camelContext;
 
@@ -86,7 +86,7 @@ public class RuntimeCommissioningResponseTestItCase {
                 .withProperty("raiseHttpExceptionFlag", "true")
                 .build());
 
-        assertThat(exchangeResponse.getIn().getBody().toString()).isEqualTo(SAMPLE_TOSCA_TEMPLATE);
+        assertThat(exchangeResponse.getIn().getBody()).hasToString(SAMPLE_TOSCA_TEMPLATE);
     }
 
     @Test

@@ -75,7 +75,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
 @ActiveProfiles({"clamp-default", "clamp-default-user", "clamp-sdc-controller"})
-public class CsarInstallerItCase {
+public class CsarInstallerItTestCase {
 
     private static final String CSAR_ARTIFACT_NAME_CDS = "example/sdc/service_Vloadbalancerms_cds.csar";
     private static final String CSAR_ARTIFACT_NAME_NO_CDS = "example/sdc/service_Vloadbalancerms_no_cds.csar";
@@ -312,7 +312,7 @@ public class CsarInstallerItCase {
         assertThat(((LoopTemplateLoopElementModel) (loopTemplate.getLoopElementModelsUsed().toArray()[0]))
                 .getLoopElementModel().getName()).isNotEmpty();
 
-        assertThat(policyModelsRepository.findAll().size()).isGreaterThanOrEqualTo(1);
+        assertThat(policyModelsRepository.findAll().size()).isPositive();
         assertThat(policyModelsRepository
                 .existsById(new PolicyModelId("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0"))).isTrue();
         assertThat(policyModelsRepository
