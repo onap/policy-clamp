@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights
+ * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,34 +34,34 @@ public class ExternalComponentStateTest {
 
     @Test
     public void generalTest() {
-        assertThat(state.toString()).isEqualTo("NOT_SENT");
+        assertThat(state).hasToString("NOT_SENT");
         state.setLevel(70);
         assertThat(state.getLevel()).isEqualTo(70);
     }
 
     @Test
     public void equalsTest() {
-        assertThat(state.equals(null)).isEqualTo(false);
+        assertThat(state.equals(null)).isFalse();
 
         ExternalComponentState state2 =  new ExternalComponentState("NOT_SENT",
                "The policies defined have NOT yet been created on the policy engine", 90);
-        assertThat(state.equals(state2)).isEqualTo(true);
+        assertThat(state.equals(state2)).isTrue();
 
-        assertThat(state.equals(12)).isEqualTo(false);
+        assertThat(state.equals(12)).isFalse();
 
         state2.setLevel(70);
-        assertThat(state.equals(state2)).isEqualTo(true);
+        assertThat(state.equals(state2)).isTrue();
 
         ExternalComponentState state3 =  new ExternalComponentState("SENT",
                 "The policies defined have NOT yet been created on the policy engine", 90);
-        assertThat(state.equals(state3)).isEqualTo(false);
+        assertThat(state.equals(state3)).isFalse();
 
         ExternalComponentState state4 =  new ExternalComponentState(null,
                 "The policies defined have NOT yet been created on the policy engine", 90);
         ExternalComponentState state5 =  new ExternalComponentState(null,
                 "The policies defined have NOT yet been", 50);
-        assertThat(state4.equals(state3)).isEqualTo(false);
-        assertThat(state4.equals(state5)).isEqualTo(true);
+        assertThat(state4.equals(state3)).isFalse();
+        assertThat(state4.equals(state5)).isTrue();
     }
 
     @Test

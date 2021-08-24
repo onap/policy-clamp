@@ -2,6 +2,8 @@
  * ============LICENSE_START=======================================================
  * Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
+ * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -30,7 +32,6 @@ import javax.ws.rs.core.Response;
 import lombok.NonNull;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.concepts.JpaControlLoop;
-import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationResponse;
 import org.onap.policy.models.base.PfAuthorative;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfKey;
@@ -197,7 +198,7 @@ public class ControlLoopProvider extends AbstractModelsProvider {
         Map<String, ToscaNodeTemplate> savedNodeTemplates = new HashMap<>();
 
         serviceTemplate.getToscaTopologyTemplate().getNodeTemplates().forEach((key, template) -> {
-            JpaToscaNodeTemplate jpaToscaNodeTemplate = new JpaToscaNodeTemplate(template);
+            var jpaToscaNodeTemplate = new JpaToscaNodeTemplate(template);
 
             getPfDao().create(jpaToscaNodeTemplate);
 

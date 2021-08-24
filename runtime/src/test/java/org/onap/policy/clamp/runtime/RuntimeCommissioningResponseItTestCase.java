@@ -2,6 +2,8 @@
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
+ * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -36,7 +38,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
-public class RuntimeCommissioningResponseTestItCase {
+public class RuntimeCommissioningResponseItTestCase {
     @Autowired
     CamelContext camelContext;
 
@@ -86,7 +88,7 @@ public class RuntimeCommissioningResponseTestItCase {
                 .withProperty("raiseHttpExceptionFlag", "true")
                 .build());
 
-        assertThat(exchangeResponse.getIn().getBody().toString()).isEqualTo(SAMPLE_TOSCA_TEMPLATE);
+        assertThat(exchangeResponse.getIn().getBody()).hasToString(SAMPLE_TOSCA_TEMPLATE);
     }
 
     @Test
