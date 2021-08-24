@@ -292,7 +292,7 @@ public class LoggingUtils {
      * @param targetServiceName The target service name
      */
     public void invoke(String targetEntity, String targetServiceName) {
-        final String invocationId = UUID.randomUUID().toString();
+        final var invocationId = UUID.randomUUID().toString();
 
         invokeContext(targetEntity, targetServiceName, invocationId);
 
@@ -396,7 +396,7 @@ public class LoggingUtils {
 
     private <T extends URLConnection> T invokeGeneric(final T con, String targetEntity,
                                                       String targetServiceName) {
-        final String invocationId = UUID.randomUUID().toString();
+        final var invocationId = UUID.randomUUID().toString();
 
         // Set standard HTTP headers on (southbound request) builder.
         con.setRequestProperty(OnapLogConstants.Headers.REQUEST_ID,

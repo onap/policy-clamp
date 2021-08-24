@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2020 AT&T Intellectual Property. All rights
+ * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -39,7 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = Application.class)
-public class DictionaryRepositoriesTestItCase {
+public class DictionaryRepositoriesTestItTestCase {
     @Autowired
     private DictionaryRepository dictionaryRepository;
 
@@ -76,13 +76,13 @@ public class DictionaryRepositoriesTestItCase {
 
         dictionaryRepository.save(dictionaryTest1);
         List<String> res1 = dictionaryRepository.getAllDictionaryNames();
-        assertThat(res1.size()).isGreaterThanOrEqualTo(1);
+        assertThat(res1.size()).isPositive();
         assertThat(res1).contains("testDictionary1");
 
         dictionaryRepository.save(dictionaryTest2);
         List<String> res2 = dictionaryRepository.getAllDictionaryNames();
         assertThat(res2.size()).isGreaterThanOrEqualTo(2);
-        assertThat(res2).contains("testDictionary1");
-        assertThat(res2).contains("testDictionary2");
+        assertThat(res2).contains("testDictionary1")
+            .contains("testDictionary2");
     }
 }

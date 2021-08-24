@@ -34,7 +34,6 @@ import java.util.Date;
 import java.util.Map;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
-import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.ExchangeBuilder;
 import org.onap.policy.clamp.clds.exception.cds.CdsParametersException;
 import org.onap.policy.clamp.clds.model.cds.CdsBpWorkFlowListResponse;
