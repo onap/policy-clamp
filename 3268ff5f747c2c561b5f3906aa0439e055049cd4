@@ -1,0 +1,146 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b58fe8d1_7537fcce",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-24T16:47:44Z",
+      "side": 1,
+      "message": "remove this part of the test - it isn\u0027t needed and it requires more junits just to test it\n\nsame comment below",
+      "range": {
+        "startLine": 113,
+        "startChar": 39,
+        "endLine": 113,
+        "endChar": 69
+      },
+      "revId": "3268ff5f747c2c561b5f3906aa0439e055049cd4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c70a1034_59f8c0a6",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/comm/ParticipantUpdatePublisher.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-24T16:47:44Z",
+      "side": 1,
+      "message": "why do we need this?",
+      "revId": "3268ff5f747c2c561b5f3906aa0439e055049cd4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3a45f5cd_c55729ae",
+        "filename": "runtime-controlloop/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProviderTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-24T16:47:44Z",
+      "side": 1,
+      "message": "maybe just put this in a BeforeEach?",
+      "revId": "3268ff5f747c2c561b5f3906aa0439e055049cd4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9f5ed285_dfe4aa3e",
+        "filename": "runtime-controlloop/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProviderTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-24T16:47:44Z",
+      "side": 1,
+      "message": "maybe we shouldn\u0027t catch this exception - just let it propagate out\n\nsame comment below",
+      "revId": "3268ff5f747c2c561b5f3906aa0439e055049cd4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "57c53811_b9ccf946",
+        "filename": "runtime-controlloop/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-24T16:47:44Z",
+      "side": 1,
+      "message": "question: can we just invoke delete() without bothering with the get() ?",
+      "revId": "3268ff5f747c2c561b5f3906aa0439e055049cd4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fee48191_e7ab3a18",
+        "filename": "runtime-controlloop/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/rest/InstantiationControllerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-24T16:47:44Z",
+      "side": 1,
+      "message": "maybe just put this in a BeforeEach?",
+      "revId": "3268ff5f747c2c561b5f3906aa0439e055049cd4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2efa531c_6fed9a19",
+        "filename": "runtime-controlloop/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/rest/InstantiationControllerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 346,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-24T16:47:44Z",
+      "side": 1,
+      "message": "maybe indent this one more tab-stop\n\nsame comment below",
+      "revId": "3268ff5f747c2c561b5f3906aa0439e055049cd4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c6aa7847_cdd7424c",
+        "filename": "runtime-controlloop/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/rest/InstantiationControllerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-24T16:47:44Z",
+      "side": 1,
+      "message": "is this test needed?",
+      "revId": "3268ff5f747c2c561b5f3906aa0439e055049cd4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
