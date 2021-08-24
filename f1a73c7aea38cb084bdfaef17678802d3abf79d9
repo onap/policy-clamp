@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "67f87b04_2771f508",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ControlLoopHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 322,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-08-24T14:35:59Z",
+      "side": 1,
+      "message": "Yes, This has to be handled appropriately in the client side, this acknowledge message will inform the client that the state transition did-not happen on this controlLoopElement. Heartbeat includes state of the controlLoopElement, client should include a logic to figure out the problem by comparing the state received in heartbeat.",
+      "parentUuid": "7f1eeea3_a8cbf2e5",
+      "revId": "f1a73c7aea38cb084bdfaef17678802d3abf79d9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a62800ad_26b36ace",
         "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ParticipantHandler.java",
         "patchSetId": 1
@@ -33,6 +51,24 @@
       "revId": "f1a73c7aea38cb084bdfaef17678802d3abf79d9",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bfc3c838_ee3592dc",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ParticipantHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-08-24T14:35:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a62800ad_26b36ace",
+      "revId": "f1a73c7aea38cb084bdfaef17678802d3abf79d9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
