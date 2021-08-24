@@ -47,8 +47,8 @@ public class ServiceTest {
         Service service3 = new Service(JsonUtils.GSON.fromJson(serviceStr3, JsonObject.class), 
                 JsonUtils.GSON.fromJson(resourceStr, JsonObject.class), "1.0");
 
-        assertThat(service1.equals(service2)).isEqualTo(true);
-        assertThat(service1.equals(service3)).isEqualTo(false);
+        assertThat(service1.equals(service2)).isTrue();
+        assertThat(service1.equals(service3)).isFalse();
     }
 
 }

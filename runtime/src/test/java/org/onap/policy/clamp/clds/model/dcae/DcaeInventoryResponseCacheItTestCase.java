@@ -42,7 +42,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
-public class DcaeInventoryResponseCacheTestItCase {
+public class DcaeInventoryResponseCacheItTestCase {
 
     public static DcaeInventoryCache inventoryCache = new DcaeInventoryCache();
 

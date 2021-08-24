@@ -30,7 +30,6 @@ import javax.ws.rs.core.Response;
 import lombok.NonNull;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.concepts.JpaControlLoop;
-import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationResponse;
 import org.onap.policy.models.base.PfAuthorative;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfKey;
@@ -197,7 +196,7 @@ public class ControlLoopProvider extends AbstractModelsProvider {
         Map<String, ToscaNodeTemplate> savedNodeTemplates = new HashMap<>();
 
         serviceTemplate.getToscaTopologyTemplate().getNodeTemplates().forEach((key, template) -> {
-            JpaToscaNodeTemplate jpaToscaNodeTemplate = new JpaToscaNodeTemplate(template);
+            var jpaToscaNodeTemplate = new JpaToscaNodeTemplate(template);
 
             getPfDao().create(jpaToscaNodeTemplate);
 

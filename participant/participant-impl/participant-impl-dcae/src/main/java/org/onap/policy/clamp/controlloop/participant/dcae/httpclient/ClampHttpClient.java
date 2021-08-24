@@ -25,7 +25,6 @@ package org.onap.policy.clamp.controlloop.participant.dcae.httpclient;
 import org.apache.http.HttpStatus;
 import org.onap.policy.clamp.controlloop.participant.dcae.main.parameters.ClampEndPoints;
 import org.onap.policy.clamp.controlloop.participant.dcae.main.parameters.ParticipantDcaeParameters;
-import org.onap.policy.clamp.controlloop.participant.dcae.model.ExternalComponent;
 import org.onap.policy.clamp.controlloop.participant.dcae.model.Loop;
 import org.springframework.stereotype.Component;
 
