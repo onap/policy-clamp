@@ -662,6 +662,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
+                    <includes>
+                        <include>**/*Test.java</include>
+                    </includes>
                     <forkCount>1C</forkCount>
                     <reuseForks>true</reuseForks>
                     <useSystemClassLoader>false</useSystemClassLoader>
@@ -685,7 +688,7 @@
                                 </additionalClasspathElement>
                             </additionalClasspathElements>
                             <includes>
-                                <include>**/*ItCase.java</include>
+                                <include>**/*ItTestCase.java</include>
                             </includes>
                             <forkCount>1C</forkCount>
                             <reuseForks>true</reuseForks>
