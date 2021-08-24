@@ -148,9 +148,9 @@ public class JsonTemplate {
      * @return a boolean
      */
     public boolean checkFields(JsonTemplate jsonTemplate) {
-        boolean duplicateFields = false;
+        var duplicateFields = false;
         if (jsonTemplate.getJsonTemplateFields().size() == this.getJsonTemplateFields().size()) {
-            int countMatchingFields = 0;
+            var countMatchingFields = 0;
             //loop each component of first
             for (JsonTemplateField jsonTemplateFieldToCheck : jsonTemplate.getJsonTemplateFields()) {
                 for (JsonTemplateField jsonTemplateField : this.getJsonTemplateFields()) {

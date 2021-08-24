@@ -37,7 +37,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
 import org.onap.policy.clamp.dao.model.jsontype.StringJsonUserType;
 import org.onap.policy.clamp.loop.common.AuditEntity;
 import org.onap.policy.clamp.util.SemanticVersioning;

@@ -36,7 +36,6 @@ import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -117,7 +116,7 @@ public class ParticipantUpdatePublisher extends AbstractParticipantPublisher<Par
             participantDefinitionUpdates.add(getParticipantDefinition(clDefinition, clParticipantId,
                 controlLoopElementDefinitionList));
         } else {
-            boolean participantExists = false;
+            var participantExists = false;
             for (ParticipantDefinition participantDefinitionUpdate : participantDefinitionUpdates) {
                 if (participantDefinitionUpdate.getParticipantId().equals(clParticipantId)) {
                     participantDefinitionUpdate.getControlLoopElementDefinitionList().add(clDefinition);

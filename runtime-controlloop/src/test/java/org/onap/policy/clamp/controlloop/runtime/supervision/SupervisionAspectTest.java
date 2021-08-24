@@ -37,7 +37,7 @@ class SupervisionAspectTest {
         var supervisionScanner = spy(mock(SupervisionScanner.class));
         try (var supervisionAspect = new SupervisionAspect(supervisionScanner)) {
             supervisionAspect.schedule();
-            verify(supervisionScanner, timeout(500)).run(eq(true));
+            verify(supervisionScanner, timeout(500)).run(true);
         }
     }
 
@@ -47,7 +47,7 @@ class SupervisionAspectTest {
         try (var supervisionAspect = new SupervisionAspect(supervisionScanner)) {
             supervisionAspect.doCheck();
             supervisionAspect.doCheck();
-            verify(supervisionScanner, timeout(500).times(2)).run(eq(false));
+            verify(supervisionScanner, timeout(500).times(2)).run(false);
         }
     }
 
@@ -60,7 +60,7 @@ class SupervisionAspectTest {
 
         try (var supervisionAspect = new SupervisionAspect(supervisionScanner)) {
             supervisionAspect.handleParticipantStatus(participantStatusMessage);
-            verify(supervisionScanner, timeout(500)).handleParticipantStatus(eq(identifier));
+            verify(supervisionScanner, timeout(500)).handleParticipantStatus(identifier);
         }
     }
 }

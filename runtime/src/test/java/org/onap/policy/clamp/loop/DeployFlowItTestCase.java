@@ -47,7 +47,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
-public class DeployFlowTestItCase {
+public class DeployFlowItTestCase {
     private Gson gson = new Gson();
 
     @Autowired
@@ -159,7 +159,7 @@ public class DeployFlowTestItCase {
         camelContext.createProducerTemplate().send("direct:undeploy-loop", myCamelExchange);
 
         Loop loopAfterTest = loopService.getLoop("ControlLoopTest");
-        assertThat(loopAfterTest.getDcaeDeploymentStatusUrl().contains("/uninstall")).isTrue();
+        assertThat(loopAfterTest.getDcaeDeploymentStatusUrl()).contains("/uninstall");
         assertThat(loopAfterTest.getDcaeDeploymentId()).isNull();
     }
 
@@ -196,7 +196,7 @@ public class DeployFlowTestItCase {
         Loop loopAfterTest = loopService.getLoop("ControlLoopTest2");
         Set<MicroServicePolicy> policyList = loopAfterTest.getMicroServicePolicies();
         for (MicroServicePolicy policy : policyList) {
-            assertThat(policy.getDcaeDeploymentStatusUrl().contains("/uninstall")).isTrue();
+            assertThat(policy.getDcaeDeploymentStatusUrl()).contains("/uninstall");
             assertThat(policy.getDcaeDeploymentId()).isNull();
             
         }
@@ -224,7 +224,7 @@ public class DeployFlowTestItCase {
                 "{\"param1\":\"value1\"}", true);
         loopTest.addMicroServicePolicy(microServicePolicy);
         loopService.saveOrUpdateLoop(loopTest);
-        assertThat(loopTest.getComponents().size()).isEqualTo(2);
+        assertThat(loopTest.getComponents()).hasSize(2);
         assertThat(loopTest.getComponent("DCAE")).isNotNull();
         assertThat(loopTest.getComponent("POLICY")).isNotNull();
         Exchange myCamelExchange = ExchangeBuilder.anExchange(camelContext).withProperty("loopObject", loopTest)
@@ -235,7 +235,7 @@ public class DeployFlowTestItCase {
         assertThat(loopTest.getComponent("DCAE").getState().getStateName()).isEqualTo("BLUEPRINT_DEPLOYED");
 
         Loop loopAfterTest = loopService.getLoop("ControlLoopTest");
-        assertThat(loopAfterTest.getComponents().size()).isEqualTo(2);
+        assertThat(loopAfterTest.getComponents()).hasSize(2);
         assertThat(loopAfterTest.getComponent("DCAE")).isNotNull();
         assertThat(loopAfterTest.getComponent("POLICY")).isNotNull();
     }
@@ -263,7 +263,7 @@ public class DeployFlowTestItCase {
         loopTest.addMicroServicePolicy(microServicePolicy);
         loopTest.addMicroServicePolicy(microServicePolicy2);
         loopService.saveOrUpdateLoop(loopTest);
-        assertThat(loopTest.getComponents().size()).isEqualTo(3);
+        assertThat(loopTest.getComponents()).hasSize(3);
         assertThat(loopTest.getComponent("DCAE")).isNull();
         assertThat(loopTest.getComponent("DCAE_configPolicyTest")).isNotNull();
         assertThat(loopTest.getComponent("DCAE_configPolicyTest2")).isNotNull();
@@ -279,7 +279,7 @@ public class DeployFlowTestItCase {
                 .isEqualTo("BLUEPRINT_DEPLOYED");
 
         Loop loopAfterTest = loopService.getLoop("ControlLoopTest");
-        assertThat(loopAfterTest.getComponents().size()).isEqualTo(3);
+        assertThat(loopAfterTest.getComponents()).hasSize(3);
         assertThat(loopAfterTest.getComponent("DCAE")).isNull();
         assertThat(loopAfterTest.getComponent("POLICY")).isNotNull();
         assertThat(loopTest.getComponent("DCAE_configPolicyTest")).isNotNull();

@@ -229,7 +229,7 @@ class TestMonitoringProvider {
         var element = new ControlLoopElement();
         element.setParticipantId(new ToscaConceptIdentifier("name1", "1.001"));
         controlLoop.setElements(Map.of(UUID.randomUUID(), element));
-        when(mockClProvider.getControlLoop(eq(new ToscaConceptIdentifier("testName", "1.001"))))
+        when(mockClProvider.getControlLoop(new ToscaConceptIdentifier("testName", "1.001")))
                 .thenReturn(controlLoop);
 
         ParticipantStatisticsList getResponse = provider.fetchParticipantStatsPerControlLoop("testName", "1.001");

@@ -22,17 +22,13 @@ package org.onap.policy.clamp.controlloop.runtime.supervision.comm;
 
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantUpdates;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopUpdate;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -63,7 +59,7 @@ public class ControlLoopUpdatePublisher extends AbstractParticipantPublisher<Con
         }
         controlLoopUpdateMsg.setParticipantUpdatesList(participantUpdates);
 
-        LOGGER.debug("ControlLoopUpdate message sent", controlLoopUpdateMsg);
+        LOGGER.debug("ControlLoopUpdate message sent {}", controlLoopUpdateMsg);
         super.send(controlLoopUpdateMsg);
     }
 
@@ -72,7 +68,7 @@ public class ControlLoopUpdatePublisher extends AbstractParticipantPublisher<Con
         if (participantUpdates.isEmpty()) {
             participantUpdates.add(getControlLoopElementList(clElement));
         } else {
-            boolean participantExists = false;
+            var participantExists = false;
             for (ParticipantUpdates participantUpdate : participantUpdates) {
                 if (participantUpdate.getParticipantId().equals(clElement.getParticipantId())) {
                     participantUpdate.getControlLoopElementList().add(clElement);
@@ -86,7 +82,7 @@ public class ControlLoopUpdatePublisher extends AbstractParticipantPublisher<Con
     }
 
     private ParticipantUpdates getControlLoopElementList(ControlLoopElement clElement) {
-        ParticipantUpdates participantUpdate = new ParticipantUpdates();
+        var participantUpdate = new ParticipantUpdates();
         List<ControlLoopElement> controlLoopElementList = new ArrayList<>();
         participantUpdate.setParticipantId(clElement.getParticipantId());
         controlLoopElementList.add(clElement);

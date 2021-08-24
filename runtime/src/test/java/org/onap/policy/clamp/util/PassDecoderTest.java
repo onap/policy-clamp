@@ -47,7 +47,7 @@ public class PassDecoderTest {
     @Test
     public final void testDecryption() throws Exception {
         String decodedPass = PassDecoder.decode(encrypted, "classpath:clds/aaf/org.onap.clamp.keyfile");
-        assertEquals(decodedPass, "China in the Spring");
+        assertEquals("China in the Spring", decodedPass);
         assertEquals("Kp8bJ4SXszM0WXlhak3eHlcse2gAw84vaoGGmJvUy2U", PassDecoder
                 .decode("enc:JPV4p067JlSXt2Fet9bfuI8JpkS4ZGYVcgypcPs98gXjgjCjTze_d3JxqmlKaaakdiOjIcEC_MJh6-5pJTLgdc",
                         "classpath:clds/aaf/org.onap.clamp.keyfile"));

@@ -158,7 +158,7 @@ public class SupervisionScanner {
             return;
         }
 
-        boolean completed = true;
+        var completed = true;
         for (ControlLoopElement element : controlLoop.getElements().values()) {
             if (!element.getState().equals(element.getOrderedState().asState())) {
                 completed = false;
