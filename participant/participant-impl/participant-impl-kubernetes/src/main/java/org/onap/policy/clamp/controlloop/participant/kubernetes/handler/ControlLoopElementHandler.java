@@ -134,10 +134,6 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
         LOGGER.info("Installation request received for the Helm Chart {} ", chartData);
         try {
             var chartInfo =  CODER.convert(chartData, ChartInfo.class);
-            var repositoryValue = chartData.get("repository");
-            if (repositoryValue != null) {
-                chartInfo.setRepository(repositoryValue.toString());
-            }
             chartService.installChart(chartInfo);
             chartMap.put(element.getId(), chartInfo);
 
