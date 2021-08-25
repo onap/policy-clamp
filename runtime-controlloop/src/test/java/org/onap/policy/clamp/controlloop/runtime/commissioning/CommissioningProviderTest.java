@@ -33,6 +33,7 @@ import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ControlLoopProvider;
+import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ParticipantProvider;
 import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
 import org.onap.policy.clamp.controlloop.runtime.util.CommonTestData;
 import org.onap.policy.common.utils.coder.Coder;
@@ -62,7 +63,7 @@ class CommissioningProviderTest {
     private ControlLoopProvider clProvider = null;
     private static final Coder CODER = new StandardCoder();
     private final ObjectMapper mapper = new ObjectMapper();
-
+    private ParticipantProvider participantProvider;
 
     @AfterEach
     void close() throws Exception {
@@ -71,6 +72,9 @@ class CommissioningProviderTest {
         }
         if (clProvider != null) {
             clProvider.close();
+        }
+        if (participantProvider != null) {
+            participantProvider.close();
         }
     }
 
@@ -85,8 +89,10 @@ class CommissioningProviderTest {
         modelsProvider =
                 CommonTestData.getPolicyModelsProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
         clProvider = new ControlLoopProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
+        participantProvider = new ParticipantProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
 
-        CommissioningProvider provider = new CommissioningProvider(modelsProvider, clProvider);
+        CommissioningProvider provider = new CommissioningProvider(modelsProvider, clProvider,
+            null, participantProvider);
         ToscaServiceTemplate serviceTemplate = yamlTranslator
                 .fromYaml(ResourceUtils.getResourceAsString(TOSCA_SERVICE_TEMPLATE_YAML), ToscaServiceTemplate.class);
 
@@ -122,8 +128,10 @@ class CommissioningProviderTest {
         modelsProvider =
                 CommonTestData.getPolicyModelsProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
         clProvider = new ControlLoopProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
+        participantProvider = new ParticipantProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
 
-        CommissioningProvider provider = new CommissioningProvider(modelsProvider, clProvider);
+        CommissioningProvider provider = new CommissioningProvider(modelsProvider, clProvider,
+            null, participantProvider);
         // Test Service template is null
         assertThatThrownBy(() -> provider.createControlLoopDefinitions(null)).hasMessageMatching(TEMPLATE_IS_NULL);
         List<ToscaNodeTemplate> listOfTemplates = provider.getControlLoopDefinitions(null, null);
@@ -151,8 +159,10 @@ class CommissioningProviderTest {
         modelsProvider =
             CommonTestData.getPolicyModelsProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
         clProvider = new ControlLoopProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
+        participantProvider = new ParticipantProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
 
-        CommissioningProvider provider = new CommissioningProvider(modelsProvider, clProvider);
+        CommissioningProvider provider = new CommissioningProvider(modelsProvider, clProvider,
+            null, participantProvider);
         ToscaServiceTemplate serviceTemplate = yamlTranslator
             .fromYaml(ResourceUtils
                 .getResourceAsString(COMMON_TOSCA_SERVICE_TEMPLATE_YAML), ToscaServiceTemplate.class);
@@ -179,8 +189,10 @@ class CommissioningProviderTest {
         modelsProvider =
             CommonTestData.getPolicyModelsProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
         clProvider = new ControlLoopProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
+        participantProvider = new ParticipantProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
 
-        CommissioningProvider provider = new CommissioningProvider(modelsProvider, clProvider);
+        CommissioningProvider provider = new CommissioningProvider(modelsProvider, clProvider,
+            null, participantProvider);
         ToscaServiceTemplate serviceTemplate = yamlTranslator
             .fromYaml(ResourceUtils
                 .getResourceAsString(COMMON_TOSCA_SERVICE_TEMPLATE_YAML), ToscaServiceTemplate.class);
@@ -207,8 +219,10 @@ class CommissioningProviderTest {
         modelsProvider =
             CommonTestData.getPolicyModelsProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
         clProvider = new ControlLoopProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
+        participantProvider = new ParticipantProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
 
-        CommissioningProvider provider = new CommissioningProvider(modelsProvider, clProvider);
+        CommissioningProvider provider = new CommissioningProvider(modelsProvider, clProvider,
+            null, participantProvider);
         ToscaServiceTemplate serviceTemplate = yamlTranslator
             .fromYaml(ResourceUtils
                 .getResourceAsString(COMMON_TOSCA_SERVICE_TEMPLATE_YAML), ToscaServiceTemplate.class);
@@ -258,8 +272,10 @@ class CommissioningProviderTest {
         modelsProvider =
                 CommonTestData.getPolicyModelsProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
         clProvider = new ControlLoopProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
+        participantProvider = new ParticipantProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
 
-        CommissioningProvider provider = new CommissioningProvider(modelsProvider, clProvider);
+        CommissioningProvider provider = new CommissioningProvider(modelsProvider, clProvider,
+            null, participantProvider);
         ToscaServiceTemplate serviceTemplate = yamlTranslator
                 .fromYaml(ResourceUtils.getResourceAsString(TOSCA_SERVICE_TEMPLATE_YAML), ToscaServiceTemplate.class);
 
@@ -286,8 +302,10 @@ class CommissioningProviderTest {
         modelsProvider =
                 CommonTestData.getPolicyModelsProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
         clProvider = new ControlLoopProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
+        participantProvider = new ParticipantProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
 
-        CommissioningProvider provider = new CommissioningProvider(modelsProvider, clProvider);
+        CommissioningProvider provider = new CommissioningProvider(modelsProvider, clProvider,
+            null, participantProvider);
         ToscaServiceTemplate serviceTemplate = yamlTranslator
                 .fromYaml(ResourceUtils.getResourceAsString(TOSCA_SERVICE_TEMPLATE_YAML), ToscaServiceTemplate.class);
 

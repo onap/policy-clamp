@@ -21,7 +21,6 @@
 package org.onap.policy.clamp.controlloop.runtime.supervision;
 
 import java.util.List;
-import java.util.Map;
 import javax.ws.rs.core.Response;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
@@ -35,6 +34,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregister;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantRegister;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStatus;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdate;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdateAck;
 import org.onap.policy.clamp.controlloop.runtime.monitoring.MonitoringProvider;
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ControlLoopStateChangePublisher;
@@ -141,7 +141,7 @@ public class SupervisionHandler {
         participantRegisterAckPublisher.send(participantRegisterMessage.getMessageId());
 
         participantUpdatePublisher.send(participantRegisterMessage.getParticipantId(),
-                participantRegisterMessage.getParticipantType());
+                participantRegisterMessage.getParticipantType(), true);
     }
 
     /**
@@ -163,6 +163,30 @@ public class SupervisionHandler {
     @MessageIntercept
     public void handleParticipantMessage(ParticipantUpdateAck participantUpdateAckMessage) {
         LOGGER.debug("Participant Update Ack received {}", participantUpdateAckMessage);
+    }
+
+    /**
+     * Send commissioning update message to dmaap.
+     *
+     * @param participantUpdateMessage the ParticipantUpdate message to send
+     */
+    public void handleSendCommissionMessage(ParticipantUpdate participantUpdateMessage) {
+        LOGGER.debug("Participant update message being sent {}", participantUpdateMessage);
+
+        participantUpdatePublisher.send(participantUpdateMessage.getParticipantId(),
+            participantUpdateMessage.getParticipantType(), true);
+    }
+
+    /**
+     * Send decommissioning update message to dmaap.
+     *
+     * @param participantUpdateMessage the ParticipantUpdate message to send
+     */
+    public void handleSendDeCommissionMessage(ParticipantUpdate participantUpdateMessage) {
+        LOGGER.debug("Participant update message being sent {}", participantUpdateMessage);
+
+        participantUpdatePublisher.send(participantUpdateMessage.getParticipantId(),
+            participantUpdateMessage.getParticipantType(), false);
     }
 
     /**

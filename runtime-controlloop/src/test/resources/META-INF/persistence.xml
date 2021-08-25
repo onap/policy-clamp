@@ -104,6 +104,7 @@
         <class>org.onap.policy.models.tosca.simple.concepts.JpaToscaTopologyTemplate</class>
         <class>org.onap.policy.clamp.controlloop.models.controlloop.persistence.concepts.JpaControlLoop</class>
         <class>org.onap.policy.clamp.controlloop.models.controlloop.persistence.concepts.JpaControlLoopElement</class>
+        <class>org.onap.policy.clamp.controlloop.models.controlloop.persistence.concepts.JpaParticipant</class>
         <class>org.onap.policy.clamp.controlloop.models.controlloop.persistence.concepts.JpaParticipantStatistics</class>
         <class>org.onap.policy.clamp.controlloop.models.controlloop.persistence.concepts.JpaClElementStatistics</class>
 
