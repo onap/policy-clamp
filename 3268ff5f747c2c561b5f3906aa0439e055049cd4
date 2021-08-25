@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6ae050e0_8e03cf2e",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-08-25T09:22:57Z",
+      "side": 1,
+      "message": "This is done in new patchset",
+      "parentUuid": "b58fe8d1_7537fcce",
+      "range": {
+        "startLine": 113,
+        "startChar": 39,
+        "endLine": 113,
+        "endChar": 69
+      },
+      "revId": "3268ff5f747c2c561b5f3906aa0439e055049cd4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c70a1034_59f8c0a6",
         "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/comm/ParticipantUpdatePublisher.java",
         "patchSetId": 1
@@ -36,6 +60,24 @@
       "writtenOn": "2021-08-24T16:47:44Z",
       "side": 1,
       "message": "why do we need this?",
+      "revId": "3268ff5f747c2c561b5f3906aa0439e055049cd4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "243defdc_df6856c3",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/comm/ParticipantUpdatePublisher.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-08-25T09:22:57Z",
+      "side": 1,
+      "message": "Have changed this in new patchset",
+      "parentUuid": "c70a1034_59f8c0a6",
       "revId": "3268ff5f747c2c561b5f3906aa0439e055049cd4",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
@@ -59,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "8050e4fe_1041e790",
+        "filename": "runtime-controlloop/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProviderTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-08-25T09:22:57Z",
+      "side": 1,
+      "message": "This is done",
+      "parentUuid": "3a45f5cd_c55729ae",
+      "revId": "3268ff5f747c2c561b5f3906aa0439e055049cd4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9f5ed285_dfe4aa3e",
         "filename": "runtime-controlloop/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProviderTest.java",
         "patchSetId": 1
@@ -70,6 +130,24 @@
       "writtenOn": "2021-08-24T16:47:44Z",
       "side": 1,
       "message": "maybe we shouldn\u0027t catch this exception - just let it propagate out\n\nsame comment below",
+      "revId": "3268ff5f747c2c561b5f3906aa0439e055049cd4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9bca98db_da9f93d9",
+        "filename": "runtime-controlloop/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProviderTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-08-25T09:22:57Z",
+      "side": 1,
+      "message": "This is done",
+      "parentUuid": "9f5ed285_dfe4aa3e",
       "revId": "3268ff5f747c2c561b5f3906aa0439e055049cd4",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
@@ -93,6 +171,24 @@
     },
     {
       "key": {
+        "uuid": "50ffd7d0_53cc6796",
+        "filename": "runtime-controlloop/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-08-25T09:22:57Z",
+      "side": 1,
+      "message": "Made this change",
+      "parentUuid": "57c53811_b9ccf946",
+      "revId": "3268ff5f747c2c561b5f3906aa0439e055049cd4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "fee48191_e7ab3a18",
         "filename": "runtime-controlloop/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/rest/InstantiationControllerTest.java",
         "patchSetId": 1
@@ -104,6 +200,24 @@
       "writtenOn": "2021-08-24T16:47:44Z",
       "side": 1,
       "message": "maybe just put this in a BeforeEach?",
+      "revId": "3268ff5f747c2c561b5f3906aa0439e055049cd4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5e19c409_b3917da1",
+        "filename": "runtime-controlloop/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/rest/InstantiationControllerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-08-25T09:22:57Z",
+      "side": 1,
+      "message": "This is done",
+      "parentUuid": "fee48191_e7ab3a18",
       "revId": "3268ff5f747c2c561b5f3906aa0439e055049cd4",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
@@ -127,6 +241,24 @@
     },
     {
       "key": {
+        "uuid": "eae8594c_fcb09297",
+        "filename": "runtime-controlloop/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/rest/InstantiationControllerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 346,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-08-25T09:22:57Z",
+      "side": 1,
+      "message": "Made these changes",
+      "parentUuid": "2efa531c_6fed9a19",
+      "revId": "3268ff5f747c2c561b5f3906aa0439e055049cd4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c6aa7847_cdd7424c",
         "filename": "runtime-controlloop/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/rest/InstantiationControllerTest.java",
         "patchSetId": 1
@@ -138,6 +270,24 @@
       "writtenOn": "2021-08-24T16:47:44Z",
       "side": 1,
       "message": "is this test needed?",
+      "revId": "3268ff5f747c2c561b5f3906aa0439e055049cd4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e8a14486_a42a3b24",
+        "filename": "runtime-controlloop/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/rest/InstantiationControllerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-08-25T09:22:57Z",
+      "side": 1,
+      "message": "This check is indeed required. Tests fail without it.",
+      "parentUuid": "c6aa7847_cdd7424c",
       "revId": "3268ff5f747c2c561b5f3906aa0439e055049cd4",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
