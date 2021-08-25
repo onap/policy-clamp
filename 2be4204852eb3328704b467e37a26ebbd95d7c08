@@ -108,6 +108,24 @@
       "revId": "2be4204852eb3328704b467e37a26ebbd95d7c08",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "af69e969_80015f10",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/Listener.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-25T14:43:56Z",
+      "side": 1,
+      "message": "probably too late for any refactoring, but we could create JIRA to do this in Jakarta.",
+      "parentUuid": "1785d07a_ef7a1a46",
+      "revId": "2be4204852eb3328704b467e37a26ebbd95d7c08",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
