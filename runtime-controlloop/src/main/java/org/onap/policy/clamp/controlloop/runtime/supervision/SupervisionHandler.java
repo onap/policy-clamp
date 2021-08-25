@@ -249,7 +249,7 @@ public class SupervisionHandler {
     }
 
     private void superviseControlLoopPassivation(ControlLoop controlLoop)
-            throws ControlLoopException, PfModelException {
+            throws ControlLoopException {
         switch (controlLoop.getState()) {
             case PASSIVE:
                 exceptionOccured(Response.Status.NOT_ACCEPTABLE,

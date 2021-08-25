@@ -21,6 +21,7 @@
 package org.onap.policy.clamp.controlloop.runtime.supervision;
 
 import java.util.List;
+import org.apache.commons.lang3.tuple.Pair;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
@@ -32,6 +33,7 @@ import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParame
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ControlLoopStateChangePublisher;
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ControlLoopUpdatePublisher;
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantStatusReqPublisher;
+import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantUpdatePublisher;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.slf4j.Logger;
@@ -46,15 +48,18 @@ public class SupervisionScanner {
     private static final Logger LOGGER = LoggerFactory.getLogger(SupervisionScanner.class);
 
     private HandleCounter<ToscaConceptIdentifier> controlLoopCounter = new HandleCounter<>();
-    private HandleCounter<ToscaConceptIdentifier> participantCounter = new HandleCounter<>();
+    private HandleCounter<ToscaConceptIdentifier> participantStatusCounter = new HandleCounter<>();
+    private HandleCounter<Pair<ToscaConceptIdentifier, ToscaConceptIdentifier>> participantUpdateCounter =
+            new HandleCounter<>();
 
     private final ControlLoopProvider controlLoopProvider;
     private final ControlLoopStateChangePublisher controlLoopStateChangePublisher;
     private final ControlLoopUpdatePublisher controlLoopUpdatePublisher;
     private final ParticipantProvider participantProvider;
     private final ParticipantStatusReqPublisher participantStatusReqPublisher;
+    private final ParticipantUpdatePublisher participantUpdatePublisher;
 
-    private final long maxMessageAgeMs;
+    private final long maxWaitMs;
 
     /**
      * Constructor for instantiating SupervisionScanner.
@@ -64,30 +69,38 @@ public class SupervisionScanner {
      * @param controlLoopUpdatePublisher the ControlLoopUpdate Publisher
      * @param participantProvider the Participant Provider
      * @param participantStatusReqPublisher the Participant StatusReq Publisher
+     * @param participantUpdatePublisher the Participant Update Publisher
      * @param clRuntimeParameterGroup the parameters for the control loop runtime
      */
     public SupervisionScanner(final ControlLoopProvider controlLoopProvider,
             final ControlLoopStateChangePublisher controlLoopStateChangePublisher,
             ControlLoopUpdatePublisher controlLoopUpdatePublisher, ParticipantProvider participantProvider,
             ParticipantStatusReqPublisher participantStatusReqPublisher,
+            ParticipantUpdatePublisher participantUpdatePublisher,
             final ClRuntimeParameterGroup clRuntimeParameterGroup) {
         this.controlLoopProvider = controlLoopProvider;
         this.controlLoopStateChangePublisher = controlLoopStateChangePublisher;
         this.controlLoopUpdatePublisher = controlLoopUpdatePublisher;
         this.participantProvider = participantProvider;
         this.participantStatusReqPublisher = participantStatusReqPublisher;
+        this.participantUpdatePublisher = participantUpdatePublisher;
 
         controlLoopCounter.setMaxRetryCount(
                 clRuntimeParameterGroup.getParticipantParameters().getUpdateParameters().getMaxRetryCount());
         controlLoopCounter
                 .setMaxWaitMs(clRuntimeParameterGroup.getParticipantParameters().getUpdateParameters().getMaxWaitMs());
 
-        participantCounter.setMaxRetryCount(
+        participantUpdateCounter.setMaxRetryCount(
                 clRuntimeParameterGroup.getParticipantParameters().getUpdateParameters().getMaxRetryCount());
-        participantCounter
+        participantUpdateCounter
                 .setMaxWaitMs(clRuntimeParameterGroup.getParticipantParameters().getUpdateParameters().getMaxWaitMs());
 
-        maxMessageAgeMs = clRuntimeParameterGroup.getParticipantParameters().getMaxMessageAgeMs();
+        participantStatusCounter.setMaxRetryCount(
+                clRuntimeParameterGroup.getParticipantParameters().getUpdateParameters().getMaxRetryCount());
+        participantStatusCounter
+                .setMaxWaitMs(clRuntimeParameterGroup.getParticipantParameters().getUpdateParameters().getMaxWaitMs());
+
+        maxWaitMs = clRuntimeParameterGroup.getParticipantParameters().getUpdateParameters().getMaxWaitMs();
     }
 
     /**
@@ -101,7 +114,7 @@ public class SupervisionScanner {
         if (counterCheck) {
             try {
                 for (Participant participant : participantProvider.getParticipants(null, null)) {
-                    scanParticipant(participant);
+                    scanParticipantStatus(participant);
                 }
             } catch (PfModelException pfme) {
                 LOGGER.warn("error reading participant from database", pfme);
@@ -116,24 +129,49 @@ public class SupervisionScanner {
         } catch (PfModelException pfme) {
             LOGGER.warn("error reading control loops from database", pfme);
         }
+        if (counterCheck) {
+            scanParticipantUpdate();
+        }
 
         LOGGER.debug("Control loop scan complete . . .");
     }
 
-    private void scanParticipant(Participant participant) throws PfModelException {
+    private void scanParticipantUpdate() {
+        LOGGER.debug("Scanning participants to update . . .");
+
+        for (var id : participantUpdateCounter.keySet()) {
+            if (participantUpdateCounter.isFault(id)) {
+                LOGGER.debug("report Participant Update fault");
+
+            } else if (participantUpdateCounter.getDuration(id) > maxWaitMs) {
+
+                if (participantUpdateCounter.count(id)) {
+                    LOGGER.debug("retry message ParticipantUpdate");
+                    participantUpdatePublisher.send(id.getLeft(), id.getRight());
+                } else {
+                    LOGGER.debug("report Participant Update fault");
+                    participantUpdateCounter.setFault(id);
+                }
+            }
+        }
+
+        LOGGER.debug("Participants to update scan complete . . .");
+    }
+
+    private void scanParticipantStatus(Participant participant) throws PfModelException {
         ToscaConceptIdentifier id = participant.getKey().asIdentifier();
-        if (participantCounter.isFault(id)) {
+        if (participantStatusCounter.isFault(id)) {
             LOGGER.debug("report Participant fault");
             return;
         }
-        if (participantCounter.getDuration(id) > maxMessageAgeMs) {
-            if (participantCounter.count(id)) {
+        if (participantStatusCounter.getDuration(id) > maxWaitMs) {
+            if (participantStatusCounter.count(id)) {
                 LOGGER.debug("retry message ParticipantStatusReq");
                 participantStatusReqPublisher.send(id);
                 participant.setHealthStatus(ParticipantHealthStatus.NOT_HEALTHY);
             } else {
                 LOGGER.debug("report Participant fault");
-                participantCounter.setFault(id);
+                participantStatusCounter.setFault(id);
                 participant.setHealthStatus(ParticipantHealthStatus.OFF_LINE);
             }
             participantProvider.updateParticipants(List.of(participant));
@@ -144,7 +182,15 @@ public class SupervisionScanner {
      * handle participant Status message.
      */
     public void handleParticipantStatus(ToscaConceptIdentifier id) {
-        participantCounter.clear(id);
+        participantStatusCounter.clear(id);
+    }
+
+    public void handleParticipantRegister(Pair<ToscaConceptIdentifier, ToscaConceptIdentifier> id) {
+        participantUpdateCounter.clear(id);
+    }
+
+    public void handleParticipantUpdateAck(Pair<ToscaConceptIdentifier, ToscaConceptIdentifier> id) {
+        participantUpdateCounter.remove(id);
     }
 
     private void scanControlLoop(final ControlLoop controlLoop, boolean counterCheck) throws PfModelException {
