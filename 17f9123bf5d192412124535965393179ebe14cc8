@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d49d1164_d4f53b6b",
+        "filename": "runtime-controlloop/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationUtils.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-25T14:17:21Z",
+      "side": 1,
+      "message": "I just want to ensure this change is OK and doesn\u0027t introduce a bunch of errors in the error log.  I only ask, because you said a similar test is needed in InstantiationControllerTest or it breaks the junit",
+      "revId": "17f9123bf5d192412124535965393179ebe14cc8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
