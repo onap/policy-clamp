@@ -108,6 +108,30 @@
     },
     {
       "key": {
+        "uuid": "92ff7ea3_651ef197",
+        "filename": "runtime/src/test/java/org/onap/policy/clamp/clds/it/config/SdcControllersConfigurationItTestCase.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 2477
+      },
+      "writtenOn": "2021-08-26T19:13:32Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "e5fdfb04_60349b4a",
+      "range": {
+        "startLine": 62,
+        "startChar": 8,
+        "endLine": 62,
+        "endChar": 20
+      },
+      "revId": "46337b0dc470b3457e2bb571cdb5002da6c727e2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c9e07a21_90a9ed28",
         "filename": "runtime/src/test/java/org/onap/policy/clamp/loop/DeployFlowItTestCase.java",
         "patchSetId": 13
