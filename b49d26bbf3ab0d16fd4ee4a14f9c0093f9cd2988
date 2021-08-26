@@ -22,6 +22,30 @@
       "revId": "b49d26bbf3ab0d16fd4ee4a14f9c0093f9cd2988",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e6dc052b_2e5fb56b",
+        "filename": "runtime/src/test/java/org/onap/policy/clamp/loop/DeployFlowItTestCase.java",
+        "patchSetId": 14
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 2477
+      },
+      "writtenOn": "2021-08-26T19:25:14Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "6e040912_b37128c7",
+      "range": {
+        "startLine": 200,
+        "startChar": 62,
+        "endLine": 200,
+        "endChar": 63
+      },
+      "revId": "b49d26bbf3ab0d16fd4ee4a14f9c0093f9cd2988",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
