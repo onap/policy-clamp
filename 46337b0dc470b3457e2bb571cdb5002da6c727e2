@@ -1,0 +1,124 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "429f5d84_ddd5fb41",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/model/dcae/DcaeInventoryResponse.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-26T17:17:18Z",
+      "side": 1,
+      "message": "maybe combine this with line 5",
+      "revId": "46337b0dc470b3457e2bb571cdb5002da6c727e2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b3eac230_de5bb021",
+        "filename": "runtime/src/test/java/org/onap/policy/clamp/clds/it/config/SdcControllersConfigurationItTestCase.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-26T17:17:18Z",
+      "side": 1,
+      "message": "use assertThat(...).hasSize(2)",
+      "range": {
+        "startLine": 62,
+        "startChar": 8,
+        "endLine": 62,
+        "endChar": 20
+      },
+      "revId": "46337b0dc470b3457e2bb571cdb5002da6c727e2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c9e07a21_90a9ed28",
+        "filename": "runtime/src/test/java/org/onap/policy/clamp/loop/DeployFlowItTestCase.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-26T17:17:18Z",
+      "side": 1,
+      "message": "delete trailing space",
+      "range": {
+        "startLine": 201,
+        "startChar": 0,
+        "endLine": 201,
+        "endChar": 12
+      },
+      "revId": "46337b0dc470b3457e2bb571cdb5002da6c727e2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b510bdab_1fba6c84",
+        "filename": "runtime/src/test/java/org/onap/policy/clamp/loop/LoopServiceItTestCase.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-26T17:17:18Z",
+      "side": 1,
+      "message": "missing newline at end of file",
+      "revId": "46337b0dc470b3457e2bb571cdb5002da6c727e2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5aa3a24c_17238e0e",
+        "filename": "runtime/src/test/java/org/onap/policy/clamp/loop/ServiceTest.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-26T17:17:18Z",
+      "side": 1,
+      "message": "trailing space",
+      "range": {
+        "startLine": 47,
+        "startChar": 94,
+        "endLine": 47,
+        "endChar": 95
+      },
+      "revId": "46337b0dc470b3457e2bb571cdb5002da6c727e2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5ea57e1f_c36326e9",
+        "filename": "runtime/src/test/java/org/onap/policy/clamp/loop/ServiceTest.java",
+        "patchSetId": 13
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-26T17:17:18Z",
+      "side": 1,
+      "message": "use assertThat(service2).isEquals(service1)\n\nsame comment below",
+      "revId": "46337b0dc470b3457e2bb571cdb5002da6c727e2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
