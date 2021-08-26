@@ -154,6 +154,30 @@
     },
     {
       "key": {
+        "uuid": "70515d85_49009491",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/IntermediaryActivator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-26T12:25:32Z",
+      "side": 1,
+      "message": "oh, I hadn\u0027t noticed that these were arrays.  Thanks for addressing it in spite of that!",
+      "parentUuid": "b974e4a4_ba5c7baf",
+      "range": {
+        "startLine": 86,
+        "startChar": 8,
+        "endLine": 86,
+        "endChar": 37
+      },
+      "revId": "2be4204852eb3328704b467e37a26ebbd95d7c08",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fcb67326_92ae203f",
         "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/Listener.java",
         "patchSetId": 2

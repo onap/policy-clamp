@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0194a611_0ab8c8e4",
+        "filename": "runtime-controlloop/src/test/java/org/onap/policy/clamp/controlloop/runtime/config/messaging/MessageDispatcherActivatorTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-08-26T12:25:32Z",
+      "side": 1,
+      "message": "let\u0027s remove the casts.  If it gives a compile error, then try changing \"var\" to \"List\u003cListener\u003e\".  If neither of these works, then maybe change the method definition(s) to \"List\u003c? extends Listener\u003e\".",
+      "revId": "97ec30617e223ea4e617588c00b7bc9e7eb74bd1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
