@@ -22,7 +22,6 @@
 
 package org.onap.policy.clamp.controlloop.participant.intermediary.handler;
 
-import java.io.Closeable;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +32,11 @@ import lombok.Getter;
 import lombok.Setter;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ClElementStatisticsList;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElementDefinition;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopInfo;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopStatistics;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoops;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantHealthStatus;
@@ -43,6 +44,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantStatistics;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopStateChange;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopUpdate;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantAckMessage;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregister;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregisterAck;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessage;
@@ -52,9 +54,10 @@ import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.Parti
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStatusReq;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdate;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdateAck;
-import org.onap.policy.clamp.controlloop.participant.intermediary.comm.MessageSender;
+import org.onap.policy.clamp.controlloop.participant.intermediary.api.ControlLoopElementListener;
 import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantParameters;
+import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
@@ -66,14 +69,14 @@ import org.springframework.stereotype.Component;
  */
 @Getter
 @Component
-public class ParticipantHandler implements Closeable {
+public class ParticipantHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantHandler.class);
 
     private final ToscaConceptIdentifier participantType;
     private final ToscaConceptIdentifier participantId;
-    private final MessageSender sender;
     private final ControlLoopHandler controlLoopHandler;
     private final ParticipantStatistics participantStatistics;
+    private final ParticipantMessagePublisher publisher;
 
     @Setter
     private ParticipantState state = ParticipantState.UNKNOWN;
@@ -81,10 +84,9 @@ public class ParticipantHandler implements Closeable {
     @Setter
     private ParticipantHealthStatus healthStatus = ParticipantHealthStatus.UNKNOWN;
 
-    private List<ControlLoopElementDefinition> clElementDefsOnThisParticipant =
-            new ArrayList<>();
+    private List<ControlLoopElementDefinition> clElementDefsOnThisParticipant = new ArrayList<>();
 
-    public ToscaServiceTemplate toscaServiceTemplate = new ToscaServiceTemplate();
+    private ToscaServiceTemplate toscaServiceTemplate = new ToscaServiceTemplate();
 
     /**
      * Constructor, set the participant ID and sender.
@@ -92,23 +94,17 @@ public class ParticipantHandler implements Closeable {
      * @param parameters the parameters of the participant
      * @param publisher the publisher for sending responses to messages
      */
-    public ParticipantHandler(ParticipantParameters parameters, ParticipantMessagePublisher publisher) {
+    public ParticipantHandler(ParticipantParameters parameters, ParticipantMessagePublisher publisher,
+            ControlLoopHandler controlLoopHandler) {
         this.participantType = parameters.getIntermediaryParameters().getParticipantType();
         this.participantId = parameters.getIntermediaryParameters().getParticipantId();
-        this.sender =
-                new MessageSender(this, publisher,
-                        parameters.getIntermediaryParameters().getReportingTimeIntervalMs());
-        this.controlLoopHandler = new ControlLoopHandler(parameters.getIntermediaryParameters(), sender);
+        this.publisher = publisher;
+        this.controlLoopHandler = controlLoopHandler;
         this.participantStatistics = new ParticipantStatistics();
         this.participantStatistics.setParticipantId(participantId);
         this.participantStatistics.setState(state);
         this.participantStatistics.setHealthStatus(healthStatus);
         this.participantStatistics.setTimeStamp(Instant.now());
-    }
-
-    @Override
-    public void close() {
-        sender.close();
     }
 
     /**
@@ -117,8 +113,35 @@ public class ParticipantHandler implements Closeable {
      * @param participantStatusReqMsg participant participantStatusReq message
      */
     public void handleParticipantStatusReq(final ParticipantStatusReq participantStatusReqMsg) {
-        sender.sendParticipantStatus(makeHeartbeat(true));
+        var controlLoops = controlLoopHandler.getControlLoops();
+        for (ControlLoopElementListener clElementListener : controlLoopHandler.getListeners()) {
+            updateClElementStatistics(controlLoops, clElementListener);
+        }
+
+        var participantStatus = makeHeartbeat(true);
+        publisher.sendParticipantStatus(participantStatus);
     }
+
+    /**
+     * Update ControlLoopElement statistics. The control loop elements listening will be
+     * notified to retrieve statistics from respective controlloop elements, and controlloopelements
+     * data on the handler will be updated.
+     *
+     * @param controlLoops the control loops
+     * @param clElementListener control loop element listener
+     */
+    private void updateClElementStatistics(ControlLoops controlLoops, ControlLoopElementListener clElementListener) {
+        for (ControlLoop controlLoop : controlLoops.getControlLoopList()) {
+            for (ControlLoopElement element : controlLoop.getElements().values()) {
+                try {
+                    clElementListener.handleStatistics(element.getId());
+                } catch (PfModelException e) {
+                    LOGGER.debug("Getting statistics for Control loop element failed");
+                }
+            }
+        }
+    }
+
 
     /**
      * Handle a control loop update message.
@@ -164,7 +187,7 @@ public class ParticipantHandler implements Closeable {
 
         var participantUpdateAck = new ParticipantUpdateAck();
         handleStateChange(participantState, participantUpdateAck);
-        sender.sendParticipantUpdateAck(participantUpdateAck);
+        publisher.sendParticipantUpdateAck(participantUpdateAck);
         return getParticipant(definition.getName(), definition.getVersion());
     }
 
@@ -197,6 +220,16 @@ public class ParticipantHandler implements Closeable {
     }
 
     /**
+     * Check if a participant message applies to this participant handler.
+     *
+     * @param participantMsg the message to check
+     * @return true if it applies, false otherwise
+     */
+    public boolean appliesTo(ParticipantAckMessage participantMsg) {
+        return participantMsg.appliesTo(participantType, participantId);
+    }
+
+    /**
      * Method to send ParticipantRegister message to controlloop runtime.
      */
     public void sendParticipantRegister() {
@@ -204,7 +237,7 @@ public class ParticipantHandler implements Closeable {
         participantRegister.setParticipantId(participantId);
         participantRegister.setParticipantType(participantType);
 
-        sender.sendParticipantRegister(participantRegister);
+        publisher.sendParticipantRegister(participantRegister);
     }
 
     /**
@@ -225,7 +258,7 @@ public class ParticipantHandler implements Closeable {
         participantDeregister.setParticipantId(participantId);
         participantDeregister.setParticipantType(participantType);
 
-        sender.sendParticipantDeregister(participantDeregister);
+        publisher.sendParticipantDeregister(participantDeregister);
     }
 
     /**
@@ -278,7 +311,14 @@ public class ParticipantHandler implements Closeable {
         participantUpdateAck.setParticipantId(participantId);
         participantUpdateAck.setParticipantType(participantType);
 
-        sender.sendParticipantUpdateAck(participantUpdateAck);
+        publisher.sendParticipantUpdateAck(participantUpdateAck);
+    }
+
+    /**
+     * Dispatch a heartbeat for this participant.
+     */
+    public void sendHeartbeat() {
+        publisher.sendHeartbeat(makeHeartbeat(false));
     }
 
     /**
@@ -311,15 +351,14 @@ public class ParticipantHandler implements Closeable {
 
     private List<ControlLoopInfo> getControlLoopInfoList() {
         List<ControlLoopInfo> controlLoopInfoList = new ArrayList<>();
-        for (Map.Entry<ToscaConceptIdentifier, ControlLoop> entry :
-                controlLoopHandler.getControlLoopMap().entrySet()) {
+        for (Map.Entry<ToscaConceptIdentifier, ControlLoop> entry : controlLoopHandler.getControlLoopMap().entrySet()) {
             ControlLoopInfo clInfo = new ControlLoopInfo();
             clInfo.setControlLoopId(entry.getKey());
             ControlLoopStatistics clStatitistics = new ControlLoopStatistics();
             clStatitistics.setControlLoopId(entry.getKey());
             ClElementStatisticsList clElementStatisticsList = new ClElementStatisticsList();
-            clElementStatisticsList.setClElementStatistics(
-                entry.getValue().getControlLoopElementStatisticsList(entry.getValue()));
+            clElementStatisticsList
+                    .setClElementStatistics(entry.getValue().getControlLoopElementStatisticsList(entry.getValue()));
             clStatitistics.setClElementStatisticsList(clElementStatisticsList);
             clInfo.setControlLoopStatistics(clStatitistics);
             clInfo.setState(entry.getValue().getState());

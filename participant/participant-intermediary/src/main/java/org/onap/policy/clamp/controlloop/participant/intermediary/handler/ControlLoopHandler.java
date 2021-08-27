@@ -29,12 +29,11 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.tuple.Pair;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ClElementStatistics;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElementAck;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElementDefinition;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
@@ -45,24 +44,25 @@ import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.Contr
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopUpdate;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageType;
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ControlLoopElementListener;
-import org.onap.policy.clamp.controlloop.participant.intermediary.comm.MessageSender;
-import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantIntermediaryParameters;
+import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ParticipantMessagePublisher;
+import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantParameters;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 /*
  * This class is responsible for managing the state of all control loops in the participant.
  */
-@NoArgsConstructor
+@Component
 public class ControlLoopHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(ControlLoopHandler.class);
 
-    private ToscaConceptIdentifier participantType = null;
-    private ToscaConceptIdentifier participantId = null;
-    private MessageSender messageSender = null;
+    private final ToscaConceptIdentifier participantType;
+    private final ToscaConceptIdentifier participantId;
+    private final ParticipantMessagePublisher publisher;
 
     @Getter
     private final Map<ToscaConceptIdentifier, ControlLoop> controlLoopMap = new LinkedHashMap<>();
@@ -77,12 +77,12 @@ public class ControlLoopHandler {
      * Constructor, set the participant ID and messageSender.
      *
      * @param parameters the parameters of the participant
-     * @param messageSender the messageSender for sending responses to messages
+     * @param publisher the ParticipantMessage Publisher
      */
-    public ControlLoopHandler(ParticipantIntermediaryParameters parameters, MessageSender messageSender) {
-        this.participantType = parameters.getParticipantType();
-        this.participantId = parameters.getParticipantId();
-        this.messageSender = messageSender;
+    public ControlLoopHandler(ParticipantParameters parameters, ParticipantMessagePublisher publisher) {
+        this.participantType = parameters.getIntermediaryParameters().getParticipantType();
+        this.participantId = parameters.getIntermediaryParameters().getParticipantId();
+        this.publisher = publisher;
     }
 
     public void registerControlLoopElementListener(ControlLoopElementListener listener) {
@@ -104,18 +104,20 @@ public class ControlLoopHandler {
             LOGGER.warn("Cannot update Control loop element state, id is null");
         }
 
-        var controlLoopStateChangeAck =
-                new ControlLoopAck(ParticipantMessageType.CONTROLLOOP_STATECHANGE_ACK);
         ControlLoopElement clElement = elementsOnThisParticipant.get(id);
         if (clElement != null) {
+            var controlLoopStateChangeAck =
+                    new ControlLoopAck(ParticipantMessageType.CONTROLLOOP_STATECHANGE_ACK);
+            controlLoopStateChangeAck.setParticipantId(participantId);
+            controlLoopStateChangeAck.setParticipantType(participantType);
             clElement.setOrderedState(orderedState);
             clElement.setState(newState);
             controlLoopStateChangeAck.getControlLoopResultMap().put(clElement.getId(),
-                Pair.of(true, "Control loop element {} state changed to {}\", id, newState)"));
+                new  ControlLoopElementAck(true, "Control loop element {} state changed to {}\", id, newState)"));
             LOGGER.debug("Control loop element {} state changed to {}", id, newState);
             controlLoopStateChangeAck.setMessage("ControlLoopElement state changed to {} " + newState);
             controlLoopStateChangeAck.setResult(true);
-            messageSender.sendAckResponse(controlLoopStateChangeAck);
+            publisher.sendControlLoopAck(controlLoopStateChangeAck);
             return clElement;
         }
         return null;
@@ -147,15 +149,17 @@ public class ControlLoopHandler {
         }
 
         var controlLoop = controlLoopMap.get(stateChangeMsg.getControlLoopId());
-        var controlLoopAck = new ControlLoopAck(ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
 
         if (controlLoop == null) {
+            var controlLoopAck = new ControlLoopAck(ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
+            controlLoopAck.setParticipantId(participantId);
+            controlLoopAck.setParticipantType(participantType);
             controlLoopAck.setMessage("Control loop " + stateChangeMsg.getControlLoopId()
                 + " does not use this participant " + participantId);
             controlLoopAck.setResult(false);
             controlLoopAck.setResponseTo(stateChangeMsg.getMessageId());
             controlLoopAck.setControlLoopId(stateChangeMsg.getControlLoopId());
-            messageSender.sendAckResponse(controlLoopAck);
+            publisher.sendControlLoopAck(controlLoopAck);
             LOGGER.debug("Control loop {} does not use this participant", stateChangeMsg.getControlLoopId());
             return;
         }
@@ -200,17 +204,19 @@ public class ControlLoopHandler {
 
         var controlLoop = controlLoopMap.get(updateMsg.getControlLoopId());
 
-        var controlLoopUpdateAck = new ControlLoopAck(ParticipantMessageType.CONTROLLOOP_UPDATE_ACK);
-
         // TODO: Updates to existing ControlLoops are not supported yet (Addition/Removal of ControlLoop
         // elements to existing ControlLoop has to be supported).
         if (controlLoop != null) {
+            var controlLoopUpdateAck = new ControlLoopAck(ParticipantMessageType.CONTROLLOOP_UPDATE_ACK);
+            controlLoopUpdateAck.setParticipantId(participantId);
+            controlLoopUpdateAck.setParticipantType(participantType);
+
             controlLoopUpdateAck.setMessage("Control loop " + updateMsg.getControlLoopId()
                 + " already defined on participant " + participantId);
             controlLoopUpdateAck.setResult(false);
             controlLoopUpdateAck.setResponseTo(updateMsg.getMessageId());
             controlLoopUpdateAck.setControlLoopId(updateMsg.getControlLoopId());
-            messageSender.sendAckResponse(controlLoopUpdateAck);
+            publisher.sendControlLoopAck(controlLoopUpdateAck);
             return;
         }
 
@@ -319,10 +325,12 @@ public class ControlLoopHandler {
 
         if (orderedState.equals(controlLoop.getOrderedState())) {
             var controlLoopAck = new ControlLoopAck(ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
+            controlLoopAck.setParticipantId(participantId);
+            controlLoopAck.setParticipantType(participantType);
             controlLoopAck.setMessage("Control loop is already in state" + orderedState);
             controlLoopAck.setResult(false);
             controlLoopAck.setControlLoopId(controlLoop.getDefinition());
-            messageSender.sendAckResponse(controlLoopAck);
+            publisher.sendControlLoopAck(controlLoopAck);
             return;
         }
 

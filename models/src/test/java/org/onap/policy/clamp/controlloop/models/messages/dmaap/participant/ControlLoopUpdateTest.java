@@ -22,6 +22,7 @@ package org.onap.policy.clamp.controlloop.models.messages.dmaap.participant;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
+import static org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageUtils.assertSerializable;
 import static org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageUtils.removeVariableFields;
 
 import java.time.Instant;
@@ -33,6 +34,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantUpdates;
+import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
@@ -40,7 +42,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
  */
 class ControlLoopUpdateTest {
     @Test
-    void testCopyConstructor() {
+    void testCopyConstructor() throws CoderException {
         assertThatThrownBy(() -> new ControlLoopUpdate(null)).isInstanceOf(NullPointerException.class);
 
         ControlLoopUpdate orig = new ControlLoopUpdate();
@@ -71,5 +73,6 @@ class ControlLoopUpdateTest {
         ControlLoopUpdate other = new ControlLoopUpdate(orig);
 
         assertEquals(removeVariableFields(orig.toString()), removeVariableFields(other.toString()));
+        assertSerializable(orig, ControlLoopUpdate.class);
     }
 }

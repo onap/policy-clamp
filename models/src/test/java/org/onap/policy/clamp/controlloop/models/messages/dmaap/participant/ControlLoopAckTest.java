@@ -22,18 +22,20 @@ package org.onap.policy.clamp.controlloop.models.messages.dmaap.participant;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
+import static org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageUtils.assertSerializable;
 import static org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageUtils.removeVariableFields;
 
 import java.util.Map;
 import java.util.UUID;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElementAck;
+import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class ControlLoopAckTest {
 
     @Test
-    void testCopyConstructor() {
+    void testCopyConstructor() throws CoderException {
         assertThatThrownBy(() -> new ControlLoopAck((ControlLoopAck) null))
             .isInstanceOf(NullPointerException.class);
 
@@ -48,9 +50,8 @@ class ControlLoopAckTest {
         orig.setControlLoopId(id);
         orig.setParticipantId(id);
         orig.setParticipantType(id);
-
-        Pair<Boolean, String> clElementResult = Pair.of(true, "ControlLoopElement result");
-        final Map<UUID, Pair<Boolean, String>> controlLoopResultMap = Map.of(UUID.randomUUID(), clElementResult);
+        ControlLoopElementAck clElementResult = new ControlLoopElementAck(true, "ControlLoopElement result");
+        final Map<UUID, ControlLoopElementAck> controlLoopResultMap = Map.of(UUID.randomUUID(), clElementResult);
         orig.setControlLoopResultMap(controlLoopResultMap);
 
         orig.setResponseTo(UUID.randomUUID());
@@ -59,5 +60,7 @@ class ControlLoopAckTest {
 
         assertEquals(removeVariableFields(orig.toString()),
                 removeVariableFields(new ControlLoopAck(orig).toString()));
+
+        assertSerializable(orig, ControlLoopAck.class);
     }
 }
