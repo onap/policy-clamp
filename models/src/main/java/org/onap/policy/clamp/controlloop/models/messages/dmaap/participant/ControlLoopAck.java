@@ -27,7 +27,7 @@ import java.util.function.UnaryOperator;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.apache.commons.lang3.tuple.Pair;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElementAck;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
@@ -45,7 +45,7 @@ public class ControlLoopAck extends ParticipantAckMessage {
 
     // A map with ControlLoopElementID as its key, and a pair of result and message as value per
     // ControlLoopElement.
-    private Map<UUID, Pair<Boolean, String>> controlLoopResultMap = new LinkedHashMap<>();
+    private Map<UUID, ControlLoopElementAck> controlLoopResultMap = new LinkedHashMap<>();
 
     /**
      * Constructor for instantiating ParticipantRegisterAck class with message name.
