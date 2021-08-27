@@ -133,6 +133,24 @@
       "revId": "c7ce81ec7247c0a784a8c0fb0fc693ae99cc3f19",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fe22c724_f548c0f8",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ParticipantHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-08-27T13:58:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa4c2c30_d50497c7",
+      "revId": "c7ce81ec7247c0a784a8c0fb0fc693ae99cc3f19",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
