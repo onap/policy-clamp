@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b67a0497_a1c71295",
+        "filename": "runtime-controlloop/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-08-27T12:06:18Z",
+      "side": 1,
+      "message": "If other components are using this it might be good to include this in the policy-parent integration POM in another review.",
+      "range": {
+        "startLine": 37,
+        "startChar": 0,
+        "endLine": 37,
+        "endChar": 4
+      },
+      "revId": "f6988ecb0ebe06c60d3945f96b514939bef8737e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2b8103aa_deb2195a",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionScanner.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-08-27T12:06:18Z",
+      "side": 1,
+      "message": "Is this something else? Doesn\u0027t seem to be related to Prometheus.",
+      "range": {
+        "startLine": 150,
+        "startChar": 0,
+        "endLine": 150,
+        "endChar": 3
+      },
+      "revId": "f6988ecb0ebe06c60d3945f96b514939bef8737e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
