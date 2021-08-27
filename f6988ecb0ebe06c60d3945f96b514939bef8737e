@@ -45,6 +45,30 @@
       "revId": "f6988ecb0ebe06c60d3945f96b514939bef8737e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "10f2ba48_b813fc24",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionScanner.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-08-27T12:35:01Z",
+      "side": 1,
+      "message": "actually master is not compiling without that and it could be removed after \"Fix issue in event handling in participants\" is merged",
+      "parentUuid": "2b8103aa_deb2195a",
+      "range": {
+        "startLine": 150,
+        "startChar": 0,
+        "endLine": 150,
+        "endChar": 3
+      },
+      "revId": "f6988ecb0ebe06c60d3945f96b514939bef8737e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
