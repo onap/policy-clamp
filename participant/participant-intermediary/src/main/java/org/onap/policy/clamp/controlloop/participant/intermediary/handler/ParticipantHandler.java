@@ -226,6 +226,14 @@ public class ParticipantHandler implements Closeable {
     public void handleParticipantRegisterAck(ParticipantRegisterAck participantRegisterAckMsg) {
         LOGGER.debug("ParticipantRegisterAck message received as responseTo {}",
                 participantRegisterAckMsg.getResponseTo());
+        if (this.healthStatus.equals(ParticipantHealthStatus.UNKNOWN)) {
+            this.healthStatus = ParticipantHealthStatus.HEALTHY;
+        }
+
+        if (this.state.equals(ParticipantState.UNKNOWN)) {
+            this.state = ParticipantState.PASSIVE;
+        }
+        sender.sendParticipantStatus(makeHeartbeat(true));
     }
 
     /**
