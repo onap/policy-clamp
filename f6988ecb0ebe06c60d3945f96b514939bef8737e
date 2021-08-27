@@ -93,6 +93,30 @@
       "revId": "f6988ecb0ebe06c60d3945f96b514939bef8737e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "665ce12b_49122c67",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionScanner.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-08-27T13:53:32Z",
+      "side": 1,
+      "message": "Ok that\u0027s fine.",
+      "parentUuid": "10f2ba48_b813fc24",
+      "range": {
+        "startLine": 150,
+        "startChar": 0,
+        "endLine": 150,
+        "endChar": 3
+      },
+      "revId": "f6988ecb0ebe06c60d3945f96b514939bef8737e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
