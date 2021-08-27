@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "79102c68_3632ae4d",
+        "filename": "runtime-controlloop/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 4903
+      },
+      "writtenOn": "2021-08-27T12:43:02Z",
+      "side": 1,
+      "message": "yeah we could, but this in this case for spring boot, the artifact is from io.micrometer (version 1.7.3 here), whereas in policy-common which is non spring boot, the artifact belongs to io.prometheus (version 0.11.0).\nmaybe it is better to change this property to io.micrometer.version",
+      "parentUuid": "b67a0497_a1c71295",
+      "range": {
+        "startLine": 37,
+        "startChar": 0,
+        "endLine": 37,
+        "endChar": 4
+      },
+      "revId": "f6988ecb0ebe06c60d3945f96b514939bef8737e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2b8103aa_deb2195a",
         "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionScanner.java",
         "patchSetId": 1
