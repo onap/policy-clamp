@@ -16,6 +16,24 @@
       "revId": "88a795d8211e9b2a6b0aa6a3d92164f03988d7e8",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ed5d1e19_1e3c6ce7",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ParticipantHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-08-30T12:56:38Z",
+      "side": 1,
+      "message": "Hi Jim. I have made the change you suggested. Thanks",
+      "parentUuid": "739de63c_29797119",
+      "revId": "88a795d8211e9b2a6b0aa6a3d92164f03988d7e8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
