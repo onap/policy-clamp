@@ -64,6 +64,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CommissioningProvider {
     public static final String CONTROL_LOOP_NODE_TYPE = "org.onap.policy.clamp.controlloop.ControlLoop";
+    private static final String INSTANCE_TEXT = "_Instance";
 
     private final PolicyModelsProvider modelsProvider;
     private final ControlLoopProvider clProvider;
@@ -96,6 +97,7 @@ public class CommissioningProvider {
      * @param serviceTemplate the service template
      * @return the result of the commissioning operation
      * @throws PfModelException on creation errors
+     * @throws ControlLoopException if there is instance properties saved
      */
     public CommissioningResponse createControlLoopDefinitions(ToscaServiceTemplate serviceTemplate)
         throws PfModelException, ControlLoopException {
@@ -146,6 +148,7 @@ public class CommissioningProvider {
      * @param version the version of the control loop to delete
      * @return the result of the deletion
      * @throws PfModelException on deletion errors
+     * @throws ControlLoopException if there is instance properties saved
      */
     public CommissioningResponse deleteControlLoopDefinition(String name, String version)
         throws PfModelException, ControlLoopException {
@@ -391,14 +394,22 @@ public class CommissioningProvider {
      * @param version the version of the definition to use, null for all definitions
      * @return the nodes templates with common or instance properties
      * @throws PfModelException on errors getting common or instance properties from node_templates
+     * @throws ControlLoopException on errors getting common properties if there is instance properties
      */
     public Map<String, ToscaNodeTemplate> getNodeTemplatesWithCommonOrInstanceProperties(boolean common, String name,
-            String version) throws PfModelException {
+            String version) throws PfModelException, ControlLoopException {
 
-        var commonOrInstanceNodeTypeProps = this.getCommonOrInstancePropertiesFromNodeTypes(common, name, version);
+        if (common && verifyIfInstancePropertiesExists()) {
+            throw new ControlLoopException(Status.BAD_REQUEST,
+                "Cannot create or edit common properties, delete all the instantiations first");
+        }
+
+        var commonOrInstanceNodeTypeProps =
+            this.getCommonOrInstancePropertiesFromNodeTypes(common, name, version);
 
         var serviceTemplates = new ToscaServiceTemplates();
-        serviceTemplates.setServiceTemplates(modelsProvider.getServiceTemplateList(name, version));
+        serviceTemplates.setServiceTemplates(filterToscaNodeTemplateInstance(
+            modelsProvider.getServiceTemplateList(name, version)));
 
         return this.getDerivedCommonOrInstanceNodeTemplates(
                 serviceTemplates.getServiceTemplates().get(0).getToscaTopologyTemplate().getNodeTemplates(),
@@ -433,7 +444,8 @@ public class CommissioningProvider {
         var serviceTemplates = new ToscaServiceTemplates();
         serviceTemplates.setServiceTemplates(modelsProvider.getServiceTemplateList(name, version));
 
-        ToscaServiceTemplate fullTemplate = serviceTemplates.getServiceTemplates().get(0);
+        ToscaServiceTemplate fullTemplate = filterToscaNodeTemplateInstance(
+            serviceTemplates.getServiceTemplates()).get(0);
 
         var template = new HashMap<String, Object>();
         template.put("tosca_definitions_version", fullTemplate.getToscaDefinitionsVersion());
@@ -496,6 +508,29 @@ public class CommissioningProvider {
         }
     }
 
+    private List<ToscaServiceTemplate> filterToscaNodeTemplateInstance(List<ToscaServiceTemplate> serviceTemplates) {
+
+        List<ToscaServiceTemplate> toscaServiceTemplates = new ArrayList<>();
+
+        serviceTemplates.stream().forEach(serviceTemplate -> {
+
+            Map<String, ToscaNodeTemplate> toscaNodeTemplates = new HashMap<>();
+
+            serviceTemplate.getToscaTopologyTemplate().getNodeTemplates().forEach((key, nodeTemplate) -> {
+                if (!nodeTemplate.getName().contains(INSTANCE_TEXT)) {
+                    toscaNodeTemplates.put(key, nodeTemplate);
+                }
+            });
+
+            serviceTemplate.getToscaTopologyTemplate().getNodeTemplates().clear();
+            serviceTemplate.getToscaTopologyTemplate().setNodeTemplates(toscaNodeTemplates);
+
+            toscaServiceTemplates.add(serviceTemplate);
+        });
+
+        return toscaServiceTemplates;
+    }
+
     /**
      * Validates to see if there is any instance properties saved.
      *
@@ -503,7 +538,7 @@ public class CommissioningProvider {
      */
     private boolean verifyIfInstancePropertiesExists() {
         return clProvider.getNodeTemplates(null, null).stream()
-            .anyMatch(nodeTemplate -> nodeTemplate.getKey().getName().contains("_Instance"));
+            .anyMatch(nodeTemplate -> nodeTemplate.getKey().getName().contains(INSTANCE_TEXT));
 
     }
 }
