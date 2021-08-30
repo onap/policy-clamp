@@ -21,18 +21,27 @@
 
 package org.onap.policy.clamp.controlloop.runtime.instantiation;
 
+import com.google.gson.Gson;
+import com.google.gson.internal.LinkedTreeMap;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import lombok.AllArgsConstructor;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoops;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ControlLoopProvider;
@@ -49,6 +58,7 @@ import org.onap.policy.common.parameters.ValidationResult;
 import org.onap.policy.common.parameters.ValidationStatus;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaNameVersion;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.stereotype.Component;
@@ -59,6 +69,11 @@ import org.springframework.stereotype.Component;
 @Component
 @AllArgsConstructor
 public class ControlLoopInstantiationProvider {
+    private static final String CONTROL_LOOP_NODE_TYPE = "org.onap.policy.clamp.controlloop.ControlLoop";
+    private static final String CONTROL_LOOP_NODE_ELEMENT_TYPE = "ControlLoopElement";
+    private static final String PARTICIPANT_ID_PROPERTY_KEY = "participant_id";
+    private static final String CL_ELEMENT_NAME = "name";
+    private static final String CL_ELEMENT_VERSION = "version";
     private static final String INSTANCE_TEXT = "_Instance";
 
     private final ControlLoopProvider controlLoopProvider;
@@ -67,40 +82,89 @@ public class ControlLoopInstantiationProvider {
 
     private static final Object lockit = new Object();
 
-    private static final String CL_ELEMENT_NAME = "name";
-
     /**
-     * Create Instance Properties.
+     * Creates Instance Properties and Control Loop.
      *
      * @param serviceTemplate the service template
      * @return the result of the instantiation operation
      * @throws PfModelException on creation errors
      */
-    public InstancePropertiesResponse saveInstanceProperties(ToscaServiceTemplate serviceTemplate) {
+    public InstancePropertiesResponse createInstanceProperties(ToscaServiceTemplate serviceTemplate)
+        throws PfModelException {
 
         String instanceName = generateSequentialInstanceName();
+        ControlLoops controlLoops = new ControlLoops();
+        ControlLoop controlLoop = new ControlLoop();
+        Map<UUID, ControlLoopElement> controlLoopElements = new HashMap<>();
 
-        Map<String, ToscaNodeTemplate> nodeTemplates = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
+        ToscaServiceTemplate toscaServiceTemplate = commissioningProvider
+            .getToscaServiceTemplate(null, null);
+
+        Map<String, ToscaNodeTemplate> persistedNodeTemplateMap = toscaServiceTemplate
+            .getToscaTopologyTemplate().getNodeTemplates();
+
+        Gson gson = new Gson();
+        String jsonString = gson.toJson(serviceTemplate.getToscaTopologyTemplate().getNodeTemplates());
+
+        Type type = new TypeToken<HashMap<String, ToscaNodeTemplate>>() {}.getType();
+        HashMap<String, ToscaNodeTemplate> nodeTemplates = gson.fromJson(jsonString, type);
 
         nodeTemplates.forEach((key, template) -> {
+            ToscaNodeTemplate newNodeTemplate = new ToscaNodeTemplate();
             String name = key + instanceName;
+            String version = template.getVersion();
             String description = template.getDescription() + instanceName;
-            template.setName(name);
-            template.setDescription(description);
+            newNodeTemplate.setName(name);
+            newNodeTemplate.setVersion(version);
+            newNodeTemplate.setDescription(description);
+            newNodeTemplate.setProperties(new HashMap<>());
+            newNodeTemplate.getProperties().putAll(template.getProperties());
+            newNodeTemplate.setType(template.getType());
+            newNodeTemplate.setTypeVersion(template.getTypeVersion());
+            newNodeTemplate.setMetadata(template.getMetadata());
 
-            changeInstanceElementsName(template, instanceName);
+            crateNewControlLoopInstance(instanceName, controlLoop, controlLoopElements, template, newNodeTemplate);
 
+            persistedNodeTemplateMap.put(name, newNodeTemplate);
+            serviceTemplate.getToscaTopologyTemplate().getNodeTemplates().putAll(persistedNodeTemplateMap);
         });
 
-        Map<String, ToscaNodeTemplate> toscaSavedNodeTemplate = controlLoopProvider
-            .saveInstanceProperties(serviceTemplate);
+        controlLoop.setElements(controlLoopElements);
+        controlLoops.getControlLoopList().add(controlLoop);
 
-        var response = new InstancePropertiesResponse();
+        return saveInstancePropertiesAndControlLoop(serviceTemplate, controlLoops);
+    }
 
-        // @formatter:off
-        response.setAffectedInstanceProperties(toscaSavedNodeTemplate.values().stream().map(template ->
-            template.getKey().asIdentifier()).collect(Collectors.toList()));
-        // @formatter:on
+    /**
+     * Deletes Instance Properties.
+     *
+     * @param name the name of the control loop to delete
+     * @param version the version of the control loop to delete
+     * @return the result of the deletion
+     * @throws PfModelException on deletion errors
+     */
+    public InstantiationResponse deleteInstanceProperties(String name, String version) throws PfModelException {
+
+        String instanceName = getInstancePropertyName(name, version);
+
+        Map<String, ToscaNodeTemplate> filteredToscaNodeTemplateMap = new HashMap<>();
+
+        ToscaServiceTemplate toscaServiceTemplate = commissioningProvider.getToscaServiceTemplate(name, version);
+
+        toscaServiceTemplate.getToscaTopologyTemplate()
+            .getNodeTemplates().forEach((key, nodeTemplate) -> {
+                if (!nodeTemplate.getName().contains(instanceName)) {
+                    filteredToscaNodeTemplateMap.put(key, nodeTemplate);
+                }
+            });
+
+        List<ToscaNodeTemplate> filteredToscaNodeTemplateList =
+            toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates().values().stream()
+                .filter(nodeTemplate -> nodeTemplate.getName().contains(instanceName)).collect(Collectors.toList());
+
+        InstantiationResponse response = this.deleteControlLoop(name, version);
+
+        controlLoopProvider.deleteInstanceProperties(filteredToscaNodeTemplateMap, filteredToscaNodeTemplateList);
 
         return response;
     }
@@ -116,7 +180,8 @@ public class ControlLoopInstantiationProvider {
 
         synchronized (lockit) {
             for (ControlLoop controlLoop : controlLoops.getControlLoopList()) {
-                var checkControlLoop = controlLoopProvider.getControlLoop(controlLoop.getKey().asIdentifier());
+                var checkControlLoop = controlLoopProvider
+                    .getControlLoop(controlLoop.getKey().asIdentifier());
                 if (checkControlLoop != null) {
                     throw new PfModelException(Response.Status.BAD_REQUEST,
                             controlLoop.getKey().asIdentifier() + " already defined");
@@ -323,25 +388,101 @@ public class ControlLoopInstantiationProvider {
     }
 
     /**
-     * Creates instance element name.
+     * Saves Instance Properties and Control Loop.
      *
-     * @param serviceTemplate the service serviceTemplate
-     * @param instanceName    to amend to the element name
+     * @param serviceTemplate the service template
+     * @param controlLoops a list of control loops
+     * @return the result of the instance properties and instantiation operation
+     * @throws PfModelException on creation errors
      */
-    private void changeInstanceElementsName(ToscaNodeTemplate serviceTemplate, String instanceName) {
+    private InstancePropertiesResponse saveInstancePropertiesAndControlLoop(
+        ToscaServiceTemplate serviceTemplate, ControlLoops controlLoops) throws PfModelException {
 
-        @SuppressWarnings("unchecked")
-        List<Map<String, String>> controlLoopElements = (List<Map<String, String>>) serviceTemplate.getProperties()
-            .get("elements");
+        var response = new InstancePropertiesResponse();
 
-        if (controlLoopElements != null) {
-            controlLoopElements.forEach(clElement -> {
-                String name = clElement.get(CL_ELEMENT_NAME) + instanceName;
-                clElement.replace(CL_ELEMENT_NAME, name);
-            });
+        Map<String, ToscaNodeTemplate> toscaSavedNodeTemplate;
+
+        synchronized (lockit) {
+            for (ControlLoop controlLoop : controlLoops.getControlLoopList()) {
+                var checkControlLoop = controlLoopProvider.getControlLoop(controlLoop.getKey().asIdentifier());
+                if (checkControlLoop != null) {
+                    throw new PfModelException(Response.Status.BAD_REQUEST,
+                        controlLoop.getKey().asIdentifier() + " already defined");
+                }
+            }
+
+            toscaSavedNodeTemplate = controlLoopProvider.saveInstanceProperties(serviceTemplate);
+
+            controlLoopProvider.createControlLoops(controlLoops.getControlLoopList());
+
         }
+
+        List<ToscaConceptIdentifier> affectedControlLoops = controlLoops.getControlLoopList().stream()
+            .map(cl -> cl.getKey().asIdentifier()).collect(Collectors.toList());
+
+        List<ToscaConceptIdentifier> toscaAffectedProperties = toscaSavedNodeTemplate.values().stream()
+            .map(template -> template.getKey().asIdentifier()).collect(Collectors.toList());
+
+        response.setAffectedInstanceProperties(Stream.of(affectedControlLoops, toscaAffectedProperties)
+            .flatMap(Collection::stream).collect(Collectors.toList()));
+
+        return response;
     }
 
+    /**
+     * Crates a new Control Loop instance.
+     * @param instanceName Control Loop Instance name
+     * @param controlLoop empty Control Loop
+     * @param controlLoopElements new Control Loop Element map
+     * @param template original Cloned Tosca Node Template
+     * @param newNodeTemplate new Tosca Node Template
+     */
+    private void crateNewControlLoopInstance(String instanceName, ControlLoop controlLoop,
+                                             Map<UUID, ControlLoopElement> controlLoopElements,
+                                             ToscaNodeTemplate template,
+                                             ToscaNodeTemplate newNodeTemplate) {
+        if (template.getType().equals(CONTROL_LOOP_NODE_TYPE)) {
+            controlLoop.setDefinition(getControlLoopDefinition(newNodeTemplate));
+        }
+
+        if (template.getType().contains(CONTROL_LOOP_NODE_ELEMENT_TYPE)) {
+            ControlLoopElement controlLoopElement = getControlLoopElement(instanceName, newNodeTemplate);
+            controlLoopElements.put(controlLoopElement.getId(), controlLoopElement);
+        }
+
+        controlLoop.setName("PMSH" + instanceName);
+        controlLoop.setVersion(template.getVersion());
+        controlLoop.setDescription("PMSH control loop " + instanceName);
+        controlLoop.setState(ControlLoopState.UNINITIALISED);
+        controlLoop.setOrderedState(ControlLoopOrderedState.UNINITIALISED);
+    }
+
+
+    /**
+     * Get's the instance property name of the control loop.
+     *
+     * @param name the name of the control loop to get, null for all control loops
+     * @param version the version of the control loop to get, null for all control loops
+     * @return the instance name of the control loop instance properties
+     * @throws PfModelException on errors getting control loops
+     */
+    private String getInstancePropertyName(String name, String version) throws PfModelException {
+        List<String> toscaDefinitionsNames =
+            controlLoopProvider.getControlLoops(name, version).stream().map(ControlLoop::getDefinition)
+                .map(ToscaNameVersion::getName).collect(Collectors.toList());
+
+        String instanceName = toscaDefinitionsNames.stream().reduce("", (s1, s2) -> {
+
+            if (s2.contains(INSTANCE_TEXT)) {
+                String[] instances = s2.split(INSTANCE_TEXT);
+
+                return INSTANCE_TEXT + instances[1];
+            }
+
+            return "";
+        });
+        return instanceName;
+    }
 
     /**
      * Generates Instance Name in sequential order and return it to append to the Node Template Name.
@@ -361,4 +502,45 @@ public class ControlLoopInstantiationProvider {
 
         return INSTANCE_TEXT + (instanceNumber + 1);
     }
+
+    /**
+     * Retrieves Control Loop Definition.
+     *
+     * @param template tosca node template
+     * @return control loop definition
+     */
+    private ToscaConceptIdentifier getControlLoopDefinition(ToscaNodeTemplate template) {
+        ToscaConceptIdentifier definition = new ToscaConceptIdentifier();
+        definition.setName(template.getName());
+        definition.setVersion(template.getVersion());
+
+        return definition;
+    }
+
+    /**
+     * Retrieves Control Loop Element.
+     *
+     * @param instanceName instance name to be appended to participant name
+     * @param template tosca node template
+     * @return a control loop element
+     */
+    private ControlLoopElement getControlLoopElement(String instanceName, ToscaNodeTemplate template) {
+        ControlLoopElement controlLoopElement = new ControlLoopElement();
+        ToscaConceptIdentifier definition = new ToscaConceptIdentifier();
+        definition.setName(template.getName());
+        definition.setVersion(template.getVersion());
+        controlLoopElement.setDefinition(definition);
+
+        LinkedTreeMap participantId = (LinkedTreeMap) template.getProperties().get(PARTICIPANT_ID_PROPERTY_KEY);
+
+        ToscaConceptIdentifier participantIdAndType = new ToscaConceptIdentifier();
+        participantIdAndType.setName(participantId.get(CL_ELEMENT_NAME) + instanceName);
+        participantIdAndType.setVersion(String.valueOf(participantId.get(CL_ELEMENT_VERSION)));
+
+        controlLoopElement.setParticipantType(participantIdAndType);
+        controlLoopElement.setParticipantId(participantIdAndType);
+
+        return controlLoopElement;
+    }
+
 }

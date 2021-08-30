@@ -19,6 +19,7 @@
 
 package org.onap.policy.clamp.controlloop.models.messages.rest.instantiation;
 
+import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,5 +34,5 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 @Setter
 @ToString(callSuper = true)
 public class InstancePropertiesResponse extends SimpleResponse {
-    private List<ToscaConceptIdentifier> affectedInstanceProperties;
+    private List<ToscaConceptIdentifier> affectedInstanceProperties = new ArrayList<>();
 }

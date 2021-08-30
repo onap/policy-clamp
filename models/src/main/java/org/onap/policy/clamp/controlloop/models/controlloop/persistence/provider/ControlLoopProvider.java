@@ -45,6 +45,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTypedEntityFilter;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaNodeTemplate;
+import org.onap.policy.models.tosca.simple.concepts.JpaToscaNodeTemplates;
 import org.springframework.stereotype.Component;
 
 /**
@@ -197,15 +198,41 @@ public class ControlLoopProvider extends AbstractModelsProvider {
 
         Map<String, ToscaNodeTemplate> savedNodeTemplates = new HashMap<>();
 
-        serviceTemplate.getToscaTopologyTemplate().getNodeTemplates().forEach((key, template) -> {
-            var jpaToscaNodeTemplate = new JpaToscaNodeTemplate(template);
+        var jpaToscaNodeTemplates = new JpaToscaNodeTemplates();
+        jpaToscaNodeTemplates.fromAuthorative(Collections.singletonList(serviceTemplate.getToscaTopologyTemplate()
+            .getNodeTemplates()));
 
-            getPfDao().create(jpaToscaNodeTemplate);
-
-            savedNodeTemplates.put(key, template);
-        });
+        getPfDao().create(jpaToscaNodeTemplates);
+        serviceTemplate.getToscaTopologyTemplate().getNodeTemplates().forEach(savedNodeTemplates::put);
 
         return savedNodeTemplates;
+    }
+
+    /**
+     * Deletes Instance Properties on the database.
+     *
+     * @param filteredToscaNodeTemplateMap filtered node templates map to delete
+     * @param filteredToscaNodeTemplateList filtered node template list to delete
+     */
+    public void deleteInstanceProperties(
+        Map<String, ToscaNodeTemplate> filteredToscaNodeTemplateMap,
+        List<ToscaNodeTemplate> filteredToscaNodeTemplateList) {
+
+        var jpaToscaNodeTemplates = new JpaToscaNodeTemplates();
+        jpaToscaNodeTemplates.fromAuthorative(Collections.singletonList(filteredToscaNodeTemplateMap));
+
+        getPfDao().create(jpaToscaNodeTemplates);
+
+        filteredToscaNodeTemplateList.forEach(template -> {
+            var jpaToscaNodeTemplate = new JpaToscaNodeTemplate(template);
+
+            getPfDao().delete(jpaToscaNodeTemplate);
+
+            ToscaConceptIdentifier toscaConceptIdentifier = new ToscaConceptIdentifier();
+            toscaConceptIdentifier.setName(jpaToscaNodeTemplate.getName());
+            toscaConceptIdentifier.setVersion(jpaToscaNodeTemplate.getVersion());
+
+        });
     }
 
     /**

@@ -110,6 +110,37 @@
             </doFinally>
         </doTry>
     </route>
+    <route id="delete-tosca-instantiation">
+        <from uri="direct:delete-tosca-instantiation"/>
+        <doTry>
+            <log loggingLevel="INFO"
+                 message="Deleting Tosca Instantiation"/>
+            <to
+                    uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('Controlloop', 'Deleting Tosca Instantiation')"/>
+            <setHeader name="CamelHttpMethod">
+                <constant>DELETE</constant>
+            </setHeader>
+            <setHeader name="Content-Type">
+                <constant>application/json</constant>
+            </setHeader>
+            <setProperty name="name">
+                <simple>${header.name}</simple>
+            </setProperty>
+            <setProperty name="version">
+                <simple>${header.version}</simple>
+            </setProperty>
+            <log loggingLevel="INFO"
+                 message="Endpoint to delete Tosca Instantiation: {{clamp.config.controlloop.runtime.url}}/onap/controlloop/v2/instantiation"></log>
+            <toD
+                    uri="{{clamp.config.controlloop.runtime.url}}/onap/controlloop/v2/instantiation?name=${exchangeProperty[name]}&amp;version=${exchangeProperty[version]}&amp;bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.controlloop.runtime.userName}}&amp;authPassword={{clamp.config.controlloop.runtime.password}}&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+            <convertBodyTo type="java.lang.String"/>
+            <doFinally>
+                <to uri="direct:reset-raise-http-exception-flag"/>
+                <to
+                        uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
+            </doFinally>
+        </doTry>
+    </route>
     <route id="post-tosca-instance-properties">
         <from uri="direct:post-tosca-instance-properties"/>
         <doTry>
@@ -127,6 +158,37 @@
                  message="Endpoint to send Tosca Instance Properties: {{clamp.config.controlloop.runtime.url}}/onap/controlloop/v2/instanceProperties"></log>
             <toD
                     uri="{{clamp.config.controlloop.runtime.url}}/onap/controlloop/v2/instanceProperties? bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.controlloop.runtime.userName}}&amp;authPassword={{clamp.config.controlloop.runtime.password}}&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+            <convertBodyTo type="java.lang.String"/>
+            <doFinally>
+                <to uri="direct:reset-raise-http-exception-flag"/>
+                <to
+                        uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
+            </doFinally>
+        </doTry>
+    </route>
+    <route id="delete-tosca-instance-properties">
+        <from uri="direct:delete-tosca-instance-properties"/>
+        <doTry>
+            <log loggingLevel="INFO"
+                 message="Deleting Tosca Instance Properties"/>
+            <to
+                    uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('Controlloop', 'Deleting Tosca Instance Properties')"/>
+            <setHeader name="CamelHttpMethod">
+                <constant>DELETE</constant>
+            </setHeader>
+            <setHeader name="Content-Type">
+                <constant>application/json</constant>
+            </setHeader>
+            <setProperty name="name">
+                <simple>${header.name}</simple>
+            </setProperty>
+            <setProperty name="version">
+                <simple>${header.version}</simple>
+            </setProperty>
+            <log loggingLevel="INFO"
+                 message="Endpoint to delete Tosca Instance Properties: {{clamp.config.controlloop.runtime.url}}/onap/controlloop/v2/instanceProperties"></log>
+            <toD
+                    uri="{{clamp.config.controlloop.runtime.url}}/onap/controlloop/v2/instanceProperties?name=${exchangeProperty[name]}&amp;version=${exchangeProperty[version]}&amp;bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.controlloop.runtime.userName}}&amp;authPassword={{clamp.config.controlloop.runtime.password}}&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
             <convertBodyTo type="java.lang.String"/>
             <doFinally>
                 <to uri="direct:reset-raise-http-exception-flag"/>
@@ -198,10 +260,16 @@
             <setHeader name="Content-Type">
                 <constant>application/json</constant>
             </setHeader>
+            <setProperty name="name">
+                <simple>${header.name}</simple>
+            </setProperty>
+            <setProperty name="version">
+                <simple>${header.version}</simple>
+            </setProperty>
             <log loggingLevel="INFO"
                  message="Endpoint to get Tosca Instantiation Order State: {{clamp.config.controlloop.runtime.url}}/onap/controlloop/v2/instantiationState"></log>
             <toD
-                    uri="{{clamp.config.controlloop.runtime.url}}/onap/controlloop/v2/instantiationState?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.controlloop.runtime.userName}}&amp;authPassword={{clamp.config.controlloop.runtime.password}}&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+                    uri="{{clamp.config.controlloop.runtime.url}}/onap/controlloop/v2/instantiationState?name=${exchangeProperty[name]}&amp;version=${exchangeProperty[version]}&amp;bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.controlloop.runtime.userName}}&amp;authPassword={{clamp.config.controlloop.runtime.password}}&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
             <convertBodyTo type="java.lang.String"/>
             <doFinally>
                 <to uri="direct:reset-raise-http-exception-flag"/>
