@@ -147,7 +147,8 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
             var config = CODER.convert(nodeTemplate.getProperties(), ThreadConfig.class);
             checkPodStatus(chartInfo, config.uninitializedToPassiveTimeout, config.podStatusCheckInterval);
 
-            intermediaryApi.updateControlLoopElementState(element.getId(), ControlLoopOrderedState.PASSIVE,
+            intermediaryApi.updateControlLoopElementState(controlLoopId, element.getId(),
+                ControlLoopOrderedState.PASSIVE,
                     ControlLoopState.UNINITIALISED, ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
 
         } catch (ServiceException | CoderException | IOException e) {

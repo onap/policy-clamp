@@ -34,7 +34,6 @@ import java.util.stream.Collectors;
 import javax.ws.rs.core.Response.Status;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
-import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ControlLoopProvider;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ParticipantProvider;
@@ -64,6 +63,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CommissioningProvider {
     public static final String CONTROL_LOOP_NODE_TYPE = "org.onap.policy.clamp.controlloop.ControlLoop";
+    private static final String INSTANCE_TEXT = "_Instance";
 
     private final PolicyModelsProvider modelsProvider;
     private final ControlLoopProvider clProvider;
@@ -98,10 +98,10 @@ public class CommissioningProvider {
      * @throws PfModelException on creation errors
      */
     public CommissioningResponse createControlLoopDefinitions(ToscaServiceTemplate serviceTemplate)
-        throws PfModelException, ControlLoopException {
+        throws PfModelException {
 
         if (verifyIfInstancePropertiesExists()) {
-            throw new ControlLoopException(Status.BAD_REQUEST,
+            throw new PfModelException(Status.BAD_REQUEST,
                 "Delete instances, to commission control loop definitions");
         }
 
@@ -148,10 +148,10 @@ public class CommissioningProvider {
      * @throws PfModelException on deletion errors
      */
     public CommissioningResponse deleteControlLoopDefinition(String name, String version)
-        throws PfModelException, ControlLoopException {
+        throws PfModelException {
 
         if (verifyIfInstancePropertiesExists()) {
-            throw new ControlLoopException(Status.BAD_REQUEST,
+            throw new PfModelException(Status.BAD_REQUEST,
                 "Delete instances, to commission control loop definitions");
         }
 
@@ -395,10 +395,17 @@ public class CommissioningProvider {
     public Map<String, ToscaNodeTemplate> getNodeTemplatesWithCommonOrInstanceProperties(boolean common, String name,
             String version) throws PfModelException {
 
-        var commonOrInstanceNodeTypeProps = this.getCommonOrInstancePropertiesFromNodeTypes(common, name, version);
+        if (common && verifyIfInstancePropertiesExists()) {
+            throw new PfModelException(Status.BAD_REQUEST,
+                "Cannot create or edit common properties, delete all the instantiations first");
+        }
+
+        var commonOrInstanceNodeTypeProps =
+            this.getCommonOrInstancePropertiesFromNodeTypes(common, name, version);
 
         var serviceTemplates = new ToscaServiceTemplates();
-        serviceTemplates.setServiceTemplates(modelsProvider.getServiceTemplateList(name, version));
+        serviceTemplates.setServiceTemplates(filterToscaNodeTemplateInstance(
+            modelsProvider.getServiceTemplateList(name, version)));
 
         return this.getDerivedCommonOrInstanceNodeTemplates(
                 serviceTemplates.getServiceTemplates().get(0).getToscaTopologyTemplate().getNodeTemplates(),
@@ -433,7 +440,8 @@ public class CommissioningProvider {
         var serviceTemplates = new ToscaServiceTemplates();
         serviceTemplates.setServiceTemplates(modelsProvider.getServiceTemplateList(name, version));
 
-        ToscaServiceTemplate fullTemplate = serviceTemplates.getServiceTemplates().get(0);
+        ToscaServiceTemplate fullTemplate = filterToscaNodeTemplateInstance(
+            serviceTemplates.getServiceTemplates()).get(0);
 
         var template = new HashMap<String, Object>();
         template.put("tosca_definitions_version", fullTemplate.getToscaDefinitionsVersion());
@@ -496,6 +504,29 @@ public class CommissioningProvider {
         }
     }
 
+    private List<ToscaServiceTemplate> filterToscaNodeTemplateInstance(List<ToscaServiceTemplate> serviceTemplates) {
+
+        List<ToscaServiceTemplate> toscaServiceTemplates = new ArrayList<>();
+
+        serviceTemplates.stream().forEach(serviceTemplate -> {
+
+            Map<String, ToscaNodeTemplate> toscaNodeTemplates = new HashMap<>();
+
+            serviceTemplate.getToscaTopologyTemplate().getNodeTemplates().forEach((key, nodeTemplate) -> {
+                if (!nodeTemplate.getName().contains(INSTANCE_TEXT)) {
+                    toscaNodeTemplates.put(key, nodeTemplate);
+                }
+            });
+
+            serviceTemplate.getToscaTopologyTemplate().getNodeTemplates().clear();
+            serviceTemplate.getToscaTopologyTemplate().setNodeTemplates(toscaNodeTemplates);
+
+            toscaServiceTemplates.add(serviceTemplate);
+        });
+
+        return toscaServiceTemplates;
+    }
+
     /**
      * Validates to see if there is any instance properties saved.
      *
@@ -503,7 +534,7 @@ public class CommissioningProvider {
      */
     private boolean verifyIfInstancePropertiesExists() {
         return clProvider.getNodeTemplates(null, null).stream()
-            .anyMatch(nodeTemplate -> nodeTemplate.getKey().getName().contains("_Instance"));
+            .anyMatch(nodeTemplate -> nodeTemplate.getKey().getName().contains(INSTANCE_TEXT));
 
     }
 }
