@@ -144,23 +144,4 @@ public class InstantiationUtils {
 
         commissioningProvider.createControlLoopDefinitions(template);
     }
-
-    /**
-     * Assert that instance properties has been properly saved.
-     *
-     * @param response InstancePropertiesResponse
-     * @throws PfModelException if an error occurs
-     */
-    public static void assertInstancePropertiesResponse(InstancePropertiesResponse response) throws PfModelException {
-
-        assertThat(response).isNotNull();
-        assertThat(response.getErrorDetails()).isNull();
-        assertThat(response.getAffectedInstanceProperties()).hasSize(8);
-
-        boolean containsInstance = response.getAffectedInstanceProperties().stream()
-            .anyMatch(identifier -> identifier.getName().contains("_Instance"));
-
-        assertThat(containsInstance).isTrue();
-
-    }
 }

@@ -121,7 +121,7 @@ public class CommissioningController extends AbstractRestController {
                     name = REQUEST_ID_NAME,
                     required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
             @ApiParam(value = "Entity Body of Control Loop", required = true) @RequestBody ToscaServiceTemplate body)
-        throws PfModelException, ControlLoopException {
+        throws PfModelException {
 
         return ResponseEntity.ok().body(provider.createControlLoopDefinitions(body));
     }
@@ -188,7 +188,7 @@ public class CommissioningController extends AbstractRestController {
             @ApiParam(
                     value = "Control Loop definition version",
                     required = true) @RequestParam("version") String version)
-        throws PfModelException, ControlLoopException {
+        throws PfModelException {
 
         return ResponseEntity.ok().body(provider.deleteControlLoopDefinition(name, version));
     }
@@ -385,6 +385,7 @@ public class CommissioningController extends AbstractRestController {
      * @param version the version of the tosca service template to get
      * @return the specified tosca service template or section Json Schema
      * @throws PfModelException on errors getting the Common or Instance Properties
+     * @throws ControlLoopException on error getting the Common or Instance Properties
      */
     // @formatter:off
     @GetMapping(value = "/commission/getCommonOrInstanceProperties",
@@ -438,7 +439,7 @@ public class CommissioningController extends AbstractRestController {
             @ApiParam(value = "Tosca service template version", required = false) @RequestParam(
                     value = "version",
                     required = false) String version)
-            throws PfModelException {
+        throws PfModelException {
 
         return ResponseEntity.ok().body(provider.getNodeTemplatesWithCommonOrInstanceProperties(common, name, version));
     }

@@ -18,6 +18,7 @@
 
 package org.onap.policy.clamp.controlloop.models.controlloop.concepts;
 
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -34,7 +35,7 @@ import org.onap.policy.models.base.PfUtils;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class ControlLoops {
-    private List<ControlLoop> controlLoopList;
+    private List<ControlLoop> controlLoopList = new ArrayList<>();
 
     /**
      * Copy constructor, does a deep copy.

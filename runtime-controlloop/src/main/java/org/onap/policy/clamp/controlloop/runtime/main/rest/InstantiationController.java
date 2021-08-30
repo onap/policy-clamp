@@ -187,9 +187,76 @@ public class InstantiationController extends AbstractRestController {
             @RequestHeader(
                 name = REQUEST_ID_NAME,
                 required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-            @ApiParam(value = "Body of instance properties", required = true) @RequestBody ToscaServiceTemplate body) {
+            @ApiParam(value = "Body of instance properties", required = true) @RequestBody ToscaServiceTemplate body)
+        throws PfModelException {
 
-        return ResponseEntity.ok().body(provider.saveInstanceProperties(body));
+        return ResponseEntity.ok().body(provider.createInstanceProperties(body));
+    }
+
+    /**
+     * Deletes a control loop definition and instance properties.
+     *
+     * @param requestId request ID used in ONAP logging
+     * @param name the name of the control loop to delete
+     * @param version the version of the control loop to delete
+     * @return a response
+     * @throws PfModelException on errors deleting of control loop and instance properties
+     */
+    // @formatter:off
+    @DeleteMapping(value = "/instanceProperties",
+        produces = {MediaType.APPLICATION_JSON_VALUE, APPLICATION_YAML})
+    @ApiOperation(value = "Delete a control loop and instance properties",
+        notes = "Deletes a control loop and instance properties, returning optional error details",
+        response = InstantiationResponse.class,
+        tags = {TAGS},
+        authorizations = @Authorization(value = AUTHORIZATION_TYPE),
+        responseHeaders = {
+            @ResponseHeader(
+                name = VERSION_MINOR_NAME,
+                description = VERSION_MINOR_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(
+                name = VERSION_PATCH_NAME,
+                description = VERSION_PATCH_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(
+                name = VERSION_LATEST_NAME,
+                description = VERSION_LATEST_DESCRIPTION,
+                response = String.class),
+            @ResponseHeader(
+                name = REQUEST_ID_NAME,
+                description = REQUEST_ID_HDR_DESCRIPTION,
+                response = UUID.class)},
+        extensions = {
+            @Extension
+                (
+                    name = EXTENSION_NAME,
+                    properties = {
+                        @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                        @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
+                    }
+                )
+        }
+    )
+    @ApiResponses(
+        value = {
+            @ApiResponse(code = AUTHENTICATION_ERROR_CODE, message = AUTHENTICATION_ERROR_MESSAGE),
+            @ApiResponse(code = AUTHORIZATION_ERROR_CODE, message = AUTHORIZATION_ERROR_MESSAGE),
+            @ApiResponse(code = SERVER_ERROR_CODE, message = SERVER_ERROR_MESSAGE)
+        }
+    )
+    // @formatter:on
+
+    public ResponseEntity<InstantiationResponse> deleteInstanceProperties(
+        @RequestHeader(
+            name = REQUEST_ID_NAME,
+            required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+        @ApiParam(value = "Control Loop definition name", required = true) @RequestParam("name") String name,
+        @ApiParam(value = "Control Loop definition version") @RequestParam(
+            value = "version",
+            required = true) String version) throws PfModelException {
+
+        return ResponseEntity.ok().body(provider.deleteInstanceProperties(name, version));
     }
 
     /**
@@ -494,10 +561,10 @@ public class InstantiationController extends AbstractRestController {
         @RequestHeader(
             name = REQUEST_ID_NAME,
             required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-        @ApiParam(value = "Control Loop definition name", required = false) @RequestParam(
+        @ApiParam(value = "Control Loop name", required = false) @RequestParam(
             value = "name",
             required = false) String name,
-        @ApiParam(value = "Control Loop definition version", required = false) @RequestParam(
+        @ApiParam(value = "Control Loop version", required = false) @RequestParam(
             value = "version",
             required = false) String version)
         throws PfModelException {
