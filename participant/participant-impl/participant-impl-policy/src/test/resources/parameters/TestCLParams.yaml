@@ -24,9 +24,20 @@ node_types:
       provider:
         type: string
         requred: false
-      participant_id:
+      participantType:
         type: onap.datatypes.ToscaConceptIdentifier
         requred: true
+      startPhase:
+        type: integer
+        required: false
+        constraints:
+        - greater-or-equal: 0
+        metadata:
+            common: true
+        description: A value indicating the start phase in which this control loop element will be started, the
+                     first start phase is zero. Control Loop Elements are started in their start_phase order and stopped
+                     in reverse start phase order. Control Loop Elements with the same start phase are started and
+                     stopped simultaneously
   org.onap.policy.clamp.controlloop.ControlLoop:
     version: 1.0.1
     derived_from: tosca.nodetypes.Root
@@ -97,7 +108,7 @@ topology_template:
       description: Control loop element for the DCAE microservice for Performance Management Subscription Handling
       properties:
         provider: Ericsson
-        participant_id:
+        participantType:
           name: org.onap.dcae.controlloop.DCAEMicroserviceControlLoopParticipant
           version: 2.3.4
         dcae_blueprint_id:
@@ -110,7 +121,7 @@ topology_template:
       description: Control loop element for the monitoring policy for Performance Management Subscription Handling
       properties:
         provider: Ericsson
-        participant_id:
+        participantType:
           name: org.onap.policy.controlloop.MonitoringPolicyControlLoopParticipant
           version: 2.3.1
         policy_type_id:
@@ -123,7 +134,7 @@ topology_template:
       description: Control loop element for the operational policy for Performance Management Subscription Handling
       properties:
         provider: Ericsson
-        participant_id:
+        participantType:
           name: org.onap.policy.controlloop.OperationalPolicyControlLoopParticipant
           version: 2.2.1
         policy_type_id:
@@ -136,7 +147,7 @@ topology_template:
       description: Control loop element for CDS for Performance Management Subscription Handling
       properties:
         provider: Ericsson
-        participant_id:
+        participantType:
           name: org.onap.ccsdk.cds.controlloop.CdsControlLoopParticipant
           version: 3.2.1
         cds_blueprint_id:

@@ -36,6 +36,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 public class ControlLoopStateChange extends ParticipantMessage {
     private ControlLoopOrderedState orderedState;
     private ControlLoopState currentState;
+    private Integer startPhase;
 
     /**
      * Constructor for instantiating ControlLoopStateChange class with message name.

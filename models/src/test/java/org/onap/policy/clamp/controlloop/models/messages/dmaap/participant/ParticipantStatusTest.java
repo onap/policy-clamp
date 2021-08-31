@@ -59,7 +59,8 @@ class ParticipantStatusTest {
         ToscaConceptIdentifier id = new ToscaConceptIdentifier("id", "1.2.3");
         orig.setControlLoopId(id);
         orig.setParticipantId(id);
-        orig.setParticipantType(id);
+        ToscaConceptIdentifier type = new ToscaConceptIdentifier("type", "2.3.4");
+        orig.setParticipantType(type);
         orig.setMessageId(UUID.randomUUID());
         orig.setState(ParticipantState.ACTIVE);
         orig.setHealthStatus(ParticipantHealthStatus.HEALTHY);
@@ -70,6 +71,7 @@ class ParticipantStatusTest {
 
         ParticipantDefinition participantDefinitionUpdate = new ParticipantDefinition();
         participantDefinitionUpdate.setParticipantId(id);
+        participantDefinitionUpdate.setParticipantType(type);
         ControlLoopElementDefinition clDefinition = getClElementDefinition(id);
         participantDefinitionUpdate.setControlLoopElementDefinitionList(List.of(clDefinition));
         orig.setParticipantDefinitionUpdates(List.of(participantDefinitionUpdate));

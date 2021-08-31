@@ -42,9 +42,20 @@ node_types:
       provider:
         type: string
         requred: false
-      participant_id:
+      participantType:
         type: onap.datatypes.ToscaConceptIdentifier
         requred: true
+      startPhase:
+        type: integer
+        required: false
+        constraints:
+        - greater-or-equal: 0
+        metadata:
+            common: true
+        description: A value indicating the start phase in which this control loop element will be started, the
+                     first start phase is zero. Control Loop Elements are started in their start_phase order and stopped
+                     in reverse start phase order. Control Loop Elements with the same start phase are started and
+                     stopped simultaneously
   org.onap.policy.clamp.controlloop.ControlLoop:
     version: 1.0.1
     derived_from: tosca.nodetypes.Root
@@ -94,9 +105,10 @@ topology_template:
       description: Control loop element for the K8S microservice for Postgres
       properties:
         provider: ONAP
-        participant_id:
+        participantType:
           name: org.onap.k8s.controlloop.K8SControlLoopParticipant
           version: 2.3.4
+        startPhase: 2
         chart:
           apiVersion: v1
           description: ONAP Postgres Server
@@ -129,9 +141,10 @@ topology_template:
       description: Control loop element for the K8S microservice for Hello World
       properties:
         provider: ONAP
-        participant_id:
+        participantType:
           name: org.onap.k8s.controlloop.K8SControlLoopParticipant
           version: 2.3.4
+        startPhase: 2
         chart:
           apiVersion: v1
           name: helloworld
