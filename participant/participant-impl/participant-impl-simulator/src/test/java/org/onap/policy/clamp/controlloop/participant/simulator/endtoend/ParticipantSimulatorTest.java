@@ -25,10 +25,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
+import org.glassfish.jersey.client.ClientProperties;
+import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
@@ -45,21 +55,13 @@ import org.onap.policy.clamp.controlloop.participant.simulator.main.parameters.C
 import org.onap.policy.clamp.controlloop.participant.simulator.main.rest.AbstractRestController;
 import org.onap.policy.clamp.controlloop.participant.simulator.main.rest.TestListenerUtils;
 import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
-import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.StandardCoder;
+import org.onap.policy.common.gson.GsonMessageBodyHandler;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -73,8 +75,6 @@ class ParticipantSimulatorTest {
     private static final CommInfrastructure INFRA = CommInfrastructure.NOOP;
     private static final String TOPIC = "my-topic";
 
-    public static final Coder coder = new StandardCoder();
-
     @Value("${spring.security.user.name}")
     private String user;
 
@@ -83,9 +83,6 @@ class ParticipantSimulatorTest {
 
     @LocalServerPort
     private int randomServerPort;
-
-    @Autowired
-    private TestRestTemplate restTemplate;
 
     @Autowired
     private ParticipantIntermediaryApi participantIntermediaryApi;
@@ -100,11 +97,9 @@ class ParticipantSimulatorTest {
         synchronized (lockit) {
             if (!check) {
                 check = true;
-                ControlLoopUpdateListener clUpdateListener =
-                        new ControlLoopUpdateListener(participantHandler);
+                ControlLoopUpdateListener clUpdateListener = new ControlLoopUpdateListener(participantHandler);
 
-                ControlLoopUpdate controlLoopUpdateMsg =
-                        TestListenerUtils.createControlLoopUpdateMsg();
+                ControlLoopUpdate controlLoopUpdateMsg = TestListenerUtils.createControlLoopUpdateMsg();
                 clUpdateListener.onTopicEvent(INFRA, TOPIC, null, controlLoopUpdateMsg);
 
             }
@@ -116,11 +111,18 @@ class ParticipantSimulatorTest {
     }
 
     void testSwagger(String endPoint) {
-        HttpEntity<Void> request = new HttpEntity<>(null, createHttpHeaders());
-        ResponseEntity<String> response =
-                restTemplate.exchange(getPath("api-docs"), HttpMethod.GET, request, String.class);
-        assertThat(response.getStatusCodeValue()).isEqualTo(200);
-        assertTrue(response.getBody().contains("/onap/participantsim/v2/" + endPoint));
+        final Client client = ClientBuilder.newBuilder().build();
+
+        client.property(ClientProperties.METAINF_SERVICES_LOOKUP_DISABLE, "true");
+        client.register(GsonMessageBodyHandler.class);
+        client.register(HttpAuthenticationFeature.basic(user, password));
+
+        final WebTarget webTarget = client.target(getPath("api-docs"));
+
+        Response response = webTarget.request(MediaType.APPLICATION_JSON).get();
+
+        assertThat(response.getStatus()).isEqualTo(200);
+        assertTrue(response.readEntity(String.class).contains("/onap/participantsim/v2/" + endPoint));
     }
 
     @Test
@@ -135,59 +137,49 @@ class ParticipantSimulatorTest {
 
     @Test
     void testProducerYaml() {
-        MediaType yamlMediaType = new MediaType("application", "yaml");
-        HttpHeaders headers = createHttpHeaders();
-        headers.setAccept(Collections.singletonList(yamlMediaType));
-        HttpEntity<Void> request = new HttpEntity<>(null, headers);
+        final Client client = ClientBuilder.newBuilder().build();
+
+        client.property(ClientProperties.METAINF_SERVICES_LOOKUP_DISABLE, "true");
+        client.register(GsonMessageBodyHandler.class);
+        client.register(HttpAuthenticationFeature.basic(user, password));
+
         String path = getPath(PARTICIPANTS_ENDPOINT + "/org.onap.PM_CDS_Blueprint/1");
+        final WebTarget webTarget = client.target(path);
 
-        ResponseEntity<String> response = restTemplate.exchange(path, HttpMethod.GET, request, String.class);
+        Response response = webTarget.request("application/yaml").get();
 
-        assertThat(response.getStatusCodeValue()).isEqualTo(200);
-        assertTrue(response.getHeaders().getContentType().isCompatibleWith(yamlMediaType));
+        assertThat(response.getStatus()).isEqualTo(200);
     }
 
     @Test
     void testQuery_Unauthorized() throws Exception {
-        String path = getPath(PARTICIPANTS_ENDPOINT + "/org.onap.PM_CDS_Blueprint/1");
+        String path = PARTICIPANTS_ENDPOINT + "/org.onap.PM_CDS_Blueprint/1";
 
-        // authorized call
-        ResponseEntity<String> response =
-                restTemplate.exchange(path, HttpMethod.GET, new HttpEntity<>(null, createHttpHeaders()), String.class);
-        assertThat(response.getStatusCodeValue()).isEqualTo(200);
+        Response response = performRequest(path, true, null).get();
+        assertThat(response.getStatus()).isEqualTo(200);
 
         // unauthorized call
-        response = restTemplate.exchange(path, HttpMethod.GET, new HttpEntity<>(null, new HttpHeaders()), String.class);
-        assertThat(response.getStatusCodeValue()).isEqualTo(401);
+        response = performRequest(path, false, null).get();
+        assertThat(response.getStatus()).isEqualTo(401);
     }
 
-    private HttpHeaders createHttpHeaders() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBasicAuth(user, password);
-        return headers;
-    }
+    private Invocation.Builder performRequest(String endpoint, boolean includeAuth, UUID uuid) {
+        final Client client = ClientBuilder.newBuilder().build();
 
-    protected <T> ResponseEntity<T> performGet(String endpoint, Class<T> responseType, UUID uuid) throws Exception {
-        HttpHeaders httpHeaders = createHttpHeaders();
-        if (uuid != null) {
-            httpHeaders.add(AbstractRestController.REQUEST_ID_NAME, uuid.toString());
+        client.property(ClientProperties.METAINF_SERVICES_LOOKUP_DISABLE, "true");
+        client.register(GsonMessageBodyHandler.class);
+        if (includeAuth) {
+            client.register(HttpAuthenticationFeature.basic(user, password));
         }
-        HttpEntity<Void> request = new HttpEntity<>(null, httpHeaders);
-        return restTemplate.exchange(getPath(endpoint), HttpMethod.GET, request, responseType);
-    }
-
-    protected <T> ResponseEntity<T> performGet(String endpoint, Class<T> responseType) throws Exception {
-        return performGet(endpoint, responseType, null);
-    }
-
-    protected <T, R> ResponseEntity<R> performPut(String path, T body, ParameterizedTypeReference<R> responseType,
-            UUID uuid) throws Exception {
-        HttpHeaders httpHeaders = createHttpHeaders();
+        Invocation.Builder builder = client.target(getPath(endpoint)).request(MediaType.APPLICATION_JSON);
         if (uuid != null) {
-            httpHeaders.add(AbstractRestController.REQUEST_ID_NAME, uuid.toString());
+            builder = builder.header(AbstractRestController.REQUEST_ID_NAME, uuid.toString());
         }
-        HttpEntity<T> request = new HttpEntity<>(body, httpHeaders);
-        return restTemplate.exchange(getPath(path), HttpMethod.PUT, request, responseType);
+        return builder;
+    }
+
+    private Response performGet(String endpoint, UUID uuid) throws Exception {
+        return performRequest(endpoint, true, uuid).get();
     }
 
     @Test
@@ -200,29 +192,30 @@ class ParticipantSimulatorTest {
         UUID uuid = UUID.randomUUID();
 
         // GET REST call for querying the participants
-        ResponseEntity<String> response = performGet(
+        Response response = performGet(
                 PARTICIPANTS_ENDPOINT + "/" + participant.getKey().getName() + "/" + participant.getKey().getVersion(),
-                String.class, uuid);
+                uuid);
         checkResponseEntity(response, 200, uuid);
 
-        Participant[] returnValue = coder.decode(response.getBody(), Participant[].class);
+        Participant[] returnValue = response.readEntity(Participant[].class);
         assertThat(returnValue).hasSize(1);
         // Verify the result of GET participants with what is stored
         assertEquals(participant.getDefinition(), returnValue[0].getDefinition());
     }
 
-    private <T> void checkResponseEntity(ResponseEntity<T> response, int status, UUID uuid) {
-        assertThat(response.getStatusCodeValue()).isEqualTo(status);
+    private <T> void checkResponseEntity(Response response, int status, UUID uuid) {
+        assertThat(response.getStatus()).isEqualTo(status);
         assertThat(getHeader(response.getHeaders(), AbstractRestController.VERSION_MINOR_NAME)).isEqualTo("0");
         assertThat(getHeader(response.getHeaders(), AbstractRestController.VERSION_PATCH_NAME)).isEqualTo("0");
         assertThat(getHeader(response.getHeaders(), AbstractRestController.VERSION_LATEST_NAME)).isEqualTo("1.0.0");
         assertThat(getHeader(response.getHeaders(), AbstractRestController.REQUEST_ID_NAME)).isEqualTo(uuid.toString());
     }
 
-    private String getHeader(HttpHeaders httpHeaders, String param) {
-        List<String> list = httpHeaders.get(param);
+    private String getHeader(MultivaluedMap<String, Object> httpHeaders, String param) {
+        List<Object> list = httpHeaders.get(param);
         assertThat(list).hasSize(1);
-        return list.get(0);
+        assertThat(list.get(0)).isNotNull();
+        return (String) list.get(0);
     }
 
     @Test
@@ -232,14 +225,17 @@ class ParticipantSimulatorTest {
         ToscaConceptIdentifier participantId = CommonTestData.getParticipantId();
 
         // GET REST call for querying the controlLoop elements
-        ResponseEntity<String> response =
-                performGet(ELEMENTS_ENDPOINT + "/" + participantId.getName() + "/" + participantId.getVersion(),
-                        String.class, uuid);
+        Response response =
+                performGet(ELEMENTS_ENDPOINT + "/" + participantId.getName() + "/" + participantId.getVersion(), uuid);
         checkResponseEntity(response, 200, uuid);
 
-        Map<?, ?> returnValue = coder.decode(response.getBody(), Map.class);
+        Map<?, ?> returnValue = response.readEntity(Map.class);
         // Verify the result of GET controlloop elements with what is stored
         assertThat(returnValue).isEmpty();
+    }
+
+    private Response performPut(String endpoint, final Entity<?> entity, UUID uuid) throws Exception {
+        return performRequest(endpoint, true, uuid).put(entity);
     }
 
     @Test
@@ -253,11 +249,11 @@ class ParticipantSimulatorTest {
         UUID uuid = UUID.randomUUID();
 
         // PUT REST call for updating Participant
-        ResponseEntity<TypedSimpleResponse<Participant>> response = performPut(PARTICIPANTS_ENDPOINT,
-                participants.get(0), new ParameterizedTypeReference<TypedSimpleResponse<Participant>>() {}, uuid);
+        Response response = performPut(PARTICIPANTS_ENDPOINT, Entity.json(participants.get(0)), uuid);
         checkResponseEntity(response, 200, uuid);
 
-        TypedSimpleResponse<Participant> resp = response.getBody();
+        TypedSimpleResponse<Participant> resp =
+                response.readEntity(new GenericType<TypedSimpleResponse<Participant>>() {});
         assertNotNull(resp.getResponse());
         // Verify the response and state returned by PUT REST call for updating participants
         assertEquals(participants.get(0).getDefinition(), resp.getResponse().getDefinition());
@@ -275,13 +271,12 @@ class ParticipantSimulatorTest {
         ControlLoopElement controlLoopElement = controlLoopElements.get(uuid);
 
         controlLoopElement.setOrderedState(ControlLoopOrderedState.PASSIVE);
-
         // PUT REST call for updating ControlLoopElement
-        ResponseEntity<TypedSimpleResponse<ControlLoopElement>> response = performPut(ELEMENTS_ENDPOINT,
-                controlLoopElement, new ParameterizedTypeReference<TypedSimpleResponse<ControlLoopElement>>() {}, uuid);
+        Response response = performPut(ELEMENTS_ENDPOINT, Entity.json(controlLoopElement), uuid);
         checkResponseEntity(response, 200, uuid);
 
-        TypedSimpleResponse<ControlLoopElement> resp = response.getBody();
+        TypedSimpleResponse<ControlLoopElement> resp =
+                response.readEntity(new GenericType<TypedSimpleResponse<ControlLoopElement>>() {});
         assertNotNull(resp.getResponse());
         // Verify the response and state returned by PUT REST call for updating participants
         assertEquals(controlLoopElement.getDefinition(), resp.getResponse().getDefinition());

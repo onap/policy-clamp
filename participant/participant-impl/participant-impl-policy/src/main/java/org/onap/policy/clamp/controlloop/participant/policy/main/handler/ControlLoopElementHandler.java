@@ -130,7 +130,7 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
             throws PfModelException {
         intermediaryApi.updateControlLoopElementState(element.getId(), element.getOrderedState(),
                 ControlLoopState.PASSIVE, ParticipantMessageType.CONTROL_LOOP_UPDATE);
-        ToscaServiceTemplate controlLoopDefinition = intermediaryApi.getToscaServiceTemplate();
+        ToscaServiceTemplate controlLoopDefinition = element.getToscaServiceTemplateFragment();
         if (controlLoopDefinition.getToscaTopologyTemplate() != null) {
             if (controlLoopDefinition.getPolicyTypes() != null) {
                 for (ToscaPolicyType policyType : controlLoopDefinition.getPolicyTypes().values()) {

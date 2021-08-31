@@ -41,8 +41,6 @@ public class ParticipantUpdate extends ParticipantMessage {
     // A list of updates to ParticipantDefinitions
     private List<ParticipantDefinition> participantDefinitionUpdates = new ArrayList<>();
 
-    private ToscaServiceTemplate toscaServiceTemplate = new ToscaServiceTemplate();
-
     /**
      * Constructor for instantiating ParticipantUpdate class with message name.
      *
@@ -61,6 +59,5 @@ public class ParticipantUpdate extends ParticipantMessage {
 
         this.participantDefinitionUpdates = PfUtils.mapList(source.participantDefinitionUpdates,
             ParticipantDefinition::new);
-        this.toscaServiceTemplate = source.toscaServiceTemplate;
     }
 }

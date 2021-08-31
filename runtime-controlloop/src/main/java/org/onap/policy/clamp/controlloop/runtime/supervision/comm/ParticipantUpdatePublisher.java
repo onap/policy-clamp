@@ -95,11 +95,9 @@ public class ParticipantUpdatePublisher extends AbstractParticipantPublisher<Par
         if (commissionFlag) {
             // Commission the controlloop but sending participantdefinitions to participants
             message.setParticipantDefinitionUpdates(participantDefinitionUpdates);
-            message.setToscaServiceTemplate(toscaServiceTemplate);
         } else {
             // DeCommission the controlloop but deleting participantdefinitions on participants
             message.setParticipantDefinitionUpdates(null);
-            message.setToscaServiceTemplate(null);
         }
         LOGGER.debug("Participant Update sent {}", message);
         super.send(message);

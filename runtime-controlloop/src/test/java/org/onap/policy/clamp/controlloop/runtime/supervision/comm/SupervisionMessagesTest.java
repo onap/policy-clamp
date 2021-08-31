@@ -206,7 +206,6 @@ class SupervisionMessagesTest extends CommonRestController {
         }
 
         participantUpdateMsg.setParticipantDefinitionUpdates(participantDefinitionUpdates);
-        participantUpdateMsg.setToscaServiceTemplate(toscaServiceTemplate);
         synchronized (lockit) {
             ParticipantUpdatePublisher participantUpdatePublisher =
                 new ParticipantUpdatePublisher(modelsProvider);

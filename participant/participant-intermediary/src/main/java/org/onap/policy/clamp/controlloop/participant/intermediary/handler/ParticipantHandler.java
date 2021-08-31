@@ -59,7 +59,6 @@ import org.onap.policy.clamp.controlloop.participant.intermediary.comm.Participa
 import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantParameters;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -85,8 +84,6 @@ public class ParticipantHandler {
     private ParticipantHealthStatus healthStatus = ParticipantHealthStatus.UNKNOWN;
 
     private final List<ControlLoopElementDefinition> clElementDefsOnThisParticipant = new ArrayList<>();
-
-    private ToscaServiceTemplate toscaServiceTemplate = new ToscaServiceTemplate();
 
     /**
      * Constructor, set the participant ID and sender.
@@ -292,8 +289,7 @@ public class ParticipantHandler {
             return;
         }
 
-        toscaServiceTemplate = participantUpdateMsg.getToscaServiceTemplate();
-        if (toscaServiceTemplate != null) {
+        if (!participantUpdateMsg.getParticipantDefinitionUpdates().isEmpty()) {
             // This message is to commission the controlloop
             for (ParticipantDefinition participantDefinition : participantUpdateMsg.getParticipantDefinitionUpdates()) {
                 if (participantDefinition.getParticipantId().equals(participantType)) {

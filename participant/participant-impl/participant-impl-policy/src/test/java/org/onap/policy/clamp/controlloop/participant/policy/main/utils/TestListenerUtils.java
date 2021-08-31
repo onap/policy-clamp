@@ -50,6 +50,7 @@ import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,6 +61,8 @@ public class TestListenerUtils {
     static CommonTestData commonTestData = new CommonTestData();
     private static final Logger LOGGER = LoggerFactory.getLogger(TestListenerUtils.class);
     private static final String CONTROL_LOOP_ELEMENT = "org.onap.policy.clamp.controlloop.ControlLoopElement";
+    private static final String POLICY_TYPE_ID = "policy_type_id";
+    private static final String POLICY_ID = "policy_id";
 
     private TestListenerUtils() {}
 
@@ -147,6 +150,7 @@ public class TestListenerUtils {
 
         Map<UUID, ControlLoopElement> elements = new LinkedHashMap<>();
         ToscaServiceTemplate toscaServiceTemplate = testControlLoopRead();
+        TestListenerUtils.addPoliciesToToscaServiceTemplate(toscaServiceTemplate);
         Map<String, ToscaNodeTemplate> nodeTemplatesMap =
                 toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates();
         for (Map.Entry<String, ToscaNodeTemplate> toscaInputEntry : nodeTemplatesMap.entrySet()) {
@@ -176,10 +180,36 @@ public class TestListenerUtils {
 
         List<ParticipantUpdates> participantUpdates = new ArrayList<>();
         for (ControlLoopElement element : elements.values()) {
+            populateToscaNodeTemplateFragment(element, toscaServiceTemplate);
             prepareParticipantUpdateForControlLoop(element, participantUpdates);
         }
         clUpdateMsg.setParticipantUpdatesList(participantUpdates);
         return clUpdateMsg;
+    }
+
+    private static void populateToscaNodeTemplateFragment(ControlLoopElement clElement,
+            ToscaServiceTemplate toscaServiceTemplate) {
+        ToscaNodeTemplate toscaNodeTemplate = toscaServiceTemplate
+            .getToscaTopologyTemplate().getNodeTemplates().get(clElement.getDefinition().getName());
+        // If the ControlLoopElement has policy_type_id or policy_id, identify it as a PolicyControlLoopElement
+        // and pass respective PolicyTypes or Policies as part of toscaServiceTemplateFragment
+        if ((toscaNodeTemplate.getProperties().get(POLICY_TYPE_ID) != null)
+                || (toscaNodeTemplate.getProperties().get(POLICY_ID) != null)) {
+            // ControlLoopElement for policy framework, send policies and policyTypes to participants
+            if ((toscaServiceTemplate.getPolicyTypes() != null)
+                    || (toscaServiceTemplate.getToscaTopologyTemplate().getPolicies() != null)) {
+                ToscaServiceTemplate toscaServiceTemplateFragment = new ToscaServiceTemplate();
+                toscaServiceTemplateFragment.setPolicyTypes(toscaServiceTemplate.getPolicyTypes());
+
+                ToscaTopologyTemplate toscaTopologyTemplate = new ToscaTopologyTemplate();
+                toscaTopologyTemplate.setPolicies(toscaServiceTemplate.getToscaTopologyTemplate().getPolicies());
+                toscaServiceTemplateFragment.setToscaTopologyTemplate(toscaTopologyTemplate);
+
+                toscaServiceTemplateFragment.setDataTypes(toscaServiceTemplate.getDataTypes());
+
+                clElement.setToscaServiceTemplateFragment(toscaServiceTemplateFragment);
+            }
+        }
     }
 
     private static void prepareParticipantUpdateForControlLoop(ControlLoopElement clElement,
@@ -248,7 +278,6 @@ public class TestListenerUtils {
         }
 
         participantUpdateMsg.setParticipantDefinitionUpdates(participantDefinitionUpdates);
-        participantUpdateMsg.setToscaServiceTemplate(toscaServiceTemplate);
         return participantUpdateMsg;
     }
 

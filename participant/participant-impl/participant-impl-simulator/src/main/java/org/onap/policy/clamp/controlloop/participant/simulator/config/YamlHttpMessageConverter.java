@@ -23,20 +23,29 @@
 package org.onap.policy.clamp.controlloop.participant.simulator.config;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
+import javax.ws.rs.core.Response;
+import org.onap.policy.clamp.controlloop.common.exception.ControlLoopRuntimeException;
+import org.onap.policy.common.utils.coder.Coder;
+import org.onap.policy.common.utils.coder.CoderException;
+import org.onap.policy.common.utils.coder.StandardCoder;
+import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.AbstractHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
-import org.yaml.snakeyaml.Yaml;
 
 public class YamlHttpMessageConverter<T> extends AbstractHttpMessageConverter<T> {
 
-    public YamlHttpMessageConverter() {
-        super(new MediaType("application", "yaml"));
+    private Coder coder;
+
+    public YamlHttpMessageConverter(String type) {
+        super(new MediaType("application", type, StandardCharsets.UTF_8));
+        this.coder = "json".equals(type) ? new StandardCoder() : new StandardYamlCoder();
     }
 
     @Override
@@ -47,16 +56,20 @@ public class YamlHttpMessageConverter<T> extends AbstractHttpMessageConverter<T>
     @Override
     protected T readInternal(Class<? extends T> clazz, HttpInputMessage inputMessage)
             throws IOException, HttpMessageNotReadableException {
-        var yaml = new Yaml();
-        return yaml.loadAs(inputMessage.getBody(), clazz);
+        try (var is = new InputStreamReader(inputMessage.getBody(), StandardCharsets.UTF_8)) {
+            return coder.decode(is, clazz);
+        } catch (CoderException e) {
+            throw new ControlLoopRuntimeException(Response.Status.BAD_REQUEST, e.getMessage(), e);
+        }
     }
 
     @Override
     protected void writeInternal(T t, HttpOutputMessage outputMessage)
             throws IOException, HttpMessageNotWritableException {
-        var yaml = new Yaml();
         try (var writer = new OutputStreamWriter(outputMessage.getBody(), StandardCharsets.UTF_8)) {
-            yaml.dump(t, writer);
+            coder.encode(writer, t);
+        } catch (CoderException e) {
+            throw new ControlLoopRuntimeException(Response.Status.BAD_REQUEST, e.getMessage(), e);
         }
     }
 }
