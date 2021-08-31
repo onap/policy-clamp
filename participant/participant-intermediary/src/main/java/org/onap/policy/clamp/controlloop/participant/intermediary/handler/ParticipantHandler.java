@@ -255,7 +255,7 @@ public class ParticipantHandler {
         if (ParticipantState.UNKNOWN.equals(this.state)) {
             this.state = ParticipantState.PASSIVE;
         }
-        sender.sendParticipantStatus(makeHeartbeat(false));
+        publisher.sendParticipantStatus(makeHeartbeat(false));
     }
 
     /**
