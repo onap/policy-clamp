@@ -1,6 +1,6 @@
 participant:
   intermediaryParameters:
-    reportingTimeInterval: 120000
+    reportingTimeIntervalMs: 120000
     description: Participant Description
     participantId:
       name: HttpParticipant0
@@ -17,11 +17,6 @@ participant:
           fetchTimeout: 15000
       topicSinks:
         - topic: POLICY-CLRUNTIME-PARTICIPANT
-          servers:
-            - ${topicServer:message-router}
-          topicCommInfrastructure: dmaap
-
-        - topic: POLICY-NOTIFICATION
           servers:
             - ${topicServer:message-router}
           topicCommInfrastructure: dmaap

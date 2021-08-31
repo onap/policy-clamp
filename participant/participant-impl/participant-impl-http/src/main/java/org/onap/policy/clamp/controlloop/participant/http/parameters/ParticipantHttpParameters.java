@@ -18,28 +18,30 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.controlloop.participant.http;
+package org.onap.policy.clamp.controlloop.participant.http.parameters;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
-import org.springframework.context.annotation.ComponentScan;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
+import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantIntermediaryParameters;
+import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantParameters;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.validation.annotation.Validated;
 
 /**
- * Starter.
+ * Class to hold all parameters needed for the http participant.
  *
  */
-@SpringBootApplication
-@ComponentScan({"org.onap.policy.clamp.controlloop.participant.http",
-    "org.onap.policy.clamp.controlloop.participant.intermediary"})
-@ConfigurationPropertiesScan("org.onap.policy.clamp.controlloop.participant.http.parameters")
-public class Application {
-    /**
-     * Main class.
-     *
-     * @param args args
-     */
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
-    }
+@Validated
+@Getter
+@Setter
+@ConfigurationProperties(prefix = "participant")
+public class ParticipantHttpParameters implements ParticipantParameters {
+
+    @NotNull
+    @Valid
+    private ParticipantIntermediaryParameters intermediaryParameters;
+
 }
