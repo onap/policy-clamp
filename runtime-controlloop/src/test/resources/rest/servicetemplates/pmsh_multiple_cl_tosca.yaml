@@ -177,6 +177,9 @@ topology_template:
         policy_type_id:
           name: onap.policies.monitoring.pm-subscription-handler
           version: 1.0.0
+        policy_id:
+          name: onap.policies.monitoring.pm-subscription-handler
+          version: 1.0.0
     org.onap.domain.pmsh.PMSD_OperationalPolicyControlLoopElement:
       version: 1.2.3
       type: org.onap.policy.clamp.controlloop.PolicyTypeControlLoopElement
@@ -189,6 +192,9 @@ topology_template:
           version: 2.2.1
         policy_type_id:
           name: onap.policies.operational.pm-subscription-handler
+          version: 1.0.0
+        policy_id:
+          name: onap.policies.monitoring.pm-subscription-handler
           version: 1.0.0
     org.onap.domain.pmsh.PMSD_CDS_ControlLoopElement:
       version: 1.2.3

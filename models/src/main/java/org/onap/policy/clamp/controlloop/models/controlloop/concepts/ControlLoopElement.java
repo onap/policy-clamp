@@ -31,6 +31,7 @@ import lombok.ToString;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 /**
  * Class to represent a control loop instance.
@@ -57,6 +58,8 @@ public class ControlLoopElement {
     @NonNull
     private ControlLoopOrderedState orderedState = ControlLoopOrderedState.UNINITIALISED;
 
+    private ToscaServiceTemplate toscaServiceTemplateFragment;
+
     private String description;
 
     private ClElementStatistics clElementStatistics;
@@ -77,6 +80,7 @@ public class ControlLoopElement {
         this.participantId = new ToscaConceptIdentifier(otherElement.participantId);
         this.state = otherElement.state;
         this.orderedState = otherElement.orderedState;
+        this.toscaServiceTemplateFragment = otherElement.toscaServiceTemplateFragment;
         this.description = otherElement.description;
         this.clElementStatistics = otherElement.clElementStatistics;
         this.commonPropertiesMap = PfUtils.mapMap(otherElement.commonPropertiesMap, UnaryOperator.identity());

@@ -101,13 +101,6 @@ public interface ParticipantIntermediaryApi {
     Map<UUID, ControlLoopElement> getControlLoopElements(String name, String version);
 
     /**
-     * Get ToscaServiceTemplate from the intermediary API.
-     *
-     * @return the control loop element
-     */
-    ToscaServiceTemplate getToscaServiceTemplate();
-
-    /**
      * Get control loop element from the intermediary API.
      *
      * @param id control loop element ID

@@ -31,6 +31,11 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantUpdates;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopUpdate;
+import org.onap.policy.models.base.PfModelException;
+import org.onap.policy.models.provider.PolicyModelsProvider;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -43,6 +48,9 @@ import org.springframework.stereotype.Component;
 public class ControlLoopUpdatePublisher extends AbstractParticipantPublisher<ControlLoopUpdate> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ControlLoopUpdatePublisher.class);
+    private static final String POLICY_TYPE_ID = "policy_type_id";
+    private static final String POLICY_ID = "policy_id";
+    private final PolicyModelsProvider modelsProvider;
 
     /**
      * Send ControlLoopUpdate to Participant.
@@ -54,9 +62,35 @@ public class ControlLoopUpdatePublisher extends AbstractParticipantPublisher<Con
         controlLoopUpdateMsg.setControlLoopId(controlLoop.getKey().asIdentifier());
         controlLoopUpdateMsg.setMessageId(UUID.randomUUID());
         controlLoopUpdateMsg.setTimestamp(Instant.now());
+        ToscaServiceTemplate toscaServiceTemplate;
+        try {
+            toscaServiceTemplate = modelsProvider.getServiceTemplateList(null, null).get(0);
+        } catch (PfModelException pfme) {
+            LOGGER.warn("Get of tosca service template failed, cannot send participantupdate", pfme);
+            return;
+        }
 
         List<ParticipantUpdates> participantUpdates = new ArrayList<>();
         for (ControlLoopElement element : controlLoop.getElements().values()) {
+            ToscaNodeTemplate toscaNodeTemplate = toscaServiceTemplate
+                .getToscaTopologyTemplate().getNodeTemplates().get(element.getDefinition().getName());
+            if ((toscaNodeTemplate.getProperties().get(POLICY_TYPE_ID) != null)
+                    || (toscaNodeTemplate.getProperties().get(POLICY_ID) != null)) {
+                // ControlLoopElement for policy framework, send policies and policyTypes to participants
+                if ((toscaServiceTemplate.getPolicyTypes() != null)
+                        || (toscaServiceTemplate.getToscaTopologyTemplate().getPolicies() != null)) {
+                    ToscaServiceTemplate toscaServiceTemplateFragment = new ToscaServiceTemplate();
+                    toscaServiceTemplateFragment.setPolicyTypes(toscaServiceTemplate.getPolicyTypes());
+
+                    ToscaTopologyTemplate toscaTopologyTemplate = new ToscaTopologyTemplate();
+                    toscaTopologyTemplate.setPolicies(toscaServiceTemplate.getToscaTopologyTemplate().getPolicies());
+                    toscaServiceTemplateFragment.setToscaTopologyTemplate(toscaTopologyTemplate);
+
+                    toscaServiceTemplateFragment.setDataTypes(toscaServiceTemplate.getDataTypes());
+
+                    element.setToscaServiceTemplateFragment(toscaServiceTemplateFragment);
+                }
+            }
             prepareParticipantUpdate(element, participantUpdates);
         }
         controlLoopUpdateMsg.setParticipantUpdatesList(participantUpdates);

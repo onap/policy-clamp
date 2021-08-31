@@ -20,9 +20,12 @@
 
 package org.onap.policy.clamp.controlloop.participant.simulator.config;
 
+import java.util.Arrays;
 import java.util.List;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
@@ -30,6 +33,11 @@ public class YamlConfiguration implements WebMvcConfigurer {
 
     @Override
     public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
-        converters.add(new YamlHttpMessageConverter<>());
+        converters.add(new YamlHttpMessageConverter<>("yaml"));
+        converters.add(new YamlHttpMessageConverter<>("json"));
+
+        StringHttpMessageConverter converter = new StringHttpMessageConverter();
+        converter.setSupportedMediaTypes(Arrays.asList(MediaType.TEXT_PLAIN));
+        converters.add(converter);
     }
 }

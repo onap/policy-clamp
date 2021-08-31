@@ -236,7 +236,6 @@ public class TestListenerUtils {
         }
 
         participantUpdateMsg.setParticipantDefinitionUpdates(participantDefinitionUpdates);
-        participantUpdateMsg.setToscaServiceTemplate(toscaServiceTemplate);
         return participantUpdateMsg;
     }
 
