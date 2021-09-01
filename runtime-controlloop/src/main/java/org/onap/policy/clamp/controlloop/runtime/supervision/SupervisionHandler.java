@@ -1,8 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2021 Nordix Foundation.
- * ================================================================================
- * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
+ *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -217,10 +216,9 @@ public class SupervisionHandler {
      * Supervise a control loop, performing whatever actions need to be performed on the control loop.
      *
      * @param controlLoop the control loop to supervises
-     * @throws PfModelException on accessing models in the database
      * @throws ControlLoopException on supervision errors
      */
-    private void superviseControlLoop(ControlLoop controlLoop) throws ControlLoopException, PfModelException {
+    private void superviseControlLoop(ControlLoop controlLoop) throws ControlLoopException {
         switch (controlLoop.getOrderedState()) {
             case UNINITIALISED:
                 superviseControlLoopUninitialization(controlLoop);

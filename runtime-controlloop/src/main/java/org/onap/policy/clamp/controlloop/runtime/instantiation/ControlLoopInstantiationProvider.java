@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2021 Nordix Foundation.
+ * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,6 +59,8 @@ import org.springframework.stereotype.Component;
 @Component
 @AllArgsConstructor
 public class ControlLoopInstantiationProvider {
+    private static final String INSTANCE_TEXT = "_Instance";
+
     private final ControlLoopProvider controlLoopProvider;
     private final CommissioningProvider commissioningProvider;
     private final SupervisionHandler supervisionHandler;
@@ -350,12 +353,12 @@ public class ControlLoopInstantiationProvider {
 
         int instanceNumber =
             nodeTemplates.stream().map(ToscaNodeTemplate::getName)
-                .filter(name -> name.contains("_Instance")).map(n -> {
-                    String[] defNameArr = n.split("_Instance");
+                .filter(name -> name.contains(INSTANCE_TEXT)).map(n -> {
+                    String[] defNameArr = n.split(INSTANCE_TEXT);
 
                     return Integer.parseInt(defNameArr[1]);
                 }).reduce(0, Math::max);
 
-        return "_Instance" + (instanceNumber + 1);
+        return INSTANCE_TEXT + (instanceNumber + 1);
     }
 }
