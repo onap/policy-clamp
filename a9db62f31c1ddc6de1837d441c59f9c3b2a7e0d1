@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "72ab192f_5182a5d2",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoopElement.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-09-01T16:12:00Z",
+      "side": 1,
+      "message": "Yes. This is ok to be null. In most of the cases ToscaServiceTemplateFragment will be null, In some cases like specified in https://wiki.onap.org/display/DW/The+CLAMP+Policy+Framework+Participant, There could be some new policy-types or policies that need to be deployed to Policy-Framework. These policies may not already exist in Policy DB. This fragment of ToscaServiceTemplate is used in such cases.",
+      "parentUuid": "dfc49035_b9c956ac",
+      "revId": "a9db62f31c1ddc6de1837d441c59f9c3b2a7e0d1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "dff616d9_cd941b02",
         "filename": "participant/participant-impl/participant-impl-policy/src/test/java/org/onap/policy/clamp/controlloop/participant/policy/main/utils/TestListenerUtils.java",
         "patchSetId": 1
@@ -33,6 +51,24 @@
       "revId": "a9db62f31c1ddc6de1837d441c59f9c3b2a7e0d1",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "94f8442e_ff461e82",
+        "filename": "participant/participant-impl/participant-impl-policy/src/test/java/org/onap/policy/clamp/controlloop/participant/policy/main/utils/TestListenerUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-09-01T16:12:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dff616d9_cd941b02",
+      "revId": "a9db62f31c1ddc6de1837d441c59f9c3b2a7e0d1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -59,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "d695bf5f_2302c8e7",
+        "filename": "participant/participant-impl/participant-impl-policy/src/test/java/org/onap/policy/clamp/controlloop/participant/policy/main/utils/TestListenerUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-09-01T16:12:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5b655215_a9f54c44",
+      "range": {
+        "startLine": 184,
+        "startChar": 12,
+        "endLine": 184,
+        "endChar": 46
+      },
+      "revId": "a9db62f31c1ddc6de1837d441c59f9c3b2a7e0d1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a73143be_844fdf22",
         "filename": "participant/participant-impl/participant-impl-policy/src/test/java/org/onap/policy/clamp/controlloop/participant/policy/main/utils/TestListenerUtils.java",
         "patchSetId": 1
@@ -79,6 +139,30 @@
       "revId": "a9db62f31c1ddc6de1837d441c59f9c3b2a7e0d1",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1bacf009_6dbb2f49",
+        "filename": "participant/participant-impl/participant-impl-policy/src/test/java/org/onap/policy/clamp/controlloop/participant/policy/main/utils/TestListenerUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-09-01T16:12:00Z",
+      "side": 1,
+      "message": "Done. Added an explanatory comment.",
+      "parentUuid": "a73143be_844fdf22",
+      "range": {
+        "startLine": 196,
+        "startChar": 16,
+        "endLine": 196,
+        "endChar": 18
+      },
+      "revId": "a9db62f31c1ddc6de1837d441c59f9c3b2a7e0d1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -105,6 +189,30 @@
     },
     {
       "key": {
+        "uuid": "db95fa35_2c8e4ecd",
+        "filename": "participant/participant-impl/participant-impl-simulator/src/main/java/org/onap/policy/clamp/controlloop/participant/simulator/config/YamlConfiguration.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-09-01T16:12:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fc2fe1aa_0c8c68e0",
+      "range": {
+        "startLine": 40,
+        "startChar": 41,
+        "endLine": 40,
+        "endChar": 54
+      },
+      "revId": "a9db62f31c1ddc6de1837d441c59f9c3b2a7e0d1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "64b59c38_1d978663",
         "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/comm/ControlLoopUpdatePublisher.java",
         "patchSetId": 1
@@ -125,6 +233,30 @@
       "revId": "a9db62f31c1ddc6de1837d441c59f9c3b2a7e0d1",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8eefa2fc_dc8b990a",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/comm/ControlLoopUpdatePublisher.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-09-01T16:12:00Z",
+      "side": 1,
+      "message": "This || is to distinguish that the ControlLoopElement is a PolicyControlLoopElement, It can have either a \"policy-type-id\" or a \"policy-id\". If anything of these exists then, the inner || is to distinguish if we have any new policies or policy-types provided in the service template fragment. I think || works better here rather than \u0026\u0026 here as it can have either new policy-types or new policies definitions.\n\nDuplicate code is written on the Participant, which is the receiving side of this message in TestListenerUtils to frame a sample ToscaServiceTemplateFragment. Will consolidate these duplications, and move to common and refactor the same in Jakarata as part of https://jira.onap.org/browse/POLICY-3540",
+      "parentUuid": "64b59c38_1d978663",
+      "range": {
+        "startLine": 78,
+        "startChar": 20,
+        "endLine": 78,
+        "endChar": 22
+      },
+      "revId": "a9db62f31c1ddc6de1837d441c59f9c3b2a7e0d1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
