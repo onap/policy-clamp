@@ -93,6 +93,7 @@ public class CamelConfiguration extends RouteBuilder {
 
 
     @Autowired
+    @SuppressWarnings("unused")
     private ClampProperties clampProperties;
 
     private void configureDefaultSslProperties() {

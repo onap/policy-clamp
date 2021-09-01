@@ -56,6 +56,7 @@ public class ToscaConverterWithDictionarySupportItTestCase {
     private ToscaMetadataParserWithDictionarySupport toscaMetadataParserWithDictionarySupport;
 
     @Autowired
+    @SuppressWarnings("unused")
     private ToscaMetadataExecutor toscaMetadataExecutor;
 
     /**

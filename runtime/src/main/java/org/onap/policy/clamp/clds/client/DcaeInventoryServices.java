@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.util.Date;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
-import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.ExchangeBuilder;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
