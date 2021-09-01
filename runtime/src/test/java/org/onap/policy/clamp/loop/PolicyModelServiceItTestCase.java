@@ -115,8 +115,8 @@ public class PolicyModelServiceItTestCase {
 
         assertThat(
                 policyModelsService.getPolicyModel(POLICY_MODEL_TYPE_1, POLICY_MODEL_TYPE_1_VERSION_1))
-                .isEqualToIgnoringGivenFields(policyModel, "createdDate", "updatedDate",
-                        "createdBy", "updatedBy");
+                .usingRecursiveComparison().ignoringFields("createdDate", "updatedDate",
+                        "createdBy", "updatedBy").isEqualTo(policyModel);
     }
 
     /**

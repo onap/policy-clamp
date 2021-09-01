@@ -63,6 +63,7 @@ public class CsarInstaller {
     private static final Logger logger = LoggerFactory.getLogger(CsarInstaller.class);
 
     @Autowired
+    @SuppressWarnings("unused")
     private PolicyModelsRepository policyModelsRepository;
 
     @Autowired

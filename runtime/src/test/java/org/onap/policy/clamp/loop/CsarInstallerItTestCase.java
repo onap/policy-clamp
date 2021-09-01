@@ -316,7 +316,7 @@ public class CsarInstallerItTestCase {
         assertThat(policyModelsRepository
                 .existsById(new PolicyModelId("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0"))).isTrue();
         assertThat(policyModelsRepository
-                .getOne((new PolicyModelId("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0")))
+                .getById((new PolicyModelId("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0")))
                 .getPolicyModelTosca()).isNotBlank();
     }
 }

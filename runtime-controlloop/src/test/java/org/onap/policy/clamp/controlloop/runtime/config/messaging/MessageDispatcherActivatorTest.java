@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2021 Nordix Foundation.
+ *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +34,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStatus;
 import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantStatusListener;
 import org.onap.policy.clamp.controlloop.runtime.util.CommonTestData;
@@ -67,7 +69,7 @@ class MessageDispatcherActivatorTest {
         when(listenerSecond.getType()).thenReturn(TOPIC_SECOND);
         when(listenerSecond.getScoListener()).thenReturn(listenerSecond);
 
-        List<Listener> listeners = List.of(listenerFirst, listenerSecond);
+        List<Listener<ParticipantStatus>> listeners = List.of(listenerFirst, listenerSecond);
 
         try (var activator = new MessageDispatcherActivator(parameterGroup, publishers, listeners)) {
 

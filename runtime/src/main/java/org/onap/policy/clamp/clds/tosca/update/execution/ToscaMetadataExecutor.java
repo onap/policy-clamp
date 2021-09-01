@@ -45,6 +45,7 @@ public class ToscaMetadataExecutor {
             LoggerFactory.getLogger(ToscaMetadataExecutor.class);
 
     @Autowired
+    @SuppressWarnings("unused")
     private DictionaryService dictionaryService;
 
     private Map<String, ToscaMetadataProcess> mapOfProcesses = new HashMap<>();

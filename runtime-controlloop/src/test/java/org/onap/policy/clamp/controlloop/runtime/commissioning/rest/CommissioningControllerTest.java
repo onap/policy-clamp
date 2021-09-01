@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2021 Nordix Foundation.
+ *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -176,7 +177,10 @@ class CommissioningControllerTest extends CommonRestController {
             + "/getCommonOrInstanceProperties" + "?common=true&name=ToscaServiceTemplateSimple&version=1.0.0");
         Response rawresp = invocationBuilder.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
+
+        @SuppressWarnings("unchecked")
         Map<String, ToscaNodeTemplate> commonProperties = rawresp.readEntity(Map.class);
+
         assertNotNull(commonProperties);
         assertThat(commonProperties).hasSize(6);
 

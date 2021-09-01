@@ -40,6 +40,7 @@ public class ExternalComponentStateTest {
     }
 
     @Test
+    @SuppressWarnings("unlikely-arg-type")
     public void equalsTest() {
         assertThat(state.equals(null)).isFalse();
 
