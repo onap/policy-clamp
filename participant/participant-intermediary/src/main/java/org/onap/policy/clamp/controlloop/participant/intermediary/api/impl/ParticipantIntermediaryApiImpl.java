@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2021 Nordix Foundation.
+ *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +39,6 @@ import org.onap.policy.clamp.controlloop.participant.intermediary.api.ControlLoo
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.controlloop.participant.intermediary.handler.ParticipantHandler;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.stereotype.Component;
 
 /**
@@ -124,8 +124,7 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
     @Override
     public ControlLoopElement updateControlLoopElementState(UUID id, ControlLoopOrderedState currentState,
             ControlLoopState newState, ParticipantMessageType messageType) {
-        return participantHandler.getControlLoopHandler().updateControlLoopElementState(id, currentState, newState,
-            messageType);
+        return participantHandler.getControlLoopHandler().updateControlLoopElementState(id, currentState, newState);
     }
 
     @Override

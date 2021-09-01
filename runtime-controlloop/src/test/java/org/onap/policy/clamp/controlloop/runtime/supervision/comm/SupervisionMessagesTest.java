@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2021 Nordix Foundation.
+ *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +21,7 @@
 
 package org.onap.policy.clamp.controlloop.runtime.supervision.comm;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -68,15 +70,12 @@ class SupervisionMessagesTest extends CommonRestController {
     private static final Object lockit = new Object();
     private static final CommInfrastructure INFRA = CommInfrastructure.NOOP;
     private static final String TOPIC = "my-topic";
-    private static final long interval = 1000;
     private static SupervisionHandler supervisionHandler;
     private static CommissioningProvider commissioningProvider;
     private static ControlLoopProvider clProvider;
     private static PolicyModelsProvider modelsProvider;
     private static ParticipantProvider participantProvider;
     private static final YamlJsonTranslator yamlTranslator = new YamlJsonTranslator();
-    private static final String TOSCA_TEMPLATE_YAML =
-            "src/test/resources/rest/servicetemplates/pmsh_multiple_cl_tosca.yaml";
     private static final String CONTROL_LOOP_ELEMENT = "org.onap.policy.clamp.controlloop.ControlLoopElement";
     private static final Coder CODER = new StandardCoder();
 
@@ -132,7 +131,8 @@ class SupervisionMessagesTest extends CommonRestController {
 
             // List<ToscaNodeTemplate> listOfTemplates = commissioningProvider.getControlLoopDefinitions(null, null);
             commissioningProvider.createControlLoopDefinitions(serviceTemplate);
-            participantRegisterListener.onTopicEvent(INFRA, TOPIC, null, participantRegisterMsg);
+            assertThatCode(() -> participantRegisterListener.onTopicEvent(INFRA, TOPIC, null, participantRegisterMsg))
+                            .doesNotThrowAnyException();
         }
     }
 
@@ -146,7 +146,7 @@ class SupervisionMessagesTest extends CommonRestController {
         synchronized (lockit) {
             ParticipantRegisterAckPublisher clRegisterAckPublisher = new ParticipantRegisterAckPublisher();
             clRegisterAckPublisher.active(Collections.singletonList(Mockito.mock(TopicSink.class)));
-            clRegisterAckPublisher.send(participantRegisterAckMsg);
+            assertThatCode(() -> clRegisterAckPublisher.send(participantRegisterAckMsg)).doesNotThrowAnyException();
         }
     }
 
@@ -159,8 +159,9 @@ class SupervisionMessagesTest extends CommonRestController {
 
         synchronized (lockit) {
             ParticipantDeregisterListener participantDeregisterListener =
-                    new ParticipantDeregisterListener(supervisionHandler);
-            participantDeregisterListener.onTopicEvent(INFRA, TOPIC, null, participantDeregisterMsg);
+                            new ParticipantDeregisterListener(supervisionHandler);
+            assertThatCode(() -> participantDeregisterListener.onTopicEvent(INFRA, TOPIC, null,
+                            participantDeregisterMsg)).doesNotThrowAnyException();
         }
     }
 
@@ -174,7 +175,7 @@ class SupervisionMessagesTest extends CommonRestController {
         synchronized (lockit) {
             ParticipantDeregisterAckPublisher clDeregisterAckPublisher = new ParticipantDeregisterAckPublisher();
             clDeregisterAckPublisher.active(Collections.singletonList(Mockito.mock(TopicSink.class)));
-            clDeregisterAckPublisher.send(participantDeregisterAckMsg);
+            assertThatCode(() -> clDeregisterAckPublisher.send(participantDeregisterAckMsg)).doesNotThrowAnyException();
         }
     }
 
@@ -210,7 +211,7 @@ class SupervisionMessagesTest extends CommonRestController {
             ParticipantUpdatePublisher participantUpdatePublisher =
                 new ParticipantUpdatePublisher(modelsProvider);
             participantUpdatePublisher.active(Collections.singletonList(Mockito.mock(TopicSink.class)));
-            participantUpdatePublisher.send(participantUpdateMsg);
+            assertThatCode(() -> participantUpdatePublisher.send(participantUpdateMsg)).doesNotThrowAnyException();
         }
     }
 
@@ -260,8 +261,9 @@ class SupervisionMessagesTest extends CommonRestController {
 
         synchronized (lockit) {
             ParticipantUpdateAckListener participantUpdateAckListener =
-                    new ParticipantUpdateAckListener(supervisionHandler);
-            participantUpdateAckListener.onTopicEvent(INFRA, TOPIC, null, participantUpdateAckMsg);
+                            new ParticipantUpdateAckListener(supervisionHandler);
+            assertThatCode(() -> participantUpdateAckListener.onTopicEvent(INFRA, TOPIC, null, participantUpdateAckMsg))
+                            .doesNotThrowAnyException();
         }
     }
 
