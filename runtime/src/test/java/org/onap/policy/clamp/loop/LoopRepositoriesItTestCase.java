@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights
+ * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Modifications Copyright (c) 2019 Samsung
@@ -175,8 +175,8 @@ public class LoopRepositoriesItTestCase {
         // objects
         loopLog.setId(((LoopLog) loopInDb.getLoopLogs().toArray()[0]).getId());
 
-        assertThat(loopInDb).isEqualToIgnoringGivenFields(loopTest, "components", "createdDate", "updatedDate",
-                "createdBy", "updatedBy");
+        assertThat(loopInDb).usingRecursiveComparison().ignoringFields("components", "createdDate", "updatedDate",
+                "createdBy", "updatedBy").isEqualTo(loopTest);
         assertThat(loopRepository.existsById(loopTest.getName())).isTrue();
         assertThat(operationalPolicyService.isExisting(opPolicy.getName())).isTrue();
         assertThat(microServicePolicyService.isExisting(microServicePolicy.getName())).isTrue();
@@ -195,13 +195,15 @@ public class LoopRepositoriesItTestCase {
 
         // Now attempt to read from database
         Loop loopInDbRetrieved = loopRepository.findById(loopTest.getName()).get();
-        assertThat(loopInDbRetrieved).isEqualToIgnoringGivenFields(loopTest, "components", "createdDate", "updatedDate",
-                "createdBy", "updatedBy");
-        assertThat(loopInDbRetrieved).isEqualToComparingOnlyGivenFields(loopInDb, "createdDate", "updatedDate",
-                "createdBy", "updatedBy");
-        assertThat((LoopLog) loopInDbRetrieved.getLoopLogs().toArray()[0]).isEqualToComparingFieldByField(loopLog);
+        assertThat(loopInDbRetrieved).usingRecursiveComparison()
+                        .ignoringFields("components", "createdDate", "updatedDate", "createdBy", "updatedBy")
+                        .isEqualTo(loopTest);
+        assertThat(loopInDbRetrieved).usingRecursiveComparison().ignoringFields("createdDate", "updatedDate",
+                "createdBy", "updatedBy").isEqualTo(loopInDb);
+        assertThat((LoopLog) loopInDbRetrieved.getLoopLogs().toArray()[0]).isEqualTo(loopLog);
         assertThat((OperationalPolicy) loopInDbRetrieved.getOperationalPolicies().toArray()[0])
-                .isEqualToIgnoringGivenFields(opPolicy, "createdDate", "updatedDate", "createdBy", "updatedBy");
+                .usingRecursiveComparison().ignoringFields("createdDate", "updatedDate", "createdBy", "updatedBy")
+                .isEqualTo(opPolicy);
         Assertions.assertThat(
                 ((OperationalPolicy) loopInDbRetrieved.getOperationalPolicies().toArray()[0]).getCreatedDate())
                 .isNotNull();
@@ -216,8 +218,8 @@ public class LoopRepositoriesItTestCase {
                 .isNotNull();
 
         assertThat((MicroServicePolicy) loopInDbRetrieved.getMicroServicePolicies().toArray()[0])
-                .isEqualToIgnoringGivenFields(microServicePolicy, "createdDate", "updatedDate", "createdBy",
-                        "updatedBy");
+                .usingRecursiveComparison().ignoringFields("createdDate", "updatedDate", "createdBy",
+                        "updatedBy").isEqualTo(microServicePolicy);
 
         // Attempt an update
         ((LoopLog) loopInDbRetrieved.getLoopLogs().toArray()[0]).setLogInstant(Instant.now());
@@ -226,7 +228,7 @@ public class LoopRepositoriesItTestCase {
         // Loop loopInDbRetrievedUpdated =
         // loopRepository.findById(loopTest.getName()).get();
         assertThat((LoopLog) loopInDbRetrievedUpdated.getLoopLogs().toArray()[0])
-                .isEqualToComparingFieldByField(loopInDbRetrieved.getLoopLogs().toArray()[0]);
+                .isEqualTo(loopInDbRetrieved.getLoopLogs().toArray()[0]);
         // UpdatedDate should have been changed
         assertThat(loopInDbRetrievedUpdated.getUpdatedDate()).isNotEqualTo(loopInDbRetrievedUpdated.getCreatedDate());
         // createdDate should have NOT been changed

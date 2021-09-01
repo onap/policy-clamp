@@ -103,9 +103,9 @@ public class PolicyEngineControllerItTestCase {
         assertThat(policyModelsList.size()).isGreaterThanOrEqualTo(2);
 
         PolicyModel policy1 = policyModelsRepository
-            .getOne(new PolicyModelId("onap.policies.monitoring.test", "1.0.0"));
+            .getById(new PolicyModelId("onap.policies.monitoring.test", "1.0.0"));
         PolicyModel policy2 = policyModelsRepository
-            .getOne(new PolicyModelId("onap.policies.controlloop.Operational", "1.0.0"));
+            .getById(new PolicyModelId("onap.policies.controlloop.Operational", "1.0.0"));
 
         String expectedRes1 = "{\"supportedPdpGroups\":[{\"monitoring\":[\"xacml\"]}]}";
         JsonObject expectedJson1 = JsonUtils.GSON.fromJson(expectedRes1, JsonObject.class);

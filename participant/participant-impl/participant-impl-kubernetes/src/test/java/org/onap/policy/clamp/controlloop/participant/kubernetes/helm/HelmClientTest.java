@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2021 Nordix Foundation.
+ *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,7 +58,7 @@ import org.springframework.util.FileSystemUtils;
 class HelmClientTest {
 
     private static final Coder CODER = new StandardCoder();
-    private static final String CHART_INFO_YAML = "src/test/resources/ChartList.json";
+    private static final String CHART_INFO_JSON = "src/test/resources/ChartList.json";
     private static List<ChartInfo> charts;
 
     @InjectMocks
@@ -71,7 +72,7 @@ class HelmClientTest {
 
     @BeforeAll
     static void init() throws CoderException {
-        charts = CODER.decode(new File(CHART_INFO_YAML), ChartList.class).getCharts();
+        charts = CODER.decode(new File(CHART_INFO_JSON), ChartList.class).getCharts();
         //Mock static method for bash command execution
         mockedClient = mockStatic(HelmClient.class);
     }

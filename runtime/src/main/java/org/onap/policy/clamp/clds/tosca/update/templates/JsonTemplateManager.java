@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2020 AT&T Intellectual Property. All rights
+ * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -157,7 +157,6 @@ public class JsonTemplateManager {
      * @param jsonTemplates The template properties as String
      * @return a map
      */
-    @SuppressWarnings("unused")
     private LinkedHashMap<String, JsonTemplate> initializeTemplates(String jsonTemplates) {
 
         LinkedHashMap<String, JsonTemplate> generatedTemplates = new LinkedHashMap<>();
