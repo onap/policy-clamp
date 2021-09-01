@@ -22,7 +22,6 @@
 
 package org.onap.policy.clamp.controlloop.runtime.supervision;
 
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.timeout;

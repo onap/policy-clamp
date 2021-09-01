@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights
+ * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Modifications Copyright (c) 2019 Samsung
@@ -128,19 +128,19 @@ public class LoopToJsonTest {
         System.out.println(jsonSerialized);
         Loop loopTestDeserialized = JsonUtils.GSON_JPA_MODEL.fromJson(jsonSerialized, Loop.class);
         assertNotNull(loopTestDeserialized);
-        assertThat(loopTestDeserialized).isEqualToIgnoringGivenFields(loopTest, "svgRepresentation", "blueprint",
-                "components");
+        assertThat(loopTestDeserialized).usingRecursiveComparison().ignoringFields("svgRepresentation", "blueprint",
+                "components").isEqualTo(loopTest);
         assertThat(loopTestDeserialized.getComponent("DCAE").getState())
-                .isEqualToComparingFieldByField(loopTest.getComponent("DCAE").getState());
-        assertThat(loopTestDeserialized.getComponent("POLICY").getState()).isEqualToComparingOnlyGivenFields(
-                loopTest.getComponent("POLICY").getState(), "stateName", "description");
+                .isEqualTo(loopTest.getComponent("DCAE").getState());
+        assertThat(loopTestDeserialized.getComponent("POLICY").getState()).usingRecursiveComparison().ignoringFields(
+                "stateName", "description").isEqualTo(loopTest.getComponent("POLICY").getState());
         // blueprint not exposed so wont be deserialized
 
         assertThat(loopTestDeserialized.getOperationalPolicies()).containsExactly(opPolicy);
         assertThat(loopTestDeserialized.getMicroServicePolicies()).containsExactly(microServicePolicy);
         assertThat(loopTestDeserialized.getLoopLogs()).containsExactly(loopLog);
-        assertThat((LoopLog) loopTestDeserialized.getLoopLogs().toArray()[0]).isEqualToIgnoringGivenFields(loopLog,
-                "loop");
+        assertThat((LoopLog) loopTestDeserialized.getLoopLogs().toArray()[0]).usingRecursiveComparison()
+                .ignoringFields("loop").isEqualTo(loopLog);
 
         // Verify the loop template
         assertThat(loopTestDeserialized.getLoopTemplate()).isEqualTo(loopTemplate);
@@ -167,7 +167,7 @@ public class LoopToJsonTest {
 
         Loop loopTestDeserialized = JsonUtils.GSON_JPA_MODEL.fromJson(jsonSerialized, Loop.class);
         assertNotNull(loopTestDeserialized);
-        assertThat(loopTestDeserialized).isEqualToIgnoringGivenFields(loopTest2, "modelService", "svgRepresentation",
-                "blueprint", "components");
+        assertThat(loopTestDeserialized).usingRecursiveComparison().ignoringFields("modelService", "svgRepresentation",
+                "blueprint", "components").isEqualTo(loopTest2);
     }
 }

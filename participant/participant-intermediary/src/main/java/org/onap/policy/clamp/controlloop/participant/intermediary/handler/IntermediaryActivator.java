@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2021 Nordix Foundation.
+ *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,9 +59,9 @@ public class IntermediaryActivator extends ServiceManagerContainer implements Cl
      * @param publishers list of Publishers
      * @param listeners list of Listeners
      */
-    public IntermediaryActivator(final ParticipantParameters parameters,
+    public <T> IntermediaryActivator(final ParticipantParameters parameters,
             ParticipantIntermediaryApi participantIntermediaryApi, List<Publisher> publishers,
-            List<Listener> listeners) {
+            List<Listener<T>> listeners) {
         this.participantIntermediaryApi = participantIntermediaryApi;
 
         topicSinks = TopicEndpointManager.getManager()
