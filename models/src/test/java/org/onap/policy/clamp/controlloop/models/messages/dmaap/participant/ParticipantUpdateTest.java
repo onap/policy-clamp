@@ -67,7 +67,7 @@ class ParticipantUpdateTest {
         toscaNodeTemplate.setVersion("1.2.3");
 
         ParticipantDefinition participantDefinitionUpdate = new ParticipantDefinition();
-        participantDefinitionUpdate.setParticipantId(id);
+        participantDefinitionUpdate.setParticipantType(id);
         ControlLoopElementDefinition clDefinition = getClElementDefinition(id);
         participantDefinitionUpdate.setControlLoopElementDefinitionList(List.of(clDefinition));
         orig.setParticipantDefinitionUpdates(List.of(participantDefinitionUpdate));

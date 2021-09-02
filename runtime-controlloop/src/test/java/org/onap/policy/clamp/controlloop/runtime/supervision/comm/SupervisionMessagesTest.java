@@ -192,15 +192,15 @@ class SupervisionMessagesTest extends CommonRestController {
         for (Map.Entry<String, ToscaNodeTemplate> toscaInputEntry :
             toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates().entrySet()) {
             if (toscaInputEntry.getValue().getType().contains(CONTROL_LOOP_ELEMENT)) {
-                ToscaConceptIdentifier clParticipantId;
+                ToscaConceptIdentifier clParticipantType;
                 try {
-                    clParticipantId = CODER.decode(
-                            toscaInputEntry.getValue().getProperties().get("participant_id").toString(),
+                    clParticipantType = CODER.decode(
+                            toscaInputEntry.getValue().getProperties().get("participantType").toString(),
                             ToscaConceptIdentifier.class);
                 } catch (CoderException e) {
-                    throw new RuntimeException("cannot get ParticipantId from toscaNodeTemplate", e);
+                    throw new RuntimeException("cannot get ParticipantType from toscaNodeTemplate", e);
                 }
-                prepareParticipantDefinitionUpdate(clParticipantId, toscaInputEntry.getKey(),
+                prepareParticipantDefinitionUpdate(clParticipantType, toscaInputEntry.getKey(),
                     toscaInputEntry.getValue(), participantDefinitionUpdates);
             }
         }
@@ -214,7 +214,7 @@ class SupervisionMessagesTest extends CommonRestController {
         }
     }
 
-    private void prepareParticipantDefinitionUpdate(ToscaConceptIdentifier clParticipantId, String entryKey,
+    private void prepareParticipantDefinitionUpdate(ToscaConceptIdentifier clParticipantType, String entryKey,
         ToscaNodeTemplate entryValue, List<ParticipantDefinition> participantDefinitionUpdates) {
 
         var clDefinition = new ControlLoopElementDefinition();
@@ -224,28 +224,28 @@ class SupervisionMessagesTest extends CommonRestController {
         List<ControlLoopElementDefinition> controlLoopElementDefinitionList = new ArrayList<>();
 
         if (participantDefinitionUpdates.isEmpty()) {
-            participantDefinitionUpdates.add(getParticipantDefinition(clDefinition, clParticipantId,
+            participantDefinitionUpdates.add(getParticipantDefinition(clDefinition, clParticipantType,
                 controlLoopElementDefinitionList));
         } else {
             boolean participantExists = false;
             for (ParticipantDefinition participantDefinitionUpdate : participantDefinitionUpdates) {
-                if (participantDefinitionUpdate.getParticipantId().equals(clParticipantId)) {
+                if (participantDefinitionUpdate.getParticipantType().equals(clParticipantType)) {
                     participantDefinitionUpdate.getControlLoopElementDefinitionList().add(clDefinition);
                     participantExists = true;
                 }
             }
             if (!participantExists) {
-                participantDefinitionUpdates.add(getParticipantDefinition(clDefinition, clParticipantId,
+                participantDefinitionUpdates.add(getParticipantDefinition(clDefinition, clParticipantType,
                     controlLoopElementDefinitionList));
             }
         }
     }
 
     private ParticipantDefinition getParticipantDefinition(ControlLoopElementDefinition clDefinition,
-        ToscaConceptIdentifier clParticipantId,
+        ToscaConceptIdentifier clParticipantType,
         List<ControlLoopElementDefinition> controlLoopElementDefinitionList) {
         ParticipantDefinition participantDefinition = new ParticipantDefinition();
-        participantDefinition.setParticipantId(clParticipantId);
+        participantDefinition.setParticipantType(clParticipantType);
         controlLoopElementDefinitionList.add(clDefinition);
         participantDefinition.setControlLoopElementDefinitionList(controlLoopElementDefinitionList);
         return participantDefinition;

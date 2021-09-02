@@ -42,6 +42,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 public class ControlLoopAck extends ParticipantAckMessage {
 
     private ToscaConceptIdentifier controlLoopId;
+    private Integer startPhase;
 
     // A map with ControlLoopElementID as its key, and a pair of result and message as value per
     // ControlLoopElement.

@@ -40,6 +40,8 @@ public class ParticipantDefinition {
 
     private ToscaConceptIdentifier participantId;
 
+    private ToscaConceptIdentifier participantType;
+
     // List of ControlLoopElementDefinition values for a particular participant
     private List<ControlLoopElementDefinition> controlLoopElementDefinitionList = new ArrayList<>();
 
@@ -50,6 +52,7 @@ public class ParticipantDefinition {
      */
     public ParticipantDefinition(final ParticipantDefinition participantDefinition) {
         this.participantId = participantDefinition.participantId;
+        this.participantType = participantDefinition.participantType;
         this.controlLoopElementDefinitionList = PfUtils.mapList(
             participantDefinition.controlLoopElementDefinitionList, ControlLoopElementDefinition::new);
     }

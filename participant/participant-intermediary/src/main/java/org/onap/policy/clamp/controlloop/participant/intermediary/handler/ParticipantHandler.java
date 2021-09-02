@@ -292,7 +292,7 @@ public class ParticipantHandler {
         if (!participantUpdateMsg.getParticipantDefinitionUpdates().isEmpty()) {
             // This message is to commission the controlloop
             for (ParticipantDefinition participantDefinition : participantUpdateMsg.getParticipantDefinitionUpdates()) {
-                if (participantDefinition.getParticipantId().equals(participantType)) {
+                if (participantDefinition.getParticipantType().equals(participantType)) {
                     clElementDefsOnThisParticipant.clear();
                     clElementDefsOnThisParticipant.addAll(participantDefinition.getControlLoopElementDefinitionList());
                     break;
@@ -343,12 +343,11 @@ public class ParticipantHandler {
         heartbeat.setControlLoopInfoList(getControlLoopInfoList());
 
         if (responseToParticipantStatusReq) {
-            List<ParticipantDefinition> participantDefinitionUpdates = new ArrayList<>();
             ParticipantDefinition participantDefinition = new ParticipantDefinition();
             participantDefinition.setParticipantId(participantId);
+            participantDefinition.setParticipantType(participantType);
             participantDefinition.setControlLoopElementDefinitionList(clElementDefsOnThisParticipant);
-            participantDefinitionUpdates.add(participantDefinition);
-            heartbeat.setParticipantDefinitionUpdates(participantDefinitionUpdates);
+            heartbeat.setParticipantDefinitionUpdates(List.of(participantDefinition));
         }
 
         return heartbeat;
