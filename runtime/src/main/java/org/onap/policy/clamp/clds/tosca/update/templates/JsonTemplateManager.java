@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2020 AT&T Intellectual Property. All rights
+ * Copyright (C) 2020, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -38,8 +38,8 @@ import org.onap.policy.clamp.clds.util.JsonUtils;
 import org.onap.policy.clamp.loop.service.Service;
 
 public class JsonTemplateManager {
-    private LinkedHashMap<String, JsonTemplate> jsonSchemaTemplates;
-    private LinkedHashMap<String, ToscaElement> toscaElements;
+    private Map<String, JsonTemplate> jsonSchemaTemplates;
+    private Map<String, ToscaElement> toscaElements;
 
     /**
      * Constructor.
@@ -58,19 +58,19 @@ public class JsonTemplateManager {
     }
 
     // GETTERS & SETTERS
-    public LinkedHashMap<String, ToscaElement> getToscaElements() {
+    public Map<String, ToscaElement> getToscaElements() {
         return toscaElements;
     }
 
-    public void setToscaElements(LinkedHashMap<String, ToscaElement> toscaElements) {
+    public void setToscaElements(Map<String, ToscaElement> toscaElements) {
         this.toscaElements = toscaElements;
     }
 
-    public LinkedHashMap<String, JsonTemplate> getJsonSchemaTemplates() {
+    public Map<String, JsonTemplate> getJsonSchemaTemplates() {
         return jsonSchemaTemplates;
     }
 
-    public void setJsonSchemaTemplates(LinkedHashMap<String, JsonTemplate> jsonSchemaTemplates) {
+    public void setJsonSchemaTemplates(Map<String, JsonTemplate> jsonSchemaTemplates) {
         this.jsonSchemaTemplates = jsonSchemaTemplates;
     }
 
@@ -157,10 +157,9 @@ public class JsonTemplateManager {
      * @param jsonTemplates The template properties as String
      * @return a map
      */
-    @SuppressWarnings("unused")
-    private LinkedHashMap<String, JsonTemplate> initializeTemplates(String jsonTemplates) {
+    private Map<String, JsonTemplate> initializeTemplates(String jsonTemplates) {
 
-        LinkedHashMap<String, JsonTemplate> generatedTemplates = new LinkedHashMap<>();
+        Map<String, JsonTemplate> generatedTemplates = new LinkedHashMap<>();
         JsonObject templates = JsonUtils.GSON.fromJson(jsonTemplates, JsonObject.class);
 
         for (Map.Entry<String, JsonElement> templateAsJson : templates.entrySet()) {

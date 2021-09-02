@@ -40,6 +40,7 @@ public class ExternalComponentStateTest {
     }
 
     @Test
+    @SuppressWarnings("unlikely-arg-type")
     public void equalsTest() {
         assertThat(state.equals(null)).isFalse();
 
@@ -68,7 +69,7 @@ public class ExternalComponentStateTest {
     public void compareToTest() {
         ExternalComponentState state2 =  new ExternalComponentState("NOT_SENT",
                "The policies defined have NOT yet been created on the policy engine", 90);
-        assertThat(state.compareTo(state2)).isEqualTo(0);
+        assertThat(state).isEqualByComparingTo(state2);
 
         ExternalComponentState state3 =  new ExternalComponentState("SENT",
                 "The policies defined have NOT yet been created on the policy engine", 50);

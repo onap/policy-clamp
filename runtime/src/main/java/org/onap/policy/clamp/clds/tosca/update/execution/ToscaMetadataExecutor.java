@@ -29,10 +29,8 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import org.onap.policy.clamp.clds.tosca.update.execution.cds.ToscaMetadataCdsProcess;
 import org.onap.policy.clamp.loop.service.Service;
-import org.onap.policy.clamp.tosca.DictionaryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -43,9 +41,6 @@ public class ToscaMetadataExecutor {
 
     private static final Logger logger =
             LoggerFactory.getLogger(ToscaMetadataExecutor.class);
-
-    @Autowired
-    private DictionaryService dictionaryService;
 
     private Map<String, ToscaMetadataProcess> mapOfProcesses = new HashMap<>();
 
