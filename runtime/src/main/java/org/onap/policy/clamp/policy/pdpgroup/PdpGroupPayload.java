@@ -119,12 +119,12 @@ public class PdpGroupPayload {
         this.deploymentGroups.getGroups().stream().filter(group ->
                 group.getName().equals(pdpGroup)).findFirst()
                 .ifPresentOrElse(group -> group.getDeploymentSubgroups().add(newSubGroup),
-                        () -> {
-                            var newGroup = new DeploymentGroup();
-                            newGroup.setName(pdpGroup);
-                            newGroup.setDeploymentSubgroups(new ArrayList<>(Arrays.asList(newSubGroup)));
-                            this.deploymentGroups.getGroups().add(newGroup);
-                        });
+                    () -> {
+                        var newGroup = new DeploymentGroup();
+                        newGroup.setName(pdpGroup);
+                        newGroup.setDeploymentSubgroups(new ArrayList<>(Arrays.asList(newSubGroup)));
+                        this.deploymentGroups.getGroups().add(newGroup);
+                    });
     }
 
     /**

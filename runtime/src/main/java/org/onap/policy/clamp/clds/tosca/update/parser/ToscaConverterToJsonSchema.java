@@ -27,7 +27,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 import org.onap.policy.clamp.clds.tosca.update.elements.ToscaElement;
 import org.onap.policy.clamp.clds.tosca.update.elements.ToscaElementProperty;
@@ -59,8 +59,8 @@ public class ToscaConverterToJsonSchema {
     private static final String TITLE = "title";
     private static final String TYPE = "type";
 
-    private LinkedHashMap<String, ToscaElement> components;
-    private LinkedHashMap<String, JsonTemplate> templates;
+    private Map<String, ToscaElement> components;
+    private Map<String, JsonTemplate> templates;
 
     private ToscaMetadataParser metadataParser;
 
@@ -74,8 +74,8 @@ public class ToscaConverterToJsonSchema {
      * @param metadataParser The metadata parser to use for metadata section
      * @param serviceModel The service model for clamp enrichment
      */
-    public ToscaConverterToJsonSchema(LinkedHashMap<String, ToscaElement> toscaElementsMap,
-            LinkedHashMap<String, JsonTemplate> jsonSchemaTemplates, ToscaMetadataParser metadataParser,
+    public ToscaConverterToJsonSchema(Map<String, ToscaElement> toscaElementsMap,
+            Map<String, JsonTemplate> jsonSchemaTemplates, ToscaMetadataParser metadataParser,
             Service serviceModel) {
         this.components = toscaElementsMap;
         this.templates = jsonSchemaTemplates;
@@ -204,43 +204,7 @@ public class ToscaConverterToJsonSchema {
         for (String propertyField : toscaElementProperty.getItems().keySet()) {
             switch (propertyField) {
                 case TYPE:
-                    if (currentPropertyJsonTemplate.hasFields(propertyField)) {
-                        String fieldtype = (String) toscaElementProperty.getItems().get(propertyField);
-                        switch (fieldtype.toLowerCase()) {
-                            case LIST:
-                                propertiesInJson.addProperty(TYPE, ARRAY);
-                                break;
-                            case MAP:
-                                propertiesInJson.addProperty(TYPE, OBJECT);
-                                break;
-                            case "scalar-unit.time":
-                            case "scalar-unit.frequency":
-                            case "scalar-unit.size":
-                                propertiesInJson.addProperty(TYPE, "string");
-                                break;
-                            case "timestamp":
-                                propertiesInJson.addProperty(TYPE, "string");
-                                propertiesInJson.addProperty(FORMAT, "date-time");
-                                break;
-                            case "float":
-                                propertiesInJson.addProperty(TYPE, "number");
-                                break;
-                            case "range":
-                                propertiesInJson.addProperty(TYPE, "integer");
-                                if (!checkConstraintPresence(toscaElementProperty, "greater_than")
-                                        && currentPropertyJsonTemplate.hasFields("exclusiveMinimum")) {
-                                    propertiesInJson.addProperty("exclusiveMinimum", false);
-                                }
-                                if (!checkConstraintPresence(toscaElementProperty, "less_than")
-                                        && currentPropertyJsonTemplate.hasFields("exclusiveMaximum")) {
-                                    propertiesInJson.addProperty("exclusiveMaximum", false);
-                                }
-                                break;
-                            default:
-                                propertiesInJson.addProperty(TYPE, currentPropertyJsonTemplate.getName());
-                                break;
-                        }
-                    }
+                    parseType(toscaElementProperty, propertyField, propertiesInJson, currentPropertyJsonTemplate);
                     break;
                 case METADATA:
                     if (metadataParser != null) {
@@ -254,37 +218,7 @@ public class ToscaConverterToJsonSchema {
                             currentPropertyJsonTemplate);
                     break;
                 case ENTRY_SCHEMA:
-                    // Here, a way to check if entry is a component (datatype) or a simple string
-                    if (getToscaElement(this.extractSpecificFieldFromMap(toscaElementProperty, ENTRY_SCHEMA)) != null) {
-                        String nameComponent = this.extractSpecificFieldFromMap(toscaElementProperty, ENTRY_SCHEMA);
-                        var child = new ToscaConverterToJsonSchema(components, templates, metadataParser, serviceModel);
-                        var propertiesContainer = new JsonObject();
-
-                        if (((String) toscaElementProperty.getItems().get(TYPE)).equals(MAP)) {
-                            JsonObject componentAsProperty = child.getJsonSchemaOfToscaElement(nameComponent);
-                            propertiesContainer.add(nameComponent, componentAsProperty);
-                            if (currentPropertyJsonTemplate.hasFields(PROPERTIES)) {
-                                propertiesInJson.add(PROPERTIES, propertiesContainer);
-                            }
-                        } else {
-                            JsonObject componentAsItem = child.getJsonSchemaOfToscaElement(nameComponent);
-                            if (currentPropertyJsonTemplate.hasFields(PROPERTIES)) {
-                                propertiesInJson.add("items", componentAsItem);
-                                propertiesInJson.addProperty(FORMAT, "tabs-top");
-                            }
-                        }
-                    } else if (toscaElementProperty.getItems().get(TYPE).equals(LIST)) {
-                        // Native cases
-                        var itemContainer = new JsonObject();
-                        String valueInEntrySchema =
-                                this.extractSpecificFieldFromMap(toscaElementProperty, ENTRY_SCHEMA);
-                        itemContainer.addProperty(TYPE, valueInEntrySchema);
-                        propertiesInJson.add("items", itemContainer);
-                        propertiesInJson.addProperty(FORMAT, "tabs-top");
-                    }
-
-                    // MAP Case, for now nothing
-
+                    parseEntrySchema(toscaElementProperty, propertiesInJson, currentPropertyJsonTemplate);
                     break;
                 default:
                     // Each classical field : type, description, default..
@@ -296,6 +230,81 @@ public class ToscaConverterToJsonSchema {
             }
         }
         return propertiesInJson;
+    }
+
+    private void parseType(ToscaElementProperty toscaElementProperty, String propertyField, JsonObject propertiesInJson,
+                    JsonTemplate currentPropertyJsonTemplate) {
+        if (currentPropertyJsonTemplate.hasFields(propertyField)) {
+            String fieldtype = (String) toscaElementProperty.getItems().get(propertyField);
+            switch (fieldtype.toLowerCase()) {
+                case LIST:
+                    propertiesInJson.addProperty(TYPE, ARRAY);
+                    break;
+                case MAP:
+                    propertiesInJson.addProperty(TYPE, OBJECT);
+                    break;
+                case "scalar-unit.time":
+                case "scalar-unit.frequency":
+                case "scalar-unit.size":
+                    propertiesInJson.addProperty(TYPE, "string");
+                    break;
+                case "timestamp":
+                    propertiesInJson.addProperty(TYPE, "string");
+                    propertiesInJson.addProperty(FORMAT, "date-time");
+                    break;
+                case "float":
+                    propertiesInJson.addProperty(TYPE, "number");
+                    break;
+                case "range":
+                    propertiesInJson.addProperty(TYPE, "integer");
+                    if (!checkConstraintPresence(toscaElementProperty, "greater_than")
+                            && currentPropertyJsonTemplate.hasFields("exclusiveMinimum")) {
+                        propertiesInJson.addProperty("exclusiveMinimum", false);
+                    }
+                    if (!checkConstraintPresence(toscaElementProperty, "less_than")
+                            && currentPropertyJsonTemplate.hasFields("exclusiveMaximum")) {
+                        propertiesInJson.addProperty("exclusiveMaximum", false);
+                    }
+                    break;
+                default:
+                    propertiesInJson.addProperty(TYPE, currentPropertyJsonTemplate.getName());
+                    break;
+            }
+        }
+    }
+
+    private void parseEntrySchema(ToscaElementProperty toscaElementProperty, JsonObject propertiesInJson,
+                    JsonTemplate currentPropertyJsonTemplate) {
+        // Here, a way to check if entry is a component (datatype) or a simple string
+        if (getToscaElement(this.extractSpecificFieldFromMap(toscaElementProperty, ENTRY_SCHEMA)) != null) {
+            String nameComponent = this.extractSpecificFieldFromMap(toscaElementProperty, ENTRY_SCHEMA);
+            var child = new ToscaConverterToJsonSchema(components, templates, metadataParser, serviceModel);
+            var propertiesContainer = new JsonObject();
+
+            if (((String) toscaElementProperty.getItems().get(TYPE)).equals(MAP)) {
+                JsonObject componentAsProperty = child.getJsonSchemaOfToscaElement(nameComponent);
+                propertiesContainer.add(nameComponent, componentAsProperty);
+                if (currentPropertyJsonTemplate.hasFields(PROPERTIES)) {
+                    propertiesInJson.add(PROPERTIES, propertiesContainer);
+                }
+            } else {
+                JsonObject componentAsItem = child.getJsonSchemaOfToscaElement(nameComponent);
+                if (currentPropertyJsonTemplate.hasFields(PROPERTIES)) {
+                    propertiesInJson.add("items", componentAsItem);
+                    propertiesInJson.addProperty(FORMAT, "tabs-top");
+                }
+            }
+        } else if (toscaElementProperty.getItems().get(TYPE).equals(LIST)) {
+            // Native cases
+            var itemContainer = new JsonObject();
+            String valueInEntrySchema =
+                    this.extractSpecificFieldFromMap(toscaElementProperty, ENTRY_SCHEMA);
+            itemContainer.addProperty(TYPE, valueInEntrySchema);
+            propertiesInJson.add("items", itemContainer);
+            propertiesInJson.addProperty(FORMAT, "tabs-top");
+        }
+
+        // MAP Case, for now nothing
     }
 
     /**
@@ -326,8 +335,8 @@ public class ToscaConverterToJsonSchema {
      */
     @SuppressWarnings("unchecked")
     public String extractSpecificFieldFromMap(ToscaElementProperty toscaElementProperty, String fieldName) {
-        LinkedHashMap<String, String> entrySchemaFields =
-                (LinkedHashMap<String, String>) toscaElementProperty.getItems().get(fieldName);
+        Map<String, String> entrySchemaFields =
+                (Map<String, String>) toscaElementProperty.getItems().get(fieldName);
         return entrySchemaFields.get(TYPE);
     }
 
@@ -344,8 +353,8 @@ public class ToscaConverterToJsonSchema {
             @SuppressWarnings("unchecked")
             ArrayList<Object> constraints = (ArrayList<Object>) toscaElementProperty.getItems().get(CONSTRAINTS);
             for (Object constraint : constraints) {
-                if (constraint instanceof LinkedHashMap
-                        && ((LinkedHashMap<?, ?>) constraint).containsKey(nameConstraint)) {
+                if (constraint instanceof Map
+                        && ((Map<?, ?>) constraint).containsKey(nameConstraint)) {
                     presentConstraint = true;
                 }
             }

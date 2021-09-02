@@ -74,8 +74,8 @@ public class IntermediaryActivator extends ServiceManagerContainer implements Cl
 
         // @formatter:off
         addAction("Topic endpoint management",
-                () -> TopicEndpointManager.getManager().start(),
-                () -> TopicEndpointManager.getManager().shutdown());
+            () -> TopicEndpointManager.getManager().start(),
+            () -> TopicEndpointManager.getManager().shutdown());
 
         publishers.forEach(publisher ->
             addAction("Publisher " + publisher.getClass().getSimpleName(),
@@ -84,8 +84,8 @@ public class IntermediaryActivator extends ServiceManagerContainer implements Cl
 
         listeners.forEach(listener ->
             addAction("Listener " + listener.getClass().getSimpleName(),
-                    () -> msgDispatcher.register(listener.getType(), listener.getScoListener()),
-                    () -> msgDispatcher.unregister(listener.getType())));
+                () -> msgDispatcher.register(listener.getType(), listener.getScoListener()),
+                () -> msgDispatcher.unregister(listener.getType())));
 
         addAction("Topic Message Dispatcher", this::registerMsgDispatcher, this::unregisterMsgDispatcher);
         // @formatter:on
