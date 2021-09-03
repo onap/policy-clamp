@@ -88,9 +88,9 @@ public class SdcControllersConfiguration {
         Map<String, SdcSingleControllerConfiguration> result = new HashMap<>();
         if (jsonRootNode.get(CONTROLLER_SUBTREE_KEY) != null) {
             jsonRootNode.get(CONTROLLER_SUBTREE_KEY).getAsJsonObject().entrySet().forEach(
-                    entry -> result.put(entry.getKey(),
-                            new SdcSingleControllerConfiguration(entry.getValue().getAsJsonObject(), entry.getKey(),
-                                    keyFile)));
+                entry -> result.put(entry.getKey(),
+                    new SdcSingleControllerConfiguration(entry.getValue().getAsJsonObject(), entry.getKey(),
+                            keyFile)));
         } else {
             throw new SdcParametersException(
                     CONTROLLER_SUBTREE_KEY + " key not found in the file: " + sdcControllerFile);

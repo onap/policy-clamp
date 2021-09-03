@@ -29,7 +29,6 @@ import javax.transaction.Transactional;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.onap.policy.clamp.clds.Application;
-import org.onap.policy.clamp.clds.tosca.update.execution.ToscaMetadataExecutor;
 import org.onap.policy.clamp.clds.tosca.update.parser.metadata.ToscaMetadataParserWithDictionarySupport;
 import org.onap.policy.clamp.clds.tosca.update.templates.JsonTemplateManager;
 import org.onap.policy.clamp.clds.util.JsonUtils;
@@ -54,9 +53,6 @@ public class ToscaConverterWithDictionarySupportItTestCase {
 
     @Autowired
     private ToscaMetadataParserWithDictionarySupport toscaMetadataParserWithDictionarySupport;
-
-    @Autowired
-    private ToscaMetadataExecutor toscaMetadataExecutor;
 
     /**
      * This Test validates Tosca yaml with metadata tag that contains policy_model_type and acronym

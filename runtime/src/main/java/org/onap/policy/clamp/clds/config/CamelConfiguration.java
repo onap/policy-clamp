@@ -91,10 +91,6 @@ public class CamelConfiguration extends RouteBuilder {
     @Value("${clamp.config.keyFile:#{null}}")
     private String keyFile;
 
-
-    @Autowired
-    private ClampProperties clampProperties;
-
     private void configureDefaultSslProperties() {
         if (trustStore != null) {
             System.setProperty("javax.net.ssl.trustStore", Thread.currentThread().getContextClassLoader()

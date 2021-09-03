@@ -43,7 +43,6 @@ import org.onap.policy.clamp.loop.service.Service;
 import org.onap.policy.clamp.loop.template.LoopElementModel;
 import org.onap.policy.clamp.loop.template.LoopTemplate;
 import org.onap.policy.clamp.loop.template.LoopTemplatesRepository;
-import org.onap.policy.clamp.loop.template.PolicyModelsRepository;
 import org.onap.policy.clamp.policy.PolicyEngineServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,9 +60,6 @@ import org.springframework.stereotype.Component;
 public class CsarInstaller {
 
     private static final Logger logger = LoggerFactory.getLogger(CsarInstaller.class);
-
-    @Autowired
-    private PolicyModelsRepository policyModelsRepository;
 
     @Autowired
     private LoopTemplatesRepository loopTemplatesRepository;

@@ -246,8 +246,8 @@ class ControlLoopInstantiationProviderTest {
                 new ControlLoopInstantiationProvider(clProvider, commissioningProvider, supervisionHandler);
 
         assertThatThrownBy(
-                () -> instantiationProvider.deleteControlLoop(controlLoop0.getName(), controlLoop0.getVersion()))
-                        .hasMessageMatching(CONTROL_LOOP_NOT_FOUND);
+            () -> instantiationProvider.deleteControlLoop(controlLoop0.getName(), controlLoop0.getVersion()))
+                    .hasMessageMatching(CONTROL_LOOP_NOT_FOUND);
 
         InstantiationUtils.assertInstantiationResponse(instantiationProvider.createControlLoops(controlLoops),
                 controlLoops);
@@ -282,8 +282,8 @@ class ControlLoopInstantiationProviderTest {
 
         instantiationProvider.updateControlLoops(controlLoops);
         assertThatThrownBy(
-                () -> instantiationProvider.deleteControlLoop(controlLoop.getName(), controlLoop.getVersion()))
-                        .hasMessageMatching(String.format(DELETE_BAD_REQUEST, state));
+            () -> instantiationProvider.deleteControlLoop(controlLoop.getName(), controlLoop.getVersion()))
+                    .hasMessageMatching(String.format(DELETE_BAD_REQUEST, state));
     }
 
     @Test
