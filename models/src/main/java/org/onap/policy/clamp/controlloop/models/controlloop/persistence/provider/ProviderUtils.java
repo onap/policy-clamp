@@ -24,15 +24,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 import javax.ws.rs.core.Response;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.models.base.PfAuthorative;
 import org.onap.policy.models.base.PfConcept;
 import org.onap.policy.models.base.PfModelRuntimeException;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ProviderUtils {
-    private ProviderUtils() {
-        // Utility class has no instances
-    }
 
     protected static <A, J extends PfConcept & PfAuthorative<A>> List<J> getJpaAndValidate(
             List<A> authorativeConceptList, Supplier<J> jpaSupplier, String conceptDescription) {

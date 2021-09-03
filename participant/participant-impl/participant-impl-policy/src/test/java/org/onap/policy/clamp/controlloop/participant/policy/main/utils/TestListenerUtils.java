@@ -38,6 +38,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantUpdates;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantUtils;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopStateChange;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopUpdate;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdate;
@@ -157,14 +158,8 @@ public class TestListenerUtils {
             if (toscaInputEntry.getValue().getType().contains(CONTROL_LOOP_ELEMENT)) {
                 ControlLoopElement clElement = new ControlLoopElement();
                 clElement.setId(UUID.randomUUID());
-                ToscaConceptIdentifier clParticipantType;
-                try {
-                    clParticipantType = CODER.decode(
-                            toscaInputEntry.getValue().getProperties().get("participantType").toString(),
-                            ToscaConceptIdentifier.class);
-                } catch (CoderException e) {
-                    throw new RuntimeException("cannot get ParticipantType from toscaNodeTemplate", e);
-                }
+                ToscaConceptIdentifier clParticipantType =
+                        ParticipantUtils.findParticipantType(toscaInputEntry.getValue().getProperties());
 
                 clElement.setParticipantId(clParticipantType);
                 clElement.setParticipantType(clParticipantType);
@@ -264,14 +259,8 @@ public class TestListenerUtils {
         for (Map.Entry<String, ToscaNodeTemplate> toscaInputEntry :
             toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates().entrySet()) {
             if (toscaInputEntry.getValue().getType().contains(CONTROL_LOOP_ELEMENT)) {
-                ToscaConceptIdentifier clParticipantType;
-                try {
-                    clParticipantType = CODER.decode(
-                            toscaInputEntry.getValue().getProperties().get("participantType").toString(),
-                            ToscaConceptIdentifier.class);
-                } catch (CoderException e) {
-                    throw new RuntimeException("cannot get ParticipantType from toscaNodeTemplate", e);
-                }
+                ToscaConceptIdentifier clParticipantType =
+                        ParticipantUtils.findParticipantType(toscaInputEntry.getValue().getProperties());
                 prepareParticipantDefinitionUpdate(clParticipantType, toscaInputEntry.getKey(),
                     toscaInputEntry.getValue(), participantDefinitionUpdates);
             }
