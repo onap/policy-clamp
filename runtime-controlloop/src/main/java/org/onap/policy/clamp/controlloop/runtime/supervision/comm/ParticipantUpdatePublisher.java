@@ -25,14 +25,11 @@ package org.onap.policy.clamp.controlloop.runtime.supervision.comm;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import lombok.AllArgsConstructor;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElementDefinition;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantDefinition;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantUtils;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdate;
-import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -50,8 +47,7 @@ import org.springframework.stereotype.Component;
 public class ParticipantUpdatePublisher extends AbstractParticipantPublisher<ParticipantUpdate> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantUpdatePublisher.class);
-    private static final String CONTROL_LOOP_ELEMENT = "org.onap.policy.clamp.controlloop.ControlLoopElement";
-    private static final Coder CODER = new StandardCoder();
+
     private final PolicyModelsProvider modelsProvider;
 
     /**
@@ -67,28 +63,27 @@ public class ParticipantUpdatePublisher extends AbstractParticipantPublisher<Par
         message.setParticipantType(participantType);
         message.setTimestamp(Instant.now());
 
-        ToscaServiceTemplate toscaServiceTemplate;
+        ToscaServiceTemplate toscaServiceTemplate = null;
         try {
-            toscaServiceTemplate = modelsProvider.getServiceTemplateList(null, null).get(0);
+            var list = modelsProvider.getServiceTemplateList(null, null);
+            if (!list.isEmpty()) {
+                toscaServiceTemplate = list.get(0);
+            }
         } catch (PfModelException pfme) {
             LOGGER.warn("Get of tosca service template failed, cannot send participantupdate", pfme);
             return;
         }
 
         List<ParticipantDefinition> participantDefinitionUpdates = new ArrayList<>();
-        for (Map.Entry<String, ToscaNodeTemplate> toscaInputEntry : toscaServiceTemplate.getToscaTopologyTemplate()
-                .getNodeTemplates().entrySet()) {
-            if (checkIfNodeTemplateIsControlLoopElement(toscaInputEntry.getValue(), toscaServiceTemplate)) {
-                ToscaConceptIdentifier clParticipantType;
-                try {
-                    clParticipantType =
-                            CODER.decode(toscaInputEntry.getValue().getProperties().get("participantType").toString(),
-                                    ToscaConceptIdentifier.class);
-                } catch (CoderException e) {
-                    throw new RuntimeException("cannot get ParticipantType from toscaNodeTemplate", e);
+        if (toscaServiceTemplate != null) {
+            for (var toscaInputEntry : toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates().entrySet()) {
+                if (ParticipantUtils.checkIfNodeTemplateIsControlLoopElement(toscaInputEntry.getValue(),
+                        toscaServiceTemplate)) {
+                    var clParticipantType =
+                            ParticipantUtils.findParticipantType(toscaInputEntry.getValue().getProperties());
+                    prepareParticipantDefinitionUpdate(clParticipantType, toscaInputEntry.getKey(),
+                            toscaInputEntry.getValue(), participantDefinitionUpdates);
                 }
-                prepareParticipantDefinitionUpdate(clParticipantType, toscaInputEntry.getKey(),
-                        toscaInputEntry.getValue(), participantDefinitionUpdates);
             }
         }
 
@@ -137,21 +132,5 @@ public class ParticipantUpdatePublisher extends AbstractParticipantPublisher<Par
         controlLoopElementDefinitionList.add(clDefinition);
         participantDefinition.setControlLoopElementDefinitionList(controlLoopElementDefinitionList);
         return participantDefinition;
-    }
-
-    private static boolean checkIfNodeTemplateIsControlLoopElement(ToscaNodeTemplate nodeTemplate,
-            ToscaServiceTemplate toscaServiceTemplate) {
-        if (nodeTemplate.getType().contains(CONTROL_LOOP_ELEMENT)) {
-            return true;
-        } else {
-            var nodeType = toscaServiceTemplate.getNodeTypes().get(nodeTemplate.getType());
-            if (nodeType != null) {
-                var derivedFrom = nodeType.getDerivedFrom();
-                if (derivedFrom != null) {
-                    return derivedFrom.contains(CONTROL_LOOP_ELEMENT) ? true : false;
-                }
-            }
-        }
-        return false;
     }
 }

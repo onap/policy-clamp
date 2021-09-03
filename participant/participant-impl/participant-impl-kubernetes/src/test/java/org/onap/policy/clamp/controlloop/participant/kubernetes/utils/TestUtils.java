@@ -21,11 +21,14 @@
 
 package org.onap.policy.clamp.controlloop.participant.kubernetes.utils;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.onap.policy.common.utils.coder.YamlJsonTranslator;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
-public class TestUtils {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class TestUtils {
 
     private static final YamlJsonTranslator yamlTranslator = new YamlJsonTranslator();
     private static final String TOSCA_TEMPLATE_YAML = "src/test/resources/servicetemplates/KubernetesHelm.yaml";
