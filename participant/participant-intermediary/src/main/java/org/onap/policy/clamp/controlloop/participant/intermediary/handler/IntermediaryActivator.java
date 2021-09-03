@@ -24,7 +24,6 @@ package org.onap.policy.clamp.controlloop.participant.intermediary.handler;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.List;
-import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantParameters;
 import org.onap.policy.common.endpoints.event.comm.TopicEndpointManager;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
@@ -48,7 +47,7 @@ public class IntermediaryActivator extends ServiceManagerContainer implements Cl
     private List<TopicSink> topicSinks;
     private List<TopicSource> topicSources;
 
-    ParticipantIntermediaryApi participantIntermediaryApi;
+    private ParticipantHandler participantHandler;
 
     private final MessageTypeDispatcher msgDispatcher;
 
@@ -56,13 +55,14 @@ public class IntermediaryActivator extends ServiceManagerContainer implements Cl
      * Instantiate the activator for participant.
      *
      * @param parameters the ParticipantParameters
+     * @param participantHandler the ParticipantHandler
      * @param publishers list of Publishers
      * @param listeners list of Listeners
      */
     public <T> IntermediaryActivator(final ParticipantParameters parameters,
-            ParticipantIntermediaryApi participantIntermediaryApi, List<Publisher> publishers,
+            ParticipantHandler participantHandler, List<Publisher> publishers,
             List<Listener<T>> listeners) {
-        this.participantIntermediaryApi = participantIntermediaryApi;
+        this.participantHandler = participantHandler;
 
         topicSinks = TopicEndpointManager.getManager()
                 .addTopicSinks(parameters.getIntermediaryParameters().getClampControlLoopTopics().getTopicSinks());
@@ -118,11 +118,11 @@ public class IntermediaryActivator extends ServiceManagerContainer implements Cl
     }
 
     private void sendParticipantRegister() {
-        participantIntermediaryApi.sendParticipantRegister();
+        participantHandler.sendParticipantRegister();
     }
 
     private void sendParticipantDeregister() {
-        participantIntermediaryApi.sendParticipantDeregister();
+        participantHandler.sendParticipantDeregister();
     }
 
     /**

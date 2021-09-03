@@ -67,28 +67,33 @@ public class ParticipantUpdatePublisher extends AbstractParticipantPublisher<Par
         message.setParticipantType(participantType);
         message.setTimestamp(Instant.now());
 
-        ToscaServiceTemplate toscaServiceTemplate;
+        ToscaServiceTemplate toscaServiceTemplate = null;
         try {
-            toscaServiceTemplate = modelsProvider.getServiceTemplateList(null, null).get(0);
+            var list = modelsProvider.getServiceTemplateList(null, null);
+            if (!list.isEmpty()) {
+                toscaServiceTemplate = list.get(0);
+            }
         } catch (PfModelException pfme) {
             LOGGER.warn("Get of tosca service template failed, cannot send participantupdate", pfme);
             return;
         }
 
         List<ParticipantDefinition> participantDefinitionUpdates = new ArrayList<>();
-        for (Map.Entry<String, ToscaNodeTemplate> toscaInputEntry : toscaServiceTemplate.getToscaTopologyTemplate()
-                .getNodeTemplates().entrySet()) {
-            if (toscaInputEntry.getValue().getType().contains(CONTROL_LOOP_ELEMENT)) {
-                ToscaConceptIdentifier clParticipantType;
-                try {
-                    clParticipantType =
-                            CODER.decode(toscaInputEntry.getValue().getProperties().get("participantType").toString(),
-                                    ToscaConceptIdentifier.class);
-                } catch (CoderException e) {
-                    throw new RuntimeException("cannot get ParticipantType from toscaNodeTemplate", e);
+        if (toscaServiceTemplate != null) {
+            for (Map.Entry<String, ToscaNodeTemplate> toscaInputEntry : toscaServiceTemplate.getToscaTopologyTemplate()
+                    .getNodeTemplates().entrySet()) {
+                if (toscaInputEntry.getValue().getType().contains(CONTROL_LOOP_ELEMENT)) {
+                    ToscaConceptIdentifier clParticipantType;
+                    try {
+                        clParticipantType = CODER.decode(
+                                toscaInputEntry.getValue().getProperties().get("participantType").toString(),
+                                ToscaConceptIdentifier.class);
+                    } catch (CoderException e) {
+                        throw new RuntimeException("cannot get ParticipantType from toscaNodeTemplate", e);
+                    }
+                    prepareParticipantDefinitionUpdate(clParticipantType, toscaInputEntry.getKey(),
+                            toscaInputEntry.getValue(), participantDefinitionUpdates);
                 }
-                prepareParticipantDefinitionUpdate(clParticipantType, toscaInputEntry.getKey(),
-                        toscaInputEntry.getValue(), participantDefinitionUpdates);
             }
         }
 

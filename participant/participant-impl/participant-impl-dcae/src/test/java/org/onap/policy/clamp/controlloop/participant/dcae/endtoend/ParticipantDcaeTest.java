@@ -20,7 +20,6 @@
 
 package org.onap.policy.clamp.controlloop.participant.dcae.endtoend;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockserver.model.HttpRequest.request;
@@ -32,14 +31,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockserver.integration.ClientAndServer;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopStateChange;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopUpdate;
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdate;
 import org.onap.policy.clamp.controlloop.participant.dcae.main.parameters.CommonTestData;
 import org.onap.policy.clamp.controlloop.participant.dcae.main.rest.TestListenerUtils;
 import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ControlLoopStateChangeListener;
 import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ControlLoopUpdateListener;
-import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ParticipantUpdateListener;
+import org.onap.policy.clamp.controlloop.participant.intermediary.handler.ControlLoopHandler;
 import org.onap.policy.clamp.controlloop.participant.intermediary.handler.ParticipantHandler;
 import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
 import org.onap.policy.common.utils.coder.CoderException;
@@ -67,11 +66,14 @@ class ParticipantDcaeTest {
     @Autowired
     private ParticipantHandler participantHandler;
 
+    @Autowired
+    private ControlLoopHandler controlLoopHandler;
+
     /**
      * start Servers.
      */
     @BeforeAll
-    public void startServers() {
+    static void startServers() {
 
         // Clamp
         mockClampServer = ClientAndServer.startClientAndServer(8443);
@@ -91,19 +93,13 @@ class ParticipantDcaeTest {
 
         mockConsulServer.when(request().withMethod("PUT").withPath("/v1/kv/dcae-pmsh:policy"))
                 .respond(response().withStatusCode(200));
-        ParticipantUpdate participantUpdateMsg = TestListenerUtils.createParticipantUpdateMsg();
-
-        synchronized (lockit) {
-            ParticipantUpdateListener participantUpdateListener = new ParticipantUpdateListener(participantHandler);
-            participantUpdateListener.onTopicEvent(INFRA, TOPIC, null, participantUpdateMsg);
-        }
     }
 
     /**
      * stop Server.
      */
     @AfterAll
-    public static void stopServer() {
+    static void stopServer() {
         mockClampServer.stop();
         mockClampServer = null;
 
@@ -133,7 +129,8 @@ class ParticipantDcaeTest {
 
     @Test
     void testControlLoopUpdateListener_ParticipantIdNoMatch() throws CoderException {
-        ControlLoopUpdate controlLoopUpdateMsg = TestListenerUtils.createControlLoopUpdateMsg();
+        ControlLoopUpdate controlLoopUpdateMsg = TestListenerUtils
+                .createControlLoopUpdateMsg(ControlLoopState.UNINITIALISED, ControlLoopOrderedState.PASSIVE);
         controlLoopUpdateMsg.getParticipantId().setName("DummyName");
 
         ControlLoopUpdateListener clUpdateListener = new ControlLoopUpdateListener(participantHandler);
@@ -146,36 +143,29 @@ class ParticipantDcaeTest {
 
     @Test
     void testControlLoopUpdateListenerPassive() throws CoderException {
-        ControlLoopUpdate controlLoopUpdateMsg = TestListenerUtils.createControlLoopUpdateMsg();
+        ControlLoopUpdate controlLoopUpdateMsg = TestListenerUtils
+                .createControlLoopUpdateMsg(ControlLoopState.UNINITIALISED, ControlLoopOrderedState.PASSIVE);
+        assertEquals(participantHandler.getParticipantId(), controlLoopUpdateMsg.getParticipantId());
+        assertEquals(participantHandler.getParticipantType(), controlLoopUpdateMsg.getParticipantType());
 
         ControlLoopUpdateListener clUpdateListener = new ControlLoopUpdateListener(participantHandler);
         clUpdateListener.onTopicEvent(INFRA, TOPIC, null, controlLoopUpdateMsg);
 
         // Verify the content in participantHandler
-        assertEquals(participantHandler.getParticipantId(), controlLoopUpdateMsg.getParticipantId());
-        assertEquals(1, participantHandler.getControlLoopHandler().getControlLoops().getControlLoopList().size());
+        assertEquals(1, controlLoopHandler.getControlLoops().getControlLoopList().size());
     }
 
     @Test
-    void testControlLoopUpdateListenerUninitialised() throws CoderException {
-        ControlLoopUpdate controlLoopUpdateMsg = TestListenerUtils.createControlLoopUpdateMsg();
+    void testControlLoopUpdateListenerRunning() throws CoderException {
+        ControlLoopUpdate controlLoopUpdateMsg =
+                TestListenerUtils.createControlLoopUpdateMsg(ControlLoopState.PASSIVE, ControlLoopOrderedState.RUNNING);
+        assertEquals(participantHandler.getParticipantId(), controlLoopUpdateMsg.getParticipantId());
+        assertEquals(participantHandler.getParticipantType(), controlLoopUpdateMsg.getParticipantType());
 
         ControlLoopUpdateListener clUpdateListener = new ControlLoopUpdateListener(participantHandler);
         clUpdateListener.onTopicEvent(INFRA, TOPIC, null, controlLoopUpdateMsg);
 
         // Verify the content in participantHandler
-        assertEquals(participantHandler.getParticipantId(), controlLoopUpdateMsg.getParticipantId());
-        assertEquals(1, participantHandler.getControlLoopHandler().getControlLoops().getControlLoopList().size());
-    }
-
-    @Test
-    void testControlLoopUpdateListenerString() throws CoderException {
-        ControlLoopUpdate controlLoopUpdateMsg = TestListenerUtils.createControlLoopUpdateMsg();
-
-        assertThat(controlLoopUpdateMsg.toString()).contains("state=UNINITIALISED");
-        ControlLoopUpdate copyControlLoopUpdateMsg =
-                TestListenerUtils.createCopyControlLoopUpdateMsg(controlLoopUpdateMsg);
-        assertThat(copyControlLoopUpdateMsg.toString()).contains("state=UNINITIALISED");
-        assertNotEquals(controlLoopUpdateMsg, copyControlLoopUpdateMsg);
+        assertEquals(1, controlLoopHandler.getControlLoops().getControlLoopList().size());
     }
 }

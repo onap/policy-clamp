@@ -61,8 +61,6 @@ public class SupervisionScanner {
     private final ParticipantStatusReqPublisher participantStatusReqPublisher;
     private final ParticipantUpdatePublisher participantUpdatePublisher;
 
-    private final long maxWaitMs;
-
     /**
      * Constructor for instantiating SupervisionScanner.
      *
@@ -89,8 +87,7 @@ public class SupervisionScanner {
 
         controlLoopCounter.setMaxRetryCount(
                 clRuntimeParameterGroup.getParticipantParameters().getUpdateParameters().getMaxRetryCount());
-        controlLoopCounter
-                .setMaxWaitMs(clRuntimeParameterGroup.getParticipantParameters().getUpdateParameters().getMaxWaitMs());
+        controlLoopCounter.setMaxWaitMs(clRuntimeParameterGroup.getParticipantParameters().getMaxStatusWaitMs());
 
         participantUpdateCounter.setMaxRetryCount(
                 clRuntimeParameterGroup.getParticipantParameters().getUpdateParameters().getMaxRetryCount());
@@ -99,10 +96,7 @@ public class SupervisionScanner {
 
         participantStatusCounter.setMaxRetryCount(
                 clRuntimeParameterGroup.getParticipantParameters().getUpdateParameters().getMaxRetryCount());
-        participantStatusCounter
-                .setMaxWaitMs(clRuntimeParameterGroup.getParticipantParameters().getUpdateParameters().getMaxWaitMs());
-
-        maxWaitMs = clRuntimeParameterGroup.getParticipantParameters().getUpdateParameters().getMaxWaitMs();
+        participantStatusCounter.setMaxWaitMs(clRuntimeParameterGroup.getParticipantParameters().getMaxStatusWaitMs());
     }
 
     /**
@@ -131,6 +125,7 @@ public class SupervisionScanner {
         } catch (PfModelException pfme) {
             LOGGER.warn("error reading control loops from database", pfme);
         }
+
         if (counterCheck) {
             scanParticipantUpdate();
         }
@@ -145,7 +140,7 @@ public class SupervisionScanner {
             if (participantUpdateCounter.isFault(id)) {
                 LOGGER.debug("report Participant Update fault");
 
-            } else if (participantUpdateCounter.getDuration(id) > maxWaitMs) {
+            } else if (participantUpdateCounter.getDuration(id) > participantUpdateCounter.getMaxWaitMs()) {
 
                 if (participantUpdateCounter.count(id)) {
                     LOGGER.debug("retry message ParticipantUpdate");
@@ -166,7 +161,7 @@ public class SupervisionScanner {
             LOGGER.debug("report Participant fault");
             return;
         }
-        if (participantStatusCounter.getDuration(id) > maxWaitMs) {
+        if (participantStatusCounter.getDuration(id) > participantStatusCounter.getMaxWaitMs()) {
             if (participantStatusCounter.count(id)) {
                 LOGGER.debug("retry message ParticipantStatusReq");
                 participantStatusReqPublisher.send(id);
@@ -243,17 +238,19 @@ public class SupervisionScanner {
             return;
         }
 
-        if (controlLoopCounter.count(id)) {
-            if (ControlLoopState.UNINITIALISED2PASSIVE.equals(controlLoop.getState())) {
-                LOGGER.debug("retry message ControlLoopUpdate");
-                controlLoopUpdatePublisher.send(controlLoop);
+        if (controlLoopCounter.getDuration(id) > controlLoopCounter.getMaxWaitMs()) {
+            if (controlLoopCounter.count(id)) {
+                if (ControlLoopState.UNINITIALISED2PASSIVE.equals(controlLoop.getState())) {
+                    LOGGER.debug("retry message ControlLoopUpdate");
+                    controlLoopUpdatePublisher.send(controlLoop);
+                } else {
+                    LOGGER.debug("retry message ControlLoopStateChange");
+                    controlLoopStateChangePublisher.send(controlLoop);
+                }
             } else {
-                LOGGER.debug("retry message ControlLoopStateChange");
-                controlLoopStateChangePublisher.send(controlLoop);
+                LOGGER.debug("report ControlLoop fault");
+                controlLoopCounter.setFault(id);
             }
-        } else {
-            LOGGER.debug("report ControlLoop fault");
-            controlLoopCounter.setFault(id);
         }
     }
 }

@@ -34,13 +34,13 @@ public class ParticipantUpdateParameters {
     /**
      * Maximum number of times to re-send a request to a PDP.
      */
-    @Min(value = 0)
+    @Min(value = 1)
     private int maxRetryCount;
 
     /**
      * Maximum time to wait, in milliseconds, for a PDP response.
      */
-    @Min(value = 0)
+    @Min(value = 100)
     private long maxWaitMs;
 
 }
