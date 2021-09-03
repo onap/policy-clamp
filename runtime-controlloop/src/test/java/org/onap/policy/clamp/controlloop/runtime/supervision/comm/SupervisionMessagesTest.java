@@ -35,6 +35,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElementDefinition;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantDefinition;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantUtils;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ClElementStatisticsProvider;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ControlLoopProvider;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ParticipantProvider;
@@ -54,7 +55,6 @@ import org.onap.policy.clamp.controlloop.runtime.util.rest.CommonRestController;
 import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
 import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.coder.YamlJsonTranslator;
 import org.onap.policy.common.utils.resources.ResourceUtils;
@@ -194,14 +194,8 @@ class SupervisionMessagesTest extends CommonRestController {
         for (Map.Entry<String, ToscaNodeTemplate> toscaInputEntry :
             toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates().entrySet()) {
             if (toscaInputEntry.getValue().getType().contains(CONTROL_LOOP_ELEMENT)) {
-                ToscaConceptIdentifier clParticipantType;
-                try {
-                    clParticipantType = CODER.decode(
-                            toscaInputEntry.getValue().getProperties().get("participantType").toString(),
-                            ToscaConceptIdentifier.class);
-                } catch (CoderException e) {
-                    throw new RuntimeException("cannot get ParticipantType from toscaNodeTemplate", e);
-                }
+                ToscaConceptIdentifier clParticipantType =
+                        ParticipantUtils.findParticipantType(toscaInputEntry.getValue().getProperties());
                 prepareParticipantDefinitionUpdate(clParticipantType, toscaInputEntry.getKey(),
                     toscaInputEntry.getValue(), participantDefinitionUpdates);
             }
