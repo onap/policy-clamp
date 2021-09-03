@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2021 Nordix Foundation.
+ *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,6 +43,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ParticipantMessagePublisher implements Publisher {
     private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantMessagePublisher.class);
+    private static final String NOT_ACTIVE_TEXT = "Not Active!";
 
     private boolean active = false;
     private TopicSinkClient topicSinkClient;
@@ -67,7 +69,7 @@ public class ParticipantMessagePublisher implements Publisher {
      */
     public void sendParticipantStatus(final ParticipantStatus participantStatus) {
         if (!active) {
-            throw new ControlLoopRuntimeException(Status.NOT_ACCEPTABLE, "Not Active!");
+            throw new ControlLoopRuntimeException(Status.NOT_ACCEPTABLE, NOT_ACTIVE_TEXT);
         }
         topicSinkClient.send(participantStatus);
         LOGGER.debug("Sent Participant Status message to CLAMP - {}", participantStatus);
@@ -80,7 +82,7 @@ public class ParticipantMessagePublisher implements Publisher {
      */
     public void sendParticipantRegister(final ParticipantRegister participantRegister) {
         if (!active) {
-            throw new ControlLoopRuntimeException(Status.NOT_ACCEPTABLE, "Not Active!");
+            throw new ControlLoopRuntimeException(Status.NOT_ACCEPTABLE, NOT_ACTIVE_TEXT);
         }
         topicSinkClient.send(participantRegister);
         LOGGER.debug("Sent Participant Register message to CLAMP - {}", participantRegister);
@@ -93,7 +95,7 @@ public class ParticipantMessagePublisher implements Publisher {
      */
     public void sendParticipantDeregister(final ParticipantDeregister participantDeregister) {
         if (!active) {
-            throw new ControlLoopRuntimeException(Status.NOT_ACCEPTABLE, "Not Active!");
+            throw new ControlLoopRuntimeException(Status.NOT_ACCEPTABLE, NOT_ACTIVE_TEXT);
         }
         topicSinkClient.send(participantDeregister);
         LOGGER.debug("Sent Participant Deregister message to CLAMP - {}", participantDeregister);
@@ -106,7 +108,7 @@ public class ParticipantMessagePublisher implements Publisher {
      */
     public void sendParticipantUpdateAck(final ParticipantUpdateAck participantUpdateAck) {
         if (!active) {
-            throw new ControlLoopRuntimeException(Status.NOT_ACCEPTABLE, "Not Active!");
+            throw new ControlLoopRuntimeException(Status.NOT_ACCEPTABLE, NOT_ACTIVE_TEXT);
         }
         topicSinkClient.send(participantUpdateAck);
         LOGGER.debug("Sent Participant Update Ack message to CLAMP - {}", participantUpdateAck);
@@ -119,7 +121,7 @@ public class ParticipantMessagePublisher implements Publisher {
      */
     public void sendControlLoopAck(final ControlLoopAck controlLoopAck) {
         if (!active) {
-            throw new ControlLoopRuntimeException(Status.NOT_ACCEPTABLE, "Not Active!");
+            throw new ControlLoopRuntimeException(Status.NOT_ACCEPTABLE, NOT_ACTIVE_TEXT);
         }
         topicSinkClient.send(controlLoopAck);
         LOGGER.debug("Sent ControlLoop Update/StateChange Ack to runtime - {}", controlLoopAck);
@@ -132,7 +134,7 @@ public class ParticipantMessagePublisher implements Publisher {
      */
     public void sendHeartbeat(final ParticipantStatus participantStatus) {
         if (!active) {
-            throw new ControlLoopRuntimeException(Status.NOT_ACCEPTABLE, "Not Active!");
+            throw new ControlLoopRuntimeException(Status.NOT_ACCEPTABLE, NOT_ACTIVE_TEXT);
         }
         topicSinkClient.send(participantStatus);
         LOGGER.debug("Sent Participant heartbeat to CLAMP - {}", participantStatus);
