@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ClElementStatisticsList;
@@ -66,13 +67,16 @@ import org.springframework.stereotype.Component;
 /**
  * This class is responsible for managing the state of a participant.
  */
-@Getter
 @Component
 public class ParticipantHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantHandler.class);
 
+    @Getter
     private final ToscaConceptIdentifier participantType;
+
+    @Getter
     private final ToscaConceptIdentifier participantId;
+
     private final ControlLoopHandler controlLoopHandler;
     private final ParticipantStatistics participantStatistics;
     private final ParticipantMessagePublisher publisher;
@@ -110,11 +114,6 @@ public class ParticipantHandler {
      * @param participantStatusReqMsg participant participantStatusReq message
      */
     public void handleParticipantStatusReq(final ParticipantStatusReq participantStatusReqMsg) {
-        var controlLoops = controlLoopHandler.getControlLoops();
-        for (ControlLoopElementListener clElementListener : controlLoopHandler.getListeners()) {
-            updateClElementStatistics(controlLoops, clElementListener);
-        }
-
         var participantStatus = makeHeartbeat(true);
         publisher.sendParticipantStatus(participantStatus);
     }
@@ -330,6 +329,12 @@ public class ParticipantHandler {
      * Method to send heartbeat to controlloop runtime.
      */
     public ParticipantStatus makeHeartbeat(boolean responseToParticipantStatusReq) {
+        if (!responseToParticipantStatusReq) {
+            var controlLoops = controlLoopHandler.getControlLoops();
+            for (var clElementListener : controlLoopHandler.getListeners()) {
+                updateClElementStatistics(controlLoops, clElementListener);
+            }
+        }
         this.participantStatistics.setState(state);
         this.participantStatistics.setHealthStatus(healthStatus);
         this.participantStatistics.setTimeStamp(Instant.now());
@@ -362,10 +367,15 @@ public class ParticipantHandler {
             clStatitistics.setControlLoopId(entry.getKey());
             ClElementStatisticsList clElementStatisticsList = new ClElementStatisticsList();
             clElementStatisticsList
-                    .setClElementStatistics(entry.getValue().getControlLoopElementStatisticsList(entry.getValue()));
+                    .setClElementStatistics(entry.getValue().getElements().values()
+                            .stream()
+                            .map(ControlLoopElement::getClElementStatistics)
+                            .filter(Objects::nonNull)
+                            .collect(Collectors.toList()));
             clStatitistics.setClElementStatisticsList(clElementStatisticsList);
             clInfo.setControlLoopStatistics(clStatitistics);
             clInfo.setState(entry.getValue().getState());
+            controlLoopInfoList.add(clInfo);
         }
         return controlLoopInfoList;
     }

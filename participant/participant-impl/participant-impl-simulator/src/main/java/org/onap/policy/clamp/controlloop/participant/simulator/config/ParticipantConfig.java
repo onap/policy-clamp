@@ -20,7 +20,10 @@
 
 package org.onap.policy.clamp.controlloop.participant.simulator.config;
 
+import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryApi;
+import org.onap.policy.clamp.controlloop.participant.simulator.main.handler.ControlLoopElementHandler;
 import org.onap.policy.clamp.controlloop.participant.simulator.main.rest.RequestResponseLoggingFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,5 +44,18 @@ public class ParticipantConfig {
         registrationBean.addUrlPatterns("/onap/participantsim/v2/*");
 
         return registrationBean;
+    }
+
+    /**
+     * Register ControlLoopElementListener.
+     *
+     * @param intermediaryApi the ParticipantIntermediaryApi
+     * @param clElementHandler the ControlLoop Element Handler
+     */
+    @Autowired
+    public void registerControlLoopElementListener(ParticipantIntermediaryApi intermediaryApi,
+            ControlLoopElementHandler clElementHandler) {
+        intermediaryApi.registerControlLoopElementListener(clElementHandler);
+        clElementHandler.setIntermediaryApi(intermediaryApi);
     }
 }

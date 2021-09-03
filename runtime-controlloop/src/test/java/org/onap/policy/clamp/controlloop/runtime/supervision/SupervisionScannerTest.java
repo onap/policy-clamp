@@ -130,7 +130,8 @@ class SupervisionScannerTest {
         when(controlLoopProvider.getControlLoops(null, null)).thenReturn(List.of(controlLoop));
 
         var clRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanParticipant");
-        clRuntimeParameterGroup.getParticipantParameters().getUpdateParameters().setMaxWaitMs(0);
+        clRuntimeParameterGroup.getParticipantParameters().getUpdateParameters().setMaxWaitMs(-1);
+        clRuntimeParameterGroup.getParticipantParameters().setMaxStatusWaitMs(-1);
 
         var participant = new Participant();
         participant.setName("Participant0");
@@ -157,7 +158,6 @@ class SupervisionScannerTest {
         List<Participant> participants = participantProvider.getParticipants(null, null);
         assertThat(participants.get(0).getHealthStatus()).isEqualTo(ParticipantHealthStatus.NOT_HEALTHY);
 
-        supervisionScanner.run(true);
         supervisionScanner.run(true);
         participants = participantProvider.getParticipants(null, null);
         assertThat(participants.get(0).getHealthStatus()).isEqualTo(ParticipantHealthStatus.OFF_LINE);
