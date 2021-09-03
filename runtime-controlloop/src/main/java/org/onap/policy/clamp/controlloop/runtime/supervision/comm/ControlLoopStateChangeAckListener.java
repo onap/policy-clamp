@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  * Copyright (C) 2021 Nordix Foundation.
+ * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +36,7 @@ import org.springframework.stereotype.Component;
  * Listener for ControlLoopStateChangeAck messages sent by participants.
  */
 @Component
-public class ControlLoopStateChangeAckListener extends ScoListener<ControlLoopAck> implements Listener {
+public class ControlLoopStateChangeAckListener extends ScoListener<ControlLoopAck> implements Listener<ControlLoopAck> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ControlLoopStateChangeAckListener.class);
 
     private final SupervisionHandler supervisionHandler;

@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2021 Nordix Foundation.
+ *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -34,7 +35,7 @@ import org.onap.policy.common.utils.coder.StandardCoderObject;
  * Abstract Listener for Participant Ack messages sent by runtime.
  */
 public abstract class ParticipantAckListener<T extends ParticipantAckMessage> extends ScoListener<T>
-        implements Listener {
+                implements Listener<T> {
 
     private final ParticipantHandler participantHandler;
     private final Consumer<T> consumer;

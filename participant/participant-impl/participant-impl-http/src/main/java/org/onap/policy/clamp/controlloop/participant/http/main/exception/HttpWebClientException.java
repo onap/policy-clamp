@@ -1,6 +1,7 @@
 /*-
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2021 Nordix Foundation.
+ *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +25,7 @@ package org.onap.policy.clamp.controlloop.participant.http.main.exception;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 public class HttpWebClientException extends WebClientResponseException {
+    private static final long serialVersionUID = 1L;
 
     public HttpWebClientException(int statusCode, String statusText) {
         super(statusCode, statusText, null, null, null);
