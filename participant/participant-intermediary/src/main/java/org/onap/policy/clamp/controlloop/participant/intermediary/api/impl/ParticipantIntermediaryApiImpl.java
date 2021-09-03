@@ -37,6 +37,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageType;
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ControlLoopElementListener;
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryApi;
+import org.onap.policy.clamp.controlloop.participant.intermediary.handler.ControlLoopHandler;
 import org.onap.policy.clamp.controlloop.participant.intermediary.handler.ParticipantHandler;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.springframework.stereotype.Component;
@@ -48,30 +49,26 @@ import org.springframework.stereotype.Component;
 public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryApi {
 
     // The handler for the participant intermediary
-    private ParticipantHandler participantHandler;
+    private final ParticipantHandler participantHandler;
+
+    // The handler for the controlLoop intermediary
+    private final ControlLoopHandler controlLoopHandler;
 
     /**
      * Constructor.
      *
      * @param participantHandler ParticipantHandler
+     * @param controlLoopHandler ControlLoopHandler
      */
-    public ParticipantIntermediaryApiImpl(ParticipantHandler participantHandler) {
+    public ParticipantIntermediaryApiImpl(ParticipantHandler participantHandler,
+            ControlLoopHandler controlLoopHandler) {
         this.participantHandler = participantHandler;
+        this.controlLoopHandler = controlLoopHandler;
     }
 
     @Override
     public void registerControlLoopElementListener(ControlLoopElementListener controlLoopElementListener) {
-        participantHandler.getControlLoopHandler().registerControlLoopElementListener(controlLoopElementListener);
-    }
-
-    @Override
-    public void sendParticipantRegister() {
-        participantHandler.sendParticipantRegister();
-    }
-
-    @Override
-    public void sendParticipantDeregister() {
-        participantHandler.sendParticipantDeregister();
+        controlLoopHandler.registerControlLoopElementListener(controlLoopElementListener);
     }
 
     @Override
@@ -91,13 +88,12 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
 
     @Override
     public ControlLoops getControlLoops(String name, String version) {
-        return participantHandler.getControlLoopHandler().getControlLoops();
+        return controlLoopHandler.getControlLoops();
     }
 
     @Override
     public Map<UUID, ControlLoopElement> getControlLoopElements(String name, String version) {
-        List<ControlLoop> controlLoops =
-                participantHandler.getControlLoopHandler().getControlLoops().getControlLoopList();
+        List<ControlLoop> controlLoops = controlLoopHandler.getControlLoops().getControlLoopList();
 
         for (ControlLoop controlLoop : controlLoops) {
             if (name.equals(controlLoop.getDefinition().getName())) {
@@ -109,8 +105,7 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
 
     @Override
     public ControlLoopElement getControlLoopElement(UUID id) {
-        List<ControlLoop> controlLoops =
-                participantHandler.getControlLoopHandler().getControlLoops().getControlLoopList();
+        List<ControlLoop> controlLoops = controlLoopHandler.getControlLoops().getControlLoopList();
 
         for (ControlLoop controlLoop : controlLoops) {
             ControlLoopElement clElement = controlLoop.getElements().get(id);
@@ -125,12 +120,12 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
     public ControlLoopElement updateControlLoopElementState(ToscaConceptIdentifier controlLoopId,
             UUID id, ControlLoopOrderedState currentState,
             ControlLoopState newState, ParticipantMessageType messageType) {
-        return participantHandler.getControlLoopHandler().updateControlLoopElementState(controlLoopId,
+        return controlLoopHandler.updateControlLoopElementState(controlLoopId,
             id, currentState, newState);
     }
 
     @Override
     public void updateControlLoopElementStatistics(UUID id, ClElementStatistics elementStatistics) {
-        participantHandler.getControlLoopHandler().updateControlLoopElementStatistics(id, elementStatistics);
+        controlLoopHandler.updateControlLoopElementStatistics(id, elementStatistics);
     }
 }

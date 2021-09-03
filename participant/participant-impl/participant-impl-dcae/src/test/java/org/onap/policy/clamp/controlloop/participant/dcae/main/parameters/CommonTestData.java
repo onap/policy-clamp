@@ -223,6 +223,18 @@ public class CommonTestData {
     }
 
     /**
+     * Returns participantType for test cases.
+     *
+     * @return participant Type
+     */
+    public static ToscaConceptIdentifier getParticipantType() {
+        final ToscaConceptIdentifier participantId = new ToscaConceptIdentifier();
+        participantId.setName("org.onap.dcae.controlloop.DCAEMicroserviceControlLoopParticipant");
+        participantId.setVersion("2.3.4");
+        return participantId;
+    }
+
+    /**
      * Nulls out a field within a JSON string.
      *
      * @param json JSON string

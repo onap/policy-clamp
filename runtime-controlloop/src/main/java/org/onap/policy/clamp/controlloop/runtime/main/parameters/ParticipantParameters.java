@@ -18,7 +18,6 @@
 
 package org.onap.policy.clamp.controlloop.runtime.main.parameters;
 
-import java.util.concurrent.TimeUnit;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -34,17 +33,11 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 public class ParticipantParameters {
 
-    /**
-     * Default maximum message age, in milliseconds, that should be examined. Any message
-     * older than this is discarded.
-     */
-    public static final long DEFAULT_MAX_AGE_MS = TimeUnit.MILLISECONDS.convert(10, TimeUnit.MINUTES);
-
-    @Min(1)
+    @Min(100)
     private long heartBeatMs;
 
-    @Min(1)
-    private long maxMessageAgeMs =  DEFAULT_MAX_AGE_MS;
+    @Min(100)
+    private long maxStatusWaitMs;
 
     @Valid
     @NotNull

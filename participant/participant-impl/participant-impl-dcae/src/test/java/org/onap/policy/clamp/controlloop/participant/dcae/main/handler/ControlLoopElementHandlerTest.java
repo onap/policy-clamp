@@ -31,28 +31,22 @@ import static org.mockito.Mockito.when;
 
 import java.util.UUID;
 import org.json.JSONException;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdate;
 import org.onap.policy.clamp.controlloop.participant.dcae.httpclient.ClampHttpClient;
 import org.onap.policy.clamp.controlloop.participant.dcae.httpclient.ConsulDcaeHttpClient;
 import org.onap.policy.clamp.controlloop.participant.dcae.main.parameters.CommonTestData;
 import org.onap.policy.clamp.controlloop.participant.dcae.main.rest.TestListenerUtils;
 import org.onap.policy.clamp.controlloop.participant.dcae.model.Loop;
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryApi;
-import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ParticipantUpdateListener;
-import org.onap.policy.clamp.controlloop.participant.intermediary.handler.ParticipantHandler;
-import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 /**
@@ -68,26 +62,7 @@ class ControlLoopElementHandlerTest {
     private static final String MICROSERVICE_INSTALLED_SUCCESSFULLY = "MICROSERVICE_INSTALLED_SUCCESSFULLY";
 
     public static final Coder CODER = new StandardCoder();
-    private static final Object lockit = new Object();
-    private static final CommInfrastructure INFRA = CommInfrastructure.NOOP;
-    private static final String TOPIC = "my-topic";
     private CommonTestData commonTestData = new CommonTestData();
-
-    @Autowired
-    private ParticipantHandler participantHandler;
-
-    /**
-     * Initial ParticipantUpdate message.
-     */
-    @BeforeAll
-    public void sendParticipantUpdate() {
-        ParticipantUpdate participantUpdateMsg = TestListenerUtils.createParticipantUpdateMsg();
-
-        synchronized (lockit) {
-            ParticipantUpdateListener participantUpdateListener = new ParticipantUpdateListener(participantHandler);
-            participantUpdateListener.onTopicEvent(INFRA, TOPIC, null, participantUpdateMsg);
-        }
-    }
 
     @Test
     void test_ControlLoopElementStateChange() {
@@ -135,10 +110,8 @@ class ControlLoopElementHandlerTest {
         element.setId(UUID.randomUUID());
         element.setOrderedState(ControlLoopOrderedState.PASSIVE);
 
-        final ToscaServiceTemplate controlLoopDefinition = new ToscaServiceTemplate();
         controlLoopElementHandler.controlLoopElementUpdate(TestListenerUtils.getControlLoopId(), element,
-            controlLoopDefinition.getToscaTopologyTemplate().getNodeTemplates()
-            .get("org.onap.domain.pmsh.PMSH_DCAEMicroservice"));
+                new ToscaNodeTemplate());
 
         verify(clampClient).create(LOOP, TEMPLATE);
         verify(consulClient).deploy(any(String.class), any(String.class));
@@ -167,10 +140,8 @@ class ControlLoopElementHandlerTest {
         element.setId(UUID.randomUUID());
         element.setOrderedState(ControlLoopOrderedState.PASSIVE);
 
-        ToscaServiceTemplate controlLoopDefinition = new ToscaServiceTemplate();
         controlLoopElementHandler.controlLoopElementUpdate(TestListenerUtils.getControlLoopId(), element,
-                controlLoopDefinition.getToscaTopologyTemplate().getNodeTemplates()
-                .get("org.onap.domain.pmsh.PMSH_DCAEMicroservice"));
+                new ToscaNodeTemplate());
 
         verify(clampClient, times(0)).create(LOOP, TEMPLATE);
         verify(consulClient).deploy(any(String.class), any(String.class));
