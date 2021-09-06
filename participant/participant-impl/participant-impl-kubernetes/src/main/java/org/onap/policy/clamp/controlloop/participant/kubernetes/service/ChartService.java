@@ -112,7 +112,7 @@ public class ChartService {
      * @throws ServiceException incase of error
      */
     public void configureRepository(HelmRepository repo) throws ServiceException {
-        if (repo.getAddress() != null && repo.getPort() != null) {
+        if (repo.getAddress() != null) {
             helmClient.addRepository(repo);
         }
     }
