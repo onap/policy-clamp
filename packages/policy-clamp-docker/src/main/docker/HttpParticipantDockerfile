@@ -21,6 +21,7 @@
 #
 # Docker file to build an image that runs CLAMP on Java 11 or better in alpine
 #
+
 FROM onap/policy-jre-alpine:2.3.0
 
 LABEL maintainer="Policy Team"
@@ -33,13 +34,13 @@ ENV POLICY_HOME=$POLICY_HOME/clamp
 RUN mkdir -p $POLICY_LOGS $POLICY_HOME $POLICY_HOME/bin && \
     chown -R policy:policy $POLICY_HOME $POLICY_LOGS && \
     mkdir /packages
-COPY /maven/lib/policy-controlloop-runtime.tar.gz /packages
+COPY /maven/lib/http-participant.tar.gz /packages
 
-RUN tar xvfz /packages/policy-controlloop-runtime.tar.gz --directory $POLICY_HOME && \
-    rm /packages/policy-controlloop-runtime.tar.gz
+RUN tar xvfz /packages/http-participant.tar.gz --directory $POLICY_HOME && \
+    rm /packages/http-participant.tar.gz
 
 WORKDIR $POLICY_HOME
-COPY controlloop-runtime.sh  bin/.
+COPY http-participant.sh  bin/.
 COPY /maven/app.jar /app
 
 RUN chown -R policy:policy * && \
@@ -48,4 +49,4 @@ RUN chown -R policy:policy * && \
 
 USER policy
 WORKDIR $POLICY_HOME/bin
-ENTRYPOINT [ "./controlloop-runtime.sh" ]
+ENTRYPOINT [ "./http-participant.sh" ]

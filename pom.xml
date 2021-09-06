@@ -47,6 +47,7 @@
             o policy-clamp-participant-impl-kubernetes: A standard participant for Kubernetes microservices
             o policy-clamp-participant-impl-policy: A standard participant for handling polcies for Policy Framework
             o policy-clamp-participant-impl-simulator: A participant simulator for integration testing
+            o policy-clamp-participant-impl-http: A standard participant for http configurations
     </description>
 
     <properties>
