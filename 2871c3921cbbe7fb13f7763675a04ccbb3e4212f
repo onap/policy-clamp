@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "24b85d7a_90eff3ac",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/test/java/org/onap/policy/clamp/controlloop/participant/dcae/endtoend/ParticipantDcaeTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 4903
+      },
+      "writtenOn": "2021-09-06T15:28:59Z",
+      "side": 1,
+      "message": "use assertThat....hasSize(..\nSame comment below.",
+      "range": {
+        "startLine": 155,
+        "startChar": 8,
+        "endLine": 155,
+        "endChar": 22
+      },
+      "revId": "2871c3921cbbe7fb13f7763675a04ccbb3e4212f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ddffb401_82922399",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/test/java/org/onap/policy/clamp/controlloop/participant/dcae/main/handler/ControlLoopElementHandlerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 4903
+      },
+      "writtenOn": "2021-09-06T15:28:59Z",
+      "side": 1,
+      "message": "could simply pass new ToscaNodeTemplate().\nsame comment below.",
+      "range": {
+        "startLine": 112,
+        "startChar": 68,
+        "endLine": 112,
+        "endChar": 80
+      },
+      "revId": "2871c3921cbbe7fb13f7763675a04ccbb3e4212f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
