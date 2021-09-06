@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "9f608ad9_5fd40a8c",
+        "filename": "packages/policy-clamp-docker/src/main/docker/HttpParticipantDockerfile",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2021-09-06T15:52:10Z",
+      "side": 1,
+      "message": "Thanks, I have also upgraded other participants to use 2.3.0",
+      "parentUuid": "9d746923_71d331b8",
+      "range": {
+        "startLine": 25,
+        "startChar": 28,
+        "endLine": 25,
+        "endChar": 33
+      },
+      "revId": "592bad27f03d9083c5f592ac61dcc7c1f1e6e71d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0b060a59_c88aff35",
         "filename": "packages/policy-clamp-docker/src/main/docker/HttpParticipantDockerfile",
         "patchSetId": 2
@@ -45,6 +69,30 @@
       "revId": "592bad27f03d9083c5f592ac61dcc7c1f1e6e71d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b4cd0fd7_fe227074",
+        "filename": "packages/policy-clamp-docker/src/main/docker/HttpParticipantDockerfile",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2021-09-06T15:52:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0b060a59_c88aff35",
+      "range": {
+        "startLine": 35,
+        "startChar": 1,
+        "endLine": 37,
+        "endChar": 2
+      },
+      "revId": "592bad27f03d9083c5f592ac61dcc7c1f1e6e71d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
