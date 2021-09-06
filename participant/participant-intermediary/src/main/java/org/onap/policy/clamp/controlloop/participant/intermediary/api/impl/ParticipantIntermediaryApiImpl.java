@@ -122,9 +122,11 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
     }
 
     @Override
-    public ControlLoopElement updateControlLoopElementState(UUID id, ControlLoopOrderedState currentState,
+    public ControlLoopElement updateControlLoopElementState(ToscaConceptIdentifier controlLoopId,
+            UUID id, ControlLoopOrderedState currentState,
             ControlLoopState newState, ParticipantMessageType messageType) {
-        return participantHandler.getControlLoopHandler().updateControlLoopElementState(id, currentState, newState);
+        return participantHandler.getControlLoopHandler().updateControlLoopElementState(controlLoopId,
+            id, currentState, newState);
     }
 
     @Override

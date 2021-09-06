@@ -38,6 +38,7 @@ import org.onap.policy.clamp.controlloop.participant.intermediary.api.Participan
 import org.onap.policy.clamp.controlloop.participant.policy.client.PolicyApiHttpClient;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
@@ -79,22 +80,25 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
      * @throws PfModelException in case of an exception
      */
     @Override
-    public void controlLoopElementStateChange(UUID controlLoopElementId, ControlLoopState currentState,
+    public void controlLoopElementStateChange(ToscaConceptIdentifier controlLoopId,
+                UUID controlLoopElementId, ControlLoopState currentState,
             ControlLoopOrderedState newState) throws PfModelException {
         switch (newState) {
             case UNINITIALISED:
                 try {
-                    deletePolicyData(controlLoopElementId, newState);
+                    deletePolicyData(controlLoopId, controlLoopElementId, newState);
                 } catch (PfModelRuntimeException e) {
                     LOGGER.debug("Deleting policy data failed", e);
                 }
                 break;
             case PASSIVE:
-                intermediaryApi.updateControlLoopElementState(controlLoopElementId, newState, ControlLoopState.PASSIVE,
+                intermediaryApi.updateControlLoopElementState(controlLoopId,
+                    controlLoopElementId, newState, ControlLoopState.PASSIVE,
                     ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
                 break;
             case RUNNING:
-                intermediaryApi.updateControlLoopElementState(controlLoopElementId, newState, ControlLoopState.RUNNING,
+                intermediaryApi.updateControlLoopElementState(controlLoopId,
+                    controlLoopElementId, newState, ControlLoopState.RUNNING,
                     ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
                 break;
             default:
@@ -103,7 +107,8 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
         }
     }
 
-    private void deletePolicyData(UUID controlLoopElementId, ControlLoopOrderedState newState) {
+    private void deletePolicyData(ToscaConceptIdentifier controlLoopId,
+            UUID controlLoopElementId, ControlLoopOrderedState newState) {
         // Delete all policies of this controlLoop from policy framework
         for (Entry<String, String> policy : policyMap.entrySet()) {
             apiHttpClient.deletePolicy(policy.getKey(), policy.getValue());
@@ -114,7 +119,8 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
             apiHttpClient.deletePolicyType(policyType.getKey(), policyType.getValue());
         }
         policyTypeMap.clear();
-        intermediaryApi.updateControlLoopElementState(controlLoopElementId, newState, ControlLoopState.UNINITIALISED,
+        intermediaryApi.updateControlLoopElementState(controlLoopId,
+            controlLoopElementId, newState, ControlLoopState.UNINITIALISED,
             ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
     }
 
@@ -126,9 +132,10 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
      * @throws PfModelException in case of an exception
      */
     @Override
-    public void controlLoopElementUpdate(ControlLoopElement element, ToscaNodeTemplate clElementDefinition)
+    public void controlLoopElementUpdate(ToscaConceptIdentifier controlLoopId, ControlLoopElement element,
+                ToscaNodeTemplate clElementDefinition)
             throws PfModelException {
-        intermediaryApi.updateControlLoopElementState(element.getId(), element.getOrderedState(),
+        intermediaryApi.updateControlLoopElementState(controlLoopId, element.getId(), element.getOrderedState(),
                 ControlLoopState.PASSIVE, ParticipantMessageType.CONTROL_LOOP_UPDATE);
         ToscaServiceTemplate controlLoopDefinition = element.getToscaServiceTemplateFragment();
         if (controlLoopDefinition.getToscaTopologyTemplate() != null) {

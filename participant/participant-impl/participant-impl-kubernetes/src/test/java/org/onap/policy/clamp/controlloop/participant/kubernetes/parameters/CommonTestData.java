@@ -150,4 +150,12 @@ public class CommonTestData {
         topicParams.setServers(Arrays.asList("localhost"));
         return topicParams;
     }
+
+    /**
+     * Get controlloop id.
+     * @return ToscaConceptIdentifier controlLoopId
+     */
+    public ToscaConceptIdentifier getControlLoopId() {
+        return new ToscaConceptIdentifier("PMSHInstance0", "1.0.0");
+    }
 }

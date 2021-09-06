@@ -88,8 +88,8 @@ public class ControlLoopElementHandler implements ControlLoopElementListener, Cl
      * @throws PfModelException in case of a model exception
      */
     @Override
-    public void controlLoopElementStateChange(UUID controlLoopElementId, ControlLoopState currentState,
-                                              ControlLoopOrderedState newState) throws PfModelException {
+    public void controlLoopElementStateChange(ToscaConceptIdentifier controlLoopId, UUID controlLoopElementId,
+            ControlLoopState currentState, ControlLoopOrderedState newState) throws PfModelException {
         // Implementation not needed for http participant
     }
 
@@ -100,7 +100,8 @@ public class ControlLoopElementHandler implements ControlLoopElementListener, Cl
      * @param nodeTemplate toscaNodeTemplate
      */
     @Override
-    public void controlLoopElementUpdate(ControlLoopElement element, ToscaNodeTemplate nodeTemplate) {
+    public void controlLoopElementUpdate(ToscaConceptIdentifier controlLoopId, ControlLoopElement element,
+            ToscaNodeTemplate nodeTemplate) {
         try {
             var configRequest = CODER.convert(nodeTemplate.getProperties(), ConfigRequest.class);
             Set<ConstraintViolation<ConfigRequest>> violations = Validation.buildDefaultValidatorFactory()

@@ -45,6 +45,7 @@ import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.Parti
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ControlLoopElementListener;
 import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantParameters;
+import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
@@ -96,7 +97,8 @@ public class ControlLoopHandler {
      * @param newState the ordered state
      * @return controlLoopElement the updated controlloop element
      */
-    public ControlLoopElement updateControlLoopElementState(UUID id, ControlLoopOrderedState orderedState,
+    public ControlLoopElement updateControlLoopElementState(ToscaConceptIdentifier controlLoopId,
+            UUID id, ControlLoopOrderedState orderedState,
             ControlLoopState newState) {
 
         if (id == null) {
@@ -104,15 +106,24 @@ public class ControlLoopHandler {
         }
 
         ControlLoopElement clElement = elementsOnThisParticipant.get(id);
+        for (var controlLoop : controlLoopMap.values()) {
+            var element = controlLoop.getElements().get(id);
+            if (element != null) {
+                element.setState(newState);
+            }
+        }
+
         if (clElement != null) {
             var controlLoopStateChangeAck =
                     new ControlLoopAck(ParticipantMessageType.CONTROLLOOP_STATECHANGE_ACK);
             controlLoopStateChangeAck.setParticipantId(participantId);
             controlLoopStateChangeAck.setParticipantType(participantType);
+            controlLoopStateChangeAck.setControlLoopId(controlLoopId);
             clElement.setOrderedState(orderedState);
             clElement.setState(newState);
             controlLoopStateChangeAck.getControlLoopResultMap().put(clElement.getId(),
-                new  ControlLoopElementAck(true, "Control loop element {} state changed to {}\", id, newState)"));
+                new  ControlLoopElementAck(newState, true,
+                    "Control loop element {} state changed to {}\", id, newState)"));
             LOGGER.debug("Control loop element {} state changed to {}", id, newState);
             controlLoopStateChangeAck.setMessage("ControlLoopElement state changed to {} " + newState);
             controlLoopStateChangeAck.setResult(true);
@@ -219,6 +230,11 @@ public class ControlLoopHandler {
             return;
         }
 
+        if (updateMsg.getParticipantUpdatesList().isEmpty()) {
+            LOGGER.warn("No ControlLoopElement updates in message {}", updateMsg.getControlLoopId());
+            return;
+        }
+
         List<ControlLoopElement> clElements = storeElementsOnThisParticipant(updateMsg.getParticipantUpdatesList());
 
         try {
@@ -226,7 +242,8 @@ public class ControlLoopHandler {
                 ToscaNodeTemplate clElementNodeTemplate = getClElementNodeTemplate(
                         clElementDefinitions, element.getDefinition());
                 for (ControlLoopElementListener clElementListener : listeners) {
-                    clElementListener.controlLoopElementUpdate(element, clElementNodeTemplate);
+                    clElementListener.controlLoopElementUpdate(updateMsg.getControlLoopId(),
+                        element, clElementNodeTemplate);
                 }
             }
         } catch (PfModelException e) {
@@ -284,7 +301,8 @@ public class ControlLoopHandler {
         for (ControlLoopElementListener clElementListener : listeners) {
             try {
                 for (ControlLoopElement element : controlLoop.getElements().values()) {
-                    clElementListener.controlLoopElementStateChange(element.getId(), element.getState(), orderedState);
+                    clElementListener.controlLoopElementStateChange(controlLoop.getDefinition(),
+                        element.getId(), element.getState(), orderedState);
                 }
             } catch (PfModelException e) {
                 LOGGER.debug("Control loop element update failed {}", controlLoop.getDefinition());

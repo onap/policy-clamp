@@ -104,7 +104,8 @@ class ControlLoopElementHandlerTest {
         controlLoopElementHandler.setIntermediaryApi(intermediaryApi);
 
         UUID controlLoopElementId = UUID.randomUUID();
-        controlLoopElementHandler.controlLoopElementStateChange(controlLoopElementId, ControlLoopState.PASSIVE,
+        controlLoopElementHandler.controlLoopElementStateChange(TestListenerUtils.getControlLoopId(),
+                controlLoopElementId, ControlLoopState.PASSIVE,
                 ControlLoopOrderedState.UNINITIALISED);
 
         verify(clampClient).undeploy(LOOP);
@@ -137,7 +138,7 @@ class ControlLoopElementHandlerTest {
         element.setOrderedState(ControlLoopOrderedState.PASSIVE);
 
         final ToscaServiceTemplate controlLoopDefinition = new ToscaServiceTemplate();
-        controlLoopElementHandler.controlLoopElementUpdate(element,
+        controlLoopElementHandler.controlLoopElementUpdate(TestListenerUtils.getControlLoopId(), element,
             controlLoopDefinition.getToscaTopologyTemplate().getNodeTemplates()
             .get("org.onap.domain.pmsh.PMSH_DCAEMicroservice"));
 
@@ -169,7 +170,7 @@ class ControlLoopElementHandlerTest {
         element.setOrderedState(ControlLoopOrderedState.PASSIVE);
 
         ToscaServiceTemplate controlLoopDefinition = new ToscaServiceTemplate();
-        controlLoopElementHandler.controlLoopElementUpdate(element,
+        controlLoopElementHandler.controlLoopElementUpdate(TestListenerUtils.getControlLoopId(), element,
                 controlLoopDefinition.getToscaTopologyTemplate().getNodeTemplates()
                 .get("org.onap.domain.pmsh.PMSH_DCAEMicroservice"));
 

@@ -25,6 +25,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
@@ -57,6 +58,11 @@ public class ParticipantAckMessage {
     private ToscaConceptIdentifier participantId;
 
     /**
+     * Participant State, or {@code null} for messages from participants.
+     */
+    private ParticipantState state;
+
+    /**
      * Constructor for instantiating a participant ack message class.
      *
      * @param messageType the message type
@@ -77,6 +83,7 @@ public class ParticipantAckMessage {
         this.messageType = source.messageType;
         this.participantType = source.participantType;
         this.participantId = source.participantId;
+        this.state = source.state;
     }
 
     /**
