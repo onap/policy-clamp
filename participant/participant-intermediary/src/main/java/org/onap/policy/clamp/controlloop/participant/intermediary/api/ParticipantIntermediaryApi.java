@@ -116,7 +116,8 @@ public interface ParticipantIntermediaryApi {
      * @param newState the state of the control loop element
      * @return ControlLoopElement updated control loop element
      */
-    ControlLoopElement updateControlLoopElementState(UUID id, ControlLoopOrderedState currentState,
+    ControlLoopElement updateControlLoopElementState(ToscaConceptIdentifier controlLoopId,
+            UUID id, ControlLoopOrderedState currentState,
             ControlLoopState newState, ParticipantMessageType messageType);
 
     /**

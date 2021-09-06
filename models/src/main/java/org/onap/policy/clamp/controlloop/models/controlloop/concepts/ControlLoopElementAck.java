@@ -31,10 +31,12 @@ import lombok.ToString;
 @ToString
 public class ControlLoopElementAck {
 
+    // State of the controlLoopElement
+    private ControlLoopState state;
+
     // Result: Success/Fail.
     private Boolean result;
 
     // Message indicating reason for failure
     private String message;
-
 }

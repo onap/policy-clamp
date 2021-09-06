@@ -78,7 +78,7 @@ public class ParticipantUpdatePublisher extends AbstractParticipantPublisher<Par
         List<ParticipantDefinition> participantDefinitionUpdates = new ArrayList<>();
         for (Map.Entry<String, ToscaNodeTemplate> toscaInputEntry : toscaServiceTemplate.getToscaTopologyTemplate()
                 .getNodeTemplates().entrySet()) {
-            if (toscaInputEntry.getValue().getType().contains(CONTROL_LOOP_ELEMENT)) {
+            if (checkIfNodeTemplateIsControlLoopElement(toscaInputEntry.getValue(), toscaServiceTemplate)) {
                 ToscaConceptIdentifier clParticipantType;
                 try {
                     clParticipantType =
@@ -137,5 +137,13 @@ public class ParticipantUpdatePublisher extends AbstractParticipantPublisher<Par
         controlLoopElementDefinitionList.add(clDefinition);
         participantDefinition.setControlLoopElementDefinitionList(controlLoopElementDefinitionList);
         return participantDefinition;
+    }
+
+    private boolean checkIfNodeTemplateIsControlLoopElement(ToscaNodeTemplate toscaNodeTemplate,
+            ToscaServiceTemplate toscaServiceTemplate) {
+        return toscaNodeTemplate.getType().contains(CONTROL_LOOP_ELEMENT)
+            || (toscaServiceTemplate.getNodeTypes().containsKey(toscaNodeTemplate.getType())
+                && toscaServiceTemplate.getNodeTypes().get(toscaNodeTemplate.getType())
+                .getDerivedFrom().contains(CONTROL_LOOP_ELEMENT));
     }
 }

@@ -39,6 +39,7 @@ import org.onap.policy.clamp.controlloop.participant.intermediary.api.ControlLoo
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfModelException;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,23 +93,27 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
      * @param newState the state to which the control loop element is changing to
      */
     @Override
-    public void controlLoopElementStateChange(UUID controlLoopElementId, ControlLoopState currentState,
+    public void controlLoopElementStateChange(ToscaConceptIdentifier controlLoopId,
+            UUID controlLoopElementId, ControlLoopState currentState,
             ControlLoopOrderedState newState) {
         switch (newState) {
             case UNINITIALISED:
                 var loop = clampClient.getstatus(LOOP);
                 if (loop != null) {
                     clampClient.undeploy(LOOP);
-                    intermediaryApi.updateControlLoopElementState(controlLoopElementId, newState,
+                    intermediaryApi.updateControlLoopElementState(controlLoopId,
+                            controlLoopElementId, newState,
                             ControlLoopState.UNINITIALISED, ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
                 }
                 break;
             case PASSIVE:
-                intermediaryApi.updateControlLoopElementState(controlLoopElementId, newState, ControlLoopState.PASSIVE,
+                intermediaryApi.updateControlLoopElementState(controlLoopId,
+                    controlLoopElementId, newState, ControlLoopState.PASSIVE,
                     ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
                 break;
             case RUNNING:
-                intermediaryApi.updateControlLoopElementState(controlLoopElementId, newState, ControlLoopState.RUNNING,
+                intermediaryApi.updateControlLoopElementState(controlLoopId,
+                    controlLoopElementId, newState, ControlLoopState.RUNNING,
                     ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
                 break;
             default:
@@ -145,8 +150,9 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
      * @throws PfModelException in case of an exception
      */
     @Override
-    public void controlLoopElementUpdate(ControlLoopElement element, ToscaNodeTemplate nodeTemplate)
-            throws PfModelException {
+    public void controlLoopElementUpdate(ToscaConceptIdentifier controlLoopId,
+            ControlLoopElement element, ToscaNodeTemplate nodeTemplate)
+             throws PfModelException {
         try {
             var loop = getStatus();
 
@@ -159,16 +165,18 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
                     loop = getStatus();
                     String status = ClampHttpClient.getStatusCode(loop);
                     if (MICROSERVICE_INSTALLED_SUCCESSFULLY.equals(status)) {
-                        intermediaryApi.updateControlLoopElementState(element.getId(), element.getOrderedState(),
-                                ControlLoopState.PASSIVE, ParticipantMessageType.CONTROL_LOOP_UPDATE);
+                        intermediaryApi.updateControlLoopElementState(controlLoopId, element.getId(),
+                            element.getOrderedState(), ControlLoopState.PASSIVE,
+                            ParticipantMessageType.CONTROL_LOOP_UPDATE);
                         deployedFlag = true;
                         break;
                     }
                 }
                 if (!deployedFlag) {
                     LOGGER.warn("DCAE is not deployed properly, ClElement state will be UNINITIALISED2PASSIVE");
-                    intermediaryApi.updateControlLoopElementState(element.getId(), element.getOrderedState(),
-                            ControlLoopState.UNINITIALISED2PASSIVE, ParticipantMessageType.CONTROL_LOOP_UPDATE);
+                    intermediaryApi.updateControlLoopElementState(controlLoopId, element.getId(),
+                        element.getOrderedState(), ControlLoopState.UNINITIALISED2PASSIVE,
+                        ParticipantMessageType.CONTROL_LOOP_UPDATE);
                 }
             }
         } catch (PfModelException e) {

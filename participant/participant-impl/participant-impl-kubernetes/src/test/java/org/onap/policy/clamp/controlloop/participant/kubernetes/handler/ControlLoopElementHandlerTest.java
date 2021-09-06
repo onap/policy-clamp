@@ -47,6 +47,7 @@ import org.onap.policy.clamp.controlloop.participant.intermediary.api.Participan
 import org.onap.policy.clamp.controlloop.participant.kubernetes.exception.ServiceException;
 import org.onap.policy.clamp.controlloop.participant.kubernetes.models.ChartInfo;
 import org.onap.policy.clamp.controlloop.participant.kubernetes.models.ChartList;
+import org.onap.policy.clamp.controlloop.participant.kubernetes.parameters.CommonTestData;
 import org.onap.policy.clamp.controlloop.participant.kubernetes.service.ChartService;
 import org.onap.policy.clamp.controlloop.participant.kubernetes.utils.TestUtils;
 import org.onap.policy.common.utils.coder.Coder;
@@ -69,7 +70,7 @@ class ControlLoopElementHandlerTest {
     private static ToscaServiceTemplate toscaServiceTemplate;
     private static final String K8S_CONTROL_LOOP_ELEMENT =
         "org.onap.domain.database.PMSH_K8SMicroserviceControlLoopElement";
-
+    private CommonTestData commonTestData = new CommonTestData();
 
     @InjectMocks
     @Spy
@@ -98,19 +99,19 @@ class ControlLoopElementHandlerTest {
 
         doNothing().when(chartService).uninstallChart(charts.get(0));
 
-        controlLoopElementHandler.controlLoopElementStateChange(controlLoopElementId1, ControlLoopState.PASSIVE,
-            ControlLoopOrderedState.UNINITIALISED);
+        controlLoopElementHandler.controlLoopElementStateChange(commonTestData.getControlLoopId(),
+            controlLoopElementId1, ControlLoopState.PASSIVE, ControlLoopOrderedState.UNINITIALISED);
 
         doThrow(new ServiceException("Error uninstalling the chart")).when(chartService)
             .uninstallChart(charts.get(0));
 
         assertDoesNotThrow(() -> controlLoopElementHandler
-            .controlLoopElementStateChange(controlLoopElementId1, ControlLoopState.PASSIVE,
-                ControlLoopOrderedState.UNINITIALISED));
+            .controlLoopElementStateChange(commonTestData.getControlLoopId(), controlLoopElementId1,
+                ControlLoopState.PASSIVE, ControlLoopOrderedState.UNINITIALISED));
 
         assertDoesNotThrow(() -> controlLoopElementHandler
-            .controlLoopElementStateChange(controlLoopElementId1, ControlLoopState.PASSIVE,
-                ControlLoopOrderedState.RUNNING));
+            .controlLoopElementStateChange(commonTestData.getControlLoopId(), controlLoopElementId1,
+                ControlLoopState.PASSIVE, ControlLoopOrderedState.RUNNING));
 
     }
 
@@ -125,7 +126,8 @@ class ControlLoopElementHandlerTest {
 
         Map<String, ToscaNodeTemplate> nodeTemplatesMap =
                 toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates();
-        controlLoopElementHandler.controlLoopElementUpdate(element, nodeTemplatesMap.get(K8S_CONTROL_LOOP_ELEMENT));
+        controlLoopElementHandler.controlLoopElementUpdate(commonTestData.getControlLoopId(), element,
+            nodeTemplatesMap.get(K8S_CONTROL_LOOP_ELEMENT));
 
         assertThat(controlLoopElementHandler.getChartMap()).hasSize(1).containsKey(elementId1);
 
@@ -134,7 +136,8 @@ class ControlLoopElementHandlerTest {
 
         UUID elementId2 = UUID.randomUUID();
         element.setId(elementId2);
-        controlLoopElementHandler.controlLoopElementUpdate(element, nodeTemplatesMap.get(K8S_CONTROL_LOOP_ELEMENT));
+        controlLoopElementHandler.controlLoopElementUpdate(commonTestData.getControlLoopId(), element,
+            nodeTemplatesMap.get(K8S_CONTROL_LOOP_ELEMENT));
 
         assertThat(controlLoopElementHandler.getChartMap().containsKey(elementId2)).isFalse();
     }

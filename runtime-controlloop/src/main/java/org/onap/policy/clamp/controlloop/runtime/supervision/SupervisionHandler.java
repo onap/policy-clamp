@@ -22,11 +22,15 @@
 package org.onap.policy.clamp.controlloop.runtime.supervision;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import javax.ws.rs.core.Response;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElementAck;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopInfo;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
@@ -166,6 +170,22 @@ public class SupervisionHandler {
     @MessageIntercept
     public void handleParticipantMessage(ParticipantUpdateAck participantUpdateAckMessage) {
         LOGGER.debug("Participant Update Ack received {}", participantUpdateAckMessage);
+        try {
+            var participantList =
+                participantProvider.getParticipants(participantUpdateAckMessage.getParticipantId().getName(),
+                    participantUpdateAckMessage.getParticipantId().getVersion());
+
+            if (participantList != null) {
+                for (Participant participant : participantList) {
+                    participant.setParticipantState(participantUpdateAckMessage.getState());
+                }
+                participantProvider.updateParticipants(participantList);
+            } else {
+                LOGGER.warn("Participant not found in database {}", participantUpdateAckMessage.getParticipantId());
+            }
+        } catch (PfModelException pfme) {
+            LOGGER.warn("Model exception occured {}", participantUpdateAckMessage.getParticipantId());
+        }
     }
 
     /**
@@ -200,6 +220,7 @@ public class SupervisionHandler {
     @MessageIntercept
     public void handleControlLoopUpdateAckMessage(ControlLoopAck controlLoopAckMessage) {
         LOGGER.debug("ControlLoop Update Ack message received {}", controlLoopAckMessage);
+        setClElementStateInDb(controlLoopAckMessage);
     }
 
     /**
@@ -210,6 +231,39 @@ public class SupervisionHandler {
     @MessageIntercept
     public void handleControlLoopStateChangeAckMessage(ControlLoopAck controlLoopAckMessage) {
         LOGGER.debug("ControlLoop StateChange Ack message received {}", controlLoopAckMessage);
+        setClElementStateInDb(controlLoopAckMessage);
+    }
+
+    private void setClElementStateInDb(ControlLoopAck controlLoopAckMessage) {
+        if (controlLoopAckMessage.getControlLoopResultMap() != null) {
+            try {
+                var controlLoop = controlLoopProvider.getControlLoop(controlLoopAckMessage.getControlLoopId());
+                if (controlLoop != null) {
+                    var updated = updateState(controlLoop, controlLoopAckMessage
+                            .getControlLoopResultMap().entrySet());
+                    if (updated) {
+                        controlLoopProvider.updateControlLoop(controlLoop);
+                    }
+                } else {
+                    LOGGER.warn("ControlLoop not found in database {}", controlLoopAckMessage.getControlLoopId());
+                }
+            } catch (PfModelException pfme) {
+                LOGGER.warn("Model exception occured {}", controlLoopAckMessage.getControlLoopId());
+            }
+        }
+    }
+
+    private boolean updateState(ControlLoop controlLoop, Set<Map.Entry<UUID, ControlLoopElementAck>>
+            controlLoopResultSet) {
+        var updated = false;
+        for (var clElementAck : controlLoopResultSet) {
+            if (controlLoop.getElements().containsKey(clElementAck.getKey())) {
+                controlLoop.getElements().get(clElementAck.getKey())
+                        .setState(clElementAck.getValue().getState());
+                updated = true;
+            }
+        }
+        return updated;
     }
 
     /**

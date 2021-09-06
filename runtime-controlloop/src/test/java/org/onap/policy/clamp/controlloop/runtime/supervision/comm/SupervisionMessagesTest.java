@@ -193,7 +193,7 @@ class SupervisionMessagesTest extends CommonRestController {
         List<ParticipantDefinition> participantDefinitionUpdates = new ArrayList<>();
         for (Map.Entry<String, ToscaNodeTemplate> toscaInputEntry :
             toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates().entrySet()) {
-            if (toscaInputEntry.getValue().getType().contains(CONTROL_LOOP_ELEMENT)) {
+            if (checkIfNodeTemplateIsControlLoopElement(toscaInputEntry.getValue(), toscaServiceTemplate)) {
                 ToscaConceptIdentifier clParticipantType;
                 try {
                     clParticipantType = CODER.decode(
@@ -214,6 +214,14 @@ class SupervisionMessagesTest extends CommonRestController {
             participantUpdatePublisher.active(Collections.singletonList(Mockito.mock(TopicSink.class)));
             assertThatCode(() -> participantUpdatePublisher.send(participantUpdateMsg)).doesNotThrowAnyException();
         }
+    }
+
+    private boolean checkIfNodeTemplateIsControlLoopElement(ToscaNodeTemplate toscaNodeTemplate,
+            ToscaServiceTemplate toscaServiceTemplate) {
+        return toscaNodeTemplate.getType().contains(CONTROL_LOOP_ELEMENT)
+            || (toscaServiceTemplate.getNodeTypes().containsKey(toscaNodeTemplate.getType())
+                && toscaServiceTemplate.getNodeTypes().get(toscaNodeTemplate.getType())
+                .getDerivedFrom().contains(CONTROL_LOOP_ELEMENT));
     }
 
     private void prepareParticipantDefinitionUpdate(ToscaConceptIdentifier clParticipantType, String entryKey,
@@ -259,6 +267,8 @@ class SupervisionMessagesTest extends CommonRestController {
         participantUpdateAckMsg.setMessage("ParticipantUpdateAck message");
         participantUpdateAckMsg.setResponseTo(UUID.randomUUID());
         participantUpdateAckMsg.setResult(true);
+        participantUpdateAckMsg.setParticipantId(getParticipantId());
+        participantUpdateAckMsg.setParticipantType(getParticipantType());
 
         synchronized (lockit) {
             ParticipantUpdateAckListener participantUpdateAckListener =

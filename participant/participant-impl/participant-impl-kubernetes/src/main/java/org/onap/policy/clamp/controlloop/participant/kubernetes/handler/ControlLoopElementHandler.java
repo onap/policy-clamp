@@ -44,6 +44,7 @@ import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.base.PfModelException;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,8 +88,8 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
      * @param newState the state to which the control loop element is changing to
      */
     @Override
-    public synchronized void controlLoopElementStateChange(UUID controlLoopElementId, ControlLoopState currentState,
-                                                           ControlLoopOrderedState newState) {
+    public synchronized void controlLoopElementStateChange(ToscaConceptIdentifier controlLoopId,
+            UUID controlLoopElementId, ControlLoopState currentState, ControlLoopOrderedState newState) {
         switch (newState) {
             case UNINITIALISED:
                 ChartInfo chart = chartMap.get(controlLoopElementId);
@@ -96,8 +97,9 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
                     LOGGER.info("Helm deployment to be deleted {} ", chart.getReleaseName());
                     try {
                         chartService.uninstallChart(chart);
-                        intermediaryApi.updateControlLoopElementState(controlLoopElementId, newState,
-                            ControlLoopState.UNINITIALISED, ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
+                        intermediaryApi.updateControlLoopElementState(controlLoopId,
+                            controlLoopElementId, newState, ControlLoopState.UNINITIALISED,
+                            ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
                         chartMap.remove(controlLoopElementId);
                         podStatusMap.remove(chart.getReleaseName());
                     } catch (ServiceException se) {
@@ -106,11 +108,13 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
                 }
                 break;
             case PASSIVE:
-                intermediaryApi.updateControlLoopElementState(controlLoopElementId, newState, ControlLoopState.PASSIVE,
+                intermediaryApi.updateControlLoopElementState(controlLoopId,
+                    controlLoopElementId, newState, ControlLoopState.PASSIVE,
                     ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
                 break;
             case RUNNING:
-                intermediaryApi.updateControlLoopElementState(controlLoopElementId, newState, ControlLoopState.RUNNING,
+                intermediaryApi.updateControlLoopElementState(controlLoopId,
+                    controlLoopElementId, newState, ControlLoopState.RUNNING,
                     ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
                 break;
             default:
@@ -128,8 +132,8 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
      * @throws PfModelException in case of an exception
      */
     @Override
-    public synchronized void controlLoopElementUpdate(ControlLoopElement element,
-            ToscaNodeTemplate nodeTemplate) throws PfModelException {
+    public synchronized void controlLoopElementUpdate(ToscaConceptIdentifier controlLoopId,
+            ControlLoopElement element, ToscaNodeTemplate nodeTemplate) throws PfModelException {
         @SuppressWarnings("unchecked")
         Map<String, Object> chartData =
             (Map<String, Object>) nodeTemplate.getProperties().get("chart");
