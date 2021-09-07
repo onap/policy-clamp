@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "69ea6134_bc9ab462",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ControlLoopProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-09-07T14:00:41Z",
+      "side": 1,
+      "message": "this appears to be unused",
+      "range": {
+        "startLine": 231,
+        "startChar": 35,
+        "endLine": 231,
+        "endChar": 58
+      },
+      "revId": "206ac0d9fe06a38e453c7a0867b7bdd026a9da40",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0539cb7d_758e6544",
         "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
         "patchSetId": 1
@@ -49,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "d6cc8cf2_12a07dac",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-09-07T14:00:41Z",
+      "side": 1,
+      "message": "it\u0027s from policy-common",
+      "parentUuid": "6ea54c32_6bb8ec19",
+      "range": {
+        "startLine": 107,
+        "startChar": 27,
+        "endLine": 107,
+        "endChar": 40
+      },
+      "revId": "206ac0d9fe06a38e453c7a0867b7bdd026a9da40",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6e074283_01d34d8a",
         "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
         "patchSetId": 1
@@ -66,6 +113,144 @@
         "endLine": 110,
         "endChar": 72
       },
+      "revId": "206ac0d9fe06a38e453c7a0867b7bdd026a9da40",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2ae4d324_9c994387",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-09-07T14:00:41Z",
+      "side": 1,
+      "message": "probably can\u0027t use StandardCoder here - it doesn\u0027t support the Type argument\n\nsince gson is required here, might as well use it on line 107, too.  However, the \"gson\" object should be \"static\" so it\u0027s only created once",
+      "parentUuid": "6e074283_01d34d8a",
+      "range": {
+        "startLine": 110,
+        "startChar": 59,
+        "endLine": 110,
+        "endChar": 72
+      },
+      "revId": "206ac0d9fe06a38e453c7a0867b7bdd026a9da40",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "27ff8309_c80d9b99",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-09-07T14:00:41Z",
+      "side": 1,
+      "message": "can combine with line 120 using:\n\n  new HashMap\u003c\u003e(temp.getProps())",
+      "revId": "206ac0d9fe06a38e453c7a0867b7bdd026a9da40",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c63d4abe_f1f42658",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-09-07T14:00:41Z",
+      "side": 1,
+      "message": "move this line outside of the forEach()",
+      "revId": "206ac0d9fe06a38e453c7a0867b7bdd026a9da40",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d7f15b62_9ca91ed9",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 420,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-09-07T14:00:41Z",
+      "side": 1,
+      "message": "maybe use this instead:\n\n  keySet().stream()\n\nsame comment below",
+      "range": {
+        "startLine": 420,
+        "startChar": 94,
+        "endLine": 420,
+        "endChar": 102
+      },
+      "revId": "206ac0d9fe06a38e453c7a0867b7bdd026a9da40",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d4f48639_438778b2",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-09-07T14:00:41Z",
+      "side": 1,
+      "message": "return s1",
+      "range": {
+        "startLine": 482,
+        "startChar": 12,
+        "endLine": 482,
+        "endChar": 21
+      },
+      "revId": "206ac0d9fe06a38e453c7a0867b7bdd026a9da40",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "01195d10_3f49cb8c",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 534,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-09-07T14:00:41Z",
+      "side": 1,
+      "message": "sonar: need parameter types (of course, then you\u0027ll have to suppress an eclipse warning)",
+      "revId": "206ac0d9fe06a38e453c7a0867b7bdd026a9da40",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cfe97e87_7b3651a2",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/rest/CommissioningController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 442,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-09-07T14:00:41Z",
+      "side": 1,
+      "message": "sonar: only throw one exception type",
       "revId": "206ac0d9fe06a38e453c7a0867b7bdd026a9da40",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
