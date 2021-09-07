@@ -186,38 +186,6 @@
                                 </assembly>
                             </build>
                         </image>
-                        <image>
-                            <name>onap/dcae-participant</name>
-                            <alias>onap-dcae-participant</alias>
-                            <build>
-                                <cleanup>try</cleanup>
-                                <dockerFile>DcaeParticipantDockerfile</dockerFile>
-                                <tags>
-                                    <tag>${project.version}</tag>
-                                    <tag>${project.version}-${maven.build.timestamp}</tag>
-                                    <tag>${project.docker.latest.minmax.tag.version}</tag>
-                                </tags>
-                                <assembly>
-                                    <inline>
-                                        <dependencySets>
-                                            <dependencySet>
-                                                <includes>
-                                                    <include>org.onap.policy.clamp:policy-clamp-tarball</include>
-                                                </includes>
-                                                <outputDirectory>/lib</outputDirectory>
-                                                <outputFileNameMapping>dcae-participant.tar.gz</outputFileNameMapping>
-                                            </dependencySet>
-                                            <dependencySet>
-                                                <includes>
-                                                    <include>org.onap.policy.clamp.participant:policy-clamp-participant-impl-dcae</include>
-                                                </includes>
-                                                <outputFileNameMapping>app.jar</outputFileNameMapping>
-                                            </dependencySet>
-                                        </dependencySets>
-                                    </inline>
-                                </assembly>
-                            </build>
-                        </image>
                     </images>
                 </configuration>
 
@@ -276,11 +244,6 @@
         <dependency>
             <groupId>org.onap.policy.clamp.participant</groupId>
             <artifactId>policy-clamp-participant-impl-policy</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.onap.policy.clamp.participant</groupId>
-            <artifactId>policy-clamp-participant-impl-dcae</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
