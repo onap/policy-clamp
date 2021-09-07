@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "43c5cee1_8b7132bf",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/test/java/org/onap/policy/clamp/controlloop/participant/dcae/main/rest/TestListenerUtils.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-09-07T14:14:33Z",
+      "side": 1,
+      "message": "is there a more specific/appropriate exception type than simply RuntimeException?",
+      "range": {
+        "startLine": 225,
+        "startChar": 30,
+        "endLine": 225,
+        "endChar": 46
+      },
+      "revId": "b22365416fbb6a9ee99846608ea0b9849d43904b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "28ff2c0e_3a3ef4c3",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/test/java/org/onap/policy/clamp/controlloop/participant/dcae/main/rest/TestListenerUtils.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-09-07T14:14:33Z",
+      "side": 1,
+      "message": "refactor this common code into a method",
+      "range": {
+        "startLine": 222,
+        "startChar": 16,
+        "endLine": 226,
+        "endChar": 17
+      },
+      "revId": "b22365416fbb6a9ee99846608ea0b9849d43904b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
