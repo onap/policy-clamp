@@ -44,11 +44,6 @@
         </dependency>
         <dependency>
             <groupId>org.onap.policy.clamp.participant</groupId>
-            <artifactId>policy-clamp-participant-impl-dcae</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.onap.policy.clamp.participant</groupId>
             <artifactId>policy-clamp-participant-impl-kubernetes</artifactId>
             <version>${project.version}</version>
         </dependency>
