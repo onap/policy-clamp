@@ -1,0 +1,193 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6eac5420_7228bae2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-09-07T14:22:21Z",
+      "side": 1,
+      "message": "lines should be ~72 characters",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 0
+      },
+      "revId": "31684da9012b9510d21563e582bff313af1dcadc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "773ad261_67d40c90",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/test/java/org/onap/policy/clamp/controlloop/participant/dcae/main/rest/TestListenerUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-09-07T14:22:21Z",
+      "side": 1,
+      "message": "is it possible for derived-from to be null?  if so, this can throw an NPE.  If not, it\u0027s fine as is",
+      "range": {
+        "startLine": 180,
+        "startChar": 17,
+        "endLine": 180,
+        "endChar": 31
+      },
+      "revId": "31684da9012b9510d21563e582bff313af1dcadc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d0fa9f53_3ba37053",
+        "filename": "participant/participant-impl/participant-impl-policy/src/test/java/org/onap/policy/clamp/controlloop/participant/policy/main/utils/TestListenerUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-09-07T14:22:21Z",
+      "side": 1,
+      "message": "same question",
+      "range": {
+        "startLine": 195,
+        "startChar": 17,
+        "endLine": 195,
+        "endChar": 31
+      },
+      "revId": "31684da9012b9510d21563e582bff313af1dcadc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6360697a_d20271f9",
+        "filename": "participant/participant-impl/participant-impl-simulator/src/test/java/org/onap/policy/clamp/controlloop/participant/simulator/main/rest/TestListenerUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-09-07T14:22:21Z",
+      "side": 1,
+      "message": "third time we\u0027ve seen this code - appear to need some refactoring",
+      "revId": "31684da9012b9510d21563e582bff313af1dcadc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "441c307c_7e9845b8",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ControlLoopHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-09-07T14:22:21Z",
+      "side": 1,
+      "message": "loop over values instead",
+      "range": {
+        "startLine": 109,
+        "startChar": 89,
+        "endLine": 109,
+        "endChar": 97
+      },
+      "revId": "31684da9012b9510d21563e582bff313af1dcadc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "610f0c82_c6507f71",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ControlLoopHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-09-07T14:22:21Z",
+      "side": 1,
+      "message": "combine these two lines - do a single \"get\" and then check for null, thus avoiding a double look-up in the map",
+      "range": {
+        "startLine": 110,
+        "startChar": 12,
+        "endLine": 111,
+        "endChar": 80
+      },
+      "revId": "31684da9012b9510d21563e582bff313af1dcadc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "967414ed_9e163a32",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-09-07T14:22:21Z",
+      "side": 1,
+      "message": "same comment as before - combine these lines into a single \"get\" call",
+      "range": {
+        "startLine": 260,
+        "startChar": 11,
+        "endLine": 261,
+        "endChar": 68
+      },
+      "revId": "31684da9012b9510d21563e582bff313af1dcadc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "614d2fc3_e6ff0543",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/comm/ParticipantUpdatePublisher.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-09-07T14:22:21Z",
+      "side": 1,
+      "message": "same comment",
+      "revId": "31684da9012b9510d21563e582bff313af1dcadc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fa00ea3b_1019c80f",
+        "filename": "runtime-controlloop/src/test/java/org/onap/policy/clamp/controlloop/runtime/supervision/comm/SupervisionMessagesTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-09-07T14:22:21Z",
+      "side": 1,
+      "message": "same comment",
+      "revId": "31684da9012b9510d21563e582bff313af1dcadc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
