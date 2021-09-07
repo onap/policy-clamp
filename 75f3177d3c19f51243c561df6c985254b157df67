@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "24d7ae7c_8eeecadf",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ParticipantUtils.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-09-07T17:14:10Z",
+      "side": 1,
+      "message": "use lombok instead, AccessLevel.PRIVATE",
+      "revId": "75f3177d3c19f51243c561df6c985254b157df67",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
