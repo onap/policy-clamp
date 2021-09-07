@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "33057ac9_bff3d6d1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-09-07T16:57:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6eac5420_7228bae2",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 0
+      },
+      "revId": "31684da9012b9510d21563e582bff313af1dcadc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "773ad261_67d40c90",
         "filename": "participant/participant-impl/participant-impl-dcae/src/test/java/org/onap/policy/clamp/controlloop/participant/dcae/main/rest/TestListenerUtils.java",
         "patchSetId": 1
@@ -45,6 +69,30 @@
       "revId": "31684da9012b9510d21563e582bff313af1dcadc",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6d30bc68_76fecd58",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/test/java/org/onap/policy/clamp/controlloop/participant/dcae/main/rest/TestListenerUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-09-07T16:57:11Z",
+      "side": 1,
+      "message": "If the derived-from is null for a node-type referenced a type, then it should be an error in the ToscaServiceTemplate. To be on safer side and avoid NPE, i have split the expression, Hope that is fine.",
+      "parentUuid": "773ad261_67d40c90",
+      "range": {
+        "startLine": 180,
+        "startChar": 17,
+        "endLine": 180,
+        "endChar": 31
+      },
+      "revId": "31684da9012b9510d21563e582bff313af1dcadc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "2a65e4ed_2878977f",
+        "filename": "participant/participant-impl/participant-impl-policy/src/test/java/org/onap/policy/clamp/controlloop/participant/policy/main/utils/TestListenerUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-09-07T16:57:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d0fa9f53_3ba37053",
+      "range": {
+        "startLine": 195,
+        "startChar": 17,
+        "endLine": 195,
+        "endChar": 31
+      },
+      "revId": "31684da9012b9510d21563e582bff313af1dcadc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6360697a_d20271f9",
         "filename": "participant/participant-impl/participant-impl-simulator/src/test/java/org/onap/policy/clamp/controlloop/participant/simulator/main/rest/TestListenerUtils.java",
         "patchSetId": 1
@@ -85,6 +157,24 @@
       "revId": "31684da9012b9510d21563e582bff313af1dcadc",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "75eeab76_ea567344",
+        "filename": "participant/participant-impl/participant-impl-simulator/src/test/java/org/onap/policy/clamp/controlloop/participant/simulator/main/rest/TestListenerUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-09-07T16:57:11Z",
+      "side": 1,
+      "message": "Yes, There is no common test utils for the moment. Will consider having a common Test Utility for all participants, as everything in this utility is repeated and duplicate. Will take care of it in the complete refactoring story in Jakarta.",
+      "parentUuid": "6360697a_d20271f9",
+      "revId": "31684da9012b9510d21563e582bff313af1dcadc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -111,6 +201,30 @@
     },
     {
       "key": {
+        "uuid": "12149d72_2befa50a",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ControlLoopHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-09-07T16:57:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "441c307c_7e9845b8",
+      "range": {
+        "startLine": 109,
+        "startChar": 89,
+        "endLine": 109,
+        "endChar": 97
+      },
+      "revId": "31684da9012b9510d21563e582bff313af1dcadc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "610f0c82_c6507f71",
         "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ControlLoopHandler.java",
         "patchSetId": 1
@@ -131,6 +245,30 @@
       "revId": "31684da9012b9510d21563e582bff313af1dcadc",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "263b7bb9_b53d8026",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ControlLoopHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-09-07T16:57:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "610f0c82_c6507f71",
+      "range": {
+        "startLine": 110,
+        "startChar": 12,
+        "endLine": 111,
+        "endChar": 80
+      },
+      "revId": "31684da9012b9510d21563e582bff313af1dcadc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -157,6 +295,30 @@
     },
     {
       "key": {
+        "uuid": "ebeed618_3390a7f0",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-09-07T16:57:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "967414ed_9e163a32",
+      "range": {
+        "startLine": 260,
+        "startChar": 11,
+        "endLine": 261,
+        "endChar": 68
+      },
+      "revId": "31684da9012b9510d21563e582bff313af1dcadc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "614d2fc3_e6ff0543",
         "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/comm/ParticipantUpdatePublisher.java",
         "patchSetId": 1
@@ -174,6 +336,24 @@
     },
     {
       "key": {
+        "uuid": "dfecfb0a_9577bf0a",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/comm/ParticipantUpdatePublisher.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-09-07T16:57:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "614d2fc3_e6ff0543",
+      "revId": "31684da9012b9510d21563e582bff313af1dcadc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa00ea3b_1019c80f",
         "filename": "runtime-controlloop/src/test/java/org/onap/policy/clamp/controlloop/runtime/supervision/comm/SupervisionMessagesTest.java",
         "patchSetId": 1
@@ -188,6 +368,24 @@
       "revId": "31684da9012b9510d21563e582bff313af1dcadc",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "61ee2519_973da440",
+        "filename": "runtime-controlloop/src/test/java/org/onap/policy/clamp/controlloop/runtime/supervision/comm/SupervisionMessagesTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-09-07T16:57:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa00ea3b_1019c80f",
+      "revId": "31684da9012b9510d21563e582bff313af1dcadc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
