@@ -7,7 +7,7 @@ security:
   enable-csrf: false
 
 participant:
-  localChartDirectory: /var/helm-manager/local-charts
+  localChartDirectory: /home/policy/local-charts
   infoFileName: CHART_INFO.json
   intermediaryParameters:
     reportingTimeIntervalMs: 120000
@@ -53,4 +53,4 @@ logging:
     org.springframework.data: ERROR
     org.springframework.web.reactive.function.client.ExchangeFunctions: ERROR
   file:
-    name: /var/log/helm-manager/application.log
+    name: /var/log/onap/policy/clamp/application.log

@@ -183,12 +183,16 @@ public class HelmClient {
     }
 
     private ProcessBuilder prepareRepoAddCommand(HelmRepository repo) {
+        var url = repo.getProtocol() + "://" + repo.getAddress();
+        if (repo.getPort() != null) {
+            url =  url + ":" + repo.getPort();
+        }
         // @formatter:off
         List<String> helmArguments = new ArrayList<>(
                 List.of(
                         "helm",
                         "repo",
-                        "add", repo.getRepoName(), repo.getProtocol() + "://" + repo.getAddress() + ":" + repo.getPort()
+                        "add", repo.getRepoName(), url
                 ));
         if (repo.getUserName() != null && repo.getPassword() != null) {
             helmArguments.addAll(List.of("--username", repo.getUserName(), "--password",  repo.getPassword()));
