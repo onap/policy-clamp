@@ -92,7 +92,7 @@
 
                     <images>
                         <image>
-                            <name>onap/policy-controlloop-runtime</name>
+                            <name>onap/policy-clamp-cl-runtime</name>
                             <build>
                                 <cleanup>try</cleanup>
                                 <dockerFile>ClRuntimeDockerfile</dockerFile>
@@ -123,8 +123,8 @@
                             </build>
                         </image>
                         <image>
-                            <name>onap/policy-participant</name>
-                            <alias>onap-policy-participant</alias>
+                            <name>onap/policy-clamp-cl-policy-participant</name>
+                            <alias>onap-policy-clamp-cl-policy-participant</alias>
                             <build>
                                 <cleanup>try</cleanup>
                                 <dockerFile>PolicyParticipantDockerfile</dockerFile>
@@ -155,8 +155,8 @@
                             </build>
                         </image>
                         <image>
-                            <name>onap/kubernetes-participant</name>
-                            <alias>onap-kubernetes-participant</alias>
+                            <name>onap/policy-clamp-cl-k8s-participant</name>
+                            <alias>onap-policy-clamp-cl-k8s-participant</alias>
                             <build>
                                 <cleanup>try</cleanup>
                                 <dockerFile>KubernetesParticipantDockerfile</dockerFile>
@@ -219,8 +219,8 @@
                             </build>
                         </image>
                         <image>
-                            <name>onap/http-participant</name>
-                            <alias>onap-http-participant</alias>
+                            <name>onap/policy-clamp-cl-http-participant</name>
+                            <alias>onap-policy-clamp-cl-http-participant</alias>
                             <build>
                                 <cleanup>try</cleanup>
                                 <dockerFile>HttpParticipantDockerfile</dockerFile>
