@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f95e7ef9_06dfbdec",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/handler/ControlLoopElementHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-09-08T13:32:31Z",
+      "side": 1,
+      "message": "File removed. Git automerged while rebase.",
+      "parentUuid": "dea123c9_44f26c01",
+      "range": {
+        "startLine": 131,
+        "startChar": 45,
+        "endLine": 131,
+        "endChar": 47
+      },
+      "revId": "bedb58d688b0c2fe52cad3632f4edc555951d77b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "850484ca_151cbd23",
         "filename": "participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/handler/ControlLoopElementHandler.java",
         "patchSetId": 3
@@ -39,6 +63,24 @@
       "revId": "bedb58d688b0c2fe52cad3632f4edc555951d77b",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2207025b_90190cd1",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/handler/ControlLoopElementHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-09-08T13:32:31Z",
+      "side": 1,
+      "message": "File removed",
+      "parentUuid": "850484ca_151cbd23",
+      "revId": "bedb58d688b0c2fe52cad3632f4edc555951d77b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "f4b86cd3_6caaed8f",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/test/java/org/onap/policy/clamp/controlloop/participant/dcae/main/handler/ControlLoopElementHandlerTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-09-08T13:32:31Z",
+      "side": 1,
+      "message": "File removed. Git automerged while rebase.",
+      "parentUuid": "6ec0ce02_3434c4fc",
+      "range": {
+        "startLine": 70,
+        "startChar": 4,
+        "endLine": 70,
+        "endChar": 11
+      },
+      "revId": "bedb58d688b0c2fe52cad3632f4edc555951d77b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ab714df9_679dc9ef",
         "filename": "participant/participant-impl/participant-impl-dcae/src/test/java/org/onap/policy/clamp/controlloop/participant/dcae/main/rest/TestListenerUtils.java",
         "patchSetId": 3
@@ -79,6 +145,24 @@
       "revId": "bedb58d688b0c2fe52cad3632f4edc555951d77b",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "67191f8b_6d00d541",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/test/java/org/onap/policy/clamp/controlloop/participant/dcae/main/rest/TestListenerUtils.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-09-08T13:32:31Z",
+      "side": 1,
+      "message": "File removed. Git automerged while rebase.",
+      "parentUuid": "ab714df9_679dc9ef",
+      "revId": "bedb58d688b0c2fe52cad3632f4edc555951d77b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -102,6 +186,30 @@
       "revId": "bedb58d688b0c2fe52cad3632f4edc555951d77b",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "84ce09b5_ba738590",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/test/java/org/onap/policy/clamp/controlloop/participant/dcae/main/rest/TestListenerUtils.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-09-08T13:32:31Z",
+      "side": 1,
+      "message": "File removed.",
+      "parentUuid": "d1bafbe8_d67d3a53",
+      "range": {
+        "startLine": 242,
+        "startChar": 15,
+        "endLine": 248,
+        "endChar": 17
+      },
+      "revId": "bedb58d688b0c2fe52cad3632f4edc555951d77b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
