@@ -1,8 +1,18 @@
 
 participant:
+  pdpGroup: defaultGroup
+  pdpType: apex
   policyApiParameters:
     clientName: api
     hostname: policy-api
+    port: 6969
+    userName: healthcheck
+    password: zb!XztG34
+    https: true
+    allowSelfSignedCerts: true
+  policyPapParameters:
+    clientName: pap
+    hostname: policy-pap
     port: 6969
     userName: healthcheck
     password: zb!XztG34
