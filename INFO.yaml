@@ -4,11 +4,11 @@ project_creation_date: '2020-12-03'
 lifecycle_state: 'Mature'
 project_category: ''
 project_lead: &onap_releng_ptl
-    name: 'Jim Hahn'
-    email: 'jrh3@att.com'
-    id: 'jrh3'
-    company: 'ATT'
-    timezone: 'America/New_York'
+    name: 'Liam Fallon'
+    email: 'liam.fallon@est.tech'
+    id: 'liamfallon'
+    company: 'Ericsson'
+    timezone: 'Europe/Ireland'
 primary_contact: *onap_releng_ptl
 issue_tracking:
     type: 'jira'
@@ -31,11 +31,6 @@ repositories:
     - 'policy/clamp'
 committers:
     - <<: *onap_releng_ptl
-    - name: 'Christophe Closset'
-      email: 'christophe.closset@intl.att.com'
-      company: 'ATT'
-      id: 'ChrisC'
-      timezone: 'Europe/Brussels'
     - name: 'Sébastien Determe'
       email: 'sebastien.determe@intl.att.com'
       company: 'ATT'
@@ -46,13 +41,8 @@ committers:
       company: 'ATT'
       id: 'osgn422w'
       timezone: 'Europe/Brussels'
-    - name: 'Xue Gao'
-      email: 'xue.gao@intl.att.com'
-      company: 'ATT'
-      id: 'xuegao'
-      timezone: 'Europe/Brussels'
     - name: 'Pamela Dragosh'
-      email: 'pdragosh@research.att.com'
+      email: 'pd1248@att.com'
       company: 'ATT'
       id: 'pdragosh'
       timezone: 'America/New_York'
@@ -61,11 +51,6 @@ committers:
       company: 'ATT'
       id: 'jhh'
       timezone: 'America/Illinois'
-    - name: 'Liam Fallon'
-      email: 'liam.fallon@est.tech'
-      company: 'Ericsson'
-      id: 'liamfallon'
-      timezone: 'Europe/Ireland'
     - name: 'Ram Krishna Verma'
       email: 'ram_krishna.verma@bell.ca'
       company: 'Bell Canada'
@@ -115,3 +100,17 @@ tsc:
         - type: 'Addition'
           name: 'Ajith Sreekumar'
           link: 'https://jira.onap.org/browse/REQ-473'
+        - type: 'Addition'
+          name: 'Liam Fallon'
+          # new PTL
+          link: https://lists.onap.org/g/onap-tsc/message/8032
+        - type: 'Removal'
+          name: 'Jim Hahn'
+          # Retired
+          link: https://lists.onap.org/g/onap-tsc/message/8056
+        - type: 'Removal'
+          name: 'Christophe Closset'
+          link: https://lists.onap.org/g/onap-tsc/message/8096
+        - type: 'Removal'
+          name: 'Xue Gao'
+          link: https://lists.onap.org/g/onap-tsc/message/8096
