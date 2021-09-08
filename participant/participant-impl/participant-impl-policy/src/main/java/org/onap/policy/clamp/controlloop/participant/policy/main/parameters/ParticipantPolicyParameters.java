@@ -21,6 +21,7 @@
 package org.onap.policy.clamp.controlloop.participant.policy.main.parameters;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -48,4 +49,14 @@ public class ParticipantPolicyParameters implements ParticipantParameters {
     @NotNull
     @ParameterGroupConstraint
     private RestClientParameters policyApiParameters;
+
+    @NotNull
+    @ParameterGroupConstraint
+    private RestClientParameters policyPapParameters;
+
+    @NotBlank
+    private String pdpGroup;
+
+    @NotBlank
+    private String pdpType;
 }

@@ -37,3 +37,7 @@ node_types:
         default: defaultGroup
         description: The PDP group to which the policy should be deployed. This parameter is used when the policy is
                      deployed to PAP. The value defaults to the "defaultGroup", which always exists.
+      pdpType:
+        type: string
+        required: true
+        description: The PDP type to which the policy will run on. This parameter is used when the policy is deployed to PAP.
