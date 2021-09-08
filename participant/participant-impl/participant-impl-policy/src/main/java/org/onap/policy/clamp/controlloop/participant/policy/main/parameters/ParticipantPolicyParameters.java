@@ -48,4 +48,8 @@ public class ParticipantPolicyParameters implements ParticipantParameters {
     @NotNull
     @ParameterGroupConstraint
     private RestClientParameters policyApiParameters;
+
+    @NotNull
+    @ParameterGroupConstraint
+    private RestClientParameters policyPapParameters;
 }

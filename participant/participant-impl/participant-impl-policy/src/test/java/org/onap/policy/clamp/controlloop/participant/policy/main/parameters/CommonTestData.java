@@ -68,6 +68,24 @@ public class CommonTestData {
         map.put("name", name);
         map.put("intermediaryParameters", getIntermediaryParametersMap(false));
         map.put("policyApiParameters", getPolicyApiParametersMap());
+        map.put("policyPapParameters", getPolicyPapParametersMap());
+        return map;
+    }
+
+    /**
+     * Returns a property map for a policyPapParameters map for test cases.
+     *
+     * @return a property map suitable for constructing an object
+     */
+    public Map<String, Object> getPolicyPapParametersMap() {
+        final Map<String, Object> map = new TreeMap<>();
+        map.put("clientName", "pap");
+        map.put("hostname", "localhost");
+        map.put("port", 6968);
+        map.put("userName", "healthcheck");
+        map.put("password", "zb!XztG34");
+        map.put("https", false);
+        map.put("allowSelfSignedCerts", true);
         return map;
     }
 

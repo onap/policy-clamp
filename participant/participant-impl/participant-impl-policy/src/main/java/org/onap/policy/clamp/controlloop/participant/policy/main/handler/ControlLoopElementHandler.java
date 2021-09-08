@@ -36,6 +36,7 @@ import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.Parti
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ControlLoopElementListener;
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.controlloop.participant.policy.client.PolicyApiHttpClient;
+import org.onap.policy.clamp.controlloop.participant.policy.client.PolicyPapHttpClient;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -58,6 +59,7 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
     private final Map<String, String> policyMap = new LinkedHashMap<>();
 
     private final PolicyApiHttpClient apiHttpClient;
+    private final PolicyPapHttpClient papHttpClient;
 
     @Setter
     private ParticipantIntermediaryApi intermediaryApi;
@@ -66,14 +68,17 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
      * constructor.
      *
      * @param apiHttpClient the Policy Api Http Client
+     * @param papHttpClient the Policy Pap Http Client
      */
-    public ControlLoopElementHandler(PolicyApiHttpClient apiHttpClient) {
+    public ControlLoopElementHandler(PolicyApiHttpClient apiHttpClient, PolicyPapHttpClient papHttpClient) {
+        this.papHttpClient = papHttpClient;
         this.apiHttpClient = apiHttpClient;
     }
 
     /**
      * Callback method to handle a control loop element state change.
      *
+     * @param controlLoopId the ID of the control loop
      * @param controlLoopElementId the ID of the control loop element
      * @param currentState the current state of the control loop element
      * @param newState the state to which the control loop element is changing to
@@ -81,8 +86,8 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
      */
     @Override
     public void controlLoopElementStateChange(ToscaConceptIdentifier controlLoopId,
-                UUID controlLoopElementId, ControlLoopState currentState,
-            ControlLoopOrderedState newState) throws PfModelException {
+                                              UUID controlLoopElementId, ControlLoopState currentState,
+                                              ControlLoopOrderedState newState) throws PfModelException {
         switch (newState) {
             case UNINITIALISED:
                 try {
@@ -92,14 +97,21 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
                 }
                 break;
             case PASSIVE:
+                try {
+                    undeployPolicies(controlLoopElementId, newState);
+                } catch (PfModelRuntimeException e) {
+                    LOGGER.debug("Undeploying policies failed - no policies to undeploy");
+                }
                 intermediaryApi.updateControlLoopElementState(controlLoopId,
-                    controlLoopElementId, newState, ControlLoopState.PASSIVE,
-                    ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
+                        controlLoopElementId, newState, ControlLoopState.PASSIVE,
+                        ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
                 break;
             case RUNNING:
-                intermediaryApi.updateControlLoopElementState(controlLoopId,
-                    controlLoopElementId, newState, ControlLoopState.RUNNING,
-                    ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
+                try {
+                    deployPolicies(controlLoopId, controlLoopElementId, newState);
+                } catch (PfModelRuntimeException e) {
+                    LOGGER.debug("Deploying policies failed");
+                }
                 break;
             default:
                 LOGGER.debug("Unknown orderedstate {}", newState);
@@ -108,7 +120,7 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
     }
 
     private void deletePolicyData(ToscaConceptIdentifier controlLoopId,
-            UUID controlLoopElementId, ControlLoopOrderedState newState) {
+                                  UUID controlLoopElementId, ControlLoopOrderedState newState) {
         // Delete all policies of this controlLoop from policy framework
         for (Entry<String, String> policy : policyMap.entrySet()) {
             apiHttpClient.deletePolicy(policy.getKey(), policy.getValue());
@@ -120,8 +132,35 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
         }
         policyTypeMap.clear();
         intermediaryApi.updateControlLoopElementState(controlLoopId,
-            controlLoopElementId, newState, ControlLoopState.UNINITIALISED,
-            ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
+                controlLoopElementId, newState, ControlLoopState.UNINITIALISED,
+                ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
+    }
+
+    private void deployPolicies(ToscaConceptIdentifier controlLoopId, UUID controlLoopElementId,
+                                ControlLoopOrderedState newState) {
+        // Deploy all policies of this controlLoop from policy framework
+        if (policyMap.entrySet() != null) {
+            for (Entry<String, String> policy : policyMap.entrySet()) {
+                papHttpClient.deployPolicy(policy.getKey(), policy.getValue());
+            }
+            LOGGER.debug("Deployed policies");
+        } else {
+            LOGGER.debug("No policies to deploy");
+        }
+        intermediaryApi.updateControlLoopElementState(controlLoopId,
+                controlLoopElementId, newState, ControlLoopState.RUNNING,
+                ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
+    }
+
+    private void undeployPolicies(UUID controlLoopElementId, ControlLoopOrderedState newState) {
+        if (policyMap.entrySet() != null) {
+            for (Entry<String, String> policy : policyMap.entrySet()) {
+                papHttpClient.undeployPolicy(policy.getKey());
+            }
+            LOGGER.debug("Undeployed policies");
+        } else {
+            LOGGER.debug("No policies to undeploy");
+        }
     }
 
     /**
@@ -133,7 +172,7 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
      */
     @Override
     public void controlLoopElementUpdate(ToscaConceptIdentifier controlLoopId, ControlLoopElement element,
-                ToscaNodeTemplate clElementDefinition)
+                                         ToscaNodeTemplate clElementDefinition)
             throws PfModelException {
         intermediaryApi.updateControlLoopElementState(controlLoopId, element.getId(), element.getOrderedState(),
                 ControlLoopState.PASSIVE, ParticipantMessageType.CONTROL_LOOP_UPDATE);
