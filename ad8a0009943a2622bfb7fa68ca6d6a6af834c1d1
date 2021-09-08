@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c4b04d24_7564be6c",
+        "filename": "packages/policy-clamp-docker/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-09-08T13:31:21Z",
+      "side": 1,
+      "message": "change policy-clamp-cl-policy-participant to policy-clamp-cl-pf-participant",
+      "revId": "ad8a0009943a2622bfb7fa68ca6d6a6af834c1d1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
