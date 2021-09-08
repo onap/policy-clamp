@@ -301,6 +301,7 @@ public class ParticipantHandler {
         } else {
             // This message is to decommision the controlloop
             clElementDefsOnThisParticipant.clear();
+            this.state = ParticipantState.TERMINATED;
         }
         sendParticipantUpdateAck(participantUpdateMsg.getMessageId());
     }
@@ -315,7 +316,7 @@ public class ParticipantHandler {
         participantUpdateAck.setResult(true);
         participantUpdateAck.setParticipantId(participantId);
         participantUpdateAck.setParticipantType(participantType);
-
+        participantUpdateAck.setState(state);
         publisher.sendParticipantUpdateAck(participantUpdateAck);
     }
 

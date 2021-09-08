@@ -140,7 +140,7 @@ public class TestListenerUtils {
         Map<String, ToscaNodeTemplate> nodeTemplatesMap =
                 toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates();
         for (Map.Entry<String, ToscaNodeTemplate> toscaInputEntry : nodeTemplatesMap.entrySet()) {
-            if (toscaInputEntry.getValue().getType().contains(CONTROL_LOOP_ELEMENT)) {
+            if (checkIfNodeTemplateIsControlLoopElement(toscaInputEntry.getValue(), toscaServiceTemplate)) {
                 ControlLoopElement clElement = new ControlLoopElement();
                 clElement.setId(UUID.randomUUID());
                 ToscaConceptIdentifier clParticipantType;
@@ -170,6 +170,22 @@ public class TestListenerUtils {
         }
         clUpdateMsg.setParticipantUpdatesList(participantUpdates);
         return clUpdateMsg;
+    }
+
+    private static boolean checkIfNodeTemplateIsControlLoopElement(ToscaNodeTemplate nodeTemplate,
+            ToscaServiceTemplate toscaServiceTemplate) {
+        if (nodeTemplate.getType().contains(CONTROL_LOOP_ELEMENT)) {
+            return true;
+        } else {
+            var nodeType = toscaServiceTemplate.getNodeTypes().get(nodeTemplate.getType());
+            if (nodeType != null) {
+                var derivedFrom = nodeType.getDerivedFrom();
+                if (derivedFrom != null) {
+                    return derivedFrom.contains(CONTROL_LOOP_ELEMENT) ? true : false;
+                }
+            }
+        }
+        return false;
     }
 
     private static void prepareParticipantUpdateForControlLoop(ControlLoopElement clElement,
@@ -221,7 +237,7 @@ public class TestListenerUtils {
         List<ParticipantDefinition> participantDefinitionUpdates = new ArrayList<>();
         for (Map.Entry<String, ToscaNodeTemplate> toscaInputEntry :
             toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates().entrySet()) {
-            if (toscaInputEntry.getValue().getType().contains(CONTROL_LOOP_ELEMENT)) {
+            if (checkIfNodeTemplateIsControlLoopElement(toscaInputEntry.getValue(), toscaServiceTemplate)) {
                 ToscaConceptIdentifier clParticipantType;
                 try {
                     clParticipantType = CODER.decode(
@@ -274,6 +290,10 @@ public class TestListenerUtils {
         controlLoopElementDefinitionList.add(clDefinition);
         participantDefinition.setControlLoopElementDefinitionList(controlLoopElementDefinitionList);
         return participantDefinition;
+    }
+
+    public static ToscaConceptIdentifier getControlLoopId() {
+        return new ToscaConceptIdentifier("PMSHInstance0", "1.0.0");
     }
 
     /**

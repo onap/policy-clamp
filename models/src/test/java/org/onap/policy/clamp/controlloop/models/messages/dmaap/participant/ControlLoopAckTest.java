@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElementAck;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
@@ -50,7 +51,8 @@ class ControlLoopAckTest {
         orig.setControlLoopId(id);
         orig.setParticipantId(id);
         orig.setParticipantType(id);
-        var clElementResult = new ControlLoopElementAck(true, "ControlLoopElement result");
+        var clElementResult = new ControlLoopElementAck(ControlLoopState.UNINITIALISED,
+            true, "ControlLoopElement result");
         final var controlLoopResultMap = Map.of(UUID.randomUUID(), clElementResult);
         orig.setControlLoopResultMap(controlLoopResultMap);
 

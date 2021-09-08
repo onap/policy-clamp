@@ -25,6 +25,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.models.base.PfModelException;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 
 /**
@@ -39,8 +40,8 @@ public interface ControlLoopElementListener {
      * @param newState the state to which the control loop element is changing to
      * @throws PfModelException in case of a model exception
      */
-    public void controlLoopElementStateChange(UUID controlLoopElementId, ControlLoopState currentState,
-            ControlLoopOrderedState newState) throws PfModelException;
+    public void controlLoopElementStateChange(ToscaConceptIdentifier controlLoopId, UUID controlLoopElementId,
+        ControlLoopState currentState, ControlLoopOrderedState newState) throws PfModelException;
 
     /**
      * Handle an update on a control loop element.
@@ -49,7 +50,7 @@ public interface ControlLoopElementListener {
      * @param controlLoopElementDefinition toscaNodeTemplate
      * @throws PfModelException from Policy framework
      */
-    public void controlLoopElementUpdate(ControlLoopElement element,
+    public void controlLoopElementUpdate(ToscaConceptIdentifier controlLoopId, ControlLoopElement element,
             ToscaNodeTemplate controlLoopElementDefinition) throws PfModelException;
 
     /**

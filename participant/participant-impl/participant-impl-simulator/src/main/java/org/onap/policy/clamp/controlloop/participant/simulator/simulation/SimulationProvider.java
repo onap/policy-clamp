@@ -79,8 +79,8 @@ public class SimulationProvider {
      */
     public TypedSimpleResponse<ControlLoopElement> updateControlLoopElement(ControlLoopElement element) {
         TypedSimpleResponse<ControlLoopElement> response = new TypedSimpleResponse<>();
-        response.setResponse(intermediaryApi.updateControlLoopElementState(element.getId(), element.getOrderedState(),
-                element.getState(), ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE));
+        response.setResponse(intermediaryApi.updateControlLoopElementState(null, element.getId(),
+            element.getOrderedState(), element.getState(), ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE));
         return response;
     }
 

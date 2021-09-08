@@ -134,6 +134,14 @@ public class CommonTestData {
     }
 
     /**
+     * Get controlloop id.
+     * @return ToscaConceptIdentifier controlLoopId
+     */
+    public ToscaConceptIdentifier getControlLoopId() {
+        return new ToscaConceptIdentifier("PMSHInstance0", "1.0.0");
+    }
+
+    /**
      * Get headers for config request.
      * @return Map of headers
      */

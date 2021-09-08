@@ -66,6 +66,7 @@ class ClElementHandlerTest {
             serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
 
         assertDoesNotThrow(() -> controlLoopElementHandler
-            .controlLoopElementUpdate(element, nodeTemplatesMap.get(HTTP_CONTROL_LOOP_ELEMENT)));
+            .controlLoopElementUpdate(commonTestData.getControlLoopId(), element,
+                nodeTemplatesMap.get(HTTP_CONTROL_LOOP_ELEMENT)));
     }
 }
