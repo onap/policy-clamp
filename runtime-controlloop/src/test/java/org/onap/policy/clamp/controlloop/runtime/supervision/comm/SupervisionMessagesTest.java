@@ -35,6 +35,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElementDefinition;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantDefinition;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantUtils;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ClElementStatisticsProvider;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ControlLoopProvider;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ParticipantProvider;
@@ -53,9 +54,6 @@ import org.onap.policy.clamp.controlloop.runtime.util.CommonTestData;
 import org.onap.policy.clamp.controlloop.runtime.util.rest.CommonRestController;
 import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
-import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.coder.YamlJsonTranslator;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfModelException;
@@ -77,8 +75,6 @@ class SupervisionMessagesTest extends CommonRestController {
     private static PolicyModelsProvider modelsProvider;
     private static ParticipantProvider participantProvider;
     private static final YamlJsonTranslator yamlTranslator = new YamlJsonTranslator();
-    private static final String CONTROL_LOOP_ELEMENT = "org.onap.policy.clamp.controlloop.ControlLoopElement";
-    private static final Coder CODER = new StandardCoder();
 
     /**
      * setup Db Provider Parameters.
@@ -133,7 +129,7 @@ class SupervisionMessagesTest extends CommonRestController {
             // List<ToscaNodeTemplate> listOfTemplates = commissioningProvider.getControlLoopDefinitions(null, null);
             commissioningProvider.createControlLoopDefinitions(serviceTemplate);
             assertThatCode(() -> participantRegisterListener.onTopicEvent(INFRA, TOPIC, null, participantRegisterMsg))
-                            .doesNotThrowAnyException();
+                    .doesNotThrowAnyException();
         }
     }
 
@@ -160,9 +156,10 @@ class SupervisionMessagesTest extends CommonRestController {
 
         synchronized (lockit) {
             ParticipantDeregisterListener participantDeregisterListener =
-                            new ParticipantDeregisterListener(supervisionHandler);
-            assertThatCode(() -> participantDeregisterListener.onTopicEvent(INFRA, TOPIC, null,
-                            participantDeregisterMsg)).doesNotThrowAnyException();
+                    new ParticipantDeregisterListener(supervisionHandler);
+            assertThatCode(
+                    () -> participantDeregisterListener.onTopicEvent(INFRA, TOPIC, null, participantDeregisterMsg))
+                            .doesNotThrowAnyException();
         }
     }
 
@@ -191,59 +188,36 @@ class SupervisionMessagesTest extends CommonRestController {
 
         ToscaServiceTemplate toscaServiceTemplate = commissioningProvider.getToscaServiceTemplate(null, null);
         List<ParticipantDefinition> participantDefinitionUpdates = new ArrayList<>();
-        for (Map.Entry<String, ToscaNodeTemplate> toscaInputEntry :
-            toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates().entrySet()) {
-            if (checkIfNodeTemplateIsControlLoopElement(toscaInputEntry.getValue(), toscaServiceTemplate)) {
-                ToscaConceptIdentifier clParticipantType;
-                try {
-                    clParticipantType = CODER.decode(
-                            toscaInputEntry.getValue().getProperties().get("participantType").toString(),
-                            ToscaConceptIdentifier.class);
-                } catch (CoderException e) {
-                    throw new RuntimeException("cannot get ParticipantType from toscaNodeTemplate", e);
-                }
+        for (Map.Entry<String, ToscaNodeTemplate> toscaInputEntry : toscaServiceTemplate.getToscaTopologyTemplate()
+                .getNodeTemplates().entrySet()) {
+            if (ParticipantUtils.checkIfNodeTemplateIsControlLoopElement(toscaInputEntry.getValue(),
+                    toscaServiceTemplate)) {
+                var clParticipantType =
+                        ParticipantUtils.findParticipantType(toscaInputEntry.getValue().getProperties());
                 prepareParticipantDefinitionUpdate(clParticipantType, toscaInputEntry.getKey(),
-                    toscaInputEntry.getValue(), participantDefinitionUpdates);
+                        toscaInputEntry.getValue(), participantDefinitionUpdates);
             }
         }
 
         participantUpdateMsg.setParticipantDefinitionUpdates(participantDefinitionUpdates);
         synchronized (lockit) {
-            ParticipantUpdatePublisher participantUpdatePublisher =
-                new ParticipantUpdatePublisher(modelsProvider);
+            ParticipantUpdatePublisher participantUpdatePublisher = new ParticipantUpdatePublisher(modelsProvider);
             participantUpdatePublisher.active(Collections.singletonList(Mockito.mock(TopicSink.class)));
             assertThatCode(() -> participantUpdatePublisher.send(participantUpdateMsg)).doesNotThrowAnyException();
         }
     }
 
-    private static boolean checkIfNodeTemplateIsControlLoopElement(ToscaNodeTemplate nodeTemplate,
-            ToscaServiceTemplate toscaServiceTemplate) {
-        if (nodeTemplate.getType().contains(CONTROL_LOOP_ELEMENT)) {
-            return true;
-        } else {
-            var nodeType = toscaServiceTemplate.getNodeTypes().get(nodeTemplate.getType());
-            if (nodeType != null) {
-                var derivedFrom = nodeType.getDerivedFrom();
-                if (derivedFrom != null) {
-                    return derivedFrom.contains(CONTROL_LOOP_ELEMENT) ? true : false;
-                }
-            }
-        }
-        return false;
-    }
-
     private void prepareParticipantDefinitionUpdate(ToscaConceptIdentifier clParticipantType, String entryKey,
-        ToscaNodeTemplate entryValue, List<ParticipantDefinition> participantDefinitionUpdates) {
+            ToscaNodeTemplate entryValue, List<ParticipantDefinition> participantDefinitionUpdates) {
 
         var clDefinition = new ControlLoopElementDefinition();
-        clDefinition.setClElementDefinitionId(new ToscaConceptIdentifier(
-            entryKey, entryValue.getVersion()));
+        clDefinition.setClElementDefinitionId(new ToscaConceptIdentifier(entryKey, entryValue.getVersion()));
         clDefinition.setControlLoopElementToscaNodeTemplate(entryValue);
         List<ControlLoopElementDefinition> controlLoopElementDefinitionList = new ArrayList<>();
 
         if (participantDefinitionUpdates.isEmpty()) {
-            participantDefinitionUpdates.add(getParticipantDefinition(clDefinition, clParticipantType,
-                controlLoopElementDefinitionList));
+            participantDefinitionUpdates
+                    .add(getParticipantDefinition(clDefinition, clParticipantType, controlLoopElementDefinitionList));
         } else {
             boolean participantExists = false;
             for (ParticipantDefinition participantDefinitionUpdate : participantDefinitionUpdates) {
@@ -253,15 +227,15 @@ class SupervisionMessagesTest extends CommonRestController {
                 }
             }
             if (!participantExists) {
-                participantDefinitionUpdates.add(getParticipantDefinition(clDefinition, clParticipantType,
-                    controlLoopElementDefinitionList));
+                participantDefinitionUpdates.add(
+                        getParticipantDefinition(clDefinition, clParticipantType, controlLoopElementDefinitionList));
             }
         }
     }
 
     private ParticipantDefinition getParticipantDefinition(ControlLoopElementDefinition clDefinition,
-        ToscaConceptIdentifier clParticipantType,
-        List<ControlLoopElementDefinition> controlLoopElementDefinitionList) {
+            ToscaConceptIdentifier clParticipantType,
+            List<ControlLoopElementDefinition> controlLoopElementDefinitionList) {
         ParticipantDefinition participantDefinition = new ParticipantDefinition();
         participantDefinition.setParticipantType(clParticipantType);
         controlLoopElementDefinitionList.add(clDefinition);
@@ -280,9 +254,9 @@ class SupervisionMessagesTest extends CommonRestController {
 
         synchronized (lockit) {
             ParticipantUpdateAckListener participantUpdateAckListener =
-                            new ParticipantUpdateAckListener(supervisionHandler);
+                    new ParticipantUpdateAckListener(supervisionHandler);
             assertThatCode(() -> participantUpdateAckListener.onTopicEvent(INFRA, TOPIC, null, participantUpdateAckMsg))
-                            .doesNotThrowAnyException();
+                    .doesNotThrowAnyException();
         }
     }
 

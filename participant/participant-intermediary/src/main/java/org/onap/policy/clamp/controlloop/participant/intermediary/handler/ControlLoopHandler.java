@@ -28,7 +28,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.Getter;
-import org.apache.commons.collections4.CollectionUtils;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ClElementStatistics;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
@@ -45,7 +44,6 @@ import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.Parti
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ControlLoopElementListener;
 import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantParameters;
-import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
@@ -97,33 +95,37 @@ public class ControlLoopHandler {
      * @param newState the ordered state
      * @return controlLoopElement the updated controlloop element
      */
-    public ControlLoopElement updateControlLoopElementState(ToscaConceptIdentifier controlLoopId,
-            UUID id, ControlLoopOrderedState orderedState,
-            ControlLoopState newState) {
+    public ControlLoopElement updateControlLoopElementState(ToscaConceptIdentifier controlLoopId, UUID id,
+            ControlLoopOrderedState orderedState, ControlLoopState newState) {
 
         if (id == null) {
             LOGGER.warn("Cannot update Control loop element state, id is null");
+            return null;
         }
 
-        ControlLoopElement clElement = elementsOnThisParticipant.get(id);
         for (var controlLoop : controlLoopMap.values()) {
             var element = controlLoop.getElements().get(id);
             if (element != null) {
                 element.setState(newState);
             }
+            var checkOpt = controlLoop.getElements().values().stream()
+                    .filter(clElement -> !newState.equals(clElement.getState())).findAny();
+            if (checkOpt.isEmpty()) {
+                controlLoop.setState(newState);
+                controlLoop.setOrderedState(orderedState);
+            }
         }
 
+        var clElement = elementsOnThisParticipant.get(id);
         if (clElement != null) {
-            var controlLoopStateChangeAck =
-                    new ControlLoopAck(ParticipantMessageType.CONTROLLOOP_STATECHANGE_ACK);
+            var controlLoopStateChangeAck = new ControlLoopAck(ParticipantMessageType.CONTROLLOOP_STATECHANGE_ACK);
             controlLoopStateChangeAck.setParticipantId(participantId);
             controlLoopStateChangeAck.setParticipantType(participantType);
             controlLoopStateChangeAck.setControlLoopId(controlLoopId);
             clElement.setOrderedState(orderedState);
             clElement.setState(newState);
-            controlLoopStateChangeAck.getControlLoopResultMap().put(clElement.getId(),
-                new  ControlLoopElementAck(newState, true,
-                    "Control loop element {} state changed to {}\", id, newState)"));
+            controlLoopStateChangeAck.getControlLoopResultMap().put(clElement.getId(), new ControlLoopElementAck(
+                    newState, true, "Control loop element {} state changed to {}\", id, newState)"));
             LOGGER.debug("Control loop element {} state changed to {}", id, newState);
             controlLoopStateChangeAck.setMessage("ControlLoopElement state changed to {} " + newState);
             controlLoopStateChangeAck.setResult(true);
@@ -140,7 +142,7 @@ public class ControlLoopHandler {
      * @param elementStatistics control loop element Statistics
      */
     public void updateControlLoopElementStatistics(UUID id, ClElementStatistics elementStatistics) {
-        ControlLoopElement clElement = elementsOnThisParticipant.get(id);
+        var clElement = elementsOnThisParticipant.get(id);
         if (clElement != null) {
             elementStatistics.setParticipantId(participantId);
             elementStatistics.setId(id);
@@ -165,7 +167,7 @@ public class ControlLoopHandler {
             controlLoopAck.setParticipantId(participantId);
             controlLoopAck.setParticipantType(participantType);
             controlLoopAck.setMessage("Control loop " + stateChangeMsg.getControlLoopId()
-                + " does not use this participant " + participantId);
+                    + " does not use this participant " + participantId);
             controlLoopAck.setResult(false);
             controlLoopAck.setResponseTo(stateChangeMsg.getMessageId());
             controlLoopAck.setControlLoopId(stateChangeMsg.getControlLoopId());
@@ -206,7 +208,7 @@ public class ControlLoopHandler {
      * @param updateMsg the update message
      */
     public void handleControlLoopUpdate(ControlLoopUpdate updateMsg,
-                List<ControlLoopElementDefinition> clElementDefinitions) {
+            List<ControlLoopElementDefinition> clElementDefinitions) {
 
         if (!updateMsg.appliesTo(participantType, participantId)) {
             return;
@@ -222,7 +224,7 @@ public class ControlLoopHandler {
             controlLoopUpdateAck.setParticipantType(participantType);
 
             controlLoopUpdateAck.setMessage("Control loop " + updateMsg.getControlLoopId()
-                + " already defined on participant " + participantId);
+                    + " already defined on participant " + participantId);
             controlLoopUpdateAck.setResult(false);
             controlLoopUpdateAck.setResponseTo(updateMsg.getMessageId());
             controlLoopUpdateAck.setControlLoopId(updateMsg.getControlLoopId());
@@ -235,22 +237,22 @@ public class ControlLoopHandler {
             return;
         }
 
-        List<ControlLoopElement> clElements = storeElementsOnThisParticipant(updateMsg.getParticipantUpdatesList());
+        var clElements = storeElementsOnThisParticipant(updateMsg.getParticipantUpdatesList());
 
         try {
-            for (ControlLoopElement element : clElements) {
-                ToscaNodeTemplate clElementNodeTemplate = getClElementNodeTemplate(
-                        clElementDefinitions, element.getDefinition());
-                for (ControlLoopElementListener clElementListener : listeners) {
-                    clElementListener.controlLoopElementUpdate(updateMsg.getControlLoopId(),
-                        element, clElementNodeTemplate);
+            for (var element : clElements) {
+                var clElementNodeTemplate =
+                        getClElementNodeTemplate(clElementDefinitions, element.getDefinition());
+                for (var clElementListener : listeners) {
+                    clElementListener.controlLoopElementUpdate(updateMsg.getControlLoopId(), element,
+                            clElementNodeTemplate);
                 }
             }
         } catch (PfModelException e) {
             LOGGER.debug("Control loop element update failed {}", updateMsg.getControlLoopId());
         }
 
-        Map<UUID, ControlLoopElement> clElementMap = prepareClElementMap(clElements);
+        var clElementMap = prepareClElementMap(clElements);
         controlLoop = new ControlLoop();
         controlLoop.setDefinition(updateMsg.getControlLoopId());
         controlLoop.setElements(clElementMap);
@@ -258,8 +260,8 @@ public class ControlLoopHandler {
     }
 
     private ToscaNodeTemplate getClElementNodeTemplate(List<ControlLoopElementDefinition> clElementDefinitions,
-                ToscaConceptIdentifier clElementDefId) {
-        for (ControlLoopElementDefinition clElementDefinition : clElementDefinitions) {
+            ToscaConceptIdentifier clElementDefId) {
+        for (var clElementDefinition : clElementDefinitions) {
             if (clElementDefinition.getClElementDefinitionId().equals(clElementDefId)) {
                 return clElementDefinition.getControlLoopElementToscaNodeTemplate();
             }
@@ -268,11 +270,9 @@ public class ControlLoopHandler {
     }
 
     private List<ControlLoopElement> storeElementsOnThisParticipant(List<ParticipantUpdates> participantUpdates) {
-        var clElementMap =
-                participantUpdates.stream()
+        var clElementMap = participantUpdates.stream()
                 .flatMap(participantUpdate -> participantUpdate.getControlLoopElementList().stream())
-                .filter(element -> participantType.equals(element.getParticipantType()))
-                .collect(Collectors.toList());
+                .filter(element -> participantType.equals(element.getParticipantType())).collect(Collectors.toList());
 
         for (var element : clElementMap) {
             elementsOnThisParticipant.put(element.getId(), element);
@@ -282,7 +282,7 @@ public class ControlLoopHandler {
 
     private Map<UUID, ControlLoopElement> prepareClElementMap(List<ControlLoopElement> clElements) {
         Map<UUID, ControlLoopElement> clElementMap = new LinkedHashMap<>();
-        for (ControlLoopElement element : clElements) {
+        for (var element : clElements) {
             clElementMap.put(element.getId(), element);
         }
         return clElementMap;
@@ -295,19 +295,9 @@ public class ControlLoopHandler {
      * @param orderedState orderedState
      */
     private void handleUninitialisedState(final ControlLoop controlLoop, final ControlLoopOrderedState orderedState) {
-        handleStateChange(controlLoop, orderedState, ControlLoopState.UNINITIALISED);
-        controlLoopMap.remove(controlLoop.getKey().asIdentifier());
-
-        for (ControlLoopElementListener clElementListener : listeners) {
-            try {
-                for (ControlLoopElement element : controlLoop.getElements().values()) {
-                    clElementListener.controlLoopElementStateChange(controlLoop.getDefinition(),
-                        element.getId(), element.getState(), orderedState);
-                }
-            } catch (PfModelException e) {
-                LOGGER.debug("Control loop element update failed {}", controlLoop.getDefinition());
-            }
-        }
+        handleStateChange(controlLoop, orderedState);
+        controlLoopMap.remove(controlLoop.getDefinition());
+        controlLoop.getElements().values().forEach(element -> elementsOnThisParticipant.remove(element.getId()));
     }
 
     /**
@@ -317,7 +307,7 @@ public class ControlLoopHandler {
      * @param orderedState orderedState
      */
     private void handlePassiveState(final ControlLoop controlLoop, final ControlLoopOrderedState orderedState) {
-        handleStateChange(controlLoop, orderedState, ControlLoopState.PASSIVE);
+        handleStateChange(controlLoop, orderedState);
     }
 
     /**
@@ -327,7 +317,7 @@ public class ControlLoopHandler {
      * @param orderedState orderedState
      */
     private void handleRunningState(final ControlLoop controlLoop, final ControlLoopOrderedState orderedState) {
-        handleStateChange(controlLoop, orderedState, ControlLoopState.RUNNING);
+        handleStateChange(controlLoop, orderedState);
     }
 
     /**
@@ -335,30 +325,30 @@ public class ControlLoopHandler {
      *
      * @param controlLoop participant status in memory
      * @param orderedState orderedState the new ordered state the participant should have
-     * @param newState new state of the control loop elements
      */
-    private void handleStateChange(ControlLoop controlLoop, final ControlLoopOrderedState orderedState,
-            ControlLoopState newState) {
+    private void handleStateChange(ControlLoop controlLoop, final ControlLoopOrderedState orderedState) {
 
         if (orderedState.equals(controlLoop.getOrderedState())) {
             var controlLoopAck = new ControlLoopAck(ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
             controlLoopAck.setParticipantId(participantId);
             controlLoopAck.setParticipantType(participantType);
-            controlLoopAck.setMessage("Control loop is already in state" + orderedState);
+            controlLoopAck.setMessage("Control loop is already in state " + orderedState);
             controlLoopAck.setResult(false);
             controlLoopAck.setControlLoopId(controlLoop.getDefinition());
             publisher.sendControlLoopAck(controlLoopAck);
             return;
         }
 
-        if (!CollectionUtils.isEmpty(controlLoop.getElements().values())) {
-            controlLoop.getElements().values().forEach(element -> {
-                element.setState(newState);
-                element.setOrderedState(orderedState);
-            });
+        for (var clElementListener : listeners) {
+            try {
+                for (var element : controlLoop.getElements().values()) {
+                    clElementListener.controlLoopElementStateChange(controlLoop.getDefinition(), element.getId(),
+                            element.getState(), orderedState);
+                }
+            } catch (PfModelException e) {
+                LOGGER.debug("Control loop element update failed {}", controlLoop.getDefinition());
+            }
         }
-
-        controlLoop.setOrderedState(orderedState);
     }
 
     /**
