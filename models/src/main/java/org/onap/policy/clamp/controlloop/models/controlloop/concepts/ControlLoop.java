@@ -52,6 +52,8 @@ public class ControlLoop extends ToscaEntity implements Comparable<ControlLoop> 
 
     private Map<UUID, ControlLoopElement> elements;
 
+    private boolean primed = false;
+
     @Override
     public String getType() {
         return definition.getName();
@@ -73,6 +75,7 @@ public class ControlLoop extends ToscaEntity implements Comparable<ControlLoop> 
         this.state = otherControlLoop.state;
         this.orderedState = otherControlLoop.orderedState;
         this.elements = PfUtils.mapMap(otherControlLoop.elements, ControlLoopElement::new);
+        this.primed = otherControlLoop.primed;
     }
 
     @Override
@@ -108,5 +111,14 @@ public class ControlLoop extends ToscaEntity implements Comparable<ControlLoop> 
 
         return controlLoop.elements.values().stream().map(ControlLoopElement::getClElementStatistics)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Get whether this controlloop is primed or de-primed.
+     *
+     * @return List of ClElementStatistics
+     */
+    public boolean getPrimed() {
+        return primed;
     }
 }
