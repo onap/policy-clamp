@@ -240,7 +240,8 @@ public class SupervisionHandler {
                 var controlLoop = controlLoopProvider.getControlLoop(controlLoopAckMessage.getControlLoopId());
                 if (controlLoop != null) {
                     var updated = updateState(controlLoop, controlLoopAckMessage
-                            .getControlLoopResultMap().entrySet());
+                                    .getControlLoopResultMap().entrySet())
+                                    || setPrimed(controlLoop);
                     if (updated) {
                         controlLoopProvider.updateControlLoop(controlLoop);
                     }
@@ -264,6 +265,23 @@ public class SupervisionHandler {
             }
         }
         return updated;
+    }
+
+    private boolean setPrimed(ControlLoop controlLoop) {
+        var clElements = controlLoop.getElements().values();
+        if (clElements != null) {
+            Boolean primedFlag = true;
+            var checkOpt = controlLoop.getElements().values().stream()
+                            .filter(clElement -> (!clElement.getState().equals(ControlLoopState.PASSIVE)
+                                    || !clElement.getState().equals(ControlLoopState.RUNNING))).findAny();
+            if (checkOpt.isEmpty()) {
+                primedFlag = false;
+            }
+            controlLoop.setPrimed(primedFlag);
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -392,7 +410,7 @@ public class SupervisionHandler {
             var participant = new Participant();
             participant.setName(participantStatusMessage.getParticipantId().getName());
             participant.setVersion(participantStatusMessage.getParticipantId().getVersion());
-            participant.setDefinition(new ToscaConceptIdentifier("unknown", "0.0.0"));
+            participant.setDefinition(participantStatusMessage.getParticipantId());
             participant.setParticipantState(participantStatusMessage.getState());
             participant.setHealthStatus(participantStatusMessage.getHealthStatus());
 

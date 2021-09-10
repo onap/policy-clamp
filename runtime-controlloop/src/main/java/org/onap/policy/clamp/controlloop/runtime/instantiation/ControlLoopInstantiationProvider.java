@@ -47,6 +47,8 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ControlLoopProvider;
 import org.onap.policy.clamp.controlloop.models.messages.rest.GenericNameVersion;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.ControlLoopOrderStateResponse;
+import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.ControlLoopPrimed;
+import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.ControlLoopPrimedResponse;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstancePropertiesResponse;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationCommand;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationResponse;
@@ -389,6 +391,33 @@ public class ControlLoopInstantiationProvider {
 
     /**
      * Saves Instance Properties and Control Loop.
+     * Gets a list of control loops which are primed or de-primed.
+     *
+     * @param name the name of the control loop to get, null for all control loops
+     * @param version the version of the control loop to get, null for all control loops
+     * @return a list of Instantiation Command
+     * @throws PfModelException on errors getting control loops
+     */
+    public ControlLoopPrimedResponse getControlLoopPriming(String name, String version)
+        throws PfModelException {
+
+        List<ControlLoop> controlLoops = controlLoopProvider.getControlLoops(name, version);
+
+        var response = new ControlLoopPrimedResponse();
+
+        controlLoops.forEach(controlLoop -> {
+            var primed = new ControlLoopPrimed();
+            primed.setName(controlLoop.getName());
+            primed.setVersion(controlLoop.getVersion());
+            primed.setPrimed(controlLoop.getPrimed());
+            response.getPrimedControlLoopsList().add(primed);
+        });
+
+        return response;
+    }
+
+    /**
+     * Creates instance element name.
      *
      * @param serviceTemplate the service template
      * @param controlLoops a list of control loops

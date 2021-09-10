@@ -52,6 +52,9 @@ public class ControlLoop extends ToscaEntity implements Comparable<ControlLoop> 
 
     private Map<UUID, ControlLoopElement> elements;
 
+    @NonNull
+    private Boolean primed = false;
+
     @Override
     public String getType() {
         return definition.getName();
@@ -73,6 +76,7 @@ public class ControlLoop extends ToscaEntity implements Comparable<ControlLoop> 
         this.state = otherControlLoop.state;
         this.orderedState = otherControlLoop.orderedState;
         this.elements = PfUtils.mapMap(otherControlLoop.elements, ControlLoopElement::new);
+        this.primed = otherControlLoop.primed;
     }
 
     @Override
