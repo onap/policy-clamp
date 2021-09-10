@@ -103,9 +103,11 @@ public class ControlLoopHandler {
             return null;
         }
 
+        // Update states of ControlLoopElement in controlLoopMap
         for (var controlLoop : controlLoopMap.values()) {
             var element = controlLoop.getElements().get(id);
             if (element != null) {
+                element.setOrderedState(orderedState);
                 element.setState(newState);
             }
             var checkOpt = controlLoop.getElements().values().stream()
@@ -116,6 +118,7 @@ public class ControlLoopHandler {
             }
         }
 
+        // Update states of ControlLoopElement in elementsOnThisParticipant
         var clElement = elementsOnThisParticipant.get(id);
         if (clElement != null) {
             var controlLoopStateChangeAck = new ControlLoopAck(ParticipantMessageType.CONTROLLOOP_STATECHANGE_ACK);
@@ -339,16 +342,16 @@ public class ControlLoopHandler {
             return;
         }
 
-        for (var clElementListener : listeners) {
-            try {
-                for (var element : controlLoop.getElements().values()) {
-                    clElementListener.controlLoopElementStateChange(controlLoop.getDefinition(), element.getId(),
-                            element.getState(), orderedState);
+        controlLoop.getElements().values().stream().forEach(clElement -> {
+            for (var clElementListener : listeners) {
+                try {
+                    clElementListener.controlLoopElementStateChange(controlLoop.getDefinition(),
+                            clElement.getId(), clElement.getState(), orderedState);
+                } catch (PfModelException e) {
+                    LOGGER.debug("Control loop element update failed {}", controlLoop.getDefinition());
                 }
-            } catch (PfModelException e) {
-                LOGGER.debug("Control loop element update failed {}", controlLoop.getDefinition());
             }
-        }
+        });
     }
 
     /**

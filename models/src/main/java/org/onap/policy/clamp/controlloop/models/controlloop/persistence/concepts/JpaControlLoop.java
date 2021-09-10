@@ -91,6 +91,9 @@ public class JpaControlLoop extends PfConcept implements PfAuthorative<ControlLo
     @Column
     private String description;
 
+    @Column
+    private Boolean primed;
+
     // @formatter:off
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @NotNull
@@ -141,6 +144,7 @@ public class JpaControlLoop extends PfConcept implements PfAuthorative<ControlLo
         this.orderedState = copyConcept.orderedState;
         this.description = copyConcept.description;
         this.elements = PfUtils.mapMap(copyConcept.elements, JpaControlLoopElement::new, new LinkedHashMap<>(0));
+        this.primed = copyConcept.primed;
     }
 
     /**
@@ -163,6 +167,7 @@ public class JpaControlLoop extends PfConcept implements PfAuthorative<ControlLo
         controlLoop.setOrderedState(orderedState != null ? orderedState : state.asOrderedState());
         controlLoop.setDescription(description);
         controlLoop.setElements(PfUtils.mapMap(elements, JpaControlLoopElement::toAuthorative, new LinkedHashMap<>(0)));
+        controlLoop.setPrimed(primed);
 
         return controlLoop;
     }
@@ -177,6 +182,7 @@ public class JpaControlLoop extends PfConcept implements PfAuthorative<ControlLo
         this.state = controlLoop.getState();
         this.orderedState = controlLoop.getOrderedState();
         this.description = controlLoop.getDescription();
+        this.primed = controlLoop.getPrimed();
 
         this.elements = new LinkedHashMap<>(controlLoop.getElements().size());
         for (Entry<UUID, ControlLoopElement> elementEntry : controlLoop.getElements().entrySet()) {
@@ -249,6 +255,10 @@ public class JpaControlLoop extends PfConcept implements PfAuthorative<ControlLo
             return result;
         }
 
+        result = ObjectUtils.compare(primed, other.primed);
+        if (result != 0) {
+            return result;
+        }
         return PfUtils.compareObjects(elements, other.elements);
     }
 }
