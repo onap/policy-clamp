@@ -240,6 +240,11 @@ class JpaControlLoopTest {
         testJpaControlLoop.setDescription(null);
         assertEquals(0, testJpaControlLoop.compareTo(otherJpaControlLoop));
 
+        testJpaControlLoop.setPrimed(true);
+        assertNotEquals(0, testJpaControlLoop.compareTo(otherJpaControlLoop));
+        testJpaControlLoop.setPrimed(false);
+        assertEquals(0, testJpaControlLoop.compareTo(otherJpaControlLoop));
+
         assertEquals(testJpaControlLoop, new JpaControlLoop(testJpaControlLoop));
     }
 

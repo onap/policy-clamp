@@ -76,33 +76,36 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
      *
      * @param controlLoopElementId the ID of the control loop element
      * @param currentState the current state of the control loop element
-     * @param newState the state to which the control loop element is changing to
+     * @param orderedState the state to which the control loop element is changing to
      * @throws PfModelException in case of an exception
      */
     @Override
     public void controlLoopElementStateChange(ToscaConceptIdentifier controlLoopId,
                 UUID controlLoopElementId, ControlLoopState currentState,
-            ControlLoopOrderedState newState) throws PfModelException {
-        switch (newState) {
+            ControlLoopOrderedState orderedState) throws PfModelException {
+        switch (orderedState) {
             case UNINITIALISED:
                 try {
-                    deletePolicyData(controlLoopId, controlLoopElementId, newState);
+                    deletePolicyData(controlLoopId, controlLoopElementId, orderedState);
+                    intermediaryApi.updateControlLoopElementState(controlLoopId,
+                            controlLoopElementId, orderedState, ControlLoopState.UNINITIALISED,
+                            ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
                 } catch (PfModelRuntimeException e) {
                     LOGGER.debug("Deleting policy data failed", e);
                 }
                 break;
             case PASSIVE:
                 intermediaryApi.updateControlLoopElementState(controlLoopId,
-                    controlLoopElementId, newState, ControlLoopState.PASSIVE,
+                    controlLoopElementId, orderedState, ControlLoopState.PASSIVE,
                     ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
                 break;
             case RUNNING:
                 intermediaryApi.updateControlLoopElementState(controlLoopId,
-                    controlLoopElementId, newState, ControlLoopState.RUNNING,
+                    controlLoopElementId, orderedState, ControlLoopState.RUNNING,
                     ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
                 break;
             default:
-                LOGGER.debug("Unknown orderedstate {}", newState);
+                LOGGER.debug("Unknown orderedstate {}", orderedState);
                 break;
         }
     }
