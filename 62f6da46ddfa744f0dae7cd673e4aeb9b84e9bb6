@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a2bca7eb_8ab73b0e",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2021-09-13T15:42:36Z",
+      "side": 1,
+      "message": "do we need to remove the participant from db as well? Or keep them in terminated state.",
+      "range": {
+        "startLine": 171,
+        "startChar": 20,
+        "endLine": 171,
+        "endChar": 81
+      },
+      "revId": "62f6da46ddfa744f0dae7cd673e4aeb9b84e9bb6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
