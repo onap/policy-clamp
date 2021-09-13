@@ -1,0 +1,131 @@
+# ============LICENSE_START=======================================================
+# Copyright (C) 2021 Nordix Foundation.
+# ================================================================================
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# SPDX-License-Identifier: Apache-2.0
+# ============LICENSE_END=========================================================
+tosca_definitions_version: tosca_simple_yaml_1_3
+topology_template:
+  node_templates:
+    org.oran.asd.MyApplicationServiceDeploymentItem0:
+      version: 1.0.0
+      type: org.oran.asd.DeploymentItem
+      type_version: 1.0.1
+      description: The first Deployment Item in our Application Service
+      properties:
+        deployemntItemId: org.oran.asd.MyApplicationServiceDeploymentItem0:1.0.0
+        artifactId: org.oran.asd.MyApplicationServiceDeploymentArtifact0:1.0.0
+        lifecycleParameters: To be defined
+        provider: Ericsson
+        participantType: org.onap.policy.controlloop.participant.Kubernetes:1.0.0
+        startPhase: 2
+        uninitializedToPassiveTimeout: 180
+        chart:
+            chartId: MyApplicationServiceDeploymentItem0Chart:1.0.0
+            releaseName: SomeRelease
+            namespace: org.oran.asd.MyApplicationService
+    org.oran.asd.MyApplicationServiceDeploymentItem1:
+      version: 1.0.0
+      type: org.oran.asd.DeploymentItem
+      type_version: 1.0.1
+      description: The second Deployment Item in our Application Service
+      properties:
+        deployemntItemId: org.oran.asd.MyApplicationServiceDeploymentItem1:1.0.0
+        artifactId: org.oran.asd.MyApplicationServiceDeploymentArtifact1:1.0.0
+        lifecycleParameters: To be defined
+        provider: Ericsson
+        participantType: org.onap.policy.controlloop.participant.Kubernetes:1.0.0
+        startPhase: 4
+        uninitializedToPassiveTimeout: 10
+        chart:
+            chartId: MyApplicationServiceDeploymentItem1Chart:1.0.0
+            releaseName: SomeRelease
+            namespace: org.oran.asd.MyApplicationService
+    org.oran.asd.MyApplicationRestConfig:
+      version: 1.0.0
+      type: org.onap.policy.clamp.controlloop.HttpControlLoopElement
+      type_version: 1.0.1
+      description: The REST configuration for My Application
+      properties:
+        provider: Ericsson
+        participantType: org.onap.policy.controlloop.participant.Http:1.0.0
+        startPhase: 1
+        baseUrl: https://10.10.10.10:12345/MyApplicationServiceDeploymentItem0RestEndpoint
+        httpHeaders:
+          "Content-Type": "application/json"
+          "Accept": "application/json"
+        configurationEntities:
+          org.onap.policy.controlloop.gentleguidance.setDomainConfig:1.0.0:
+            configurationEntityId: org.onap.policy.controlloop.gentleguidance.setDomainConfig:1.0.0
+            restSequence:
+            - restRequestId: org.oran.asd.myapplication.setDomainConfig.CreateConfig:1.0.0
+              httpMethd: POST
+              path: "gentle/create"
+              body:
+                gentleLevel: veryGentle
+                gentleType: softAndFurry
+              expectedResponse: 200
+            - restRequestId: org.oran.asd.myapplication.setDomainConfig.CreateConfig:1.0.0
+              httpMethd: POST
+              path: "guidance/create"
+              body:
+                guidanceLevel: high
+                guidanceType: subtle
+              expectedResponse: 200
+          org.oran.asd.myapplication.updateDomainConfig:1.0.0:
+            configurationEntityId: org.oran.asd.myapplication.updateDomainConfig:1.0.0
+            restSequence:
+            - restRequestId: org.oran.asd.myapplication.updateDomainConfig.UpdateConfig:1.0.0
+              httpMethd: PUT
+              path: "gentle/update]"
+              body:
+                gentleLevel: robust
+                gentleType: hardAndGritty
+              expectedResponse: 200
+            - restRequestId: org.oran.asd.myapplication.updateDomainConfig.UpdateConfig:1.0.0
+              httpMethd: PUT
+              path: "guidance/update"
+              body:
+                guidanceLevel: low
+                guidanceType: terse
+              expectedResponse: 200
+    org.oran.asd.MyApplicationPolicy:
+      version: 1.0.0
+      type: org.onap.policy.clamp.controlloop.PolicyControlLoopElement
+      type_version: 1.0.1
+      description: My Application Operational Policy
+      properties:
+        provider: Ericsson
+        participantType: org.onap.policy.controlloop.participant.Policy:1.0.0
+        startPhase: 0
+        policyType: onap.policies.controlloop.operational.common.Apex:1.0.0
+        policyId: org.oran.asd.myapplication.ServiceControlPolicy:1.0.0
+    org.org.oran.asd.MyApplicationService:
+      version: 1.0.0
+      type: org.oran.asd.ASD
+      type_version: 1.0.1
+      description: ASD Definition of the My Application Service
+      properties:
+        asdId: org.org.oran.asd.MyApplicationService:1.0.0
+        asdSchemaVersion: 2.3.2
+        provider: Ericsson
+        asdApplication: org.oran.asd.MyWonderfulApplicationService:1.2.1
+        asdApplicationInfoName: The wonderful ASD service that does everything imaginable
+        asdExtCpd: To be defined
+        enhancedCludterCapabilities: To be defined
+        elements:
+        - org.oran.asd.MyApplicationServiceDeploymentItem0:1.0.0
+        - org.oran.asd.MyApplicationServiceDeploymentItem1:1.0.0
+        - org.oran.asd.MyApplicationRestConfig:1.0.0
+        - org.oran.asd.MyApplicationPolicy:1.0.0
