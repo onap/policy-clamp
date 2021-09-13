@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "81f80577_e0ff04f4",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoop.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2021-09-13T15:40:07Z",
+      "side": 1,
+      "message": "can we use lombok annotations?",
+      "range": {
+        "startLine": 116,
+        "startChar": 3,
+        "endLine": 123,
+        "endChar": 5
+      },
+      "revId": "170f93a4116aa84812df4eb60c1a4d82d18cfbb1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "72fdab95_c0ff86ed",
         "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ControlLoopHandler.java",
         "patchSetId": 1
@@ -13,6 +36,52 @@
       "writtenOn": "2021-09-13T14:28:51Z",
       "side": 1,
       "message": "I guess we could use a stream/lambda approach here?",
+      "revId": "170f93a4116aa84812df4eb60c1a4d82d18cfbb1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a49917b7_fa9e4b61",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/rest/InstantiationController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 589,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2021-09-13T15:40:07Z",
+      "side": 1,
+      "message": "should this be updated?",
+      "range": {
+        "startLine": 589,
+        "startChar": 65,
+        "endLine": 589,
+        "endChar": 99
+      },
+      "revId": "170f93a4116aa84812df4eb60c1a4d82d18cfbb1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "98bcf2e2_b5593adb",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/rest/InstantiationController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 590,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2021-09-13T15:40:07Z",
+      "side": 1,
+      "message": "should this be ControlLoopPrimedResponse?",
+      "range": {
+        "startLine": 590,
+        "startChar": 19,
+        "endLine": 590,
+        "endChar": 37
+      },
       "revId": "170f93a4116aa84812df4eb60c1a4d82d18cfbb1",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
