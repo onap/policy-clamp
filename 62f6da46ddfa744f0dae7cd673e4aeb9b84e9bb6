@@ -22,6 +22,30 @@
       "revId": "62f6da46ddfa744f0dae7cd673e4aeb9b84e9bb6",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a4352715_c10704b5",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-09-13T15:52:22Z",
+      "side": 1,
+      "message": "We thought it would be better to keep them in terminated state for debugging/tracing and also so that they could be used again in the future.",
+      "parentUuid": "a2bca7eb_8ab73b0e",
+      "range": {
+        "startLine": 171,
+        "startChar": 20,
+        "endLine": 171,
+        "endChar": 81
+      },
+      "revId": "62f6da46ddfa744f0dae7cd673e4aeb9b84e9bb6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
