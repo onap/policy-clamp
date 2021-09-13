@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "72fdab95_c0ff86ed",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ControlLoopHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 348,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-09-13T14:28:51Z",
+      "side": 1,
+      "message": "I guess we could use a stream/lambda approach here?",
+      "revId": "170f93a4116aa84812df4eb60c1a4d82d18cfbb1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "87a866dd_5d870387",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-09-13T14:28:51Z",
+      "side": 1,
+      "message": "Same here?",
+      "revId": "170f93a4116aa84812df4eb60c1a4d82d18cfbb1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
