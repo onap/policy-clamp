@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a8d67e3f_f16c9c49",
+        "filename": "participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/client/PolicyPapHttpClient.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2021-09-14T13:53:24Z",
+      "side": 1,
+      "message": "Instead of creating the json structure manually, you could have used the DeploymentGroups already available in policy/models repo - https://github.com/onap/policy-models/blob/master/models-pdp/src/main/java/org/onap/policy/models/pdp/concepts/DeploymentGroups.java",
+      "range": {
+        "startLine": 59,
+        "startChar": 8,
+        "endLine": 84,
+        "endChar": 0
+      },
+      "revId": "d2bb21f150442a114f8f0d4dd780f78bf6f54b3d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
