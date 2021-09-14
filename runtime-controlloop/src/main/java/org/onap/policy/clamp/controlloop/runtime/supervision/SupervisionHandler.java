@@ -34,6 +34,8 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopInfo;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantHealthStatus;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ControlLoopProvider;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ParticipantProvider;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopAck;
@@ -159,6 +161,22 @@ public class SupervisionHandler {
     @MessageIntercept
     public void handleParticipantMessage(ParticipantDeregister participantDeregisterMessage) {
         LOGGER.debug("Participant Deregister received {}", participantDeregisterMessage);
+        try {
+            var participantList =
+                participantProvider.getParticipants(participantDeregisterMessage.getParticipantId().getName(),
+                    participantDeregisterMessage.getParticipantId().getVersion());
+
+            if (participantList != null) {
+                for (Participant participant : participantList) {
+                    participant.setParticipantState(ParticipantState.TERMINATED);
+                    participant.setHealthStatus(ParticipantHealthStatus.OFF_LINE);
+                }
+                participantProvider.updateParticipants(participantList);
+            }
+        } catch (PfModelException pfme) {
+            LOGGER.warn("Model exception occured {}", participantDeregisterMessage.getParticipantId());
+        }
+
         participantDeregisterAckPublisher.send(participantDeregisterMessage.getMessageId());
     }
 
