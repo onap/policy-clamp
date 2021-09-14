@@ -6,7 +6,10 @@ target
 .idea
 .checkstyle
 *.iml
-ui-react/node_modules
+runtime/ui-react/node_modules
+runtime/ui-react/package-lock.json
+runtime/ui-react-lib/node_modules
+runtime/ui-react-lib/package-lock.json
 ui-react/build
 **/.evosuite/
 **/debug-logs/
