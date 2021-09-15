@@ -99,7 +99,7 @@
         <npm.publish.url>https://nexus3.onap.org/repository/npm.snapshot/</npm.publish.url>
 
         <!--  This property triggers generation of the Swagger documents -->
-        <swagger.generation.phase>post-integration-test</swagger.generation.phase>
+        <!-- swagger.generation.phase>post-integration-test</swagger.generation.phase-->
     </properties>
 
     <profiles>
