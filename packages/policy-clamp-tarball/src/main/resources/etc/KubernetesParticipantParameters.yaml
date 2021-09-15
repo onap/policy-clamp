@@ -26,12 +26,14 @@ participant:
             - ${topicServer:message-router}
           topicCommInfrastructure: dmaap
           fetchTimeout: 15000
+          useHttps: true
       topicSinks:
         -
           topic: POLICY-CLRUNTIME-PARTICIPANT
           servers:
             - ${topicServer:message-router}
           topicCommInfrastructure: dmaap
+          useHttps: true
 
 management:
   endpoints:
@@ -42,6 +44,8 @@ server:
   # Configuration of the HTTP/REST server. The parameters are defined and handled by the springboot framework.
   # See springboot documentation.
   port: 8083
+  servlet:
+    context-path: /onap/k8sparticipant
 
 logging:
   # Configuration of logging
