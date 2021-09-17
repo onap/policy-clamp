@@ -14,15 +14,14 @@ Go to clamp/runtime-controlloop
 mvn spring-boot:run -Dspring-boot.run.arguments="--topicServer=localhost --mariadb.host=localhost"
 
 Run Participant from command line using Maven
-mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=8080 --topicServer=localhost"
-mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=8081 --topicServer=localhost"
-mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=8082 --topicServer=localhost"
+mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=8080
+mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=8081
+mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=8082
 
 Run Participant from command line using Jar
-java -jar -Dserver.port=8080 -DtopicServer=localhost target/policy-clamp-participant-impl-simulator-6.1.2-SNAPSHOT.jar
-java -jar -Dserver.port=8081 -DtopicServer=localhost target/policy-clamp-participant-impl-dcae-6.1.2-SNAPSHOT.jar
-java -jar -Dserver.port=8082 -DtopicServer=localhost target/policy-clamp-participant-impl-policy-6.1.2-SNAPSHOT.jar
-java -jar -DtopicServer=localhost target/policy-clamp-participant-impl-kubernetes-6.1.2-SNAPSHOT.jar
+java -jar -Dserver.port=8080 target/policy-clamp-participant-impl-simulator-6.1.2-SNAPSHOT.jar
+java -jar -Dserver.port=8082 target/policy-clamp-participant-impl-policy-6.1.2-SNAPSHOT.jar
+java -jar target/policy-clamp-participant-impl-kubernetes-6.1.2-SNAPSHOT.jar
 
 Config of DB
 
@@ -38,6 +37,24 @@ MariaDB [(none)]> SHOW GRANTS for 'policy'@localhost;
 | GRANT ALL PRIVILEGES ON `controlloop`.* TO `policy`@`localhost`                                               |
 +---------------------------------------------------------------------------------------------------------------+
 2 rows in set (0.000 sec)
+
+//Generate the keystore
+//clone policy/docker
+cd docker/csit
+./gen_truststore.sh
+./gen_keystore.sh
+//the keystore generated: /docker/csit/config/ks.jks
+
+Run Participant from command line using Docker
+docker run --add-host=message-router:<ip-router> -p 6969:6969 --mount type=bind,source=<path-keystore-file>,target=/opt/app/policy/clamp/etc/ssl/policy-keystore onap/policy-clamp-cl-runtime
+docker run --add-host=message-router:<ip-router> -p 8083:8083 --mount type=bind,source=<path-keystore-file>,target=/opt/app/policy/clamp/etc/ssl/policy-keystore onap/policy-clamp-cl-k8s-ppnt
+docker run --add-host=message-router:<ip-router> --mount type=bind,source=<path-keystore-file>,target=/opt/app/policy/clamp/etc/ssl/policy-keystore onap/policy-clamp-cl-http-ppnt
+docker run --add-host=message-router:<ip-router> --mount type=bind,source=<path-keystore-file>,target=/opt/app/policy/clamp/etc/ssl/policy-keystore onap/policy-clamp-cl-pf-ppnt
+
+Note:
+/policy-clamp-tarball/src/main/resources/etc/ssl/policy-truststore is the truststore for DMaap of oom project
+Participant-k8 swagger: https://localhost:8083/onap/k8sparticipant/swagger-ui/
+CL-Runtime swagger: https://localhost:6969/onap/controlloop/swagger-ui/
 
 
 Run Policy API:
