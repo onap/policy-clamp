@@ -36,6 +36,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantUpdates;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaProperty;
 
 /**
  * Test the copy constructor.
@@ -62,8 +63,11 @@ class ControlLoopUpdateTest {
         clElement.setParticipantId(id);
         clElement.setParticipantType(id);
 
-        Map<String, String> commonPropertiesMap = Map.of("Prop1", "PropValue");
-        clElement.setCommonPropertiesMap(commonPropertiesMap);
+        ToscaProperty property = new ToscaProperty();
+        property.setName("test");
+        property.setType("testType");
+        Map<String, ToscaProperty> propertiesMap = Map.of("Prop1", property);
+        clElement.setPropertiesMap(propertiesMap);
 
         ParticipantUpdates participantUpdates = new ParticipantUpdates();
         participantUpdates.setParticipantId(id);

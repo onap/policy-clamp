@@ -31,6 +31,7 @@ import lombok.ToString;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaProperty;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 /**
@@ -66,7 +67,7 @@ public class ControlLoopElement {
 
     // A map indexed by the property name. Each map entry is the serialized value of the property,
     // which can be deserialized into an instance of the type of the property.
-    private Map<String, String> commonPropertiesMap = new LinkedHashMap<>();
+    private Map<String, ToscaProperty> propertiesMap = new LinkedHashMap<>();
 
     /**
      * Copy constructor, does a deep copy but as all fields here are immutable, it's just a regular copy.
@@ -83,6 +84,6 @@ public class ControlLoopElement {
         this.toscaServiceTemplateFragment = otherElement.toscaServiceTemplateFragment;
         this.description = otherElement.description;
         this.clElementStatistics = otherElement.clElementStatistics;
-        this.commonPropertiesMap = PfUtils.mapMap(otherElement.commonPropertiesMap, UnaryOperator.identity());
+        this.propertiesMap = PfUtils.mapMap(otherElement.propertiesMap, UnaryOperator.identity());
     }
 }

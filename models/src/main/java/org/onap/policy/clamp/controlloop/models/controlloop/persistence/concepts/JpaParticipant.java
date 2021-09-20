@@ -70,6 +70,11 @@ public class JpaParticipant extends PfConcept implements PfAuthorative<Participa
     private PfConceptKey definition;
     // @formatter:on
 
+    @NotNull
+    @AttributeOverride(name = "name",    column = @Column(name = "participant_type_name"))
+    @AttributeOverride(name = "version", column = @Column(name = "participant_type_version"))
+    private PfConceptKey participantType;
+
     @Column
     @NotNull
     private ParticipantState participantState;
@@ -125,6 +130,7 @@ public class JpaParticipant extends PfConcept implements PfAuthorative<Participa
         this.participantState = copyConcept.participantState;
         this.healthStatus = copyConcept.healthStatus;
         this.description = copyConcept.description;
+        this.participantType = copyConcept.participantType;
     }
 
     /**
@@ -146,6 +152,7 @@ public class JpaParticipant extends PfConcept implements PfAuthorative<Participa
         participant.setParticipantState(participantState);
         participant.setHealthStatus(healthStatus);
         participant.setDescription(description);
+        participant.setParticipantType(new ToscaConceptIdentifier(participantType));
 
         return participant;
     }
@@ -160,6 +167,7 @@ public class JpaParticipant extends PfConcept implements PfAuthorative<Participa
         this.setParticipantState(participant.getParticipantState());
         this.setHealthStatus(participant.getHealthStatus());
         this.setDescription(participant.getDescription());
+        this.participantType = participant.getParticipantType().asConceptKey();
     }
 
     @Override
@@ -167,6 +175,7 @@ public class JpaParticipant extends PfConcept implements PfAuthorative<Participa
         List<PfKey> keyList = getKey().getKeys();
 
         keyList.add(definition);
+        keyList.add(participantType);
 
         return keyList;
     }
@@ -176,6 +185,7 @@ public class JpaParticipant extends PfConcept implements PfAuthorative<Participa
         key.clean();
         definition.clean();
         description = (description == null ? null : description.trim());
+        participantType.clean();
     }
 
     @Override
@@ -207,6 +217,11 @@ public class JpaParticipant extends PfConcept implements PfAuthorative<Participa
         }
 
         result = ObjectUtils.compare(healthStatus, other.healthStatus);
+        if (result != 0) {
+            return result;
+        }
+
+        result = ObjectUtils.compare(participantType, other.participantType);
         if (result != 0) {
             return result;
         }

@@ -42,6 +42,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaProperty;
 
 class ParticipantStatusTest {
 
@@ -117,7 +118,11 @@ class ParticipantStatusTest {
         ControlLoopElementDefinition clDefinition = new ControlLoopElementDefinition();
         clDefinition.setClElementDefinitionId(id);
         clDefinition.setControlLoopElementToscaNodeTemplate(toscaNodeTemplate);
-        Map<String, String> commonPropertiesMap = Map.of("Prop1", "PropValue");
+
+        ToscaProperty property = new ToscaProperty();
+        property.setName("test");
+        property.setType("testType");
+        Map<String, ToscaProperty> commonPropertiesMap = Map.of("Prop1", property);
         clDefinition.setCommonPropertiesMap(commonPropertiesMap);
         return clDefinition;
     }

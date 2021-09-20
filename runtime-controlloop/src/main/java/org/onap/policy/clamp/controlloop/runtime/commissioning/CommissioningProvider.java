@@ -40,6 +40,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdate;
 import org.onap.policy.clamp.controlloop.models.messages.rest.commissioning.CommissioningResponse;
 import org.onap.policy.clamp.controlloop.runtime.supervision.SupervisionHandler;
+import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantUpdatePublisher;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaCapabilityType;
@@ -108,23 +109,13 @@ public class CommissioningProvider {
         synchronized (lockit) {
             modelsProvider.createServiceTemplate(serviceTemplate);
             List<Participant> participantList =
-                participantProvider.getParticipants(null,
-                    null);
-
-            if (participantList != null) {
-                for (Participant participant: participantList) {
-                    var participantType = new ToscaConceptIdentifier();
-                    participantType.setName(participant.getType());
-                    participantType.setVersion(participant.getTypeVersion());
-
-                    var participantUpdate = new ParticipantUpdate();
-                    participantUpdate.setParticipantId(participant.getDefinition());
-                    participantUpdate.setParticipantType(participantType);
-
-                    this.supervisionHandler.handleSendCommissionMessage(participantUpdate);
-                }
+                participantProvider.getParticipants(null, null);
+            if (!participantList.isEmpty()) {
+                this.supervisionHandler.handleSendCommissionMessage(
+                    getCommonOrInstancePropertiesFromNodeTypes(true,
+                        serviceTemplate.getName(),
+                        serviceTemplate.getVersion()));
             }
-
         }
 
         var response = new CommissioningResponse();
@@ -159,21 +150,9 @@ public class CommissioningProvider {
             List<Participant> participantList =
                 participantProvider.getParticipants(null,
                     null);
-
-            if (participantList != null) {
-                for (Participant participant : participantList) {
-                    var participantType = new ToscaConceptIdentifier();
-                    participantType.setName(participant.getType());
-                    participantType.setVersion(participant.getTypeVersion());
-
-                    var participantUpdate = new ParticipantUpdate();
-                    participantUpdate.setParticipantId(participant.getDefinition());
-                    participantUpdate.setParticipantType(participantType);
-
-                    this.supervisionHandler.handleSendDeCommissionMessage(participantUpdate);
-                }
+            if (!participantList.isEmpty()) {
+                this.supervisionHandler.handleSendDeCommissionMessage();
             }
-
             modelsProvider.deleteServiceTemplate(name, version);
         }
 
@@ -342,7 +321,7 @@ public class CommissioningProvider {
      * @return the node types with common or instance properties
      * @throws PfModelException on errors getting node type properties
      */
-    private Map<String, ToscaNodeType> getCommonOrInstancePropertiesFromNodeTypes(boolean common, String name,
+    public Map<String, ToscaNodeType> getCommonOrInstancePropertiesFromNodeTypes(boolean common, String name,
             String version) throws PfModelException {
         var serviceTemplates = new ToscaServiceTemplates();
         serviceTemplates.setServiceTemplates(modelsProvider.getServiceTemplateList(name, version));

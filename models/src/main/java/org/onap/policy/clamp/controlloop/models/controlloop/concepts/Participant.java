@@ -44,6 +44,9 @@ public class Participant extends ToscaEntity implements Comparable<Participant> 
     @NonNull
     private ParticipantHealthStatus healthStatus = ParticipantHealthStatus.UNKNOWN;
 
+    @NonNull
+    private ToscaConceptIdentifier participantType = new ToscaConceptIdentifier();
+
     @Override
     public String getType() {
         return definition.getName();
@@ -69,5 +72,6 @@ public class Participant extends ToscaEntity implements Comparable<Participant> 
         this.definition = new ToscaConceptIdentifier(otherParticipant.definition);
         this.participantState = otherParticipant.participantState;
         this.healthStatus = otherParticipant.healthStatus;
+        this.participantType = otherParticipant.participantType;
     }
 }

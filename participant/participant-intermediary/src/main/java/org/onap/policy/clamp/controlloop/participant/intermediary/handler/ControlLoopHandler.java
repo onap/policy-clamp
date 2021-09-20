@@ -22,6 +22,7 @@
 package org.onap.policy.clamp.controlloop.participant.intermediary.handler;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +48,7 @@ import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.Par
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -265,7 +267,8 @@ public class ControlLoopHandler {
     private ToscaNodeTemplate getClElementNodeTemplate(List<ControlLoopElementDefinition> clElementDefinitions,
             ToscaConceptIdentifier clElementDefId) {
         for (var clElementDefinition : clElementDefinitions) {
-            if (clElementDefinition.getClElementDefinitionId().equals(clElementDefId)) {
+            if (clElementDefId.getName().contains(
+                clElementDefinition.getClElementDefinitionId().getName())) {
                 return clElementDefinition.getControlLoopElementToscaNodeTemplate();
             }
         }
@@ -363,5 +366,22 @@ public class ControlLoopHandler {
         var controlLoops = new ControlLoops();
         controlLoops.setControlLoopList(new ArrayList<>(controlLoopMap.values()));
         return controlLoops;
+    }
+
+    /**
+     * Get properties of a controlloopelement.
+     *
+     * @param id the control loop element id
+     * @return the instance properties
+     */
+    public Map<String, ToscaProperty> getClElementInstanceProperties(UUID id) {
+        Map<String, ToscaProperty> propertiesMap = new HashMap<>();
+        for (var controlLoop : controlLoopMap.values()) {
+            var element = controlLoop.getElements().get(id);
+            if (element != null) {
+                propertiesMap.putAll(element.getPropertiesMap());
+            }
+        }
+        return propertiesMap;
     }
 }

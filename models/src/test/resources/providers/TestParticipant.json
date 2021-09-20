@@ -7,5 +7,9 @@
   },
   "participantState": "PASSIVE",
   "healthStatus": "HEALTHY",
-  "description": "A dummy PMSH participant1"
+  "description": "A dummy PMSH participant1",
+  "participantType":{
+    "name": "org.onap.domain.pmsh.PolicyControlLoopDefinition",
+    "version": "1.0.0"
+  }
 }
