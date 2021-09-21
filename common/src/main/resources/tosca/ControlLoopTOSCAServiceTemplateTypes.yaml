@@ -47,7 +47,7 @@ node_types:
         type: integer
         required: false
         constraints:
-        - greater-or-equal: 0
+        - greater_or_equal: 0
         metadata:
             common: true
         description: A value indicating the start phase in which this control loop element will be started, the
@@ -58,7 +58,7 @@ node_types:
         type: integer
         required: false
         constraints:
-        - greater-or-equal: 0
+        - greater_or_equal: 0
         default: 60
         metadata:
             common: true
@@ -67,7 +67,7 @@ node_types:
         type: integer
         required: false
         constraints:
-        - greater-or-equal: 0
+        - greater_or_equal: 0
         default: 60
         metadata:
             common: true
@@ -76,7 +76,7 @@ node_types:
         type: integer
         required: false
         constraints:
-        - greater-or-equal: 0
+        - greater_or_equal: 0
         default: 60
         metadata:
             common: true
@@ -85,11 +85,20 @@ node_types:
         type: integer
         required: false
         constraints:
-        - greater-or-equal: 0
+        - greater_or_equal: 0
         default: 60
         metadata:
             common: true
         description: The maximum time in seconds to wait for a state chage from passive to uninitialized
+      startDelay:
+        type: integer
+        required: false
+        constraints:
+        - greater_or_equal: 0
+        default: 0
+        metadata:
+            common: true
+        description: The number of milliseconds that the start of this control loop element should be delayed
   org.onap.policy.clamp.controlloop.ControlLoop:
     version: 1.0.1
     derived_from: tosca.nodetypes.Root
