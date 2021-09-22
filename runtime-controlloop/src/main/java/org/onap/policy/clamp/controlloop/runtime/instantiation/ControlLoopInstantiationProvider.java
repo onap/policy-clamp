@@ -74,6 +74,7 @@ public class ControlLoopInstantiationProvider {
     private static final String CONTROL_LOOP_NODE_TYPE = "org.onap.policy.clamp.controlloop.ControlLoop";
     private static final String CONTROL_LOOP_NODE_ELEMENT_TYPE = "ControlLoopElement";
     private static final String PARTICIPANT_ID_PROPERTY_KEY = "participant_id";
+    private static final String PARTICIPANT_TYPE_PROPERTY_KEY = "participantType";
     private static final String CL_ELEMENT_NAME = "name";
     private static final String CL_ELEMENT_VERSION = "version";
     private static final String INSTANCE_TEXT = "_Instance";
@@ -475,7 +476,7 @@ public class ControlLoopInstantiationProvider {
         }
 
         if (template.getType().contains(CONTROL_LOOP_NODE_ELEMENT_TYPE)) {
-            ControlLoopElement controlLoopElement = getControlLoopElement(instanceName, newNodeTemplate);
+            ControlLoopElement controlLoopElement = getControlLoopElement(newNodeTemplate);
             controlLoopElements.put(controlLoopElement.getId(), controlLoopElement);
         }
 
@@ -548,12 +549,11 @@ public class ControlLoopInstantiationProvider {
     /**
      * Retrieves Control Loop Element.
      *
-     * @param instanceName instance name to be appended to participant name
      * @param template tosca node template
      * @return a control loop element
      */
     @SuppressWarnings("unchecked")
-    private ControlLoopElement getControlLoopElement(String instanceName, ToscaNodeTemplate template) {
+    private ControlLoopElement getControlLoopElement(ToscaNodeTemplate template) {
         ControlLoopElement controlLoopElement = new ControlLoopElement();
         ToscaConceptIdentifier definition = new ToscaConceptIdentifier();
         definition.setName(template.getName());
@@ -563,12 +563,22 @@ public class ControlLoopInstantiationProvider {
         LinkedTreeMap<String, Object> participantId = (LinkedTreeMap<String, Object>) template.getProperties()
             .get(PARTICIPANT_ID_PROPERTY_KEY);
 
-        ToscaConceptIdentifier participantIdAndType = new ToscaConceptIdentifier();
-        participantIdAndType.setName(participantId.get(CL_ELEMENT_NAME) + instanceName);
-        participantIdAndType.setVersion(String.valueOf(participantId.get(CL_ELEMENT_VERSION)));
+        if (participantId != null) {
+            ToscaConceptIdentifier participantIdProperty = new ToscaConceptIdentifier();
+            participantIdProperty.setName(String.valueOf(participantId.get(CL_ELEMENT_NAME)));
+            participantIdProperty.setVersion(String.valueOf(participantId.get(CL_ELEMENT_VERSION)));
+            controlLoopElement.setParticipantId(participantIdProperty);
+        }
 
-        controlLoopElement.setParticipantType(participantIdAndType);
-        controlLoopElement.setParticipantId(participantIdAndType);
+        LinkedTreeMap<String, Object> participantType = (LinkedTreeMap<String, Object>) template.getProperties()
+            .get(PARTICIPANT_TYPE_PROPERTY_KEY);
+
+        if (participantType != null) {
+            ToscaConceptIdentifier participantTypeProperty = new ToscaConceptIdentifier();
+            participantTypeProperty.setName(String.valueOf(participantType.get(CL_ELEMENT_NAME)));
+            participantTypeProperty.setVersion(participantType.get(CL_ELEMENT_VERSION).toString());
+            controlLoopElement.setParticipantType(participantTypeProperty);
+        }
 
         return controlLoopElement;
     }
