@@ -40,6 +40,7 @@ public class ControlLoopUpdate extends ParticipantMessage {
 
     // A list of ParticipantUpdates instances which carries details of an updated participant.
     private List<ParticipantUpdates> participantUpdatesList = new ArrayList<>();
+    private Integer startPhase = 0;
 
     /**
      * Constructor for instantiating ControlLoopUpdate class with message name.

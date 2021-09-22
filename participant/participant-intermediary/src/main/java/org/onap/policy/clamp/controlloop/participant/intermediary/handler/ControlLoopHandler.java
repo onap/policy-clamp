@@ -37,6 +37,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoops;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantUpdates;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantUtils;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopAck;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopStateChange;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopUpdate;
@@ -217,6 +218,15 @@ public class ControlLoopHandler {
             return;
         }
 
+        if (0 == updateMsg.getStartPhase()) {
+            handleClUpdatePhase0(updateMsg, clElementDefinitions);
+        } else {
+            handleClUpdatePhaseN(updateMsg, clElementDefinitions);
+        }
+    }
+
+    private void handleClUpdatePhase0(ControlLoopUpdate updateMsg,
+            List<ControlLoopElementDefinition> clElementDefinitions) {
         var controlLoop = controlLoopMap.get(updateMsg.getControlLoopId());
 
         // TODO: Updates to existing ControlLoops are not supported yet (Addition/Removal of ControlLoop
@@ -242,28 +252,51 @@ public class ControlLoopHandler {
 
         var clElements = storeElementsOnThisParticipant(updateMsg.getParticipantUpdatesList());
 
-        try {
-            for (var element : clElements) {
-                var clElementNodeTemplate =
-                        getClElementNodeTemplate(clElementDefinitions, element.getDefinition());
-                for (var clElementListener : listeners) {
-                    clElementListener.controlLoopElementUpdate(updateMsg.getControlLoopId(), element,
-                            clElementNodeTemplate);
-                }
-            }
-        } catch (PfModelException e) {
-            LOGGER.debug("Control loop element update failed {}", updateMsg.getControlLoopId());
-        }
-
         var clElementMap = prepareClElementMap(clElements);
         controlLoop = new ControlLoop();
         controlLoop.setDefinition(updateMsg.getControlLoopId());
         controlLoop.setElements(clElementMap);
         controlLoopMap.put(updateMsg.getControlLoopId(), controlLoop);
+
+        handleControlLoopElementUpdate(clElements, clElementDefinitions, updateMsg.getStartPhase(),
+                updateMsg.getControlLoopId());
+    }
+
+    private void handleClUpdatePhaseN(ControlLoopUpdate updateMsg,
+            List<ControlLoopElementDefinition> clElementDefinitions) {
+
+        var clElementList = updateMsg.getParticipantUpdatesList().stream()
+                .flatMap(participantUpdate -> participantUpdate.getControlLoopElementList().stream())
+                .filter(element -> participantType.equals(element.getParticipantType())).collect(Collectors.toList());
+
+        handleControlLoopElementUpdate(clElementList, clElementDefinitions, updateMsg.getStartPhase(),
+                updateMsg.getControlLoopId());
+    }
+
+    private void handleControlLoopElementUpdate(List<ControlLoopElement> clElements,
+            List<ControlLoopElementDefinition> clElementDefinitions, Integer startPhaseMsg,
+            ToscaConceptIdentifier controlLoopId) {
+        try {
+            for (var element : clElements) {
+                var clElementNodeTemplate = getClElementNodeTemplate(clElementDefinitions, element.getDefinition());
+                if (clElementNodeTemplate != null) {
+                    int startPhase = ParticipantUtils.findStartPhase(clElementNodeTemplate.getProperties());
+                    if (startPhaseMsg.equals(startPhase)) {
+                        for (var clElementListener : listeners) {
+                            clElementListener.controlLoopElementUpdate(controlLoopId, element, clElementNodeTemplate);
+                        }
+                    }
+                }
+            }
+        } catch (PfModelException e) {
+            LOGGER.debug("Control loop element update failed {}", controlLoopId);
+        }
+
     }
 
     private ToscaNodeTemplate getClElementNodeTemplate(List<ControlLoopElementDefinition> clElementDefinitions,
             ToscaConceptIdentifier clElementDefId) {
+
         for (var clElementDefinition : clElementDefinitions) {
             if (clElementDefinition.getClElementDefinitionId().equals(clElementDefId)) {
                 return clElementDefinition.getControlLoopElementToscaNodeTemplate();
@@ -273,14 +306,14 @@ public class ControlLoopHandler {
     }
 
     private List<ControlLoopElement> storeElementsOnThisParticipant(List<ParticipantUpdates> participantUpdates) {
-        var clElementMap = participantUpdates.stream()
+        var clElementList = participantUpdates.stream()
                 .flatMap(participantUpdate -> participantUpdate.getControlLoopElementList().stream())
                 .filter(element -> participantType.equals(element.getParticipantType())).collect(Collectors.toList());
 
-        for (var element : clElementMap) {
+        for (var element : clElementList) {
             elementsOnThisParticipant.put(element.getId(), element);
         }
-        return clElementMap;
+        return clElementList;
     }
 
     private Map<UUID, ControlLoopElement> prepareClElementMap(List<ControlLoopElement> clElements) {
@@ -345,8 +378,8 @@ public class ControlLoopHandler {
         controlLoop.getElements().values().stream().forEach(clElement -> {
             for (var clElementListener : listeners) {
                 try {
-                    clElementListener.controlLoopElementStateChange(controlLoop.getDefinition(),
-                            clElement.getId(), clElement.getState(), orderedState);
+                    clElementListener.controlLoopElementStateChange(controlLoop.getDefinition(), clElement.getId(),
+                            clElement.getState(), orderedState);
                 } catch (PfModelException e) {
                     LOGGER.debug("Control loop element update failed {}", controlLoop.getDefinition());
                 }

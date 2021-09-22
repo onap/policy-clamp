@@ -46,13 +46,16 @@ import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantSta
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantUpdatePublisher;
 import org.onap.policy.clamp.controlloop.runtime.util.CommonTestData;
 import org.onap.policy.models.base.PfModelException;
+import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 class SupervisionScannerTest {
 
     @Test
     void testScannerOrderedStateEqualsToState() throws PfModelException {
         var controlLoopProvider = mock(ControlLoopProvider.class);
+        var modelsProvider = mock(PolicyModelsProvider.class);
         var controlLoopStateChangePublisher = mock(ControlLoopStateChangePublisher.class);
         var controlLoopUpdatePublisher = mock(ControlLoopUpdatePublisher.class);
         var participantProvider = mock(ParticipantProvider.class);
@@ -63,9 +66,9 @@ class SupervisionScannerTest {
         var controlLoop = new ControlLoop();
         when(controlLoopProvider.getControlLoops(null, null)).thenReturn(List.of(controlLoop));
 
-        var supervisionScanner = new SupervisionScanner(controlLoopProvider, controlLoopStateChangePublisher,
-                controlLoopUpdatePublisher, participantProvider, participantStatusReqPublisher,
-                participantUpdatePublisher, clRuntimeParameterGroup);
+        var supervisionScanner = new SupervisionScanner(controlLoopProvider, modelsProvider,
+                controlLoopStateChangePublisher, controlLoopUpdatePublisher, participantProvider,
+                participantStatusReqPublisher, participantUpdatePublisher, clRuntimeParameterGroup);
         supervisionScanner.run(false);
 
         verify(controlLoopProvider, times(0)).updateControlLoop(any(ControlLoop.class));
@@ -87,9 +90,12 @@ class SupervisionScannerTest {
         var participantUpdatePublisher = mock(ParticipantUpdatePublisher.class);
         var clRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
 
-        var supervisionScanner = new SupervisionScanner(controlLoopProvider, controlLoopStateChangePublisher,
-                controlLoopUpdatePublisher, participantProvider, participantStatusReqPublisher,
-                participantUpdatePublisher, clRuntimeParameterGroup);
+        var modelsProvider = mock(PolicyModelsProvider.class);
+        when(modelsProvider.getServiceTemplateList(null, null)).thenReturn(List.of(new ToscaServiceTemplate()));
+
+        var supervisionScanner = new SupervisionScanner(controlLoopProvider, modelsProvider,
+                controlLoopStateChangePublisher, controlLoopUpdatePublisher, participantProvider,
+                participantStatusReqPublisher, participantUpdatePublisher, clRuntimeParameterGroup);
         supervisionScanner.run(false);
 
         verify(controlLoopProvider, times(1)).updateControlLoop(any(ControlLoop.class));
@@ -107,15 +113,16 @@ class SupervisionScannerTest {
         participant.setVersion("1.0.0");
         when(participantProvider.getParticipants(null, null)).thenReturn(List.of(participant));
 
+        var modelsProvider = mock(PolicyModelsProvider.class);
         var controlLoopUpdatePublisher = mock(ControlLoopUpdatePublisher.class);
         var participantStatusReqPublisher = mock(ParticipantStatusReqPublisher.class);
         var controlLoopStateChangePublisher = mock(ControlLoopStateChangePublisher.class);
         var participantUpdatePublisher = mock(ParticipantUpdatePublisher.class);
         var clRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
 
-        var supervisionScanner = new SupervisionScanner(controlLoopProvider, controlLoopStateChangePublisher,
-                controlLoopUpdatePublisher, participantProvider, participantStatusReqPublisher,
-                participantUpdatePublisher, clRuntimeParameterGroup);
+        var supervisionScanner = new SupervisionScanner(controlLoopProvider, modelsProvider,
+                controlLoopStateChangePublisher, controlLoopUpdatePublisher, participantProvider,
+                participantStatusReqPublisher, participantUpdatePublisher, clRuntimeParameterGroup);
 
         supervisionScanner.handleParticipantStatus(participant.getKey().asIdentifier());
         supervisionScanner.run(true);
@@ -142,14 +149,15 @@ class SupervisionScannerTest {
         var participantProvider = new ParticipantProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
         participantProvider.updateParticipants(List.of(participant));
 
+        var modelsProvider = mock(PolicyModelsProvider.class);
         var controlLoopUpdatePublisher = mock(ControlLoopUpdatePublisher.class);
         var participantStatusReqPublisher = mock(ParticipantStatusReqPublisher.class);
         var controlLoopStateChangePublisher = mock(ControlLoopStateChangePublisher.class);
         var participantUpdatePublisher = mock(ParticipantUpdatePublisher.class);
 
-        var supervisionScanner = new SupervisionScanner(controlLoopProvider, controlLoopStateChangePublisher,
-                controlLoopUpdatePublisher, participantProvider, participantStatusReqPublisher,
-                participantUpdatePublisher, clRuntimeParameterGroup);
+        var supervisionScanner = new SupervisionScanner(controlLoopProvider, modelsProvider,
+                controlLoopStateChangePublisher, controlLoopUpdatePublisher, participantProvider,
+                participantStatusReqPublisher, participantUpdatePublisher, clRuntimeParameterGroup);
 
         supervisionScanner.handleParticipantStatus(participant.getKey().asIdentifier());
         supervisionScanner.run(true);

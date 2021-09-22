@@ -29,6 +29,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantHealthStatus;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantUtils;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ControlLoopProvider;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ParticipantProvider;
 import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
@@ -37,7 +38,10 @@ import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ControlLoopUpd
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantStatusReqPublisher;
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantUpdatePublisher;
 import org.onap.policy.models.base.PfModelException;
+import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -55,6 +59,7 @@ public class SupervisionScanner {
             new HandleCounter<>();
 
     private final ControlLoopProvider controlLoopProvider;
+    private final PolicyModelsProvider modelsProvider;
     private final ControlLoopStateChangePublisher controlLoopStateChangePublisher;
     private final ControlLoopUpdatePublisher controlLoopUpdatePublisher;
     private final ParticipantProvider participantProvider;
@@ -65,6 +70,7 @@ public class SupervisionScanner {
      * Constructor for instantiating SupervisionScanner.
      *
      * @param controlLoopProvider the provider to use to read control loops from the database
+     * @param modelsProvider the Policy Models Provider
      * @param controlLoopStateChangePublisher the ControlLoop StateChange Publisher
      * @param controlLoopUpdatePublisher the ControlLoopUpdate Publisher
      * @param participantProvider the Participant Provider
@@ -72,13 +78,14 @@ public class SupervisionScanner {
      * @param participantUpdatePublisher the Participant Update Publisher
      * @param clRuntimeParameterGroup the parameters for the control loop runtime
      */
-    public SupervisionScanner(final ControlLoopProvider controlLoopProvider,
+    public SupervisionScanner(final ControlLoopProvider controlLoopProvider, PolicyModelsProvider modelsProvider,
             final ControlLoopStateChangePublisher controlLoopStateChangePublisher,
             ControlLoopUpdatePublisher controlLoopUpdatePublisher, ParticipantProvider participantProvider,
             ParticipantStatusReqPublisher participantStatusReqPublisher,
             ParticipantUpdatePublisher participantUpdatePublisher,
             final ClRuntimeParameterGroup clRuntimeParameterGroup) {
         this.controlLoopProvider = controlLoopProvider;
+        this.modelsProvider = modelsProvider;
         this.controlLoopStateChangePublisher = controlLoopStateChangePublisher;
         this.controlLoopUpdatePublisher = controlLoopUpdatePublisher;
         this.participantProvider = participantProvider;
@@ -119,8 +126,13 @@ public class SupervisionScanner {
         }
 
         try {
-            for (ControlLoop controlLoop : controlLoopProvider.getControlLoops(null, null)) {
-                scanControlLoop(controlLoop, counterCheck);
+            var list = modelsProvider.getServiceTemplateList(null, null);
+            if (list != null && !list.isEmpty()) {
+                ToscaServiceTemplate toscaServiceTemplate = list.get(0);
+
+                for (ControlLoop controlLoop : controlLoopProvider.getControlLoops(null, null)) {
+                    scanControlLoop(controlLoop, toscaServiceTemplate, counterCheck);
+                }
             }
         } catch (PfModelException pfme) {
             LOGGER.warn("error reading control loops from database", pfme);
@@ -190,7 +202,8 @@ public class SupervisionScanner {
         participantUpdateCounter.remove(id);
     }
 
-    private void scanControlLoop(final ControlLoop controlLoop, boolean counterCheck) throws PfModelException {
+    private void scanControlLoop(final ControlLoop controlLoop, ToscaServiceTemplate toscaServiceTemplate,
+            boolean counterCheck) throws PfModelException {
         LOGGER.debug("scanning control loop {} . . .", controlLoop.getKey().asIdentifier());
 
         if (controlLoop.getState().equals(controlLoop.getOrderedState().asState())) {
@@ -202,11 +215,16 @@ public class SupervisionScanner {
         }
 
         var completed = true;
+        var minSpNotCompleted = 1000; // min startPhase not completed
         for (ControlLoopElement element : controlLoop.getElements().values()) {
             if (!element.getState().equals(element.getOrderedState().asState())) {
                 completed = false;
-                break;
+                ToscaNodeTemplate toscaNodeTemplate = toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates()
+                        .get(element.getDefinition().getName());
+                int startPhase = ParticipantUtils.findStartPhase(toscaNodeTemplate.getProperties());
+                minSpNotCompleted = Math.min(minSpNotCompleted, startPhase);
             }
+
         }
 
         if (completed) {
@@ -222,7 +240,7 @@ public class SupervisionScanner {
             LOGGER.debug("control loop scan: transition from state {} to {} not completed", controlLoop.getState(),
                     controlLoop.getOrderedState());
             if (counterCheck) {
-                handleCounter(controlLoop);
+                handleCounter(controlLoop, minSpNotCompleted);
             }
         }
     }
@@ -231,7 +249,7 @@ public class SupervisionScanner {
         controlLoopCounter.clear(controlLoop.getKey().asIdentifier());
     }
 
-    private void handleCounter(ControlLoop controlLoop) {
+    private void handleCounter(ControlLoop controlLoop, int startPhase) {
         ToscaConceptIdentifier id = controlLoop.getKey().asIdentifier();
         if (controlLoopCounter.isFault(id)) {
             LOGGER.debug("report ControlLoop fault");
@@ -242,7 +260,7 @@ public class SupervisionScanner {
             if (controlLoopCounter.count(id)) {
                 if (ControlLoopState.UNINITIALISED2PASSIVE.equals(controlLoop.getState())) {
                     LOGGER.debug("retry message ControlLoopUpdate");
-                    controlLoopUpdatePublisher.send(controlLoop);
+                    controlLoopUpdatePublisher.send(controlLoop, startPhase);
                 } else {
                     LOGGER.debug("retry message ControlLoopStateChange");
                     controlLoopStateChangePublisher.send(controlLoop);
