@@ -6,7 +6,9 @@
         "version" :   "1.0"
       },
       "namespace" : "onap",
-      "repository" : "chartMuseum",
+      "repository" : {
+        "repoName": "chartMuseum"
+      },
       "releaseName" : "helloworld"
     },
     {
