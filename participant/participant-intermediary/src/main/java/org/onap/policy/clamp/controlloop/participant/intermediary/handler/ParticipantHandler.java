@@ -24,6 +24,7 @@ package org.onap.policy.clamp.controlloop.participant.intermediary.handler;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -60,6 +61,7 @@ import org.onap.policy.clamp.controlloop.participant.intermediary.comm.Participa
 import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantParameters;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -206,6 +208,22 @@ public class ParticipantHandler {
     }
 
     /**
+     * Get common properties of a controlloopelement.
+     *
+     * @param clElementDef the control loop element definition
+     * @return the common properties
+     */
+    public Map<String, ToscaProperty> getClElementDefinitionCommonProperties(ToscaConceptIdentifier clElementDef) {
+        Map<String, ToscaProperty> commonPropertiesMap = new HashMap<>();
+        clElementDefsOnThisParticipant.stream().forEach(definition -> {
+            if (definition.getClElementDefinitionId().equals(clElementDef)) {
+                commonPropertiesMap.putAll(definition.getCommonPropertiesMap());
+            }
+        });
+        return commonPropertiesMap;
+    }
+
+    /**
      * Check if a participant message applies to this participant handler.
      *
      * @param participantMsg the message to check
@@ -284,15 +302,10 @@ public class ParticipantHandler {
         LOGGER.debug("ParticipantUpdate message received for participantId {}",
                 participantUpdateMsg.getParticipantId());
 
-        if (!participantUpdateMsg.appliesTo(participantType, participantId)) {
-            return;
-        }
-
         if (!participantUpdateMsg.getParticipantDefinitionUpdates().isEmpty()) {
             // This message is to commission the controlloop
             for (ParticipantDefinition participantDefinition : participantUpdateMsg.getParticipantDefinitionUpdates()) {
                 if (participantDefinition.getParticipantType().equals(participantType)) {
-                    clElementDefsOnThisParticipant.clear();
                     clElementDefsOnThisParticipant.addAll(participantDefinition.getControlLoopElementDefinitionList());
                     break;
                 }

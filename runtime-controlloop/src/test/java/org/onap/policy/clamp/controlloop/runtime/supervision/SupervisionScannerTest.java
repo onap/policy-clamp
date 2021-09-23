@@ -146,6 +146,7 @@ class SupervisionScannerTest {
         participant.setHealthStatus(ParticipantHealthStatus.HEALTHY);
         participant.setParticipantState(ParticipantState.ACTIVE);
         participant.setDefinition(new ToscaConceptIdentifier("unknown", "0.0.0"));
+        participant.setParticipantType(new ToscaConceptIdentifier("ParticipantType1", "1.0.0"));
         var participantProvider = new ParticipantProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
         participantProvider.updateParticipants(List.of(participant));
 

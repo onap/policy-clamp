@@ -247,6 +247,7 @@ class JpaParticipantTest {
         testParticipant.setName("participant");
         testParticipant.setVersion("0.0.1");
         testParticipant.setDefinition(new ToscaConceptIdentifier("participantDefinitionName", "0.0.1"));
+        testParticipant.setParticipantType(new ToscaConceptIdentifier("participantTypeName", "0.0.1"));
 
         return testParticipant;
     }

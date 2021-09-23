@@ -156,7 +156,7 @@ public class SupervisionScanner {
 
                 if (participantUpdateCounter.count(id)) {
                     LOGGER.debug("retry message ParticipantUpdate");
-                    participantUpdatePublisher.send(id.getLeft(), id.getRight(), true);
+                    participantUpdatePublisher.send(null, true);
                 } else {
                     LOGGER.debug("report Participant Update fault");
                     participantUpdateCounter.setFault(id);

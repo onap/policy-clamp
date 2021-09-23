@@ -40,6 +40,7 @@ import org.onap.policy.clamp.controlloop.participant.intermediary.api.Participan
 import org.onap.policy.clamp.controlloop.participant.intermediary.handler.ControlLoopHandler;
 import org.onap.policy.clamp.controlloop.participant.intermediary.handler.ParticipantHandler;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaProperty;
 import org.springframework.stereotype.Component;
 
 /**
@@ -74,6 +75,11 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
     @Override
     public List<Participant> getParticipants(String name, String version) {
         return List.of(participantHandler.getParticipant(name, version));
+    }
+
+    @Override
+    public Map<String, ToscaProperty> getClElementDefinitionCommonProperties(ToscaConceptIdentifier clElementDef) {
+        return participantHandler.getClElementDefinitionCommonProperties(clElementDef);
     }
 
     @Override

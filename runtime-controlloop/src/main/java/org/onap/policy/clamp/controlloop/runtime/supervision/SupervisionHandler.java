@@ -52,6 +52,7 @@ import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantReg
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantUpdatePublisher;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -149,8 +150,7 @@ public class SupervisionHandler {
         participantRegisterAckPublisher.send(participantRegisterMessage.getMessageId(),
                 participantRegisterMessage.getParticipantId(), participantRegisterMessage.getParticipantType());
 
-        participantUpdatePublisher.send(participantRegisterMessage.getParticipantId(),
-                participantRegisterMessage.getParticipantType(), true);
+        participantUpdatePublisher.send(null, true);
     }
 
     /**
@@ -209,25 +209,19 @@ public class SupervisionHandler {
     /**
      * Send commissioning update message to dmaap.
      *
-     * @param participantUpdateMessage the ParticipantUpdate message to send
      */
-    public void handleSendCommissionMessage(ParticipantUpdate participantUpdateMessage) {
-        LOGGER.debug("Participant update message being sent {}", participantUpdateMessage);
-
-        participantUpdatePublisher.send(participantUpdateMessage.getParticipantId(),
-            participantUpdateMessage.getParticipantType(), true);
+    public void handleSendCommissionMessage(Map<String, ToscaNodeType> commonPropertiesMap) {
+        LOGGER.debug("Participant update message being sent {}");
+        participantUpdatePublisher.send(commonPropertiesMap, true);
     }
 
     /**
      * Send decommissioning update message to dmaap.
      *
-     * @param participantUpdateMessage the ParticipantUpdate message to send
      */
-    public void handleSendDeCommissionMessage(ParticipantUpdate participantUpdateMessage) {
-        LOGGER.debug("Participant update message being sent {}", participantUpdateMessage);
-
-        participantUpdatePublisher.send(participantUpdateMessage.getParticipantId(),
-            participantUpdateMessage.getParticipantType(), false);
+    public void handleSendDeCommissionMessage() {
+        LOGGER.debug("Participant update message being sent");
+        participantUpdatePublisher.send(null, false);
     }
 
     /**
@@ -429,6 +423,7 @@ public class SupervisionHandler {
             participant.setName(participantStatusMessage.getParticipantId().getName());
             participant.setVersion(participantStatusMessage.getParticipantId().getVersion());
             participant.setDefinition(participantStatusMessage.getParticipantId());
+            participant.setParticipantType(participantStatusMessage.getParticipantType());
             participant.setParticipantState(participantStatusMessage.getState());
             participant.setHealthStatus(participantStatusMessage.getHealthStatus());
 

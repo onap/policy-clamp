@@ -34,6 +34,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantStatistics;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaProperty;
 
 /**
  * This interface is used by participant implementations to use the participant intermediary.
@@ -55,6 +56,14 @@ public interface ParticipantIntermediaryApi {
      * @return the participants
      */
     List<Participant> getParticipants(String name, String version);
+
+    /**
+     * Get common properties of a controlloopelement.
+     *
+     * @param clElementDef the control loop element definition
+     * @return the common properties
+     */
+    Map<String, ToscaProperty> getClElementDefinitionCommonProperties(ToscaConceptIdentifier clElementDef);
 
     /**
      * Update the state of a participant.

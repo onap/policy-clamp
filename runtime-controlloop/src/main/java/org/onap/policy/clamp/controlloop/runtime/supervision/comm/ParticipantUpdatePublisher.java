@@ -25,6 +25,7 @@ package org.onap.policy.clamp.controlloop.runtime.supervision.comm;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElementDefinition;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantDefinition;
@@ -34,6 +35,7 @@ import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,14 +55,9 @@ public class ParticipantUpdatePublisher extends AbstractParticipantPublisher<Par
     /**
      * Send ParticipantUpdate to Participant.
      *
-     * @param participantId the participant Id
-     * @param participantType the participant Type
      */
-    public void send(ToscaConceptIdentifier participantId, ToscaConceptIdentifier participantType,
-            boolean commissionFlag) {
+    public void send(Map<String, ToscaNodeType> commonPropertiesMap, boolean commissionFlag) {
         var message = new ParticipantUpdate();
-        message.setParticipantId(participantId);
-        message.setParticipantType(participantType);
         message.setTimestamp(Instant.now());
 
         ToscaServiceTemplate toscaServiceTemplate = null;
@@ -82,7 +79,7 @@ public class ParticipantUpdatePublisher extends AbstractParticipantPublisher<Par
                     var clParticipantType =
                             ParticipantUtils.findParticipantType(toscaInputEntry.getValue().getProperties());
                     prepareParticipantDefinitionUpdate(clParticipantType, toscaInputEntry.getKey(),
-                            toscaInputEntry.getValue(), participantDefinitionUpdates);
+                            toscaInputEntry.getValue(), participantDefinitionUpdates, commonPropertiesMap);
                 }
             }
         }
@@ -99,11 +96,17 @@ public class ParticipantUpdatePublisher extends AbstractParticipantPublisher<Par
     }
 
     private void prepareParticipantDefinitionUpdate(ToscaConceptIdentifier clParticipantType, String entryKey,
-            ToscaNodeTemplate entryValue, List<ParticipantDefinition> participantDefinitionUpdates) {
+            ToscaNodeTemplate entryValue, List<ParticipantDefinition> participantDefinitionUpdates,
+            Map<String, ToscaNodeType> commonPropertiesMap) {
 
         var clDefinition = new ControlLoopElementDefinition();
         clDefinition.setClElementDefinitionId(new ToscaConceptIdentifier(entryKey, entryValue.getVersion()));
         clDefinition.setControlLoopElementToscaNodeTemplate(entryValue);
+        ToscaNodeType nodeType = commonPropertiesMap.get(entryValue.getType());
+        if (nodeType != null) {
+            clDefinition.setCommonPropertiesMap(nodeType.getProperties());
+        }
+
         List<ControlLoopElementDefinition> controlLoopElementDefinitionList = new ArrayList<>();
 
         if (participantDefinitionUpdates.isEmpty()) {
