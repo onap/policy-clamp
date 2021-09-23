@@ -57,6 +57,20 @@ public final class ParticipantUtils {
     }
 
     /**
+     * Finds startPhase from a map of properties.
+     *
+     * @param properties Map of properties
+     * @return startPhase
+     */
+    public static int findStartPhase(Map<String, Object> properties) {
+        var objParticipantType = properties.get("startPhase");
+        if (objParticipantType != null) {
+            return Integer.valueOf(objParticipantType.toString());
+        }
+        return 0;
+    }
+
+    /**
      * Checks If NodeTemplate Is ControlLoopElement.
      *
      * @param nodeTemplate the ToscaNodeTemplate

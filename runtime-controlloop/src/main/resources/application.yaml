@@ -26,7 +26,7 @@ runtime:
     heartBeatMs: 20000
     maxStatusWaitMs: 100000
     updateParameters:
-      maxRetryCount: 3
+      maxRetryCount: 4
       maxWaitMs: 20000
   databaseProviderParameters:
     name: PolicyProviderParameterGroup

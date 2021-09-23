@@ -58,7 +58,18 @@ public class ControlLoopUpdatePublisher extends AbstractParticipantPublisher<Con
      * @param controlLoop the ControlLoop
      */
     public void send(ControlLoop controlLoop) {
+        send(controlLoop, 0);
+    }
+
+    /**
+     * Send ControlLoopUpdate to Participant.
+     *
+     * @param controlLoop the ControlLoop
+     * @param startPhase the Start Phase
+     */
+    public void send(ControlLoop controlLoop, int startPhase) {
         var controlLoopUpdateMsg = new ControlLoopUpdate();
+        controlLoopUpdateMsg.setStartPhase(startPhase);
         controlLoopUpdateMsg.setControlLoopId(controlLoop.getKey().asIdentifier());
         controlLoopUpdateMsg.setMessageId(UUID.randomUUID());
         controlLoopUpdateMsg.setTimestamp(Instant.now());
