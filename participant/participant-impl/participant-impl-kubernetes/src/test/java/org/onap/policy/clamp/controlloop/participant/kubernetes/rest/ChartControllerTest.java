@@ -29,7 +29,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
+import org.apache.commons.io.FileUtils;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -65,9 +68,11 @@ class ChartControllerTest {
     private static final Coder CODER = new StandardCoder();
     private static final String CHART_INFO_YAML = "src/test/resources/ChartList.json";
     private static List<ChartInfo> charts;
-    private static String DEFAULT_CHART_URL = "/helm/charts";
+    private static String RETRIEVE_CHART_URL = "/helm/charts";
     private static String INSTALL_CHART_URL = "/helm/install";
     private static String UNINSTALL_CHART_URL = "/helm/uninstall/";
+    private static String ONBOARD_CHART_URL = "/helm/onboard/chart";
+    private static String DELETE_CHART_URL = "/helm/chart";
 
     @Autowired
     private MockMvc mockMvc;
@@ -107,7 +112,7 @@ class ChartControllerTest {
     @Test
     void retrieveAllCharts() throws Exception {
         RequestBuilder requestBuilder;
-        requestBuilder = MockMvcRequestBuilders.get(DEFAULT_CHART_URL).accept(MediaType.APPLICATION_JSON_VALUE);
+        requestBuilder = MockMvcRequestBuilders.get(RETRIEVE_CHART_URL).accept(MediaType.APPLICATION_JSON_VALUE);
 
         mockMvc.perform(requestBuilder).andExpect(status().isOk())
             .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -180,7 +185,7 @@ class ChartControllerTest {
         //Mocking successful scenario for void uninstall method
         when(chartService.saveChart(charts.get(0), chartFile, null)).thenReturn(charts.get(0));
 
-        requestBuilder = MockMvcRequestBuilders.multipart(DEFAULT_CHART_URL)
+        requestBuilder = MockMvcRequestBuilders.multipart(ONBOARD_CHART_URL)
             .file(chartFile).file(overrideFile).param("info", getChartInfoJson());
 
         mockMvc.perform(requestBuilder).andExpect(status().isOk());
@@ -197,7 +202,7 @@ class ChartControllerTest {
         //Mocking successful scenario for void uninstall method
         doNothing().when(chartService).deleteChart(charts.get(0));
 
-        requestBuilder = MockMvcRequestBuilders.delete(DEFAULT_CHART_URL + "/" + charts.get(0)
+        requestBuilder = MockMvcRequestBuilders.delete(DELETE_CHART_URL + "/" + charts.get(0)
             .getChartId().getName() + "/" + charts.get(0).getChartId().getVersion())
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .contentType(MediaType.APPLICATION_JSON_VALUE);
@@ -219,14 +224,8 @@ class ChartControllerTest {
         return jsonObj.toString();
     }
 
-    private String getChartInfoJson() {
-        JSONObject jsonObj = new JSONObject();
-        jsonObj.put("chartName", charts.get(0).getChartId().getName());
-        jsonObj.put("version", charts.get(0).getChartId().getVersion());
-        jsonObj.put("namespace", charts.get(0).getNamespace());
-        jsonObj.put("repository", charts.get(0).getRepository());
-        jsonObj.put("releaseName", charts.get(0).getReleaseName());
-        return jsonObj.toString();
+    private String getChartInfoJson() throws IOException {
+        return FileUtils.readFileToString(new File(CHART_INFO_YAML), StandardCharsets.UTF_8);
     }
 
 }

@@ -121,7 +121,7 @@ class ChartServiceTest {
         doReturn("dummyRepoName").when(chartService).findChartRepo(any());
         doNothing().when(helmClient).installChart(any());
         chartService.installChart(charts.get(1));
-        assertEquals("dummyRepoName", charts.get(1).getRepository());
+        assertEquals("dummyRepoName", charts.get(1).getRepository().getRepoName());
 
         ChartInfo testChart = charts.get(1);
         testChart.setRepository(null);
