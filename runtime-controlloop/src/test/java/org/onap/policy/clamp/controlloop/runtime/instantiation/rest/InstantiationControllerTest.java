@@ -26,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import java.util.List;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.Response;
@@ -36,6 +37,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoops;
+import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ParticipantProvider;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.ControlLoopPrimedResponse;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationCommand;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationResponse;
@@ -43,6 +45,7 @@ import org.onap.policy.clamp.controlloop.runtime.instantiation.ControlLoopInstan
 import org.onap.policy.clamp.controlloop.runtime.instantiation.InstantiationUtils;
 import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
 import org.onap.policy.clamp.controlloop.runtime.main.rest.InstantiationController;
+import org.onap.policy.clamp.controlloop.runtime.util.CommonTestData;
 import org.onap.policy.clamp.controlloop.runtime.util.rest.CommonRestController;
 import org.onap.policy.common.utils.coder.YamlJsonTranslator;
 import org.onap.policy.common.utils.resources.ResourceUtils;
@@ -93,6 +96,9 @@ class InstantiationControllerTest extends CommonRestController {
 
     @Autowired
     private ControlLoopInstantiationProvider instantiationProvider;
+
+    @Autowired
+    private ParticipantProvider participantProvider;
 
     @LocalServerPort
     private int randomServerPort;
@@ -326,9 +332,20 @@ class InstantiationControllerTest extends CommonRestController {
 
     @Test
     void testCommand() throws Exception {
-
         var controlLoops = InstantiationUtils.getControlLoopsFromResource(CL_INSTANTIATION_CREATE_JSON, "Command");
         instantiationProvider.createControlLoops(controlLoops);
+
+        var participant1 = CommonTestData.createParticipant(
+                new ToscaConceptIdentifier("org.onap.dcae.controlloop.DCAEMicroserviceControlLoopParticipant", "2.3.4"),
+                new ToscaConceptIdentifier("org.onap.dcae.controlloop.DCAEMicroserviceControlLoopParticipant",
+                        "2.3.4"));
+        var participant2 = CommonTestData.createParticipant(
+                new ToscaConceptIdentifier("org.onap.policy.controlloop.PolicyControlLoopParticipant", "2.3.1"),
+                new ToscaConceptIdentifier("org.onap.policy.controlloop.PolicyControlLoopParticipant", "2.3.1"));
+        var participant3 = CommonTestData.createParticipant(
+                new ToscaConceptIdentifier("org.onap.ccsdk.cds.controlloop.CdsControlLoopParticipant", "2.2.1"),
+                new ToscaConceptIdentifier("org.onap.ccsdk.cds.controlloop.CdsControlLoopParticipant", "2.2.1"));
+        participantProvider.createParticipants(List.of(participant1, participant2, participant3));
 
         InstantiationCommand command =
                 InstantiationUtils.getInstantiationCommandFromResource(CL_INSTANTIATION_CHANGE_STATE_JSON, "Command");

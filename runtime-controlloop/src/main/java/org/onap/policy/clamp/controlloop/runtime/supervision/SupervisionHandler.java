@@ -21,6 +21,7 @@
 
 package org.onap.policy.clamp.controlloop.runtime.supervision;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -42,7 +43,6 @@ import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.Contr
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregister;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantRegister;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStatus;
-import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdate;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdateAck;
 import org.onap.policy.clamp.controlloop.runtime.monitoring.MonitoringProvider;
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ControlLoopStateChangePublisher;
@@ -143,14 +143,11 @@ public class SupervisionHandler {
      *
      * @param participantRegisterMessage the ParticipantRegister message received from a participant
      */
-    @MessageIntercept
     public void handleParticipantMessage(ParticipantRegister participantRegisterMessage) {
         LOGGER.debug("Participant Register received {}", participantRegisterMessage);
 
         participantRegisterAckPublisher.send(participantRegisterMessage.getMessageId(),
                 participantRegisterMessage.getParticipantId(), participantRegisterMessage.getParticipantType());
-
-        participantUpdatePublisher.send(null, true);
     }
 
     /**
@@ -221,7 +218,7 @@ public class SupervisionHandler {
      */
     public void handleSendDeCommissionMessage() {
         LOGGER.debug("Participant update message being sent");
-        participantUpdatePublisher.send(null, false);
+        participantUpdatePublisher.send(Collections.emptyMap(), false);
     }
 
     /**
