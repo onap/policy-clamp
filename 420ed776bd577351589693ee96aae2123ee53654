@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fc1587c2_feb54544",
+        "filename": "models/lombok.config",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2021-09-27T13:42:02Z",
+      "side": 1,
+      "message": "may be you want to add this at top level? so that other submodules also get benefitted.",
+      "revId": "420ed776bd577351589693ee96aae2123ee53654",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
