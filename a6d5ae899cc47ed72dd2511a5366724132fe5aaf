@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "35c9a078_2be9f5ab",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 392,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-09-27T12:15:51Z",
+      "side": 1,
+      "message": "Participant with ID",
+      "range": {
+        "startLine": 392,
+        "startChar": 29,
+        "endLine": 392,
+        "endChar": 43
+      },
+      "revId": "a6d5ae899cc47ed72dd2511a5366724132fe5aaf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "67ae5571_5a9739ab",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 392,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-09-27T12:15:51Z",
+      "side": 1,
+      "message": "is not registered",
+      "range": {
+        "startLine": 392,
+        "startChar": 78,
+        "endLine": 392,
+        "endChar": 89
+      },
+      "revId": "a6d5ae899cc47ed72dd2511a5366724132fe5aaf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ecd5c5a7_9e77b7d9",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 396,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-09-27T12:15:51Z",
+      "side": 1,
+      "message": "Same comment",
+      "revId": "a6d5ae899cc47ed72dd2511a5366724132fe5aaf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7c31e4cc_6617924d",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 478,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-09-27T12:15:51Z",
+      "side": 1,
+      "message": "Control loop with id \u003cid\u003e already defined",
+      "range": {
+        "startLine": 478,
+        "startChar": 0,
+        "endLine": 478,
+        "endChar": 5
+      },
+      "revId": "a6d5ae899cc47ed72dd2511a5366724132fe5aaf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
