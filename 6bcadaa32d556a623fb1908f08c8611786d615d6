@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "a2098b3f_e4f8c0a5",
+        "filename": "runtime-controlloop/src/test/java/org/onap/policy/clamp/controlloop/runtime/supervision/comm/SupervisionMessagesTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-09-27T13:52:02Z",
+      "side": 0,
+      "message": "this part has been invalidated due the change in POLICY-3576 and could be reinsert in other Jira task",
+      "parentUuid": "b3788156_899e9401",
+      "revId": "6bcadaa32d556a623fb1908f08c8611786d615d6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "64d21c37_a6f96f4a",
         "filename": "runtime-controlloop/src/test/java/org/onap/policy/clamp/controlloop/runtime/supervision/comm/SupervisionMessagesTest.java",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2021-09-27T12:15:51Z",
       "side": 0,
       "message": "So we don\u0027t need these tests any more?",
+      "revId": "6bcadaa32d556a623fb1908f08c8611786d615d6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c6226e2d_2c5be77b",
+        "filename": "runtime-controlloop/src/test/java/org/onap/policy/clamp/controlloop/runtime/supervision/comm/SupervisionMessagesTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-09-27T13:52:02Z",
+      "side": 0,
+      "message": "this part has been invalidated due the change in POLICY-3576 and could be reinsert in other Jira task",
+      "parentUuid": "64d21c37_a6f96f4a",
       "revId": "6bcadaa32d556a623fb1908f08c8611786d615d6",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
