@@ -16,6 +16,24 @@
       "revId": "420ed776bd577351589693ee96aae2123ee53654",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a6f7286e_d1e769a5",
+        "filename": "models/lombok.config",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 7629
+      },
+      "writtenOn": "2021-09-27T14:24:25Z",
+      "side": 1,
+      "message": "I can move the config up one level, and check the results. Thank you",
+      "parentUuid": "fc1587c2_feb54544",
+      "revId": "420ed776bd577351589693ee96aae2123ee53654",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
