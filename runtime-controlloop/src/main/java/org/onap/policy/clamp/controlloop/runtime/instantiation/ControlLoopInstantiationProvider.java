@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -44,7 +45,9 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoops;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ControlLoopProvider;
+import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ParticipantProvider;
 import org.onap.policy.clamp.controlloop.models.messages.rest.GenericNameVersion;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.ControlLoopOrderStateResponse;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.ControlLoopPrimed;
@@ -84,6 +87,7 @@ public class ControlLoopInstantiationProvider {
     private final ControlLoopProvider controlLoopProvider;
     private final CommissioningProvider commissioningProvider;
     private final SupervisionHandler supervisionHandler;
+    private final ParticipantProvider participantProvider;
 
     private static final Object lockit = new Object();
 
@@ -95,20 +99,18 @@ public class ControlLoopInstantiationProvider {
      * @throws PfModelException on creation errors
      */
     public InstancePropertiesResponse createInstanceProperties(ToscaServiceTemplate serviceTemplate)
-        throws PfModelException {
+            throws PfModelException {
 
         String instanceName = generateSequentialInstanceName();
         ControlLoop controlLoop = new ControlLoop();
         Map<UUID, ControlLoopElement> controlLoopElements = new HashMap<>();
 
-        ToscaServiceTemplate toscaServiceTemplate = commissioningProvider
-            .getToscaServiceTemplate(null, null);
+        ToscaServiceTemplate toscaServiceTemplate = commissioningProvider.getToscaServiceTemplate(null, null);
 
-        Map<String, ToscaNodeTemplate> persistedNodeTemplateMap = toscaServiceTemplate
-            .getToscaTopologyTemplate().getNodeTemplates();
+        Map<String, ToscaNodeTemplate> persistedNodeTemplateMap =
+                toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates();
 
-        Map<String, ToscaNodeTemplate> nodeTemplates =
-            deepCloneNodeTemplate(serviceTemplate);
+        Map<String, ToscaNodeTemplate> nodeTemplates = deepCloneNodeTemplate(serviceTemplate);
 
         nodeTemplates.forEach((key, template) -> {
             ToscaNodeTemplate newNodeTemplate = new ToscaNodeTemplate();
@@ -154,15 +156,14 @@ public class ControlLoopInstantiationProvider {
 
         ToscaServiceTemplate toscaServiceTemplate = commissioningProvider.getToscaServiceTemplate(name, version);
 
-        toscaServiceTemplate.getToscaTopologyTemplate()
-            .getNodeTemplates().forEach((key, nodeTemplate) -> {
-                if (!nodeTemplate.getName().contains(instanceName)) {
-                    filteredToscaNodeTemplateMap.put(key, nodeTemplate);
-                }
-            });
+        toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates().forEach((key, nodeTemplate) -> {
+            if (!nodeTemplate.getName().contains(instanceName)) {
+                filteredToscaNodeTemplateMap.put(key, nodeTemplate);
+            }
+        });
 
-        List<ToscaNodeTemplate> filteredToscaNodeTemplateList =
-            toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates().values().stream()
+        List<ToscaNodeTemplate> filteredToscaNodeTemplateList = toscaServiceTemplate.getToscaTopologyTemplate()
+                .getNodeTemplates().values().stream()
                 .filter(nodeTemplate -> nodeTemplate.getName().contains(instanceName)).collect(Collectors.toList());
 
         InstantiationResponse response = this.deleteControlLoop(name, version);
@@ -183,8 +184,7 @@ public class ControlLoopInstantiationProvider {
 
         synchronized (lockit) {
             for (ControlLoop controlLoop : controlLoops.getControlLoopList()) {
-                var checkControlLoop = controlLoopProvider
-                    .getControlLoop(controlLoop.getKey().asIdentifier());
+                var checkControlLoop = controlLoopProvider.getControlLoop(controlLoop.getKey().asIdentifier());
                 if (checkControlLoop != null) {
                     throw new PfModelException(Response.Status.BAD_REQUEST,
                             controlLoop.getKey().asIdentifier() + " already defined");
@@ -349,11 +349,19 @@ public class ControlLoopInstantiationProvider {
         }
 
         synchronized (lockit) {
+            var participants = participantProvider.getParticipants(null, null);
+            if (participants.isEmpty()) {
+                throw new ControlLoopException(Status.BAD_REQUEST, "No participants registered");
+            }
             List<ControlLoop> controlLoops = new ArrayList<>(command.getControlLoopIdentifierList().size());
             for (ToscaConceptIdentifier id : command.getControlLoopIdentifierList()) {
                 var controlLoop = controlLoopProvider.getControlLoop(id);
                 controlLoop.setCascadedOrderedState(command.getOrderedState());
                 controlLoops.add(controlLoop);
+            }
+            BeanValidationResult validationResult = validateIssueControlLoops(controlLoops, participants);
+            if (!validationResult.isValid()) {
+                throw new PfModelException(Response.Status.BAD_REQUEST, validationResult.getResult());
             }
             controlLoopProvider.updateControlLoops(controlLoops);
         }
@@ -365,6 +373,37 @@ public class ControlLoopInstantiationProvider {
         return response;
     }
 
+    private BeanValidationResult validateIssueControlLoops(List<ControlLoop> controlLoops,
+            List<Participant> participants) {
+        var result = new BeanValidationResult("ControlLoops", controlLoops);
+
+        Map<ToscaConceptIdentifier, Participant> participantMap = participants.stream()
+                .collect(Collectors.toMap(participant -> participant.getKey().asIdentifier(), Function.identity()));
+
+        for (ControlLoop controlLoop : controlLoops) {
+
+            for (var element : controlLoop.getElements().values()) {
+                var subResult = new BeanValidationResult("entry " + element.getDefinition().getName(), element);
+
+                Participant p = participantMap.get(element.getParticipantId());
+                if (p == null) {
+                    subResult.addResult(new ObjectValidationResult(CONTROL_LOOP_NODE_ELEMENT_TYPE,
+                            element.getDefinition().getName(), ValidationStatus.INVALID,
+                            "Participant with ID " + element.getParticipantId() + " is not registered"));
+                } else if (!p.getParticipantType().equals(element.getParticipantType())) {
+                    subResult.addResult(new ObjectValidationResult(CONTROL_LOOP_NODE_ELEMENT_TYPE,
+                            element.getDefinition().getName(), ValidationStatus.INVALID,
+                            "Participant with ID " + element.getParticipantType() + " - " + element.getParticipantId()
+                                    + " is not registered"));
+                }
+                result.addResult(subResult);
+            }
+
+        }
+
+        return result;
+    }
+
     /**
      * Gets a list of control loops with it's ordered state.
      *
@@ -374,7 +413,7 @@ public class ControlLoopInstantiationProvider {
      * @throws PfModelException on errors getting control loops
      */
     public ControlLoopOrderStateResponse getInstantiationOrderState(String name, String version)
-        throws PfModelException {
+            throws PfModelException {
 
         List<ControlLoop> controlLoops = controlLoopProvider.getControlLoops(name, version);
 
@@ -399,8 +438,7 @@ public class ControlLoopInstantiationProvider {
      * @return a list of Instantiation Command
      * @throws PfModelException on errors getting control loops
      */
-    public ControlLoopPrimedResponse getControlLoopPriming(String name, String version)
-        throws PfModelException {
+    public ControlLoopPrimedResponse getControlLoopPriming(String name, String version) throws PfModelException {
 
         List<ControlLoop> controlLoops = controlLoopProvider.getControlLoops(name, version);
 
@@ -425,8 +463,8 @@ public class ControlLoopInstantiationProvider {
      * @return the result of the instance properties and instantiation operation
      * @throws PfModelException on creation errors
      */
-    private InstancePropertiesResponse saveInstancePropertiesAndControlLoop(
-        ToscaServiceTemplate serviceTemplate, ControlLoops controlLoops) throws PfModelException {
+    private InstancePropertiesResponse saveInstancePropertiesAndControlLoop(ToscaServiceTemplate serviceTemplate,
+            ControlLoops controlLoops) throws PfModelException {
 
         var response = new InstancePropertiesResponse();
 
@@ -437,7 +475,7 @@ public class ControlLoopInstantiationProvider {
                 var checkControlLoop = controlLoopProvider.getControlLoop(controlLoop.getKey().asIdentifier());
                 if (checkControlLoop != null) {
                     throw new PfModelException(Response.Status.BAD_REQUEST,
-                        controlLoop.getKey().asIdentifier() + " already defined");
+                            "Control loop with id " + controlLoop.getKey().asIdentifier() + " already defined");
                 }
             }
 
@@ -448,19 +486,20 @@ public class ControlLoopInstantiationProvider {
         }
 
         List<ToscaConceptIdentifier> affectedControlLoops = controlLoops.getControlLoopList().stream()
-            .map(cl -> cl.getKey().asIdentifier()).collect(Collectors.toList());
+                .map(cl -> cl.getKey().asIdentifier()).collect(Collectors.toList());
 
         List<ToscaConceptIdentifier> toscaAffectedProperties = toscaSavedNodeTemplate.values().stream()
-            .map(template -> template.getKey().asIdentifier()).collect(Collectors.toList());
+                .map(template -> template.getKey().asIdentifier()).collect(Collectors.toList());
 
         response.setAffectedInstanceProperties(Stream.of(affectedControlLoops, toscaAffectedProperties)
-            .flatMap(Collection::stream).collect(Collectors.toList()));
+                .flatMap(Collection::stream).collect(Collectors.toList()));
 
         return response;
     }
 
     /**
      * Crates a new Control Loop instance.
+     *
      * @param instanceName Control Loop Instance name
      * @param controlLoop empty Control Loop
      * @param controlLoopElements new Control Loop Element map
@@ -468,9 +507,8 @@ public class ControlLoopInstantiationProvider {
      * @param newNodeTemplate new Tosca Node Template
      */
     private void crateNewControlLoopInstance(String instanceName, ControlLoop controlLoop,
-                                             Map<UUID, ControlLoopElement> controlLoopElements,
-                                             ToscaNodeTemplate template,
-                                             ToscaNodeTemplate newNodeTemplate) {
+            Map<UUID, ControlLoopElement> controlLoopElements, ToscaNodeTemplate template,
+            ToscaNodeTemplate newNodeTemplate) {
         if (template.getType().equals(CONTROL_LOOP_NODE_TYPE)) {
             controlLoop.setDefinition(getControlLoopDefinition(newNodeTemplate));
         }
@@ -487,7 +525,6 @@ public class ControlLoopInstantiationProvider {
         controlLoop.setOrderedState(ControlLoopOrderedState.UNINITIALISED);
     }
 
-
     /**
      * Get's the instance property name of the control loop.
      *
@@ -497,9 +534,8 @@ public class ControlLoopInstantiationProvider {
      * @throws PfModelException on errors getting control loops
      */
     private String getInstancePropertyName(String name, String version) throws PfModelException {
-        List<String> toscaDefinitionsNames =
-            controlLoopProvider.getControlLoops(name, version).stream().map(ControlLoop::getDefinition)
-                .map(ToscaNameVersion::getName).collect(Collectors.toList());
+        List<String> toscaDefinitionsNames = controlLoopProvider.getControlLoops(name, version).stream()
+                .map(ControlLoop::getDefinition).map(ToscaNameVersion::getName).collect(Collectors.toList());
 
         return toscaDefinitionsNames.stream().reduce("", (s1, s2) -> {
 
@@ -521,8 +557,7 @@ public class ControlLoopInstantiationProvider {
     private String generateSequentialInstanceName() {
         List<ToscaNodeTemplate> nodeTemplates = controlLoopProvider.getNodeTemplates(null, null);
 
-        int instanceNumber =
-            nodeTemplates.stream().map(ToscaNodeTemplate::getName)
+        int instanceNumber = nodeTemplates.stream().map(ToscaNodeTemplate::getName)
                 .filter(name -> name.contains(INSTANCE_TEXT)).map(n -> {
                     String[] defNameArr = n.split(INSTANCE_TEXT);
 
@@ -560,8 +595,8 @@ public class ControlLoopInstantiationProvider {
         definition.setVersion(template.getVersion());
         controlLoopElement.setDefinition(definition);
 
-        LinkedTreeMap<String, Object> participantId = (LinkedTreeMap<String, Object>) template.getProperties()
-            .get(PARTICIPANT_ID_PROPERTY_KEY);
+        LinkedTreeMap<String, Object> participantId =
+                (LinkedTreeMap<String, Object>) template.getProperties().get(PARTICIPANT_ID_PROPERTY_KEY);
 
         if (participantId != null) {
             ToscaConceptIdentifier participantIdProperty = new ToscaConceptIdentifier();
@@ -570,8 +605,8 @@ public class ControlLoopInstantiationProvider {
             controlLoopElement.setParticipantId(participantIdProperty);
         }
 
-        LinkedTreeMap<String, Object> participantType = (LinkedTreeMap<String, Object>) template.getProperties()
-            .get(PARTICIPANT_TYPE_PROPERTY_KEY);
+        LinkedTreeMap<String, Object> participantType =
+                (LinkedTreeMap<String, Object>) template.getProperties().get(PARTICIPANT_TYPE_PROPERTY_KEY);
 
         if (participantType != null) {
             ToscaConceptIdentifier participantTypeProperty = new ToscaConceptIdentifier();
