@@ -37,6 +37,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageType;
 import org.onap.policy.clamp.controlloop.participant.http.main.models.ConfigRequest;
 import org.onap.policy.clamp.controlloop.participant.http.main.webclient.ClHttpClient;
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ControlLoopElementListener;
@@ -90,7 +91,26 @@ public class ControlLoopElementHandler implements ControlLoopElementListener, Cl
     @Override
     public void controlLoopElementStateChange(ToscaConceptIdentifier controlLoopId, UUID controlLoopElementId,
             ControlLoopState currentState, ControlLoopOrderedState newState) throws PfModelException {
-        // Implementation not needed for http participant
+        switch (newState) {
+            case UNINITIALISED:
+                intermediaryApi.updateControlLoopElementState(controlLoopId,
+                        controlLoopElementId, newState, ControlLoopState.UNINITIALISED,
+                        ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
+                break;
+            case PASSIVE:
+                intermediaryApi.updateControlLoopElementState(controlLoopId,
+                        controlLoopElementId, newState, ControlLoopState.PASSIVE,
+                        ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
+                break;
+            case RUNNING:
+                intermediaryApi.updateControlLoopElementState(controlLoopId,
+                        controlLoopElementId, newState, ControlLoopState.RUNNING,
+                        ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
+                break;
+            default:
+                LOGGER.warn("Cannot transition from state {} to state {}", currentState, newState);
+                break;
+        }
     }
 
     /**
@@ -108,6 +128,9 @@ public class ControlLoopElementHandler implements ControlLoopElementListener, Cl
                 .getValidator().validate(configRequest);
             if (violations.isEmpty()) {
                 invokeHttpClient(configRequest);
+                intermediaryApi.updateControlLoopElementState(controlLoopId, element.getId(),
+                        ControlLoopOrderedState.PASSIVE, ControlLoopState.PASSIVE,
+                        ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
             } else {
                 LOGGER.error("Violations found in the config request parameters: {}", violations);
                 throw new ValidationException("Constraint violations in the config request");

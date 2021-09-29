@@ -29,9 +29,11 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Spy;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
 import org.onap.policy.clamp.controlloop.participant.http.main.handler.ControlLoopElementHandler;
+import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
@@ -45,6 +47,9 @@ class ClElementHandlerTest {
     @InjectMocks
     @Spy
     private ControlLoopElementHandler controlLoopElementHandler = new ControlLoopElementHandler();
+
+    @Mock
+    private ParticipantIntermediaryApi participantIntermediaryApi;
 
     private CommonTestData commonTestData = new CommonTestData();
 

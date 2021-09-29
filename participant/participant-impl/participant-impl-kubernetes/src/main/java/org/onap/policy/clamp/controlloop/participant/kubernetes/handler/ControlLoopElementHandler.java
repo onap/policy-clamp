@@ -103,7 +103,7 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
                         chartMap.remove(controlLoopElementId);
                         podStatusMap.remove(chart.getReleaseName());
                     } catch (ServiceException se) {
-                        LOGGER.warn("deletion of Helm deployment failed", se);
+                        LOGGER.warn("Deletion of Helm deployment failed", se);
                     }
                 }
                 break;
@@ -118,7 +118,7 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
                     ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
                 break;
             default:
-                LOGGER.warn("cannot transition from state {} to state {}", currentState, newState);
+                LOGGER.warn("Cannot transition from state {} to state {}", currentState, newState);
                 break;
         }
     }
@@ -148,7 +148,7 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
             checkPodStatus(chartInfo, config.uninitializedToPassiveTimeout, config.podStatusCheckInterval);
 
             intermediaryApi.updateControlLoopElementState(controlLoopId, element.getId(),
-                    ControlLoopOrderedState.PASSIVE, ControlLoopState.UNINITIALISED,
+                    ControlLoopOrderedState.PASSIVE, ControlLoopState.PASSIVE,
                     ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
 
         } catch (ServiceException | CoderException | IOException e) {
