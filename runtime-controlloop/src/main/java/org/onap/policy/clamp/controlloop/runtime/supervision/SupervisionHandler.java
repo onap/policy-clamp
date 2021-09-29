@@ -41,6 +41,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ParticipantProvider;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopAck;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregister;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessage;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantRegister;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStatus;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdateAck;
@@ -145,7 +146,11 @@ public class SupervisionHandler {
      */
     public void handleParticipantMessage(ParticipantRegister participantRegisterMessage) {
         LOGGER.debug("Participant Register received {}", participantRegisterMessage);
-
+        try {
+            checkParticipant(participantRegisterMessage, ParticipantState.UNKNOWN, ParticipantHealthStatus.UNKNOWN);
+        } catch (PfModelException | ControlLoopException svExc) {
+            LOGGER.warn("error saving participant {}", participantRegisterMessage.getParticipantId(), svExc);
+        }
         participantRegisterAckPublisher.send(participantRegisterMessage.getMessageId(),
                 participantRegisterMessage.getParticipantId(), participantRegisterMessage.getParticipantType());
     }
@@ -160,8 +165,8 @@ public class SupervisionHandler {
         LOGGER.debug("Participant Deregister received {}", participantDeregisterMessage);
         try {
             var participantList =
-                participantProvider.getParticipants(participantDeregisterMessage.getParticipantId().getName(),
-                    participantDeregisterMessage.getParticipantId().getVersion());
+                    participantProvider.getParticipants(participantDeregisterMessage.getParticipantId().getName(),
+                            participantDeregisterMessage.getParticipantId().getVersion());
 
             if (participantList != null) {
                 for (Participant participant : participantList) {
@@ -171,7 +176,8 @@ public class SupervisionHandler {
                 participantProvider.updateParticipants(participantList);
             }
         } catch (PfModelException pfme) {
-            LOGGER.warn("Model exception occured {}", participantDeregisterMessage.getParticipantId());
+            LOGGER.warn("Model exception occured with participant id {}",
+                    participantDeregisterMessage.getParticipantId());
         }
 
         participantDeregisterAckPublisher.send(participantDeregisterMessage.getMessageId());
@@ -187,8 +193,8 @@ public class SupervisionHandler {
         LOGGER.debug("Participant Update Ack received {}", participantUpdateAckMessage);
         try {
             var participantList =
-                participantProvider.getParticipants(participantUpdateAckMessage.getParticipantId().getName(),
-                    participantUpdateAckMessage.getParticipantId().getVersion());
+                    participantProvider.getParticipants(participantUpdateAckMessage.getParticipantId().getName(),
+                            participantUpdateAckMessage.getParticipantId().getVersion());
 
             if (participantList != null) {
                 for (Participant participant : participantList) {
@@ -199,7 +205,8 @@ public class SupervisionHandler {
                 LOGGER.warn("Participant not found in database {}", participantUpdateAckMessage.getParticipantId());
             }
         } catch (PfModelException pfme) {
-            LOGGER.warn("Model exception occured {}", participantUpdateAckMessage.getParticipantId());
+            LOGGER.warn("Model exception occured with participant id {}",
+                    participantUpdateAckMessage.getParticipantId());
         }
     }
 
@@ -248,9 +255,8 @@ public class SupervisionHandler {
             try {
                 var controlLoop = controlLoopProvider.getControlLoop(controlLoopAckMessage.getControlLoopId());
                 if (controlLoop != null) {
-                    var updated = updateState(controlLoop, controlLoopAckMessage
-                                    .getControlLoopResultMap().entrySet())
-                                    || setPrimed(controlLoop);
+                    var updated = updateState(controlLoop, controlLoopAckMessage.getControlLoopResultMap().entrySet());
+                    updated |= setPrimed(controlLoop);
                     if (updated) {
                         controlLoopProvider.updateControlLoop(controlLoop);
                     }
@@ -258,13 +264,13 @@ public class SupervisionHandler {
                     LOGGER.warn("ControlLoop not found in database {}", controlLoopAckMessage.getControlLoopId());
                 }
             } catch (PfModelException pfme) {
-                LOGGER.warn("Model exception occured {}", controlLoopAckMessage.getControlLoopId());
+                LOGGER.warn("Model exception occured with ControlLoop Id {}", controlLoopAckMessage.getControlLoopId());
             }
         }
     }
 
-    private boolean updateState(ControlLoop controlLoop, Set<Map.Entry<UUID, ControlLoopElementAck>>
-            controlLoopResultSet) {
+    private boolean updateState(ControlLoop controlLoop,
+            Set<Map.Entry<UUID, ControlLoopElementAck>> controlLoopResultSet) {
         var updated = false;
         for (var clElementAck : controlLoopResultSet) {
             var element = controlLoop.getElements().get(clElementAck.getKey());
@@ -281,8 +287,9 @@ public class SupervisionHandler {
         if (clElements != null) {
             Boolean primedFlag = true;
             var checkOpt = controlLoop.getElements().values().stream()
-                            .filter(clElement -> (!clElement.getState().equals(ControlLoopState.PASSIVE)
-                                    || !clElement.getState().equals(ControlLoopState.RUNNING))).findAny();
+                    .filter(clElement -> (!clElement.getState().equals(ControlLoopState.PASSIVE)
+                            || !clElement.getState().equals(ControlLoopState.RUNNING)))
+                    .findAny();
             if (checkOpt.isEmpty()) {
                 primedFlag = false;
             }
@@ -351,8 +358,7 @@ public class SupervisionHandler {
         }
     }
 
-    private void superviseControlLoopPassivation(ControlLoop controlLoop)
-            throws ControlLoopException {
+    private void superviseControlLoopPassivation(ControlLoop controlLoop) throws ControlLoopException {
         switch (controlLoop.getState()) {
             case PASSIVE:
                 exceptionOccured(Response.Status.NOT_ACCEPTABLE,
@@ -405,34 +411,39 @@ public class SupervisionHandler {
         }
     }
 
-    private void superviseParticipant(ParticipantStatus participantStatusMessage)
-            throws PfModelException, ControlLoopException {
-        if (participantStatusMessage.getParticipantId() == null) {
+    private void checkParticipant(ParticipantMessage participantMessage, ParticipantState participantState,
+            ParticipantHealthStatus healthStatus) throws ControlLoopException, PfModelException {
+        if (participantMessage.getParticipantId() == null) {
             exceptionOccured(Response.Status.NOT_FOUND, "Participant ID on PARTICIPANT_STATUS message is null");
         }
-
-        List<Participant> participantList =
-                participantProvider.getParticipants(participantStatusMessage.getParticipantId().getName(),
-                        participantStatusMessage.getParticipantId().getVersion());
+        List<Participant> participantList = participantProvider.getParticipants(
+                participantMessage.getParticipantId().getName(), participantMessage.getParticipantId().getVersion());
 
         if (CollectionUtils.isEmpty(participantList)) {
             var participant = new Participant();
-            participant.setName(participantStatusMessage.getParticipantId().getName());
-            participant.setVersion(participantStatusMessage.getParticipantId().getVersion());
-            participant.setDefinition(participantStatusMessage.getParticipantId());
-            participant.setParticipantType(participantStatusMessage.getParticipantType());
-            participant.setParticipantState(participantStatusMessage.getState());
-            participant.setHealthStatus(participantStatusMessage.getHealthStatus());
+            participant.setName(participantMessage.getParticipantId().getName());
+            participant.setVersion(participantMessage.getParticipantId().getVersion());
+            participant.setDefinition(participantMessage.getParticipantId());
+            participant.setParticipantType(participantMessage.getParticipantType());
+            participant.setParticipantState(participantState);
+            participant.setHealthStatus(healthStatus);
 
             participantList.add(participant);
             participantProvider.createParticipants(participantList);
         } else {
             for (Participant participant : participantList) {
-                participant.setParticipantState(participantStatusMessage.getState());
-                participant.setHealthStatus(participantStatusMessage.getHealthStatus());
+                participant.setParticipantState(participantState);
+                participant.setHealthStatus(healthStatus);
             }
             participantProvider.updateParticipants(participantList);
         }
+    }
+
+    private void superviseParticipant(ParticipantStatus participantStatusMessage)
+            throws PfModelException, ControlLoopException {
+
+        checkParticipant(participantStatusMessage, participantStatusMessage.getState(),
+                participantStatusMessage.getHealthStatus());
 
         monitoringProvider.createParticipantStatistics(List.of(participantStatusMessage.getParticipantStatistics()));
     }
