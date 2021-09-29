@@ -28,6 +28,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.models.base.PfKey;
@@ -98,5 +99,35 @@ class ControlLoopTest {
         assertNull(cl1.getElements().get(UUID.randomUUID()));
 
         assertEquals(PfKey.NULL_KEY_NAME, cl0.getDefinition().getName());
+
+    }
+
+    @Test
+    void testControlLoopElementStatisticsList() {
+        ControlLoop cl = new ControlLoop();
+        List<ClElementStatistics> emptylist = cl.getControlLoopElementStatisticsList(cl);
+        assertNull(emptylist);
+
+        cl.setDefinition(new ToscaConceptIdentifier("defName", "1.2.3"));
+        cl.setDescription("Description");
+        cl.setElements(new LinkedHashMap<>());
+        cl.setName("Name");
+        cl.setOrderedState(ControlLoopOrderedState.UNINITIALISED);
+        cl.setState(ControlLoopState.UNINITIALISED);
+        cl.setVersion("0.0.1");
+
+        UUID uuid = UUID.randomUUID();
+        ControlLoopElement clElement = new ControlLoopElement();
+        clElement.setId(uuid);
+        ToscaConceptIdentifier id = new ToscaConceptIdentifier(
+                "org.onap.policy.controlloop.PolicyControlLoopParticipant", "1.0.1");
+        clElement.setParticipantId(id);
+        clElement.setDefinition(id);
+        clElement.setOrderedState(ControlLoopOrderedState.UNINITIALISED);
+
+        cl.getElements().put(uuid, clElement);
+
+        List<ClElementStatistics> list = cl.getControlLoopElementStatisticsList(cl);
+        assertNotNull(list);
     }
 }

@@ -25,6 +25,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -33,11 +34,23 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 class ControlLoopElementTest {
     @Test
     void testControlLoopElement() {
+        ControlLoopElement cle0 = new ControlLoopElement();
+        ControlLoopElement cle1 = new ControlLoopElement(cle0);
 
+        assertEquals(cle0, cle1);
+    }
+
+    @Test
+    void testControlLoopState() {
         ControlLoopElement cle0 = new ControlLoopElement();
 
-        ControlLoopElement cle1 = new ControlLoopElement(cle0);
-        assertEquals(cle0, cle1);
+        assertTrue(
+                cle0.getOrderedState()
+                .equalsControlLoopState(ControlLoopState.UNINITIALISED));
+
+        assertTrue(
+                cle0.getOrderedState().asState()
+                .equalsControlLoopOrderedState(ControlLoopOrderedState.UNINITIALISED));
     }
 
     @Test
