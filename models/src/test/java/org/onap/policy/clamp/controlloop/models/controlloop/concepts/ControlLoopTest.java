@@ -27,7 +27,9 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import java.time.Instant;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.models.base.PfKey;
@@ -98,5 +100,62 @@ class ControlLoopTest {
         assertNull(cl1.getElements().get(UUID.randomUUID()));
 
         assertEquals(PfKey.NULL_KEY_NAME, cl0.getDefinition().getName());
+
+    }
+
+    @Test
+    void testControlLoopElementStatisticsList() {
+        ControlLoop cl = new ControlLoop();
+        List<ClElementStatistics> emptylist = cl.getControlLoopElementStatisticsList(cl);
+        assertNull(emptylist);
+
+        ControlLoop cl1 = getControlLoopTest();
+        List<ClElementStatistics> list = cl1.getControlLoopElementStatisticsList(cl1);
+        System.out.println(list);
+        assertNotNull(list);
+        assertEquals(2, list.size());
+        assertEquals(ControlLoopState.UNINITIALISED, list.get(0).getControlLoopState());
+    }
+
+    private ControlLoop getControlLoopTest() {
+        ControlLoop cl = new ControlLoop();
+        cl.setDefinition(new ToscaConceptIdentifier("defName", "1.2.3"));
+        cl.setDescription("Description");
+        cl.setElements(new LinkedHashMap<>());
+        cl.setName("Name");
+        cl.setOrderedState(ControlLoopOrderedState.UNINITIALISED);
+        cl.setState(ControlLoopState.UNINITIALISED);
+        cl.setVersion("0.0.1");
+
+        UUID uuid = UUID.randomUUID();
+        ToscaConceptIdentifier id = new ToscaConceptIdentifier(
+                "org.onap.policy.controlloop.PolicyControlLoopParticipant", "1.0.1");
+        ControlLoopElement clElement = getControlLoopElementTest(uuid, id);
+
+        UUID uuid2 = UUID.randomUUID();
+        ToscaConceptIdentifier id2 = new ToscaConceptIdentifier(
+                "org.onap.policy.controlloop.PolicyControlLoopParticipantIntermediary", "0.0.1");
+        ControlLoopElement clElement2 = getControlLoopElementTest(uuid2, id2);
+
+        cl.getElements().put(uuid, clElement);
+        cl.getElements().put(uuid2, clElement2);
+        return cl;
+    }
+
+    private ControlLoopElement getControlLoopElementTest(UUID uuid, ToscaConceptIdentifier id) {
+        ControlLoopElement clElement = new ControlLoopElement();
+        clElement.setId(uuid);
+        clElement.setParticipantId(id);
+        clElement.setDefinition(id);
+        clElement.setOrderedState(ControlLoopOrderedState.UNINITIALISED);
+
+        ClElementStatistics clElementStatistics = new ClElementStatistics();
+        clElementStatistics.setParticipantId(id);
+        clElementStatistics.setControlLoopState(ControlLoopState.UNINITIALISED);
+        clElementStatistics.setTimeStamp(Instant.now());
+
+        clElement.setClElementStatistics(clElementStatistics);
+
+        return clElement;
     }
 }

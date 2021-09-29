@@ -23,6 +23,7 @@ package org.onap.policy.clamp.controlloop.models.controlloop.persistence.provide
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import java.util.List;
@@ -35,9 +36,12 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoops;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.StandardCoder;
+import org.onap.policy.common.utils.coder.YamlJsonTranslator;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTypedEntityFilter;
 
 class ControlLoopProviderTest {
@@ -46,7 +50,9 @@ class ControlLoopProviderTest {
     private static final Coder CODER = new StandardCoder();
     private static final String CONTROL_LOOP_JSON = "src/test/resources/providers/TestControlLoops.json";
     private static final String UPDATE_CL_JSON = "src/test/resources/providers/UpdateControlLoops.json";
+    private static final String TOSCA_TEMPLATE_YAML = "examples/controlloop/PMSubscriptionHandling.yaml";
 
+    private static final YamlJsonTranslator yamlTranslator = new YamlJsonTranslator();
     private static AtomicInteger dbNameCounter = new AtomicInteger();
 
     private PolicyModelsProviderParameters parameters;
@@ -149,6 +155,56 @@ class ControlLoopProviderTest {
 
         deletedCl = controlLoopProvider.deleteControlLoop(name, version);
         assertEquals(clList.get(0), deletedCl);
+    }
 
+    @Test
+    void testDeleteAllInstanceProperties() throws Exception {
+        ToscaServiceTemplate toscaServiceTemplate = testControlLoopRead();
+        controlLoopProvider.deleteInstanceProperties(
+                controlLoopProvider.saveInstanceProperties(toscaServiceTemplate),
+                controlLoopProvider.getNodeTemplates(null, null));
+        assertThat(controlLoopProvider.getControlLoops(null, null)).isEmpty();
+    }
+
+    @Test
+    void testSaveAndDeleteInstanceProperties() throws Exception {
+        ToscaServiceTemplate toscaServiceTest = testControlLoopRead();
+        controlLoopProvider.createControlLoops(inputControlLoops.getControlLoopList());
+
+        controlLoopProvider.saveInstanceProperties(toscaServiceTest);
+        assertThat(controlLoopProvider.getNodeTemplates(
+                "org.onap.policy.controlloop.PolicyControlLoopParticipant",
+                "2.3.1")).isNotEmpty();
+
+        controlLoopProvider.deleteInstanceProperties(
+                controlLoopProvider.saveInstanceProperties(toscaServiceTest),
+                controlLoopProvider.getNodeTemplates(
+                        "org.onap.policy.controlloop.PolicyControlLoopParticipant",
+                        "2.3.1"));
+        assertThat(controlLoopProvider.getNodeTemplates(
+                "org.onap.policy.controlloop.PolicyControlLoopParticipant",
+                "2.3.1")).isEmpty();
+
+    }
+
+    @Test
+    void testGetNodeTemplates() throws Exception {
+        //Getting all nodes
+        List<ToscaNodeTemplate> listNodes = controlLoopProvider.getNodeTemplates(null, null);
+        assertNotNull(listNodes);
+
+        assertThatThrownBy(() -> {
+            controlLoopProvider.getFilteredNodeTemplates(null);
+        }).hasMessageMatching("filter is marked non-null but is null");
+    }
+
+    private static ToscaServiceTemplate testControlLoopRead() {
+        return testControlLoopYamlSerialization(TOSCA_TEMPLATE_YAML);
+    }
+
+    private static ToscaServiceTemplate testControlLoopYamlSerialization(String controlLoopFilePath) {
+        String controlLoopString = ResourceUtils.getResourceAsString(controlLoopFilePath);
+        ToscaServiceTemplate serviceTemplate = yamlTranslator.fromYaml(controlLoopString, ToscaServiceTemplate.class);
+        return serviceTemplate;
     }
 }
