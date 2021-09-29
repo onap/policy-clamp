@@ -30,9 +30,9 @@ import lombok.AllArgsConstructor;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElementDefinition;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantUtils;
+import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ServiceTemplateProvider;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdate;
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeType;
@@ -50,49 +50,67 @@ public class ParticipantUpdatePublisher extends AbstractParticipantPublisher<Par
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantUpdatePublisher.class);
 
-    private final PolicyModelsProvider modelsProvider;
+    private final ServiceTemplateProvider serviceTemplateProvider;
 
     /**
-     * Send ParticipantUpdate to Participant.
+     * Send ParticipantUpdate to all Participants.
      *
+     * @param name the ToscaServiceTemplate name
+     * @param version the ToscaServiceTemplate version
      */
-    public void send(Map<String, ToscaNodeType> commonPropertiesMap, boolean commissionFlag) {
+    public void sendComissioningBroadcast(String name, String version) {
+        sendCommissioning(name, version, null, null);
+    }
+
+    /**
+     * Send ParticipantUpdate to Participant
+     * if participantType and participantId are null then message is broadcast.
+     *
+     * @param name the ToscaServiceTemplate name
+     * @param version the ToscaServiceTemplate version
+     * @param participantType the ParticipantType
+     * @param participantId the ParticipantId
+     */
+    public boolean sendCommissioning(String name, String version, ToscaConceptIdentifier participantType,
+            ToscaConceptIdentifier participantId) {
         var message = new ParticipantUpdate();
+        message.setParticipantType(participantType);
+        message.setParticipantId(participantId);
         message.setTimestamp(Instant.now());
 
         ToscaServiceTemplate toscaServiceTemplate = null;
+        Map<String, ToscaNodeType> commonPropertiesMap = null;
         try {
-            var list = modelsProvider.getServiceTemplateList(null, null);
+            var list = serviceTemplateProvider.getServiceTemplateList(name, version);
             if (!list.isEmpty()) {
                 toscaServiceTemplate = list.get(0);
+                commonPropertiesMap =
+                        serviceTemplateProvider.getCommonOrInstancePropertiesFromNodeTypes(true, toscaServiceTemplate);
+            } else {
+                LOGGER.warn("No tosca service template found, cannot send participantupdate");
+                return false;
             }
         } catch (PfModelException pfme) {
             LOGGER.warn("Get of tosca service template failed, cannot send participantupdate", pfme);
-            return;
+            return false;
         }
 
         List<ParticipantDefinition> participantDefinitionUpdates = new ArrayList<>();
-        if (toscaServiceTemplate != null) {
-            for (var toscaInputEntry : toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates().entrySet()) {
-                if (ParticipantUtils.checkIfNodeTemplateIsControlLoopElement(toscaInputEntry.getValue(),
-                        toscaServiceTemplate)) {
-                    var clParticipantType =
-                            ParticipantUtils.findParticipantType(toscaInputEntry.getValue().getProperties());
-                    prepareParticipantDefinitionUpdate(clParticipantType, toscaInputEntry.getKey(),
-                            toscaInputEntry.getValue(), participantDefinitionUpdates, commonPropertiesMap);
-                }
+        for (var toscaInputEntry : toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates().entrySet()) {
+            if (ParticipantUtils.checkIfNodeTemplateIsControlLoopElement(toscaInputEntry.getValue(),
+                    toscaServiceTemplate)) {
+                var clParticipantType =
+                        ParticipantUtils.findParticipantType(toscaInputEntry.getValue().getProperties());
+                prepareParticipantDefinitionUpdate(clParticipantType, toscaInputEntry.getKey(),
+                        toscaInputEntry.getValue(), participantDefinitionUpdates, commonPropertiesMap);
             }
         }
 
-        if (commissionFlag) {
-            // Commission the controlloop but sending participantdefinitions to participants
-            message.setParticipantDefinitionUpdates(participantDefinitionUpdates);
-        } else {
-            // DeCommission the controlloop but deleting participantdefinitions on participants
-            message.setParticipantDefinitionUpdates(null);
-        }
+        // Commission the controlloop but sending participantdefinitions to participants
+        message.setParticipantDefinitionUpdates(participantDefinitionUpdates);
         LOGGER.debug("Participant Update sent {}", message);
         super.send(message);
+        return true;
     }
 
     private void prepareParticipantDefinitionUpdate(ToscaConceptIdentifier clParticipantType, String entryKey,
@@ -135,5 +153,18 @@ public class ParticipantUpdatePublisher extends AbstractParticipantPublisher<Par
         controlLoopElementDefinitionList.add(clDefinition);
         participantDefinition.setControlLoopElementDefinitionList(controlLoopElementDefinitionList);
         return participantDefinition;
+    }
+
+    /**
+     * Send ParticipantUpdate to Participant after that commissioning has been removed.
+     */
+    public void sendDecomisioning() {
+        var message = new ParticipantUpdate();
+        message.setTimestamp(Instant.now());
+        // DeCommission the controlloop but deleting participantdefinitions on participants
+        message.setParticipantDefinitionUpdates(null);
+
+        LOGGER.debug("Participant Update sent {}", message);
+        super.send(message);
     }
 }

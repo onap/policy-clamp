@@ -21,7 +21,6 @@
 
 package org.onap.policy.clamp.controlloop.runtime.supervision;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -52,7 +51,6 @@ import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantReg
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantUpdatePublisher;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -143,11 +141,15 @@ public class SupervisionHandler {
      *
      * @param participantRegisterMessage the ParticipantRegister message received from a participant
      */
-    public void handleParticipantMessage(ParticipantRegister participantRegisterMessage) {
+    @MessageIntercept
+    public boolean handleParticipantMessage(ParticipantRegister participantRegisterMessage) {
         LOGGER.debug("Participant Register received {}", participantRegisterMessage);
 
+        var isCommissioning = participantUpdatePublisher.sendCommissioning(null, null,
+                participantRegisterMessage.getParticipantId(), participantRegisterMessage.getParticipantType());
         participantRegisterAckPublisher.send(participantRegisterMessage.getMessageId(),
                 participantRegisterMessage.getParticipantId(), participantRegisterMessage.getParticipantType());
+        return isCommissioning;
     }
 
     /**
@@ -160,8 +162,8 @@ public class SupervisionHandler {
         LOGGER.debug("Participant Deregister received {}", participantDeregisterMessage);
         try {
             var participantList =
-                participantProvider.getParticipants(participantDeregisterMessage.getParticipantId().getName(),
-                    participantDeregisterMessage.getParticipantId().getVersion());
+                    participantProvider.getParticipants(participantDeregisterMessage.getParticipantId().getName(),
+                            participantDeregisterMessage.getParticipantId().getVersion());
 
             if (participantList != null) {
                 for (Participant participant : participantList) {
@@ -187,8 +189,8 @@ public class SupervisionHandler {
         LOGGER.debug("Participant Update Ack received {}", participantUpdateAckMessage);
         try {
             var participantList =
-                participantProvider.getParticipants(participantUpdateAckMessage.getParticipantId().getName(),
-                    participantUpdateAckMessage.getParticipantId().getVersion());
+                    participantProvider.getParticipants(participantUpdateAckMessage.getParticipantId().getName(),
+                            participantUpdateAckMessage.getParticipantId().getVersion());
 
             if (participantList != null) {
                 for (Participant participant : participantList) {
@@ -206,10 +208,13 @@ public class SupervisionHandler {
     /**
      * Send commissioning update message to dmaap.
      *
+     * @param name the ToscaServiceTemplate name
+     * @param version the ToscaServiceTemplate version
      */
-    public void handleSendCommissionMessage(Map<String, ToscaNodeType> commonPropertiesMap) {
-        LOGGER.debug("Participant update message being sent {}");
-        participantUpdatePublisher.send(commonPropertiesMap, true);
+    public void handleSendCommissionMessage(String name, String version) {
+        LOGGER.debug("Participant update message with serviveTemplate {} {} being sent to all participants", name,
+                version);
+        participantUpdatePublisher.sendComissioningBroadcast(name, version);
     }
 
     /**
@@ -218,7 +223,7 @@ public class SupervisionHandler {
      */
     public void handleSendDeCommissionMessage() {
         LOGGER.debug("Participant update message being sent");
-        participantUpdatePublisher.send(Collections.emptyMap(), false);
+        participantUpdatePublisher.sendDecomisioning();
     }
 
     /**
@@ -248,9 +253,8 @@ public class SupervisionHandler {
             try {
                 var controlLoop = controlLoopProvider.getControlLoop(controlLoopAckMessage.getControlLoopId());
                 if (controlLoop != null) {
-                    var updated = updateState(controlLoop, controlLoopAckMessage
-                                    .getControlLoopResultMap().entrySet())
-                                    || setPrimed(controlLoop);
+                    var updated = updateState(controlLoop, controlLoopAckMessage.getControlLoopResultMap().entrySet())
+                            || setPrimed(controlLoop);
                     if (updated) {
                         controlLoopProvider.updateControlLoop(controlLoop);
                     }
@@ -263,8 +267,8 @@ public class SupervisionHandler {
         }
     }
 
-    private boolean updateState(ControlLoop controlLoop, Set<Map.Entry<UUID, ControlLoopElementAck>>
-            controlLoopResultSet) {
+    private boolean updateState(ControlLoop controlLoop,
+            Set<Map.Entry<UUID, ControlLoopElementAck>> controlLoopResultSet) {
         var updated = false;
         for (var clElementAck : controlLoopResultSet) {
             var element = controlLoop.getElements().get(clElementAck.getKey());
@@ -281,8 +285,9 @@ public class SupervisionHandler {
         if (clElements != null) {
             Boolean primedFlag = true;
             var checkOpt = controlLoop.getElements().values().stream()
-                            .filter(clElement -> (!clElement.getState().equals(ControlLoopState.PASSIVE)
-                                    || !clElement.getState().equals(ControlLoopState.RUNNING))).findAny();
+                    .filter(clElement -> (!clElement.getState().equals(ControlLoopState.PASSIVE)
+                            || !clElement.getState().equals(ControlLoopState.RUNNING)))
+                    .findAny();
             if (checkOpt.isEmpty()) {
                 primedFlag = false;
             }
@@ -351,8 +356,7 @@ public class SupervisionHandler {
         }
     }
 
-    private void superviseControlLoopPassivation(ControlLoop controlLoop)
-            throws ControlLoopException {
+    private void superviseControlLoopPassivation(ControlLoop controlLoop) throws ControlLoopException {
         switch (controlLoop.getState()) {
             case PASSIVE:
                 exceptionOccured(Response.Status.NOT_ACCEPTABLE,

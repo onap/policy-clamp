@@ -26,7 +26,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -41,6 +40,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ControlLoopProvider;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ParticipantProvider;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ParticipantStatisticsProvider;
+import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ServiceTemplateProvider;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationCommand;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationResponse;
 import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningProvider;
@@ -128,7 +128,8 @@ class ControlLoopInstantiationProviderTest {
                 new ParticipantStatisticsProvider(controlLoopParameters.getDatabaseProviderParameters());
         var clElementStatisticsProvider =
                 new ClElementStatisticsProvider(controlLoopParameters.getDatabaseProviderParameters());
-        commissioningProvider = new CommissioningProvider(modelsProvider, clProvider, null, participantProvider);
+        commissioningProvider = new CommissioningProvider(new ServiceTemplateProvider(modelsProvider), clProvider, null,
+                participantProvider);
         var monitoringProvider =
                 new MonitoringProvider(participantStatisticsProvider, clElementStatisticsProvider, clProvider);
         var participantProvider = new ParticipantProvider(controlLoopParameters.getDatabaseProviderParameters());
