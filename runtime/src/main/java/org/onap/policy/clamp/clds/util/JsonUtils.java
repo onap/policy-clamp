@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2018-2019 AT&T Intellectual Property. All rights
+ * Copyright (C) 2018-2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -40,12 +40,16 @@ public class JsonUtils {
 
     protected static final Logger logger = LoggerFactory.getLogger(JsonUtils.class);
 
-    public static final Gson GSON = new GsonBuilder().setPrettyPrinting()
+    public static final Gson GSON = new GsonBuilder()
+            .registerTypeAdapter(Instant.class, new InstantSerializer())
+            .registerTypeAdapter(Instant.class, new InstantDeserializer())
+            .setPrettyPrinting()
             .registerTypeAdapter(SecureServicePermission.class, new SecureServicePermissionDeserializer()).create();
 
-    public static final Gson GSON_JPA_MODEL = new GsonBuilder().setPrettyPrinting()
+    public static final Gson GSON_JPA_MODEL = new GsonBuilder()
             .registerTypeAdapter(Instant.class, new InstantSerializer())
             .registerTypeAdapter(Instant.class, new InstantDeserializer()).setPrettyPrinting()
+            .setPrettyPrinting()
             .excludeFieldsWithoutExposeAnnotation().create();
 
     private JsonUtils() {

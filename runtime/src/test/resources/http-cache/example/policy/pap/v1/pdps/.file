@@ -8,7 +8,15 @@
                 {
                     "currentInstanceCount": 0,
                     "desiredInstanceCount": 1,
-                    "pdpInstances": [],
+                    "pdpInstances": [
+                        {
+                          "instanceId": "controlloop-f8287777-5f3e-4f0f-b21b-d8829c93f57b",
+                          "pdpState": "ACTIVE",
+                          "healthy": "HEALTHY",
+                          "message": "Pdp Heartbeat",
+                          "lastUpdate": "2021-09-29T02:51:21Z"
+                        }
+                    ],
                     "pdpType": "apex",
                     "policies": [
                                 {
@@ -31,7 +39,15 @@
                 {
                     "currentInstanceCount": 0,
                     "desiredInstanceCount": 1,
-                    "pdpInstances": [],
+                    "pdpInstances": [
+                        {
+                          "instanceId": "drools-f8287777-5f3e-4f0f-b21b-d8829c93f57b",
+                          "pdpState": "ACTIVE",
+                          "healthy": "HEALTHY",
+                          "message": "Pdp Heartbeat",
+                          "lastUpdate": "2021-09-29T02:51:21Z"
+                        }
+                    ],
                     "pdpType": "drools",
                     "policies": [
                                 {
@@ -54,7 +70,15 @@
                 {
                     "currentInstanceCount": 0,
                     "desiredInstanceCount": 1,
-                    "pdpInstances": [],
+                    "pdpInstances": [
+                        {
+                          "instanceId": "xacml-f8287777-5f3e-4f0f-b21b-d8829c93f57b",
+                          "pdpState": "ACTIVE",
+                          "healthy": "HEALTHY",
+                          "message": "Pdp Heartbeat",
+                          "lastUpdate": "2021-09-29T02:51:21Z"
+                        }
+                    ],
                     "pdpType": "xacml",
                     "policies": [],
                     "properties": {},
@@ -76,7 +100,15 @@
                 {
                     "currentInstanceCount": 0,
                     "desiredInstanceCount": 1,
-                    "pdpInstances": [],
+                    "pdpInstances": [
+                        {
+                          "instanceId": "monitoring-f8287777-5f3e-4f0f-b21b-d8829c93f57b",
+                          "pdpState": "ACTIVE",
+                          "healthy": "HEALTHY",
+                          "message": "Pdp Heartbeat",
+                          "lastUpdate": "2021-09-29T02:51:21Z"
+                        }
+                    ],
                     "pdpType": "xacml",
                     "policies": [
                                 {
