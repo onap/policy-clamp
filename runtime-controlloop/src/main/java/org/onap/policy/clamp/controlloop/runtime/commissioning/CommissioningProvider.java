@@ -37,17 +37,16 @@ import org.apache.commons.collections4.MapUtils;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ControlLoopProvider;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ParticipantProvider;
+import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ServiceTemplateProvider;
 import org.onap.policy.clamp.controlloop.models.messages.rest.commissioning.CommissioningResponse;
 import org.onap.policy.clamp.controlloop.runtime.supervision.SupervisionHandler;
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaCapabilityType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaDataType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaProperty;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaRelationshipType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplates;
@@ -64,7 +63,7 @@ public class CommissioningProvider {
     public static final String CONTROL_LOOP_NODE_TYPE = "org.onap.policy.clamp.controlloop.ControlLoop";
     private static final String INSTANCE_TEXT = "_Instance";
 
-    private final PolicyModelsProvider modelsProvider;
+    private final ServiceTemplateProvider serviceTemplateProvider;
     private final ControlLoopProvider clProvider;
     private final ObjectMapper mapper = new ObjectMapper();
     private final ParticipantProvider participantProvider;
@@ -75,14 +74,14 @@ public class CommissioningProvider {
     /**
      * Create a commissioning provider.
      *
-     * @param modelsProvider the PolicyModelsProvider
-     * @param clProvider the ControlLoopProvider
+     * @param serviceTemplateProvider the ServiceTemplate Provider
+     * @param clProvider the ControlLoop Provider
+     * @param supervisionHandler the Supervision Handler
+     * @param participantProvider the Participant Provider
      */
-    public CommissioningProvider(PolicyModelsProvider modelsProvider,
-                                 ControlLoopProvider clProvider,
-                                 SupervisionHandler supervisionHandler,
-                                 ParticipantProvider participantProvider) {
-        this.modelsProvider = modelsProvider;
+    public CommissioningProvider(ServiceTemplateProvider serviceTemplateProvider, ControlLoopProvider clProvider,
+            SupervisionHandler supervisionHandler, ParticipantProvider participantProvider) {
+        this.serviceTemplateProvider = serviceTemplateProvider;
         this.clProvider = clProvider;
         this.supervisionHandler = supervisionHandler;
         this.participantProvider = participantProvider;
@@ -97,22 +96,17 @@ public class CommissioningProvider {
      * @throws PfModelException on creation errors
      */
     public CommissioningResponse createControlLoopDefinitions(ToscaServiceTemplate serviceTemplate)
-        throws PfModelException {
+            throws PfModelException {
 
         if (verifyIfInstancePropertiesExists()) {
-            throw new PfModelException(Status.BAD_REQUEST,
-                "Delete instances, to commission control loop definitions");
+            throw new PfModelException(Status.BAD_REQUEST, "Delete instances, to commission control loop definitions");
         }
 
         synchronized (lockit) {
-            modelsProvider.createServiceTemplate(serviceTemplate);
-            List<Participant> participantList =
-                participantProvider.getParticipants(null, null);
+            serviceTemplateProvider.createServiceTemplate(serviceTemplate);
+            List<Participant> participantList = participantProvider.getParticipants(null, null);
             if (!participantList.isEmpty()) {
-                this.supervisionHandler.handleSendCommissionMessage(
-                    getCommonOrInstancePropertiesFromNodeTypes(true,
-                        serviceTemplate.getName(),
-                        serviceTemplate.getVersion()));
+                supervisionHandler.handleSendCommissionMessage(serviceTemplate.getName(), serviceTemplate.getVersion());
             }
         }
 
@@ -136,22 +130,18 @@ public class CommissioningProvider {
      * @return the result of the deletion
      * @throws PfModelException on deletion errors
      */
-    public CommissioningResponse deleteControlLoopDefinition(String name, String version)
-        throws PfModelException {
+    public CommissioningResponse deleteControlLoopDefinition(String name, String version) throws PfModelException {
 
         if (verifyIfInstancePropertiesExists()) {
-            throw new PfModelException(Status.BAD_REQUEST,
-                "Delete instances, to commission control loop definitions");
+            throw new PfModelException(Status.BAD_REQUEST, "Delete instances, to commission control loop definitions");
         }
 
         synchronized (lockit) {
-            List<Participant> participantList =
-                participantProvider.getParticipants(null,
-                    null);
+            List<Participant> participantList = participantProvider.getParticipants(null, null);
             if (!participantList.isEmpty()) {
-                this.supervisionHandler.handleSendDeCommissionMessage();
+                supervisionHandler.handleSendDeCommissionMessage();
             }
-            modelsProvider.deleteServiceTemplate(name, version);
+            serviceTemplateProvider.deleteServiceTemplate(name, version);
         }
 
         var response = new CommissioningResponse();
@@ -224,143 +214,6 @@ public class CommissioningProvider {
     }
 
     /**
-     * Get the initial node types with common or instance properties.
-     *
-     * @param fullNodeTypes map of all the node types in the specified template
-     * @param common boolean to indicate whether common or instance properties are required
-     * @return node types map that only has common properties
-     * @throws PfModelException on errors getting node type with common properties
-     */
-    private Map<String, ToscaNodeType> getInitialNodeTypesMap(Map<String, ToscaNodeType> fullNodeTypes,
-            boolean common) {
-
-        var tempNodeTypesMap = new HashMap<String, ToscaNodeType>();
-
-        fullNodeTypes.forEach((key, nodeType) -> {
-            var tempToscaNodeType = new ToscaNodeType();
-            tempToscaNodeType.setName(key);
-
-            var resultantPropertyMap = findCommonOrInstancePropsInNodeTypes(nodeType, common);
-
-            if (!resultantPropertyMap.isEmpty()) {
-                tempToscaNodeType.setProperties(resultantPropertyMap);
-                tempNodeTypesMap.put(key, tempToscaNodeType);
-            }
-        });
-        return tempNodeTypesMap;
-    }
-
-    private Map<String, ToscaProperty> findCommonOrInstancePropsInNodeTypes(ToscaNodeType nodeType, boolean common) {
-
-        var tempCommonPropertyMap = new HashMap<String, ToscaProperty>();
-        var tempInstancePropertyMap = new HashMap<String, ToscaProperty>();
-
-        nodeType.getProperties().forEach((propKey, prop) -> {
-
-            if (prop.getMetadata() != null) {
-                prop.getMetadata().forEach((k, v) -> {
-                    if (k.equals("common") && v.equals("true") && common) {
-                        tempCommonPropertyMap.put(propKey, prop);
-                    } else if (k.equals("common") && v.equals("false") && !common) {
-                        tempInstancePropertyMap.put(propKey, prop);
-                    }
-
-                });
-            } else {
-                tempInstancePropertyMap.put(propKey, prop);
-            }
-        });
-
-        if (tempCommonPropertyMap.isEmpty() && !common) {
-            return tempInstancePropertyMap;
-        } else {
-            return tempCommonPropertyMap;
-        }
-    }
-
-    /**
-     * Get the node types derived from those that have common properties.
-     *
-     * @param initialNodeTypes map of all the node types in the specified template
-     * @param filteredNodeTypes map of all the node types that have common or instance properties
-     * @return all node types that have common properties including their children
-     * @throws PfModelException on errors getting node type with common properties
-     */
-    private Map<String, ToscaNodeType> getFinalNodeTypesMap(Map<String, ToscaNodeType> initialNodeTypes,
-            Map<String, ToscaNodeType> filteredNodeTypes) {
-        for (var i = 0; i < initialNodeTypes.size(); i++) {
-            initialNodeTypes.forEach((key, nodeType) -> {
-                var tempToscaNodeType = new ToscaNodeType();
-                tempToscaNodeType.setName(key);
-
-                if (filteredNodeTypes.get(nodeType.getDerivedFrom()) != null) {
-                    tempToscaNodeType.setName(key);
-
-                    var finalProps = new HashMap<String, ToscaProperty>(
-                            filteredNodeTypes.get(nodeType.getDerivedFrom()).getProperties());
-
-                    tempToscaNodeType.setProperties(finalProps);
-                } else {
-                    return;
-                }
-                filteredNodeTypes.putIfAbsent(key, tempToscaNodeType);
-
-            });
-        }
-        return filteredNodeTypes;
-    }
-
-    /**
-     * Get the requested node types with common or instance properties.
-     *
-     * @param common boolean indicating common or instance properties
-     * @param name the name of the definition to get, null for all definitions
-     * @param version the version of the definition to get, null for all definitions
-     * @return the node types with common or instance properties
-     * @throws PfModelException on errors getting node type properties
-     */
-    public Map<String, ToscaNodeType> getCommonOrInstancePropertiesFromNodeTypes(boolean common, String name,
-            String version) throws PfModelException {
-        var serviceTemplates = new ToscaServiceTemplates();
-        serviceTemplates.setServiceTemplates(modelsProvider.getServiceTemplateList(name, version));
-        var tempNodeTypesMap =
-                this.getInitialNodeTypesMap(serviceTemplates.getServiceTemplates().get(0).getNodeTypes(), common);
-
-        return this.getFinalNodeTypesMap(serviceTemplates.getServiceTemplates().get(0).getNodeTypes(),
-                tempNodeTypesMap);
-
-    }
-
-    /**
-     * Get node templates with appropriate common or instance properties added.
-     *
-     * @param initialNodeTemplates map of all the node templates in the specified template
-     * @param nodeTypeProps map of all the node types that have common or instance properties including children
-     * @return all node templates with appropriate common or instance properties added
-     * @throws PfModelException on errors getting map of node templates with common or instance properties added
-     */
-    private Map<String, ToscaNodeTemplate> getDerivedCommonOrInstanceNodeTemplates(
-            Map<String, ToscaNodeTemplate> initialNodeTemplates, Map<String, ToscaNodeType> nodeTypeProps) {
-
-        var finalNodeTemplatesMap = new HashMap<String, ToscaNodeTemplate>();
-
-        initialNodeTemplates.forEach((templateKey, template) -> {
-            if (nodeTypeProps.containsKey(template.getType())) {
-                var finalMergedProps = new HashMap<String, Object>();
-
-                nodeTypeProps.get(template.getType()).getProperties().forEach(finalMergedProps::putIfAbsent);
-
-                template.setProperties(finalMergedProps);
-
-                finalNodeTemplatesMap.put(templateKey, template);
-            } else {
-                return;
-            }
-        });
-        return finalNodeTemplatesMap;
-    }
-
-    /**
      * Get node templates with common properties added.
      *
      * @param common boolean indicating common or instance properties to be used
@@ -374,17 +227,17 @@ public class CommissioningProvider {
 
         if (common && verifyIfInstancePropertiesExists()) {
             throw new PfModelException(Status.BAD_REQUEST,
-                "Cannot create or edit common properties, delete all the instantiations first");
+                    "Cannot create or edit common properties, delete all the instantiations first");
         }
 
+        var serviceTemplateList = serviceTemplateProvider.getServiceTemplateList(name, version);
         var commonOrInstanceNodeTypeProps =
-            this.getCommonOrInstancePropertiesFromNodeTypes(common, name, version);
+                serviceTemplateProvider.getCommonOrInstancePropertiesFromNodeTypes(common, serviceTemplateList.get(0));
 
         var serviceTemplates = new ToscaServiceTemplates();
-        serviceTemplates.setServiceTemplates(filterToscaNodeTemplateInstance(
-            modelsProvider.getServiceTemplateList(name, version)));
+        serviceTemplates.setServiceTemplates(filterToscaNodeTemplateInstance(serviceTemplateList));
 
-        return this.getDerivedCommonOrInstanceNodeTemplates(
+        return serviceTemplateProvider.getDerivedCommonOrInstanceNodeTemplates(
                 serviceTemplates.getServiceTemplates().get(0).getToscaTopologyTemplate().getNodeTemplates(),
                 commonOrInstanceNodeTypeProps);
     }
@@ -398,9 +251,7 @@ public class CommissioningProvider {
      * @throws PfModelException on errors getting control loop definitions
      */
     public ToscaServiceTemplate getToscaServiceTemplate(String name, String version) throws PfModelException {
-        var serviceTemplates = new ToscaServiceTemplates();
-        serviceTemplates.setServiceTemplates(modelsProvider.getServiceTemplateList(name, version));
-        return serviceTemplates.getServiceTemplates().get(0);
+        return serviceTemplateProvider.getToscaServiceTemplate(name, version);
     }
 
     /**
@@ -411,14 +262,11 @@ public class CommissioningProvider {
      * @return the tosca service template
      * @throws PfModelException on errors getting tosca service template
      */
-    public String getToscaServiceTemplateReduced(String name, String version)
-        throws PfModelException {
+    public String getToscaServiceTemplateReduced(String name, String version) throws PfModelException {
 
-        var serviceTemplates = new ToscaServiceTemplates();
-        serviceTemplates.setServiceTemplates(modelsProvider.getServiceTemplateList(name, version));
+        var serviceTemplateList = serviceTemplateProvider.getServiceTemplateList(name, version);
 
-        ToscaServiceTemplate fullTemplate = filterToscaNodeTemplateInstance(
-            serviceTemplates.getServiceTemplates()).get(0);
+        ToscaServiceTemplate fullTemplate = filterToscaNodeTemplateInstance(serviceTemplateList).get(0);
 
         var template = new HashMap<String, Object>();
         template.put("tosca_definitions_version", fullTemplate.getToscaDefinitionsVersion());
@@ -511,7 +359,7 @@ public class CommissioningProvider {
      */
     private boolean verifyIfInstancePropertiesExists() {
         return clProvider.getNodeTemplates(null, null).stream()
-            .anyMatch(nodeTemplate -> nodeTemplate.getKey().getName().contains(INSTANCE_TEXT));
+                .anyMatch(nodeTemplate -> nodeTemplate.getKey().getName().contains(INSTANCE_TEXT));
 
     }
 }
