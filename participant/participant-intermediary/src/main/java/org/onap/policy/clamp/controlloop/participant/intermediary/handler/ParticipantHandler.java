@@ -262,14 +262,19 @@ public class ParticipantHandler {
     public void handleParticipantRegisterAck(ParticipantRegisterAck participantRegisterAckMsg) {
         LOGGER.debug("ParticipantRegisterAck message received as responseTo {}",
                 participantRegisterAckMsg.getResponseTo());
+        statusToPassive();
+        publisher.sendParticipantStatus(makeHeartbeat(false));
+    }
+
+    private void statusToPassive() {
         if (ParticipantHealthStatus.UNKNOWN.equals(this.healthStatus)) {
             this.healthStatus = ParticipantHealthStatus.HEALTHY;
         }
 
-        if (ParticipantState.UNKNOWN.equals(this.state)) {
+        if (ParticipantState.UNKNOWN.equals(this.state) || ParticipantState.TERMINATED.equals(this.state)) {
             this.state = ParticipantState.PASSIVE;
         }
-        publisher.sendParticipantStatus(makeHeartbeat(false));
+
     }
 
     /**
@@ -303,6 +308,7 @@ public class ParticipantHandler {
                 participantUpdateMsg.getParticipantId());
 
         if (!participantUpdateMsg.getParticipantDefinitionUpdates().isEmpty()) {
+            statusToPassive();
             // This message is to commission the controlloop
             for (ParticipantDefinition participantDefinition : participantUpdateMsg.getParticipantDefinitionUpdates()) {
                 if (participantDefinition.getParticipantType().equals(participantType)) {
@@ -311,7 +317,7 @@ public class ParticipantHandler {
                 }
             }
         } else {
-            // This message is to decommision the controlloop
+            // This message is to decommission the controlloop
             clElementDefsOnThisParticipant.clear();
             this.state = ParticipantState.TERMINATED;
         }
@@ -374,12 +380,12 @@ public class ParticipantHandler {
 
     private List<ControlLoopInfo> getControlLoopInfoList() {
         List<ControlLoopInfo> controlLoopInfoList = new ArrayList<>();
-        for (Map.Entry<ToscaConceptIdentifier, ControlLoop> entry : controlLoopHandler.getControlLoopMap().entrySet()) {
-            ControlLoopInfo clInfo = new ControlLoopInfo();
+        for (var entry : controlLoopHandler.getControlLoopMap().entrySet()) {
+            var clInfo = new ControlLoopInfo();
             clInfo.setControlLoopId(entry.getKey());
-            ControlLoopStatistics clStatitistics = new ControlLoopStatistics();
+            var clStatitistics = new ControlLoopStatistics();
             clStatitistics.setControlLoopId(entry.getKey());
-            ClElementStatisticsList clElementStatisticsList = new ClElementStatisticsList();
+            var clElementStatisticsList = new ClElementStatisticsList();
             clElementStatisticsList
                     .setClElementStatistics(entry.getValue().getElements().values()
                             .stream()
