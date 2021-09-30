@@ -22,6 +22,7 @@ package org.onap.policy.clamp.controlloop.runtime.supervision;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -40,6 +41,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ControlLoopProvider;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ParticipantProvider;
+import org.onap.policy.clamp.controlloop.runtime.instantiation.InstantiationUtils;
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ControlLoopStateChangePublisher;
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ControlLoopUpdatePublisher;
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantStatusReqPublisher;
@@ -51,6 +53,9 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 class SupervisionScannerTest {
+
+    private static final String TOSCA_SERVICE_TEMPLATE_YAML =
+            "src/test/resources/rest/servicetemplates/tosca-for-smoke-testing.yaml";
 
     @Test
     void testScannerOrderedStateEqualsToState() throws PfModelException {
@@ -128,6 +133,50 @@ class SupervisionScannerTest {
         supervisionScanner.run(true);
         verify(controlLoopProvider, times(0)).updateControlLoop(any(ControlLoop.class));
         verify(participantStatusReqPublisher, times(0)).send(any(ToscaConceptIdentifier.class));
+    }
+
+    @Test
+    void testSendControlLoopMsgUpdate() throws PfModelException {
+        var controlLoop = new ControlLoop();
+        controlLoop.setState(ControlLoopState.UNINITIALISED2PASSIVE);
+        controlLoop.setOrderedState(ControlLoopOrderedState.PASSIVE);
+        controlLoop.setElements(Map.of(UUID.randomUUID(),
+                createHttpElement(ControlLoopState.UNINITIALISED, ControlLoopOrderedState.PASSIVE)));
+
+        var controlLoopProvider = mock(ControlLoopProvider.class);
+        when(controlLoopProvider.getControlLoops(null, null)).thenReturn(List.of(controlLoop));
+
+        ToscaServiceTemplate serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
+        var modelsProvider = mock(PolicyModelsProvider.class);
+        when(modelsProvider.getServiceTemplateList(null, null)).thenReturn(List.of(serviceTemplate));
+
+        var participantProvider = mock(ParticipantProvider.class);
+        var controlLoopUpdatePublisher = mock(ControlLoopUpdatePublisher.class);
+        var participantStatusReqPublisher = mock(ParticipantStatusReqPublisher.class);
+        var controlLoopStateChangePublisher = mock(ControlLoopStateChangePublisher.class);
+        var participantUpdatePublisher = mock(ParticipantUpdatePublisher.class);
+        var clRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
+
+        var supervisionScanner = new SupervisionScanner(controlLoopProvider, modelsProvider,
+                controlLoopStateChangePublisher, controlLoopUpdatePublisher, participantProvider,
+                participantStatusReqPublisher, participantUpdatePublisher, clRuntimeParameterGroup);
+
+        supervisionScanner.run(false);
+
+        verify(controlLoopUpdatePublisher).send(any(ControlLoop.class), anyInt());
+    }
+
+    private ControlLoopElement createHttpElement(ControlLoopState state, ControlLoopOrderedState orderedState) {
+        var element = new ControlLoopElement();
+        element.setDefinition(new ToscaConceptIdentifier(
+                "org.onap.domain.database.Http_PMSHMicroserviceControlLoopElement", "1.2.3"));
+        element.setState(state);
+        element.setOrderedState(orderedState);
+        element.setParticipantId(new ToscaConceptIdentifier("HttpParticipant0", "1.0.0"));
+        element.setParticipantType(
+                new ToscaConceptIdentifier("org.onap.k8s.controlloop.HttpControlLoopParticipant", "2.3.4"));
+
+        return element;
     }
 
     @Test

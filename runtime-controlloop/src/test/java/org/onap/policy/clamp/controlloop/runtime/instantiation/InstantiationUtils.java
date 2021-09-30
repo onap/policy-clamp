@@ -23,21 +23,18 @@ package org.onap.policy.clamp.controlloop.runtime.instantiation;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
-import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoops;
-import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstancePropertiesResponse;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationCommand;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationResponse;
-import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningProvider;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
-import org.onap.policy.common.utils.coder.YamlJsonTranslator;
+import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
-import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
@@ -47,7 +44,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 public class InstantiationUtils {
 
     private static final Coder CODER = new StandardCoder();
-    private static final YamlJsonTranslator yamlTranslator = new YamlJsonTranslator();
+    private static final StandardYamlCoder YAML_TRANSLATOR = new StandardYamlCoder();
 
     /**
      * Gets the ControlLoops from Resource.
@@ -128,20 +125,17 @@ public class InstantiationUtils {
     }
 
     /**
-     * Store ToscaServiceTemplate from resource to DB.
+     * Get ToscaServiceTemplate from resource.
      *
      * @param path path of the resource
-     * @param commissioningProvider The CommissioningProvider
-     * @throws PfModelException if an error occurs
      */
-    public static void storeToscaServiceTemplate(String path, CommissioningProvider commissioningProvider)
-        throws PfModelException, ControlLoopException {
+    public static ToscaServiceTemplate getToscaServiceTemplate(String path) {
 
-        ToscaServiceTemplate template =
-                yamlTranslator.fromYaml(ResourceUtils.getResourceAsString(path), ToscaServiceTemplate.class);
-
-        commissioningProvider.deleteControlLoopDefinition(null, null);
-
-        commissioningProvider.createControlLoopDefinitions(template);
+        try {
+            return YAML_TRANSLATOR.decode(ResourceUtils.getResourceAsStream(path), ToscaServiceTemplate.class);
+        } catch (CoderException e) {
+            fail("Cannot read or decode " + path);
+            return null;
+        }
     }
 }
