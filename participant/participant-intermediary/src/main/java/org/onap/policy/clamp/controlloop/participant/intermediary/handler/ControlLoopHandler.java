@@ -169,7 +169,7 @@ public class ControlLoopHandler {
         var controlLoop = controlLoopMap.get(stateChangeMsg.getControlLoopId());
 
         if (controlLoop == null) {
-            var controlLoopAck = new ControlLoopAck(ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
+            var controlLoopAck = new ControlLoopAck(ParticipantMessageType.CONTROLLOOP_STATECHANGE_ACK);
             controlLoopAck.setParticipantId(participantId);
             controlLoopAck.setParticipantType(participantType);
             controlLoopAck.setMessage("Control loop " + stateChangeMsg.getControlLoopId()
@@ -368,7 +368,7 @@ public class ControlLoopHandler {
     private void handleStateChange(ControlLoop controlLoop, final ControlLoopOrderedState orderedState) {
 
         if (orderedState.equals(controlLoop.getOrderedState())) {
-            var controlLoopAck = new ControlLoopAck(ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
+            var controlLoopAck = new ControlLoopAck(ParticipantMessageType.CONTROLLOOP_STATECHANGE_ACK);
             controlLoopAck.setParticipantId(participantId);
             controlLoopAck.setParticipantType(participantType);
             controlLoopAck.setMessage("Control loop is already in state " + orderedState);
