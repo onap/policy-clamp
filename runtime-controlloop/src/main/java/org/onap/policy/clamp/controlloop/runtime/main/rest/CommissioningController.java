@@ -312,7 +312,7 @@ public class CommissioningController extends AbstractRestController {
             @ApiParam(value = "Tosca service template version", required = false) @RequestParam(
                     value = "version",
                     required = false) String version)
-            throws PfModelException {
+        throws PfModelException, ControlLoopException {
 
         return ResponseEntity.ok().body(provider.getToscaServiceTemplateReduced(name, version));
     }
