@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b17d2cf0_cdea288d",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ServiceTemplateProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-09-30T15:18:34Z",
+      "side": 1,
+      "message": "I think it\u0027s OK to add this class for Istanbul, We should be able to remove it in Jakarta when we fix the DB service template handling and have sufficient support for this in policy models.",
+      "revId": "35fcb9065ac850c28e5050567e74004db90541ce",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
