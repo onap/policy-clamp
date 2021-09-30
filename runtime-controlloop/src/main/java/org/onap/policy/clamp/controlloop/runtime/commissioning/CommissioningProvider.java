@@ -262,11 +262,19 @@ public class CommissioningProvider {
      * @return the tosca service template
      * @throws PfModelException on errors getting tosca service template
      */
-    public String getToscaServiceTemplateReduced(String name, String version) throws PfModelException {
+    public String getToscaServiceTemplateReduced(String name, String version)
+        throws PfModelException {
 
         var serviceTemplateList = serviceTemplateProvider.getServiceTemplateList(name, version);
 
-        ToscaServiceTemplate fullTemplate = filterToscaNodeTemplateInstance(serviceTemplateList).get(0);
+        List<ToscaServiceTemplate> filteredServiceTemplateList = filterToscaNodeTemplateInstance(
+            serviceTemplateList);
+
+        if (filteredServiceTemplateList.isEmpty()) {
+            throw new PfModelException(Status.BAD_REQUEST, "Invalid Service Template");
+        }
+
+        ToscaServiceTemplate fullTemplate = filteredServiceTemplateList.get(0);
 
         var template = new HashMap<String, Object>();
         template.put("tosca_definitions_version", fullTemplate.getToscaDefinitionsVersion());
