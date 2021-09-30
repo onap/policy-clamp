@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.core.Response.Status;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
@@ -417,8 +418,14 @@ public class CommissioningProvider {
         var serviceTemplates = new ToscaServiceTemplates();
         serviceTemplates.setServiceTemplates(modelsProvider.getServiceTemplateList(name, version));
 
-        ToscaServiceTemplate fullTemplate = filterToscaNodeTemplateInstance(
-            serviceTemplates.getServiceTemplates()).get(0);
+        List<ToscaServiceTemplate> toscaServiceTemplates = filterToscaNodeTemplateInstance(
+            serviceTemplates.getServiceTemplates());
+
+        if (toscaServiceTemplates.isEmpty()) {
+            throw new BadRequestException("Invalid Service Template");
+        }
+
+        ToscaServiceTemplate fullTemplate = toscaServiceTemplates.get(0);
 
         var template = new HashMap<String, Object>();
         template.put("tosca_definitions_version", fullTemplate.getToscaDefinitionsVersion());
