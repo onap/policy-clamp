@@ -16,6 +16,70 @@
       "revId": "35fcb9065ac850c28e5050567e74004db90541ce",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "574cdf78_333cc8df",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ServiceTemplateProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2021-10-01T17:43:28Z",
+      "side": 1,
+      "message": "sounds good",
+      "parentUuid": "b17d2cf0_cdea288d",
+      "revId": "35fcb9065ac850c28e5050567e74004db90541ce",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "812ccf89_fb0a8afe",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ServiceTemplateProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2021-10-01T17:43:28Z",
+      "side": 1,
+      "message": "do you want to add unit test case for this class?",
+      "range": {
+        "startLine": 38,
+        "startChar": 13,
+        "endLine": 38,
+        "endChar": 36
+      },
+      "revId": "35fcb9065ac850c28e5050567e74004db90541ce",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b637be7a_eacfc3c6",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/comm/ParticipantUpdatePublisher.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2021-10-01T17:43:28Z",
+      "side": 1,
+      "message": "do we need to add the name \u0026 version for which nothing was found in db? makes it more easier while debugging logs.",
+      "range": {
+        "startLine": 90,
+        "startChar": 29,
+        "endLine": 90,
+        "endChar": 91
+      },
+      "revId": "35fcb9065ac850c28e5050567e74004db90541ce",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
