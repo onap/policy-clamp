@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "361c808f_290b0e42",
+        "filename": "models/src/test/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoopTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 7629
+      },
+      "writtenOn": "2021-10-04T15:07:57Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "920b953a_8efb87a9",
+      "range": {
+        "startLine": 131,
+        "startChar": 0,
+        "endLine": 131,
+        "endChar": 1
+      },
+      "revId": "d4ec1335f3a6af7da0ee52ae8e3d5500709ecfc3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7dd9c2e9_bce45f48",
         "filename": "models/src/test/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ControlLoopProviderTest.java",
         "patchSetId": 1
@@ -45,6 +69,30 @@
       "revId": "d4ec1335f3a6af7da0ee52ae8e3d5500709ecfc3",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bf5b6588_18f44018",
+        "filename": "models/src/test/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ControlLoopProviderTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 7629
+      },
+      "writtenOn": "2021-10-04T15:07:57Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "7dd9c2e9_bce45f48",
+      "range": {
+        "startLine": 181,
+        "startChar": 0,
+        "endLine": 181,
+        "endChar": 1
+      },
+      "revId": "d4ec1335f3a6af7da0ee52ae8e3d5500709ecfc3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
