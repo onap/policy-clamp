@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "920b953a_8efb87a9",
+        "filename": "models/src/test/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoopTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-10-04T14:22:01Z",
+      "side": 1,
+      "message": "COuld we check one or two members of the list to make sure they are what we expect as well as checking that the returned list is not null?",
+      "range": {
+        "startLine": 131,
+        "startChar": 0,
+        "endLine": 131,
+        "endChar": 1
+      },
+      "revId": "d4ec1335f3a6af7da0ee52ae8e3d5500709ecfc3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7dd9c2e9_bce45f48",
+        "filename": "models/src/test/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ControlLoopProviderTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-10-04T14:22:01Z",
+      "side": 1,
+      "message": "Same comment, please check for contents as well as not null.",
+      "range": {
+        "startLine": 181,
+        "startChar": 0,
+        "endLine": 181,
+        "endChar": 1
+      },
+      "revId": "d4ec1335f3a6af7da0ee52ae8e3d5500709ecfc3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
