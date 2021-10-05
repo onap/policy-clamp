@@ -22,6 +22,30 @@
       "revId": "58a8d07e2901af59a85d698438d678ea10f8833c",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5b7fc48e_39096d6f",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 415,
+      "author": {
+        "id": 7660
+      },
+      "writtenOn": "2021-10-05T16:16:09Z",
+      "side": 1,
+      "message": "I tried to re-create the issue, but when I forcibly try to commission an invalid service template I will get an exception for it, and because of it I can\u0027t reproduce this error.\n\nI guess it will be a fail safe mechanism that probably will never get triggered but it is better keep it there than getting a Null Pointer Exception.",
+      "parentUuid": "5c8462da_f3fb4c72",
+      "range": {
+        "startLine": 415,
+        "startChar": 18,
+        "endLine": 415,
+        "endChar": 48
+      },
+      "revId": "58a8d07e2901af59a85d698438d678ea10f8833c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
