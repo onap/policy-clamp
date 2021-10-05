@@ -46,8 +46,6 @@ import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParame
 import org.onap.policy.clamp.controlloop.runtime.main.rest.InstantiationController;
 import org.onap.policy.clamp.controlloop.runtime.util.CommonTestData;
 import org.onap.policy.clamp.controlloop.runtime.util.rest.CommonRestController;
-import org.onap.policy.common.utils.coder.YamlJsonTranslator;
-import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.provider.PolicyModelsProviderFactory;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -87,9 +85,6 @@ class InstantiationControllerTest extends CommonRestController {
 
     private static ToscaServiceTemplate serviceTemplate = new ToscaServiceTemplate();
 
-    private static final YamlJsonTranslator yamlTranslator = new YamlJsonTranslator();
-
-
     @Autowired
     private ClRuntimeParameterGroup clRuntimeParameterGroup;
 
@@ -104,8 +99,7 @@ class InstantiationControllerTest extends CommonRestController {
 
     @BeforeAll
     public static void setUpBeforeClass() throws Exception {
-        serviceTemplate = yamlTranslator.fromYaml(ResourceUtils.getResourceAsString(TOSCA_TEMPLATE_YAML),
-            ToscaServiceTemplate.class);
+        serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_TEMPLATE_YAML);
     }
 
     @BeforeEach

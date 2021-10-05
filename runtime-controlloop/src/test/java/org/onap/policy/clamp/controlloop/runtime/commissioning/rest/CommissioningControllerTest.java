@@ -40,10 +40,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.onap.policy.clamp.controlloop.models.messages.rest.commissioning.CommissioningResponse;
+import org.onap.policy.clamp.controlloop.runtime.instantiation.InstantiationUtils;
 import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
 import org.onap.policy.clamp.controlloop.runtime.util.rest.CommonRestController;
-import org.onap.policy.common.utils.coder.YamlJsonTranslator;
-import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.provider.PolicyModelsProviderFactory;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
@@ -64,8 +63,8 @@ class CommissioningControllerTest extends CommonRestController {
     private static final String TOSCA_SERVICE_TEMPLATE_YAML =
             "src/test/resources/rest/servicetemplates/pmsh_multiple_cl_tosca.yaml";
     private static final String COMMON_TOSCA_SERVICE_TEMPLATE_YAML =
-        "src/test/resources/rest/servicetemplates/full-tosca-with-common-properties.yaml";
-    private static final YamlJsonTranslator yamlTranslator = new YamlJsonTranslator();
+            "src/test/resources/rest/servicetemplates/full-tosca-with-common-properties.yaml";
+
     private static final String COMMISSIONING_ENDPOINT = "commission";
     private static ToscaServiceTemplate serviceTemplate = new ToscaServiceTemplate();
     private static ToscaServiceTemplate commonPropertiesServiceTemplate = new ToscaServiceTemplate();
@@ -84,11 +83,9 @@ class CommissioningControllerTest extends CommonRestController {
     @BeforeAll
     public static void setUpBeforeClass() throws Exception {
 
-        serviceTemplate = yamlTranslator.fromYaml(ResourceUtils.getResourceAsString(TOSCA_SERVICE_TEMPLATE_YAML),
-                ToscaServiceTemplate.class);
-        commonPropertiesServiceTemplate = yamlTranslator.fromYaml(ResourceUtils
-                .getResourceAsString(COMMON_TOSCA_SERVICE_TEMPLATE_YAML),
-            ToscaServiceTemplate.class);
+        serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
+        commonPropertiesServiceTemplate =
+                InstantiationUtils.getToscaServiceTemplate(COMMON_TOSCA_SERVICE_TEMPLATE_YAML);
     }
 
     @BeforeEach
@@ -146,8 +143,7 @@ class CommissioningControllerTest extends CommonRestController {
     void testQueryToscaServiceTemplate() throws Exception {
         createFullEntryInDbWithCommonProps();
 
-        Invocation.Builder invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT
-            + "/toscaservicetemplate");
+        Invocation.Builder invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT + "/toscaservicetemplate");
         Response rawresp = invocationBuilder.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
         ToscaServiceTemplate template = rawresp.readEntity(ToscaServiceTemplate.class);
@@ -160,8 +156,8 @@ class CommissioningControllerTest extends CommonRestController {
     void testQueryToscaServiceTemplateSchema() throws Exception {
         createFullEntryInDbWithCommonProps();
 
-        Invocation.Builder invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT
-            + "/toscaServiceTemplateSchema");
+        Invocation.Builder invocationBuilder =
+                super.sendRequest(COMMISSIONING_ENDPOINT + "/toscaServiceTemplateSchema");
         Response rawresp = invocationBuilder.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
         String schema = rawresp.readEntity(String.class);
@@ -174,7 +170,7 @@ class CommissioningControllerTest extends CommonRestController {
         createFullEntryInDbWithCommonProps();
 
         Invocation.Builder invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT
-            + "/getCommonOrInstanceProperties" + "?common=true&name=ToscaServiceTemplateSimple&version=1.0.0");
+                + "/getCommonOrInstanceProperties" + "?common=true&name=ToscaServiceTemplateSimple&version=1.0.0");
         Response rawresp = invocationBuilder.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
 
@@ -244,7 +240,7 @@ class CommissioningControllerTest extends CommonRestController {
     void testQueryElementsBadRequest() throws Exception {
         createEntryInDB();
 
-        //Call get elements with no info
+        // Call get elements with no info
         Invocation.Builder invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT + "/elements");
         Response resp = invocationBuilder.buildGet().invoke();
         assertEquals(Response.Status.NOT_ACCEPTABLE.getStatusCode(), resp.getStatus());
@@ -255,8 +251,8 @@ class CommissioningControllerTest extends CommonRestController {
     void testQueryElements() throws Exception {
         createEntryInDB();
 
-        Invocation.Builder invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT + "/elements"
-                + "?name=org.onap.domain.pmsh.PMSHControlLoopDefinition");
+        Invocation.Builder invocationBuilder = super.sendRequest(
+                COMMISSIONING_ENDPOINT + "/elements" + "?name=org.onap.domain.pmsh.PMSHControlLoopDefinition");
         Response rawresp = invocationBuilder.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
         List<?> entityList = rawresp.readEntity(List.class);
@@ -270,7 +266,7 @@ class CommissioningControllerTest extends CommonRestController {
         createEntryInDB();
 
         Invocation.Builder invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT);
-        //Call delete with no info
+        // Call delete with no info
         Response resp = invocationBuilder.delete();
         assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), resp.getStatus());
 
@@ -282,7 +278,7 @@ class CommissioningControllerTest extends CommonRestController {
 
         Invocation.Builder invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT + "?name="
                 + serviceTemplate.getName() + "&version=" + serviceTemplate.getVersion());
-        //Call delete with no info
+        // Call delete with no info
         Response resp = invocationBuilder.delete();
         assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
 
@@ -305,7 +301,7 @@ class CommissioningControllerTest extends CommonRestController {
     // Delete entries from the DB after relevant tests
     private synchronized void deleteEntryInDB(String name, String version) throws Exception {
         try (PolicyModelsProvider modelsProvider = new PolicyModelsProviderFactory()
-            .createPolicyModelsProvider(clRuntimeParameterGroup.getDatabaseProviderParameters())) {
+                .createPolicyModelsProvider(clRuntimeParameterGroup.getDatabaseProviderParameters())) {
             if (!modelsProvider.getServiceTemplateList(null, null).isEmpty()) {
                 modelsProvider.deleteServiceTemplate(name, version);
             }
@@ -314,7 +310,7 @@ class CommissioningControllerTest extends CommonRestController {
 
     private synchronized void createFullEntryInDbWithCommonProps() throws Exception {
         try (PolicyModelsProvider modelsProvider = new PolicyModelsProviderFactory()
-            .createPolicyModelsProvider(clRuntimeParameterGroup.getDatabaseProviderParameters())) {
+                .createPolicyModelsProvider(clRuntimeParameterGroup.getDatabaseProviderParameters())) {
             deleteEntryInDB(commonPropertiesServiceTemplate.getName(), commonPropertiesServiceTemplate.getVersion());
             modelsProvider.createServiceTemplate(commonPropertiesServiceTemplate);
         }

@@ -22,7 +22,9 @@
 
 package org.onap.policy.clamp.controlloop.runtime.supervision;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.apache.commons.lang3.tuple.Pair;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
@@ -53,10 +55,12 @@ import org.springframework.stereotype.Component;
 public class SupervisionScanner {
     private static final Logger LOGGER = LoggerFactory.getLogger(SupervisionScanner.class);
 
-    private HandleCounter<ToscaConceptIdentifier> controlLoopCounter = new HandleCounter<>();
-    private HandleCounter<ToscaConceptIdentifier> participantStatusCounter = new HandleCounter<>();
-    private HandleCounter<Pair<ToscaConceptIdentifier, ToscaConceptIdentifier>> participantUpdateCounter =
+    private final HandleCounter<ToscaConceptIdentifier> controlLoopCounter = new HandleCounter<>();
+    private final HandleCounter<ToscaConceptIdentifier> participantStatusCounter = new HandleCounter<>();
+    private final HandleCounter<Pair<ToscaConceptIdentifier, ToscaConceptIdentifier>> participantUpdateCounter =
             new HandleCounter<>();
+
+    private final Map<ToscaConceptIdentifier, Integer> phaseMap = new HashMap<>();
 
     private final ControlLoopProvider controlLoopProvider;
     private final PolicyModelsProvider modelsProvider;
@@ -224,7 +228,6 @@ public class SupervisionScanner {
                 int startPhase = ParticipantUtils.findStartPhase(toscaNodeTemplate.getProperties());
                 minSpNotCompleted = Math.min(minSpNotCompleted, startPhase);
             }
-
         }
 
         if (completed) {
@@ -239,7 +242,12 @@ public class SupervisionScanner {
         } else {
             LOGGER.debug("control loop scan: transition from state {} to {} not completed", controlLoop.getState(),
                     controlLoop.getOrderedState());
-            if (counterCheck) {
+
+            if (minSpNotCompleted != phaseMap.getOrDefault(controlLoop.getKey().asIdentifier(), 0)
+                    && ControlLoopState.UNINITIALISED2PASSIVE.equals(controlLoop.getState())) {
+                phaseMap.put(controlLoop.getKey().asIdentifier(), minSpNotCompleted);
+                sendControlLoopMsg(controlLoop, minSpNotCompleted);
+            } else if (counterCheck) {
                 handleCounter(controlLoop, minSpNotCompleted);
             }
         }
@@ -247,6 +255,7 @@ public class SupervisionScanner {
 
     private void clearFaultAndCounter(ControlLoop controlLoop) {
         controlLoopCounter.clear(controlLoop.getKey().asIdentifier());
+        phaseMap.clear();
     }
 
     private void handleCounter(ControlLoop controlLoop, int startPhase) {
@@ -258,17 +267,22 @@ public class SupervisionScanner {
 
         if (controlLoopCounter.getDuration(id) > controlLoopCounter.getMaxWaitMs()) {
             if (controlLoopCounter.count(id)) {
-                if (ControlLoopState.UNINITIALISED2PASSIVE.equals(controlLoop.getState())) {
-                    LOGGER.debug("retry message ControlLoopUpdate");
-                    controlLoopUpdatePublisher.send(controlLoop, startPhase);
-                } else {
-                    LOGGER.debug("retry message ControlLoopStateChange");
-                    controlLoopStateChangePublisher.send(controlLoop);
-                }
+                phaseMap.put(id, startPhase);
+                sendControlLoopMsg(controlLoop, startPhase);
             } else {
                 LOGGER.debug("report ControlLoop fault");
                 controlLoopCounter.setFault(id);
             }
+        }
+    }
+
+    private void sendControlLoopMsg(ControlLoop controlLoop, int startPhase) {
+        if (ControlLoopState.UNINITIALISED2PASSIVE.equals(controlLoop.getState())) {
+            LOGGER.debug("retry message ControlLoopUpdate");
+            controlLoopUpdatePublisher.send(controlLoop, startPhase);
+        } else {
+            LOGGER.debug("retry message ControlLoopStateChange");
+            controlLoopStateChangePublisher.send(controlLoop);
         }
     }
 }

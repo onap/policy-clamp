@@ -26,7 +26,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -53,8 +52,6 @@ import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantDer
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantRegisterAckPublisher;
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantUpdatePublisher;
 import org.onap.policy.clamp.controlloop.runtime.util.CommonTestData;
-import org.onap.policy.common.utils.coder.YamlJsonTranslator;
-import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -97,8 +94,6 @@ class ControlLoopInstantiationProviderTest {
 
     private static ToscaServiceTemplate serviceTemplate = new ToscaServiceTemplate();
 
-    private static final YamlJsonTranslator yamlTranslator = new YamlJsonTranslator();
-
     private static SupervisionHandler supervisionHandler;
     private static CommissioningProvider commissioningProvider;
     private static ControlLoopProvider clProvider;
@@ -107,8 +102,7 @@ class ControlLoopInstantiationProviderTest {
 
     @BeforeAll
     public static void setUpBeforeClass() throws Exception {
-        serviceTemplate = yamlTranslator.fromYaml(ResourceUtils.getResourceAsString(TOSCA_TEMPLATE_YAML),
-                ToscaServiceTemplate.class);
+        serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_TEMPLATE_YAML);
     }
 
     /**
