@@ -61,5 +61,11 @@ $JAVA_HOME/bin/java -Dserver.ssl.enabled="true" \
     -Dserver.ssl.keyStorePassword="${KEYSTORE_PASSWD}" \
     -Djavax.net.ssl.trustStore="${TRUSTSTORE}" \
     -Djavax.net.ssl.trustStorePassword="${TRUSTSTORE_PASSWD}" \
+    -Dcom.sun.management.jmxremote.rmi.port=9090 \
+    -Dcom.sun.management.jmxremote=true \
+    -Dcom.sun.management.jmxremote.port=9090 \
+    -Dcom.sun.management.jmxremote.ssl=false \
+    -Dcom.sun.management.jmxremote.authenticate=false \
+    -Dcom.sun.management.jmxremote.local.only=false \
     -jar /app/app.jar \
     --spring.config.location="${POLICY_HOME}/config/ClRuntimeParameters.yaml"

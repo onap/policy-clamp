@@ -1,0 +1,2268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.4.1">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Policy Clamp Controlloop Stability" enabled="true">
+      <stringProp name="TestPlan.comments">Policy Clamp Controlloop Stability Tests</stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">true</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <collectionProp name="Arguments.arguments">
+          <elementProp name="RUNTIME_HOST" elementType="Argument">
+            <stringProp name="Argument.name">RUNTIME_HOST</stringProp>
+            <stringProp name="Argument.value">192.168.48.9</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="RUNTIME_PORT" elementType="Argument">
+            <stringProp name="Argument.name">RUNTIME_PORT</stringProp>
+            <stringProp name="Argument.value">6969</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="POLICY_PARTICIPANT_HOST" elementType="Argument">
+            <stringProp name="Argument.name">POLICY_PARTICIPANT_HOST</stringProp>
+            <stringProp name="Argument.value">192.168.48.8</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="POLICY_PARTICIPANT_HOST_PORT" elementType="Argument">
+            <stringProp name="Argument.name">POLICY_PARTICIPANT_HOST_PORT</stringProp>
+            <stringProp name="Argument.value">6973</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+        </collectionProp>
+      </elementProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+      <AuthManager guiclass="AuthPanel" testclass="AuthManager" testname="HTTP Authorization Manager" enabled="true">
+        <collectionProp name="AuthManager.auth_list">
+          <elementProp name="" elementType="Authorization">
+            <stringProp name="Authorization.url">https://${RUNTIME_HOST}:${RUNTIME_PORT}/onap/controlloop/v2</stringProp>
+            <stringProp name="Authorization.username">healthcheck</stringProp>
+            <stringProp name="Authorization.password">zb!XztG34</stringProp>
+            <stringProp name="Authorization.domain"></stringProp>
+            <stringProp name="Authorization.realm"></stringProp>
+          </elementProp>
+        </collectionProp>
+        <boolProp name="AuthManager.clearEachIteration">true</boolProp>
+        <boolProp name="AuthManager.controlledByThreadGroup">false</boolProp>
+      </AuthManager>
+      <hashTree/>
+      <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+        <collectionProp name="HeaderManager.headers">
+          <elementProp name="" elementType="Header">
+            <stringProp name="Header.name">Content-Type</stringProp>
+            <stringProp name="Header.value">application/json</stringProp>
+          </elementProp>
+          <elementProp name="" elementType="Header">
+            <stringProp name="Header.name">X-ONAP-RequestID</stringProp>
+            <stringProp name="Header.value">709c62b3-8918-41b9-a747-d21eb79c6c20</stringProp>
+          </elementProp>
+        </collectionProp>
+      </HeaderManager>
+      <hashTree/>
+      <SetupThreadGroup guiclass="SetupThreadGroupGui" testclass="SetupThreadGroup" testname="setUp Thread Group" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">stoptest</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration">260000</stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+      </SetupThreadGroup>
+      <hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Commission Contorlloop definition" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+  &quot;tosca_definitions_version&quot;: &quot;tosca_simple_yaml_1_1_0&quot;,&#xd;
+  &quot;data_types&quot;: {&#xd;
+    &quot;onap.datatypes.ToscaConceptIdentifier&quot;: {&#xd;
+      &quot;derived_from&quot;: &quot;tosca.datatypes.Root&quot;,&#xd;
+      &quot;properties&quot;: {&#xd;
+        &quot;name&quot;: {&#xd;
+          &quot;type&quot;: &quot;string&quot;,&#xd;
+          &quot;required&quot;: true&#xd;
+        },&#xd;
+        &quot;version&quot;: {&#xd;
+          &quot;type&quot;: &quot;string&quot;,&#xd;
+          &quot;required&quot;: true&#xd;
+        }&#xd;
+      }&#xd;
+    },&#xd;
+    &quot;org.onap.datatypes.policy.clamp.controlloop.DCAEMicroserviceControlLoopElementConsulInfo&quot;: {&#xd;
+      &quot;name&quot;: &quot;org.onap.datatypes.policy.clamp.controlloop.DCAEMicroserviceControlLoopElementConsulInfo&quot;,&#xd;
+      &quot;version&quot;: &quot;0.0.0&quot;,&#xd;
+      &quot;derived_from&quot;: &quot;tosca.datatypes.Root&quot;,&#xd;
+      &quot;properties&quot;: {&#xd;
+        &quot;consulUrl&quot;: {&#xd;
+          &quot;name&quot;: &quot;consulUrl&quot;,&#xd;
+          &quot;type&quot;: &quot;string&quot;,&#xd;
+          &quot;typeVersion&quot;: &quot;0.0.0&quot;,&#xd;
+          &quot;description&quot;: &quot;Consul url for this entry&quot;,&#xd;
+          &quot;required&quot;: true&#xd;
+        },&#xd;
+        &quot;consul_body&quot;: {&#xd;
+          &quot;name&quot;: &quot;consulBody&quot;,&#xd;
+          &quot;type&quot;: &quot;string&quot;,&#xd;
+          &quot;typeVersion&quot;: &quot;0.0.0&quot;,&#xd;
+          &quot;description&quot;: &quot;Body of Consul entry&quot;,&#xd;
+          &quot;required&quot;: true&#xd;
+        }&#xd;
+      }&#xd;
+    },&#xd;
+    &quot;onap.datatype.controlloop.Target&quot;: {&#xd;
+      &quot;derived_from&quot;: &quot;tosca.datatypes.Root&quot;,&#xd;
+      &quot;description&quot;: &quot;Definition for a entity in A&amp;AI to perform a control loop operation on&quot;,&#xd;
+      &quot;properties&quot;: {&#xd;
+        &quot;targetType&quot;: {&#xd;
+          &quot;type&quot;: &quot;string&quot;,&#xd;
+          &quot;description&quot;: &quot;Category for the target type&quot;,&#xd;
+          &quot;required&quot;: true,&#xd;
+          &quot;constraints&quot;: [&#xd;
+            {&#xd;
+              &quot;valid_values&quot;: [&#xd;
+                &quot;VNF&quot;,&#xd;
+                &quot;VM&quot;,&#xd;
+                &quot;VFMODULE&quot;,&#xd;
+                &quot;PNF&quot;&#xd;
+              ]&#xd;
+            }&#xd;
+          ]&#xd;
+        },&#xd;
+        &quot;entityIds&quot;: {&#xd;
+          &quot;type&quot;: &quot;map&quot;,&#xd;
+          &quot;description&quot;: &quot;Map of values that identify the resource. If none are provided, it is assumed that the\nentity that generated the ONSET event will be the target.\n&quot;,&#xd;
+          &quot;required&quot;: false,&#xd;
+          &quot;metadata&quot;: {&#xd;
+            &quot;clamp_possible_values&quot;: &quot;ClampExecution:CSAR_RESOURCES&quot;&#xd;
+          },&#xd;
+          &quot;entry_schema&quot;: {&#xd;
+            &quot;type&quot;: &quot;string&quot;&#xd;
+          }&#xd;
+        }&#xd;
+      }&#xd;
+    },&#xd;
+    &quot;onap.datatype.controlloop.Actor&quot;: {&#xd;
+      &quot;derived_from&quot;: &quot;tosca.datatypes.Root&quot;,&#xd;
+      &quot;description&quot;: &quot;An actor/operation/target definition&quot;,&#xd;
+      &quot;properties&quot;: {&#xd;
+        &quot;actor&quot;: {&#xd;
+          &quot;type&quot;: &quot;string&quot;,&#xd;
+          &quot;description&quot;: &quot;The actor performing the operation.&quot;,&#xd;
+          &quot;required&quot;: true,&#xd;
+          &quot;metadata&quot;: {&#xd;
+            &quot;clamp_possible_values&quot;: &quot;Dictionary:DefaultActors,ClampExecution:CDS/actor&quot;&#xd;
+          }&#xd;
+        },&#xd;
+        &quot;operation&quot;: {&#xd;
+          &quot;type&quot;: &quot;string&quot;,&#xd;
+          &quot;description&quot;: &quot;The operation the actor is performing.&quot;,&#xd;
+          &quot;metadata&quot;: {&#xd;
+            &quot;clamp_possible_values&quot;: &quot;Dictionary:DefaultOperations,ClampExecution:CDS/operation&quot;&#xd;
+          },&#xd;
+          &quot;required&quot;: true&#xd;
+        },&#xd;
+        &quot;target&quot;: {&#xd;
+          &quot;type&quot;: &quot;onap.datatype.controlloop.Target&quot;,&#xd;
+          &quot;description&quot;: &quot;The resource the operation should be performed on.&quot;,&#xd;
+          &quot;required&quot;: true&#xd;
+        },&#xd;
+        &quot;payload&quot;: {&#xd;
+          &quot;type&quot;: &quot;map&quot;,&#xd;
+          &quot;description&quot;: &quot;Name/value pairs of payload information passed by Policy to the actor&quot;,&#xd;
+          &quot;required&quot;: false,&#xd;
+          &quot;metadata&quot;: {&#xd;
+            &quot;clamp_possible_values&quot;: &quot;ClampExecution:CDS/payload&quot;&#xd;
+          },&#xd;
+          &quot;entry_schema&quot;: {&#xd;
+            &quot;type&quot;: &quot;string&quot;&#xd;
+          }&#xd;
+        }&#xd;
+      }&#xd;
+    },&#xd;
+    &quot;onap.datatype.controlloop.Operation&quot;: {&#xd;
+      &quot;derived_from&quot;: &quot;tosca.datatypes.Root&quot;,&#xd;
+      &quot;description&quot;: &quot;An operation supported by an actor&quot;,&#xd;
+      &quot;properties&quot;: {&#xd;
+        &quot;id&quot;: {&#xd;
+          &quot;type&quot;: &quot;string&quot;,&#xd;
+          &quot;description&quot;: &quot;Unique identifier for the operation&quot;,&#xd;
+          &quot;required&quot;: true&#xd;
+        },&#xd;
+        &quot;description&quot;: {&#xd;
+          &quot;type&quot;: &quot;string&quot;,&#xd;
+          &quot;description&quot;: &quot;A user-friendly description of the intent for the operation&quot;,&#xd;
+          &quot;required&quot;: false&#xd;
+        },&#xd;
+        &quot;operation&quot;: {&#xd;
+          &quot;type&quot;: &quot;onap.datatype.controlloop.Actor&quot;,&#xd;
+          &quot;description&quot;: &quot;The definition of the operation to be performed.&quot;,&#xd;
+          &quot;required&quot;: true&#xd;
+        },&#xd;
+        &quot;timeout&quot;: {&#xd;
+          &quot;type&quot;: &quot;integer&quot;,&#xd;
+          &quot;description&quot;: &quot;The amount of time for the actor to perform the operation.&quot;,&#xd;
+          &quot;required&quot;: true&#xd;
+        },&#xd;
+        &quot;retries&quot;: {&#xd;
+          &quot;type&quot;: &quot;integer&quot;,&#xd;
+          &quot;description&quot;: &quot;The number of retries the actor should attempt to perform the operation.&quot;,&#xd;
+          &quot;required&quot;: true,&#xd;
+          &quot;default&quot;: 0&#xd;
+        },&#xd;
+        &quot;success&quot;: {&#xd;
+          &quot;type&quot;: &quot;string&quot;,&#xd;
+          &quot;description&quot;: &quot;Points to the operation to invoke on success. A value of \&quot;final_success\&quot; indicates and end to the operation.&quot;,&#xd;
+          &quot;required&quot;: false,&#xd;
+          &quot;default&quot;: &quot;final_success&quot;&#xd;
+        },&#xd;
+        &quot;failure&quot;: {&#xd;
+          &quot;type&quot;: &quot;string&quot;,&#xd;
+          &quot;description&quot;: &quot;Points to the operation to invoke on Actor operation failure.&quot;,&#xd;
+          &quot;required&quot;: false,&#xd;
+          &quot;default&quot;: &quot;final_failure&quot;&#xd;
+        },&#xd;
+        &quot;failure_timeout&quot;: {&#xd;
+          &quot;type&quot;: &quot;string&quot;,&#xd;
+          &quot;description&quot;: &quot;Points to the operation to invoke when the time out for the operation occurs.&quot;,&#xd;
+          &quot;required&quot;: false,&#xd;
+          &quot;default&quot;: &quot;final_failure_timeout&quot;&#xd;
+        },&#xd;
+        &quot;failure_retries&quot;: {&#xd;
+          &quot;type&quot;: &quot;string&quot;,&#xd;
+          &quot;description&quot;: &quot;Points to the operation to invoke when the current operation has exceeded its max retries.&quot;,&#xd;
+          &quot;required&quot;: false,&#xd;
+          &quot;default&quot;: &quot;final_failure_retries&quot;&#xd;
+        },&#xd;
+        &quot;failure_exception&quot;: {&#xd;
+          &quot;type&quot;: &quot;string&quot;,&#xd;
+          &quot;description&quot;: &quot;Points to the operation to invoke when the current operation causes an exception.&quot;,&#xd;
+          &quot;required&quot;: false,&#xd;
+          &quot;default&quot;: &quot;final_failure_exception&quot;&#xd;
+        },&#xd;
+        &quot;failure_guard&quot;: {&#xd;
+          &quot;type&quot;: &quot;string&quot;,&#xd;
+          &quot;description&quot;: &quot;Points to the operation to invoke when the current operation is blocked due to guard policy enforcement.&quot;,&#xd;
+          &quot;required&quot;: false,&#xd;
+          &quot;default&quot;: &quot;final_failure_guard&quot;&#xd;
+        }&#xd;
+      }&#xd;
+    },&#xd;
+    &quot;onap.datatypes.monitoring.managedObjectDNsBasic&quot;: {&#xd;
+      &quot;constraints&quot;: [],&#xd;
+      &quot;properties&quot;: {&#xd;
+        &quot;DN&quot;: {&#xd;
+          &quot;name&quot;: &quot;DN&quot;,&#xd;
+          &quot;type&quot;: &quot;string&quot;,&#xd;
+          &quot;typeVersion&quot;: &quot;0.0.0&quot;,&#xd;
+          &quot;description&quot;: &quot;Managed object distinguished name&quot;,&#xd;
+          &quot;required&quot;: true,&#xd;
+          &quot;constraints&quot;: [],&#xd;
+          &quot;metadata&quot;: {}&#xd;
+        }&#xd;
+      },&#xd;
+      &quot;name&quot;: &quot;onap.datatypes.monitoring.managedObjectDNsBasic&quot;,&#xd;
+      &quot;version&quot;: &quot;0.0.0&quot;,&#xd;
+      &quot;derived_from&quot;: &quot;tosca.datatypes.Root&quot;,&#xd;
+      &quot;metadata&quot;: {}&#xd;
+    },&#xd;
+    &quot;onap.datatypes.monitoring.managedObjectDNsBasics&quot;: {&#xd;
+      &quot;constraints&quot;: [],&#xd;
+      &quot;properties&quot;: {&#xd;
+        &quot;managedObjectDNsBasic&quot;: {&#xd;
+          &quot;name&quot;: &quot;managedObjectDNsBasic&quot;,&#xd;
+          &quot;type&quot;: &quot;map&quot;,&#xd;
+          &quot;typeVersion&quot;: &quot;0.0.0&quot;,&#xd;
+          &quot;description&quot;: &quot;Managed object distinguished name object&quot;,&#xd;
+          &quot;required&quot;: true,&#xd;
+          &quot;constraints&quot;: [],&#xd;
+          &quot;entry_schema&quot;: {&#xd;
+            &quot;type&quot;: &quot;onap.datatypes.monitoring.managedObjectDNsBasic&quot;,&#xd;
+            &quot;typeVersion&quot;: &quot;0.0.0&quot;,&#xd;
+            &quot;constraints&quot;: []&#xd;
+          },&#xd;
+          &quot;metadata&quot;: {}&#xd;
+        }&#xd;
+      },&#xd;
+      &quot;name&quot;: &quot;onap.datatypes.monitoring.managedObjectDNsBasics&quot;,&#xd;
+      &quot;version&quot;: &quot;0.0.0&quot;,&#xd;
+      &quot;derived_from&quot;: &quot;tosca.datatypes.Root&quot;,&#xd;
+      &quot;metadata&quot;: {}&#xd;
+    },&#xd;
+    &quot;onap.datatypes.monitoring.measurementGroup&quot;: {&#xd;
+      &quot;constraints&quot;: [],&#xd;
+      &quot;properties&quot;: {&#xd;
+        &quot;measurementTypes&quot;: {&#xd;
+          &quot;name&quot;: &quot;measurementTypes&quot;,&#xd;
+          &quot;type&quot;: &quot;list&quot;,&#xd;
+          &quot;typeVersion&quot;: &quot;0.0.0&quot;,&#xd;
+          &quot;description&quot;: &quot;List of measurement types&quot;,&#xd;
+          &quot;required&quot;: true,&#xd;
+          &quot;constraints&quot;: [],&#xd;
+          &quot;entry_schema&quot;: {&#xd;
+            &quot;type&quot;: &quot;onap.datatypes.monitoring.measurementTypes&quot;,&#xd;
+            &quot;typeVersion&quot;: &quot;0.0.0&quot;,&#xd;
+            &quot;constraints&quot;: []&#xd;
+          },&#xd;
+          &quot;metadata&quot;: {}&#xd;
+        },&#xd;
+        &quot;managedObjectDNsBasic&quot;: {&#xd;
+          &quot;name&quot;: &quot;managedObjectDNsBasic&quot;,&#xd;
+          &quot;type&quot;: &quot;list&quot;,&#xd;
+          &quot;typeVersion&quot;: &quot;0.0.0&quot;,&#xd;
+          &quot;description&quot;: &quot;List of managed object distinguished names&quot;,&#xd;
+          &quot;required&quot;: true,&#xd;
+          &quot;constraints&quot;: [],&#xd;
+          &quot;entry_schema&quot;: {&#xd;
+            &quot;type&quot;: &quot;onap.datatypes.monitoring.managedObjectDNsBasics&quot;,&#xd;
+            &quot;typeVersion&quot;: &quot;0.0.0&quot;,&#xd;
+            &quot;constraints&quot;: []&#xd;
+          },&#xd;
+          &quot;metadata&quot;: {}&#xd;
+        }&#xd;
+      },&#xd;
+      &quot;name&quot;: &quot;onap.datatypes.monitoring.measurementGroup&quot;,&#xd;
+      &quot;version&quot;: &quot;0.0.0&quot;,&#xd;
+      &quot;derived_from&quot;: &quot;tosca.datatypes.Root&quot;,&#xd;
+      &quot;metadata&quot;: {}&#xd;
+    },&#xd;
+    &quot;onap.datatypes.monitoring.measurementGroups&quot;: {&#xd;
+      &quot;constraints&quot;: [],&#xd;
+      &quot;properties&quot;: {&#xd;
+        &quot;measurementGroup&quot;: {&#xd;
+          &quot;name&quot;: &quot;measurementGroup&quot;,&#xd;
+          &quot;type&quot;: &quot;map&quot;,&#xd;
+          &quot;typeVersion&quot;: &quot;0.0.0&quot;,&#xd;
+          &quot;description&quot;: &quot;Measurement Group&quot;,&#xd;
+          &quot;required&quot;: true,&#xd;
+          &quot;constraints&quot;: [],&#xd;
+          &quot;entry_schema&quot;: {&#xd;
+            &quot;type&quot;: &quot;onap.datatypes.monitoring.measurementGroup&quot;,&#xd;
+            &quot;typeVersion&quot;: &quot;0.0.0&quot;,&#xd;
+            &quot;constraints&quot;: []&#xd;
+          },&#xd;
+          &quot;metadata&quot;: {}&#xd;
+        }&#xd;
+      },&#xd;
+      &quot;name&quot;: &quot;onap.datatypes.monitoring.measurementGroups&quot;,&#xd;
+      &quot;version&quot;: &quot;0.0.0&quot;,&#xd;
+      &quot;derived_from&quot;: &quot;tosca.datatypes.Root&quot;,&#xd;
+      &quot;metadata&quot;: {}&#xd;
+    },&#xd;
+    &quot;onap.datatypes.monitoring.measurementType&quot;: {&#xd;
+      &quot;constraints&quot;: [],&#xd;
+      &quot;properties&quot;: {&#xd;
+        &quot;measurementType&quot;: {&#xd;
+          &quot;name&quot;: &quot;measurementType&quot;,&#xd;
+          &quot;type&quot;: &quot;string&quot;,&#xd;
+          &quot;typeVersion&quot;: &quot;0.0.0&quot;,&#xd;
+          &quot;description&quot;: &quot;Measurement type&quot;,&#xd;
+          &quot;required&quot;: true,&#xd;
+          &quot;constraints&quot;: [],&#xd;
+          &quot;metadata&quot;: {}&#xd;
+        }&#xd;
+      },&#xd;
+      &quot;name&quot;: &quot;onap.datatypes.monitoring.measurementType&quot;,&#xd;
+      &quot;version&quot;: &quot;0.0.0&quot;,&#xd;
+      &quot;derived_from&quot;: &quot;tosca.datatypes.Root&quot;,&#xd;
+      &quot;metadata&quot;: {}&#xd;
+    },&#xd;
+    &quot;onap.datatypes.monitoring.measurementTypes&quot;: {&#xd;
+      &quot;constraints&quot;: [],&#xd;
+      &quot;properties&quot;: {&#xd;
+        &quot;measurementType&quot;: {&#xd;
+          &quot;name&quot;: &quot;measurementType&quot;,&#xd;
+          &quot;type&quot;: &quot;map&quot;,&#xd;
+          &quot;typeVersion&quot;: &quot;0.0.0&quot;,&#xd;
+          &quot;description&quot;: &quot;Measurement type object&quot;,&#xd;
+          &quot;required&quot;: true,&#xd;
+          &quot;constraints&quot;: [],&#xd;
+          &quot;entry_schema&quot;: {&#xd;
+            &quot;type&quot;: &quot;onap.datatypes.monitoring.measurementType&quot;,&#xd;
+            &quot;typeVersion&quot;: &quot;0.0.0&quot;,&#xd;
+            &quot;constraints&quot;: []&#xd;
+          },&#xd;
+          &quot;metadata&quot;: {}&#xd;
+        }&#xd;
+      },&#xd;
+      &quot;name&quot;: &quot;onap.datatypes.monitoring.measurementTypes&quot;,&#xd;
+      &quot;version&quot;: &quot;0.0.0&quot;,&#xd;
+      &quot;derived_from&quot;: &quot;tosca.datatypes.Root&quot;,&#xd;
+      &quot;metadata&quot;: {}&#xd;
+    },&#xd;
+    &quot;onap.datatypes.monitoring.nfFilter&quot;: {&#xd;
+      &quot;constraints&quot;: [],&#xd;
+      &quot;properties&quot;: {&#xd;
+        &quot;modelNames&quot;: {&#xd;
+          &quot;name&quot;: &quot;modelNames&quot;,&#xd;
+          &quot;type&quot;: &quot;list&quot;,&#xd;
+          &quot;typeVersion&quot;: &quot;0.0.0&quot;,&#xd;
+          &quot;description&quot;: &quot;List of model names&quot;,&#xd;
+          &quot;required&quot;: true,&#xd;
+          &quot;constraints&quot;: [],&#xd;
+          &quot;entry_schema&quot;: {&#xd;
+            &quot;type&quot;: &quot;string&quot;,&#xd;
+            &quot;typeVersion&quot;: &quot;0.0.0&quot;,&#xd;
+            &quot;constraints&quot;: []&#xd;
+          },&#xd;
+          &quot;metadata&quot;: {}&#xd;
+        },&#xd;
+        &quot;modelInvariantIDs&quot;: {&#xd;
+          &quot;name&quot;: &quot;modelInvariantIDs&quot;,&#xd;
+          &quot;type&quot;: &quot;list&quot;,&#xd;
+          &quot;typeVersion&quot;: &quot;0.0.0&quot;,&#xd;
+          &quot;description&quot;: &quot;List of model invariant IDs&quot;,&#xd;
+          &quot;required&quot;: true,&#xd;
+          &quot;constraints&quot;: [],&#xd;
+          &quot;entry_schema&quot;: {&#xd;
+            &quot;type&quot;: &quot;string&quot;,&#xd;
+            &quot;typeVersion&quot;: &quot;0.0.0&quot;,&#xd;
+            &quot;constraints&quot;: []&#xd;
+          },&#xd;
+          &quot;metadata&quot;: {}&#xd;
+        },&#xd;
+        &quot;modelVersionIDs&quot;: {&#xd;
+          &quot;name&quot;: &quot;modelVersionIDs&quot;,&#xd;
+          &quot;type&quot;: &quot;list&quot;,&#xd;
+          &quot;typeVersion&quot;: &quot;0.0.0&quot;,&#xd;
+          &quot;description&quot;: &quot;List of model version IDs&quot;,&#xd;
+          &quot;required&quot;: true,&#xd;
+          &quot;constraints&quot;: [],&#xd;
+          &quot;entry_schema&quot;: {&#xd;
+            &quot;type&quot;: &quot;string&quot;,&#xd;
+            &quot;typeVersion&quot;: &quot;0.0.0&quot;,&#xd;
+            &quot;constraints&quot;: []&#xd;
+          },&#xd;
+          &quot;metadata&quot;: {}&#xd;
+        },&#xd;
+        &quot;nfNames&quot;: {&#xd;
+          &quot;name&quot;: &quot;nfNames&quot;,&#xd;
+          &quot;type&quot;: &quot;list&quot;,&#xd;
+          &quot;typeVersion&quot;: &quot;0.0.0&quot;,&#xd;
+          &quot;description&quot;: &quot;List of network functions&quot;,&#xd;
+          &quot;required&quot;: true,&#xd;
+          &quot;constraints&quot;: [],&#xd;
+          &quot;entry_schema&quot;: {&#xd;
+            &quot;type&quot;: &quot;string&quot;,&#xd;
+            &quot;typeVersion&quot;: &quot;0.0.0&quot;,&#xd;
+            &quot;constraints&quot;: []&#xd;
+          },&#xd;
+          &quot;metadata&quot;: {}&#xd;
+        }&#xd;
+      },&#xd;
+      &quot;name&quot;: &quot;onap.datatypes.monitoring.nfFilter&quot;,&#xd;
+      &quot;version&quot;: &quot;0.0.0&quot;,&#xd;
+      &quot;derived_from&quot;: &quot;tosca.datatypes.Root&quot;,&#xd;
+      &quot;metadata&quot;: {}&#xd;
+    },&#xd;
+    &quot;onap.datatypes.monitoring.subscription&quot;: {&#xd;
+      &quot;constraints&quot;: [],&#xd;
+      &quot;properties&quot;: {&#xd;
+        &quot;measurementGroups&quot;: {&#xd;
+          &quot;name&quot;: &quot;measurementGroups&quot;,&#xd;
+          &quot;type&quot;: &quot;list&quot;,&#xd;
+          &quot;typeVersion&quot;: &quot;0.0.0&quot;,&#xd;
+          &quot;description&quot;: &quot;Measurement Groups&quot;,&#xd;
+          &quot;required&quot;: true,&#xd;
+          &quot;constraints&quot;: [],&#xd;
+          &quot;entry_schema&quot;: {&#xd;
+            &quot;type&quot;: &quot;onap.datatypes.monitoring.measurementGroups&quot;,&#xd;
+            &quot;typeVersion&quot;: &quot;0.0.0&quot;,&#xd;
+            &quot;constraints&quot;: []&#xd;
+          },&#xd;
+          &quot;metadata&quot;: {}&#xd;
+        },&#xd;
+        &quot;fileBasedGP&quot;: {&#xd;
+          &quot;name&quot;: &quot;fileBasedGP&quot;,&#xd;
+          &quot;type&quot;: &quot;integer&quot;,&#xd;
+          &quot;typeVersion&quot;: &quot;0.0.0&quot;,&#xd;
+          &quot;description&quot;: &quot;File based granularity period&quot;,&#xd;
+          &quot;required&quot;: true,&#xd;
+          &quot;constraints&quot;: [],&#xd;
+          &quot;metadata&quot;: {}&#xd;
+        },&#xd;
+        &quot;fileLocation&quot;: {&#xd;
+          &quot;name&quot;: &quot;fileLocation&quot;,&#xd;
+          &quot;type&quot;: &quot;string&quot;,&#xd;
+          &quot;typeVersion&quot;: &quot;0.0.0&quot;,&#xd;
+          &quot;description&quot;: &quot;ROP file location&quot;,&#xd;
+          &quot;required&quot;: true,&#xd;
+          &quot;constraints&quot;: [],&#xd;
+          &quot;metadata&quot;: {}&#xd;
+        },&#xd;
+        &quot;subscriptionName&quot;: {&#xd;
+          &quot;name&quot;: &quot;subscriptionName&quot;,&#xd;
+          &quot;type&quot;: &quot;string&quot;,&#xd;
+          &quot;typeVersion&quot;: &quot;0.0.0&quot;,&#xd;
+          &quot;description&quot;: &quot;Name of the subscription&quot;,&#xd;
+          &quot;required&quot;: true,&#xd;
+          &quot;constraints&quot;: [],&#xd;
+          &quot;metadata&quot;: {}&#xd;
+        },&#xd;
+        &quot;administrativeState&quot;: {&#xd;
+          &quot;name&quot;: &quot;administrativeState&quot;,&#xd;
+          &quot;type&quot;: &quot;string&quot;,&#xd;
+          &quot;typeVersion&quot;: &quot;0.0.0&quot;,&#xd;
+          &quot;description&quot;: &quot;State of the subscription&quot;,&#xd;
+          &quot;required&quot;: true,&#xd;
+          &quot;constraints&quot;: [&#xd;
+            {&#xd;
+              &quot;valid_values&quot;: [&#xd;
+                &quot;LOCKED&quot;,&#xd;
+                &quot;UNLOCKED&quot;&#xd;
+              ]&#xd;
+            }&#xd;
+          ],&#xd;
+          &quot;metadata&quot;: {}&#xd;
+        },&#xd;
+        &quot;nfFilter&quot;: {&#xd;
+          &quot;name&quot;: &quot;nfFilter&quot;,&#xd;
+          &quot;type&quot;: &quot;map&quot;,&#xd;
+          &quot;typeVersion&quot;: &quot;0.0.0&quot;,&#xd;
+          &quot;description&quot;: &quot;Network function filter&quot;,&#xd;
+          &quot;required&quot;: true,&#xd;
+          &quot;constraints&quot;: [],&#xd;
+          &quot;entry_schema&quot;: {&#xd;
+            &quot;type&quot;: &quot;onap.datatypes.monitoring.nfFilter&quot;,&#xd;
+            &quot;typeVersion&quot;: &quot;0.0.0&quot;,&#xd;
+            &quot;constraints&quot;: []&#xd;
+          },&#xd;
+          &quot;metadata&quot;: {}&#xd;
+        }&#xd;
+      },&#xd;
+      &quot;name&quot;: &quot;onap.datatypes.monitoring.subscription&quot;,&#xd;
+      &quot;version&quot;: &quot;0.0.0&quot;,&#xd;
+      &quot;derived_from&quot;: &quot;tosca.datatypes.Root&quot;,&#xd;
+      &quot;metadata&quot;: {}&#xd;
+    }&#xd;
+  },&#xd;
+  &quot;policy_types&quot;: {&#xd;
+    &quot;onap.policies.Monitoring&quot;: {&#xd;
+      &quot;derived_from&quot;: &quot;tosca.policies.Root&quot;,&#xd;
+      &quot;description&quot;: &quot;a base policy type for all policies that govern monitoring provisioning&quot;,&#xd;
+      &quot;version&quot;: &quot;1.0.0&quot;,&#xd;
+      &quot;name&quot;: &quot;onap.policies.Monitoring&quot;&#xd;
+    },&#xd;
+    &quot;onap.policies.test123&quot;: {&#xd;
+      &quot;derived_from&quot;: &quot;tosca.policies.Root&quot;,&#xd;
+      &quot;description&quot;: &quot;a base policy type for all policies that govern monitoring provisioning&quot;,&#xd;
+      &quot;version&quot;: &quot;1.0.0&quot;,&#xd;
+      &quot;name&quot;: &quot;onap.policies.test123&quot;&#xd;
+    },&#xd;
+    &quot;onap.policies.monitoring.dcae-pm-subscription-handler&quot;: {&#xd;
+      &quot;properties&quot;: {&#xd;
+        &quot;pmsh_policy&quot;: {&#xd;
+          &quot;name&quot;: &quot;pmsh_policy&quot;,&#xd;
+          &quot;type&quot;: &quot;onap.datatypes.monitoring.subscription&quot;,&#xd;
+          &quot;typeVersion&quot;: &quot;0.0.0&quot;,&#xd;
+          &quot;description&quot;: &quot;PMSH Policy JSON&quot;,&#xd;
+          &quot;required&quot;: false,&#xd;
+          &quot;constraints&quot;: [],&#xd;
+          &quot;metadata&quot;: {}&#xd;
+        }&#xd;
+      },&#xd;
+      &quot;name&quot;: &quot;onap.policies.monitoring.dcae-pm-subscription-handler&quot;,&#xd;
+      &quot;version&quot;: &quot;1.0.0&quot;,&#xd;
+      &quot;derived_from&quot;: &quot;onap.policies.Monitoring&quot;,&#xd;
+      &quot;metadata&quot;: {}&#xd;
+    },&#xd;
+    &quot;onap.policies.controlloop.operational.Common&quot;: {&#xd;
+      &quot;derived_from&quot;: &quot;tosca.policies.Root&quot;,&#xd;
+      &quot;version&quot;: &quot;1.0.0&quot;,&#xd;
+      &quot;name&quot;: &quot;onap.policies.controlloop.operational.Common&quot;,&#xd;
+      &quot;description&quot;: &quot;Operational Policy for Control Loop execution. Originated in Frankfurt to support TOSCA Compliant\nPolicy Types. This does NOT support the legacy Policy YAML policy type.\n&quot;,&#xd;
+      &quot;properties&quot;: {&#xd;
+        &quot;id&quot;: {&#xd;
+          &quot;type&quot;: &quot;string&quot;,&#xd;
+          &quot;description&quot;: &quot;The unique control loop id.&quot;,&#xd;
+          &quot;required&quot;: true&#xd;
+        },&#xd;
+        &quot;timeout&quot;: {&#xd;
+          &quot;type&quot;: &quot;integer&quot;,&#xd;
+          &quot;description&quot;: &quot;Overall timeout for executing all the operations. This timeout should equal or exceed the total\ntimeout for each operation listed.\n&quot;,&#xd;
+          &quot;required&quot;: true&#xd;
+        },&#xd;
+        &quot;abatement&quot;: {&#xd;
+          &quot;type&quot;: &quot;boolean&quot;,&#xd;
+          &quot;description&quot;: &quot;Whether an abatement event message will be expected for the control loop from DCAE.&quot;,&#xd;
+          &quot;required&quot;: true,&#xd;
+          &quot;default&quot;: false&#xd;
+        },&#xd;
+        &quot;trigger&quot;: {&#xd;
+          &quot;type&quot;: &quot;string&quot;,&#xd;
+          &quot;description&quot;: &quot;Initial operation to execute upon receiving an Onset event message for the Control Loop.&quot;,&#xd;
+          &quot;required&quot;: true&#xd;
+        },&#xd;
+        &quot;operations&quot;: {&#xd;
+          &quot;type&quot;: &quot;list&quot;,&#xd;
+          &quot;description&quot;: &quot;List of operations to be performed when Control Loop is triggered.&quot;,&#xd;
+          &quot;required&quot;: true,&#xd;
+          &quot;entry_schema&quot;: {&#xd;
+            &quot;type&quot;: &quot;onap.datatype.controlloop.Operation&quot;&#xd;
+          }&#xd;
+        }&#xd;
+      }&#xd;
+    },&#xd;
+    &quot;onap.policies.controlloop.operational.common.Apex&quot;: {&#xd;
+      &quot;derived_from&quot;: &quot;onap.policies.controlloop.operational.Common&quot;,&#xd;
+      &quot;type_version&quot;: &quot;1.0.0&quot;,&#xd;
+      &quot;version&quot;: &quot;1.0.0&quot;,&#xd;
+      &quot;name&quot;: &quot;onap.policies.controlloop.operational.common.Apex&quot;,&#xd;
+      &quot;description&quot;: &quot;Operational policies for Apex PDP&quot;,&#xd;
+      &quot;properties&quot;: {&#xd;
+        &quot;engineServiceParameters&quot;: {&#xd;
+          &quot;type&quot;: &quot;string&quot;,&#xd;
+          &quot;description&quot;: &quot;The engine parameters like name, instanceCount, policy implementation, parameters etc.&quot;,&#xd;
+          &quot;required&quot;: true&#xd;
+        },&#xd;
+        &quot;eventInputParameters&quot;: {&#xd;
+          &quot;type&quot;: &quot;string&quot;,&#xd;
+          &quot;description&quot;: &quot;The event input parameters.&quot;,&#xd;
+          &quot;required&quot;: true&#xd;
+        },&#xd;
+        &quot;eventOutputParameters&quot;: {&#xd;
+          &quot;type&quot;: &quot;string&quot;,&#xd;
+          &quot;description&quot;: &quot;The event output parameters.&quot;,&#xd;
+          &quot;required&quot;: true&#xd;
+        },&#xd;
+        &quot;javaProperties&quot;: {&#xd;
+          &quot;type&quot;: &quot;string&quot;,&#xd;
+          &quot;description&quot;: &quot;Name/value pairs of properties to be set for APEX if needed.&quot;,&#xd;
+          &quot;required&quot;: false&#xd;
+        }&#xd;
+      }&#xd;
+    }&#xd;
+  },&#xd;
+  &quot;node_types&quot;: {&#xd;
+    &quot;org.onap.policy.clamp.controlloop.Participant&quot;: {&#xd;
+      &quot;version&quot;: &quot;1.0.1&quot;,&#xd;
+      &quot;derived_from&quot;: &quot;tosca.nodetypes.Root&quot;,&#xd;
+      &quot;properties&quot;: {&#xd;
+        &quot;provider&quot;: {&#xd;
+          &quot;type&quot;: &quot;string&quot;,&#xd;
+          &quot;requred&quot;: false&#xd;
+        }&#xd;
+      }&#xd;
+    },&#xd;
+    &quot;org.onap.policy.clamp.controlloop.ControlLoopElement&quot;: {&#xd;
+      &quot;version&quot;: &quot;1.0.1&quot;,&#xd;
+      &quot;derived_from&quot;: &quot;tosca.nodetypes.Root&quot;,&#xd;
+      &quot;properties&quot;: {&#xd;
+        &quot;provider&quot;: {&#xd;
+          &quot;type&quot;: &quot;string&quot;,&#xd;
+          &quot;required&quot;: false,&#xd;
+          &quot;metadata&quot;: {&#xd;
+            &quot;common&quot;: true&#xd;
+          },&#xd;
+          &quot;description&quot;: &quot;Specifies the organization that provides the control loop element&quot;&#xd;
+        },&#xd;
+        &quot;participantType&quot;: {&#xd;
+          &quot;type&quot;: &quot;onap.datatypes.ToscaConceptIdentifier&quot;,&#xd;
+          &quot;required&quot;: true,&#xd;
+          &quot;metadata&quot;: {&#xd;
+            &quot;common&quot;: true&#xd;
+          },&#xd;
+          &quot;description&quot;: &quot;The identity of the participant type that hosts this type of Control Loop Element&quot;&#xd;
+        },&#xd;
+        &quot;startPhase&quot;: {&#xd;
+          &quot;type&quot;: &quot;integer&quot;,&#xd;
+          &quot;required&quot;: false,&#xd;
+          &quot;constraints&quot;: [&#xd;
+            {&#xd;
+              &quot;greater_or_equal&quot;: 0&#xd;
+            }&#xd;
+          ],&#xd;
+          &quot;metadata&quot;: {&#xd;
+            &quot;common&quot;: true&#xd;
+          },&#xd;
+          &quot;description&quot;: &quot;A value indicating the start phase in which this control loop element will be started, the first start phase is zero. Control Loop Elements are started in their start_phase order and stopped in reverse start phase order. Control Loop Elements with the same start phase are started and stopped simultaneously&quot;&#xd;
+        },&#xd;
+        &quot;uninitializedToPassiveTimeout&quot;: {&#xd;
+          &quot;type&quot;: &quot;integer&quot;,&#xd;
+          &quot;required&quot;: false,&#xd;
+          &quot;constraints&quot;: [&#xd;
+            {&#xd;
+              &quot;greater_or_equal&quot;: 0&#xd;
+            }&#xd;
+          ],&#xd;
+          &quot;default&quot;: 60,&#xd;
+          &quot;metadata&quot;: {&#xd;
+            &quot;common&quot;: true&#xd;
+          },&#xd;
+          &quot;description&quot;: &quot;The maximum time in seconds to wait for a state chage from uninitialized to passive&quot;&#xd;
+        },&#xd;
+        &quot;passiveToRunningTimeout&quot;: {&#xd;
+          &quot;type&quot;: &quot;integer&quot;,&#xd;
+          &quot;required&quot;: false,&#xd;
+          &quot;constraints&quot;: [&#xd;
+            {&#xd;
+              &quot;greater_or_equal&quot;: 0&#xd;
+            }&#xd;
+          ],&#xd;
+          &quot;default&quot;: 60,&#xd;
+          &quot;metadata&quot;: {&#xd;
+            &quot;common&quot;: true&#xd;
+          },&#xd;
+          &quot;description&quot;: &quot;The maximum time in seconds to wait for a state chage from passive to running&quot;&#xd;
+        },&#xd;
+        &quot;runningToPassiveTimeout&quot;: {&#xd;
+          &quot;type&quot;: &quot;integer&quot;,&#xd;
+          &quot;required&quot;: false,&#xd;
+          &quot;constraints&quot;: [&#xd;
+            {&#xd;
+              &quot;greater_or_equal&quot;: 0&#xd;
+            }&#xd;
+          ],&#xd;
+          &quot;default&quot;: 60,&#xd;
+          &quot;metadata&quot;: {&#xd;
+            &quot;common&quot;: true&#xd;
+          },&#xd;
+          &quot;description&quot;: &quot;The maximum time in seconds to wait for a state chage from running to passive&quot;&#xd;
+        },&#xd;
+        &quot;passiveToUninitializedTimeout&quot;: {&#xd;
+          &quot;type&quot;: &quot;integer&quot;,&#xd;
+          &quot;required&quot;: false,&#xd;
+          &quot;constraints&quot;: [&#xd;
+            {&#xd;
+              &quot;greater_or_equal&quot;: 0&#xd;
+            }&#xd;
+          ],&#xd;
+          &quot;default&quot;: 60,&#xd;
+          &quot;metadata&quot;: {&#xd;
+            &quot;common&quot;: true&#xd;
+          },&#xd;
+          &quot;description&quot;: &quot;The maximum time in seconds to wait for a state chage from passive to uninitialized&quot;&#xd;
+        }&#xd;
+      }&#xd;
+    },&#xd;
+    &quot;org.onap.policy.clamp.controlloop.ControlLoop&quot;: {&#xd;
+      &quot;version&quot;: &quot;1.0.1&quot;,&#xd;
+      &quot;derived_from&quot;: &quot;tosca.nodetypes.Root&quot;,&#xd;
+      &quot;properties&quot;: {&#xd;
+        &quot;provider&quot;: {&#xd;
+          &quot;type&quot;: &quot;string&quot;,&#xd;
+          &quot;required&quot;: false,&#xd;
+          &quot;metadata&quot;: {&#xd;
+            &quot;common&quot;: true&#xd;
+          },&#xd;
+          &quot;description&quot;: &quot;Specifies the organization that provides the control loop element&quot;&#xd;
+        },&#xd;
+        &quot;elements&quot;: {&#xd;
+          &quot;type&quot;: &quot;list&quot;,&#xd;
+          &quot;required&quot;: true,&#xd;
+          &quot;metadata&quot;: {&#xd;
+            &quot;common&quot;: true&#xd;
+          },&#xd;
+          &quot;entry_schema&quot;: {&#xd;
+            &quot;type&quot;: &quot;onap.datatypes.ToscaConceptIdentifier&quot;&#xd;
+          },&#xd;
+          &quot;description&quot;: &quot;Specifies a list of control loop element definitions that make up this control loop definition&quot;&#xd;
+        }&#xd;
+      }&#xd;
+    },&#xd;
+    &quot;org.onap.policy.clamp.controlloop.DCAEMicroserviceControlLoopElement&quot;: {&#xd;
+      &quot;version&quot;: &quot;1.0.1&quot;,&#xd;
+      &quot;derived_from&quot;: &quot;org.onap.policy.clamp.controlloop.ControlLoopElement&quot;,&#xd;
+      &quot;properties&quot;: {&#xd;
+        &quot;dcae_blueprint_id&quot;: {&#xd;
+          &quot;type&quot;: &quot;onap.datatypes.ToscaConceptIdentifier&quot;,&#xd;
+          &quot;requred&quot;: false&#xd;
+        },&#xd;
+        &quot;dcae_blueprint&quot;: {&#xd;
+          &quot;type&quot;: &quot;onap.dcae.cloudify_blueprint&quot;,&#xd;
+          &quot;requred&quot;: false&#xd;
+        },&#xd;
+        &quot;consul_info&quot;: {&#xd;
+          &quot;type&quot;: &quot;list&quot;,&#xd;
+          &quot;required&quot;: false,&#xd;
+          &quot;entry_schema&quot;: {&#xd;
+            &quot;type&quot;: &quot;org.onap.datatypes.policy.clamp.controlloop.DCAEMicroserviceControlLoopElementConsulInfo&quot;&#xd;
+          }&#xd;
+        }&#xd;
+      }&#xd;
+    },&#xd;
+    &quot;org.onap.policy.clamp.controlloop.PolicyControlLoopElement&quot;: {&#xd;
+      &quot;version&quot;: &quot;1.0.1&quot;,&#xd;
+      &quot;derived_from&quot;: &quot;org.onap.policy.clamp.controlloop.ControlLoopElement&quot;,&#xd;
+      &quot;properties&quot;: {&#xd;
+        &quot;policy_type_id&quot;: {&#xd;
+          &quot;type&quot;: &quot;onap.datatypes.ToscaConceptIdentifier&quot;,&#xd;
+          &quot;requred&quot;: true&#xd;
+        },&#xd;
+        &quot;policy_id&quot;: {&#xd;
+          &quot;type&quot;: &quot;onap.datatypes.ToscaConceptIdentifier&quot;,&#xd;
+          &quot;requred&quot;: false&#xd;
+        }&#xd;
+      }&#xd;
+    },&#xd;
+    &quot;org.onap.policy.clamp.controlloop.DerivedPolicyControlLoopElement&quot;: {&#xd;
+      &quot;version&quot;: &quot;1.0.1&quot;,&#xd;
+      &quot;derived_from&quot;: &quot;org.onap.policy.clamp.controlloop.PolicyControlLoopElement&quot;,&#xd;
+      &quot;properties&quot;: {&#xd;
+        &quot;policy_type_id&quot;: {&#xd;
+          &quot;type&quot;: &quot;onap.datatypes.ToscaConceptIdentifier&quot;,&#xd;
+          &quot;requred&quot;: true&#xd;
+        },&#xd;
+        &quot;policy_id&quot;: {&#xd;
+          &quot;type&quot;: &quot;onap.datatypes.ToscaConceptIdentifier&quot;,&#xd;
+          &quot;requred&quot;: false&#xd;
+        }&#xd;
+      }&#xd;
+    },&#xd;
+    &quot;org.onap.policy.clamp.controlloop.DerivedDerivedPolicyControlLoopElement&quot;: {&#xd;
+      &quot;version&quot;: &quot;1.0.1&quot;,&#xd;
+      &quot;derived_from&quot;: &quot;org.onap.policy.clamp.controlloop.DerivedPolicyControlLoopElement&quot;,&#xd;
+      &quot;properties&quot;: {&#xd;
+        &quot;policy_type_id&quot;: {&#xd;
+          &quot;type&quot;: &quot;onap.datatypes.ToscaConceptIdentifier&quot;,&#xd;
+          &quot;requred&quot;: true&#xd;
+        },&#xd;
+        &quot;policy_id&quot;: {&#xd;
+          &quot;type&quot;: &quot;onap.datatypes.ToscaConceptIdentifier&quot;,&#xd;
+          &quot;requred&quot;: false&#xd;
+        }&#xd;
+      }&#xd;
+    },&#xd;
+    &quot;org.onap.policy.clamp.controlloop.CDSControlLoopElement&quot;: {&#xd;
+      &quot;version&quot;: &quot;1.0.1&quot;,&#xd;
+      &quot;derived_from&quot;: &quot;org.onap.policy.clamp.controlloop.ControlLoopElement&quot;,&#xd;
+      &quot;properties&quot;: {&#xd;
+        &quot;cds_blueprint_id&quot;: {&#xd;
+          &quot;type&quot;: &quot;onap.datatypes.ToscaConceptIdentifier&quot;,&#xd;
+          &quot;requred&quot;: true&#xd;
+        }&#xd;
+      }&#xd;
+    }&#xd;
+  },&#xd;
+  &quot;topology_template&quot;: {&#xd;
+    &quot;inputs&quot;: {&#xd;
+      &quot;pmsh_monitoring_policy&quot;: {&#xd;
+        &quot;type&quot;: &quot;onap.datatypes.ToscaConceptIdentifier&quot;,&#xd;
+        &quot;description&quot;: &quot;The ID of the PMSH monitoring policy to use&quot;,&#xd;
+        &quot;default&quot;: {&#xd;
+          &quot;name&quot;: &quot;MICROSERVICE_vLoadBalancerMS_v1_0_dcae-pm-subscription-handler_1_0_0test&quot;,&#xd;
+          &quot;version&quot;: &quot;1.0.0&quot;&#xd;
+        }&#xd;
+      },&#xd;
+      &quot;pmsh_operational_policy&quot;: {&#xd;
+        &quot;type&quot;: &quot;onap.datatypes.ToscaConceptIdentifier&quot;,&#xd;
+        &quot;description&quot;: &quot;The ID of the PMSH operational policy to use&quot;,&#xd;
+        &quot;default&quot;: {&#xd;
+          &quot;name&quot;: &quot;operational.apex.pmcontrol&quot;,&#xd;
+          &quot;version&quot;: &quot;1.0.0&quot;&#xd;
+        }&#xd;
+      }&#xd;
+    },&#xd;
+    &quot;node_templates&quot;: {&#xd;
+      &quot;org.onap.dcae.controlloop.DCAEMicroserviceControlLoopParticipant&quot;: {&#xd;
+        &quot;version&quot;: &quot;2.3.4&quot;,&#xd;
+        &quot;type&quot;: &quot;org.onap.policy.clamp.controlloop.Participant&quot;,&#xd;
+        &quot;type_version&quot;: &quot;1.0.1&quot;,&#xd;
+        &quot;description&quot;: &quot;Participant for DCAE microservices&quot;,&#xd;
+        &quot;properties&quot;: {&#xd;
+          &quot;provider&quot;: &quot;ONAP&quot;&#xd;
+        }&#xd;
+      },&#xd;
+      &quot;org.onap.policy.controlloop.PolicyControlLoopParticipant&quot;: {&#xd;
+        &quot;version&quot;: &quot;2.3.1&quot;,&#xd;
+        &quot;type&quot;: &quot;org.onap.policy.clamp.controlloop.Participant&quot;,&#xd;
+        &quot;type_version&quot;: &quot;1.0.1&quot;,&#xd;
+        &quot;description&quot;: &quot;Participant for DCAE microservices&quot;,&#xd;
+        &quot;properties&quot;: {&#xd;
+          &quot;provider&quot;: &quot;ONAP&quot;&#xd;
+        }&#xd;
+      },&#xd;
+      &quot;org.onap.domain.pmsh.PMSH_MonitoringPolicyControlLoopElement&quot;: {&#xd;
+        &quot;version&quot;: &quot;1.2.3&quot;,&#xd;
+        &quot;type&quot;: &quot;org.onap.policy.clamp.controlloop.PolicyControlLoopElement&quot;,&#xd;
+        &quot;type_version&quot;: &quot;1.0.0&quot;,&#xd;
+        &quot;description&quot;: &quot;Control loop element for the monitoring policy for Performance Management Subscription Handling&quot;,&#xd;
+        &quot;properties&quot;: {&#xd;
+          &quot;provider&quot;: &quot;Ericsson&quot;,&#xd;
+          &quot;participantType&quot;: {&#xd;
+            &quot;name&quot;: &quot;org.onap.policy.controlloop.PolicyControlLoopParticipant&quot;,&#xd;
+            &quot;version&quot;: &quot;2.3.1&quot;&#xd;
+          },&#xd;
+          &quot;policy_type_id&quot;: {&#xd;
+            &quot;name&quot;: &quot;onap.policies.monitoring.pm-subscription-handler&quot;,&#xd;
+            &quot;version&quot;: &quot;1.0.0&quot;&#xd;
+          },&#xd;
+          &quot;policy_id&quot;: {&#xd;
+            &quot;get_input&quot;: &quot;pmsh_monitoring_policy&quot;&#xd;
+          }&#xd;
+        }&#xd;
+      },&#xd;
+      &quot;org.onap.domain.pmsh.PMSH_OperationalPolicyControlLoopElement&quot;: {&#xd;
+        &quot;version&quot;: &quot;1.2.3&quot;,&#xd;
+        &quot;type&quot;: &quot;org.onap.policy.clamp.controlloop.PolicyControlLoopElement&quot;,&#xd;
+        &quot;type_version&quot;: &quot;1.0.0&quot;,&#xd;
+        &quot;description&quot;: &quot;Control loop element for the operational policy for Performance Management Subscription Handling&quot;,&#xd;
+        &quot;properties&quot;: {&#xd;
+          &quot;provider&quot;: &quot;Ericsson&quot;,&#xd;
+          &quot;participantType&quot;: {&#xd;
+            &quot;name&quot;: &quot;org.onap.policy.controlloop.PolicyControlLoopParticipant&quot;,&#xd;
+            &quot;version&quot;: &quot;2.3.1&quot;&#xd;
+          },&#xd;
+          &quot;policy_type_id&quot;: {&#xd;
+            &quot;name&quot;: &quot;onap.policies.operational.pm-subscription-handler&quot;,&#xd;
+            &quot;version&quot;: &quot;1.0.0&quot;&#xd;
+          },&#xd;
+          &quot;policy_id&quot;: {&#xd;
+            &quot;get_input&quot;: &quot;pmsh_operational_policy&quot;&#xd;
+          }&#xd;
+        }&#xd;
+      },&#xd;
+      &quot;org.onap.domain.pmsh.PMSHControlLoopDefinition&quot;: {&#xd;
+        &quot;version&quot;: &quot;1.2.3&quot;,&#xd;
+        &quot;type&quot;: &quot;org.onap.policy.clamp.controlloop.ControlLoop&quot;,&#xd;
+        &quot;type_version&quot;: &quot;1.0.0&quot;,&#xd;
+        &quot;description&quot;: &quot;Control loop for Performance Management Subscription Handling&quot;,&#xd;
+        &quot;properties&quot;: {&#xd;
+          &quot;provider&quot;: &quot;Ericsson&quot;,&#xd;
+          &quot;elements&quot;: [&#xd;
+            {&#xd;
+              &quot;name&quot;: &quot;org.onap.domain.pmsh.PMSH_DCAEMicroservice&quot;,&#xd;
+              &quot;version&quot;: &quot;1.2.3&quot;&#xd;
+            },&#xd;
+            {&#xd;
+              &quot;name&quot;: &quot;org.onap.domain.pmsh.PMSH_MonitoringPolicyControlLoopElement&quot;,&#xd;
+              &quot;version&quot;: &quot;1.2.3&quot;&#xd;
+            },&#xd;
+            {&#xd;
+              &quot;name&quot;: &quot;org.onap.domain.pmsh.PMSH_OperationalPolicyControlLoopElement&quot;,&#xd;
+              &quot;version&quot;: &quot;1.2.3&quot;&#xd;
+            }&#xd;
+          ]&#xd;
+        }&#xd;
+      }&#xd;
+    }&#xd;
+  }&#xd;
+}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">${RUNTIME_HOST}</stringProp>
+          <stringProp name="HTTPSampler.port">${RUNTIME_PORT}</stringProp>
+          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/onap/controlloop/v2/commission</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49586">200</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">1</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Instantiate controlloop" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+    &quot;controlLoopList&quot;: [&#xd;
+        {&#xd;
+            &quot;name&quot;: &quot;PMSHInstance0&quot;,&#xd;
+            &quot;version&quot;: &quot;1.0.1&quot;,&#xd;
+            &quot;definition&quot;: {&#xd;
+                &quot;name&quot;: &quot;org.onap.domain.pmsh.PMSHControlLoopDefinition&quot;,&#xd;
+                &quot;version&quot;: &quot;1.2.3&quot;&#xd;
+            },&#xd;
+            &quot;state&quot;: &quot;UNINITIALISED&quot;,&#xd;
+            &quot;orderedState&quot;: &quot;UNINITIALISED&quot;,&#xd;
+            &quot;description&quot;: &quot;PMSH control loop instance 0&quot;,&#xd;
+            &quot;elements&quot;: {&#xd;
+                &quot;709c62b3-8918-41b9-a747-d21eb79c6c21&quot;: {&#xd;
+                    &quot;id&quot;: &quot;709c62b3-8918-41b9-a747-d21eb79c6c21&quot;,&#xd;
+                    &quot;definition&quot;: {&#xd;
+                        &quot;name&quot;: &quot;org.onap.domain.pmsh.PMSH_MonitoringPolicyControlLoopElement&quot;,&#xd;
+                        &quot;version&quot;: &quot;1.2.3&quot;&#xd;
+                    },&#xd;
+                   &quot;participantType&quot;:{&#xd;
+                        &quot;name&quot;:&quot;org.onap.policy.controlloop.PolicyControlLoopParticipant&quot;,&#xd;
+                        &quot;version&quot;:&quot;2.3.1&quot;&#xd;
+                    },&#xd;
+                   &quot;participantId&quot;:{&#xd;
+                        &quot;name&quot;:&quot;org.onap.PM_Policy&quot;,&#xd;
+                        &quot;version&quot;:&quot;1.0.0&quot;&#xd;
+                    },&#xd;
+                    &quot;state&quot;:&quot;UNINITIALISED&quot;,&#xd;
+                    &quot;orderedState&quot;:&quot;UNINITIALISED&quot;,&#xd;
+                    &quot;toscaServiceTemplateFragment&quot;:{&#xd;
+					  &quot;data_types&quot;:{&#xd;
+						 &quot;onap.datatype.controlloop.Actor&quot;:{&#xd;
+							&quot;constraints&quot;:[&#xd;
+							   &#xd;
+							],&#xd;
+							&quot;properties&quot;:{&#xd;
+							   &quot;payload&quot;:{&#xd;
+								  &quot;name&quot;:&quot;payload&quot;,&#xd;
+								  &quot;type&quot;:&quot;map&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;Name/value pairs of payload information passed by Policy to the actor&quot;,&#xd;
+								  &quot;required&quot;:false,&#xd;
+								  &quot;entry_schema&quot;:{&#xd;
+									 &quot;type&quot;:&quot;string&quot;,&#xd;
+									 &quot;type_version&quot;:&quot;0.0.0&quot;&#xd;
+								  },&#xd;
+								  &quot;metadata&quot;:{&#xd;
+									 &quot;clamp_possible_values&quot;:&quot;ClampExecution:CDS/payload&quot;&#xd;
+								  }&#xd;
+							   },&#xd;
+							   &quot;target&quot;:{&#xd;
+								  &quot;name&quot;:&quot;target&quot;,&#xd;
+								  &quot;type&quot;:&quot;onap.datatype.controlloop.Target&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;The resource the operation should be performed on.&quot;,&#xd;
+								  &quot;required&quot;:true&#xd;
+							   },&#xd;
+							   &quot;actor&quot;:{&#xd;
+								  &quot;name&quot;:&quot;actor&quot;,&#xd;
+								  &quot;type&quot;:&quot;string&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;The actor performing the operation.&quot;,&#xd;
+								  &quot;required&quot;:true,&#xd;
+								  &quot;metadata&quot;:{&#xd;
+									 &quot;clamp_possible_values&quot;:&quot;Dictionary:DefaultActors,ClampExecution:CDS/actor&quot;&#xd;
+								  }&#xd;
+							   },&#xd;
+							   &quot;operation&quot;:{&#xd;
+								  &quot;name&quot;:&quot;operation&quot;,&#xd;
+								  &quot;type&quot;:&quot;string&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;The operation the actor is performing.&quot;,&#xd;
+								  &quot;required&quot;:true,&#xd;
+								  &quot;metadata&quot;:{&#xd;
+									 &quot;clamp_possible_values&quot;:&quot;Dictionary:DefaultOperations,ClampExecution:CDS/operation&quot;&#xd;
+								  }&#xd;
+							   }&#xd;
+							},&#xd;
+							&quot;name&quot;:&quot;onap.datatype.controlloop.Actor&quot;,&#xd;
+							&quot;version&quot;:&quot;0.0.0&quot;,&#xd;
+							&quot;derived_from&quot;:&quot;tosca.datatypes.Root&quot;,&#xd;
+							&quot;metadata&quot;:{&#xd;
+							   &#xd;
+							},&#xd;
+							&quot;description&quot;:&quot;An actor/operation/target definition&quot;&#xd;
+						 },&#xd;
+						 &quot;onap.datatype.controlloop.Operation&quot;:{&#xd;
+							&quot;constraints&quot;:[&#xd;
+							   &#xd;
+							],&#xd;
+							&quot;properties&quot;:{&#xd;
+							   &quot;failure_retries&quot;:{&#xd;
+								  &quot;name&quot;:&quot;failure_retries&quot;,&#xd;
+								  &quot;type&quot;:&quot;string&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;Points to the operation to invoke when the current operation has exceeded its max retries.&quot;,&#xd;
+								  &quot;default&quot;:&quot;final_failure_retries&quot;,&#xd;
+								  &quot;required&quot;:false&#xd;
+							   },&#xd;
+							   &quot;id&quot;:{&#xd;
+								  &quot;name&quot;:&quot;id&quot;,&#xd;
+								  &quot;type&quot;:&quot;string&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;Unique identifier for the operation&quot;,&#xd;
+								  &quot;required&quot;:true&#xd;
+							   },&#xd;
+							   &quot;failure_timeout&quot;:{&#xd;
+								  &quot;name&quot;:&quot;failure_timeout&quot;,&#xd;
+								  &quot;type&quot;:&quot;string&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;Points to the operation to invoke when the time out for the operation occurs.&quot;,&#xd;
+								  &quot;default&quot;:&quot;final_failure_timeout&quot;,&#xd;
+								  &quot;required&quot;:false&#xd;
+							   },&#xd;
+							   &quot;failure&quot;:{&#xd;
+								  &quot;name&quot;:&quot;failure&quot;,&#xd;
+								  &quot;type&quot;:&quot;string&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;Points to the operation to invoke on Actor operation failure.&quot;,&#xd;
+								  &quot;default&quot;:&quot;final_failure&quot;,&#xd;
+								  &quot;required&quot;:false&#xd;
+							   },&#xd;
+							   &quot;operation&quot;:{&#xd;
+								  &quot;name&quot;:&quot;operation&quot;,&#xd;
+								  &quot;type&quot;:&quot;onap.datatype.controlloop.Actor&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;The definition of the operation to be performed.&quot;,&#xd;
+								  &quot;required&quot;:true&#xd;
+							   },&#xd;
+							   &quot;failure_guard&quot;:{&#xd;
+								  &quot;name&quot;:&quot;failure_guard&quot;,&#xd;
+								  &quot;type&quot;:&quot;string&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;Points to the operation to invoke when the current operation is blocked due to guard policy enforcement.&quot;,&#xd;
+								  &quot;default&quot;:&quot;final_failure_guard&quot;,&#xd;
+								  &quot;required&quot;:false&#xd;
+							   },&#xd;
+							   &quot;retries&quot;:{&#xd;
+								  &quot;name&quot;:&quot;retries&quot;,&#xd;
+								  &quot;type&quot;:&quot;integer&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;The number of retries the actor should attempt to perform the operation.&quot;,&#xd;
+								  &quot;default&quot;:0.0,&#xd;
+								  &quot;required&quot;:true&#xd;
+							   },&#xd;
+							   &quot;timeout&quot;:{&#xd;
+								  &quot;name&quot;:&quot;timeout&quot;,&#xd;
+								  &quot;type&quot;:&quot;integer&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;The amount of time for the actor to perform the operation.&quot;,&#xd;
+								  &quot;required&quot;:true&#xd;
+							   },&#xd;
+							   &quot;failure_exception&quot;:{&#xd;
+								  &quot;name&quot;:&quot;failure_exception&quot;,&#xd;
+								  &quot;type&quot;:&quot;string&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;Points to the operation to invoke when the current operation causes an exception.&quot;,&#xd;
+								  &quot;default&quot;:&quot;final_failure_exception&quot;,&#xd;
+								  &quot;required&quot;:false&#xd;
+							   },&#xd;
+							   &quot;description&quot;:{&#xd;
+								  &quot;name&quot;:&quot;description&quot;,&#xd;
+								  &quot;type&quot;:&quot;string&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;A user-friendly description of the intent for the operation&quot;,&#xd;
+								  &quot;required&quot;:false&#xd;
+							   },&#xd;
+							   &quot;success&quot;:{&#xd;
+								  &quot;name&quot;:&quot;success&quot;,&#xd;
+								  &quot;type&quot;:&quot;string&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;Points to the operation to invoke on success. A value of \&quot;final_success\&quot; indicates and end to the operation.&quot;,&#xd;
+								  &quot;default&quot;:&quot;final_success&quot;,&#xd;
+								  &quot;required&quot;:false&#xd;
+							   }&#xd;
+							},&#xd;
+							&quot;name&quot;:&quot;onap.datatype.controlloop.Operation&quot;,&#xd;
+							&quot;version&quot;:&quot;0.0.0&quot;,&#xd;
+							&quot;derived_from&quot;:&quot;tosca.datatypes.Root&quot;,&#xd;
+							&quot;metadata&quot;:{&#xd;
+							   &#xd;
+							},&#xd;
+							&quot;description&quot;:&quot;An operation supported by an actor&quot;&#xd;
+						 },&#xd;
+						 &quot;onap.datatype.controlloop.Target&quot;:{&#xd;
+							&quot;constraints&quot;:[&#xd;
+							   &#xd;
+							],&#xd;
+							&quot;properties&quot;:{&#xd;
+							   &quot;entityIds&quot;:{&#xd;
+								  &quot;name&quot;:&quot;entityIds&quot;,&#xd;
+								  &quot;type&quot;:&quot;map&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;Map of values that identify the resource. If none are provided, it is assumed that the\nentity that generated the ONSET event will be the target.\n&quot;,&#xd;
+								  &quot;required&quot;:false,&#xd;
+								  &quot;entry_schema&quot;:{&#xd;
+									 &quot;type&quot;:&quot;string&quot;,&#xd;
+									 &quot;type_version&quot;:&quot;0.0.0&quot;&#xd;
+								  },&#xd;
+								  &quot;metadata&quot;:{&#xd;
+									 &quot;clamp_possible_values&quot;:&quot;ClampExecution:CSAR_RESOURCES&quot;&#xd;
+								  }&#xd;
+							   },&#xd;
+							   &quot;targetType&quot;:{&#xd;
+								  &quot;name&quot;:&quot;targetType&quot;,&#xd;
+								  &quot;type&quot;:&quot;string&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;Category for the target type&quot;,&#xd;
+								  &quot;required&quot;:true,&#xd;
+								  &quot;constraints&quot;:[&#xd;
+									 {&#xd;
+										&quot;valid_values&quot;:[&#xd;
+										   &quot;VNF&quot;,&#xd;
+										   &quot;VM&quot;,&#xd;
+										   &quot;VFMODULE&quot;,&#xd;
+										   &quot;PNF&quot;&#xd;
+										]&#xd;
+									 }&#xd;
+								  ]&#xd;
+							   }&#xd;
+							},&#xd;
+							&quot;name&quot;:&quot;onap.datatype.controlloop.Target&quot;,&#xd;
+							&quot;version&quot;:&quot;0.0.0&quot;,&#xd;
+							&quot;derived_from&quot;:&quot;tosca.datatypes.Root&quot;,&#xd;
+							&quot;metadata&quot;:{&#xd;
+							   &#xd;
+							},&#xd;
+							&quot;description&quot;:&quot;Definition for a entity in A&amp;AI to perform a control loop operation on&quot;&#xd;
+						 },&#xd;
+						 &quot;onap.datatypes.ToscaConceptIdentifier&quot;:{&#xd;
+							&quot;constraints&quot;:[&#xd;
+							   &#xd;
+							],&#xd;
+							&quot;properties&quot;:{&#xd;
+							   &quot;version&quot;:{&#xd;
+								  &quot;name&quot;:&quot;version&quot;,&#xd;
+								  &quot;type&quot;:&quot;string&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;required&quot;:true&#xd;
+							   },&#xd;
+							   &quot;name&quot;:{&#xd;
+								  &quot;name&quot;:&quot;name&quot;,&#xd;
+								  &quot;type&quot;:&quot;string&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;required&quot;:true&#xd;
+							   }&#xd;
+							},&#xd;
+							&quot;name&quot;:&quot;onap.datatypes.ToscaConceptIdentifier&quot;,&#xd;
+							&quot;version&quot;:&quot;0.0.0&quot;,&#xd;
+							&quot;derived_from&quot;:&quot;tosca.datatypes.Root&quot;,&#xd;
+							&quot;metadata&quot;:{&#xd;
+							   &#xd;
+							}&#xd;
+						 },&#xd;
+						 &quot;onap.datatypes.monitoring.managedObjectDNsBasic&quot;:{&#xd;
+							&quot;constraints&quot;:[&#xd;
+							   &#xd;
+							],&#xd;
+							&quot;properties&quot;:{&#xd;
+							   &quot;DN&quot;:{&#xd;
+								  &quot;name&quot;:&quot;DN&quot;,&#xd;
+								  &quot;type&quot;:&quot;string&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;Managed object distinguished name&quot;,&#xd;
+								  &quot;required&quot;:true,&#xd;
+								  &quot;constraints&quot;:[&#xd;
+									 &#xd;
+								  ],&#xd;
+								  &quot;metadata&quot;:{&#xd;
+									 &#xd;
+								  }&#xd;
+							   }&#xd;
+							},&#xd;
+							&quot;name&quot;:&quot;onap.datatypes.monitoring.managedObjectDNsBasic&quot;,&#xd;
+							&quot;version&quot;:&quot;0.0.0&quot;,&#xd;
+							&quot;derived_from&quot;:&quot;tosca.datatypes.Root&quot;,&#xd;
+							&quot;metadata&quot;:{&#xd;
+							   &#xd;
+							}&#xd;
+						 },&#xd;
+						 &quot;onap.datatypes.monitoring.managedObjectDNsBasics&quot;:{&#xd;
+							&quot;constraints&quot;:[&#xd;
+							   &#xd;
+							],&#xd;
+							&quot;properties&quot;:{&#xd;
+							   &quot;managedObjectDNsBasic&quot;:{&#xd;
+								  &quot;name&quot;:&quot;managedObjectDNsBasic&quot;,&#xd;
+								  &quot;type&quot;:&quot;map&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;Managed object distinguished name object&quot;,&#xd;
+								  &quot;required&quot;:true,&#xd;
+								  &quot;constraints&quot;:[&#xd;
+									 &#xd;
+								  ],&#xd;
+								  &quot;entry_schema&quot;:{&#xd;
+									 &quot;type&quot;:&quot;onap.datatypes.monitoring.managedObjectDNsBasic&quot;,&#xd;
+									 &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+									 &quot;constraints&quot;:[&#xd;
+										&#xd;
+									 ]&#xd;
+								  },&#xd;
+								  &quot;metadata&quot;:{&#xd;
+									 &#xd;
+								  }&#xd;
+							   }&#xd;
+							},&#xd;
+							&quot;name&quot;:&quot;onap.datatypes.monitoring.managedObjectDNsBasics&quot;,&#xd;
+							&quot;version&quot;:&quot;0.0.0&quot;,&#xd;
+							&quot;derived_from&quot;:&quot;tosca.datatypes.Root&quot;,&#xd;
+							&quot;metadata&quot;:{&#xd;
+							   &#xd;
+							}&#xd;
+						 },&#xd;
+						 &quot;onap.datatypes.monitoring.measurementGroup&quot;:{&#xd;
+							&quot;constraints&quot;:[&#xd;
+							   &#xd;
+							],&#xd;
+							&quot;properties&quot;:{&#xd;
+							   &quot;measurementTypes&quot;:{&#xd;
+								  &quot;name&quot;:&quot;measurementTypes&quot;,&#xd;
+								  &quot;type&quot;:&quot;list&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;List of measurement types&quot;,&#xd;
+								  &quot;required&quot;:true,&#xd;
+								  &quot;constraints&quot;:[&#xd;
+									 &#xd;
+								  ],&#xd;
+								  &quot;entry_schema&quot;:{&#xd;
+									 &quot;type&quot;:&quot;onap.datatypes.monitoring.measurementTypes&quot;,&#xd;
+									 &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+									 &quot;constraints&quot;:[&#xd;
+										&#xd;
+									 ]&#xd;
+								  },&#xd;
+								  &quot;metadata&quot;:{&#xd;
+									 &#xd;
+								  }&#xd;
+							   },&#xd;
+							   &quot;managedObjectDNsBasic&quot;:{&#xd;
+								  &quot;name&quot;:&quot;managedObjectDNsBasic&quot;,&#xd;
+								  &quot;type&quot;:&quot;list&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;List of managed object distinguished names&quot;,&#xd;
+								  &quot;required&quot;:true,&#xd;
+								  &quot;constraints&quot;:[&#xd;
+									 &#xd;
+								  ],&#xd;
+								  &quot;entry_schema&quot;:{&#xd;
+									 &quot;type&quot;:&quot;onap.datatypes.monitoring.managedObjectDNsBasics&quot;,&#xd;
+									 &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+									 &quot;constraints&quot;:[&#xd;
+										&#xd;
+									 ]&#xd;
+								  },&#xd;
+								  &quot;metadata&quot;:{&#xd;
+									 &#xd;
+								  }&#xd;
+							   }&#xd;
+							},&#xd;
+							&quot;name&quot;:&quot;onap.datatypes.monitoring.measurementGroup&quot;,&#xd;
+							&quot;version&quot;:&quot;0.0.0&quot;,&#xd;
+							&quot;derived_from&quot;:&quot;tosca.datatypes.Root&quot;,&#xd;
+							&quot;metadata&quot;:{&#xd;
+							   &#xd;
+							}&#xd;
+						 },&#xd;
+						 &quot;onap.datatypes.monitoring.measurementGroups&quot;:{&#xd;
+							&quot;constraints&quot;:[&#xd;
+							   &#xd;
+							],&#xd;
+							&quot;properties&quot;:{&#xd;
+							   &quot;measurementGroup&quot;:{&#xd;
+								  &quot;name&quot;:&quot;measurementGroup&quot;,&#xd;
+								  &quot;type&quot;:&quot;map&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;Measurement Group&quot;,&#xd;
+								  &quot;required&quot;:true,&#xd;
+								  &quot;constraints&quot;:[&#xd;
+									 &#xd;
+								  ],&#xd;
+								  &quot;entry_schema&quot;:{&#xd;
+									 &quot;type&quot;:&quot;onap.datatypes.monitoring.measurementGroup&quot;,&#xd;
+									 &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+									 &quot;constraints&quot;:[&#xd;
+										&#xd;
+									 ]&#xd;
+								  },&#xd;
+								  &quot;metadata&quot;:{&#xd;
+									 &#xd;
+								  }&#xd;
+							   }&#xd;
+							},&#xd;
+							&quot;name&quot;:&quot;onap.datatypes.monitoring.measurementGroups&quot;,&#xd;
+							&quot;version&quot;:&quot;0.0.0&quot;,&#xd;
+							&quot;derived_from&quot;:&quot;tosca.datatypes.Root&quot;,&#xd;
+							&quot;metadata&quot;:{&#xd;
+							   &#xd;
+							}&#xd;
+						 },&#xd;
+						 &quot;onap.datatypes.monitoring.measurementType&quot;:{&#xd;
+							&quot;constraints&quot;:[&#xd;
+							   &#xd;
+							],&#xd;
+							&quot;properties&quot;:{&#xd;
+							   &quot;measurementType&quot;:{&#xd;
+								  &quot;name&quot;:&quot;measurementType&quot;,&#xd;
+								  &quot;type&quot;:&quot;string&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;Measurement type&quot;,&#xd;
+								  &quot;required&quot;:true,&#xd;
+								  &quot;constraints&quot;:[&#xd;
+									 &#xd;
+								  ],&#xd;
+								  &quot;metadata&quot;:{&#xd;
+									 &#xd;
+								  }&#xd;
+							   }&#xd;
+							},&#xd;
+							&quot;name&quot;:&quot;onap.datatypes.monitoring.measurementType&quot;,&#xd;
+							&quot;version&quot;:&quot;0.0.0&quot;,&#xd;
+							&quot;derived_from&quot;:&quot;tosca.datatypes.Root&quot;,&#xd;
+							&quot;metadata&quot;:{&#xd;
+							   &#xd;
+							}&#xd;
+						 },&#xd;
+						 &quot;onap.datatypes.monitoring.measurementTypes&quot;:{&#xd;
+							&quot;constraints&quot;:[&#xd;
+							   &#xd;
+							],&#xd;
+							&quot;properties&quot;:{&#xd;
+							   &quot;measurementType&quot;:{&#xd;
+								  &quot;name&quot;:&quot;measurementType&quot;,&#xd;
+								  &quot;type&quot;:&quot;map&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;Measurement type object&quot;,&#xd;
+								  &quot;required&quot;:true,&#xd;
+								  &quot;constraints&quot;:[&#xd;
+									 &#xd;
+								  ],&#xd;
+								  &quot;entry_schema&quot;:{&#xd;
+									 &quot;type&quot;:&quot;onap.datatypes.monitoring.measurementType&quot;,&#xd;
+									 &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+									 &quot;constraints&quot;:[&#xd;
+										&#xd;
+									 ]&#xd;
+								  },&#xd;
+								  &quot;metadata&quot;:{&#xd;
+									 &#xd;
+								  }&#xd;
+							   }&#xd;
+							},&#xd;
+							&quot;name&quot;:&quot;onap.datatypes.monitoring.measurementTypes&quot;,&#xd;
+							&quot;version&quot;:&quot;0.0.0&quot;,&#xd;
+							&quot;derived_from&quot;:&quot;tosca.datatypes.Root&quot;,&#xd;
+							&quot;metadata&quot;:{&#xd;
+							   &#xd;
+							}&#xd;
+						 },&#xd;
+						 &quot;onap.datatypes.monitoring.nfFilter&quot;:{&#xd;
+							&quot;constraints&quot;:[&#xd;
+							   &#xd;
+							],&#xd;
+							&quot;properties&quot;:{&#xd;
+							   &quot;modelVersionIDs&quot;:{&#xd;
+								  &quot;name&quot;:&quot;modelVersionIDs&quot;,&#xd;
+								  &quot;type&quot;:&quot;list&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;List of model version IDs&quot;,&#xd;
+								  &quot;required&quot;:true,&#xd;
+								  &quot;constraints&quot;:[&#xd;
+									 &#xd;
+								  ],&#xd;
+								  &quot;entry_schema&quot;:{&#xd;
+									 &quot;type&quot;:&quot;string&quot;,&#xd;
+									 &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+									 &quot;constraints&quot;:[&#xd;
+										&#xd;
+									 ]&#xd;
+								  },&#xd;
+								  &quot;metadata&quot;:{&#xd;
+									 &#xd;
+								  }&#xd;
+							   },&#xd;
+							   &quot;modelInvariantIDs&quot;:{&#xd;
+								  &quot;name&quot;:&quot;modelInvariantIDs&quot;,&#xd;
+								  &quot;type&quot;:&quot;list&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;List of model invariant IDs&quot;,&#xd;
+								  &quot;required&quot;:true,&#xd;
+								  &quot;constraints&quot;:[&#xd;
+									 &#xd;
+								  ],&#xd;
+								  &quot;entry_schema&quot;:{&#xd;
+									 &quot;type&quot;:&quot;string&quot;,&#xd;
+									 &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+									 &quot;constraints&quot;:[&#xd;
+										&#xd;
+									 ]&#xd;
+								  },&#xd;
+								  &quot;metadata&quot;:{&#xd;
+									 &#xd;
+								  }&#xd;
+							   },&#xd;
+							   &quot;modelNames&quot;:{&#xd;
+								  &quot;name&quot;:&quot;modelNames&quot;,&#xd;
+								  &quot;type&quot;:&quot;list&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;List of model names&quot;,&#xd;
+								  &quot;required&quot;:true,&#xd;
+								  &quot;constraints&quot;:[&#xd;
+									 &#xd;
+								  ],&#xd;
+								  &quot;entry_schema&quot;:{&#xd;
+									 &quot;type&quot;:&quot;string&quot;,&#xd;
+									 &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+									 &quot;constraints&quot;:[&#xd;
+										&#xd;
+									 ]&#xd;
+								  },&#xd;
+								  &quot;metadata&quot;:{&#xd;
+									 &#xd;
+								  }&#xd;
+							   },&#xd;
+							   &quot;nfNames&quot;:{&#xd;
+								  &quot;name&quot;:&quot;nfNames&quot;,&#xd;
+								  &quot;type&quot;:&quot;list&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;List of network functions&quot;,&#xd;
+								  &quot;required&quot;:true,&#xd;
+								  &quot;constraints&quot;:[&#xd;
+									 &#xd;
+								  ],&#xd;
+								  &quot;entry_schema&quot;:{&#xd;
+									 &quot;type&quot;:&quot;string&quot;,&#xd;
+									 &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+									 &quot;constraints&quot;:[&#xd;
+										&#xd;
+									 ]&#xd;
+								  },&#xd;
+								  &quot;metadata&quot;:{&#xd;
+									 &#xd;
+								  }&#xd;
+							   }&#xd;
+							},&#xd;
+							&quot;name&quot;:&quot;onap.datatypes.monitoring.nfFilter&quot;,&#xd;
+							&quot;version&quot;:&quot;0.0.0&quot;,&#xd;
+							&quot;derived_from&quot;:&quot;tosca.datatypes.Root&quot;,&#xd;
+							&quot;metadata&quot;:{&#xd;
+							   &#xd;
+							}&#xd;
+						 },&#xd;
+						 &quot;onap.datatypes.monitoring.subscription&quot;:{&#xd;
+							&quot;constraints&quot;:[&#xd;
+							   &#xd;
+							],&#xd;
+							&quot;properties&quot;:{&#xd;
+							   &quot;measurementGroups&quot;:{&#xd;
+								  &quot;name&quot;:&quot;measurementGroups&quot;,&#xd;
+								  &quot;type&quot;:&quot;list&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;Measurement Groups&quot;,&#xd;
+								  &quot;required&quot;:true,&#xd;
+								  &quot;constraints&quot;:[&#xd;
+									 &#xd;
+								  ],&#xd;
+								  &quot;entry_schema&quot;:{&#xd;
+									 &quot;type&quot;:&quot;onap.datatypes.monitoring.measurementGroups&quot;,&#xd;
+									 &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+									 &quot;constraints&quot;:[&#xd;
+										&#xd;
+									 ]&#xd;
+								  },&#xd;
+								  &quot;metadata&quot;:{&#xd;
+									 &#xd;
+								  }&#xd;
+							   },&#xd;
+							   &quot;fileBasedGP&quot;:{&#xd;
+								  &quot;name&quot;:&quot;fileBasedGP&quot;,&#xd;
+								  &quot;type&quot;:&quot;integer&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;File based granularity period&quot;,&#xd;
+								  &quot;required&quot;:true,&#xd;
+								  &quot;constraints&quot;:[&#xd;
+									 &#xd;
+								  ],&#xd;
+								  &quot;metadata&quot;:{&#xd;
+									 &#xd;
+								  }&#xd;
+							   },&#xd;
+							   &quot;fileLocation&quot;:{&#xd;
+								  &quot;name&quot;:&quot;fileLocation&quot;,&#xd;
+								  &quot;type&quot;:&quot;string&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;ROP file location&quot;,&#xd;
+								  &quot;required&quot;:true,&#xd;
+								  &quot;constraints&quot;:[&#xd;
+									 &#xd;
+								  ],&#xd;
+								  &quot;metadata&quot;:{&#xd;
+									 &#xd;
+								  }&#xd;
+							   },&#xd;
+							   &quot;subscriptionName&quot;:{&#xd;
+								  &quot;name&quot;:&quot;subscriptionName&quot;,&#xd;
+								  &quot;type&quot;:&quot;string&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;Name of the subscription&quot;,&#xd;
+								  &quot;required&quot;:true,&#xd;
+								  &quot;constraints&quot;:[&#xd;
+									 &#xd;
+								  ],&#xd;
+								  &quot;metadata&quot;:{&#xd;
+									 &#xd;
+								  }&#xd;
+							   },&#xd;
+							   &quot;administrativeState&quot;:{&#xd;
+								  &quot;name&quot;:&quot;administrativeState&quot;,&#xd;
+								  &quot;type&quot;:&quot;string&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;State of the subscription&quot;,&#xd;
+								  &quot;required&quot;:true,&#xd;
+								  &quot;constraints&quot;:[&#xd;
+									 {&#xd;
+										&quot;valid_values&quot;:[&#xd;
+										   &quot;LOCKED&quot;,&#xd;
+										   &quot;UNLOCKED&quot;&#xd;
+										]&#xd;
+									 }&#xd;
+								  ],&#xd;
+								  &quot;metadata&quot;:{&#xd;
+									 &#xd;
+								  }&#xd;
+							   },&#xd;
+							   &quot;nfFilter&quot;:{&#xd;
+								  &quot;name&quot;:&quot;nfFilter&quot;,&#xd;
+								  &quot;type&quot;:&quot;map&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;Network function filter&quot;,&#xd;
+								  &quot;required&quot;:true,&#xd;
+								  &quot;constraints&quot;:[&#xd;
+									 &#xd;
+								  ],&#xd;
+								  &quot;entry_schema&quot;:{&#xd;
+									 &quot;type&quot;:&quot;onap.datatypes.monitoring.nfFilter&quot;,&#xd;
+									 &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+									 &quot;constraints&quot;:[&#xd;
+										&#xd;
+									 ]&#xd;
+								  },&#xd;
+								  &quot;metadata&quot;:{&#xd;
+									 &#xd;
+								  }&#xd;
+							   }&#xd;
+							},&#xd;
+							&quot;name&quot;:&quot;onap.datatypes.monitoring.subscription&quot;,&#xd;
+							&quot;version&quot;:&quot;0.0.0&quot;,&#xd;
+							&quot;derived_from&quot;:&quot;tosca.datatypes.Root&quot;,&#xd;
+							&quot;metadata&quot;:{&#xd;
+							   &#xd;
+							}&#xd;
+						 }&#xd;
+					  },&#xd;
+					  &quot;policy_types&quot;:{&#xd;
+						 &quot;onap.policies.Monitoring&quot;:{&#xd;
+							&quot;properties&quot;:{&#xd;
+							   &#xd;
+							},&#xd;
+							&quot;name&quot;:&quot;onap.policies.Monitoring&quot;,&#xd;
+							&quot;version&quot;:&quot;1.0.0&quot;,&#xd;
+							&quot;derived_from&quot;:&quot;tosca.policies.Root&quot;,&#xd;
+							&quot;metadata&quot;:{&#xd;
+							   &#xd;
+							},&#xd;
+							&quot;description&quot;:&quot;a base policy type for all policies that govern monitoring provisioning&quot;&#xd;
+						 },&#xd;
+						 &quot;onap.policies.test123&quot;:{&#xd;
+							&quot;properties&quot;:{&#xd;
+							   &#xd;
+							},&#xd;
+							&quot;name&quot;:&quot;onap.policies.test123&quot;,&#xd;
+							&quot;version&quot;:&quot;1.0.0&quot;,&#xd;
+							&quot;derived_from&quot;:&quot;tosca.policies.Root&quot;,&#xd;
+							&quot;metadata&quot;:{&#xd;
+							   &#xd;
+							},&#xd;
+							&quot;description&quot;:&quot;a base policy type for all policies that govern monitoring provisioning&quot;&#xd;
+						 },&#xd;
+						 &quot;onap.policies.controlloop.operational.Common&quot;:{&#xd;
+							&quot;properties&quot;:{&#xd;
+							   &quot;abatement&quot;:{&#xd;
+								  &quot;name&quot;:&quot;abatement&quot;,&#xd;
+								  &quot;type&quot;:&quot;boolean&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;Whether an abatement event message will be expected for the control loop from DCAE.&quot;,&#xd;
+								  &quot;default&quot;:false,&#xd;
+								  &quot;required&quot;:true&#xd;
+							   },&#xd;
+							   &quot;operations&quot;:{&#xd;
+								  &quot;name&quot;:&quot;operations&quot;,&#xd;
+								  &quot;type&quot;:&quot;list&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;List of operations to be performed when Control Loop is triggered.&quot;,&#xd;
+								  &quot;required&quot;:true,&#xd;
+								  &quot;entry_schema&quot;:{&#xd;
+									 &quot;type&quot;:&quot;onap.datatype.controlloop.Operation&quot;,&#xd;
+									 &quot;type_version&quot;:&quot;0.0.0&quot;&#xd;
+								  }&#xd;
+							   },&#xd;
+							   &quot;trigger&quot;:{&#xd;
+								  &quot;name&quot;:&quot;trigger&quot;,&#xd;
+								  &quot;type&quot;:&quot;string&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;Initial operation to execute upon receiving an Onset event message for the Control Loop.&quot;,&#xd;
+								  &quot;required&quot;:true&#xd;
+							   },&#xd;
+							   &quot;timeout&quot;:{&#xd;
+								  &quot;name&quot;:&quot;timeout&quot;,&#xd;
+								  &quot;type&quot;:&quot;integer&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;Overall timeout for executing all the operations. This timeout should equal or exceed the total\ntimeout for each operation listed.\n&quot;,&#xd;
+								  &quot;required&quot;:true&#xd;
+							   },&#xd;
+							   &quot;id&quot;:{&#xd;
+								  &quot;name&quot;:&quot;id&quot;,&#xd;
+								  &quot;type&quot;:&quot;string&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;The unique control loop id.&quot;,&#xd;
+								  &quot;required&quot;:true&#xd;
+							   }&#xd;
+							},&#xd;
+							&quot;name&quot;:&quot;onap.policies.controlloop.operational.Common&quot;,&#xd;
+							&quot;version&quot;:&quot;1.0.0&quot;,&#xd;
+							&quot;derived_from&quot;:&quot;tosca.policies.Root&quot;,&#xd;
+							&quot;metadata&quot;:{&#xd;
+							   &#xd;
+							},&#xd;
+							&quot;description&quot;:&quot;Operational Policy for Control Loop execution. Originated in Frankfurt to support TOSCA Compliant\nPolicy Types. This does NOT support the legacy Policy YAML policy type.\n&quot;&#xd;
+						 },&#xd;
+						 &quot;onap.policies.controlloop.operational.common.Apex&quot;:{&#xd;
+							&quot;properties&quot;:{&#xd;
+							   &quot;engineServiceParameters&quot;:{&#xd;
+								  &quot;name&quot;:&quot;engineServiceParameters&quot;,&#xd;
+								  &quot;type&quot;:&quot;string&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;The engine parameters like name, instanceCount, policy implementation, parameters etc.&quot;,&#xd;
+								  &quot;required&quot;:true&#xd;
+							   },&#xd;
+							   &quot;eventOutputParameters&quot;:{&#xd;
+								  &quot;name&quot;:&quot;eventOutputParameters&quot;,&#xd;
+								  &quot;type&quot;:&quot;string&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;The event output parameters.&quot;,&#xd;
+								  &quot;required&quot;:true&#xd;
+							   },&#xd;
+							   &quot;javaProperties&quot;:{&#xd;
+								  &quot;name&quot;:&quot;javaProperties&quot;,&#xd;
+								  &quot;type&quot;:&quot;string&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;Name/value pairs of properties to be set for APEX if needed.&quot;,&#xd;
+								  &quot;required&quot;:false&#xd;
+							   },&#xd;
+							   &quot;eventInputParameters&quot;:{&#xd;
+								  &quot;name&quot;:&quot;eventInputParameters&quot;,&#xd;
+								  &quot;type&quot;:&quot;string&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;The event input parameters.&quot;,&#xd;
+								  &quot;required&quot;:true&#xd;
+							   }&#xd;
+							},&#xd;
+							&quot;name&quot;:&quot;onap.policies.controlloop.operational.common.Apex&quot;,&#xd;
+							&quot;version&quot;:&quot;1.0.0&quot;,&#xd;
+							&quot;derived_from&quot;:&quot;onap.policies.controlloop.operational.Common&quot;,&#xd;
+							&quot;metadata&quot;:{&#xd;
+							   &#xd;
+							},&#xd;
+							&quot;description&quot;:&quot;Operational policies for Apex PDP&quot;&#xd;
+						 },&#xd;
+						 &quot;onap.policies.monitoring.dcae-pm-subscription-handler&quot;:{&#xd;
+							&quot;properties&quot;:{&#xd;
+							   &quot;pmsh_policy&quot;:{&#xd;
+								  &quot;name&quot;:&quot;pmsh_policy&quot;,&#xd;
+								  &quot;type&quot;:&quot;onap.datatypes.monitoring.subscription&quot;,&#xd;
+								  &quot;type_version&quot;:&quot;0.0.0&quot;,&#xd;
+								  &quot;description&quot;:&quot;PMSH Policy JSON&quot;,&#xd;
+								  &quot;required&quot;:false,&#xd;
+								  &quot;constraints&quot;:[&#xd;
+									 &#xd;
+								  ],&#xd;
+								  &quot;metadata&quot;:{&#xd;
+									 &#xd;
+								  }&#xd;
+							   }&#xd;
+							},&#xd;
+							&quot;name&quot;:&quot;onap.policies.monitoring.dcae-pm-subscription-handler&quot;,&#xd;
+							&quot;version&quot;:&quot;1.0.0&quot;,&#xd;
+							&quot;derived_from&quot;:&quot;onap.policies.Monitoring&quot;,&#xd;
+							&quot;metadata&quot;:{&#xd;
+							   &#xd;
+							}&#xd;
+						 }&#xd;
+					  },&#xd;
+					  &quot;topology_template&quot;:{&#xd;
+						 &#xd;
+					  },&#xd;
+					  &quot;name&quot;:&quot;NULL&quot;,&#xd;
+					  &quot;version&quot;:&quot;0.0.0&quot;&#xd;
+				     },&#xd;
+                    &quot;propertiesMap&quot;: {&#xd;
+                        &quot;provider_instance&quot;: {&#xd;
+                            &quot;name&quot;: &quot;provider_instance&quot;,&#xd;
+                            &quot;version&quot;: &quot;1.2.3&quot;,&#xd;
+                            &quot;type&quot;: &quot;org.onap.datatypes.policy.clamp.controlloop.policControlLoopElement.Chart&quot;,&#xd;
+                            &quot;typeVersion&quot;: &quot;1.0.0&quot;,&#xd;
+                            &quot;description&quot;: &quot;The helm chart for the microservice&quot;,&#xd;
+                            &quot;required&quot;: true&#xd;
+                        }&#xd;
+                     },&#xd;
+					 &quot;description&quot;: &quot;Monitoring Policy Control Loop Element for the PMSH instance 0 control loop&quot;&#xd;
+                },&#xd;
+                &quot;709c62b3-8918-41b9-a747-d21eb79c6c22&quot;: {&#xd;
+                    &quot;id&quot;: &quot;709c62b3-8918-41b9-a747-d21eb79c6c22&quot;,&#xd;
+                    &quot;definition&quot;: {&#xd;
+                        &quot;name&quot;: &quot;org.onap.domain.pmsh.PMSH_OperationalPolicyControlLoopElement&quot;,&#xd;
+                        &quot;version&quot;: &quot;1.2.3&quot;&#xd;
+                    },&#xd;
+                   &quot;participantType&quot;:{&#xd;
+                        &quot;name&quot;:&quot;org.onap.policy.controlloop.PolicyControlLoopParticipant&quot;,&#xd;
+                        &quot;version&quot;:&quot;2.3.1&quot;&#xd;
+                    },&#xd;
+                   &quot;participantId&quot;:{&#xd;
+                        &quot;name&quot;:&quot;org.onap.PM_Policy&quot;,&#xd;
+                        &quot;version&quot;:&quot;1.0.0&quot;&#xd;
+                    },&#xd;
+                    &quot;state&quot;:&quot;UNINITIALISED&quot;,&#xd;
+                    &quot;orderedState&quot;:&quot;UNINITIALISED&quot;,&#xd;
+                    &quot;propertiesMap&quot;: {&#xd;
+                        &quot;provider_instance&quot;: {&#xd;
+                            &quot;name&quot;: &quot;provider_instance&quot;,&#xd;
+                            &quot;version&quot;: &quot;1.2.3&quot;,&#xd;
+                            &quot;type&quot;: &quot;org.onap.datatypes.policy.clamp.controlloop.policControlLoopElement.Chart&quot;,&#xd;
+                            &quot;typeVersion&quot;: &quot;1.0.0&quot;,&#xd;
+                            &quot;description&quot;: &quot;The helm chart for the microservice&quot;,&#xd;
+                            &quot;required&quot;: true&#xd;
+                        }&#xd;
+                     },&#xd;
+                     &quot;description&quot;: &quot;Operational Policy Control Loop Element for the PMSH instance 0 control loop&quot;&#xd;
+                }&#xd;
+            }&#xd;
+        }&#xd;
+    ]&#xd;
+}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">${RUNTIME_HOST}</stringProp>
+          <stringProp name="HTTPSampler.port">${RUNTIME_PORT}</stringProp>
+          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/onap/controlloop/v2/instantiation</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49586">200</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">1</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="ControlLoop Test Flow" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <intProp name="LoopController.loops">-1</intProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.scheduler">true</boolProp>
+        <stringProp name="ThreadGroup.duration">259200</stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+      </ThreadGroup>
+      <hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Check controlloop state" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">${RUNTIME_HOST}</stringProp>
+          <stringProp name="HTTPSampler.port">${RUNTIME_PORT}</stringProp>
+          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/onap/controlloop/v2/instantiation</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          <stringProp name="TestPlan.comments">Basic Health Check</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49586">200</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">1</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Change State to PASSIVE" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+    &quot;orderedState&quot;: &quot;PASSIVE&quot;,&#xd;
+    &quot;controlLoopIdentifierList&quot;: [&#xd;
+        {&#xd;
+            &quot;name&quot;: &quot;PMSHInstance0&quot;,&#xd;
+            &quot;version&quot;: &quot;1.0.1&quot;&#xd;
+        }&#xd;
+    ]&#xd;
+}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">${RUNTIME_HOST}</stringProp>
+          <stringProp name="HTTPSampler.port">${RUNTIME_PORT}</stringProp>
+          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/onap/controlloop/v2/instantiation/command</stringProp>
+          <stringProp name="HTTPSampler.method">PUT</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="true">
+            <stringProp name="ConstantTimer.delay">6000</stringProp>
+          </ConstantTimer>
+          <hashTree/>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49588">202</stringProp>
+              <stringProp name="51508">400</stringProp>
+              <stringProp name="51514">406</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">true</boolProp>
+            <intProp name="Assertion.test_type">34</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Check controlloop state" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">${RUNTIME_HOST}</stringProp>
+          <stringProp name="HTTPSampler.port">${RUNTIME_PORT}</stringProp>
+          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/onap/controlloop/v2/instantiation</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          <stringProp name="TestPlan.comments">Basic Health Check</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49586">200</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">1</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Change State to UNINITIALISED" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+    &quot;orderedState&quot;: &quot;UNINITIALISED&quot;,&#xd;
+    &quot;controlLoopIdentifierList&quot;: [&#xd;
+        {&#xd;
+            &quot;name&quot;: &quot;PMSHInstance0&quot;,&#xd;
+            &quot;version&quot;: &quot;1.0.1&quot;&#xd;
+        }&#xd;
+    ]&#xd;
+}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">${RUNTIME_HOST}</stringProp>
+          <stringProp name="HTTPSampler.port">${RUNTIME_PORT}</stringProp>
+          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/onap/controlloop/v2/instantiation/command</stringProp>
+          <stringProp name="HTTPSampler.method">PUT</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="51508">400</stringProp>
+              <stringProp name="51514">406</stringProp>
+              <stringProp name="49588">202</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">true</boolProp>
+            <intProp name="Assertion.test_type">34</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="true">
+            <stringProp name="ConstantTimer.delay">6000</stringProp>
+          </ConstantTimer>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Check controlloop state" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">${RUNTIME_HOST}</stringProp>
+          <stringProp name="HTTPSampler.port">${RUNTIME_PORT}</stringProp>
+          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/onap/controlloop/v2/instantiation</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          <stringProp name="TestPlan.comments">Basic Health Check</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49586">200</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">1</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+      <PostThreadGroup guiclass="PostThreadGroupGui" testclass="PostThreadGroup" testname="tearDown Thread Group" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">stoptest</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+      </PostThreadGroup>
+      <hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Delete instantiated controlloop" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">${RUNTIME_HOST}</stringProp>
+          <stringProp name="HTTPSampler.port">${RUNTIME_PORT}</stringProp>
+          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/onap/controlloop/v2/instantiation?name=PMSHInstance0&amp;version=1.0.1</stringProp>
+          <stringProp name="HTTPSampler.method">DELETE</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49586">200</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">1</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="true">
+            <stringProp name="ConstantTimer.delay">6000</stringProp>
+          </ConstantTimer>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Delete ControlLoop Definition" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">${RUNTIME_HOST}</stringProp>
+          <stringProp name="HTTPSampler.port">${RUNTIME_PORT}</stringProp>
+          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/onap/controlloop/v2/commission?name=NULL&amp;version=0.0.0</stringProp>
+          <stringProp name="HTTPSampler.method">DELETE</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49586">200</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">1</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+      <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>false</xml>
+            <fieldNames>true</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+            <sentBytes>true</sentBytes>
+            <url>true</url>
+            <threadCounts>true</threadCounts>
+            <idleTime>true</idleTime>
+            <connectTime>true</connectTime>
+          </value>
+        </objProp>
+        <stringProp name="filename">./controlloop_stability/testsummary.jtl</stringProp>
+      </ResultCollector>
+      <hashTree/>
+      <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>false</xml>
+            <fieldNames>true</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+            <sentBytes>true</sentBytes>
+            <url>true</url>
+            <threadCounts>true</threadCounts>
+            <idleTime>true</idleTime>
+            <connectTime>true</connectTime>
+          </value>
+        </objProp>
+        <stringProp name="filename">./controlloop_stability/resultTree.log</stringProp>
+      </ResultCollector>
+      <hashTree/>
+      <ResultCollector guiclass="TableVisualizer" testclass="ResultCollector" testname="View Results in Table" enabled="true">
+        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>false</xml>
+            <fieldNames>true</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+            <sentBytes>true</sentBytes>
+            <url>true</url>
+            <threadCounts>true</threadCounts>
+            <idleTime>true</idleTime>
+            <connectTime>true</connectTime>
+          </value>
+        </objProp>
+        <stringProp name="filename">./controlloop_stability/resultTable.log</stringProp>
+      </ResultCollector>
+      <hashTree/>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>
