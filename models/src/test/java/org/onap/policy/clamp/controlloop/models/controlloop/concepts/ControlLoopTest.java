@@ -27,7 +27,9 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import java.time.Instant;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.models.base.PfKey;
@@ -36,12 +38,12 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 class ControlLoopTest {
     @Test
     void testControlLoop() {
-        ControlLoop cl0 = new ControlLoop();
+        var cl0 = new ControlLoop();
         cl0.setDefinition(new ToscaConceptIdentifier("dfName", "1.2.3"));
         assertEquals("dfName", cl0.getType());
         assertEquals("1.2.3", cl0.getTypeVersion());
 
-        ControlLoop cl1 = new ControlLoop(cl0);
+        var cl1 = new ControlLoop(cl0);
         assertEquals(cl0, cl1);
 
         assertEquals(0, cl0.compareTo(cl1));
@@ -50,7 +52,7 @@ class ControlLoopTest {
     @Test
     void testControlLoopLombok() {
         assertNotNull(new ControlLoop());
-        ControlLoop cl0 = new ControlLoop();
+        var cl0 = new ControlLoop();
         cl0.setElements(new LinkedHashMap<>());
 
         assertThat(cl0.toString()).contains("ControlLoop(");
@@ -58,7 +60,7 @@ class ControlLoopTest {
         assertEquals(true, cl0.equals(cl0));
         assertEquals(false, cl0.equals(null));
 
-        ControlLoop cl1 = new ControlLoop();
+        var cl1 = new ControlLoop();
 
         cl1.setDefinition(new ToscaConceptIdentifier("defName", "0.0.1"));
         cl1.setDescription("Description");
@@ -75,7 +77,7 @@ class ControlLoopTest {
 
         assertNotEquals(cl1, cl0);
 
-        ControlLoop cl2 = new ControlLoop();
+        var cl2 = new ControlLoop();
         cl2.setElements(new LinkedHashMap<>());
 
         // @formatter:off
@@ -98,5 +100,61 @@ class ControlLoopTest {
         assertNull(cl1.getElements().get(UUID.randomUUID()));
 
         assertEquals(PfKey.NULL_KEY_NAME, cl0.getDefinition().getName());
+
+    }
+
+    @Test
+    void testControlLoopElementStatisticsList() {
+        var cl = new ControlLoop();
+        List<ClElementStatistics> emptylist = cl.getControlLoopElementStatisticsList(cl);
+        assertNull(emptylist);
+
+        var cl1 = getControlLoopTest();
+        List<ClElementStatistics> list = cl1.getControlLoopElementStatisticsList(cl1);
+        assertNotNull(list);
+        assertEquals(2, list.size());
+        assertEquals(ControlLoopState.UNINITIALISED, list.get(0).getControlLoopState());
+    }
+
+    private ControlLoop getControlLoopTest() {
+        var cl = new ControlLoop();
+        cl.setDefinition(new ToscaConceptIdentifier("defName", "1.2.3"));
+        cl.setDescription("Description");
+        cl.setElements(new LinkedHashMap<>());
+        cl.setName("Name");
+        cl.setOrderedState(ControlLoopOrderedState.UNINITIALISED);
+        cl.setState(ControlLoopState.UNINITIALISED);
+        cl.setVersion("0.0.1");
+
+        var uuid = UUID.randomUUID();
+        var id = new ToscaConceptIdentifier(
+                "org.onap.policy.controlloop.PolicyControlLoopParticipant", "1.0.1");
+        var clElement = getControlLoopElementTest(uuid, id);
+
+        var uuid2 = UUID.randomUUID();
+        var id2 = new ToscaConceptIdentifier(
+                "org.onap.policy.controlloop.PolicyControlLoopParticipantIntermediary", "0.0.1");
+        var clElement2 = getControlLoopElementTest(uuid2, id2);
+
+        cl.getElements().put(uuid, clElement);
+        cl.getElements().put(uuid2, clElement2);
+        return cl;
+    }
+
+    private ControlLoopElement getControlLoopElementTest(UUID uuid, ToscaConceptIdentifier id) {
+        var clElement = new ControlLoopElement();
+        clElement.setId(uuid);
+        clElement.setParticipantId(id);
+        clElement.setDefinition(id);
+        clElement.setOrderedState(ControlLoopOrderedState.UNINITIALISED);
+
+        var clElementStatistics = new ClElementStatistics();
+        clElementStatistics.setParticipantId(id);
+        clElementStatistics.setControlLoopState(ControlLoopState.UNINITIALISED);
+        clElementStatistics.setTimeStamp(Instant.now());
+
+        clElement.setClElementStatistics(clElementStatistics);
+
+        return clElement;
     }
 }

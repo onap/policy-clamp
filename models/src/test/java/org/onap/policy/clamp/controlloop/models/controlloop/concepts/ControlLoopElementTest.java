@@ -25,6 +25,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -33,24 +34,45 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 class ControlLoopElementTest {
     @Test
     void testControlLoopElement() {
-
-        ControlLoopElement cle0 = new ControlLoopElement();
-
-        ControlLoopElement cle1 = new ControlLoopElement(cle0);
+        var cle0 = new ControlLoopElement();
+        var cle1 = new ControlLoopElement(cle0);
         assertEquals(cle0, cle1);
+
+        cle1.setDefinition(new ToscaConceptIdentifier("defName", "0.0.1"));
+        cle1.setDescription("Description");
+        cle1.setId(UUID.randomUUID());
+        cle1.setOrderedState(ControlLoopOrderedState.UNINITIALISED);
+        cle1.setParticipantId(new ToscaConceptIdentifier("id", "1.2.3"));
+        cle1.setState(ControlLoopState.UNINITIALISED);
+
+        var cle2 = new ControlLoopElement(cle1);
+        assertEquals(cle1, cle2);
+    }
+
+    @Test
+    void testControlLoopState() {
+        var cle0 = new ControlLoopElement();
+
+        assertTrue(
+                cle0.getOrderedState()
+                .equalsControlLoopState(ControlLoopState.UNINITIALISED));
+
+        assertTrue(
+                cle0.getOrderedState().asState()
+                .equalsControlLoopOrderedState(ControlLoopOrderedState.UNINITIALISED));
     }
 
     @Test
     void testControlLoopElementLombok() {
         assertNotNull(new ControlLoopElement());
-        ControlLoopElement cle0 = new ControlLoopElement();
+        var cle0 = new ControlLoopElement();
 
         assertThat(cle0.toString()).contains("ControlLoopElement(");
         assertThat(cle0.hashCode()).isNotZero();
         assertEquals(true, cle0.equals(cle0));
         assertEquals(false, cle0.equals(null));
 
-        ControlLoopElement cle1 = new ControlLoopElement();
+        var cle1 = new ControlLoopElement();
 
         cle1.setDefinition(new ToscaConceptIdentifier("defName", "0.0.1"));
         cle1.setDescription("Description");
@@ -66,7 +88,7 @@ class ControlLoopElementTest {
 
         assertNotEquals(cle1, cle0);
 
-        ControlLoopElement cle2 = new ControlLoopElement();
+        var cle2 = new ControlLoopElement();
 
         // @formatter:off
         assertThatThrownBy(() -> cle2.setDefinition(null)).   isInstanceOf(NullPointerException.class);
