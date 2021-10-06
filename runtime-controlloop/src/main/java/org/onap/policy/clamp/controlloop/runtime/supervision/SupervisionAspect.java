@@ -28,6 +28,7 @@ import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantRegister;
@@ -74,10 +75,21 @@ public class SupervisionAspect implements Closeable {
         executor.execute(() -> supervisionScanner.handleParticipantStatus(participantStatusMessage.getParticipantId()));
     }
 
-    @Before("@annotation(MessageIntercept) && args(participantRegisterMessage,..)")
-    public void handleParticipantRegister(ParticipantRegister participantRegisterMessage) {
-        executor.execute(() -> supervisionScanner.handleParticipantRegister(new ImmutablePair<>(
-                participantRegisterMessage.getParticipantId(), participantRegisterMessage.getParticipantType())));
+    /**
+     * Intercepts participant Register Message
+     * if there is a Commissioning starts an execution of handleParticipantRegister.
+     *
+     * @param participantRegisterMessage the ParticipantRegister message
+     * @param isCommissioning is Commissioning
+     */
+    @AfterReturning(
+            value = "@annotation(MessageIntercept) && args(participantRegisterMessage,..)",
+            returning = "isCommissioning")
+    public void handleParticipantRegister(ParticipantRegister participantRegisterMessage, boolean isCommissioning) {
+        if (isCommissioning) {
+            executor.execute(() -> supervisionScanner.handleParticipantRegister(new ImmutablePair<>(
+                    participantRegisterMessage.getParticipantId(), participantRegisterMessage.getParticipantType())));
+        }
     }
 
     @Before("@annotation(MessageIntercept) && args(participantUpdateAckMessage,..)")

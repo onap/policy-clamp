@@ -21,7 +21,6 @@
 
 package org.onap.policy.clamp.controlloop.runtime.supervision;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -53,7 +52,6 @@ import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantReg
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantUpdatePublisher;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -144,15 +142,21 @@ public class SupervisionHandler {
      *
      * @param participantRegisterMessage the ParticipantRegister message received from a participant
      */
-    public void handleParticipantMessage(ParticipantRegister participantRegisterMessage) {
+    @MessageIntercept
+    public boolean handleParticipantMessage(ParticipantRegister participantRegisterMessage) {
         LOGGER.debug("Participant Register received {}", participantRegisterMessage);
         try {
             checkParticipant(participantRegisterMessage, ParticipantState.UNKNOWN, ParticipantHealthStatus.UNKNOWN);
         } catch (PfModelException | ControlLoopException svExc) {
             LOGGER.warn("error saving participant {}", participantRegisterMessage.getParticipantId(), svExc);
         }
+
+        var isCommissioning = participantUpdatePublisher.sendCommissioning(null, null,
+                participantRegisterMessage.getParticipantId(), participantRegisterMessage.getParticipantType());
+
         participantRegisterAckPublisher.send(participantRegisterMessage.getMessageId(),
                 participantRegisterMessage.getParticipantId(), participantRegisterMessage.getParticipantType());
+        return isCommissioning;
     }
 
     /**
@@ -213,10 +217,13 @@ public class SupervisionHandler {
     /**
      * Send commissioning update message to dmaap.
      *
+     * @param name the ToscaServiceTemplate name
+     * @param version the ToscaServiceTemplate version
      */
-    public void handleSendCommissionMessage(Map<String, ToscaNodeType> commonPropertiesMap) {
-        LOGGER.debug("Participant update message being sent {}");
-        participantUpdatePublisher.send(commonPropertiesMap, true);
+    public void handleSendCommissionMessage(String name, String version) {
+        LOGGER.debug("Participant update message with serviveTemplate {} {} being sent to all participants", name,
+                version);
+        participantUpdatePublisher.sendComissioningBroadcast(name, version);
     }
 
     /**
@@ -225,7 +232,7 @@ public class SupervisionHandler {
      */
     public void handleSendDeCommissionMessage() {
         LOGGER.debug("Participant update message being sent");
-        participantUpdatePublisher.send(Collections.emptyMap(), false);
+        participantUpdatePublisher.sendDecomisioning();
     }
 
     /**

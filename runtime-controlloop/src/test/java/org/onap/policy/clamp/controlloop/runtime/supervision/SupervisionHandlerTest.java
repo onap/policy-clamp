@@ -23,7 +23,6 @@ package org.onap.policy.clamp.controlloop.runtime.supervision;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -230,9 +229,10 @@ class SupervisionHandlerTest {
                 mock(MonitoringProvider.class), mock(ParticipantRegisterAckPublisher.class),
                 mock(ParticipantDeregisterAckPublisher.class), mock(ControlLoopUpdatePublisher.class),
                 participantUpdatePublisher);
-        handler.handleSendCommissionMessage(Map.of());
+        handler.handleSendCommissionMessage(participantId.getName(), participantId.getVersion());
 
-        verify(participantUpdatePublisher).send(anyMap(), eq(true));
+        verify(participantUpdatePublisher).sendComissioningBroadcast(eq(participantId.getName()),
+                eq(participantId.getVersion()));
     }
 
     @Test
@@ -244,7 +244,7 @@ class SupervisionHandlerTest {
                 participantUpdatePublisher);
         handler.handleSendDeCommissionMessage();
 
-        verify(participantUpdatePublisher).send(anyMap(), eq(false));
+        verify(participantUpdatePublisher).sendDecomisioning();
     }
 
     private SupervisionHandler createSupervisionHandler(ControlLoopProvider controlLoopProvider,

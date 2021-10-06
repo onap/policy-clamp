@@ -160,7 +160,7 @@ public class SupervisionScanner {
 
                 if (participantUpdateCounter.count(id)) {
                     LOGGER.debug("retry message ParticipantUpdate");
-                    participantUpdatePublisher.send(null, true);
+                    participantUpdatePublisher.sendCommissioning(null, null, id.getLeft(), id.getRight());
                 } else {
                     LOGGER.debug("report Participant Update fault");
                     participantUpdateCounter.setFault(id);
