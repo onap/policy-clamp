@@ -560,6 +560,9 @@
                     <to
                             uri="bean:org.onap.policy.clamp.loop.log.LoopLogService?method=addLog('DELETE request','INFO',${exchangeProperty[loopObject]})"/>
                     <to uri="direct:undeploy-loop"/>
+                    <setProperty name="raiseHttpExceptionFlag">
+                        <simple resultType="java.lang.Boolean">false</simple>
+                    </setProperty>
                     <to uri="direct:remove-all-policy-from-active-pdp-group"/>
                     <log loggingLevel="INFO"
                          message="Deleting all MICRO-SERVICES policies defined in loop ${exchangeProperty[loopObject].getName()}"/>
@@ -597,6 +600,12 @@
                          message="DELETE request successfully executed for loop: ${header.loopName}"/>
                     <to
                             uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=endLog()"/>
+                    <setHeader name="CamelHttpResponseCode">
+                        <constant>200</constant>
+                    </setHeader>
+                    <setBody>
+                        <simple>DELETE request SUCCESSFUL</simple>
+                    </setBody>
                     <doCatch>
                         <exception>java.lang.Exception</exception>
                         <handled>

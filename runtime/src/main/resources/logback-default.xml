@@ -214,5 +214,6 @@
         <appender-ref ref="asyncAudit" />
         <appender-ref ref="asyncMetric" />
         <appender-ref ref="asyncSecurity" />
+        <appender-ref ref="STDOUT" />
     </root>
 </included>

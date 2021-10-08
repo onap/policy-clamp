@@ -32,7 +32,7 @@ export default class LoopActionService{
  			})
  		.then(function (response) {
  			if (response.ok) {
- 				return response.json();
+ 				return response;
  			} else {
  				return Promise.reject("Perform action failed with code:" + response.status);
  			}

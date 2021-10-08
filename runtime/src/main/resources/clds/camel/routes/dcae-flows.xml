@@ -349,9 +349,9 @@
             </when>
             <otherwise>
                 <log loggingLevel="WARN"
-                     message="Cannot Undeploy for the loop: ${exchangeProperty[loopObject].getName()}, the Deployment ID does not exist !"/>
+                     message="Cannot Undeploy the loop: ${exchangeProperty[loopObject].getName()}, the Deployment ID does not exist !"/>
                 <to
-                        uri="bean:org.onap.policy.clamp.loop.log.LoopLogService?method=addLog('Cannot Undeploy for the loop: ${exchangeProperty[loopObject].getName()}, the Deployment ID does not exist !','WARNING',${exchangeProperty[loopObject]})"/>
+                        uri="bean:org.onap.policy.clamp.loop.log.LoopLogService?method=addLogForComponent('Cannot Undeploy the loop: ${exchangeProperty[loopObject].getName()}, the Deployment ID does not exist !','WARNING','DCAE',${exchangeProperty[loopObject]})"/>
             </otherwise>
         </choice>
     </route>
@@ -404,7 +404,7 @@
                 <log loggingLevel="ERROR"
                      message="GET DCAE deployment request FAILED for loop: ${header.loopName}, ${exception.stacktrace}"/>
                 <to
-                        uri="bean:org.onap.policy.clamp.loop.log.LoopLogService?method=addLog('GET DCAE deployment request failed, Error reported: ${exception.message}','ERROR',${exchangeProperty[loopObject]})"/>
+                        uri="bean:org.onap.policy.clamp.loop.log.LoopLogService?method=addLogForComponent('GET DCAE deployment request failed, Error reported: ${exception.message}','ERROR','DCAE',${exchangeProperty[loopObject]})"/>
             </doCatch>
             <doFinally>
                 <to uri="direct:reset-raise-http-exception-flag"/>
