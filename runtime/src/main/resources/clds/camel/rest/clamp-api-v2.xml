@@ -336,6 +336,9 @@
                     <to uri="direct:load-loop"/>
                     <to
                             uri="bean:org.onap.policy.clamp.loop.log.LoopLogService?method=addLog('DCAE UNDEPLOY request','INFO',${exchangeProperty[loopObject]})"/>
+                    <setProperty name="raiseHttpExceptionFlag">
+                        <simple resultType="java.lang.Boolean">true</simple>
+                    </setProperty>
                     <to uri="direct:undeploy-loop"/>
 
                     <log loggingLevel="INFO"
@@ -549,9 +552,6 @@
                 <doTry>
                     <log loggingLevel="INFO"
                          message="DELETE request for loop: ${header.loopName}"/>
-                    <setProperty name="raiseHttpExceptionFlag">
-                        <simple resultType="java.lang.Boolean">true</simple>
-                    </setProperty>
                     <to
                             uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=startLog(*,'DELETE request')"/>
                     <to
@@ -559,11 +559,17 @@
                     <to uri="direct:load-loop"/>
                     <to
                             uri="bean:org.onap.policy.clamp.loop.log.LoopLogService?method=addLog('DELETE request','INFO',${exchangeProperty[loopObject]})"/>
+
+                    <setProperty name="raiseHttpExceptionFlag">
+                        <simple resultType="java.lang.Boolean">false</simple>
+                    </setProperty>
                     <to uri="direct:undeploy-loop"/>
+
                     <setProperty name="raiseHttpExceptionFlag">
                         <simple resultType="java.lang.Boolean">false</simple>
                     </setProperty>
                     <to uri="direct:remove-all-policy-from-active-pdp-group"/>
+
                     <log loggingLevel="INFO"
                          message="Deleting all MICRO-SERVICES policies defined in loop ${exchangeProperty[loopObject].getName()}"/>
                     <split>
