@@ -154,7 +154,7 @@ public class DeployFlowItTestCase {
         loopTest.addMicroServicePolicy(microServicePolicy);
         loopService.saveOrUpdateLoop(loopTest);
         Exchange myCamelExchange = ExchangeBuilder.anExchange(camelContext).withProperty("loopObject", loopTest)
-                .build();
+                .withProperty("raiseHttpExceptionFlag", true).build();
 
         camelContext.createProducerTemplate().send("direct:undeploy-loop", myCamelExchange);
 
@@ -189,7 +189,7 @@ public class DeployFlowItTestCase {
         loopTest2.addMicroServicePolicy(microServicePolicy2);
         loopsRepository.saveAndFlush(loopTest2);
         Exchange myCamelExchange = ExchangeBuilder.anExchange(camelContext).withProperty("loopObject", loopTest2)
-                .build();
+                .withProperty("raiseHttpExceptionFlag", true).build();
 
         camelContext.createProducerTemplate().send("direct:undeploy-loop", myCamelExchange);
 
