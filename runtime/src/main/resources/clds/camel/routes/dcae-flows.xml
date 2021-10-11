@@ -180,17 +180,11 @@
             <when>
                 <simple>${exchangeProperty['loopObject'].getLoopTemplate().getUniqueBlueprint()} == true
                 </simple>
-                <setProperty name="raiseHttpExceptionFlag">
-                    <simple resultType="java.lang.Boolean">true</simple>
-                </setProperty>
                 <to uri="direct:undeploy-loop-single-blueprint"/>
             </when>
             <when>
                 <simple>${exchangeProperty['loopObject'].getLoopTemplate().getUniqueBlueprint()} == false
                 </simple>
-                <setProperty name="raiseHttpExceptionFlag">
-                    <simple resultType="java.lang.Boolean">true</simple>
-                </setProperty>
                 <to uri="direct:undeploy-loop-multi-blueprint"/>
             </when>
         </choice>
