@@ -29,7 +29,9 @@ import org.mockito.Mockito;
 import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.controlloop.participant.intermediary.handler.ControlLoopHandler;
 import org.onap.policy.clamp.controlloop.participant.intermediary.handler.DummyParticipantParameters;
+import org.onap.policy.clamp.controlloop.participant.intermediary.handler.ParticipantHandler;
 import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantIntermediaryParameters;
+import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantParameters;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
 import org.onap.policy.common.endpoints.parameters.TopicParameters;
 import org.onap.policy.common.utils.coder.Coder;
@@ -45,7 +47,6 @@ public class CommonTestData {
     public static final String DESCRIPTION = "Participant description";
     public static final long TIME_INTERVAL = 2000;
     public static final List<TopicParameters> TOPIC_PARAMS = Arrays.asList(getTopicParams());
-
     public static final Coder CODER = new StandardCoder();
     private static final Object lockit = new Object();
 
@@ -168,4 +169,19 @@ public class CommonTestData {
                 getParticipantParameters(),
                 getParticipantMessagePublisher());
     }
+
+    /**
+     * Returns a mocked ParticipantHandler for test cases.
+     *
+     * @return participant Handler
+     */
+    public ParticipantHandler getMockParticipantHandler() {
+        ParticipantParameters parameters = getParticipantParameters();
+        ControlLoopHandler controlLoopHander = getMockControlLoopHandler();
+        ParticipantMessagePublisher publisher = new ParticipantMessagePublisher();
+        publisher.active(Collections.singletonList(Mockito.mock(TopicSink.class)));
+        ParticipantHandler participantHandler = new ParticipantHandler(parameters, publisher, controlLoopHander);
+        return participantHandler;
+    }
+
 }
