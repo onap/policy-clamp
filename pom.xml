@@ -37,7 +37,7 @@
         This is the root Maven module for the policy-clamp project.
 
         It contains the following modules:
-        - policy-clamp-common: Common code for all CLAMP modules
+	    - policy-clamp-common: Common code for all Policy/CLAMP modules
         - policy-clamp-models: POJOs and other model code for REST and DMaaP messages and for persistence
         - policy-clamp-runtime: The runtime server for CLAMP
         - policy-clamp-participant: Modules for CLAMP control loop participants
