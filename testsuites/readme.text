@@ -1,0 +1,73 @@
+#-------------------------------------------------------------------------------
+# ============LICENSE_START=======================================================
+   Copyright (C) 2021 Nordix Foundation.
+# ================================================================================
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# SPDX-License-Identifier: Apache-2.0
+# ============LICENSE_END=========================================================
+#-------------------------------------------------------------------------------
+
+To set up S3P test environment with all docker images, either build the docker images locally with
+"mvn clean install -P docker" in clamp/packages directory Or use policy/docker/csit to bring up docker images.
+
+Important Instructions to setup environment using CSIT:
+-------------------------------------------------------
+Step 1: $cd policy/docker/csit
+
+Step 2:
+$vi run-project-csit.sh
+Comment the on_exit cleanup function call in run-project-csit.sh file. By doing this, docker images once started will not be shutdown.
+All images will be up and running, to carryout any Stability or Performance tests using JMeter.
+# ensure that teardown and other finalizing steps are always executed
+#trap on_exit EXIT
+
+Step 3:
+./run-project-csit.sh clamp
+This command will bring up all required docker images
+
+Step 4: Ensure the IP's and Ports in stability.jmx and performance.jmx are changed, and reflecting to the IP's of docker images.
+Example:
+$cd ./clamp/testsuites/stability/src/main/resources/testplans/stability.jmx
+          <elementProp name="RUNTIME_HOST" elementType="Argument">
+            <stringProp name="Argument.name">RUNTIME_HOST</stringProp>
+            <stringProp name="Argument.value">192.168.48.9</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+
+
+On successfull docker image bring up:
+------------------------------------
+$docker ps
+CONTAINER ID   IMAGE                                                                    COMMAND                  CREATED          STATUS          PORTS                                         NAMES
+a9cb0cd103cf   onap/policy-clamp-cl-runtime:latest                                      "/opt/app/policy/bin…"   41 seconds ago   Up 40 seconds   6969/tcp                                      policy-clamp-cl-runtime
+886e572b8438   onap/policy-clamp-cl-pf-ppnt:latest                                      "/opt/app/policy/bin…"   42 seconds ago   Up 41 seconds   6973/tcp                                      policy-clamp-cl-pf-ppnt
+035707b1b95f   nexus3.onap.org:10001/onap/policy-api:2.5-SNAPSHOT-latest                "./wait_for_port.sh …"   42 seconds ago   Up 42 seconds   6969/tcp                                      policy-api
+d34204f95ff3   onap/policy-clamp-cl-http-ppnt:latest                                    "/opt/app/policy/bin…"   43 seconds ago   Up 42 seconds   6971/tcp                                      policy-clamp-cl-http-ppnt
+4470e608c9a8   onap/policy-clamp-cl-k8s-ppnt:latest                                     "/opt/app/policy/bin…"   43 seconds ago   Up 42 seconds   6972/tcp, 8083/tcp                            policy-clamp-cl-k8s-ppnt
+62229d46b79c   nexus3.onap.org:10001/onap/policy-models-simulator:2.5-SNAPSHOT-latest   "bash simulators.sh"     45 seconds ago   Up 43 seconds   3905/tcp, 6666/tcp, 6668-6670/tcp, 6680/tcp   simulator
+efaf0ca5e1f0   nexus3.onap.org:10001/mariadb:10.5.8                                     "docker-entrypoint.s…"   45 seconds ago   Up 43 seconds   3306/tcp                                      mariadb
+
+To start performance tests:
+--------------------------
+nohup ./jMeter/apache-jmeter-5.2.1/bin/jmeter -n -t performance.jmx -l testresults.jtl
+
+To start stability tests:
+--------------------------
+nohup ./jMeter/apache-jmeter-5.2.1/bin/jmeter -n -t stability.jmx -l testresults.jtl
+
+To remove all docker images after Stability (72hrs) and Performance(2hrs) test runs:
+-----------------------------------------------------------------------------------
+cd policy/docker/csit
+docker-compose -f ./docker-compose-all.yml down -v
+

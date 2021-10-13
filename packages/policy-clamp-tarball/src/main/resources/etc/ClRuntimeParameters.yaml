@@ -33,8 +33,8 @@ runtime:
     implementation: org.onap.policy.models.provider.impl.DatabasePolicyModelsProviderImpl
     databaseDriver: org.mariadb.jdbc.Driver
     databaseUrl: jdbc:mariadb://${mariadb.host:mariadb}:${mariadb.port:3306}/controlloop
-    databaseUser: policy
-    databasePassword: P01icY
+    databaseUser: policy_user
+    databasePassword: policy_user
     persistenceUnit: CommissioningMariaDb
   topicParameterGroup:
     topicSources:
