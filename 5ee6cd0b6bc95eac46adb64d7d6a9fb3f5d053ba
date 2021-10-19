@@ -16,6 +16,24 @@
       "revId": "5ee6cd0b6bc95eac46adb64d7d6a9fb3f5d053ba",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e22ab7f9_212d1119",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/rest/RestUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-10-19T14:53:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5fe3dfb1_62536f3c",
+      "revId": "5ee6cd0b6bc95eac46adb64d7d6a9fb3f5d053ba",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
