@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5fe3dfb1_62536f3c",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/rest/RestUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-10-19T13:29:30Z",
+      "side": 1,
+      "message": "I think this will give sonars with an implementation that is not a default implementation, I think it should be a class instead.",
+      "revId": "5ee6cd0b6bc95eac46adb64d7d6a9fb3f5d053ba",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
