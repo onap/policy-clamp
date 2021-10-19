@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "43bf6cf5_0e826ce9",
+        "filename": "participant/participant-intermediary/src/test/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ParticipantHandlerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 4903
+      },
+      "writtenOn": "2021-10-19T10:26:19Z",
+      "side": 1,
+      "message": "extract these to a constant.",
+      "range": {
+        "startLine": 74,
+        "startChar": 63,
+        "endLine": 74,
+        "endChar": 99
+      },
+      "revId": "578950dd9882ed6853540af550a0399fe0a8cf99",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
