@@ -22,6 +22,7 @@ package org.onap.policy.clamp.controlloop.runtime.main.web;
 
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
 import org.onap.policy.clamp.controlloop.models.messages.rest.SimpleResponse;
+import org.onap.policy.clamp.controlloop.models.rest.RestUtils;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.springframework.http.ResponseEntity;
@@ -39,9 +40,7 @@ public class GlobalControllerExceptionHandler {
      */
     @ExceptionHandler(ControlLoopException.class)
     public ResponseEntity<SimpleResponse> handleBadRequest(ControlLoopException ex) {
-        var resp = new SimpleResponse();
-        resp.setErrorDetails(ex.getErrorResponse().getErrorMessage());
-        return ResponseEntity.status(ex.getErrorResponse().getResponseCode().getStatusCode()).body(resp);
+        return RestUtils.toSimpleResponse(ex);
     }
 
     /**
@@ -52,9 +51,7 @@ public class GlobalControllerExceptionHandler {
      */
     @ExceptionHandler(PfModelRuntimeException.class)
     public ResponseEntity<SimpleResponse> handleBadRequest(PfModelRuntimeException ex) {
-        var resp = new SimpleResponse();
-        resp.setErrorDetails(ex.getErrorResponse().getErrorMessage());
-        return ResponseEntity.status(ex.getErrorResponse().getResponseCode().getStatusCode()).body(resp);
+        return RestUtils.toSimpleResponse(ex);
     }
 
     /**
@@ -65,9 +62,6 @@ public class GlobalControllerExceptionHandler {
      */
     @ExceptionHandler(PfModelException.class)
     public ResponseEntity<SimpleResponse> handleBadRequest(PfModelException ex) {
-        var resp = new SimpleResponse();
-        resp.setErrorDetails(ex.getErrorResponse().getErrorMessage());
-        return ResponseEntity.status(ex.getErrorResponse().getResponseCode().getStatusCode()).body(resp);
+        return RestUtils.toSimpleResponse(ex);
     }
-
 }

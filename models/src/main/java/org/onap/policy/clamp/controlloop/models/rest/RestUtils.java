@@ -2,8 +2,6 @@
  * ============LICENSE_START=======================================================
  *  Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
- * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
- * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -20,26 +18,26 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.controlloop.participant.simulator.main.rest;
+package org.onap.policy.clamp.controlloop.models.rest;
 
-import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.onap.policy.clamp.controlloop.models.messages.rest.SimpleResponse;
-import org.onap.policy.clamp.controlloop.models.rest.RestUtils;
+import org.onap.policy.models.errors.concepts.ErrorResponseInfo;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@RestControllerAdvice
-public class GlobalControllerExceptionHandler {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class RestUtils {
 
     /**
-     * Handle ControlLoopException.
+     * Convert an ErrorResponseInfo to a ResponseEntity.
      *
-     * @param ex ControlLoopException
-     * @return ResponseEntity
+     * @param ex the ErrorResponseInfo
+     * @return the ResponseEntity
      */
-    @ExceptionHandler(ControlLoopException.class)
-    public ResponseEntity<SimpleResponse> handleBadRequest(ControlLoopException ex) {
-        return RestUtils.toSimpleResponse(ex);
+    public static ResponseEntity<SimpleResponse> toSimpleResponse(ErrorResponseInfo ex) {
+        var resp = new SimpleResponse();
+        resp.setErrorDetails(ex.getErrorResponse().getErrorMessage());
+        return ResponseEntity.status(ex.getErrorResponse().getResponseCode().getStatusCode()).body(resp);
     }
 }
