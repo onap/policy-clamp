@@ -20,18 +20,28 @@
 
 package org.onap.policy.clamp.controlloop.participant.intermediary.main.parameters;
 
+import java.io.File;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.UUID;
 import org.mockito.Mockito;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ClElementStatistics;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoops;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregisterAck;
 import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.controlloop.participant.intermediary.handler.ControlLoopHandler;
 import org.onap.policy.clamp.controlloop.participant.intermediary.handler.DummyParticipantParameters;
 import org.onap.policy.clamp.controlloop.participant.intermediary.handler.ParticipantHandler;
 import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantIntermediaryParameters;
-import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantParameters;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
 import org.onap.policy.common.endpoints.parameters.TopicParameters;
 import org.onap.policy.common.utils.coder.Coder;
@@ -129,7 +139,7 @@ public class CommonTestData {
      * @return topic parameters
      */
     public static TopicParameters getTopicParams() {
-        final TopicParameters topicParams = new TopicParameters();
+        final var topicParams = new TopicParameters();
         topicParams.setTopic("POLICY-CLRUNTIME-PARTICIPANT");
         topicParams.setTopicCommInfrastructure("dmaap");
         topicParams.setServers(Arrays.asList("localhost"));
@@ -152,8 +162,7 @@ public class CommonTestData {
      */
     private ParticipantMessagePublisher getParticipantMessagePublisher() {
         synchronized (lockit) {
-            ParticipantMessagePublisher participantMessagePublisher =
-                    new ParticipantMessagePublisher();
+            var participantMessagePublisher = new ParticipantMessagePublisher();
             participantMessagePublisher.active(Collections.singletonList(Mockito.mock(TopicSink.class)));
             return participantMessagePublisher;
         }
@@ -176,12 +185,89 @@ public class CommonTestData {
      * @return participant Handler
      */
     public ParticipantHandler getMockParticipantHandler() {
-        ParticipantParameters parameters = getParticipantParameters();
-        ControlLoopHandler controlLoopHander = getMockControlLoopHandler();
-        ParticipantMessagePublisher publisher = new ParticipantMessagePublisher();
+        var parameters = getParticipantParameters();
+        var controlLoopHandler = getMockControlLoopHandler();
+        var publisher = new ParticipantMessagePublisher();
         publisher.active(Collections.singletonList(Mockito.mock(TopicSink.class)));
-        ParticipantHandler participantHandler = new ParticipantHandler(parameters, publisher, controlLoopHander);
+        var participantHandler = new ParticipantHandler(parameters, publisher, controlLoopHandler);
         return participantHandler;
+    }
+
+    /**
+     * Returns a mocked ParticipantHandler for test cases.
+     *
+     * @return participant Handler
+     *
+     * @throws CoderException if there is an error with .json file.
+     */
+    public ParticipantHandler getParticipantHandlerControlLoops() throws CoderException {
+        var controlLoopHandler = Mockito.mock(ControlLoopHandler.class);
+        Mockito.doReturn(getTestControlLoops()).when(controlLoopHandler).getControlLoops();
+        Mockito.doReturn(getTestControlLoopMap()).when(controlLoopHandler).getControlLoopMap();
+        var publisher = new ParticipantMessagePublisher();
+        publisher.active(Collections.singletonList(Mockito.mock(TopicSink.class)));
+        var parameters = getParticipantParameters();
+        var participantHandler = new ParticipantHandler(parameters, publisher, controlLoopHandler);
+        participantHandler.sendParticipantRegister();
+        participantHandler.handleParticipantStatusReq(null);
+        participantHandler.sendParticipantDeregister();
+        var participantDeregisterAckMsg = new ParticipantDeregisterAck();
+        participantDeregisterAckMsg.setResponseTo(UUID.randomUUID());
+        participantHandler.handleParticipantDeregisterAck(participantDeregisterAckMsg);
+        return participantHandler;
+    }
+
+    /**
+     * Returns a Map of ToscaConceptIdentifier and ControlLoop for test cases.
+     *
+     * @return controlLoopMap
+     *
+     * @throws CoderException if there is an error with .json file.
+     */
+    public Map<ToscaConceptIdentifier, ControlLoop> getTestControlLoopMap() throws CoderException {
+        var controlLoops = getTestControlLoops();
+        var controlLoop = controlLoops.getControlLoopList().get(1);
+        var id = getParticipantId();
+        Map<ToscaConceptIdentifier, ControlLoop> controlLoopMap = new LinkedHashMap<>();
+        controlLoopMap.put(id, controlLoop);
+        return controlLoopMap;
+    }
+
+    /**
+     * Returns List of ControlLoop for test cases.
+     *
+     * @return ControlLoops
+     *
+     * @throws CoderException if there is an error with .json file.
+     */
+    public ControlLoops getTestControlLoops() throws CoderException {
+        return new StandardCoder()
+                .decode(new File("src/test/resources/providers/TestControlLoops.json"), ControlLoops.class);
+    }
+
+    /**
+     * Returns a map for a elementsOnThisParticipant for test cases.
+     *
+     * @param uuid UUID and id ToscaConceptIdentifier
+     * @return a map suitable for elementsOnThisParticipant
+     */
+    public Map<UUID, ControlLoopElement> setControlLoopElementTest(UUID uuid, ToscaConceptIdentifier id) {
+        var clElement = new ControlLoopElement();
+        clElement.setId(uuid);
+        clElement.setParticipantId(id);
+        clElement.setDefinition(id);
+        clElement.setOrderedState(ControlLoopOrderedState.UNINITIALISED);
+
+        var clElementStatistics = new ClElementStatistics();
+        clElementStatistics.setParticipantId(id);
+        clElementStatistics.setControlLoopState(ControlLoopState.UNINITIALISED);
+        clElementStatistics.setTimeStamp(Instant.now());
+
+        clElement.setClElementStatistics(clElementStatistics);
+
+        Map<UUID, ControlLoopElement> elementsOnThisParticipant = new LinkedHashMap<>();
+        elementsOnThisParticipant.put(uuid, clElement);
+        return elementsOnThisParticipant;
     }
 
 }
