@@ -93,7 +93,8 @@ public class ControlLoopHandler {
     /**
      * Handle a control loop element state change message.
      *
-     * @param id controlloop element id
+     * @param controlLoopId the controlLoop Id
+     * @param id the controlLoop UUID
      * @param orderedState the current state
      * @param newState the ordered state
      * @return controlLoopElement the updated controlloop element
@@ -160,8 +161,10 @@ public class ControlLoopHandler {
      * Handle a control loop state change message.
      *
      * @param stateChangeMsg the state change message
+     * @param clElementDefinitions the list of ControlLoopElementDefinition
      */
-    public void handleControlLoopStateChange(ControlLoopStateChange stateChangeMsg) {
+    public void handleControlLoopStateChange(ControlLoopStateChange stateChangeMsg,
+            List<ControlLoopElementDefinition> clElementDefinitions) {
         if (stateChangeMsg.getControlLoopId() == null) {
             return;
         }
@@ -182,7 +185,8 @@ public class ControlLoopHandler {
             return;
         }
 
-        handleState(controlLoop, stateChangeMsg.getOrderedState());
+        handleState(controlLoop, stateChangeMsg.getOrderedState(), stateChangeMsg.getStartPhase(),
+                clElementDefinitions);
     }
 
     /**
@@ -190,17 +194,20 @@ public class ControlLoopHandler {
      *
      * @param controlLoop participant response
      * @param orderedState controlloop ordered state
+     * @param startPhaseMsg startPhase from message
+     * @param clElementDefinitions the list of ControlLoopElementDefinition
      */
-    private void handleState(final ControlLoop controlLoop, ControlLoopOrderedState orderedState) {
+    private void handleState(final ControlLoop controlLoop, ControlLoopOrderedState orderedState, Integer startPhaseMsg,
+            List<ControlLoopElementDefinition> clElementDefinitions) {
         switch (orderedState) {
             case UNINITIALISED:
-                handleUninitialisedState(controlLoop, orderedState);
+                handleUninitialisedState(controlLoop, orderedState, startPhaseMsg, clElementDefinitions);
                 break;
             case PASSIVE:
-                handlePassiveState(controlLoop, orderedState);
+                handlePassiveState(controlLoop, orderedState, startPhaseMsg, clElementDefinitions);
                 break;
             case RUNNING:
-                handleRunningState(controlLoop, orderedState);
+                handleRunningState(controlLoop, orderedState, startPhaseMsg, clElementDefinitions);
                 break;
             default:
                 LOGGER.debug("StateChange message has no state, state is null {}", controlLoop.getDefinition());
@@ -212,6 +219,7 @@ public class ControlLoopHandler {
      * Handle a control loop update message.
      *
      * @param updateMsg the update message
+     * @param clElementDefinitions the list of ControlLoopElementDefinition
      */
     public void handleControlLoopUpdate(ControlLoopUpdate updateMsg,
             List<ControlLoopElementDefinition> clElementDefinitions) {
@@ -300,8 +308,7 @@ public class ControlLoopHandler {
             ToscaConceptIdentifier clElementDefId) {
 
         for (var clElementDefinition : clElementDefinitions) {
-            if (clElementDefId.getName().contains(
-                clElementDefinition.getClElementDefinitionId().getName())) {
+            if (clElementDefId.getName().contains(clElementDefinition.getClElementDefinitionId().getName())) {
                 return clElementDefinition.getControlLoopElementToscaNodeTemplate();
             }
         }
@@ -332,11 +339,18 @@ public class ControlLoopHandler {
      *
      * @param controlLoop participant response
      * @param orderedState orderedState
+     * @param startPhaseMsg startPhase from message
+     * @param clElementDefinitions the list of ControlLoopElementDefinition
      */
-    private void handleUninitialisedState(final ControlLoop controlLoop, final ControlLoopOrderedState orderedState) {
-        handleStateChange(controlLoop, orderedState);
-        controlLoopMap.remove(controlLoop.getDefinition());
-        controlLoop.getElements().values().forEach(element -> elementsOnThisParticipant.remove(element.getId()));
+    private void handleUninitialisedState(final ControlLoop controlLoop, final ControlLoopOrderedState orderedState,
+            Integer startPhaseMsg, List<ControlLoopElementDefinition> clElementDefinitions) {
+        handleStateChange(controlLoop, orderedState, startPhaseMsg, clElementDefinitions);
+        boolean isAllUninitialised = controlLoop.getElements().values().stream()
+                .filter(element -> !ControlLoopState.UNINITIALISED.equals(element.getState())).findAny().isEmpty();
+        if (isAllUninitialised) {
+            controlLoopMap.remove(controlLoop.getDefinition());
+            controlLoop.getElements().values().forEach(element -> elementsOnThisParticipant.remove(element.getId()));
+        }
     }
 
     /**
@@ -344,9 +358,12 @@ public class ControlLoopHandler {
      *
      * @param controlLoop participant response
      * @param orderedState orderedState
+     * @param startPhaseMsg startPhase from message
+     * @param clElementDefinitions the list of ControlLoopElementDefinition
      */
-    private void handlePassiveState(final ControlLoop controlLoop, final ControlLoopOrderedState orderedState) {
-        handleStateChange(controlLoop, orderedState);
+    private void handlePassiveState(final ControlLoop controlLoop, final ControlLoopOrderedState orderedState,
+            Integer startPhaseMsg, List<ControlLoopElementDefinition> clElementDefinitions) {
+        handleStateChange(controlLoop, orderedState, startPhaseMsg, clElementDefinitions);
     }
 
     /**
@@ -354,9 +371,12 @@ public class ControlLoopHandler {
      *
      * @param controlLoop participant response
      * @param orderedState orderedState
+     * @param startPhaseMsg startPhase from message
+     * @param clElementDefinitions the list of ControlLoopElementDefinition
      */
-    private void handleRunningState(final ControlLoop controlLoop, final ControlLoopOrderedState orderedState) {
-        handleStateChange(controlLoop, orderedState);
+    private void handleRunningState(final ControlLoop controlLoop, final ControlLoopOrderedState orderedState,
+            Integer startPhaseMsg, List<ControlLoopElementDefinition> clElementDefinitions) {
+        handleStateChange(controlLoop, orderedState, startPhaseMsg, clElementDefinitions);
     }
 
     /**
@@ -364,8 +384,11 @@ public class ControlLoopHandler {
      *
      * @param controlLoop participant status in memory
      * @param orderedState orderedState the new ordered state the participant should have
+     * @param startPhaseMsg startPhase from message
+     * @param clElementDefinitions the list of ControlLoopElementDefinition
      */
-    private void handleStateChange(ControlLoop controlLoop, final ControlLoopOrderedState orderedState) {
+    private void handleStateChange(ControlLoop controlLoop, final ControlLoopOrderedState orderedState,
+            Integer startPhaseMsg, List<ControlLoopElementDefinition> clElementDefinitions) {
 
         if (orderedState.equals(controlLoop.getOrderedState())) {
             var controlLoopAck = new ControlLoopAck(ParticipantMessageType.CONTROLLOOP_STATECHANGE_ACK);
@@ -378,16 +401,27 @@ public class ControlLoopHandler {
             return;
         }
 
-        controlLoop.getElements().values().stream().forEach(clElement -> {
-            for (var clElementListener : listeners) {
-                try {
-                    clElementListener.controlLoopElementStateChange(controlLoop.getDefinition(), clElement.getId(),
-                            clElement.getState(), orderedState);
-                } catch (PfModelException e) {
-                    LOGGER.debug("Control loop element update failed {}", controlLoop.getDefinition());
+        controlLoop.getElements().values().stream().forEach(clElement -> controlLoopElementStateChange(controlLoop,
+                orderedState, clElement, startPhaseMsg, clElementDefinitions));
+    }
+
+    private void controlLoopElementStateChange(ControlLoop controlLoop, ControlLoopOrderedState orderedState,
+            ControlLoopElement clElement, Integer startPhaseMsg,
+            List<ControlLoopElementDefinition> clElementDefinitions) {
+        var clElementNodeTemplate = getClElementNodeTemplate(clElementDefinitions, clElement.getDefinition());
+        if (clElementNodeTemplate != null) {
+            int startPhase = ParticipantUtils.findStartPhase(clElementNodeTemplate.getProperties());
+            if (startPhaseMsg.equals(startPhase)) {
+                for (var clElementListener : listeners) {
+                    try {
+                        clElementListener.controlLoopElementStateChange(controlLoop.getDefinition(), clElement.getId(),
+                                clElement.getState(), orderedState);
+                    } catch (PfModelException e) {
+                        LOGGER.debug("Control loop element update failed {}", controlLoop.getDefinition());
+                    }
                 }
             }
-        });
+        }
     }
 
     /**

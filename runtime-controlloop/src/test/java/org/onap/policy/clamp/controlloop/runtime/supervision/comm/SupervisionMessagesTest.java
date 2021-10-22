@@ -22,14 +22,21 @@
 package org.onap.policy.clamp.controlloop.runtime.supervision.comm;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 import java.time.Instant;
 import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ClElementStatisticsProvider;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ControlLoopProvider;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ParticipantProvider;
@@ -51,6 +58,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class SupervisionMessagesTest extends CommonRestController {
 
+    private static final String NOT_ACTIVE = "Not Active!";
     private static final Object lockit = new Object();
     private static final CommInfrastructure INFRA = CommInfrastructure.NOOP;
     private static final String TOPIC = "my-topic";
@@ -77,12 +85,13 @@ class SupervisionMessagesTest extends CommonRestController {
         var monitoringProvider =
                 new MonitoringProvider(participantStatisticsProvider, clElementStatisticsProvider, clProvider);
         var participantProvider = new ParticipantProvider(controlLoopParameters.getDatabaseProviderParameters());
+        var modelsProvider = Mockito.mock(PolicyModelsProvider.class);
         var controlLoopUpdatePublisher = Mockito.mock(ControlLoopUpdatePublisher.class);
         var controlLoopStateChangePublisher = Mockito.mock(ControlLoopStateChangePublisher.class);
         var participantRegisterAckPublisher = Mockito.mock(ParticipantRegisterAckPublisher.class);
         var participantDeregisterAckPublisher = Mockito.mock(ParticipantDeregisterAckPublisher.class);
         var participantUpdatePublisher = Mockito.mock(ParticipantUpdatePublisher.class);
-        supervisionHandler = new SupervisionHandler(clProvider, participantProvider, monitoringProvider,
+        supervisionHandler = new SupervisionHandler(clProvider, participantProvider, monitoringProvider, modelsProvider,
                 controlLoopUpdatePublisher, controlLoopStateChangePublisher, participantRegisterAckPublisher,
                 participantDeregisterAckPublisher, participantUpdatePublisher);
     }
@@ -152,6 +161,29 @@ class SupervisionMessagesTest extends CommonRestController {
             assertThatCode(() -> participantUpdateAckListener.onTopicEvent(INFRA, TOPIC, null, participantUpdateAckMsg))
                     .doesNotThrowAnyException();
         }
+    }
+
+    @Test
+    void testSendControlLoopStateChangePublisherNotActive() {
+        var publisher = new ControlLoopStateChangePublisher();
+        assertThatThrownBy(() -> publisher.send(getControlLoop(), 0)).hasMessage(NOT_ACTIVE);
+    }
+
+    @Test
+    void testSendControlLoopStateChangePublisher() {
+        var publisher = new ControlLoopStateChangePublisher();
+        var topicSink = mock(TopicSink.class);
+        publisher.active(List.of(topicSink));
+        publisher.send(getControlLoop(), 0);
+        verify(topicSink).send(anyString());
+    }
+
+    private ControlLoop getControlLoop() {
+        var controlLoop = new ControlLoop();
+        controlLoop.setName("NAME");
+        controlLoop.setVersion("0.0.1");
+        controlLoop.setState(ControlLoopState.UNINITIALISED);
+        return controlLoop;
     }
 
     private ToscaConceptIdentifier getParticipantId() {
