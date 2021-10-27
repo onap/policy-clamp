@@ -33,9 +33,9 @@ import java.util.Set;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.onap.policy.clamp.controlloop.common.utils.CommonUtils;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElementDefinition;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantDefinition;
@@ -53,7 +53,6 @@ import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,8 +63,6 @@ public final class TestListenerUtils {
     private static final Coder CODER = new StandardCoder();
     static CommonTestData commonTestData = new CommonTestData();
     private static final Logger LOGGER = LoggerFactory.getLogger(TestListenerUtils.class);
-    private static final String POLICY_TYPE_ID = "policy_type_id";
-    private static final String POLICY_ID = "policy_id";
 
     /**
      * Method to create a controlLoop from a yaml file.
@@ -174,63 +171,11 @@ public final class TestListenerUtils {
 
         List<ParticipantUpdates> participantUpdates = new ArrayList<>();
         for (ControlLoopElement element : elements.values()) {
-            populateToscaNodeTemplateFragment(element, toscaServiceTemplate);
-            prepareParticipantUpdateForControlLoop(element, participantUpdates);
+            CommonUtils.setToscaServiceTemplateFragment(element, toscaServiceTemplate);
+            CommonUtils.prepareParticipantUpdate(element, participantUpdates);
         }
         clUpdateMsg.setParticipantUpdatesList(participantUpdates);
         return clUpdateMsg;
-    }
-
-    private static void populateToscaNodeTemplateFragment(ControlLoopElement clElement,
-            ToscaServiceTemplate toscaServiceTemplate) {
-        ToscaNodeTemplate toscaNodeTemplate = toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates()
-                .get(clElement.getDefinition().getName());
-        // If the ControlLoopElement has policy_type_id or policy_id, identify it as a PolicyControlLoopElement
-        // and pass respective PolicyTypes or Policies as part of toscaServiceTemplateFragment
-        if ((toscaNodeTemplate.getProperties().get(POLICY_TYPE_ID) != null)
-                || (toscaNodeTemplate.getProperties().get(POLICY_ID) != null)) {
-            // ControlLoopElement for policy framework, send policies and policyTypes to participants
-            if ((toscaServiceTemplate.getPolicyTypes() != null)
-                    || (toscaServiceTemplate.getToscaTopologyTemplate().getPolicies() != null)) {
-                ToscaServiceTemplate toscaServiceTemplateFragment = new ToscaServiceTemplate();
-                toscaServiceTemplateFragment.setPolicyTypes(toscaServiceTemplate.getPolicyTypes());
-
-                ToscaTopologyTemplate toscaTopologyTemplate = new ToscaTopologyTemplate();
-                toscaTopologyTemplate.setPolicies(toscaServiceTemplate.getToscaTopologyTemplate().getPolicies());
-                toscaServiceTemplateFragment.setToscaTopologyTemplate(toscaTopologyTemplate);
-
-                toscaServiceTemplateFragment.setDataTypes(toscaServiceTemplate.getDataTypes());
-
-                clElement.setToscaServiceTemplateFragment(toscaServiceTemplateFragment);
-            }
-        }
-    }
-
-    private static void prepareParticipantUpdateForControlLoop(ControlLoopElement clElement,
-            List<ParticipantUpdates> participantUpdates) {
-        if (participantUpdates.isEmpty()) {
-            participantUpdates.add(getControlLoopElementList(clElement));
-        } else {
-            boolean participantExists = false;
-            for (ParticipantUpdates participantUpdate : participantUpdates) {
-                if (participantUpdate.getParticipantId().equals(clElement.getParticipantId())) {
-                    participantUpdate.getControlLoopElementList().add(clElement);
-                    participantExists = true;
-                }
-            }
-            if (!participantExists) {
-                participantUpdates.add(getControlLoopElementList(clElement));
-            }
-        }
-    }
-
-    private static ParticipantUpdates getControlLoopElementList(ControlLoopElement clElement) {
-        ParticipantUpdates participantUpdate = new ParticipantUpdates();
-        List<ControlLoopElement> controlLoopElementList = new ArrayList<>();
-        participantUpdate.setParticipantId(clElement.getParticipantId());
-        controlLoopElementList.add(clElement);
-        participantUpdate.setControlLoopElementList(controlLoopElementList);
-        return participantUpdate;
     }
 
     /**
@@ -259,51 +204,15 @@ public final class TestListenerUtils {
                 .getNodeTemplates().entrySet()) {
             if (ParticipantUtils.checkIfNodeTemplateIsControlLoopElement(toscaInputEntry.getValue(),
                     toscaServiceTemplate)) {
-                var clParticipantType =
-                        ParticipantUtils.findParticipantType(toscaInputEntry.getValue().getProperties());
-                prepareParticipantDefinitionUpdate(clParticipantType, toscaInputEntry.getKey(),
-                        toscaInputEntry.getValue(), participantDefinitionUpdates);
+                CommonUtils.prepareParticipantDefinitionUpdate(
+                        ParticipantUtils.findParticipantType(toscaInputEntry.getValue().getProperties()),
+                        toscaInputEntry.getKey(), toscaInputEntry.getValue(),
+                        participantDefinitionUpdates, null);
             }
         }
 
         participantUpdateMsg.setParticipantDefinitionUpdates(participantDefinitionUpdates);
         return participantUpdateMsg;
-    }
-
-    private static void prepareParticipantDefinitionUpdate(ToscaConceptIdentifier clParticipantType, String entryKey,
-            ToscaNodeTemplate entryValue, List<ParticipantDefinition> participantDefinitionUpdates) {
-
-        var clDefinition = new ControlLoopElementDefinition();
-        clDefinition.setClElementDefinitionId(new ToscaConceptIdentifier(entryKey, entryValue.getVersion()));
-        clDefinition.setControlLoopElementToscaNodeTemplate(entryValue);
-        List<ControlLoopElementDefinition> controlLoopElementDefinitionList = new ArrayList<>();
-
-        if (participantDefinitionUpdates.isEmpty()) {
-            participantDefinitionUpdates
-                    .add(getParticipantDefinition(clDefinition, clParticipantType, controlLoopElementDefinitionList));
-        } else {
-            boolean participantExists = false;
-            for (ParticipantDefinition participantDefinitionUpdate : participantDefinitionUpdates) {
-                if (participantDefinitionUpdate.getParticipantType().equals(clParticipantType)) {
-                    participantDefinitionUpdate.getControlLoopElementDefinitionList().add(clDefinition);
-                    participantExists = true;
-                }
-            }
-            if (!participantExists) {
-                participantDefinitionUpdates.add(
-                        getParticipantDefinition(clDefinition, clParticipantType, controlLoopElementDefinitionList));
-            }
-        }
-    }
-
-    private static ParticipantDefinition getParticipantDefinition(ControlLoopElementDefinition clDefinition,
-            ToscaConceptIdentifier clParticipantType,
-            List<ControlLoopElementDefinition> controlLoopElementDefinitionList) {
-        ParticipantDefinition participantDefinition = new ParticipantDefinition();
-        participantDefinition.setParticipantType(clParticipantType);
-        controlLoopElementDefinitionList.add(clDefinition);
-        participantDefinition.setControlLoopElementDefinitionList(controlLoopElementDefinitionList);
-        return participantDefinition;
     }
 
     /**

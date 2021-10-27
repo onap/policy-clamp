@@ -27,15 +27,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
+import org.onap.policy.clamp.controlloop.common.utils.CommonUtils;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantUpdates;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopUpdate;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.provider.PolicyModelsProvider;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -48,8 +47,6 @@ import org.springframework.stereotype.Component;
 public class ControlLoopUpdatePublisher extends AbstractParticipantPublisher<ControlLoopUpdate> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ControlLoopUpdatePublisher.class);
-    private static final String POLICY_TYPE_ID = "policy_type_id";
-    private static final String POLICY_ID = "policy_id";
     private final PolicyModelsProvider modelsProvider;
 
     /**
@@ -83,59 +80,12 @@ public class ControlLoopUpdatePublisher extends AbstractParticipantPublisher<Con
 
         List<ParticipantUpdates> participantUpdates = new ArrayList<>();
         for (ControlLoopElement element : controlLoop.getElements().values()) {
-            ToscaNodeTemplate toscaNodeTemplate = toscaServiceTemplate
-                .getToscaTopologyTemplate().getNodeTemplates().get(element.getDefinition().getName());
-            // If the ControlLoopElement has policy_type_id or policy_id, identify it as a PolicyControlLoopElement
-            // and pass respective PolicyTypes or Policies as part of toscaServiceTemplateFragment
-            if ((toscaNodeTemplate.getProperties().get(POLICY_TYPE_ID) != null)
-                    || (toscaNodeTemplate.getProperties().get(POLICY_ID) != null)) {
-                // ControlLoopElement for policy framework, send policies and policyTypes to participants
-                if ((toscaServiceTemplate.getPolicyTypes() != null)
-                        || (toscaServiceTemplate.getToscaTopologyTemplate().getPolicies() != null)) {
-                    ToscaServiceTemplate toscaServiceTemplateFragment = new ToscaServiceTemplate();
-                    toscaServiceTemplateFragment.setPolicyTypes(toscaServiceTemplate.getPolicyTypes());
-
-                    ToscaTopologyTemplate toscaTopologyTemplate = new ToscaTopologyTemplate();
-                    toscaTopologyTemplate.setPolicies(toscaServiceTemplate.getToscaTopologyTemplate().getPolicies());
-                    toscaServiceTemplateFragment.setToscaTopologyTemplate(toscaTopologyTemplate);
-
-                    toscaServiceTemplateFragment.setDataTypes(toscaServiceTemplate.getDataTypes());
-
-                    element.setToscaServiceTemplateFragment(toscaServiceTemplateFragment);
-                }
-            }
-            prepareParticipantUpdate(element, participantUpdates);
+            CommonUtils.setToscaServiceTemplateFragment(element, toscaServiceTemplate);
+            CommonUtils.prepareParticipantUpdate(element, participantUpdates);
         }
         controlLoopUpdateMsg.setParticipantUpdatesList(participantUpdates);
 
         LOGGER.debug("ControlLoopUpdate message sent {}", controlLoopUpdateMsg);
         super.send(controlLoopUpdateMsg);
-    }
-
-    private void prepareParticipantUpdate(ControlLoopElement clElement,
-        List<ParticipantUpdates> participantUpdates) {
-        if (participantUpdates.isEmpty()) {
-            participantUpdates.add(getControlLoopElementList(clElement));
-        } else {
-            var participantExists = false;
-            for (ParticipantUpdates participantUpdate : participantUpdates) {
-                if (participantUpdate.getParticipantId().equals(clElement.getParticipantId())) {
-                    participantUpdate.getControlLoopElementList().add(clElement);
-                    participantExists = true;
-                }
-            }
-            if (!participantExists) {
-                participantUpdates.add(getControlLoopElementList(clElement));
-            }
-        }
-    }
-
-    private ParticipantUpdates getControlLoopElementList(ControlLoopElement clElement) {
-        var participantUpdate = new ParticipantUpdates();
-        List<ControlLoopElement> controlLoopElementList = new ArrayList<>();
-        participantUpdate.setParticipantId(clElement.getParticipantId());
-        controlLoopElementList.add(clElement);
-        participantUpdate.setControlLoopElementList(controlLoopElementList);
-        return participantUpdate;
     }
 }
