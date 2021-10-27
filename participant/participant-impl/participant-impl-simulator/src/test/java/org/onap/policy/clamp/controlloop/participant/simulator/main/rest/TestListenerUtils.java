@@ -33,9 +33,9 @@ import java.util.Set;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.onap.policy.clamp.controlloop.common.utils.CommonUtils;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElementDefinition;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantDefinition;
@@ -166,37 +166,10 @@ public final class TestListenerUtils {
 
         List<ParticipantUpdates> participantUpdates = new ArrayList<>();
         for (ControlLoopElement element : elements.values()) {
-            prepareParticipantUpdateForControlLoop(element, participantUpdates);
+            CommonUtils.prepareParticipantUpdate(element, participantUpdates);
         }
         clUpdateMsg.setParticipantUpdatesList(participantUpdates);
         return clUpdateMsg;
-    }
-
-    private static void prepareParticipantUpdateForControlLoop(ControlLoopElement clElement,
-            List<ParticipantUpdates> participantUpdates) {
-        if (participantUpdates.isEmpty()) {
-            participantUpdates.add(getControlLoopElementList(clElement));
-        } else {
-            boolean participantExists = false;
-            for (ParticipantUpdates participantUpdate : participantUpdates) {
-                if (participantUpdate.getParticipantId().equals(clElement.getParticipantId())) {
-                    participantUpdate.getControlLoopElementList().add(clElement);
-                    participantExists = true;
-                }
-            }
-            if (!participantExists) {
-                participantUpdates.add(getControlLoopElementList(clElement));
-            }
-        }
-    }
-
-    private static ParticipantUpdates getControlLoopElementList(ControlLoopElement clElement) {
-        ParticipantUpdates participantUpdate = new ParticipantUpdates();
-        List<ControlLoopElement> controlLoopElementList = new ArrayList<>();
-        participantUpdate.setParticipantId(clElement.getParticipantId());
-        controlLoopElementList.add(clElement);
-        participantUpdate.setControlLoopElementList(controlLoopElementList);
-        return participantUpdate;
     }
 
     /**
@@ -226,49 +199,13 @@ public final class TestListenerUtils {
                     toscaServiceTemplate)) {
                 var clParticipantType =
                         ParticipantUtils.findParticipantType(toscaInputEntry.getValue().getProperties());
-                prepareParticipantDefinitionUpdate(clParticipantType, toscaInputEntry.getKey(),
-                        toscaInputEntry.getValue(), participantDefinitionUpdates);
+                CommonUtils.prepareParticipantDefinitionUpdate(clParticipantType, toscaInputEntry.getKey(),
+                        toscaInputEntry.getValue(), participantDefinitionUpdates, null);
             }
         }
 
         participantUpdateMsg.setParticipantDefinitionUpdates(participantDefinitionUpdates);
         return participantUpdateMsg;
-    }
-
-    private static void prepareParticipantDefinitionUpdate(ToscaConceptIdentifier clParticipantType, String entryKey,
-            ToscaNodeTemplate entryValue, List<ParticipantDefinition> participantDefinitionUpdates) {
-
-        var clDefinition = new ControlLoopElementDefinition();
-        clDefinition.setClElementDefinitionId(new ToscaConceptIdentifier(entryKey, entryValue.getVersion()));
-        clDefinition.setControlLoopElementToscaNodeTemplate(entryValue);
-        List<ControlLoopElementDefinition> controlLoopElementDefinitionList = new ArrayList<>();
-
-        if (participantDefinitionUpdates.isEmpty()) {
-            participantDefinitionUpdates
-                    .add(getParticipantDefinition(clDefinition, clParticipantType, controlLoopElementDefinitionList));
-        } else {
-            boolean participantExists = false;
-            for (ParticipantDefinition participantDefinitionUpdate : participantDefinitionUpdates) {
-                if (participantDefinitionUpdate.getParticipantType().equals(clParticipantType)) {
-                    participantDefinitionUpdate.getControlLoopElementDefinitionList().add(clDefinition);
-                    participantExists = true;
-                }
-            }
-            if (!participantExists) {
-                participantDefinitionUpdates.add(
-                        getParticipantDefinition(clDefinition, clParticipantType, controlLoopElementDefinitionList));
-            }
-        }
-    }
-
-    private static ParticipantDefinition getParticipantDefinition(ControlLoopElementDefinition clDefinition,
-            ToscaConceptIdentifier clParticipantType,
-            List<ControlLoopElementDefinition> controlLoopElementDefinitionList) {
-        ParticipantDefinition participantDefinition = new ParticipantDefinition();
-        participantDefinition.setParticipantType(clParticipantType);
-        controlLoopElementDefinitionList.add(clDefinition);
-        participantDefinition.setControlLoopElementDefinitionList(controlLoopElementDefinitionList);
-        return participantDefinition;
     }
 
     /**
