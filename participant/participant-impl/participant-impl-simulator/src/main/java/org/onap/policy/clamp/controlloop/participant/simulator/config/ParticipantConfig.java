@@ -20,9 +20,9 @@
 
 package org.onap.policy.clamp.controlloop.participant.simulator.config;
 
+import org.onap.policy.clamp.controlloop.common.rest.RequestResponseLoggingFilter;
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.controlloop.participant.simulator.main.handler.ControlLoopElementHandler;
-import org.onap.policy.clamp.controlloop.participant.simulator.main.rest.RequestResponseLoggingFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;

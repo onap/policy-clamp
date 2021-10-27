@@ -20,7 +20,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.controlloop.runtime.main.web;
+package org.onap.policy.clamp.controlloop.common.rest;
 
 import java.io.IOException;
 import java.util.UUID;

@@ -205,10 +205,6 @@ class ParticipantSimulatorTest {
 
     private <T> void checkResponseEntity(Response response, int status, UUID uuid) {
         assertThat(response.getStatus()).isEqualTo(status);
-        assertThat(getHeader(response.getHeaders(), AbstractRestController.VERSION_MINOR_NAME)).isEqualTo("0");
-        assertThat(getHeader(response.getHeaders(), AbstractRestController.VERSION_PATCH_NAME)).isEqualTo("0");
-        assertThat(getHeader(response.getHeaders(), AbstractRestController.VERSION_LATEST_NAME)).isEqualTo("1.0.0");
-        assertThat(getHeader(response.getHeaders(), AbstractRestController.REQUEST_ID_NAME)).isEqualTo(uuid.toString());
     }
 
     private String getHeader(MultivaluedMap<String, Object> httpHeaders, String param) {
