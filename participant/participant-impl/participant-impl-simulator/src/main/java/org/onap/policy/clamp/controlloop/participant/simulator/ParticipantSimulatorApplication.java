@@ -34,7 +34,8 @@ import org.springframework.context.annotation.ComponentScan;
 @ConfigurationPropertiesScan("org.onap.policy.clamp.controlloop.participant.simulator.main.parameters")
 @ComponentScan({
     "org.onap.policy.clamp.controlloop.participant.simulator",
-    "org.onap.policy.clamp.controlloop.participant.intermediary"
+    "org.onap.policy.clamp.controlloop.participant.intermediary",
+    "org.onap.policy.clamp.controlloop.common.rest"
 })
 //@formatter:on
 public class ParticipantSimulatorApplication {

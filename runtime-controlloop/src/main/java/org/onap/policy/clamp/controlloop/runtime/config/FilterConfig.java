@@ -20,7 +20,7 @@
 
 package org.onap.policy.clamp.controlloop.runtime.config;
 
-import org.onap.policy.clamp.controlloop.runtime.main.web.RequestResponseLoggingFilter;
+import org.onap.policy.clamp.controlloop.common.rest.RequestResponseLoggingFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

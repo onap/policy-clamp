@@ -29,7 +29,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @SpringBootApplication
 @ComponentScan({"org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider",
-    "org.onap.policy.clamp.controlloop.runtime"})
+    "org.onap.policy.clamp.controlloop.runtime",
+    "org.onap.policy.clamp.controlloop.common.rest"})
 @ConfigurationPropertiesScan("org.onap.policy.clamp.controlloop.runtime.main.parameters")
 public class Application {
 
