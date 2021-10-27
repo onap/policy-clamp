@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4218b956_50ca088c",
+        "filename": "common/src/main/java/org/onap/policy/clamp/controlloop/common/utils/CommonUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-10-27T10:35:48Z",
+      "side": 1,
+      "message": "Add a return statement here and you can get rid of the \"else\" clause",
+      "range": {
+        "startLine": 53,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 1
+      },
+      "revId": "8c6bf735dbe7618b4fb098cbbc5fc6166e19ef1c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "72af318e_c04476ab",
+        "filename": "common/src/main/java/org/onap/policy/clamp/controlloop/common/utils/CommonUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-10-27T10:35:48Z",
+      "side": 1,
+      "message": "Change lines 75-104 as follows:\n\n    /**\n     * Set the Policy information in the service template forthe controlloopelement.\n     *\n     * @param clElement controlloop element\n     * @param toscaServiceTemplate ToscaServiceTemplate\n     */\n    public static void setServiceTemplatePolicyInfo(ControlLoopElement clElement,\n            ToscaServiceTemplate toscaServiceTemplate) {\n        ToscaNodeTemplate toscaNodeTemplate \u003d toscaServiceTemplate\n                .getToscaTopologyTemplate().getNodeTemplates().get(clElement.getDefinition().getName());\n\n        // Pass respective PolicyTypes or Policies as part of toscaServiceTemplateFragment\n        if (toscaServiceTemplate.getPolicyTypes() \u003d\u003d null \u0026\u0026 toscaServiceTemplate.getToscaTopologyTemplate().getPolicies() \u003d\u003d null) {\n            return;\n        }\n\n        ToscaServiceTemplate toscaServiceTemplateFragment \u003d new ToscaServiceTemplate();\n        toscaServiceTemplateFragment.setPolicyTypes(toscaServiceTemplate.getPolicyTypes());\n        ToscaTopologyTemplate toscaTopologyTemplate \u003d new ToscaTopologyTemplate();\n        toscaTopologyTemplate.setPolicies(toscaServiceTemplate.getToscaTopologyTemplate().getPolicies());\n        toscaServiceTemplateFragment.setToscaTopologyTemplate(toscaTopologyTemplate);\n        toscaServiceTemplateFragment.setDataTypes(toscaServiceTemplate.getDataTypes());\n        clElement.setToscaServiceTemplateFragment(toscaServiceTemplateFragment);\n    }\n\n\n\nOK, we always send the policy types and policies to the Policy Framework, even if they are not  in the service template, I think that is OK to simplify the code and also if the users wants to do that, why should we prevent them?",
+      "revId": "8c6bf735dbe7618b4fb098cbbc5fc6166e19ef1c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
