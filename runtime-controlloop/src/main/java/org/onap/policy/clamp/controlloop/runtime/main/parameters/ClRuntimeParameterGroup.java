@@ -22,6 +22,7 @@ package org.onap.policy.clamp.controlloop.runtime.main.parameters;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -65,4 +66,8 @@ public class ClRuntimeParameterGroup {
     private long participantDeregisterAckIntervalSec;
     private long participantUpdateIntervalSec;
 
+    @NotBlank
+    private String databasePlatform;
+
+    private boolean showSql = false;
 }

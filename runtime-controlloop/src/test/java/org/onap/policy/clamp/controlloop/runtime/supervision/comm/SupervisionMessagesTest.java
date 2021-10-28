@@ -41,6 +41,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ControlLoopProvider;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ParticipantProvider;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ParticipantStatisticsProvider;
+import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ServiceTemplateProvider;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregister;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregisterAck;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantRegisterAck;
@@ -53,7 +54,6 @@ import org.onap.policy.clamp.controlloop.runtime.util.rest.CommonRestController;
 import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class SupervisionMessagesTest extends CommonRestController {
@@ -64,7 +64,6 @@ class SupervisionMessagesTest extends CommonRestController {
     private static final String TOPIC = "my-topic";
     private static SupervisionHandler supervisionHandler;
     private static ControlLoopProvider clProvider;
-    private static PolicyModelsProvider modelsProvider;
 
     /**
      * setup Db Provider Parameters.
@@ -75,7 +74,6 @@ class SupervisionMessagesTest extends CommonRestController {
     public static void setupDbProviderParameters() throws PfModelException {
         ClRuntimeParameterGroup controlLoopParameters = CommonTestData.geParameterGroup("instantproviderdb");
 
-        modelsProvider = CommonTestData.getPolicyModelsProvider(controlLoopParameters.getDatabaseProviderParameters());
         clProvider = new ControlLoopProvider(controlLoopParameters.getDatabaseProviderParameters());
 
         var participantStatisticsProvider =
@@ -85,21 +83,20 @@ class SupervisionMessagesTest extends CommonRestController {
         var monitoringProvider =
                 new MonitoringProvider(participantStatisticsProvider, clElementStatisticsProvider, clProvider);
         var participantProvider = new ParticipantProvider(controlLoopParameters.getDatabaseProviderParameters());
-        var modelsProvider = Mockito.mock(PolicyModelsProvider.class);
+        var serviceTemplateProvider = Mockito.mock(ServiceTemplateProvider.class);
         var controlLoopUpdatePublisher = Mockito.mock(ControlLoopUpdatePublisher.class);
         var controlLoopStateChangePublisher = Mockito.mock(ControlLoopStateChangePublisher.class);
         var participantRegisterAckPublisher = Mockito.mock(ParticipantRegisterAckPublisher.class);
         var participantDeregisterAckPublisher = Mockito.mock(ParticipantDeregisterAckPublisher.class);
         var participantUpdatePublisher = Mockito.mock(ParticipantUpdatePublisher.class);
-        supervisionHandler = new SupervisionHandler(clProvider, participantProvider, monitoringProvider, modelsProvider,
-                controlLoopUpdatePublisher, controlLoopStateChangePublisher, participantRegisterAckPublisher,
-                participantDeregisterAckPublisher, participantUpdatePublisher);
+        supervisionHandler = new SupervisionHandler(clProvider, participantProvider, monitoringProvider,
+                serviceTemplateProvider, controlLoopUpdatePublisher, controlLoopStateChangePublisher,
+                participantRegisterAckPublisher, participantDeregisterAckPublisher, participantUpdatePublisher);
     }
 
     @AfterAll
     public static void closeDbProvider() throws PfModelException {
         clProvider.close();
-        modelsProvider.close();
     }
 
     @Test
