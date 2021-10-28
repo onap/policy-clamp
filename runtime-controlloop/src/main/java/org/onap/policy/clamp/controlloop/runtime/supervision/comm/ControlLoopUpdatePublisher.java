@@ -31,9 +31,9 @@ import org.onap.policy.clamp.controlloop.common.utils.CommonUtils;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantUpdates;
+import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ServiceTemplateProvider;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopUpdate;
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +47,7 @@ import org.springframework.stereotype.Component;
 public class ControlLoopUpdatePublisher extends AbstractParticipantPublisher<ControlLoopUpdate> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ControlLoopUpdatePublisher.class);
-    private final PolicyModelsProvider modelsProvider;
+    private final ServiceTemplateProvider serviceTemplateProvider;
 
     /**
      * Send ControlLoopUpdate to Participant.
@@ -72,7 +72,7 @@ public class ControlLoopUpdatePublisher extends AbstractParticipantPublisher<Con
         controlLoopUpdateMsg.setTimestamp(Instant.now());
         ToscaServiceTemplate toscaServiceTemplate;
         try {
-            toscaServiceTemplate = modelsProvider.getServiceTemplateList(null, null).get(0);
+            toscaServiceTemplate = serviceTemplateProvider.getServiceTemplateList(null, null).get(0);
         } catch (PfModelException pfme) {
             LOGGER.warn("Get of tosca service template failed, cannot send participantupdate", pfme);
             return;

@@ -133,11 +133,11 @@ class ControlLoopInstantiationProviderTest {
         var participantRegisterAckPublisher = Mockito.mock(ParticipantRegisterAckPublisher.class);
         var participantDeregisterAckPublisher = Mockito.mock(ParticipantDeregisterAckPublisher.class);
         var participantUpdatePublisher = Mockito.mock(ParticipantUpdatePublisher.class);
-        var modelsProvider = Mockito.mock(PolicyModelsProvider.class);
+        var serviceTemplateProvider = Mockito.mock(ServiceTemplateProvider.class);
 
-        supervisionHandler = new SupervisionHandler(clProvider, participantProvider, monitoringProvider, modelsProvider,
-                controlLoopUpdatePublisher, controlLoopStateChangePublisher, participantRegisterAckPublisher,
-                participantDeregisterAckPublisher, participantUpdatePublisher);
+        supervisionHandler = new SupervisionHandler(clProvider, participantProvider, monitoringProvider,
+                serviceTemplateProvider, controlLoopUpdatePublisher, controlLoopStateChangePublisher,
+                participantRegisterAckPublisher, participantDeregisterAckPublisher, participantUpdatePublisher);
     }
 
     @BeforeEach

@@ -42,6 +42,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantStatistics;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ControlLoopProvider;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ParticipantProvider;
+import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ServiceTemplateProvider;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopAck;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregister;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageType;
@@ -57,7 +58,6 @@ import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantReg
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantUpdatePublisher;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class SupervisionHandlerTest {
@@ -266,13 +266,13 @@ class SupervisionHandlerTest {
 
         when(controlLoopProvider.getControlLoop(eq(identifier))).thenReturn(controlLoop);
 
-        var modelsProvider = Mockito.mock(PolicyModelsProvider.class);
-        when(modelsProvider.getServiceTemplateList(any(), any()))
+        var serviceTemplateProvider = Mockito.mock(ServiceTemplateProvider.class);
+        when(serviceTemplateProvider.getServiceTemplateList(any(), any()))
                 .thenReturn(List.of(InstantiationUtils.getToscaServiceTemplate(TOSCA_TEMPLATE_YAML)));
 
-        return new SupervisionHandler(controlLoopProvider, participantProvider, monitoringProvider, modelsProvider,
-                controlLoopUpdatePublisher, controlLoopStateChangePublisher, participantRegisterAckPublisher,
-                participantDeregisterAckPublisher, participantUpdatePublisher);
+        return new SupervisionHandler(controlLoopProvider, participantProvider, monitoringProvider,
+                serviceTemplateProvider, controlLoopUpdatePublisher, controlLoopStateChangePublisher,
+                participantRegisterAckPublisher, participantDeregisterAckPublisher, participantUpdatePublisher);
 
     }
 }
