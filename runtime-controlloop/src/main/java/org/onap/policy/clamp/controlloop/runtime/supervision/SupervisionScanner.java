@@ -34,13 +34,13 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantUtils;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ControlLoopProvider;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ParticipantProvider;
+import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ServiceTemplateProvider;
 import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ControlLoopStateChangePublisher;
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ControlLoopUpdatePublisher;
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantStatusReqPublisher;
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantUpdatePublisher;
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
@@ -63,7 +63,7 @@ public class SupervisionScanner {
     private final Map<ToscaConceptIdentifier, Integer> phaseMap = new HashMap<>();
 
     private final ControlLoopProvider controlLoopProvider;
-    private final PolicyModelsProvider modelsProvider;
+    private final ServiceTemplateProvider serviceTemplateProvider;
     private final ControlLoopStateChangePublisher controlLoopStateChangePublisher;
     private final ControlLoopUpdatePublisher controlLoopUpdatePublisher;
     private final ParticipantProvider participantProvider;
@@ -74,7 +74,7 @@ public class SupervisionScanner {
      * Constructor for instantiating SupervisionScanner.
      *
      * @param controlLoopProvider the provider to use to read control loops from the database
-     * @param modelsProvider the Policy Models Provider
+     * @param serviceTemplateProvider the Policy Models Provider
      * @param controlLoopStateChangePublisher the ControlLoop StateChange Publisher
      * @param controlLoopUpdatePublisher the ControlLoopUpdate Publisher
      * @param participantProvider the Participant Provider
@@ -82,14 +82,15 @@ public class SupervisionScanner {
      * @param participantUpdatePublisher the Participant Update Publisher
      * @param clRuntimeParameterGroup the parameters for the control loop runtime
      */
-    public SupervisionScanner(final ControlLoopProvider controlLoopProvider, PolicyModelsProvider modelsProvider,
+    public SupervisionScanner(final ControlLoopProvider controlLoopProvider,
+            ServiceTemplateProvider serviceTemplateProvider,
             final ControlLoopStateChangePublisher controlLoopStateChangePublisher,
             ControlLoopUpdatePublisher controlLoopUpdatePublisher, ParticipantProvider participantProvider,
             ParticipantStatusReqPublisher participantStatusReqPublisher,
             ParticipantUpdatePublisher participantUpdatePublisher,
             final ClRuntimeParameterGroup clRuntimeParameterGroup) {
         this.controlLoopProvider = controlLoopProvider;
-        this.modelsProvider = modelsProvider;
+        this.serviceTemplateProvider = serviceTemplateProvider;
         this.controlLoopStateChangePublisher = controlLoopStateChangePublisher;
         this.controlLoopUpdatePublisher = controlLoopUpdatePublisher;
         this.participantProvider = participantProvider;
@@ -130,7 +131,7 @@ public class SupervisionScanner {
         }
 
         try {
-            var list = modelsProvider.getServiceTemplateList(null, null);
+            var list = serviceTemplateProvider.getServiceTemplateList(null, null);
             if (list != null && !list.isEmpty()) {
                 ToscaServiceTemplate toscaServiceTemplate = list.get(0);
 

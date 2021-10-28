@@ -39,12 +39,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ServiceTemplateProvider;
 import org.onap.policy.clamp.controlloop.models.messages.rest.commissioning.CommissioningResponse;
 import org.onap.policy.clamp.controlloop.runtime.instantiation.InstantiationUtils;
-import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
 import org.onap.policy.clamp.controlloop.runtime.util.rest.CommonRestController;
-import org.onap.policy.models.provider.PolicyModelsProvider;
-import org.onap.policy.models.provider.PolicyModelsProviderFactory;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +68,7 @@ class CommissioningControllerTest extends CommonRestController {
     private static ToscaServiceTemplate commonPropertiesServiceTemplate = new ToscaServiceTemplate();
 
     @Autowired
-    private ClRuntimeParameterGroup clRuntimeParameterGroup;
+    private ServiceTemplateProvider serviceTemplateProvider;
 
     @LocalServerPort
     private int randomServerPort;
@@ -282,37 +280,25 @@ class CommissioningControllerTest extends CommonRestController {
         Response resp = invocationBuilder.delete();
         assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
 
-        try (PolicyModelsProvider modelsProvider = new PolicyModelsProviderFactory()
-                .createPolicyModelsProvider(clRuntimeParameterGroup.getDatabaseProviderParameters())) {
-            List<ToscaServiceTemplate> templatesInDB = modelsProvider.getServiceTemplateList(null, null);
-            assertThat(templatesInDB).isEmpty();
-        }
+        List<ToscaServiceTemplate> templatesInDB = serviceTemplateProvider.getServiceTemplateList(null, null);
+        assertThat(templatesInDB).isEmpty();
 
     }
 
     private synchronized void createEntryInDB() throws Exception {
-        try (PolicyModelsProvider modelsProvider = new PolicyModelsProviderFactory()
-                .createPolicyModelsProvider(clRuntimeParameterGroup.getDatabaseProviderParameters())) {
-            deleteEntryInDB(commonPropertiesServiceTemplate.getName(), commonPropertiesServiceTemplate.getVersion());
-            modelsProvider.createServiceTemplate(serviceTemplate);
-        }
+        deleteEntryInDB(commonPropertiesServiceTemplate.getName(), commonPropertiesServiceTemplate.getVersion());
+        serviceTemplateProvider.createServiceTemplate(serviceTemplate);
     }
 
     // Delete entries from the DB after relevant tests
     private synchronized void deleteEntryInDB(String name, String version) throws Exception {
-        try (PolicyModelsProvider modelsProvider = new PolicyModelsProviderFactory()
-                .createPolicyModelsProvider(clRuntimeParameterGroup.getDatabaseProviderParameters())) {
-            if (!modelsProvider.getServiceTemplateList(null, null).isEmpty()) {
-                modelsProvider.deleteServiceTemplate(name, version);
-            }
+        if (!serviceTemplateProvider.getServiceTemplateList(null, null).isEmpty()) {
+            serviceTemplateProvider.deleteServiceTemplate(name, version);
         }
     }
 
     private synchronized void createFullEntryInDbWithCommonProps() throws Exception {
-        try (PolicyModelsProvider modelsProvider = new PolicyModelsProviderFactory()
-                .createPolicyModelsProvider(clRuntimeParameterGroup.getDatabaseProviderParameters())) {
-            deleteEntryInDB(commonPropertiesServiceTemplate.getName(), commonPropertiesServiceTemplate.getVersion());
-            modelsProvider.createServiceTemplate(commonPropertiesServiceTemplate);
-        }
+        deleteEntryInDB(commonPropertiesServiceTemplate.getName(), commonPropertiesServiceTemplate.getVersion());
+        serviceTemplateProvider.createServiceTemplate(commonPropertiesServiceTemplate);
     }
 }

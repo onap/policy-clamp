@@ -22,16 +22,21 @@ package org.onap.policy.clamp.controlloop.runtime;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableScheduling
 @SpringBootApplication
+@EnableJpaRepositories
 @ComponentScan({"org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider",
     "org.onap.policy.clamp.controlloop.runtime",
     "org.onap.policy.clamp.controlloop.common.rest"})
 @ConfigurationPropertiesScan("org.onap.policy.clamp.controlloop.runtime.main.parameters")
+@EntityScan({"org.onap.policy.models.tosca.simple.concepts",
+    "org.onap.policy.clamp.controlloop.models.controlloop.concepts"})
 public class Application {
 
     public static void main(String[] args) {
