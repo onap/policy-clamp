@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
@@ -36,6 +37,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantHealthStatus;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantUtils;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ControlLoopProvider;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ParticipantProvider;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopAck;
@@ -51,7 +53,10 @@ import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantDer
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantRegisterAckPublisher;
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantUpdatePublisher;
 import org.onap.policy.models.base.PfModelException;
+import org.onap.policy.models.base.PfModelRuntimeException;
+import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -75,6 +80,7 @@ public class SupervisionHandler {
     private final ControlLoopProvider controlLoopProvider;
     private final ParticipantProvider participantProvider;
     private final MonitoringProvider monitoringProvider;
+    private final PolicyModelsProvider modelsProvider;
 
     // Publishers for participant communication
     private final ControlLoopUpdatePublisher controlLoopUpdatePublisher;
@@ -350,7 +356,7 @@ public class SupervisionHandler {
             case UNINITIALISED2PASSIVE:
             case PASSIVE:
                 controlLoop.setState(ControlLoopState.PASSIVE2UNINITIALISED);
-                controlLoopStateChangePublisher.send(controlLoop);
+                controlLoopStateChangePublisher.send(controlLoop, getFirstStartPhase(controlLoop));
                 break;
 
             case PASSIVE2UNINITIALISED:
@@ -384,7 +390,7 @@ public class SupervisionHandler {
 
             case RUNNING:
                 controlLoop.setState(ControlLoopState.RUNNING2PASSIVE);
-                controlLoopStateChangePublisher.send(controlLoop);
+                controlLoopStateChangePublisher.send(controlLoop, getFirstStartPhase(controlLoop));
                 break;
 
             default:
@@ -408,7 +414,7 @@ public class SupervisionHandler {
 
             case PASSIVE:
                 controlLoop.setState(ControlLoopState.PASSIVE2RUNNING);
-                controlLoopStateChangePublisher.send(controlLoop);
+                controlLoopStateChangePublisher.send(controlLoop, getFirstStartPhase(controlLoop));
                 break;
 
             default:
@@ -416,6 +422,16 @@ public class SupervisionHandler {
                         + controlLoop.getState().name() + TO_STATE + controlLoop.getOrderedState());
                 break;
         }
+    }
+
+    private int getFirstStartPhase(ControlLoop controlLoop) {
+        ToscaServiceTemplate toscaServiceTemplate = null;
+        try {
+            toscaServiceTemplate = modelsProvider.getServiceTemplateList(null, null).get(0);
+        } catch (PfModelException e) {
+            throw new PfModelRuntimeException(Status.BAD_REQUEST, "Canont load ToscaServiceTemplate from DB", e);
+        }
+        return ParticipantUtils.getFirstStartPhase(controlLoop, toscaServiceTemplate);
     }
 
     private void checkParticipant(ParticipantMessage participantMessage, ParticipantState participantState,

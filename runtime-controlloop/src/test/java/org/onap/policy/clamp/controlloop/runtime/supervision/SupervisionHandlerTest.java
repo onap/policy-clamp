@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
@@ -56,9 +57,12 @@ import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantReg
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantUpdatePublisher;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.models.base.PfModelException;
+import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class SupervisionHandlerTest {
+    private static final String TOSCA_TEMPLATE_YAML =
+            "src/test/resources/rest/servicetemplates/tosca-for-smoke-testing.yaml";
     private static final String CL_INSTANTIATION_CREATE_JSON = "src/test/resources/rest/controlloops/ControlLoops.json";
     private static final ToscaConceptIdentifier identifier = new ToscaConceptIdentifier("PMSHInstance0Crud", "1.0.1");
     private static final ToscaConceptIdentifier participantId = new ToscaConceptIdentifier("ParticipantId", "1.0.0");
@@ -262,7 +266,11 @@ class SupervisionHandlerTest {
 
         when(controlLoopProvider.getControlLoop(eq(identifier))).thenReturn(controlLoop);
 
-        return new SupervisionHandler(controlLoopProvider, participantProvider, monitoringProvider,
+        var modelsProvider = Mockito.mock(PolicyModelsProvider.class);
+        when(modelsProvider.getServiceTemplateList(any(), any()))
+                .thenReturn(List.of(InstantiationUtils.getToscaServiceTemplate(TOSCA_TEMPLATE_YAML)));
+
+        return new SupervisionHandler(controlLoopProvider, participantProvider, monitoringProvider, modelsProvider,
                 controlLoopUpdatePublisher, controlLoopStateChangePublisher, participantRegisterAckPublisher,
                 participantDeregisterAckPublisher, participantUpdatePublisher);
 

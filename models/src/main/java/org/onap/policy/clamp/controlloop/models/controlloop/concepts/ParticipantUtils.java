@@ -57,6 +57,30 @@ public final class ParticipantUtils {
     }
 
     /**
+     * Get the First StartPhase
+     * it depend of the state of the Control Loop
+     * and also from the all startPhase defined into the ToscaServiceTemplate.
+     * @param controlLoop the ControlLoop
+     * @param toscaServiceTemplate the ToscaServiceTemplate
+     * @return the First StartPhase
+     */
+    public static int getFirstStartPhase(ControlLoop controlLoop, ToscaServiceTemplate toscaServiceTemplate) {
+        var minStartPhase = 1000;
+        var maxStartPhase = 0;
+        for (var element : controlLoop.getElements().values()) {
+            ToscaNodeTemplate toscaNodeTemplate = toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates()
+                    .get(element.getDefinition().getName());
+            int startPhase = ParticipantUtils.findStartPhase(toscaNodeTemplate.getProperties());
+            minStartPhase = Math.min(minStartPhase, startPhase);
+            maxStartPhase = Math.max(maxStartPhase, startPhase);
+        }
+
+        return ControlLoopState.UNINITIALISED2PASSIVE.equals(controlLoop.getState())
+                || ControlLoopState.PASSIVE2RUNNING.equals(controlLoop.getState()) ? minStartPhase
+                        : maxStartPhase;
+    }
+
+    /**
      * Finds startPhase from a map of properties.
      *
      * @param properties Map of properties

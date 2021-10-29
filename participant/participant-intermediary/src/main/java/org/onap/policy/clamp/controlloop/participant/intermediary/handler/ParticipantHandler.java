@@ -156,7 +156,7 @@ public class ParticipantHandler {
      * @param stateChangeMsg the state change message
      */
     public void handleControlLoopStateChange(ControlLoopStateChange stateChangeMsg) {
-        controlLoopHandler.handleControlLoopStateChange(stateChangeMsg);
+        controlLoopHandler.handleControlLoopStateChange(stateChangeMsg, clElementDefsOnThisParticipant);
     }
 
     private void handleStateChange(ParticipantState newParticipantState, ParticipantUpdateAck response) {

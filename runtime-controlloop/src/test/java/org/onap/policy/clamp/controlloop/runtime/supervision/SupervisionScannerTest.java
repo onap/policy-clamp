@@ -29,11 +29,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
@@ -47,6 +45,7 @@ import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ControlLoopUpd
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantStatusReqPublisher;
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantUpdatePublisher;
 import org.onap.policy.clamp.controlloop.runtime.util.CommonTestData;
+import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -56,11 +55,19 @@ class SupervisionScannerTest {
 
     private static final String TOSCA_SERVICE_TEMPLATE_YAML =
             "src/test/resources/rest/servicetemplates/tosca-for-smoke-testing.yaml";
+    private static final String CONTROLLOOP_JSON = "src/test/resources/rest/controlloops/ControlLoopsSmoke.json";
+
+    private static PolicyModelsProvider modelsProvider = mock(PolicyModelsProvider.class);
+
+    @BeforeAll
+    public static void setUpBeforeAll() throws Exception {
+        ToscaServiceTemplate serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
+        when(modelsProvider.getServiceTemplateList(null, null)).thenReturn(List.of(serviceTemplate));
+    }
 
     @Test
-    void testScannerOrderedStateEqualsToState() throws PfModelException {
+    void testScannerOrderedStateEqualsToState() throws PfModelException, CoderException {
         var controlLoopProvider = mock(ControlLoopProvider.class);
-        var modelsProvider = mock(PolicyModelsProvider.class);
         var controlLoopStateChangePublisher = mock(ControlLoopStateChangePublisher.class);
         var controlLoopUpdatePublisher = mock(ControlLoopUpdatePublisher.class);
         var participantProvider = mock(ParticipantProvider.class);
@@ -68,8 +75,9 @@ class SupervisionScannerTest {
         var participantUpdatePublisher = mock(ParticipantUpdatePublisher.class);
         var clRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
 
-        var controlLoop = new ControlLoop();
-        when(controlLoopProvider.getControlLoops(null, null)).thenReturn(List.of(controlLoop));
+        var controlLoops =
+                InstantiationUtils.getControlLoopsFromResource(CONTROLLOOP_JSON, "Crud").getControlLoopList();
+        when(controlLoopProvider.getControlLoops(null, null)).thenReturn(controlLoops);
 
         var supervisionScanner = new SupervisionScanner(controlLoopProvider, modelsProvider,
                 controlLoopStateChangePublisher, controlLoopUpdatePublisher, participantProvider,
@@ -80,13 +88,13 @@ class SupervisionScannerTest {
     }
 
     @Test
-    void testScannerOrderedStateDifferentToState() throws PfModelException {
-        var controlLoop = new ControlLoop();
-        controlLoop.setState(ControlLoopState.UNINITIALISED2PASSIVE);
-        controlLoop.setOrderedState(ControlLoopOrderedState.UNINITIALISED);
-        controlLoop.setElements(Map.of(UUID.randomUUID(), new ControlLoopElement()));
+    void testScannerOrderedStateDifferentToState() throws PfModelException, CoderException {
+        var controlLoops =
+                InstantiationUtils.getControlLoopsFromResource(CONTROLLOOP_JSON, "Crud").getControlLoopList();
+        controlLoops.get(0).setState(ControlLoopState.UNINITIALISED2PASSIVE);
+        controlLoops.get(0).setOrderedState(ControlLoopOrderedState.UNINITIALISED);
         var controlLoopProvider = mock(ControlLoopProvider.class);
-        when(controlLoopProvider.getControlLoops(null, null)).thenReturn(List.of(controlLoop));
+        when(controlLoopProvider.getControlLoops(null, null)).thenReturn(controlLoops);
 
         var controlLoopUpdatePublisher = mock(ControlLoopUpdatePublisher.class);
         var controlLoopStateChangePublisher = mock(ControlLoopStateChangePublisher.class);
@@ -94,9 +102,6 @@ class SupervisionScannerTest {
         var participantStatusReqPublisher = mock(ParticipantStatusReqPublisher.class);
         var participantUpdatePublisher = mock(ParticipantUpdatePublisher.class);
         var clRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
-
-        var modelsProvider = mock(PolicyModelsProvider.class);
-        when(modelsProvider.getServiceTemplateList(null, null)).thenReturn(List.of(new ToscaServiceTemplate()));
 
         var supervisionScanner = new SupervisionScanner(controlLoopProvider, modelsProvider,
                 controlLoopStateChangePublisher, controlLoopUpdatePublisher, participantProvider,
@@ -118,7 +123,6 @@ class SupervisionScannerTest {
         participant.setVersion("1.0.0");
         when(participantProvider.getParticipants(null, null)).thenReturn(List.of(participant));
 
-        var modelsProvider = mock(PolicyModelsProvider.class);
         var controlLoopUpdatePublisher = mock(ControlLoopUpdatePublisher.class);
         var participantStatusReqPublisher = mock(ParticipantStatusReqPublisher.class);
         var controlLoopStateChangePublisher = mock(ControlLoopStateChangePublisher.class);
@@ -136,19 +140,24 @@ class SupervisionScannerTest {
     }
 
     @Test
-    void testSendControlLoopMsgUpdate() throws PfModelException {
-        var controlLoop = new ControlLoop();
-        controlLoop.setState(ControlLoopState.UNINITIALISED2PASSIVE);
-        controlLoop.setOrderedState(ControlLoopOrderedState.PASSIVE);
-        controlLoop.setElements(Map.of(UUID.randomUUID(),
-                createHttpElement(ControlLoopState.UNINITIALISED, ControlLoopOrderedState.PASSIVE)));
+    void testSendControlLoopMsgUpdate() throws PfModelException, CoderException {
+        var controlLoops =
+                InstantiationUtils.getControlLoopsFromResource(CONTROLLOOP_JSON, "Crud").getControlLoopList();
+        controlLoops.get(0).setState(ControlLoopState.UNINITIALISED2PASSIVE);
+        controlLoops.get(0).setOrderedState(ControlLoopOrderedState.PASSIVE);
+        for (var element : controlLoops.get(0).getElements().values()) {
+            if ("org.onap.domain.database.Http_PMSHMicroserviceControlLoopElement"
+                    .equals(element.getDefinition().getName())) {
+                element.setOrderedState(ControlLoopOrderedState.PASSIVE);
+                element.setState(ControlLoopState.UNINITIALISED);
+            } else {
+                element.setOrderedState(ControlLoopOrderedState.PASSIVE);
+                element.setState(ControlLoopState.PASSIVE);
+            }
+        }
 
         var controlLoopProvider = mock(ControlLoopProvider.class);
-        when(controlLoopProvider.getControlLoops(null, null)).thenReturn(List.of(controlLoop));
-
-        ToscaServiceTemplate serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
-        var modelsProvider = mock(PolicyModelsProvider.class);
-        when(modelsProvider.getServiceTemplateList(null, null)).thenReturn(List.of(serviceTemplate));
+        when(controlLoopProvider.getControlLoops(null, null)).thenReturn(controlLoops);
 
         var participantProvider = mock(ParticipantProvider.class);
         var controlLoopUpdatePublisher = mock(ControlLoopUpdatePublisher.class);
@@ -164,19 +173,6 @@ class SupervisionScannerTest {
         supervisionScanner.run(false);
 
         verify(controlLoopUpdatePublisher).send(any(ControlLoop.class), anyInt());
-    }
-
-    private ControlLoopElement createHttpElement(ControlLoopState state, ControlLoopOrderedState orderedState) {
-        var element = new ControlLoopElement();
-        element.setDefinition(new ToscaConceptIdentifier(
-                "org.onap.domain.database.Http_PMSHMicroserviceControlLoopElement", "1.2.3"));
-        element.setState(state);
-        element.setOrderedState(orderedState);
-        element.setParticipantId(new ToscaConceptIdentifier("HttpParticipant0", "1.0.0"));
-        element.setParticipantType(
-                new ToscaConceptIdentifier("org.onap.k8s.controlloop.HttpControlLoopParticipant", "2.3.4"));
-
-        return element;
     }
 
     @Test
@@ -199,7 +195,6 @@ class SupervisionScannerTest {
         var participantProvider = new ParticipantProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
         participantProvider.updateParticipants(List.of(participant));
 
-        var modelsProvider = mock(PolicyModelsProvider.class);
         var controlLoopUpdatePublisher = mock(ControlLoopUpdatePublisher.class);
         var participantStatusReqPublisher = mock(ParticipantStatusReqPublisher.class);
         var controlLoopStateChangePublisher = mock(ControlLoopStateChangePublisher.class);

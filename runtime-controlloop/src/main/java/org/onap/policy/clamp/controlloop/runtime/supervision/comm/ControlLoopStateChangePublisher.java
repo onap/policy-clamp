@@ -36,12 +36,14 @@ public class ControlLoopStateChangePublisher
      * Send ControlLoopStateChange to Participant.
      *
      * @param controlLoop the ControlLoop
+     * @param startPhase the startPhase
      */
-    public void send(ControlLoop controlLoop) {
+    public void send(ControlLoop controlLoop, int startPhase) {
         var clsc = new ControlLoopStateChange();
         clsc.setControlLoopId(controlLoop.getKey().asIdentifier());
         clsc.setMessageId(UUID.randomUUID());
         clsc.setOrderedState(controlLoop.getOrderedState());
+        clsc.setStartPhase(startPhase);
 
         super.send(clsc);
     }

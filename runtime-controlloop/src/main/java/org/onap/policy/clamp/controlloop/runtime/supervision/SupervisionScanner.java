@@ -220,13 +220,19 @@ public class SupervisionScanner {
 
         var completed = true;
         var minSpNotCompleted = 1000; // min startPhase not completed
+        var maxSpNotCompleted = 0; // max startPhase not completed
+        var defaultMin = 1000; // min startPhase
+        var defaultMax = 0; // max startPhase
         for (ControlLoopElement element : controlLoop.getElements().values()) {
+            ToscaNodeTemplate toscaNodeTemplate = toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates()
+                    .get(element.getDefinition().getName());
+            int startPhase = ParticipantUtils.findStartPhase(toscaNodeTemplate.getProperties());
+            defaultMin = Math.min(defaultMin, startPhase);
+            defaultMax = Math.max(defaultMax, startPhase);
             if (!element.getState().equals(element.getOrderedState().asState())) {
                 completed = false;
-                ToscaNodeTemplate toscaNodeTemplate = toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates()
-                        .get(element.getDefinition().getName());
-                int startPhase = ParticipantUtils.findStartPhase(toscaNodeTemplate.getProperties());
                 minSpNotCompleted = Math.min(minSpNotCompleted, startPhase);
+                maxSpNotCompleted = Math.max(maxSpNotCompleted, startPhase);
             }
         }
 
@@ -243,12 +249,20 @@ public class SupervisionScanner {
             LOGGER.debug("control loop scan: transition from state {} to {} not completed", controlLoop.getState(),
                     controlLoop.getOrderedState());
 
-            if (minSpNotCompleted != phaseMap.getOrDefault(controlLoop.getKey().asIdentifier(), 0)
-                    && ControlLoopState.UNINITIALISED2PASSIVE.equals(controlLoop.getState())) {
-                phaseMap.put(controlLoop.getKey().asIdentifier(), minSpNotCompleted);
-                sendControlLoopMsg(controlLoop, minSpNotCompleted);
+            var nextSpNotCompleted = ControlLoopState.UNINITIALISED2PASSIVE.equals(controlLoop.getState())
+                    || ControlLoopState.PASSIVE2RUNNING.equals(controlLoop.getState()) ? minSpNotCompleted
+                            : maxSpNotCompleted;
+
+            var firstStartPhase = ControlLoopState.UNINITIALISED2PASSIVE.equals(controlLoop.getState())
+                    || ControlLoopState.PASSIVE2RUNNING.equals(controlLoop.getState()) ? defaultMin
+                            : defaultMax;
+
+            if (nextSpNotCompleted != phaseMap.getOrDefault(controlLoop.getKey().asIdentifier(), firstStartPhase)) {
+                phaseMap.put(controlLoop.getKey().asIdentifier(), nextSpNotCompleted);
+                sendControlLoopMsg(controlLoop, nextSpNotCompleted);
             } else if (counterCheck) {
-                handleCounter(controlLoop, minSpNotCompleted);
+                phaseMap.put(controlLoop.getKey().asIdentifier(), nextSpNotCompleted);
+                handleCounter(controlLoop, nextSpNotCompleted);
             }
         }
     }
@@ -282,7 +296,7 @@ public class SupervisionScanner {
             controlLoopUpdatePublisher.send(controlLoop, startPhase);
         } else {
             LOGGER.debug("retry message ControlLoopStateChange");
-            controlLoopStateChangePublisher.send(controlLoop);
+            controlLoopStateChangePublisher.send(controlLoop, startPhase);
         }
     }
 }
