@@ -39,6 +39,7 @@ import org.onap.policy.clamp.controlloop.participant.policy.client.PolicyApiHttp
 import org.onap.policy.clamp.controlloop.participant.policy.client.PolicyPapHttpClient;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
+import org.onap.policy.models.pdp.concepts.DeploymentSubGroup;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
@@ -144,7 +145,8 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
         // Deploy all policies of this controlLoop from Policy Framework
         if (policyMap.entrySet() != null) {
             for (Entry<String, String> policy : policyMap.entrySet()) {
-                papHttpClient.handlePolicyDeployOrUndeploy(policy.getKey(), policy.getValue(), "POST");
+                papHttpClient.handlePolicyDeployOrUndeploy(policy.getKey(), policy.getValue(),
+                        DeploymentSubGroup.Action.POST);
             }
             LOGGER.debug("Policies deployed to {} successfully", controlLoopElementId);
         } else {
@@ -159,7 +161,8 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
         // Undeploy all policies of this controlloop from Policy Framework
         if (policyMap.entrySet() != null) {
             for (Entry<String, String> policy : policyMap.entrySet()) {
-                papHttpClient.handlePolicyDeployOrUndeploy(policy.getKey(), policy.getValue(), "DELETE");
+                papHttpClient.handlePolicyDeployOrUndeploy(policy.getKey(), policy.getValue(),
+                        DeploymentSubGroup.Action.DELETE);
             }
             LOGGER.debug("Undeployed policies from {} successfully", controlLoopElementId);
         } else {

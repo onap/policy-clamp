@@ -20,12 +20,16 @@
 
 package org.onap.policy.clamp.controlloop.participant.policy.client;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import java.util.LinkedList;
+import java.util.List;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.onap.policy.clamp.controlloop.participant.policy.main.parameters.ParticipantPolicyParameters;
+import org.onap.policy.models.pdp.concepts.DeploymentGroup;
+import org.onap.policy.models.pdp.concepts.DeploymentGroups;
+import org.onap.policy.models.pdp.concepts.DeploymentSubGroup;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -55,33 +59,27 @@ public class PolicyPapHttpClient extends AbstractHttpClient {
      * @return Response
      */
     public Response handlePolicyDeployOrUndeploy(final String policyName, final String policyVersion,
-                                                 final String action) {
-        // policies
-        JsonObject policyArrayBody = new JsonObject();
-        policyArrayBody.addProperty("name", policyName);
-        policyArrayBody.addProperty("version", policyVersion);
-        JsonArray policyArr = new JsonArray();
-        policyArr.add(policyArrayBody);
+                                                 final DeploymentSubGroup.Action action) {
 
-        // deploymentSubgroups
-        JsonObject deploymentSubGrpBody = new JsonObject();
-        deploymentSubGrpBody.addProperty("pdpType", pdpType);
-        deploymentSubGrpBody.addProperty("action", action);
-        deploymentSubGrpBody.add("policies", policyArr);
-        JsonArray deployArr = new JsonArray();
-        deployArr.add(deploymentSubGrpBody);
+        List<ToscaConceptIdentifier> policies = new LinkedList<ToscaConceptIdentifier>();
+        policies.add(new ToscaConceptIdentifier(policyName, policyVersion));
 
-        // groups
-        JsonObject groupArrayBody = new JsonObject();
-        groupArrayBody.addProperty("name", pdpGroup);
-        groupArrayBody.add("deploymentSubgroups", deployArr);
-        JsonArray groupArr = new JsonArray();
-        groupArr.add(groupArrayBody);
+        DeploymentSubGroup subGroup = new DeploymentSubGroup();
+        subGroup.setPolicies(policies);
+        subGroup.setPdpType(pdpType);
+        subGroup.setAction(action);
 
-        // main json
-        JsonObject mainJson = new JsonObject();
-        mainJson.add("groups", groupArr);
+        DeploymentGroup group = new DeploymentGroup();
+        List<DeploymentSubGroup> subGroups = new LinkedList<DeploymentSubGroup>();
+        subGroups.add(subGroup);
+        group.setDeploymentSubgroups(subGroups);
+        group.setName(pdpGroup);
 
-        return executePost(PAP_URI + "pdps/deployments/batch", Entity.entity(mainJson, MediaType.APPLICATION_JSON));
+        DeploymentGroups groups = new DeploymentGroups();
+        List<DeploymentGroup> groupsArr = new LinkedList<DeploymentGroup>();
+        groupsArr.add(group);
+        groups.setGroups(groupsArr);
+
+        return executePost(PAP_URI + "pdps/deployments/batch", Entity.entity(groups, MediaType.APPLICATION_JSON));
     }
 }
