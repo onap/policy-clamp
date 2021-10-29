@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.controlloop.runtime.config;
+package org.onap.policy.clamp.controlloop.common.rest;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
