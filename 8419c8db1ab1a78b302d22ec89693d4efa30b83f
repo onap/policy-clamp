@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6ea7b5b3_5a4f8634",
+        "filename": "models/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 4903
+      },
+      "writtenOn": "2021-11-01T10:30:37Z",
+      "side": 1,
+      "message": "So you are trying to change the default JPA provided coming as part of spring boot - which is hibernate to eclipselink? In my investigation, I am seeing performance impacts while doing this.",
+      "range": {
+        "startLine": 37,
+        "startChar": 0,
+        "endLine": 51,
+        "endChar": 21
+      },
+      "revId": "8419c8db1ab1a78b302d22ec89693d4efa30b83f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
