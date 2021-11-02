@@ -72,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "d6848c83_bc020b5a",
+        "filename": "packages/policy-clamp-tarball/src/main/resources/etc/ClRuntimeParameters.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-11-02T15:37:53Z",
+      "side": 1,
+      "message": "I have used default values",
+      "parentUuid": "19727796_a626b27a",
+      "range": {
+        "startLine": 15,
+        "startChar": 6,
+        "endLine": 16,
+        "endChar": 25
+      },
+      "revId": "8419c8db1ab1a78b302d22ec89693d4efa30b83f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "24cc3c05_0bd4e5a5",
         "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/parameters/ClRuntimeParameterGroup.java",
         "patchSetId": 2
@@ -92,6 +116,30 @@
       "revId": "8419c8db1ab1a78b302d22ec89693d4efa30b83f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "025ef0dd_f036a00c",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/parameters/ClRuntimeParameterGroup.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-11-02T15:37:53Z",
+      "side": 1,
+      "message": "it can be overridden by properties file",
+      "parentUuid": "24cc3c05_0bd4e5a5",
+      "range": {
+        "startLine": 72,
+        "startChar": 27,
+        "endLine": 72,
+        "endChar": 36
+      },
+      "revId": "8419c8db1ab1a78b302d22ec89693d4efa30b83f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
