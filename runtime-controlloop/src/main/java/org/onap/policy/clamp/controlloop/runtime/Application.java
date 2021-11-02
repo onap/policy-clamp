@@ -30,7 +30,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableScheduling
 @SpringBootApplication
-@EnableJpaRepositories
+@EnableJpaRepositories({"org.onap.policy.clamp.controlloop.models.controlloop.persistence.repository"})
 @ComponentScan({"org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider",
     "org.onap.policy.clamp.controlloop.runtime",
     "org.onap.policy.clamp.controlloop.common.rest"})

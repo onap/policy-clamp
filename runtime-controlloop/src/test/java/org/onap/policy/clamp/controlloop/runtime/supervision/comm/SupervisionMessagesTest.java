@@ -76,10 +76,8 @@ class SupervisionMessagesTest extends CommonRestController {
 
         clProvider = new ControlLoopProvider(controlLoopParameters.getDatabaseProviderParameters());
 
-        var participantStatisticsProvider =
-                new ParticipantStatisticsProvider(controlLoopParameters.getDatabaseProviderParameters());
-        var clElementStatisticsProvider =
-                new ClElementStatisticsProvider(controlLoopParameters.getDatabaseProviderParameters());
+        var participantStatisticsProvider = mock(ParticipantStatisticsProvider.class);
+        var clElementStatisticsProvider = mock(ClElementStatisticsProvider.class);
         var monitoringProvider =
                 new MonitoringProvider(participantStatisticsProvider, clElementStatisticsProvider, clProvider);
         var participantProvider = new ParticipantProvider(controlLoopParameters.getDatabaseProviderParameters());
