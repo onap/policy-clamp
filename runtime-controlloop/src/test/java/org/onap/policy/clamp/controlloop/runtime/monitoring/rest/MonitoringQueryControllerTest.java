@@ -141,7 +141,12 @@ class MonitoringQueryControllerTest extends CommonRestController {
 
         assertNotNull(result1);
         assertThat(result1.getClElementStatistics()).hasSize(2);
-        assertEquals(result1.getClElementStatistics().get(0), clElementStatisticsList.getClElementStatistics().get(0));
+
+        var clElementStat0 = clElementStatisticsList.getClElementStatistics().get(0);
+        for (var clElement : result1.getClElementStatistics()) {
+            assertEquals(clElement.getParticipantId().asConceptKey(), clElementStat0.getParticipantId().asConceptKey());
+            assertEquals(clElement.getId(), clElementStat0.getId());
+        }
 
         // Filter statistics based on timestamp
         Invocation.Builder invokeRequest2 = super.sendRequest(CLELEMENT_STATS_ENDPOINT + "?name="
@@ -155,7 +160,7 @@ class MonitoringQueryControllerTest extends CommonRestController {
 
         assertNotNull(result2);
         assertThat(result2.getClElementStatistics()).hasSize(1);
-        assertEquals(result1.getClElementStatistics().get(0), clElementStatisticsList.getClElementStatistics().get(0));
+        assertEquals(result2.getClElementStatistics().get(0), clElementStat0);
     }
 
     @Test
@@ -178,7 +183,7 @@ class MonitoringQueryControllerTest extends CommonRestController {
 
         assertNotNull(result1);
         assertThat(result1.getStatisticsList()).hasSize(2);
-        assertEquals(result1.getStatisticsList().get(0), participantStatisticsList.getStatisticsList().get(0));
+        assertThat(result1.getStatisticsList()).contains(participantStatisticsList.getStatisticsList().get(0));
 
         // Filter statistics based on timestamp
         Invocation.Builder invokeRequest2 = super.sendRequest(PARTICIPANT_STATS_ENDPOINT + "?name="
@@ -191,7 +196,7 @@ class MonitoringQueryControllerTest extends CommonRestController {
 
         assertNotNull(result2);
         assertThat(result2.getStatisticsList()).hasSize(1);
-        assertEquals(result1.getStatisticsList().get(0), participantStatisticsList.getStatisticsList().get(0));
+        assertEquals(result2.getStatisticsList().get(0), participantStatisticsList.getStatisticsList().get(0));
     }
 
     @Test

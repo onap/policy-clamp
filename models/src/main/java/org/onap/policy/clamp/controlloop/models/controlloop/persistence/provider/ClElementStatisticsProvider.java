@@ -21,19 +21,20 @@
 package org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import javax.ws.rs.core.Response.Status;
+import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ClElementStatistics;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.concepts.JpaClElementStatistics;
+import org.onap.policy.clamp.controlloop.models.controlloop.persistence.repository.ClElementStatisticsRepository;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfReferenceTimestampKey;
 import org.onap.policy.models.dao.PfFilterParameters;
-import org.onap.policy.models.provider.PolicyModelsProviderParameters;
-import org.onap.policy.models.provider.impl.AbstractModelsProvider;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * This class provides the provision of information on control loop element statistics in the database to callers.
@@ -41,46 +42,34 @@ import org.springframework.stereotype.Component;
  * @author Ramesh Murugan Iyer (ramesh.murugan.iyer@est.tech)
  */
 @Component
-public class ClElementStatisticsProvider extends AbstractModelsProvider {
+@Transactional
+@AllArgsConstructor
+public class ClElementStatisticsProvider {
 
-    /**
-     * Create a provider for control loop element statistics.
-     *
-     * @param parameters the parameters for database access
-     * @throws PfModelException on initiation errors
-     */
-    public ClElementStatisticsProvider(@NonNull PolicyModelsProviderParameters parameters) throws PfModelException {
-        super(parameters);
-        this.init();
-    }
+    private ClElementStatisticsRepository clElementStatisticsRepository;
 
     /**
      * Creates control loop element statistics.
      *
      * @param clElementStatisticsList a specification of the CL element statistics to create
      * @return the clElement statistics created
-     * @throws PfModelException on errors creating clElement statistics
+     * @throws PfModelException on initiation errors
      */
     public List<ClElementStatistics> createClElementStatistics(
             @NonNull final List<ClElementStatistics> clElementStatisticsList) throws PfModelException {
 
-        List<JpaClElementStatistics> jpaClElementStatisticsList = ProviderUtils.getJpaAndValidate(
-                clElementStatisticsList, JpaClElementStatistics::new, "control loop element statistics");
+        try {
+            var jpaClElementStatisticsList = ProviderUtils.getJpaAndValidate(clElementStatisticsList,
+                    JpaClElementStatistics::new, "control loop element statistics");
 
-        jpaClElementStatisticsList.forEach(jpaClElementStatistics -> getPfDao().create(jpaClElementStatistics));
+            var jpaClElementStatisticsSaved = clElementStatisticsRepository.saveAll(jpaClElementStatisticsList);
 
-        // Return the created control loop element statistics
-        List<ClElementStatistics> elementStatistics = new ArrayList<>(clElementStatisticsList.size());
-
-        for (ClElementStatistics clElementStat : clElementStatisticsList) {
-            var jpaClElementStatistics = getPfDao().get(JpaClElementStatistics.class,
-                    new PfReferenceTimestampKey(clElementStat.getParticipantId().getName(),
-                            clElementStat.getParticipantId().getVersion(), clElementStat.getId().toString(),
-                            clElementStat.getTimeStamp()));
-            elementStatistics.add(jpaClElementStatistics.toAuthorative());
+            // Return the saved control loop element statistics
+            return asClElementStatisticsList(jpaClElementStatisticsSaved);
+        } catch (IllegalArgumentException e) {
+            throw new PfModelException(Status.INTERNAL_SERVER_ERROR, "Error in save control loop element statistics",
+                    e);
         }
-
-        return elementStatistics;
     }
 
     /**
@@ -101,22 +90,17 @@ public class ClElementStatisticsProvider extends AbstractModelsProvider {
      * @param id of the control loop element
      * @param timestamp timestamp of the statistics
      * @return the clElement statistics found
-     * @throws PfModelException on errors getting clElement statistics
      */
+    @Transactional(readOnly = true)
     public List<ClElementStatistics> getClElementStatistics(final String name, final String version, final String id,
-            final Instant timestamp) throws PfModelException {
-        List<ClElementStatistics> clElementStatistics = new ArrayList<>(1);
+            final Instant timestamp) {
         if (name != null && version != null && timestamp != null && id != null) {
-            clElementStatistics.add(getPfDao()
-                    .get(JpaClElementStatistics.class, new PfReferenceTimestampKey(name, version, id, timestamp))
-                    .toAuthorative());
-            return clElementStatistics;
+            return asClElementStatisticsList(clElementStatisticsRepository
+                    .findAllById(List.of(new PfReferenceTimestampKey(name, version, id, timestamp))));
         } else if (name != null) {
-            clElementStatistics.addAll(getFilteredClElementStatistics(name, version, null, null, null, "DESC", 0));
-        } else {
-            clElementStatistics.addAll(asClElementStatisticsList(getPfDao().getAll(JpaClElementStatistics.class)));
+            return getFilteredClElementStatistics(name, version, null, null, null, "DESC", 0);
         }
-        return clElementStatistics;
+        return asClElementStatisticsList(clElementStatisticsRepository.findAll());
     }
 
     /**
@@ -130,8 +114,8 @@ public class ClElementStatisticsProvider extends AbstractModelsProvider {
      * @param getRecordNum Total query count from database
      * @param filterMap the filters to apply to the get operation
      * @return the clElement statistics found
-     * @throws PfModelException on errors getting policies
      */
+    @Transactional(readOnly = true)
     public List<ClElementStatistics> getFilteredClElementStatistics(final String name, final String version,
             final Instant startTimeStamp, final Instant endTimeStamp, Map<String, Object> filterMap,
             final String sortOrder, final int getRecordNum) {
@@ -148,6 +132,7 @@ public class ClElementStatisticsProvider extends AbstractModelsProvider {
                 .recordNum(getRecordNum)
                 .build();
         // @formatter:on
-        return asClElementStatisticsList(getPfDao().getFiltered(JpaClElementStatistics.class, filterParams));
+        return asClElementStatisticsList(
+                clElementStatisticsRepository.getFiltered(JpaClElementStatistics.class, filterParams));
     }
 }

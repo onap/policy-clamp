@@ -23,19 +23,23 @@ package org.onap.policy.clamp.controlloop.models.controlloop.persistence.provide
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ClElementStatistics;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ClElementStatisticsList;
+import org.onap.policy.clamp.controlloop.models.controlloop.persistence.concepts.JpaClElementStatistics;
+import org.onap.policy.clamp.controlloop.models.controlloop.persistence.repository.ClElementStatisticsRepository;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
-import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class ClElementStatisticsProviderTest {
@@ -43,9 +47,6 @@ class ClElementStatisticsProviderTest {
     private static final Coder CODER = new StandardCoder();
     private static final String CL_ELEMENT_STATS_JSON = "src/test/resources/providers/TestClElementStatistics.json";
 
-    private static AtomicInteger dbNameCounter = new AtomicInteger();
-
-    private PolicyModelsProviderParameters parameters;
     private ClElementStatisticsProvider clElementStatisticsProvider;
     private ClElementStatisticsList inputClElementStats;
     private String originalJson = ResourceUtils.getResourceAsString(CL_ELEMENT_STATS_JSON);
@@ -58,22 +59,23 @@ class ClElementStatisticsProviderTest {
     @BeforeEach
     void beforeSetupDao() throws Exception {
 
-        parameters = new PolicyModelsProviderParameters();
-        parameters.setDatabaseDriver("org.h2.Driver");
-        parameters.setName("PolicyProviderParameterGroup");
-        parameters.setImplementation("org.onap.policy.models.provider.impl.DatabasePolicyModelsProviderImpl");
-        parameters.setDatabaseUrl("jdbc:h2:mem:clElementTestDb" + dbNameCounter.getAndIncrement());
-        parameters.setDatabaseUser("policy");
-        parameters.setDatabasePassword("P01icY");
-        parameters.setPersistenceUnit("ToscaConceptTest");
-
-        clElementStatisticsProvider = new ClElementStatisticsProvider(parameters);
         inputClElementStats = CODER.decode(originalJson, ClElementStatisticsList.class);
-    }
+        var clElementStatisticsRepository = mock(ClElementStatisticsRepository.class);
 
-    @AfterEach
-    void teardown() {
-        clElementStatisticsProvider.close();
+        var jpaClElementStatisticsList = ProviderUtils.getJpaAndValidate(inputClElementStats.getClElementStatistics(),
+                JpaClElementStatistics::new, "control loop element statistics");
+
+        for (var clElementStat : jpaClElementStatisticsList) {
+            when(clElementStatisticsRepository.findAllById(List.of(clElementStat.getKey())))
+                    .thenReturn(List.of(clElementStat));
+        }
+
+        when(clElementStatisticsRepository.saveAll(anyList())).thenReturn(jpaClElementStatisticsList);
+
+        when(clElementStatisticsRepository.getFiltered(eq(JpaClElementStatistics.class), any()))
+                .thenReturn(List.of(jpaClElementStatisticsList.get(0)));
+
+        clElementStatisticsProvider = new ClElementStatisticsProvider(clElementStatisticsRepository);
     }
 
     @Test
@@ -84,10 +86,10 @@ class ClElementStatisticsProviderTest {
 
         ClElementStatisticsList createdClElementStats = new ClElementStatisticsList();
         createdClElementStats.setClElementStatistics(
-            clElementStatisticsProvider.createClElementStatistics(inputClElementStats.getClElementStatistics()));
+                clElementStatisticsProvider.createClElementStatistics(inputClElementStats.getClElementStatistics()));
 
         assertEquals(inputClElementStats.toString().replaceAll("\\s+", ""),
-            createdClElementStats.toString().replaceAll("\\s+", ""));
+                createdClElementStats.toString().replaceAll("\\s+", ""));
     }
 
     @Test
@@ -104,9 +106,9 @@ class ClElementStatisticsProviderTest {
         Instant instant = inputClElementStats.getClElementStatistics().get(0).getTimeStamp();
         String id = inputClElementStats.getClElementStatistics().get(0).getId().toString();
         assertEquals(1, clElementStatisticsProvider
-            .getClElementStatistics(identifier.getName(), identifier.getVersion(), id, instant).size());
+                .getClElementStatistics(identifier.getName(), identifier.getVersion(), id, instant).size());
 
         assertEquals(1, clElementStatisticsProvider
-            .getFilteredClElementStatistics("name2", "1.0.1", null, null, null, "DESC", 1).size());
+                .getFilteredClElementStatistics("name2", "1.0.1", null, null, null, "DESC", 1).size());
     }
 }
