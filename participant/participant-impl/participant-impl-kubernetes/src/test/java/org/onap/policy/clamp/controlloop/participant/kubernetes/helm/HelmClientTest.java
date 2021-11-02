@@ -89,7 +89,10 @@ class HelmClientTest {
             .thenReturn("success");
         doReturn(new File("/target/tmp/override.yaml")).when(chartStore)
             .getOverrideFile(any());
-        assertDoesNotThrow(() -> helmClient.installChart(charts.get(0)));
+        var chartinfo = charts.get(0);
+        assertDoesNotThrow(() -> helmClient.installChart(chartinfo));
+        chartinfo.setNamespace("");
+        assertDoesNotThrow(() -> helmClient.installChart(chartinfo));
     }
 
     @Test
