@@ -46,6 +46,52 @@
       "revId": "8419c8db1ab1a78b302d22ec89693d4efa30b83f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19727796_a626b27a",
+        "filename": "packages/policy-clamp-tarball/src/main/resources/etc/ClRuntimeParameters.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 4903
+      },
+      "writtenOn": "2021-11-02T12:32:13Z",
+      "side": 1,
+      "message": "question: are these values ok?",
+      "range": {
+        "startLine": 15,
+        "startChar": 6,
+        "endLine": 16,
+        "endChar": 25
+      },
+      "revId": "8419c8db1ab1a78b302d22ec89693d4efa30b83f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "24cc3c05_0bd4e5a5",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/parameters/ClRuntimeParameterGroup.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 4903
+      },
+      "writtenOn": "2021-11-02T12:32:13Z",
+      "side": 1,
+      "message": "default value is anyway false.",
+      "range": {
+        "startLine": 72,
+        "startChar": 27,
+        "endLine": 72,
+        "endChar": 36
+      },
+      "revId": "8419c8db1ab1a78b302d22ec89693d4efa30b83f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
