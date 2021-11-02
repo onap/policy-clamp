@@ -89,7 +89,7 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
 
     @Override
     public void updateParticipantStatistics(ParticipantStatistics participantStatistics) {
-        // TODO Auto-generated method stub
+        participantHandler.updateParticipantStatistics(participantStatistics);
     }
 
     @Override

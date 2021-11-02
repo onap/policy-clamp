@@ -25,7 +25,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -78,7 +77,7 @@ class ServiceTemplateProviderTest {
         var serviceTemplateProvider = new ServiceTemplateProvider(modelsProvider);
 
         var serviceTemplate = new ToscaServiceTemplate();
-        when(modelsProvider.createServiceTemplate(eq(serviceTemplate))).thenReturn(serviceTemplate);
+        when(modelsProvider.createServiceTemplate(serviceTemplate)).thenReturn(serviceTemplate);
 
         var result = serviceTemplateProvider.createServiceTemplate(serviceTemplate);
 
@@ -91,7 +90,7 @@ class ServiceTemplateProviderTest {
         serviceTemplate.setName("Name");
         serviceTemplate.setVersion("1.0.0");
         var modelsProvider = mock(PolicyModelsProvider.class);
-        when(modelsProvider.deleteServiceTemplate(eq(serviceTemplate.getName()), eq(serviceTemplate.getVersion())))
+        when(modelsProvider.deleteServiceTemplate(serviceTemplate.getName(), serviceTemplate.getVersion()))
                 .thenReturn(serviceTemplate);
 
         var serviceTemplateProvider = new ServiceTemplateProvider(modelsProvider);
@@ -117,7 +116,7 @@ class ServiceTemplateProviderTest {
         serviceTemplate.setName("Name");
         serviceTemplate.setVersion("1.0.0");
         var modelsProvider = mock(PolicyModelsProvider.class);
-        when(modelsProvider.getServiceTemplateList(eq(serviceTemplate.getName()), eq(serviceTemplate.getVersion())))
+        when(modelsProvider.getServiceTemplateList(serviceTemplate.getName(), serviceTemplate.getVersion()))
                 .thenReturn(List.of(serviceTemplate));
 
         var serviceTemplateProvider = new ServiceTemplateProvider(modelsProvider);
@@ -133,7 +132,7 @@ class ServiceTemplateProviderTest {
         serviceTemplate.setName("Name");
         serviceTemplate.setVersion("1.0.0");
         var modelsProvider = mock(PolicyModelsProvider.class);
-        when(modelsProvider.getServiceTemplateList(eq(serviceTemplate.getName()), eq(serviceTemplate.getVersion())))
+        when(modelsProvider.getServiceTemplateList(serviceTemplate.getName(), serviceTemplate.getVersion()))
                 .thenReturn(List.of(serviceTemplate));
 
         var serviceTemplateProvider = new ServiceTemplateProvider(modelsProvider);

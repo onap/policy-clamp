@@ -23,7 +23,6 @@ package org.onap.policy.clamp.controlloop.runtime.supervision;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -137,7 +136,7 @@ class SupervisionHandlerTest {
         participant.setParticipantType(participantType);
 
         var participantProvider = mock(ParticipantProvider.class);
-        when(participantProvider.getParticipants(eq(participantId.getName()), eq(participantId.getVersion())))
+        when(participantProvider.getParticipants(participantId.getName(), participantId.getVersion()))
                 .thenReturn(List.of(participant));
 
         var participantDeregisterMessage = new ParticipantDeregister();
@@ -153,7 +152,7 @@ class SupervisionHandlerTest {
         handler.handleParticipantMessage(participantDeregisterMessage);
 
         verify(participantProvider).updateParticipants(anyList());
-        verify(participantDeregisterAckPublisher).send(eq(participantDeregisterMessage.getMessageId()));
+        verify(participantDeregisterAckPublisher).send(participantDeregisterMessage.getMessageId());
     }
 
     @Test
@@ -177,8 +176,8 @@ class SupervisionHandlerTest {
         handler.handleParticipantMessage(participantRegisterMessage);
 
         verify(participantProvider).createParticipants(anyList());
-        verify(participantRegisterAckPublisher).send(eq(participantRegisterMessage.getMessageId()), eq(participantId),
-                eq(participantType));
+        verify(participantRegisterAckPublisher).send(participantRegisterMessage.getMessageId(), participantId,
+                participantType);
     }
 
     @Test
@@ -189,7 +188,7 @@ class SupervisionHandlerTest {
         participant.setParticipantType(participantType);
 
         var participantProvider = mock(ParticipantProvider.class);
-        when(participantProvider.getParticipants(eq(participantId.getName()), eq(participantId.getVersion())))
+        when(participantProvider.getParticipants(participantId.getName(), participantId.getVersion()))
                 .thenReturn(List.of(participant));
 
         var participantUpdateAckMessage = new ParticipantUpdateAck();
@@ -235,8 +234,8 @@ class SupervisionHandlerTest {
                 participantUpdatePublisher);
         handler.handleSendCommissionMessage(participantId.getName(), participantId.getVersion());
 
-        verify(participantUpdatePublisher).sendComissioningBroadcast(eq(participantId.getName()),
-                eq(participantId.getVersion()));
+        verify(participantUpdatePublisher).sendComissioningBroadcast(participantId.getName(),
+                participantId.getVersion());
     }
 
     @Test
@@ -264,7 +263,7 @@ class SupervisionHandlerTest {
 
         var controlLoopStateChangePublisher = mock(ControlLoopStateChangePublisher.class);
 
-        when(controlLoopProvider.getControlLoop(eq(identifier))).thenReturn(controlLoop);
+        when(controlLoopProvider.getControlLoop(identifier)).thenReturn(controlLoop);
 
         var modelsProvider = Mockito.mock(PolicyModelsProvider.class);
         when(modelsProvider.getServiceTemplateList(any(), any()))

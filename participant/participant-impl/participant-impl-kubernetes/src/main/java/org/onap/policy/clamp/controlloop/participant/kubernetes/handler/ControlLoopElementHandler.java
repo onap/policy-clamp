@@ -20,9 +20,9 @@
 
 package org.onap.policy.clamp.controlloop.participant.kubernetes.handler;
 
-
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -30,6 +30,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ClElementStatistics;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
@@ -50,7 +51,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 
 /**
  * This class handles implementation of controlLoopElement updates.
@@ -170,10 +170,16 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
      * Overridden method.
      *
      * @param controlLoopElementId controlLoopElement id
-     * @throws PfModelException incase of error
+     * @throws PfModelException in case of error
      */
     @Override
     public synchronized void handleStatistics(UUID controlLoopElementId) throws PfModelException {
-        // TODO Implement statistics functionality
+        var clElement = intermediaryApi.getControlLoopElement(controlLoopElementId);
+        if (clElement != null) {
+            var clElementStatistics = new ClElementStatistics();
+            clElementStatistics.setControlLoopState(clElement.getState());
+            clElementStatistics.setTimeStamp(Instant.now());
+            intermediaryApi.updateControlLoopElementStatistics(controlLoopElementId, clElementStatistics);
+        }
     }
 }

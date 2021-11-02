@@ -190,6 +190,19 @@ public class ParticipantHandler {
     }
 
     /**
+     * Method to update participant statistics.
+     *
+     * @param statistics participant statistics
+     */
+    public void updateParticipantStatistics(ParticipantStatistics statistics) {
+        participantStatistics.setState(statistics.getState());
+        participantStatistics.setHealthStatus(statistics.getHealthStatus());
+        participantStatistics.setTimeStamp(statistics.getTimeStamp());
+        participantStatistics.setAverageExecutionTime(statistics.getAverageExecutionTime());
+        participantStatistics.setEventCount(statistics.getEventCount());
+    }
+
+    /**
      * Get participants as a {@link Participant} class.
      *
      * @param name the participant name to get

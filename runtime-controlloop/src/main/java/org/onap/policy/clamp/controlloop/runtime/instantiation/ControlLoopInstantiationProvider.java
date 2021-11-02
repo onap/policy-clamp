@@ -90,6 +90,7 @@ public class ControlLoopInstantiationProvider {
     private final ParticipantProvider participantProvider;
 
     private static final Object lockit = new Object();
+    private static final String ENTRY = "entry ";
 
     /**
      * Creates Instance Properties and Control Loop.
@@ -239,7 +240,7 @@ public class ControlLoopInstantiationProvider {
         var result = new BeanValidationResult("ControlLoops", controlLoops);
 
         for (ControlLoop controlLoop : controlLoops.getControlLoopList()) {
-            var subResult = new BeanValidationResult("entry " + controlLoop.getDefinition().getName(), controlLoop);
+            var subResult = new BeanValidationResult(ENTRY + controlLoop.getDefinition().getName(), controlLoop);
 
             List<ToscaNodeTemplate> toscaNodeTemplates = commissioningProvider.getControlLoopDefinitions(
                     controlLoop.getDefinition().getName(), controlLoop.getDefinition().getVersion());
@@ -280,7 +281,7 @@ public class ControlLoopInstantiationProvider {
      */
     private ValidationResult validateDefinition(Map<String, ToscaConceptIdentifier> definitions,
             ToscaConceptIdentifier definition) {
-        var result = new BeanValidationResult("entry " + definition.getName(), definition);
+        var result = new BeanValidationResult(ENTRY + definition.getName(), definition);
         ToscaConceptIdentifier identifier = definitions.get(definition.getName());
         if (identifier == null) {
             result.setResult(ValidationStatus.INVALID, "Not FOUND");
@@ -383,7 +384,7 @@ public class ControlLoopInstantiationProvider {
         for (ControlLoop controlLoop : controlLoops) {
 
             for (var element : controlLoop.getElements().values()) {
-                var subResult = new BeanValidationResult("entry " + element.getDefinition().getName(), element);
+                var subResult = new BeanValidationResult(ENTRY + element.getDefinition().getName(), element);
 
                 Participant p = participantMap.get(element.getParticipantId());
                 if (p == null) {

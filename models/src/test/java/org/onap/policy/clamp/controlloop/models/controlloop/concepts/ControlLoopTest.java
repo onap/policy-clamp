@@ -107,7 +107,7 @@ class ControlLoopTest {
     void testControlLoopElementStatisticsList() {
         var cl = new ControlLoop();
         List<ClElementStatistics> emptylist = cl.getControlLoopElementStatisticsList(cl);
-        assertNull(emptylist);
+        assertEquals(List.of(), emptylist);
 
         var cl1 = getControlLoopTest();
         List<ClElementStatistics> list = cl1.getControlLoopElementStatisticsList(cl1);

@@ -102,7 +102,7 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
                 break;
             case PASSIVE:
                 try {
-                    undeployPolicies(controlLoopElementId, orderedState);
+                    undeployPolicies(controlLoopElementId);
                 } catch (PfModelRuntimeException e) {
                     LOGGER.debug("Undeploying policies failed - no policies to undeploy {}", controlLoopElementId);
                 }
@@ -157,7 +157,7 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
                 ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
     }
 
-    private void undeployPolicies(UUID controlLoopElementId, ControlLoopOrderedState newState) {
+    private void undeployPolicies(UUID controlLoopElementId) {
         // Undeploy all policies of this controlloop from Policy Framework
         if (policyMap.entrySet() != null) {
             for (Entry<String, String> policy : policyMap.entrySet()) {

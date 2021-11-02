@@ -47,6 +47,7 @@ public class HelmClient {
     private ChartStore chartStore;
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final String PATH_DELIMITER = "/";
 
     /**
      * Install a chart.
@@ -100,7 +101,7 @@ public class HelmClient {
         }
         var localHelmChartDir = chartStore.getAppPath(chart.getChartId()).toString();
         logger.info("Chart not found in helm repositories, verifying local repo {} ", localHelmChartDir);
-        if (verifyLocalHelmRepo(new File(localHelmChartDir + "/" + chart.getChartId().getName()))) {
+        if (verifyLocalHelmRepo(new File(localHelmChartDir + PATH_DELIMITER + chart.getChartId().getName()))) {
             repository = localHelmChartDir;
         }
         return repository;

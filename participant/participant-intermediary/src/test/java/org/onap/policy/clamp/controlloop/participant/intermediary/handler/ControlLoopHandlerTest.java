@@ -132,11 +132,11 @@ class ControlLoopHandlerTest {
         stateChange.setTimestamp(Instant.ofEpochMilli(3000));
 
         var clh = setTestControlLoopHandler(id, uuid);
-        clh.handleControlLoopStateChange(stateChange);
+        clh.handleControlLoopStateChange(stateChange, List.of());
         var newid = new ToscaConceptIdentifier("id", "1.2.3");
         stateChange.setControlLoopId(newid);
         stateChange.setParticipantId(newid);
-        assertDoesNotThrow(() -> clh.handleControlLoopStateChange(stateChange));
+        assertDoesNotThrow(() -> clh.handleControlLoopStateChange(stateChange, List.of()));
 
         List<ControlLoopElementDefinition> clElementDefinitions = new ArrayList<>();
         var cld = new ControlLoopElementDefinition();

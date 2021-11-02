@@ -24,8 +24,6 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
-import org.onap.policy.clamp.controlloop.models.messages.rest.GenericNameVersion;
 import org.onap.policy.clamp.controlloop.models.messages.rest.SimpleResponse;
 
 

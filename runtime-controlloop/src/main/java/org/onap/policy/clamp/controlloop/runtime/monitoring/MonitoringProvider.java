@@ -232,12 +232,4 @@ public class MonitoringProvider {
         }
         return clElementId;
     }
-
-    public void updateClElementStatistics(List<ClElementStatistics> clElementStatistics) {
-        // TODO Auto-generated method stub
-    }
-
-    public void updateParticipantStatistics(List<ParticipantStatistics> statisticsList) {
-        // TODO Auto-generated method stub
-    }
 }

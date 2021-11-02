@@ -107,7 +107,7 @@ public class ControlLoop extends ToscaEntity implements Comparable<ControlLoop> 
      */
     public List<ClElementStatistics> getControlLoopElementStatisticsList(final ControlLoop controlLoop) {
         if (MapUtils.isEmpty(controlLoop.elements)) {
-            return null;
+            return List.of();
         }
 
         return controlLoop.elements.values().stream().map(ControlLoopElement::getClElementStatistics)
