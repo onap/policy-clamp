@@ -73,6 +73,7 @@ class ChartControllerTest {
     private static String UNINSTALL_CHART_URL = "/helm/uninstall/";
     private static String ONBOARD_CHART_URL = "/helm/onboard/chart";
     private static String DELETE_CHART_URL = "/helm/chart";
+    private static String CONFIGURE_REPO_URL = "/helm/repo";
 
     @Autowired
     private MockMvc mockMvc;
@@ -216,6 +217,23 @@ class ChartControllerTest {
         mockMvc.perform(requestBuilder).andExpect(status().isNotFound());
 
     }
+
+    /**
+     * Test endpoint for configuring a helm repository.
+     * @throws Exception in case of error.
+     */
+    @Test
+    void testConfigureRepo() throws Exception {
+        RequestBuilder requestBuilder;
+
+        requestBuilder = MockMvcRequestBuilders.post(CONFIGURE_REPO_URL).accept(MediaType.APPLICATION_JSON_VALUE)
+            .content(getInstallationJson(charts.get(0).getChartId().getName(), charts.get(0).getChartId().getVersion()))
+            .contentType(MediaType.APPLICATION_JSON_VALUE);
+
+        mockMvc.perform(requestBuilder).andExpect(status().isCreated());
+
+    }
+
 
     private String getInstallationJson(String name, String version) {
         JSONObject jsonObj = new JSONObject();

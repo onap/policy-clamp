@@ -23,6 +23,9 @@ package org.onap.policy.clamp.controlloop.runtime.instantiation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,6 +37,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopRuntimeException;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoops;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ClElementStatisticsProvider;
@@ -63,7 +67,8 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
  *
  */
 class ControlLoopInstantiationProviderTest {
-
+    private static final String ID_NAME = "PMSH_Instance1";
+    private static final String ID_VERSION = "1.2.3";
     private static final String CL_INSTANTIATION_CREATE_JSON = "src/test/resources/rest/controlloops/ControlLoops.json";
     private static final String CL_INSTANTIATION_UPDATE_JSON =
             "src/test/resources/rest/controlloops/ControlLoopsUpdate.json";
@@ -154,6 +159,24 @@ class ControlLoopInstantiationProviderTest {
     @AfterEach
     public void cleanDatabase() throws Exception {
         deleteEntryInDB(serviceTemplate.getName(), serviceTemplate.getVersion());
+    }
+
+    @Test
+    void testIntanceResponses() throws PfModelException {
+        var instantiationProvider = new ControlLoopInstantiationProvider(clProvider, commissioningProvider,
+                supervisionHandler, participantProvider);
+        var instancePropertyList = instantiationProvider.createInstanceProperties(serviceTemplate);
+        assertNull(instancePropertyList.getErrorDetails());
+        var id = new ToscaConceptIdentifier(ID_NAME, ID_VERSION);
+        assertEquals(id, instancePropertyList.getAffectedInstanceProperties().get(0));
+        var instanceOrderState = instantiationProvider.getInstantiationOrderState(ID_NAME, ID_VERSION);
+        assertEquals(ControlLoopOrderedState.UNINITIALISED, instanceOrderState.getOrderedState());
+        assertEquals(ID_NAME, instanceOrderState.getControlLoopIdentifierList().get(0).getName());
+
+        assertNotNull(clProvider.getControlLoop(id));
+        var instanceResponse = instantiationProvider.deleteInstanceProperties(ID_NAME, ID_VERSION);
+        assertEquals(ID_NAME, instanceResponse.getAffectedControlLoops().get(0).getName());
+        assertNull(clProvider.getControlLoop(id));
     }
 
     @Test
