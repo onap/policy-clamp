@@ -1,5 +1,8 @@
-server:
-  port: 8082
+spring:
+  security:
+    user:
+      name: participantUser
+      password: zb!XztG34
 
 participant:
   pdpGroup: defaultGroup
@@ -43,3 +46,12 @@ participant:
           servers:
             - ${topicServer:localhost}
           topicCommInfrastructure: dmaap
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, metrics, prometheus
+server:
+  port: 8085
+  servlet:
+    context-path: /onap/policyparticipant

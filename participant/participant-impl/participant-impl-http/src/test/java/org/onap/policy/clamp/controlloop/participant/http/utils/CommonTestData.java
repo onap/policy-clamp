@@ -19,7 +19,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package utils;
+package org.onap.policy.clamp.controlloop.participant.http.utils;
 
 import java.util.List;
 import java.util.Map;
