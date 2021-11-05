@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package utils;
+package org.onap.policy.clamp.controlloop.participant.http.utils;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
