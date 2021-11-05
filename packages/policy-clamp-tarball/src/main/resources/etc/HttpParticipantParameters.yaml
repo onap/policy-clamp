@@ -1,3 +1,10 @@
+spring:
+  security:
+    user:
+      name: participantUser
+      password: zb!XztG34
+security:
+  enable-csrf: false
 participant:
   intermediaryParameters:
     reportingTimeIntervalMs: 120000
@@ -22,3 +29,12 @@ participant:
             - ${topicServer:message-router}
           topicCommInfrastructure: dmaap
           useHttps: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, metrics, prometheus
+server:
+  port: 8084
+  servlet:
+    context-path: /onap/httpparticipant

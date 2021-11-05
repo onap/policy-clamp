@@ -18,14 +18,12 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.controlloop.runtime.util.rest;
+package org.onap.policy.clamp.controlloop.participant.kubernetes.utils;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
@@ -39,38 +37,13 @@ import org.onap.policy.common.utils.network.NetworkUtil;
  * Class to perform Rest unit tests.
  *
  */
-public class CommonRestController {
+public class CommonActuatorController {
 
     public static final String SELF = NetworkUtil.getHostname();
-    public static final String CONTEXT_PATH = "onap/controlloop";
-    public static final String ENDPOINT_PREFIX = CONTEXT_PATH + "/v2/";
+    public static final String CONTEXT_PATH = "onap/k8sparticipant";
     public static final String ACTUATOR_ENDPOINT = CONTEXT_PATH + "/actuator/";
 
     private static String httpPrefix;
-
-    /**
-     * Verifies that an endpoint appears within the swagger response.
-     *
-     * @param endpoint the endpoint of interest
-     * @throws Exception if an error occurs
-     */
-    protected void testSwagger(final String endpoint) throws Exception {
-        final Invocation.Builder invocationBuilder = sendRequest("api-docs");
-        final String resp = invocationBuilder.get(String.class);
-
-        assertThat(resp).contains(endpoint);
-    }
-
-    /**
-     * Sends a request to an endpoint.
-     *
-     * @param endpoint the target endpoint
-     * @return a request builder
-     * @throws Exception if an error occurs
-     */
-    protected Invocation.Builder sendRequest(final String endpoint) throws Exception {
-        return sendFqeRequest(httpPrefix + ENDPOINT_PREFIX + endpoint, true);
-    }
 
     /**
      * Sends a request to an actuator endpoint.
@@ -81,17 +54,6 @@ public class CommonRestController {
      */
     protected Invocation.Builder sendActRequest(final String endpoint) throws Exception {
         return sendFqeRequest(httpPrefix + ACTUATOR_ENDPOINT + endpoint, true);
-    }
-
-    /**
-     * Sends a request to an Rest Api endpoint, without any authorization header.
-     *
-     * @param endpoint the target endpoint
-     * @return a request builder
-     * @throws Exception if an error occurs
-     */
-    protected Invocation.Builder sendNoAuthRequest(final String endpoint) throws Exception {
-        return sendFqeRequest(httpPrefix + ENDPOINT_PREFIX + endpoint, false);
     }
 
     /**
@@ -121,47 +83,12 @@ public class CommonRestController {
         client.register(GsonMessageBodyHandler.class);
 
         if (includeAuth) {
-            client.register(HttpAuthenticationFeature.basic("runtimeUser", "zb!XztG34"));
+            client.register(HttpAuthenticationFeature.basic("participantUser", "zb!XztG34"));
         }
 
         final WebTarget webTarget = client.target(fullyQualifiedEndpoint);
 
         return webTarget.request(MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN);
-    }
-
-    /**
-     * Assert that POST call is Unauthorized.
-     *
-     * @param endPoint the endpoint
-     * @param entity the entity ofthe body
-     * @throws Exception if an error occurs
-     */
-    protected void assertUnauthorizedPost(final String endPoint, final Entity<?> entity) throws Exception {
-        Response rawresp = sendNoAuthRequest(endPoint).post(entity);
-        assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), rawresp.getStatus());
-    }
-
-    /**
-     * Assert that PUT call is Unauthorized.
-     *
-     * @param endPoint the endpoint
-     * @param entity the entity ofthe body
-     * @throws Exception if an error occurs
-     */
-    protected void assertUnauthorizedPut(final String endPoint, final Entity<?> entity) throws Exception {
-        Response rawresp = sendNoAuthRequest(endPoint).put(entity);
-        assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), rawresp.getStatus());
-    }
-
-    /**
-     * Assert that GET call is Unauthorized.
-     *
-     * @param endPoint the endpoint
-     * @throws Exception if an error occurs
-     */
-    protected void assertUnauthorizedGet(final String endPoint) throws Exception {
-        Response rawresp = sendNoAuthRequest(endPoint).buildGet().invoke();
-        assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), rawresp.getStatus());
     }
 
     /**
@@ -176,17 +103,6 @@ public class CommonRestController {
     }
 
     /**
-     * Assert that DELETE call is Unauthorized.
-     *
-     * @param endPoint the endpoint
-     * @throws Exception if an error occurs
-     */
-    protected void assertUnauthorizedDelete(final String endPoint) throws Exception {
-        Response rawresp = sendNoAuthRequest(endPoint).delete();
-        assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), rawresp.getStatus());
-    }
-
-    /**
      * Set Up httpPrefix.
      *
      * @param port the port
@@ -195,7 +111,4 @@ public class CommonRestController {
         httpPrefix = "http://" + SELF + ":" + port + "/";
     }
 
-    protected String getHttpPrefix() {
-        return httpPrefix;
-    }
 }

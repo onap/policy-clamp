@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package handler;
+package org.onap.policy.clamp.controlloop.participant.http.handler;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
@@ -33,13 +33,14 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
 import org.onap.policy.clamp.controlloop.participant.http.main.handler.ControlLoopElementHandler;
+import org.onap.policy.clamp.controlloop.participant.http.utils.CommonTestData;
+import org.onap.policy.clamp.controlloop.participant.http.utils.ToscaUtils;
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import utils.CommonTestData;
-import utils.ToscaUtils;
+
 
 @ExtendWith(SpringExtension.class)
 class ClElementHandlerTest {
