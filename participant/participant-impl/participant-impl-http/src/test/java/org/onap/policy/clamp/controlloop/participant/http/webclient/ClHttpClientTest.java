@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package webclient;
+package org.onap.policy.clamp.controlloop.participant.http.webclient;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -41,10 +41,10 @@ import org.mockserver.model.Parameter;
 import org.onap.policy.clamp.controlloop.participant.http.main.models.ConfigRequest;
 import org.onap.policy.clamp.controlloop.participant.http.main.models.ConfigurationEntity;
 import org.onap.policy.clamp.controlloop.participant.http.main.webclient.ClHttpClient;
+import org.onap.policy.clamp.controlloop.participant.http.utils.CommonTestData;
 import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import utils.CommonTestData;
 
 @ExtendWith(SpringExtension.class)
 class ClHttpClientTest {
