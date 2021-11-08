@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e3825bfe_e796e241",
+        "filename": "packages/policy-clamp-tarball/src/main/resources/etc/HttpParticipantParameters.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 4903
+      },
+      "writtenOn": "2021-11-08T16:30:43Z",
+      "side": 1,
+      "message": "Just a comment, In case you are interested in metrics for prometheus, you can add prometheus to this list, and add a dependency micrometer-registry-prometheus in your pom.xml.",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 36,
+        "endChar": 33
+      },
+      "revId": "73151a27257ab510bf246d2f88d6a2f6493b283a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
