@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "479a7c79_882d6a0e",
+        "filename": "packages/policy-clamp-tarball/src/main/resources/etc/HttpParticipantParameters.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2021-11-08T21:13:11Z",
+      "side": 1,
+      "message": "rename",
+      "range": {
+        "startLine": 4,
+        "startChar": 12,
+        "endLine": 4,
+        "endChar": 23
+      },
+      "revId": "73151a27257ab510bf246d2f88d6a2f6493b283a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e3825bfe_e796e241",
         "filename": "packages/policy-clamp-tarball/src/main/resources/etc/HttpParticipantParameters.yaml",
         "patchSetId": 2
@@ -18,6 +41,168 @@
         "startChar": 0,
         "endLine": 36,
         "endChar": 33
+      },
+      "revId": "73151a27257ab510bf246d2f88d6a2f6493b283a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "204912cc_80ece5bb",
+        "filename": "packages/policy-clamp-tarball/src/main/resources/etc/HttpParticipantParameters.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2021-11-08T21:13:11Z",
+      "side": 1,
+      "message": "Agree",
+      "parentUuid": "e3825bfe_e796e241",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 36,
+        "endChar": 33
+      },
+      "revId": "73151a27257ab510bf246d2f88d6a2f6493b283a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9ac106e9_3d23be3a",
+        "filename": "packages/policy-clamp-tarball/src/main/resources/etc/PolicyParticipantParameters.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2021-11-08T21:13:11Z",
+      "side": 1,
+      "message": "rename",
+      "range": {
+        "startLine": 4,
+        "startChar": 12,
+        "endLine": 4,
+        "endChar": 23
+      },
+      "revId": "73151a27257ab510bf246d2f88d6a2f6493b283a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "05165e02_9ebba9ec",
+        "filename": "participant/participant-impl/participant-impl-http/src/main/resources/config/application.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2021-11-08T21:13:11Z",
+      "side": 1,
+      "message": "rename",
+      "range": {
+        "startLine": 4,
+        "startChar": 12,
+        "endLine": 4,
+        "endChar": 23
+      },
+      "revId": "73151a27257ab510bf246d2f88d6a2f6493b283a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f3513698_cc3fd46a",
+        "filename": "participant/participant-impl/participant-impl-http/src/test/resources/application_test.properties",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2021-11-08T21:13:11Z",
+      "side": 1,
+      "message": "rename",
+      "range": {
+        "startLine": 1,
+        "startChar": 26,
+        "endLine": 1,
+        "endChar": 37
+      },
+      "revId": "73151a27257ab510bf246d2f88d6a2f6493b283a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fd261721_9bf375f7",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/test/resources/application_test.properties",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2021-11-08T21:13:11Z",
+      "side": 1,
+      "message": "rename",
+      "range": {
+        "startLine": 1,
+        "startChar": 26,
+        "endLine": 1,
+        "endChar": 37
+      },
+      "revId": "73151a27257ab510bf246d2f88d6a2f6493b283a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "99bcbb9c_c77fc5b8",
+        "filename": "participant/participant-impl/participant-impl-policy/src/main/resources/config/application.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2021-11-08T21:13:11Z",
+      "side": 1,
+      "message": "rename",
+      "range": {
+        "startLine": 4,
+        "startChar": 12,
+        "endLine": 4,
+        "endChar": 23
+      },
+      "revId": "73151a27257ab510bf246d2f88d6a2f6493b283a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e522a29c_f1637921",
+        "filename": "participant/participant-impl/participant-impl-policy/src/test/resources/application_test.properties",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2021-11-08T21:13:11Z",
+      "side": 1,
+      "message": "rename",
+      "range": {
+        "startLine": 8,
+        "startChar": 41,
+        "endLine": 8,
+        "endChar": 52
       },
       "revId": "73151a27257ab510bf246d2f88d6a2f6493b283a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
