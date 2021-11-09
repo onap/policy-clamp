@@ -26,11 +26,11 @@ import OnapClamp from './OnapClamp';
 
 describe('Verify OnapClamp', () => {
 
-	it('Test the render method',  () => {
+  it('Test the render method', () => {
 
-		const component = shallow(<OnapClamp />)
+    const component = shallow(<OnapClamp/>)
 
-		expect(component).toMatchSnapshot();
-	});
+    expect(component).toMatchSnapshot();
+  });
 
 });

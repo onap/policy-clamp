@@ -26,21 +26,21 @@ import MenuBar from './MenuBar';
 
 describe('Verify MenuBar', () => {
 
-	it('Test the render method', () => {
-		const component = shallow(<MenuBar />)
+  it('Test the render method', () => {
+    const component = shallow(<MenuBar/>)
 
-		expect(component).toMatchSnapshot();
-	});
+    expect(component).toMatchSnapshot();
+  });
 
-	it('Update loopName', () => {
-		const component = shallow(<MenuBar />)
-		component.setProps({ loopName: "newLoop" });
-		expect(component.state('disabled')).toBe(false);
-	});
+  it('Update loopName', () => {
+    const component = shallow(<MenuBar/>)
+    component.setProps({ loopName: "newLoop" });
+    expect(component.state('disabled')).toBe(false);
+  });
 
-	it('Default loopName', () => {
-		const component = shallow(<MenuBar />)
-		component.setProps({ loopName: "Empty (NO loop loaded yet)" });
-		expect(component.state('disabled')).toBe(true);
-	});
+  it('Default loopName', () => {
+    const component = shallow(<MenuBar/>)
+    component.setProps({ loopName: "Empty (NO loop loaded yet)" });
+    expect(component.state('disabled')).toBe(true);
+  });
 });

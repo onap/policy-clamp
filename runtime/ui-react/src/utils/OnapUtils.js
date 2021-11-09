@@ -23,43 +23,43 @@
 
 export default class OnapUtils {
 
-	constructor() {
-		this.clickBlocked = false;
-	}
+  constructor() {
+    this.clickBlocked = false;
+  }
 
-	static jsonEditorErrorFormatter(errors) {
+  static jsonEditorErrorFormatter(errors) {
 
-		let messages = [];
-		let messagesOutputString = null;
+    let messages = [];
+    let messagesOutputString = null;
 
-		// errors is an array of JSON Editor "error" objects, where each
-		// object looks like this:
+    // errors is an array of JSON Editor "error" objects, where each
+    // object looks like this:
 
-		//	{
-		//		message: "Please populate the required property "Threshold""
-		//		path: "root.signatures.0"
-		//		property: "required"
-		//	}
+    // {
+    //   message: "Please populate the required property "Threshold""
+    //   path: "root.signatures.0"
+    //   property: "required"
+    // }
 
-		// In this function we concatenate all the messages, removing any duplicates,
-		// and adding a newline between each message. The result returned is a single
-		// string that can be displayed to the user in an alert message
+    // In this function we concatenate all the messages, removing any duplicates,
+    // and adding a newline between each message. The result returned is a single
+    // string that can be displayed to the user in an alert message
 
-		if (!Array.isArray(errors)) {
-			console.error('jsoneEditorErrorFormatter was passed a non-array argument');
-		} else {
-			for (let ii=0; ii < errors.length; ++ii) {
-				if (!messages.includes(errors[ii].message)) {
-					messages.push(errors[ii].message);
-					if (messagesOutputString) {
-						messagesOutputString += '\n' + errors[ii].message;
-					} else {
-						messagesOutputString = errors[ii].message;
-					}
-				}
-			}
-		}
+    if (!Array.isArray(errors)) {
+      console.error('jsoneEditorErrorFormatter was passed a non-array argument');
+    } else {
+      for (let ii = 0; ii < errors.length; ++ii) {
+        if (!messages.includes(errors[ii].message)) {
+          messages.push(errors[ii].message);
+          if (messagesOutputString) {
+            messagesOutputString += '\n' + errors[ii].message;
+          } else {
+            messagesOutputString = errors[ii].message;
+          }
+        }
+      }
+    }
 
-		return messagesOutputString;
-	}
+    return messagesOutputString;
+  }
 }

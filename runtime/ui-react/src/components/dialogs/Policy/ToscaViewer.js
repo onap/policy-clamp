@@ -27,40 +27,40 @@ import styled from 'styled-components';
 import Button from 'react-bootstrap/Button';
 
 const ToscaDiv = styled.div`
-    background-color: ${props => props.theme.toscaTextareaBackgroundColor};
-    text-align: justify;
-    font-size: ${props => props.theme.toscaTextareaFontSize};
-    width: 100%;
-    height: 30%;
+  background-color: ${ props => props.theme.toscaTextareaBackgroundColor };
+  text-align: justify;
+  font-size: ${ props => props.theme.toscaTextareaFontSize };
+  width: 100%;
+  height: 30%;
 `
 
 export default class ToscaViewer extends React.Component {
 
-   state = {
-        toscaData: this.props.toscaData,
-        yamlPolicyTosca: this.getToscaModelYamlFor(this.props.toscaData),
-   }
+  state = {
+    toscaData: this.props.toscaData,
+    yamlPolicyTosca: this.getToscaModelYamlFor(this.props.toscaData),
+  }
 
-   constructor(props, context) {
-        super(props, context);
-        this.getToscaModelYamlFor = this.getToscaModelYamlFor.bind(this);
-   }
+  constructor(props, context) {
+    super(props, context);
+    this.getToscaModelYamlFor = this.getToscaModelYamlFor.bind(this);
+  }
 
-   getToscaModelYamlFor(toscaData) {
-        PolicyToscaService.getToscaPolicyModelYaml(toscaData["policyModelType"], toscaData["version"]).then(respYamlPolicyTosca => {
-            this.setState({
-                yamlPolicyTosca: respYamlPolicyTosca,
-            })
-        });
-   }
+  getToscaModelYamlFor(toscaData) {
+    PolicyToscaService.getToscaPolicyModelYaml(toscaData["policyModelType"], toscaData["version"]).then(respYamlPolicyTosca => {
+      this.setState({
+        yamlPolicyTosca: respYamlPolicyTosca,
+      })
+    });
+  }
 
-   render() {
-       return (
-           <ToscaDiv>
-               <pre>{this.state.yamlPolicyTosca}</pre>
-               <Button variant="secondary" title="Create a new policy version from the defined parameters"
-                   onClick={this.handleCreateNewVersion}>Create New Version</Button>
-           </ToscaDiv>
-       );
-   }
+  render() {
+    return (
+      <ToscaDiv>
+        <pre>{ this.state.yamlPolicyTosca }</pre>
+        <Button variant="secondary" title="Create a new policy version from the defined parameters"
+                onClick={ this.handleCreateNewVersion }>Create New Version</Button>
+      </ToscaDiv>
+    );
+  }
 }

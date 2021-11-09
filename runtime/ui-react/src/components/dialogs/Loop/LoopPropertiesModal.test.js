@@ -27,82 +27,84 @@ import LoopCache from '../../../api/LoopCache';
 import LoopService from '../../../api/LoopService';
 
 describe('Verify LoopPropertiesModal', () => {
-	const loopCache = new LoopCache({
-		"name": "LOOP_Jbv1z_v1_0_ResourceInstanceName1_tca",
-		"globalPropertiesJson": {
-			"dcaeDeployParameters": {
-				"location_id": "",
-				"policy_id": "TCA_h2NMX_v1_0_ResourceInstanceName1_tca"
-			}
-		}
-	});
+  const loopCache = new LoopCache({
+    "name": "LOOP_Jbv1z_v1_0_ResourceInstanceName1_tca",
+    "globalPropertiesJson": {
+      "dcaeDeployParameters": {
+        "location_id": "",
+        "policy_id": "TCA_h2NMX_v1_0_ResourceInstanceName1_tca"
+      }
+    }
+  });
 
-	it('Test the render method', () => {
-		const component = shallow(
-			<LoopPropertiesModal loopCache={loopCache}/>
-		)
-		component.setState({ show: true,
-			temporaryPropertiesJson: {
-				"dcaeDeployParameters": {
-					"location_id": "",
-					"policy_id": "TCA_h2NMX_v1_0_ResourceInstanceName1_tca"
-				}
-			}
-		});
+  it('Test the render method', () => {
+    const component = shallow(
+      <LoopPropertiesModal loopCache={ loopCache }/>
+    )
+    component.setState({
+      show: true,
+      temporaryPropertiesJson: {
+        "dcaeDeployParameters": {
+          "location_id": "",
+          "policy_id": "TCA_h2NMX_v1_0_ResourceInstanceName1_tca"
+        }
+      }
+    });
 
-	expect(component.state('temporaryPropertiesJson')).toEqual({
-	"dcaeDeployParameters": {
-		"location_id": "",
-		"policy_id": "TCA_h2NMX_v1_0_ResourceInstanceName1_tca"}
-	});
-	expect(component.state('show')).toEqual(true);
+    expect(component.state('temporaryPropertiesJson')).toEqual({
+      "dcaeDeployParameters": {
+        "location_id": "",
+        "policy_id": "TCA_h2NMX_v1_0_ResourceInstanceName1_tca"
+      }
+    });
+    expect(component.state('show')).toEqual(true);
 
-	expect(component).toMatchSnapshot();
-	});
+    expect(component).toMatchSnapshot();
+  });
 
-	it('Test handleClose', () => {
-		const historyMock = { push: jest.fn() };
-		const handleClose = jest.spyOn(LoopPropertiesModal.prototype,'handleClose');
-		const component = shallow(<LoopPropertiesModal history={historyMock} loopCache={loopCache}/>)
+  it('Test handleClose', () => {
+    const historyMock = { push: jest.fn() };
+    const handleClose = jest.spyOn(LoopPropertiesModal.prototype, 'handleClose');
+    const component = shallow(<LoopPropertiesModal history={ historyMock } loopCache={ loopCache }/>)
 
-		component.find('[variant="secondary"]').prop('onClick')();
+    component.find('[variant="secondary"]').prop('onClick')();
 
-		expect(handleClose).toHaveBeenCalledTimes(1);
-		expect(historyMock.push.mock.calls[0]).toEqual([ '/']);
-	});
+    expect(handleClose).toHaveBeenCalledTimes(1);
+    expect(historyMock.push.mock.calls[0]).toEqual(['/']);
+  });
 
-	it('Test handleSave successful', async () => {
-		const flushPromises = () => new Promise(setImmediate);
-		const historyMock = { push: jest.fn() };
-		const loadLoopFunction = jest.fn();
-		const handleSave = jest.spyOn(LoopPropertiesModal.prototype,'handleSave');
-		LoopService.updateGlobalProperties = jest.fn().mockImplementation(() => {
-			return Promise.resolve({
-				ok: true,
-				status: 200,
-				text: () => "OK"
-			});
-		});
+  it('Test handleSave successful', async () => {
+    const flushPromises = () => new Promise(setImmediate);
+    const historyMock = { push: jest.fn() };
+    const loadLoopFunction = jest.fn();
+    const handleSave = jest.spyOn(LoopPropertiesModal.prototype, 'handleSave');
+    LoopService.updateGlobalProperties = jest.fn().mockImplementation(() => {
+      return Promise.resolve({
+        ok: true,
+        status: 200,
+        text: () => "OK"
+      });
+    });
 
-		const component = shallow(<LoopPropertiesModal history={historyMock} 
-						loopCache={loopCache} loadLoopFunction={loadLoopFunction} />)
+    const component = shallow(<LoopPropertiesModal history={ historyMock }
+                                                   loopCache={ loopCache } loadLoopFunction={ loadLoopFunction }/>)
 
-		component.find('[variant="primary"]').prop('onClick')();
-		await flushPromises();
-		component.update();
+    component.find('[variant="primary"]').prop('onClick')();
+    await flushPromises();
+    component.update();
 
-		expect(handleSave).toHaveBeenCalledTimes(1);
-		expect(component.state('show')).toEqual(false);
-		expect(historyMock.push.mock.calls[0]).toEqual([ '/']);
-	});
+    expect(handleSave).toHaveBeenCalledTimes(1);
+    expect(component.state('show')).toEqual(false);
+    expect(historyMock.push.mock.calls[0]).toEqual(['/']);
+  });
 
-	it('Onchange event', () => {
-		const event = {target:{name:"dcaeDeployParameters", value:"{\"location_id\": \"testLocation\",\"policy_id\": \"TCA_h2NMX_v1_0_ResourceInstanceName1_tca\"}"}};
-		const component = shallow(<LoopPropertiesModal loopCache={loopCache}/>);
+  it('Onchange event', () => {
+    const event = { target: { name: "dcaeDeployParameters", value: "{\"location_id\": \"testLocation\",\"policy_id\": \"TCA_h2NMX_v1_0_ResourceInstanceName1_tca\"}" } };
+    const component = shallow(<LoopPropertiesModal loopCache={ loopCache }/>);
 
-		component.find('FormControl').simulate('change', event);
-		component.update();
+    component.find('FormControl').simulate('change', event);
+    component.update();
 
-		expect(component.state('temporaryPropertiesJson').dcaeDeployParameters.location_id).toEqual("testLocation");
-	});
+    expect(component.state('temporaryPropertiesJson').dcaeDeployParameters.location_id).toEqual("testLocation");
+  });
 });

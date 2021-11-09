@@ -27,52 +27,52 @@ import LoopCache from '../../../api/LoopCache';
 
 describe('Verify LoopStatus', () => {
 
-	const loopCache = new LoopCache({
-		"name": "LOOP_Jbv1z_v1_0_ResourceInstanceName1_tca",
-		"lastComputedState": "DESIGN",
-		"components": {
-			"POLICY": {
-				"componentState": {
-					"stateName": "NOT_SENT",
-					"description": "The policies defined have NOT yet been created on the policy engine"
-				}
-			},
-			"DCAE": {
-				"componentState": {
-					"stateName": "BLUEPRINT_DEPLOYED",
-					"description": "The DCAE blueprint has been found in the DCAE inventory but not yet instancianted for this loop"
-				}
-			}
-		}
-	});
+  const loopCache = new LoopCache({
+    "name": "LOOP_Jbv1z_v1_0_ResourceInstanceName1_tca",
+    "lastComputedState": "DESIGN",
+    "components": {
+      "POLICY": {
+        "componentState": {
+          "stateName": "NOT_SENT",
+          "description": "The policies defined have NOT yet been created on the policy engine"
+        }
+      },
+      "DCAE": {
+        "componentState": {
+          "stateName": "BLUEPRINT_DEPLOYED",
+          "description": "The DCAE blueprint has been found in the DCAE inventory but not yet instancianted for this loop"
+        }
+      }
+    }
+  });
 
-	it('Test the render method', () => {
-		const component = shallow(<LoopStatus loopCache={loopCache}/>)
+  it('Test the render method', () => {
+    const component = shallow(<LoopStatus loopCache={ loopCache }/>)
 
-		expect(component).toMatchSnapshot();
-		
-		const loopCacheUpdated = new LoopCache({
-			"name": "LOOP_Jbv1z_v1_0_ResourceInstanceName1_tca",
-			"lastComputedState": "SUBMIT",
-			"components": {
-				"POLICY": {
-					"componentState": {
-						"stateName": "SENT",
-						"description": "The policies defined have NOT yet been created on the policy engine"
-					}
-				},
-				"DCAE": {
-					"componentState": {
-						"stateName": "BLUEPRINT_DEPLOYED",
-						"description": "The DCAE blueprint has been found in the DCAE inventory but not yet instancianted for this loop"
-					}
-				}
-			}
-		});
-		component.setProps({ loopCache: loopCacheUpdated });
+    expect(component).toMatchSnapshot();
 
-		const forms = component.find('TableRow');
-		expect(forms.get(0).props.statusRow.stateName).toEqual("SENT");
-		expect(component.find('label').text()).toContain('SUBMIT');
-	});
+    const loopCacheUpdated = new LoopCache({
+      "name": "LOOP_Jbv1z_v1_0_ResourceInstanceName1_tca",
+      "lastComputedState": "SUBMIT",
+      "components": {
+        "POLICY": {
+          "componentState": {
+            "stateName": "SENT",
+            "description": "The policies defined have NOT yet been created on the policy engine"
+          }
+        },
+        "DCAE": {
+          "componentState": {
+            "stateName": "BLUEPRINT_DEPLOYED",
+            "description": "The DCAE blueprint has been found in the DCAE inventory but not yet instancianted for this loop"
+          }
+        }
+      }
+    });
+    component.setProps({ loopCache: loopCacheUpdated });
+
+    const forms = component.find('TableRow');
+    expect(forms.get(0).props.statusRow.stateName).toEqual("SENT");
+    expect(component.find('label').text()).toContain('SUBMIT');
+  });
 });

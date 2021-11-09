@@ -27,44 +27,44 @@ import LoopCache from '../../../api/LoopCache';
 
 describe('Verify LoopLogs', () => {
 
-	const loopCache = new LoopCache({
-		"name": "LOOP_Jbv1z_v1_0_ResourceInstanceName1_tca",
-			"loopLogs": [
-			{
-				"id": 1,
-				"logType": "INFO",
-				"logComponent": "CLAMP",
-				"message": "Operational policies UPDATED",
-				"logInstant": "2019-07-08T09:44:37Z"
-			}
-		]
-	});
+  const loopCache = new LoopCache({
+    "name": "LOOP_Jbv1z_v1_0_ResourceInstanceName1_tca",
+    "loopLogs": [
+      {
+        "id": 1,
+        "logType": "INFO",
+        "logComponent": "CLAMP",
+        "message": "Operational policies UPDATED",
+        "logInstant": "2019-07-08T09:44:37Z"
+      }
+    ]
+  });
 
-	it('Test the render method', () => {
-		const component = shallow(<LoopLogs loopCache={loopCache}/>)
-		expect(component).toMatchSnapshot();
+  it('Test the render method', () => {
+    const component = shallow(<LoopLogs loopCache={ loopCache }/>)
+    expect(component).toMatchSnapshot();
 
-		const loopCacheUpdated = new LoopCache({
-		"name": "LOOP_Jbv1z_v1_0_ResourceInstanceName1_tca",
-			"loopLogs": [
-			{
-				"id": 1,
-				"logType": "INFO",
-				"logComponent": "CLAMP",
-				"message": "Operational policies UPDATED",
-				"logInstant": "2019-07-08T09:44:37Z"
-			},
-			{
-				"id": 2,
-				"logType": "INFO",
-				"logComponent": "CLAMP",
-				"message": "Operational policies UPDATED",
-				"logInstant": "2019-07-08T09:44:50Z"
-			}
-			]
-		});
+    const loopCacheUpdated = new LoopCache({
+      "name": "LOOP_Jbv1z_v1_0_ResourceInstanceName1_tca",
+      "loopLogs": [
+        {
+          "id": 1,
+          "logType": "INFO",
+          "logComponent": "CLAMP",
+          "message": "Operational policies UPDATED",
+          "logInstant": "2019-07-08T09:44:37Z"
+        },
+        {
+          "id": 2,
+          "logType": "INFO",
+          "logComponent": "CLAMP",
+          "message": "Operational policies UPDATED",
+          "logInstant": "2019-07-08T09:44:50Z"
+        }
+      ]
+    });
 
-		component.setProps({ loopCache: loopCacheUpdated });
-		expect(component.find('TableRow').length).toEqual(2);
-	});
+    component.setProps({ loopCache: loopCacheUpdated });
+    expect(component.find('TableRow').length).toEqual(2);
+  });
 });

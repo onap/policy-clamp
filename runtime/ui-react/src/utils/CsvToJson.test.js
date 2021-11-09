@@ -25,244 +25,244 @@ import CsvToJson from './CsvToJson'
 
 describe('Verify CsvToJson', () => {
 
-	const hdrNames= [ 
-		"Element Short Name",
-		"Element Name",
-		"Element Description",
-		"Element Type",
-		"Sub-Dictionary"
-	];
+  const hdrNames = [
+    "Element Short Name",
+    "Element Name",
+    "Element Description",
+    "Element Type",
+    "Sub-Dictionary"
+  ];
 
-	const jsonKeyNames = [
-		"shortName",
-		"name",
-		"description",
-		"type",
-		"subDictionary"
-	];
+  const jsonKeyNames = [
+    "shortName",
+    "name",
+    "description",
+    "type",
+    "subDictionary"
+  ];
 
-	const mandatory = [ true, true, true, true, false ];
+  const mandatory = [true, true, true, true, false];
 
-	it('Test CsvToJson No Error Case, Quoted Columns', () => {
+  it('Test CsvToJson No Error Case, Quoted Columns', () => {
 
-		let rawCsv = '"Element Short Name","Element Name","Element Description","Element Type","Sub-Dictionary"\n';
-		rawCsv += '"alertType","Alert Type","Type of Alert","string","","admin","2020-06-11T13:56:14.927437Z"';
-				
-		let expectedResult = {
-			 errorMessages: '',
-			 jsonObjArray: [
-				{
-					description: "Type of Alert",
-					name: "Alert Type",
-					shortName: "alertType",
-					subDictionary: "",
-					type: "string"
-				}
-			]
-		};
+    let rawCsv = '"Element Short Name","Element Name","Element Description","Element Type","Sub-Dictionary"\n';
+    rawCsv += '"alertType","Alert Type","Type of Alert","string","","admin","2020-06-11T13:56:14.927437Z"';
 
-		expect(CsvToJson(rawCsv, ',', '|', hdrNames, jsonKeyNames, mandatory)).toEqual(expectedResult);
-	});
+    let expectedResult = {
+      errorMessages: '',
+      jsonObjArray: [
+        {
+          description: "Type of Alert",
+          name: "Alert Type",
+          shortName: "alertType",
+          subDictionary: "",
+          type: "string"
+        }
+      ]
+    };
 
-	it('Test CsvToJson No Error Case, Unquoted Columns', () => {
+    expect(CsvToJson(rawCsv, ',', '|', hdrNames, jsonKeyNames, mandatory)).toEqual(expectedResult);
+  });
 
-		let rawCsv = 'Element Short Name,Element Name,Element Description,Element Type,Sub-Dictionary\n';
-		rawCsv += 'alertType,Alert Type,Type of Alert,string,,admin,2020-06-11T13:56:14.927437Z';
-				
-		let expectedResult = {
-			 errorMessages: '',
-			 jsonObjArray: [
-				{
-					description: "Type of Alert",
-					name: "Alert Type",
-					shortName: "alertType",
-					subDictionary: "",
-					type: "string"
-				}
-			]
-		};
+  it('Test CsvToJson No Error Case, Unquoted Columns', () => {
 
-		expect(CsvToJson(rawCsv, ',', '|', hdrNames, jsonKeyNames, mandatory)).toEqual(expectedResult);
-	});
+    let rawCsv = 'Element Short Name,Element Name,Element Description,Element Type,Sub-Dictionary\n';
+    rawCsv += 'alertType,Alert Type,Type of Alert,string,,admin,2020-06-11T13:56:14.927437Z';
 
-	it('Test CsvToJson Properly Escaped Double Quote and Delimiter', () => {
+    let expectedResult = {
+      errorMessages: '',
+      jsonObjArray: [
+        {
+          description: "Type of Alert",
+          name: "Alert Type",
+          shortName: "alertType",
+          subDictionary: "",
+          type: "string"
+        }
+      ]
+    };
 
-		let rawCsv = '"Element Short Name","Element Name","Element Description","Element Type","Sub-Dictionary"\n';
-		rawCsv += '"alertType","Alert ""Type""","Type of Alert, Varies","string","","admin","2020-06-11T13:56:14.927437Z"';
-		
-		let errorMessage = '';
-				
-		let expectedResult = {
-			errorMessages: errorMessage,
-			jsonObjArray: [
-				{
-					description: "Type of Alert, Varies",
-					name: 'Alert "Type"',
-					shortName: 'alertType',
-					subDictionary: "",
-					type: "string",
-				}
+    expect(CsvToJson(rawCsv, ',', '|', hdrNames, jsonKeyNames, mandatory)).toEqual(expectedResult);
+  });
 
-			]
-		};
+  it('Test CsvToJson Properly Escaped Double Quote and Delimiter', () => {
 
-		expect(CsvToJson(rawCsv, ',', '|', hdrNames, jsonKeyNames, mandatory)).toEqual(expectedResult);
-	});
+    let rawCsv = '"Element Short Name","Element Name","Element Description","Element Type","Sub-Dictionary"\n';
+    rawCsv += '"alertType","Alert ""Type""","Type of Alert, Varies","string","","admin","2020-06-11T13:56:14.927437Z"';
+
+    let errorMessage = '';
+
+    let expectedResult = {
+      errorMessages: errorMessage,
+      jsonObjArray: [
+        {
+          description: "Type of Alert, Varies",
+          name: 'Alert "Type"',
+          shortName: 'alertType',
+          subDictionary: "",
+          type: "string",
+        }
+
+      ]
+    };
+
+    expect(CsvToJson(rawCsv, ',', '|', hdrNames, jsonKeyNames, mandatory)).toEqual(expectedResult);
+  });
 
 
-	it('Test CsvToJson Error Header Mismatch Error Case', () => {
+  it('Test CsvToJson Error Header Mismatch Error Case', () => {
 
-		let rawCsv = '"Element Short Names","Element Name","Element Description","Element Type","Sub-Dictionary"\n';
-		rawCsv += '"alertType","Alert Type","Type of Alert","string","","admin","2020-06-11T13:56:14.927437Z"';
-		
-		let errorMessage = 'Row 1 header key at column #1 is a mismatch. Expected row header must contain at least:\n';
-		errorMessage += 'Element Short Name,Element Name,Element Description,Element Type,Sub-Dictionary';
-				
-		let expectedResult = {
-			 errorMessages: errorMessage,
-			 jsonObjArray: []
-		};
+    let rawCsv = '"Element Short Names","Element Name","Element Description","Element Type","Sub-Dictionary"\n';
+    rawCsv += '"alertType","Alert Type","Type of Alert","string","","admin","2020-06-11T13:56:14.927437Z"';
 
-		expect(CsvToJson(rawCsv, ',', '|', hdrNames, jsonKeyNames, mandatory)).toEqual(expectedResult);
-	});
+    let errorMessage = 'Row 1 header key at column #1 is a mismatch. Expected row header must contain at least:\n';
+    errorMessage += 'Element Short Name,Element Name,Element Description,Element Type,Sub-Dictionary';
 
-	it('Test CsvToJson Error Mismatched Double Quotes in Column', () => {
+    let expectedResult = {
+      errorMessages: errorMessage,
+      jsonObjArray: []
+    };
 
-		let rawCsv = '"Element Short Name","Element Name","Element Description","Element Type","Sub-Dictionary"\n';
-		rawCsv += '"alert"Type","Alert Type","Type of Alert","string","","admin","2020-06-11T13:56:14.927437Z"';
-		
-		let errorMessage = '\nRow #2 is badly formatted at column #1. Perhaps an unescaped double quote.'
-				
-		let expectedResult = {
-			 errorMessages: errorMessage,
-			 jsonObjArray: []
-		};
+    expect(CsvToJson(rawCsv, ',', '|', hdrNames, jsonKeyNames, mandatory)).toEqual(expectedResult);
+  });
 
-		expect(CsvToJson(rawCsv, ',', '|', hdrNames, jsonKeyNames, mandatory)).toEqual(expectedResult);
-	});
+  it('Test CsvToJson Error Mismatched Double Quotes in Column', () => {
 
-	it('Test CsvToJson Error Illegal Whitespace', () => {
+    let rawCsv = '"Element Short Name","Element Name","Element Description","Element Type","Sub-Dictionary"\n';
+    rawCsv += '"alert"Type","Alert Type","Type of Alert","string","","admin","2020-06-11T13:56:14.927437Z"';
 
-		let rawCsv = '"Element Short Name","Element Name","Element Description","Element Type","Sub-Dictionary"\n';
-		rawCsv += 'alertType ,  "Alert Type","Type of Alert","string","","admin","2020-06-11T13:56:14.927437Z"';
-		
-		let errorMessage = '\nMismatched double quotes or illegal whitespace around delimiter at row #2 near column #2';
-				
-		let expectedResult = {
-			 errorMessages: errorMessage,
-			 jsonObjArray: []
-		};
+    let errorMessage = '\nRow #2 is badly formatted at column #1. Perhaps an unescaped double quote.'
 
-		expect(CsvToJson(rawCsv, ',', '|', hdrNames, jsonKeyNames, mandatory)).toEqual(expectedResult);
-	});
+    let expectedResult = {
+      errorMessages: errorMessage,
+      jsonObjArray: []
+    };
 
-	it('Test CsvToJson Error Too Few Data Columns', () => {
+    expect(CsvToJson(rawCsv, ',', '|', hdrNames, jsonKeyNames, mandatory)).toEqual(expectedResult);
+  });
 
-		let rawCsv = '"Element Short Name","Element Name","Element Description","Element Type","Sub-Dictionary"\n';
-		rawCsv += '"alertType","Alert Type","Type of Alert"';
-		
-		let errorMessage = '\nNot enough columns (5) at row #2';
-				
-		let expectedResult = {
-			errorMessages: errorMessage,
-			jsonObjArray: []
-		};
+  it('Test CsvToJson Error Illegal Whitespace', () => {
 
-		expect(CsvToJson(rawCsv, ',', '|', hdrNames, jsonKeyNames, mandatory)).toEqual(expectedResult);
-	});
+    let rawCsv = '"Element Short Name","Element Name","Element Description","Element Type","Sub-Dictionary"\n';
+    rawCsv += 'alertType ,  "Alert Type","Type of Alert","string","","admin","2020-06-11T13:56:14.927437Z"';
 
-	it('Test CsvToJson Error Wrong Header Column Order', () => {
+    let errorMessage = '\nMismatched double quotes or illegal whitespace around delimiter at row #2 near column #2';
 
-		let rawCsv = '"Element Name","Element Short Name","Element Description","Element Type","Sub-Dictionary"\n';
-		rawCsv += '"alertType","Alert Type","Type of Alert","string","","admin","2020-06-11T13:56:14.927437Z"';
-		
-		let errorMessage = 'Row 1 header key at column #1 is a mismatch. Expected row header must contain at least:\n';
-		errorMessage += 'Element Short Name,Element Name,Element Description,Element Type,Sub-Dictionary';
-				
-		let expectedResult = {
-			errorMessages: errorMessage,
-			jsonObjArray: []
-		};
+    let expectedResult = {
+      errorMessages: errorMessage,
+      jsonObjArray: []
+    };
 
-		expect(CsvToJson(rawCsv, ',', '|', hdrNames, jsonKeyNames, mandatory)).toEqual(expectedResult);
-	});
+    expect(CsvToJson(rawCsv, ',', '|', hdrNames, jsonKeyNames, mandatory)).toEqual(expectedResult);
+  });
 
-	it('Test CsvToJson Error Not Enough Rows', () => {
+  it('Test CsvToJson Error Too Few Data Columns', () => {
 
-		let rawCsv = '"Element Short Name","Element Name","Element Description","Element Type","Sub-Dictionary"\n';
-		
-		let errorMessage = '\nNot enough row data found in import file. Need at least a header row and one row of data';
-				
-		let expectedResult = {
-			errorMessages: errorMessage,
-			jsonObjArray: []
-		};
+    let rawCsv = '"Element Short Name","Element Name","Element Description","Element Type","Sub-Dictionary"\n';
+    rawCsv += '"alertType","Alert Type","Type of Alert"';
 
-		expect(CsvToJson(rawCsv, ',', '|', hdrNames, jsonKeyNames, mandatory)).toEqual(expectedResult);
-	});
+    let errorMessage = '\nNot enough columns (5) at row #2';
 
-	it('Test CsvToJson Error Mandatory Field Is Empty', () => {
+    let expectedResult = {
+      errorMessages: errorMessage,
+      jsonObjArray: []
+    };
 
-		let rawCsv = '"Element Short Name","Element Name","Element Description","Element Type","Sub-Dictionary"\n';
-		rawCsv += '"","Alert Type","Type of Alert","string","","admin","2020-06-11T13:56:14.927437Z"';
-				
-		let expectedResult = {
-			 errorMessages: '\nElement Short Name at row #2 is empty but requires a value.',
-			 jsonObjArray: []
-		};
+    expect(CsvToJson(rawCsv, ',', '|', hdrNames, jsonKeyNames, mandatory)).toEqual(expectedResult);
+  });
 
-		expect(CsvToJson(rawCsv, ',', '|', hdrNames, jsonKeyNames, mandatory)).toEqual(expectedResult);
-	});
+  it('Test CsvToJson Error Wrong Header Column Order', () => {
 
-	it('Test CsvToJson Error Mismatched Double Quotes At End', () => {
+    let rawCsv = '"Element Name","Element Short Name","Element Description","Element Type","Sub-Dictionary"\n';
+    rawCsv += '"alertType","Alert Type","Type of Alert","string","","admin","2020-06-11T13:56:14.927437Z"';
 
-		let rawCsv = '"Element Short Name","Element Name","Element Description","Element Type","Sub-Dictionary"\n';
-		rawCsv += '"alertType","Alert Type","Alert Type Description","string","admin","2020-06-11T13:56:14.927437Z';
-				
-		let expectedResult = {
-			 errorMessages: '\nMismatched double quotes at row #2',
-			 jsonObjArray: []
-		};
+    let errorMessage = 'Row 1 header key at column #1 is a mismatch. Expected row header must contain at least:\n';
+    errorMessage += 'Element Short Name,Element Name,Element Description,Element Type,Sub-Dictionary';
 
-		expect(CsvToJson(rawCsv, ',', '||', hdrNames, jsonKeyNames, mandatory)).toEqual(expectedResult);
-	});
+    let expectedResult = {
+      errorMessages: errorMessage,
+      jsonObjArray: []
+    };
 
-	it('Test CsvToJson Error Mismatched Mandatory Array Parameters', () => {
+    expect(CsvToJson(rawCsv, ',', '|', hdrNames, jsonKeyNames, mandatory)).toEqual(expectedResult);
+  });
 
-		let rawCsv = '"Element Short Name","Element Name","Element Description","Element Type","Sub-Dictionary"\n';
-		rawCsv += '"alertType","Alert Type","Alert Type Description","string","admin","2020-06-11T13:56:14.927437Z';
-				
-		let expectedResult = {
-			 errorMessages: 'interanl error: csvHeaderNames, jsonKeyNames, and mandatory arrays parameters are not the same length',
-			 jsonObjArray: []
-		};
+  it('Test CsvToJson Error Not Enough Rows', () => {
 
-		expect(CsvToJson(rawCsv, ',', '||', hdrNames, jsonKeyNames, [ true ])).toEqual(expectedResult);
-	});
+    let rawCsv = '"Element Short Name","Element Name","Element Description","Element Type","Sub-Dictionary"\n';
 
-	it('Test CsvToJson Error Empty Mandatory Array Parameters', () => {
+    let errorMessage = '\nNot enough row data found in import file. Need at least a header row and one row of data';
 
-		let rawCsv = '"Element Short Name","Element Name","Element Description","Element Type","Sub-Dictionary"\n';
-		rawCsv += '"alertType","Alert Type","Alert Type Description","string","admin","2020-06-11T13:56:14.927437Z';
-				
-		let expectedResult = {
-			 errorMessages: 'interanl error: csvHeaderNames, jsonKeyNames, and mandatory arrays have no entries',
-			 jsonObjArray: []
-		};
+    let expectedResult = {
+      errorMessages: errorMessage,
+      jsonObjArray: []
+    };
 
-		expect(CsvToJson(rawCsv, ',', '||', [], [], [])).toEqual(expectedResult);
-	});
+    expect(CsvToJson(rawCsv, ',', '|', hdrNames, jsonKeyNames, mandatory)).toEqual(expectedResult);
+  });
 
-	it('Test CsvToJson Error Illegal Data Contains Internal Delimiter', () => {
+  it('Test CsvToJson Error Mandatory Field Is Empty', () => {
 
-		let rawCsv = '"Element Short Name","Element Name","Element Description","Element Type","Sub-Dictionary"\n';
-		rawCsv += '"alertType","Alert Type","Alert Type||Description","string","admin","2020-06-11T13:56:14.927437Z';
+    let rawCsv = '"Element Short Name","Element Name","Element Description","Element Type","Sub-Dictionary"\n';
+    rawCsv += '"","Alert Type","Type of Alert","string","","admin","2020-06-11T13:56:14.927437Z"';
 
-		let expectedResult = {
-			 errorMessages: '\nRow #1 contains illegal sequence of characters (||)',
-			 jsonObjArray: []
-		};
+    let expectedResult = {
+      errorMessages: '\nElement Short Name at row #2 is empty but requires a value.',
+      jsonObjArray: []
+    };
 
-		expect(CsvToJson(rawCsv, ',', '||', hdrNames, jsonKeyNames, mandatory)).toEqual(expectedResult);
-	});
+    expect(CsvToJson(rawCsv, ',', '|', hdrNames, jsonKeyNames, mandatory)).toEqual(expectedResult);
+  });
+
+  it('Test CsvToJson Error Mismatched Double Quotes At End', () => {
+
+    let rawCsv = '"Element Short Name","Element Name","Element Description","Element Type","Sub-Dictionary"\n';
+    rawCsv += '"alertType","Alert Type","Alert Type Description","string","admin","2020-06-11T13:56:14.927437Z';
+
+    let expectedResult = {
+      errorMessages: '\nMismatched double quotes at row #2',
+      jsonObjArray: []
+    };
+
+    expect(CsvToJson(rawCsv, ',', '||', hdrNames, jsonKeyNames, mandatory)).toEqual(expectedResult);
+  });
+
+  it('Test CsvToJson Error Mismatched Mandatory Array Parameters', () => {
+
+    let rawCsv = '"Element Short Name","Element Name","Element Description","Element Type","Sub-Dictionary"\n';
+    rawCsv += '"alertType","Alert Type","Alert Type Description","string","admin","2020-06-11T13:56:14.927437Z';
+
+    let expectedResult = {
+      errorMessages: 'interanl error: csvHeaderNames, jsonKeyNames, and mandatory arrays parameters are not the same length',
+      jsonObjArray: []
+    };
+
+    expect(CsvToJson(rawCsv, ',', '||', hdrNames, jsonKeyNames, [true])).toEqual(expectedResult);
+  });
+
+  it('Test CsvToJson Error Empty Mandatory Array Parameters', () => {
+
+    let rawCsv = '"Element Short Name","Element Name","Element Description","Element Type","Sub-Dictionary"\n';
+    rawCsv += '"alertType","Alert Type","Alert Type Description","string","admin","2020-06-11T13:56:14.927437Z';
+
+    let expectedResult = {
+      errorMessages: 'interanl error: csvHeaderNames, jsonKeyNames, and mandatory arrays have no entries',
+      jsonObjArray: []
+    };
+
+    expect(CsvToJson(rawCsv, ',', '||', [], [], [])).toEqual(expectedResult);
+  });
+
+  it('Test CsvToJson Error Illegal Data Contains Internal Delimiter', () => {
+
+    let rawCsv = '"Element Short Name","Element Name","Element Description","Element Type","Sub-Dictionary"\n';
+    rawCsv += '"alertType","Alert Type","Alert Type||Description","string","admin","2020-06-11T13:56:14.927437Z';
+
+    let expectedResult = {
+      errorMessages: '\nRow #1 contains illegal sequence of characters (||)',
+      jsonObjArray: []
+    };
+
+    expect(CsvToJson(rawCsv, ',', '||', hdrNames, jsonKeyNames, mandatory)).toEqual(expectedResult);
+  });
 })

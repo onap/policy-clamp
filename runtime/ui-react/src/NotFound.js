@@ -24,13 +24,13 @@ import React from 'react'
 
 
 export default class NotFound extends React.Component {
-	render () {
-		return (
+  render() {
+    return (
       <div id='main'>
-      	<div class="divRow"><b>Page Not Found!</b></div>
-      	<div class="divRow">Please cick <a href="/">here</a> to go back to the main page.</div>
+        <div class="divRow"><b>Page Not Found!</b></div>
+        <div class="divRow">Please cick <a href="/">here</a> to go back to the main page.</div>
       </div>
 
-		);
-	}
+    );
+  }
 }

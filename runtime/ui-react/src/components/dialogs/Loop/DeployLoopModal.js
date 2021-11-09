@@ -32,142 +32,147 @@ import styled from 'styled-components';
 import Spinner from 'react-bootstrap/Spinner'
 
 const StyledSpinnerDiv = styled.div`
-	justify-content: center !important;
-	display: flex !important;
+  justify-content: center !important;
+  display: flex !important;
 `;
 
 const ModalStyled = styled(Modal)`
-	background-color: transparent;
+  background-color: transparent;
 `
 const FormStyled = styled(Form.Group)`
-	padding: .25rem 1.5rem;
+  padding: .25rem 1.5rem;
 `
 export default class DeployLoopModal extends React.Component {
 
 
-		
-	constructor(props, context) {
-		super(props, context);
+  constructor(props, context) {
+    super(props, context);
 
-		this.handleSave = this.handleSave.bind(this);
-		this.handleClose = this.handleClose.bind(this);
-		this.handleChange = this.handleChange.bind(this);
-		this.refreshStatus = this.refreshStatus.bind(this);
-		this.renderDeployParam = this.renderDeployParam.bind(this);
-		this.renderSpinner = this.renderSpinner.bind(this);
+    this.handleSave = this.handleSave.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.refreshStatus = this.refreshStatus.bind(this);
+    this.renderDeployParam = this.renderDeployParam.bind(this);
+    this.renderSpinner = this.renderSpinner.bind(this);
 
-		const propertiesJson = JSON.parse(JSON.stringify(this.props.loopCache.getGlobalProperties()));
-		this.state = {
-			loopCache: this.props.loopCache,
-			temporaryPropertiesJson: propertiesJson,
-			show: true,
-			key: this.getInitialKeyValue(propertiesJson)
-		};
-	}
-	getInitialKeyValue(temporaryPropertiesJson) {
-		const deployJsonList = temporaryPropertiesJson["dcaeDeployParameters"];
-		return Object.keys(deployJsonList).find((obj) => Object.keys(deployJsonList).indexOf(obj) === 0);
-	}
-	componentWillReceiveProps(newProps) {
-		this.setState({
-			loopName: newProps.loopCache.getLoopName(),
-			show: true
-		});
-	}
+    const propertiesJson = JSON.parse(JSON.stringify(this.props.loopCache.getGlobalProperties()));
+    this.state = {
+      loopCache: this.props.loopCache,
+      temporaryPropertiesJson: propertiesJson,
+      show: true,
+      key: this.getInitialKeyValue(propertiesJson)
+    };
+  }
 
-	handleClose(){
-		this.setState({ show: false });
-		this.props.history.push('/');
-	}
+  getInitialKeyValue(temporaryPropertiesJson) {
+    const deployJsonList = temporaryPropertiesJson["dcaeDeployParameters"];
+    return Object.keys(deployJsonList).find((obj) => Object.keys(deployJsonList).indexOf(obj) === 0);
+  }
 
-	renderSpinner() {
-		if (this.state.deploying) {
-			return (
-				<StyledSpinnerDiv>
-					<Spinner animation="border" role="status">
-						<span className="sr-only">Loading...</span>
-					</Spinner>
-				</StyledSpinnerDiv>
-			);
-		} else {
-			return (<div></div>);
-		}
-	}
+  componentWillReceiveProps(newProps) {
+    this.setState({
+      loopName: newProps.loopCache.getLoopName(),
+      show: true
+    });
+  }
 
-	handleSave() {
-		const loopName = this.props.loopCache.getLoopName();
-		// save the global propserties
-		this.setState({ deploying: true });
-		LoopService.updateGlobalProperties(loopName, this.state.temporaryPropertiesJson).then(resp => {
-			LoopActionService.performAction(loopName, "deploy").then(pars => {
-				this.props.showSucAlert("Action deploy successfully performed");
-				// refresh status and update loop logs
-				this.refreshStatus(loopName);
-			})
-			.catch(error => {
-				this.props.showFailAlert("Action deploy failed");
-				// refresh status and update loop logs
-				this.refreshStatus(loopName);
-			});
-		});
-	}
+  handleClose() {
+    this.setState({ show: false });
+    this.props.history.push('/');
+  }
 
-	refreshStatus(loopName) {
-		LoopActionService.refreshStatus(loopName).then(data => {
-			this.props.updateLoopFunction(data);
-			this.setState({ show: false, deploying: false });
-			this.props.history.push('/');
-		})
-		.catch(error => {
-			this.props.showFailAlert("Refresh status failed");
-			this.setState({ show: false, deploying: false  });
-			this.props.history.push('/');
-		});
-	}
-	handleChange(event) {
-		let deploymentParam = this.state.temporaryPropertiesJson["dcaeDeployParameters"];
-		deploymentParam[this.state.key][event.target.name] = event.target.value;
+  renderSpinner() {
+    if (this.state.deploying) {
+      return (
+        <StyledSpinnerDiv>
+          <Spinner animation="border" role="status">
+            <span className="sr-only">Loading...</span>
+          </Spinner>
+        </StyledSpinnerDiv>
+      );
+    } else {
+      return (<div></div>);
+    }
+  }
 
-		this.setState({temporaryPropertiesJson:{dcaeDeployParameters: deploymentParam}});
-	}
-	renderDeployParamTabs() {
-		if (typeof (this.state.temporaryPropertiesJson) === "undefined") {
-			 return "";
-		}
+  handleSave() {
+    const loopName = this.props.loopCache.getLoopName();
+    // save the global propserties
+    this.setState({ deploying: true });
+    LoopService.updateGlobalProperties(loopName, this.state.temporaryPropertiesJson).then(resp => {
+      LoopActionService.performAction(loopName, "deploy").then(pars => {
+        this.props.showSucAlert("Action deploy successfully performed");
+        // refresh status and update loop logs
+        this.refreshStatus(loopName);
+      })
+        .catch(error => {
+          this.props.showFailAlert("Action deploy failed");
+          // refresh status and update loop logs
+          this.refreshStatus(loopName);
+        });
+    });
+  }
 
-		const deployJsonList = this.state.temporaryPropertiesJson["dcaeDeployParameters"];
-		var indents = [];
-		Object.keys(deployJsonList).forEach(item =>
-			indents.push(<Tab key={item} eventKey={item} title={item}>
-				{this.renderDeployParam(deployJsonList[item])}
-				</Tab>)
-		);
-		return indents;
-	}
-	renderDeployParam(deployJson) {
-		var indents = [];
-		Object.keys(deployJson).forEach(item =>
-		indents.push(<FormStyled key={item}>
-				<Form.Label>{item}</Form.Label>
-				<Form.Control type="text" name={item} onChange={this.handleChange} defaultValue={deployJson[item]}></Form.Control>
-			</FormStyled>));
-		return indents;
-	}
-	render() {
-		return (
-					<ModalStyled size="lg" show={this.state.show} onHide={this.handleClose} backdrop="static" keyboard={false} >
-						<Modal.Header closeButton>
-							<Modal.Title>Deployment parameters</Modal.Title>
-						</Modal.Header>
-						<Tabs id="controlled-tab-example" activeKey={this.state.key} onSelect={key => this.setState({ key })}>
-						{this.renderDeployParamTabs()}
-						</Tabs>
-						{this.renderSpinner()}
-						<Modal.Footer>
-							<Button variant="secondary" type="null" onClick={this.handleClose}>Cancel</Button>
-							<Button variant="primary" type="submit" onClick={this.handleSave}>Deploy</Button>
-						</Modal.Footer>
-					</ModalStyled>
-		);
-	}
+  refreshStatus(loopName) {
+    LoopActionService.refreshStatus(loopName).then(data => {
+      this.props.updateLoopFunction(data);
+      this.setState({ show: false, deploying: false });
+      this.props.history.push('/');
+    })
+      .catch(error => {
+        this.props.showFailAlert("Refresh status failed");
+        this.setState({ show: false, deploying: false });
+        this.props.history.push('/');
+      });
+  }
+
+  handleChange(event) {
+    let deploymentParam = this.state.temporaryPropertiesJson["dcaeDeployParameters"];
+    deploymentParam[this.state.key][event.target.name] = event.target.value;
+
+    this.setState({ temporaryPropertiesJson: { dcaeDeployParameters: deploymentParam } });
+  }
+
+  renderDeployParamTabs() {
+    if (typeof (this.state.temporaryPropertiesJson) === "undefined") {
+      return "";
+    }
+
+    const deployJsonList = this.state.temporaryPropertiesJson["dcaeDeployParameters"];
+    var indents = [];
+    Object.keys(deployJsonList).forEach(item =>
+      indents.push(<Tab key={ item } eventKey={ item } title={ item }>
+        { this.renderDeployParam(deployJsonList[item]) }
+      </Tab>)
+    );
+    return indents;
+  }
+
+  renderDeployParam(deployJson) {
+    var indents = [];
+    Object.keys(deployJson).forEach(item =>
+      indents.push(<FormStyled key={ item }>
+        <Form.Label>{ item }</Form.Label>
+        <Form.Control type="text" name={ item } onChange={ this.handleChange } defaultValue={ deployJson[item] }></Form.Control>
+      </FormStyled>));
+    return indents;
+  }
+
+  render() {
+    return (
+      <ModalStyled size="lg" show={ this.state.show } onHide={ this.handleClose } backdrop="static" keyboard={ false }>
+        <Modal.Header closeButton>
+          <Modal.Title>Deployment parameters</Modal.Title>
+        </Modal.Header>
+        <Tabs id="controlled-tab-example" activeKey={ this.state.key } onSelect={ key => this.setState({ key }) }>
+          { this.renderDeployParamTabs() }
+        </Tabs>
+        { this.renderSpinner() }
+        <Modal.Footer>
+          <Button variant="secondary" type="null" onClick={ this.handleClose }>Cancel</Button>
+          <Button variant="primary" type="submit" onClick={ this.handleSave }>Deploy</Button>
+        </Modal.Footer>
+      </ModalStyled>
+    );
+  }
 }

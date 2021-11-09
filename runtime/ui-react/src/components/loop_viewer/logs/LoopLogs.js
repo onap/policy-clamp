@@ -26,71 +26,72 @@ import LoopCache from '../../../api/LoopCache';
 import styled from 'styled-components';
 
 const LoopLogsHeaderDivStyled = styled.div`
-	background-color: ${props => props.theme.loopLogsHeaderBackgroundColor};
-	padding: 10px 10px;
-	color: ${props => props.theme.loopLogsHeaderFontColor};
+  background-color: ${ props => props.theme.loopLogsHeaderBackgroundColor };
+  padding: 10px 10px;
+  color: ${ props => props.theme.loopLogsHeaderFontColor };
 `
 const TableStyled = styled(Table)`
-    
-    overflow: auto;
+
+  overflow: auto;
 `
 const TableRow = ({ logRow }) => (
-	<tr>
-		<td>{logRow.logInstant}</td>
-		<td>{logRow.logType}</td>
-		<td>{logRow.logComponent}</td>
-		<td>{logRow.message}</td>
-	</tr>
+  <tr>
+    <td>{ logRow.logInstant }</td>
+    <td>{ logRow.logType }</td>
+    <td>{ logRow.logComponent }</td>
+    <td>{ logRow.message }</td>
+  </tr>
 
 )
 
 export default class LoopLogs extends React.Component {
 
-	state = {
-		loopCache: new LoopCache({})
-	}
-	constructor(props) {
-		super(props);
-		this.renderLogs = this.renderLogs.bind(this);
-		this.state.loopCache = props.loopCache;
-	}
+  state = {
+    loopCache: new LoopCache({})
+  }
 
-	shouldComponentUpdate(nextProps, nextState) {
-		return this.state.loopCache !== nextState.loopCache;
-	}
+  constructor(props) {
+    super(props);
+    this.renderLogs = this.renderLogs.bind(this);
+    this.state.loopCache = props.loopCache;
+  }
 
-	componentWillReceiveProps(newProps) {
-		this.setState({
-			loopCache: newProps.loopCache
-		});
-	}
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.state.loopCache !== nextState.loopCache;
+  }
 
-	renderLogs() {
-	    let logsArray = this.state.loopCache.getLoopLogsArray();
-		if (logsArray != null) {
-			return (logsArray.map(row => <TableRow key={row.id} logRow={row} />));
-		}
-	}
+  componentWillReceiveProps(newProps) {
+    this.setState({
+      loopCache: newProps.loopCache
+    });
+  }
 
-	render() {
-		return (
-			<LoopLogsHeaderDivStyled>
-				<label>Loop Logs</label>
-				<TableStyled striped hover variant responsive>
-					<thead>
-						<tr>
-							<th><span align="left">Date</span></th>
-							<th><span align="left">Type</span></th>
-							<th><span align="left">Component</span></th>
-							<th><span align="right">Log</span></th>
-						</tr>
-					</thead>
-					<tbody>
-						{this.renderLogs()}
-					</tbody>
-				</TableStyled>
-			</LoopLogsHeaderDivStyled>
+  renderLogs() {
+    let logsArray = this.state.loopCache.getLoopLogsArray();
+    if (logsArray != null) {
+      return (logsArray.map(row => <TableRow key={ row.id } logRow={ row }/>));
+    }
+  }
 
-		);
-	}
+  render() {
+    return (
+      <LoopLogsHeaderDivStyled>
+        <label>Loop Logs</label>
+        <TableStyled striped hover variant responsive>
+          <thead>
+          <tr>
+            <th><span align="left">Date</span></th>
+            <th><span align="left">Type</span></th>
+            <th><span align="left">Component</span></th>
+            <th><span align="right">Log</span></th>
+          </tr>
+          </thead>
+          <tbody>
+          { this.renderLogs() }
+          </tbody>
+        </TableStyled>
+      </LoopLogsHeaderDivStyled>
+
+    );
+  }
 }
