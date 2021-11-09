@@ -38,8 +38,10 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
  *
  */
 public class CommonUtils {
-    private static final String POLICY_TYPE_ID = "policy_type_id";
-    private static final String POLICY_ID = "policy_id";
+
+    private CommonUtils() {
+        throw new IllegalStateException("Utility class");
+    }
 
     /**
      * Prepare participant updates map.
