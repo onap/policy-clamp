@@ -9,13 +9,13 @@ The ONAP CLAMP platform abstracts the details of these systems under the concept
 At a higher level, CLAMP is about supporting and managing the broad operational life cycle of VNFs/VMs and ultimately ONAP components itself. It will offer the ability to design, test, deploy and update control loop automation - both closed and open. Automating these functions would represent a significant saving on operational costs compared to traditional methods.
 
 # Developer Contact
-Owner: ONAP CLAMP Dev team
+Owner: ONAP Policy/CLAMP Dev team
 Mailing List : onap-discuss@lists.onap.org
-Add the following prefix to Subject on the mailing list : [CLAMP]
+Add the following prefix to Subject on the mailing list : [POLICY]
 See here to subscribe : https://wiki.onap.org/display/DW/Mailing+Lists
 
 # Wiki
-https://wiki.onap.org/display/DW/CLAMP+Project
+https://wiki.onap.org/display/DW/Policy+Framework+Project
 
 # Build
 Jenkins Job: ${jenkins-joblink}
