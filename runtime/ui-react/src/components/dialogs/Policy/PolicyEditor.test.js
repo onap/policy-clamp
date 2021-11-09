@@ -26,46 +26,47 @@ import { shallow, mount } from 'enzyme';
 import PolicyToscaService from '../../../api/PolicyToscaService';
 
 describe('Verify PolicyEditor', () => {
-    const fs = require('fs');
+  const fs = require('fs');
 
-    let toscaJson = fs.readFileSync('src/components/dialogs/Policy/toscaData.test.json', {encoding:'utf8', flag:'r'})
+  let toscaJson = fs.readFileSync('src/components/dialogs/Policy/toscaData.test.json', { encoding: 'utf8', flag: 'r' })
 
-    const policyProperties = {
-      "tca.policy": {
-        "domain": "measurementsForVfScaling",
-        "metricsPerEventName": [
-          {
-            "policyScope": "DCAE",
-            "thresholds": [
-              {
-                "version": "1.0.2",
-                "severity": "MAJOR",
-                "thresholdValue": 200,
-                "closedLoopEventStatus": "ONSET",
-                "closedLoopControlName": "LOOP_test",
-                "direction": "LESS_OR_EQUAL",
-                "fieldPath": "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedTotalPacketsDelta"
-              }
-            ],
-            "eventName": "vLoadBalancer",
-            "policyVersion": "v0.0.1",
-            "controlLoopSchemaType": "VM",
-            "policyName": "DCAE.Config_tca-hi-lo"
-          }
-        ]
-      }
-    };
+  const policyProperties = {
+    "tca.policy": {
+      "domain": "measurementsForVfScaling",
+      "metricsPerEventName": [
+        {
+          "policyScope": "DCAE",
+          "thresholds": [
+            {
+              "version": "1.0.2",
+              "severity": "MAJOR",
+              "thresholdValue": 200,
+              "closedLoopEventStatus": "ONSET",
+              "closedLoopControlName": "LOOP_test",
+              "direction": "LESS_OR_EQUAL",
+              "fieldPath": "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedTotalPacketsDelta"
+            }
+          ],
+          "eventName": "vLoadBalancer",
+          "policyVersion": "v0.0.1",
+          "controlLoopSchemaType": "VM",
+          "policyName": "DCAE.Config_tca-hi-lo"
+        }
+      ]
+    }
+  };
 
 
-    it('Test the render method',async () => {
-         PolicyToscaService.getToscaPolicyModel = jest.fn().mockImplementation(() => {
-            return Promise.resolve(toscaJson);
-         });
-
-        const component = mount(<PolicyEditor policyModelType="onap.policies.monitoring.tcagen2" policyModelTypeVersion="1.0.0"
-            policyName="org.onap.new" policyVersion="1.0.0" policyProperties={policyProperties}
-            policiesTableUpdateFunction={() => {}} />);
-        await PolicyToscaService.getToscaPolicyModel();
-        expect(component).toMatchSnapshot();
+  it('Test the render method', async () => {
+    PolicyToscaService.getToscaPolicyModel = jest.fn().mockImplementation(() => {
+      return Promise.resolve(toscaJson);
     });
+
+    const component = mount(<PolicyEditor policyModelType="onap.policies.monitoring.tcagen2" policyModelTypeVersion="1.0.0"
+                                          policyName="org.onap.new" policyVersion="1.0.0" policyProperties={ policyProperties }
+                                          policiesTableUpdateFunction={ () => {
+                                          } }/>);
+    await PolicyToscaService.getToscaPolicyModel();
+    expect(component).toMatchSnapshot();
+  });
 });

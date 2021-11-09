@@ -25,71 +25,71 @@ import LoopActionService from '../../api/LoopActionService';
 
 
 export default class PerformActions extends React.Component {
-	state = {
-		loopName: this.props.loopCache.getLoopName(),
-		loopAction: this.props.loopAction
-	};
+  state = {
+    loopName: this.props.loopCache.getLoopName(),
+    loopAction: this.props.loopAction
+  };
 
-	constructor(props, context) {
-		super(props, context);
-		this.refreshStatus = this.refreshStatus.bind(this);
-	}
+  constructor(props, context) {
+    super(props, context);
+    this.refreshStatus = this.refreshStatus.bind(this);
+  }
 
-	componentWillReceiveProps(newProps) {
-		this.setState({
-			loopName: newProps.loopCache.getLoopName(),
-			loopAction: newProps.loopAction
-		});
-	}
+  componentWillReceiveProps(newProps) {
+    this.setState({
+      loopName: newProps.loopCache.getLoopName(),
+      loopAction: newProps.loopAction
+    });
+  }
 
-	componentDidMount() {
-		const action = this.state.loopAction;
-		const loopName = this.state.loopName;
+  componentDidMount() {
+    const action = this.state.loopAction;
+    const loopName = this.state.loopName;
 
-		if (action === 'delete') {
-			if (window.confirm('You are about to remove Control Loop Model "' + loopName +
-					'". Select OK to continue with deletion or Cancel to keep the model.') === false) {
-				return;
-			}
-		}
+    if (action === 'delete') {
+      if (window.confirm('You are about to remove Control Loop Model "' + loopName +
+        '". Select OK to continue with deletion or Cancel to keep the model.') === false) {
+        return;
+      }
+    }
 
-		this.props.setBusyLoading(); // Alert top level to start block user clicks
+    this.props.setBusyLoading(); // Alert top level to start block user clicks
 
-		LoopActionService.performAction(loopName, action)
-		.then(pars => {
-			this.props.showSucAlert("Action " + action + " successfully performed");
-			if (action === 'delete') {
-				this.props.updateLoopFunction(null);
-				this.props.history.push('/');
-			} else {
-				// refresh status and update loop logs
-				this.refreshStatus(loopName);
-			}
-		})
-		.catch(error => {
-			this.props.showFailAlert("Action " + action + " failed");
-			// refresh status and update loop logs
-			this.refreshStatus(loopName);
-		})
-		.finally(() => this.props.clearBusyLoading());
-	}
+    LoopActionService.performAction(loopName, action)
+      .then(pars => {
+        this.props.showSucAlert("Action " + action + " successfully performed");
+        if (action === 'delete') {
+          this.props.updateLoopFunction(null);
+          this.props.history.push('/');
+        } else {
+          // refresh status and update loop logs
+          this.refreshStatus(loopName);
+        }
+      })
+      .catch(error => {
+        this.props.showFailAlert("Action " + action + " failed");
+        // refresh status and update loop logs
+        this.refreshStatus(loopName);
+      })
+      .finally(() => this.props.clearBusyLoading());
+  }
 
-	refreshStatus(loopName) {
+  refreshStatus(loopName) {
 
-		this.props.setBusyLoading();
+    this.props.setBusyLoading();
 
-		LoopActionService.refreshStatus(loopName)
-		.then(data => {
-			this.props.updateLoopFunction(data);
-			this.props.history.push('/');
-		})
-		.catch(error => {
-			this.props.history.push('/');
-		})
-		.finally(() => this.props.clearBusyLoading());
-	}
+    LoopActionService.refreshStatus(loopName)
+      .then(data => {
+        this.props.updateLoopFunction(data);
+        this.props.history.push('/');
+      })
+      .catch(error => {
+        this.props.history.push('/');
+      })
+      .finally(() => this.props.clearBusyLoading());
+  }
 
-	render() {
-		return null;
-	}
+  render() {
+    return null;
+  }
 }

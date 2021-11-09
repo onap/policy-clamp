@@ -24,75 +24,75 @@
 import { createGlobalStyle } from 'styled-components';
 
 export const GlobalClampStyle = createGlobalStyle`
-	body {
-		padding: 0;
-		margin: 0;
-		font-family: ${props => props.theme.fontFamily};
-		font-size: ${props => props.theme.fontSize};
-		font-weight: normal;
-	}
+  body {
+    padding: 0;
+    margin: 0;
+    font-family: ${ props => props.theme.fontFamily };
+    font-size: ${ props => props.theme.fontSize };
+    font-weight: normal;
+  }
 
-	span {
-		font-family: ${props => props.theme.fontFamily};
-		font-size: ${props => props.theme.fontSize};
-		font-weight: bold;
-	}
+  span {
+    font-family: ${ props => props.theme.fontFamily };
+    font-size: ${ props => props.theme.fontSize };
+    font-weight: bold;
+  }
 
-	a {
-		font-family: ${props => props.theme.fontFamily};
-		font-size: ${props => props.theme.fontSize};
-		font-weight: bold;
-	}
+  a {
+    font-family: ${ props => props.theme.fontFamily };
+    font-size: ${ props => props.theme.fontSize };
+    font-weight: bold;
+  }
 
-	div {
-		font-family: ${props => props.theme.fontFamily};
-		font-size: ${props => props.theme.fontSize};
-		border-radius: 4px;
-		margin-top: 1px;
-	}
+  div {
+    font-family: ${ props => props.theme.fontFamily };
+    font-size: ${ props => props.theme.fontSize };
+    border-radius: 4px;
+    margin-top: 1px;
+  }
 
-	label {
-		font-family: ${props => props.theme.fontFamily};
-		font-size: ${props => props.theme.fontSize};
-		font-weight: bold;
-	}
+  label {
+    font-family: ${ props => props.theme.fontFamily };
+    font-size: ${ props => props.theme.fontSize };
+    font-weight: bold;
+  }
 
-	button {
-		font-family: ${props => props.theme.fontFamily};
-		font-size: ${props => props.theme.fontSize};
-		font-weight: bold;
-	}
+  button {
+    font-family: ${ props => props.theme.fontFamily };
+    font-size: ${ props => props.theme.fontSize };
+    font-weight: bold;
+  }
 
 `
 
 export const DefaultClampTheme = {
-	fontDanger: '#eb238e',
-	fontWarning: '#eb238e',
-	fontLight: '#ffffff',
-	fontDark: '#888888',
-	fontHighlight: '#ffff00',
-	fontNormal: 'black',
+  fontDanger: '#eb238e',
+  fontWarning: '#eb238e',
+  fontLight: '#ffffff',
+  fontDark: '#888888',
+  fontHighlight: '#ffff00',
+  fontNormal: 'black',
 
-	backgroundColor: '#eeeeee',
-	fontFamily: 'Arial, Sans-serif',
-	fontSize: '16px',
+  backgroundColor: '#eeeeee',
+  fontFamily: 'Arial, Sans-serif',
+  fontSize: '16px',
 
-	loopViewerBackgroundColor: 'white',
-	loopViewerFontColor: 'yellow',
-	loopViewerHeaderBackgroundColor: '#337ab7',
-	loopViewerHeaderFontColor: 'white',
+  loopViewerBackgroundColor: 'white',
+  loopViewerFontColor: 'yellow',
+  loopViewerHeaderBackgroundColor: '#337ab7',
+  loopViewerHeaderFontColor: 'white',
 
-    loopLogsHeaderBackgroundColor:  'white',
-    loopLogsHeaderFontColor: 'black',
+  loopLogsHeaderBackgroundColor: 'white',
+  loopLogsHeaderFontColor: 'black',
 
-	menuBackgroundColor: 'white',
-	menuFontColor: 'black',
-	menuHighlightedBackgroundColor: '#337ab7',
-	menuHighlightedFontColor: 'white',
+  menuBackgroundColor: 'white',
+  menuFontColor: 'black',
+  menuHighlightedBackgroundColor: '#337ab7',
+  menuHighlightedFontColor: 'white',
 
-	toscaTextareaBackgroundColor: 'white',
-	toscaTextareaFontSize: '13px',
+  toscaTextareaBackgroundColor: 'white',
+  toscaTextareaFontSize: '13px',
 
-	policyEditorBackgroundColor: 'white',
-	policyEditorFontSize: '13px'
+  policyEditorBackgroundColor: 'white',
+  policyEditorFontSize: '13px'
 };

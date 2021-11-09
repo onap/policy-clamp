@@ -26,11 +26,11 @@ import NotFound from './NotFound';
 
 describe('Verify OnapClamp', () => {
 
-	it('Test the render method',  () => {
+  it('Test the render method', () => {
 
-		const component = shallow(<NotFound />)
+    const component = shallow(<NotFound/>)
 
-		expect(component).toMatchSnapshot();
-	});
+    expect(component).toMatchSnapshot();
+  });
 
 });

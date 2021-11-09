@@ -34,104 +34,106 @@ import SvgGenerator from '../../loop_viewer/svg/SvgGenerator';
 import LoopCache from '../../../api/LoopCache';
 
 const ModalStyled = styled(Modal)`
-	background-color: transparent;
+  background-color: transparent;
 `
 const CheckBoxStyled = styled(FormCheck.Input)`
-	margin-left:3rem;
+  margin-left: 3rem;
 `
 
 export default class OpenLoopModal extends React.Component {
-	constructor(props, context) {
-		super(props, context);
+  constructor(props, context) {
+    super(props, context);
 
-		this.getLoopNames = this.getLoopNames.bind(this);
-		this.handleOpen = this.handleOpen.bind(this);
-		this.handleClose = this.handleClose.bind(this);
-		this.handleDropDownListChange = this.handleDropDownListChange.bind(this);
-		this.renderSvg = this.renderSvg.bind(this);
-		this.showReadOnly = props.showReadOnly !== undefined ? props.showReadOnly : true;
-		this.state = {
-			show: true,
-			chosenLoopName: '',
-			loopNames: [],
-			loopCacheOpened: new LoopCache({})
-		};
-	}
+    this.getLoopNames = this.getLoopNames.bind(this);
+    this.handleOpen = this.handleOpen.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+    this.handleDropDownListChange = this.handleDropDownListChange.bind(this);
+    this.renderSvg = this.renderSvg.bind(this);
+    this.showReadOnly = props.showReadOnly !== undefined ? props.showReadOnly : true;
+    this.state = {
+      show: true,
+      chosenLoopName: '',
+      loopNames: [],
+      loopCacheOpened: new LoopCache({})
+    };
+  }
 
-	componentWillMount() {
-		this.getLoopNames();
-	}
+  componentWillMount() {
+    this.getLoopNames();
+  }
 
-	handleClose() {
-		this.setState({ show: false });
-		this.props.history.push('/');
-	}
+  handleClose() {
+    this.setState({ show: false });
+    this.props.history.push('/');
+  }
 
-	handleDropDownListChange(e) {
-        LoopService.getLoop(e.value).then(loop => {
-            this.setState({
-                chosenLoopName: e.value,
-                loopCacheOpened: new LoopCache(loop)
-             });
-		});
-	}
+  handleDropDownListChange(e) {
+    LoopService.getLoop(e.value).then(loop => {
+      this.setState({
+        chosenLoopName: e.value,
+        loopCacheOpened: new LoopCache(loop)
+      });
+    });
+  }
 
-	getLoopNames() {
-		LoopService.getLoopNames().then(loopNames => {
-		    if (Object.entries(loopNames).length !== 0) {
-		        const loopOptions = loopNames.filter(loopName => loopName!=='undefined').map((loopName) => { return { label: loopName, value: loopName } });
-            	this.setState({ loopNames: loopOptions })
-		    }
-		});
-	}
+  getLoopNames() {
+    LoopService.getLoopNames().then(loopNames => {
+      if (Object.entries(loopNames).length !== 0) {
+        const loopOptions = loopNames.filter(loopName => loopName !== 'undefined').map((loopName) => {
+          return { label: loopName, value: loopName }
+        });
+        this.setState({ loopNames: loopOptions })
+      }
+    });
+  }
 
-	handleOpen() {
-		console.info("Loop " + this.state.chosenLoopName + " is chosen");
-        this.handleClose();
-		this.props.loadLoopFunction(this.state.chosenLoopName);
-	}
+  handleOpen() {
+    console.info("Loop " + this.state.chosenLoopName + " is chosen");
+    this.handleClose();
+    this.props.loadLoopFunction(this.state.chosenLoopName);
+  }
 
-	renderSvg() {
-		return(
-				<SvgGenerator loopCache={this.state.loopCacheOpened} clickable={false} generatedFrom={SvgGenerator.GENERATED_FROM_INSTANCE}/>
-		);
-	}
+  renderSvg() {
+    return (
+      <SvgGenerator loopCache={ this.state.loopCacheOpened } clickable={ false } generatedFrom={ SvgGenerator.GENERATED_FROM_INSTANCE }/>
+    );
+  }
 
-	render() {
-		return (
-			<ModalStyled size="xl" show={this.state.show} onHide={this.handleClose} backdrop="static" keyboard={false} >
-				<Modal.Header closeButton>
-					<Modal.Title>Open Model</Modal.Title>
-				</Modal.Header>
-				<Modal.Body>
-					<Form.Group as={Row} controlId="formPlaintextEmail">
-						<Form.Label column sm="2">Model Name:</Form.Label>
-						<Col sm="10">
-							<Select onChange={this.handleDropDownListChange}
-							options={this.state.loopNames} />
-						</Col>
-					</Form.Group>
-					<Form.Group as={Row} style={{alignItems: 'center'}} controlId="formSvgPreview">
-						<Form.Label column sm="2">Model Preview:</Form.Label>
-						<Col sm="10">
-						    {this.renderSvg()}
-						</Col>
-					</Form.Group>
-					{this.showReadOnly === true ?
-						<Form.Group as={Row} controlId="formBasicCheckbox">
-							<Form.Check>
-								<FormCheck.Label>Read Only Mode:</FormCheck.Label>
-								<CheckBoxStyled style={{marginLeft: '3.5em'}} type="checkbox" />
-							</Form.Check>
-						</Form.Group>
-					: null}
-				</Modal.Body>
-				<Modal.Footer>
-					<Button variant="secondary" type="null" onClick={this.handleClose}>Cancel</Button>
-					<Button variant="primary" type="submit" onClick={this.handleOpen}>Open</Button>
-				</Modal.Footer>
-			</ModalStyled>
+  render() {
+    return (
+      <ModalStyled size="xl" show={ this.state.show } onHide={ this.handleClose } backdrop="static" keyboard={ false }>
+        <Modal.Header closeButton>
+          <Modal.Title>Open Model</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Group as={ Row } controlId="formPlaintextEmail">
+            <Form.Label column sm="2">Model Name:</Form.Label>
+            <Col sm="10">
+              <Select onChange={ this.handleDropDownListChange }
+                      options={ this.state.loopNames }/>
+            </Col>
+          </Form.Group>
+          <Form.Group as={ Row } style={ { alignItems: 'center' } } controlId="formSvgPreview">
+            <Form.Label column sm="2">Model Preview:</Form.Label>
+            <Col sm="10">
+              { this.renderSvg() }
+            </Col>
+          </Form.Group>
+          { this.showReadOnly === true ?
+            <Form.Group as={ Row } controlId="formBasicCheckbox">
+              <Form.Check>
+                <FormCheck.Label>Read Only Mode:</FormCheck.Label>
+                <CheckBoxStyled style={ { marginLeft: '3.5em' } } type="checkbox"/>
+              </Form.Check>
+            </Form.Group>
+            : null }
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" type="null" onClick={ this.handleClose }>Cancel</Button>
+          <Button variant="primary" type="submit" onClick={ this.handleOpen }>Open</Button>
+        </Modal.Footer>
+      </ModalStyled>
 
-		);
-	}
+    );
+  }
 }

@@ -31,79 +31,79 @@ import DescriptionIcon from '@material-ui/icons/Description';
 
 export default class PoliciesTreeViewer extends React.Component {
 
-    separator = ".";
+  separator = ".";
 
-    nodesList = new Map();
+  nodesList = new Map();
 
-    constructor(props, context) {
-        super(props, context);
-        this.createPoliciesTree = this.createPoliciesTree.bind(this);
-        this.handleTreeItemClick = this.handleTreeItemClick.bind(this);
-        this.buildNameWithParent = this.buildNameWithParent.bind(this);
+  constructor(props, context) {
+    super(props, context);
+    this.createPoliciesTree = this.createPoliciesTree.bind(this);
+    this.handleTreeItemClick = this.handleTreeItemClick.bind(this);
+    this.buildNameWithParent = this.buildNameWithParent.bind(this);
 
+  }
+
+  state = {
+    policiesTreeData: this.createPoliciesTree(this.props.policiesData),
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.policiesData !== this.props.policiesData) {
+      this.setState({ policiesTreeData: this.createPoliciesTree(this.props.policiesData) })
     }
+  }
 
-    state = {
-            policiesTreeData: this.createPoliciesTree(this.props.policiesData),
-    }
+  createPoliciesTree(policiesArray) {
+    // put my policies array in a Json
+    let nodeId = 1;
+    let root = { id: nodeId, policyCount: 0, name: "ROOT", children: [], parent: undefined };
+    this.nodesList.set(nodeId++, root);
 
-    componentDidUpdate(prevProps) {
-      if (prevProps.policiesData !== this.props.policiesData) {
-        this.setState({policiesTreeData: this.createPoliciesTree(this.props.policiesData)})
-      }
-    }
-
-    createPoliciesTree(policiesArray) {
-        // put my policies array in a Json
-        let nodeId = 1;
-        let root = {id:nodeId, policyCount:0, name:"ROOT", children:[], parent: undefined};
-        this.nodesList.set(nodeId++, root);
-
-        policiesArray.forEach(policy => {
-            let currentTreeNode = root;
-            policy[this.props.valueForTreeCreation].split(this.separator).forEach((policyNamePart, index, policyNamePartsArray) => {
-                let node = currentTreeNode["children"].find(element => element.name === policyNamePart);
-                if (typeof(node) === "undefined") {
-                    node = {id:nodeId, policyCount:0, children:[], name:policyNamePart, parent:currentTreeNode};
-                    this.nodesList.set(nodeId++, node);
-                    currentTreeNode["children"].push(node);
-                }
-                if ((index+1) === policyNamePartsArray.length) {
-                    ++currentTreeNode["policyCount"];
-                }
-                currentTreeNode = node;
-            })
-        })
-        return root;
-    }
-
-    buildNameWithParent(node) {
-        let nameToBuild = node.name;
-        if (node.parent  !== undefined) {
-            nameToBuild = this.buildNameWithParent(node.parent) + this.separator + node.name;
+    policiesArray.forEach(policy => {
+      let currentTreeNode = root;
+      policy[this.props.valueForTreeCreation].split(this.separator).forEach((policyNamePart, index, policyNamePartsArray) => {
+        let node = currentTreeNode["children"].find(element => element.name === policyNamePart);
+        if (typeof (node) === "undefined") {
+          node = { id: nodeId, policyCount: 0, children: [], name: policyNamePart, parent: currentTreeNode };
+          this.nodesList.set(nodeId++, node);
+          currentTreeNode["children"].push(node);
         }
-        return nameToBuild;
-    }
+        if ((index + 1) === policyNamePartsArray.length) {
+          ++currentTreeNode["policyCount"];
+        }
+        currentTreeNode = node;
+      })
+    })
+    return root;
+  }
 
-    handleTreeItemClick(event, value) {
-        let fullName = this.buildNameWithParent(this.nodesList.get(value[0])).substring(5);
-        this.props.policiesFilterFunction(fullName);
+  buildNameWithParent(node) {
+    let nameToBuild = node.name;
+    if (node.parent !== undefined) {
+      nameToBuild = this.buildNameWithParent(node.parent) + this.separator + node.name;
     }
+    return nameToBuild;
+  }
 
-    renderTreeItems(nodes) {
-        return (<TreeItem key={nodes.id} nodeId={nodes.id} label={nodes.name + "("+ nodes.policyCount + ")"} onNodeSelect={this.handleTreeItemClick}>
-          {
-            Array.isArray(nodes.children) ? nodes.children.map((node) => this.renderTreeItems(node)) : null
-          }
-        </TreeItem>);
-    };
+  handleTreeItemClick(event, value) {
+    let fullName = this.buildNameWithParent(this.nodesList.get(value[0])).substring(5);
+    this.props.policiesFilterFunction(fullName);
+  }
 
-    render() {
-         return (
-                <TreeView defaultExpanded={['root']} defaultCollapseIcon={<FolderOpenIcon />}
-                defaultExpandIcon={<FolderIcon />} defaultEndIcon={<DescriptionIcon />} onNodeSelect={this.handleTreeItemClick} multiSelect>
-                  {this.renderTreeItems(this.state.policiesTreeData)}
-                </TreeView>
-          );
-    }
+  renderTreeItems(nodes) {
+    return (<TreeItem key={ nodes.id } nodeId={ nodes.id } label={ nodes.name + "(" + nodes.policyCount + ")" } onNodeSelect={ this.handleTreeItemClick }>
+      {
+        Array.isArray(nodes.children) ? nodes.children.map((node) => this.renderTreeItems(node)) : null
+      }
+    </TreeItem>);
+  };
+
+  render() {
+    return (
+      <TreeView defaultExpanded={ ['root'] } defaultCollapseIcon={ <FolderOpenIcon/> }
+                defaultExpandIcon={ <FolderIcon/> } defaultEndIcon={ <DescriptionIcon/> } onNodeSelect={ this.handleTreeItemClick } multiSelect>
+        { this.renderTreeItems(this.state.policiesTreeData) }
+      </TreeView>
+    );
+  }
 }

@@ -39,42 +39,42 @@ export default class PolicyToscaService {
   }
 
   static getToscaPolicyModelYaml(policyModelType, policyModelVersion) {
-        return fetch(window.location.pathname + 'restservices/clds/v2/policyToscaModels/yaml/' + policyModelType + "/" + policyModelVersion, {
-            method: 'GET',
-            credentials: 'same-origin'
-        })
-            .then(function (response) {
-                console.debug("getToscaPolicyModelYaml response received: ", response.status);
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    console.error("getToscaPolicyModelYaml query failed");
-                    return "";
-                }
-            })
-            .catch(function (error) {
-                console.error("getToscaPolicyModelYaml error received", error);
-                return "";
-            });
+    return fetch(window.location.pathname + 'restservices/clds/v2/policyToscaModels/yaml/' + policyModelType + "/" + policyModelVersion, {
+      method: 'GET',
+      credentials: 'same-origin'
+    })
+      .then(function (response) {
+        console.debug("getToscaPolicyModelYaml response received: ", response.status);
+        if (response.ok) {
+          return response.json();
+        } else {
+          console.error("getToscaPolicyModelYaml query failed");
+          return "";
+        }
+      })
+      .catch(function (error) {
+        console.error("getToscaPolicyModelYaml error received", error);
+        return "";
+      });
   }
 
   static getToscaPolicyModel(policyModelType, policyModelVersion) {
-         return fetch(window.location.pathname + 'restservices/clds/v2/policyToscaModels/' + policyModelType + "/" + policyModelVersion, {
-             method: 'GET',
-             credentials: 'same-origin'
-         })
-             .then(function (response) {
-                 console.debug("getToscaPolicyModel response received: ", response.status);
-                 if (response.ok) {
-                     return response.json();
-                 } else {
-                     console.error("getToscaPolicyModel query failed");
-                     return {};
-                 }
-             })
-             .catch(function (error) {
-                 console.error("getToscaPolicyModel error received", error);
-                 return {};
-             });
+    return fetch(window.location.pathname + 'restservices/clds/v2/policyToscaModels/' + policyModelType + "/" + policyModelVersion, {
+      method: 'GET',
+      credentials: 'same-origin'
+    })
+      .then(function (response) {
+        console.debug("getToscaPolicyModel response received: ", response.status);
+        if (response.ok) {
+          return response.json();
+        } else {
+          console.error("getToscaPolicyModel query failed");
+          return {};
+        }
+      })
+      .catch(function (error) {
+        console.error("getToscaPolicyModel error received", error);
+        return {};
+      });
   }
 }

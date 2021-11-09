@@ -28,15 +28,15 @@ import LoopService from '../../../api/LoopService';
 describe('Verify OpenLoopModal', () => {
 
   beforeEach(() => {
-      fetch.resetMocks();
-      fetch.mockResponse(JSON.stringify([
-        "LOOP_gmtAS_v1_0_ResourceInstanceName1_tca",
-        "LOOP_gmtAS_v1_0_ResourceInstanceName1_tca_3",
-        "LOOP_gmtAS_v1_0_ResourceInstanceName2_tca_2"
-      ]));
+    fetch.resetMocks();
+    fetch.mockResponse(JSON.stringify([
+      "LOOP_gmtAS_v1_0_ResourceInstanceName1_tca",
+      "LOOP_gmtAS_v1_0_ResourceInstanceName1_tca_3",
+      "LOOP_gmtAS_v1_0_ResourceInstanceName2_tca_2"
+    ]));
   });
 
-    it('Test the render method', () => {
+  it('Test the render method', () => {
 
     const component = shallow(<OpenLoopModal/>);
     expect(component).toMatchSnapshot();
@@ -45,13 +45,14 @@ describe('Verify OpenLoopModal', () => {
   it('Onchange event', async () => {
     const flushPromises = () => new Promise(setImmediate);
     LoopService.getLoop = jest.fn().mockImplementation(() => {
-  		return Promise.resolve({
-  			ok: true,
-  			status: 200,
-  			json: () => {}
-  		});
-  	});
-    const event = {value: 'LOOP_gmtAS_v1_0_ResourceInstanceName1_tca_3'};
+      return Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => {
+        }
+      });
+    });
+    const event = { value: 'LOOP_gmtAS_v1_0_ResourceInstanceName1_tca_3' };
     const component = shallow(<OpenLoopModal/>);
     component.find('StateManager').simulate('change', event);
     await flushPromises();
@@ -61,30 +62,30 @@ describe('Verify OpenLoopModal', () => {
 
 
   it('Test handleClose', () => {
-    const historyMock = { push: jest.fn() }; 
-    const handleClose = jest.spyOn(OpenLoopModal.prototype,'handleClose');
-    const component = shallow(<OpenLoopModal history={historyMock} />)
+    const historyMock = { push: jest.fn() };
+    const handleClose = jest.spyOn(OpenLoopModal.prototype, 'handleClose');
+    const component = shallow(<OpenLoopModal history={ historyMock }/>)
 
     component.find('[variant="secondary"]').prop('onClick')();
 
     expect(handleClose).toHaveBeenCalledTimes(1);
     expect(component.state('show')).toEqual(false);
-    expect(historyMock.push.mock.calls[0]).toEqual([ '/']);
-    
+    expect(historyMock.push.mock.calls[0]).toEqual(['/']);
+
     handleClose.mockClear();
   });
 
-    it('Test handleSubmit', () => {
+  it('Test handleSubmit', () => {
     const historyMock = { push: jest.fn() };
-    const loadLoopFunction = jest.fn();  
-    const handleOpen = jest.spyOn(OpenLoopModal.prototype,'handleOpen');
-    const component = shallow(<OpenLoopModal history={historyMock} loadLoopFunction={loadLoopFunction}/>)
+    const loadLoopFunction = jest.fn();
+    const handleOpen = jest.spyOn(OpenLoopModal.prototype, 'handleOpen');
+    const component = shallow(<OpenLoopModal history={ historyMock } loadLoopFunction={ loadLoopFunction }/>)
 
     component.find('[variant="primary"]').prop('onClick')();
 
     expect(handleOpen).toHaveBeenCalledTimes(1);
     expect(component.state('show')).toEqual(false);
-    expect(historyMock.push.mock.calls[0]).toEqual([ '/']);
+    expect(historyMock.push.mock.calls[0]).toEqual(['/']);
 
     handleOpen.mockClear();
   });

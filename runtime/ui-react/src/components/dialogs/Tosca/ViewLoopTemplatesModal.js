@@ -38,126 +38,136 @@ import LoopCache from '../../../api/LoopCache';
 import SvgGenerator from '../../loop_viewer/svg/SvgGenerator';
 
 const ModalStyled = styled(Modal)`
-	background-color: transparent;
+  background-color: transparent;
 `
 
 const cellStyle = { border: '1px solid black' };
-const headerStyle = { backgroundColor: '#ddd',	border: '2px solid black'	};
-const rowHeaderStyle = {backgroundColor:'#ddd',  fontSize: '15pt', text: 'bold', border: '1px solid black'};
+const headerStyle = { backgroundColor: '#ddd', border: '2px solid black' };
+const rowHeaderStyle = { backgroundColor: '#ddd', fontSize: '15pt', text: 'bold', border: '1px solid black' };
 
 export default class ViewLoopTemplatesModal extends React.Component {
   state = {
-        show: true,
-		content: 'Please select a loop template to display it',
-		selectedRow: -1,
-		loopTemplatesData: [],
-		fakeLoopCacheWithTemplate: new LoopCache({}),
-		loopTemplateColumnsDefinition: [
-			{ title: "#", field: "index", render: rowData => rowData.tableData.id + 1,
-				cellStyle: cellStyle,
-				headerStyle: headerStyle
-			},
-			{ title: "Template Name", field: "name",
-				cellStyle: cellStyle,
-				headerStyle: headerStyle
-			},
-			{ title: "Service Model Name", field: "modelService.serviceDetails.name",
-				cellStyle: cellStyle,
-				headerStyle: headerStyle
-			},
-			{ title: "Loop Type Allowed", field: "allowedLoopType",
-				cellStyle: cellStyle,
-				headerStyle: headerStyle
-			},
-			{ title: "# Instances Allowed", field: "maximumInstancesAllowed",
-				cellStyle: cellStyle,
-				headerStyle: headerStyle
-			},
-			{ title: "Modified Date", field: "updatedDate", editable: 'never',
-				cellStyle: cellStyle,
-				headerStyle: headerStyle
-			}
-		],
-		tableIcons: {
-			FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
-			LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
-			NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-			PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
-			ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-			Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
-			SortArrow: forwardRef((props, ref) => <ArrowUpward {...props} ref={ref} />)
-		}
-	};
-
-	constructor(props, context) {
-		super(props, context);
-		this.handleClose = this.handleClose.bind(this);
-		this.renderSvg = this.renderSvg.bind(this);
-		this.getLoopTemplate = this.getLoopTemplate.bind(this);
-		this.getAllLoopTemplates();
-	}
-
-	getAllLoopTemplates() {
-		TemplateService.getAllLoopTemplates().then(templatesData => {
-			// replace -1 in maximumInstancesAllowed with more meaningful 'No Limit'
-			for (let item in templatesData) {
-				if (templatesData[item].maximumInstancesAllowed === -1) {
-					templatesData[item].maximumInstancesAllowed = 'No Limit';
-				}
-			} 
-			this.setState({ loopTemplatesData: templatesData })
-		});
-	}
-
-	getLoopTemplate(templateIdInDataArray) {
-	    if (typeof templateIdInDataArray !== "undefined") {
-	        this.setState({ fakeLoopCacheWithTemplate:
-                new LoopCache({
-                    "loopTemplate":this.state.loopTemplatesData[templateIdInDataArray],
-                    "name": "fakeLoop"
-                })
-	        })
-		} else {
-          	this.setState({ fakeLoopCacheWithTemplate: new LoopCache({}) })
-        }
+    show: true,
+    content: 'Please select a loop template to display it',
+    selectedRow: -1,
+    loopTemplatesData: [],
+    fakeLoopCacheWithTemplate: new LoopCache({}),
+    loopTemplateColumnsDefinition: [
+      {
+        title: "#", field: "index", render: rowData => rowData.tableData.id + 1,
+        cellStyle: cellStyle,
+        headerStyle: headerStyle
+      },
+      {
+        title: "Template Name", field: "name",
+        cellStyle: cellStyle,
+        headerStyle: headerStyle
+      },
+      {
+        title: "Service Model Name", field: "modelService.serviceDetails.name",
+        cellStyle: cellStyle,
+        headerStyle: headerStyle
+      },
+      {
+        title: "Loop Type Allowed", field: "allowedLoopType",
+        cellStyle: cellStyle,
+        headerStyle: headerStyle
+      },
+      {
+        title: "# Instances Allowed", field: "maximumInstancesAllowed",
+        cellStyle: cellStyle,
+        headerStyle: headerStyle
+      },
+      {
+        title: "Modified Date", field: "updatedDate", editable: 'never',
+        cellStyle: cellStyle,
+        headerStyle: headerStyle
+      }
+    ],
+    tableIcons: {
+      FirstPage: forwardRef((props, ref) => <FirstPage { ...props } ref={ ref }/>),
+      LastPage: forwardRef((props, ref) => <LastPage { ...props } ref={ ref }/>),
+      NextPage: forwardRef((props, ref) => <ChevronRight { ...props } ref={ ref }/>),
+      PreviousPage: forwardRef((props, ref) => <ChevronLeft { ...props } ref={ ref }/>),
+      ResetSearch: forwardRef((props, ref) => <Clear { ...props } ref={ ref }/>),
+      Search: forwardRef((props, ref) => <Search { ...props } ref={ ref }/>),
+      SortArrow: forwardRef((props, ref) => <ArrowUpward { ...props } ref={ ref }/>)
     }
+  };
 
-	handleClose() {
-		this.setState({ show: false });
-		this.props.history.push('/')
-	}
+  constructor(props, context) {
+    super(props, context);
+    this.handleClose = this.handleClose.bind(this);
+    this.renderSvg = this.renderSvg.bind(this);
+    this.getLoopTemplate = this.getLoopTemplate.bind(this);
+    this.getAllLoopTemplates();
+  }
 
-	renderSvg() {
-		return(
-			<SvgGenerator loopCache={this.state.fakeLoopCacheWithTemplate} clickable={false} generatedFrom={SvgGenerator.GENERATED_FROM_TEMPLATE}/>
-		)
-	}
+  getAllLoopTemplates() {
+    TemplateService.getAllLoopTemplates().then(templatesData => {
+      // replace -1 in maximumInstancesAllowed with more meaningful 'No Limit'
+      for (let item in templatesData) {
+        if (templatesData[item].maximumInstancesAllowed === -1) {
+          templatesData[item].maximumInstancesAllowed = 'No Limit';
+        }
+      }
+      this.setState({ loopTemplatesData: templatesData })
+    });
+  }
 
-	render() {
-    return (
-    		<ModalStyled size="xl" show={this.state.show} onHide={this.handleClose} backdrop="static"  keyboard={false}>
-    			<Modal.Header closeButton>
-    			</Modal.Header>
-    			<Modal.Body>
-    			   <MaterialTable
-    				  title={"View Blueprint MicroService Templates"}
-    				  data={this.state.loopTemplatesData}
-					  columns={this.state.loopTemplateColumnsDefinition}
-					  icons={this.state.tableIcons}
-    			      onRowClick={(event, rowData) => {this.getLoopTemplate(rowData.tableData.id);this.setState({selectedRow: rowData.tableData.id})}}
-					  options={{
-					      headerStyle:rowHeaderStyle,
-					      rowStyle: rowData => ({
-					      backgroundColor: (this.state.selectedRow !== -1 && this.state.selectedRow === rowData.tableData.id) ? '#EEE' : '#FFF'
-                          })
-                      }}
-                />
-	            {this.renderSvg()}
-                </Modal.Body>
-                <Modal.Footer>
-                	<Button variant="secondary" onClick={this.handleClose}>Close</Button>
-               </Modal.Footer>
-      </ModalStyled>
-      );
+  getLoopTemplate(templateIdInDataArray) {
+    if (typeof templateIdInDataArray !== "undefined") {
+      this.setState({
+        fakeLoopCacheWithTemplate:
+          new LoopCache({
+            "loopTemplate": this.state.loopTemplatesData[templateIdInDataArray],
+            "name": "fakeLoop"
+          })
+      })
+    } else {
+      this.setState({ fakeLoopCacheWithTemplate: new LoopCache({}) })
     }
   }
+
+  handleClose() {
+    this.setState({ show: false });
+    this.props.history.push('/')
+  }
+
+  renderSvg() {
+    return (
+      <SvgGenerator loopCache={ this.state.fakeLoopCacheWithTemplate } clickable={ false } generatedFrom={ SvgGenerator.GENERATED_FROM_TEMPLATE }/>
+    )
+  }
+
+  render() {
+    return (
+      <ModalStyled size="xl" show={ this.state.show } onHide={ this.handleClose } backdrop="static" keyboard={ false }>
+        <Modal.Header closeButton>
+        </Modal.Header>
+        <Modal.Body>
+          <MaterialTable
+            title={ "View Blueprint MicroService Templates" }
+            data={ this.state.loopTemplatesData }
+            columns={ this.state.loopTemplateColumnsDefinition }
+            icons={ this.state.tableIcons }
+            onRowClick={ (event, rowData) => {
+              this.getLoopTemplate(rowData.tableData.id);
+              this.setState({ selectedRow: rowData.tableData.id })
+            } }
+            options={ {
+              headerStyle: rowHeaderStyle,
+              rowStyle: rowData => ({
+                backgroundColor: (this.state.selectedRow !== -1 && this.state.selectedRow === rowData.tableData.id) ? '#EEE' : '#FFF'
+              })
+            } }
+          />
+          { this.renderSvg() }
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={ this.handleClose }>Close</Button>
+        </Modal.Footer>
+      </ModalStyled>
+    );
+  }
+}

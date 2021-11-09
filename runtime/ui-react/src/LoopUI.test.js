@@ -30,142 +30,144 @@ import LoopActionService from './api/LoopActionService';
 import LoopService from './api/LoopService';
 
 describe('Verify LoopUI', () => {
-	beforeEach(() => {
-		fetch.resetMocks();
-		fetch.mockImplementation(() => {
-			return Promise.resolve({
-				ok: true,
-				status: 200,
-				text: () => "testUser"
+  beforeEach(() => {
+    fetch.resetMocks();
+    fetch.mockImplementation(() => {
+      return Promise.resolve({
+        ok: true,
+        status: 200,
+        text: () => "testUser"
 
-			});
-		});
-	})
+      });
+    });
+  })
 
-	const loopCache = new LoopCache({
-		"name": "LOOP_Jbv1z_v1_0_ResourceInstanceName1_tca",
-		"components": {
-			"POLICY": {
-				"componentState": {
-					"stateName": "UNKNOWN",
-					"description": "The policies defined have NOT yet been created on the policy engine"
-				}
-			},
-			"DCAE": {
-				"componentState": {
-					"stateName": "BLUEPRINT_DEPLOYED",
-					"description": "The DCAE blueprint has been found in the DCAE inventory but not yet instancianted for this loop"
-				}
-			}
-		}
-	});
+  const loopCache = new LoopCache({
+    "name": "LOOP_Jbv1z_v1_0_ResourceInstanceName1_tca",
+    "components": {
+      "POLICY": {
+        "componentState": {
+          "stateName": "UNKNOWN",
+          "description": "The policies defined have NOT yet been created on the policy engine"
+        }
+      },
+      "DCAE": {
+        "componentState": {
+          "stateName": "BLUEPRINT_DEPLOYED",
+          "description": "The DCAE blueprint has been found in the DCAE inventory but not yet instancianted for this loop"
+        }
+      }
+    }
+  });
 
-	it('Test the render method', async () => {
-		const flushPromises = () => new Promise(setImmediate);
+  it('Test the render method', async () => {
+    const flushPromises = () => new Promise(setImmediate);
 
-		const component = shallow(<LoopUI />)
-		component.setState({
-			loopName: "testLoopName",
-			showSucAlert: false,
-			showFailAlert: false 
-		});
-		await flushPromises();
-		expect(component).toMatchSnapshot();
-	});
+    const component = shallow(<LoopUI/>)
+    component.setState({
+      loopName: "testLoopName",
+      showSucAlert: false,
+      showFailAlert: false
+    });
+    await flushPromises();
+    expect(component).toMatchSnapshot();
+  });
 
-	test('Test closeLoop method', () => {
-		const historyMock = { push: jest.fn() };
-		const component = shallow(<LoopUI history={historyMock}/>)
-		const instance = component.instance();
-		instance.closeLoop();
-			
-		expect(component.state('loopName')).toEqual(OnapConstants.defaultLoopName);
-		expect(historyMock.push.mock.calls[0]).toEqual([ '/']);
-	})
+  test('Test closeLoop method', () => {
+    const historyMock = { push: jest.fn() };
+    const component = shallow(<LoopUI history={ historyMock }/>)
+    const instance = component.instance();
+    instance.closeLoop();
 
-	test('Test loadLoop method refresh suc', async () => {
-		const historyMock = { push: jest.fn() };
-		LoopService.getLoop = jest.fn().mockImplementation(() => {
-			return Promise.resolve({
-				ok: true,
-				status: 200,
-				text: () => {}
-			});
-		});
+    expect(component.state('loopName')).toEqual(OnapConstants.defaultLoopName);
+    expect(historyMock.push.mock.calls[0]).toEqual(['/']);
+  })
 
-		LoopActionService.refreshStatus = jest.fn().mockImplementation(() => {
-			return Promise.resolve({name: "LOOP_Jbv1z_v1_0_ResourceInstanceName1_tca"});
-		});
+  test('Test loadLoop method refresh suc', async () => {
+    const historyMock = { push: jest.fn() };
+    LoopService.getLoop = jest.fn().mockImplementation(() => {
+      return Promise.resolve({
+        ok: true,
+        status: 200,
+        text: () => {
+        }
+      });
+    });
 
-		const flushPromises = () => new Promise(setImmediate);
-		const component = shallow(<LoopUI history={historyMock}/>)
-		const instance = component.instance();
-		instance.loadLoop("LOOP_Jbv1z_v1_0_ResourceInstanceName1_tca");
+    LoopActionService.refreshStatus = jest.fn().mockImplementation(() => {
+      return Promise.resolve({ name: "LOOP_Jbv1z_v1_0_ResourceInstanceName1_tca" });
+    });
 
-		await flushPromises();
+    const flushPromises = () => new Promise(setImmediate);
+    const component = shallow(<LoopUI history={ historyMock }/>)
+    const instance = component.instance();
+    instance.loadLoop("LOOP_Jbv1z_v1_0_ResourceInstanceName1_tca");
 
-		const resLoopCache = instance.getLoopCache();
-			
-		expect(resLoopCache.getComponentStates()).toBeUndefined();
-		expect(component.state('loopName')).toEqual("LOOP_Jbv1z_v1_0_ResourceInstanceName1_tca");
-	})
+    await flushPromises();
 
-	test('Test loadLoop method refresh fail', async () => {
-		const historyMock = { push: jest.fn() };
-		LoopService.getLoop = jest.fn().mockImplementation(() => {
-			return Promise.resolve({
-			name: "LOOP_Jbv1z_v1_0_ResourceInstanceName1_tca",
-			"components": {
-				"POLICY": {
-					"componentState": {
-						"stateName": "UNKNOWN",
-						"description": "The policies defined have NOT yet been created on the policy engine"
-					}
-				},
-				"DCAE": {
-					"componentState": {
-						"stateName": "BLUEPRINT_DEPLOYED",
-						"description": "The DCAE blueprint has been found in the DCAE inventory but not yet instancianted for this loop"
-					}
-				}
-			}});
-		});
+    const resLoopCache = instance.getLoopCache();
 
-		LoopActionService.refreshStatus = jest.fn().mockImplementation(() => {
-			return Promise.reject({error: "whatever"});
-		});
+    expect(resLoopCache.getComponentStates()).toBeUndefined();
+    expect(component.state('loopName')).toEqual("LOOP_Jbv1z_v1_0_ResourceInstanceName1_tca");
+  })
 
-		const flushPromises = () => new Promise(setImmediate);
-		const component = shallow(<LoopUI history={historyMock}/>)
-		const instance = component.instance();
-		instance.loadLoop("LOOP_Jbv1z_v1_0_ResourceInstanceName1_tca");
+  test('Test loadLoop method refresh fail', async () => {
+    const historyMock = { push: jest.fn() };
+    LoopService.getLoop = jest.fn().mockImplementation(() => {
+      return Promise.resolve({
+        name: "LOOP_Jbv1z_v1_0_ResourceInstanceName1_tca",
+        "components": {
+          "POLICY": {
+            "componentState": {
+              "stateName": "UNKNOWN",
+              "description": "The policies defined have NOT yet been created on the policy engine"
+            }
+          },
+          "DCAE": {
+            "componentState": {
+              "stateName": "BLUEPRINT_DEPLOYED",
+              "description": "The DCAE blueprint has been found in the DCAE inventory but not yet instancianted for this loop"
+            }
+          }
+        }
+      });
+    });
 
-		await flushPromises();
+    LoopActionService.refreshStatus = jest.fn().mockImplementation(() => {
+      return Promise.reject({ error: "whatever" });
+    });
 
-		const resLoopCache = instance.getLoopCache();
-			
-		expect(resLoopCache).toEqual(loopCache);
-		expect(component.state('loopName')).toEqual("LOOP_Jbv1z_v1_0_ResourceInstanceName1_tca");
-	})
+    const flushPromises = () => new Promise(setImmediate);
+    const component = shallow(<LoopUI history={ historyMock }/>)
+    const instance = component.instance();
+    instance.loadLoop("LOOP_Jbv1z_v1_0_ResourceInstanceName1_tca");
 
-	test('Test alert methods', () => {
-		const component = shallow(<LoopUI />)
-		expect(component.state('showSucAlert')).toEqual(false);
+    await flushPromises();
 
-		const instance = component.instance();
-		instance.showSucAlert("testAlert");
-		expect(component.state('showSucAlert')).toEqual(true);
-		expect(component.state('showFailAlert')).toEqual(false);
-		expect(component.state('showMessage')).toEqual("testAlert");
+    const resLoopCache = instance.getLoopCache();
 
-		instance.disableAlert();
-			
-		expect(component.state('showSucAlert')).toEqual(false);
-		expect(component.state('showFailAlert')).toEqual(false);
+    expect(resLoopCache).toEqual(loopCache);
+    expect(component.state('loopName')).toEqual("LOOP_Jbv1z_v1_0_ResourceInstanceName1_tca");
+  })
 
-		instance.showFailAlert("testAlert2");
-		expect(component.state('showSucAlert')).toEqual(false);
-		expect(component.state('showFailAlert')).toEqual(true);
-		expect(component.state('showMessage')).toEqual("testAlert2");
-	})
+  test('Test alert methods', () => {
+    const component = shallow(<LoopUI/>)
+    expect(component.state('showSucAlert')).toEqual(false);
+
+    const instance = component.instance();
+    instance.showSucAlert("testAlert");
+    expect(component.state('showSucAlert')).toEqual(true);
+    expect(component.state('showFailAlert')).toEqual(false);
+    expect(component.state('showMessage')).toEqual("testAlert");
+
+    instance.disableAlert();
+
+    expect(component.state('showSucAlert')).toEqual(false);
+    expect(component.state('showFailAlert')).toEqual(false);
+
+    instance.showFailAlert("testAlert2");
+    expect(component.state('showSucAlert')).toEqual(false);
+    expect(component.state('showFailAlert')).toEqual(true);
+    expect(component.state('showMessage')).toEqual("testAlert2");
+  })
 });

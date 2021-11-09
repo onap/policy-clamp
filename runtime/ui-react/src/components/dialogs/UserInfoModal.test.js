@@ -26,53 +26,59 @@ import UserInfoModal from './UserInfoModal';
 
 describe('Verify UserInfoModal', () => {
 
-	beforeEach(() => {
-		fetch.resetMocks();
-		fetch.mockImplementation(() => {
-			return Promise.resolve({
-				ok: true,
-				status: 200,
-				json: () => {
-					return Promise.resolve({
-						"userName": "test",
-						"cldsVersion": "1.0.0"
-					});
-			}});
-		});
-	})
+  beforeEach(() => {
+    fetch.resetMocks();
+    fetch.mockImplementation(() => {
+      return Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => {
+          return Promise.resolve({
+            "userName": "test",
+            "cldsVersion": "1.0.0"
+          });
+        }
+      });
+    });
+  })
 
-	it('Test the render method full permission', () => {
-		const component = shallow(<UserInfoModal />)
-		component.setState({ userInfo: {
-			"userName": "test",
-			"cldsVersion": "1.0.0",
-			"allPermissions": ["permission1","permission2"]
-		}});
-		expect(component).toMatchSnapshot();
-	});
+  it('Test the render method full permission', () => {
+    const component = shallow(<UserInfoModal/>)
+    component.setState({
+      userInfo: {
+        "userName": "test",
+        "cldsVersion": "1.0.0",
+        "allPermissions": ["permission1", "permission2"]
+      }
+    });
+    expect(component).toMatchSnapshot();
+  });
 
-	it('Test the render method no permission', () => {
-		const component = shallow(<UserInfoModal />)
-		component.setState({ userInfo: {}
-		});
+  it('Test the render method no permission', () => {
+    const component = shallow(<UserInfoModal/>)
+    component.setState({
+      userInfo: {}
+    });
 
-		expect(component.find('FormControl').length).toEqual(0);
-	});
+    expect(component.find('FormControl').length).toEqual(0);
+  });
 
-	it('Test the render method read permission', () => {
-		const component = shallow(<UserInfoModal />)
-		component.setState({ userInfo: {
-			"userName": "test",
-			"cldsVersion": "1.0.0",
-			"allPermissions": ["permission1","permission2"]
-		}});
+  it('Test the render method read permission', () => {
+    const component = shallow(<UserInfoModal/>)
+    component.setState({
+      userInfo: {
+        "userName": "test",
+        "cldsVersion": "1.0.0",
+        "allPermissions": ["permission1", "permission2"]
+      }
+    });
 
-		expect(component.find('FormControl').length).toEqual(4);
+    expect(component.find('FormControl').length).toEqual(4);
 
-		const forms = component.find('FormControl');
-		expect(forms.get(0).props.defaultValue).toEqual("test");
-		expect(forms.get(1).props.defaultValue).toEqual("1.0.0");
-		expect(forms.get(2).props.defaultValue).toEqual("permission1");
-		expect(forms.get(3).props.defaultValue).toEqual("permission2");
-	});
+    const forms = component.find('FormControl');
+    expect(forms.get(0).props.defaultValue).toEqual("test");
+    expect(forms.get(1).props.defaultValue).toEqual("1.0.0");
+    expect(forms.get(2).props.defaultValue).toEqual("permission1");
+    expect(forms.get(3).props.defaultValue).toEqual("permission2");
+  });
 });
