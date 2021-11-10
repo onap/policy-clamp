@@ -191,7 +191,6 @@ public final class TestListenerUtils {
 
         ToscaServiceTemplate toscaServiceTemplate = testControlLoopRead();
         // Add policies to the toscaServiceTemplate
-
         List<ParticipantDefinition> participantDefinitionUpdates = new ArrayList<>();
         for (Map.Entry<String, ToscaNodeTemplate> toscaInputEntry : toscaServiceTemplate.getToscaTopologyTemplate()
                 .getNodeTemplates().entrySet()) {
