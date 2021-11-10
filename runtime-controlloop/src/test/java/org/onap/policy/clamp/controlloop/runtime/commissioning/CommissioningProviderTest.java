@@ -24,6 +24,7 @@ package org.onap.policy.clamp.controlloop.runtime.commissioning;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
@@ -63,7 +64,6 @@ class CommissioningProviderTest {
     private ControlLoopProvider clProvider = null;
     private static final Coder CODER = new StandardCoder();
     private final ObjectMapper mapper = new ObjectMapper();
-    private ParticipantProvider participantProvider;
 
     @AfterEach
     void close() throws Exception {
@@ -72,9 +72,6 @@ class CommissioningProviderTest {
         }
         if (clProvider != null) {
             clProvider.close();
-        }
-        if (participantProvider != null) {
-            participantProvider.close();
         }
     }
 
@@ -89,7 +86,7 @@ class CommissioningProviderTest {
         modelsProvider =
                 CommonTestData.getPolicyModelsProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
         clProvider = new ControlLoopProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
-        participantProvider = new ParticipantProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
+        var participantProvider = mock(ParticipantProvider.class);
 
         CommissioningProvider provider = new CommissioningProvider(new ServiceTemplateProvider(modelsProvider),
                 clProvider, null, participantProvider);
@@ -127,7 +124,7 @@ class CommissioningProviderTest {
         modelsProvider =
                 CommonTestData.getPolicyModelsProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
         clProvider = new ControlLoopProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
-        participantProvider = new ParticipantProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
+        var participantProvider = mock(ParticipantProvider.class);
 
         CommissioningProvider provider = new CommissioningProvider(new ServiceTemplateProvider(modelsProvider),
                 clProvider, null, participantProvider);
@@ -157,7 +154,7 @@ class CommissioningProviderTest {
         modelsProvider =
                 CommonTestData.getPolicyModelsProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
         clProvider = new ControlLoopProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
-        participantProvider = new ParticipantProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
+        var participantProvider = mock(ParticipantProvider.class);
 
         CommissioningProvider provider = new CommissioningProvider(new ServiceTemplateProvider(modelsProvider),
                 clProvider, null, participantProvider);
@@ -186,7 +183,7 @@ class CommissioningProviderTest {
         modelsProvider =
                 CommonTestData.getPolicyModelsProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
         clProvider = new ControlLoopProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
-        participantProvider = new ParticipantProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
+        var participantProvider = mock(ParticipantProvider.class);
 
         CommissioningProvider provider = new CommissioningProvider(new ServiceTemplateProvider(modelsProvider),
                 clProvider, null, participantProvider);
@@ -215,7 +212,7 @@ class CommissioningProviderTest {
         modelsProvider =
                 CommonTestData.getPolicyModelsProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
         clProvider = new ControlLoopProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
-        participantProvider = new ParticipantProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
+        var participantProvider = mock(ParticipantProvider.class);
 
         CommissioningProvider provider = new CommissioningProvider(new ServiceTemplateProvider(modelsProvider),
                 clProvider, null, participantProvider);
@@ -261,7 +258,7 @@ class CommissioningProviderTest {
         modelsProvider =
                 CommonTestData.getPolicyModelsProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
         clProvider = new ControlLoopProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
-        participantProvider = new ParticipantProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
+        var participantProvider = mock(ParticipantProvider.class);
 
         CommissioningProvider provider = new CommissioningProvider(new ServiceTemplateProvider(modelsProvider),
                 clProvider, null, participantProvider);
@@ -290,7 +287,7 @@ class CommissioningProviderTest {
         modelsProvider =
                 CommonTestData.getPolicyModelsProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
         clProvider = new ControlLoopProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
-        participantProvider = new ParticipantProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
+        var participantProvider = mock(ParticipantProvider.class);
 
         CommissioningProvider provider = new CommissioningProvider(new ServiceTemplateProvider(modelsProvider),
                 clProvider, null, participantProvider);

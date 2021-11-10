@@ -104,7 +104,7 @@ public class CommissioningProvider {
 
         synchronized (lockit) {
             serviceTemplateProvider.createServiceTemplate(serviceTemplate);
-            List<Participant> participantList = participantProvider.getParticipants(null, null);
+            List<Participant> participantList = participantProvider.getParticipants();
             if (!participantList.isEmpty()) {
                 supervisionHandler.handleSendCommissionMessage(serviceTemplate.getName(), serviceTemplate.getVersion());
             }
@@ -137,7 +137,7 @@ public class CommissioningProvider {
         }
 
         synchronized (lockit) {
-            List<Participant> participantList = participantProvider.getParticipants(null, null);
+            List<Participant> participantList = participantProvider.getParticipants();
             if (!participantList.isEmpty()) {
                 supervisionHandler.handleSendDeCommissionMessage();
             }
@@ -145,8 +145,7 @@ public class CommissioningProvider {
         }
 
         var response = new CommissioningResponse();
-        response.setAffectedControlLoopDefinitions(
-                Collections.singletonList(new ToscaConceptIdentifier(name, version)));
+        response.setAffectedControlLoopDefinitions(List.of(new ToscaConceptIdentifier(name, version)));
 
         return response;
     }
@@ -262,13 +261,11 @@ public class CommissioningProvider {
      * @return the tosca service template
      * @throws PfModelException on errors getting tosca service template
      */
-    public String getToscaServiceTemplateReduced(String name, String version)
-        throws PfModelException {
+    public String getToscaServiceTemplateReduced(String name, String version) throws PfModelException {
 
         var serviceTemplateList = serviceTemplateProvider.getServiceTemplateList(name, version);
 
-        List<ToscaServiceTemplate> filteredServiceTemplateList = filterToscaNodeTemplateInstance(
-            serviceTemplateList);
+        List<ToscaServiceTemplate> filteredServiceTemplateList = filterToscaNodeTemplateInstance(serviceTemplateList);
 
         if (filteredServiceTemplateList.isEmpty()) {
             throw new PfModelException(Status.BAD_REQUEST, "Invalid Service Template");

@@ -57,15 +57,13 @@ public class ParticipantStatisticsProvider {
     @Transactional(readOnly = true)
     public List<ParticipantStatistics> getParticipantStatistics(final String name, final String version,
             final Instant timestamp) {
-
         if (name != null && version != null && timestamp != null) {
             return asParticipantStatisticsList(
                     participantStatisticsRepository.findAllById(List.of(new PfTimestampKey(name, version, timestamp))));
         } else if (name != null) {
             return getFilteredParticipantStatistics(name, version, timestamp, null, null, "DESC", 0);
-        } else {
-            return asParticipantStatisticsList(participantStatisticsRepository.findAll());
         }
+        return asParticipantStatisticsList(participantStatisticsRepository.findAll());
     }
 
     /**
@@ -113,7 +111,7 @@ public class ParticipantStatisticsProvider {
             @NonNull final List<ParticipantStatistics> participantStatisticsList) throws PfModelException {
 
         try {
-            var jpaParticipantStatisticsList = ProviderUtils.getJpaAndValidate(participantStatisticsList,
+            var jpaParticipantStatisticsList = ProviderUtils.getJpaAndValidateList(participantStatisticsList,
                     JpaParticipantStatistics::new, "Participant Statistics");
 
             var jpaParticipantStatisticsSaved = participantStatisticsRepository.saveAll(jpaParticipantStatisticsList);
@@ -121,7 +119,7 @@ public class ParticipantStatisticsProvider {
             // Return the saved participant statistics
             return asParticipantStatisticsList(jpaParticipantStatisticsSaved);
         } catch (IllegalArgumentException e) {
-            throw new PfModelException(Status.INTERNAL_SERVER_ERROR, "Error in save participant statistics", e);
+            throw new PfModelException(Status.BAD_REQUEST, "Error in save participant statistics", e);
         }
     }
 

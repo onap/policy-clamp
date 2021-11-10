@@ -350,7 +350,7 @@ public class ControlLoopInstantiationProvider {
         }
 
         synchronized (lockit) {
-            var participants = participantProvider.getParticipants(null, null);
+            var participants = participantProvider.getParticipants();
             if (participants.isEmpty()) {
                 throw new ControlLoopException(Status.BAD_REQUEST, "No participants registered");
             }

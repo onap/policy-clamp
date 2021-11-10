@@ -59,7 +59,7 @@ public class ClElementStatisticsProvider {
             @NonNull final List<ClElementStatistics> clElementStatisticsList) throws PfModelException {
 
         try {
-            var jpaClElementStatisticsList = ProviderUtils.getJpaAndValidate(clElementStatisticsList,
+            var jpaClElementStatisticsList = ProviderUtils.getJpaAndValidateList(clElementStatisticsList,
                     JpaClElementStatistics::new, "control loop element statistics");
 
             var jpaClElementStatisticsSaved = clElementStatisticsRepository.saveAll(jpaClElementStatisticsList);
@@ -67,8 +67,7 @@ public class ClElementStatisticsProvider {
             // Return the saved control loop element statistics
             return asClElementStatisticsList(jpaClElementStatisticsSaved);
         } catch (IllegalArgumentException e) {
-            throw new PfModelException(Status.INTERNAL_SERVER_ERROR, "Error in save control loop element statistics",
-                    e);
+            throw new PfModelException(Status.BAD_REQUEST, "Error in save control loop element statistics", e);
         }
     }
 

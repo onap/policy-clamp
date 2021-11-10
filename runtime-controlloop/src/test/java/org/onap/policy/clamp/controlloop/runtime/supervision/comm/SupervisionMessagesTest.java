@@ -80,7 +80,7 @@ class SupervisionMessagesTest extends CommonRestController {
         var clElementStatisticsProvider = mock(ClElementStatisticsProvider.class);
         var monitoringProvider =
                 new MonitoringProvider(participantStatisticsProvider, clElementStatisticsProvider, clProvider);
-        var participantProvider = new ParticipantProvider(controlLoopParameters.getDatabaseProviderParameters());
+        var participantProvider = mock(ParticipantProvider.class);
         var serviceTemplateProvider = Mockito.mock(ServiceTemplateProvider.class);
         var controlLoopUpdatePublisher = Mockito.mock(ControlLoopUpdatePublisher.class);
         var controlLoopStateChangePublisher = Mockito.mock(ControlLoopStateChangePublisher.class);
