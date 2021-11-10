@@ -40,6 +40,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantUtils;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ControlLoopProvider;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ParticipantProvider;
+import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ServiceTemplateProvider;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopAck;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregister;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessage;
@@ -54,7 +55,6 @@ import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantReg
 import org.onap.policy.clamp.controlloop.runtime.supervision.comm.ParticipantUpdatePublisher;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
-import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
@@ -80,7 +80,7 @@ public class SupervisionHandler {
     private final ControlLoopProvider controlLoopProvider;
     private final ParticipantProvider participantProvider;
     private final MonitoringProvider monitoringProvider;
-    private final PolicyModelsProvider modelsProvider;
+    private final ServiceTemplateProvider serviceTemplateProvider;
 
     // Publishers for participant communication
     private final ControlLoopUpdatePublisher controlLoopUpdatePublisher;
@@ -427,7 +427,7 @@ public class SupervisionHandler {
     private int getFirstStartPhase(ControlLoop controlLoop) {
         ToscaServiceTemplate toscaServiceTemplate = null;
         try {
-            toscaServiceTemplate = modelsProvider.getServiceTemplateList(null, null).get(0);
+            toscaServiceTemplate = serviceTemplateProvider.getServiceTemplateList(null, null).get(0);
         } catch (PfModelException e) {
             throw new PfModelRuntimeException(Status.BAD_REQUEST, "Canont load ToscaServiceTemplate from DB", e);
         }

@@ -6,6 +6,16 @@ spring:
   http:
     converters:
       preferred-json-mapper: gson
+  datasource:
+    url: jdbc:mariadb://${mariadb.host:mariadb}:${mariadb.port:3306}/controlloop
+    driverClassName: org.mariadb.jdbc.Driver
+    username: policy_user
+    password: policy_user
+    hikari:
+      connectionTimeout: 30000
+      idleTimeout: 600000
+      maxLifetime: 1800000
+      maximumPoolSize: 10
 
 security:
   enable-csrf: false
@@ -28,6 +38,7 @@ runtime:
     updateParameters:
       maxRetryCount: 3
       maxWaitMs: 20000
+  databasePlatform: org.eclipse.persistence.platform.database.MySQLPlatform
   databaseProviderParameters:
     name: PolicyProviderParameterGroup
     implementation: org.onap.policy.models.provider.impl.DatabasePolicyModelsProviderImpl
