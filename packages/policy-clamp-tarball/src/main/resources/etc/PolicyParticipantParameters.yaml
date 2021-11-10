@@ -8,7 +8,7 @@ participant:
     port: 6969
     userName: healthcheck
     password: zb!XztG34
-    https: true
+    useHttps: true
     allowSelfSignedCerts: true
   policyPapParameters:
     clientName: pap
@@ -16,7 +16,7 @@ participant:
     port: 6969
     userName: healthcheck
     password: zb!XztG34
-    https: true
+    useHttps: true
     allowSelfSignedCerts: true
   intermediaryParameters:
     reportingTimeIntervalMs: 120000
