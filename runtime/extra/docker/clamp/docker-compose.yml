@@ -1,4 +1,4 @@
-version: '3.1'
+version: '3.2'
 
 services:
   policy-clamp-frontend:
@@ -8,7 +8,7 @@ services:
     ports:
       - "2443:2443"
   db:
-    image: mariadb:10.5.4
+    image: mariadb:10.7
     volumes:
       - "/var/lib/mysql"
       - "../mariadb/conf1:/etc/mysql/conf.d:ro"
@@ -29,7 +29,7 @@ services:
       - "10443:8443"
 
   third-party-proxy:
-    image: python:2-slim
+    image: python:3.9-slim
     volumes:
       - "../../../src/test/resources/http-cache/example/:/thirdparty:rw"
       - "../../../src/test/resources/http-cache/:/script/:ro"
