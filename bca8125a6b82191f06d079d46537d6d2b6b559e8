@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "13f3a860_4ba47623",
+        "filename": "runtime/extra/docker/clamp/docker-compose.yml",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-11-11T21:55:10Z",
+      "side": 1,
+      "message": "I think this should match the actual OOM deployment (the onap official installer).   If you can check it out, after a quick check I see references to 10.5.x for both of our config jobs and mariadb-galera.   I think any changes should go in tandem.",
+      "revId": "bca8125a6b82191f06d079d46537d6d2b6b559e8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a0a5b656_c1f47e76",
+        "filename": "runtime/src/test/resources/http-cache/third_party_proxy.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-11-11T21:55:10Z",
+      "side": 1,
+      "message": "do we still use python2 in clamp?   In other policy components there was an activity to get rid of it (security requirement).",
+      "revId": "bca8125a6b82191f06d079d46537d6d2b6b559e8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
