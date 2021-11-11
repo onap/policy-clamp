@@ -29,13 +29,17 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.Optional;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.clamp.controlloop.models.controlloop.persistence.repository.ToscaServiceTemplateRepository;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
+import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
+import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
 
 class ServiceTemplateProviderTest {
 
@@ -44,28 +48,33 @@ class ServiceTemplateProviderTest {
 
     private static final StandardYamlCoder YAML_TRANSLATOR = new StandardYamlCoder();
 
+    private static ToscaServiceTemplate inputServiceTemplate;
+
+    @BeforeAll
+    static void loadServiceTemplate() {
+        inputServiceTemplate = getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
+    }
+
     @Test
     void testGetCommonOrInstancePropertiesFromNodeTypes() throws PfModelException {
-        var serviceTemplateProvider = new ServiceTemplateProvider(mock(PolicyModelsProvider.class));
+        var serviceTemplateRepository = mock(ToscaServiceTemplateRepository.class);
+        var serviceTemplateProvider = new ServiceTemplateProvider(serviceTemplateRepository);
 
-        var serviceTemplate = getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
-
-        var result = serviceTemplateProvider.getCommonOrInstancePropertiesFromNodeTypes(true, serviceTemplate);
+        var result = serviceTemplateProvider.getCommonOrInstancePropertiesFromNodeTypes(true, inputServiceTemplate);
         assertNotNull(result);
         assertThat(result).hasSize(8);
     }
 
     @Test
     void testGetDerivedCommonOrInstanceNodeTemplates() throws PfModelException {
-        var serviceTemplateProvider = new ServiceTemplateProvider(mock(PolicyModelsProvider.class));
-
-        var serviceTemplate = getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
+        var serviceTemplateRepository = mock(ToscaServiceTemplateRepository.class);
+        var serviceTemplateProvider = new ServiceTemplateProvider(serviceTemplateRepository);
 
         var commonOrInstanceNodeTypeProps =
-                serviceTemplateProvider.getCommonOrInstancePropertiesFromNodeTypes(true, serviceTemplate);
+                serviceTemplateProvider.getCommonOrInstancePropertiesFromNodeTypes(true, inputServiceTemplate);
 
         var result = serviceTemplateProvider.getDerivedCommonOrInstanceNodeTemplates(
-                serviceTemplate.getToscaTopologyTemplate().getNodeTemplates(), commonOrInstanceNodeTypeProps);
+                inputServiceTemplate.getToscaTopologyTemplate().getNodeTemplates(), commonOrInstanceNodeTypeProps);
 
         assertNotNull(result);
         assertThat(result).hasSize(8);
@@ -73,74 +82,74 @@ class ServiceTemplateProviderTest {
 
     @Test
     void testCreateServiceTemplate() throws PfModelException {
-        var modelsProvider = mock(PolicyModelsProvider.class);
-        var serviceTemplateProvider = new ServiceTemplateProvider(modelsProvider);
+        var serviceTemplateRepository = mock(ToscaServiceTemplateRepository.class);
+        var serviceTemplateProvider = new ServiceTemplateProvider(serviceTemplateRepository);
 
-        var serviceTemplate = new ToscaServiceTemplate();
-        when(modelsProvider.createServiceTemplate(serviceTemplate)).thenReturn(serviceTemplate);
+        var jpaServiceTemplate = ProviderUtils.getJpaAndValidate(inputServiceTemplate, JpaToscaServiceTemplate::new,
+                "toscaServiceTemplate");
+        when(serviceTemplateRepository.save(jpaServiceTemplate)).thenReturn(jpaServiceTemplate);
 
-        var result = serviceTemplateProvider.createServiceTemplate(serviceTemplate);
+        var result = serviceTemplateProvider.createServiceTemplate(inputServiceTemplate);
 
-        assertThat(result).isEqualTo(serviceTemplate);
+        assertThat(result).isEqualTo(jpaServiceTemplate.toAuthorative());
     }
 
     @Test
     void testDeleteServiceTemplate() throws PfModelException {
-        var serviceTemplate = new ToscaServiceTemplate();
-        serviceTemplate.setName("Name");
-        serviceTemplate.setVersion("1.0.0");
-        var modelsProvider = mock(PolicyModelsProvider.class);
-        when(modelsProvider.deleteServiceTemplate(serviceTemplate.getName(), serviceTemplate.getVersion()))
-                .thenReturn(serviceTemplate);
+        var jpaServiceTemplate = ProviderUtils.getJpaAndValidate(inputServiceTemplate, JpaToscaServiceTemplate::new,
+                "toscaServiceTemplate");
+        var serviceTemplateRepository = mock(ToscaServiceTemplateRepository.class);
+        when(serviceTemplateRepository
+                .findById(new PfConceptKey(inputServiceTemplate.getName(), inputServiceTemplate.getVersion())))
+                        .thenReturn(Optional.of(jpaServiceTemplate));
 
-        var serviceTemplateProvider = new ServiceTemplateProvider(modelsProvider);
-        var result =
-                serviceTemplateProvider.deleteServiceTemplate(serviceTemplate.getName(), serviceTemplate.getVersion());
+        var serviceTemplateProvider = new ServiceTemplateProvider(serviceTemplateRepository);
+        var result = serviceTemplateProvider.deleteServiceTemplate(inputServiceTemplate.getName(),
+                inputServiceTemplate.getVersion());
 
-        assertThat(result).isEqualTo(serviceTemplate);
+        assertThat(result).isEqualTo(jpaServiceTemplate.toAuthorative());
     }
 
     @Test
     void testGetServiceTemplateListEmpty() throws PfModelException {
-        var modelsProvider = mock(PolicyModelsProvider.class);
-        when(modelsProvider.getServiceTemplateList(any(String.class), any(String.class))).thenReturn(List.of());
+        var serviceTemplateRepository = mock(ToscaServiceTemplateRepository.class);
+        when(serviceTemplateRepository.findById(any())).thenReturn(Optional.empty());
 
-        var serviceTemplateProvider = new ServiceTemplateProvider(modelsProvider);
+        var serviceTemplateProvider = new ServiceTemplateProvider(serviceTemplateRepository);
         assertThatThrownBy(() -> serviceTemplateProvider.getToscaServiceTemplate("Name", "1.0.0"))
                 .hasMessage("Control Loop definitions not found");
     }
 
     @Test
     void testGetServiceTemplateList() throws PfModelException {
-        var serviceTemplate = new ToscaServiceTemplate();
-        serviceTemplate.setName("Name");
-        serviceTemplate.setVersion("1.0.0");
-        var modelsProvider = mock(PolicyModelsProvider.class);
-        when(modelsProvider.getServiceTemplateList(serviceTemplate.getName(), serviceTemplate.getVersion()))
-                .thenReturn(List.of(serviceTemplate));
+        var jpaServiceTemplate = ProviderUtils.getJpaAndValidate(inputServiceTemplate, JpaToscaServiceTemplate::new,
+                "toscaServiceTemplate");
+        var serviceTemplateRepository = mock(ToscaServiceTemplateRepository.class);
+        when(serviceTemplateRepository
+                .findById(new PfConceptKey(inputServiceTemplate.getName(), inputServiceTemplate.getVersion())))
+                        .thenReturn(Optional.of(jpaServiceTemplate));
 
-        var serviceTemplateProvider = new ServiceTemplateProvider(modelsProvider);
-        var result = serviceTemplateProvider.getToscaServiceTemplate(serviceTemplate.getName(),
-                serviceTemplate.getVersion());
+        var serviceTemplateProvider = new ServiceTemplateProvider(serviceTemplateRepository);
+        var result = serviceTemplateProvider.getToscaServiceTemplate(inputServiceTemplate.getName(),
+                inputServiceTemplate.getVersion());
 
-        assertThat(result).isEqualTo(serviceTemplate);
+        assertThat(result).isEqualTo(jpaServiceTemplate.toAuthorative());
     }
 
     @Test
     void testGetServiceTemplate() throws PfModelException {
-        var serviceTemplate = new ToscaServiceTemplate();
-        serviceTemplate.setName("Name");
-        serviceTemplate.setVersion("1.0.0");
-        var modelsProvider = mock(PolicyModelsProvider.class);
-        when(modelsProvider.getServiceTemplateList(serviceTemplate.getName(), serviceTemplate.getVersion()))
-                .thenReturn(List.of(serviceTemplate));
+        var jpaServiceTemplate = ProviderUtils.getJpaAndValidate(inputServiceTemplate, JpaToscaServiceTemplate::new,
+                "toscaServiceTemplate");
+        var serviceTemplateRepository = mock(ToscaServiceTemplateRepository.class);
+        when(serviceTemplateRepository.getFiltered(JpaToscaServiceTemplate.class, inputServiceTemplate.getName(),
+                inputServiceTemplate.getVersion())).thenReturn(List.of(jpaServiceTemplate));
 
-        var serviceTemplateProvider = new ServiceTemplateProvider(modelsProvider);
-        var result =
-                serviceTemplateProvider.getServiceTemplateList(serviceTemplate.getName(), serviceTemplate.getVersion());
+        var serviceTemplateProvider = new ServiceTemplateProvider(serviceTemplateRepository);
+        var result = serviceTemplateProvider.getServiceTemplateList(inputServiceTemplate.getName(),
+                inputServiceTemplate.getVersion());
 
         assertThat(result).hasSize(1);
-        assertThat(result.get(0)).isEqualTo(serviceTemplate);
+        assertThat(result.get(0)).isEqualTo(jpaServiceTemplate.toAuthorative());
     }
 
     /**

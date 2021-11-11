@@ -92,7 +92,7 @@ class SupervisionHandlerTest {
         handler.triggerControlLoopSupervision(List.of(identifier));
 
         verify(controlLoopUpdatePublisher).send(any(ControlLoop.class));
-        verify(controlLoopProvider).updateControlLoop(any(ControlLoop.class));
+        verify(controlLoopProvider).saveControlLoop(any(ControlLoop.class));
     }
 
     @Test
@@ -134,7 +134,7 @@ class SupervisionHandlerTest {
 
         handler.handleControlLoopStateChangeAckMessage(controlLoopAckMessage);
 
-        verify(controlLoopProvider).updateControlLoop(any(ControlLoop.class));
+        verify(controlLoopProvider).saveControlLoop(any(ControlLoop.class));
     }
 
     @Test
@@ -152,7 +152,7 @@ class SupervisionHandlerTest {
 
         handler.handleControlLoopUpdateAckMessage(controlLoopAckMessage);
 
-        verify(controlLoopProvider).updateControlLoop(any(ControlLoop.class));
+        verify(controlLoopProvider).saveControlLoop(any(ControlLoop.class));
     }
 
     @Test
@@ -290,13 +290,14 @@ class SupervisionHandlerTest {
         var controlLoop = controlLoopsCreate.getControlLoopList().get(0);
         controlLoop.setOrderedState(orderedState);
 
-        var controlLoopStateChangePublisher = mock(ControlLoopStateChangePublisher.class);
-
+        when(controlLoopProvider.findControlLoop(identifier)).thenReturn(Optional.of(controlLoop));
         when(controlLoopProvider.getControlLoop(identifier)).thenReturn(controlLoop);
 
         var serviceTemplateProvider = Mockito.mock(ServiceTemplateProvider.class);
         when(serviceTemplateProvider.getServiceTemplateList(any(), any()))
                 .thenReturn(List.of(InstantiationUtils.getToscaServiceTemplate(TOSCA_TEMPLATE_YAML)));
+
+        var controlLoopStateChangePublisher = mock(ControlLoopStateChangePublisher.class);
 
         return new SupervisionHandler(controlLoopProvider, participantProvider, monitoringProvider,
                 serviceTemplateProvider, controlLoopUpdatePublisher, controlLoopStateChangePublisher,

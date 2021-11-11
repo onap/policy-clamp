@@ -61,7 +61,7 @@ class SupervisionScannerTest {
     @BeforeAll
     public static void setUpBeforeAll() throws Exception {
         ToscaServiceTemplate serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
-        when(serviceTemplateProvider.getServiceTemplateList(null, null)).thenReturn(List.of(serviceTemplate));
+        when(serviceTemplateProvider.getAllServiceTemplates()).thenReturn(List.of(serviceTemplate));
     }
 
     @Test
@@ -76,14 +76,14 @@ class SupervisionScannerTest {
 
         var controlLoops =
                 InstantiationUtils.getControlLoopsFromResource(CONTROLLOOP_JSON, "Crud").getControlLoopList();
-        when(controlLoopProvider.getControlLoops(null, null)).thenReturn(controlLoops);
+        when(controlLoopProvider.getControlLoops()).thenReturn(controlLoops);
 
         var supervisionScanner = new SupervisionScanner(controlLoopProvider, serviceTemplateProvider,
                 controlLoopStateChangePublisher, controlLoopUpdatePublisher, participantProvider,
                 participantStatusReqPublisher, participantUpdatePublisher, clRuntimeParameterGroup);
         supervisionScanner.run(false);
 
-        verify(controlLoopProvider, times(0)).updateControlLoop(any(ControlLoop.class));
+        verify(controlLoopProvider, times(0)).saveControlLoop(any(ControlLoop.class));
     }
 
     @Test
@@ -93,7 +93,7 @@ class SupervisionScannerTest {
         controlLoops.get(0).setState(ControlLoopState.UNINITIALISED2PASSIVE);
         controlLoops.get(0).setOrderedState(ControlLoopOrderedState.UNINITIALISED);
         var controlLoopProvider = mock(ControlLoopProvider.class);
-        when(controlLoopProvider.getControlLoops(null, null)).thenReturn(controlLoops);
+        when(controlLoopProvider.getControlLoops()).thenReturn(controlLoops);
 
         var controlLoopUpdatePublisher = mock(ControlLoopUpdatePublisher.class);
         var controlLoopStateChangePublisher = mock(ControlLoopStateChangePublisher.class);
@@ -107,14 +107,14 @@ class SupervisionScannerTest {
                 participantStatusReqPublisher, participantUpdatePublisher, clRuntimeParameterGroup);
         supervisionScanner.run(false);
 
-        verify(controlLoopProvider, times(1)).updateControlLoop(any(ControlLoop.class));
+        verify(controlLoopProvider, times(1)).saveControlLoop(any(ControlLoop.class));
     }
 
     @Test
     void testScanner() throws PfModelException {
         var controlLoopProvider = mock(ControlLoopProvider.class);
         var controlLoop = new ControlLoop();
-        when(controlLoopProvider.getControlLoops(null, null)).thenReturn(List.of(controlLoop));
+        when(controlLoopProvider.getControlLoops()).thenReturn(List.of(controlLoop));
 
         var participantProvider = mock(ParticipantProvider.class);
         var participant = new Participant();
@@ -134,7 +134,7 @@ class SupervisionScannerTest {
 
         supervisionScanner.handleParticipantStatus(participant.getKey().asIdentifier());
         supervisionScanner.run(true);
-        verify(controlLoopProvider, times(0)).updateControlLoop(any(ControlLoop.class));
+        verify(controlLoopProvider, times(0)).saveControlLoop(any(ControlLoop.class));
         verify(participantStatusReqPublisher, times(0)).send(any(ToscaConceptIdentifier.class));
     }
 
@@ -156,7 +156,7 @@ class SupervisionScannerTest {
         }
 
         var controlLoopProvider = mock(ControlLoopProvider.class);
-        when(controlLoopProvider.getControlLoops(null, null)).thenReturn(controlLoops);
+        when(controlLoopProvider.getControlLoops()).thenReturn(controlLoops);
 
         var participantProvider = mock(ParticipantProvider.class);
         var controlLoopUpdatePublisher = mock(ControlLoopUpdatePublisher.class);
@@ -178,7 +178,7 @@ class SupervisionScannerTest {
     void testScanParticipant() throws PfModelException {
         var controlLoopProvider = mock(ControlLoopProvider.class);
         var controlLoop = new ControlLoop();
-        when(controlLoopProvider.getControlLoops(null, null)).thenReturn(List.of(controlLoop));
+        when(controlLoopProvider.getControlLoops()).thenReturn(List.of(controlLoop));
 
         var clRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanParticipant");
         clRuntimeParameterGroup.getParticipantParameters().getUpdateParameters().setMaxWaitMs(-1);

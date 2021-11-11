@@ -35,9 +35,9 @@ import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.Response;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -48,8 +48,6 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ClElementStatisticsProvider;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ControlLoopProvider;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ParticipantStatisticsProvider;
-import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
-import org.onap.policy.clamp.controlloop.runtime.util.CommonTestData;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -85,8 +83,6 @@ class TestMonitoringProvider {
     private static ClElementStatisticsList inputClElementStatistics;
     private static ClElementStatisticsList invalidClElementInput;
 
-    private ControlLoopProvider clProvider = null;
-
     @BeforeAll
     public static void beforeSetupStatistics() throws CoderException {
         // Reading input json for statistics data
@@ -98,19 +94,11 @@ class TestMonitoringProvider {
         invalidClElementInput = CODER.decode(new File(INVALID_CL_ELEMENT_JSON_INPUT), ClElementStatisticsList.class);
     }
 
-    @AfterEach
-    void close() throws Exception {
-        if (clProvider != null) {
-            clProvider.close();
-        }
-    }
-
     @Test
     void testCreateParticipantStatistics() throws Exception {
         var participantStatisticsProvider = mock(ParticipantStatisticsProvider.class);
         var clElementStatisticsProvider = mock(ClElementStatisticsProvider.class);
-        ClRuntimeParameterGroup parameters = CommonTestData.geParameterGroup("createparStat");
-        clProvider = new ControlLoopProvider(parameters.getDatabaseProviderParameters());
+        var clProvider = mock(ControlLoopProvider.class);
         MonitoringProvider provider =
                 new MonitoringProvider(participantStatisticsProvider, clElementStatisticsProvider, clProvider);
 
@@ -152,8 +140,7 @@ class TestMonitoringProvider {
         when(participantStatisticsProvider.getFilteredParticipantStatistics(eq(ID_NAME2), any(), any(), any(), eq(null),
                 eq(SORT_DESC), eq(1))).thenReturn(List.of(inputParticipantStatistics.getStatisticsList().get(2)));
 
-        ClRuntimeParameterGroup parameters = CommonTestData.geParameterGroup("getparStat");
-        clProvider = new ControlLoopProvider(parameters.getDatabaseProviderParameters());
+        var clProvider = mock(ControlLoopProvider.class);
         var clElementStatisticsProvider = mock(ClElementStatisticsProvider.class);
         MonitoringProvider provider =
                 new MonitoringProvider(participantStatisticsProvider, clElementStatisticsProvider, clProvider);
@@ -190,8 +177,7 @@ class TestMonitoringProvider {
         when(clElementStatisticsProvider.createClElementStatistics(eq(null)))
                 .thenThrow(new PfModelRuntimeException(Response.Status.BAD_REQUEST, CL_LIST_IS_NULL));
 
-        ClRuntimeParameterGroup parameters = CommonTestData.geParameterGroup("createelemstat");
-        clProvider = new ControlLoopProvider(parameters.getDatabaseProviderParameters());
+        var clProvider = mock(ControlLoopProvider.class);
 
         var participantStatisticsProvider = mock(ParticipantStatisticsProvider.class);
         MonitoringProvider provider =
@@ -218,8 +204,12 @@ class TestMonitoringProvider {
     void testGetClElementStatistics() throws Exception {
         var participantStatisticsProvider = mock(ParticipantStatisticsProvider.class);
         var clElementStatisticsProvider = mock(ClElementStatisticsProvider.class);
-        ClRuntimeParameterGroup parameters = CommonTestData.geParameterGroup("getelemstat");
-        clProvider = new ControlLoopProvider(parameters.getDatabaseProviderParameters());
+        var clProvider = mock(ControlLoopProvider.class);
+
+        when(clElementStatisticsProvider.getFilteredClElementStatistics(eq(ID_NAME1), any(), any(), any(), anyMap(),
+                eq(SORT_DESC), eq(0)))
+                        .thenReturn(List.of(inputClElementStatistics.getClElementStatistics().get(0),
+                                inputClElementStatistics.getClElementStatistics().get(1)));
 
         when(clElementStatisticsProvider.getFilteredClElementStatistics(eq(ID_NAME1), any(), any(), any(), anyMap(),
                 eq(SORT_DESC), eq(0)))
@@ -266,7 +256,8 @@ class TestMonitoringProvider {
         var element = new ControlLoopElement();
         element.setParticipantId(new ToscaConceptIdentifier(ID_NAME1, ID_VERSION1));
         controlLoop.setElements(Map.of(UUID.randomUUID(), element));
-        when(mockClProvider.getControlLoop(new ToscaConceptIdentifier(ID_NAME2, ID_VERSION1))).thenReturn(controlLoop);
+        when(mockClProvider.findControlLoop(new ToscaConceptIdentifier(ID_NAME2, ID_VERSION1)))
+                .thenReturn(Optional.of(controlLoop));
 
         when(participantStatisticsProvider.getFilteredParticipantStatistics(eq(ID_NAME1), eq(ID_VERSION1), any(), any(),
                 eq(null), eq(SORT_DESC), eq(0)))
@@ -300,7 +291,8 @@ class TestMonitoringProvider {
                 new MonitoringProvider(participantStatisticsProvider, clElementStatisticsProvider, mockClProvider);
 
         // Mock controlloop data to be returned for the given CL Id
-        when(mockClProvider.getControlLoop(new ToscaConceptIdentifier(ID_NAME3, ID_VERSION1))).thenReturn(mockCL);
+        when(mockClProvider.findControlLoop(new ToscaConceptIdentifier(ID_NAME3, ID_VERSION1)))
+                .thenReturn(Optional.of(mockCL));
 
         when(clElementStatisticsProvider.getFilteredClElementStatistics(eq(ID_NAME1), eq(ID_VERSION1), any(), any(),
                 anyMap(), eq(SORT_DESC), eq(0)))

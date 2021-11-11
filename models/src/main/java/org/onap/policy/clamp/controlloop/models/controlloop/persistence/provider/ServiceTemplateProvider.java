@@ -23,21 +23,26 @@ package org.onap.policy.clamp.controlloop.models.controlloop.persistence.provide
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import lombok.RequiredArgsConstructor;
+import org.onap.policy.clamp.controlloop.models.controlloop.persistence.repository.ToscaServiceTemplateRepository;
+import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaProperty;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
+import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
+@Transactional
 public class ServiceTemplateProvider {
 
-    private final PolicyModelsProvider modelsProvider;
+    private final ToscaServiceTemplateRepository serviceTemplateRepository;
 
     /**
      * Create service template.
@@ -48,7 +53,13 @@ public class ServiceTemplateProvider {
      */
     public ToscaServiceTemplate createServiceTemplate(final ToscaServiceTemplate serviceTemplate)
             throws PfModelException {
-        return modelsProvider.createServiceTemplate(serviceTemplate);
+        try {
+            var result = serviceTemplateRepository.save(ProviderUtils.getJpaAndValidate(serviceTemplate,
+                    JpaToscaServiceTemplate::new, "toscaServiceTemplate"));
+            return result.toAuthorative();
+        } catch (IllegalArgumentException e) {
+            throw new PfModelException(Status.BAD_REQUEST, "Error in save serviceTemplate", e);
+        }
     }
 
     /**
@@ -60,7 +71,15 @@ public class ServiceTemplateProvider {
      * @throws PfModelException on errors deleting policy types
      */
     public ToscaServiceTemplate deleteServiceTemplate(final String name, final String version) throws PfModelException {
-        return modelsProvider.deleteServiceTemplate(name, version);
+        var serviceTemplateKey = new PfConceptKey(name, version);
+        var jpaDelete = serviceTemplateRepository.findById(serviceTemplateKey);
+        if (jpaDelete.isEmpty()) {
+            String errorMessage = "delete of serviceTemplate \"" + serviceTemplateKey.getId()
+                    + "\" failed, serviceTemplate does not exist";
+            throw new PfModelException(Response.Status.BAD_REQUEST, errorMessage);
+        }
+        serviceTemplateRepository.deleteById(serviceTemplateKey);
+        return jpaDelete.get().toAuthorative();
     }
 
     /**
@@ -71,12 +90,26 @@ public class ServiceTemplateProvider {
      * @return the control loop definitions
      * @throws PfModelException on errors getting control loop definitions
      */
+    @Transactional(readOnly = true)
     public ToscaServiceTemplate getToscaServiceTemplate(String name, String version) throws PfModelException {
-        var serviceTemplates = modelsProvider.getServiceTemplateList(name, version);
-        if (serviceTemplates.isEmpty()) {
+        var serviceTemplateKey = new PfConceptKey(name, version);
+        var jpaServiceTemplates = serviceTemplateRepository.findById(serviceTemplateKey);
+        if (jpaServiceTemplates.isEmpty()) {
             throw new PfModelException(Status.NOT_FOUND, "Control Loop definitions not found");
         }
-        return serviceTemplates.get(0);
+        return jpaServiceTemplates.get().toAuthorative();
+    }
+
+    /**
+     * Get service templates.
+     *
+     * @return the topology templates found
+     * @throws PfModelException on errors getting service templates
+     */
+    @Transactional(readOnly = true)
+    public List<ToscaServiceTemplate> getAllServiceTemplates() throws PfModelException {
+        var jpaList = serviceTemplateRepository.findAll();
+        return ProviderUtils.asEntityList(jpaList);
     }
 
     /**
@@ -87,9 +120,11 @@ public class ServiceTemplateProvider {
      * @return the topology templates found
      * @throws PfModelException on errors getting service templates
      */
+    @Transactional(readOnly = true)
     public List<ToscaServiceTemplate> getServiceTemplateList(final String name, final String version)
             throws PfModelException {
-        return modelsProvider.getServiceTemplateList(name, version);
+        var jpaList = serviceTemplateRepository.getFiltered(JpaToscaServiceTemplate.class, name, version);
+        return ProviderUtils.asEntityList(jpaList);
     }
 
     /**

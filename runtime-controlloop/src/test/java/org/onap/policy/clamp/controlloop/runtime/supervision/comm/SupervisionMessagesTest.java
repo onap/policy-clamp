@@ -25,13 +25,13 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -46,10 +46,8 @@ import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.Parti
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantDeregisterAck;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantRegisterAck;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantUpdateAck;
-import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
 import org.onap.policy.clamp.controlloop.runtime.monitoring.MonitoringProvider;
 import org.onap.policy.clamp.controlloop.runtime.supervision.SupervisionHandler;
-import org.onap.policy.clamp.controlloop.runtime.util.CommonTestData;
 import org.onap.policy.clamp.controlloop.runtime.util.rest.CommonRestController;
 import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
@@ -63,7 +61,6 @@ class SupervisionMessagesTest extends CommonRestController {
     private static final CommInfrastructure INFRA = CommInfrastructure.NOOP;
     private static final String TOPIC = "my-topic";
     private static SupervisionHandler supervisionHandler;
-    private static ControlLoopProvider clProvider;
 
     /**
      * setup Db Provider Parameters.
@@ -72,10 +69,7 @@ class SupervisionMessagesTest extends CommonRestController {
      */
     @BeforeAll
     public static void setupDbProviderParameters() throws PfModelException {
-        ClRuntimeParameterGroup controlLoopParameters = CommonTestData.geParameterGroup("instantproviderdb");
-
-        clProvider = new ControlLoopProvider(controlLoopParameters.getDatabaseProviderParameters());
-
+        var clProvider = mock(ControlLoopProvider.class);
         var participantStatisticsProvider = mock(ParticipantStatisticsProvider.class);
         var clElementStatisticsProvider = mock(ClElementStatisticsProvider.class);
         var monitoringProvider =
@@ -92,11 +86,6 @@ class SupervisionMessagesTest extends CommonRestController {
                 participantRegisterAckPublisher, participantDeregisterAckPublisher, participantUpdatePublisher);
     }
 
-    @AfterAll
-    public static void closeDbProvider() throws PfModelException {
-        clProvider.close();
-    }
-
     @Test
     void testSendParticipantRegisterAck() throws Exception {
         final ParticipantRegisterAck participantRegisterAckMsg = new ParticipantRegisterAck();
@@ -106,7 +95,7 @@ class SupervisionMessagesTest extends CommonRestController {
 
         synchronized (lockit) {
             ParticipantRegisterAckPublisher clRegisterAckPublisher = new ParticipantRegisterAckPublisher();
-            clRegisterAckPublisher.active(Collections.singletonList(Mockito.mock(TopicSink.class)));
+            clRegisterAckPublisher.active(List.of(Mockito.mock(TopicSink.class)));
             assertThatCode(() -> clRegisterAckPublisher.send(participantRegisterAckMsg)).doesNotThrowAnyException();
         }
     }
@@ -170,6 +159,51 @@ class SupervisionMessagesTest extends CommonRestController {
         var topicSink = mock(TopicSink.class);
         publisher.active(List.of(topicSink));
         publisher.send(getControlLoop(), 0);
+        verify(topicSink).send(anyString());
+    }
+
+    @Test
+    void testParticipantUpdatePublisherDecomisioning() {
+        var publisher = new ParticipantUpdatePublisher(mock(ServiceTemplateProvider.class));
+        var topicSink = mock(TopicSink.class);
+        publisher.active(List.of(topicSink));
+        publisher.sendDecomisioning();
+        verify(topicSink).send(anyString());
+    }
+
+    @Test
+    void testParticipantUpdatePublisherComissioning() {
+        var publisher = new ParticipantUpdatePublisher(mock(ServiceTemplateProvider.class));
+        var topicSink = mock(TopicSink.class);
+        publisher.active(List.of(topicSink));
+        publisher.sendComissioningBroadcast("NAME", "1.0.0");
+        verify(topicSink, times(0)).send(anyString());
+    }
+
+    @Test
+    void testParticipantStatusReqPublisher() {
+        var publisher = new ParticipantStatusReqPublisher();
+        var topicSink = mock(TopicSink.class);
+        publisher.active(List.of(topicSink));
+        publisher.send(getParticipantId());
+        verify(topicSink).send(anyString());
+    }
+
+    @Test
+    void testParticipantRegisterAckPublisher() {
+        var publisher = new ParticipantRegisterAckPublisher();
+        var topicSink = mock(TopicSink.class);
+        publisher.active(List.of(topicSink));
+        publisher.send(UUID.randomUUID(), getParticipantId(), getParticipantType());
+        verify(topicSink).send(anyString());
+    }
+
+    @Test
+    void testParticipantDeregisterAckPublisher() {
+        var publisher = new ParticipantDeregisterAckPublisher();
+        var topicSink = mock(TopicSink.class);
+        publisher.active(List.of(topicSink));
+        publisher.send(UUID.randomUUID());
         verify(topicSink).send(anyString());
     }
 

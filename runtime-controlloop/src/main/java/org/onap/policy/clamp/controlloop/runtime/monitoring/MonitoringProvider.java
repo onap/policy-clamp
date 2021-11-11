@@ -174,9 +174,9 @@ public class MonitoringProvider {
         try {
             List<ControlLoopElement> clElements = new ArrayList<>();
             // Fetch all control loop elements for the control loop
-            var controlLoop = controlLoopProvider.getControlLoop(new ToscaConceptIdentifier(name, version));
-            if (controlLoop != null) {
-                clElements.addAll(controlLoop.getElements().values());
+            var controlLoopOpt = controlLoopProvider.findControlLoop(new ToscaConceptIdentifier(name, version));
+            if (controlLoopOpt.isPresent()) {
+                clElements.addAll(controlLoopOpt.get().getElements().values());
                 // Collect control loop element statistics for each cl element.
                 for (ControlLoopElement clElement : clElements) {
                     clElementStats.addAll(fetchFilteredClElementStatistics(clElement.getParticipantId().getName(),
@@ -203,9 +203,9 @@ public class MonitoringProvider {
     public List<ToscaConceptIdentifier> getAllParticipantIdsPerControlLoop(String name, String version)
             throws PfModelException {
         List<ToscaConceptIdentifier> participantIds = new ArrayList<>();
-        var controlLoop = controlLoopProvider.getControlLoop(new ToscaConceptIdentifier(name, version));
-        if (controlLoop != null) {
-            for (ControlLoopElement clElement : controlLoop.getElements().values()) {
+        var controlLoopOpt = controlLoopProvider.findControlLoop(new ToscaConceptIdentifier(name, version));
+        if (controlLoopOpt.isPresent()) {
+            for (ControlLoopElement clElement : controlLoopOpt.get().getElements().values()) {
                 participantIds.add(clElement.getParticipantId());
             }
         }
@@ -224,9 +224,9 @@ public class MonitoringProvider {
     public Map<String, ToscaConceptIdentifier> getAllClElementsIdPerControlLoop(String name, String version)
             throws PfModelException {
         Map<String, ToscaConceptIdentifier> clElementId = new HashMap<>();
-        var controlLoop = controlLoopProvider.getControlLoop(new ToscaConceptIdentifier(name, version));
-        if (controlLoop != null) {
-            for (ControlLoopElement clElement : controlLoop.getElements().values()) {
+        var controlLoopOpt = controlLoopProvider.findControlLoop(new ToscaConceptIdentifier(name, version));
+        if (controlLoopOpt.isPresent()) {
+            for (ControlLoopElement clElement : controlLoopOpt.get().getElements().values()) {
                 clElementId.put(clElement.getId().toString(), clElement.getParticipantId());
             }
         }

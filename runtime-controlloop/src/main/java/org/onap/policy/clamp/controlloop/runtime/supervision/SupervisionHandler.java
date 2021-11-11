@@ -114,7 +114,7 @@ public class SupervisionHandler {
 
                 superviseControlLoop(controlLoop);
 
-                controlLoopProvider.updateControlLoop(controlLoop);
+                controlLoopProvider.saveControlLoop(controlLoop);
             } catch (PfModelException pfme) {
                 throw new ControlLoopException(pfme.getErrorResponse().getResponseCode(), pfme.getMessage(), pfme);
             }
@@ -269,7 +269,7 @@ public class SupervisionHandler {
                     var updated = updateState(controlLoop, controlLoopAckMessage.getControlLoopResultMap().entrySet());
                     updated |= setPrimed(controlLoop);
                     if (updated) {
-                        controlLoopProvider.updateControlLoop(controlLoop);
+                        controlLoopProvider.saveControlLoop(controlLoop);
                     }
                 } else {
                     LOGGER.warn("ControlLoop not found in database {}", controlLoopAckMessage.getControlLoopId());
@@ -425,7 +425,7 @@ public class SupervisionHandler {
     private int getFirstStartPhase(ControlLoop controlLoop) {
         ToscaServiceTemplate toscaServiceTemplate = null;
         try {
-            toscaServiceTemplate = serviceTemplateProvider.getServiceTemplateList(null, null).get(0);
+            toscaServiceTemplate = serviceTemplateProvider.getAllServiceTemplates().get(0);
         } catch (PfModelException e) {
             throw new PfModelRuntimeException(Status.BAD_REQUEST, "Canont load ToscaServiceTemplate from DB", e);
         }

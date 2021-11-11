@@ -27,7 +27,6 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -106,7 +105,7 @@ public class ControlLoopInstantiationProvider {
         ControlLoop controlLoop = new ControlLoop();
         Map<UUID, ControlLoopElement> controlLoopElements = new HashMap<>();
 
-        ToscaServiceTemplate toscaServiceTemplate = commissioningProvider.getToscaServiceTemplate(null, null);
+        ToscaServiceTemplate toscaServiceTemplate = commissioningProvider.getAllToscaServiceTemplate().get(0);
 
         Map<String, ToscaNodeTemplate> persistedNodeTemplateMap =
                 toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates();
@@ -155,7 +154,7 @@ public class ControlLoopInstantiationProvider {
 
         Map<String, ToscaNodeTemplate> filteredToscaNodeTemplateMap = new HashMap<>();
 
-        ToscaServiceTemplate toscaServiceTemplate = commissioningProvider.getToscaServiceTemplate(name, version);
+        ToscaServiceTemplate toscaServiceTemplate = commissioningProvider.getAllToscaServiceTemplate().get(0);
 
         toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates().forEach((key, nodeTemplate) -> {
             if (!nodeTemplate.getName().contains(instanceName)) {
@@ -185,8 +184,8 @@ public class ControlLoopInstantiationProvider {
 
         synchronized (lockit) {
             for (ControlLoop controlLoop : controlLoops.getControlLoopList()) {
-                var checkControlLoop = controlLoopProvider.getControlLoop(controlLoop.getKey().asIdentifier());
-                if (checkControlLoop != null) {
+                var checkControlLoopOpt = controlLoopProvider.findControlLoop(controlLoop.getKey().asIdentifier());
+                if (checkControlLoopOpt.isPresent()) {
                     throw new PfModelException(Response.Status.BAD_REQUEST,
                             controlLoop.getKey().asIdentifier() + " already defined");
                 }
@@ -195,7 +194,7 @@ public class ControlLoopInstantiationProvider {
             if (!validationResult.isValid()) {
                 throw new PfModelException(Response.Status.BAD_REQUEST, validationResult.getResult());
             }
-            controlLoopProvider.createControlLoops(controlLoops.getControlLoopList());
+            controlLoopProvider.saveControlLoops(controlLoops.getControlLoopList());
         }
 
         var response = new InstantiationResponse();
@@ -218,7 +217,7 @@ public class ControlLoopInstantiationProvider {
             if (!validationResult.isValid()) {
                 throw new PfModelException(Response.Status.BAD_REQUEST, validationResult.getResult());
             }
-            controlLoopProvider.updateControlLoops(controlLoops.getControlLoopList());
+            controlLoopProvider.saveControlLoops(controlLoops.getControlLoopList());
         }
 
         var response = new InstantiationResponse();
@@ -302,19 +301,18 @@ public class ControlLoopInstantiationProvider {
     public InstantiationResponse deleteControlLoop(String name, String version) throws PfModelException {
         var response = new InstantiationResponse();
         synchronized (lockit) {
-            List<ControlLoop> controlLoops = controlLoopProvider.getControlLoops(name, version);
-            if (controlLoops.isEmpty()) {
+            var controlLoopOpt = controlLoopProvider.findControlLoop(name, version);
+            if (controlLoopOpt.isEmpty()) {
                 throw new PfModelException(Response.Status.NOT_FOUND, "Control Loop not found");
             }
-            for (ControlLoop controlLoop : controlLoops) {
-                if (!ControlLoopState.UNINITIALISED.equals(controlLoop.getState())) {
-                    throw new PfModelException(Response.Status.BAD_REQUEST,
-                            "Control Loop State is still " + controlLoop.getState());
-                }
+            var controlLoop = controlLoopOpt.get();
+            if (!ControlLoopState.UNINITIALISED.equals(controlLoop.getState())) {
+                throw new PfModelException(Response.Status.BAD_REQUEST,
+                        "Control Loop State is still " + controlLoop.getState());
             }
 
-            response.setAffectedControlLoops(Collections
-                    .singletonList(controlLoopProvider.deleteControlLoop(name, version).getKey().asIdentifier()));
+            response.setAffectedControlLoops(
+                    List.of(controlLoopProvider.deleteControlLoop(name, version).getKey().asIdentifier()));
         }
         return response;
     }
@@ -354,17 +352,26 @@ public class ControlLoopInstantiationProvider {
             if (participants.isEmpty()) {
                 throw new ControlLoopException(Status.BAD_REQUEST, "No participants registered");
             }
+            var validationResult = new BeanValidationResult("InstantiationCommand", command);
             List<ControlLoop> controlLoops = new ArrayList<>(command.getControlLoopIdentifierList().size());
             for (ToscaConceptIdentifier id : command.getControlLoopIdentifierList()) {
-                var controlLoop = controlLoopProvider.getControlLoop(id);
-                controlLoop.setCascadedOrderedState(command.getOrderedState());
-                controlLoops.add(controlLoop);
+                var controlLoopOpt = controlLoopProvider.findControlLoop(id);
+                if (controlLoopOpt.isEmpty()) {
+                    validationResult.addResult("ToscaConceptIdentifier", id, ValidationStatus.INVALID,
+                            "ControlLoop with id " + id + " not found");
+                } else {
+                    var controlLoop = controlLoopOpt.get();
+                    controlLoop.setCascadedOrderedState(command.getOrderedState());
+                    controlLoops.add(controlLoop);
+                }
             }
-            BeanValidationResult validationResult = validateIssueControlLoops(controlLoops, participants);
+            if (validationResult.isValid()) {
+                validationResult = validateIssueControlLoops(controlLoops, participants);
+            }
             if (!validationResult.isValid()) {
                 throw new PfModelException(Response.Status.BAD_REQUEST, validationResult.getResult());
             }
-            controlLoopProvider.updateControlLoops(controlLoops);
+            controlLoopProvider.saveControlLoops(controlLoops);
         }
 
         supervisionHandler.triggerControlLoopSupervision(command.getControlLoopIdentifierList());
@@ -473,8 +480,8 @@ public class ControlLoopInstantiationProvider {
 
         synchronized (lockit) {
             for (ControlLoop controlLoop : controlLoops.getControlLoopList()) {
-                var checkControlLoop = controlLoopProvider.getControlLoop(controlLoop.getKey().asIdentifier());
-                if (checkControlLoop != null) {
+                var checkControlLoopOpt = controlLoopProvider.findControlLoop(controlLoop.getKey().asIdentifier());
+                if (checkControlLoopOpt.isPresent()) {
                     throw new PfModelException(Response.Status.BAD_REQUEST,
                             "Control loop with id " + controlLoop.getKey().asIdentifier() + " already defined");
                 }
@@ -482,7 +489,7 @@ public class ControlLoopInstantiationProvider {
 
             toscaSavedNodeTemplate = controlLoopProvider.saveInstanceProperties(serviceTemplate);
 
-            controlLoopProvider.createControlLoops(controlLoops.getControlLoopList());
+            controlLoopProvider.saveControlLoops(controlLoops.getControlLoopList());
 
         }
 
