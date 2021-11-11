@@ -100,7 +100,7 @@ class ControlLoopHandlerTest {
         var uuid = UUID.randomUUID();
         var id = CommonTestData.getParticipantId();
 
-        var clh = setTestControlLoopHandler(id, uuid);
+        var clh = commonTestData.setTestControlLoopHandler(id, uuid);
         var key = clh.getElementsOnThisParticipant().keySet().iterator().next();
         var value = clh.getElementsOnThisParticipant().get(key);
         assertEquals(ControlLoopState.UNINITIALISED, value.getState());
@@ -123,15 +123,9 @@ class ControlLoopHandlerTest {
         var uuid = UUID.randomUUID();
         var id = CommonTestData.getParticipantId();
 
-        var stateChange = new ControlLoopStateChange();
-        stateChange.setControlLoopId(id);
-        stateChange.setParticipantId(id);
-        stateChange.setMessageId(uuid);
-        stateChange.setOrderedState(ControlLoopOrderedState.RUNNING);
-        stateChange.setCurrentState(ControlLoopState.UNINITIALISED);
-        stateChange.setTimestamp(Instant.ofEpochMilli(3000));
+        var stateChange = getStateChange(id, uuid, ControlLoopOrderedState.RUNNING);
 
-        var clh = setTestControlLoopHandler(id, uuid);
+        var clh = commonTestData.setTestControlLoopHandler(id, uuid);
         clh.handleControlLoopStateChange(stateChange, List.of());
         var newid = new ToscaConceptIdentifier("id", "1.2.3");
         stateChange.setControlLoopId(newid);
@@ -150,20 +144,49 @@ class ControlLoopHandlerTest {
         assertDoesNotThrow(() -> clh.handleControlLoopUpdate(updateMsg, clElementDefinitions));
         updateMsg.setStartPhase(1);
         assertDoesNotThrow(() -> clh.handleControlLoopUpdate(updateMsg, clElementDefinitions));
+        assertThat(clh.getClElementInstanceProperties(uuid)).isEmpty();
     }
 
-    private ControlLoopHandler setTestControlLoopHandler(ToscaConceptIdentifier id, UUID uuid) throws CoderException {
-        var clh = commonTestData.getMockControlLoopHandler();
+    @Test
+    void controlLoopStateChangeUninitialisedTest() throws CoderException {
+        var uuid = UUID.randomUUID();
+        var id = CommonTestData.getParticipantId();
 
-        var key = commonTestData.getTestControlLoopMap().keySet().iterator().next();
-        var value = commonTestData.getTestControlLoopMap().get(key);
-        clh.getControlLoopMap().put(key, value);
+        var stateChangeUninitialised = getStateChange(id, uuid, ControlLoopOrderedState.UNINITIALISED);
 
-        var keyElem = commonTestData.setControlLoopElementTest(uuid, id).keySet().iterator().next();
-        var valueElem = commonTestData.setControlLoopElementTest(uuid, id).get(keyElem);
-        clh.getElementsOnThisParticipant().put(keyElem, valueElem);
+        var clh = commonTestData.setTestControlLoopHandler(id, uuid);
+        clh.handleControlLoopStateChange(stateChangeUninitialised, List.of());
+        var newid = new ToscaConceptIdentifier("id", "1.2.3");
+        stateChangeUninitialised.setControlLoopId(newid);
+        stateChangeUninitialised.setParticipantId(newid);
+        assertDoesNotThrow(() -> clh.handleControlLoopStateChange(stateChangeUninitialised, List.of()));
+    }
 
-        return clh;
+    @Test
+    void controlLoopStateChangePassiveTest() throws CoderException {
+        var uuid = UUID.randomUUID();
+        var id = CommonTestData.getParticipantId();
+
+        var stateChangePassive = getStateChange(id, uuid, ControlLoopOrderedState.PASSIVE);
+
+        var clh = commonTestData.setTestControlLoopHandler(id, uuid);
+        clh.handleControlLoopStateChange(stateChangePassive, List.of());
+        var newid = new ToscaConceptIdentifier("id", "1.2.3");
+        stateChangePassive.setControlLoopId(newid);
+        stateChangePassive.setParticipantId(newid);
+        assertDoesNotThrow(() -> clh.handleControlLoopStateChange(stateChangePassive, List.of()));
+    }
+
+
+    private ControlLoopStateChange getStateChange(ToscaConceptIdentifier id, UUID uuid, ControlLoopOrderedState state) {
+        var stateChange = new ControlLoopStateChange();
+        stateChange.setControlLoopId(id);
+        stateChange.setParticipantId(id);
+        stateChange.setMessageId(uuid);
+        stateChange.setOrderedState(state);
+        stateChange.setCurrentState(ControlLoopState.UNINITIALISED);
+        stateChange.setTimestamp(Instant.ofEpochMilli(3000));
+        return stateChange;
     }
 
 }
