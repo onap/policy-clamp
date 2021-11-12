@@ -86,6 +86,24 @@
       "revId": "bca8125a6b82191f06d079d46537d6d2b6b559e8",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d88d9a68_2713e026",
+        "filename": "runtime/src/test/resources/http-cache/third_party_proxy.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 7660
+      },
+      "writtenOn": "2021-11-12T14:53:27Z",
+      "side": 1,
+      "message": "I just reverted back to Maria DB 10.5.4 and I put under a specific ticket POLICY-3818",
+      "parentUuid": "2b85b95f_d14ee414",
+      "revId": "bca8125a6b82191f06d079d46537d6d2b6b559e8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
