@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "1a9ce4e0_7d309489",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-11-12T13:33:38Z",
+      "side": 1,
+      "message": "Issue-ID (instead of Issue-Id) so it can linked to JIRA.   It may not let you merge, I don\u0027t remember if there are checks checking for the right syntax on this line.",
+      "revId": "bca8125a6b82191f06d079d46537d6d2b6b559e8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "13f3a860_4ba47623",
         "filename": "runtime/extra/docker/clamp/docker-compose.yml",
         "patchSetId": 2
