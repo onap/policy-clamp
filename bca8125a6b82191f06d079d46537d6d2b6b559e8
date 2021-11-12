@@ -33,6 +33,24 @@
       "revId": "bca8125a6b82191f06d079d46537d6d2b6b559e8",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "79e51167_ef3feab6",
+        "filename": "runtime/src/test/resources/http-cache/third_party_proxy.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 7660
+      },
+      "writtenOn": "2021-11-12T09:09:41Z",
+      "side": 1,
+      "message": "The reason we are using Python2 is because this is the intermediary between clamp and the Camel Endpoints.  I would suggest upgrading to python3, but I tried to do it but since I\u0027m not really familiar with python, there where some issues with some libraries, I would suggest someone who has a better knowledge of python to help me thru the upgrade.",
+      "parentUuid": "a0a5b656_c1f47e76",
+      "revId": "bca8125a6b82191f06d079d46537d6d2b6b559e8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
