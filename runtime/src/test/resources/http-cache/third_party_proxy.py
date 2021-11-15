@@ -24,12 +24,11 @@
 # ===================================================================
 #
 ###
-
 import json
+
 import requests
 import os
 import errno
-import sys
 import SimpleHTTPServer
 import SocketServer
 import argparse
@@ -45,7 +44,7 @@ parser.add_argument("--root",     "-r", default=tempfile.mkdtemp(), type=str, he
 parser.add_argument("--temp",     "-t", default=tempfile.mkdtemp(), type=str, help="Temp folder for the generated content")
 parser.add_argument("--proxy"         , type=str, help="Url of the  Act as a proxy. If not set, this script only uses the cache and will return a 404 if files aren't found")
 parser.add_argument("--port",     "-P", type=int, default="8081", help="Port on which the proxy should listen to")
-parser.add_argument("--verbose",  "-v", type=bool, help="Print more information in case of error")
+parser.add_argument("--verbose",  "-v", type=bool, help="print(more information in case of error")
 parser.add_argument("--proxyaddress","-a", type=str, help="Address of this proxy, generally either third-party-proxy:8085 or localhost:8085 depending if started with docker-compose or not")
 options = parser.parse_args()
 
@@ -88,7 +87,7 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
             self.wfile.write(fc)
 
     def _write_cache(self,cached_file_folder, header_file, content_file, response):
-        os.makedirs(cached_file_folder, 0777)
+        os.makedirs(cached_file_folder, 0o777)
         with open(content_file, 'w') as f:
             f.write(response.raw.read())
         with open(header_file, 'w') as f:
@@ -108,9 +107,9 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
         return "%s/.header" % (cached_file_folder,)
 
     def _create_cache(self, generated_json, cached_file_folder, cached_file_header, cached_file_content):
-        print "jsonGenerated: " + generated_json
+        print("jsonGenerated: " + generated_json)
         if not os.path.exists(cached_file_folder):
-            os.makedirs(cached_file_folder, 0775)
+            os.makedirs(cached_file_folder, 0o775)
         with open(cached_file_header, 'w+') as f:
             f.write("{\"Content-Length\": \"" + str(len(generated_json)) + "\", \"Content-Type\": \"application/json\"}")
         with open(cached_file_content, 'w+') as f:
@@ -125,15 +124,15 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
 
      if self.path.startswith("/dcae-service-types?asdcResourceId=") and http_type == "GET":
         if not _file_available:
-            print "self.path start with /dcae-service-types?asdcResourceId=, generating response json..."
+            print("self.path start with /dcae-service-types?asdcResourceId=, generating response json...")
             uuidGenerated = str(uuid.uuid4())
             typeId = "typeId-" + uuidGenerated
             typeName = "typeName-" + uuidGenerated
-            print "typeId generated: " + typeName + " and typeName: "+ typeId
+            print("typeId generated: " + typeName + " and typeName: "+ typeId)
             jsonGenerated = "{\"totalCount\":1, \"items\":[{\"typeId\":\"" + typeId + "\", \"typeName\":\"" + typeName +"\"}]}"
-            print "jsonGenerated: " + jsonGenerated
+            print("jsonGenerated: " + jsonGenerated)
 
-            os.makedirs(cached_file_folder, 0777)
+            os.makedirs(cached_file_folder, 0o777)
             with open(cached_file_header, 'w') as f:
                 f.write("{\"Content-Length\": \"" + str(len(jsonGenerated)) + "\", \"Content-Type\": \"application/json\"}")
             with open(cached_file_content, 'w') as f:
@@ -141,12 +140,12 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
         return True
      elif self.path.startswith("/dcae-operationstatus/install") and http_type == "GET":
         if not _file_available:
-            print "self.path start with /dcae-operationstatus/install, generating response json..."
+            print("self.path start with /dcae-operationstatus/install, generating response json...")
             jsonGenerated =  "{\"operationType\": \"install\", \"status\": \"succeeded\"}"
-            print "jsonGenerated: " + jsonGenerated
+            print("jsonGenerated: " + jsonGenerated)
 
             try:
-                os.makedirs(cached_file_folder, 0777)
+                os.makedirs(cached_file_folder, 0o777)
             except OSError as e:
                 if e.errno != errno.EEXIST:
                     raise
@@ -159,12 +158,12 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
         return True
      elif self.path.startswith("/dcae-operationstatus/uninstall") and http_type == "GET":
         if not _file_available:
-            print "self.path start with /dcae-operationstatus/uninstall, generating response json..."
+            print("self.path start with /dcae-operationstatus/uninstall, generating response json...")
             jsonGenerated =  "{\"operationType\": \"uninstall\", \"status\": \"succeeded\"}"
-            print "jsonGenerated: " + jsonGenerated
+            print("jsonGenerated: " + jsonGenerated)
 
             try:
-                os.makedirs(cached_file_folder, 0777)
+                os.makedirs(cached_file_folder, 0o777)
             except OSError as e:
                 if e.errno != errno.EEXIST:
                     raise
@@ -177,63 +176,63 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
         return True
      elif self.path.startswith("/sdc/v1/catalog/services/") and http_type == "POST":
         if not _file_available:
-            print "self.path start with /sdc/v1/catalog/services/, generating response json..."
+            print("self.path start with /sdc/v1/catalog/services/, generating response json...")
             jsondata = json.loads(self.data_string)
             jsonGenerated = "{\"artifactName\":\"" + jsondata['artifactName'] + "\",\"artifactType\":\"" + jsondata['artifactType'] + "\",\"artifactURL\":\"" + self.path + "\",\"artifactDescription\":\"" + jsondata['description'] + "\",\"artifactChecksum\":\"ZjJlMjVmMWE2M2M1OTM2MDZlODlmNTVmZmYzNjViYzM=\",\"artifactUUID\":\"" + str(uuid.uuid4()) + "\",\"artifactVersion\":\"1\"}"
-            print "jsonGenerated: " + jsonGenerated
+            print("jsonGenerated: " + jsonGenerated)
 
-            os.makedirs(cached_file_folder, 0777)
+            os.makedirs(cached_file_folder, 0o777)
             with open(cached_file_header, 'w') as f:
                 f.write("{\"Content-Length\": \"" + str(len(jsonGenerated)) + "\", \"Content-Type\": \"application/json\"}")
             with open(cached_file_content, 'w') as f:
                 f.write(jsonGenerated)
         return True
      elif self.path.startswith("/dcae-deployments/") and http_type == "PUT":
-            print "self.path start with /dcae-deployments/ DEPLOY, generating response json..."
+            print("self.path start with /dcae-deployments/ DEPLOY, generating response json...")
             #jsondata = json.loads(self.data_string)
             jsonGenerated = "{\"operationType\":\"install\",\"status\":\"processing\",\"links\":{\"status\":\"http:\/\/" + PROXY_ADDRESS + "\/dcae-operationstatus/install?test=test\"}}"
-            print "jsonGenerated: " + jsonGenerated
+            print("jsonGenerated: " + jsonGenerated)
             if not os.path.exists(cached_file_folder):
-                os.makedirs(cached_file_folder, 0777)
+                os.makedirs(cached_file_folder, 0o777)
             with open(cached_file_header, 'w+') as f:
                 f.write("{\"Content-Length\": \"" + str(len(jsonGenerated)) + "\", \"Content-Type\": \"application/json\"}")
             with open(cached_file_content, 'w+') as f:
                 f.write(jsonGenerated)
             return True
      elif self.path.startswith("/dcae-deployments/") and http_type == "DELETE":
-            print "self.path start with /dcae-deployments/ UNDEPLOY, generating response json..."
+            print("self.path start with /dcae-deployments/ UNDEPLOY, generating response json...")
             #jsondata = json.loads(self.data_string)
             jsonGenerated = "{\"operationType\":\"uninstall\",\"status\":\"processing\",\"links\":{\"status\":\"http:\/\/" + PROXY_ADDRESS + "\/dcae-operationstatus/uninstall?test=test\"}}"
-            print "jsonGenerated: " + jsonGenerated
+            print("jsonGenerated: " + jsonGenerated)
             if not os.path.exists(cached_file_folder):
-                os.makedirs(cached_file_folder, 0777)
+                os.makedirs(cached_file_folder, 0o777)
             with open(cached_file_header, 'w+') as f:
                 f.write("{\"Content-Length\": \"" + str(len(jsonGenerated)) + "\", \"Content-Type\": \"application/json\"}")
             with open(cached_file_content, 'w+') as f:
                 f.write(jsonGenerated)
             return True
      elif (self.path.startswith("/pdp/api/") and (http_type == "PUT" or http_type == "DELETE")) or (self.path.startswith("/pdp/api/policyEngineImport") and http_type == "POST"):
-        print "self.path start with /pdp/api/, copying body to response ..."
+        print("self.path start with /pdp/api/, copying body to response ...")
         if not os.path.exists(cached_file_folder):
-            os.makedirs(cached_file_folder, 0777)
+            os.makedirs(cached_file_folder, 0o777)
         with open(cached_file_header, 'w+') as f:
             f.write("{\"Content-Length\": \"" + str(len(self.data_string)) + "\", \"Content-Type\": \""+str(self.headers['Content-Type'])+"\"}")
         with open(cached_file_content, 'w+') as f:
             f.write(self.data_string)
         return True
      elif self.path.startswith("/policy/api/v1/policytypes/") and http_type == "POST":
-        print "self.path start with POST new policy API /pdp/api/, copying body to response ..."
+        print("self.path start with POST new policy API /pdp/api/, copying body to response ...")
         if not os.path.exists(cached_file_folder):
-            os.makedirs(cached_file_folder, 0777)
+            os.makedirs(cached_file_folder, 0o777)
         with open(cached_file_header, 'w+') as f:
             f.write("{\"Content-Length\": \"" + str(len(self.data_string)) + "\", \"Content-Type\": \""+str(self.headers['Content-Type'])+"\"}")
         with open(cached_file_content, 'w+') as f:
             f.write(self.data_string)
         return True
      elif self.path.startswith("/policy/api/v1/policytypes/") and http_type == "DELETE":
-        print "self.path start with DELETE new policy API /policy/api/v1/policytypes/ ..."
+        print("self.path start with DELETE new policy API /policy/api/v1/policytypes/ ...")
         if not os.path.exists(cached_file_folder):
-            os.makedirs(cached_file_folder, 0777)
+            os.makedirs(cached_file_folder, 0o777)
 
         with open(cached_file_header, 'w+') as f:
                 f.write("{\"Content-Length\": \"" + str(len("")) + "\", \"Content-Type\": \""+str("")+"\"}")
@@ -241,20 +240,20 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
                 f.write(self.data_string)
         return True
      elif self.path.startswith("/policy/pap/v1/pdps/policies") and http_type == "POST":
-        print "self.path start with POST new policy API /policy/pap/v1/pdps/ ..."
+        print("self.path start with POST new policy API /policy/pap/v1/pdps/ ...")
         if not os.path.exists(cached_file_folder):
-            os.makedirs(cached_file_folder, 0777)
+            os.makedirs(cached_file_folder, 0o777)
         with open(cached_file_header, 'w+') as f:
                 f.write("{\"Content-Length\": \"" + str(len("")) + "\", \"Content-Type\": \""+str("")+"\"}")
         with open(cached_file_content, 'w+') as f:
                 f.write(self.data_string)
         return True
      elif (self.path.startswith("/policy/pap/v1/policies/deployed/")) and http_type == "GET":
-        print "self.path start with /policy/api/v1/policytypes/, generating response json..."
+        print("self.path start with /policy/api/v1/policytypes/, generating response json...")
         jsonGenerated =  "{\"policyTypeId\": \"onap.policies.controlloop.operational\",\"policyTypeVersion\": \"1.0.0\",\"policyId\": \"OPERATIONAL_z711F_v1_0_ResourceInstanceName1_tca\"}"
-        print "jsonGenerated: " + jsonGenerated
+        print("jsonGenerated: " + jsonGenerated)
         if not os.path.exists(cached_file_folder):
-            os.makedirs(cached_file_folder, 0777)
+            os.makedirs(cached_file_folder, 0o777)
 
         with open(cached_file_header, 'w') as f:
             f.write("{\"Content-Length\": \"" + str(len(jsonGenerated)) + "\", \"Content-Type\": \"application/json\"}")
@@ -267,11 +266,11 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
             cached_file_folder = '%s/%s' % (TMP_ROOT, self.path)
             cached_file_content = self._get_cached_content_file_name(cached_file_folder)
             cached_file_header = self._get_cached_header_file_name(cached_file_folder)
-            print "self.path start with /dcae-service-types, generating response json..."
+            print("self.path start with /dcae-service-types, generating response json...")
             response = "{\"links\": {\"previousLink\": {\"title\": \"string\",\"rel\": \"string\",\"uri\": \"string\",\"uriBuilder\": {},\"rels\": [\"string\"],\"params\": {\"additionalProp1\": \"string\",\"additionalProp2\": \"string\",\"additionalProp3\": \"string\"},\"type\": \"string\"},\"nextLink\": {\"title\": \"string\",\"rel\": \"string\",\"uri\": \"string\",\"uriBuilder\": {},\"rels\": [\"string\"],\"params\": {\"additionalProp1\": \"string\",\"additionalProp2\": \"string\",\"additionalProp3\": \"string\"},\"type\": \"string\"}},\"totalCount\": 1,\"items\": [{\"owner\": \"testOwner\",\"application\": \"testApplication\",\"component\": \"testComponent\",\"typeName\": \"testTypeName\",\"typeVersion\": 0,\"blueprintTemplate\": \"testBlueprintTemplate\",\"serviceIds\": [\"serviceId1\", \"serviceId2\"],\"vnfTypes\": [\"vnfType1\", \"vnfType2\"],\"serviceLocations\": [\"serviceLocation1\", \"serviceLocation2\"],\"asdcServiceId\": \"testAsdcServiceId\",\"asdcResourceId\": \"0\",\"asdcServiceURL\": \"testAsdcServiceURL\",\"typeId\": \"testtypeId\",\"selfLink\": {\"title\": \"selfLinkTitle\",\"rel\": \"selfLinkRel\",\"uri\": \"selfLinkUri\",\"uriBuilder\": {},\"rels\": [\"string\"],\"params\": {\"additionalProp1\": \"string\",\"additionalProp2\": \"string\",\"additionalProp3\": \"string\"},\"type\": \"string\"},\"created\": \"2020-01-22T09:38:15.436Z\",\"deactivated\": \"2020-01-22T09:38:15.437Z\"},{\"owner\": \"testOwner2\",\"application\": \"testApplication1\",\"component\": \"testComponent2\",\"typeName\": \"testTypeName2\",\"typeVersion\": 0,\"blueprintTemplate\": \"testBlueprintTemplate2\",\"serviceIds\": [\"serviceId3\", \"serviceId4\"],\"vnfTypes\": [\"vnfType13\", \"vnfType4\"],\"serviceLocations\": [\"serviceLocation3\", \"serviceLocation4\"],\"asdcServiceId\": \"testAsdcServiceId\",\"asdcResourceId\": \"1\",\"asdcServiceURL\": \"testAsdcServiceURL2\",\"typeId\": \"testtypeId2\",\"selfLink\": {\"title\": \"selfLinkTitle\",\"rel\": \"selfLinkRel\",\"uri\": \"selfLinkUri\",\"uriBuilder\": {},\"rels\": [\"string\"],\"params\": {\"additionalProp1\": \"string\",\"additionalProp2\": \"string\",\"additionalProp3\": \"string\"},\"type\": \"string\"},\"created\": \"2020-01-22T09:38:15.436Z\",\"deactivated\": \"2020-01-22T09:38:15.437Z\"}]}"
-            print "jsonGenerated: " + response
+            print("jsonGenerated: " + response)
 
-            os.makedirs(cached_file_folder, 0777)
+            os.makedirs(cached_file_folder, 0o777)
             with open(cached_file_header, 'w') as f:
                 f.write("{\"Content-Length\": \"" + str(len(response)) + "\", \"Content-Type\": \"application/json\"}")
             with open(cached_file_content, 'w') as f:
@@ -280,50 +279,55 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
      elif (self.path.startswith("/onap/controlloop/v2/commission/toscaservicetemplate")) and http_type == "GET":
          if not _file_available:
              cached_file_folder = cached_file_folder.split('bridgeEndpoint')[0]
-             print ("cached file folder for onap is %s: ", cached_file_folder)
-             print "self.path start with /onap/controlloop/v2/commission/, generating response json..."
+             print(("cached file folder for onap is %s: ", cached_file_folder))
+             print("self.path start with /onap/controlloop/v2/commission/, generating response json...")
              jsonGenerated =  "{\"tosca_definitions_version\": \"tosca_simple_yaml_1_1_0\",\"data_types\": {},\"node_types\": {}, \"policy_types\": {}, \"topology_template\": {}, \"name\": \"ToscaServiceTemplateSimple\", \"version\": \"1.0.0\", \"metadata\": {}}"
              self._create_cache(jsonGenerated, cached_file_folder, cached_file_header, cached_file_content)
          return True
      elif (self.path.startswith("/onap/controlloop/v2/commission/toscaServiceTemplateSchema")) and http_type == "GET":
          if not _file_available:
              cached_file_folder = cached_file_folder.split('bridgeEndpoint')[0]
-             print ("cached file folder for onap is %s: ", cached_file_folder)
-             print "self.path start with /onap/controlloop/v2/commission/, generating response json..."
+             print(("cached file folder for onap is %s: ", cached_file_folder))
+             print("self.path start with /onap/controlloop/v2/commission/, generating response json...")
              jsonGenerated =  "{\"tosca_definitions_version\": \"tosca_simple_yaml_1_1_0\",\"data_types\": {},\"node_types\": {}, \"policy_types\": {}, \"topology_template\": {}, \"name\": \"ToscaServiceTemplateSimple\", \"version\": \"1.0.0\", \"metadata\": {}}"
              self._create_cache(jsonGenerated, cached_file_folder, cached_file_header, cached_file_content)
          return True
      elif (self.path.startswith("/onap/controlloop/v2/commission/elements")) and http_type == "GET":
          if not _file_available:
-             print "self.path start with /commission/elements Control Loop Elements, generating response json..."
+             print("self.path start with /commission/elements Control Loop Elements, generating response json...")
              jsonGenerated = "[{\"name\": ,\"org.onap.domain.pmsh.PMSH_DCAEMicroservice\": [{ \"version\": \"1.2.3\", \"derived_from\": null }]}]"
              self._create_cache(jsonGenerated, cached_file_folder, cached_file_header, cached_file_content)
          return True
      elif (self.path.startswith("/onap/controlloop/v2/commission")) and http_type == "GET":
          if not _file_available:
-             print "self.path start with /commission control loop definition, generating response json..."
+             print("self.path start with /commission control loop definition, generating response json...")
              #jsondata = json.loads(self.data_string)
              jsonGenerated = "[{\"name\": ,\"org.onap.domain.pmsh.PMSHControlLoopDefinition\": [{ \"version\": \"1.2.3\", \"derived_from\": null }]}]"
              self._create_cache(jsonGenerated, cached_file_folder, cached_file_header, cached_file_content)
          return True
      elif (self.path.startswith("/onap/controlloop/v2/commission/getCommonOrInstanceProperties")) and http_type == "GET":
          if not _file_available:
-             print "self.path start with /commission getting common properties, generating response json..."
+             print("self.path start with /commission getting common properties, generating response json...")
              with open("example/node_template.json", "r") as f:
                  jsonGenerated = f.read()
              self._create_cache(jsonGenerated, cached_file_folder, cached_file_header, cached_file_content)
          return True
      elif (self.path.startswith("/onap/controlloop/v2/commission")) and http_type == "POST":
-         print "self.path start with POST /onap/controlloop/v2/commission, copying body to response ..."
+         print("self.path start with POST /onap/controlloop/v2/commission, copying body to response ...")
          if not os.path.exists(cached_file_folder):
-             os.makedirs(cached_file_folder, 0777)
+             os.makedirs(cached_file_folder, 0o777)
          with open(cached_file_header, 'w+') as f:
              f.write("{\"Content-Length\": \"" + str(len(self.data_string)) + "\", \"Content-Type\": \""+str(self.headers['Content-Type'])+"\"}")
          with open(cached_file_content, 'w+') as f:
              f.write(self.data_string)
          return True
      elif (self.path.startswith("/onap/controlloop/v2/commission")) and http_type == "DELETE":
-         print "self.path start with /commission Decommissioning, generating response json..."
+         print("self.path start with /commission Decommissioning, generating response json...")
+         jsonGenerated = "{\"errorDetails\": null,\"affectedControlLoopDefinitions\": [{ \"name\": \"ToscaServiceTemplateSimple\", \"version\": \"1.0.0\" }]}"
+         self._create_cache(jsonGenerated, cached_file_folder, cached_file_header, cached_file_content)
+         return True
+     elif (self.path.startswith("/onap/controlloop/v2/instantiation")) and http_type == "GET":
+         print("self.path start with /instantiation Retrieving Instantiation, generating response json...")
          jsonGenerated = "{\"errorDetails\": null,\"affectedControlLoopDefinitions\": [{ \"name\": \"ToscaServiceTemplateSimple\", \"version\": \"1.0.0\" }]}"
          self._create_cache(jsonGenerated, cached_file_folder, cached_file_header, cached_file_content)
          return True
@@ -383,13 +387,13 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
         self._send_content(cached_file_header, cached_file_content)
 
         if self.path.startswith("/dcae-service-types?asdcResourceId="):
-            print "DCAE case deleting folder created " + cached_file_folder
+            print("DCAE case deleting folder created " + cached_file_folder)
             shutil.rmtree(cached_file_folder, ignore_errors=False, onerror=None)
         elif self.path.startswith("/dcae-service-types"):
-            print "DCAE case deleting folder created " + cached_file_folder
+            print("DCAE case deleting folder created " + cached_file_folder)
             shutil.rmtree(cached_file_folder, ignore_errors=False, onerror=None)
         else:
-            print "NOT in DCAE case deleting folder created " + cached_file_folder
+            print("NOT in DCAE case deleting folder created " + cached_file_folder)
 
     def do_POST(self):
         cached_file_folder = ""
@@ -553,7 +557,7 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
 # Main code that start the HTTP server
 httpd = SocketServer.ForkingTCPServer(('', PORT), Proxy)
 httpd.allow_reuse_address = True
-print "Listening on port "+ str(PORT) + "(Press Ctrl+C/Ctrl+Z to stop HTTPD Caching script)"
-print "Caching folder " + CACHE_ROOT + ", Tmp folder for generated files " + TMP_ROOT
+print("Listening on port "+ str(PORT) + "(Press Ctrl+C/Ctrl+Z to stop HTTPD Caching script)")
+print("Caching folder " + CACHE_ROOT + ", Tmp folder for generated files " + TMP_ROOT)
 signal.signal(signal.SIGINT, signal_handler)
 httpd.serve_forever()
