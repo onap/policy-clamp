@@ -29,107 +29,107 @@ import OnapConstant from '../../../utils/OnapConstants';
 import { shallow } from 'enzyme';
 
 describe('Verify PolicyModal', () => {
-    beforeEach(() => {
-        fetch.resetMocks();
-        fetch.mockImplementation(() => {
-            return Promise.resolve({
-                ok: true,
-                status: 200,
-                text: () => "OK"
-            });
-        });
-    })
-    const loopCacheStr = {
-            "name": "LOOP_Jbv1z_v1_0_ResourceInstanceName1_tca",
-            "operationalPolicies": [{
-                "name": "OPERATIONAL_h2NMX_v1_0_ResourceInstanceName1_tca",
-                "configurationsJson": {
-                    "operational_policy": {
-                        "controlLoop": {},
-                        "policies": []
-                    }
-                },
-                "policyModel": {"policyPdpGroup": {"supportedPdpGroups":[{"monitoring": ["xacml"]}]}},
-                "jsonRepresentation" : {"schema": {}}
-             }]
-    };
-
-    const loopCache = new LoopCache(loopCacheStr);
-    const historyMock = { push: jest.fn() };
-    const flushPromises = () => new Promise(setImmediate);
-    const match = {params: {policyName:"OPERATIONAL_h2NMX_v1_0_ResourceInstanceName1_tca", policyInstanceType: OnapConstant.operationalPolicyType}}
-
-    it('Test handleClose', () => {
-      const handleClose = jest.spyOn(PolicyModal.prototype,'handleClose');
-      const component = mount(<PolicyModal history={historyMock} match={match} loopCache={loopCache}/>)
-
-      component.find('[variant="secondary"]').prop('onClick')();
-
-      expect(handleClose).toHaveBeenCalledTimes(1);
-      expect(component.state('show')).toEqual(false);
-      expect(historyMock.push.mock.calls[0]).toEqual([ '/']);
+  beforeEach(() => {
+    fetch.resetMocks();
+    fetch.mockImplementation(() => {
+      return Promise.resolve({
+        ok: true,
+        status: 200,
+        text: () => "OK"
+      });
     });
+  })
+  const loopCacheStr = {
+    "name": "LOOP_Jbv1z_v1_0_ResourceInstanceName1_tca",
+    "operationalPolicies": [{
+      "name": "OPERATIONAL_h2NMX_v1_0_ResourceInstanceName1_tca",
+      "configurationsJson": {
+        "operational_policy": {
+          "controlLoop": {},
+          "policies": []
+        }
+      },
+      "policyModel": { "policyPdpGroup": { "supportedPdpGroups": [{ "monitoring": ["xacml"] }] } },
+      "jsonRepresentation": { "schema": {} }
+    }]
+  };
 
-    it('Test handleSave', async () => {
-        const loadLoopFunction = jest.fn();
-        const handleSave = jest.spyOn(PolicyModal.prototype,'handleSave');
-        const component = mount(<PolicyModal history={historyMock} 
-                          loopCache={loopCache} match={match} loadLoopFunction={loadLoopFunction} />)
+  const loopCache = new LoopCache(loopCacheStr);
+  const historyMock = { push: jest.fn() };
+  const flushPromises = () => new Promise(setImmediate);
+  const match = { params: { policyName: "OPERATIONAL_h2NMX_v1_0_ResourceInstanceName1_tca", policyInstanceType: OnapConstant.operationalPolicyType } }
 
-        component.find('[variant="primary"]').get(0).props.onClick();
-        await flushPromises();
-        component.update();
+  it('Test handleClose', () => {
+    const handleClose = jest.spyOn(PolicyModal.prototype, 'handleClose');
+    const component = mount(<PolicyModal history={ historyMock } match={ match } loopCache={ loopCache }/>)
 
-        expect(handleSave).toHaveBeenCalledTimes(1);
-        expect(component.state('show')).toEqual(false);
-        expect(historyMock.push.mock.calls[0]).toEqual([ '/']);
+    component.find('[variant="secondary"]').prop('onClick')();
+
+    expect(handleClose).toHaveBeenCalledTimes(1);
+    expect(component.state('show')).toEqual(false);
+    expect(historyMock.push.mock.calls[0]).toEqual(['/']);
+  });
+
+  it('Test handleSave', async () => {
+    const loadLoopFunction = jest.fn();
+    const handleSave = jest.spyOn(PolicyModal.prototype, 'handleSave');
+    const component = mount(<PolicyModal history={ historyMock }
+                                         loopCache={ loopCache } match={ match } loadLoopFunction={ loadLoopFunction }/>)
+
+    component.find('[variant="primary"]').get(0).props.onClick();
+    await flushPromises();
+    component.update();
+
+    expect(handleSave).toHaveBeenCalledTimes(1);
+    expect(component.state('show')).toEqual(false);
+    expect(historyMock.push.mock.calls[0]).toEqual(['/']);
+  });
+
+  it('Test handleRefresh', async () => {
+    LoopService.refreshOperationalPolicyJson = jest.fn().mockImplementation(() => {
+      return Promise.resolve(loopCacheStr);
     });
+    const updateLoopFunction = jest.fn();
+    const handleRefresh = jest.spyOn(PolicyModal.prototype, 'handleRefresh');
+    const component = mount(<PolicyModal loopCache={ loopCache } match={ match } updateLoopFunction={ updateLoopFunction }/>)
 
-    it('Test handleRefresh', async () => {
-        LoopService.refreshOperationalPolicyJson = jest.fn().mockImplementation(() => {
-            return Promise.resolve(loopCacheStr);
-        });
-        const updateLoopFunction = jest.fn();
-        const handleRefresh = jest.spyOn(PolicyModal.prototype,'handleRefresh');
-        const component = mount(<PolicyModal loopCache={loopCache} match={match} updateLoopFunction={updateLoopFunction} />)
+    component.find('[variant="primary"]').get(1).props.onClick();
+    await flushPromises();
+    component.update();
 
-        component.find('[variant="primary"]').get(1).props.onClick();
-        await flushPromises();
-        component.update();
+    expect(handleRefresh).toHaveBeenCalledTimes(1);
+    expect(component.state('show')).toEqual(true);
+    expect(component.state('showSucAlert')).toEqual(true);
+    expect(component.state('showMessage')).toEqual("Successfully refreshed");
+  });
 
-        expect(handleRefresh).toHaveBeenCalledTimes(1);
-        expect(component.state('show')).toEqual(true);
-        expect(component.state('showSucAlert')).toEqual(true);
-        expect(component.state('showMessage')).toEqual("Successfully refreshed");
+  it('Test handlePdpGroupChange', () => {
+    const component = mount(<PolicyModal loopCache={ loopCache } match={ match }/>)
+    component.setState({
+      "pdpGroup": [{ "option1": ["subPdp1", "subPdp2"] }],
+      "chosenPdpGroup": "option2"
     });
+    expect(component.state('chosenPdpGroup')).toEqual("option2");
 
-    it('Test handlePdpGroupChange', () => {
-        const component = mount(<PolicyModal loopCache={loopCache} match={match} />)
-        component.setState({ 
-                "pdpGroup": [{"option1":["subPdp1","subPdp2"]}],
-                "chosenPdpGroup": "option2"
-        });
-        expect(component.state('chosenPdpGroup')).toEqual("option2");
+    const instance = component.instance();
+    const event = { label: "option1", value: "option1" }
+    instance.handlePdpGroupChange(event);
+    expect(component.state('chosenPdpGroup')).toEqual("option1");
+    expect(component.state('chosenPdpSubgroup')).toEqual("");
+    expect(component.state('pdpSubgroupList')).toEqual([{ label: "subPdp1", value: "subPdp1" }, { label: "subPdp2", value: "subPdp2" }]);
+  });
 
-        const instance = component.instance();
-        const event = {label:"option1", value:"option1"}
-        instance.handlePdpGroupChange(event);
-        expect(component.state('chosenPdpGroup')).toEqual("option1");
-        expect(component.state('chosenPdpSubgroup')).toEqual("");
-        expect(component.state('pdpSubgroupList')).toEqual([{label:"subPdp1", value:"subPdp1"}, {label:"subPdp2", value:"subPdp2"}]);
-    });
+  it('Test handlePdpSubgroupChange', () => {
+    const component = mount(<PolicyModal loopCache={ loopCache } match={ match }/>)
 
-    it('Test handlePdpSubgroupChange', () => {
-        const component = mount(<PolicyModal loopCache={loopCache} match={match} />)
+    const instance = component.instance();
+    const event = { label: "option1", value: "option1" }
+    instance.handlePdpSubgroupChange(event);
+    expect(component.state('chosenPdpSubgroup')).toEqual("option1");
+  });
 
-        const instance = component.instance();
-        const event = {label:"option1", value:"option1"}
-        instance.handlePdpSubgroupChange(event);
-        expect(component.state('chosenPdpSubgroup')).toEqual("option1");
-    });
-
-    it('Test the render method', () => {
-        const component = shallow(<PolicyModal loopCache={loopCache} match={match}/>)
-        expect(component).toMatchSnapshot();
-    });
+  it('Test the render method', () => {
+    const component = shallow(<PolicyModal loopCache={ loopCache } match={ match }/>)
+    expect(component).toMatchSnapshot();
+  });
 });
