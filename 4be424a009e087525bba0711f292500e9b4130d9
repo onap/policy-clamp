@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "44aa0258_f993b1ea",
+        "filename": "runtime/ui-react/src/components/dialogs/Policy/PolicyDeploymentEditor.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-11-15T15:41:18Z",
+      "side": 1,
+      "message": "These files only have white space differences:\n\nliam@liam-saoru:~/git/onap/policy/clamp$ diff -w runtime/ui-react/src/components/dialogs/Policy/PolicyDeploymentEditor.js /media/sf_liam/git/onap/policy/clamp-ui/runtime/ui-react/src/components/dialogs/Policy/PolicyDeploymentEditor.js\n136,139c136,137\n\u003c           pdpStates.push({\n\u003c             name: fullName,\n\u003c             value: infoPdpMap.get(fullName) !\u003d\u003d undefined\n\u003c           });\n---\n\u003e                             pdpStates.push({name: fullName,\n\u003e                                 value: infoPdpMap.get(fullName) !\u003d\u003d undefined});\nliam@liam-saoru:~/git/onap/policy/clamp$",
+      "revId": "4be424a009e087525bba0711f292500e9b4130d9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "482b7487_80637a8f",
+        "filename": "runtime/ui-react/src/components/dialogs/Policy/PolicyModal.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-11-15T15:41:18Z",
+      "side": 1,
+      "message": "These files only have white space differences:\n\nliam@liam-saoru:~/git/onap/policy/clamp$ diff -w runtime/ui-react/src/components/dialogs/Policy/PolicyModal.js /media/sf_liam/git/onap/policy/clamp-ui/runtime/ui-react/src/components/dialogs/Policy/PolicyModal.js \n94c94,95\n\u003c     } else {\n---\n\u003e         }\n\u003e         else {\n141,142c142\n\u003c       {\n\u003c         schema: toscaModel,\n---\n\u003e         {   schema: toscaModel,\n190,192c190\n\u003c       pdpSubgroupValues \u003d selectedPdpGroup[0][chosenPdpGroupValue].map((pdpSubgroup) \u003d\u003e {\n\u003c         return { label: pdpSubgroup, value: pdpSubgroup }\n\u003c       });\n---\n\u003e             pdpSubgroupValues \u003d selectedPdpGroup[0][chosenPdpGroupValue].map((pdpSubgroup) \u003d\u003e { return { label: pdpSubgroup, value: pdpSubgroup } });\n208,210c206\n\u003c     const pdpSubgroupValues \u003d selectedPdpGroup[0][e.value].map((pdpSubgroup) \u003d\u003e {\n\u003c       return { label: pdpSubgroup, value: pdpSubgroup }\n\u003c     });\n---\n\u003e         const pdpSubgroupValues \u003d selectedPdpGroup[0][e.value].map((pdpSubgroup) \u003d\u003e { return { label: pdpSubgroup, value: pdpSubgroup } });\nliam@liam-saoru:~/git/onap/policy/clamp$",
+      "revId": "4be424a009e087525bba0711f292500e9b4130d9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e5719c9c_e24e621c",
+        "filename": "runtime/ui-react/src/components/dialogs/Policy/PolicyModal.test.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-11-15T15:41:18Z",
+      "side": 1,
+      "message": "These files only have white space differences:\n\nliam@liam-saoru:~/git/onap/policy/clamp$ diff -w runtime/ui-react/src/components/dialogs/Policy/PolicyModal.test.js /media/sf_liam/git/onap/policy/clamp-ui/runtime/ui-react/src/components/dialogs/Policy/PolicyModal.test.js \nliam@liam-saoru:~/git/onap/policy/clamp$",
+      "revId": "4be424a009e087525bba0711f292500e9b4130d9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9fc66fe1_a02bca01",
+        "filename": "runtime/ui-react/src/components/loop_viewer/svg/SvgGenerator.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-11-15T15:41:18Z",
+      "side": 1,
+      "message": "These files only have white space differences:\n\nliam@liam-saoru:~/git/onap/policy/clamp$ diff -w runtime/ui-react/src/components/loop_viewer/svg/SvgGenerator.js /media/sf_liam/git/onap/policy/clamp-ui/runtime/ui-react/src/components/loop_viewer/svg/SvgGenerator.js \n36,38c36\n\u003c const emptySvg \u003d (\u003csvg\u003e\n\u003c   \u003ctext x\u003d\"60\" y\u003d\"40\"\u003eNo LOOP (SVG)\u003c/text\u003e\n\u003c \u003c/svg\u003e);\n---\n\u003e const emptySvg \u003d (\u003csvg\u003e \u003ctext x\u003d\"60\" y\u003d\"40\"\u003eNo LOOP (SVG)\u003c/text\u003e \u003c/svg\u003e);\nliam@liam-saoru:~/git/onap/policy/clamp$",
+      "revId": "4be424a009e087525bba0711f292500e9b4130d9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
