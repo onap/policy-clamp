@@ -270,4 +270,24 @@ public class CommonTestData {
         return elementsOnThisParticipant;
     }
 
+    /**
+     * Returns a ControlLoopHandler with elements on the id,uuid.
+     *
+     * @param id ToscaConceptIdentifier and uuid UUID
+     * @return a ControlLoopHander with elements
+     */
+    public ControlLoopHandler setTestControlLoopHandler(ToscaConceptIdentifier id, UUID uuid) throws CoderException {
+        var clh = getMockControlLoopHandler();
+
+        var key = getTestControlLoopMap().keySet().iterator().next();
+        var value = getTestControlLoopMap().get(key);
+        clh.getControlLoopMap().put(key, value);
+
+        var keyElem = setControlLoopElementTest(uuid, id).keySet().iterator().next();
+        var valueElem = setControlLoopElementTest(uuid, id).get(keyElem);
+        clh.getElementsOnThisParticipant().put(keyElem, valueElem);
+
+        return clh;
+    }
+
 }
