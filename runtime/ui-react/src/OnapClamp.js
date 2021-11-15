@@ -27,13 +27,13 @@ import { ThemeProvider } from 'styled-components';
 import { DefaultClampTheme } from './theme/globalStyle.js';
 
 export default class OnapClamp extends LoopUI {
-	
-	render() {
-		console.info("Onap Clamp UI starting");
-		return (
-		<ThemeProvider theme={DefaultClampTheme}>
-			{super.render()}
-		</ThemeProvider>);
-	}
+
+  render() {
+    console.info("Onap Clamp UI starting");
+    return (
+      <ThemeProvider theme={ DefaultClampTheme }>
+        { super.render() }
+      </ThemeProvider>);
+  }
 }
 

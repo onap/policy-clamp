@@ -27,136 +27,137 @@ import { mount } from 'enzyme';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 describe('Verify ViewLoopTemplatesModal', () => {
-	beforeEach(() => {
-		fetch.resetMocks();
-	});
+  beforeEach(() => {
+    fetch.resetMocks();
+  });
 
-	it('Test API Successful', () => {
-		fetch.mockImplementationOnce(() => {
-			return Promise.resolve({
-				ok: true,
-				status: 200,
-				json: () => {
-					return Promise.resolve({
-						"index": "1",
-						"name": "MTCA version 1",
-						"modelService.serviceDetails.name": "MTCA",
-						"allowedLoopType" : "CLOSED",
-						"maximumInstancesAllowed":1,
-						"updatedDate":"2019-09-06 19:09:42"
-					});
-				}
-			});
-		});
-		const component = shallow(<ViewLoopTemplatesModal/>);
-	});
-  	
-	it('Test API Exception', () => {
-		fetch.mockImplementationOnce(() => {
-			return Promise.resolve({
-				ok: false,
-				status: 500,
-				json: () => {
-					return Promise.resolve({
-						"index": "1",
-						"name": "MTCA version 1",
-						"modelService.serviceDetails.name": "MTCA",
-						"allowedLoopType" : "CLOSED",
-						"maximumInstancesAllowed":1,
-						"updatedDate":"2019-09-06 19:09:42"
-					});
-				}
-			});
-		});
-		const component = shallow(<ViewLoopTemplatesModal/>);
-	});
+  it('Test API Successful', () => {
+    fetch.mockImplementationOnce(() => {
+      return Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => {
+          return Promise.resolve({
+            "index": "1",
+            "name": "MTCA version 1",
+            "modelService.serviceDetails.name": "MTCA",
+            "allowedLoopType": "CLOSED",
+            "maximumInstancesAllowed": 1,
+            "updatedDate": "2019-09-06 19:09:42"
+          });
+        }
+      });
+    });
+    const component = shallow(<ViewLoopTemplatesModal/>);
+  });
 
-	it('Test API Rejection', () => {
-		const myMockFunc  = fetch.mockImplementationOnce(() => Promise.reject('error'));
-		setTimeout( () => myMockFunc().catch(e => {
-			console.info(e);
-		}),
-		100
-		);
-		const component = shallow(<ViewLoopTemplatesModal/>);
-		expect(myMockFunc.mock.calls.length).toBe(1);
-	});
+  it('Test API Exception', () => {
+    fetch.mockImplementationOnce(() => {
+      return Promise.resolve({
+        ok: false,
+        status: 500,
+        json: () => {
+          return Promise.resolve({
+            "index": "1",
+            "name": "MTCA version 1",
+            "modelService.serviceDetails.name": "MTCA",
+            "allowedLoopType": "CLOSED",
+            "maximumInstancesAllowed": 1,
+            "updatedDate": "2019-09-06 19:09:42"
+          });
+        }
+      });
+    });
+    const component = shallow(<ViewLoopTemplatesModal/>);
+  });
 
-	it('Test the tosca model view render method', () => {
-		fetch.mockImplementationOnce(() => {
-			return Promise.resolve({
-				ok: true,
-				status: 200,
-				json: () => {
-					return Promise.resolve({
-						"index": "1",
-						"name": "MTCA version 1",
-						"modelService.serviceDetails.name": "MTCA",
-						"allowedLoopType" : "CLOSED",
-						"maximumInstancesAllowed":1,
-						"updatedDate":"2019-09-06 19:09:42"
-					});
-				}
-			});
-		});
-		const component = shallow(<ViewLoopTemplatesModal/>);
-		component.setState({ loopTemplateData: {
-						"index": "1",
-						"name": "MTCA version 1",
-						"modelService.serviceDetails.name": "MTCA",
-						"allowedLoopType" : "CLOSED",
-						"maximumInstancesAllowed":1,
-						"updatedDate":"2019-09-06 19:09:42"
-		  }
-		});
-		expect(component).toMatchSnapshot();
-	});
+  it('Test API Rejection', () => {
+    const myMockFunc = fetch.mockImplementationOnce(() => Promise.reject('error'));
+    setTimeout(() => myMockFunc().catch(e => {
+        console.info(e);
+      }),
+      100
+    );
+    const component = shallow(<ViewLoopTemplatesModal/>);
+    expect(myMockFunc.mock.calls.length).toBe(1);
+  });
 
-	it('Test Table icons', () => {
-			fetch.mockImplementationOnce(() => {
-				return Promise.resolve({
-					ok: true,
-					status: 200,
-					json: () => {
-						return Promise.resolve({
-						"index": "1",
-						"name": "MTCA version 1",
-						"modelService.serviceDetails.name": "MTCA",
-						"allowedLoopType" : "CLOSED",
-						"maximumInstancesAllowed":1,
-						"updatedDate":"2019-09-06 19:09:42"
-						});
-					}
-				});
-			});
-			const component = mount(<Router><ViewLoopTemplatesModal/></Router>);
-			expect(component.find('[className="MuiSelect-icon MuiTablePagination-selectIcon"]')).toBeTruthy();
-		});
-		
-		it('Test handleClose', () => {
-			fetch.mockImplementationOnce(() => {
-				return Promise.resolve({
-					ok: true,
-					status: 200,
-					json: () => {
-						return Promise.resolve({
-						"index": "1",
-						"name": "MTCA version 1",
-						"modelService.serviceDetails.name": "MTCA",
-						"allowedLoopType" : "CLOSED",
-						"maximumInstancesAllowed":1,
-						"updatedDate":"2019-09-06 19:09:42"
-						});
-					}
-				});
-			});
-			const historyMock = { push: jest.fn() };
-			const handleClose = jest.spyOn(ViewLoopTemplatesModal.prototype,'handleClose');
-			const component = shallow(<ViewLoopTemplatesModal history={historyMock} />)
-			component.find('[variant="secondary"]').prop('onClick')();
-			expect(handleClose).toHaveBeenCalledTimes(1);
-			expect(component.state('show')).toEqual(false);
-			expect(historyMock.push.mock.calls[0]).toEqual([ '/']);
-			handleClose.mockClear();
-		});
-	});
+  it('Test the tosca model view render method', () => {
+    fetch.mockImplementationOnce(() => {
+      return Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => {
+          return Promise.resolve({
+            "index": "1",
+            "name": "MTCA version 1",
+            "modelService.serviceDetails.name": "MTCA",
+            "allowedLoopType": "CLOSED",
+            "maximumInstancesAllowed": 1,
+            "updatedDate": "2019-09-06 19:09:42"
+          });
+        }
+      });
+    });
+    const component = shallow(<ViewLoopTemplatesModal/>);
+    component.setState({
+      loopTemplateData: {
+        "index": "1",
+        "name": "MTCA version 1",
+        "modelService.serviceDetails.name": "MTCA",
+        "allowedLoopType": "CLOSED",
+        "maximumInstancesAllowed": 1,
+        "updatedDate": "2019-09-06 19:09:42"
+      }
+    });
+    expect(component).toMatchSnapshot();
+  });
+
+  it('Test Table icons', () => {
+    fetch.mockImplementationOnce(() => {
+      return Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => {
+          return Promise.resolve({
+            "index": "1",
+            "name": "MTCA version 1",
+            "modelService.serviceDetails.name": "MTCA",
+            "allowedLoopType": "CLOSED",
+            "maximumInstancesAllowed": 1,
+            "updatedDate": "2019-09-06 19:09:42"
+          });
+        }
+      });
+    });
+    const component = mount(<Router><ViewLoopTemplatesModal/></Router>);
+    expect(component.find('[className="MuiSelect-icon MuiTablePagination-selectIcon"]')).toBeTruthy();
+  });
+
+  it('Test handleClose', () => {
+    fetch.mockImplementationOnce(() => {
+      return Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => {
+          return Promise.resolve({
+            "index": "1",
+            "name": "MTCA version 1",
+            "modelService.serviceDetails.name": "MTCA",
+            "allowedLoopType": "CLOSED",
+            "maximumInstancesAllowed": 1,
+            "updatedDate": "2019-09-06 19:09:42"
+          });
+        }
+      });
+    });
+    const historyMock = { push: jest.fn() };
+    const handleClose = jest.spyOn(ViewLoopTemplatesModal.prototype, 'handleClose');
+    const component = shallow(<ViewLoopTemplatesModal history={ historyMock }/>)
+    component.find('[variant="secondary"]').prop('onClick')();
+    expect(handleClose).toHaveBeenCalledTimes(1);
+    expect(component.state('show')).toEqual(false);
+    expect(historyMock.push.mock.calls[0]).toEqual(['/']);
+    handleClose.mockClear();
+  });
+});

@@ -28,85 +28,87 @@ import LoopActionService from '../../../api/LoopActionService';
 import LoopService from '../../../api/LoopService';
 
 describe('Verify DeployLoopModal', () => {
-	const loopCache = new LoopCache({
-		"name": "LOOP_Jbv1z_v1_0_ResourceInstanceName1_tca",
-		"globalPropertiesJson": {
-			"dcaeDeployParameters": {
-				"testMs": {
-					"location_id": "",
-					"policy_id": "TCA_h2NMX_v1_0_ResourceInstanceName1_tca"
-				}
-			}
-		}
-	});
+  const loopCache = new LoopCache({
+    "name": "LOOP_Jbv1z_v1_0_ResourceInstanceName1_tca",
+    "globalPropertiesJson": {
+      "dcaeDeployParameters": {
+        "testMs": {
+          "location_id": "",
+          "policy_id": "TCA_h2NMX_v1_0_ResourceInstanceName1_tca"
+        }
+      }
+    }
+  });
 
-	it('Test the render method', () => {
-		const component = shallow(
-			<DeployLoopModal loopCache={loopCache}/>
-		)
+  it('Test the render method', () => {
+    const component = shallow(
+      <DeployLoopModal loopCache={ loopCache }/>
+    )
 
-	expect(component).toMatchSnapshot();
-	});
-	
-	it('Test handleClose', () => {
-		const historyMock = { push: jest.fn() };
-		const handleClose = jest.spyOn(DeployLoopModal.prototype,'handleClose');
-		const component = shallow(<DeployLoopModal history={historyMock} loopCache={loopCache}/>)
+    expect(component).toMatchSnapshot();
+  });
 
-		component.find('[variant="secondary"]').prop('onClick')();
+  it('Test handleClose', () => {
+    const historyMock = { push: jest.fn() };
+    const handleClose = jest.spyOn(DeployLoopModal.prototype, 'handleClose');
+    const component = shallow(<DeployLoopModal history={ historyMock } loopCache={ loopCache }/>)
 
-		expect(handleClose).toHaveBeenCalledTimes(1);
-		expect(historyMock.push.mock.calls[0]).toEqual([ '/']);
-	});
+    component.find('[variant="secondary"]').prop('onClick')();
 
-	it('Test handleSave successful', async () => {
-		const flushPromises = () => new Promise(setImmediate);
-		const historyMock = { push: jest.fn() };
-		const updateLoopFunction = jest.fn();
-		const showSucAlert = jest.fn();
-		const showFailAlert = jest.fn();
-		const handleSave = jest.spyOn(DeployLoopModal.prototype,'handleSave');
-		LoopService.updateGlobalProperties = jest.fn().mockImplementation(() => {
-			return Promise.resolve({
-				ok: true,
-				status: 200,
-				text: () => "OK"
-			});
-		});
-		LoopActionService.performAction = jest.fn().mockImplementation(() => {
-			return Promise.resolve({
-				ok: true,
-				status: 200,
-				json: () => {}
-			});
-		});
-		LoopActionService.refreshStatus = jest.fn().mockImplementation(() => {
-			return Promise.resolve({
-				ok: true,
-				status: 200,
-				json: () => {}
-			});
-		});
+    expect(handleClose).toHaveBeenCalledTimes(1);
+    expect(historyMock.push.mock.calls[0]).toEqual(['/']);
+  });
 
-		const component = shallow(<DeployLoopModal history={historyMock} 
-						loopCache={loopCache} updateLoopFunction={updateLoopFunction} showSucAlert={showSucAlert} showFailAlert={showFailAlert} />)
+  it('Test handleSave successful', async () => {
+    const flushPromises = () => new Promise(setImmediate);
+    const historyMock = { push: jest.fn() };
+    const updateLoopFunction = jest.fn();
+    const showSucAlert = jest.fn();
+    const showFailAlert = jest.fn();
+    const handleSave = jest.spyOn(DeployLoopModal.prototype, 'handleSave');
+    LoopService.updateGlobalProperties = jest.fn().mockImplementation(() => {
+      return Promise.resolve({
+        ok: true,
+        status: 200,
+        text: () => "OK"
+      });
+    });
+    LoopActionService.performAction = jest.fn().mockImplementation(() => {
+      return Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => {
+        }
+      });
+    });
+    LoopActionService.refreshStatus = jest.fn().mockImplementation(() => {
+      return Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => {
+        }
+      });
+    });
 
-		component.find('[variant="primary"]').prop('onClick')();
-		await flushPromises();
-		component.update();
+    const component = shallow(<DeployLoopModal history={ historyMock }
+                                               loopCache={ loopCache } updateLoopFunction={ updateLoopFunction } showSucAlert={ showSucAlert } showFailAlert={ showFailAlert }/>)
 
-		expect(handleSave).toHaveBeenCalledTimes(1);
-		expect(component.state('show')).toEqual(false);
-		expect(historyMock.push.mock.calls[0]).toEqual([ '/']);
-		handleSave.mockClear();
-	});
+    component.find('[variant="primary"]').prop('onClick')();
+    await flushPromises();
+    component.update();
 
-	it('Onchange event', () => {
-		const event = { target: { name: "location_id", value: "testLocation"} };
-		const component = shallow(<DeployLoopModal loopCache={loopCache}/>);
+    expect(handleSave).toHaveBeenCalledTimes(1);
+    expect(component.state('show')).toEqual(false);
+    expect(historyMock.push.mock.calls[0]).toEqual(['/']);
+    handleSave.mockClear();
+  });
 
-		component.find('[name="location_id"]').simulate('change', event);
-		component.update();
-		expect(component.state('temporaryPropertiesJson').dcaeDeployParameters.testMs.location_id).toEqual("testLocation");
-	});
+  it('Onchange event', () => {
+    const event = { target: { name: "location_id", value: "testLocation" } };
+    const component = shallow(<DeployLoopModal loopCache={ loopCache }/>);
+
+    component.find('[name="location_id"]').simulate('change', event);
+    component.update();
+    expect(component.state('temporaryPropertiesJson').dcaeDeployParameters.testMs.location_id).toEqual("testLocation");
+  });
 });

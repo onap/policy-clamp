@@ -27,7 +27,10 @@ import LoopService from '../../../api/LoopService';
 import TemplateService from '../../../api/TemplateService';
 
 let errorMessage = '';
-window.alert = jest.fn().mockImplementation((mesg) => { errorMessage = mesg ; return });
+window.alert = jest.fn().mockImplementation((mesg) => {
+  errorMessage = mesg;
+  return
+});
 
 
 describe('Verify CreateLoopModal', () => {
@@ -35,7 +38,7 @@ describe('Verify CreateLoopModal', () => {
   it('Test the render method', async () => {
     const flushPromises = () => new Promise(setImmediate);
     TemplateService.getAllLoopTemplates = jest.fn().mockImplementation(() => {
-      return Promise.resolve([{"name":"template1"},{"name":"template2"}]);
+      return Promise.resolve([{ "name": "template1" }, { "name": "template2" }]);
     });
     TemplateService.getLoopNames = jest.fn().mockImplementation(() => {
       return Promise.resolve([]);
@@ -45,21 +48,25 @@ describe('Verify CreateLoopModal', () => {
     expect(component).toMatchSnapshot();
     await flushPromises();
     component.update();
-    expect(component.state('templateNames')).toStrictEqual([{"label": "template1", "value": "template1", "templateObject": {"name": "template1"}}, {"label": "template2", "value": "template2","templateObject": {"name": "template2"}}]);
+    expect(component.state('templateNames')).toStrictEqual([{ "label": "template1", "value": "template1", "templateObject": { "name": "template1" } }, {
+      "label": "template2",
+      "value": "template2",
+      "templateObject": { "name": "template2" }
+    }]);
   });
 
   it('handleDropdownListChange event', async () => {
-  	const flushPromises = () => new Promise(setImmediate);
+    const flushPromises = () => new Promise(setImmediate);
 
     const component = shallow(<CreateLoopModal/>);
-    component.find('StateManager').simulate('change', {value: 'template1', templateObject: {"name":"template1"} });
+    component.find('StateManager').simulate('change', { value: 'template1', templateObject: { "name": "template1" } });
     await flushPromises();
     component.update();
     expect(component.state('chosenTemplateName')).toEqual("template1");
     expect(component.state('fakeLoopCacheWithTemplate').getLoopTemplate()['name']).toEqual("template1");
     expect(component.state('fakeLoopCacheWithTemplate').getLoopName()).toEqual("fakeLoop");
 
-	component.find('StateManager').simulate('change',{value: 'template2', templateObject: {"name":"template2"} });
+    component.find('StateManager').simulate('change', { value: 'template2', templateObject: { "name": "template2" } });
     await flushPromises();
     component.update();
     expect(component.state('chosenTemplateName')).toEqual("template2");
@@ -70,12 +77,12 @@ describe('Verify CreateLoopModal', () => {
   it('handleModelName event', async () => {
     const flushPromises = () => new Promise(setImmediate);
     TemplateService.getAllLoopTemplates = jest.fn().mockImplementation(() => {
-      return Promise.resolve([{"name":"template1"},{"name":"template2"}]);
+      return Promise.resolve([{ "name": "template1" }, { "name": "template2" }]);
     });
     TemplateService.getLoopNames = jest.fn().mockImplementation(() => {
       return Promise.resolve([]);
     });
-    const event = {target: {value : "model1"} };
+    const event = { target: { value: "model1" } };
     const component = shallow(<CreateLoopModal/>);
     await flushPromises();
     component.find('input').simulate('change', event);
@@ -84,21 +91,21 @@ describe('Verify CreateLoopModal', () => {
   });
 
   it('Test handleClose', () => {
-    const historyMock = { push: jest.fn() }; 
-    const handleClose = jest.spyOn(CreateLoopModal.prototype,'handleClose');
-    const component = shallow(<CreateLoopModal history={historyMock} />)
+    const historyMock = { push: jest.fn() };
+    const handleClose = jest.spyOn(CreateLoopModal.prototype, 'handleClose');
+    const component = shallow(<CreateLoopModal history={ historyMock }/>)
 
     component.find('[variant="secondary"]').prop('onClick')();
 
     expect(handleClose).toHaveBeenCalledTimes(1);
     expect(component.state('show')).toEqual(false);
-    expect(historyMock.push.mock.calls[0]).toEqual([ '/']);
-    
+    expect(historyMock.push.mock.calls[0]).toEqual(['/']);
+
     handleClose.mockClear();
   });
 
   it('Test handleCreate Fail', () => {
-    const handleCreate = jest.spyOn(CreateLoopModal.prototype,'handleCreate');
+    const handleCreate = jest.spyOn(CreateLoopModal.prototype, 'handleCreate');
     const component = shallow(<CreateLoopModal/>)
 
     component.find('[variant="primary"]').prop('onClick')();
@@ -110,32 +117,33 @@ describe('Verify CreateLoopModal', () => {
   });
 
   it('Test handleCreate Suc', async () => {
-	const flushPromises = () => new Promise(setImmediate);
+    const flushPromises = () => new Promise(setImmediate);
     const historyMock = { push: jest.fn() };
-    const loadLoopFunction = jest.fn();  
-    
-    LoopService.createLoop = jest.fn().mockImplementation(() => {
-			return Promise.resolve({
-				ok: true,
-				status: 200,
-				json: () => {}
-			});
-		});
+    const loadLoopFunction = jest.fn();
 
-    const handleCreate = jest.spyOn(CreateLoopModal.prototype,'handleCreate');
-    const component = shallow(<CreateLoopModal history={historyMock} loadLoopFunction={loadLoopFunction}/>)
+    LoopService.createLoop = jest.fn().mockImplementation(() => {
+      return Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => {
+        }
+      });
+    });
+
+    const handleCreate = jest.spyOn(CreateLoopModal.prototype, 'handleCreate');
+    const component = shallow(<CreateLoopModal history={ historyMock } loadLoopFunction={ loadLoopFunction }/>)
     component.setState({
-			modelName: "modelNameTest",
-			chosenTemplateName: "template1"
-		});
+      modelName: "modelNameTest",
+      chosenTemplateName: "template1"
+    });
 
     component.find('[variant="primary"]').prop('onClick')();
-	await flushPromises();
-	component.update();
+    await flushPromises();
+    component.update();
 
     expect(handleCreate).toHaveBeenCalledTimes(1);
     expect(component.state('show')).toEqual(false);
-    expect(historyMock.push.mock.calls[0]).toEqual([ '/']);
+    expect(historyMock.push.mock.calls[0]).toEqual(['/']);
 
     handleCreate.mockClear();
   });

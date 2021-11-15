@@ -27,12 +27,12 @@ import { Route, MemoryRouter } from 'react-router-dom'
 
 
 const routing = (
-	<MemoryRouter forceRefresh={false}>
-		<Route path="/" component={OnapClamp}/>
-	</MemoryRouter>
+  <MemoryRouter forceRefresh={ false }>
+    <Route path="/" component={ OnapClamp }/>
+  </MemoryRouter>
 );
 
 export var mainClamp = ReactDOM.render(
-	routing,
-	document.getElementById('root')
+  routing,
+  document.getElementById('root')
 )

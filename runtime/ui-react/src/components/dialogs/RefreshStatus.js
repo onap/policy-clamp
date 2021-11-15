@@ -26,40 +26,40 @@ import Spinner from 'react-bootstrap/Spinner';
 import styled from 'styled-components';
 
 const StyledSpinnerDiv = styled.div`
-	justify-content: center !important;
-	display: flex !important;
+  justify-content: center !important;
+  display: flex !important;
 `;
 
 export default class RefreshStatus extends React.Component {
-	state = {
-		loopName: this.props.loopCache.getLoopName()
-	};
+  state = {
+    loopName: this.props.loopCache.getLoopName()
+  };
 
-	componentWillReceiveProps(newProps) {
-		this.setState({
-			loopName: newProps.loopCache.getLoopName()
-		});
-	}
+  componentWillReceiveProps(newProps) {
+    this.setState({
+      loopName: newProps.loopCache.getLoopName()
+    });
+  }
 
-	componentDidMount() {
-		// refresh status and update loop logs
-		LoopActionService.refreshStatus(this.state.loopName).then(data => {
-			this.props.showSucAlert("Status successfully refreshed");
-			this.props.updateLoopFunction(data);
-			this.props.history.push('/');
-		})
-		.catch(error => {
-			this.props.showFailAlert("Status refreshing failed");
-			this.props.history.push('/');
-		});
-	}
+  componentDidMount() {
+    // refresh status and update loop logs
+    LoopActionService.refreshStatus(this.state.loopName).then(data => {
+      this.props.showSucAlert("Status successfully refreshed");
+      this.props.updateLoopFunction(data);
+      this.props.history.push('/');
+    })
+      .catch(error => {
+        this.props.showFailAlert("Status refreshing failed");
+        this.props.history.push('/');
+      });
+  }
 
-	render() {
-		return (
-			<StyledSpinnerDiv>
-				<Spinner animation="border" role="status">
-				</Spinner>
-			</StyledSpinnerDiv>
-		);
-	}
+  render() {
+    return (
+      <StyledSpinnerDiv>
+        <Spinner animation="border" role="status">
+        </Spinner>
+      </StyledSpinnerDiv>
+    );
+  }
 }

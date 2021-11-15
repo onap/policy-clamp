@@ -28,44 +28,45 @@ import LoopActionService from '../../api/LoopActionService';
 
 describe('Verify RefreshStatus', () => {
 
-	const loopCache = new LoopCache({
-		"name": "LOOP_Jbv1z_v1_0_ResourceInstanceName1_tca"
-	});
+  const loopCache = new LoopCache({
+    "name": "LOOP_Jbv1z_v1_0_ResourceInstanceName1_tca"
+  });
 
-	it('Test refresh status failed', async () => {
-		const flushPromises = () => new Promise(setImmediate);
-		const historyMock = { push: jest.fn() };
-		const showSucAlert = jest.fn();
-		const showFailAlert = jest.fn();
+  it('Test refresh status failed', async () => {
+    const flushPromises = () => new Promise(setImmediate);
+    const historyMock = { push: jest.fn() };
+    const showSucAlert = jest.fn();
+    const showFailAlert = jest.fn();
 
-		const component = shallow(<RefreshStatus loopCache={loopCache} history={historyMock} showSucAlert={showSucAlert} showFailAlert={showFailAlert} />)
-		await flushPromises();
-		component.update();
+    const component = shallow(<RefreshStatus loopCache={ loopCache } history={ historyMock } showSucAlert={ showSucAlert } showFailAlert={ showFailAlert }/>)
+    await flushPromises();
+    component.update();
 
-		expect(historyMock.push.mock.calls[0]).toEqual([ '/']);
-	});
+    expect(historyMock.push.mock.calls[0]).toEqual(['/']);
+  });
 
-	it('Test refresh status successful', async () => {
-		const flushPromises = () => new Promise(setImmediate);
-		const historyMock = { push: jest.fn() };
-		const updateLoopFunction = jest.fn();
-		const showSucAlert = jest.fn();
-		const showFailAlert = jest.fn();
+  it('Test refresh status successful', async () => {
+    const flushPromises = () => new Promise(setImmediate);
+    const historyMock = { push: jest.fn() };
+    const updateLoopFunction = jest.fn();
+    const showSucAlert = jest.fn();
+    const showFailAlert = jest.fn();
 
-		LoopActionService.refreshStatus = jest.fn().mockImplementation(() => {
-			return Promise.resolve({
-				ok: true,
-				status: 200,
-				json: () => {}
-			});
-		});
+    LoopActionService.refreshStatus = jest.fn().mockImplementation(() => {
+      return Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => {
+        }
+      });
+    });
 
-		const component = shallow(<RefreshStatus loopCache={loopCache} 
-						loopAction="submit" history={historyMock} updateLoopFunction={updateLoopFunction} showSucAlert={showSucAlert} showFailAlert={showFailAlert} />)
-		await flushPromises();
-		component.update();
+    const component = shallow(<RefreshStatus loopCache={ loopCache }
+                                             loopAction="submit" history={ historyMock } updateLoopFunction={ updateLoopFunction } showSucAlert={ showSucAlert } showFailAlert={ showFailAlert }/>)
+    await flushPromises();
+    component.update();
 
-		expect(historyMock.push.mock.calls[0]).toEqual([ '/']);
-	});
+    expect(historyMock.push.mock.calls[0]).toEqual(['/']);
+  });
 
 });
