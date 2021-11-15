@@ -21,36 +21,30 @@
 package org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import javax.ws.rs.core.Response.Status;
+import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantStatistics;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.concepts.JpaParticipantStatistics;
+import org.onap.policy.clamp.controlloop.models.controlloop.persistence.repository.ParticipantStatisticsRepository;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfTimestampKey;
 import org.onap.policy.models.dao.PfFilterParameters;
-import org.onap.policy.models.provider.PolicyModelsProviderParameters;
-import org.onap.policy.models.provider.impl.AbstractModelsProvider;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * This class provides the provision of information on participant statistics in the database to callers.
  */
 @Component
-public class ParticipantStatisticsProvider extends AbstractModelsProvider {
+@Transactional
+@AllArgsConstructor
+public class ParticipantStatisticsProvider {
 
-    /**
-     * Create a provider for control loops statistics.
-     *
-     * @param parameters the parameters for database access
-     * @throws PfModelException on initiation errors
-     */
-    public ParticipantStatisticsProvider(@NonNull PolicyModelsProviderParameters parameters) throws PfModelException {
-        super(parameters);
-        this.init();
-    }
+    private ParticipantStatisticsRepository participantStatisticsRepository;
 
     /**
      * Get Participant statistics.
@@ -59,20 +53,18 @@ public class ParticipantStatisticsProvider extends AbstractModelsProvider {
      * @param version the version of the participant statistics to get, null to get all stats for a name
      * @param timestamp the time stamp for the stats to get
      * @return the participant statistics found
-     * @throws PfModelException on errors getting participant statistics
      */
+    @Transactional(readOnly = true)
     public List<ParticipantStatistics> getParticipantStatistics(final String name, final String version,
-            final Instant timestamp) throws PfModelException {
+            final Instant timestamp) {
 
         if (name != null && version != null && timestamp != null) {
-            List<ParticipantStatistics> participantStatistics = new ArrayList<>(1);
-            participantStatistics.add(getPfDao()
-                    .get(JpaParticipantStatistics.class, new PfTimestampKey(name, version, timestamp)).toAuthorative());
-            return participantStatistics;
+            return asParticipantStatisticsList(
+                    participantStatisticsRepository.findAllById(List.of(new PfTimestampKey(name, version, timestamp))));
         } else if (name != null) {
             return getFilteredParticipantStatistics(name, version, timestamp, null, null, "DESC", 0);
         } else {
-            return asParticipantStatisticsList(getPfDao().getAll(JpaParticipantStatistics.class));
+            return asParticipantStatisticsList(participantStatisticsRepository.findAll());
         }
     }
 
@@ -87,8 +79,8 @@ public class ParticipantStatisticsProvider extends AbstractModelsProvider {
      * @param getRecordNum Total query count from database
      * @param filterMap the filters to apply to the get operation
      * @return the participant statistics found
-     * @throws PfModelException on errors getting policies
      */
+    @Transactional(readOnly = true)
     public List<ParticipantStatistics> getFilteredParticipantStatistics(final String name, final String version,
             final Instant startTimeStamp, final Instant endTimeStamp, Map<String, Object> filterMap,
             final String sortOrder, final int getRecordNum) {
@@ -106,7 +98,8 @@ public class ParticipantStatisticsProvider extends AbstractModelsProvider {
                 .build();
         // @formatter:on
 
-        return asParticipantStatisticsList(getPfDao().getFiltered(JpaParticipantStatistics.class, filterParams));
+        return asParticipantStatisticsList(
+                participantStatisticsRepository.getFiltered(JpaParticipantStatistics.class, filterParams));
     }
 
     /**
@@ -119,23 +112,17 @@ public class ParticipantStatisticsProvider extends AbstractModelsProvider {
     public List<ParticipantStatistics> createParticipantStatistics(
             @NonNull final List<ParticipantStatistics> participantStatisticsList) throws PfModelException {
 
-        List<JpaParticipantStatistics> jpaParticipantStatisticsList = ProviderUtils
-                .getJpaAndValidate(participantStatisticsList, JpaParticipantStatistics::new, "Participant Statistics");
+        try {
+            var jpaParticipantStatisticsList = ProviderUtils.getJpaAndValidate(participantStatisticsList,
+                    JpaParticipantStatistics::new, "Participant Statistics");
 
-        jpaParticipantStatisticsList.forEach(jpaParticipantStatistics -> getPfDao().update(jpaParticipantStatistics));
+            var jpaParticipantStatisticsSaved = participantStatisticsRepository.saveAll(jpaParticipantStatisticsList);
 
-        // Return the created participant statistics
-        List<ParticipantStatistics> participantStatistics = new ArrayList<>(participantStatisticsList.size());
-
-        for (ParticipantStatistics participantStatisticsItem : participantStatisticsList) {
-            var jpaParticipantStatistics = getPfDao().get(JpaParticipantStatistics.class,
-                    new PfTimestampKey(participantStatisticsItem.getParticipantId().getName(),
-                            participantStatisticsItem.getParticipantId().getVersion(),
-                            participantStatisticsItem.getTimeStamp()));
-            participantStatistics.add(jpaParticipantStatistics.toAuthorative());
+            // Return the saved participant statistics
+            return asParticipantStatisticsList(jpaParticipantStatisticsSaved);
+        } catch (IllegalArgumentException e) {
+            throw new PfModelException(Status.INTERNAL_SERVER_ERROR, "Error in save participant statistics", e);
         }
-
-        return participantStatistics;
     }
 
     /**

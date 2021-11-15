@@ -24,13 +24,19 @@ package org.onap.policy.clamp.controlloop.runtime.monitoring;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyMap;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.time.Instant;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import javax.ws.rs.core.Response;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -47,6 +53,7 @@ import org.onap.policy.clamp.controlloop.runtime.util.CommonTestData;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
+import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class TestMonitoringProvider {
@@ -61,14 +68,23 @@ class TestMonitoringProvider {
             "src/test/resources/rest/monitoring/TestClElementStatistics_Invalid.json";
     private static final Coder CODER = new StandardCoder();
 
-    private static final String LIST_IS_NULL = ".*StatisticsList is marked .*ull but is null";
+    private static final String STAT_LIST_IS_NULL = ".*StatisticsList is marked .*ull but is null";
+    private static final String PARTICIPANT_STAT_LIST_IS_NULL =
+            "participantStatisticsList is marked .*null but is null";
+    private static final String NAME_IS_NULL = "name is marked .*null but is null";
+    private static final String CL_LIST_IS_NULL = "clElementStatisticsList is marked .*null but is null";
+    private static final String ID_VERSION1 = "1.001";
+    private static final String ID_VERSION2 = "1.002";
+    private static final String ID_NAME1 = "name1";
+    private static final String ID_NAME2 = "name2";
+    private static final String SORT_DESC = "DESC";
+    private static final String ID_NAME3 = "testCLName";
+    private static final String ID_INVALID_NAME = "invalidCLName";
     private static ParticipantStatisticsList inputParticipantStatistics;
     private static ParticipantStatisticsList invalidParticipantInput;
     private static ClElementStatisticsList inputClElementStatistics;
     private static ClElementStatisticsList invalidClElementInput;
 
-    private ParticipantStatisticsProvider participantStatisticsProvider = null;
-    private ClElementStatisticsProvider clElementStatisticsProvider = null;
     private ControlLoopProvider clProvider = null;
 
     @BeforeAll
@@ -84,12 +100,6 @@ class TestMonitoringProvider {
 
     @AfterEach
     void close() throws Exception {
-        if (participantStatisticsProvider != null) {
-            participantStatisticsProvider.close();
-        }
-        if (clElementStatisticsProvider != null) {
-            clElementStatisticsProvider.close();
-        }
         if (clProvider != null) {
             clProvider.close();
         }
@@ -97,20 +107,28 @@ class TestMonitoringProvider {
 
     @Test
     void testCreateParticipantStatistics() throws Exception {
+        var participantStatisticsProvider = mock(ParticipantStatisticsProvider.class);
+        var clElementStatisticsProvider = mock(ClElementStatisticsProvider.class);
         ClRuntimeParameterGroup parameters = CommonTestData.geParameterGroup("createparStat");
-        participantStatisticsProvider = new ParticipantStatisticsProvider(parameters.getDatabaseProviderParameters());
-        clElementStatisticsProvider = new ClElementStatisticsProvider(parameters.getDatabaseProviderParameters());
         clProvider = new ControlLoopProvider(parameters.getDatabaseProviderParameters());
         MonitoringProvider provider =
                 new MonitoringProvider(participantStatisticsProvider, clElementStatisticsProvider, clProvider);
+
+        when(participantStatisticsProvider.createParticipantStatistics(any()))
+                .thenReturn(inputParticipantStatistics.getStatisticsList());
+
+        when(participantStatisticsProvider.createParticipantStatistics(eq(null)))
+                .thenThrow(new PfModelRuntimeException(Response.Status.BAD_REQUEST, PARTICIPANT_STAT_LIST_IS_NULL));
+
         // Creating statistics data in db with null input
+
         assertThatThrownBy(() -> {
             provider.createParticipantStatistics(null);
-        }).hasMessageMatching(LIST_IS_NULL);
+        }).hasMessageMatching(STAT_LIST_IS_NULL);
 
         assertThatThrownBy(() -> {
             provider.createParticipantStatistics(invalidParticipantInput.getStatisticsList());
-        }).hasMessageMatching("participantStatisticsList is marked .*null but is null");
+        }).hasMessageMatching(PARTICIPANT_STAT_LIST_IS_NULL);
 
         // Creating statistics data from input json
         ParticipantStatisticsList createResponse =
@@ -123,32 +141,41 @@ class TestMonitoringProvider {
 
     @Test
     void testGetParticipantStatistics() throws Exception {
+        var participantStatisticsProvider = mock(ParticipantStatisticsProvider.class);
+        when(participantStatisticsProvider.getFilteredParticipantStatistics(eq(ID_NAME1), any(), any(), any(), eq(null),
+                eq(SORT_DESC), eq(0))).thenReturn(List.of(inputParticipantStatistics.getStatisticsList().get(0)));
+
+        when(participantStatisticsProvider.getFilteredParticipantStatistics(eq(ID_NAME1), any(),
+                eq(Instant.parse("2021-01-11T12:00:00.000Z")), eq(Instant.parse("2021-01-11T16:00:00.000Z")), eq(null),
+                eq(SORT_DESC), eq(0))).thenReturn(List.of());
+
+        when(participantStatisticsProvider.getFilteredParticipantStatistics(eq(ID_NAME2), any(), any(), any(), eq(null),
+                eq(SORT_DESC), eq(1))).thenReturn(List.of(inputParticipantStatistics.getStatisticsList().get(2)));
+
         ClRuntimeParameterGroup parameters = CommonTestData.geParameterGroup("getparStat");
-        participantStatisticsProvider = new ParticipantStatisticsProvider(parameters.getDatabaseProviderParameters());
-        clElementStatisticsProvider = new ClElementStatisticsProvider(parameters.getDatabaseProviderParameters());
         clProvider = new ControlLoopProvider(parameters.getDatabaseProviderParameters());
+        var clElementStatisticsProvider = mock(ClElementStatisticsProvider.class);
         MonitoringProvider provider =
                 new MonitoringProvider(participantStatisticsProvider, clElementStatisticsProvider, clProvider);
-
         provider.createParticipantStatistics(inputParticipantStatistics.getStatisticsList());
 
         assertThatThrownBy(() -> {
             provider.fetchFilteredParticipantStatistics(null, null, 0, null, null);
-        }).hasMessageMatching("name is marked .*null but is null");
+        }).hasMessageMatching(NAME_IS_NULL);
 
         // Fetch specific statistics record with name, version and record count
         ParticipantStatisticsList getResponse =
-                provider.fetchFilteredParticipantStatistics("name2", "1.001", 1, null, null);
+                provider.fetchFilteredParticipantStatistics(ID_NAME2, ID_VERSION1, 1, null, null);
         assertThat(getResponse.getStatisticsList()).hasSize(1);
         assertEquals(getResponse.getStatisticsList().get(0).toString().replaceAll("\\s+", ""),
                 inputParticipantStatistics.getStatisticsList().get(2).toString().replaceAll("\\s+", ""));
 
         // Fetch statistics using timestamp
-        getResponse = provider.fetchFilteredParticipantStatistics("name1", "1.001", 0, null,
+        getResponse = provider.fetchFilteredParticipantStatistics(ID_NAME1, ID_VERSION1, 0, null,
                 Instant.parse("2021-01-10T15:00:00.000Z"));
         assertThat(getResponse.getStatisticsList()).hasSize(1);
 
-        getResponse = provider.fetchFilteredParticipantStatistics("name1", "1.001", 0,
+        getResponse = provider.fetchFilteredParticipantStatistics(ID_NAME1, ID_VERSION1, 0,
                 Instant.parse("2021-01-11T12:00:00.000Z"), Instant.parse("2021-01-11T16:00:00.000Z"));
 
         assertThat(getResponse.getStatisticsList()).isEmpty();
@@ -156,21 +183,27 @@ class TestMonitoringProvider {
 
     @Test
     void testCreateClElementStatistics() throws Exception {
+        var clElementStatisticsProvider = mock(ClElementStatisticsProvider.class);
+        when(clElementStatisticsProvider.createClElementStatistics(any()))
+                .thenReturn(inputClElementStatistics.getClElementStatistics());
+
+        when(clElementStatisticsProvider.createClElementStatistics(eq(null)))
+                .thenThrow(new PfModelRuntimeException(Response.Status.BAD_REQUEST, CL_LIST_IS_NULL));
+
         ClRuntimeParameterGroup parameters = CommonTestData.geParameterGroup("createelemstat");
-        participantStatisticsProvider = new ParticipantStatisticsProvider(parameters.getDatabaseProviderParameters());
-        clElementStatisticsProvider = new ClElementStatisticsProvider(parameters.getDatabaseProviderParameters());
         clProvider = new ControlLoopProvider(parameters.getDatabaseProviderParameters());
 
+        var participantStatisticsProvider = mock(ParticipantStatisticsProvider.class);
         MonitoringProvider provider =
                 new MonitoringProvider(participantStatisticsProvider, clElementStatisticsProvider, clProvider);
         // Creating statistics data in db with null input
         assertThatThrownBy(() -> {
             provider.createClElementStatistics(null);
-        }).hasMessageMatching(LIST_IS_NULL);
+        }).hasMessageMatching(STAT_LIST_IS_NULL);
 
         assertThatThrownBy(() -> {
             provider.createClElementStatistics(invalidClElementInput.getClElementStatistics());
-        }).hasMessageMatching("clElementStatisticsList is marked .*null but is null");
+        }).hasMessageMatching(CL_LIST_IS_NULL);
 
         // Creating clElement statistics data from input json
         ClElementStatisticsList createResponse =
@@ -183,42 +216,46 @@ class TestMonitoringProvider {
 
     @Test
     void testGetClElementStatistics() throws Exception {
+        var participantStatisticsProvider = mock(ParticipantStatisticsProvider.class);
+        var clElementStatisticsProvider = mock(ClElementStatisticsProvider.class);
         ClRuntimeParameterGroup parameters = CommonTestData.geParameterGroup("getelemstat");
-        participantStatisticsProvider = new ParticipantStatisticsProvider(parameters.getDatabaseProviderParameters());
-        clElementStatisticsProvider = new ClElementStatisticsProvider(parameters.getDatabaseProviderParameters());
         clProvider = new ControlLoopProvider(parameters.getDatabaseProviderParameters());
+
+        when(clElementStatisticsProvider.getFilteredClElementStatistics(eq(ID_NAME1), any(), any(), any(), anyMap(),
+                eq(SORT_DESC), eq(0)))
+                        .thenReturn(List.of(inputClElementStatistics.getClElementStatistics().get(0),
+                                inputClElementStatistics.getClElementStatistics().get(1)));
 
         MonitoringProvider provider =
                 new MonitoringProvider(participantStatisticsProvider, clElementStatisticsProvider, clProvider);
         assertThatThrownBy(() -> {
             provider.fetchFilteredClElementStatistics(null, null, null, null, null, 0);
-        }).hasMessageMatching("name is marked .*null but is null");
+        }).hasMessageMatching(NAME_IS_NULL);
 
         provider.createClElementStatistics(inputClElementStatistics.getClElementStatistics());
 
         ClElementStatisticsList getResponse =
-                provider.fetchFilteredClElementStatistics("name1", null, null, null, null, 0);
+                provider.fetchFilteredClElementStatistics(ID_NAME1, null, null, null, null, 0);
 
         assertThat(getResponse.getClElementStatistics()).hasSize(2);
         assertEquals(getResponse.getClElementStatistics().get(0).toString().replaceAll("\\s+", ""),
                 inputClElementStatistics.getClElementStatistics().get(0).toString().replaceAll("\\s+", ""));
 
         // Fetch specific statistics record with name, id and record count
-        getResponse = provider.fetchFilteredClElementStatistics("name1", "1.001",
+        getResponse = provider.fetchFilteredClElementStatistics(ID_NAME1, ID_VERSION1,
                 "709c62b3-8918-41b9-a747-d21eb79c6c20", null, null, 0);
         assertThat(getResponse.getClElementStatistics()).hasSize(2);
 
         // Fetch statistics using timestamp
-        getResponse = provider.fetchFilteredClElementStatistics("name1", "1.001", null,
+        getResponse = provider.fetchFilteredClElementStatistics(ID_NAME1, ID_VERSION1, null,
                 Instant.parse("2021-01-10T13:45:00.000Z"), null, 0);
         assertThat(getResponse.getClElementStatistics()).hasSize(2);
     }
 
     @Test
     void testGetParticipantStatsPerCL() throws Exception {
-        ClRuntimeParameterGroup parameters = CommonTestData.geParameterGroup("getparStatCL");
-        participantStatisticsProvider = new ParticipantStatisticsProvider(parameters.getDatabaseProviderParameters());
-        clElementStatisticsProvider = new ClElementStatisticsProvider(parameters.getDatabaseProviderParameters());
+        var participantStatisticsProvider = mock(ParticipantStatisticsProvider.class);
+        var clElementStatisticsProvider = mock(ClElementStatisticsProvider.class);
         var mockClProvider = Mockito.mock(ControlLoopProvider.class);
         var provider =
                 new MonitoringProvider(participantStatisticsProvider, clElementStatisticsProvider, mockClProvider);
@@ -227,56 +264,63 @@ class TestMonitoringProvider {
 
         var controlLoop = new ControlLoop();
         var element = new ControlLoopElement();
-        element.setParticipantId(new ToscaConceptIdentifier("name1", "1.001"));
+        element.setParticipantId(new ToscaConceptIdentifier(ID_NAME1, ID_VERSION1));
         controlLoop.setElements(Map.of(UUID.randomUUID(), element));
-        when(mockClProvider.getControlLoop(new ToscaConceptIdentifier("testName", "1.001")))
-                .thenReturn(controlLoop);
+        when(mockClProvider.getControlLoop(new ToscaConceptIdentifier(ID_NAME2, ID_VERSION1))).thenReturn(controlLoop);
 
-        ParticipantStatisticsList getResponse = provider.fetchParticipantStatsPerControlLoop("testName", "1.001");
+        when(participantStatisticsProvider.getFilteredParticipantStatistics(eq(ID_NAME1), eq(ID_VERSION1), any(), any(),
+                eq(null), eq(SORT_DESC), eq(0)))
+                        .thenReturn(List.of(inputParticipantStatistics.getStatisticsList().get(0),
+                                inputParticipantStatistics.getStatisticsList().get(1)));
+
+        ParticipantStatisticsList getResponse = provider.fetchParticipantStatsPerControlLoop(ID_NAME2, ID_VERSION1);
         assertThat(getResponse.getStatisticsList()).hasSize(2);
         assertEquals(getResponse.getStatisticsList().get(0).toString().replaceAll("\\s+", ""),
                 inputParticipantStatistics.getStatisticsList().get(0).toString().replaceAll("\\s+", ""));
-        assertThat(provider.fetchParticipantStatsPerControlLoop("invalidCLName", "1.002").getStatisticsList())
+        assertThat(provider.fetchParticipantStatsPerControlLoop(ID_INVALID_NAME, ID_VERSION2).getStatisticsList())
                 .isEmpty();
     }
 
     @Test
     void testClElementStatsPerCL() throws Exception {
         // Setup a dummy Control loop data
-        ControlLoopElement mockClElement = new ControlLoopElement();
+        var mockClElement = new ControlLoopElement();
         mockClElement.setId(inputClElementStatistics.getClElementStatistics().get(0).getId());
         mockClElement.setParticipantId(new ToscaConceptIdentifier(
                 inputClElementStatistics.getClElementStatistics().get(0).getParticipantId().getName(),
                 inputClElementStatistics.getClElementStatistics().get(0).getParticipantId().getVersion()));
-        ControlLoop mockCL = new ControlLoop();
+        var mockCL = new ControlLoop();
         mockCL.setElements(new LinkedHashMap<>());
         mockCL.getElements().put(mockClElement.getId(), mockClElement);
 
-        ClRuntimeParameterGroup parameters = CommonTestData.geParameterGroup("getelemstatPerCL");
-        participantStatisticsProvider = new ParticipantStatisticsProvider(parameters.getDatabaseProviderParameters());
-        clElementStatisticsProvider = new ClElementStatisticsProvider(parameters.getDatabaseProviderParameters());
-        ControlLoopProvider mockClProvider = Mockito.mock(ControlLoopProvider.class);
+        var participantStatisticsProvider = mock(ParticipantStatisticsProvider.class);
+        var clElementStatisticsProvider = mock(ClElementStatisticsProvider.class);
+        var mockClProvider = Mockito.mock(ControlLoopProvider.class);
         var monitoringProvider =
                 new MonitoringProvider(participantStatisticsProvider, clElementStatisticsProvider, mockClProvider);
 
         // Mock controlloop data to be returned for the given CL Id
-        when(mockClProvider.getControlLoop(new ToscaConceptIdentifier("testCLName", "1.001"))).thenReturn(mockCL);
+        when(mockClProvider.getControlLoop(new ToscaConceptIdentifier(ID_NAME3, ID_VERSION1))).thenReturn(mockCL);
+
+        when(clElementStatisticsProvider.getFilteredClElementStatistics(eq(ID_NAME1), eq(ID_VERSION1), any(), any(),
+                anyMap(), eq(SORT_DESC), eq(0)))
+                        .thenReturn(List.of(inputClElementStatistics.getClElementStatistics().get(0),
+                                inputClElementStatistics.getClElementStatistics().get(1)));
 
         monitoringProvider.createClElementStatistics(inputClElementStatistics.getClElementStatistics());
 
         ClElementStatisticsList getResponse =
-                monitoringProvider.fetchClElementStatsPerControlLoop("testCLName", "1.001");
+                monitoringProvider.fetchClElementStatsPerControlLoop(ID_NAME3, ID_VERSION1);
 
         assertThat(getResponse.getClElementStatistics()).hasSize(2);
         assertEquals(getResponse.getClElementStatistics().get(1).toString().replaceAll("\\s+", ""),
                 inputClElementStatistics.getClElementStatistics().get(1).toString().replaceAll("\\s+", ""));
 
-        assertThat(
-                monitoringProvider.fetchClElementStatsPerControlLoop("invalidCLName", "1.002").getClElementStatistics())
-                        .isEmpty();
+        assertThat(monitoringProvider.fetchClElementStatsPerControlLoop(ID_INVALID_NAME, ID_VERSION2)
+                .getClElementStatistics()).isEmpty();
 
         Map<String, ToscaConceptIdentifier> clElementIds =
-                monitoringProvider.getAllClElementsIdPerControlLoop("testCLName", "1.001");
+                monitoringProvider.getAllClElementsIdPerControlLoop(ID_NAME3, ID_VERSION1);
         assertThat(clElementIds)
                 .containsKey(inputClElementStatistics.getClElementStatistics().get(0).getId().toString());
     }

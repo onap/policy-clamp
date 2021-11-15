@@ -23,19 +23,23 @@ package org.onap.policy.clamp.controlloop.models.controlloop.persistence.provide
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantStatistics;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantStatisticsList;
+import org.onap.policy.clamp.controlloop.models.controlloop.persistence.concepts.JpaParticipantStatistics;
+import org.onap.policy.clamp.controlloop.models.controlloop.persistence.repository.ParticipantStatisticsRepository;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
-import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class ParticipantStatisticsProviderTest {
@@ -44,32 +48,29 @@ class ParticipantStatisticsProviderTest {
     private static final Coder CODER = new StandardCoder();
     private static final String PARTICIPANT_STATS_JSON = "src/test/resources/providers/TestParticipantStatistics.json";
 
-    private static AtomicInteger dbNameCounter = new AtomicInteger();
-
-    private PolicyModelsProviderParameters parameters;
     private ParticipantStatisticsProvider participantStatisticsProvider;
     private ParticipantStatisticsList inputParticipantStatistics;
     private String originalJson = ResourceUtils.getResourceAsString(PARTICIPANT_STATS_JSON);
 
     @BeforeEach
     void beforeSetupDao() throws Exception {
-
-        parameters = new PolicyModelsProviderParameters();
-        parameters.setDatabaseDriver("org.h2.Driver");
-        parameters.setName("PolicyProviderParameterGroup");
-        parameters.setImplementation("org.onap.policy.models.provider.impl.DatabasePolicyModelsProviderImpl");
-        parameters.setDatabaseUrl("jdbc:h2:mem:participantStatisticsProviderTestDb" + dbNameCounter.getAndIncrement());
-        parameters.setDatabaseUser("policy");
-        parameters.setDatabasePassword("P01icY");
-        parameters.setPersistenceUnit("ToscaConceptTest");
-
-        participantStatisticsProvider = new ParticipantStatisticsProvider(parameters);
+        var participantStatisticsRepository = mock(ParticipantStatisticsRepository.class);
+        participantStatisticsProvider = new ParticipantStatisticsProvider(participantStatisticsRepository);
         inputParticipantStatistics = CODER.decode(originalJson, ParticipantStatisticsList.class);
-    }
 
-    @AfterEach
-    void teardown() {
-        participantStatisticsProvider.close();
+        var jpaParticipantStatisticsList =
+                ProviderUtils.getJpaAndValidate(inputParticipantStatistics.getStatisticsList(),
+                        JpaParticipantStatistics::new, "Participant Statistics");
+
+        for (var participantStat : jpaParticipantStatisticsList) {
+            when(participantStatisticsRepository.findAllById(List.of(participantStat.getKey())))
+                    .thenReturn(List.of(participantStat));
+        }
+
+        when(participantStatisticsRepository.getFiltered(eq(JpaParticipantStatistics.class), any()))
+                .thenReturn(List.of(jpaParticipantStatisticsList.get(0)));
+
+        when(participantStatisticsRepository.saveAll(anyList())).thenReturn(jpaParticipantStatisticsList);
     }
 
     @Test

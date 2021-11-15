@@ -26,6 +26,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.mock;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -124,10 +125,8 @@ class ControlLoopInstantiationProviderTest {
         clProvider = new ControlLoopProvider(controlLoopParameters.getDatabaseProviderParameters());
         participantProvider = new ParticipantProvider(controlLoopParameters.getDatabaseProviderParameters());
 
-        var participantStatisticsProvider =
-                new ParticipantStatisticsProvider(controlLoopParameters.getDatabaseProviderParameters());
-        var clElementStatisticsProvider =
-                new ClElementStatisticsProvider(controlLoopParameters.getDatabaseProviderParameters());
+        var participantStatisticsProvider = Mockito.mock(ParticipantStatisticsProvider.class);
+        var clElementStatisticsProvider = mock(ClElementStatisticsProvider.class);
         commissioningProvider = new CommissioningProvider(new ServiceTemplateProvider(modelsProvider), clProvider, null,
                 participantProvider);
         var monitoringProvider =
