@@ -46,6 +46,8 @@ RUN chown -R policy:policy * && \
     chmod 755 bin/*.sh && \
     chown -R policy:policy /app
 
+EXPOSE 8085
+
 USER policy
 WORKDIR $POLICY_HOME/bin
 ENTRYPOINT [ "./policy-participant.sh" ]

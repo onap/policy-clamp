@@ -1,7 +1,7 @@
 spring:
   security:
     user:
-      name: healthcheck
+      name: participantUser
       password: zb!XztG34
 security:
   enable-csrf: false
@@ -39,10 +39,8 @@ management:
   endpoints:
     web:
       exposure:
-        include: "loggers,logfile,health,info,metrics,threaddump,heapdump"
+        include: health, metrics, prometheus
 server:
-  # Configuration of the HTTP/REST server. The parameters are defined and handled by the springboot framework.
-  # See springboot documentation.
   port: 8083
   servlet:
     context-path: /onap/k8sparticipant

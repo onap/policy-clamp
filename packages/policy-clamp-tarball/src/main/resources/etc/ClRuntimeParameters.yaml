@@ -1,7 +1,7 @@
 spring:
   security:
     user:
-      name: healthcheck
+      name: runtimeUser
       password: zb!XztG34
   http:
     converters:
