@@ -328,7 +328,7 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
          return True
      elif (self.path.startswith("/onap/controlloop/v2/instantiation")) and http_type == "GET":
          print("self.path start with /instantiation Retrieving Instantiation, generating response json...")
-         jsonGenerated = "{\"errorDetails\": null,\"affectedControlLoopDefinitions\": [{ \"name\": \"ToscaServiceTemplateSimple\", \"version\": \"1.0.0\" }]}"
+         jsonGenerated = "{\"controlLoopList\": [{\"name\": \"PMSHInstance0\",\"version\": \"1.0.1\",\"definition\": {},\"state\": \"UNINITIALISED\",\"orderedState\": \"UNINITIALISED\",\"description\": \"PMSH control loop instance 0\",\"elements\": {}}]}";
          self._create_cache(jsonGenerated, cached_file_folder, cached_file_header, cached_file_content)
          return True
      else:
