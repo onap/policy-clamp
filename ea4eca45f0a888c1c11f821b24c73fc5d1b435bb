@@ -16,6 +16,24 @@
       "revId": "ea4eca45f0a888c1c11f821b24c73fc5d1b435bb",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d49e0d6f_b5590607",
+        "filename": "participant/participant-impl/participant-impl-policy/src/test/java/org/onap/policy/clamp/controlloop/participant/policy/main/handler/ControlLoopElementHandlerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 7629
+      },
+      "writtenOn": "2021-11-16T16:12:31Z",
+      "side": 1,
+      "message": "There is a direct reference in clamp pom to org.junit.jupiter 5.7.1",
+      "parentUuid": "320e4b6a_e642bf8e",
+      "revId": "ea4eca45f0a888c1c11f821b24c73fc5d1b435bb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
