@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c68b00c3_1a4a890a",
+        "filename": "runtime/src/test/java/org/onap/policy/clamp/runtime/RuntimeInstantiationResponseItTestCase.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 4903
+      },
+      "writtenOn": "2021-11-16T10:57:00Z",
+      "side": 1,
+      "message": "Sonar will flag this. extract constants.",
+      "range": {
+        "startLine": 54,
+        "startChar": 30,
+        "endLine": 54,
+        "endChar": 62
+      },
+      "revId": "8b17cb8a57b4b645792478781cde19b7f2498f20",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
