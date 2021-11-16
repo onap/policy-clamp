@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "320e4b6a_e642bf8e",
+        "filename": "participant/participant-impl/participant-impl-policy/src/test/java/org/onap/policy/clamp/controlloop/participant/policy/main/handler/ControlLoopElementHandlerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-11-16T14:25:11Z",
+      "side": 1,
+      "message": "just a question for my knowledge:  is this junit 5, picked up from spring boot?",
+      "revId": "ea4eca45f0a888c1c11f821b24c73fc5d1b435bb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
