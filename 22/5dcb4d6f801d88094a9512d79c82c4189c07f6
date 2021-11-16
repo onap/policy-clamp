@@ -1,0 +1,10 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Jorge Hernandez <jorge.hernandez-herrero@att.com>
+Code-Review+1: Ajith Sreekumar <ajith.sreekumar@bell.ca>
+Code-Review+2: Ram Krishna Verma <ram_krishna.verma@bell.ca>
+Code-Review+1: Liam Fallon <liam.fallon@est.tech>
+Submitted-by: Ram Krishna Verma <ram_krishna.verma@bell.ca>
+Submitted-at: Tue, 16 Nov 2021 15:54:16 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/policy/clamp/+/125759
+Project: policy/clamp
+Branch: refs/heads/master
