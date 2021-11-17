@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "14f63c19_58a05dc2",
+        "filename": "runtime/ui-react/src/components/dialogs/Policy/PolicyEditor.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-11-17T15:42:58Z",
+      "side": 1,
+      "message": "The old and new file only differ on whitespace:\n\nliam@liam-saoru:~/git/onap/policy/clamp$ ^diff^diff -w\ndiff -w runtime/ui-react/src/components/dialogs/Policy/PolicyEditor.js /media/sf_liam/git/onap/policy/clamp-ui/runtime/ui-react/src/components/dialogs/Policy/PolicyEditor.js\nliam@liam-saoru:~/git/onap/policy/clamp$",
+      "revId": "f7dad634d6067e41161fa46d2209223801780ca5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4929231f_5d0da4f8",
+        "filename": "runtime/ui-react/src/components/dialogs/Policy/__snapshots__/PolicyEditor.test.js.snap",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-11-17T15:42:58Z",
+      "side": 1,
+      "message": "This must match a generated value.",
+      "range": {
+        "startLine": 40,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 3
+      },
+      "revId": "f7dad634d6067e41161fa46d2209223801780ca5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e3685bac_10aea8c7",
+        "filename": "runtime/ui-react/src/components/dialogs/Policy/__snapshots__/PolicyEditor.test.js.snap",
+        "patchSetId": 1
+      },
+      "lineNbr": 780,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-11-17T15:42:58Z",
+      "side": 1,
+      "message": "This must match a generated value.",
+      "range": {
+        "startLine": 780,
+        "startChar": 0,
+        "endLine": 780,
+        "endChar": 3
+      },
+      "revId": "f7dad634d6067e41161fa46d2209223801780ca5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
