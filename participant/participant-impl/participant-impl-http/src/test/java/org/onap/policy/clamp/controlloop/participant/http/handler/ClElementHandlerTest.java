@@ -24,15 +24,20 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 
+import java.io.IOException;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.clamp.controlloop.participant.http.main.handler.ControlLoopElementHandler;
+import org.onap.policy.clamp.controlloop.participant.http.main.models.ConfigRequest;
 import org.onap.policy.clamp.controlloop.participant.http.utils.CommonTestData;
 import org.onap.policy.clamp.controlloop.participant.http.utils.ToscaUtils;
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryApi;
@@ -61,6 +66,30 @@ class ClElementHandlerTest {
     @BeforeAll
     static void init() throws CoderException {
         serviceTemplate = ToscaUtils.readControlLoopFromTosca();
+    }
+
+    @Test
+    void test_controlLoopElementeStateChange() throws IOException {
+        var controlLoopId = commonTestData.getControlLoopId();
+        var element = commonTestData.getControlLoopElement();
+        var controlLoopElementId = element.getId();
+
+        var config = Mockito.mock(ConfigRequest.class);
+        assertDoesNotThrow(() -> controlLoopElementHandler.invokeHttpClient(config));
+
+        assertDoesNotThrow(() -> controlLoopElementHandler
+                .controlLoopElementStateChange(controlLoopId,
+                        controlLoopElementId, ControlLoopState.PASSIVE, ControlLoopOrderedState.PASSIVE));
+
+        assertDoesNotThrow(() -> controlLoopElementHandler
+                .controlLoopElementStateChange(controlLoopId,
+                        controlLoopElementId, ControlLoopState.PASSIVE, ControlLoopOrderedState.UNINITIALISED));
+
+        assertDoesNotThrow(() -> controlLoopElementHandler
+                .controlLoopElementStateChange(controlLoopId,
+                        controlLoopElementId, ControlLoopState.PASSIVE, ControlLoopOrderedState.RUNNING));
+
+        controlLoopElementHandler.close();
     }
 
     @Test
