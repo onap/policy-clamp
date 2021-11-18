@@ -84,7 +84,7 @@ public class CommonTestData {
         map.put("clientName", "pap");
         map.put("hostname", "localhost");
         map.put("port", 6968);
-        map.put("userName", "healthcheck");
+        map.put("userName", "policyadmin");
         map.put("password", "zb!XztG34");
         map.put("https", false);
         map.put("allowSelfSignedCerts", true);
@@ -101,7 +101,7 @@ public class CommonTestData {
         map.put("clientName", "api");
         map.put("hostname", "localhost");
         map.put("port", 6969);
-        map.put("userName", "healthcheck");
+        map.put("userName", "policyadmin");
         map.put("password", "zb!XztG34");
         map.put("https", false);
         map.put("allowSelfSignedCerts", true);
