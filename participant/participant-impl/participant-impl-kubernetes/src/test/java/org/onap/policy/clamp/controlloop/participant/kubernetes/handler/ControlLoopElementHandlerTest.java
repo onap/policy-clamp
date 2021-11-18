@@ -27,6 +27,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
@@ -106,6 +107,10 @@ class ControlLoopElementHandlerTest {
             .uninstallChart(charts.get(0));
 
         assertDoesNotThrow(() -> controlLoopElementHandler
+                .controlLoopElementStateChange(commonTestData.getControlLoopId(), controlLoopElementId1,
+                    ControlLoopState.PASSIVE, ControlLoopOrderedState.PASSIVE));
+
+        assertDoesNotThrow(() -> controlLoopElementHandler
             .controlLoopElementStateChange(commonTestData.getControlLoopId(), controlLoopElementId1,
                 ControlLoopState.PASSIVE, ControlLoopOrderedState.UNINITIALISED));
 
@@ -140,5 +145,19 @@ class ControlLoopElementHandlerTest {
             nodeTemplatesMap.get(K8S_CONTROL_LOOP_ELEMENT));
 
         assertThat(controlLoopElementHandler.getChartMap().containsKey(elementId2)).isFalse();
+    }
+
+    @Test
+    void test_handleStatistics() throws PfModelException {
+        UUID elementId1 = UUID.randomUUID();
+        controlLoopElementHandler.getChartMap().put(elementId1, charts.get(0));
+        when(participantIntermediaryApi.getControlLoopElement(elementId1)).thenReturn(new ControlLoopElement());
+        assertDoesNotThrow(() -> controlLoopElementHandler.handleStatistics(elementId1));
+    }
+
+    @Test
+    void test_checkPodStatus() {
+        var chartInfo =  charts.get(0);
+        assertDoesNotThrow(() -> controlLoopElementHandler.checkPodStatus(chartInfo, 1, 1));
     }
 }

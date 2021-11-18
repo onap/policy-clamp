@@ -29,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,6 +47,7 @@ import org.mockito.Spy;
 import org.onap.policy.clamp.controlloop.participant.kubernetes.exception.ServiceException;
 import org.onap.policy.clamp.controlloop.participant.kubernetes.models.ChartInfo;
 import org.onap.policy.clamp.controlloop.participant.kubernetes.models.ChartList;
+import org.onap.policy.clamp.controlloop.participant.kubernetes.models.HelmRepository;
 import org.onap.policy.clamp.controlloop.participant.kubernetes.service.ChartStore;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
@@ -67,6 +69,9 @@ class HelmClientTest {
 
     @Mock
     ChartStore chartStore;
+
+    @Mock
+    HelmRepository repo;
 
     private static MockedStatic<HelmClient> mockedClient;
 
@@ -90,9 +95,27 @@ class HelmClientTest {
         doReturn(new File("/target/tmp/override.yaml")).when(chartStore)
             .getOverrideFile(any());
         var chartinfo = charts.get(0);
+
         assertDoesNotThrow(() -> helmClient.installChart(chartinfo));
         chartinfo.setNamespace("");
         assertDoesNotThrow(() -> helmClient.installChart(chartinfo));
+
+        mockedClient.when(() -> HelmClient.executeCommand(any()))
+            .thenReturn(new String());
+        assertDoesNotThrow(() -> helmClient.installChart(chartinfo));
+
+    }
+
+    @Test
+    void test_addRepository() throws IOException {
+        mockedClient.when(() -> HelmClient.executeCommand(any()))
+            .thenReturn(new String());
+        when(repo.getRepoName()).thenReturn("RepoName");
+        assertDoesNotThrow(() -> helmClient.addRepository(repo));
+
+        mockedClient.when(() -> HelmClient.executeCommand(any()))
+            .thenReturn("failed");
+        assertDoesNotThrow(() -> helmClient.addRepository(repo));
     }
 
     @Test
