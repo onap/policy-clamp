@@ -41,6 +41,8 @@ public class RuntimeInstantiationResponseItTestCase {
 
     private static final String DIRECT_GET_TOSCA_INSTANTIATION = "direct:get-tosca-instantiation";
 
+    private static final String DIRECT_POST_TOSCA_INSTANTANCE_PROPERTIES = "direct:post-tosca-instance-properties";
+
     private static final String SERVICE_TEMPLATE_NAME = "name";
 
     private static final String SERVICE_TEMPLATE_VERSION = "version";
@@ -50,6 +52,12 @@ public class RuntimeInstantiationResponseItTestCase {
     private static final String SAMPLE_CONTROL_LOOP_LIST = "{\"controlLoopList\": [{\"name\": \"PMSHInstance0\","
         + "\"version\": \"1.0.1\",\"definition\": {},\"state\": \"UNINITIALISED\",\"orderedState\": \"UNINITIALISED\","
         + "\"description\": \"PMSH control loop instance 0\",\"elements\": {}}]}";
+
+    private static final String SAMPLE_TOSCA_TEMPLATE =
+        "{\"tosca_definitions_version\": \"tosca_simple_yaml_1_1_0\","
+            + "\"data_types\": {},\"node_types\": {}, \"policy_types\": {},"
+            + " \"topology_template\": {},"
+            + " \"name\": \"ToscaServiceTemplateSimple\", \"version\": \"1.0.0\", \"metadata\": {}}";
 
     @Test
     public void testToscaServiceTemplateStatus() {
@@ -88,6 +96,20 @@ public class RuntimeInstantiationResponseItTestCase {
             prodTemplate.send(DIRECT_GET_TOSCA_INSTANTIATION, ExchangeBuilder.anExchange(camelContext)
                 .withBody(SAMPLE_CONTROL_LOOP_LIST)
                 .withProperty(RAISE_HTTP_EXCEPTION_FLAG, "true")
+                .build());
+
+        assertThat(HttpStatus.valueOf((Integer) exchangeResponse.getIn().getHeader(Exchange.HTTP_RESPONSE_CODE))
+            .is2xxSuccessful()).isTrue();
+    }
+
+    @Test
+    public void testCommissioningOfToscaServiceTemplateStatus() {
+        ProducerTemplate prodTemplate = camelContext.createProducerTemplate();
+
+        Exchange exchangeResponse =
+            prodTemplate.send(DIRECT_POST_TOSCA_INSTANTANCE_PROPERTIES, ExchangeBuilder.anExchange(camelContext)
+                .withBody(SAMPLE_TOSCA_TEMPLATE)
+                .withProperty("raiseHttpExceptionFlag", "true")
                 .build());
 
         assertThat(HttpStatus.valueOf((Integer) exchangeResponse.getIn().getHeader(Exchange.HTTP_RESPONSE_CODE))
