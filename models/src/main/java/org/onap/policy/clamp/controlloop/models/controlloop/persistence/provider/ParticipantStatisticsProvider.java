@@ -33,13 +33,13 @@ import org.onap.policy.clamp.controlloop.models.controlloop.persistence.reposito
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfTimestampKey;
 import org.onap.policy.models.dao.PfFilterParameters;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  * This class provides the provision of information on participant statistics in the database to callers.
  */
-@Component
+@Service
 @Transactional
 @AllArgsConstructor
 public class ParticipantStatisticsProvider {

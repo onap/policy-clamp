@@ -32,15 +32,15 @@ import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTypedEntityFilter;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  * This class provides information on participant concepts in the database to callers.
  */
+@Service
 @Transactional
 @AllArgsConstructor
-@Component
 public class ParticipantProvider {
 
     private ParticipantRepository participantRepository;
