@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "c72dc1e1_4afffb5e",
+        "filename": "runtime/ui-react/src/components/dialogs/Policy/PolicyEditor.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4903
+      },
+      "writtenOn": "2021-11-19T14:03:39Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "14f63c19_58a05dc2",
+      "revId": "f7dad634d6067e41161fa46d2209223801780ca5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4929231f_5d0da4f8",
         "filename": "runtime/ui-react/src/components/dialogs/Policy/__snapshots__/PolicyEditor.test.js.snap",
         "patchSetId": 1
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "6bd71757_c57c7c27",
+        "filename": "runtime/ui-react/src/components/dialogs/Policy/__snapshots__/PolicyEditor.test.js.snap",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 4903
+      },
+      "writtenOn": "2021-11-19T14:03:39Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "4929231f_5d0da4f8",
+      "range": {
+        "startLine": 40,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 3
+      },
+      "revId": "f7dad634d6067e41161fa46d2209223801780ca5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e3685bac_10aea8c7",
         "filename": "runtime/ui-react/src/components/dialogs/Policy/__snapshots__/PolicyEditor.test.js.snap",
         "patchSetId": 1
@@ -62,6 +104,30 @@
       "revId": "f7dad634d6067e41161fa46d2209223801780ca5",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "52576d60_6f0198b8",
+        "filename": "runtime/ui-react/src/components/dialogs/Policy/__snapshots__/PolicyEditor.test.js.snap",
+        "patchSetId": 1
+      },
+      "lineNbr": 780,
+      "author": {
+        "id": 4903
+      },
+      "writtenOn": "2021-11-19T14:03:39Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "e3685bac_10aea8c7",
+      "range": {
+        "startLine": 780,
+        "startChar": 0,
+        "endLine": 780,
+        "endChar": 3
+      },
+      "revId": "f7dad634d6067e41161fa46d2209223801780ca5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
