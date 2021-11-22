@@ -29,7 +29,6 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.mock;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -39,12 +38,14 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElementDefinition;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantUpdates;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopStateChange;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ControlLoopUpdate;
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ControlLoopElementListener;
 import org.onap.policy.clamp.controlloop.participant.intermediary.main.parameters.CommonTestData;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
@@ -108,6 +109,11 @@ class ControlLoopHandlerTest {
                 ControlLoopState.PASSIVE);
         assertEquals(ControlLoopState.PASSIVE, value.getState());
 
+        clh.getControlLoopMap().values().iterator().next().getElements().putIfAbsent(key, value);
+        clh.updateControlLoopElementState(id, key, ControlLoopOrderedState.PASSIVE,
+                ControlLoopState.RUNNING);
+        assertEquals(ControlLoopState.RUNNING, value.getState());
+
         var clElementStatistics = new ClElementStatistics();
         clElementStatistics.setParticipantId(id);
         clElementStatistics.setControlLoopState(ControlLoopState.RUNNING);
@@ -116,35 +122,63 @@ class ControlLoopHandlerTest {
         assertNotEquals(uuid, value.getClElementStatistics().getId());
         clh.updateControlLoopElementStatistics(uuid, clElementStatistics);
         assertEquals(uuid, value.getClElementStatistics().getId());
+
+        clh.getElementsOnThisParticipant().remove(key, value);
+        clh.getControlLoopMap().values().iterator().next().getElements().clear();
+        assertNull(clh.updateControlLoopElementState(id, key, ControlLoopOrderedState.PASSIVE,
+                ControlLoopState.RUNNING));
+
     }
 
     @Test
     void handleControlLoopUpdateExceptionTest() throws CoderException {
         var uuid = UUID.randomUUID();
         var id = CommonTestData.getParticipantId();
-
         var stateChange = getStateChange(id, uuid, ControlLoopOrderedState.RUNNING);
-
         var clh = commonTestData.setTestControlLoopHandler(id, uuid);
+        assertDoesNotThrow(() -> clh.handleControlLoopStateChange(mock(ControlLoopStateChange.class), List.of()));
+
         clh.handleControlLoopStateChange(stateChange, List.of());
         var newid = new ToscaConceptIdentifier("id", "1.2.3");
         stateChange.setControlLoopId(newid);
         stateChange.setParticipantId(newid);
         assertDoesNotThrow(() -> clh.handleControlLoopStateChange(stateChange, List.of()));
 
-        List<ControlLoopElementDefinition> clElementDefinitions = new ArrayList<>();
         var cld = new ControlLoopElementDefinition();
         cld.setClElementDefinitionId(id);
-        clElementDefinitions.add(cld);
         var updateMsg = new ControlLoopUpdate();
         updateMsg.setControlLoopId(id);
         updateMsg.setMessageId(uuid);
         updateMsg.setParticipantId(id);
         updateMsg.setStartPhase(0);
+        var clElementDefinitions = List.of(cld);
         assertDoesNotThrow(() -> clh.handleControlLoopUpdate(updateMsg, clElementDefinitions));
         updateMsg.setStartPhase(1);
         assertDoesNotThrow(() -> clh.handleControlLoopUpdate(updateMsg, clElementDefinitions));
         assertThat(clh.getClElementInstanceProperties(uuid)).isEmpty();
+
+        clh.getControlLoopMap().clear();
+        updateMsg.setStartPhase(0);
+        assertDoesNotThrow(() -> clh.handleControlLoopUpdate(updateMsg, clElementDefinitions));
+
+        updateMsg.setControlLoopId(new ToscaConceptIdentifier("new", "0.0.1"));
+        updateMsg.setParticipantUpdatesList(List.of(mock(ParticipantUpdates.class)));
+        assertDoesNotThrow(() -> clh.handleControlLoopUpdate(updateMsg, clElementDefinitions));
+
+        updateMsg.setStartPhase(1);
+        var participantUpdate = new ParticipantUpdates();
+        participantUpdate.setParticipantId(id);
+        var element = new ControlLoopElement();
+        element.setParticipantType(id);
+        element.setDefinition(id);
+        participantUpdate.setControlLoopElementList(List.of(element));
+        updateMsg.setParticipantUpdatesList(List.of(participantUpdate));
+
+        var cld2 = new ControlLoopElementDefinition();
+        cld2.setClElementDefinitionId(id);
+        cld2.setControlLoopElementToscaNodeTemplate(mock(ToscaNodeTemplate.class));
+        assertDoesNotThrow(() -> clh.handleControlLoopUpdate(updateMsg, List.of(cld2)));
+
     }
 
     @Test
