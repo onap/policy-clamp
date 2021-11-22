@@ -340,6 +340,16 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
          with open(cached_file_content, 'w+') as f:
              f.write(self.data_string)
          return True
+     elif (self.path.startswith("/onap/controlloop/v2/instanceProperties")) and http_type == "DELETE":
+         print("self.path start with /instanceProperties Deleting instance properties, generating response json...")
+         jsonGenerated = "{\"errorDetails\": null,\"affectedControlLoopDefinitions\": [{ \"name\": \"PMSH_Instance1\", \"version\": \"2.3.1\" }]}"
+         self._create_cache(jsonGenerated, cached_file_folder, cached_file_header, cached_file_content)
+         return True
+     elif (self.path.startswith("/onap/controlloop/v2/instantiation/command")) and http_type == "PUT":
+         print("self.path start with /instantiation/command Changing order state, generating response json...")
+         jsonGenerated = "{\"orderedState\":\"PASSIVE\",\"controlLoopIdentifierList\":[{\"name\":\"PMSH_Instance1\",\"version\":\"2.3.1\"}]}"
+         self._create_cache(jsonGenerated, cached_file_folder, cached_file_header, cached_file_content)
+         return True
      else:
         return False
 

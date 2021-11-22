@@ -41,7 +41,11 @@ public class RuntimeInstantiationResponseItTestCase {
 
     private static final String DIRECT_GET_TOSCA_INSTANTIATION = "direct:get-tosca-instantiation";
 
-    private static final String DIRECT_POST_TOSCA_INSTANTANCE_PROPERTIES = "direct:post-tosca-instance-properties";
+    private static final String DIRECT_POST_TOSCA_INSTANCE_PROPERTIES = "direct:post-tosca-instance-properties";
+
+    private static final String DIRECT_DELETE_TOSCA_INSTANCE_PROPERTIES = "direct:delete-tosca-instance-properties";
+
+    private static final String DIRECT_PUT_TOSCA_INSTANCE_PROPERTIES = "direct:put-tosca-instantiation";
 
     private static final String SERVICE_TEMPLATE_NAME = "name";
 
@@ -58,6 +62,9 @@ public class RuntimeInstantiationResponseItTestCase {
             + "\"data_types\": {},\"node_types\": {}, \"policy_types\": {},"
             + " \"topology_template\": {},"
             + " \"name\": \"ToscaServiceTemplateSimple\", \"version\": \"1.0.0\", \"metadata\": {}}";
+
+    private static final String SAMPLE_TOSCA_CHANGE_ORDER_STATE = "{\"orderedState\":\"PASSIVE\","
+        + "\"controlLoopIdentifierList\":[{\"name\":\"PMSH_Instance1\",\"version\":\"2.3.1\"}]}";
 
     @Test
     public void testToscaServiceTemplateStatus() {
@@ -103,12 +110,41 @@ public class RuntimeInstantiationResponseItTestCase {
     }
 
     @Test
-    public void testCommissioningOfToscaServiceTemplateStatus() {
+    public void testCreateToscaInstancePropertiesStatus() {
         ProducerTemplate prodTemplate = camelContext.createProducerTemplate();
 
         Exchange exchangeResponse =
-            prodTemplate.send(DIRECT_POST_TOSCA_INSTANTANCE_PROPERTIES, ExchangeBuilder.anExchange(camelContext)
+            prodTemplate.send(DIRECT_POST_TOSCA_INSTANCE_PROPERTIES, ExchangeBuilder.anExchange(camelContext)
                 .withBody(SAMPLE_TOSCA_TEMPLATE)
+                .withProperty("raiseHttpExceptionFlag", "true")
+                .build());
+
+        assertThat(HttpStatus.valueOf((Integer) exchangeResponse.getIn().getHeader(Exchange.HTTP_RESPONSE_CODE))
+            .is2xxSuccessful()).isTrue();
+    }
+
+    @Test
+    public void testDeleteToscaInstancePropertiesStatus() {
+        ProducerTemplate prodTemplate = camelContext.createProducerTemplate();
+
+        Exchange exchangeResponse =
+            prodTemplate.send(DIRECT_DELETE_TOSCA_INSTANCE_PROPERTIES, ExchangeBuilder.anExchange(camelContext)
+                .withProperty("name", "PMSH_Instance1")
+                .withProperty("version", "2.3.1")
+                .withProperty("raiseHttpExceptionFlag", "true")
+                .build());
+
+        assertThat(HttpStatus.valueOf((Integer) exchangeResponse.getIn().getHeader(Exchange.HTTP_RESPONSE_CODE))
+            .is2xxSuccessful()).isTrue();
+    }
+
+    @Test
+    public void testChangeOrderStateStatus() {
+        ProducerTemplate prodTemplate = camelContext.createProducerTemplate();
+
+        Exchange exchangeResponse =
+            prodTemplate.send(DIRECT_PUT_TOSCA_INSTANCE_PROPERTIES, ExchangeBuilder.anExchange(camelContext)
+                .withBody(SAMPLE_TOSCA_CHANGE_ORDER_STATE)
                 .withProperty("raiseHttpExceptionFlag", "true")
                 .build());
 
