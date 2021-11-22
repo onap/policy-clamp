@@ -247,7 +247,7 @@
   "auth": {
     "type": "basic",
     "basic": {
-      "username": "healthcheck",
+      "username": "runtimeUser",
       "password": "zb!XztG34"
     }
   }

@@ -46,7 +46,7 @@ public class CldsReferencePropertiesItTestCase {
      */
     @Test
     public void testGetStringValue() {
-        assertEquals("healthcheck", refProp.getStringValue("policy.api.userName"));
+        assertEquals("policyadmin", refProp.getStringValue("policy.api.userName"));
     }
 
     /**
