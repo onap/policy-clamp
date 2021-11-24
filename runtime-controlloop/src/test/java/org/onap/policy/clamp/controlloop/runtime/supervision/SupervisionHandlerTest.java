@@ -73,7 +73,7 @@ class SupervisionHandlerTest {
         var handler = createSupervisionHandler(mock(ControlLoopProvider.class), mock(ParticipantProvider.class),
                 mock(MonitoringProvider.class), mock(ParticipantRegisterAckPublisher.class),
                 mock(ParticipantDeregisterAckPublisher.class), mock(ControlLoopUpdatePublisher.class),
-                mock(ParticipantUpdatePublisher.class));
+                mock(ParticipantUpdatePublisher.class), ControlLoopOrderedState.PASSIVE);
 
         assertThatThrownBy(() -> handler.triggerControlLoopSupervision(List.of()))
                 .hasMessageMatching("The list of control loops for supervision is empty");
@@ -86,7 +86,7 @@ class SupervisionHandlerTest {
         var handler = createSupervisionHandler(controlLoopProvider, mock(ParticipantProvider.class),
                 mock(MonitoringProvider.class), mock(ParticipantRegisterAckPublisher.class),
                 mock(ParticipantDeregisterAckPublisher.class), controlLoopUpdatePublisher,
-                mock(ParticipantUpdatePublisher.class));
+                mock(ParticipantUpdatePublisher.class), ControlLoopOrderedState.PASSIVE);
 
         handler.triggerControlLoopSupervision(List.of(identifier));
 
@@ -95,12 +95,38 @@ class SupervisionHandlerTest {
     }
 
     @Test
+    void testTriggerControlLoopUninitialised() throws ControlLoopException, PfModelException, CoderException {
+        var controlLoopProvider = mock(ControlLoopProvider.class);
+        var controlLoopUpdatePublisher = mock(ControlLoopUpdatePublisher.class);
+        var handler = createSupervisionHandler(controlLoopProvider, mock(ParticipantProvider.class),
+                mock(MonitoringProvider.class), mock(ParticipantRegisterAckPublisher.class),
+                mock(ParticipantDeregisterAckPublisher.class), controlLoopUpdatePublisher,
+                mock(ParticipantUpdatePublisher.class), ControlLoopOrderedState.UNINITIALISED);
+
+        assertThatThrownBy(() -> handler.triggerControlLoopSupervision(List.of(identifier)))
+            .hasMessageMatching("Control loop is already in state UNINITIALISED");
+    }
+
+    @Test
+    void testTriggerControlLoopRunning() throws ControlLoopException, PfModelException, CoderException {
+        var controlLoopProvider = mock(ControlLoopProvider.class);
+        var controlLoopUpdatePublisher = mock(ControlLoopUpdatePublisher.class);
+        var handler = createSupervisionHandler(controlLoopProvider, mock(ParticipantProvider.class),
+                mock(MonitoringProvider.class), mock(ParticipantRegisterAckPublisher.class),
+                mock(ParticipantDeregisterAckPublisher.class), controlLoopUpdatePublisher,
+                mock(ParticipantUpdatePublisher.class), ControlLoopOrderedState.RUNNING);
+
+        assertThatThrownBy(() -> handler.triggerControlLoopSupervision(List.of(identifier)))
+            .hasMessageMatching("Control loop can't transition from state UNINITIALISED to state RUNNING");
+    }
+
+    @Test
     void testHandleControlLoopStateChangeAckMessage() throws PfModelException, CoderException {
         var controlLoopProvider = mock(ControlLoopProvider.class);
         var handler = createSupervisionHandler(controlLoopProvider, mock(ParticipantProvider.class),
                 mock(MonitoringProvider.class), mock(ParticipantRegisterAckPublisher.class),
                 mock(ParticipantDeregisterAckPublisher.class), mock(ControlLoopUpdatePublisher.class),
-                mock(ParticipantUpdatePublisher.class));
+                mock(ParticipantUpdatePublisher.class), ControlLoopOrderedState.PASSIVE);
         var controlLoopAckMessage = new ControlLoopAck(ParticipantMessageType.CONTROLLOOP_STATECHANGE_ACK);
         controlLoopAckMessage.setControlLoopResultMap(Map.of());
         controlLoopAckMessage.setControlLoopId(identifier);
@@ -121,7 +147,7 @@ class SupervisionHandlerTest {
         var handler = createSupervisionHandler(controlLoopProvider, mock(ParticipantProvider.class),
                 mock(MonitoringProvider.class), mock(ParticipantRegisterAckPublisher.class),
                 mock(ParticipantDeregisterAckPublisher.class), mock(ControlLoopUpdatePublisher.class),
-                mock(ParticipantUpdatePublisher.class));
+                mock(ParticipantUpdatePublisher.class), ControlLoopOrderedState.PASSIVE);
 
         handler.handleControlLoopUpdateAckMessage(controlLoopAckMessage);
 
@@ -147,7 +173,7 @@ class SupervisionHandlerTest {
         var handler = createSupervisionHandler(mock(ControlLoopProvider.class), participantProvider,
                 mock(MonitoringProvider.class), mock(ParticipantRegisterAckPublisher.class),
                 participantDeregisterAckPublisher, mock(ControlLoopUpdatePublisher.class),
-                mock(ParticipantUpdatePublisher.class));
+                mock(ParticipantUpdatePublisher.class), ControlLoopOrderedState.PASSIVE);
 
         handler.handleParticipantMessage(participantDeregisterMessage);
 
@@ -171,7 +197,7 @@ class SupervisionHandlerTest {
         var handler = createSupervisionHandler(mock(ControlLoopProvider.class), participantProvider,
                 mock(MonitoringProvider.class), participantRegisterAckPublisher,
                 mock(ParticipantDeregisterAckPublisher.class), mock(ControlLoopUpdatePublisher.class),
-                mock(ParticipantUpdatePublisher.class));
+                mock(ParticipantUpdatePublisher.class), ControlLoopOrderedState.PASSIVE);
 
         handler.handleParticipantMessage(participantRegisterMessage);
 
@@ -198,7 +224,7 @@ class SupervisionHandlerTest {
         var handler = createSupervisionHandler(mock(ControlLoopProvider.class), participantProvider,
                 mock(MonitoringProvider.class), mock(ParticipantRegisterAckPublisher.class),
                 mock(ParticipantDeregisterAckPublisher.class), mock(ControlLoopUpdatePublisher.class),
-                mock(ParticipantUpdatePublisher.class));
+                mock(ParticipantUpdatePublisher.class), ControlLoopOrderedState.PASSIVE);
 
         handler.handleParticipantMessage(participantUpdateAckMessage);
 
@@ -218,7 +244,8 @@ class SupervisionHandlerTest {
         var monitoringProvider = mock(MonitoringProvider.class);
         var handler = createSupervisionHandler(mock(ControlLoopProvider.class), participantProvider, monitoringProvider,
                 mock(ParticipantRegisterAckPublisher.class), mock(ParticipantDeregisterAckPublisher.class),
-                mock(ControlLoopUpdatePublisher.class), mock(ParticipantUpdatePublisher.class));
+                mock(ControlLoopUpdatePublisher.class), mock(ParticipantUpdatePublisher.class),
+                ControlLoopOrderedState.PASSIVE);
         handler.handleParticipantMessage(participantStatusMessage);
 
         verify(participantProvider).createParticipants(anyList());
@@ -231,7 +258,7 @@ class SupervisionHandlerTest {
         var handler = createSupervisionHandler(mock(ControlLoopProvider.class), mock(ParticipantProvider.class),
                 mock(MonitoringProvider.class), mock(ParticipantRegisterAckPublisher.class),
                 mock(ParticipantDeregisterAckPublisher.class), mock(ControlLoopUpdatePublisher.class),
-                participantUpdatePublisher);
+                participantUpdatePublisher, ControlLoopOrderedState.PASSIVE);
         handler.handleSendCommissionMessage(participantId.getName(), participantId.getVersion());
 
         verify(participantUpdatePublisher).sendComissioningBroadcast(participantId.getName(),
@@ -244,7 +271,7 @@ class SupervisionHandlerTest {
         var handler = createSupervisionHandler(mock(ControlLoopProvider.class), mock(ParticipantProvider.class),
                 mock(MonitoringProvider.class), mock(ParticipantRegisterAckPublisher.class),
                 mock(ParticipantDeregisterAckPublisher.class), mock(ControlLoopUpdatePublisher.class),
-                participantUpdatePublisher);
+                participantUpdatePublisher, ControlLoopOrderedState.PASSIVE);
         handler.handleSendDeCommissionMessage();
 
         verify(participantUpdatePublisher).sendDecomisioning();
@@ -255,11 +282,12 @@ class SupervisionHandlerTest {
             ParticipantRegisterAckPublisher participantRegisterAckPublisher,
             ParticipantDeregisterAckPublisher participantDeregisterAckPublisher,
             ControlLoopUpdatePublisher controlLoopUpdatePublisher,
-            ParticipantUpdatePublisher participantUpdatePublisher) throws PfModelException, CoderException {
+            ParticipantUpdatePublisher participantUpdatePublisher,
+            ControlLoopOrderedState orderedState) throws PfModelException, CoderException {
         var controlLoopsCreate = InstantiationUtils.getControlLoopsFromResource(CL_INSTANTIATION_CREATE_JSON, "Crud");
 
         var controlLoop = controlLoopsCreate.getControlLoopList().get(0);
-        controlLoop.setOrderedState(ControlLoopOrderedState.PASSIVE);
+        controlLoop.setOrderedState(orderedState);
 
         var controlLoopStateChangePublisher = mock(ControlLoopStateChangePublisher.class);
 

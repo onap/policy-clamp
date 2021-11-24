@@ -21,6 +21,7 @@
 package org.onap.policy.clamp.controlloop.participant.intermediary.handler;
 
 import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -40,6 +41,8 @@ import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.Par
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.coder.StandardCoderObject;
+import org.springframework.context.event.ContextClosedEvent;
+import org.springframework.context.event.ContextRefreshedEvent;
 
 class IntermediaryActivatorTest {
     private static final Coder CODER = new StandardCoder();
@@ -86,12 +89,15 @@ class IntermediaryActivatorTest {
             activator.getMsgDispatcher().onTopicEvent(null, "msg", sco);
             verify(listenerSecond, times(1)).onTopicEvent(any(), any(), any());
 
-            activator.stop();
+            activator.close();
             assertFalse(activator.isAlive());
 
             // repeat stop - should throw an exception
             assertThatIllegalStateException().isThrownBy(() -> activator.stop());
             assertFalse(activator.isAlive());
+
+            assertDoesNotThrow(() -> activator.handleContextRefreshEvent(mock(ContextRefreshedEvent.class)));
+            assertDoesNotThrow(() -> activator.handleContextClosedEvent(mock(ContextClosedEvent.class)));
         }
     }
 }
