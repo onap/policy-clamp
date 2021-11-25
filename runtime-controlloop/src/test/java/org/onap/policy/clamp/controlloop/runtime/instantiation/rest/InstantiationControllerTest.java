@@ -326,7 +326,10 @@ class InstantiationControllerTest extends CommonRestController {
         var controlLoops = InstantiationUtils.getControlLoopsFromResource(CL_INSTANTIATION_CREATE_JSON, "Command");
         instantiationProvider.createControlLoops(controlLoops);
 
-        participantProvider.createParticipants(CommonTestData.createParticipants());
+        var participants = CommonTestData.createParticipants();
+        for (var participant : participants) {
+            participantProvider.saveParticipant(participant);
+        }
 
         InstantiationCommand command =
                 InstantiationUtils.getInstantiationCommandFromResource(CL_INSTANTIATION_CHANGE_STATE_JSON, "Command");

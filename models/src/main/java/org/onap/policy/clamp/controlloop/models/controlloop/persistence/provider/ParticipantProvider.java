@@ -20,36 +20,30 @@
 
 package org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import javax.ws.rs.core.Response;
+import java.util.Optional;
+import javax.ws.rs.core.Response.Status;
+import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.concepts.JpaParticipant;
+import org.onap.policy.clamp.controlloop.models.controlloop.persistence.repository.ParticipantRepository;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
-import org.onap.policy.models.provider.PolicyModelsProviderParameters;
-import org.onap.policy.models.provider.impl.AbstractModelsProvider;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTypedEntityFilter;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * This class provides information on participant concepts in the database to callers.
  */
+@Transactional
+@AllArgsConstructor
 @Component
-public class ParticipantProvider extends AbstractModelsProvider {
-    /**
-     * Create a provider for participants.
-     *
-     * @param parameters the parameters for database access
-     * @throws PfModelException on initiation errors
-     */
-    public ParticipantProvider(@NonNull PolicyModelsProviderParameters parameters) throws PfModelException {
-        super(parameters);
-        this.init();
-    }
+public class ParticipantProvider {
+
+    private ParticipantRepository participantRepository;
 
     /**
      * Get participants.
@@ -59,9 +53,39 @@ public class ParticipantProvider extends AbstractModelsProvider {
      * @return the participants found
      * @throws PfModelException on errors getting participants
      */
+    @Transactional(readOnly = true)
     public List<Participant> getParticipants(final String name, final String version) throws PfModelException {
 
-        return asParticipantList(getPfDao().getFiltered(JpaParticipant.class, name, version));
+        return ProviderUtils.asEntityList(participantRepository.getFiltered(JpaParticipant.class, name, version));
+    }
+
+    /**
+     * Get all participants.
+     *
+     * @return the participants found
+     * @throws PfModelException on errors getting policies
+     */
+    @Transactional(readOnly = true)
+    public List<Participant> getParticipants() throws PfModelException {
+        return ProviderUtils.asEntityList(participantRepository.findAll());
+    }
+
+    /**
+     * Get participant.
+     *
+     * @param name the name of the participant to get
+     * @param version the version of the participant to get
+     * @return the participant found
+     * @throws PfModelException on errors getting participant
+     */
+    @Transactional(readOnly = true)
+    public Optional<Participant> findParticipant(@NonNull final String name, @NonNull final String version)
+            throws PfModelException {
+        try {
+            return participantRepository.findById(new PfConceptKey(name, version)).map(JpaParticipant::toAuthorative);
+        } catch (IllegalArgumentException e) {
+            throw new PfModelException(Status.BAD_REQUEST, "Error in find Participant", e);
+        }
     }
 
     /**
@@ -71,62 +95,31 @@ public class ParticipantProvider extends AbstractModelsProvider {
      * @return the participants found
      * @throws PfModelException on errors getting policies
      */
-    public List<Participant> getFilteredParticipants(@NonNull final ToscaTypedEntityFilter<Participant> filter) {
+    @Transactional(readOnly = true)
+    public List<Participant> getFilteredParticipants(@NonNull final ToscaTypedEntityFilter<Participant> filter)
+            throws PfModelException {
 
-        return filter.filter(
-                asParticipantList(getPfDao().getFiltered(JpaParticipant.class, filter.getName(), filter.getVersion())));
+        return filter.filter(ProviderUtils.asEntityList(
+                participantRepository.getFiltered(JpaParticipant.class, filter.getName(), filter.getVersion())));
     }
 
     /**
-     * Creates participants.
+     * Saves participant.
      *
-     * @param participants a specification of the participants to create
-     * @return the participants created
+     * @param participant participant to save
+     * @return the participant created
      * @throws PfModelException on errors creating participants
      */
-    public List<Participant> createParticipants(@NonNull final List<Participant> participants) throws PfModelException {
+    public Participant saveParticipant(@NonNull final Participant participant) throws PfModelException {
+        try {
+            var result = participantRepository
+                    .save(ProviderUtils.getJpaAndValidate(participant, JpaParticipant::new, "participant"));
 
-        List<JpaParticipant> jpaParticipantList =
-                ProviderUtils.getJpaAndValidate(participants, JpaParticipant::new, "participant");
-
-        jpaParticipantList.forEach(jpaParticipant -> getPfDao().create(jpaParticipant));
-
-        // Return the created participants
-        List<Participant> returnParticipants = new ArrayList<>(participants.size());
-
-        for (Participant participant : participants) {
-            var jpaParticipant = getPfDao().get(JpaParticipant.class,
-                    new PfConceptKey(participant.getName(), participant.getVersion()));
-            returnParticipants.add(jpaParticipant.toAuthorative());
+            // Return the saved participant
+            return result.toAuthorative();
+        } catch (IllegalArgumentException e) {
+            throw new PfModelException(Status.BAD_REQUEST, "Error in save Participant", e);
         }
-
-        return returnParticipants;
-    }
-
-    /**
-     * Updates participants.
-     *
-     * @param participants a specification of the participants to update
-     * @return the participants updated
-     * @throws PfModelException on errors updating participants
-     */
-    public List<Participant> updateParticipants(@NonNull final List<Participant> participants) throws PfModelException {
-
-        List<JpaParticipant> jpaParticipantList =
-                ProviderUtils.getJpaAndValidate(participants, JpaParticipant::new, "participant");
-
-        jpaParticipantList.forEach(jpaParticipant -> getPfDao().update(jpaParticipant));
-
-        // Return the created participants
-        List<Participant> returnParticipants = new ArrayList<>(participants.size());
-
-        for (Participant participant : participants) {
-            var jpaParticipant = getPfDao().get(JpaParticipant.class,
-                    new PfConceptKey(participant.getName(), participant.getVersion()));
-            returnParticipants.add(jpaParticipant.toAuthorative());
-        }
-
-        return returnParticipants;
     }
 
     /**
@@ -137,30 +130,23 @@ public class ParticipantProvider extends AbstractModelsProvider {
      * @return the participant deleted
      * @throws PfModelRuntimeException on errors deleting participants
      */
-    public Participant deleteParticipant(@NonNull final String name, @NonNull final String version) {
+    public Participant deleteParticipant(@NonNull final String name, @NonNull final String version)
+            throws PfModelException {
+        try {
+            var participantKey = new PfConceptKey(name, version);
 
-        var participantKey = new PfConceptKey(name, version);
+            var jpaDeleteParticipantOpt = participantRepository.findById(participantKey);
 
-        JpaParticipant jpaDeleteParticipant = getPfDao().get(JpaParticipant.class, participantKey);
+            if (jpaDeleteParticipantOpt.isEmpty()) {
+                String errorMessage =
+                        "delete of participant \"" + participantKey.getId() + "\" failed, participant does not exist";
+                throw new PfModelRuntimeException(Status.BAD_REQUEST, errorMessage);
+            }
+            participantRepository.delete(jpaDeleteParticipantOpt.get());
 
-        if (jpaDeleteParticipant == null) {
-            String errorMessage =
-                    "delete of participant \"" + participantKey.getId() + "\" failed, participant does not exist";
-            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, errorMessage);
+            return jpaDeleteParticipantOpt.get().toAuthorative();
+        } catch (IllegalArgumentException e) {
+            throw new PfModelException(Status.BAD_REQUEST, "Error in delete Participant", e);
         }
-
-        getPfDao().delete(jpaDeleteParticipant);
-
-        return jpaDeleteParticipant.toAuthorative();
-    }
-
-    /**
-     * Convert JPA participant list to an authorative participant list.
-     *
-     * @param jpaParticipantList the list to convert
-     * @return the authorative list
-     */
-    private List<Participant> asParticipantList(List<JpaParticipant> jpaParticipantList) {
-        return jpaParticipantList.stream().map(JpaParticipant::toAuthorative).collect(Collectors.toList());
     }
 }

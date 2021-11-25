@@ -62,11 +62,13 @@ class ClElementStatisticsProviderTest {
         inputClElementStats = CODER.decode(originalJson, ClElementStatisticsList.class);
         var clElementStatisticsRepository = mock(ClElementStatisticsRepository.class);
 
-        var jpaClElementStatisticsList = ProviderUtils.getJpaAndValidate(inputClElementStats.getClElementStatistics(),
-                JpaClElementStatistics::new, "control loop element statistics");
+        var jpaClElementStatisticsList =
+                ProviderUtils.getJpaAndValidateList(inputClElementStats.getClElementStatistics(),
+                        JpaClElementStatistics::new, "control loop element statistics");
 
         for (var clElementStat : jpaClElementStatisticsList) {
-            when(clElementStatisticsRepository.findAllById(List.of(clElementStat.getKey())))
+            when(clElementStatisticsRepository.getById(eq(clElementStat.getKey()))).thenReturn(clElementStat);
+            when(clElementStatisticsRepository.findAllById(eq(List.of(clElementStat.getKey()))))
                     .thenReturn(List.of(clElementStat));
         }
 

@@ -27,6 +27,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -105,7 +106,6 @@ class ControlLoopInstantiationProviderTest {
     private static CommissioningProvider commissioningProvider;
     private static ControlLoopProvider clProvider;
     private static PolicyModelsProvider modelsProvider;
-    private static ParticipantProvider participantProvider;
 
     @BeforeAll
     public static void setUpBeforeClass() throws Exception {
@@ -123,7 +123,7 @@ class ControlLoopInstantiationProviderTest {
 
         modelsProvider = CommonTestData.getPolicyModelsProvider(controlLoopParameters.getDatabaseProviderParameters());
         clProvider = new ControlLoopProvider(controlLoopParameters.getDatabaseProviderParameters());
-        participantProvider = new ParticipantProvider(controlLoopParameters.getDatabaseProviderParameters());
+        var participantProvider = Mockito.mock(ParticipantProvider.class);
 
         var participantStatisticsProvider = Mockito.mock(ParticipantStatisticsProvider.class);
         var clElementStatisticsProvider = mock(ClElementStatisticsProvider.class);
@@ -131,7 +131,6 @@ class ControlLoopInstantiationProviderTest {
                 participantProvider);
         var monitoringProvider =
                 new MonitoringProvider(participantStatisticsProvider, clElementStatisticsProvider, clProvider);
-        var participantProvider = new ParticipantProvider(controlLoopParameters.getDatabaseProviderParameters());
         var controlLoopUpdatePublisher = Mockito.mock(ControlLoopUpdatePublisher.class);
         var controlLoopStateChangePublisher = Mockito.mock(ControlLoopStateChangePublisher.class);
         var participantRegisterAckPublisher = Mockito.mock(ParticipantRegisterAckPublisher.class);
@@ -162,6 +161,7 @@ class ControlLoopInstantiationProviderTest {
 
     @Test
     void testIntanceResponses() throws PfModelException {
+        var participantProvider = Mockito.mock(ParticipantProvider.class);
         var instantiationProvider = new ControlLoopInstantiationProvider(clProvider, commissioningProvider,
                 supervisionHandler, participantProvider);
         var instancePropertyList = instantiationProvider.createInstanceProperties(serviceTemplate);
@@ -180,7 +180,9 @@ class ControlLoopInstantiationProviderTest {
 
     @Test
     void testInstantiationCrud() throws Exception {
-        participantProvider.createParticipants(CommonTestData.createParticipants());
+        var participantProvider = Mockito.mock(ParticipantProvider.class);
+        var participants = CommonTestData.createParticipants();
+        when(participantProvider.getParticipants()).thenReturn(participants);
 
         ControlLoops controlLoopsCreate =
                 InstantiationUtils.getControlLoopsFromResource(CL_INSTANTIATION_CREATE_JSON, "Crud");
@@ -242,6 +244,7 @@ class ControlLoopInstantiationProviderTest {
 
         ControlLoops controlLoopsDb = new ControlLoops();
         controlLoopsDb.setControlLoopList(new ArrayList<>());
+        var participantProvider = Mockito.mock(ParticipantProvider.class);
 
         var instantiationProvider = new ControlLoopInstantiationProvider(clProvider, commissioningProvider,
                 supervisionHandler, participantProvider);
@@ -262,6 +265,7 @@ class ControlLoopInstantiationProviderTest {
         assertThat(getControlLoopsFromDb(controlLoops).getControlLoopList()).isEmpty();
 
         ControlLoop controlLoop0 = controlLoops.getControlLoopList().get(0);
+        var participantProvider = Mockito.mock(ParticipantProvider.class);
 
         var instantiationProvider = new ControlLoopInstantiationProvider(clProvider, commissioningProvider,
                 supervisionHandler, participantProvider);
@@ -295,8 +299,8 @@ class ControlLoopInstantiationProviderTest {
 
     private void assertThatDeleteThrownBy(ControlLoops controlLoops, ControlLoopState state) throws Exception {
         ControlLoop controlLoop = controlLoops.getControlLoopList().get(0);
-
         controlLoop.setState(state);
+        var participantProvider = Mockito.mock(ParticipantProvider.class);
 
         var instantiationProvider = new ControlLoopInstantiationProvider(clProvider, commissioningProvider,
                 supervisionHandler, participantProvider);
@@ -316,6 +320,7 @@ class ControlLoopInstantiationProviderTest {
         ControlLoops controlLoopsDb = getControlLoopsFromDb(controlLoopsCreate);
         assertThat(controlLoopsDb.getControlLoopList()).isEmpty();
 
+        var participantProvider = Mockito.mock(ParticipantProvider.class);
         var instantiationProvider = new ControlLoopInstantiationProvider(clProvider, commissioningProvider,
                 supervisionHandler, participantProvider);
 
@@ -336,6 +341,7 @@ class ControlLoopInstantiationProviderTest {
         ControlLoops controlLoops = InstantiationUtils
                 .getControlLoopsFromResource(CL_INSTANTIATION_DEFINITION_NAME_NOT_FOUND_JSON, "ClElementNotFound");
 
+        var participantProvider = Mockito.mock(ParticipantProvider.class);
         var provider = new ControlLoopInstantiationProvider(clProvider, commissioningProvider, supervisionHandler,
                 participantProvider);
 
@@ -355,6 +361,7 @@ class ControlLoopInstantiationProviderTest {
 
         assertThat(getControlLoopsFromDb(controlLoops).getControlLoopList()).isEmpty();
 
+        var participantProvider = Mockito.mock(ParticipantProvider.class);
         var provider = new ControlLoopInstantiationProvider(clProvider, commissioningProvider, supervisionHandler,
                 participantProvider);
         assertThatThrownBy(() -> provider.createControlLoops(controlLoops))
@@ -363,6 +370,7 @@ class ControlLoopInstantiationProviderTest {
 
     @Test
     void testIssueControlLoopCommand_OrderedStateInvalid() throws ControlLoopRuntimeException, IOException {
+        var participantProvider = Mockito.mock(ParticipantProvider.class);
         var instantiationProvider = new ControlLoopInstantiationProvider(clProvider, commissioningProvider,
                 supervisionHandler, participantProvider);
         assertThatThrownBy(() -> instantiationProvider.issueControlLoopCommand(new InstantiationCommand()))
@@ -376,6 +384,7 @@ class ControlLoopInstantiationProviderTest {
                 InstantiationUtils.getControlLoopsFromResource(CL_INSTANTIATION_CREATE_JSON, "V1");
         assertThat(getControlLoopsFromDb(controlLoopsV1).getControlLoopList()).isEmpty();
 
+        var participantProvider = Mockito.mock(ParticipantProvider.class);
         var instantiationProvider = new ControlLoopInstantiationProvider(clProvider, commissioningProvider,
                 supervisionHandler, participantProvider);
 

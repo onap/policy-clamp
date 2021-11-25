@@ -23,7 +23,6 @@
 package org.onap.policy.clamp.controlloop.runtime.supervision;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.tuple.Pair;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
@@ -121,7 +120,7 @@ public class SupervisionScanner {
 
         if (counterCheck) {
             try {
-                for (Participant participant : participantProvider.getParticipants(null, null)) {
+                for (var participant : participantProvider.getParticipants()) {
                     scanParticipantStatus(participant);
                 }
             } catch (PfModelException pfme) {
@@ -188,7 +187,7 @@ public class SupervisionScanner {
                 participantStatusCounter.setFault(id);
                 participant.setHealthStatus(ParticipantHealthStatus.OFF_LINE);
             }
-            participantProvider.updateParticipants(List.of(participant));
+            participantProvider.saveParticipant(participant);
         }
     }
 

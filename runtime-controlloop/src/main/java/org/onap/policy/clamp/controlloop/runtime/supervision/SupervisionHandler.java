@@ -174,16 +174,15 @@ public class SupervisionHandler {
     public void handleParticipantMessage(ParticipantDeregister participantDeregisterMessage) {
         LOGGER.debug("Participant Deregister received {}", participantDeregisterMessage);
         try {
-            var participantList =
-                    participantProvider.getParticipants(participantDeregisterMessage.getParticipantId().getName(),
+            var participantOpt =
+                    participantProvider.findParticipant(participantDeregisterMessage.getParticipantId().getName(),
                             participantDeregisterMessage.getParticipantId().getVersion());
 
-            if (participantList != null) {
-                for (Participant participant : participantList) {
-                    participant.setParticipantState(ParticipantState.TERMINATED);
-                    participant.setHealthStatus(ParticipantHealthStatus.OFF_LINE);
-                }
-                participantProvider.updateParticipants(participantList);
+            if (participantOpt.isPresent()) {
+                var participant = participantOpt.get();
+                participant.setParticipantState(ParticipantState.TERMINATED);
+                participant.setHealthStatus(ParticipantHealthStatus.OFF_LINE);
+                participantProvider.saveParticipant(participant);
             }
         } catch (PfModelException pfme) {
             LOGGER.warn("Model exception occured with participant id {}",
@@ -202,15 +201,14 @@ public class SupervisionHandler {
     public void handleParticipantMessage(ParticipantUpdateAck participantUpdateAckMessage) {
         LOGGER.debug("Participant Update Ack received {}", participantUpdateAckMessage);
         try {
-            var participantList =
-                    participantProvider.getParticipants(participantUpdateAckMessage.getParticipantId().getName(),
+            var participantOpt =
+                    participantProvider.findParticipant(participantUpdateAckMessage.getParticipantId().getName(),
                             participantUpdateAckMessage.getParticipantId().getVersion());
 
-            if (participantList != null) {
-                for (Participant participant : participantList) {
-                    participant.setParticipantState(participantUpdateAckMessage.getState());
-                }
-                participantProvider.updateParticipants(participantList);
+            if (participantOpt.isPresent()) {
+                var participant = participantOpt.get();
+                participant.setParticipantState(participantUpdateAckMessage.getState());
+                participantProvider.saveParticipant(participant);
             } else {
                 LOGGER.warn("Participant not found in database {}", participantUpdateAckMessage.getParticipantId());
             }
@@ -439,10 +437,10 @@ public class SupervisionHandler {
         if (participantMessage.getParticipantId() == null) {
             exceptionOccured(Response.Status.NOT_FOUND, "Participant ID on PARTICIPANT_STATUS message is null");
         }
-        List<Participant> participantList = participantProvider.getParticipants(
-                participantMessage.getParticipantId().getName(), participantMessage.getParticipantId().getVersion());
+        var participantOpt = participantProvider.findParticipant(participantMessage.getParticipantId().getName(),
+                participantMessage.getParticipantId().getVersion());
 
-        if (CollectionUtils.isEmpty(participantList)) {
+        if (participantOpt.isEmpty()) {
             var participant = new Participant();
             participant.setName(participantMessage.getParticipantId().getName());
             participant.setVersion(participantMessage.getParticipantId().getVersion());
@@ -451,14 +449,13 @@ public class SupervisionHandler {
             participant.setParticipantState(participantState);
             participant.setHealthStatus(healthStatus);
 
-            participantList.add(participant);
-            participantProvider.createParticipants(participantList);
+            participantProvider.saveParticipant(participant);
         } else {
-            for (Participant participant : participantList) {
-                participant.setParticipantState(participantState);
-                participant.setHealthStatus(healthStatus);
-            }
-            participantProvider.updateParticipants(participantList);
+            var participant = participantOpt.get();
+            participant.setParticipantState(participantState);
+            participant.setHealthStatus(healthStatus);
+
+            participantProvider.saveParticipant(participant);
         }
     }
 

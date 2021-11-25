@@ -125,7 +125,7 @@ public class ControlLoopProvider extends AbstractModelsProvider {
     public List<ControlLoop> createControlLoops(@NonNull final List<ControlLoop> controlLoops) throws PfModelException {
 
         List<JpaControlLoop> jpaControlLoopList =
-                ProviderUtils.getJpaAndValidate(controlLoops, JpaControlLoop::new, "control loop");
+                ProviderUtils.getJpaAndValidateList(controlLoops, JpaControlLoop::new, "control loop");
 
         jpaControlLoopList.forEach(jpaControlLoop -> getPfDao().create(jpaControlLoop));
 
@@ -151,7 +151,7 @@ public class ControlLoopProvider extends AbstractModelsProvider {
     public List<ControlLoop> updateControlLoops(@NonNull final List<ControlLoop> controlLoops) throws PfModelException {
 
         List<JpaControlLoop> jpaControlLoopList =
-                ProviderUtils.getJpaAndValidate(controlLoops, JpaControlLoop::new, "control loop");
+                ProviderUtils.getJpaAndValidateList(controlLoops, JpaControlLoop::new, "control loop");
 
         // Return the created control loops
         List<ControlLoop> returnControlLoops = new ArrayList<>(controlLoops.size());

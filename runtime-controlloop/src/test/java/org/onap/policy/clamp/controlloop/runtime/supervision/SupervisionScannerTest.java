@@ -20,7 +20,6 @@
 
 package org.onap.policy.clamp.controlloop.runtime.supervision;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
@@ -192,8 +191,8 @@ class SupervisionScannerTest {
         participant.setParticipantState(ParticipantState.ACTIVE);
         participant.setDefinition(new ToscaConceptIdentifier("unknown", "0.0.0"));
         participant.setParticipantType(new ToscaConceptIdentifier("ParticipantType1", "1.0.0"));
-        var participantProvider = new ParticipantProvider(clRuntimeParameterGroup.getDatabaseProviderParameters());
-        participantProvider.updateParticipants(List.of(participant));
+        var participantProvider = mock(ParticipantProvider.class);
+        when(participantProvider.getParticipants()).thenReturn(List.of(participant));
 
         var controlLoopUpdatePublisher = mock(ControlLoopUpdatePublisher.class);
         var participantStatusReqPublisher = mock(ParticipantStatusReqPublisher.class);
@@ -206,13 +205,10 @@ class SupervisionScannerTest {
 
         supervisionScanner.handleParticipantStatus(participant.getKey().asIdentifier());
         supervisionScanner.run(true);
-        verify(participantStatusReqPublisher, times(1)).send(any(ToscaConceptIdentifier.class));
-
-        List<Participant> participants = participantProvider.getParticipants(null, null);
-        assertThat(participants.get(0).getHealthStatus()).isEqualTo(ParticipantHealthStatus.NOT_HEALTHY);
+        verify(participantStatusReqPublisher).send(any(ToscaConceptIdentifier.class));
+        verify(participantProvider).saveParticipant(any());
 
         supervisionScanner.run(true);
-        participants = participantProvider.getParticipants(null, null);
-        assertThat(participants.get(0).getHealthStatus()).isEqualTo(ParticipantHealthStatus.OFF_LINE);
+        verify(participantProvider, times(2)).saveParticipant(any());
     }
 }

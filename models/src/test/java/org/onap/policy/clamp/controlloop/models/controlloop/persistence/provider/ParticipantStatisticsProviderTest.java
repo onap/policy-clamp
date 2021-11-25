@@ -59,11 +59,12 @@ class ParticipantStatisticsProviderTest {
         inputParticipantStatistics = CODER.decode(originalJson, ParticipantStatisticsList.class);
 
         var jpaParticipantStatisticsList =
-                ProviderUtils.getJpaAndValidate(inputParticipantStatistics.getStatisticsList(),
+                ProviderUtils.getJpaAndValidateList(inputParticipantStatistics.getStatisticsList(),
                         JpaParticipantStatistics::new, "Participant Statistics");
 
         for (var participantStat : jpaParticipantStatisticsList) {
-            when(participantStatisticsRepository.findAllById(List.of(participantStat.getKey())))
+            when(participantStatisticsRepository.getById(eq(participantStat.getKey()))).thenReturn(participantStat);
+            when(participantStatisticsRepository.findAllById(eq(List.of(participantStat.getKey()))))
                     .thenReturn(List.of(participantStat));
         }
 
@@ -89,10 +90,9 @@ class ParticipantStatisticsProviderTest {
 
     @Test
     void testGetControlLoops() throws Exception {
-        List<ParticipantStatistics> getResponse;
-
         // Return empty list when no data present in db
-        getResponse = participantStatisticsProvider.getParticipantStatistics(null, null, null);
+        List<ParticipantStatistics> getResponse =
+                participantStatisticsProvider.getParticipantStatistics(null, null, null);
         assertThat(getResponse).isEmpty();
 
         participantStatisticsProvider.createParticipantStatistics(inputParticipantStatistics.getStatisticsList());

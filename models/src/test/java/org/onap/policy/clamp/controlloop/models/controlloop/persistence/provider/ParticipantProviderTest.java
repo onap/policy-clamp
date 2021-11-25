@@ -23,129 +23,127 @@ package org.onap.policy.clamp.controlloop.models.controlloop.persistence.provide
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-import org.junit.jupiter.api.AfterEach;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
+import org.onap.policy.clamp.controlloop.models.controlloop.persistence.concepts.JpaParticipant;
+import org.onap.policy.clamp.controlloop.models.controlloop.persistence.repository.ParticipantRepository;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
-import org.onap.policy.models.provider.PolicyModelsProviderParameters;
+import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTypedEntityFilter;
 
 class ParticipantProviderTest {
 
     private static final Coder CODER = new StandardCoder();
-    private static final String PARTICIPANT_JSON =
-            "src/test/resources/providers/TestParticipant.json";
+    private static final String PARTICIPANT_JSON = "src/test/resources/providers/TestParticipant.json";
     private static final String LIST_IS_NULL = ".*. is marked .*ull but is null";
 
-    private static AtomicInteger dbNameCounter = new AtomicInteger();
-
-    private PolicyModelsProviderParameters parameters;
-    private ParticipantProvider participantProvider;
     private List<Participant> inputParticipants = new ArrayList<>();
-    private Participant updateParticipants;
+    private List<JpaParticipant> jpaParticipantList;
     private String originalJson = ResourceUtils.getResourceAsString(PARTICIPANT_JSON);
 
     @BeforeEach
     void beforeSetupDao() throws Exception {
-
-        parameters = new PolicyModelsProviderParameters();
-        parameters.setDatabaseDriver("org.h2.Driver");
-        parameters.setName("PolicyProviderParameterGroup");
-        parameters.setImplementation("org.onap.policy.models.provider.impl.DatabasePolicyModelsProviderImpl");
-        parameters.setDatabaseUrl("jdbc:h2:mem:participantProviderTestDb" + dbNameCounter.getAndIncrement());
-        parameters.setDatabaseUser("policy");
-        parameters.setDatabasePassword("P01icY");
-        parameters.setPersistenceUnit("ToscaConceptTest");
-
-        participantProvider = new ParticipantProvider(parameters);
         inputParticipants.add(CODER.decode(originalJson, Participant.class));
-
-    }
-
-    @AfterEach
-    void teardown() {
-        participantProvider.close();
+        jpaParticipantList = ProviderUtils.getJpaAndValidateList(inputParticipants, JpaParticipant::new, "participant");
     }
 
     @Test
-    void testParticipantCreate() throws Exception {
+    void testParticipantSave() throws Exception {
+        var participantRepository = mock(ParticipantRepository.class);
+        for (var participant : jpaParticipantList) {
+            when(participantRepository.getById(new PfConceptKey(participant.getName(), participant.getVersion())))
+                    .thenReturn(participant);
+        }
+        var participantProvider = new ParticipantProvider(participantRepository);
+
         assertThatThrownBy(() -> {
-            participantProvider.createParticipants(null);
+            participantProvider.saveParticipant(null);
         }).hasMessageMatching(LIST_IS_NULL);
 
-        List<Participant> createdParticipants = new ArrayList<>();
-        createdParticipants.addAll(participantProvider
-                .createParticipants(inputParticipants));
+        when(participantRepository.save(any())).thenReturn(jpaParticipantList.get(0));
 
-        assertEquals(createdParticipants.get(0),
-                inputParticipants.get(0));
+        Participant savedParticipant = participantProvider.saveParticipant(inputParticipants.get(0));
+        assertEquals(savedParticipant, inputParticipants.get(0));
+
+        when(participantRepository.save(any())).thenThrow(IllegalArgumentException.class);
+
+        assertThatThrownBy(() -> {
+            participantProvider.saveParticipant(inputParticipants.get(0));
+        }).hasMessageMatching("Error in save Participant");
     }
-
 
     @Test
     void testGetControlLoops() throws Exception {
+        var participantRepository = mock(ParticipantRepository.class);
+        var participantProvider = new ParticipantProvider(participantRepository);
 
-        List<Participant> getResponse;
-
-        //Return empty list when no data present in db
-        getResponse = participantProvider.getParticipants(null, null);
+        // Return empty list when no data present in db
+        List<Participant> getResponse = participantProvider.getParticipants(null, null);
         assertThat(getResponse).isEmpty();
 
-        participantProvider.createParticipants(inputParticipants);
         String name = inputParticipants.get(0).getName();
         String version = inputParticipants.get(0).getVersion();
+        when(participantRepository.getFiltered(any(), eq(name), eq(version)))
+                .thenReturn(List.of(jpaParticipantList.get(0)));
         assertEquals(1, participantProvider.getParticipants(name, version).size());
 
-        assertThat(participantProvider.getParticipants("invalid_name",
-                "1.0.1")).isEmpty();
+        assertThat(participantProvider.getParticipants("invalid_name", "1.0.1")).isEmpty();
+
+        assertThat(participantProvider.findParticipant("invalid_name", "1.0.1")).isEmpty();
+
+        when(participantRepository.findAll()).thenReturn(jpaParticipantList);
+        assertThat(participantProvider.getParticipants()).hasSize(inputParticipants.size());
+
+        when(participantRepository.findById(any())).thenThrow(IllegalArgumentException.class);
+
+        assertThatThrownBy(() -> {
+            participantProvider.findParticipant("notValid", "notValid");
+        }).hasMessageMatching("Error in find Participant");
 
         assertThatThrownBy(() -> {
             participantProvider.getFilteredParticipants(null);
         }).hasMessageMatching("filter is marked .*ull but is null");
 
+        when(participantRepository.getFiltered(eq(JpaParticipant.class), eq(null), eq(null)))
+                .thenReturn(jpaParticipantList);
+
         final ToscaTypedEntityFilter<Participant> filter = ToscaTypedEntityFilter.<Participant>builder()
                 .type("org.onap.domain.pmsh.PMSHControlLoopDefinition").build();
         assertEquals(1, participantProvider.getFilteredParticipants(filter).size());
-    }
 
-    @Test
-    void testUpdateParticipant() throws Exception {
-        assertThatThrownBy(() -> {
-            participantProvider.updateParticipants(null);
-        }).hasMessageMatching("participants is marked .*ull but is null");
-
-        participantProvider.createParticipants(inputParticipants);
-        updateParticipants = inputParticipants.get(0);
-        updateParticipants.setParticipantState(ParticipantState.ACTIVE);
-        List<Participant> participantList = new ArrayList<>();
-        participantList.add(updateParticipants);
-        List<Participant> updateResponse = new ArrayList<>();
-        updateResponse = participantProvider.updateParticipants(participantList);
-
-        assertEquals(ParticipantState.ACTIVE, updateResponse.get(0).getParticipantState());
     }
 
     @Test
     void testDeleteParticipant() throws Exception {
+        var participantRepository = mock(ParticipantRepository.class);
+        var participantProvider = new ParticipantProvider(participantRepository);
+
         assertThatThrownBy(() -> {
             participantProvider.deleteParticipant("Invalid_name", "1.0.1");
         }).hasMessageMatching(".*.failed, participant does not exist");
 
-        Participant deletedParticipant;
-        List<Participant> participantList = participantProvider.createParticipants(inputParticipants);
         String name = inputParticipants.get(0).getName();
         String version = inputParticipants.get(0).getVersion();
 
-        deletedParticipant = participantProvider.deleteParticipant(name, version);
-        assertEquals(participantList.get(0), deletedParticipant);
+        when(participantRepository.findById(any())).thenReturn(Optional.of(jpaParticipantList.get(0)));
 
+        Participant deletedParticipant = participantProvider.deleteParticipant(name, version);
+        assertEquals(inputParticipants.get(0), deletedParticipant);
+
+        when(participantRepository.findById(any())).thenThrow(IllegalArgumentException.class);
+        assertThatThrownBy(() -> {
+            participantProvider.deleteParticipant(name, version);
+        }).hasMessageMatching("Error in delete Participant");
     }
 }

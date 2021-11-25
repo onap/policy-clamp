@@ -23,6 +23,7 @@ package org.onap.policy.clamp.controlloop.models.controlloop.persistence.provide
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import javax.ws.rs.core.Response;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -30,11 +31,20 @@ import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.models.base.PfAuthorative;
 import org.onap.policy.models.base.PfConcept;
 import org.onap.policy.models.base.PfModelRuntimeException;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaEntity;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ProviderUtils {
 
-    protected static <A, J extends PfConcept & PfAuthorative<A>> List<J> getJpaAndValidate(
+    /**
+     * Convert a list of concepts to a list of Jpa objects.
+     *
+     * @param authorativeConceptList the list of concepts
+     * @param jpaSupplier the Jpa Supplier
+     * @param conceptDescription the description used for validation result
+     * @return the list of Jpa objects
+     */
+    public static <A, J extends PfConcept & PfAuthorative<A>> List<J> getJpaAndValidateList(
             List<A> authorativeConceptList, Supplier<J> jpaSupplier, String conceptDescription) {
         var validationResult = new BeanValidationResult(conceptDescription + " List", authorativeConceptList);
 
@@ -52,5 +62,32 @@ public final class ProviderUtils {
             throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, validationResult.getResult());
         }
         return jpaConceptList;
+    }
+
+    protected static <A, J extends PfConcept & PfAuthorative<A>> J getJpaAndValidate(A authorativeConcept,
+            Supplier<J> jpaSupplier, String conceptDescription) {
+        var validationResult = new BeanValidationResult(conceptDescription, authorativeConcept);
+
+        var jpaConcept = jpaSupplier.get();
+        jpaConcept.fromAuthorative(authorativeConcept);
+
+        validationResult.addResult(jpaConcept.validate(conceptDescription));
+
+        if (!validationResult.isValid()) {
+            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, validationResult.getResult());
+        }
+        return jpaConcept;
+    }
+
+    /**
+     * Convert JPA control loop list to an authorative control loop list.
+     *
+     * @param <T> the type of TOSCA entity
+     * @param <J> the type of JPA TOSCA entity
+     * @param jpaEntityList the list to convert
+     * @return the authorative list
+     */
+    public static <T extends ToscaEntity, J extends PfAuthorative<T>> List<T> asEntityList(List<J> jpaEntityList) {
+        return jpaEntityList.stream().map(J::toAuthorative).collect(Collectors.toList());
     }
 }

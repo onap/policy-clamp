@@ -29,6 +29,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -162,8 +163,8 @@ class SupervisionHandlerTest {
         participant.setParticipantType(participantType);
 
         var participantProvider = mock(ParticipantProvider.class);
-        when(participantProvider.getParticipants(participantId.getName(), participantId.getVersion()))
-                .thenReturn(List.of(participant));
+        when(participantProvider.findParticipant(participantId.getName(), participantId.getVersion()))
+                .thenReturn(Optional.of(participant));
 
         var participantDeregisterMessage = new ParticipantDeregister();
         participantDeregisterMessage.setMessageId(UUID.randomUUID());
@@ -177,7 +178,7 @@ class SupervisionHandlerTest {
 
         handler.handleParticipantMessage(participantDeregisterMessage);
 
-        verify(participantProvider).updateParticipants(anyList());
+        verify(participantProvider).saveParticipant(any());
         verify(participantDeregisterAckPublisher).send(participantDeregisterMessage.getMessageId());
     }
 
@@ -201,7 +202,7 @@ class SupervisionHandlerTest {
 
         handler.handleParticipantMessage(participantRegisterMessage);
 
-        verify(participantProvider).createParticipants(anyList());
+        verify(participantProvider).saveParticipant(any());
         verify(participantRegisterAckPublisher).send(participantRegisterMessage.getMessageId(), participantId,
                 participantType);
     }
@@ -214,8 +215,8 @@ class SupervisionHandlerTest {
         participant.setParticipantType(participantType);
 
         var participantProvider = mock(ParticipantProvider.class);
-        when(participantProvider.getParticipants(participantId.getName(), participantId.getVersion()))
-                .thenReturn(List.of(participant));
+        when(participantProvider.findParticipant(participantId.getName(), participantId.getVersion()))
+                .thenReturn(Optional.of(participant));
 
         var participantUpdateAckMessage = new ParticipantUpdateAck();
         participantUpdateAckMessage.setParticipantId(participantId);
@@ -228,7 +229,7 @@ class SupervisionHandlerTest {
 
         handler.handleParticipantMessage(participantUpdateAckMessage);
 
-        verify(participantProvider).updateParticipants(anyList());
+        verify(participantProvider).saveParticipant(any());
     }
 
     @Test
@@ -248,7 +249,7 @@ class SupervisionHandlerTest {
                 ControlLoopOrderedState.PASSIVE);
         handler.handleParticipantMessage(participantStatusMessage);
 
-        verify(participantProvider).createParticipants(anyList());
+        verify(participantProvider).saveParticipant(any());
         verify(monitoringProvider).createParticipantStatistics(anyList());
     }
 
