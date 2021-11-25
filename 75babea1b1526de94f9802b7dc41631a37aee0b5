@@ -22,6 +22,30 @@
       "revId": "75babea1b1526de94f9802b7dc41631a37aee0b5",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cd5a4d91_352c76d5",
+        "filename": "runtime/src/test/java/org/onap/policy/clamp/authorization/AuthorizationTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 7629
+      },
+      "writtenOn": "2021-11-25T11:57:19Z",
+      "side": 1,
+      "message": "True, I can change the test since the coverage was on the clamp information and not the clds version in particular",
+      "parentUuid": "c6ec28d8_fd80e5ad",
+      "range": {
+        "startLine": 29,
+        "startChar": 4,
+        "endLine": 29,
+        "endChar": 58
+      },
+      "revId": "75babea1b1526de94f9802b7dc41631a37aee0b5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
