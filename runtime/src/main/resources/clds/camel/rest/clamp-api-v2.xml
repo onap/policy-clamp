@@ -1648,8 +1648,7 @@
 
         <get uri="/v2/toscaControlLoop/getToscaInstantiation" outType="java.lang.String" bindingMode="off" produces="application/json">
             <route>
-                <removeHeaders pattern="*"
-                               excludePattern="name|version|requestId"/>
+                <removeHeaders pattern="*"/>
                 <doTry>
                     <to uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=startLog(*, 'GET Tosca Instantiation ')"/>
                     <to uri="bean:org.onap.policy.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','read')"/>
