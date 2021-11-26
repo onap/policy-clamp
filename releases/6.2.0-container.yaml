@@ -1,0 +1,18 @@
+distribution_type: 'container'
+container_release_tag: '6.2.0'
+project: 'policy-clamp'
+log_dir: 'policy-clamp-maven-docker-stage-master/356'
+ref: d03e0497ba2a2ff76148d6c2c7e7e95d9a012cff
+containers:
+    - name: 'policy-clamp-backend'
+      version: '6.2-STAGING-20211126T101113Z'
+    - name: 'policy-clamp-frontend'
+      version: '6.2-STAGING-20211126T101113Z'
+    - name: 'policy-clamp-cl-pf-ppnt'
+      version: '6.2.0-20211126T1011'
+    - name: 'policy-clamp-cl-k8s-ppnt'
+      version: '6.2.0-20211126T1011'
+    - name: 'policy-clamp-cl-http-ppnt'
+      version: '6.2.0-20211126T1011'
+    - name: 'policy-clamp-cl-runtime'
+      version: '6.2.0-20211126T1011'
