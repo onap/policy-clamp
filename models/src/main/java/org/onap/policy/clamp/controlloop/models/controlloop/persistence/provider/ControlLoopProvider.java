@@ -22,48 +22,42 @@
 
 package org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Optional;
+import javax.persistence.EntityNotFoundException;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.concepts.JpaControlLoop;
-import org.onap.policy.models.base.PfAuthorative;
+import org.onap.policy.clamp.controlloop.models.controlloop.persistence.repository.ControlLoopRepository;
+import org.onap.policy.clamp.controlloop.models.controlloop.persistence.repository.ToscaNodeTemplateRepository;
+import org.onap.policy.clamp.controlloop.models.controlloop.persistence.repository.ToscaNodeTemplatesRepository;
 import org.onap.policy.models.base.PfConceptKey;
-import org.onap.policy.models.base.PfKey;
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.base.PfModelRuntimeException;
-import org.onap.policy.models.provider.PolicyModelsProviderParameters;
-import org.onap.policy.models.provider.impl.AbstractModelsProvider;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaEntity;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTypedEntityFilter;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaNodeTemplate;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaNodeTemplates;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * This class provides information on control loop concepts in the database to callers.
  */
 @Component
-public class ControlLoopProvider extends AbstractModelsProvider {
+@Transactional
+@AllArgsConstructor
+public class ControlLoopProvider {
 
-    /**
-     * Create a provider for control loops.
-     *
-     * @param parameters the parameters for database access
-     * @throws PfModelException on initiation errors
-     */
-    public ControlLoopProvider(@NonNull PolicyModelsProviderParameters parameters) throws PfModelException {
-        super(parameters);
-        this.init();
-    }
+    private final ControlLoopRepository controlLoopRepository;
+    private final ToscaNodeTemplateRepository toscaNodeTemplateRepository;
+    private final ToscaNodeTemplatesRepository toscaNodeTemplatesRepository;
 
     /**
      * Get Control Loop.
@@ -72,21 +66,78 @@ public class ControlLoopProvider extends AbstractModelsProvider {
      * @return the control loop found
      * @throws PfModelException on errors getting the control loop
      */
+    @Transactional(readOnly = true)
     public ControlLoop getControlLoop(final ToscaConceptIdentifier controlLoopId) throws PfModelException {
-        var jpaControlLoop = getPfDao().get(JpaControlLoop.class, controlLoopId.asConceptKey());
-
-        return jpaControlLoop == null ? null : jpaControlLoop.toAuthorative();
+        try {
+            return controlLoopRepository.getById(controlLoopId.asConceptKey()).toAuthorative();
+        } catch (EntityNotFoundException e) {
+            throw new PfModelException(Status.NOT_FOUND, "ControlLoop not found", e);
+        }
     }
 
     /**
-     * Update Control Loop.
+     * Find Control Loop by controlLoopId.
+     *
+     * @param name the name of the control loop to get, null to get all control loops
+     * @param version the version of the control loop to get, null to get all control loops
+     * @return the control loop found
+     * @throws PfModelException on errors getting the control loop
+     */
+    @Transactional(readOnly = true)
+    public Optional<ControlLoop> findControlLoop(@NonNull final String name, @NonNull final String version)
+            throws PfModelException {
+        return findControlLoop(new PfConceptKey(name, version));
+    }
+
+    /**
+     * Find Control Loop by controlLoopId.
+     *
+     * @param controlLoopId the ID of the control loop to get
+     * @return the control loop found
+     * @throws PfModelException on errors getting the control loop
+     */
+    @Transactional(readOnly = true)
+    public Optional<ControlLoop> findControlLoop(final ToscaConceptIdentifier controlLoopId) throws PfModelException {
+        return findControlLoop(controlLoopId.asConceptKey());
+    }
+
+    private Optional<ControlLoop> findControlLoop(@NonNull final PfConceptKey key) throws PfModelException {
+        try {
+            return controlLoopRepository.findById(key).map(JpaControlLoop::toAuthorative);
+        } catch (IllegalArgumentException e) {
+            throw new PfModelException(Status.BAD_REQUEST, "Not valid parameter", e);
+        }
+    }
+
+    /**
+     * Save Control Loop.
      *
      * @param controlLoop the control loop to update
      * @return the updated control loop
      * @throws PfModelException on errors updating the control loop
      */
-    public ControlLoop updateControlLoop(final ControlLoop controlLoop) throws PfModelException {
-        return updateControlLoops(Collections.singletonList(controlLoop)).get(0);
+    public ControlLoop saveControlLoop(final ControlLoop controlLoop) throws PfModelException {
+        try {
+            var result = controlLoopRepository
+                    .save(ProviderUtils.getJpaAndValidate(controlLoop, JpaControlLoop::new, "control loop"));
+
+            // Return the saved participant
+            return result.toAuthorative();
+        } catch (IllegalArgumentException e) {
+            throw new PfModelException(Status.BAD_REQUEST, "Error in save controlLoop", e);
+        }
+    }
+
+    /**
+     * Get All Control Loops.
+     *
+     * @return all control loops found
+     * @throws PfModelException on errors getting control loops
+     */
+    @Transactional(readOnly = true)
+    public List<ControlLoop> getControlLoops() throws PfModelException {
+
+        return ProviderUtils.asEntityList(controlLoopRepository.findAll());
     }
 
     /**
@@ -97,71 +148,47 @@ public class ControlLoopProvider extends AbstractModelsProvider {
      * @return the control loops found
      * @throws PfModelException on errors getting control loops
      */
+    @Transactional(readOnly = true)
     public List<ControlLoop> getControlLoops(final String name, final String version) throws PfModelException {
 
-        return asEntityList(getPfDao().getFiltered(JpaControlLoop.class, name, version));
+        return ProviderUtils.asEntityList(controlLoopRepository.getFiltered(JpaControlLoop.class, name, version));
     }
 
     /**
-     * Get filtered control loops.
-     *
-     * @param filter the filter for the control loops to get
-     * @return the control loops found
-     * @throws PfModelException on errors getting control loops
-     */
-    public List<ControlLoop> getFilteredControlLoops(@NonNull final ToscaTypedEntityFilter<ControlLoop> filter) {
-
-        return filter.filter(
-                asEntityList(getPfDao().getFiltered(JpaControlLoop.class, filter.getName(), PfKey.NULL_KEY_VERSION)));
-    }
-
-    /**
-     * Creates control loops.
+     * Saves control loops.
      *
      * @param controlLoops a specification of the control loops to create
      * @return the control loops created
      * @throws PfModelException on errors creating control loops
      */
-    public List<ControlLoop> createControlLoops(@NonNull final List<ControlLoop> controlLoops) throws PfModelException {
+    public List<ControlLoop> saveControlLoops(@NonNull final List<ControlLoop> controlLoops) throws PfModelException {
+        try {
+            var result = controlLoopRepository
+                    .saveAll(ProviderUtils.getJpaAndValidateList(controlLoops, JpaControlLoop::new, "control loops"));
 
-        List<JpaControlLoop> jpaControlLoopList =
-                ProviderUtils.getJpaAndValidateList(controlLoops, JpaControlLoop::new, "control loop");
-
-        jpaControlLoopList.forEach(jpaControlLoop -> getPfDao().create(jpaControlLoop));
-
-        // Return the created control loops
-        List<ControlLoop> returnControlLoops = new ArrayList<>(controlLoops.size());
-
-        for (ControlLoop controlLoop : controlLoops) {
-            var jpaControlLoop = getPfDao().get(JpaControlLoop.class,
-                    new PfConceptKey(controlLoop.getName(), controlLoop.getVersion()));
-            returnControlLoops.add(jpaControlLoop.toAuthorative());
+            // Return the saved participant
+            return ProviderUtils.asEntityList(result);
+        } catch (IllegalArgumentException e) {
+            throw new PfModelException(Status.BAD_REQUEST, "Error in save ControlLoops", e);
         }
-
-        return returnControlLoops;
     }
 
     /**
-     * Updates control loops.
+     * Saves Instance Properties to the database.
      *
-     * @param controlLoops a specification of the control loops to update
-     * @return the control loops updated
-     * @throws PfModelException on errors updating control loops
+     * @param serviceTemplate the service template
+     * @return a Map of tosca node templates
      */
-    public List<ControlLoop> updateControlLoops(@NonNull final List<ControlLoop> controlLoops) throws PfModelException {
+    public Map<String, ToscaNodeTemplate> saveInstanceProperties(ToscaServiceTemplate serviceTemplate) {
+        Map<String, ToscaNodeTemplate> savedNodeTemplates = new HashMap<>();
 
-        List<JpaControlLoop> jpaControlLoopList =
-                ProviderUtils.getJpaAndValidateList(controlLoops, JpaControlLoop::new, "control loop");
+        var jpaToscaNodeTemplates = new JpaToscaNodeTemplates();
+        jpaToscaNodeTemplates.fromAuthorative(List.of(serviceTemplate.getToscaTopologyTemplate().getNodeTemplates()));
 
-        // Return the created control loops
-        List<ControlLoop> returnControlLoops = new ArrayList<>(controlLoops.size());
+        toscaNodeTemplatesRepository.save(jpaToscaNodeTemplates);
+        serviceTemplate.getToscaTopologyTemplate().getNodeTemplates().forEach(savedNodeTemplates::put);
 
-        jpaControlLoopList.forEach(jpaControlLoop -> {
-            var returnJpaControlLoop = getPfDao().update(jpaControlLoop);
-            returnControlLoops.add(returnJpaControlLoop.toAuthorative());
-        });
-
-        return returnControlLoops;
+        return savedNodeTemplates;
     }
 
     /**
@@ -170,42 +197,23 @@ public class ControlLoopProvider extends AbstractModelsProvider {
      * @param name the name of the control loop to delete
      * @param version the version of the control loop to delete
      * @return the control loop deleted
-     * @throws PfModelRuntimeException on errors deleting the control loop
+     * @throws PfModelException on errors deleting the control loop
      */
-    public ControlLoop deleteControlLoop(@NonNull final String name, @NonNull final String version) {
+    public ControlLoop deleteControlLoop(@NonNull final String name, @NonNull final String version)
+            throws PfModelException {
 
         var controlLoopKey = new PfConceptKey(name, version);
+        var jpaDeleteControlLoop = controlLoopRepository.findById(controlLoopKey);
 
-        var jpaDeleteControlLoop = getPfDao().get(JpaControlLoop.class, controlLoopKey);
-
-        if (jpaDeleteControlLoop == null) {
+        if (jpaDeleteControlLoop.isEmpty()) {
             String errorMessage =
                     "delete of control loop \"" + controlLoopKey.getId() + "\" failed, control loop does not exist";
-            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, errorMessage);
+            throw new PfModelException(Response.Status.BAD_REQUEST, errorMessage);
         }
 
-        getPfDao().delete(jpaDeleteControlLoop);
+        controlLoopRepository.deleteById(controlLoopKey);
 
-        return jpaDeleteControlLoop.toAuthorative();
-    }
-
-    /**
-     * Saves Instance Properties to the database.
-     * @param serviceTemplate the service template
-     * @return a Map of tosca node templates
-     */
-    public Map<String, ToscaNodeTemplate> saveInstanceProperties(ToscaServiceTemplate serviceTemplate) {
-
-        Map<String, ToscaNodeTemplate> savedNodeTemplates = new HashMap<>();
-
-        var jpaToscaNodeTemplates = new JpaToscaNodeTemplates();
-        jpaToscaNodeTemplates.fromAuthorative(Collections.singletonList(serviceTemplate.getToscaTopologyTemplate()
-            .getNodeTemplates()));
-
-        getPfDao().create(jpaToscaNodeTemplates);
-        serviceTemplate.getToscaTopologyTemplate().getNodeTemplates().forEach(savedNodeTemplates::put);
-
-        return savedNodeTemplates;
+        return jpaDeleteControlLoop.get().toAuthorative();
     }
 
     /**
@@ -214,20 +222,30 @@ public class ControlLoopProvider extends AbstractModelsProvider {
      * @param filteredToscaNodeTemplateMap filtered node templates map to delete
      * @param filteredToscaNodeTemplateList filtered node template list to delete
      */
-    public void deleteInstanceProperties(
-        Map<String, ToscaNodeTemplate> filteredToscaNodeTemplateMap,
-        List<ToscaNodeTemplate> filteredToscaNodeTemplateList) {
+    public void deleteInstanceProperties(Map<String, ToscaNodeTemplate> filteredToscaNodeTemplateMap,
+            List<ToscaNodeTemplate> filteredToscaNodeTemplateList) {
 
         var jpaToscaNodeTemplates = new JpaToscaNodeTemplates();
-        jpaToscaNodeTemplates.fromAuthorative(Collections.singletonList(filteredToscaNodeTemplateMap));
+        jpaToscaNodeTemplates.fromAuthorative(List.of(filteredToscaNodeTemplateMap));
 
-        getPfDao().create(jpaToscaNodeTemplates);
+        toscaNodeTemplatesRepository.save(jpaToscaNodeTemplates);
 
         filteredToscaNodeTemplateList.forEach(template -> {
             var jpaToscaNodeTemplate = new JpaToscaNodeTemplate(template);
 
-            getPfDao().delete(jpaToscaNodeTemplate);
+            toscaNodeTemplateRepository.delete(jpaToscaNodeTemplate);
         });
+    }
+
+    /**
+     * Get All Node Templates.
+     *
+     * @return the list of node templates found
+     * @throws PfModelException on errors getting node templates
+     */
+    @Transactional(readOnly = true)
+    public List<ToscaNodeTemplate> getAllNodeTemplates() {
+        return ProviderUtils.asEntityList(toscaNodeTemplateRepository.findAll());
     }
 
     /**
@@ -238,8 +256,10 @@ public class ControlLoopProvider extends AbstractModelsProvider {
      * @return the node templates found
      * @throws PfModelException on errors getting node templates
      */
+    @Transactional(readOnly = true)
     public List<ToscaNodeTemplate> getNodeTemplates(final String name, final String version) {
-        return asEntityList(getPfDao().getFiltered(JpaToscaNodeTemplate.class, name, version));
+        return ProviderUtils
+                .asEntityList(toscaNodeTemplateRepository.getFiltered(JpaToscaNodeTemplate.class, name, version));
     }
 
     /**
@@ -249,23 +269,11 @@ public class ControlLoopProvider extends AbstractModelsProvider {
      * @return the node templates found
      * @throws PfModelException on errors getting node templates
      */
+    @Transactional(readOnly = true)
     public List<ToscaNodeTemplate> getFilteredNodeTemplates(
             @NonNull final ToscaTypedEntityFilter<ToscaNodeTemplate> filter) {
 
-        return filter.filter(asEntityList(
-                getPfDao().getFiltered(JpaToscaNodeTemplate.class, filter.getName(), filter.getVersion())));
+        return filter.filter(ProviderUtils.asEntityList(toscaNodeTemplateRepository
+                .getFiltered(JpaToscaNodeTemplate.class, filter.getName(), filter.getVersion())));
     }
-
-    /**
-     * Convert JPA control loop list to an authorative control loop list.
-     *
-     * @param <T> the type of TOSCA entity
-     * @param <J> the type of JPA TOSCA entity
-     * @param jpaEntityList the list to convert
-     * @return the authorative list
-     */
-    private <T extends ToscaEntity, J extends PfAuthorative<T>> List<T> asEntityList(List<J> jpaEntityList) {
-        return jpaEntityList.stream().map(J::toAuthorative).collect(Collectors.toList());
-    }
-
 }

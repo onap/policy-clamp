@@ -72,7 +72,7 @@ public class ControlLoopUpdatePublisher extends AbstractParticipantPublisher<Con
         controlLoopUpdateMsg.setTimestamp(Instant.now());
         ToscaServiceTemplate toscaServiceTemplate;
         try {
-            toscaServiceTemplate = serviceTemplateProvider.getServiceTemplateList(null, null).get(0);
+            toscaServiceTemplate = serviceTemplateProvider.getAllServiceTemplates().get(0);
         } catch (PfModelException pfme) {
             LOGGER.warn("Get of tosca service template failed, cannot send participantupdate", pfme);
             return;

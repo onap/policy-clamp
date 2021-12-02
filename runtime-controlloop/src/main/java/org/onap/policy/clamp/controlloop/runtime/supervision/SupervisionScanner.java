@@ -130,11 +130,11 @@ public class SupervisionScanner {
         }
 
         try {
-            var list = serviceTemplateProvider.getServiceTemplateList(null, null);
+            var list = serviceTemplateProvider.getAllServiceTemplates();
             if (list != null && !list.isEmpty()) {
                 ToscaServiceTemplate toscaServiceTemplate = list.get(0);
 
-                for (ControlLoop controlLoop : controlLoopProvider.getControlLoops(null, null)) {
+                for (ControlLoop controlLoop : controlLoopProvider.getControlLoops()) {
                     scanControlLoop(controlLoop, toscaServiceTemplate, counterCheck);
                 }
             }
@@ -241,7 +241,7 @@ public class SupervisionScanner {
                     controlLoop.getOrderedState());
 
             controlLoop.setState(controlLoop.getOrderedState().asState());
-            controlLoopProvider.updateControlLoop(controlLoop);
+            controlLoopProvider.saveControlLoop(controlLoop);
 
             // Clear missed report counter on Control Loop
             clearFaultAndCounter(controlLoop);
@@ -254,8 +254,7 @@ public class SupervisionScanner {
                             : maxSpNotCompleted;
 
             var firstStartPhase = ControlLoopState.UNINITIALISED2PASSIVE.equals(controlLoop.getState())
-                    || ControlLoopState.PASSIVE2RUNNING.equals(controlLoop.getState()) ? defaultMin
-                            : defaultMax;
+                    || ControlLoopState.PASSIVE2RUNNING.equals(controlLoop.getState()) ? defaultMin : defaultMax;
 
             if (nextSpNotCompleted != phaseMap.getOrDefault(controlLoop.getKey().asIdentifier(), firstStartPhase)) {
                 phaseMap.put(controlLoop.getKey().asIdentifier(), nextSpNotCompleted);

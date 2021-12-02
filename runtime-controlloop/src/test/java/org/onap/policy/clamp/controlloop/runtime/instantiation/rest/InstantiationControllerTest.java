@@ -35,10 +35,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoops;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ParticipantProvider;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ServiceTemplateProvider;
+import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.ControlLoopOrderStateResponse;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.ControlLoopPrimedResponse;
+import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstancePropertiesResponse;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationCommand;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationResponse;
 import org.onap.policy.clamp.controlloop.runtime.instantiation.ControlLoopInstantiationProvider;
@@ -64,6 +67,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @TestPropertySource(locations = {"classpath:application_test.properties"})
 class InstantiationControllerTest extends CommonRestController {
 
+    private static final String ID_NAME = "PMSH_Instance1";
+    private static final String ID_VERSION = "1.2.3";
+
     private static final String CL_INSTANTIATION_CREATE_JSON = "src/test/resources/rest/controlloops/ControlLoops.json";
 
     private static final String CL_INSTANTIATION_UPDATE_JSON =
@@ -76,10 +82,10 @@ class InstantiationControllerTest extends CommonRestController {
             "src/test/resources/rest/servicetemplates/pmsh_multiple_cl_tosca.yaml";
 
     private static final String INSTANTIATION_ENDPOINT = "instantiation";
-
     private static final String INSTANTIATION_COMMAND_ENDPOINT = "instantiation/command";
-
     private static final String PRIMING_ENDPOINT = "controlLoopPriming";
+    private static final String INSTANTIATION_PROPERTIES = "instanceProperties";
+    private static final String INSTANTIATION_STATE = "instantiationState";
 
     private static ToscaServiceTemplate serviceTemplate = new ToscaServiceTemplate();
 
@@ -112,7 +118,7 @@ class InstantiationControllerTest extends CommonRestController {
 
     @AfterEach
     public void cleanDatabase() throws Exception {
-        deleteEntryInDB(serviceTemplate.getName(), serviceTemplate.getVersion());
+        deleteEntryInDB();
     }
 
     @Test
@@ -256,7 +262,8 @@ class InstantiationControllerTest extends CommonRestController {
 
     @Test
     void testDelete_NoResultWithThisName() throws Exception {
-        Invocation.Builder invocationBuilder = super.sendRequest(INSTANTIATION_ENDPOINT + "?name=noResultWithThisName");
+        Invocation.Builder invocationBuilder =
+                super.sendRequest(INSTANTIATION_ENDPOINT + "?name=noResultWithThisName&version=1.0.1");
         Response resp = invocationBuilder.delete();
         assertEquals(Response.Status.NOT_FOUND.getStatusCode(), resp.getStatus());
         InstantiationResponse instResponse = resp.readEntity(InstantiationResponse.class);
@@ -298,8 +305,7 @@ class InstantiationControllerTest extends CommonRestController {
             Invocation.Builder invocationBuilder =
                     super.sendRequest(INSTANTIATION_ENDPOINT + "?name=" + controlLoopFromRsc.getKey().getName());
             Response resp = invocationBuilder.delete();
-            // should be BAD_REQUEST
-            assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), resp.getStatus());
+            assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), resp.getStatus());
         }
     }
 
@@ -349,14 +355,43 @@ class InstantiationControllerTest extends CommonRestController {
         }
     }
 
-    private synchronized void deleteEntryInDB(String name, String version) throws Exception {
-        if (!serviceTemplateProvider.getServiceTemplateList(null, null).isEmpty()) {
-            serviceTemplateProvider.deleteServiceTemplate(name, version);
+    @Test
+    void testIntanceProperties() throws Exception {
+        Invocation.Builder invocationBuilder = super.sendRequest(INSTANTIATION_PROPERTIES);
+        Response resp = invocationBuilder.post(Entity.json(serviceTemplate));
+        assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
+        var instancePropertyList = resp.readEntity(InstancePropertiesResponse.class);
+        assertNull(instancePropertyList.getErrorDetails());
+        var id = new ToscaConceptIdentifier(ID_NAME, ID_VERSION);
+        assertEquals(id, instancePropertyList.getAffectedInstanceProperties().get(0));
+
+        invocationBuilder = super.sendRequest(INSTANTIATION_STATE + "?name=" + ID_NAME + "&version=" + ID_VERSION);
+        resp = invocationBuilder.buildGet().invoke();
+        assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
+        var instanceOrderState = resp.readEntity(ControlLoopOrderStateResponse.class);
+        assertEquals(ControlLoopOrderedState.UNINITIALISED, instanceOrderState.getOrderedState());
+        assertEquals(ID_NAME, instanceOrderState.getControlLoopIdentifierList().get(0).getName());
+        ControlLoops controlLoopsGet = instantiationProvider.getControlLoops(ID_NAME, ID_VERSION);
+        assertThat(controlLoopsGet.getControlLoopList()).hasSize(1);
+
+        invocationBuilder = super.sendRequest(INSTANTIATION_PROPERTIES + "?name=" + ID_NAME + "&version=" + ID_VERSION);
+        resp = invocationBuilder.delete();
+        assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
+        var instanceResponse = resp.readEntity(InstantiationResponse.class);
+        assertEquals(ID_NAME, instanceResponse.getAffectedControlLoops().get(0).getName());
+        controlLoopsGet = instantiationProvider.getControlLoops(ID_NAME, ID_VERSION);
+        assertThat(controlLoopsGet.getControlLoopList()).isEmpty();
+    }
+
+    private synchronized void deleteEntryInDB() throws Exception {
+        var list = serviceTemplateProvider.getAllServiceTemplates();
+        if (!list.isEmpty()) {
+            serviceTemplateProvider.deleteServiceTemplate(list.get(0).getName(), list.get(0).getVersion());
         }
     }
 
     private synchronized void createEntryInDB() throws Exception {
-        deleteEntryInDB(serviceTemplate.getName(), serviceTemplate.getVersion());
+        deleteEntryInDB();
         serviceTemplateProvider.createServiceTemplate(serviceTemplate);
     }
 }

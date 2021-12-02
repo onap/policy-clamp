@@ -186,10 +186,10 @@ public class InstantiationController extends AbstractRestController {
     // @formatter:on
     public ResponseEntity<InstancePropertiesResponse> createInstanceProperties(
             @RequestHeader(
-                name = REQUEST_ID_NAME,
-                required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+                    name = REQUEST_ID_NAME,
+                    required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
             @ApiParam(value = "Body of instance properties", required = true) @RequestBody ToscaServiceTemplate body)
-        throws PfModelException {
+            throws PfModelException {
 
         return ResponseEntity.ok().body(provider.createInstanceProperties(body));
     }
@@ -249,13 +249,14 @@ public class InstantiationController extends AbstractRestController {
     // @formatter:on
 
     public ResponseEntity<InstantiationResponse> deleteInstanceProperties(
-        @RequestHeader(
-            name = REQUEST_ID_NAME,
-            required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-        @ApiParam(value = "Control Loop definition name", required = true) @RequestParam("name") String name,
-        @ApiParam(value = "Control Loop definition version") @RequestParam(
-            value = "version",
-            required = true) String version) throws PfModelException {
+            @RequestHeader(
+                    name = REQUEST_ID_NAME,
+                    required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+            @ApiParam(value = "Control Loop definition name", required = true) @RequestParam("name") String name,
+            @ApiParam(value = "Control Loop definition version") @RequestParam(
+                    value = "version",
+                    required = true) String version)
+            throws PfModelException {
 
         return ResponseEntity.ok().body(provider.deleteInstanceProperties(name, version));
     }
@@ -447,7 +448,7 @@ public class InstantiationController extends AbstractRestController {
             @ApiParam(value = "Control Loop definition name", required = true) @RequestParam("name") String name,
             @ApiParam(value = "Control Loop definition version") @RequestParam(
                     value = "version",
-                    required = false) String version)
+                    required = true) String version)
             throws PfModelException {
 
         return ResponseEntity.ok().body(provider.deleteControlLoop(name, version));
@@ -559,16 +560,16 @@ public class InstantiationController extends AbstractRestController {
     )
     // @formatter:on
     public ResponseEntity<ControlLoopOrderStateResponse> getInstantiationOrderState(
-        @RequestHeader(
-            name = REQUEST_ID_NAME,
-            required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-        @ApiParam(value = "Control Loop name", required = false) @RequestParam(
-            value = "name",
-            required = false) String name,
-        @ApiParam(value = "Control Loop version", required = false) @RequestParam(
-            value = "version",
-            required = false) String version)
-        throws PfModelException {
+            @RequestHeader(
+                    name = REQUEST_ID_NAME,
+                    required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+            @ApiParam(value = "Control Loop name", required = false) @RequestParam(
+                    value = "name",
+                    required = false) String name,
+            @ApiParam(value = "Control Loop version", required = false) @RequestParam(
+                    value = "version",
+                    required = false) String version)
+            throws PfModelException {
 
         return ResponseEntity.ok().body(provider.getInstantiationOrderState(name, version));
     }
@@ -620,16 +621,16 @@ public class InstantiationController extends AbstractRestController {
     )
     // @formatter:on
     public ResponseEntity<ControlLoopPrimedResponse> getControlLoopPriming(
-        @RequestHeader(
-            name = REQUEST_ID_NAME,
-            required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-        @ApiParam(value = "Control Loop definition name", required = false) @RequestParam(
-            value = "name",
-            required = false) String name,
-        @ApiParam(value = "Control Loop definition version", required = false) @RequestParam(
-            value = "version",
-            required = false) String version)
-        throws PfModelException {
+            @RequestHeader(
+                    name = REQUEST_ID_NAME,
+                    required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+            @ApiParam(value = "Control Loop definition name", required = false) @RequestParam(
+                    value = "name",
+                    required = false) String name,
+            @ApiParam(value = "Control Loop definition version", required = false) @RequestParam(
+                    value = "version",
+                    required = false) String version)
+            throws PfModelException {
 
         return ResponseEntity.ok().body(provider.getControlLoopPriming(name, version));
     }

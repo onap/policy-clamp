@@ -103,7 +103,7 @@ public class CommissioningProvider {
         }
 
         synchronized (lockit) {
-            serviceTemplateProvider.createServiceTemplate(serviceTemplate);
+            serviceTemplate = serviceTemplateProvider.createServiceTemplate(serviceTemplate);
             List<Participant> participantList = participantProvider.getParticipants();
             if (!participantList.isEmpty()) {
                 supervisionHandler.handleSendCommissionMessage(serviceTemplate.getName(), serviceTemplate.getVersion());
@@ -254,6 +254,16 @@ public class CommissioningProvider {
     }
 
     /**
+     * Get All the requested control loop definitions.
+     *
+     * @return the control loop definitions
+     * @throws PfModelException on errors getting control loop definitions
+     */
+    public List<ToscaServiceTemplate> getAllToscaServiceTemplate() throws PfModelException {
+        return serviceTemplateProvider.getAllServiceTemplates();
+    }
+
+    /**
      * Get the tosca service template with only required sections.
      *
      * @param name the name of the template to get, null for all definitions
@@ -363,7 +373,7 @@ public class CommissioningProvider {
      * @return true if exists instance properties
      */
     private boolean verifyIfInstancePropertiesExists() {
-        return clProvider.getNodeTemplates(null, null).stream()
+        return clProvider.getAllNodeTemplates().stream()
                 .anyMatch(nodeTemplate -> nodeTemplate.getKey().getName().contains(INSTANCE_TEXT));
 
     }

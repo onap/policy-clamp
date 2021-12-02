@@ -93,8 +93,7 @@ class CommissioningControllerTest extends CommonRestController {
 
     @AfterEach
     public void cleanDatabase() throws Exception {
-        deleteEntryInDB(serviceTemplate.getName(), serviceTemplate.getVersion());
-        deleteEntryInDB(commonPropertiesServiceTemplate.getName(), commonPropertiesServiceTemplate.getVersion());
+        deleteEntryInDB();
     }
 
     @Test
@@ -272,33 +271,33 @@ class CommissioningControllerTest extends CommonRestController {
 
     @Test
     void testDelete() throws Exception {
-        createEntryInDB();
+        var serviceTemplateCreated = createEntryInDB();
 
         Invocation.Builder invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT + "?name="
-                + serviceTemplate.getName() + "&version=" + serviceTemplate.getVersion());
+                + serviceTemplateCreated.getName() + "&version=" + serviceTemplateCreated.getVersion());
         // Call delete with no info
         Response resp = invocationBuilder.delete();
         assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
 
-        List<ToscaServiceTemplate> templatesInDB = serviceTemplateProvider.getServiceTemplateList(null, null);
+        List<ToscaServiceTemplate> templatesInDB = serviceTemplateProvider.getAllServiceTemplates();
         assertThat(templatesInDB).isEmpty();
-
     }
 
-    private synchronized void createEntryInDB() throws Exception {
-        deleteEntryInDB(commonPropertiesServiceTemplate.getName(), commonPropertiesServiceTemplate.getVersion());
-        serviceTemplateProvider.createServiceTemplate(serviceTemplate);
+    private synchronized ToscaServiceTemplate createEntryInDB() throws Exception {
+        deleteEntryInDB();
+        return serviceTemplateProvider.createServiceTemplate(serviceTemplate);
     }
 
     // Delete entries from the DB after relevant tests
-    private synchronized void deleteEntryInDB(String name, String version) throws Exception {
-        if (!serviceTemplateProvider.getServiceTemplateList(null, null).isEmpty()) {
-            serviceTemplateProvider.deleteServiceTemplate(name, version);
+    private synchronized void deleteEntryInDB() throws Exception {
+        var list = serviceTemplateProvider.getAllServiceTemplates();
+        if (!list.isEmpty()) {
+            serviceTemplateProvider.deleteServiceTemplate(list.get(0).getName(), list.get(0).getVersion());
         }
     }
 
     private synchronized void createFullEntryInDbWithCommonProps() throws Exception {
-        deleteEntryInDB(commonPropertiesServiceTemplate.getName(), commonPropertiesServiceTemplate.getVersion());
+        deleteEntryInDB();
         serviceTemplateProvider.createServiceTemplate(commonPropertiesServiceTemplate);
     }
 }
