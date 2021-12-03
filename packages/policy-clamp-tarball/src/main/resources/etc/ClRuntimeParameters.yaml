@@ -16,6 +16,16 @@ spring:
       idleTimeout: 600000
       maxLifetime: 1800000
       maximumPoolSize: 10
+  jpa:
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.onap.policy.clamp.controlloop.runtime.config.PhysicalNamingStrategyClImpl
+        implicit-strategy: org.onap.policy.clamp.controlloop.runtime.config.CustomImplicitNamingStrategy
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MariaDB103Dialect
+        format_sql: true
 
 security:
   enable-csrf: false
@@ -29,24 +39,12 @@ server:
 
 
 runtime:
-  supervisionScannerIntervalSec: 1000
-  participantClUpdateIntervalSec: 1000
-  participantClStateChangeIntervalSec: 1000
   participantParameters:
     heartBeatMs: 20000
     maxStatusWaitMs: 100000
     updateParameters:
       maxRetryCount: 3
       maxWaitMs: 20000
-  databasePlatform: org.eclipse.persistence.platform.database.MySQLPlatform
-  databaseProviderParameters:
-    name: PolicyProviderParameterGroup
-    implementation: org.onap.policy.models.provider.impl.DatabasePolicyModelsProviderImpl
-    databaseDriver: org.mariadb.jdbc.Driver
-    databaseUrl: jdbc:mariadb://${mariadb.host:mariadb}:${mariadb.port:3306}/controlloop
-    databaseUser: policy_user
-    databasePassword: policy_user
-    persistenceUnit: CommissioningMariaDb
   topicParameterGroup:
     topicSources:
       -

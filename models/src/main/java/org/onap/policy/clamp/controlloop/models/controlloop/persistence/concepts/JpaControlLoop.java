@@ -94,7 +94,6 @@ public class JpaControlLoop extends PfConcept implements PfAuthorative<ControlLo
     @Column
     private Boolean primed;
 
-    // @formatter:off
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @NotNull
     private Map<@NotNull UUID, @NotNull @Valid JpaControlLoopElement> elements;

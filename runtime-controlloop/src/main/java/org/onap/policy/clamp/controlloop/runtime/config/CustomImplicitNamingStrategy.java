@@ -18,32 +18,19 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.controlloop.runtime.main.parameters;
+package org.onap.policy.clamp.controlloop.runtime.config;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
-import org.onap.policy.common.endpoints.parameters.TopicParameterGroup;
-import org.onap.policy.common.parameters.validation.ParameterGroupConstraint;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.validation.annotation.Validated;
+import org.hibernate.boot.model.naming.Identifier;
+import org.hibernate.boot.model.naming.ImplicitJoinColumnNameSource;
+import org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl;
 
-/**
- * Class to hold all parameters needed for the Control Loop runtime component.
- *
- */
-@Validated
-@Getter
-@Setter
-@ConfigurationProperties(prefix = "runtime")
-public class ClRuntimeParameterGroup {
+public class CustomImplicitNamingStrategy extends ImplicitNamingStrategyJpaCompliantImpl {
 
-    @Valid
-    @NotNull
-    private ParticipantParameters participantParameters;
+    private static final long serialVersionUID = 1L;
 
-    @NotNull
-    @ParameterGroupConstraint
-    private TopicParameterGroup topicParameterGroup;
+    @Override
+    public Identifier determineJoinColumnName(ImplicitJoinColumnNameSource source) {
+        String name = source.getReferencedColumnName().getText();
+        return toIdentifier(name, source.getBuildingContext());
+    }
 }
