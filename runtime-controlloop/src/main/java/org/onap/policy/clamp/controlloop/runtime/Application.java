@@ -36,7 +36,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
     "org.onap.policy.clamp.controlloop.common.rest"})
 @ConfigurationPropertiesScan("org.onap.policy.clamp.controlloop.runtime.main.parameters")
 @EntityScan({"org.onap.policy.models.tosca.simple.concepts",
-    "org.onap.policy.clamp.controlloop.models.controlloop.concepts"})
+    "org.onap.policy.clamp.controlloop.models.controlloop.persistence.concepts"})
 public class Application {
 
     public static void main(String[] args) {
