@@ -302,8 +302,8 @@ class InstantiationControllerTest extends CommonRestController {
         instantiationProvider.createControlLoops(controlLoopsFromRsc);
 
         for (ControlLoop controlLoopFromRsc : controlLoopsFromRsc.getControlLoopList()) {
-            Invocation.Builder invocationBuilder =
-                    super.sendRequest(INSTANTIATION_ENDPOINT + "?name=" + controlLoopFromRsc.getKey().getName());
+            Invocation.Builder invocationBuilder = super.sendRequest(INSTANTIATION_ENDPOINT + "?name="
+                    + controlLoopFromRsc.getKey().getName());
             Response resp = invocationBuilder.delete();
             assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), resp.getStatus());
         }

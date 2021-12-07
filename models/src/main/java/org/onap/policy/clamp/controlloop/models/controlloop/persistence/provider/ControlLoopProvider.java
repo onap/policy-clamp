@@ -44,13 +44,13 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTypedEntityFilter;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaNodeTemplate;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaNodeTemplates;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  * This class provides information on control loop concepts in the database to callers.
  */
-@Component
+@Service
 @Transactional
 @AllArgsConstructor
 public class ControlLoopProvider {

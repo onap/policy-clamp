@@ -38,12 +38,14 @@ import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * This class provides information about statistics data of CL elements and CL Participants in database to callers.
  */
-@Component
+@Service
+@Transactional
 @AllArgsConstructor
 public class MonitoringProvider {
 
@@ -94,6 +96,7 @@ public class MonitoringProvider {
      * @param endTime end of the timestamp up to which statistics to be filtered
      * @return the participant found
      */
+    @Transactional(readOnly = true)
     public ParticipantStatisticsList fetchFilteredParticipantStatistics(@NonNull final String name,
             final String version, int recordCount, Instant startTime, Instant endTime) {
         var participantStatisticsList = new ParticipantStatisticsList();
@@ -114,6 +117,7 @@ public class MonitoringProvider {
      * @return All the participant statistics found
      * @throws PfModelRuntimeException on errors getting participant statistics
      */
+    @Transactional(readOnly = true)
     public ParticipantStatisticsList fetchParticipantStatsPerControlLoop(@NonNull final String controlLoopName,
             @NonNull final String controlLoopVersion) {
         var statisticsList = new ParticipantStatisticsList();
@@ -145,6 +149,7 @@ public class MonitoringProvider {
      * @return the participant found
      * @throws PfModelException on errors getting control loop statistics
      */
+    @Transactional(readOnly = true)
     public ClElementStatisticsList fetchFilteredClElementStatistics(@NonNull final String name, final String version,
             final String id, Instant startTime, Instant endTime, int recordCount) throws PfModelException {
         var clElementStatisticsList = new ClElementStatisticsList();
@@ -167,6 +172,7 @@ public class MonitoringProvider {
      * @return the clElement statistics found
      * @throws PfModelRuntimeException on errors getting control loop statistics
      */
+    @Transactional(readOnly = true)
     public ClElementStatisticsList fetchClElementStatsPerControlLoop(@NonNull final String name,
             @NonNull final String version) {
         var clElementStatisticsList = new ClElementStatisticsList();
@@ -200,6 +206,7 @@ public class MonitoringProvider {
      * @return List of participant Id
      * @throws PfModelException on errors
      */
+    @Transactional(readOnly = true)
     public List<ToscaConceptIdentifier> getAllParticipantIdsPerControlLoop(String name, String version)
             throws PfModelException {
         List<ToscaConceptIdentifier> participantIds = new ArrayList<>();
@@ -221,6 +228,7 @@ public class MonitoringProvider {
      * @return Map of control loop Id and participant details
      * @throws PfModelException on errors
      */
+    @Transactional(readOnly = true)
     public Map<String, ToscaConceptIdentifier> getAllClElementsIdPerControlLoop(String name, String version)
             throws PfModelException {
         Map<String, ToscaConceptIdentifier> clElementId = new HashMap<>();

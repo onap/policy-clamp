@@ -209,7 +209,7 @@ class ControlLoopProviderTest {
                 mock(ToscaNodeTemplateRepository.class), mock(ToscaNodeTemplatesRepository.class));
         var toscaServiceTemplate = testControlLoopRead();
         controlLoopProvider.deleteInstanceProperties(controlLoopProvider.saveInstanceProperties(toscaServiceTemplate),
-                controlLoopProvider.getNodeTemplates(null, null));
+                controlLoopProvider.getAllNodeTemplates());
         assertThat(controlLoopProvider.getControlLoops()).isEmpty();
     }
 
@@ -255,7 +255,7 @@ class ControlLoopProviderTest {
                 .thenReturn(List.of(toscaNodeTemplate0));
 
         // Getting all nodes
-        var listNodes = controlLoopProvider.getNodeTemplates(null, null);
+        var listNodes = controlLoopProvider.getAllNodeTemplates();
         assertNotNull(listNodes);
         assertThat(listNodes).hasSize(2);
 

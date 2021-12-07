@@ -52,13 +52,15 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplates;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTypedEntityFilter;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * This class provides the create, read and delete actions on Commissioning of Control Loop concepts in the database to
  * the callers.
  */
-@Component
+@Service
+@Transactional
 public class CommissioningProvider {
     public static final String CONTROL_LOOP_NODE_TYPE = "org.onap.policy.clamp.controlloop.ControlLoop";
     private static final String INSTANCE_TEXT = "_Instance";
@@ -68,8 +70,6 @@ public class CommissioningProvider {
     private final ObjectMapper mapper = new ObjectMapper();
     private final ParticipantProvider participantProvider;
     private final SupervisionHandler supervisionHandler;
-
-    private static final Object lockit = new Object();
 
     /**
      * Create a commissioning provider.
@@ -101,15 +101,11 @@ public class CommissioningProvider {
         if (verifyIfInstancePropertiesExists()) {
             throw new PfModelException(Status.BAD_REQUEST, "Delete instances, to commission control loop definitions");
         }
-
-        synchronized (lockit) {
-            serviceTemplate = serviceTemplateProvider.createServiceTemplate(serviceTemplate);
-            List<Participant> participantList = participantProvider.getParticipants();
-            if (!participantList.isEmpty()) {
-                supervisionHandler.handleSendCommissionMessage(serviceTemplate.getName(), serviceTemplate.getVersion());
-            }
+        serviceTemplate = serviceTemplateProvider.createServiceTemplate(serviceTemplate);
+        List<Participant> participantList = participantProvider.getParticipants();
+        if (!participantList.isEmpty()) {
+            supervisionHandler.handleSendCommissionMessage(serviceTemplate.getName(), serviceTemplate.getVersion());
         }
-
         var response = new CommissioningResponse();
         // @formatter:off
         response.setAffectedControlLoopDefinitions(serviceTemplate.getToscaTopologyTemplate().getNodeTemplates()
@@ -135,15 +131,11 @@ public class CommissioningProvider {
         if (verifyIfInstancePropertiesExists()) {
             throw new PfModelException(Status.BAD_REQUEST, "Delete instances, to commission control loop definitions");
         }
-
-        synchronized (lockit) {
-            List<Participant> participantList = participantProvider.getParticipants();
-            if (!participantList.isEmpty()) {
-                supervisionHandler.handleSendDeCommissionMessage();
-            }
-            serviceTemplateProvider.deleteServiceTemplate(name, version);
+        List<Participant> participantList = participantProvider.getParticipants();
+        if (!participantList.isEmpty()) {
+            supervisionHandler.handleSendDeCommissionMessage();
         }
-
+        serviceTemplateProvider.deleteServiceTemplate(name, version);
         var response = new CommissioningResponse();
         response.setAffectedControlLoopDefinitions(List.of(new ToscaConceptIdentifier(name, version)));
 
@@ -158,6 +150,7 @@ public class CommissioningProvider {
      * @return list of control loop node templates
      * @throws PfModelException on errors getting control loop definitions
      */
+    @Transactional(readOnly = true)
     public List<ToscaNodeTemplate> getControlLoopDefinitions(String clName, String clVersion) throws PfModelException {
 
         // @formatter:off
@@ -179,6 +172,7 @@ public class CommissioningProvider {
      * @return a list of the control loop element node templates in a control loop node template
      * @throws PfModelException on errors get control loop element node templates
      */
+    @Transactional(readOnly = true)
     public List<ToscaNodeTemplate> getControlLoopElementDefinitions(ToscaNodeTemplate controlLoopNodeTemplate)
             throws PfModelException {
         if (!CONTROL_LOOP_NODE_TYPE.equals(controlLoopNodeTemplate.getType())) {
@@ -221,6 +215,7 @@ public class CommissioningProvider {
      * @return the nodes templates with common or instance properties
      * @throws PfModelException on errors getting common or instance properties from node_templates
      */
+    @Transactional(readOnly = true)
     public Map<String, ToscaNodeTemplate> getNodeTemplatesWithCommonOrInstanceProperties(boolean common, String name,
             String version) throws PfModelException {
 
@@ -249,6 +244,7 @@ public class CommissioningProvider {
      * @return the control loop definitions
      * @throws PfModelException on errors getting control loop definitions
      */
+    @Transactional(readOnly = true)
     public ToscaServiceTemplate getToscaServiceTemplate(String name, String version) throws PfModelException {
         return serviceTemplateProvider.getToscaServiceTemplate(name, version);
     }
@@ -259,6 +255,7 @@ public class CommissioningProvider {
      * @return the control loop definitions
      * @throws PfModelException on errors getting control loop definitions
      */
+    @Transactional(readOnly = true)
     public List<ToscaServiceTemplate> getAllToscaServiceTemplate() throws PfModelException {
         return serviceTemplateProvider.getAllServiceTemplates();
     }
@@ -271,8 +268,8 @@ public class CommissioningProvider {
      * @return the tosca service template
      * @throws PfModelException on errors getting tosca service template
      */
+    @Transactional(readOnly = true)
     public String getToscaServiceTemplateReduced(String name, String version) throws PfModelException {
-
         var serviceTemplateList = serviceTemplateProvider.getServiceTemplateList(name, version);
 
         List<ToscaServiceTemplate> filteredServiceTemplateList = filterToscaNodeTemplateInstance(serviceTemplateList);
@@ -305,6 +302,7 @@ public class CommissioningProvider {
      * @return the specified tosca service template or section Json Schema
      * @throws PfModelException on errors with retrieving the classes
      */
+    @Transactional(readOnly = true)
     public String getToscaServiceTemplateSchema(String section) throws PfModelException {
         var visitor = new SchemaFactoryWrapper();
 
