@@ -314,6 +314,23 @@ class InstantiationControllerTest extends CommonRestController {
     }
 
     @Test
+    void testCreateInstanceProperties() throws Exception {
+        Invocation.Builder invocationBuilder = super.sendRequest(INSTANTIATION_PROPERTIES);
+        Response resp = invocationBuilder.post(Entity.json(serviceTemplate));
+        assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
+        var instancePropertyList = resp.readEntity(InstancePropertiesResponse.class);
+        assertNull(instancePropertyList.getErrorDetails());
+        var id = new ToscaConceptIdentifier(ID_NAME, ID_VERSION);
+        assertEquals(id, instancePropertyList.getAffectedInstanceProperties().get(0));
+
+        invocationBuilder = super.sendRequest(INSTANTIATION_ENDPOINT);
+        resp = invocationBuilder.get();
+        assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
+        var controlLoopsGet = resp.readEntity(ControlLoops.class);
+        assertThat(controlLoopsGet.getControlLoopList()).hasSize(1);
+    }
+
+    @Test
     void testDeleteInstanceProperties() throws Exception {
         Invocation.Builder invocationBuilder = super.sendRequest(INSTANTIATION_PROPERTIES);
         Response resp = invocationBuilder.post(Entity.json(serviceTemplate));
