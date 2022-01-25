@@ -92,7 +92,7 @@
 
                     <images>
                         <image>
-                            <name>onap/policy-clamp-cl-runtime</name>
+                            <name>onap/policy-clamp-runtime-acm</name>
                             <build>
                                 <cleanup>try</cleanup>
                                 <dockerFile>ClRuntimeDockerfile</dockerFile>
@@ -109,11 +109,11 @@
                                                     <include>org.onap.policy.clamp:policy-clamp-tarball</include>
                                                 </includes>
                                                 <outputDirectory>/lib</outputDirectory>
-                                                <outputFileNameMapping>policy-controlloop-runtime.tar.gz</outputFileNameMapping>
+                                                <outputFileNameMapping>policy-clamp-runtime-acm.tar.gz</outputFileNameMapping>
                                             </dependencySet>
                                             <dependencySet>
                                                 <includes>
-                                                    <include>org.onap.policy.clamp:policy-clamp-runtime-controlloop</include>
+                                                    <include>org.onap.policy.clamp:policy-clamp-runtime-acm</include>
                                                 </includes>
                                                 <outputFileNameMapping>app.jar</outputFileNameMapping>
                                             </dependencySet>
@@ -123,8 +123,8 @@
                             </build>
                         </image>
                         <image>
-                            <name>onap/policy-clamp-cl-pf-ppnt</name>
-                            <alias>onap-policy-clamp-cl-pf-ppnt</alias>
+                            <name>onap/policy-clamp-ac-pf-ppnt</name>
+                            <alias>onap-policy-clamp-ac-pf-ppnt</alias>
                             <build>
                                 <cleanup>try</cleanup>
                                 <dockerFile>PolicyParticipantDockerfile</dockerFile>
@@ -155,8 +155,8 @@
                             </build>
                         </image>
                         <image>
-                            <name>onap/policy-clamp-cl-k8s-ppnt</name>
-                            <alias>onap-policy-clamp-cl-k8s-ppnt</alias>
+                            <name>onap/policy-clamp-ac-k8s-ppnt</name>
+                            <alias>onap-policy-clamp-ac-k8s-ppnt</alias>
                             <build>
                                 <cleanup>try</cleanup>
                                 <dockerFile>KubernetesParticipantDockerfile</dockerFile>
@@ -187,8 +187,8 @@
                             </build>
                         </image>
                         <image>
-                            <name>onap/policy-clamp-cl-http-ppnt</name>
-                            <alias>onap-policy-clamp-cl-http-ppnt</alias>
+                            <name>onap/policy-clamp-ac-http-ppnt</name>
+                            <alias>onap-policy-clamp-ac-http-ppnt</alias>
                             <build>
                                 <cleanup>try</cleanup>
                                 <dockerFile>HttpParticipantDockerfile</dockerFile>

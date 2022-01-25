@@ -1,4 +1,0 @@
-ONAP Tosca defined control loop
-Version: ${project.version}
-Built (UTC): ${maven.build.timestamp}
-ONAP https://wiki.onap.org

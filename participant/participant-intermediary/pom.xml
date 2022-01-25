@@ -30,7 +30,7 @@
 
     <artifactId>policy-clamp-participant-intermediary</artifactId>
     <name>${project.artifactId}</name>
-    <description>Common intermediary library for managing DMaaP participant messaging and holding participant and control
-     loop state</description>
+    <description>Common intermediary library for managing DMaaP participant messaging and holding participant and
+                 Automation Composition state</description>
 
 </project>
