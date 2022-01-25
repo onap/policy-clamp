@@ -125,7 +125,7 @@ public class RuntimeCommissioningResponseItTestCase {
         ProducerTemplate prodTemplate = camelContext.createProducerTemplate();
 
         Exchange exchangeResponse =
-            prodTemplate.send("direct:get-control-loop-definitions", ExchangeBuilder.anExchange(camelContext)
+            prodTemplate.send("direct:get-acm-definitions", ExchangeBuilder.anExchange(camelContext)
                 .withProperty("name", "ToscaServiceTemplate")
                 .withProperty("version", "1.0.0")
                 .withProperty("raiseHttpExceptionFlag", "true")

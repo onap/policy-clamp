@@ -1,0 +1,13 @@
+{
+    "id": "a95757ba-b34a-4049-a2a8-46773abcbe5e",
+    "definition": {
+        "name": "aceDef",
+        "version": "0.0.1"
+    },
+    "participantType": {
+        "name": "participantType",
+        "version": "0.0.1"
+    },
+    "state": "UNINITIALISED",
+    "orderedState": null
+}

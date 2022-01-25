@@ -10,7 +10,7 @@ Go to policy/models/models-sim/policy-models-simulators
 mvn exec:java  -Dexec.mainClass=org.onap.policy.models.simulators.Main -Dexec.args="src/test/resources/simParameters.json"
 
 Run CL from command line
-Go to clamp/runtime-controlloop
+Go to clamp/runtime-acm
 mvn spring-boot:run -Dspring-boot.run.arguments="--topicServer=localhost --mariadb.host=localhost"
 
 Run Participant from command line using Maven
@@ -26,15 +26,15 @@ java -jar target/policy-clamp-participant-impl-kubernetes-6.1.2-SNAPSHOT.jar
 Config of DB
 
 Prompt > mysql
-MariaDB [(none)]> create database controlloop;
+MariaDB [(none)]> create database acm;
 MariaDB [(none)]> CREATE USER 'policy'@localhost IDENTIFIED BY 'P01icY';
-MariaDB [(none)]> GRANT ALL PRIVILEGES ON controlloop.* TO 'policy'@'localhost';\
+MariaDB [(none)]> GRANT ALL PRIVILEGES ON acm.* TO 'policy'@'localhost';\
 MariaDB [(none)]> SHOW GRANTS for 'policy'@localhost;
 +---------------------------------------------------------------------------------------------------------------+
 | Grants for policy@localhost                                                                                   |
 +---------------------------------------------------------------------------------------------------------------+
 | GRANT USAGE ON *.* TO `policy`@`localhost` IDENTIFIED BY PASSWORD '*D0574A541C5DEDF11838FB41CA04E256FD5A04CC' |
-| GRANT ALL PRIVILEGES ON `controlloop`.* TO `policy`@`localhost`                                               |
+| GRANT ALL PRIVILEGES ON `acm`.* TO `policy`@`localhost`                                               |
 +---------------------------------------------------------------------------------------------------------------+
 2 rows in set (0.000 sec)
 
@@ -54,8 +54,8 @@ docker run --add-host=message-router:<ip-router> --mount type=bind,source=<path-
 Note:
 /policy-clamp-tarball/src/main/resources/etc/ssl/policy-truststore is the truststore for DMaap of oom project
 Participant-k8 swagger: https://localhost:8083/onap/k8sparticipant/swagger-ui/
-CL-Runtime swagger: https://localhost:6969/onap/controlloop/swagger-ui/
+CL-Runtime swagger: https://localhost:6969/onap/acm/swagger-ui/
 
 
 Run Policy API:
-mvn exec:java -Dexec.mainClass=org.onap.policy.api.main.startstop.Main -Dexec.args="-c ../../clamp-tpn/tosca-controlloop/common/src/test/resources/demo/policy-api/PolicyAPIConfig.json"
+mvn exec:java -Dexec.mainClass=org.onap.policy.api.main.startstop.Main -Dexec.args="-c common/src/test/resources/demo/config/RuntimeConfig.json"
