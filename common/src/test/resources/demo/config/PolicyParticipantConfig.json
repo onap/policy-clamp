@@ -1,21 +1,21 @@
 {
-    "name": "ControlLoopParticipantGroup",
+    "name": "AutomationCompositionParticipantGroup",
     "intermediaryParameters": {
         "name": "Participant parameters",
         "reportingTimeInterval": 120000,
         "description": "Participant Description",
         "participantType":{
-            "name": "org.onap.policy.controlloop.PolicyControlLoopParticipant",
+            "name": "org.onap.policy.acm.PolicyAutomationCompositionParticipant",
             "version":"2.3.1"
         },
         "participantId": {
             "name": "org.onap.PM_Policy",
             "version": "1.0.0"
         },
-        "clampControlLoopTopics": {
+        "automationCompositionTopics": {
             "topicSources": [
                 {
-                    "topic": "POLICY-CLRUNTIME-PARTICIPANT",
+                    "topic": "POLICY-ACRUNTIME-PARTICIPANT",
                     "servers": [
                         "localhost"
                     ],
@@ -25,7 +25,7 @@
             ],
             "topicSinks": [
                 {
-                    "topic": "POLICY-CLRUNTIME-PARTICIPANT",
+                    "topic": "POLICY-ACRUNTIME-PARTICIPANT",
                     "servers": [
                         "localhost"
                     ],

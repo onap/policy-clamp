@@ -21,17 +21,17 @@ participant:
     participantType:
       name: org.onap.PM_CDS_Blueprint
       version: 1.0.0
-    clampControlLoopTopics:
+    clampAutomationCompositionTopics:
       topicSources:
         -
-          topic: POLICY-CLRUNTIME-PARTICIPANT
+          topic: POLICY-ACRUNTIME-PARTICIPANT
           servers:
             - ${topicServer:localhost}
           topicCommInfrastructure: dmaap
           fetchTimeout: 15000
       topicSinks:
         -
-          topic: POLICY-CLRUNTIME-PARTICIPANT
+          topic: POLICY-ACRUNTIME-PARTICIPANT
           servers:
             - ${topicServer:localhost}
           topicCommInfrastructure: dmaap

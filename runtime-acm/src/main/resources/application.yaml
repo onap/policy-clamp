@@ -1,0 +1,69 @@
+spring:
+  security:
+    user:
+      name: runtimeUser
+      password: zb!XztG34
+  http:
+    converters:
+      preferred-json-mapper: gson
+  datasource:
+    url: jdbc:mariadb://${mariadb.host:localhost}:${mariadb.port:3306}/automationcomposition
+    driverClassName: org.mariadb.jdbc.Driver
+    username: policy
+    password: P01icY
+    hikari:
+      connectionTimeout: 30000
+      idleTimeout: 600000
+      maxLifetime: 1800000
+      maximumPoolSize: 10
+
+security:
+  enable-csrf: false
+
+server:
+  port: 6969
+  servlet:
+    context-path: /onap/automationcomposition
+  error:
+    path: /error
+
+
+runtime:
+  supervisionScannerIntervalSec: 1000
+  participantAcUpdateIntervalSec: 1000
+  participantAcStateChangeIntervalSec: 1000
+  participantParameters:
+    heartBeatMs: 20000
+    maxStatusWaitMs: 100000
+    updateParameters:
+      maxRetryCount: 4
+      maxWaitMs: 20000
+  databasePlatform: org.eclipse.persistence.platform.database.MySQLPlatform
+  databaseProviderParameters:
+    name: PolicyProviderParameterGroup
+    implementation: org.onap.policy.models.provider.impl.DatabasePolicyModelsProviderImpl
+    databaseDriver: org.mariadb.jdbc.Driver
+    databaseUrl: jdbc:mariadb://${mariadb.host:localhost}:${mariadb.port:3306}/automationcomposition
+    databaseUser: policy
+    databasePassword: P01icY
+    persistenceUnit: CommissioningMariaDb
+  topicParameterGroup:
+    topicSources:
+      -
+        topic: POLICY-ACRUNTIME-PARTICIPANT
+        servers:
+          - ${topicServer:localhost}
+        topicCommInfrastructure: dmaap
+        fetchTimeout: 15000
+    topicSinks:
+      -
+        topic: POLICY-ACRUNTIME-PARTICIPANT
+        servers:
+          - ${topicServer:localhost}
+        topicCommInfrastructure: dmaap
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, metrics, prometheus
