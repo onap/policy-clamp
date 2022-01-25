@@ -34,7 +34,7 @@
     <dependencies>
         <dependency>
             <groupId>org.onap.policy.clamp</groupId>
-            <artifactId>policy-clamp-runtime-controlloop</artifactId>
+            <artifactId>policy-clamp-runtime-acm</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

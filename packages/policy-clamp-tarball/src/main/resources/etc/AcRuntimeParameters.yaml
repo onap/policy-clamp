@@ -1,0 +1,70 @@
+spring:
+  security:
+    user:
+      name: runtimeUser
+      password: zb!XztG34
+  http:
+    converters:
+      preferred-json-mapper: gson
+  datasource:
+    url: jdbc:mariadb://${mariadb.host:mariadb}:${mariadb.port:3306}/clamp-acm
+    driverClassName: org.mariadb.jdbc.Driver
+    username: policy_user
+    password: policy_user
+    hikari:
+      connectionTimeout: 30000
+      idleTimeout: 600000
+      maxLifetime: 1800000
+      maximumPoolSize: 10
+
+security:
+  enable-csrf: false
+
+server:
+  port: 6969
+  servlet:
+    context-path: /onap/policy/clamp/acm
+  error:
+    path: /error
+
+runtime:
+  supervisionScannerIntervalSec: 1000
+  participantAcUpdateIntervalSec: 1000
+  participantAcStateChangeIntervalSec: 1000
+  participantParameters:
+    heartBeatMs: 20000
+    maxStatusWaitMs: 100000
+    updateParameters:
+      maxRetryCount: 3
+      maxWaitMs: 20000
+  databasePlatform: org.eclipse.persistence.platform.database.MySQLPlatform
+  databaseProviderParameters:
+    name: PolicyProviderParameterGroup
+    implementation: org.onap.policy.models.provider.impl.DatabasePolicyModelsProviderImpl
+    databaseDriver: org.mariadb.jdbc.Driver
+    databaseUrl: jdbc:mariadb://${mariadb.host:mariadb}:${mariadb.port:3306}/clamp-acm
+    databaseUser: policy_user
+    databasePassword: policy_user
+    persistenceUnit: CommissioningMariaDb
+  topicParameterGroup:
+    topicSources:
+      -
+        topic: POLICY-ACRUNTIME-PARTICIPANT
+        servers:
+          - ${topicServer:message-router}
+        topicCommInfrastructure: dmaap
+        fetchTimeout: 15000
+        useHttps: true
+    topicSinks:
+      -
+        topic: POLICY-ACRUNTIME-PARTICIPANT
+        servers:
+          - ${topicServer:message-router}
+        topicCommInfrastructure: dmaap
+        useHttps: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, metrics, prometheus

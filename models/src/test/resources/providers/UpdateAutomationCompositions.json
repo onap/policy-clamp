@@ -1,0 +1,73 @@
+{
+    "automationCompositionList": [
+        {
+            "name": "PMSHInstance0",
+            "version": "1.0.1",
+            "definition": {
+                "name": "org.onap.domain.pmsh.PMSHAutomationCompositionDefinition",
+                "version": "1.0.0"
+            },
+            "state": "RUNNING",
+            "orderedState": "RUNNING",
+            "description": "PMSH automation composition instance 0",
+            "elements": {
+                "709c62b3-8918-41b9-a747-d21eb79c6c20": {
+                    "id": "709c62b3-8918-41b9-a747-d21eb79c6c20",
+                    "definition": {
+                        "name": "org.onap.domain.pmsh.PMSH_DCAEMicroservice",
+                        "version": "1.2.3"
+                    },
+                    "participantType": {
+                        "name": "org.onap.dcae.acm.DCAEMicroserviceAutomationCompositionParticipant",
+                        "version": "2.3.4"
+                    },
+                    "state": "RUNNING",
+                    "orderedState": "RUNNING",
+                    "description": "DCAE element for the PMSH instance 0 automation composition"
+                },
+                "709c62b3-8918-41b9-a747-d21eb79c6c21": {
+                    "id": "709c62b3-8918-41b9-a747-d21eb79c6c21",
+                    "definition": {
+                        "name": "org.onap.domain.pmsh.PMSH_MonitoringPolicyAutomationCompositionElement",
+                        "version": "1.2.3"
+                    },
+                    "participantType": {
+                        "name": "org.onap.policy.acm.PolicyAutomationCompositionParticipant",
+                        "version": "2.3.1"
+                    },
+                    "state": "RUNNING",
+                    "orderedState": "RUNNING",
+                    "description": "Monitoring Policy element for the PMSH instance 0 automation composition"
+                },
+                "709c62b3-8918-41b9-a747-d21eb79c6c22": {
+                    "id": "709c62b3-8918-41b9-a747-d21eb79c6c22",
+                    "definition": {
+                        "name": "org.onap.domain.pmsh.PMSH_OperationalPolicyAutomationCompositionElement",
+                        "version": "2.3.1"
+                    },
+                    "participantType": {
+                        "name": "org.onap.policy.acm.PolicyAutomationCompositionParticipant",
+                        "version": "1.0.0"
+                    },
+                    "state": "RUNNING",
+                    "orderedState": "RUNNING",
+                    "description": "Operational Policy element for the PMSH instance 0 automation composition"
+                },
+                "709c62b3-8918-41b9-a747-d21eb79c6c23": {
+                    "id": "709c62b3-8918-41b9-a747-d21eb79c6c23",
+                    "definition": {
+                        "name": "org.onap.domain.pmsh.PMSH_CDS_AutomationCompositionElement",
+                        "version": "1.2.3"
+                    },
+                    "participantType": {
+                        "name": "org.onap.ccsdk.cds.acm.CdsAutomationCompositionParticipant",
+                        "version": "2.2.1"
+                    },
+                    "state": "RUNNING",
+                    "orderedState": "RUNNING",
+                    "description": "CDS element for the PMSH instance 0 automation composition"
+                }
+            }
+        }
+    ]
+}

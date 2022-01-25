@@ -52,11 +52,11 @@
         <class>org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate</class>
         <class>org.onap.policy.models.tosca.simple.concepts.JpaToscaTopologyTemplate</class>
         <class>org.onap.policy.models.tosca.simple.concepts.JpaToscaTrigger</class>
-        <class>org.onap.policy.clamp.controlloop.models.controlloop.persistence.concepts.JpaControlLoop</class>
-        <class>org.onap.policy.clamp.controlloop.models.controlloop.persistence.concepts.JpaControlLoopElement</class>
-        <class>org.onap.policy.clamp.controlloop.models.controlloop.persistence.concepts.JpaParticipant</class>
-        <class>org.onap.policy.clamp.controlloop.models.controlloop.persistence.concepts.JpaParticipantStatistics</class>
-        <class>org.onap.policy.clamp.controlloop.models.controlloop.persistence.concepts.JpaClElementStatistics</class>
+        <class>org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationCompositionLoop</class>
+        <class>org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationCompositionElement</class>
+        <class>org.onap.policy.clamp.models.acm.persistence.concepts.JpaParticipant</class>
+        <class>org.onap.policy.clamp.models.acm.persistence.concepts.JpaParticipantStatistics</class>
+        <class>org.onap.policy.clamp.models.acm.persistence.concepts.JpaClElementStatistics</class>
 
         <properties>
             <property name="eclipselink.ddl-generation" value="create-or-extend-tables" />
@@ -110,11 +110,11 @@
         <class>org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate</class>
         <class>org.onap.policy.models.tosca.simple.concepts.JpaToscaTopologyTemplate</class>
         <class>org.onap.policy.models.tosca.simple.concepts.JpaToscaTrigger</class>
-        <class>org.onap.policy.clamp.controlloop.models.controlloop.persistence.concepts.JpaControlLoop</class>
-        <class>org.onap.policy.clamp.controlloop.models.controlloop.persistence.concepts.JpaControlLoopElement</class>
-        <class>org.onap.policy.clamp.controlloop.models.controlloop.persistence.concepts.JpaParticipant</class>
-        <class>org.onap.policy.clamp.controlloop.models.controlloop.persistence.concepts.JpaParticipantStatistics</class>
-        <class>org.onap.policy.clamp.controlloop.models.controlloop.persistence.concepts.JpaClElementStatistics</class>
+        <class>org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationComposition</class>
+        <class>org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationCompositionElement</class>
+        <class>org.onap.policy.clamp.models.acm.persistence.concepts.JpaParticipant</class>
+        <class>org.onap.policy.clamp.models.acm.persistence.concepts.JpaParticipantStatistics</class>
+        <class>org.onap.policy.clamp.models.acm.persistence.concepts.JpaClElementStatistics</class>
 
         <properties>
             <property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
