@@ -1,0 +1,387 @@
+<routes xmlns="http://camel.apache.org/schema/spring">
+    <route id="get-service-template">
+        <from uri="direct:get-service-template"/>
+        <doTry>
+            <log loggingLevel="INFO"
+                 message="Getting the tosca service template"/>
+            <to
+                    uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('AutomationComposition', 'Getting the tosca service template')"/>
+            <setHeader name="CamelHttpMethod">
+                <constant>GET</constant>
+            </setHeader>
+            <setHeader name="Content-Type">
+                <constant>application/json</constant>
+            </setHeader>
+            <setProperty name="name">
+                <simple>${header.name}</simple>
+            </setProperty>
+            <setProperty name="version">
+                <simple>${header.version}</simple>
+            </setProperty>
+            <log loggingLevel="INFO"
+                 message="Endpoint to get Tosca Service Template: {{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/commission/toscaservicetemplate"></log>
+            <toD uri="{{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/commission/toscaservicetemplate?name=${exchangeProperty[name]}&amp;version=${exchangeProperty[version]}&amp;bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.acm.runtime.userName}}&amp;authPassword={{clamp.config.acm.runtime.password}}&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+            <convertBodyTo type="java.lang.String"/>
+            <doFinally>
+                <to uri="direct:reset-raise-http-exception-flag"/>
+                <to
+                        uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
+            </doFinally>
+        </doTry>
+    </route>
+    <route id="commission-service-template">
+        <from uri="direct:commission-service-template"/>
+        <doTry>
+            <log loggingLevel="INFO"
+                 message="Commissioning the tosca service template"/>
+            <to
+                    uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('AutomationComposition', 'Commissioning the tosca service template')"/>
+            <setHeader name="CamelHttpMethod">
+                <constant>POST</constant>
+            </setHeader>
+            <setHeader name="Content-Type">
+                <constant>application/json</constant>
+            </setHeader>
+            <log loggingLevel="INFO"
+                 message="Endpoint to send Tosca Service Template: {{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/commission"></log>
+            <toD
+                    uri="{{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/commission? bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.acm.runtime.userName}}&amp;authPassword={{clamp.config.acm.runtime.password}}&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+            <convertBodyTo type="java.lang.String"/>
+            <doFinally>
+                <to uri="direct:reset-raise-http-exception-flag"/>
+                <to
+                        uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
+            </doFinally>
+        </doTry>
+    </route>
+    <route id="decommission-service-template">
+        <from uri="direct:decommission-service-template"/>
+        <doTry>
+            <log loggingLevel="INFO"
+                 message="Decommissioning the tosca service template"/>
+            <to
+                    uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('AutomationComposition', 'Decommissioning the tosca service template')"/>
+            <setHeader name="CamelHttpMethod">
+                <constant>DELETE</constant>
+            </setHeader>
+            <setHeader name="Content-Type">
+                <constant>application/json</constant>
+            </setHeader>
+            <setProperty name="name">
+                <simple>${header.name}</simple>
+            </setProperty>
+            <setProperty name="version">
+                <simple>${header.version}</simple>
+            </setProperty>
+            <log loggingLevel="INFO"
+                 message="Endpoint to send Tosca Service Template: {{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/commission"></log>
+            <toD
+                    uri="{{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/commission?name=${exchangeProperty[name]}&amp;version=${exchangeProperty[version]}&amp;bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.acm.runtime.userName}}&amp;authPassword={{clamp.config.acm.runtime.password}}&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+            <convertBodyTo type="java.lang.String"/>
+            <doFinally>
+                <to uri="direct:reset-raise-http-exception-flag"/>
+                <to
+                        uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
+            </doFinally>
+        </doTry>
+    </route>
+    <route id="get-tosca-instantiation">
+        <from uri="direct:get-tosca-instantiation"/>
+        <doTry>
+            <log loggingLevel="INFO"
+                 message="Getting the Tosca instantiation"/>
+            <to
+                    uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('AutomationComposition', 'Getting the Tosca instantiation')"/>
+            <setHeader name="CamelHttpMethod">
+                <constant>GET</constant>
+            </setHeader>
+            <setHeader name="Content-Type">
+                <constant>application/json</constant>
+            </setHeader>
+            <log loggingLevel="INFO"
+                 message="Endpoint to get Tosca Instantiation: {{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/instantiation"></log>
+            <toD
+                    uri="{{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/instantiation?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.acm.runtime.userName}}&amp;authPassword={{clamp.config.acm.runtime.password}}&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+            <convertBodyTo type="java.lang.String"/>
+            <doFinally>
+                <to uri="direct:reset-raise-http-exception-flag"/>
+                <to
+                        uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
+            </doFinally>
+        </doTry>
+    </route>
+    <route id="delete-tosca-instantiation">
+        <from uri="direct:delete-tosca-instantiation"/>
+        <doTry>
+            <log loggingLevel="INFO"
+                 message="Deleting Tosca Instantiation"/>
+            <to
+                    uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('AutomationComposition', 'Deleting Tosca Instantiation')"/>
+            <setHeader name="CamelHttpMethod">
+                <constant>DELETE</constant>
+            </setHeader>
+            <setHeader name="Content-Type">
+                <constant>application/json</constant>
+            </setHeader>
+            <setProperty name="name">
+                <simple>${header.name}</simple>
+            </setProperty>
+            <setProperty name="version">
+                <simple>${header.version}</simple>
+            </setProperty>
+            <log loggingLevel="INFO"
+                 message="Endpoint to delete Tosca Instantiation: {{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/instantiation"></log>
+            <toD
+                    uri="{{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/instantiation?name=${exchangeProperty[name]}&amp;version=${exchangeProperty[version]}&amp;bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.acm.runtime.userName}}&amp;authPassword={{clamp.config.acm.runtime.password}}&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+            <convertBodyTo type="java.lang.String"/>
+            <doFinally>
+                <to uri="direct:reset-raise-http-exception-flag"/>
+                <to
+                        uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
+            </doFinally>
+        </doTry>
+    </route>
+    <route id="post-tosca-instance-properties">
+        <from uri="direct:post-tosca-instance-properties"/>
+        <doTry>
+            <log loggingLevel="INFO"
+                 message="Creating the tosca instance properties"/>
+            <to
+                    uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('AutomationComposition', 'Creating the tosca instance properties')"/>
+            <setHeader name="CamelHttpMethod">
+                <constant>POST</constant>
+            </setHeader>
+            <setHeader name="Content-Type">
+                <constant>application/json</constant>
+            </setHeader>
+            <log loggingLevel="INFO"
+                 message="Endpoint to send Tosca Instance Properties: {{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/instanceProperties"></log>
+            <toD
+                    uri="{{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/instanceProperties?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.acm.runtime.userName}}&amp;authPassword={{clamp.config.acm.runtime.password}}&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+            <convertBodyTo type="java.lang.String"/>
+            <doFinally>
+                <to uri="direct:reset-raise-http-exception-flag"/>
+                <to
+                        uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
+            </doFinally>
+        </doTry>
+    </route>
+    <route id="delete-tosca-instance-properties">
+        <from uri="direct:delete-tosca-instance-properties"/>
+        <doTry>
+            <log loggingLevel="INFO"
+                 message="Deleting Tosca Instance Properties"/>
+            <to
+                    uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('AutomationComposition', 'Deleting Tosca Instance Properties')"/>
+            <setHeader name="CamelHttpMethod">
+                <constant>DELETE</constant>
+            </setHeader>
+            <setHeader name="Content-Type">
+                <constant>application/json</constant>
+            </setHeader>
+            <setProperty name="name">
+                <simple>${header.name}</simple>
+            </setProperty>
+            <setProperty name="version">
+                <simple>${header.version}</simple>
+            </setProperty>
+            <log loggingLevel="INFO"
+                 message="Endpoint to delete Tosca Instance Properties: {{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/instanceProperties"></log>
+            <toD
+                    uri="{{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/instanceProperties?name=${exchangeProperty[name]}&amp;version=${exchangeProperty[version]}&amp;bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.acm.runtime.userName}}&amp;authPassword={{clamp.config.acm.runtime.password}}&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+            <convertBodyTo type="java.lang.String"/>
+            <doFinally>
+                <to uri="direct:reset-raise-http-exception-flag"/>
+                <to
+                        uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
+            </doFinally>
+        </doTry>
+    </route>
+    <route id="post-tosca-instantiation">
+        <from uri="direct:post-tosca-instantiation"/>
+        <doTry>
+            <log loggingLevel="INFO"
+                 message="Create the tosca instantiation service"/>
+            <to
+                    uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('AutomationComposition', 'Create the tosca instantiation service')"/>
+            <setHeader name="CamelHttpMethod">
+                <constant>POST</constant>
+            </setHeader>
+            <setHeader name="Content-Type">
+                <constant>application/json</constant>
+            </setHeader>
+            <log loggingLevel="INFO"
+                 message="Endpoint to send Tosca Instantiation Service: {{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/instantiation"></log>
+            <toD
+                    uri="{{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/instantiation?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.acm.runtime.userName}}&amp;authPassword={{clamp.config.acm.runtime.password}}&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+            <convertBodyTo type="java.lang.String"/>
+            <doFinally>
+                <to uri="direct:reset-raise-http-exception-flag"/>
+                <to
+                        uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
+            </doFinally>
+        </doTry>
+    </route>
+    <route id="put-tosca-instantiation">
+        <from uri="direct:put-tosca-instantiation"/>
+        <doTry>
+            <log loggingLevel="INFO"
+                 message="Change the tosca instantiation state service"/>
+            <to
+                    uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('AutomationComposition', 'Change the tosca instantiation state service')"/>
+            <setHeader name="CamelHttpMethod">
+                <constant>PUT</constant>
+            </setHeader>
+            <setHeader name="Content-Type">
+                <constant>application/json</constant>
+            </setHeader>
+            <log loggingLevel="INFO"
+                 message="Endpoint to send Tosca Instantiation state change Service: {{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/instantiation/command"></log>
+            <toD
+                    uri="{{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/instantiation/command?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.acm.runtime.userName}}&amp;authPassword={{clamp.config.acm.runtime.password}}&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+            <convertBodyTo type="java.lang.String"/>
+            <doFinally>
+                <to uri="direct:reset-raise-http-exception-flag"/>
+                <to
+                        uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
+            </doFinally>
+        </doTry>
+    </route>
+    <route id="get-tosca-instantiation-order-state">
+        <from uri="direct:get-tosca-instantiation-order-state"/>
+        <doTry>
+            <log loggingLevel="INFO"
+                 message="Getting the Tosca Instantiation Order State"/>
+            <to
+                    uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('AutomationComposition', 'Getting the Tosca Instantiation Order State')"/>
+            <setHeader name="CamelHttpMethod">
+                <constant>GET</constant>
+            </setHeader>
+            <setHeader name="Content-Type">
+                <constant>application/json</constant>
+            </setHeader>
+            <setProperty name="name">
+                <simple>${header.name}</simple>
+            </setProperty>
+            <setProperty name="version">
+                <simple>${header.version}</simple>
+            </setProperty>
+            <log loggingLevel="INFO"
+                 message="Endpoint to get Tosca Instantiation Order State: {{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/instantiationState"></log>
+            <toD
+                    uri="{{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/instantiationState?name=${exchangeProperty[name]}&amp;version=${exchangeProperty[version]}&amp;bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.acm.runtime.userName}}&amp;authPassword={{clamp.config.acm.runtime.password}}&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+            <convertBodyTo type="java.lang.String"/>
+            <doFinally>
+                <to uri="direct:reset-raise-http-exception-flag"/>
+                <to
+                        uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
+            </doFinally>
+        </doTry>
+    </route>
+    <route id="get-json-schema">
+        <from uri="direct:get-json-schema"/>
+        <doTry>
+            <log loggingLevel="INFO"
+                 message="Getting the JSON Schema"/>
+            <to
+                    uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('AutomationComposition', 'Getting the JSON Schema')"/>
+            <setHeader name="CamelHttpMethod">
+                <constant>GET</constant>
+            </setHeader>
+            <setHeader name="Content-Type">
+                <constant>application/json</constant>
+            </setHeader>
+            <setProperty name="section">
+                <simple>${header.section}</simple>
+            </setProperty>
+            <log loggingLevel="INFO"
+                 message="Endpoint to get Json Schema: {{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/commission/toscaServiceTemplateSchema"></log>
+            <toD
+                    uri="{{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/commission/toscaServiceTemplateSchema?section=${exchangeProperty[section]}&amp;bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.acm.runtime.userName}}&amp;authPassword={{clamp.config.acm.runtime.password}}&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+            <convertBodyTo type="java.lang.String"/>
+            <doFinally>
+                <to uri="direct:reset-raise-http-exception-flag"/>
+                <to
+                        uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
+            </doFinally>
+        </doTry>
+    </route>
+    <route id="get-element-definitions">
+        <from uri="direct:get-element-definitions"/>
+        <doTry>
+            <log loggingLevel="INFO"
+                 message="Getting the Automation Composition Element Definitions"/>
+            <to
+                    uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('AutomationComposition', 'Getting the Automation Composition Element Definitions')"/>
+            <setHeader name="CamelHttpMethod">
+                <constant>GET</constant>
+            </setHeader>
+            <setHeader name="Content-Type">
+                <constant>application/json</constant>
+            </setHeader>
+            <log loggingLevel="INFO"
+                 message="Endpoint to get Json Schema: {{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/commission/elements"></log>
+            <toD
+                    uri="{{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/commission/elements?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.acm.runtime.userName}}&amp;authPassword={{clamp.config.acm.runtime.password}}&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+            <convertBodyTo type="java.lang.String"/>
+            <doFinally>
+                <to uri="direct:reset-raise-http-exception-flag"/>
+                <to
+                        uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
+            </doFinally>
+        </doTry>
+    </route>
+    <route id="get-acm-definitions">
+        <from uri="direct:get-acm-definitions"/>
+        <doTry>
+            <log loggingLevel="INFO"
+                 message="Getting the Automation Composition  Definitions"/>
+            <to
+                    uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('AutomationComposition', 'Getting the Automation Composition Element Definitions')"/>
+            <setHeader name="CamelHttpMethod">
+                <constant>GET</constant>
+            </setHeader>
+            <setHeader name="Content-Type">
+                <constant>application/json</constant>
+            </setHeader>
+            <log loggingLevel="INFO"
+                 message="Endpoint to get Json Schema: {{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/commission/elements"></log>
+            <toD
+                    uri="{{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/commission? bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.acm.runtime.userName}}&amp;authPassword={{clamp.config.acm.runtime.password}}&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+            <convertBodyTo type="java.lang.String"/>
+            <doFinally>
+                <to uri="direct:reset-raise-http-exception-flag"/>
+                <to
+                        uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
+            </doFinally>
+        </doTry>
+    </route>
+    <route id="get-common-or-instance-properties">
+        <from uri="direct:get-common-or-instance-properties"/>
+        <doTry>
+            <log loggingLevel="INFO"
+                 message="Getting Common Or Instance Properties"/>
+            <to
+                    uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('AutomationComposition', 'Getting Common Or Instance Properties')"/>
+            <setHeader name="CamelHttpMethod">
+                <constant>GET</constant>
+            </setHeader>
+            <setHeader name="Content-Type">
+                <constant>application/json</constant>
+            </setHeader>
+            <setProperty name="common">
+                <simple>${header.common}</simple>
+            </setProperty>
+            <log loggingLevel="INFO"
+                 message="Endpoint to get Common Or Instance Properties: {{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/commission/getCommonOrInstanceProperties"></log>
+            <toD
+                    uri="{{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/commission/getCommonOrInstanceProperties?common=${exchangeProperty[common]}&amp;bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.acm.runtime.userName}}&amp;authPassword={{clamp.config.acm.runtime.password}}&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+            <convertBodyTo type="java.lang.String"/>
+            <doFinally>
+                <to uri="direct:reset-raise-http-exception-flag"/>
+                <to
+                        uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
+            </doFinally>
+        </doTry>
+    </route>
+</routes>

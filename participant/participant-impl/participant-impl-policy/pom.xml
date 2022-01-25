@@ -30,7 +30,7 @@
 
     <artifactId>policy-clamp-participant-impl-policy</artifactId>
     <name>${project.artifactId}</name>
-    <description>Policy participant, that allows Policy to partake in control loops</description>
+    <description>Policy participant, that allows Policy to partake in automation compositions</description>
 
     <build>
         <plugins>

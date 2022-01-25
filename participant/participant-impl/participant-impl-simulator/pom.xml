@@ -31,7 +31,7 @@
 
     <artifactId>policy-clamp-participant-impl-simulator</artifactId>
     <name>${project.artifactId}</name>
-    <description>Participant simulator, used to test control loops</description>
+    <description>Participant simulator, used to test automation compositions</description>
 
     <build>
         <plugins>

@@ -30,5 +30,5 @@
 
     <artifactId>policy-clamp-participant-impl-cds</artifactId>
     <name>${project.artifactId}</name>
-    <description>CDS participant, that allows CDS to partake in control loops</description>
+    <description>CDS participant, that allows CDS to partake in automation compositions</description>
 </project>

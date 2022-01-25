@@ -27,14 +27,14 @@ data_types:
         type: string
         required: true
 node_types:
-  org.onap.policy.clamp.controlloop.Participant:
+  org.onap.policy.clamp.acm.Participant:
     version: 1.0.1
     derived_from: tosca.nodetypes.Root
     properties:
       provider:
         type: string
         requred: false
-  org.onap.policy.clamp.controlloop.ControlLoopElement:
+  org.onap.policy.clamp.acm.AutomationCompositionElement:
     version: 1.0.1
     derived_from: tosca.nodetypes.Root
     properties:
@@ -51,11 +51,11 @@ node_types:
         - greater-or-equal: 0
         metadata:
             common: true
-        description: A value indicating the start phase in which this control loop element will be started, the
-                     first start phase is zero. Control Loop Elements are started in their start_phase order and stopped
-                     in reverse start phase order. Control Loop Elements with the same start phase are started and
-                     stopped simultaneously
-  org.onap.policy.clamp.controlloop.ControlLoop:
+        description: A value indicating the start phase in which this automation composition element will be started,
+                     the first start phase is zero. Automation Composition Elements are started in their start_phase
+                     order and stopped in reverse start phase order. Automation Composition Elements with the same start
+                     phase are started and stopped simultaneously
+  org.onap.policy.clamp.acm.AutomationComposition:
     version: 1.0.1
     derived_from: tosca.nodetypes.Root
     properties:
@@ -67,9 +67,9 @@ node_types:
         required: true
         entry_schema:
           type: onap.datatypes.ToscaConceptIdentifier
-  org.onap.policy.clamp.controlloop.K8SMicroserviceControlLoopElement:
+  org.onap.policy.clamp.acm.K8SMicroserviceAutomationCompositionElement:
     version: 1.0.1
-    derived_from: org.onap.policy.clamp.controlloop.ControlLoopElement
+    derived_from: org.onap.policy.clamp.acm.AutomationCompositionElement
     properties:
       chart:
         type: string
@@ -89,24 +89,24 @@ node_types:
         requred: true
 topology_template:
   node_templates:
-    org.onap.k8s.controlloop.K8SControlLoopParticipant:
+    org.onap.k8s.acm.K8SAutomationCompositionParticipant:
       version: 2.3.4
-      type: org.onap.policy.clamp.controlloop.Participant
+      type: org.onap.policy.clamp.acm.Participant
       type_version: 1.0.1
       description: Participant for K8S
       properties:
         provider: ONAP
 
-    org.onap.domain.database.HelloWorld_K8SMicroserviceControlLoopElement:
+    org.onap.domain.database.HelloWorld_K8SMicroserviceAutomationCompositionElement:
       # Chart from any chart repository configured on helm client.
       version: 1.2.3
-      type: org.onap.policy.clamp.controlloop.K8SMicroserviceControlLoopElement
+      type: org.onap.policy.clamp.acm.K8SMicroserviceAutomationCompositionElement
       type_version: 1.0.0
-      description: Control loop element for the K8S microservice for Hello World
+      description: Automation composition element for the K8S microservice for Hello World
       properties:
         provider: ONAP
         participantType:
-          name: org.onap.k8s.controlloop.K8SControlLoopParticipant
+          name: org.onap.k8s.acm.K8SAutomationCompositionParticipant
           version: 2.3.4
         startPhase: 2
         uninitializedToPassiveTimeout: 180
@@ -119,16 +119,16 @@ topology_template:
           namespace: onap
           repository: chartMuseum
 
-    org.onap.domain.database.PMSH_K8SMicroserviceControlLoopElement:
+    org.onap.domain.database.PMSH_K8SMicroserviceAutomationCompositionElement:
       # Chart from local file system
       version: 1.2.3
-      type: org.onap.policy.clamp.controlloop.K8SMicroserviceControlLoopElement
+      type: org.onap.policy.clamp.acm.K8SMicroserviceAutomationCompositionElement
       type_version: 1.0.0
-      description: Control loop element for the K8S microservice for PMSH
+      description: Automation composition element for the K8S microservice for PMSH
       properties:
         provider: ONAP
         participantType:
-          name: org.onap.k8s.controlloop.K8SControlLoopParticipant
+          name: org.onap.k8s.acm.K8SAutomationCompositionParticipant
           version: 2.3.4
         startPhase: 2
         uninitializedToPassiveTimeout: 180
@@ -142,16 +142,16 @@ topology_template:
           overrideParams:
             global.masterPassword: test
 
-    org.onap.domain.database.Local_K8SMicroserviceControlLoopElement:
+    org.onap.domain.database.Local_K8SMicroserviceAutomationCompositionElement:
       # Chart installation without passing repository name
       version: 1.2.3
-      type: org.onap.policy.clamp.controlloop.K8SMicroserviceControlLoopElement
+      type: org.onap.policy.clamp.acm.K8SMicroserviceAutomationCompositionElement
       type_version: 1.0.0
-      description: Control loop element for the K8S microservice for local chart
+      description: Automation composition element for the K8S microservice for local chart
       properties:
         provider: ONAP
         participantType:
-          name: org.onap.k8s.controlloop.K8SControlLoopParticipant
+          name: org.onap.k8s.acm.K8SAutomationCompositionParticipant
           version: 2.3.4
         startPhase: 2
         uninitializedToPassiveTimeout: 180
@@ -163,17 +163,17 @@ topology_template:
           releaseName: nginxms
           namespace: onap
 
-    org.onap.domain.sample.GenericK8s_ControlLoopDefinition:
+    org.onap.domain.sample.GenericK8s_AutomationCompositionDefinition:
       version: 1.2.3
-      type: org.onap.policy.clamp.controlloop.ControlLoop
+      type: org.onap.policy.clamp.acm.AutomationComposition
       type_version: 1.0.0
-      description: Control loop for Hello World
+      description: Automation composition for Hello World
       properties:
         provider: ONAP
         elements:
-          - name: org.onap.domain.database.HelloWorld_K8SMicroserviceControlLoopElement
+          - name: org.onap.domain.database.HelloWorld_K8SMicroserviceAutomationCompositionElement
             version: 1.2.3
-          - name: org.onap.domain.database.PMSH_K8SMicroserviceControlLoopElement
+          - name: org.onap.domain.database.PMSH_K8SMicroserviceAutomationCompositionElement
             version: 1.2.3
-          - name: org.onap.domain.database.Local_K8SMicroserviceControlLoopElement
+          - name: org.onap.domain.database.Local_K8SMicroserviceAutomationCompositionElement
             version: 1.2.3

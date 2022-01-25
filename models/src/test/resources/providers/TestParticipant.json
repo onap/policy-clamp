@@ -2,14 +2,14 @@
   "name": "dummy_participant1",
   "version": "1.0.1",
   "definition":{
-    "name": "org.onap.domain.pmsh.PMSHControlLoopDefinition",
+    "name": "org.onap.domain.pmsh.PMSHAutomationCompositionDefinition",
     "version": "1.0.0"
   },
   "participantState": "PASSIVE",
   "healthStatus": "HEALTHY",
   "description": "A dummy PMSH participant1",
   "participantType":{
-    "name": "org.onap.domain.pmsh.PolicyControlLoopDefinition",
+    "name": "org.onap.domain.pmsh.PolicyAutomationCompositionDefinition",
     "version": "1.0.0"
   }
 }

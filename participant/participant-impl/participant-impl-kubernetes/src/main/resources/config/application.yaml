@@ -13,22 +13,22 @@ participant:
     reportingTimeIntervalMs: 120000
     description: Participant Description
     participantId:
-      name: K8sParticipant0
-      version: 1.0.0
-    participantType:
-      name: org.onap.k8s.controlloop.K8sControlLoopParticipant
+      name: org.onap.policy.clamp.acm.KubernetesParticipant
       version: 2.3.4
-    clampControlLoopTopics:
+    participantType:
+      name: org.onap.k8s.acm.K8SAutomationCompositionParticipant
+      version: 2.3.4
+    clampAutomationCompositionTopics:
       topicSources:
         -
-          topic: POLICY-CLRUNTIME-PARTICIPANT
+          topic: POLICY-ACRUNTIME-PARTICIPANT
           servers:
             - ${topicServer:localhost}
           topicCommInfrastructure: dmaap
           fetchTimeout: 15000
       topicSinks:
         -
-          topic: POLICY-CLRUNTIME-PARTICIPANT
+          topic: POLICY-ACRUNTIME-PARTICIPANT
           servers:
             - ${topicServer:localhost}
           topicCommInfrastructure: dmaap
@@ -41,7 +41,7 @@ management:
 server:
   port: 8083
   servlet:
-    context-path: /onap/k8sparticipant
+    context-path: /onap/policy/clamp/acm/k8sparticipant
 
 logging:
   # Configuration of logging
@@ -50,7 +50,7 @@ logging:
     org.springframework: ERROR
     org.springframework.data: ERROR
     org.springframework.web.reactive.function.client.ExchangeFunctions: ERROR
-    org.onap.policy.clamp.controlloop.participant.kubernetes: INFO
+    org.onap.policy.clamp.acm.participant.kubernetes: INFO
 
   file:
     name: /var/log/onap/policy/clamp/application.log
