@@ -53,9 +53,10 @@ public class RuntimeInstantiationResponseItTestCase {
 
     private static final String RAISE_HTTP_EXCEPTION_FLAG = "raiseHttpExceptionFlag";
 
-    private static final String SAMPLE_CONTROL_LOOP_LIST = "{\"controlLoopList\": [{\"name\": \"PMSHInstance0\","
+    private static final String SAMPLE_CONTROL_LOOP_LIST =
+        "{\"automationCompositionList\": [{\"name\": \"PMSHInstance0\","
         + "\"version\": \"1.0.1\",\"definition\": {},\"state\": \"UNINITIALISED\",\"orderedState\": \"UNINITIALISED\","
-        + "\"description\": \"PMSH control loop instance 0\",\"elements\": {}}]}";
+        + "\"description\": \"PMSH Automation Composition instance 0\",\"elements\": {}}]}";
 
     private static final String SAMPLE_TOSCA_TEMPLATE =
         "{\"tosca_definitions_version\": \"tosca_simple_yaml_1_1_0\","

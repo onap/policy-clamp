@@ -1,0 +1,12 @@
+{
+    "definition": {
+        "name": "automationCompositionDefinitionName",
+        "version": "0.0.1"
+    },
+    "state": "UNINITIALISED",
+    "orderedState": null,
+    "elements": [
+    ],
+    "name": "automation-composition",
+    "version": "0.0.1"
+}
