@@ -30,19 +30,19 @@ participant:
       name: org.onap.PM_Policy
       version: 1.0.0
     participantType:
-      name: org.onap.policy.controlloop.PolicyControlLoopParticipant
+      name: org.onap.policy.clamp.acm.PolicyParticipant
       version: 2.3.1
-    clampControlLoopTopics:
+    clampAutomationCompositionTopics:
       topicSources:
         -
-          topic: POLICY-CLRUNTIME-PARTICIPANT
+          topic: POLICY-ACRUNTIME-PARTICIPANT
           servers:
             - ${topicServer:localhost}
           topicCommInfrastructure: dmaap
           fetchTimeout: 15000
       topicSinks:
         -
-          topic: POLICY-CLRUNTIME-PARTICIPANT
+          topic: POLICY-ACRUNTIME-PARTICIPANT
           servers:
             - ${topicServer:localhost}
           topicCommInfrastructure: dmaap
@@ -54,4 +54,4 @@ management:
 server:
   port: 8085
   servlet:
-    context-path: /onap/policyparticipant
+    context-path: /onap/policy/clamp/acm/policyparticipant

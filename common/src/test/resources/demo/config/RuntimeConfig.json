@@ -1,5 +1,5 @@
 {
-    "name": "ControlLoopRuntimeGroup",
+    "name": "AutomationCompositionRuntimeGroup",
     "restServerParameters": {
         "host": "0.0.0.0",
         "port": 6969,
@@ -23,7 +23,7 @@
         "name": "PolicyProviderParameterGroup",
         "implementation": "org.onap.policy.models.provider.impl.DatabasePolicyModelsProviderImpl",
         "databaseDriver": "org.mariadb.jdbc.Driver",
-        "databaseUrl": "jdbc:mariadb://localhost:3306/controlloop",
+        "databaseUrl": "jdbc:mariadb://localhost:3306/acm",
         "databaseUser": "policy",
         "databasePassword": "P01icY",
         "persistenceUnit": "CommissioningMariaDb"
@@ -31,7 +31,7 @@
     "topicParameterGroup": {
         "topicSources": [
             {
-                "topic": "POLICY-CLRUNTIME-PARTICIPANT",
+                "topic": "POLICY-ACRUNTIME-PARTICIPANT",
                 "servers": [
                     "localhost"
                 ],
@@ -41,7 +41,7 @@
         ],
         "topicSinks": [
             {
-                "topic": "POLICY-CLRUNTIME-PARTICIPANT",
+                "topic": "POLICY-ACRUNTIME-PARTICIPANT",
                 "servers": [
                     "localhost"
                 ],

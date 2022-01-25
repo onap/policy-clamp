@@ -1,0 +1,44 @@
+{
+    "name": "AutomationCompositionRuntimeGroup",
+    "supervisionScannerIntervalSec": 1000,
+    "participantAcUpdateIntervalSec": 1000,
+    "participantAcStateChangeIntervalSec": 1000,
+    "participantParameters": {
+        "heartBeatMs": 120000,
+        "maxStatusWaitMs": 100000,
+        "updateParameters": {
+            "maxRetryCount": 1,
+            "maxWaitMs": 30000
+        }
+    },
+    "databaseProviderParameters": {
+        "name": "PolicyProviderParameterGroup",
+        "implementation": "org.onap.policy.models.provider.impl.DatabasePolicyModelsProviderImpl",
+        "databaseDriver": "org.h2.Driver",
+        "databaseUrl": "${dbName}",
+        "databaseUser": "policy",
+        "databasePassword": "P01icY",
+        "persistenceUnit": "InstantiationTests"
+    },
+    "topicParameterGroup": {
+        "topicSources": [
+            {
+                "topic": "POLICY-ACRUNTIME-PARTICIPANT",
+                "servers": [
+                    "localhost"
+                ],
+                "topicCommInfrastructure": "dmaap",
+                "fetchTimeout": 15000
+            }
+        ],
+        "topicSinks": [
+            {
+                "topic": "POLICY-ACRUNTIME-PARTICIPANT",
+                "servers": [
+                    "localhost"
+                ],
+                "topicCommInfrastructure": "dmaap"
+            }
+        ]
+    }
+}

@@ -30,7 +30,7 @@
 
     <artifactId>policy-clamp-participant-impl-kubernetes</artifactId>
     <name>${project.artifactId}</name>
-    <description>Kubernetes participant, that allows k8s pods to partake in control loops</description>
+    <description>Kubernetes participant, that allows k8s pods to partake in automation compositions</description>
 
     <!-- Dependency added here to take precedence over Mockito-core in parent pom-->
     <dependencies>

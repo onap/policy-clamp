@@ -61,7 +61,7 @@ public class AafConfiguration {
         registration.addUrlPatterns("/restservices/clds/v2/policyToscaModels/*");
         registration.addUrlPatterns("/restservices/clds/v2/policies/*");
         registration.addUrlPatterns("/restservices/clds/v2/loop/*");
-        registration.addUrlPatterns("/restservices/clds/v2/toscaControlLoop/*");
+        registration.addUrlPatterns("/restservices/clds/v2/acm/*");
         registration.setName("cadiFilter");
         registration.setOrder(0);
         return registration;

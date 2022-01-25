@@ -1,0 +1,44 @@
+{
+  "acElementStatistics":[
+    {
+      "participantId":{
+        "name":"name1",
+        "version":"1.001"
+      },
+      "id": "709c62b3-8918-41b9-a747-d21eb79c6c20",
+      "timeStamp": "2021-01-10T13:45:00.000Z",
+      "state": "UNINITIALISED",
+      "acElementUptime":250
+    },
+    {
+      "participantId":{
+        "name":"name1",
+        "version":"1.001"
+      },
+      "id": "709c62b3-8918-41b9-a747-d21eb79c6c20",
+      "timeStamp": "2021-01-10T15:45:00.000Z",
+      "state": "UNINITIALISED",
+      "acElementUptime":450
+    },
+    {
+      "participantId":{
+        "name":"name2",
+        "version":"1.001"
+      },
+      "id": "709c62b3-8918-41b9-a747-d21eb79c6c21",
+      "timeStamp": "2021-01-10T14:25:00.000Z",
+      "state": "UNINITIALISED",
+      "acElementUptime":330
+    },
+    {
+      "participantId":{
+        "name":"name2",
+        "version":"1.001"
+      },
+      "id": "709c62b3-8918-41b9-a747-d21eb79c6c21",
+      "timeStamp": "2021-01-10T16:35:00.000Z",
+      "state": "UNINITIALISED",
+      "acElementUptime":650
+    }
+  ]
+}

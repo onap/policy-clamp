@@ -276,44 +276,44 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
             with open(cached_file_content, 'w') as f:
                 f.write(response)
         return True
-     elif (self.path.startswith("/onap/controlloop/v2/commission/toscaservicetemplate")) and http_type == "GET":
+     elif (self.path.startswith("/onap/policy/clamp/acm/v2/commission/toscaservicetemplate")) and http_type == "GET":
          if not _file_available:
              cached_file_folder = cached_file_folder.split('bridgeEndpoint')[0]
              print(("cached file folder for onap is %s: ", cached_file_folder))
-             print("self.path start with /onap/controlloop/v2/commission/, generating response json...")
+             print("self.path start with /onap/policy/clamp/acm/v2/commission/, generating response json...")
              jsonGenerated =  "{\"tosca_definitions_version\": \"tosca_simple_yaml_1_1_0\",\"data_types\": {},\"node_types\": {}, \"policy_types\": {}, \"topology_template\": {}, \"name\": \"ToscaServiceTemplateSimple\", \"version\": \"1.0.0\", \"metadata\": {}}"
              self._create_cache(jsonGenerated, cached_file_folder, cached_file_header, cached_file_content)
          return True
-     elif (self.path.startswith("/onap/controlloop/v2/commission/toscaServiceTemplateSchema")) and http_type == "GET":
+     elif (self.path.startswith("/onap/policy/clamp/acm/v2/commission/toscaServiceTemplateSchema")) and http_type == "GET":
          if not _file_available:
              cached_file_folder = cached_file_folder.split('bridgeEndpoint')[0]
              print(("cached file folder for onap is %s: ", cached_file_folder))
-             print("self.path start with /onap/controlloop/v2/commission/, generating response json...")
+             print("self.path start with /onap/policy/clamp/acm/v2/commission/, generating response json...")
              jsonGenerated =  "{\"tosca_definitions_version\": \"tosca_simple_yaml_1_1_0\",\"data_types\": {},\"node_types\": {}, \"policy_types\": {}, \"topology_template\": {}, \"name\": \"ToscaServiceTemplateSimple\", \"version\": \"1.0.0\", \"metadata\": {}}"
              self._create_cache(jsonGenerated, cached_file_folder, cached_file_header, cached_file_content)
          return True
-     elif (self.path.startswith("/onap/controlloop/v2/commission/elements")) and http_type == "GET":
+     elif (self.path.startswith("/onap/policy/clamp/acm/v2/commission/elements")) and http_type == "GET":
          if not _file_available:
-             print("self.path start with /commission/elements Control Loop Elements, generating response json...")
+             print("self.path start with /commission/elements Automation Composition Elements, generating response json...")
              jsonGenerated = "[{\"name\": ,\"org.onap.domain.pmsh.PMSH_DCAEMicroservice\": [{ \"version\": \"1.2.3\", \"derived_from\": null }]}]"
              self._create_cache(jsonGenerated, cached_file_folder, cached_file_header, cached_file_content)
          return True
-     elif (self.path.startswith("/onap/controlloop/v2/commission")) and http_type == "GET":
+     elif (self.path.startswith("/onap/policy/clamp/acm/v2/commission")) and http_type == "GET":
          if not _file_available:
-             print("self.path start with /commission control loop definition, generating response json...")
+             print("self.path start with /commission Automation Composition definition, generating response json...")
              #jsondata = json.loads(self.data_string)
              jsonGenerated = "[{\"name\": ,\"org.onap.domain.pmsh.PMSHControlLoopDefinition\": [{ \"version\": \"1.2.3\", \"derived_from\": null }]}]"
              self._create_cache(jsonGenerated, cached_file_folder, cached_file_header, cached_file_content)
          return True
-     elif (self.path.startswith("/onap/controlloop/v2/commission/getCommonOrInstanceProperties")) and http_type == "GET":
+     elif (self.path.startswith("/onap/policy/clamp/acm/v2/commission/getCommonOrInstanceProperties")) and http_type == "GET":
          if not _file_available:
              print("self.path start with /commission getting common properties, generating response json...")
              with open("example/node_template.json", "r") as f:
                  jsonGenerated = f.read()
              self._create_cache(jsonGenerated, cached_file_folder, cached_file_header, cached_file_content)
          return True
-     elif (self.path.startswith("/onap/controlloop/v2/commission")) and http_type == "POST":
-         print("self.path start with POST /onap/controlloop/v2/commission, copying body to response ...")
+     elif (self.path.startswith("/onap/policy/clamp/acm/v2/commission")) and http_type == "POST":
+         print("self.path start with POST /onap/policy/clamp/acm/v2/commission, copying body to response ...")
          if not os.path.exists(cached_file_folder):
              os.makedirs(cached_file_folder, 0o777)
          with open(cached_file_header, 'w+') as f:
@@ -321,18 +321,18 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
          with open(cached_file_content, 'w+') as f:
              f.write(self.data_string)
          return True
-     elif (self.path.startswith("/onap/controlloop/v2/commission")) and http_type == "DELETE":
+     elif (self.path.startswith("/onap/policy/clamp/acm/v2/commission")) and http_type == "DELETE":
          print("self.path start with /commission Decommissioning, generating response json...")
          jsonGenerated = "{\"errorDetails\": null,\"affectedControlLoopDefinitions\": [{ \"name\": \"ToscaServiceTemplateSimple\", \"version\": \"1.0.0\" }]}"
          self._create_cache(jsonGenerated, cached_file_folder, cached_file_header, cached_file_content)
          return True
-     elif (self.path.startswith("/onap/controlloop/v2/instantiation")) and http_type == "GET":
+     elif (self.path.startswith("/onap/policy/clamp/acm/v2/instantiation")) and http_type == "GET":
          print("self.path start with /instantiation Retrieving Instantiation, generating response json...")
-         jsonGenerated = "{\"controlLoopList\": [{\"name\": \"PMSHInstance0\",\"version\": \"1.0.1\",\"definition\": {},\"state\": \"UNINITIALISED\",\"orderedState\": \"UNINITIALISED\",\"description\": \"PMSH control loop instance 0\",\"elements\": {}}]}";
+         jsonGenerated = "{\"automationCompositionList\": [{\"name\": \"PMSHInstance0\",\"version\": \"1.0.1\",\"definition\": {},\"state\": \"UNINITIALISED\",\"orderedState\": \"UNINITIALISED\",\"description\": \"PMSH Automation Composition instance 0\",\"elements\": {}}]}";
          self._create_cache(jsonGenerated, cached_file_folder, cached_file_header, cached_file_content)
          return True
-     elif (self.path.startswith("/onap/controlloop/v2/instanceProperties")) and http_type == "POST":
-         print("self.path start with POST /onap/controlloop/v2/instanceProperties, copying body to response ...")
+     elif (self.path.startswith("/onap/policy/clamp/acm/v2/instanceProperties")) and http_type == "POST":
+         print("self.path start with POST /onap/policy/clamp/acm/v2/instanceProperties, copying body to response ...")
          if not os.path.exists(cached_file_folder):
              os.makedirs(cached_file_folder, 0o777)
          with open(cached_file_header, 'w+') as f:
@@ -340,12 +340,12 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
          with open(cached_file_content, 'w+') as f:
              f.write(self.data_string)
          return True
-     elif (self.path.startswith("/onap/controlloop/v2/instanceProperties")) and http_type == "DELETE":
+     elif (self.path.startswith("/onap/policy/clamp/acm/v2/instanceProperties")) and http_type == "DELETE":
          print("self.path start with /instanceProperties Deleting instance properties, generating response json...")
          jsonGenerated = "{\"errorDetails\": null,\"affectedControlLoopDefinitions\": [{ \"name\": \"PMSH_Instance1\", \"version\": \"2.3.1\" }]}"
          self._create_cache(jsonGenerated, cached_file_folder, cached_file_header, cached_file_content)
          return True
-     elif (self.path.startswith("/onap/controlloop/v2/instantiation/command")) and http_type == "PUT":
+     elif (self.path.startswith("/onap/policy/clamp/acm/v2/instantiation/command")) and http_type == "PUT":
          print("self.path start with /instantiation/command Changing order state, generating response json...")
          jsonGenerated = "{\"orderedState\":\"PASSIVE\",\"controlLoopIdentifierList\":[{\"name\":\"PMSH_Instance1\",\"version\":\"2.3.1\"}]}"
          self._create_cache(jsonGenerated, cached_file_folder, cached_file_header, cached_file_content)
