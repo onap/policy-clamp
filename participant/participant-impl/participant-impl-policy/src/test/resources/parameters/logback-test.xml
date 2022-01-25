@@ -36,7 +36,7 @@
         <appender-ref ref="STDOUT" />
     </root>
 
-    <logger name="org.onap.policy.clamp.controlloop.participant" level="trace" additivity="false">
+    <logger name="org.onap.policy.clamp.acm.participant" level="trace" additivity="false">
         <appender-ref ref="STDOUT" />
     </logger>
 </configuration>

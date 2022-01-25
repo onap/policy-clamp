@@ -13,17 +13,17 @@ participant:
       name: HttpParticipant0
       version: 1.0.0
     participantType:
-      name: org.onap.k8s.controlloop.HttpControlLoopParticipant
+      name: org.onap.policy.clamp.acm.HttpParticipant
       version: 2.3.4
-    clampControlLoopTopics:
+    clampAutomationCompositionTopics:
       topicSources:
-        - topic: POLICY-CLRUNTIME-PARTICIPANT
+        - topic: POLICY-ACRUNTIME-PARTICIPANT
           servers:
             - ${topicServer:message-router}
           topicCommInfrastructure: dmaap
           fetchTimeout: 15000
       topicSinks:
-        - topic: POLICY-CLRUNTIME-PARTICIPANT
+        - topic: POLICY-ACRUNTIME-PARTICIPANT
           servers:
             - ${topicServer:message-router}
           topicCommInfrastructure: dmaap
@@ -35,4 +35,4 @@ management:
 server:
   port: 8084
   servlet:
-    context-path: /onap/httpparticipant
+    context-path: /onap/policy/clamp/acm/httpparticipant

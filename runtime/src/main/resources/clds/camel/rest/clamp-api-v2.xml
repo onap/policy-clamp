@@ -1476,7 +1476,7 @@
             </route>
         </post>
 
-        <get uri="/v2/toscaControlLoop/getToscaTemplate" outType="java.lang.String" bindingMode="off"
+        <get uri="/v2/acm/getToscaTemplate" outType="java.lang.String" bindingMode="off"
              produces="application/json">
             <route>
                 <removeHeaders pattern="*"
@@ -1515,7 +1515,7 @@
             </route>
         </get>
 
-        <post uri="/v2/toscaControlLoop/commissionToscaTemplate"
+        <post uri="/v2/acm/commissionToscaTemplate"
               type="java.lang.String"
               consumes="plain/text"
               outType="java.lang.String"
@@ -1558,7 +1558,7 @@
             </route>
         </post>
 
-        <delete uri="/v2/toscaControlLoop/decommissionToscaTemplate"
+        <delete uri="/v2/acm/decommissionToscaTemplate"
               type="java.lang.String"
               consumes="plain/text"
               outType="java.lang.String"
@@ -1602,7 +1602,7 @@
             </route>
         </delete>
 
-        <delete uri="/v2/toscaControlLoop/deleteToscaInstantiation"
+        <delete uri="/v2/acm/deleteToscaInstantiation"
                 type="java.lang.String"
                 consumes="plain/text"
                 outType="java.lang.String"
@@ -1646,7 +1646,7 @@
             </route>
         </delete>
 
-        <get uri="/v2/toscaControlLoop/getToscaInstantiation" outType="java.lang.String" bindingMode="off" produces="application/json">
+        <get uri="/v2/acm/getToscaInstantiation" outType="java.lang.String" bindingMode="off" produces="application/json">
             <route>
                 <removeHeaders pattern="*"/>
                 <doTry>
@@ -1679,7 +1679,7 @@
                 </doTry>
             </route>
         </get>
-        <get uri="/v2/toscaControlLoop/getInstantiationOrderState" outType="java.lang.String" bindingMode="off" produces="application/json">
+        <get uri="/v2/acm/getInstantiationOrderState" outType="java.lang.String" bindingMode="off" produces="application/json">
             <route>
                 <removeHeaders pattern="*"
                                excludePattern="name|version|requestId"/>
@@ -1713,7 +1713,7 @@
                 </doTry>
             </route>
         </get>
-        <get uri="/v2/toscaControlLoop/getJsonSchema" outType="java.lang.String" bindingMode="off" produces="application/json">
+        <get uri="/v2/acm/getJsonSchema" outType="java.lang.String" bindingMode="off" produces="application/json">
             <route>
                 <removeHeaders pattern="*"
                                excludePattern="section"/>
@@ -1748,7 +1748,7 @@
             </route>
         </get>
 
-        <get uri="/v2/toscaControlLoop/getElementDefinitions" outType="java.lang.String" bindingMode="off" produces="application/json">
+        <get uri="/v2/acm/getElementDefinitions" outType="java.lang.String" bindingMode="off" produces="application/json">
             <route>
                 <removeHeaders pattern="*"
                                excludePattern="name|version|requestId"/>
@@ -1783,7 +1783,7 @@
             </route>
         </get>
 
-        <get uri="/v2/toscaControlLoop/getControlLoopDefinitions" outType="java.lang.String" bindingMode="off" produces="application/json">
+        <get uri="/v2/acm/getAutomationCompositionDefinitions" outType="java.lang.String" bindingMode="off" produces="application/json">
             <route>
                 <removeHeaders pattern="*"
                                excludePattern="name|version|requestId"/>
@@ -1796,7 +1796,7 @@
                     <setProperty name="raiseHttpExceptionFlag">
                         <simple resultType="java.lang.Boolean">true</simple>
                     </setProperty>
-                    <to uri="direct:get-control-loop-definitions"/>
+                    <to uri="direct:get-acm-definitions"/>
                     <to uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=endLog()"/>
                     <doCatch>
                         <exception>java.lang.Exception</exception>
@@ -1806,19 +1806,19 @@
                         <to
                                 uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=errorLog()"/>
                         <log loggingLevel="ERROR"
-                             message="GET Control Loop Definitions request failed: ${exception.stacktrace}"/>
+                             message="GET Automation Composition Definitions request failed: ${exception.stacktrace}"/>
                         <setHeader name="CamelHttpResponseCode">
                             <constant>500</constant>
                         </setHeader>
                         <setBody>
-                            <simple>GET Control Loop Definitions FAILED</simple>
+                            <simple>GET Automation Composition Definitions FAILED</simple>
                         </setBody>
                     </doCatch>
                 </doTry>
             </route>
         </get>
 
-        <post uri="/v2/toscaControlLoop/postToscaInstanceProperties"
+        <post uri="/v2/acm/postToscaInstanceProperties"
               type="java.lang.String"
               consumes="plain/text"
               outType="java.lang.String"
@@ -1860,7 +1860,7 @@
                 </doTry>
             </route>
         </post>
-        <delete uri="/v2/toscaControlLoop/deleteToscaInstanceProperties"
+        <delete uri="/v2/acm/deleteToscaInstanceProperties"
                 type="java.lang.String"
                 consumes="plain/text"
                 outType="java.lang.String"
@@ -1904,7 +1904,7 @@
             </route>
         </delete>
 
-        <get uri="/v2/toscaControlLoop/getCommonOrInstanceProperties" outType="java.lang.String" bindingMode="off" produces="application/json">
+        <get uri="/v2/acm/getCommonOrInstanceProperties" outType="java.lang.String" bindingMode="off" produces="application/json">
             <route>
                 <removeHeaders pattern="*"
                                excludePattern="name|version|requestId|common"/>
@@ -1939,7 +1939,7 @@
             </route>
         </get>
 
-        <post uri="/v2/toscaControlLoop/postToscaInstantiation"
+        <post uri="/v2/acm/postToscaInstantiation"
               type="java.lang.String"
               consumes="plain/text"
               outType="java.lang.String"
@@ -1982,7 +1982,7 @@
             </route>
         </post>
 
-        <put uri="/v2/toscaControlLoop/putToscaInstantiationStateChange"
+        <put uri="/v2/acm/putToscaInstantiationStateChange"
               type="java.lang.String"
               consumes="plain/text"
               outType="java.lang.String"
