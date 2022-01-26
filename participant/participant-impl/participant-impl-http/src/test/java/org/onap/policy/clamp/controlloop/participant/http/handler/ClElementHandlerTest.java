@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import static org.mockito.Mockito.doNothing;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -93,7 +94,7 @@ class ClElementHandlerTest {
     }
 
     @Test
-    void test_ControlLoopElementUpdate() {
+    void test_ControlLoopElementUpdate() throws ExecutionException, InterruptedException {
         doNothing().when(controlLoopElementHandler).invokeHttpClient(any());
         ControlLoopElement element = commonTestData.getControlLoopElement();
 

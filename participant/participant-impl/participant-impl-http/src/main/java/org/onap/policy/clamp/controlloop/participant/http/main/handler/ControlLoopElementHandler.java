@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,12 +23,16 @@ package org.onap.policy.clamp.controlloop.participant.http.main.handler;
 import java.io.Closeable;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.ValidationException;
@@ -50,6 +54,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 /**
@@ -128,14 +133,21 @@ public class ControlLoopElementHandler implements ControlLoopElementListener, Cl
                 .getValidator().validate(configRequest);
             if (violations.isEmpty()) {
                 invokeHttpClient(configRequest);
-                intermediaryApi.updateControlLoopElementState(controlLoopId, element.getId(),
-                        ControlLoopOrderedState.PASSIVE, ControlLoopState.PASSIVE,
-                        ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
+                List<Pair<Integer, String>> failedResponseStatus = restResponseMap.values().stream()
+                        .filter(response -> !HttpStatus.valueOf(response.getKey())
+                        .is2xxSuccessful()).collect(Collectors.toList());
+                if (failedResponseStatus.isEmpty()) {
+                    intermediaryApi.updateControlLoopElementState(controlLoopId, element.getId(),
+                            ControlLoopOrderedState.PASSIVE, ControlLoopState.PASSIVE,
+                            ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
+                } else {
+                    LOGGER.error("Error on Invoking the http request: {}", failedResponseStatus);
+                }
             } else {
                 LOGGER.error("Violations found in the config request parameters: {}", violations);
                 throw new ValidationException("Constraint violations in the config request");
             }
-        } catch (CoderException | ValidationException e) {
+        } catch (CoderException | ValidationException | InterruptedException | ExecutionException e) {
             LOGGER.error("Error invoking the http request for the config ", e);
         }
     }
@@ -144,9 +156,12 @@ public class ControlLoopElementHandler implements ControlLoopElementListener, Cl
      * Invoke a runnable thread to execute http requests.
      * @param configRequest ConfigRequest
      */
-    public void invokeHttpClient(ConfigRequest configRequest) {
+    public void invokeHttpClient(ConfigRequest configRequest) throws ExecutionException, InterruptedException {
         // Invoke runnable thread to execute https requests of all config entities
-        executor.execute(new ClHttpClient(configRequest, restResponseMap));
+        Future<Map> result = executor.submit(new ClHttpClient(configRequest, restResponseMap), restResponseMap);
+        if (!result.get().isEmpty()) {
+            LOGGER.debug("Http Request Completed: {}", result.isDone());
+        }
     }
 
     /**
