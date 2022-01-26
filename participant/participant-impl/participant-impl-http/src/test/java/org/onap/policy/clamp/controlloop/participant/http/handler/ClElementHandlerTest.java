@@ -26,6 +26,7 @@ import static org.mockito.Mockito.doNothing;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -93,7 +94,7 @@ class ClElementHandlerTest {
     }
 
     @Test
-    void test_ControlLoopElementUpdate() {
+    void test_ControlLoopElementUpdate() throws ExecutionException, InterruptedException {
         doNothing().when(controlLoopElementHandler).invokeHttpClient(any());
         ControlLoopElement element = commonTestData.getControlLoopElement();
 
