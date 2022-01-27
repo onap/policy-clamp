@@ -22,6 +22,29 @@
       "revId": "1ea1a6d7ad5d20564d801b70973ecd6c519307f4",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3be04f17_25bb3edc",
+        "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/main/handler/ControlLoopElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2022-01-27T10:56:15Z",
+      "side": 1,
+      "message": "I think the ClHttpClient updates the corresponding http response in the restResponseMap. The executor is going to override the values here?",
+      "range": {
+        "startLine": 161,
+        "startChar": 95,
+        "endLine": 161,
+        "endChar": 110
+      },
+      "revId": "1ea1a6d7ad5d20564d801b70973ecd6c519307f4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
