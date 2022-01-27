@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "09d5111b_ed86bfa8",
+        "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/main/handler/ControlLoopElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 3813
+      },
+      "writtenOn": "2022-01-27T13:11:19Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "13fba958_18fb2c76",
+      "range": {
+        "startLine": 3,
+        "startChar": 17,
+        "endLine": 3,
+        "endChar": 23
+      },
+      "revId": "1ea1a6d7ad5d20564d801b70973ecd6c519307f4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3be04f17_25bb3edc",
         "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/main/handler/ControlLoopElementHandler.java",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2022-01-27T10:56:15Z",
       "side": 1,
       "message": "I think the ClHttpClient updates the corresponding http response in the restResponseMap. The executor is going to override the values here?",
+      "range": {
+        "startLine": 161,
+        "startChar": 95,
+        "endLine": 161,
+        "endChar": 110
+      },
+      "revId": "1ea1a6d7ad5d20564d801b70973ecd6c519307f4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0f8b95d7_d8824416",
+        "filename": "participant/participant-impl/participant-impl-http/src/main/java/org/onap/policy/clamp/controlloop/participant/http/main/handler/ControlLoopElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 3813
+      },
+      "writtenOn": "2022-01-27T13:11:19Z",
+      "side": 1,
+      "message": "No. Both reference same. ClHttpClient updates the map for each http call and the restResponseMap contains\nconsolidated value \u0026 response codes.",
+      "parentUuid": "3be04f17_25bb3edc",
       "range": {
         "startLine": 161,
         "startChar": 95,
