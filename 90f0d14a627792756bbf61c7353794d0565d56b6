@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "430d7ec1_a45b0030",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/HelmClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 3813
+      },
+      "writtenOn": "2022-02-01T11:26:00Z",
+      "side": 1,
+      "message": "The repository variable is referenced in line 107.\nIf the helm repo is not available, it will check for local repo and assign that directory to repository variable and finally return it.",
+      "parentUuid": "1d510a3f_04fce24d",
+      "range": {
+        "startLine": 96,
+        "startChar": 0,
+        "endLine": 96,
+        "endChar": 2
+      },
+      "revId": "90f0d14a627792756bbf61c7353794d0565d56b6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c9058d70_bb6ecb4b",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/HelmClient.java",
         "patchSetId": 1
