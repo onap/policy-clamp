@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1d510a3f_04fce24d",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/HelmClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2022-02-01T10:57:05Z",
+      "side": 1,
+      "message": "Delete this line",
+      "range": {
+        "startLine": 96,
+        "startChar": 0,
+        "endLine": 96,
+        "endChar": 2
+      },
+      "revId": "90f0d14a627792756bbf61c7353794d0565d56b6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c9058d70_bb6ecb4b",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/HelmClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2022-02-01T10:57:05Z",
+      "side": 1,
+      "message": "String respository \u003d verifyConfiguredRepo(chart);",
+      "range": {
+        "startLine": 98,
+        "startChar": 0,
+        "endLine": 98,
+        "endChar": 3
+      },
+      "revId": "90f0d14a627792756bbf61c7353794d0565d56b6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
