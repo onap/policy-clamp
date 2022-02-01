@@ -1,6 +1,6 @@
 /*-
  * ========================LICENSE_START=================================
- * Copyright (C) 2021 Nordix Foundation. All rights reserved.
+ * Copyright (C) 2021-2022 Nordix Foundation. All rights reserved.
  * ======================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ======================================================================
@@ -93,18 +93,19 @@ public class HelmClient {
      * @throws IOException in case of IO errors
      */
     public String findChartRepository(ChartInfo chart) throws ServiceException, IOException {
-        updateHelmRepo();
-        String repository = verifyConfiguredRepo(chart);
-        if (repository != null) {
-            logger.info("Helm chart located in the repository {} ", repository);
-            return repository;
+        if (updateHelmRepo()) {
+            String repository = verifyConfiguredRepo(chart);
+            if (repository != null) {
+                logger.info("Helm chart located in the repository {} ", repository);
+                return repository;
+            }
         }
         var localHelmChartDir = chartStore.getAppPath(chart.getChartId()).toString();
         logger.info("Chart not found in helm repositories, verifying local repo {} ", localHelmChartDir);
         if (verifyLocalHelmRepo(new File(localHelmChartDir + PATH_DELIMITER + chart.getChartId().getName()))) {
-            repository = localHelmChartDir;
+            return localHelmChartDir;
         }
-        return repository;
+        return null;
     }
 
     /**
@@ -254,10 +255,18 @@ public class HelmClient {
     }
 
 
-    private void updateHelmRepo() throws ServiceException {
-        logger.info("Updating local helm repositories before verifying the chart");
-        executeCommand(new ProcessBuilder().command("helm", "repo", "update"));
-        logger.debug("Helm repositories updated successfully");
+    private boolean updateHelmRepo() {
+        try {
+            logger.info("Updating local helm repositories before verifying the chart");
+            executeCommand(new ProcessBuilder().command("helm", "repo", "update"));
+            logger.debug("Helm repositories updated successfully");
+        } catch (ServiceException e) {
+            logger.error("Failed to update the helm repo: ", e);
+            return false;
+        }
+        return true;
+
+
     }
 
     private boolean verifyLocalHelmRepo(File localFile) {

@@ -13,10 +13,10 @@ participant:
     reportingTimeIntervalMs: 120000
     description: Participant Description
     participantId:
-      name: org.onap.k8s.controlloop.K8SControlLoopParticipant
-      version: 2.3.4
+      name: K8sParticipant0
+      version: 1.0.0
     participantType:
-      name: org.onap.k8s.controlloop.K8SControlLoopParticipant
+      name: org.onap.k8s.controlloop.K8sControlLoopParticipant
       version: 2.3.4
     clampControlLoopTopics:
       topicSources:
