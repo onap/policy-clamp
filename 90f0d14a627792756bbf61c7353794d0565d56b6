@@ -115,6 +115,30 @@
       "revId": "90f0d14a627792756bbf61c7353794d0565d56b6",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "af5835b8_b282c3f3",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/HelmClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2022-02-01T11:46:30Z",
+      "side": 1,
+      "message": "Yes, It should return null in error case",
+      "parentUuid": "7fac35db_e54acb87",
+      "range": {
+        "startLine": 109,
+        "startChar": 0,
+        "endLine": 109,
+        "endChar": 3
+      },
+      "revId": "90f0d14a627792756bbf61c7353794d0565d56b6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
