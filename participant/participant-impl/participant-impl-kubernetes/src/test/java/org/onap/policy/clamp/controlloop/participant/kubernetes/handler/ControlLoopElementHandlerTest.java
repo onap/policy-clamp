@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
@@ -34,6 +35,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -83,6 +87,12 @@ class ControlLoopElementHandlerTest {
     @Mock
     private ParticipantIntermediaryApi participantIntermediaryApi;
 
+    @Mock
+    private ExecutorService executor;
+
+    @Mock
+    private Future<String> result;
+
     @BeforeAll
     static void init() throws CoderException {
         charts = CODER.decode(new File(CHART_INFO_YAML), ChartList.class).getCharts();
@@ -121,8 +131,9 @@ class ControlLoopElementHandlerTest {
     }
 
     @Test
-    void test_ControlLoopElementUpdate() throws PfModelException, IOException, ServiceException {
-        doNothing().when(controlLoopElementHandler).checkPodStatus(any(), anyInt(), anyInt());
+    void test_ControlLoopElementUpdate() throws PfModelException, IOException, ServiceException,
+            ExecutionException, InterruptedException {
+        doNothing().when(controlLoopElementHandler).checkPodStatus(any(), any(), any(), anyInt(), anyInt());
         UUID elementId1 = UUID.randomUUID();
         ControlLoopElement element = new ControlLoopElement();
         element.setId(elementId1);
@@ -156,8 +167,13 @@ class ControlLoopElementHandlerTest {
     }
 
     @Test
-    void test_checkPodStatus() {
+    void test_checkPodStatus() throws ExecutionException, InterruptedException {
+        doReturn(result).when(executor).submit(any(Runnable.class), any());
+        doReturn("Done").when(result).get();
+        doReturn(true).when(result).isDone();
         var chartInfo =  charts.get(0);
-        assertDoesNotThrow(() -> controlLoopElementHandler.checkPodStatus(chartInfo, 1, 1));
+        ToscaConceptIdentifier controlLoopId = new ToscaConceptIdentifier();
+        ControlLoopElement element = new ControlLoopElement();
+        assertDoesNotThrow(() -> controlLoopElementHandler.checkPodStatus(controlLoopId, element, chartInfo, 1, 1));
     }
 }
