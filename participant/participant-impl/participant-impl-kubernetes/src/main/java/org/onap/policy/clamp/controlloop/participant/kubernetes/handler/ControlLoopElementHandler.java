@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -58,6 +62,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class ControlLoopElementHandler implements ControlLoopElementListener {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
+    private ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
     // Map of helm installation and the status of corresponding pods
     @Getter
@@ -145,13 +151,11 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
             chartMap.put(element.getId(), chartInfo);
 
             var config = CODER.convert(nodeTemplate.getProperties(), ThreadConfig.class);
-            checkPodStatus(chartInfo, config.uninitializedToPassiveTimeout, config.podStatusCheckInterval);
+            checkPodStatus(controlLoopId, element.getId(), chartInfo, config.uninitializedToPassiveTimeout,
+                    config.podStatusCheckInterval);
 
-            intermediaryApi.updateControlLoopElementState(controlLoopId, element.getId(),
-                    ControlLoopOrderedState.PASSIVE, ControlLoopState.PASSIVE,
-                    ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
-
-        } catch (ServiceException | CoderException | IOException e) {
+        } catch (ServiceException | CoderException | IOException | ExecutionException
+                | InterruptedException e) {
             LOGGER.warn("Installation of Helm chart failed", e);
         }
     }
@@ -160,10 +164,17 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
      * Invoke a new thread to check the status of deployed pods.
      * @param chart ChartInfo
      */
-    public void checkPodStatus(ChartInfo chart, int timeout, int podStatusCheckInterval) {
+    public void checkPodStatus(ToscaConceptIdentifier controlLoopId, UUID elementId,
+            ChartInfo chart, int timeout, int podStatusCheckInterval) throws ExecutionException, InterruptedException {
         // Invoke runnable thread to check pod status
-        var runnableThread = new Thread(new PodStatusValidator(chart, timeout, podStatusCheckInterval));
-        runnableThread.start();
+        Future<String> result = executor.submit(new PodStatusValidator(chart, timeout,
+                podStatusCheckInterval), "Done");
+        if (!result.get().isEmpty()) {
+            LOGGER.info("Pod Status Validator Completed: {}", result.isDone());
+            intermediaryApi.updateControlLoopElementState(controlLoopId, elementId,
+                ControlLoopOrderedState.PASSIVE, ControlLoopState.PASSIVE,
+                ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
+        }
     }
 
     /**
