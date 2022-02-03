@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0d7a9a80_5dfc42d0",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/handler/ControlLoopElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2022-02-03T16:31:08Z",
+      "side": 1,
+      "message": "Passing just the elementId is sufficient here?",
+      "range": {
+        "startLine": 154,
+        "startChar": 42,
+        "endLine": 154,
+        "endChar": 49
+      },
+      "revId": "401a4dce4081b88dfcd72c5e8a849ffeef9f28f8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
