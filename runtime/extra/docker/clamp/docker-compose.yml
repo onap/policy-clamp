@@ -2,7 +2,7 @@ version: '3.1'
 
 services:
   policy-clamp-frontend:
-    image: onap/policy-clamp-frontend
+    image: onap/policy-gui
     depends_on:
       - policy-clamp-backend
     ports:
