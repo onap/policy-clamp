@@ -41,29 +41,26 @@
         - The ONAP POLICY-CLAMP JAR that contains CLAMP back-end code.
         - The DOCKER images for:
         * POLICY-CLAMP backend (Java Spring)
-        * POLICY-CLAMP frontend (Javascript React)
 
         It can test:
         - The POLICY-CLAMP backend, JAVA unit testing
         - The POLICY-CLAMP backend, JAVA integration tests (with Spring + docker mariadb database + docker policy/dcae
         emulator written in python)
-        - The POLICY-CLAMP frontend, Javascript tests (NodeJS(NPM) + JEST and Enzyme for React)
 
         The test coverage for dev's can be found after a "clean install" build in:
         - Clamp backend: target/jacoco-dev.exec (unit tests + integration tests merged)
         or separately target/coverage-reports/jacoco.exec and target/coverage-reports/jacoco-it.exec
-        - Clamp frontend: target/ui-react/coverage
 
         Useful mvn commands:
-        - mvn clean install: Build Clamp backend JAR + unit tests + integration tests + NPM tests (+coverage for all)
-        - mvn clean install -DskipITs=true: Build Clamp backend JAR + unit tests + NPM tests (+coverage for all), it
+        - mvn clean install: Build Clamp backend JAR + unit tests + integration tests (+coverage for all)
+        - mvn clean install -DskipITs=true: Build Clamp backend JAR + unit tests (+coverage for all), it
         does not require a DOCKER engine
         - mvn clean install -DskipTests -P docker: Build Clamp backend JAR + all docker images
 
-        To start POLICY-CLAMP (Build it before):
+        To start POLICY-CLAMP (Build it before. In order to start frontend, is also required policy/gui repo built):
         - Use docker-compose file in ./extra/docker/clamp/docker-compose.yml
         - Use the script located in ./extra/bin/start-backend.sh + start-frontend.sh
-        - Use your IDE to use the Jar or start NVM/NPM
+        - Use your IDE to use the Jar or start NVM
 
     </description>
 
@@ -77,16 +74,11 @@
         </sonar.coverage.jacoco.xmlReportPaths>
         <sonar.projectVersion>${project.version}</sonar.projectVersion>
         <sonar.log.level>DEBUG</sonar.log.level>
-        <sonar.nodejs.executable>${project.build.directory}/${ui.react.src}/node/node</sonar.nodejs.executable>
         <sonar.verbose>true</sonar.verbose>
-        <sonar.sources>src/main,${project.build.directory}/${ui.react.src}/src</sonar.sources>
+        <sonar.sources>src/main</sonar.sources>
         <sonar.exclusions>src/main/resources/**</sonar.exclusions>
         <sonar.scm.exclusions.disabled>true</sonar.scm.exclusions.disabled>
-        <sonar.javascript.lcov.reportPaths>${project.build.directory}/${ui.react.src}/coverage/lcov.info
-        </sonar.javascript.lcov.reportPaths>
-        <sonar.coverage.exclusions>
-            src/main/resources/**,target/ui-react/src/**/*.test.js,target/ui-react/src/setupTests.js
-        </sonar.coverage.exclusions>
+        <sonar.coverage.exclusions>src/main/resources/**</sonar.coverage.exclusions>
         <docker.push.registry>localhost:5000</docker.push.registry>
         <docker.pull.registry>nexus3.onap.org:10001</docker.pull.registry>
         <docker.skip.build>true</docker.skip.build>
@@ -94,9 +86,6 @@
         <docker.skip.tag>true</docker.skip.tag>
         <skip.staging.artifacts>false</skip.staging.artifacts>
         <python.http.proxy.param />
-        <ui.react.src>ui-react</ui.react.src>
-        <ui.react.lib.src>ui-react-lib</ui.react.lib.src>
-        <npm.publish.url>https://nexus3.onap.org/repository/npm.snapshot/</npm.publish.url>
 
         <!--  This property triggers generation of the Swagger documents -->
         <!-- swagger.generation.phase>post-integration-test</swagger.generation.phase-->
@@ -485,44 +474,6 @@
                     <include>clds/aaf/**</include>
                 </includes>
             </resource>
-            <resource>
-                <directory>${ui.react.src}</directory>
-                <excludes>
-                    <exclude>node_modules</exclude>
-                </excludes>
-                <includes>
-                    <include>src/**</include>
-                    <include>public/**</include>
-                    <include>package.json</include>
-                    <include>package-lock.json</include>
-                </includes>
-                <filtering>true</filtering>
-                <targetPath>${project.build.directory}/${ui.react.src}</targetPath>
-            </resource>
-            <resource>
-                <directory>${ui.react.src}</directory>
-                <includes>
-                    <include>src/**</include>
-                </includes>
-                <excludes>
-                    <exclude>**/__snapshots__/**</exclude>
-                    <exclude>**/**.test.js</exclude>
-                </excludes>
-                <filtering>true</filtering>
-                <targetPath>${project.build.directory}/${ui.react.lib.src}</targetPath>
-            </resource>
-            <resource>
-                <directory>${ui.react.lib.src}</directory>
-                <includes>
-                    <include>**</include>
-                </includes>
-                <excludes>
-                    <exclude>node_modules/**</exclude>
-                    <exclude>package-lock.json</exclude>
-                </excludes>
-                <filtering>true</filtering>
-                <targetPath>${project.build.directory}/${ui.react.lib.src}</targetPath>
-            </resource>
         </resources>
 
         <plugins>
@@ -573,16 +524,6 @@
                         </goals>
                         <configuration>
                             <source>${project.basedir}/src/main/script/TagVersion.groovy</source>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>npm-repos-selection</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>execute</goal>
-                        </goals>
-                        <configuration>
-                            <source>${project.basedir}/src/main/script/SelectNpmRepo.groovy</source>
                         </configuration>
                     </execution>
                 </executions>
@@ -801,28 +742,6 @@
                                 </assembly>
                             </build>
                         </image>
-                        <image>
-                            <name>onap/policy-clamp-frontend</name>
-                            <alias>onap-policy-clamp-frontend</alias>
-                            <run>
-                                <skip>true</skip>
-                            </run>
-                            <build>
-                                <cleanup>true</cleanup>
-                                <tags>
-                                    <tag>latest</tag>
-                                    <tag>${project.docker.latesttagtimestamp.version}</tag>
-                                    <tag>${project.docker.latesttag.version}</tag>
-                                </tags>
-                                <!-- A relative path is looked up in ${project.basedir}/src/main/docker by
-                                    default -->
-                                <dockerFile>frontend/Dockerfile</dockerFile>
-                                <assembly>
-                                    <descriptor>frontend/frontend-files.xml</descriptor>
-                                    <name>onap-policy-clamp-frontend</name>
-                                </assembly>
-                            </build>
-                        </image>
                     </images>
                 </configuration>
 
@@ -932,128 +851,12 @@
             </plugin>
 
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>cleanNodeModules</id>
-                        <phase>clean</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <executable>bash</executable>
-                    <arguments>
-                        <argument>${project.build.directory}/clean_node_modules.sh</argument>
-                    </arguments>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>com.github.eirslett</groupId>
-                <artifactId>frontend-maven-plugin</artifactId>
-                <version>1.11.3</version>
-                <configuration>
-                    <installDirectory>${project.build.directory}/${ui.react.src}</installDirectory>
-                    <npmDownloadRoot>${repo.npm}</npmDownloadRoot>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>install_node_and_npm</id>
-                        <goals>
-                            <goal>install-node-and-npm</goal>
-                        </goals>
-                        <phase>generate-sources</phase>
-                        <configuration>
-                            <nodeVersion>v14.16.1</nodeVersion>
-                            <npmVersion>6.14.13</npmVersion>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>npm_install</id>
-                        <goals>
-                            <goal>npm</goal>
-                        </goals>
-                        <phase>compile</phase>
-                        <configuration>
-                            <workingDirectory>${project.build.directory}/${ui.react.src}</workingDirectory>
-                            <arguments>install</arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>npm_test</id>
-                        <goals>
-                            <goal>npm</goal>
-                        </goals>
-                        <phase>test</phase>
-                        <configuration>
-                            <skip>${maven.test.skip}</skip>
-                            <arguments>run-script test:coverage</arguments>
-                            <workingDirectory>${project.build.directory}/${ui.react.src}</workingDirectory>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>npm_install_lib</id>
-                        <goals>
-                            <goal>npm</goal>
-                        </goals>
-                        <phase>deploy</phase>
-                        <configuration>
-                            <workingDirectory>${project.build.directory}/${ui.react.lib.src}</workingDirectory>
-                            <arguments>install</arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>npm_build_lib</id>
-                        <goals>
-                            <goal>npm</goal>
-                        </goals>
-                        <phase>deploy</phase>
-                        <configuration>
-                            <workingDirectory>${project.build.directory}/${ui.react.lib.src}</workingDirectory>
-                            <arguments>run build</arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>npm_publish</id>
-                        <goals>
-                            <goal>npm</goal>
-                        </goals>
-                        <phase>deploy</phase>
-                        <configuration>
-                            <workingDirectory>${project.build.directory}/${ui.react.lib.src}</workingDirectory>
-                            <arguments>publish</arguments>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
             </plugin>
             <plugin>
                 <groupId>org.sonarsource.scanner.maven</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>libIndexCheck</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <executable>bash</executable>
-                    <arguments>
-                        <argument>${project.basedir}/src/main/script/checkLibIndex.sh</argument>
-                    </arguments>
-                </configuration>
             </plugin>
             <!-- Plugin to generate a X509 Certificate for https tests  -->
             <plugin>
