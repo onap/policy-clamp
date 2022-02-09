@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "90b7a79d_9a7dfbad",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/config/PhysicalNamingStrategyClImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 4903
+      },
+      "writtenOn": "2022-02-09T16:22:13Z",
+      "side": 1,
+      "message": "I see everything else except this part same as PhysicalNamingStrategyStandardImpl which is provided by hibernate.\nIn policyadmin schema, this is working straight away, not sure if something is different in clamp  which causes the table names to differ.",
+      "range": {
+        "startLine": 46,
+        "startChar": 7,
+        "endLine": 51,
+        "endChar": 9
+      },
+      "revId": "c506b4cf6a1b229859bcd3c473a98a5913ec0109",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
