@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "afc65bb6_34fc48d6",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/config/PhysicalNamingStrategyClImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2022-02-10T09:54:44Z",
+      "side": 1,
+      "message": "I am getting this error: Table \u0027controlloop.JpaToscaDataType_properties\u0027 doesn\u0027t exist. This code change tables like JpaToscaDataType_properties to JpaToscaDataType_PROPERTIES",
+      "parentUuid": "90b7a79d_9a7dfbad",
+      "range": {
+        "startLine": 46,
+        "startChar": 7,
+        "endLine": 51,
+        "endChar": 9
+      },
+      "revId": "c506b4cf6a1b229859bcd3c473a98a5913ec0109",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c64b5390_0a8dde13",
         "filename": "runtime-controlloop/src/main/resources/application.yaml",
         "patchSetId": 1
@@ -39,6 +63,24 @@
       "revId": "c506b4cf6a1b229859bcd3c473a98a5913ec0109",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a7c9e265_81cb8aef",
+        "filename": "runtime-controlloop/src/main/resources/application.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2022-02-10T09:54:44Z",
+      "side": 1,
+      "message": "we are using MariaDB, I think that MariaDB dialect is much more appropriate than MySql dialect",
+      "parentUuid": "c64b5390_0a8dde13",
+      "revId": "c506b4cf6a1b229859bcd3c473a98a5913ec0109",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
