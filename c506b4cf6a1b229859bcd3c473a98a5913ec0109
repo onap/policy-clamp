@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "07208bc3_698e4e95",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/config/PhysicalNamingStrategyClImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 4903
+      },
+      "writtenOn": "2022-02-10T10:59:44Z",
+      "side": 1,
+      "message": "oh! that is strange. In the existing ONAP setups, when I check, all tables in policyadmin and controlloop databases seem to be all lower case",
+      "parentUuid": "afc65bb6_34fc48d6",
+      "range": {
+        "startLine": 46,
+        "startChar": 7,
+        "endLine": 51,
+        "endChar": 9
+      },
+      "revId": "c506b4cf6a1b229859bcd3c473a98a5913ec0109",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c64b5390_0a8dde13",
         "filename": "runtime-controlloop/src/main/resources/application.yaml",
         "patchSetId": 1
