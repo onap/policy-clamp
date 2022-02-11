@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d7d199d7_8d988c4e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2022-02-11T10:59:15Z",
+      "side": 1,
+      "message": "Please add a short description of what you have done.",
+      "revId": "18bc4c0a5d07297d6526848499359a2f8b6ab65f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "267996e3_5a65cc0b",
+        "filename": "runtime/extra/docker/clamp/docker-compose.yml",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2022-02-11T10:59:15Z",
+      "side": 1,
+      "message": "we could rename this to:\npolicy-gui\n\nOr would it cause other problems to do this?",
+      "range": {
+        "startLine": 4,
+        "startChar": 2,
+        "endLine": 4,
+        "endChar": 23
+      },
+      "revId": "18bc4c0a5d07297d6526848499359a2f8b6ab65f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
