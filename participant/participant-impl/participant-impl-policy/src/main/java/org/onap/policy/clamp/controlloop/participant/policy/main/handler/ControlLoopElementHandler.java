@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -83,21 +83,21 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
      * @param controlLoopElementId the ID of the control loop element
      * @param currentState the current state of the control loop element
      * @param orderedState the state to which the control loop element is changing to
-     * @throws PfModelException in case of an exception
      */
     @Override
     public void controlLoopElementStateChange(ToscaConceptIdentifier controlLoopId,
                 UUID controlLoopElementId, ControlLoopState currentState,
-            ControlLoopOrderedState orderedState) throws PfModelException {
+            ControlLoopOrderedState orderedState) {
         switch (orderedState) {
             case UNINITIALISED:
                 try {
+                    undeployPolicies(controlLoopElementId);
                     deletePolicyData(controlLoopId, controlLoopElementId, orderedState);
                     intermediaryApi.updateControlLoopElementState(controlLoopId,
                             controlLoopElementId, orderedState, ControlLoopState.UNINITIALISED,
                             ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
                 } catch (PfModelRuntimeException e) {
-                    LOGGER.debug("Deleting policy data failed", e);
+                    LOGGER.debug("Undeploying/Deleting policy failed {}", controlLoopElementId, e);
                 }
                 break;
             case PASSIVE:
@@ -111,11 +111,7 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
                         ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
                 break;
             case RUNNING:
-                try {
-                    deployPolicies(controlLoopId, controlLoopElementId, orderedState);
-                } catch (PfModelRuntimeException e) {
-                    LOGGER.debug("Deploying policies failed {}", controlLoopElementId);
-                }
+                LOGGER.info("Running state is not supported");
                 break;
             default:
                 LOGGER.debug("Unknown orderedstate {}", orderedState);
@@ -153,7 +149,7 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
             LOGGER.debug("No policies to deploy to {}", controlLoopElementId);
         }
         intermediaryApi.updateControlLoopElementState(controlLoopId,
-                controlLoopElementId, newState, ControlLoopState.RUNNING,
+                controlLoopElementId, newState, ControlLoopState.PASSIVE,
                 ParticipantMessageType.CONTROL_LOOP_STATE_CHANGE);
     }
 
@@ -181,8 +177,6 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
     public void controlLoopElementUpdate(ToscaConceptIdentifier controlLoopId, ControlLoopElement element,
                                          ToscaNodeTemplate clElementDefinition)
             throws PfModelException {
-        intermediaryApi.updateControlLoopElementState(controlLoopId, element.getId(), element.getOrderedState(),
-                ControlLoopState.PASSIVE, ParticipantMessageType.CONTROL_LOOP_UPDATE);
         ToscaServiceTemplate controlLoopDefinition = element.getToscaServiceTemplateFragment();
         if (controlLoopDefinition.getToscaTopologyTemplate() != null) {
             if (controlLoopDefinition.getPolicyTypes() != null) {
@@ -205,6 +199,7 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
                 apiHttpClient.createPolicy(controlLoopDefinition);
             }
         }
+        deployPolicies(controlLoopId, element.getId(), element.getOrderedState());
     }
 
     /**
