@@ -22,6 +22,30 @@
       "revId": "8d763271d7b9e29d8adda76dfeb113ed52d9cd4f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e817a7fc_e5a49ad8",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/resources/config/application.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 3813
+      },
+      "writtenOn": "2022-02-15T13:37:13Z",
+      "side": 1,
+      "message": "Yes. It is required to sync the application.yaml with docker \u0026 oom repo\u0027s. But this fix wont break any change in running the application. If the property is not present in the yaml it will default to false which will disable the helm endpoints.",
+      "parentUuid": "ce3d0997_acd4f3ee",
+      "range": {
+        "startLine": 60,
+        "startChar": 13,
+        "endLine": 60,
+        "endChar": 18
+      },
+      "revId": "8d763271d7b9e29d8adda76dfeb113ed52d9cd4f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
