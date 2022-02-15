@@ -46,6 +46,30 @@
       "revId": "8d763271d7b9e29d8adda76dfeb113ed52d9cd4f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3943fbb2_29454582",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/resources/config/application.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2022-02-15T13:39:16Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "e817a7fc_e5a49ad8",
+      "range": {
+        "startLine": 60,
+        "startChar": 13,
+        "endLine": 60,
+        "endChar": 18
+      },
+      "revId": "8d763271d7b9e29d8adda76dfeb113ed52d9cd4f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
