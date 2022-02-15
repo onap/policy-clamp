@@ -61,7 +61,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(value = ChartController.class)
+@WebMvcTest(value = ChartController.class, properties = "chart.api.enabled=true")
 @EnableConfigurationProperties(value = ParticipantK8sParameters.class)
 class ChartControllerTest {
 
