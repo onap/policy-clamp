@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -61,7 +61,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(value = ChartController.class)
+@WebMvcTest(value = ChartController.class, properties = "chart.api.enabled=true")
 @EnableConfigurationProperties(value = ParticipantK8sParameters.class)
 class ChartControllerTest {
 
