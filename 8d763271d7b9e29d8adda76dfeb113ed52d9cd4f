@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ce3d0997_acd4f3ee",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/resources/config/application.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2022-02-15T13:28:55Z",
+      "side": 1,
+      "message": "We will also require this change in the docker properties file as well as in OOM repo.",
+      "range": {
+        "startLine": 60,
+        "startChar": 13,
+        "endLine": 60,
+        "endChar": 18
+      },
+      "revId": "8d763271d7b9e29d8adda76dfeb113ed52d9cd4f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
