@@ -188,8 +188,9 @@ public class ChartController {
         } catch (CoderException e) {
             throw new ServiceException("Error parsing the repository information", e);
         }
-        chartService.configureRepository(repository);
-
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        if (chartService.configureRepository(repository)) {
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
 }
