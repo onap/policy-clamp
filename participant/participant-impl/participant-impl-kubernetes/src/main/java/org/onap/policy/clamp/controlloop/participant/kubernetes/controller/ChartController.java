@@ -1,6 +1,6 @@
 /*-
  * ========================LICENSE_START=================================
- * Copyright (C) 2021 Nordix Foundation. All rights reserved.
+ * Copyright (C) 2021-2022 Nordix Foundation. All rights reserved.
  * ======================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ import org.onap.policy.clamp.controlloop.participant.kubernetes.service.ChartSer
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -48,6 +49,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController("chartController")
+@ConditionalOnExpression("${chart.api.enabled:false}")
 @RequestMapping("helm")
 @Api(tags = {"k8s-participant"})
 public class ChartController {
