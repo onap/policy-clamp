@@ -1,6 +1,6 @@
 /*-
  * ========================LICENSE_START=================================
- * Copyright (C) 2021 Nordix Foundation. All rights reserved.
+ * Copyright (C) 2021-2022 Nordix Foundation. All rights reserved.
  * ======================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -111,10 +111,8 @@ public class ChartService {
      * @param repo HelmRepository
      * @throws ServiceException incase of error
      */
-    public void configureRepository(HelmRepository repo) throws ServiceException {
-        if (repo.getAddress() != null) {
-            helmClient.addRepository(repo);
-        }
+    public boolean configureRepository(HelmRepository repo) throws ServiceException {
+        return helmClient.addRepository(repo);
     }
 
     /**

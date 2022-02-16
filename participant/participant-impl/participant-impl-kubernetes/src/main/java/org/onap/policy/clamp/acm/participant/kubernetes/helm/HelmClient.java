@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.onap.policy.clamp.acm.participant.kubernetes.exception.ServiceException;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartInfo;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.HelmRepository;
@@ -70,17 +71,18 @@ public class HelmClient {
     /**
      * Add repository if doesn't exist.
      * @param repo HelmRepository
+     * @return boolean true of false based on add repo success or failed
      * @throws ServiceException incase of error
      */
-    public void addRepository(HelmRepository repo) throws ServiceException {
-        String output = executeCommand(prepareVerifyRepoCommand(repo));
-        if (output.isEmpty()) {
+    public boolean addRepository(HelmRepository repo) throws ServiceException {
+        if (!verifyHelmRepoAlreadyExist(repo)) {
             logger.info("Adding repository to helm client");
             executeCommand(prepareRepoAddCommand(repo));
             logger.debug("Added repository {} to the helm client", repo.getRepoName());
-        } else {
-            logger.info("Repository already exists");
+            return true;
         }
+        logger.info("Repository already exists");
+        return false;
     }
 
 
@@ -184,7 +186,10 @@ public class HelmClient {
         return null;
     }
 
-    private ProcessBuilder prepareRepoAddCommand(HelmRepository repo) {
+    private ProcessBuilder prepareRepoAddCommand(HelmRepository repo) throws ServiceException {
+        if (StringUtils.isEmpty(repo.getAddress())) {
+            throw new ServiceException("Repository Should have valid address");
+        }
         var url = repo.getProtocol() + "://" + repo.getAddress();
         if (repo.getPort() != null) {
             url =  url + ":" + repo.getPort();
@@ -202,9 +207,16 @@ public class HelmClient {
         return new ProcessBuilder().command(helmArguments);
     }
 
-    private ProcessBuilder prepareVerifyRepoCommand(HelmRepository repo) {
-        List<String> helmArguments = List.of("sh", "-c", "helm repo ls | grep " + repo.getRepoName());
-        return new ProcessBuilder().command(helmArguments);
+    private boolean verifyHelmRepoAlreadyExist(HelmRepository repo) {
+        try {
+            logger.debug("Verify the repo already exist in helm repositories");
+            List<String> helmArguments = List.of("sh", "-c", "helm repo list | grep " + repo.getRepoName());
+            executeCommand(new ProcessBuilder().command(helmArguments));
+        } catch (ServiceException e) {
+            logger.debug("Repository {} not found:", repo.getRepoName(), e);
+            return false;
+        }
+        return true;
     }
 
     private ProcessBuilder prepareVerifyNamespaceCommand(String namespace) {
@@ -265,8 +277,6 @@ public class HelmClient {
             return false;
         }
         return true;
-
-
     }
 
     private boolean verifyLocalHelmRepo(File localFile) {
