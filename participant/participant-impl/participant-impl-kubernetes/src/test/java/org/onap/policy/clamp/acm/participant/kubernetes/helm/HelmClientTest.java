@@ -111,6 +111,7 @@ class HelmClientTest {
         mockedClient.when(() -> HelmClient.executeCommand(any()))
             .thenReturn(new String());
         when(repo.getRepoName()).thenReturn("RepoName");
+        when(repo.getAddress()).thenReturn("http://localhost:8080");
         assertDoesNotThrow(() -> helmClient.addRepository(repo));
 
         mockedClient.when(() -> HelmClient.executeCommand(any()))

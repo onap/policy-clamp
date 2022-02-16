@@ -23,6 +23,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import org.onap.policy.clamp.acm.participant.kubernetes.exception.ServiceException;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartInfo;
@@ -32,6 +33,8 @@ import org.onap.policy.clamp.acm.participant.kubernetes.models.InstallationInfo;
 import org.onap.policy.clamp.acm.participant.kubernetes.service.ChartService;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.http.HttpStatus;
@@ -53,6 +56,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("helm")
 @Api(tags = {"k8s-participant"})
 public class ChartController {
+    private final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @Autowired
     private ChartService chartService;
@@ -179,17 +183,21 @@ public class ChartController {
     @PostMapping(path = "/repo", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Configure helm repository")
-    @ApiResponses(value = {@ApiResponse(code = 201, message = "Repository added")})
+    @ApiResponses(value = {@ApiResponse(code = 201, message = "Repository added"),
+                           @ApiResponse(code = 409, message = "Repository already Exist")})
     public ResponseEntity<Object> configureRepo(@RequestBody String repo)
             throws ServiceException, IOException {
         HelmRepository repository;
         try {
             repository = CODER.decode(repo, HelmRepository.class);
         } catch (CoderException e) {
-            throw new ServiceException("Error parsing the repository information", e);
+            logger.warn("Error parsing the repository information:", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error parsing the repository information");
         }
-        chartService.configureRepository(repository);
-
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        if (chartService.configureRepository(repository)) {
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
 }

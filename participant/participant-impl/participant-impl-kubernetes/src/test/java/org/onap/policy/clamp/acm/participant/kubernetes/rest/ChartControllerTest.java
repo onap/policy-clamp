@@ -22,6 +22,7 @@
 package org.onap.policy.clamp.acm.participant.kubernetes.rest;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -225,12 +226,26 @@ class ChartControllerTest {
     @Test
     void testConfigureRepo() throws Exception {
         RequestBuilder requestBuilder;
+        when(chartService.configureRepository(any())).thenReturn(true);
 
         requestBuilder = MockMvcRequestBuilders.post(CONFIGURE_REPO_URL).accept(MediaType.APPLICATION_JSON_VALUE)
             .content(getInstallationJson(charts.get(0).getChartId().getName(), charts.get(0).getChartId().getVersion()))
             .contentType(MediaType.APPLICATION_JSON_VALUE);
 
         mockMvc.perform(requestBuilder).andExpect(status().isCreated());
+
+    }
+
+    @Test
+    void testConfigureRepoAlreadyExist() throws Exception {
+        RequestBuilder requestBuilder;
+        when(chartService.configureRepository(any())).thenReturn(false);
+
+        requestBuilder = MockMvcRequestBuilders.post(CONFIGURE_REPO_URL).accept(MediaType.APPLICATION_JSON_VALUE)
+            .content(getInstallationJson(charts.get(0).getChartId().getName(), charts.get(0).getChartId().getVersion()))
+            .contentType(MediaType.APPLICATION_JSON_VALUE);
+
+        mockMvc.perform(requestBuilder).andExpect(status().isConflict());
 
     }
 
