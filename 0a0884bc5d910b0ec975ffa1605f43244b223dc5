@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "93ba8fa2_2a846e85",
+        "filename": "packages/policy-clamp-docker/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2022-02-17T10:55:25Z",
+      "side": 1,
+      "message": "AcmRuntimeDockerfile",
+      "range": {
+        "startLine": 98,
+        "startChar": 44,
+        "endLine": 98,
+        "endChar": 63
+      },
+      "revId": "0a0884bc5d910b0ec975ffa1605f43244b223dc5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
