@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "12c3ac62_ab250f6c",
+        "filename": "common/src/test/resources/demo/Notes.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2022-02-18T15:44:37Z",
+      "side": 1,
+      "message": "onap/policy-clamp-runtime-acm",
+      "range": {
+        "startLine": 49,
+        "startChar": 161,
+        "endLine": 49,
+        "endChar": 189
+      },
+      "revId": "687ffaf065e3d1593c6faa7aef5623c7d58a733f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "788ace37_b0d0bd87",
+        "filename": "common/src/test/resources/demo/Notes.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2022-02-18T15:44:37Z",
+      "side": 1,
+      "message": "onap/policy-clamp-ac-k8s-ppnt",
+      "range": {
+        "startLine": 50,
+        "startChar": 161,
+        "endLine": 50,
+        "endChar": 190
+      },
+      "revId": "687ffaf065e3d1593c6faa7aef5623c7d58a733f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "993ba60e_6afbfe3b",
+        "filename": "common/src/test/resources/demo/Notes.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2022-02-18T15:44:37Z",
+      "side": 1,
+      "message": "onap/policy-clamp-ac-http-ppnt",
+      "range": {
+        "startLine": 51,
+        "startChar": 148,
+        "endLine": 51,
+        "endChar": 178
+      },
+      "revId": "687ffaf065e3d1593c6faa7aef5623c7d58a733f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ed15c0ed_535ff17a",
+        "filename": "common/src/test/resources/demo/Notes.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2022-02-18T15:44:37Z",
+      "side": 1,
+      "message": "onap/policy-clamp-ac-pf-ppnt",
+      "range": {
+        "startLine": 52,
+        "startChar": 148,
+        "endLine": 52,
+        "endChar": 176
+      },
+      "revId": "687ffaf065e3d1593c6faa7aef5623c7d58a733f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
