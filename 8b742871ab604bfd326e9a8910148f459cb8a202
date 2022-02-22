@@ -33,6 +33,29 @@
       "revId": "8b742871ab604bfd326e9a8910148f459cb8a202",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2db63560_4aee7e08",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/acm/participant/kubernetes/helm/HelmClient.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2022-02-22T15:01:02Z",
+      "side": 1,
+      "message": "This will return empty if the required repo does not exist and some other repositories are already configured, in that case we should not be returning true",
+      "range": {
+        "startLine": 214,
+        "startChar": 12,
+        "endLine": 214,
+        "endChar": 26
+      },
+      "revId": "8b742871ab604bfd326e9a8910148f459cb8a202",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
