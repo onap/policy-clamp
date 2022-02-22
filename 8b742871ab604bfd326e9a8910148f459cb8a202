@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "f8c3ee52_f4408d93",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/acm/participant/kubernetes/controller/ChartController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 3813
+      },
+      "writtenOn": "2022-02-22T15:55:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7ec0cd89_5b29ef97",
+      "revId": "8b742871ab604bfd326e9a8910148f459cb8a202",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "69050984_1bf4edab",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/acm/participant/kubernetes/controller/ChartController.java",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2022-02-22T14:23:58Z",
       "side": 1,
       "message": "probably should wrap this exception on something that makes sense to the client, not sure how the server will wrap it up into json.",
+      "revId": "8b742871ab604bfd326e9a8910148f459cb8a202",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f1c5f31b_521ef084",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/acm/participant/kubernetes/controller/ChartController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 3813
+      },
+      "writtenOn": "2022-02-22T15:55:27Z",
+      "side": 1,
+      "message": "This API is disabled by default and it is used for developers to test and deploy the helm charts. I have modified it to returned the ResponseEntity",
+      "parentUuid": "69050984_1bf4edab",
       "revId": "8b742871ab604bfd326e9a8910148f459cb8a202",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
@@ -56,6 +92,30 @@
       "revId": "8b742871ab604bfd326e9a8910148f459cb8a202",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8745a67a_7184ea92",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/acm/participant/kubernetes/helm/HelmClient.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 3813
+      },
+      "writtenOn": "2022-02-22T15:55:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2db63560_4aee7e08",
+      "range": {
+        "startLine": 214,
+        "startChar": 12,
+        "endLine": 214,
+        "endChar": 26
+      },
+      "revId": "8b742871ab604bfd326e9a8910148f459cb8a202",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
