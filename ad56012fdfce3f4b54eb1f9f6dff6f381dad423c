@@ -16,6 +16,24 @@
       "revId": "ad56012fdfce3f4b54eb1f9f6dff6f381dad423c",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c283da71_dbf5fb01",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/acm/participant/kubernetes/controller/ChartController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2022-02-22T17:36:51Z",
+      "side": 1,
+      "message": "Yes, I guess it should be warn, can we fix that?",
+      "parentUuid": "acdda12e_b1db86c7",
+      "revId": "ad56012fdfce3f4b54eb1f9f6dff6f381dad423c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
