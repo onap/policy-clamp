@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "acdda12e_b1db86c7",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/acm/participant/kubernetes/controller/ChartController.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-02-22T16:57:12Z",
+      "side": 1,
+      "message": "may be severity here is info or warn at max?",
+      "revId": "ad56012fdfce3f4b54eb1f9f6dff6f381dad423c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
