@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7ec0cd89_5b29ef97",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/acm/participant/kubernetes/controller/ChartController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-02-22T14:23:58Z",
+      "side": 1,
+      "message": "missing new api response from line 194",
+      "revId": "8b742871ab604bfd326e9a8910148f459cb8a202",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "69050984_1bf4edab",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/acm/participant/kubernetes/controller/ChartController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-02-22T14:23:58Z",
+      "side": 1,
+      "message": "probably should wrap this exception on something that makes sense to the client, not sure how the server will wrap it up into json.",
+      "revId": "8b742871ab604bfd326e9a8910148f459cb8a202",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
