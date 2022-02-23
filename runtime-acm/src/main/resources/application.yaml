@@ -7,7 +7,7 @@ spring:
     converters:
       preferred-json-mapper: gson
   datasource:
-    url: jdbc:mariadb://${mariadb.host:localhost}:${mariadb.port:3306}/clamp-acm
+    url: jdbc:mariadb://${mariadb.host:localhost}:${mariadb.port:3306}/clampacm
     driverClassName: org.mariadb.jdbc.Driver
     username: policy
     password: P01icY
