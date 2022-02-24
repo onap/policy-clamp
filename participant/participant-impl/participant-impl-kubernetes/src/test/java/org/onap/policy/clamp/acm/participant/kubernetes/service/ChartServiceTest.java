@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,6 +34,7 @@ import static org.mockito.Mockito.doThrow;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
@@ -42,10 +43,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
+import org.onap.policy.clamp.acm.participant.kubernetes.configurations.HelmRepositoryConfig;
 import org.onap.policy.clamp.acm.participant.kubernetes.exception.ServiceException;
 import org.onap.policy.clamp.acm.participant.kubernetes.helm.HelmClient;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartInfo;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartList;
+import org.onap.policy.clamp.acm.participant.kubernetes.models.HelmRepository;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -68,6 +71,9 @@ class ChartServiceTest {
 
     @Mock
     private HelmClient helmClient;
+
+    @Mock
+    private HelmRepositoryConfig helmRepositoryConfig;
 
     @BeforeAll
     static void init() throws CoderException {
@@ -114,6 +120,9 @@ class ChartServiceTest {
 
     @Test
     void test_installChart() throws IOException, ServiceException {
+        List<HelmRepository> helmRepositoryList = new ArrayList<>();
+        helmRepositoryList.add(HelmRepository.builder().address("https://localhost:8080").build());
+        doReturn(helmRepositoryList).when(helmRepositoryConfig).getRepos();
         assertDoesNotThrow(() -> chartService.installChart(charts.get(0)));
         doThrow(ServiceException.class).when(helmClient).installChart(any());
         assertThatThrownBy(() -> chartService.installChart(charts.get(0))).isInstanceOf(ServiceException.class);
