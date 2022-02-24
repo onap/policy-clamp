@@ -21,6 +21,7 @@ package org.onap.policy.clamp.acm.participant.kubernetes.service;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.Collection;
+import org.onap.policy.clamp.acm.participant.kubernetes.configurations.HelmRepositoryConfig;
 import org.onap.policy.clamp.acm.participant.kubernetes.exception.ServiceException;
 import org.onap.policy.clamp.acm.participant.kubernetes.helm.HelmClient;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartInfo;
@@ -40,6 +41,9 @@ public class ChartService {
 
     @Autowired
     private HelmClient helmClient;
+
+    @Autowired
+    private HelmRepositoryConfig helmRepositoryConfig;
 
     /**
      * Get all the installed charts.
@@ -84,25 +88,40 @@ public class ChartService {
     /**
      * Install a helm chart.
      * @param chart name and version.
+     * @return boolean flag to indicate success or failure
      * @throws ServiceException in case of error
      * @throws IOException in case of IO errors
      */
-    public void installChart(ChartInfo chart) throws ServiceException, IOException {
+    public boolean installChart(ChartInfo chart) throws ServiceException, IOException {
+        boolean whiteListed = false;
         if (chart.getRepository() == null) {
             String repoName = findChartRepo(chart);
             if (repoName == null) {
                 logger.error("Chart repository could not be found. Skipping chart Installation "
                     + "for the chart {} ", chart.getChartId().getName());
-                return;
+                return false;
             } else {
                 HelmRepository repo = HelmRepository.builder().repoName(repoName).build();
                 chart.setRepository(repo);
             }
         } else {
             // Add remote repository if passed via TOSCA
-            configureRepository(chart.getRepository());
+            // check whether the repo is whitelisted
+            for (HelmRepository repo : helmRepositoryConfig.getRepos()) {
+                if (repo.getAddress().equals(chart.getRepository().getAddress())
+                        && chart.getRepository().getAddress().contains("https")) {
+                    configureRepository(chart.getRepository());
+                    whiteListed = true;
+                    break;
+                }
+            }
+            if (!whiteListed) {
+                logger.error("Repository is not Whitelisted / plain http in not allowed");
+                return false;
+            }
         }
         helmClient.installChart(chart);
+        return true;
     }
 
 

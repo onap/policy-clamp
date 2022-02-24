@@ -24,6 +24,7 @@ package org.onap.policy.clamp.acm.participant.kubernetes.rest;
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -130,7 +131,7 @@ class ChartControllerTest {
         RequestBuilder requestBuilder;
 
         //Mocking successful installation for void install method
-        doNothing().when(chartService).installChart(charts.get(0));
+        doReturn(true).when(chartService).installChart(charts.get(0));
 
         requestBuilder = MockMvcRequestBuilders.post(INSTALL_CHART_URL).accept(MediaType.APPLICATION_JSON_VALUE)
             .content(getInstallationJson(charts.get(0).getChartId().getName(), charts.get(0).getChartId().getVersion()))

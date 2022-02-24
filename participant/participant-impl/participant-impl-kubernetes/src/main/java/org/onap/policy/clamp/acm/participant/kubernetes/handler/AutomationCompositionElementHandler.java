@@ -146,13 +146,14 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
         LOGGER.info("Installation request received for the Helm Chart {} ", chartData);
         try {
             var chartInfo = CODER.convert(chartData, ChartInfo.class);
-            chartService.installChart(chartInfo);
-            chartMap.put(element.getId(), chartInfo);
+            if (chartService.installChart(chartInfo)) {
+                chartMap.put(element.getId(), chartInfo);
 
-            var config = CODER.convert(nodeTemplate.getProperties(), ThreadConfig.class);
-            checkPodStatus(automationCompositionId, element.getId(), chartInfo, config.uninitializedToPassiveTimeout,
-                    config.podStatusCheckInterval);
-
+                var config = CODER.convert(nodeTemplate.getProperties(),
+                        ThreadConfig.class);
+                checkPodStatus(automationCompositionId, element.getId(), chartInfo,
+                        config.uninitializedToPassiveTimeout, config.podStatusCheckInterval);
+            }
         } catch (ServiceException | CoderException | IOException | ExecutionException
                 | InterruptedException e) {
             LOGGER.warn("Installation of Helm chart failed", e);

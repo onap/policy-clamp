@@ -7,7 +7,8 @@
       },
       "namespace" : "onap",
       "repository" : {
-        "repoName": "chartMuseum"
+        "repoName": "chartMuseum",
+        "address" : "https://localhost:8080"
       },
       "releaseName" : "helloworld"
     },
