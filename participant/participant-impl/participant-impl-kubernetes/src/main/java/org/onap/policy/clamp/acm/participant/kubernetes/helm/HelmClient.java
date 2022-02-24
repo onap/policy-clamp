@@ -190,18 +190,14 @@ public class HelmClient {
         if (StringUtils.isEmpty(repo.getAddress())) {
             throw new ServiceException("Repository Should have valid address");
         }
-        var url = repo.getProtocol() + "://" + repo.getAddress();
-        if (repo.getPort() != null) {
-            url =  url + ":" + repo.getPort();
-        }
         // @formatter:off
         List<String> helmArguments = new ArrayList<>(
                 List.of(
                         "helm",
                         "repo",
-                        "add", repo.getRepoName(), url
+                        "add", repo.getRepoName(), repo.getAddress()
                 ));
-        if (repo.getUserName() != null && repo.getPassword() != null) {
+        if (!StringUtils.isEmpty(repo.getUserName()) && !StringUtils.isEmpty(repo.getPassword())) {
             helmArguments.addAll(List.of("--username", repo.getUserName(), "--password",  repo.getPassword()));
         }
         return new ProcessBuilder().command(helmArguments);

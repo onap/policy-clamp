@@ -1,6 +1,6 @@
 /*-
  * ========================LICENSE_START=================================
- * Copyright (C) 2021 Nordix Foundation. All rights reserved.
+ * Copyright (C) 2021-2022 Nordix Foundation. All rights reserved.
  * ======================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,15 @@
 
 package org.onap.policy.clamp.acm.participant.kubernetes.models;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class HelmRepository {
 
     private String repoName;

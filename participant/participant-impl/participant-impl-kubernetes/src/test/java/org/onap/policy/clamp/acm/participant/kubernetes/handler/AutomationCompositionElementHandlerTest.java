@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -132,6 +132,7 @@ class AutomationCompositionElementHandlerTest {
     @Test
     void test_AutomationCompositionElementUpdate() throws PfModelException, IOException, ServiceException,
         ExecutionException, InterruptedException {
+        doReturn(true).when(chartService).installChart(any());
         doNothing().when(automationCompositionElementHandler).checkPodStatus(any(), any(), any(), anyInt(), anyInt());
         UUID elementId1 = UUID.randomUUID();
         AutomationCompositionElement element = new AutomationCompositionElement();
