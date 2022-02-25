@@ -13,10 +13,10 @@ participant:
     reportingTimeIntervalMs: 120000
     description: Participant Description
     participantId:
-      name: org.onap.policy.clamp.acm.KubernetesParticipant
+      name: K8sParticipant0
       version: 2.3.4
     participantType:
-      name: org.onap.k8s.acm.K8SAutomationCompositionParticipant
+      name: org.onap.policy.clamp.acm.KubernetesParticipant
       version: 2.3.4
     clampAutomationCompositionTopics:
       topicSources:
