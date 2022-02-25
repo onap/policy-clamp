@@ -1,0 +1,483 @@
+# ============LICENSE_START=======================================================
+# Copyright (C) 2022 Nordix Foundation.
+# ================================================================================
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# SPDX-License-Identifier: Apache-2.0
+# ============LICENSE_END=========================================================
+# This is a sample ACM tosca template that contains multiple ACM elements.
+# The definition comprises the following ACM elements: a policy Acm element for creating and deploying a sample policy,
+# a http Acm element for executing http requests, and a k8s Acm element for deploying helm chart of nginx app. 
+
+tosca_definitions_version: tosca_simple_yaml_1_3
+data_types:
+  onap.datatypes.ToscaConceptIdentifier:
+    derived_from: tosca.datatypes.Root
+    properties:
+      name:
+        type: string
+        required: true
+      version:
+        type: string
+        required: true
+  org.onap.datatypes.policy.clamp.acm.httpAutomationCompositionElement.RestRequest:
+    version: 1.0.0
+    derived_from: tosca.datatypes.Root
+    properties:
+      restRequestId:
+        type: onap.datatypes.ToscaConceptIdentifier
+        typeVersion: 1.0.0
+        required: true
+        description: The name and version of a REST request to be sent to a REST endpoint
+      httpMethod:
+        type: string
+        required: true
+        constraints:
+          - valid_values: [ POST, PUT, GET, DELETE ]
+        description: The REST method to use
+      path:
+        type: string
+        required: true
+        description: The path of the REST request relative to the base URL
+      body:
+        type: string
+        required: false
+        description: The body of the REST request for PUT and POST requests
+      expectedResponse:
+        type: integer
+        required: true
+        constraints: [ ]
+        description: THe expected HTTP status code for the REST request
+  org.onap.datatypes.policy.clamp.acm.httpAutomationCompositionElement.ConfigurationEntity:
+    version: 1.0.0
+    derived_from: tosca.datatypes.Root
+    properties:
+      configurationEntityId:
+        type: onap.datatypes.ToscaConceptIdentifier
+        typeVersion: 1.0.0
+        required: true
+        description: The name and version of a Configuration Entity to be handled by the HTTP Automation Composition Element
+      restSequence:
+        type: list
+        entry_schema:
+          type: org.onap.datatypes.policy.clamp.acm.httpAutomationCompositionElement.RestRequest
+          typeVersion: 1.0.0
+        description: A sequence of REST commands to send to the REST endpoint
+policy_types:
+  # The following policy types will be created in policy framework by the acm policy participant
+  onap.policies.Monitoring:
+    derived_from: tosca.policies.Root
+    description: a base policy type for all policies that govern monitoring provisioning
+    version: 1.0.0
+    name: onap.policies.Monitoring
+  onap.policies.dummyPolicy:
+    derived_from: tosca.policies.Root
+    description: a dummy policy type
+    version: 1.0.0
+    name: onap.policies.dummyPolicy
+node_types:
+  org.onap.policy.clamp.acm.Participant:
+    version: 1.0.1
+    derived_from: tosca.nodetypes.Root
+    properties:
+      provider:
+        type: string
+        requred: false
+  org.onap.policy.clamp.acm.AutomationCompositionElement:
+    version: 1.0.1
+    derived_from: tosca.nodetypes.Root
+    properties:
+      provider:
+        type: string
+        required: false
+        metadata:
+          common: true
+        description: Specifies the organization that provides the automation composition element
+      participant_id:
+        type: onap.datatypes.ToscaConceptIdentifier
+        requred: true
+        metadata:
+          common: true
+      participantType:
+        type: onap.datatypes.ToscaConceptIdentifier
+        required: true
+        metadata:
+          common: true
+        description: The identity of the participant type that hosts this type of Automation Composition Element
+      startPhase:
+        type: integer
+        required: false
+        constraints:
+          - greater_or_equal: 0
+        metadata:
+          common: true
+        description: A value indicating the start phase in which this automation composition element will be started, the
+          first start phase is zero. Automation Composition Elements are started in their start_phase order and stopped
+          in reverse start phase order. Automation Composition Elements with the same start phase are started and
+          stopped simultaneously
+      uninitializedToPassiveTimeout:
+        type: integer
+        required: false
+        constraints:
+          - greater_or_equal: 0
+        default: 60
+        metadata:
+          common: true
+        description: The maximum time in seconds to wait for a state chage from uninitialized to passive
+      passiveToRunningTimeout:
+        type: integer
+        required: false
+        constraints:
+          - greater_or_equal: 0
+        default: 60
+        metadata:
+          common: true
+        description: The maximum time in seconds to wait for a state chage from passive to running
+      runningToPassiveTimeout:
+        type: integer
+        required: false
+        constraints:
+          - greater_or_equal: 0
+        default: 60
+        metadata:
+          common: true
+        description: The maximum time in seconds to wait for a state chage from running to passive
+      passiveToUninitializedTimeout:
+        type: integer
+        required: false
+        constraints:
+          - greater_or_equal: 0
+        default: 60
+        metadata:
+          common: true
+        description: The maximum time in seconds to wait for a state chage from passive to uninitialized
+  org.onap.policy.clamp.acm.AutomationComposition:
+    version: 1.0.1
+    derived_from: tosca.nodetypes.Root
+    properties:
+      provider:
+        type: string
+        required: false
+        metadata:
+          common: true
+        description: Specifies the organization that provides the automation composition element
+      elements:
+        type: list
+        required: true
+        metadata:
+          common: true
+        entry_schema:
+          type: onap.datatypes.ToscaConceptIdentifier
+        description: Specifies a list of automation composition element definitions that make up this automation composition definition
+  org.onap.policy.clamp.acm.PolicyAutomationCompositionElement:
+    version: 1.0.1
+    derived_from: org.onap.policy.clamp.acm.AutomationCompositionElement
+    properties:
+      policy_type_id:
+        type: onap.datatypes.ToscaConceptIdentifier
+        requred: true
+      policy_id:
+        type: onap.datatypes.ToscaConceptIdentifier
+        requred: false
+  org.onap.policy.clamp.acm.K8SMicroserviceAutomationCompositionElement:
+    version: 1.0.1
+    derived_from: org.onap.policy.clamp.acm.AutomationCompositionElement
+    properties:
+      chart:
+        type: string
+        required: true
+      configs:
+        type: list
+        required: false
+      requirements:
+        type: string
+        requred: false
+      templates:
+        type: list
+        required: false
+        entry_schema:
+      values:
+        type: string
+        requred: true
+  org.onap.policy.clamp.acm.HttpAutomationCompositionElement:
+    version: 1.0.1
+    derived_from: org.onap.policy.clamp.acm.AutomationCompositionElement
+    properties:
+      baseUrl:
+        type: string
+        required: true
+        description: The base URL to be prepended to each path, identifies the host for the REST endpoints.
+      httpHeaders:
+        type: map
+        required: false
+        entry_schema:
+          type: string
+        description: HTTP headers to send on REST requests
+      configurationEntities:
+        type: map
+        required: true
+        entry_schema:
+          type: org.onap.datatypes.policy.clamp.acm.httpAutomationCompositionElement.ConfigurationEntity
+          typeVersion: 1.0.0
+        description: The connfiguration entities the Automation Composition Element is managing and their associated REST requests
+
+topology_template:
+  inputs:
+    sample_decisionMaker_policy:
+      type: onap.datatypes.ToscaConceptIdentifier
+      description: The ID of the operational policy to use
+      default:
+        name: operational.apex.decisionMaker
+        version: 1.0.0
+  node_templates:
+    org.onap.policy.clamp.acm.PolicyParticipant:
+      version: 2.3.1
+      type: org.onap.policy.clamp.acm.Participant
+      type_version: 1.0.1
+      description: Participant for DCAE microservices
+      properties:
+        provider: ONAP
+    org.onap.policy.clamp.sample_decisionMakerPolicyAutomationCompositionElement:
+      # The policy Acm element that deploys decision maker policy in policy framework.
+      version: 1.2.3
+      type: org.onap.policy.clamp.acm.PolicyAutomationCompositionElement
+      type_version: 1.0.0
+      description: Automation composition element for deploying sample decision maker policy
+      properties:
+        provider: Ericsson
+        participant_id:
+          name: org.onap.PM_Policy
+          version: 1.0.0
+        participantType:
+          name: org.onap.policy.clamp.acm.PolicyParticipant
+          version: 2.3.1
+        policy_type_id:
+          name: onap.policies.native.Apex
+          version: 1.0.0
+        policy_id:
+          get_input: sample_decisionMaker_policy
+    org.onap.policy.clamp.acm.KubernetesParticipant:
+      version: 2.3.4
+      type: org.onap.policy.clamp.acm.Participant
+      type_version: 1.0.1
+      description: Participant for K8S
+      properties:
+        provider: ONAP
+    org.onap.policy.clamp.Nginx_K8SMicroserviceAutomationCompositionElement:
+      # The k8s Acm element that deploys the helm chart of nginx-ingress from nginx repo.
+      version: 1.2.3
+      type: org.onap.policy.clamp.acm.K8SMicroserviceAutomationCompositionElement
+      type_version: 1.0.0
+      description: Automation composition element for the K8S microservice to deploy nginx app
+      properties:
+        provider: ONAP
+        participant_id:
+          name: K8sParticipant0
+          version: 1.0.0
+        participantType:
+          name: org.onap.policy.clamp.acm.KubernetesParticipant
+          version: 2.3.4
+        chart:
+          chartId:
+            name: nginx-ingress
+            version: 0.9.1
+          namespace: onap
+          releaseName: nginxapp
+          repository:
+            repoName: nginx-stable
+            address: https://helm.nginx.com/stable
+    org.onap.policy.clamp.acm.HttpParticipant:
+      version: 2.3.4
+      type: org.onap.policy.clamp.acm.Participant
+      type_version: 1.0.1
+      description: Participant for Http requests
+      properties:
+        provider: ONAP
+    org.onap.policy.clamp.Http_AutomationCompositionElement:
+      # Sample Acm element that executes http GET and POST requests on a single entity.
+      version: 1.2.3
+      type: org.onap.policy.clamp.acm.HttpAutomationCompositionElement
+      type_version: 1.0.1
+      description: Automation composition element for the http requests of PMSH microservice
+      properties:
+        provider: ONAP
+        participant_id:
+          name: HttpParticipant0
+          version: 1.0.0
+        participantType:
+          name: org.onap.policy.clamp.acm.HttpParticipant
+          version: 2.3.4
+        uninitializedToPassiveTimeout: 180
+        startPhase: 1
+        baseUrl: https://httpbin.org
+        httpHeaders:
+          Content-Type: application/json
+        configurationEntities:
+          - configurationEntityId:
+              name: entity1
+              version: 1.0.1
+            restSequence:
+              - restRequestId:
+                  name: request1
+                  version: 1.0.1
+                httpMethod: GET
+                path: get
+                expectedResponse: 200
+              - restRequestId:
+                  name: request2
+                  version: 1.0.1
+                httpMethod: POST
+                path: post
+                body: 'sample request body'
+                expectedResponse: 200
+    org.onap.domain.sample.GenericK8s_AutomationCompositionDefinition:
+      # The ACM definition that comprises multiple Acm elements
+      version: 1.2.3
+      type: org.onap.policy.clamp.acm.AutomationComposition
+      type_version: 1.0.0
+      description: Automation composition with multiple Acm elements
+      properties:
+        provider: ONAP
+        elements:
+          - name: org.onap.policy.clamp.sample_decisionMakerPolicyAutomationCompositionElement
+            version: 1.2.3
+          - name: org.onap.policy.clamp.Nginx_K8SMicroserviceAutomationCompositionElement
+            version: 1.2.3
+          - name: org.onap.policy.clamp.Http_AutomationCompositionElement
+            version: 1.2.3
+  policies:
+    - operational.apex.decisionMaker:
+        type: onap.policies.native.Apex
+        type_version: 1.0.0
+        name: operational.apex.decisionMaker
+        version: 1.0.0
+        metadata:
+          metadataSetName: apexMetadata_decisionMaker
+          metadataSetVersion: 1.0.0
+        properties:
+          engineServiceParameters:
+            name: MyApexEngine
+            version: 0.0.1
+            id: 45
+            instanceCount: 4
+            deploymentPort: 12561
+            engineParameters:
+              executorParameters:
+                JAVASCRIPT:
+                  parameterClassName: org.onap.policy.apex.plugins.executor.javascript.JavascriptExecutorParameters
+              contextParameters:
+                parameterClassName: org.onap.policy.apex.context.parameters.ContextParameters
+                schemaParameters:
+                  Avro:
+                    parameterClassName: org.onap.policy.apex.plugins.context.schema.avro.AvroSchemaHelperParameters
+                  Java:
+                    parameterClassName: org.onap.policy.apex.context.impl.schema.java.JavaSchemaHelperParameters
+                    jsonAdapters:
+                      Instant:
+                        adaptedClass: java.time.Instant
+                        adaptorClass: org.onap.policy.controlloop.util.Serialization$GsonInstantAdapter
+              taskParameters:
+                - key: ParameterKey1
+                  value: ParameterValue1
+                - taskId: AAILookupTask:0.0.1
+                  key: SomeKeyForThisTask
+                  value: Value
+          eventInputParameters:
+            GuardRequestorConsumer:
+              carrierTechnologyParameters:
+                carrierTechnology: RESTREQUESTOR
+                parameterClassName: org.onap.policy.apex.plugins.event.carrier.restrequestor.RestRequestorCarrierTechnologyParameters
+                parameters:
+                  url: http://111.222.333.444:5555/pdp/api/getDecision
+                  httpMethod: POST
+                  restRequestTimeout: 2000
+                  httpHeader: Authorization:aaaaaaaaa== ClientAuth:bbbbbbbbb=
+              eventProtocolParameters:
+                eventProtocol: JSON
+              eventName: GuardResponseEvent
+              eventNameFilter: GuardResponseEvent
+              requestorMode: true
+              requestorPeer: GuardRequestorProducer
+              requestorTimeout: 500
+            DCAEConsumer:
+              carrierTechnologyParameters:
+                carrierTechnology: RESTCLIENT
+                parameterClassName: org.onap.policy.apex.plugins.event.carrier.restclient.RestClientCarrierTechnologyParameters
+                parameters:
+                  url: http://message-router:3904/events/unauthenticated.DCAE_CL_OUTPUT/APEX/1?timeout=60000
+              eventProtocolParameters:
+                eventProtocol: JSON
+                parameters:
+                  nameAlias: closedLoopControlName
+                  versionAlias: version
+                  sourceAlias: from
+                  pojoField: VirtualControlLoopEvent
+              eventName: ControlLoop-vCPE-48f0c2c3-a172-4192-9ae3-052274181b6e
+            APPCConsumer:
+              carrierTechnologyParameters:
+                carrierTechnology: RESTCLIENT
+                parameterClassName: org.onap.policy.apex.plugins.event.carrier.restclient.RestClientCarrierTechnologyParameters
+                parameters:
+                  url: http://message-router:3904/events/APPC-LCM-WRITE/APEX/1?timeout=60000
+              eventProtocolParameters:
+                eventProtocol: JSON
+                parameters:
+                  versionAlias: version
+                  pojoField: APPCLCMResponseEvent
+              eventName: APPCRestartVNFResponseEvent
+              eventNameFilter: APPCRestartVNFResponseEvent
+          eventOutputParameters:
+            logProducer:
+              carrierTechnologyParameters:
+                carrierTechnology: FILE
+                parameters:
+                  fileName: "/tmp/VCPEEventsOut.json"
+              eventProtocolParameters:
+                eventProtocol: JSON
+            GuardRequestorProducer:
+              carrierTechnologyParameters:
+                carrierTechnology: RESTREQUESTOR
+                parameterClassName: org.onap.policy.apex.plugins.event.carrier.restrequestor.RestRequestorCarrierTechnologyParameters
+              eventProtocolParameters:
+                eventProtocol: JSON
+              eventNameFilter: GuardRequestEvent
+              requestorMode: true
+              requestorPeer: GuardRequestorConsumer
+              requestorTimeout: 500
+            APPCProducer:
+              carrierTechnologyParameters:
+                carrierTechnology: RESTCLIENT
+                parameterClassName: org.onap.policy.apex.plugins.event.carrier.restclient.RestClientCarrierTechnologyParameters
+                parameters:
+                  url: http://message-router:3904/events/APPC-LCM-READ
+              eventProtocolParameters:
+                eventProtocol: JSON
+                parameters:
+                  versionAlias: version
+                  sourceAlias: from
+                  pojoField: APPCLCMRequestEvent
+              eventNameFilter: APPCRestartVNFRequestEvent
+            PolicyLogProducer:
+              carrierTechnologyParameters:
+                carrierTechnology: RESTCLIENT
+                parameterClassName: org.onap.policy.apex.plugins.event.carrier.restclient.RestClientCarrierTechnologyParameters
+                parameters:
+                  url: http://message-router:3904/events/POLICY-CL-MGT
+              eventProtocolParameters:
+                eventProtocol: JSON
+                parameters:
+                  versionAlias: version
+                  sourceAlias: from
+                  pojoField: VirtualControlLoopNotification
+              eventNameFilter: ControlLoopLogEvent
+         
