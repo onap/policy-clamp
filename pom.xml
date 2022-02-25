@@ -58,6 +58,7 @@
 
     <modules>
         <module>common</module>
+        <module>examples</module>
         <module>models</module>
         <module>packages</module>
         <module>runtime</module>
