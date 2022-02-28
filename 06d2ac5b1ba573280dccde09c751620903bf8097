@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d119c4e7_aa3a8a73",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-02-28T15:44:51Z",
+      "side": 1,
+      "message": "remove \"Fix -\" and correct tosca typo in summary sentence.",
+      "revId": "06d2ac5b1ba573280dccde09c751620903bf8097",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
