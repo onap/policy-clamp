@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d7acadde_06018f0a",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/acm/participant/kubernetes/models/HelmRepository.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2022-03-01T09:08:18Z",
+      "side": 1,
+      "message": "Should we remove protocol and port fields if we are going to handle them as part of the address itself? We need to update the example tosca definitions accordingly.",
+      "range": {
+        "startLine": 34,
+        "startChar": 19,
+        "endLine": 34,
+        "endChar": 27
+      },
+      "revId": "15d769bb0117f50ab6f150c2addbf20cd899ef1e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "36702d41_8e36e444",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/acm/participant/kubernetes/service/ChartService.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2022-03-01T09:08:18Z",
+      "side": 1,
+      "message": "Do we need the whitelist check here if the repo is fetched from the already configured repo list? Possibility of using repository with http?",
+      "range": {
+        "startLine": 98,
+        "startChar": 19,
+        "endLine": 98,
+        "endChar": 50
+      },
+      "revId": "15d769bb0117f50ab6f150c2addbf20cd899ef1e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
