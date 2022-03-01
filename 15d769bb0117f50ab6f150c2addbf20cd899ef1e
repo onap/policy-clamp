@@ -117,6 +117,30 @@
       "revId": "15d769bb0117f50ab6f150c2addbf20cd899ef1e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8ac61308_bcf3b113",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/acm/participant/kubernetes/service/ChartService.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2022-03-01T22:09:53Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "d508eb94_9250f7f1",
+      "range": {
+        "startLine": 98,
+        "startChar": 19,
+        "endLine": 98,
+        "endChar": 50
+      },
+      "revId": "15d769bb0117f50ab6f150c2addbf20cd899ef1e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
