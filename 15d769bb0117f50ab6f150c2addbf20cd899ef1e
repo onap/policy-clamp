@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "701bbeab_8f170418",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/acm/participant/kubernetes/models/HelmRepository.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 3813
+      },
+      "writtenOn": "2022-03-01T10:32:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d7acadde_06018f0a",
+      "range": {
+        "startLine": 34,
+        "startChar": 19,
+        "endLine": 34,
+        "endChar": 27
+      },
+      "revId": "15d769bb0117f50ab6f150c2addbf20cd899ef1e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "36702d41_8e36e444",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/acm/participant/kubernetes/service/ChartService.java",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2022-03-01T09:08:18Z",
       "side": 1,
       "message": "Do we need the whitelist check here if the repo is fetched from the already configured repo list? Possibility of using repository with http?",
+      "range": {
+        "startLine": 98,
+        "startChar": 19,
+        "endLine": 98,
+        "endChar": 50
+      },
+      "revId": "15d769bb0117f50ab6f150c2addbf20cd899ef1e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5ef3723c_50b2acd4",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/acm/participant/kubernetes/service/ChartService.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 3813
+      },
+      "writtenOn": "2022-03-01T10:32:15Z",
+      "side": 1,
+      "message": "The repositories can only be added through TOSCA template and it is verified during commission stage. If a new repository is found in the helm client then it would have been added manually  by the k8s administrator which is not in the scope of K8s participant.\nLiam: Do you think we need to check for whitelist/https here?\n\n@Ramesh: Can we take this in another commit if it\u0027s necessary to fix?",
+      "parentUuid": "36702d41_8e36e444",
       "range": {
         "startLine": 98,
         "startChar": 19,
