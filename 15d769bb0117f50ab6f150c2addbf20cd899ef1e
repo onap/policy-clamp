@@ -93,6 +93,30 @@
       "revId": "15d769bb0117f50ab6f150c2addbf20cd899ef1e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d508eb94_9250f7f1",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/acm/participant/kubernetes/service/ChartService.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2022-03-01T10:55:38Z",
+      "side": 1,
+      "message": "Yes , we can take this in a separate commit if it is necessary. But it is a topic for discussion if the cluster administrator might manually configure an unsecure repository by themselves in the client. In such scenario, if we want to avoid using unsecure repo, we may require to add additional checks.",
+      "parentUuid": "5ef3723c_50b2acd4",
+      "range": {
+        "startLine": 98,
+        "startChar": 19,
+        "endLine": 98,
+        "endChar": 50
+      },
+      "revId": "15d769bb0117f50ab6f150c2addbf20cd899ef1e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
