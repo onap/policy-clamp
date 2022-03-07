@@ -57,7 +57,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
  *
  */
 class AutomationCompositionInstantiationProviderTest {
-    private static final String ID_NAME = "PMSH_Instance1";
+    private static final String ID_NAME = "PMSH_Test_Instance";
     private static final String ID_VERSION = "1.2.3";
     private static final String AC_INSTANTIATION_CREATE_JSON =
         "src/test/resources/rest/acm/AutomationCompositions.json";
@@ -97,7 +97,7 @@ class AutomationCompositionInstantiationProviderTest {
     }
 
     @Test
-    void testIntanceResponses() throws Exception {
+    void testInstanceResponse() throws Exception {
         var participantProvider = Mockito.mock(ParticipantProvider.class);
         var acProvider = mock(AutomationCompositionProvider.class);
         var supervisionHandler = mock(SupervisionHandler.class);

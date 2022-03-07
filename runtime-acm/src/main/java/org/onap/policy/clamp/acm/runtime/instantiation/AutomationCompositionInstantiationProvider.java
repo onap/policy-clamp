@@ -81,7 +81,7 @@ public class AutomationCompositionInstantiationProvider {
     private static final String PARTICIPANT_TYPE_PROPERTY_KEY = "participantType";
     private static final String AC_ELEMENT_NAME = "name";
     private static final String AC_ELEMENT_VERSION = "version";
-    private static final String INSTANCE_TEXT = "_Instance";
+    private static final String HYPHEN = "-";
 
     private static final Gson GSON = new Gson();
 
@@ -101,7 +101,7 @@ public class AutomationCompositionInstantiationProvider {
     public InstancePropertiesResponse createInstanceProperties(ToscaServiceTemplate serviceTemplate)
         throws PfModelException {
 
-        String instanceName = generateSequentialInstanceName();
+        String instanceName = serviceTemplate.getName();
         AutomationComposition automationComposition = new AutomationComposition();
         Map<UUID, AutomationCompositionElement> automationCompositionElements = new HashMap<>();
 
@@ -114,9 +114,9 @@ public class AutomationCompositionInstantiationProvider {
 
         nodeTemplates.forEach((key, template) -> {
             ToscaNodeTemplate newNodeTemplate = new ToscaNodeTemplate();
-            String name = key + instanceName;
+            String name = key + "-" + instanceName;
             String version = template.getVersion();
-            String description = template.getDescription() + instanceName;
+            String description = template.getDescription() + " " + instanceName;
             newNodeTemplate.setName(name);
             newNodeTemplate.setVersion(version);
             newNodeTemplate.setDescription(description);
@@ -528,9 +528,9 @@ public class AutomationCompositionInstantiationProvider {
             automationCompositionElements.put(automationCompositionElement.getId(), automationCompositionElement);
         }
 
-        automationComposition.setName("PMSH" + instanceName);
+        automationComposition.setName(instanceName);
         automationComposition.setVersion(template.getVersion());
-        automationComposition.setDescription("PMSH automation composition " + instanceName);
+        automationComposition.setDescription("Automation composition " + instanceName);
         automationComposition.setState(AutomationCompositionState.UNINITIALISED);
         automationComposition.setOrderedState(AutomationCompositionOrderedState.UNINITIALISED);
     }
@@ -550,32 +550,14 @@ public class AutomationCompositionInstantiationProvider {
 
         return toscaDefinitionsNames.stream().reduce("", (s1, s2) -> {
 
-            if (s2.contains(INSTANCE_TEXT)) {
-                String[] instances = s2.split(INSTANCE_TEXT);
+            if (s2.contains(HYPHEN)) {
+                String[] instances = s2.split(HYPHEN);
 
-                return INSTANCE_TEXT + instances[1];
+                return HYPHEN + instances[1];
             }
 
             return s1;
         });
-    }
-
-    /**
-     * Generates Instance Name in sequential order and return it to append to the Node Template Name.
-     *
-     * @return instanceName
-     */
-    private String generateSequentialInstanceName() {
-        List<ToscaNodeTemplate> nodeTemplates = automationCompositionProvider.getAllNodeTemplates();
-
-        int instanceNumber = nodeTemplates.stream().map(ToscaNodeTemplate::getName)
-            .filter(name -> name.contains(INSTANCE_TEXT)).map(n -> {
-                String[] defNameArr = n.split(INSTANCE_TEXT);
-
-                return Integer.parseInt(defNameArr[1]);
-            }).reduce(0, Math::max);
-
-        return INSTANCE_TEXT + (instanceNumber + 1);
     }
 
     /**

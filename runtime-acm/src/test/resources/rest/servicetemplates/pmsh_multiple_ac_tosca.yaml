@@ -1,4 +1,5 @@
 tosca_definitions_version: tosca_simple_yaml_1_3
+name: PMSH_Test_Instance
 data_types:
   onap.datatypes.ToscaConceptIdentifier:
     derived_from: tosca.datatypes.Root

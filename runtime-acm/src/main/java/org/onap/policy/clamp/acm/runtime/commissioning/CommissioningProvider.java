@@ -63,7 +63,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class CommissioningProvider {
     public static final String AUTOMATION_COMPOSITION_NODE_TYPE = "org.onap.policy.clamp.acm.AutomationComposition";
-    private static final String INSTANCE_TEXT = "_Instance";
+    private static final String HYPHEN = "-";
 
     private final ServiceTemplateProvider serviceTemplateProvider;
     private final AutomationCompositionProvider acProvider;
@@ -356,7 +356,7 @@ public class CommissioningProvider {
             Map<String, ToscaNodeTemplate> toscaNodeTemplates = new HashMap<>();
 
             serviceTemplate.getToscaTopologyTemplate().getNodeTemplates().forEach((key, nodeTemplate) -> {
-                if (!nodeTemplate.getName().contains(INSTANCE_TEXT)) {
+                if (!nodeTemplate.getName().contains(HYPHEN)) {
                     toscaNodeTemplates.put(key, nodeTemplate);
                 }
             });
@@ -377,7 +377,7 @@ public class CommissioningProvider {
      */
     private boolean verifyIfInstancePropertiesExists() {
         return acProvider.getAllNodeTemplates().stream()
-            .anyMatch(nodeTemplate -> nodeTemplate.getKey().getName().contains(INSTANCE_TEXT));
+            .anyMatch(nodeTemplate -> nodeTemplate.getKey().getName().contains(HYPHEN));
 
     }
 }
