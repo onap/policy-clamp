@@ -22,6 +22,30 @@
       "revId": "e27362ae319ac0aa302381e274c87a82cd4ec9f1",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cf26e2a9_eb69442c",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/instantiation/AutomationCompositionInstantiationProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 7660
+      },
+      "writtenOn": "2022-03-08T14:03:35Z",
+      "side": 1,
+      "message": "Yes unfortunately I tried to use a blank space, but the system threw a Regedit exception that only accepts letters [A-Za-z0-9] plus hyphens.  So for me to be able to extract the name I had to use a special character, and using period the regedit would have a hard time to separate from one period to the other.",
+      "parentUuid": "21997b42_caf82bed",
+      "range": {
+        "startLine": 117,
+        "startChar": 32,
+        "endLine": 117,
+        "endChar": 35
+      },
+      "revId": "e27362ae319ac0aa302381e274c87a82cd4ec9f1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
