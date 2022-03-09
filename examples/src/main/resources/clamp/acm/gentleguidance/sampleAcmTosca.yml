@@ -33,7 +33,7 @@ data_types:
     derived_from: tosca.datatypes.Root
     properties:
       restRequestId:
-        type:  onap.datatypes.ToscaConceptIdentifier
+        type: onap.datatypes.ToscaConceptIdentifier
         typeVersion: 1.0.0
         required: true
         description: The name and version of a REST request to be sent to a REST endpoint
@@ -41,7 +41,7 @@ data_types:
         type: string
         required: true
         constraints:
-          - valid_values: [POST, PUT, GET, DELETE]
+          - valid_values: [ POST, PUT, GET, DELETE ]
         description: The REST method to use
       path:
         type: string
@@ -54,139 +54,139 @@ data_types:
       expectedResponse:
         type: integer
         required: true
-        constraints: []
+        constraints: [ ]
         description: THe expected HTTP status code for the REST request
   org.onap.datatypes.policy.clamp.acm.httpAutomationCompositionElement.ConfigurationEntity:
-      version: 1.0.0
-      derived_from: tosca.datatypes.Root
-      properties:
-        configurationEntityId:
-          type:  onap.datatypes.ToscaConceptIdentifier
-          typeVersion: 1.0.0
-          required: true
-          description: The name and version of a Configuration Entity to be handled by the HTTP Automation Composition Element
-        restSequence:
-          type: list
-          entry_schema:
-            type: org.onap.datatypes.policy.clamp.acm.httpAutomationCompositionElement.RestRequest
-            typeVersion: 1.0.0
-          description: A sequence of REST commands to send to the REST endpoint
-  
- node_types:
-  org.onap.policy.clamp.acm.Participant:
-    version: 1.0.1
-    derived_from: tosca.nodetypes.Root
+    version: 1.0.0
+    derived_from: tosca.datatypes.Root
     properties:
-      provider:
-        type: string
-        requred: false
-  org.onap.policy.clamp.acm.AutomationCompositionElement:
-    version: 1.0.1
-    derived_from: tosca.nodetypes.Root
-    properties:
-      provider:
-        type: string
-        required: false
-        metadata:
-          common: true
-        description: Specifies the organization that provides the automation composition element
-      participant_id:
+      configurationEntityId:
         type: onap.datatypes.ToscaConceptIdentifier
-        requred: true
-        metadata:
-          common: true
-      participantType:
-        type: onap.datatypes.ToscaConceptIdentifier
+        typeVersion: 1.0.0
         required: true
-        metadata:
-          common: true
-        description: The identity of the participant type that hosts this type of Automation Composition Element
-      startPhase:
-        type: integer
-        required: false
-        constraints:
-          - greater_or_equal: 0
-        metadata:
-          common: true
-        description: A value indicating the start phase in which this automation composition element will be started, the
-          first start phase is zero. Automation Composition Elements are started in their start_phase order and stopped
-          in reverse start phase order. Automation Composition Elements with the same start phase are started and
-          stopped simultaneously
-      uninitializedToPassiveTimeout:
-        type: integer
-        required: false
-        constraints:
-          - greater_or_equal: 0
-        default: 60
-        metadata:
-          common: true
-        description: The maximum time in seconds to wait for a state chage from uninitialized to passive
-      passiveToRunningTimeout:
-        type: integer
-        required: false
-        constraints:
-          - greater_or_equal: 0
-        default: 60
-        metadata:
-          common: true
-        description: The maximum time in seconds to wait for a state chage from passive to running
-      runningToPassiveTimeout:
-        type: integer
-        required: false
-        constraints:
-          - greater_or_equal: 0
-        default: 60
-        metadata:
-          common: true
-        description: The maximum time in seconds to wait for a state chage from running to passive
-      passiveToUninitializedTimeout:
-        type: integer
-        required: false
-        constraints:
-          - greater_or_equal: 0
-        default: 60
-        metadata:
-          common: true
-        description: The maximum time in seconds to wait for a state chage from passive to uninitialized
-  org.onap.policy.clamp.acm.AutomationComposition:
-    version: 1.0.1
-    derived_from: tosca.nodetypes.Root
-    properties:
-      provider:
-        type: string
-        required: false
-        metadata:
-          common: true
-        description: Specifies the organization that provides the automation composition element
-      elements:
+        description: The name and version of a Configuration Entity to be handled by the HTTP Automation Composition Element
+      restSequence:
         type: list
-        required: true
-        metadata:
-          common: true
         entry_schema:
-          type: onap.datatypes.ToscaConceptIdentifier
-        description: Specifies a list of automation composition element definitions that make up this automation composition definition
-  org.onap.policy.clamp.acm.HttpAutomationCompositionElement:
-    version: 1.0.1
-    derived_from: org.onap.policy.clamp.acm.AutomationCompositionElement
-    properties:
-      baseUrl:
-        type: string
-        required: true
-        description: The base URL to be prepended to each path, identifies the host for the REST endpoints.
-      httpHeaders:
-        type: map
-        required: false
-        entry_schema:
-          type: string
-        description: HTTP headers to send on REST requests
-      configurationEntities:
-        type: map
-        required: true
-        entry_schema:
-          type: org.onap.datatypes.policy.clamp.acm.httpAutomationCompositionElement.ConfigurationEntity
+          type: org.onap.datatypes.policy.clamp.acm.httpAutomationCompositionElement.RestRequest
           typeVersion: 1.0.0
-        description: The connfiguration entities the Automation Composition Element is managing and their associated REST requests
+        description: A sequence of REST commands to send to the REST endpoint
+
+  node_types:
+    org.onap.policy.clamp.acm.Participant:
+      version: 1.0.1
+      derived_from: tosca.nodetypes.Root
+      properties:
+        provider:
+          type: string
+          requred: false
+    org.onap.policy.clamp.acm.AutomationCompositionElement:
+      version: 1.0.1
+      derived_from: tosca.nodetypes.Root
+      properties:
+        provider:
+          type: string
+          required: false
+          metadata:
+            common: true
+          description: Specifies the organization that provides the automation composition element
+        participant_id:
+          type: onap.datatypes.ToscaConceptIdentifier
+          requred: true
+          metadata:
+            common: true
+        participantType:
+          type: onap.datatypes.ToscaConceptIdentifier
+          required: true
+          metadata:
+            common: true
+          description: The identity of the participant type that hosts this type of Automation Composition Element
+        startPhase:
+          type: integer
+          required: false
+          constraints:
+            - greater_or_equal: 0
+          metadata:
+            common: true
+          description: A value indicating the start phase in which this automation composition element will be started, the
+            first start phase is zero. Automation Composition Elements are started in their start_phase order and stopped
+            in reverse start phase order. Automation Composition Elements with the same start phase are started and
+            stopped simultaneously
+        uninitializedToPassiveTimeout:
+          type: integer
+          required: false
+          constraints:
+            - greater_or_equal: 0
+          default: 60
+          metadata:
+            common: true
+          description: The maximum time in seconds to wait for a state chage from uninitialized to passive
+        passiveToRunningTimeout:
+          type: integer
+          required: false
+          constraints:
+            - greater_or_equal: 0
+          default: 60
+          metadata:
+            common: true
+          description: The maximum time in seconds to wait for a state chage from passive to running
+        runningToPassiveTimeout:
+          type: integer
+          required: false
+          constraints:
+            - greater_or_equal: 0
+          default: 60
+          metadata:
+            common: true
+          description: The maximum time in seconds to wait for a state chage from running to passive
+        passiveToUninitializedTimeout:
+          type: integer
+          required: false
+          constraints:
+            - greater_or_equal: 0
+          default: 60
+          metadata:
+            common: true
+          description: The maximum time in seconds to wait for a state chage from passive to uninitialized
+    org.onap.policy.clamp.acm.AutomationComposition:
+      version: 1.0.1
+      derived_from: tosca.nodetypes.Root
+      properties:
+        provider:
+          type: string
+          required: false
+          metadata:
+            common: true
+          description: Specifies the organization that provides the automation composition element
+        elements:
+          type: list
+          required: true
+          metadata:
+            common: true
+          entry_schema:
+            type: onap.datatypes.ToscaConceptIdentifier
+          description: Specifies a list of automation composition element definitions that make up this automation composition definition
+    org.onap.policy.clamp.acm.HttpAutomationCompositionElement:
+      version: 1.0.1
+      derived_from: org.onap.policy.clamp.acm.AutomationCompositionElement
+      properties:
+        baseUrl:
+          type: string
+          required: true
+          description: The base URL to be prepended to each path, identifies the host for the REST endpoints.
+        httpHeaders:
+          type: map
+          required: false
+          entry_schema:
+            type: string
+          description: HTTP headers to send on REST requests
+        configurationEntities:
+          type: map
+          required: true
+          entry_schema:
+            type: org.onap.datatypes.policy.clamp.acm.httpAutomationCompositionElement.ConfigurationEntity
+            typeVersion: 1.0.0
+          description: The connfiguration entities the Automation Composition Element is managing and their associated REST requests
 
 topology_template:
   node_templates:
@@ -240,7 +240,6 @@ topology_template:
       description: Automation composition for executing simple http requests
       properties:
         provider: ONAP
-        elements:         
+        elements:
           - name: org.onap.policy.clamp.Http_AutomationCompositionElement
             version: 1.2.3
-          

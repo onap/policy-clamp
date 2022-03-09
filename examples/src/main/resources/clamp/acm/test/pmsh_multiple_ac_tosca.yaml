@@ -32,13 +32,13 @@ node_types:
         type: integer
         required: false
         constraints:
-        - greater-or-equal: 0
+          - greater-or-equal: 0
         metadata:
-            common: true
+          common: true
         description: A value indicating the start phase in which this automation composition element will be started, the
-                     first start phase is zero. Automation Composition Elements are started in their start_phase order and stopped
-                     in reverse start phase order. Automation Composition Elements with the same start phase are started and
-                     stopped simultaneously
+          first start phase is zero. Automation Composition Elements are started in their start_phase order and stopped
+          in reverse start phase order. Automation Composition Elements with the same start phase are started and
+          stopped simultaneously
   org.onap.policy.clamp.acm.AutomationComposition:
     version: 1.0.1
     derived_from: tosca.nodetypes.Root

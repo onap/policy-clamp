@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -95,7 +95,7 @@ public class InstantiationUtils {
             .isEqualTo(automationCompositions.getAutomationCompositionList().size());
         for (AutomationComposition automationComposition : automationCompositions.getAutomationCompositionList()) {
             assertTrue(response.getAffectedAutomationCompositions().stream()
-                .filter(ac -> ac.equals(automationComposition.getKey().asIdentifier())).findAny().isPresent());
+                .anyMatch(ac -> ac.equals(automationComposition.getKey().asIdentifier())));
         }
     }
 
@@ -111,7 +111,7 @@ public class InstantiationUtils {
             command.getAutomationCompositionIdentifierList().size());
         for (ToscaConceptIdentifier toscaConceptIdentifier : command.getAutomationCompositionIdentifierList()) {
             assertTrue(response.getAffectedAutomationCompositions().stream()
-                .filter(ac -> ac.compareTo(toscaConceptIdentifier) == 0).findAny().isPresent());
+                .anyMatch(ac -> ac.compareTo(toscaConceptIdentifier) == 0));
         }
     }
 

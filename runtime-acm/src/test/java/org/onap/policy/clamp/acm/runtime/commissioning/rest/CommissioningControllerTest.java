@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,6 +26,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVICE_TEMPLATE_YAML;
+import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_ST_TEMPLATE_YAML;
 
 import java.util.List;
 import java.util.Map;
@@ -49,19 +51,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@TestPropertySource(locations = {"classpath:application_test.properties"})
+@ActiveProfiles("test")
 @Execution(ExecutionMode.SAME_THREAD)
 class CommissioningControllerTest extends CommonRestController {
-
-    private static final String TOSCA_SERVICE_TEMPLATE_YAML =
-        "src/test/resources/rest/servicetemplates/pmsh_multiple_ac_tosca.yaml";
-    private static final String COMMON_TOSCA_SERVICE_TEMPLATE_YAML =
-        "src/test/resources/rest/servicetemplates/full-tosca-with-common-properties.yaml";
 
     private static final String COMMISSIONING_ENDPOINT = "commission";
     private static ToscaServiceTemplate serviceTemplate = new ToscaServiceTemplate();
@@ -75,15 +72,12 @@ class CommissioningControllerTest extends CommonRestController {
 
     /**
      * starts Main and inserts a commissioning template.
-     *
-     * @throws Exception if an error occurs
      */
     @BeforeAll
-    public static void setUpBeforeClass() throws Exception {
-
+    public static void setUpBeforeClass() {
         serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
         commonPropertiesServiceTemplate =
-            InstantiationUtils.getToscaServiceTemplate(COMMON_TOSCA_SERVICE_TEMPLATE_YAML);
+            InstantiationUtils.getToscaServiceTemplate(TOSCA_ST_TEMPLATE_YAML);
     }
 
     @BeforeEach
@@ -145,8 +139,7 @@ class CommissioningControllerTest extends CommonRestController {
         assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
         ToscaServiceTemplate template = rawresp.readEntity(ToscaServiceTemplate.class);
         assertNotNull(template);
-        assertThat(template.getNodeTypes()).hasSize(8);
-
+        assertThat(template.getNodeTypes()).hasSize(7);
     }
 
     @Test
@@ -159,7 +152,6 @@ class CommissioningControllerTest extends CommonRestController {
         assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
         String schema = rawresp.readEntity(String.class);
         assertNotNull(schema);
-
     }
 
     @Test
@@ -175,8 +167,7 @@ class CommissioningControllerTest extends CommonRestController {
         Map<String, ToscaNodeTemplate> commonProperties = rawresp.readEntity(Map.class);
 
         assertNotNull(commonProperties);
-        assertThat(commonProperties).hasSize(6);
-
+        assertThat(commonProperties).hasSize(5);
     }
 
     @Test
@@ -205,7 +196,6 @@ class CommissioningControllerTest extends CommonRestController {
             assertTrue(commissioningResponse.getAffectedAutomationCompositionDefinitions().stream()
                 .anyMatch(ac -> ac.getName().equals(nodeTemplateName)));
         }
-
     }
 
     @Test
@@ -217,7 +207,6 @@ class CommissioningControllerTest extends CommonRestController {
         assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
         List<?> entityList = rawresp.readEntity(List.class);
         assertThat(entityList).isEmpty();
-
     }
 
     @Test
@@ -230,7 +219,6 @@ class CommissioningControllerTest extends CommonRestController {
         List<?> entityList = rawresp.readEntity(List.class);
         assertNotNull(entityList);
         assertThat(entityList).hasSize(2);
-
     }
 
     @Test
@@ -241,7 +229,6 @@ class CommissioningControllerTest extends CommonRestController {
         Invocation.Builder invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT + "/elements");
         Response resp = invocationBuilder.buildGet().invoke();
         assertEquals(Response.Status.NOT_ACCEPTABLE.getStatusCode(), resp.getStatus());
-
     }
 
     @Test
@@ -255,7 +242,6 @@ class CommissioningControllerTest extends CommonRestController {
         List<?> entityList = rawresp.readEntity(List.class);
         assertNotNull(entityList);
         assertThat(entityList).hasSize(4);
-
     }
 
     @Test
@@ -266,7 +252,6 @@ class CommissioningControllerTest extends CommonRestController {
         // Call delete with no info
         Response resp = invocationBuilder.delete();
         assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), resp.getStatus());
-
     }
 
     @Test

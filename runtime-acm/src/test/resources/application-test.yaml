@@ -1,0 +1,36 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    hikari:
+      maxLifetime: 1800000
+      maximumPoolSize: 3
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.HSQLDialect
+
+server:
+  servlet:
+    context-path: /onap/automationcomposition
+
+runtime:
+  participantParameters:
+    updateParameters:
+      maxRetryCount: 3
+  topicParameterGroup:
+    topicSources:
+      -
+        topic: POLICY-ACRUNTIME-PARTICIPANT
+        servers:
+          - localhost
+        topicCommInfrastructure: dmaap
+        fetchTimeout: 15000
+    topicSinks:
+      -
+        topicCommInfrastructure: dmaap
+        servers:
+          - localhost
+        topic: POLICY-ACRUNTIME-PARTICIPANT

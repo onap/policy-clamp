@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,8 +26,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_ST_TEMPLATE_YAML;
 
 import java.util.List;
+import java.util.Objects;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
@@ -52,16 +54,15 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 class SupervisionScannerTest {
 
-    private static final String TOSCA_SERVICE_TEMPLATE_YAML =
-        "src/test/resources/rest/servicetemplates/tosca-for-smoke-testing.yaml";
     private static final String AC_JSON = "src/test/resources/rest/acm/AutomationCompositionsSmoke.json";
 
-    private static ServiceTemplateProvider serviceTemplateProvider = mock(ServiceTemplateProvider.class);
+    private static final ServiceTemplateProvider serviceTemplateProvider = mock(ServiceTemplateProvider.class);
 
     @BeforeAll
     public static void setUpBeforeAll() throws Exception {
-        ToscaServiceTemplate serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
-        when(serviceTemplateProvider.getAllServiceTemplates()).thenReturn(List.of(serviceTemplate));
+        ToscaServiceTemplate serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_ST_TEMPLATE_YAML);
+        when(serviceTemplateProvider.getAllServiceTemplates())
+            .thenReturn(List.of(Objects.requireNonNull(serviceTemplate)));
     }
 
     @Test

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -110,13 +110,10 @@ class TestMonitoringProvider {
 
         // Creating statistics data in db with null input
 
-        assertThatThrownBy(() -> {
-            provider.createParticipantStatistics(null);
-        }).hasMessageMatching(STAT_LIST_IS_NULL);
+        assertThatThrownBy(() -> provider.createParticipantStatistics(null)).hasMessageMatching(STAT_LIST_IS_NULL);
 
-        assertThatThrownBy(() -> {
-            provider.createParticipantStatistics(invalidParticipantInput.getStatisticsList());
-        }).hasMessageMatching(PARTICIPANT_STAT_LIST_IS_NULL);
+        assertThatThrownBy(() -> provider.createParticipantStatistics(invalidParticipantInput.getStatisticsList()))
+            .hasMessageMatching(PARTICIPANT_STAT_LIST_IS_NULL);
 
         // Creating statistics data from input json
         ParticipantStatisticsList createResponse =
@@ -146,9 +143,8 @@ class TestMonitoringProvider {
             new MonitoringProvider(participantStatisticsProvider, acElementStatisticsProvider, acProvider);
         provider.createParticipantStatistics(inputParticipantStatistics.getStatisticsList());
 
-        assertThatThrownBy(() -> {
-            provider.fetchFilteredParticipantStatistics(null, null, 0, null, null);
-        }).hasMessageMatching(NAME_IS_NULL);
+        assertThatThrownBy(() -> provider.fetchFilteredParticipantStatistics(null, null, 0, null, null))
+            .hasMessageMatching(NAME_IS_NULL);
 
         // Fetch specific statistics record with name, version and record count
         ParticipantStatisticsList getResponse =
@@ -183,13 +179,10 @@ class TestMonitoringProvider {
         MonitoringProvider provider =
             new MonitoringProvider(participantStatisticsProvider, acElementStatisticsProvider, acProvider);
         // Creating statistics data in db with null input
-        assertThatThrownBy(() -> {
-            provider.createAcElementStatistics(null);
-        }).hasMessageMatching(STAT_LIST_IS_NULL);
+        assertThatThrownBy(() -> provider.createAcElementStatistics(null)).hasMessageMatching(STAT_LIST_IS_NULL);
 
-        assertThatThrownBy(() -> {
-            provider.createAcElementStatistics(invalidAcElementInput.getAcElementStatistics());
-        }).hasMessageMatching(AC_LIST_IS_NULL);
+        assertThatThrownBy(() -> provider.createAcElementStatistics(invalidAcElementInput.getAcElementStatistics()))
+            .hasMessageMatching(AC_LIST_IS_NULL);
 
         // Creating acElement statistics data from input json
         AcElementStatisticsList createResponse =
@@ -218,9 +211,9 @@ class TestMonitoringProvider {
 
         MonitoringProvider provider =
             new MonitoringProvider(participantStatisticsProvider, acElementStatisticsProvider, acProvider);
-        assertThatThrownBy(() -> {
-            provider.fetchFilteredAcElementStatistics(null, null, null, null, null, 0);
-        }).hasMessageMatching(NAME_IS_NULL);
+        assertThatThrownBy(() -> provider
+            .fetchFilteredAcElementStatistics(null, null, null, null, null, 0))
+            .hasMessageMatching(NAME_IS_NULL);
 
         provider.createAcElementStatistics(inputAcElementStatistics.getAcElementStatistics());
 

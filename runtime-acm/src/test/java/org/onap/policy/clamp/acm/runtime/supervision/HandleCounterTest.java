@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,8 +54,7 @@ class HandleCounterTest {
     }
 
     @Test
-    void testDuration() throws InterruptedException {
-
+    void testDuration() {
         var handleCounter = new HandleCounter<Integer>() {
             long epochMilli = 0;
 

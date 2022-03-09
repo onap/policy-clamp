@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -78,7 +78,7 @@ class MessageDispatcherActivatorTest {
             assertTrue(activator.isAlive());
 
             // repeat start - should throw an exception
-            assertThatIllegalStateException().isThrownBy(() -> activator.start());
+            assertThatIllegalStateException().isThrownBy(activator::start);
             assertTrue(activator.isAlive());
             verify(publisherFirst, times(1)).active(anyList());
             verify(publisherSecond, times(1)).active(anyList());
@@ -95,7 +95,7 @@ class MessageDispatcherActivatorTest {
             assertFalse(activator.isAlive());
 
             // repeat stop - should throw an exception
-            assertThatIllegalStateException().isThrownBy(() -> activator.stop());
+            assertThatIllegalStateException().isThrownBy(activator::stop);
             assertFalse(activator.isAlive());
         }
     }

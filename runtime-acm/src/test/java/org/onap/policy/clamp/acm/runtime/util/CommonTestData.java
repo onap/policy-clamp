@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,11 +29,6 @@ import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
-import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.base.PfModelRuntimeException;
-import org.onap.policy.models.provider.PolicyModelsProvider;
-import org.onap.policy.models.provider.PolicyModelsProviderFactory;
-import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
@@ -42,6 +37,10 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
  */
 public class CommonTestData {
     private static final Coder CODER = new StandardCoder();
+    public static final String TOSCA_SERVICE_TEMPLATE_YAML =
+        "clamp/acm/test/pmsh_multiple_ac_tosca.yaml";
+    public static final String TOSCA_ST_TEMPLATE_YAML =
+        "clamp/acm/pmsh/funtional-pmsh-usecase.yaml";
 
     /**
      * Gets the standard automation composition parameters.
@@ -69,21 +68,6 @@ public class CommonTestData {
     public static String getParameterGroupAsString(final String dbName) {
         return ResourceUtils.getResourceAsString("src/test/resources/parameters/TestParameters.json")
             .replace("${dbName}", "jdbc:h2:mem:" + dbName);
-    }
-
-    /**
-     * Create a new PolicyModelsProvider.
-     *
-     * @param databaseProviderParameters the database Provider Parameters
-     * @return a new PolicyModelsProvider
-     */
-    public static PolicyModelsProvider getPolicyModelsProvider(
-        PolicyModelsProviderParameters databaseProviderParameters) {
-        try {
-            return new PolicyModelsProviderFactory().createPolicyModelsProvider(databaseProviderParameters);
-        } catch (PfModelException e) {
-            throw new PfModelRuntimeException(e);
-        }
     }
 
     /**
