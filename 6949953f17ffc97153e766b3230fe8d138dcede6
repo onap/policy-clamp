@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "007f6cc9_30be5e6e",
+        "filename": "examples/src/main/resources/clamp/acm/test/pmsh_multiple_ac_tosca.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2022-03-09T15:45:22Z",
+      "side": 1,
+      "message": "If you have time can you shorten the line to 120 characters?",
+      "revId": "6949953f17ffc97153e766b3230fe8d138dcede6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
