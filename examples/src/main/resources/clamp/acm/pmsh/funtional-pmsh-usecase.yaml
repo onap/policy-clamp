@@ -134,7 +134,7 @@ data_types:
         required: false
         default: final_failure_guard
   onap.datatypes.monitoring.managedObjectDNsBasic:
-    constraints: []
+    constraints: [ ]
     properties:
       DN:
         name: DN
@@ -142,14 +142,14 @@ data_types:
         typeVersion: 0.0.0
         description: Managed object distinguished name
         required: true
-        constraints: []
-        metadata: {}
+        constraints: [ ]
+        metadata: { }
     name: onap.datatypes.monitoring.managedObjectDNsBasic
     version: 0.0.0
     derived_from: tosca.datatypes.Root
-    metadata: {}
+    metadata: { }
   onap.datatypes.monitoring.managedObjectDNsBasics:
-    constraints: []
+    constraints: [ ]
     properties:
       managedObjectDNsBasic:
         name: managedObjectDNsBasic
@@ -157,18 +157,18 @@ data_types:
         typeVersion: 0.0.0
         description: Managed object distinguished name object
         required: true
-        constraints: []
+        constraints: [ ]
         entry_schema:
           type: onap.datatypes.monitoring.managedObjectDNsBasic
           typeVersion: 0.0.0
-          constraints: []
-        metadata: {}
+          constraints: [ ]
+        metadata: { }
     name: onap.datatypes.monitoring.managedObjectDNsBasics
     version: 0.0.0
     derived_from: tosca.datatypes.Root
-    metadata: {}
+    metadata: { }
   onap.datatypes.monitoring.measurementGroup:
-    constraints: []
+    constraints: [ ]
     properties:
       measurementTypes:
         name: measurementTypes
@@ -176,30 +176,30 @@ data_types:
         typeVersion: 0.0.0
         description: List of measurement types
         required: true
-        constraints: []
+        constraints: [ ]
         entry_schema:
           type: onap.datatypes.monitoring.measurementTypes
           typeVersion: 0.0.0
-          constraints: []
-        metadata: {}
+          constraints: [ ]
+        metadata: { }
       managedObjectDNsBasic:
         name: managedObjectDNsBasic
         type: list
         typeVersion: 0.0.0
         description: List of managed object distinguished names
         required: true
-        constraints: []
+        constraints: [ ]
         entry_schema:
           type: onap.datatypes.monitoring.managedObjectDNsBasics
           typeVersion: 0.0.0
-          constraints: []
-        metadata: {}
+          constraints: [ ]
+        metadata: { }
     name: onap.datatypes.monitoring.measurementGroup
     version: 0.0.0
     derived_from: tosca.datatypes.Root
-    metadata: {}
+    metadata: { }
   onap.datatypes.monitoring.measurementGroups:
-    constraints: []
+    constraints: [ ]
     properties:
       measurementGroup:
         name: measurementGroup
@@ -207,18 +207,18 @@ data_types:
         typeVersion: 0.0.0
         description: Measurement Group
         required: true
-        constraints: []
+        constraints: [ ]
         entry_schema:
           type: onap.datatypes.monitoring.measurementGroup
           typeVersion: 0.0.0
-          constraints: []
-        metadata: {}
+          constraints: [ ]
+        metadata: { }
     name: onap.datatypes.monitoring.measurementGroups
     version: 0.0.0
     derived_from: tosca.datatypes.Root
-    metadata: {}
+    metadata: { }
   onap.datatypes.monitoring.measurementType:
-    constraints: []
+    constraints: [ ]
     properties:
       measurementType:
         name: measurementType
@@ -226,14 +226,14 @@ data_types:
         typeVersion: 0.0.0
         description: Measurement type
         required: true
-        constraints: []
-        metadata: {}
+        constraints: [ ]
+        metadata: { }
     name: onap.datatypes.monitoring.measurementType
     version: 0.0.0
     derived_from: tosca.datatypes.Root
-    metadata: {}
+    metadata: { }
   onap.datatypes.monitoring.measurementTypes:
-    constraints: []
+    constraints: [ ]
     properties:
       measurementType:
         name: measurementType
@@ -241,18 +241,18 @@ data_types:
         typeVersion: 0.0.0
         description: Measurement type object
         required: true
-        constraints: []
+        constraints: [ ]
         entry_schema:
           type: onap.datatypes.monitoring.measurementType
           typeVersion: 0.0.0
-          constraints: []
-        metadata: {}
+          constraints: [ ]
+        metadata: { }
     name: onap.datatypes.monitoring.measurementTypes
     version: 0.0.0
     derived_from: tosca.datatypes.Root
-    metadata: {}
+    metadata: { }
   onap.datatypes.monitoring.nfFilter:
-    constraints: []
+    constraints: [ ]
     properties:
       modelNames:
         name: modelNames
@@ -260,54 +260,54 @@ data_types:
         typeVersion: 0.0.0
         description: List of model names
         required: true
-        constraints: []
+        constraints: [ ]
         entry_schema:
           type: string
           typeVersion: 0.0.0
-          constraints: []
-        metadata: {}
+          constraints: [ ]
+        metadata: { }
       modelInvariantIDs:
         name: modelInvariantIDs
         type: list
         typeVersion: 0.0.0
         description: List of model invariant IDs
         required: true
-        constraints: []
+        constraints: [ ]
         entry_schema:
           type: string
           typeVersion: 0.0.0
-          constraints: []
-        metadata: {}
+          constraints: [ ]
+        metadata: { }
       modelVersionIDs:
         name: modelVersionIDs
         type: list
         typeVersion: 0.0.0
         description: List of model version IDs
         required: true
-        constraints: []
+        constraints: [ ]
         entry_schema:
           type: string
           typeVersion: 0.0.0
-          constraints: []
-        metadata: {}
+          constraints: [ ]
+        metadata: { }
       nfNames:
         name: nfNames
         type: list
         typeVersion: 0.0.0
         description: List of network functions
         required: true
-        constraints: []
+        constraints: [ ]
         entry_schema:
           type: string
           typeVersion: 0.0.0
-          constraints: []
-        metadata: {}
+          constraints: [ ]
+        metadata: { }
     name: onap.datatypes.monitoring.nfFilter
     version: 0.0.0
     derived_from: tosca.datatypes.Root
-    metadata: {}
+    metadata: { }
   onap.datatypes.monitoring.subscription:
-    constraints: []
+    constraints: [ ]
     properties:
       measurementGroups:
         name: measurementGroups
@@ -315,36 +315,36 @@ data_types:
         typeVersion: 0.0.0
         description: Measurement Groups
         required: true
-        constraints: []
+        constraints: [ ]
         entry_schema:
           type: onap.datatypes.monitoring.measurementGroups
           typeVersion: 0.0.0
-          constraints: []
-        metadata: {}
+          constraints: [ ]
+        metadata: { }
       fileBasedGP:
         name: fileBasedGP
         type: integer
         typeVersion: 0.0.0
         description: File based granularity period
         required: true
-        constraints: []
-        metadata: {}
+        constraints: [ ]
+        metadata: { }
       fileLocation:
         name: fileLocation
         type: string
         typeVersion: 0.0.0
         description: ROP file location
         required: true
-        constraints: []
-        metadata: {}
+        constraints: [ ]
+        metadata: { }
       subscriptionName:
         name: subscriptionName
         type: string
         typeVersion: 0.0.0
         description: Name of the subscription
         required: true
-        constraints: []
-        metadata: {}
+        constraints: [ ]
+        metadata: { }
       administrativeState:
         name: administrativeState
         type: string
@@ -355,29 +355,29 @@ data_types:
           - valid_values:
               - LOCKED
               - UNLOCKED
-        metadata: {}
+        metadata: { }
       nfFilter:
         name: nfFilter
         type: map
         typeVersion: 0.0.0
         description: Network function filter
         required: true
-        constraints: []
+        constraints: [ ]
         entry_schema:
           type: onap.datatypes.monitoring.nfFilter
           typeVersion: 0.0.0
-          constraints: []
-        metadata: {}
+          constraints: [ ]
+        metadata: { }
     name: onap.datatypes.monitoring.subscription
     version: 0.0.0
     derived_from: tosca.datatypes.Root
-    metadata: {}
+    metadata: { }
   org.onap.datatypes.policy.clamp.acm.httpAutomationCompositionElement.RestRequest:
     version: 1.0.0
     derived_from: tosca.datatypes.Root
     properties:
       restRequestId:
-        type:  onap.datatypes.ToscaConceptIdentifier
+        type: onap.datatypes.ToscaConceptIdentifier
         typeVersion: 1.0.0
         required: true
         description: The name and version of a REST request to be sent to a REST endpoint
@@ -385,7 +385,7 @@ data_types:
         type: string
         required: true
         constraints:
-          - valid_values: [POST, PUT, GET, DELETE]
+          - valid_values: [ POST, PUT, GET, DELETE ]
         description: The REST method to use
       path:
         type: string
@@ -398,14 +398,14 @@ data_types:
       expectedResponse:
         type: integer
         required: true
-        constraints: []
+        constraints: [ ]
         description: THe expected HTTP status code for the REST request
     org.onap.datatypes.policy.clamp.acm.httpAutomationCompositionElement.ConfigurationEntity:
       version: 1.0.0
       derived_from: tosca.datatypes.Root
       properties:
         configurationEntityId:
-          type:  onap.datatypes.ToscaConceptIdentifier
+          type: onap.datatypes.ToscaConceptIdentifier
           typeVersion: 1.0.0
           required: true
           description: The name and version of a Configuration Entity to be handled by the HTTP Automation Composition Element
@@ -434,12 +434,12 @@ policy_types:
         typeVersion: 0.0.0
         description: PMSH Policy JSON
         required: false
-        constraints: []
-        metadata: {}
+        constraints: [ ]
+        metadata: { }
     name: onap.policies.monitoring.dcae-pm-subscription-handler
     version: 1.0.0
     derived_from: onap.policies.Monitoring
-    metadata: {}
+    metadata: { }
   onap.policies.acm.operational.Common:
     derived_from: tosca.policies.Root
     version: 1.0.0

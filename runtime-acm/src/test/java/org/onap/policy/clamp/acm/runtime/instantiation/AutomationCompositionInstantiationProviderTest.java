@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,14 +23,14 @@ package org.onap.policy.clamp.acm.runtime.instantiation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVICE_TEMPLATE_YAML;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeAll;
@@ -68,32 +68,32 @@ class AutomationCompositionInstantiationProviderTest {
         "src/test/resources/rest/acm/AutomationCompositionElementsNotFound.json";
     private static final String AC_INSTANTIATION_AC_DEFINITION_NOT_FOUND_JSON =
         "src/test/resources/rest/acm/AutomationCompositionsNotFound.json";
-    private static final String TOSCA_TEMPLATE_YAML =
-        "src/test/resources/rest/servicetemplates/pmsh_multiple_ac_tosca.yaml";
     private static final String AUTOMATION_COMPOSITION_NOT_FOUND = "Automation composition not found";
     private static final String DELETE_BAD_REQUEST = "Automation composition state is still %s";
     private static final String ORDERED_STATE_INVALID = "ordered state invalid or not specified on command";
     private static final String AC_ELEMENT_NAME_NOT_FOUND =
         "\"AutomationCompositions\" INVALID, item has status INVALID\n"
-            + "  \"entry org.onap.domain.pmsh.PMSHAutomationCompositionDefinition\" INVALID, item has status INVALID\n"
-            + "    \"entry org.onap.domain.pmsh.DCAEMicroservice\" INVALID, Not found\n"
-            + "  \"entry org.onap.domain.pmsh.PMSHAutomationCompositionDefinition\" INVALID, item has status INVALID\n"
-            + "    \"entry org.onap.domain.pmsh.DCAEMicroservice\" INVALID, Not found\n";
+            + " {2}\"entry org.onap.domain.pmsh.PMSHAutomationCompositionDefinition\" "
+            + "INVALID, item has status INVALID\n"
+            + " {4}\"entry org.onap.domain.pmsh.DCAEMicroservice\" INVALID, Not found\n"
+            + " {2}\"entry org.onap.domain.pmsh.PMSHAutomationCompositionDefinition\" "
+            + "INVALID, item has status INVALID\n"
+            + " {4}\"entry org.onap.domain.pmsh.DCAEMicroservice\" INVALID, Not found\n";
 
     private static final String AC_DEFINITION_NOT_FOUND =
         "\"AutomationCompositions\" INVALID, item has status INVALID\n"
-            + "  \"entry org.onap.domain.PMSHAutomationCompositionDefinition\" INVALID, item has status INVALID\n"
-            + "    item \"AutomationComposition\" value \"org.onap.domain.PMSHAutomationCompositionDefinition\""
+            + " {2}\"entry org.onap.domain.PMSHAutomationCompositionDefinition\" INVALID, item has status INVALID\n"
+            + " {4}item \"AutomationComposition\" value \"org.onap.domain.PMSHAutomationCompositionDefinition\""
             + " INVALID, Commissioned automation composition definition not found\n"
-            + "  \"entry org.onap.domain.PMSHAutomationCompositionDefinition\" INVALID, item has status INVALID\n"
-            + "    item \"AutomationComposition\" value \"org.onap.domain.PMSHAutomationCompositionDefinition\""
+            + " {2}\"entry org.onap.domain.PMSHAutomationCompositionDefinition\" INVALID, item has status INVALID\n"
+            + " {4}item \"AutomationComposition\" value \"org.onap.domain.PMSHAutomationCompositionDefinition\""
             + " INVALID, Commissioned automation composition definition not found\n";
 
     private static ToscaServiceTemplate serviceTemplate = new ToscaServiceTemplate();
 
     @BeforeAll
-    public static void setUpBeforeClass() throws Exception {
-        serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_TEMPLATE_YAML);
+    public static void setUpBeforeClass() {
+        serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
     }
 
     @Test
@@ -381,7 +381,7 @@ class AutomationCompositionInstantiationProviderTest {
 
     @Test
     void testIssueAutomationCompositionCommand_OrderedStateInvalid()
-        throws AutomationCompositionRuntimeException, IOException {
+        throws AutomationCompositionRuntimeException {
         var participantProvider = Mockito.mock(ParticipantProvider.class);
         var acProvider = mock(AutomationCompositionProvider.class);
         var supervisionHandler = mock(SupervisionHandler.class);

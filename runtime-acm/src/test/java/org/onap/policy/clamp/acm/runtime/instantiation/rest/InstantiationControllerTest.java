@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,8 +23,10 @@ package org.onap.policy.clamp.acm.runtime.instantiation.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVICE_TEMPLATE_YAML;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
@@ -56,7 +58,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 /**
@@ -65,7 +67,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
  */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@TestPropertySource(locations = {"classpath:application_test.properties"})
+@ActiveProfiles("test")
 class InstantiationControllerTest extends CommonRestController {
 
     private static final String ID_NAME = "PMSH_Test_Instance";
@@ -78,9 +80,6 @@ class InstantiationControllerTest extends CommonRestController {
         "src/test/resources/rest/acm/AutomationCompositionsUpdate.json";
 
     private static final String AC_INSTANTIATION_CHANGE_STATE_JSON = "src/test/resources/rest/acm/PassiveCommand.json";
-
-    private static final String TOSCA_TEMPLATE_YAML =
-        "src/test/resources/rest/servicetemplates/pmsh_multiple_ac_tosca.yaml";
 
     private static final String INSTANTIATION_ENDPOINT = "instantiation";
     private static final String INSTANTIATION_COMMAND_ENDPOINT = "instantiation/command";
@@ -106,8 +105,8 @@ class InstantiationControllerTest extends CommonRestController {
     private int randomServerPort;
 
     @BeforeAll
-    public static void setUpBeforeClass() throws Exception {
-        serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_TEMPLATE_YAML);
+    public static void setUpBeforeClass() {
+        serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
     }
 
     @BeforeEach
@@ -193,7 +192,7 @@ class InstantiationControllerTest extends CommonRestController {
         assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
         AutomationCompositionPrimedResponse primResponse =
             rawresp.readEntity(AutomationCompositionPrimedResponse.class);
-        assertEquals(false, primResponse.getPrimedAutomationCompositionsList().get(0).isPrimed());
+        assertFalse(primResponse.getPrimedAutomationCompositionsList().get(0).isPrimed());
     }
 
     @Test

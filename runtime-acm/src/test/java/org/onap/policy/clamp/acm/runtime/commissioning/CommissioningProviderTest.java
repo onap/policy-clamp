@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,16 +23,18 @@ package org.onap.policy.clamp.acm.runtime.commissioning;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVICE_TEMPLATE_YAML;
+import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_ST_TEMPLATE_YAML;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.module.jsonSchema.factories.SchemaFactoryWrapper;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
@@ -51,10 +53,6 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
 
 class CommissioningProviderTest {
-    private static final String TOSCA_SERVICE_TEMPLATE_YAML =
-        "src/test/resources/rest/servicetemplates/pmsh_multiple_ac_tosca.yaml";
-    private static final String COMMON_TOSCA_SERVICE_TEMPLATE_YAML =
-        "src/test/resources/rest/servicetemplates/full-tosca-with-common-properties.yaml";
 
     private static final Coder CODER = new StandardCoder();
     private final ObjectMapper mapper = new ObjectMapper();
@@ -128,13 +126,13 @@ class CommissioningProviderTest {
         CommissioningProvider provider =
             new CommissioningProvider(serviceTemplateProvider, acProvider, null, participantProvider);
         ToscaServiceTemplate serviceTemplate =
-            InstantiationUtils.getToscaServiceTemplate(COMMON_TOSCA_SERVICE_TEMPLATE_YAML);
+            InstantiationUtils.getToscaServiceTemplate(TOSCA_ST_TEMPLATE_YAML);
         when(serviceTemplateProvider.createServiceTemplate(serviceTemplate)).thenReturn(serviceTemplate);
 
         provider.createAutomationCompositionDefinitions(serviceTemplate);
         verify(serviceTemplateProvider).createServiceTemplate(serviceTemplate);
 
-        when(serviceTemplateProvider.getToscaServiceTemplate(eq(null), eq(null))).thenReturn(serviceTemplate);
+        when(serviceTemplateProvider.getToscaServiceTemplate(null, null)).thenReturn(serviceTemplate);
 
         ToscaServiceTemplate returnedServiceTemplate = provider.getToscaServiceTemplate(null, null);
         assertThat(returnedServiceTemplate).isNotNull();
@@ -159,12 +157,13 @@ class CommissioningProviderTest {
         CommissioningProvider provider =
             new CommissioningProvider(serviceTemplateProvider, acProvider, null, participantProvider);
         ToscaServiceTemplate serviceTemplate =
-            InstantiationUtils.getToscaServiceTemplate(COMMON_TOSCA_SERVICE_TEMPLATE_YAML);
+            InstantiationUtils.getToscaServiceTemplate(TOSCA_ST_TEMPLATE_YAML);
         when(serviceTemplateProvider.createServiceTemplate(serviceTemplate)).thenReturn(serviceTemplate);
 
         provider.createAutomationCompositionDefinitions(serviceTemplate);
 
-        when(serviceTemplateProvider.getServiceTemplateList(any(), any())).thenReturn(List.of(serviceTemplate));
+        when(serviceTemplateProvider.getServiceTemplateList(any(), any())).thenReturn(List.of(
+            Objects.requireNonNull(serviceTemplate)));
 
         String returnedServiceTemplate = provider.getToscaServiceTemplateReduced(null, null);
         assertThat(returnedServiceTemplate).isNotNull();
@@ -188,7 +187,7 @@ class CommissioningProviderTest {
         CommissioningProvider provider =
             new CommissioningProvider(serviceTemplateProvider, acProvider, null, participantProvider);
         ToscaServiceTemplate serviceTemplate =
-            InstantiationUtils.getToscaServiceTemplate(COMMON_TOSCA_SERVICE_TEMPLATE_YAML);
+            InstantiationUtils.getToscaServiceTemplate(TOSCA_ST_TEMPLATE_YAML);
         when(serviceTemplateProvider.createServiceTemplate(serviceTemplate)).thenReturn(serviceTemplate);
 
         provider.createAutomationCompositionDefinitions(serviceTemplate);

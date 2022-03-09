@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,9 +26,11 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_ST_TEMPLATE_YAML;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -61,8 +63,6 @@ import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class SupervisionHandlerTest {
-    private static final String TOSCA_TEMPLATE_YAML =
-        "src/test/resources/rest/servicetemplates/tosca-for-smoke-testing.yaml";
     private static final String AC_INSTANTIATION_CREATE_JSON =
         "src/test/resources/rest/acm/AutomationCompositions.json";
     private static final ToscaConceptIdentifier identifier = new ToscaConceptIdentifier("PMSHInstance0Crud", "1.0.1");
@@ -71,8 +71,7 @@ class SupervisionHandlerTest {
         new ToscaConceptIdentifier("ParticipantType", "1.0.0");
 
     @Test
-    void testTriggerAutomationCompositionSupervisionEmpty()
-        throws AutomationCompositionException, PfModelException, CoderException {
+    void testTriggerAutomationCompositionSupervisionEmpty() throws PfModelException, CoderException {
         var handler =
             createSupervisionHandler(mock(AutomationCompositionProvider.class), mock(ParticipantProvider.class),
                 mock(MonitoringProvider.class), mock(ParticipantRegisterAckPublisher.class),
@@ -100,8 +99,7 @@ class SupervisionHandlerTest {
     }
 
     @Test
-    void testTriggerAutomationCompositionUninitialised()
-        throws AutomationCompositionException, PfModelException, CoderException {
+    void testTriggerAutomationCompositionUninitialised() throws PfModelException, CoderException {
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         var automationCompositionUpdatePublisher = mock(AutomationCompositionUpdatePublisher.class);
         var handler = createSupervisionHandler(automationCompositionProvider, mock(ParticipantProvider.class),
@@ -114,8 +112,7 @@ class SupervisionHandlerTest {
     }
 
     @Test
-    void testTriggerAutomationCompositionRunning()
-        throws AutomationCompositionException, PfModelException, CoderException {
+    void testTriggerAutomationCompositionRunning() throws PfModelException, CoderException {
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         var automationCompositionUpdatePublisher = mock(AutomationCompositionUpdatePublisher.class);
         var handler = createSupervisionHandler(automationCompositionProvider, mock(ParticipantProvider.class),
@@ -307,7 +304,8 @@ class SupervisionHandlerTest {
 
         var serviceTemplateProvider = Mockito.mock(ServiceTemplateProvider.class);
         when(serviceTemplateProvider.getServiceTemplateList(any(), any()))
-            .thenReturn(List.of(InstantiationUtils.getToscaServiceTemplate(TOSCA_TEMPLATE_YAML)));
+            .thenReturn(List.of(Objects.requireNonNull(InstantiationUtils.getToscaServiceTemplate(
+                TOSCA_ST_TEMPLATE_YAML))));
 
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
 
