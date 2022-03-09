@@ -68,7 +68,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @TestPropertySource(locations = {"classpath:application_test.properties"})
 class InstantiationControllerTest extends CommonRestController {
 
-    private static final String ID_NAME = "PMSH_Instance1";
+    private static final String ID_NAME = "PMSH_Test_Instance";
     private static final String ID_VERSION = "1.2.3";
 
     private static final String AC_INSTANTIATION_CREATE_JSON =

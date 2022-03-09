@@ -14,7 +14,7 @@ participant:
     description: Participant Description
     participantId:
       name: K8sParticipant0
-      version: 2.3.4
+      version: 1.0.0
     participantType:
       name: org.onap.policy.clamp.acm.KubernetesParticipant
       version: 2.3.4
