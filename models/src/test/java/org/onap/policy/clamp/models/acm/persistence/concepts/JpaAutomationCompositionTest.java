@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,11 +23,12 @@ package org.onap.policy.clamp.models.acm.persistence.concepts;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.util.LinkedHashMap;
@@ -196,7 +197,7 @@ class JpaAutomationCompositionTest {
             new JpaAutomationComposition(automationCompositionsWithElements.getAutomationCompositionList().get(0));
         assertEquals(4, jpaAutomationCompositionWithElements.getElements().size());
         assertEquals(18, jpaAutomationCompositionWithElements.getKeys().size());
-        assertThatCode(() -> jpaAutomationCompositionWithElements.clean()).doesNotThrowAnyException();
+        assertThatCode(jpaAutomationCompositionWithElements::clean).doesNotThrowAnyException();
 
         assertEquals(automationCompositionsWithElements.getAutomationCompositionList().get(0),
             jpaAutomationCompositionWithElements.toAuthorative());
@@ -206,9 +207,8 @@ class JpaAutomationCompositionTest {
     void testJpaAutomationCompositionValidation() {
         JpaAutomationComposition testJpaAutomationComposition = createJpaAutomationCompositionInstance();
 
-        assertThatThrownBy(() -> {
-            testJpaAutomationComposition.validate(null);
-        }).hasMessageMatching("fieldName is marked .*ull but is null");
+        assertThatThrownBy(() -> testJpaAutomationComposition.validate(null))
+            .hasMessageMatching("fieldName is marked .*ull but is null");
 
         assertTrue(testJpaAutomationComposition.validate("").isValid());
     }
@@ -264,8 +264,8 @@ class JpaAutomationCompositionTest {
 
         assertThat(ac0.toString()).contains("JpaAutomationComposition(");
         assertThat(ac0.hashCode()).isNotZero();
-        assertEquals(true, ac0.equals(ac0));
-        assertEquals(false, ac0.equals(null));
+        assertEquals(ac0, ac0);
+        assertNotEquals(null, ac0);
 
         JpaAutomationComposition ac1 = new JpaAutomationComposition();
 
@@ -276,9 +276,9 @@ class JpaAutomationCompositionTest {
         ac1.setState(AutomationCompositionState.UNINITIALISED);
 
         assertThat(ac1.toString()).contains("AutomationComposition(");
-        assertEquals(false, ac1.hashCode() == 0);
-        assertEquals(false, ac1.equals(ac0));
-        assertEquals(false, ac1.equals(null));
+        assertNotEquals(0, ac1.hashCode());
+        assertNotEquals(ac1, ac0);
+        assertNotEquals(null, ac1);
 
         assertNotEquals(ac1, ac0);
 

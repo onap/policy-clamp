@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,10 +22,11 @@ package org.onap.policy.clamp.models.acm.persistence.concepts;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -147,8 +148,8 @@ class JpaAcElementStatisticsTest {
 
         assertThat(aces0.toString()).contains("JpaAcElementStatistics(");
         assertThat(aces0.hashCode()).isNotZero();
-        assertEquals(true, aces0.equals(aces0));
-        assertEquals(false, aces0.equals(null));
+        assertEquals(aces0, aces0);
+        assertNotEquals(null, aces0);
 
 
         JpaAcElementStatistics aces11 = new JpaAcElementStatistics();
@@ -156,9 +157,9 @@ class JpaAcElementStatisticsTest {
         aces11.setState(AutomationCompositionState.UNINITIALISED);
 
         assertThat(aces11.toString()).contains("JpaAcElementStatistics(");
-        assertEquals(false, aces11.hashCode() == 0);
-        assertEquals(false, aces11.equals(aces0));
-        assertEquals(false, aces11.equals(null));
+        assertNotEquals(0, aces11.hashCode());
+        assertNotEquals(aces11, aces0);
+        assertNotEquals(null, aces11);
 
         assertNotEquals(aces11, aces0);
 

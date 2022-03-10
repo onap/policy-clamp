@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,9 @@
 package org.onap.policy.clamp.models.acm.messages.dmaap.notification;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -38,11 +39,11 @@ class AutomationCompositionStatusTest {
         AutomationCompositionStatus acn0 = new AutomationCompositionStatus();
 
         assertThat(acn0.toString()).contains("AutomationCompositionStatus(");
-        assertEquals(false, acn0.hashCode() == 0);
-        assertEquals(true, acn0.equals(acn0));
-        assertEquals(false, acn0.equals(null));
+        assertNotEquals(0, acn0.hashCode());
+        assertEquals(acn0, acn0);
+        assertNotEquals(null, acn0);
 
         AutomationCompositionStatus acn1 = new AutomationCompositionStatus();
-        assertEquals(true, acn1.equals(acn0));
+        assertEquals(acn1, acn0);
     }
 }

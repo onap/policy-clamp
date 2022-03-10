@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,11 @@
 package org.onap.policy.clamp.models.acm.messages.dmaap.notification;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,24 +43,24 @@ class AutomationCompositionNotificationTest {
         List<AutomationCompositionStatus> deletedList = new ArrayList<>();
         deletedList.add(new AutomationCompositionStatus());
 
-        assertEquals(true, acn0.isEmpty());
+        assertTrue(acn0.isEmpty());
 
         acn0.setAdded(addedList);
-        assertEquals(false, acn0.isEmpty());
+        assertFalse(acn0.isEmpty());
         acn0.setAdded(null);
-        assertEquals(true, acn0.isEmpty());
+        assertTrue(acn0.isEmpty());
 
         acn0.setDeleted(deletedList);
-        assertEquals(false, acn0.isEmpty());
+        assertFalse(acn0.isEmpty());
         acn0.setDeleted(null);
-        assertEquals(true, acn0.isEmpty());
+        assertTrue(acn0.isEmpty());
 
         acn0.setAdded(addedList);
         acn0.setDeleted(deletedList);
-        assertEquals(false, acn0.isEmpty());
+        assertFalse(acn0.isEmpty());
         acn0.setAdded(null);
         acn0.setDeleted(null);
-        assertEquals(true, acn0.isEmpty());
+        assertTrue(acn0.isEmpty());
     }
 
     @Test
@@ -68,16 +71,16 @@ class AutomationCompositionNotificationTest {
         AutomationCompositionNotification acn0 = new AutomationCompositionNotification();
 
         assertThat(acn0.toString()).contains("AutomationCompositionNotification(");
-        assertEquals(false, acn0.hashCode() == 0);
-        assertEquals(true, acn0.equals(acn0));
-        assertEquals(false, acn0.equals(null));
+        assertNotEquals(0, acn0.hashCode());
+        assertEquals(acn0, acn0);
+        assertNotEquals(null, acn0);
 
 
         AutomationCompositionNotification acn1 = new AutomationCompositionNotification();
 
         assertThat(acn1.toString()).contains("AutomationCompositionNotification(");
-        assertEquals(false, acn1.hashCode() == 0);
-        assertEquals(true, acn1.equals(acn0));
-        assertEquals(false, acn1.equals(null));
+        assertNotEquals(0, acn1.hashCode());
+        assertEquals(acn1, acn0);
+        assertNotEquals(null, acn1);
     }
 }

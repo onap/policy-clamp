@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 class ParticipantUtilsTest {
 
     private static final Coder CODER = new StandardCoder();
-    private static final String TOSCA_TEMPLATE_YAML = "examples/acm/PMSubscriptionHandling.yaml";
+    private static final String TOSCA_TEMPLATE_YAML = "examples/acm/test-pm-subscription-handling.yaml";
     private static final String AUTOMATION_COMPOSITION_JSON =
         "src/test/resources/providers/TestAutomationCompositions.json";
     private static final String AUTOMATION_COMPOSITION_ELEMENT =

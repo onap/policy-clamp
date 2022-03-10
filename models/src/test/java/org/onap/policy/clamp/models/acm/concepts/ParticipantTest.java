@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +22,11 @@ package org.onap.policy.clamp.models.acm.concepts;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -51,8 +53,8 @@ class ParticipantTest {
 
         assertThat(p0.toString()).contains("Participant(");
         assertThat(p0.hashCode()).isNotZero();
-        assertEquals(true, p0.equals(p0));
-        assertEquals(false, p0.equals(null));
+        assertEquals(p0, p0);
+        assertNotEquals(null, p0);
 
 
         Participant p1 = new Participant();
@@ -65,9 +67,9 @@ class ParticipantTest {
         p1.setVersion("0.0.1");
 
         assertThat(p1.toString()).contains("Participant(");
-        assertEquals(false, p1.hashCode() == 0);
-        assertEquals(false, p1.equals(p0));
-        assertEquals(false, p1.equals(null));
+        assertNotEquals(0, p1.hashCode());
+        assertNotEquals(p1, p0);
+        assertNotEquals(null, p1);
 
         assertNotEquals(p1, p0);
 

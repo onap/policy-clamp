@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,9 @@
 package org.onap.policy.clamp.models.acm.utils;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,8 +44,8 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
 
 class AcmUtilsTest {
 
-    private ToscaConceptIdentifier id = new ToscaConceptIdentifier("id", "1.0.0");
-    private ToscaConceptIdentifier idNode =
+    private final ToscaConceptIdentifier id = new ToscaConceptIdentifier("id", "1.0.0");
+    private final ToscaConceptIdentifier idNode =
         new ToscaConceptIdentifier("org.onap.dcae.acm.DCAEMicroserviceAutomationCompositionParticipant", "0.0.0");
 
     @Test
@@ -87,6 +88,16 @@ class AcmUtilsTest {
         checkParticipantDefinitionUpdate(toscaServiceTemplate, participantDefinitionUpdates);
         assertEquals(idNode, participantDefinitionUpdates.get(0).getAutomationCompositionElementDefinitionList().get(0)
             .getAcElementDefinitionId());
+    }
+
+    @Test
+    void testSetServiceTemplatePolicyInfoWithNullInfo() {
+        var toscaServiceTemplate = getDummyToscaServiceTemplate();
+        toscaServiceTemplate.setPolicyTypes(null);
+        toscaServiceTemplate.getToscaTopologyTemplate().setPolicies(null);
+        AutomationCompositionElement acElement = new AutomationCompositionElement();
+        AcmUtils.setServiceTemplatePolicyInfo(new AutomationCompositionElement(), toscaServiceTemplate);
+        assertNull(acElement.getToscaServiceTemplateFragment());
     }
 
     private ToscaServiceTemplate getDummyToscaServiceTemplate() {

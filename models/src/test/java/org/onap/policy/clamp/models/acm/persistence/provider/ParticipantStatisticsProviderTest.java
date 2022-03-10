@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021 Nordix Foundation.
+ * Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ package org.onap.policy.clamp.models.acm.persistence.provider;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.eq;
@@ -50,7 +50,7 @@ class ParticipantStatisticsProviderTest {
 
     private ParticipantStatisticsProvider participantStatisticsProvider;
     private ParticipantStatisticsList inputParticipantStatistics;
-    private String originalJson = ResourceUtils.getResourceAsString(PARTICIPANT_STATS_JSON);
+    private final String originalJson = ResourceUtils.getResourceAsString(PARTICIPANT_STATS_JSON);
 
     @BeforeEach
     void beforeSetupDao() throws Exception {

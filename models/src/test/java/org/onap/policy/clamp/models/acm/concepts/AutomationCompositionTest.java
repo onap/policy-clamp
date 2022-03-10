@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,10 +22,10 @@ package org.onap.policy.clamp.models.acm.concepts;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.time.Instant;
 import java.util.LinkedHashMap;
@@ -57,8 +57,8 @@ class AutomationCompositionTest {
 
         assertThat(ac0.toString()).contains("AutomationComposition(");
         assertThat(ac0.hashCode()).isNotZero();
-        assertEquals(true, ac0.equals(ac0));
-        assertEquals(false, ac0.equals(null));
+        assertEquals(ac0, ac0);
+        assertNotEquals(null, ac0);
 
         var ac1 = new AutomationComposition();
 
@@ -71,9 +71,9 @@ class AutomationCompositionTest {
         ac1.setVersion("0.0.1");
 
         assertThat(ac1.toString()).contains("AutomationComposition(");
-        assertEquals(false, ac1.hashCode() == 0);
-        assertEquals(false, ac1.equals(ac0));
-        assertEquals(false, ac1.equals(null));
+        assertNotEquals(0, ac1.hashCode());
+        assertNotEquals(ac1, ac0);
+        assertNotEquals(null, ac1);
 
         assertNotEquals(ac1, ac0);
 

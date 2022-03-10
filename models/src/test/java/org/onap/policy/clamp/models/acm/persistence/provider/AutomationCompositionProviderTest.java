@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021 Nordix Foundation.
+ * Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,8 @@ package org.onap.policy.clamp.models.acm.persistence.provider;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -65,13 +65,13 @@ class AutomationCompositionProviderTest {
     private static final Coder CODER = new StandardCoder();
     private static final String AUTOMATION_COMPOSITION_JSON =
         "src/test/resources/providers/TestAutomationCompositions.json";
-    private static final String TOSCA_TEMPLATE_YAML = "examples/acm/PMSubscriptionHandling.yaml";
+    private static final String TOSCA_TEMPLATE_YAML = "examples/acm/test-pm-subscription-handling.yaml";
 
     private static final YamlJsonTranslator yamlTranslator = new YamlJsonTranslator();
 
     private AutomationCompositions inputAutomationCompositions;
     private List<JpaAutomationComposition> inputAutomationCompositionsJpa;
-    private String originalJson = ResourceUtils.getResourceAsString(AUTOMATION_COMPOSITION_JSON);
+    private final String originalJson = ResourceUtils.getResourceAsString(AUTOMATION_COMPOSITION_JSON);
 
     @BeforeEach
     void beforeSetupDao() throws Exception {
@@ -87,9 +87,8 @@ class AutomationCompositionProviderTest {
         var automationCompositionProvider = new AutomationCompositionProvider(automationCompositionRepository,
             mock(ToscaNodeTemplateRepository.class), mock(ToscaNodeTemplatesRepository.class));
 
-        assertThatThrownBy(() -> {
-            automationCompositionProvider.saveAutomationCompositions(null);
-        }).hasMessageMatching(LIST_IS_NULL);
+        assertThatThrownBy(() -> automationCompositionProvider.saveAutomationCompositions(null))
+            .hasMessageMatching(LIST_IS_NULL);
 
         when(automationCompositionRepository.saveAll(inputAutomationCompositionsJpa))
             .thenReturn(inputAutomationCompositionsJpa);
@@ -102,10 +101,9 @@ class AutomationCompositionProviderTest {
 
         when(automationCompositionRepository.saveAll(any())).thenThrow(IllegalArgumentException.class);
 
-        assertThatThrownBy(() -> {
-            automationCompositionProvider
-                .saveAutomationCompositions(inputAutomationCompositions.getAutomationCompositionList());
-        }).hasMessageMatching("Error in save AutomationCompositions");
+        assertThatThrownBy(() -> automationCompositionProvider
+            .saveAutomationCompositions(inputAutomationCompositions.getAutomationCompositionList()))
+            .hasMessageMatching("Error in save AutomationCompositions");
     }
 
     @Test
@@ -114,9 +112,8 @@ class AutomationCompositionProviderTest {
         var automationCompositionProvider = new AutomationCompositionProvider(automationCompositionRepository,
             mock(ToscaNodeTemplateRepository.class), mock(ToscaNodeTemplatesRepository.class));
 
-        assertThatThrownBy(() -> {
-            automationCompositionProvider.saveAutomationComposition(null);
-        }).hasMessageMatching(OBJECT_IS_NULL);
+        assertThatThrownBy(() -> automationCompositionProvider.saveAutomationComposition(null))
+            .hasMessageMatching(OBJECT_IS_NULL);
 
         when(automationCompositionRepository.save(inputAutomationCompositionsJpa.get(0)))
             .thenReturn(inputAutomationCompositionsJpa.get(0));
@@ -128,10 +125,9 @@ class AutomationCompositionProviderTest {
 
         when(automationCompositionRepository.save(any())).thenThrow(IllegalArgumentException.class);
 
-        assertThatThrownBy(() -> {
-            automationCompositionProvider
-                .saveAutomationComposition(inputAutomationCompositions.getAutomationCompositionList().get(0));
-        }).hasMessageMatching("Error in save automationComposition");
+        assertThatThrownBy(() -> automationCompositionProvider
+            .saveAutomationComposition(inputAutomationCompositions.getAutomationCompositionList().get(0)))
+            .hasMessageMatching("Error in save automationComposition");
     }
 
     @Test
@@ -167,7 +163,8 @@ class AutomationCompositionProviderTest {
         assertEquals(1, automationCompositionProvider.getAutomationCompositions(name, version).size());
 
         var ac = automationCompositionProvider
-            .findAutomationComposition(new ToscaConceptIdentifier(ID_NAME, ID_VERSION)).get();
+            .findAutomationComposition(new ToscaConceptIdentifier(ID_NAME, ID_VERSION))
+            .orElse(new AutomationComposition());
         assertEquals(inputAutomationCompositions.getAutomationCompositionList().get(1), ac);
 
         ac = automationCompositionProvider.getAutomationComposition(new ToscaConceptIdentifier(ID_NAME, ID_VERSION));
@@ -175,12 +172,12 @@ class AutomationCompositionProviderTest {
 
         when(automationCompositionRepository.getById(any())).thenThrow(EntityNotFoundException.class);
 
-        assertThatThrownBy(() -> {
-            automationCompositionProvider
-                .getAutomationComposition(new ToscaConceptIdentifier(ID_NAME_NOT_EXTST, ID_VERSION));
-        }).hasMessageMatching("AutomationComposition not found");
+        assertThatThrownBy(() -> automationCompositionProvider
+            .getAutomationComposition(new ToscaConceptIdentifier(ID_NAME_NOT_EXTST, ID_VERSION)))
+            .hasMessageMatching("AutomationComposition not found");
 
-        ac = automationCompositionProvider.findAutomationComposition(ID_NAME, ID_VERSION).get();
+        ac = automationCompositionProvider.findAutomationComposition(ID_NAME, ID_VERSION)
+            .orElse(new AutomationComposition());
         assertEquals(inputAutomationCompositions.getAutomationCompositionList().get(1), ac);
 
         assertThat(automationCompositionProvider
@@ -188,9 +185,8 @@ class AutomationCompositionProviderTest {
 
         when(automationCompositionRepository.findById(any())).thenThrow(IllegalArgumentException.class);
 
-        assertThatThrownBy(() -> {
-            automationCompositionProvider.findAutomationComposition(ID_NAME_NOT_VALID, ID_VERSION);
-        }).hasMessageMatching("Not valid parameter");
+        assertThatThrownBy(() -> automationCompositionProvider.findAutomationComposition(ID_NAME_NOT_VALID, ID_VERSION))
+            .hasMessageMatching("Not valid parameter");
     }
 
     @Test
@@ -199,9 +195,9 @@ class AutomationCompositionProviderTest {
         var automationCompositionProvider = new AutomationCompositionProvider(automationCompositionRepository,
             mock(ToscaNodeTemplateRepository.class), mock(ToscaNodeTemplatesRepository.class));
 
-        assertThatThrownBy(() -> {
-            automationCompositionProvider.deleteAutomationComposition(ID_NAME_NOT_EXTST, ID_VERSION);
-        }).hasMessageMatching(".*.failed, automation composition does not exist");
+        assertThatThrownBy(() -> automationCompositionProvider
+            .deleteAutomationComposition(ID_NAME_NOT_EXTST, ID_VERSION))
+            .hasMessageMatching(".*.failed, automation composition does not exist");
 
         var automationComposition = inputAutomationCompositions.getAutomationCompositionList().get(0);
         var name = automationComposition.getName();
@@ -227,7 +223,7 @@ class AutomationCompositionProviderTest {
     }
 
     @Test
-    void testSaveAndDeleteInstanceProperties() throws Exception {
+    void testSaveAndDeleteInstanceProperties() {
         var toscaNodeTemplatesRepository = mock(ToscaNodeTemplatesRepository.class);
         var toscaNodeTemplateRepository = mock(ToscaNodeTemplateRepository.class);
         var automationCompositionProvider = new AutomationCompositionProvider(
@@ -253,7 +249,7 @@ class AutomationCompositionProviderTest {
     }
 
     @Test
-    void testGetNodeTemplates() throws Exception {
+    void testGetNodeTemplates() {
         var toscaNodeTemplateRepository = mock(ToscaNodeTemplateRepository.class);
         var automationCompositionProvider =
             new AutomationCompositionProvider(mock(AutomationCompositionRepository.class), toscaNodeTemplateRepository,
@@ -288,18 +284,17 @@ class AutomationCompositionProviderTest {
         assertNotNull(listNodes);
         assertThat(listNodes).hasSize(1);
 
-        assertThatThrownBy(() -> {
-            automationCompositionProvider.getFilteredNodeTemplates(null);
-        }).hasMessageMatching("filter is marked non-null but is null");
+        assertThatThrownBy(() -> automationCompositionProvider.getFilteredNodeTemplates(null))
+            .hasMessageMatching("filter is marked non-null but is null");
     }
 
     private static ToscaServiceTemplate testAutomationCompositionRead() {
-        return testAutomationCompositionYamlSerialization(TOSCA_TEMPLATE_YAML);
+        return testAutomationCompositionYamlSerialization();
     }
 
-    private static ToscaServiceTemplate testAutomationCompositionYamlSerialization(
-        String automationCompositionFilePath) {
-        var automationCompositionString = ResourceUtils.getResourceAsString(automationCompositionFilePath);
+    private static ToscaServiceTemplate testAutomationCompositionYamlSerialization() {
+        var automationCompositionString = ResourceUtils.getResourceAsString(
+            AutomationCompositionProviderTest.TOSCA_TEMPLATE_YAML);
         return yamlTranslator.fromYaml(automationCompositionString, ToscaServiceTemplate.class);
     }
 }

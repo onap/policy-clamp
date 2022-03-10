@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +22,9 @@ package org.onap.policy.clamp.models.acm.concepts;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.time.Instant;
 import org.junit.jupiter.api.Test;
@@ -38,8 +38,8 @@ class ParticipantStatisticsTest {
 
         assertThat(ps0.toString()).contains("ParticipantStatistics(");
         assertThat(ps0.hashCode()).isNotZero();
-        assertEquals(true, ps0.equals(ps0));
-        assertEquals(false, ps0.equals(null));
+        assertEquals(ps0, ps0);
+        assertNotEquals(null, ps0);
 
 
         ParticipantStatistics ps1 = new ParticipantStatistics();
@@ -47,9 +47,9 @@ class ParticipantStatisticsTest {
         ps1.setTimeStamp(Instant.now());
 
         assertThat(ps1.toString()).contains("ParticipantStatistics(");
-        assertEquals(false, ps1.hashCode() == 0);
-        assertEquals(false, ps1.equals(ps0));
-        assertEquals(false, ps1.equals(null));
+        assertNotEquals(0, ps1.hashCode());
+        assertNotEquals(ps1, ps0);
+        assertNotEquals(null, ps1);
 
         assertNotEquals(ps1, ps0);
 

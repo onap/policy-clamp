@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021 Nordix Foundation.
+ * Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ package org.onap.policy.clamp.models.acm.persistence.provider;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.eq;
@@ -49,7 +49,7 @@ class AcElementStatisticsProviderTest {
 
     private AcElementStatisticsProvider acElementStatisticsProvider;
     private AcElementStatisticsList inputAcElementStats;
-    private String originalJson = ResourceUtils.getResourceAsString(AC_ELEMENT_STATS_JSON);
+    private final String originalJson = ResourceUtils.getResourceAsString(AC_ELEMENT_STATS_JSON);
 
     /**
      * Set up test AcElement statistics provider.
@@ -82,9 +82,8 @@ class AcElementStatisticsProviderTest {
 
     @Test
     void testAcElementStatisticsCreate() throws Exception {
-        assertThatThrownBy(() -> {
-            acElementStatisticsProvider.createAcElementStatistics(null);
-        }).hasMessageMatching(LIST_IS_NULL);
+        assertThatThrownBy(() -> acElementStatisticsProvider.createAcElementStatistics(null))
+            .hasMessageMatching(LIST_IS_NULL);
 
         AcElementStatisticsList createdAcElementStats = new AcElementStatisticsList();
         createdAcElementStats.setAcElementStatistics(

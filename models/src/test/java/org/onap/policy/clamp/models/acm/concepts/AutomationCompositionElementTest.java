@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,10 +22,10 @@ package org.onap.policy.clamp.models.acm.concepts;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -34,6 +34,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 class AutomationCompositionElementTest {
     @Test
     void testAutomationCompositionElement() {
+        assertNotNull(new AutomationCompositionElement());
         var ace0 = new AutomationCompositionElement();
         var ace1 = new AutomationCompositionElement(ace0);
         assertEquals(ace0, ace1);
@@ -64,13 +65,12 @@ class AutomationCompositionElementTest {
 
     @Test
     void testAutomationCompositionElementLombok() {
-        assertNotNull(new AutomationCompositionElement());
         var ace0 = new AutomationCompositionElement();
 
         assertThat(ace0.toString()).contains("AutomationCompositionElement(");
         assertThat(ace0.hashCode()).isNotZero();
-        assertEquals(true, ace0.equals(ace0));
-        assertEquals(false, ace0.equals(null));
+        assertEquals(ace0, ace0);
+        assertNotEquals(null, ace0);
 
         var ace1 = new AutomationCompositionElement();
 
@@ -82,9 +82,9 @@ class AutomationCompositionElementTest {
         ace1.setState(AutomationCompositionState.UNINITIALISED);
 
         assertThat(ace1.toString()).contains("AutomationCompositionElement(");
-        assertEquals(false, ace1.hashCode() == 0);
-        assertEquals(false, ace1.equals(ace0));
-        assertEquals(false, ace1.equals(null));
+        assertNotEquals(0, ace1.hashCode());
+        assertNotEquals(ace1, ace0);
+        assertNotEquals(null, ace1);
 
         assertNotEquals(ace1, ace0);
 
