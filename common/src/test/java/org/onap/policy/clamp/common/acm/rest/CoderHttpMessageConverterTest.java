@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@
 
 package org.onap.policy.clamp.common.acm.rest;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -37,7 +37,7 @@ class CoderHttpMessageConverterTest {
 
 
     @Test
-    void coderHttpMesageConverterTest() throws AutomationCompositionRuntimeException, IOException {
+    void coderHttpMessageConverterTest() throws AutomationCompositionRuntimeException, IOException {
         var y = new CoderHttpMesageConverter<>("yaml");
         var j = new CoderHttpMesageConverter<>("json");
 
@@ -46,15 +46,12 @@ class CoderHttpMessageConverterTest {
         var testInputStream = new ByteArrayInputStream("testdata".getBytes());
         HttpInputMessage input = Mockito.mock(HttpInputMessage.class);
         Mockito.when(input.getBody()).thenReturn(testInputStream);
-        assertThrows(AutomationCompositionRuntimeException.class, () -> {
-            y.readInternal(RequestResponseLoggingFilterTest.class, input);
-        });
+        assertThrows(AutomationCompositionRuntimeException.class,
+            () -> y.readInternal(RequestResponseLoggingFilterTest.class, input));
 
         var testOutputStream = new ByteArrayOutputStream();
         HttpOutputMessage output = Mockito.mock(HttpOutputMessage.class);
         Mockito.when(output.getBody()).thenReturn(testOutputStream);
-        assertThrows(AutomationCompositionRuntimeException.class, () -> {
-            j.writeInternal(String.class, output);
-        });
+        assertThrows(AutomationCompositionRuntimeException.class, () -> j.writeInternal(String.class, output));
     }
 }

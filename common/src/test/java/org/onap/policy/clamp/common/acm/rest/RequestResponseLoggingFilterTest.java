@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -35,7 +35,7 @@ import org.mockito.Mockito;
 class RequestResponseLoggingFilterTest {
 
     @Test
-    void initTest() throws IOException, ServletException {
+    void initTest() {
         var e = new RequestResponseLoggingFilter();
         var res = Mockito.mock(HttpServletResponse.class);
         var req = Mockito.mock(HttpServletRequest.class);
