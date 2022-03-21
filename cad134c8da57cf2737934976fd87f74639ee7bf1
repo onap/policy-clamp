@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fef2a9c4_ce2b9486",
+        "filename": "examples/src/main/resources/clamp/acm/tca/tosca-tcagen2-final-v2.yml",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2022-03-21T13:59:38Z",
+      "side": 1,
+      "message": "There\u0027s one or two trailing blanks in the file, scroll down to spot them.",
+      "revId": "cad134c8da57cf2737934976fd87f74639ee7bf1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
