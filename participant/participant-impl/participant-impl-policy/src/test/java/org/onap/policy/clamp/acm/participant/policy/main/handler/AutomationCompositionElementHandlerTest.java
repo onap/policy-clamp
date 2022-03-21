@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,6 @@ import org.onap.policy.clamp.acm.participant.policy.client.PolicyPapHttpClient;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
-import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
@@ -46,7 +45,7 @@ class AutomationCompositionElementHandlerTest {
         new ToscaConceptIdentifier(ID_NAME, ID_VERSION);
 
     @Test
-    void testHandlerExceptions() {
+    void testHandlerDoesNotThrowExceptions() {
         AutomationCompositionElementHandler handler = getTestingHandler();
 
         assertDoesNotThrow(() -> handler
@@ -76,7 +75,7 @@ class AutomationCompositionElementHandlerTest {
             .handleStatistics(automationCompositionElementId));
     }
 
-    AutomationCompositionElementHandler getTestingHandler() {
+    private AutomationCompositionElementHandler getTestingHandler() {
         var api = Mockito.mock(PolicyApiHttpClient.class);
         var pap = Mockito.mock(PolicyPapHttpClient.class);
         var handler = new AutomationCompositionElementHandler(api, pap);
@@ -87,7 +86,7 @@ class AutomationCompositionElementHandlerTest {
         return handler;
     }
 
-    AutomationCompositionElement getTestingAcElement() {
+    private AutomationCompositionElement getTestingAcElement() {
         var element = new AutomationCompositionElement();
         element.setDefinition(automationCompositionId);
         element.setDescription("Description");

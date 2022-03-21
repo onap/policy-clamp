@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,10 +27,10 @@ import static org.mockito.Mockito.doNothing;
 import java.io.IOException;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.onap.policy.clamp.acm.participant.http.main.handler.AutomationCompositionElementHandler;
@@ -41,7 +41,6 @@ import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantInterme
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
-import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -54,22 +53,24 @@ class AcElementHandlerTest {
     private AutomationCompositionElementHandler automationCompositionElementHandler =
         new AutomationCompositionElementHandler();
 
-    @Mock
-    private ParticipantIntermediaryApi participantIntermediaryApi;
-
-    private CommonTestData commonTestData = new CommonTestData();
+    private final CommonTestData commonTestData = new CommonTestData();
 
     private static ToscaServiceTemplate serviceTemplate;
     private static final String HTTP_AUTOMATION_COMPOSITION_ELEMENT =
         "org.onap.domain.database.Http_PMSHMicroserviceAutomationCompositionElement";
 
     @BeforeAll
-    static void init() throws CoderException {
+    static void init() {
         serviceTemplate = ToscaUtils.readAutomationCompositionFromTosca();
     }
 
+    @BeforeEach
+    void startMocks() {
+        automationCompositionElementHandler.setIntermediaryApi(Mockito.mock(ParticipantIntermediaryApi.class));
+    }
+
     @Test
-    void test_automationCompositionElementeStateChange() throws IOException {
+    void test_automationCompositionElementStateChange() throws IOException {
         var automationCompositionId = commonTestData.getAutomationCompositionId();
         var element = commonTestData.getAutomationCompositionElement();
         var automationCompositionElementId = element.getId();

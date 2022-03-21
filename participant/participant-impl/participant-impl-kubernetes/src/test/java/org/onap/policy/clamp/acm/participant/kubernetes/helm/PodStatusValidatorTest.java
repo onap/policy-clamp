@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -49,24 +49,21 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 class PodStatusValidatorTest {
 
-
     private static final Coder CODER = new StandardCoder();
     private static final String CHART_INFO_YAML = "src/test/resources/ChartList.json";
     private static List<ChartInfo> charts;
-    private static int timeout = 60;
-    private static int statusCheckInterval = 30;
-
 
     @InjectMocks
     private static PodStatusValidator podStatusValidator;
 
     private static MockedStatic<HelmClient> mockedClient;
 
-
     @BeforeAll
     static void init() throws CoderException {
         charts = CODER.decode(new File(CHART_INFO_YAML), ChartList.class).getCharts();
         mockedClient = mockStatic(HelmClient.class);
+        int timeout = 60;
+        int statusCheckInterval = 30;
         podStatusValidator = new PodStatusValidator(charts.get(0), timeout, statusCheckInterval);
     }
 

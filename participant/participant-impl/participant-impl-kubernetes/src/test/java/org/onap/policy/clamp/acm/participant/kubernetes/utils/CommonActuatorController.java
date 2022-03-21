@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,9 +50,8 @@ public class CommonActuatorController {
      *
      * @param endpoint the target endpoint
      * @return a request builder
-     * @throws Exception if an error occurs
      */
-    protected Invocation.Builder sendActRequest(final String endpoint) throws Exception {
+    protected Invocation.Builder sendActRequest(final String endpoint) {
         return sendFqeRequest(httpPrefix + ACTUATOR_ENDPOINT + endpoint, true);
     }
 
@@ -61,9 +60,8 @@ public class CommonActuatorController {
      *
      * @param endpoint the target endpoint
      * @return a request builder
-     * @throws Exception if an error occurs
      */
-    protected Invocation.Builder sendNoAuthActRequest(final String endpoint) throws Exception {
+    protected Invocation.Builder sendNoAuthActRequest(final String endpoint) {
         return sendFqeRequest(httpPrefix + ACTUATOR_ENDPOINT + endpoint, false);
     }
 
@@ -73,10 +71,8 @@ public class CommonActuatorController {
      * @param fullyQualifiedEndpoint the fully qualified target endpoint
      * @param includeAuth if authorization header should be included
      * @return a request builder
-     * @throws Exception if an error occurs
      */
-    protected Invocation.Builder sendFqeRequest(final String fullyQualifiedEndpoint, boolean includeAuth)
-            throws Exception {
+    protected Invocation.Builder sendFqeRequest(final String fullyQualifiedEndpoint, boolean includeAuth) {
         final Client client = ClientBuilder.newBuilder().build();
 
         client.property(ClientProperties.METAINF_SERVICES_LOOKUP_DISABLE, "true");
@@ -95,9 +91,8 @@ public class CommonActuatorController {
      * Assert that GET call to actuator endpoint is Unauthorized.
      *
      * @param endPoint the endpoint
-     * @throws Exception if an error occurs
      */
-    protected void assertUnauthorizedActGet(final String endPoint) throws Exception {
+    protected void assertUnauthorizedActGet(final String endPoint) {
         Response rawresp = sendNoAuthActRequest(endPoint).buildGet().invoke();
         assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), rawresp.getStatus());
     }

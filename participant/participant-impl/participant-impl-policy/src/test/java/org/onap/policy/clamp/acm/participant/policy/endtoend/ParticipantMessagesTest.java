@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,7 +22,7 @@
 package org.onap.policy.clamp.acm.participant.policy.endtoend;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.Instant;
 import java.util.Collections;
@@ -49,12 +49,12 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@TestPropertySource(locations = {"classpath:application_test.properties"})
+@ActiveProfiles("test")
 class ParticipantMessagesTest {
 
     private static final Object lockit = new Object();
@@ -65,7 +65,7 @@ class ParticipantMessagesTest {
     private ParticipantHandler participantHandler;
 
     @Test
-    void testSendParticipantRegisterMessage() throws Exception {
+    void testSendParticipantRegisterMessage() {
         final ParticipantRegister participantRegisterMsg = new ParticipantRegister();
         participantRegisterMsg.setParticipantId(getParticipantId());
         participantRegisterMsg.setTimestamp(Instant.now());
@@ -73,15 +73,15 @@ class ParticipantMessagesTest {
 
         synchronized (lockit) {
             ParticipantMessagePublisher participantMessagePublisher =
-                    new ParticipantMessagePublisher();
+                new ParticipantMessagePublisher();
             participantMessagePublisher.active(Collections.singletonList(Mockito.mock(TopicSink.class)));
             assertThatCode(() -> participantMessagePublisher.sendParticipantRegister(participantRegisterMsg))
-                            .doesNotThrowAnyException();
+                .doesNotThrowAnyException();
         }
     }
 
     @Test
-    void testReceiveParticipantRegisterAckMessage() throws Exception {
+    void testReceiveParticipantRegisterAckMessage() {
         final ParticipantRegisterAck participantRegisterAckMsg = new ParticipantRegisterAck();
         participantRegisterAckMsg.setMessage("ParticipantRegisterAck message");
         participantRegisterAckMsg.setResponseTo(UUID.randomUUID());
@@ -91,12 +91,12 @@ class ParticipantMessagesTest {
             ParticipantRegisterAckListener participantRegisterAckListener =
                 new ParticipantRegisterAckListener(participantHandler);
             assertThatCode(() -> participantRegisterAckListener.onTopicEvent(INFRA, TOPIC, null,
-                            participantRegisterAckMsg)).doesNotThrowAnyException();
+                participantRegisterAckMsg)).doesNotThrowAnyException();
         }
     }
 
     @Test
-    void testSendParticipantDeregisterMessage() throws Exception {
+    void testSendParticipantDeregisterMessage() {
         final ParticipantDeregister participantDeregisterMsg = new ParticipantDeregister();
         participantDeregisterMsg.setParticipantId(getParticipantId());
         participantDeregisterMsg.setTimestamp(Instant.now());
@@ -104,15 +104,15 @@ class ParticipantMessagesTest {
 
         synchronized (lockit) {
             ParticipantMessagePublisher participantMessagePublisher =
-                    new ParticipantMessagePublisher();
+                new ParticipantMessagePublisher();
             participantMessagePublisher.active(Collections.singletonList(Mockito.mock(TopicSink.class)));
             assertThatCode(() -> participantMessagePublisher.sendParticipantDeregister(participantDeregisterMsg))
-                            .doesNotThrowAnyException();
+                .doesNotThrowAnyException();
         }
     }
 
     @Test
-    void testReceiveParticipantDeregisterAckMessage() throws Exception {
+    void testReceiveParticipantDeregisterAckMessage() {
         final ParticipantDeregisterAck participantDeregisterAckMsg = new ParticipantDeregisterAck();
         participantDeregisterAckMsg.setMessage("ParticipantDeregisterAck message");
         participantDeregisterAckMsg.setResponseTo(UUID.randomUUID());
@@ -120,14 +120,14 @@ class ParticipantMessagesTest {
 
         synchronized (lockit) {
             ParticipantDeregisterAckListener participantDeregisterAckListener =
-                            new ParticipantDeregisterAckListener(participantHandler);
+                new ParticipantDeregisterAckListener(participantHandler);
             assertThatCode(() -> participantDeregisterAckListener.onTopicEvent(INFRA, TOPIC, null,
-                            participantDeregisterAckMsg)).doesNotThrowAnyException();
+                participantDeregisterAckMsg)).doesNotThrowAnyException();
         }
     }
 
     @Test
-    void testReceiveParticipantUpdateMessage() throws Exception {
+    void testReceiveParticipantUpdateMessage() {
         ParticipantUpdate participantUpdateMsg = TestListenerUtils.createParticipantUpdateMsg();
 
         synchronized (lockit) {
@@ -140,7 +140,7 @@ class ParticipantMessagesTest {
     }
 
     @Test
-    void testSendParticipantUpdateAckMessage() throws Exception {
+    void testSendParticipantUpdateAckMessage() {
         final ParticipantUpdateAck participantUpdateAckMsg = new ParticipantUpdateAck();
         participantUpdateAckMsg.setMessage("ParticipantUpdateAck message");
         participantUpdateAckMsg.setResponseTo(UUID.randomUUID());
@@ -150,12 +150,12 @@ class ParticipantMessagesTest {
             ParticipantMessagePublisher participantMessagePublisher = new ParticipantMessagePublisher();
             participantMessagePublisher.active(Collections.singletonList(Mockito.mock(TopicSink.class)));
             assertThatCode(() -> participantMessagePublisher.sendParticipantUpdateAck(participantUpdateAckMsg))
-                            .doesNotThrowAnyException();
+                .doesNotThrowAnyException();
         }
     }
 
     @Test
-    void testParticipantStatusHeartbeat() throws Exception {
+    void testParticipantStatusHeartbeat() {
         final ParticipantStatus heartbeat = participantHandler.makeHeartbeat(true);
         synchronized (lockit) {
             ParticipantMessagePublisher publisher = new ParticipantMessagePublisher();

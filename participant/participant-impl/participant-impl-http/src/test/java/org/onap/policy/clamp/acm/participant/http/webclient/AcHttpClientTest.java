@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,9 +53,7 @@ class AcHttpClientTest {
 
     private static int mockServerPort;
 
-    private String testMockUrl = "http://localhost";
-
-    private Map<ToscaConceptIdentifier, Pair<Integer, String>> responseMap = new HashMap<>();
+    private final String testMockUrl = "http://localhost";
 
     private static ClientAndServer mockServer;
 
@@ -94,6 +92,7 @@ class AcHttpClientTest {
     void test_validRequest() {
         //Add valid rest requests POST, GET
         ConfigurationEntity configurationEntity = commonTestData.getConfigurationEntity();
+        Map<ToscaConceptIdentifier, Pair<Integer, String>> responseMap = new HashMap<>();
 
         Map<String, String> headers = commonTestData.getHeaders();
         ConfigRequest configRequest = new ConfigRequest(testMockUrl + ":" + mockServerPort, headers,
@@ -113,6 +112,7 @@ class AcHttpClientTest {
     void test_invalidRequest() {
         //Add rest requests Invalid POST, Valid GET
         ConfigurationEntity configurationEntity = commonTestData.getInvalidConfigurationEntity();
+        Map<ToscaConceptIdentifier, Pair<Integer, String>> responseMap = new HashMap<>();
 
         Map<String, String> headers = commonTestData.getHeaders();
         ConfigRequest configRequest = new ConfigRequest(testMockUrl + ":" + mockServerPort, headers,

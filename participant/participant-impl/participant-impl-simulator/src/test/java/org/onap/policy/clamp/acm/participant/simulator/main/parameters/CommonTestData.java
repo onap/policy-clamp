@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@
 
 package org.onap.policy.clamp.acm.participant.simulator.main.parameters;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -34,10 +33,9 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
  * Class to hold/create all parameters for test cases.
  */
 public class CommonTestData {
-    public static final String PARTICIPANT_GROUP_NAME = "AutomationCompositionParticipantGroup";
     public static final String DESCRIPTION = "Participant description";
     public static final long TIME_INTERVAL = 2000;
-    public static final List<TopicParameters> TOPIC_PARAMS = Arrays.asList(getTopicParams());
+    public static final List<TopicParameters> TOPIC_PARAMS = List.of(getTopicParams());
 
     public static final Coder CODER = new StandardCoder();
 
@@ -48,7 +46,7 @@ public class CommonTestData {
      */
     public ParticipantSimulatorParameters getParticipantSimulatorParameters() {
         try {
-            return CODER.convert(getParticipantParameterGroupMap(PARTICIPANT_GROUP_NAME),
+            return CODER.convert(getParticipantParameterGroupMap(),
                     ParticipantSimulatorParameters.class);
         } catch (final CoderException e) {
             throw new RuntimeException("cannot create ParticipantSimulatorParameters from map", e);
@@ -58,11 +56,9 @@ public class CommonTestData {
     /**
      * Returns a property map for a ApexStarterParameterGroup map for test cases.
      *
-     * @param name name of the parameters
-     *
      * @return a property map suitable for constructing an object
      */
-    public Map<String, Object> getParticipantParameterGroupMap(final String name) {
+    public Map<String, Object> getParticipantParameterGroupMap() {
         final Map<String, Object> map = new TreeMap<>();
 
         map.put("intermediaryParameters", getIntermediaryParametersMap(false));
@@ -113,7 +109,7 @@ public class CommonTestData {
         final TopicParameters topicParams = new TopicParameters();
         topicParams.setTopic("POLICY-ACRUNTIME-PARTICIPANT");
         topicParams.setTopicCommInfrastructure("dmaap");
-        topicParams.setServers(Arrays.asList("localhost"));
+        topicParams.setServers(List.of("localhost"));
         return topicParams;
     }
 
@@ -123,18 +119,6 @@ public class CommonTestData {
      * @return participant Id
      */
     public static ToscaConceptIdentifier getParticipantId() {
-        final ToscaConceptIdentifier participantId = new ToscaConceptIdentifier("org.onap.PM_CDS_Blueprint", "1.0.0");
-        return participantId;
-    }
-
-    /**
-     * Nulls out a field within a JSON string.
-     *
-     * @param json JSON string
-     * @param field field to be nulled out
-     * @return a new JSON string with the field nulled out
-     */
-    public String nullifyField(String json, String field) {
-        return json.replace(field + "\"", field + "\":null, \"" + field + "Xxx\"");
+        return new ToscaConceptIdentifier("org.onap.PM_CDS_Blueprint", "1.0.0");
     }
 }

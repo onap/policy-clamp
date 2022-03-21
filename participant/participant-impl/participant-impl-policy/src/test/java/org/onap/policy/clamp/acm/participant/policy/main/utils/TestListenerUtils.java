@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,31 +22,19 @@ package org.onap.policy.clamp.acm.participant.policy.main.utils;
 
 import static org.junit.Assert.assertTrue;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantUpdates;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionStateChange;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionUpdate;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUpdate;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
-import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.coder.YamlJsonTranslator;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -59,121 +47,7 @@ import org.slf4j.LoggerFactory;
 public final class TestListenerUtils {
 
     private static final YamlJsonTranslator yamlTranslator = new YamlJsonTranslator();
-    private static final Coder CODER = new StandardCoder();
     private static final Logger LOGGER = LoggerFactory.getLogger(TestListenerUtils.class);
-
-    /**
-     * Method to create a automationComposition from a yaml file.
-     *
-     * @return AutomationComposition automation composition
-     */
-    public static AutomationComposition createAutomationComposition() {
-        AutomationComposition automationComposition = new AutomationComposition();
-        Map<UUID, AutomationCompositionElement> elements = new LinkedHashMap<>();
-        ToscaServiceTemplate toscaServiceTemplate = testAutomationCompositionRead();
-        Map<String, ToscaNodeTemplate> nodeTemplatesMap =
-            toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates();
-        for (Map.Entry<String, ToscaNodeTemplate> toscaInputEntry : nodeTemplatesMap.entrySet()) {
-            AutomationCompositionElement acElement = new AutomationCompositionElement();
-            acElement.setId(UUID.randomUUID());
-
-            ToscaConceptIdentifier acElementParticipantId = new ToscaConceptIdentifier();
-            acElementParticipantId.setName(toscaInputEntry.getKey());
-            acElementParticipantId.setVersion(toscaInputEntry.getValue().getVersion());
-            acElement.setParticipantId(acElementParticipantId);
-
-            acElement.setDefinition(acElementParticipantId);
-            acElement.setState(AutomationCompositionState.UNINITIALISED);
-            acElement.setDescription(toscaInputEntry.getValue().getDescription());
-            acElement.setOrderedState(AutomationCompositionOrderedState.UNINITIALISED);
-            elements.put(acElement.getId(), acElement);
-        }
-        automationComposition.setElements(elements);
-        automationComposition.setName("PMSHInstance0");
-        automationComposition.setVersion("1.0.0");
-
-        ToscaConceptIdentifier definition = new ToscaConceptIdentifier();
-        definition.setName("PMSHInstance0");
-        definition.setVersion("1.0.0");
-        automationComposition.setDefinition(definition);
-
-        return automationComposition;
-    }
-
-    /**
-     * Method to create AutomationCompositionStateChange message from the arguments passed.
-     *
-     * @param automationCompositionOrderedState automationCompositionOrderedState
-     * @return AutomationCompositionStateChange message
-     */
-    public static AutomationCompositionStateChange createAutomationCompositionStateChangeMsg(
-        final AutomationCompositionOrderedState automationCompositionOrderedState) {
-        final AutomationCompositionStateChange acStateChangeMsg = new AutomationCompositionStateChange();
-
-        ToscaConceptIdentifier automationCompositionId = new ToscaConceptIdentifier();
-        automationCompositionId.setName("PMSHInstance0");
-        automationCompositionId.setVersion("1.0.0");
-
-        ToscaConceptIdentifier participantId = new ToscaConceptIdentifier();
-        participantId.setName("org.onap.PM_Policy");
-        participantId.setVersion("0.0.0");
-
-        acStateChangeMsg.setAutomationCompositionId(automationCompositionId);
-        acStateChangeMsg.setParticipantId(participantId);
-        acStateChangeMsg.setTimestamp(Instant.now());
-        acStateChangeMsg.setOrderedState(automationCompositionOrderedState);
-
-        return acStateChangeMsg;
-    }
-
-    /**
-     * Method to create AutomationCompositionUpdateMsg.
-     *
-     * @return AutomationCompositionUpdate message
-     */
-    public static AutomationCompositionUpdate createAutomationCompositionUpdateMsg() {
-        final AutomationCompositionUpdate acUpdateMsg = new AutomationCompositionUpdate();
-        ToscaConceptIdentifier automationCompositionId = new ToscaConceptIdentifier("PMSHInstance0", "1.0.0");
-        ToscaConceptIdentifier participantId = new ToscaConceptIdentifier("org.onap.PM_Policy", "0.0.0");
-
-        acUpdateMsg.setAutomationCompositionId(automationCompositionId);
-        acUpdateMsg.setParticipantId(participantId);
-        acUpdateMsg.setMessageId(UUID.randomUUID());
-        acUpdateMsg.setTimestamp(Instant.now());
-
-        Map<UUID, AutomationCompositionElement> elements = new LinkedHashMap<>();
-        ToscaServiceTemplate toscaServiceTemplate = testAutomationCompositionRead();
-        TestListenerUtils.addPoliciesToToscaServiceTemplate(toscaServiceTemplate);
-        Map<String, ToscaNodeTemplate> nodeTemplatesMap =
-            toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates();
-        for (Map.Entry<String, ToscaNodeTemplate> toscaInputEntry : nodeTemplatesMap.entrySet()) {
-            if (ParticipantUtils.checkIfNodeTemplateIsAutomationCompositionElement(toscaInputEntry.getValue(),
-                toscaServiceTemplate)) {
-                AutomationCompositionElement acElement = new AutomationCompositionElement();
-                acElement.setId(UUID.randomUUID());
-                var acParticipantType =
-                    ParticipantUtils.findParticipantType(toscaInputEntry.getValue().getProperties());
-
-                acElement.setParticipantId(acParticipantType);
-                acElement.setParticipantType(acParticipantType);
-
-                acElement.setDefinition(
-                    new ToscaConceptIdentifier(toscaInputEntry.getKey(), toscaInputEntry.getValue().getVersion()));
-                acElement.setState(AutomationCompositionState.UNINITIALISED);
-                acElement.setDescription(toscaInputEntry.getValue().getDescription());
-                acElement.setOrderedState(AutomationCompositionOrderedState.PASSIVE);
-                elements.put(acElement.getId(), acElement);
-            }
-        }
-
-        List<ParticipantUpdates> participantUpdates = new ArrayList<>();
-        for (AutomationCompositionElement element : elements.values()) {
-            AcmUtils.setServiceTemplatePolicyInfo(element, toscaServiceTemplate);
-            AcmUtils.prepareParticipantUpdate(element, participantUpdates);
-        }
-        acUpdateMsg.setParticipantUpdatesList(participantUpdates);
-        return acUpdateMsg;
-    }
 
     /**
      * Method to create participantUpdateMsg.
@@ -212,23 +86,9 @@ public final class TestListenerUtils {
         return participantUpdateMsg;
     }
 
-    /**
-     * Method to create AutomationCompositionUpdate using the arguments passed.
-     *
-     * @param jsonFilePath the path of the automation composition content
-     * @return AutomationCompositionUpdate message
-     * @throws CoderException exception while reading the file to object
-     */
-    public static AutomationCompositionUpdate createParticipantAcUpdateMsgFromJson(String jsonFilePath)
-        throws CoderException {
-        AutomationCompositionUpdate automationCompositionUpdateMsg =
-            CODER.decode(new File(jsonFilePath), AutomationCompositionUpdate.class);
-        return automationCompositionUpdateMsg;
-    }
-
     private static ToscaServiceTemplate testAutomationCompositionRead() {
         Set<String> automationCompositionDirectoryContents =
-            ResourceUtils.getDirectoryContents("src/test/resources/utils/servicetemplates");
+            ResourceUtils.getDirectoryContents("clamp/acm/test");
 
         boolean atLeastOneAutomationCompositionTested = false;
         ToscaServiceTemplate toscaServiceTemplate = null;
@@ -310,11 +170,9 @@ public final class TestListenerUtils {
                 throw new FileNotFoundException(automationCompositionFilePath);
             }
 
-            ToscaServiceTemplate serviceTemplate =
-                yamlTranslator.fromYaml(automationCompositionString, ToscaServiceTemplate.class);
-            return serviceTemplate;
+            return yamlTranslator.fromYaml(automationCompositionString, ToscaServiceTemplate.class);
         } catch (FileNotFoundException e) {
-            LOGGER.error("cannot find YAML file", automationCompositionFilePath);
+            LOGGER.error("cannot find YAML file {}", automationCompositionFilePath);
             throw new IllegalArgumentException(e);
         }
     }

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ package org.onap.policy.clamp.acm.participant.intermediary.main.parameters;
 
 import java.io.File;
 import java.time.Instant;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -56,7 +55,7 @@ public class CommonTestData {
     public static final String PARTICIPANT_GROUP_NAME = "AutomationCompositionParticipantGroup";
     public static final String DESCRIPTION = "Participant description";
     public static final long TIME_INTERVAL = 2000;
-    public static final List<TopicParameters> TOPIC_PARAMS = Arrays.asList(getTopicParams());
+    public static final List<TopicParameters> TOPIC_PARAMS = List.of(getTopicParams());
     public static final Coder CODER = new StandardCoder();
     private static final Object lockit = new Object();
 
@@ -141,7 +140,7 @@ public class CommonTestData {
         final var topicParams = new TopicParameters();
         topicParams.setTopic("POLICY-ACRUNTIME-PARTICIPANT");
         topicParams.setTopicCommInfrastructure("dmaap");
-        topicParams.setServers(Arrays.asList("localhost"));
+        topicParams.setServers(List.of("localhost"));
         return topicParams;
     }
 
@@ -186,8 +185,7 @@ public class CommonTestData {
         var automationCompositionHandler = getMockAutomationCompositionHandler();
         var publisher = new ParticipantMessagePublisher();
         publisher.active(Collections.singletonList(Mockito.mock(TopicSink.class)));
-        var participantHandler = new ParticipantHandler(parameters, publisher, automationCompositionHandler);
-        return participantHandler;
+        return new ParticipantHandler(parameters, publisher, automationCompositionHandler);
     }
 
     /**

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 public final class ToscaUtils {
 
     private static final YamlJsonTranslator yamlTranslator = new YamlJsonTranslator();
-    private static final String TOSCA_TEMPLATE_YAML = "src/test/resources/HttpParticipantConfig.yaml";
+    private static final String TOSCA_TEMPLATE_YAML = "clamp/acm/test/participant-http.yaml";
 
 
     /**
@@ -41,11 +41,11 @@ public final class ToscaUtils {
      * @return ToscaServiceTemplate
      */
     public static ToscaServiceTemplate readAutomationCompositionFromTosca() {
-        return serializeAutomationCompositionYaml(TOSCA_TEMPLATE_YAML);
+        return serializeAutomationCompositionYaml();
     }
 
-    private static ToscaServiceTemplate serializeAutomationCompositionYaml(String automationCompositionFilePath) {
-        String automationCompositionString = ResourceUtils.getResourceAsString(automationCompositionFilePath);
+    private static ToscaServiceTemplate serializeAutomationCompositionYaml() {
+        String automationCompositionString = ResourceUtils.getResourceAsString(ToscaUtils.TOSCA_TEMPLATE_YAML);
         return yamlTranslator.fromYaml(automationCompositionString, ToscaServiceTemplate.class);
     }
 }

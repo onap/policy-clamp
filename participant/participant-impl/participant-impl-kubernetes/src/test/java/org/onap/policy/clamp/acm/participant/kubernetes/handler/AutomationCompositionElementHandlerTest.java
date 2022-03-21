@@ -75,7 +75,7 @@ class AutomationCompositionElementHandlerTest {
     private static ToscaServiceTemplate toscaServiceTemplate;
     private static final String K8S_AUTOMATION_COMPOSITION_ELEMENT =
         "org.onap.domain.database.PMSH_K8SMicroserviceAutomationCompositionElement";
-    private CommonTestData commonTestData = new CommonTestData();
+    private final CommonTestData commonTestData = new CommonTestData();
 
     @InjectMocks
     @Spy
@@ -160,7 +160,7 @@ class AutomationCompositionElementHandlerTest {
     }
 
     @Test
-    void test_handleStatistics() throws PfModelException {
+    void test_handleStatistics() {
         UUID elementId1 = UUID.randomUUID();
         automationCompositionElementHandler.getChartMap().put(elementId1, charts.get(0));
         when(participantIntermediaryApi.getAutomationCompositionElement(elementId1))

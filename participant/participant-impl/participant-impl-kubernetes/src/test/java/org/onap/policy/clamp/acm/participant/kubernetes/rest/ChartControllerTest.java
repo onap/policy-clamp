@@ -70,12 +70,12 @@ class ChartControllerTest {
     private static final Coder CODER = new StandardCoder();
     private static final String CHART_INFO_YAML = "src/test/resources/ChartList.json";
     private static List<ChartInfo> charts;
-    private static String RETRIEVE_CHART_URL = "/helm/charts";
-    private static String INSTALL_CHART_URL = "/helm/install";
-    private static String UNINSTALL_CHART_URL = "/helm/uninstall/";
-    private static String ONBOARD_CHART_URL = "/helm/onboard/chart";
-    private static String DELETE_CHART_URL = "/helm/chart";
-    private static String CONFIGURE_REPO_URL = "/helm/repo";
+    private static final String RETRIEVE_CHART_URL = "/helm/charts";
+    private static final String INSTALL_CHART_URL = "/helm/install";
+    private static final String UNINSTALL_CHART_URL = "/helm/uninstall/";
+    private static final String ONBOARD_CHART_URL = "/helm/onboard/chart";
+    private static final String DELETE_CHART_URL = "/helm/chart";
+    private static final String CONFIGURE_REPO_URL = "/helm/repo";
 
     @Autowired
     private MockMvc mockMvc;
@@ -88,7 +88,7 @@ class ChartControllerTest {
 
     /**
      * Read input chart info json.
-     * @throws Exception incase of error.
+     * @throws CoderException in case of error.
      */
     @BeforeAll
     static void setupParams() throws CoderException {
@@ -97,7 +97,6 @@ class ChartControllerTest {
 
     /**
      * Mock service layer in Controller.
-     * @throws Exception incase of error.
      */
     @BeforeEach
     void mockServiceClass() {
@@ -110,7 +109,7 @@ class ChartControllerTest {
 
     /**
      * Test endpoint for retrieving all charts.
-     * @throws Exception incase of error.
+     * @throws Exception in case of error.
      */
     @Test
     void retrieveAllCharts() throws Exception {
@@ -124,7 +123,7 @@ class ChartControllerTest {
 
     /**
      * Test endpoint for installing a chart.
-     * @throws Exception incase of error.
+     * @throws Exception in case of error.
      */
     @Test
     void installChart() throws Exception {
@@ -149,7 +148,7 @@ class ChartControllerTest {
 
     /**
      * Test endpoint for uninstalling a chart.
-     * @throws Exception incase of error.
+     * @throws Exception in case of error.
      */
     @Test
     void uninstallChart() throws Exception {
@@ -174,7 +173,7 @@ class ChartControllerTest {
 
     /**
      * Test endpoint for chart onboarding.
-     * @throws Exception incase of error.
+     * @throws Exception in case of error.
      */
     @Test
     void onboardChart() throws Exception {
@@ -196,7 +195,7 @@ class ChartControllerTest {
 
     /**
      * Test endpoint for deleting a chart.
-     * @throws Exception incase of error.
+     * @throws Exception in case of error.
      */
     @Test
     void deleteChart() throws Exception {
@@ -249,7 +248,6 @@ class ChartControllerTest {
         mockMvc.perform(requestBuilder).andExpect(status().isConflict());
 
     }
-
 
     private String getInstallationJson(String name, String version) {
         JSONObject jsonObj = new JSONObject();

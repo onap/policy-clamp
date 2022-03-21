@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ import org.onap.policy.clamp.acm.participant.intermediary.comm.AutomationComposi
 import org.onap.policy.clamp.acm.participant.intermediary.handler.ParticipantHandler;
 import org.onap.policy.clamp.acm.participant.simulator.main.parameters.CommonTestData;
 import org.onap.policy.clamp.acm.participant.simulator.main.rest.AbstractRestController;
-import org.onap.policy.clamp.acm.participant.simulator.main.rest.TestListenerUtils;
+import org.onap.policy.clamp.acm.participant.simulator.utils.TestListenerUtils;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
@@ -62,12 +62,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@TestPropertySource(locations = {"classpath:application_test.properties"})
+@ActiveProfiles("test")
 class ParticipantSimulatorTest {
 
     private static final String PARTICIPANTS_ENDPOINT = "participants";
@@ -93,7 +93,7 @@ class ParticipantSimulatorTest {
     private static final Object lockit = new Object();
     private boolean check = false;
 
-    private void setUp() throws Exception {
+    private void setUp() {
         synchronized (lockit) {
             if (!check) {
                 check = true;
@@ -103,32 +103,12 @@ class ParticipantSimulatorTest {
                 AutomationCompositionUpdate automationCompositionUpdateMsg =
                     TestListenerUtils.createAutomationCompositionUpdateMsg();
                 acUpdateListener.onTopicEvent(INFRA, TOPIC, null, automationCompositionUpdateMsg);
-
             }
         }
     }
 
-    private String getPath(String path) {
-        return "http://localhost:" + randomServerPort + "/onap/participantsim/v2/" + path;
-    }
-
-    void testSwagger(String endPoint) {
-        final Client client = ClientBuilder.newBuilder().build();
-
-        client.property(ClientProperties.METAINF_SERVICES_LOOKUP_DISABLE, "true");
-        client.register(GsonMessageBodyHandler.class);
-        client.register(HttpAuthenticationFeature.basic(user, password));
-
-        final WebTarget webTarget = client.target(getPath("api-docs"));
-
-        Response response = webTarget.request(MediaType.APPLICATION_JSON).get();
-
-        assertThat(response.getStatus()).isEqualTo(200);
-        assertTrue(response.readEntity(String.class).contains("/onap/participantsim/v2/" + endPoint));
-    }
-
     @Test
-    void testEndParticipatsSwagger() {
+    void testEndParticipantsSwagger() {
         testSwagger(PARTICIPANTS_ENDPOINT);
     }
 
@@ -154,7 +134,7 @@ class ParticipantSimulatorTest {
     }
 
     @Test
-    void testQuery_Unauthorized() throws Exception {
+    void testQuery_Unauthorized() {
         String path = PARTICIPANTS_ENDPOINT + "/org.onap.PM_CDS_Blueprint/1";
 
         Response response = performRequest(path, true, null).get();
@@ -163,6 +143,108 @@ class ParticipantSimulatorTest {
         // unauthorized call
         response = performRequest(path, false, null).get();
         assertThat(response.getStatus()).isEqualTo(401);
+    }
+
+    @Test
+    void testQueryParticipants() {
+        Participant participant = new Participant();
+        ToscaConceptIdentifier participantId = CommonTestData.getParticipantId();
+        participant.setDefinition(participantId);
+        participant.setName(participantId.getName());
+        participant.setVersion(participantId.getVersion());
+        UUID uuid = UUID.randomUUID();
+
+        // GET REST call for querying the participants
+        Response response = performGet(
+            PARTICIPANTS_ENDPOINT + "/" + participant.getKey().getName() + "/" + participant.getKey().getVersion(),
+            uuid);
+        checkResponseEntity(response, uuid);
+
+        Participant[] returnValue = response.readEntity(Participant[].class);
+        assertThat(returnValue).hasSize(1);
+        // Verify the result of GET participants with what is stored
+        assertEquals(participant.getDefinition(), returnValue[0].getDefinition());
+    }
+
+    @Test
+    void testQueryAutomationCompositionElements() {
+        setUp();
+        UUID uuid = UUID.randomUUID();
+        ToscaConceptIdentifier participantId = CommonTestData.getParticipantId();
+
+        // GET REST call for querying the automationComposition elements
+        Response response =
+            performGet(ELEMENTS_ENDPOINT + "/" + participantId.getName() + "/" + participantId.getVersion(), uuid);
+        checkResponseEntity(response, uuid);
+
+        Map<?, ?> returnValue = response.readEntity(Map.class);
+        // Verify the result of GET automation composition elements with what is stored
+        assertThat(returnValue).isEmpty();
+    }
+
+    @Test
+    void testUpdateParticipant() {
+        setUp();
+        List<Participant> participants = participantIntermediaryApi.getParticipants(
+            CommonTestData.getParticipantId().getName(), CommonTestData.getParticipantId().getVersion());
+        assertEquals(ParticipantState.UNKNOWN, participants.get(0).getParticipantState());
+        // Change the state of the participant to PASSIVE from UNKNOWN
+        participants.get(0).setParticipantState(ParticipantState.PASSIVE);
+        UUID uuid = UUID.randomUUID();
+
+        // PUT REST call for updating Participant
+        Response response = performPut(PARTICIPANTS_ENDPOINT, Entity.json(participants.get(0)), uuid);
+        checkResponseEntity(response, uuid);
+
+        TypedSimpleResponse<Participant> resp = response.readEntity(new GenericType<>() {
+        });
+        assertNotNull(resp.getResponse());
+        // Verify the response and state returned by PUT REST call for updating participants
+        assertEquals(participants.get(0).getDefinition(), resp.getResponse().getDefinition());
+        assertEquals(ParticipantState.PASSIVE, resp.getResponse().getParticipantState());
+    }
+
+    @Test
+    void testUpdateAutomationCompositionElement() {
+        setUp();
+        AutomationComposition automationComposition = TestListenerUtils.createAutomationComposition();
+        Map<UUID, AutomationCompositionElement> automationCompositionElements =
+            participantIntermediaryApi.getAutomationCompositionElements(automationComposition.getDefinition().getName(),
+                automationComposition.getDefinition().getVersion());
+
+        UUID uuid = automationCompositionElements.keySet().iterator().next();
+        AutomationCompositionElement automationCompositionElement = automationCompositionElements.get(uuid);
+
+        automationCompositionElement.setOrderedState(AutomationCompositionOrderedState.PASSIVE);
+        // PUT REST call for updating AutomationCompositionElement
+        Response response = performPut(ELEMENTS_ENDPOINT, Entity.json(automationCompositionElement), uuid);
+        checkResponseEntity(response, uuid);
+
+        TypedSimpleResponse<AutomationCompositionElement> resp = response.readEntity(new GenericType<>() {
+        });
+        assertNotNull(resp.getResponse());
+        // Verify the response and state returned by PUT REST call for updating participants
+        assertEquals(automationCompositionElement.getDefinition(), resp.getResponse().getDefinition());
+        assertEquals(AutomationCompositionOrderedState.PASSIVE, resp.getResponse().getOrderedState());
+    }
+
+    private String getPath(String path) {
+        return "http://localhost:" + randomServerPort + "/onap/participantsim/v2/" + path;
+    }
+
+    void testSwagger(String endPoint) {
+        final Client client = ClientBuilder.newBuilder().build();
+
+        client.property(ClientProperties.METAINF_SERVICES_LOOKUP_DISABLE, "true");
+        client.register(GsonMessageBodyHandler.class);
+        client.register(HttpAuthenticationFeature.basic(user, password));
+
+        final WebTarget webTarget = client.target(getPath("api-docs"));
+
+        Response response = webTarget.request(MediaType.APPLICATION_JSON).get();
+
+        assertThat(response.getStatus()).isEqualTo(200);
+        assertTrue(response.readEntity(String.class).contains("/onap/participantsim/v2/" + endPoint));
     }
 
     private Invocation.Builder performRequest(String endpoint, boolean includeAuth, UUID uuid) {
@@ -180,33 +262,12 @@ class ParticipantSimulatorTest {
         return builder;
     }
 
-    private Response performGet(String endpoint, UUID uuid) throws Exception {
+    private Response performGet(String endpoint, UUID uuid) {
         return performRequest(endpoint, true, uuid).get();
     }
 
-    @Test
-    void testQueryParticipants() throws Exception {
-        Participant participant = new Participant();
-        ToscaConceptIdentifier participantId = CommonTestData.getParticipantId();
-        participant.setDefinition(participantId);
-        participant.setName(participantId.getName());
-        participant.setVersion(participantId.getVersion());
-        UUID uuid = UUID.randomUUID();
-
-        // GET REST call for querying the participants
-        Response response = performGet(
-            PARTICIPANTS_ENDPOINT + "/" + participant.getKey().getName() + "/" + participant.getKey().getVersion(),
-            uuid);
-        checkResponseEntity(response, 200, uuid);
-
-        Participant[] returnValue = response.readEntity(Participant[].class);
-        assertThat(returnValue).hasSize(1);
-        // Verify the result of GET participants with what is stored
-        assertEquals(participant.getDefinition(), returnValue[0].getDefinition());
-    }
-
-    private <T> void checkResponseEntity(Response response, int status, UUID uuid) {
-        assertThat(response.getStatus()).isEqualTo(status);
+    private void checkResponseEntity(Response response, UUID uuid) {
+        assertThat(response.getStatus()).isEqualTo(200);
         assertThat(getHeader(response.getHeaders(), AbstractRestController.VERSION_MINOR_NAME)).isEqualTo("0");
         assertThat(getHeader(response.getHeaders(), AbstractRestController.VERSION_PATCH_NAME)).isEqualTo("0");
         assertThat(getHeader(response.getHeaders(), AbstractRestController.VERSION_LATEST_NAME)).isEqualTo("1.0.0");
@@ -220,69 +281,7 @@ class ParticipantSimulatorTest {
         return (String) list.get(0);
     }
 
-    @Test
-    void testQueryAutomationCompositionElements() throws Exception {
-        setUp();
-        UUID uuid = UUID.randomUUID();
-        ToscaConceptIdentifier participantId = CommonTestData.getParticipantId();
-
-        // GET REST call for querying the automationComposition elements
-        Response response =
-            performGet(ELEMENTS_ENDPOINT + "/" + participantId.getName() + "/" + participantId.getVersion(), uuid);
-        checkResponseEntity(response, 200, uuid);
-
-        Map<?, ?> returnValue = response.readEntity(Map.class);
-        // Verify the result of GET automation composition elements with what is stored
-        assertThat(returnValue).isEmpty();
-    }
-
-    private Response performPut(String endpoint, final Entity<?> entity, UUID uuid) throws Exception {
+    private Response performPut(String endpoint, final Entity<?> entity, UUID uuid) {
         return performRequest(endpoint, true, uuid).put(entity);
-    }
-
-    @Test
-    void testUpdateParticipant() throws Exception {
-        setUp();
-        List<Participant> participants = participantIntermediaryApi.getParticipants(
-            CommonTestData.getParticipantId().getName(), CommonTestData.getParticipantId().getVersion());
-        assertEquals(ParticipantState.UNKNOWN, participants.get(0).getParticipantState());
-        // Change the state of the participant to PASSIVE from UNKNOWN
-        participants.get(0).setParticipantState(ParticipantState.PASSIVE);
-        UUID uuid = UUID.randomUUID();
-
-        // PUT REST call for updating Participant
-        Response response = performPut(PARTICIPANTS_ENDPOINT, Entity.json(participants.get(0)), uuid);
-        checkResponseEntity(response, 200, uuid);
-
-        TypedSimpleResponse<Participant> resp =
-            response.readEntity(new GenericType<TypedSimpleResponse<Participant>>() {});
-        assertNotNull(resp.getResponse());
-        // Verify the response and state returned by PUT REST call for updating participants
-        assertEquals(participants.get(0).getDefinition(), resp.getResponse().getDefinition());
-        assertEquals(ParticipantState.PASSIVE, resp.getResponse().getParticipantState());
-    }
-
-    @Test
-    void testUpdateAutomationCompositionElement() throws Exception {
-        setUp();
-        AutomationComposition automationComposition = TestListenerUtils.createAutomationComposition();
-        Map<UUID, AutomationCompositionElement> automationCompositionElements =
-            participantIntermediaryApi.getAutomationCompositionElements(automationComposition.getDefinition().getName(),
-                automationComposition.getDefinition().getVersion());
-
-        UUID uuid = automationCompositionElements.keySet().iterator().next();
-        AutomationCompositionElement automationCompositionElement = automationCompositionElements.get(uuid);
-
-        automationCompositionElement.setOrderedState(AutomationCompositionOrderedState.PASSIVE);
-        // PUT REST call for updating AutomationCompositionElement
-        Response response = performPut(ELEMENTS_ENDPOINT, Entity.json(automationCompositionElement), uuid);
-        checkResponseEntity(response, 200, uuid);
-
-        TypedSimpleResponse<AutomationCompositionElement> resp =
-            response.readEntity(new GenericType<TypedSimpleResponse<AutomationCompositionElement>>() {});
-        assertNotNull(resp.getResponse());
-        // Verify the response and state returned by PUT REST call for updating participants
-        assertEquals(automationCompositionElement.getDefinition(), resp.getResponse().getDefinition());
-        assertEquals(AutomationCompositionOrderedState.PASSIVE, resp.getResponse().getOrderedState());
     }
 }

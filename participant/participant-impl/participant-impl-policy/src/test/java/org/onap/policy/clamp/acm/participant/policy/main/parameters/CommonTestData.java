@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,11 +20,9 @@
 
 package org.onap.policy.clamp.acm.participant.policy.main.parameters;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import org.onap.policy.clamp.acm.participant.policy.main.parameters.ParticipantPolicyParameters;
 import org.onap.policy.common.endpoints.parameters.TopicParameters;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
@@ -38,7 +36,7 @@ public class CommonTestData {
     public static final String PARTICIPANT_GROUP_NAME = "AutomationCompositionParticipantGroup";
     public static final String DESCRIPTION = "Participant description";
     public static final long TIME_INTERVAL = 2000;
-    public static final List<TopicParameters> TOPIC_PARAMS = Arrays.asList(getTopicParams());
+    public static final List<TopicParameters> TOPIC_PARAMS = List.of(getTopicParams());
 
     public static final Coder CODER = new StandardCoder();
 
@@ -154,7 +152,7 @@ public class CommonTestData {
         final TopicParameters topicParams = new TopicParameters();
         topicParams.setTopic("POLICY-ACRUNTIME-PARTICIPANT");
         topicParams.setTopicCommInfrastructure("dmaap");
-        topicParams.setServers(Arrays.asList("localhost"));
+        topicParams.setServers(List.of("localhost"));
         return topicParams;
     }
 
@@ -164,18 +162,7 @@ public class CommonTestData {
      * @return participant Id
      */
     public static ToscaConceptIdentifier getParticipantId() {
-        final ToscaConceptIdentifier participantId = new ToscaConceptIdentifier("org.onap.PM_Policy", "0.0.0");
-        return participantId;
+        return new ToscaConceptIdentifier("org.onap.PM_Policy", "0.0.0");
     }
 
-    /**
-     * Nulls out a field within a JSON string.
-     *
-     * @param json JSON string
-     * @param field field to be nulled out
-     * @return a new JSON string with the field nulled out
-     */
-    public String nullifyField(String json, String field) {
-        return json.replace(field + "\"", field + "\":null, \"" + field + "Xxx\"");
-    }
 }

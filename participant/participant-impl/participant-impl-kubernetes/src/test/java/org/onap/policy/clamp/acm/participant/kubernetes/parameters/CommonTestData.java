@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,7 +21,6 @@
 
 package org.onap.policy.clamp.acm.participant.kubernetes.parameters;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -36,7 +35,7 @@ public class CommonTestData {
     public static final String PARTICIPANT_GROUP_NAME = "AutomationCompositionParticipantGroup";
     public static final String DESCRIPTION = "Participant description";
     public static final long TIME_INTERVAL = 2000;
-    public static final List<TopicParameters> TOPIC_PARAMS = Arrays.asList(getTopicParams());
+    public static final List<TopicParameters> TOPIC_PARAMS = List.of(getTopicParams());
     public static final Coder CODER = new StandardCoder();
 
 
@@ -147,7 +146,7 @@ public class CommonTestData {
         final TopicParameters topicParams = new TopicParameters();
         topicParams.setTopic("POLICY-ACRUNTIME-PARTICIPANT");
         topicParams.setTopicCommInfrastructure("dmaap");
-        topicParams.setServers(Arrays.asList("localhost"));
+        topicParams.setServers(List.of("localhost"));
         return topicParams;
     }
 

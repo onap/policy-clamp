@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,11 +27,12 @@ import javax.validation.ValidatorFactory;
 import org.junit.jupiter.api.Test;
 
 /**
- * Class to perform unit test of {@link ParticipantParameterGroup}.
+ * Class to perform unit test of
+ * {@link org.onap.policy.clamp.acm.participant.intermediary.parameters.ParticipantParameters}.
  */
 class TestParticipantSimulatorParameters {
-    private CommonTestData commonTestData = new CommonTestData();
-    private ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
+    private final CommonTestData commonTestData = new CommonTestData();
+    private final ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
 
     @Test
     void testParticipantParameterGroup() {

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,8 +31,8 @@ import org.junit.jupiter.api.Test;
 
 class ParticipantK8sParametersTest {
 
-    private CommonTestData commonTestData = new CommonTestData();
-    private ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
+    private final CommonTestData commonTestData = new CommonTestData();
+    private final ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
 
     @Test
     void testParticipantPolicyParameters() {

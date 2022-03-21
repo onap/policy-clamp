@@ -23,9 +23,10 @@ package org.onap.policy.clamp.acm.participant.kubernetes.helm;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mockStatic;
@@ -89,7 +90,7 @@ class HelmClientTest {
     }
 
     @Test
-    void test_installChart() throws IOException {
+    void test_installChart() {
         mockedClient.when(() -> HelmClient.executeCommand(any()))
             .thenReturn("success");
         doReturn(new File("/target/tmp/override.yaml")).when(chartStore)
@@ -100,16 +101,14 @@ class HelmClientTest {
         chartinfo.setNamespace("");
         assertDoesNotThrow(() -> helmClient.installChart(chartinfo));
 
-        mockedClient.when(() -> HelmClient.executeCommand(any()))
-            .thenReturn(new String());
+        mockedClient.when(() -> HelmClient.executeCommand(any())).thenReturn("");
         assertDoesNotThrow(() -> helmClient.installChart(chartinfo));
 
     }
 
     @Test
-    void test_addRepository() throws IOException {
-        mockedClient.when(() -> HelmClient.executeCommand(any()))
-            .thenReturn(new String());
+    void test_addRepository() {
+        mockedClient.when(() -> HelmClient.executeCommand(any())).thenReturn("");
         when(repo.getRepoName()).thenReturn("RepoName");
         when(repo.getAddress()).thenReturn("http://localhost:8080");
         assertDoesNotThrow(() -> helmClient.addRepository(repo));
@@ -129,7 +128,10 @@ class HelmClientTest {
         assertThat(configuredRepo).isEqualTo("nginx-stable");
 
         File tmpFile = new File(tmpPath + charts.get(1).getChartId().getName());
-        tmpFile.mkdirs();
+        if (!tmpFile.mkdirs()) {
+            fail("Couldn't create dirs");
+        }
+
         doReturn(Path.of(tmpPath)).when(chartStore).getAppPath(charts.get(1).getChartId());
 
         doReturn(null).when(helmClient).verifyConfiguredRepo(charts.get(1));

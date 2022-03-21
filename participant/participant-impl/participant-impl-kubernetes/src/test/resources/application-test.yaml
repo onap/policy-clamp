@@ -1,0 +1,32 @@
+server:
+  error:
+    path: /error
+
+participant:
+  name: AutomationCompositionParticipant Kubernetes Test
+  intermediaryParameters:
+    name: Participant parameters
+    description: Participant Description
+    reportingTimeInterval: 120000
+    participantId:
+      name: K8sParticipant0
+      version: 1.0.0
+    participantType:
+      version: 2.3.4
+      name: org.onap.k8s.acm.K8SAutomationCompositionParticipant
+    clampAutomationCompositionTopics:
+      topicSources:
+        -
+          topic: POLICY-ACRUNTIME-PARTICIPANT
+          fetchTimeout: 15000
+          servers:
+            - localhost
+          topicCommInfrastructure: dmaap
+      topicSinks:
+        -
+          topic: POLICY-ACRUNTIME-PARTICIPANT
+          servers:
+            - localhost
+          topicCommInfrastructure: dmaap
+      name: AutomationComposition Topics
+

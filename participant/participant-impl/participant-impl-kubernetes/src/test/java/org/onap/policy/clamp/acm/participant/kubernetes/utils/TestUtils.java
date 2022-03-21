@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,17 +31,14 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 public final class TestUtils {
 
     private static final YamlJsonTranslator yamlTranslator = new YamlJsonTranslator();
-    private static final String TOSCA_TEMPLATE_YAML = "src/test/resources/servicetemplates/KubernetesHelm.yaml";
+    private static final String TOSCA_TEMPLATE_YAML = "clamp/acm/test/participant-kubernetes-helm.yaml";
 
     public static ToscaServiceTemplate testAutomationCompositionRead() {
-        return testAutomationCompositionYamlSerialization(TOSCA_TEMPLATE_YAML);
+        return testAutomationCompositionYamlSerialization();
     }
 
-    private static ToscaServiceTemplate testAutomationCompositionYamlSerialization(
-        String automationCompositionFilePath) {
-        String automationCompositionString = ResourceUtils.getResourceAsString(automationCompositionFilePath);
-        ToscaServiceTemplate serviceTemplate =
-            yamlTranslator.fromYaml(automationCompositionString, ToscaServiceTemplate.class);
-        return serviceTemplate;
+    private static ToscaServiceTemplate testAutomationCompositionYamlSerialization() {
+        String automationCompositionString = ResourceUtils.getResourceAsString(TestUtils.TOSCA_TEMPLATE_YAML);
+        return yamlTranslator.fromYaml(automationCompositionString, ToscaServiceTemplate.class);
     }
 }

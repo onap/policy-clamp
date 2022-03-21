@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,13 +32,13 @@ import org.springframework.boot.test.autoconfigure.actuate.metrics.AutoConfigure
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @AutoConfigureMetrics
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@TestPropertySource(locations = {"classpath:application_test.properties"})
+@ActiveProfiles("test")
 class ActuatorControllerTest extends CommonActuatorController {
 
     private static final String HEALTH_ENDPOINT = "health";
@@ -54,36 +54,36 @@ class ActuatorControllerTest extends CommonActuatorController {
     }
 
     @Test
-    void testGetHealth_Unauthorized() throws Exception {
+    void testGetHealth_Unauthorized() {
         assertUnauthorizedActGet(HEALTH_ENDPOINT);
     }
 
     @Test
-    void testGetMetrics_Unauthorized() throws Exception {
+    void testGetMetrics_Unauthorized() {
         assertUnauthorizedActGet(METRICS_ENDPOINT);
     }
 
     @Test
-    void testGetPrometheus_Unauthorized() throws Exception {
+    void testGetPrometheus_Unauthorized() {
         assertUnauthorizedActGet(PROMETHEUS_ENDPOINT);
     }
 
     @Test
-    void testGetHealth() throws Exception {
+    void testGetHealth() {
         Invocation.Builder invocationBuilder = super.sendActRequest(HEALTH_ENDPOINT);
         Response rawresp = invocationBuilder.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
     }
 
     @Test
-    void testGetMetrics() throws Exception {
+    void testGetMetrics() {
         Invocation.Builder invocationBuilder = super.sendActRequest(METRICS_ENDPOINT);
         Response rawresp = invocationBuilder.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
     }
 
     @Test
-    void testGePrometheus() throws Exception {
+    void testGePrometheus() {
         Invocation.Builder invocationBuilder = super.sendActRequest(PROMETHEUS_ENDPOINT);
         Response rawresp = invocationBuilder.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());

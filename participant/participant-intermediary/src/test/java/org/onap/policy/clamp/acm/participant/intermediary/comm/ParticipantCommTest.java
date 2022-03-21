@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.comm;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Collections;
@@ -40,7 +40,7 @@ import org.onap.policy.common.utils.coder.CoderException;
 
 class ParticipantCommTest {
 
-    private CommonTestData commonTestData = new CommonTestData();
+    private final CommonTestData commonTestData = new CommonTestData();
 
     @Test
     void participantReqTest() throws CoderException {
@@ -73,32 +73,25 @@ class ParticipantCommTest {
         var participantMessagePublisher = new ParticipantMessagePublisher();
 
         var participantStatus = Mockito.mock(ParticipantStatus.class);
-        assertThrows(AutomationCompositionRuntimeException.class, () -> {
-            participantMessagePublisher.sendParticipantStatus(participantStatus);
-        });
-        assertThrows(AutomationCompositionRuntimeException.class, () -> {
-            participantMessagePublisher.sendHeartbeat(participantStatus);
-        });
+        assertThrows(AutomationCompositionRuntimeException.class,
+            () -> participantMessagePublisher.sendParticipantStatus(participantStatus));
+        assertThrows(AutomationCompositionRuntimeException.class,
+            () -> participantMessagePublisher.sendHeartbeat(participantStatus));
 
         var participantRegister = Mockito.mock(ParticipantRegister.class);
-        assertThrows(AutomationCompositionRuntimeException.class, () -> {
-            participantMessagePublisher.sendParticipantRegister(participantRegister);
-        });
+        assertThrows(AutomationCompositionRuntimeException.class,
+            () -> participantMessagePublisher.sendParticipantRegister(participantRegister));
 
         var participantDeregister = Mockito.mock(ParticipantDeregister.class);
-        assertThrows(AutomationCompositionRuntimeException.class, () -> {
-            participantMessagePublisher.sendParticipantDeregister(participantDeregister);
-        });
+        assertThrows(AutomationCompositionRuntimeException.class,
+            () -> participantMessagePublisher.sendParticipantDeregister(participantDeregister));
 
         var automationCompositionAck = Mockito.mock(AutomationCompositionAck.class);
-        assertThrows(AutomationCompositionRuntimeException.class, () -> {
-            participantMessagePublisher.sendAutomationCompositionAck(automationCompositionAck);
-        });
+        assertThrows(AutomationCompositionRuntimeException.class,
+            () -> participantMessagePublisher.sendAutomationCompositionAck(automationCompositionAck));
 
         List<TopicSink> emptyList = Collections.emptyList();
-        assertThrows(IllegalArgumentException.class, () -> {
-            participantMessagePublisher.active(emptyList);
-        });
+        assertThrows(IllegalArgumentException.class, () -> participantMessagePublisher.active(emptyList));
 
         participantMessagePublisher.stop();
     }

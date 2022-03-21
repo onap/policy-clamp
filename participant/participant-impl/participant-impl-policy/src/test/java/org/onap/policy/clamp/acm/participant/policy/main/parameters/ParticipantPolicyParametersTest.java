@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import javax.validation.Validation;
 import javax.validation.ValidatorFactory;
 import org.junit.jupiter.api.Test;
-import org.onap.policy.clamp.acm.participant.policy.main.parameters.ParticipantPolicyParameters;
 
 class ParticipantPolicyParametersTest {
     private final CommonTestData commonTestData = new CommonTestData();
