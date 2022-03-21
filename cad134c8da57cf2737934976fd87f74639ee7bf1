@@ -16,6 +16,24 @@
       "revId": "cad134c8da57cf2737934976fd87f74639ee7bf1",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "25e2585d_df43d6c3",
+        "filename": "examples/src/main/resources/clamp/acm/tca/tosca-tcagen2-final-v2.yml",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2022-03-21T14:14:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fef2a9c4_ce2b9486",
+      "revId": "cad134c8da57cf2737934976fd87f74639ee7bf1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
