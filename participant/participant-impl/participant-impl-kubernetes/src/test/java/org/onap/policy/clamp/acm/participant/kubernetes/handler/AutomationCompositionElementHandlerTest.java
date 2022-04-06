@@ -174,10 +174,10 @@ class AutomationCompositionElementHandlerTest {
         doReturn("Done").when(result).get();
         doReturn(true).when(result).isDone();
         var chartInfo = charts.get(0);
-        ToscaConceptIdentifier controlLoopId = new ToscaConceptIdentifier();
+        ToscaConceptIdentifier automationCompositionId = new ToscaConceptIdentifier();
         AutomationCompositionElement element = new AutomationCompositionElement();
         assertDoesNotThrow(
-            () -> automationCompositionElementHandler.checkPodStatus(controlLoopId, element.getId(), chartInfo,
-                1, 1));
+            () -> automationCompositionElementHandler.checkPodStatus(automationCompositionId,
+                    element.getId(), chartInfo, 1, 1));
     }
 }
