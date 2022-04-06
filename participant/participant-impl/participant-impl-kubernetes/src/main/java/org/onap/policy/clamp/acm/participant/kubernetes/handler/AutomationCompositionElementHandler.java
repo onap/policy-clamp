@@ -165,14 +165,14 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
      *
      * @param chart ChartInfo
      */
-    public void checkPodStatus(ToscaConceptIdentifier controlLoopId, UUID elementId,
+    public void checkPodStatus(ToscaConceptIdentifier automationCompositionId, UUID elementId,
             ChartInfo chart, int timeout, int podStatusCheckInterval) throws ExecutionException, InterruptedException {
         // Invoke runnable thread to check pod status
         Future<String> result = executor.submit(new PodStatusValidator(chart, timeout,
                 podStatusCheckInterval), "Done");
         if (!result.get().isEmpty()) {
             LOGGER.info("Pod Status Validator Completed: {}", result.isDone());
-            intermediaryApi.updateAutomationCompositionElementState(controlLoopId, elementId,
+            intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, elementId,
                 AutomationCompositionOrderedState.PASSIVE, AutomationCompositionState.PASSIVE,
                 ParticipantMessageType.AUTOMATION_COMPOSITION_STATE_CHANGE);
         }

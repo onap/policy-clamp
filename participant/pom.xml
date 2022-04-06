@@ -32,7 +32,7 @@
     <groupId>org.onap.policy.clamp.participant</groupId>
     <artifactId>policy-clamp-participant</artifactId>
     <name>${project.artifactId}</name>
-    <description>participants that communicate with the runtime server to handle control loops</description>
+    <description>participants that communicate with the runtime server to handle automation compositions</description>
     <packaging>pom</packaging>
 
     <modules>
@@ -142,7 +142,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.onap.policy.clamp.controlloop.participant.simulator.main.startstop.Main</mainClass>
+                            <mainClass>org.onap.policy.clamp.acm.participant.simulator.main.startstop.Main</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
