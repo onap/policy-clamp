@@ -52,7 +52,6 @@
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-jsonSchema</artifactId>
-            <version>${version.jackson}</version>
             <exclusions>
                 <exclusion>
                     <groupId>javax.validation</groupId>
