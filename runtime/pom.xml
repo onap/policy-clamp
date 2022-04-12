@@ -158,6 +158,11 @@
     </dependencyManagement>
     <dependencies>
         <dependency>
+            <groupId>org.onap.policy.clamp</groupId>
+            <artifactId>policy-clamp-examples</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.codehaus.janino</groupId>
             <artifactId>janino</artifactId>
         </dependency>
