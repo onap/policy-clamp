@@ -29,9 +29,10 @@ import static org.mockito.Mockito.when;
 import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVICE_TEMPLATE_YAML;
 import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_ST_TEMPLATE_YAML;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.module.jsonSchema.factories.SchemaFactoryWrapper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializer;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -51,11 +52,12 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaRelationshipType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.event.RecordApplicationEvents;
 
 class CommissioningProviderTest {
 
     private static final Coder CODER = new StandardCoder();
-    private final ObjectMapper mapper = new ObjectMapper();
 
     /**
      * Test the fetching of automation composition definitions (ToscaServiceTemplates).
@@ -191,30 +193,30 @@ class CommissioningProviderTest {
         when(serviceTemplateProvider.createServiceTemplate(serviceTemplate)).thenReturn(serviceTemplate);
 
         provider.createAutomationCompositionDefinitions(serviceTemplate);
+        provider.initialize();
 
-        mapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
-
-        Map<String, Class<?>> sections = Map.of("all", ToscaServiceTemplate.class, "data_types", ToscaDataType.class,
-            "capability_types", ToscaCapabilityType.class, "node_types", ToscaNodeType.class, "relationship_types",
+        final Map<String, Class<?>> sections = Map.of("all", ToscaServiceTemplate.class,
+            "data_types", ToscaDataType.class, "capability_types", ToscaCapabilityType.class,
+            "node_types", ToscaNodeType.class, "relationship_types",
             ToscaRelationshipType.class, "policy_types", ToscaPolicyType.class, "topology_template",
             ToscaTopologyTemplate.class, "node_templates", List.class);
+
+        String localServiceTemplateSchema = new String();
+        Gson gson = new Gson();
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(ToscaTopologyTemplate.class,
+                (JsonSerializer<ToscaTopologyTemplate>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()));
+        builder.setPrettyPrinting();
+        gson = builder.create();
 
         for (Map.Entry<String, Class<?>> entry : sections.entrySet()) {
             String returnedServiceTemplateSchema = provider.getToscaServiceTemplateSchema(entry.getKey());
             assertThat(returnedServiceTemplateSchema).isNotNull();
 
-            var visitor = new SchemaFactoryWrapper();
-
-            if (entry.getKey().equals("node_templates")) {
-                mapper.acceptJsonFormatVisitor(
-                    mapper.getTypeFactory().constructCollectionType(List.class, ToscaNodeTemplate.class), visitor);
-            } else {
-                mapper.acceptJsonFormatVisitor(mapper.constructType(entry.getValue()), visitor);
+            if (entry.getKey().equals("topology_template")) {
+                localServiceTemplateSchema = gson.toJson(new ToscaTopologyTemplate());
+                assertThat(localServiceTemplateSchema).isEqualTo(returnedServiceTemplateSchema);
             }
-
-            var jsonSchema = visitor.finalSchema();
-            String localServiceTemplateSchema = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonSchema);
-            assertThat(localServiceTemplateSchema).isEqualTo(returnedServiceTemplateSchema);
         }
     }
 }

@@ -29,6 +29,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVICE_TEMPLATE_YAML;
 import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_ST_TEMPLATE_YAML;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializer;
 import java.util.List;
 import java.util.Map;
 import javax.ws.rs.client.Entity;
@@ -137,9 +143,18 @@ class CommissioningControllerTest extends CommonRestController {
         Invocation.Builder invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT + "/toscaservicetemplate");
         Response rawresp = invocationBuilder.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
-        ToscaServiceTemplate template = rawresp.readEntity(ToscaServiceTemplate.class);
-        assertNotNull(template);
-        assertThat(template.getNodeTypes()).hasSize(7);
+        String template = rawresp.readEntity(String.class);
+        final JsonObject jsonObject = new JsonParser().parse(template).getAsJsonObject();
+
+        Gson gson = new Gson();
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(ToscaNodeTemplate.class,
+                (JsonSerializer<ToscaNodeTemplate>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()));
+        builder.setPrettyPrinting();
+        gson = builder.create();
+
+        ToscaNodeTemplate toscaNodeTemplate = gson.fromJson(jsonObject, ToscaNodeTemplate.class);
+        assertNotNull(toscaNodeTemplate);
     }
 
     @Test
