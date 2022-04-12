@@ -27,7 +27,7 @@
     <parent>
         <groupId>org.onap.policy.clamp</groupId>
         <artifactId>policy-clamp</artifactId>
-        <version>6.2.2-SNAPSHOT</version>
+        <version>6.2.3-SNAPSHOT</version>
     </parent>
 
     <artifactId>policy-clamp-models</artifactId>
