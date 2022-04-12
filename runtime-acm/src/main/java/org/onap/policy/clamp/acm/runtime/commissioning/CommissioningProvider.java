@@ -21,10 +21,10 @@
 
 package org.onap.policy.clamp.acm.runtime.commissioning;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.module.jsonSchema.factories.SchemaFactoryWrapper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -52,6 +52,8 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplates;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTypedEntityFilter;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -67,9 +69,11 @@ public class CommissioningProvider {
 
     private final ServiceTemplateProvider serviceTemplateProvider;
     private final AutomationCompositionProvider acProvider;
-    private final ObjectMapper mapper = new ObjectMapper();
     private final ParticipantProvider participantProvider;
     private final SupervisionHandler supervisionHandler;
+
+    private static final Map<String, String> sections = new HashMap<>();
+    private Gson gson = new Gson();
 
     /**
      * Create a commissioning provider.
@@ -86,7 +90,42 @@ public class CommissioningProvider {
         this.acProvider = acProvider;
         this.supervisionHandler = supervisionHandler;
         this.participantProvider = participantProvider;
-        mapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
+    }
+
+    /**
+     * Event listener initiilize function called at ApplicationReadyEvent.
+     *
+     */
+    @EventListener(ApplicationReadyEvent.class)
+    public void initialize() {
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(ToscaServiceTemplate.class,
+                (JsonSerializer<ToscaServiceTemplate>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()));
+        builder.registerTypeAdapter(ToscaDataType.class,
+                (JsonSerializer<ToscaDataType>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()));
+        builder.registerTypeAdapter(ToscaCapabilityType.class,
+                (JsonSerializer<ToscaCapabilityType>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()));
+        builder.registerTypeAdapter(ToscaNodeType.class,
+                (JsonSerializer<ToscaNodeType>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()));
+        builder.registerTypeAdapter(ToscaRelationshipType.class,
+                (JsonSerializer<ToscaRelationshipType>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()));
+        builder.registerTypeAdapter(ToscaPolicyType.class,
+                (JsonSerializer<ToscaPolicyType>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()));
+        builder.registerTypeAdapter(ToscaTopologyTemplate.class,
+                (JsonSerializer<ToscaTopologyTemplate>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()));
+        builder.registerTypeAdapter(ToscaNodeTemplate.class,
+                (JsonSerializer<ToscaNodeTemplate>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()));
+        builder.setPrettyPrinting();
+        gson = builder.create();
+
+        sections.put("data_types", gson.toJson(new ToscaDataType()));
+        sections.put("capability_types", gson.toJson(new ToscaCapabilityType()));
+        sections.put("node_types", gson.toJson(new ToscaNodeType()));
+        sections.put("relationship_types", gson.toJson(new ToscaRelationshipType()));
+        sections.put("policy_types", gson.toJson(new ToscaPolicyType()));
+        sections.put("topology_template", gson.toJson(new ToscaTopologyTemplate()));
+        sections.put("node_templates", gson.toJson(new ToscaNodeTemplate()));
+        sections.put("all", gson.toJson(new ToscaServiceTemplate()));
     }
 
     /**
@@ -293,12 +332,7 @@ public class CommissioningProvider {
         template.put("node_types", fullTemplate.getNodeTypes());
         template.put("topology_template", fullTemplate.getToscaTopologyTemplate());
 
-        try {
-            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(template);
-
-        } catch (JsonProcessingException e) {
-            throw new PfModelException(Status.BAD_REQUEST, "Converion to Json Schema failed", e);
-        }
+        return gson.toJson(template);
     }
 
     /**
@@ -308,43 +342,8 @@ public class CommissioningProvider {
      * @return the specified tosca service template or section Json Schema
      * @throws PfModelException on errors with retrieving the classes
      */
-    @Transactional(readOnly = true)
     public String getToscaServiceTemplateSchema(String section) throws PfModelException {
-        var visitor = new SchemaFactoryWrapper();
-
-        try {
-            switch (section) {
-                case "data_types":
-                    mapper.acceptJsonFormatVisitor(mapper.constructType(ToscaDataType.class), visitor);
-                    break;
-                case "capability_types":
-                    mapper.acceptJsonFormatVisitor(mapper.constructType(ToscaCapabilityType.class), visitor);
-                    break;
-                case "node_types":
-                    mapper.acceptJsonFormatVisitor(mapper.constructType(ToscaNodeType.class), visitor);
-                    break;
-                case "relationship_types":
-                    mapper.acceptJsonFormatVisitor(mapper.constructType(ToscaRelationshipType.class), visitor);
-                    break;
-                case "policy_types":
-                    mapper.acceptJsonFormatVisitor(mapper.constructType(ToscaPolicyType.class), visitor);
-                    break;
-                case "topology_template":
-                    mapper.acceptJsonFormatVisitor(mapper.constructType(ToscaTopologyTemplate.class), visitor);
-                    break;
-                case "node_templates":
-                    mapper.acceptJsonFormatVisitor(
-                        mapper.getTypeFactory().constructCollectionType(List.class, ToscaNodeTemplate.class), visitor);
-                    break;
-                default:
-                    mapper.acceptJsonFormatVisitor(mapper.constructType(ToscaServiceTemplate.class), visitor);
-            }
-
-            var jsonSchema = visitor.finalSchema();
-            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonSchema);
-        } catch (JsonProcessingException e) {
-            throw new PfModelException(Status.BAD_REQUEST, "Converion to Json Schema failed", e);
-        }
+        return sections.getOrDefault(section, sections.get("all"));
     }
 
     private List<ToscaServiceTemplate> filterToscaNodeTemplateInstance(List<ToscaServiceTemplate> serviceTemplates) {
