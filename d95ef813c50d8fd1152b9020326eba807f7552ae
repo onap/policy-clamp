@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8ef7e371_69ffc6fc",
+        "filename": "runtime-acm/src/test/java/org/onap/policy/clamp/acm/runtime/commissioning/CommissioningProviderTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 4903
+      },
+      "writtenOn": "2022-04-20T12:11:16Z",
+      "side": 1,
+      "message": "unused imports?",
+      "range": {
+        "startLine": 55,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 70
+      },
+      "revId": "d95ef813c50d8fd1152b9020326eba807f7552ae",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
