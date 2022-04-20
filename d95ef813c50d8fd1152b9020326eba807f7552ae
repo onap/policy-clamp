@@ -22,6 +22,30 @@
       "revId": "d95ef813c50d8fd1152b9020326eba807f7552ae",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9c461cd2_8da30248",
+        "filename": "runtime-acm/src/test/java/org/onap/policy/clamp/acm/runtime/commissioning/CommissioningProviderTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2022-04-20T14:04:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8ef7e371_69ffc6fc",
+      "range": {
+        "startLine": 55,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 70
+      },
+      "revId": "d95ef813c50d8fd1152b9020326eba807f7552ae",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
