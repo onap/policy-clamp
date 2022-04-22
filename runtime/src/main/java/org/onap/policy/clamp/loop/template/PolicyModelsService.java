@@ -23,9 +23,7 @@
 
 package org.onap.policy.clamp.loop.template;
 
-import com.google.gson.JsonObject;
 import java.util.List;
-import org.onap.policy.clamp.clds.tosca.update.ToscaConverterWithDictionarySupport;
 import org.onap.policy.clamp.policy.pdpgroup.PdpGroupsAnalyzer;
 import org.onap.policy.models.pdp.concepts.PdpGroups;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,12 +37,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class PolicyModelsService {
     private final PolicyModelsRepository policyModelsRepository;
-
-    /**
-     * This is the new tosca converter that must be used in clamp.
-     */
-    @Autowired
-    private ToscaConverterWithDictionarySupport toscaConverterWithDictionarySupport;
 
     @Autowired
     public PolicyModelsService(PolicyModelsRepository policyModelrepo) {
@@ -69,22 +61,6 @@ public class PolicyModelsService {
      */
     public boolean existsById(PolicyModelId policyModelId) {
         return policyModelsRepository.existsById(policyModelId);
-    }
-
-    /**
-     * This method retrieves the tosca model and convert it to a Json schema.
-     * That json schema is normally used by the UI.
-     *
-     * @param policyType        The policy model type id
-     * @param policyTypeVersion The policy model type version
-     * @return A JsonObject with the json schema describing the tosca
-     */
-    public JsonObject getPolicyModelJson(String policyType, String policyTypeVersion) {
-        var thePolicyModel = getPolicyModel(policyType, policyTypeVersion);
-        // In the following use case we are not in the context of a closed loop, so the enrichment
-        // of the json cannot be done, that's why the serviceModel provided is NULL.
-        return toscaConverterWithDictionarySupport
-                .convertToscaToJsonSchemaObject(thePolicyModel.getPolicyModelTosca(), policyType, null);
     }
 
     public List<String> getAllPolicyModelTypes() {

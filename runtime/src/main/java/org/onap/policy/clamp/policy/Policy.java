@@ -36,11 +36,8 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
-import org.onap.policy.clamp.clds.tosca.update.ToscaConverterWithDictionarySupport;
 import org.onap.policy.clamp.dao.model.jsontype.StringJsonUserType;
 import org.onap.policy.clamp.loop.common.AuditEntity;
-import org.onap.policy.clamp.loop.service.Service;
-import org.onap.policy.clamp.loop.template.LoopElementModel;
 import org.onap.policy.clamp.loop.template.PolicyModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,15 +58,6 @@ public abstract class Policy extends AuditEntity {
     @Type(type = "json")
     @Column(columnDefinition = "json", name = "configurations_json")
     private JsonObject configurationsJson;
-
-    /**
-     * This attribute can be null when the user add a policy on the loop instance, not the template.
-     * When null, It therefore indicates that this policy is not by default in the loop template.
-     */
-    @Expose
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "loop_element_model_id")
-    private LoopElementModel loopElementModel;
 
     @Expose
     @Column(name = "pdp_group")
@@ -129,15 +117,6 @@ public abstract class Policy extends AuditEntity {
     }
 
     /**
-     * Regenerate the Policy Json Representation.
-     *
-     * @param toscaConverter The tosca converter required to regenerate the json schema
-     * @param serviceModel   The service model associated
-     */
-    public abstract void updateJsonRepresentation(ToscaConverterWithDictionarySupport toscaConverter,
-                                                  Service serviceModel);
-
-    /**
      * policyModel getter.
      *
      * @return the policyModel
@@ -171,24 +150,6 @@ public abstract class Policy extends AuditEntity {
      */
     public void setConfigurationsJson(JsonObject configurationsJson) {
         this.configurationsJson = configurationsJson;
-    }
-
-    /**
-     * loopElementModel getter.
-     *
-     * @return the loopElementModel
-     */
-    public LoopElementModel getLoopElementModel() {
-        return loopElementModel;
-    }
-
-    /**
-     * loopElementModel setter.
-     *
-     * @param loopElementModel the loopElementModel to set
-     */
-    public void setLoopElementModel(LoopElementModel loopElementModel) {
-        this.loopElementModel = loopElementModel;
     }
 
     /**

@@ -26,11 +26,9 @@ import java.util.Date;
 import org.onap.policy.clamp.clds.model.CldsHealthCheck;
 import org.onap.policy.clamp.clds.util.LoggingUtils;
 import org.onap.policy.clamp.clds.util.OnapLogConstants;
-import org.onap.policy.clamp.loop.LoopController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -40,9 +38,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class CldsHealthcheckService {
-
-    @Autowired
-    private LoopController loopController;
 
     protected static final Logger logger = LoggerFactory.getLogger(CldsHealthcheckService.class);
 
@@ -58,7 +53,6 @@ public class CldsHealthcheckService {
         LoggingUtils.setRequestContext("CldsService: GET healthcheck", "Clamp-Health-Check");
         LoggingUtils.setTimeContext(startTime, new Date());
         try {
-            loopController.getLoopNames();
             cldsHealthCheck.setHealthCheckComponent("CLDS-APP");
             cldsHealthCheck.setHealthCheckStatus("UP");
             cldsHealthCheck.setDescription("OK");

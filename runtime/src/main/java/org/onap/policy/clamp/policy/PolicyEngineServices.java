@@ -29,7 +29,6 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.ExchangeBuilder;
 import org.onap.policy.clamp.clds.config.ClampProperties;
-import org.onap.policy.clamp.clds.sdc.controller.installer.BlueprintMicroService;
 import org.onap.policy.clamp.clds.util.JsonUtils;
 import org.onap.policy.clamp.loop.template.PolicyModel;
 import org.onap.policy.clamp.loop.template.PolicyModelsService;
@@ -110,16 +109,6 @@ public class PolicyEngineServices {
                 policyType, policyVersion);
             return policyModelFound;
         }
-    }
-
-    /**
-     * This method query Policy engine and create a PolicyModel object with type and version.
-     *
-     * @param microService microservice object instance
-     * @return A PolicyModel created from policyEngine data
-     */
-    public PolicyModel createPolicyModelFromPolicyEngine(BlueprintMicroService microService) {
-        return createPolicyModelFromPolicyEngine(microService.getModelType(), microService.getModelVersion());
     }
 
     /**
