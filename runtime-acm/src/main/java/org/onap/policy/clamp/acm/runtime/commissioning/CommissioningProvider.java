@@ -21,10 +21,11 @@
 
 package org.onap.policy.clamp.acm.runtime.commissioning;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializer;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.module.jsonSchema.factories.SchemaFactoryWrapper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -69,11 +70,11 @@ public class CommissioningProvider {
 
     private final ServiceTemplateProvider serviceTemplateProvider;
     private final AutomationCompositionProvider acProvider;
+    private final ObjectMapper mapper = new ObjectMapper();
     private final ParticipantProvider participantProvider;
     private final SupervisionHandler supervisionHandler;
 
-    private static final Map<String, String> sections = new HashMap<>();
-    private Gson gson = new Gson();
+    private static final Map<String, JavaType> sections = new HashMap<>();
 
     /**
      * Create a commissioning provider.
@@ -84,12 +85,13 @@ public class CommissioningProvider {
      * @param participantProvider the Participant Provider
      */
     public CommissioningProvider(ServiceTemplateProvider serviceTemplateProvider,
-        AutomationCompositionProvider acProvider, SupervisionHandler supervisionHandler,
-        ParticipantProvider participantProvider) {
+            AutomationCompositionProvider acProvider, SupervisionHandler supervisionHandler,
+            ParticipantProvider participantProvider) {
         this.serviceTemplateProvider = serviceTemplateProvider;
         this.acProvider = acProvider;
         this.supervisionHandler = supervisionHandler;
         this.participantProvider = participantProvider;
+        mapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
     }
 
     /**
@@ -98,34 +100,15 @@ public class CommissioningProvider {
      */
     @EventListener(ApplicationReadyEvent.class)
     public void initialize() {
-        GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(ToscaServiceTemplate.class,
-                (JsonSerializer<ToscaServiceTemplate>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()));
-        builder.registerTypeAdapter(ToscaDataType.class,
-                (JsonSerializer<ToscaDataType>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()));
-        builder.registerTypeAdapter(ToscaCapabilityType.class,
-                (JsonSerializer<ToscaCapabilityType>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()));
-        builder.registerTypeAdapter(ToscaNodeType.class,
-                (JsonSerializer<ToscaNodeType>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()));
-        builder.registerTypeAdapter(ToscaRelationshipType.class,
-                (JsonSerializer<ToscaRelationshipType>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()));
-        builder.registerTypeAdapter(ToscaPolicyType.class,
-                (JsonSerializer<ToscaPolicyType>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()));
-        builder.registerTypeAdapter(ToscaTopologyTemplate.class,
-                (JsonSerializer<ToscaTopologyTemplate>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()));
-        builder.registerTypeAdapter(ToscaNodeTemplate.class,
-                (JsonSerializer<ToscaNodeTemplate>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()));
-        builder.setPrettyPrinting();
-        gson = builder.create();
-
-        sections.put("data_types", gson.toJson(new ToscaDataType()));
-        sections.put("capability_types", gson.toJson(new ToscaCapabilityType()));
-        sections.put("node_types", gson.toJson(new ToscaNodeType()));
-        sections.put("relationship_types", gson.toJson(new ToscaRelationshipType()));
-        sections.put("policy_types", gson.toJson(new ToscaPolicyType()));
-        sections.put("topology_template", gson.toJson(new ToscaTopologyTemplate()));
-        sections.put("node_templates", gson.toJson(new ToscaNodeTemplate()));
-        sections.put("all", gson.toJson(new ToscaServiceTemplate()));
+        sections.put("data_types", mapper.constructType(ToscaDataType.class));
+        sections.put("capability_types", mapper.constructType(ToscaCapabilityType.class));
+        sections.put("node_types", mapper.constructType(ToscaNodeType.class));
+        sections.put("relationship_types", mapper.constructType(ToscaRelationshipType.class));
+        sections.put("policy_types", mapper.constructType(ToscaPolicyType.class));
+        sections.put("topology_template", mapper.constructType(ToscaTopologyTemplate.class));
+        sections.put("node_templates",
+                mapper.getTypeFactory().constructCollectionType(List.class, ToscaNodeTemplate.class));
+        sections.put("all", mapper.constructType(ToscaServiceTemplate.class));
     }
 
     /**
@@ -136,11 +119,11 @@ public class CommissioningProvider {
      * @throws PfModelException on creation errors
      */
     public CommissioningResponse createAutomationCompositionDefinitions(ToscaServiceTemplate serviceTemplate)
-        throws PfModelException {
+            throws PfModelException {
 
         if (verifyIfInstancePropertiesExists()) {
             throw new PfModelException(Status.BAD_REQUEST,
-                "Delete instances, to commission automation composition definitions");
+                    "Delete instances, to commission automation composition definitions");
         }
         serviceTemplate = serviceTemplateProvider.createServiceTemplate(serviceTemplate);
         List<Participant> participantList = participantProvider.getParticipants();
@@ -169,11 +152,11 @@ public class CommissioningProvider {
      * @throws PfModelException on deletion errors
      */
     public CommissioningResponse deleteAutomationCompositionDefinition(String name, String version)
-        throws PfModelException {
+            throws PfModelException {
 
         if (verifyIfInstancePropertiesExists()) {
             throw new PfModelException(Status.BAD_REQUEST,
-                "Delete instances, to commission automation composition definitions");
+                    "Delete instances, to commission automation composition definitions");
         }
         List<Participant> participantList = participantProvider.getParticipants();
         if (!participantList.isEmpty()) {
@@ -196,7 +179,7 @@ public class CommissioningProvider {
      */
     @Transactional(readOnly = true)
     public List<ToscaNodeTemplate> getAutomationCompositionDefinitions(String acName, String acVersion)
-        throws PfModelException {
+            throws PfModelException {
 
         // @formatter:off
         ToscaTypedEntityFilter<ToscaNodeTemplate> nodeTemplateFilter = ToscaTypedEntityFilter
@@ -219,7 +202,7 @@ public class CommissioningProvider {
      */
     @Transactional(readOnly = true)
     public List<ToscaNodeTemplate> getAutomationCompositionElementDefinitions(
-        ToscaNodeTemplate automationCompositionNodeTemplate) throws PfModelException {
+            ToscaNodeTemplate automationCompositionNodeTemplate) throws PfModelException {
         if (!AUTOMATION_COMPOSITION_NODE_TYPE.equals(automationCompositionNodeTemplate.getType())) {
             return Collections.emptyList();
         }
@@ -230,7 +213,7 @@ public class CommissioningProvider {
 
         @SuppressWarnings("unchecked")
         List<Map<String, String>> automationCompositionElements =
-            (List<Map<String, String>>) automationCompositionNodeTemplate.getProperties().get("elements");
+                (List<Map<String, String>>) automationCompositionNodeTemplate.getProperties().get("elements");
 
         if (CollectionUtils.isEmpty(automationCompositionElements)) {
             return Collections.emptyList();
@@ -262,23 +245,23 @@ public class CommissioningProvider {
      */
     @Transactional(readOnly = true)
     public Map<String, ToscaNodeTemplate> getNodeTemplatesWithCommonOrInstanceProperties(boolean common, String name,
-        String version) throws PfModelException {
+            String version) throws PfModelException {
 
         if (common && verifyIfInstancePropertiesExists()) {
             throw new PfModelException(Status.BAD_REQUEST,
-                "Cannot create or edit common properties, delete all the instantiations first");
+                    "Cannot create or edit common properties, delete all the instantiations first");
         }
 
         var serviceTemplateList = serviceTemplateProvider.getServiceTemplateList(name, version);
         var commonOrInstanceNodeTypeProps =
-            serviceTemplateProvider.getCommonOrInstancePropertiesFromNodeTypes(common, serviceTemplateList.get(0));
+                serviceTemplateProvider.getCommonOrInstancePropertiesFromNodeTypes(common, serviceTemplateList.get(0));
 
         var serviceTemplates = new ToscaServiceTemplates();
         serviceTemplates.setServiceTemplates(filterToscaNodeTemplateInstance(serviceTemplateList));
 
         return serviceTemplateProvider.getDerivedCommonOrInstanceNodeTemplates(
-            serviceTemplates.getServiceTemplates().get(0).getToscaTopologyTemplate().getNodeTemplates(),
-            commonOrInstanceNodeTypeProps);
+                serviceTemplates.getServiceTemplates().get(0).getToscaTopologyTemplate().getNodeTemplates(),
+                commonOrInstanceNodeTypeProps);
     }
 
     /**
@@ -332,7 +315,12 @@ public class CommissioningProvider {
         template.put("node_types", fullTemplate.getNodeTypes());
         template.put("topology_template", fullTemplate.getToscaTopologyTemplate());
 
-        return gson.toJson(template);
+        try {
+            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(template);
+
+        } catch (JsonProcessingException e) {
+            throw new PfModelException(Status.BAD_REQUEST, "Converion to Json Schema failed", e);
+        }
     }
 
     /**
@@ -343,7 +331,15 @@ public class CommissioningProvider {
      * @throws PfModelException on errors with retrieving the classes
      */
     public String getToscaServiceTemplateSchema(String section) throws PfModelException {
-        return sections.getOrDefault(section, sections.get("all"));
+        var visitor = new SchemaFactoryWrapper();
+        var sectionMapper = sections.getOrDefault(section, sections.get("all"));
+        try {
+            mapper.acceptJsonFormatVisitor(sectionMapper, visitor);
+            var jsonSchema = visitor.finalSchema();
+            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonSchema);
+        } catch (JsonProcessingException e) {
+            throw new PfModelException(Status.BAD_REQUEST, "Converion to Json Schema failed", e);
+        }
     }
 
     private List<ToscaServiceTemplate> filterToscaNodeTemplateInstance(List<ToscaServiceTemplate> serviceTemplates) {
@@ -376,7 +372,7 @@ public class CommissioningProvider {
      */
     private boolean verifyIfInstancePropertiesExists() {
         return acProvider.getAllNodeTemplates().stream()
-            .anyMatch(nodeTemplate -> nodeTemplate.getKey().getName().contains(HYPHEN));
+                .anyMatch(nodeTemplate -> nodeTemplate.getKey().getName().contains(HYPHEN));
 
     }
 }

@@ -29,10 +29,9 @@ import static org.mockito.Mockito.when;
 import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVICE_TEMPLATE_YAML;
 import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_ST_TEMPLATE_YAML;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializer;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.module.jsonSchema.factories.SchemaFactoryWrapper;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -56,6 +55,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
 class CommissioningProviderTest {
 
     private static final Coder CODER = new StandardCoder();
+    private final ObjectMapper mapper = new ObjectMapper();
 
     /**
      * Test the fetching of automation composition definitions (ToscaServiceTemplates).
@@ -69,13 +69,13 @@ class CommissioningProviderTest {
         var serviceTemplateProvider = mock(ServiceTemplateProvider.class);
 
         CommissioningProvider provider =
-            new CommissioningProvider(serviceTemplateProvider, acProvider, null, participantProvider);
+                new CommissioningProvider(serviceTemplateProvider, acProvider, null, participantProvider);
 
         List<ToscaNodeTemplate> listOfTemplates = provider.getAutomationCompositionDefinitions(null, null);
         assertThat(listOfTemplates).isEmpty();
 
         when(acProvider.getFilteredNodeTemplates(any()))
-            .thenReturn(List.of(new ToscaNodeTemplate(), new ToscaNodeTemplate()));
+                .thenReturn(List.of(new ToscaNodeTemplate(), new ToscaNodeTemplate()));
         listOfTemplates = provider.getAutomationCompositionDefinitions(null, null);
         assertThat(listOfTemplates).hasSize(2);
     }
@@ -92,7 +92,7 @@ class CommissioningProviderTest {
         var participantProvider = mock(ParticipantProvider.class);
 
         CommissioningProvider provider =
-            new CommissioningProvider(serviceTemplateProvider, acProvider, null, participantProvider);
+                new CommissioningProvider(serviceTemplateProvider, acProvider, null, participantProvider);
 
         List<ToscaNodeTemplate> listOfTemplates = provider.getAutomationCompositionDefinitions(null, null);
         assertThat(listOfTemplates).isEmpty();
@@ -102,11 +102,11 @@ class CommissioningProviderTest {
 
         // Response should return the number of node templates present in the service template
         List<ToscaConceptIdentifier> affectedDefinitions = provider
-            .createAutomationCompositionDefinitions(serviceTemplate).getAffectedAutomationCompositionDefinitions();
+                .createAutomationCompositionDefinitions(serviceTemplate).getAffectedAutomationCompositionDefinitions();
         assertThat(affectedDefinitions).hasSize(13);
 
         when(acProvider.getFilteredNodeTemplates(any()))
-            .thenReturn(List.of(new ToscaNodeTemplate(), new ToscaNodeTemplate()));
+                .thenReturn(List.of(new ToscaNodeTemplate(), new ToscaNodeTemplate()));
 
         listOfTemplates = provider.getAutomationCompositionDefinitions(null, null);
         assertThat(listOfTemplates).hasSize(2);
@@ -124,9 +124,8 @@ class CommissioningProviderTest {
         var participantProvider = mock(ParticipantProvider.class);
 
         CommissioningProvider provider =
-            new CommissioningProvider(serviceTemplateProvider, acProvider, null, participantProvider);
-        ToscaServiceTemplate serviceTemplate =
-            InstantiationUtils.getToscaServiceTemplate(TOSCA_ST_TEMPLATE_YAML);
+                new CommissioningProvider(serviceTemplateProvider, acProvider, null, participantProvider);
+        ToscaServiceTemplate serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_ST_TEMPLATE_YAML);
         when(serviceTemplateProvider.createServiceTemplate(serviceTemplate)).thenReturn(serviceTemplate);
 
         provider.createAutomationCompositionDefinitions(serviceTemplate);
@@ -138,7 +137,7 @@ class CommissioningProviderTest {
         assertThat(returnedServiceTemplate).isNotNull();
 
         Map<String, ToscaNodeTemplate> nodeTemplates =
-            returnedServiceTemplate.getToscaTopologyTemplate().getNodeTemplates();
+                returnedServiceTemplate.getToscaTopologyTemplate().getNodeTemplates();
 
         assertThat(nodeTemplates).hasSize(8);
     }
@@ -155,15 +154,14 @@ class CommissioningProviderTest {
         var participantProvider = mock(ParticipantProvider.class);
 
         CommissioningProvider provider =
-            new CommissioningProvider(serviceTemplateProvider, acProvider, null, participantProvider);
-        ToscaServiceTemplate serviceTemplate =
-            InstantiationUtils.getToscaServiceTemplate(TOSCA_ST_TEMPLATE_YAML);
+                new CommissioningProvider(serviceTemplateProvider, acProvider, null, participantProvider);
+        ToscaServiceTemplate serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_ST_TEMPLATE_YAML);
         when(serviceTemplateProvider.createServiceTemplate(serviceTemplate)).thenReturn(serviceTemplate);
 
         provider.createAutomationCompositionDefinitions(serviceTemplate);
 
-        when(serviceTemplateProvider.getServiceTemplateList(any(), any())).thenReturn(List.of(
-            Objects.requireNonNull(serviceTemplate)));
+        when(serviceTemplateProvider.getServiceTemplateList(any(), any()))
+                .thenReturn(List.of(Objects.requireNonNull(serviceTemplate)));
 
         String returnedServiceTemplate = provider.getToscaServiceTemplateReduced(null, null);
         assertThat(returnedServiceTemplate).isNotNull();
@@ -185,36 +183,36 @@ class CommissioningProviderTest {
         var participantProvider = mock(ParticipantProvider.class);
 
         CommissioningProvider provider =
-            new CommissioningProvider(serviceTemplateProvider, acProvider, null, participantProvider);
-        ToscaServiceTemplate serviceTemplate =
-            InstantiationUtils.getToscaServiceTemplate(TOSCA_ST_TEMPLATE_YAML);
+                new CommissioningProvider(serviceTemplateProvider, acProvider, null, participantProvider);
+        ToscaServiceTemplate serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_ST_TEMPLATE_YAML);
         when(serviceTemplateProvider.createServiceTemplate(serviceTemplate)).thenReturn(serviceTemplate);
 
         provider.createAutomationCompositionDefinitions(serviceTemplate);
         provider.initialize();
 
-        final Map<String, Class<?>> sections = Map.of("all", ToscaServiceTemplate.class,
-            "data_types", ToscaDataType.class, "capability_types", ToscaCapabilityType.class,
-            "node_types", ToscaNodeType.class, "relationship_types",
-            ToscaRelationshipType.class, "policy_types", ToscaPolicyType.class, "topology_template",
-            ToscaTopologyTemplate.class, "node_templates", List.class);
+        mapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
 
-        String localServiceTemplateSchema = new String();
-        Gson gson = new Gson();
-        GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(ToscaTopologyTemplate.class,
-                (JsonSerializer<ToscaTopologyTemplate>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()));
-        builder.setPrettyPrinting();
-        gson = builder.create();
+        Map<String, Class<?>> sections = Map.of("all", ToscaServiceTemplate.class, "data_types", ToscaDataType.class,
+                "capability_types", ToscaCapabilityType.class, "node_types", ToscaNodeType.class, "relationship_types",
+                ToscaRelationshipType.class, "policy_types", ToscaPolicyType.class, "topology_template",
+                ToscaTopologyTemplate.class, "node_templates", List.class);
 
         for (Map.Entry<String, Class<?>> entry : sections.entrySet()) {
             String returnedServiceTemplateSchema = provider.getToscaServiceTemplateSchema(entry.getKey());
             assertThat(returnedServiceTemplateSchema).isNotNull();
 
-            if (entry.getKey().equals("topology_template")) {
-                localServiceTemplateSchema = gson.toJson(new ToscaTopologyTemplate());
-                assertThat(localServiceTemplateSchema).isEqualTo(returnedServiceTemplateSchema);
+            var visitor = new SchemaFactoryWrapper();
+
+            if (entry.getKey().equals("node_templates")) {
+                mapper.acceptJsonFormatVisitor(
+                        mapper.getTypeFactory().constructCollectionType(List.class, ToscaNodeTemplate.class), visitor);
+            } else {
+                mapper.acceptJsonFormatVisitor(mapper.constructType(entry.getValue()), visitor);
             }
+
+            var jsonSchema = visitor.finalSchema();
+            String localServiceTemplateSchema = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonSchema);
+            assertThat(localServiceTemplateSchema).isEqualTo(returnedServiceTemplateSchema);
         }
     }
 }
