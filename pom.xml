@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.onap.policy.parent</groupId>
         <artifactId>integration</artifactId>
-        <version>3.5.3-SNAPSHOT</version>
+        <version>3.5.3</version>
         <relativePath />
     </parent>
 
@@ -52,8 +52,8 @@
     </description>
 
     <properties>
-        <policy.common.version>1.10.3-SNAPSHOT</policy.common.version>
-        <policy.models.version>2.6.3-SNAPSHOT</policy.models.version>
+        <policy.common.version>1.10.3</policy.common.version>
+        <policy.models.version>2.6.3</policy.models.version>
     </properties>
 
     <modules>
