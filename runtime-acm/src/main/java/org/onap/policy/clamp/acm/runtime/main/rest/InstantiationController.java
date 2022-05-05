@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -193,6 +193,74 @@ public class InstantiationController extends AbstractRestController {
     }
 
     /**
+     * Updates instance properties.
+     *
+     * @param name the name of the automation composition to update
+     * @param version the version of the automation composition to update
+     * @param body the body of automation composition following TOSCA definition
+     * @return a response
+     */
+    // @formatter:off
+    @PutMapping(value = "/instanceProperties",
+            consumes = {MediaType.APPLICATION_JSON_VALUE, APPLICATION_YAML},
+            produces = {MediaType.APPLICATION_JSON_VALUE, APPLICATION_YAML})
+    @ApiOperation(
+            value = "Updates instance properties",
+            notes = "Updates instance properties, returning the saved instances properties and it's version",
+            response = InstancePropertiesResponse.class,
+            tags = {TAGS},
+            authorizations = @Authorization(value = AUTHORIZATION_TYPE),
+            responseHeaders = {
+                @ResponseHeader(
+                    name = VERSION_MINOR_NAME,
+                    description = VERSION_MINOR_DESCRIPTION,
+                    response = String.class),
+                @ResponseHeader(
+                    name = VERSION_PATCH_NAME,
+                    description = VERSION_PATCH_DESCRIPTION,
+                    response = String.class),
+                @ResponseHeader(
+                    name = VERSION_LATEST_NAME,
+                    description = VERSION_LATEST_DESCRIPTION,
+                    response = String.class),
+                @ResponseHeader(
+                    name = REQUEST_ID_NAME,
+                    description = REQUEST_ID_HDR_DESCRIPTION,
+                    response = UUID.class)
+            },
+            extensions = {
+                @Extension
+                    (
+                        name = EXTENSION_NAME,
+                        properties = {
+                            @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                            @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
+                        }
+                    )
+            }
+    )
+    @ApiResponses(
+        value = {
+            @ApiResponse(code = AUTHENTICATION_ERROR_CODE, message = AUTHENTICATION_ERROR_MESSAGE),
+            @ApiResponse(code = AUTHORIZATION_ERROR_CODE, message = AUTHORIZATION_ERROR_MESSAGE),
+            @ApiResponse(code = SERVER_ERROR_CODE, message = SERVER_ERROR_MESSAGE)
+        }
+    )
+    // @formatter:on
+    public ResponseEntity<InstancePropertiesResponse> updatesInstanceProperties(
+            @RequestHeader(name = REQUEST_ID_NAME, required = false)
+            @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+            @ApiParam(value = "Automation composition definition name", required = true)
+                @RequestParam("name") String name,
+            @ApiParam(value = "Automation composition definition version", required = true)
+                @RequestParam("version") String version,
+            @ApiParam(value = "Body of instance properties", required = true) @RequestBody ToscaServiceTemplate body)
+            throws PfModelException {
+
+        return ResponseEntity.ok().body(provider.updatesInstanceProperties(name, version, body));
+    }
+
+    /**
      * Deletes a automation composition definition and instance properties.
      *
      * @param requestId request ID used in ONAP logging
@@ -248,8 +316,8 @@ public class InstantiationController extends AbstractRestController {
 
     public ResponseEntity<InstantiationResponse> deleteInstanceProperties(
         @RequestHeader(name = REQUEST_ID_NAME, required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-        @ApiParam(value = "Automation composition  definition name", required = true) @RequestParam("name") String name,
-        @ApiParam(value = "Automation composition  definition version") @RequestParam(
+        @ApiParam(value = "Automation composition definition name", required = true) @RequestParam("name") String name,
+        @ApiParam(value = "Automation composition definition version") @RequestParam(
             value = "version",
             required = true) String version)
         throws PfModelException {

@@ -158,7 +158,7 @@ class CommissioningControllerTest extends CommonRestController {
         createFullEntryInDbWithCommonProps();
 
         Invocation.Builder invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT
-                + "/getCommonOrInstanceProperties" + "?common=true&name=ToscaServiceTemplateSimple&version=1.0.0");
+                + "/getCommonOrInstanceProperties?common=true");
         Response rawresp = invocationBuilder.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
 

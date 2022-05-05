@@ -163,7 +163,8 @@ class CommissioningProviderTest {
         when(serviceTemplateProvider.getServiceTemplateList(any(), any()))
                 .thenReturn(List.of(Objects.requireNonNull(serviceTemplate)));
 
-        String returnedServiceTemplate = provider.getToscaServiceTemplateReduced(null, null);
+        String returnedServiceTemplate = provider
+                .getToscaServiceTemplateReduced(null, null, null);
         assertThat(returnedServiceTemplate).isNotNull();
         ToscaServiceTemplate parsedServiceTemplate = CODER.decode(returnedServiceTemplate, ToscaServiceTemplate.class);
 

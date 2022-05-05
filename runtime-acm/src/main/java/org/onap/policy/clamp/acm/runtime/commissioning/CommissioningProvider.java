@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021 Nordix Foundation.
+ * Copyright (C) 2021-2022 Nordix Foundation.
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -237,15 +237,19 @@ public class CommissioningProvider {
     /**
      * Get node templates with common properties added.
      *
-     * @param common boolean indicating common or instance properties to be used
      * @param name the name of the definition to use, null for all definitions
      * @param version the version of the definition to use, null for all definitions
+     * @param instanceName automation composition name
+     * @param common boolean indicating common or instance properties to be used
      * @return the nodes templates with common or instance properties
      * @throws PfModelException on errors getting common or instance properties from node_templates
      */
     @Transactional(readOnly = true)
-    public Map<String, ToscaNodeTemplate> getNodeTemplatesWithCommonOrInstanceProperties(boolean common, String name,
-            String version) throws PfModelException {
+    public Map<String, ToscaNodeTemplate> getNodeTemplatesWithCommonOrInstanceProperties(
+            final String name, final String version, final String instanceName, final boolean common)
+            throws PfModelException {
+
+        String acmName = instanceName == null || instanceName.isEmpty() ? null : instanceName;
 
         if (common && verifyIfInstancePropertiesExists()) {
             throw new PfModelException(Status.BAD_REQUEST,
@@ -253,11 +257,17 @@ public class CommissioningProvider {
         }
 
         var serviceTemplateList = serviceTemplateProvider.getServiceTemplateList(name, version);
+
+        if (serviceTemplateList.isEmpty()) {
+            throw new PfModelException(Status.BAD_REQUEST,
+                    "Tosca service template has to be commissioned before saving instance properties");
+        }
+
         var commonOrInstanceNodeTypeProps =
                 serviceTemplateProvider.getCommonOrInstancePropertiesFromNodeTypes(common, serviceTemplateList.get(0));
 
         var serviceTemplates = new ToscaServiceTemplates();
-        serviceTemplates.setServiceTemplates(filterToscaNodeTemplateInstance(serviceTemplateList));
+        serviceTemplates.setServiceTemplates(filterToscaNodeTemplateInstance(serviceTemplateList, acmName));
 
         return serviceTemplateProvider.getDerivedCommonOrInstanceNodeTemplates(
                 serviceTemplates.getServiceTemplates().get(0).getToscaTopologyTemplate().getNodeTemplates(),
@@ -293,14 +303,21 @@ public class CommissioningProvider {
      *
      * @param name the name of the template to get, null for all definitions
      * @param version the version of the template to get, null for all definitions
+     * @param instanceName automation composition name
      * @return the tosca service template
      * @throws PfModelException on errors getting tosca service template
      */
     @Transactional(readOnly = true)
-    public String getToscaServiceTemplateReduced(String name, String version) throws PfModelException {
+    public String getToscaServiceTemplateReduced(
+            final String name, final String version, final String instanceName)
+            throws PfModelException {
+
+        String acmName = instanceName == null || instanceName.isEmpty() ? null : instanceName;
+
         var serviceTemplateList = serviceTemplateProvider.getServiceTemplateList(name, version);
 
-        List<ToscaServiceTemplate> filteredServiceTemplateList = filterToscaNodeTemplateInstance(serviceTemplateList);
+        List<ToscaServiceTemplate> filteredServiceTemplateList =
+                filterToscaNodeTemplateInstance(serviceTemplateList, acmName);
 
         if (filteredServiceTemplateList.isEmpty()) {
             throw new PfModelException(Status.BAD_REQUEST, "Invalid Service Template");
@@ -342,16 +359,26 @@ public class CommissioningProvider {
         }
     }
 
-    private List<ToscaServiceTemplate> filterToscaNodeTemplateInstance(List<ToscaServiceTemplate> serviceTemplates) {
+    /**
+     * Filters service templates if is not an instantiation type.
+     *
+     * @param serviceTemplates tosca service template
+     * @param instanceName     automation composition name
+     * @return List of tosca service templates
+     */
+    private List<ToscaServiceTemplate> filterToscaNodeTemplateInstance(
+            List<ToscaServiceTemplate> serviceTemplates, String instanceName) {
 
         List<ToscaServiceTemplate> toscaServiceTemplates = new ArrayList<>();
 
-        serviceTemplates.stream().forEach(serviceTemplate -> {
+        serviceTemplates.forEach(serviceTemplate -> {
 
             Map<String, ToscaNodeTemplate> toscaNodeTemplates = new HashMap<>();
 
             serviceTemplate.getToscaTopologyTemplate().getNodeTemplates().forEach((key, nodeTemplate) -> {
-                if (!nodeTemplate.getName().contains(HYPHEN)) {
+                if (instanceName != null && nodeTemplate.getName().contains(instanceName)) {
+                    toscaNodeTemplates.put(key, nodeTemplate);
+                } else if (instanceName == null && !nodeTemplate.getName().contains(HYPHEN)) {
                     toscaNodeTemplates.put(key, nodeTemplate);
                 }
             });
