@@ -142,6 +142,61 @@ public class AutomationCompositionInstantiationProvider {
     }
 
     /**
+     * Updates Instance Properties and Automation Composition Instance.
+     *
+     * @param name the name of the automation composition to update
+     * @param version the version of the automation composition to update
+     * @param serviceTemplate tosca service template body
+     * @return InstancePropertiesResponse response from updating instance properties
+     * @throws PfModelException exception if incorrect instance name
+     */
+    public InstancePropertiesResponse updatesInstanceProperties(
+            String name, String version, ToscaServiceTemplate serviceTemplate) throws PfModelException {
+
+        if (name.length() < 3) {
+            throw new PfModelException(Status.BAD_REQUEST, "Instance Name cannot be empty or less than 3 characters!");
+        }
+
+        Map<String, ToscaNodeTemplate> nodeTemplates = deepCloneNodeTemplate(serviceTemplate);
+        Map<String, ToscaNodeTemplate> updatedNodeTemplates = new HashMap<>();
+
+        String instanceName = serviceTemplate.getName();
+
+        nodeTemplates.forEach((key, template) -> {
+            ToscaNodeTemplate toscaNodeTemplate = new ToscaNodeTemplate();
+
+            String updatedName = updateInstanceNameDescription(instanceName, name, key);
+            String updatedDescription = updateInstanceNameDescription(
+                    instanceName, name, template.getDescription());
+
+            toscaNodeTemplate.setName(updatedName);
+            toscaNodeTemplate.setDescription(updatedDescription);
+            toscaNodeTemplate.setCapabilities(template.getCapabilities());
+            toscaNodeTemplate.setRequirements(template.getRequirements());
+            toscaNodeTemplate.setMetadata(template.getMetadata());
+            toscaNodeTemplate.setProperties(template.getProperties());
+            toscaNodeTemplate.setDerivedFrom(template.getDerivedFrom());
+            toscaNodeTemplate.setVersion(template.getVersion());
+            toscaNodeTemplate.setType(template.getType());
+            toscaNodeTemplate.setTypeVersion(template.getTypeVersion());
+
+            String updatedKey = updateInstanceNameDescription(instanceName, name, key);
+
+            updatedNodeTemplates.put(updatedKey, toscaNodeTemplate);
+        });
+
+        serviceTemplate.getToscaTopologyTemplate().getNodeTemplates().clear();
+        serviceTemplate.getToscaTopologyTemplate().getNodeTemplates().putAll(updatedNodeTemplates);
+
+        AutomationCompositions automationCompositions = updateAutomationComposition(
+                name, instanceName);
+
+        deleteInstanceProperties(name, version);
+
+        return saveInstancePropertiesAndAutomationComposition(serviceTemplate, automationCompositions);
+    }
+
+    /**
      * Deletes Instance Properties.
      *
      * @param name the name of the automation composition to delete
@@ -615,5 +670,65 @@ public class AutomationCompositionInstantiationProvider {
         String jsonString = GSON.toJson(serviceTemplate.getToscaTopologyTemplate().getNodeTemplates());
         Type type = new TypeToken<HashMap<String, ToscaNodeTemplate>>() {}.getType();
         return GSON.fromJson(jsonString, type);
+    }
+
+    /**
+     * Updates Automation composition instance name.
+     *
+     * @param oldInstanceName previous saved instance name
+     * @param newInstanceName new instance name to replace the previous one
+     * @return AutomationCompositions updated
+     * @throws PfModelException exception to compositions is not defined
+     */
+    private AutomationCompositions updateAutomationComposition(
+            String oldInstanceName, String newInstanceName) throws PfModelException {
+
+        List<AutomationComposition> filteredAcmList = automationCompositionProvider.getAutomationCompositions()
+                .stream().filter(acm -> acm.getName().contains(oldInstanceName)).collect(Collectors.toList());
+
+        if (filteredAcmList.isEmpty()) {
+            throw new PfModelException(Status.BAD_REQUEST, "Automation compositions not defined!");
+        }
+
+        AutomationComposition automationComposition = filteredAcmList.get(0);
+
+        automationComposition.getDefinition()
+                .setName(updateInstanceNameDescription(newInstanceName, oldInstanceName,
+                        automationComposition.getDefinition().getName()));
+
+        automationComposition.setName(newInstanceName);
+
+        automationComposition.setDescription(
+                updateInstanceNameDescription(newInstanceName, oldInstanceName,
+                        automationComposition.getDescription()));
+
+        automationComposition.getElements().forEach((uuid, automationCompositionElement) -> {
+            automationCompositionElement.getDefinition()
+                    .setName(updateInstanceNameDescription(newInstanceName, oldInstanceName,
+                            automationCompositionElement.getDefinition().getName()));
+        });
+
+        AutomationCompositions automationCompositions = new AutomationCompositions();
+        automationCompositions.getAutomationCompositionList().add(automationComposition);
+
+        return automationCompositions;
+
+    }
+
+    /**
+     * Updates instance and description.
+     *
+     * @param newInstanceName new instance name to replace the previous one
+     * @param oldInstanceName previous saved instance name
+     * @param value to be updated
+     * @return String updated instance name or description
+     */
+    private String updateInstanceNameDescription(
+            String newInstanceName, String oldInstanceName, String value) {
+        String toBeReplaced = value.substring(value.indexOf(oldInstanceName));
+
+        String replace = value.replace(toBeReplaced, newInstanceName);
+
+        return replace;
     }
 }

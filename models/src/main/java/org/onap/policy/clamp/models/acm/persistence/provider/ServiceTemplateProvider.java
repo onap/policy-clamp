@@ -133,7 +133,6 @@ public class ServiceTemplateProvider {
      * @param fullNodeTypes map of all the node types in the specified template
      * @param common boolean to indicate whether common or instance properties are required
      * @return node types map that only has common properties
-     * @throws PfModelException on errors getting node type with common properties
      */
     private Map<String, ToscaNodeType> getInitialNodeTypesMap(Map<String, ToscaNodeType> fullNodeTypes,
             boolean common) {
@@ -212,6 +211,56 @@ public class ServiceTemplateProvider {
             });
         }
         return filteredNodeTypes;
+    }
+
+    /**
+     * Get the node types derived from those that have been saved by instantiation.
+     *
+     * @param initialNodeTypes map of all the node types in the specified template
+     * @param filteredNodeTypes map of all the node types that have common or instance properties
+     * @param instanceName automation composition name
+     * @return all node types that have common properties including their children
+     */
+    private Map<String, ToscaNodeType> getFinalSavedInstanceNodeTypesMap(
+            Map<String, ToscaNodeType> initialNodeTypes,
+            Map<String, ToscaNodeType> filteredNodeTypes, String instanceName) {
+
+        for (var i = 0; i < initialNodeTypes.size(); i++) {
+            initialNodeTypes.forEach((key, nodeType) -> {
+                var tempToscaNodeType = new ToscaNodeType();
+                tempToscaNodeType.setName(key);
+
+                if (filteredNodeTypes.get(nodeType.getDerivedFrom()) != null) {
+                    tempToscaNodeType.setName(key);
+
+                    var finalProps = new HashMap<String, ToscaProperty>(
+                            filteredNodeTypes.get(nodeType.getDerivedFrom()).getProperties());
+
+                    tempToscaNodeType.setProperties(finalProps);
+                } else {
+                    return;
+                }
+                filteredNodeTypes.putIfAbsent(key, tempToscaNodeType);
+
+            });
+        }
+        return filteredNodeTypes;
+    }
+
+    /**
+     * Get the requested node types by automation composition.
+     *
+     * @param instanceName automation composition name
+     * @param serviceTemplate the ToscaServiceTemplate
+     * @return the node types with common or instance properties
+     */
+    public Map<String, ToscaNodeType> getSavedInstanceInstancePropertiesFromNodeTypes(
+            String instanceName, ToscaServiceTemplate serviceTemplate) {
+        var tempNodeTypesMap =
+                this.getInitialNodeTypesMap(serviceTemplate.getNodeTypes(), false);
+
+        return this.getFinalSavedInstanceNodeTypesMap(serviceTemplate.getNodeTypes(), tempNodeTypesMap, instanceName);
+
     }
 
     /**
