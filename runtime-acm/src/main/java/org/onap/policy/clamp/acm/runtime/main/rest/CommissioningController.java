@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,6 @@ import javax.ws.rs.core.Response.Status;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.runtime.commissioning.CommissioningProvider;
 import org.onap.policy.clamp.acm.runtime.main.web.AbstractRestController;
-import org.onap.policy.clamp.common.acm.exception.AutomationCompositionException;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.CommissioningResponse;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
@@ -305,10 +304,13 @@ public class CommissioningController extends AbstractRestController {
             required = false) String name,
         @ApiParam(value = "Tosca service template version", required = false) @RequestParam(
             value = "version",
-            required = false) String version)
+            required = false) String version,
+        @ApiParam(value = "Automation composition name", required = false) @RequestParam(
+                value = "instanceName",
+                required = false) String instanceName)
         throws PfModelException {
 
-        return ResponseEntity.ok().body(provider.getToscaServiceTemplateReduced(name, version));
+        return ResponseEntity.ok().body(provider.getToscaServiceTemplateReduced(name, version, instanceName));
     }
 
     /**
@@ -376,7 +378,6 @@ public class CommissioningController extends AbstractRestController {
      * @param version the version of the tosca service template to get
      * @return the specified tosca service template or section Json Schema
      * @throws PfModelException on errors getting the Common or Instance Properties
-     * @throws AutomationCompositionException on error getting the Common or Instance Properties
      */
     // @formatter:off
     @GetMapping(value = "/commission/getCommonOrInstanceProperties",
@@ -418,18 +419,23 @@ public class CommissioningController extends AbstractRestController {
     // @formatter:on
     public ResponseEntity<Map<String, ToscaNodeTemplate>> queryToscaServiceCommonOrInstanceProperties(
         @RequestHeader(name = REQUEST_ID_NAME, required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-        @ApiParam(
-            value = "Flag, true for common properties, false for instance",
-            required = false) @RequestParam(value = "common", defaultValue = "false", required = false) boolean common,
         @ApiParam(value = "Tosca service template name", required = false) @RequestParam(
             value = "name",
             required = false) String name,
         @ApiParam(value = "Tosca service template version", required = false) @RequestParam(
             value = "version",
-            required = false) String version)
+            required = false) String version,
+        @ApiParam(value = "Automation composition name", required = false) @RequestParam(
+                value = "instanceName",
+                required = false) String instanceName,
+        @ApiParam(
+                value = "Flag, true for common properties, false for instance",
+                required = false)
+            @RequestParam(value = "common", defaultValue = "false", required = false) boolean common)
         throws PfModelException {
 
-        return ResponseEntity.ok().body(provider.getNodeTemplatesWithCommonOrInstanceProperties(common, name, version));
+        return ResponseEntity.ok().body(provider
+                .getNodeTemplatesWithCommonOrInstanceProperties(name, version, instanceName, common));
     }
 
     /**

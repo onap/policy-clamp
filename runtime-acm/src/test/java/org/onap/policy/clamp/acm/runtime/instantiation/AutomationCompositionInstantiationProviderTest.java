@@ -120,6 +120,11 @@ class AutomationCompositionInstantiationProviderTest {
         automationComposition.setVersion(ID_VERSION);
         when(acProvider.getAutomationCompositions(ID_NAME, ID_VERSION)).thenReturn(List.of(automationComposition));
 
+        var updatedInstancePropertyList = instantiationProvider.createInstanceProperties(serviceTemplate);
+        assertNull(updatedInstancePropertyList.getErrorDetails());
+        var updatedId = new ToscaConceptIdentifier(ID_NAME, ID_VERSION);
+        assertEquals(updatedId, instancePropertyList.getAffectedInstanceProperties().get(0));
+
         var instanceOrderState = instantiationProvider.getInstantiationOrderState(ID_NAME, ID_VERSION);
         assertEquals(AutomationCompositionOrderedState.UNINITIALISED, instanceOrderState.getOrderedState());
         assertEquals(ID_NAME, instanceOrderState.getAutomationCompositionIdentifierList().get(0).getName());

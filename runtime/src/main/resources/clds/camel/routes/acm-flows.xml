@@ -18,9 +18,12 @@
             <setProperty name="version">
                 <simple>${header.version}</simple>
             </setProperty>
+            <setProperty name="instanceName">
+                <simple>${header.instanceName}</simple>
+            </setProperty>
             <log loggingLevel="INFO"
                  message="Endpoint to get Tosca Service Template: {{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/commission/toscaservicetemplate"></log>
-            <toD uri="{{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/commission/toscaservicetemplate?name=${exchangeProperty[name]}&amp;version=${exchangeProperty[version]}&amp;bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.acm.runtime.userName}}&amp;authPassword={{clamp.config.acm.runtime.password}}&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+            <toD uri="{{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/commission/toscaservicetemplate?name=${exchangeProperty[name]}&amp;version=${exchangeProperty[version]}&amp;instanceName=${exchangeProperty[instanceName]}&amp;bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.acm.runtime.userName}}&amp;authPassword={{clamp.config.acm.runtime.password}}&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
             <convertBodyTo type="java.lang.String"/>
             <doFinally>
                 <to uri="direct:reset-raise-http-exception-flag"/>
@@ -158,6 +161,37 @@
                  message="Endpoint to send Tosca Instance Properties: {{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/instanceProperties"></log>
             <toD
                     uri="{{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/instanceProperties?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.acm.runtime.userName}}&amp;authPassword={{clamp.config.acm.runtime.password}}&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+            <convertBodyTo type="java.lang.String"/>
+            <doFinally>
+                <to uri="direct:reset-raise-http-exception-flag"/>
+                <to
+                        uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
+            </doFinally>
+        </doTry>
+    </route>
+    <route id="put-tosca-instance-properties">
+        <from uri="direct:put-tosca-instance-properties"/>
+        <doTry>
+            <log loggingLevel="INFO"
+                 message="Updating the tosca instance properties"/>
+            <to
+                    uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('AutomationComposition', 'Updating the tosca instance properties')"/>
+            <setHeader name="CamelHttpMethod">
+                <constant>PUT</constant>
+            </setHeader>
+            <setHeader name="Content-Type">
+                <constant>application/json</constant>
+            </setHeader>
+            <setProperty name="name">
+                <simple>${header.name}</simple>
+            </setProperty>
+            <setProperty name="version">
+                <simple>${header.version}</simple>
+            </setProperty>
+            <log loggingLevel="INFO"
+                 message="Endpoint to send Tosca Instance Properties: {{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/instanceProperties"></log>
+            <toD
+                    uri="{{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/instanceProperties?name=${exchangeProperty[name]}&amp;version=${exchangeProperty[version]}&amp;bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.acm.runtime.userName}}&amp;authPassword={{clamp.config.acm.runtime.password}}&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
             <convertBodyTo type="java.lang.String"/>
             <doFinally>
                 <to uri="direct:reset-raise-http-exception-flag"/>
@@ -369,13 +403,56 @@
             <setHeader name="Content-Type">
                 <constant>application/json</constant>
             </setHeader>
+            <setProperty name="name">
+                <simple>${header.name}</simple>
+            </setProperty>
+            <setProperty name="version">
+                <simple>${header.version}</simple>
+            </setProperty>
+            <setProperty name="instanceName">
+                <simple>${header.instanceName}</simple>
+            </setProperty>
             <setProperty name="common">
                 <simple>${header.common}</simple>
             </setProperty>
             <log loggingLevel="INFO"
                  message="Endpoint to get Common Or Instance Properties: {{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/commission/getCommonOrInstanceProperties"></log>
             <toD
-                    uri="{{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/commission/getCommonOrInstanceProperties?common=${exchangeProperty[common]}&amp;bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.acm.runtime.userName}}&amp;authPassword={{clamp.config.acm.runtime.password}}&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+                    uri="{{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/commission/getCommonOrInstanceProperties?name=${exchangeProperty[name]}&amp;version=${exchangeProperty[version]}&amp;instanceName=${exchangeProperty[instanceName]}&amp;common=${exchangeProperty[common]}&amp;bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.acm.runtime.userName}}&amp;authPassword={{clamp.config.acm.runtime.password}}&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+            <convertBodyTo type="java.lang.String"/>
+            <doFinally>
+                <to uri="direct:reset-raise-http-exception-flag"/>
+                <to
+                        uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
+            </doFinally>
+        </doTry>
+    </route>
+    <route id="get-saved-instance-name-instance-properties">
+        <from uri="direct:get-saved-instance-name-instance-properties"/>
+        <doTry>
+            <log loggingLevel="INFO"
+                 message="Getting Common Or Instance Properties"/>
+            <to
+                    uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('AutomationComposition', 'Getting Saved Instance Name Instance Properties')"/>
+            <setHeader name="CamelHttpMethod">
+                <constant>GET</constant>
+            </setHeader>
+            <setHeader name="Content-Type">
+                <constant>application/json</constant>
+            </setHeader>
+            <setProperty name="name">
+                <simple>${header.name}</simple>
+            </setProperty>
+            <setProperty name="version">
+                <simple>${header.version}</simple>
+            </setProperty>
+            <setProperty name="instanceName">
+                <simple>${header.instanceName}</simple>
+            </setProperty>
+            <log loggingLevel="INFO"
+                 message="Endpoint to get Common Or Instance Properties: {{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/commission/getSavedInstanceNameInstanceProperties"></log>
+            <toD
+                    uri="{{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/commission/getSavedInstanceNameInstanceProperties?name=${exchangeProperty[name]}&amp;version=${exchangeProperty[version]}&amp;instanceName=${exchangeProperty[instanceName]}&amp;bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.acm.runtime.userName}}&amp;authPassword={{clamp.config.acm.runtime.password}}&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
             <convertBodyTo type="java.lang.String"/>
             <doFinally>
                 <to uri="direct:reset-raise-http-exception-flag"/>

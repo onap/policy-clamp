@@ -5,7 +5,7 @@
 # ================================================================================
 # Copyright (C) 2018 AT&T Intellectual Property. All rights
 #                             reserved.
-# Modifications Copyright (C) 2021 Nordix Foundation.
+# Modifications Copyright (C) 2021-2022 Nordix Foundation.
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -340,6 +340,15 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
          with open(cached_file_content, 'w+') as f:
              f.write(self.data_string)
          return True
+     elif (self.path.startswith("/onap/policy/clamp/acm/v2/instanceProperties")) and http_type == "PUT":
+             print("self.path start with PUT /onap/policy/clamp/acm/v2/instanceProperties, updating body to response ...")
+             if not os.path.exists(cached_file_folder):
+                 os.makedirs(cached_file_folder, 0o777)
+             with open(cached_file_header, 'w+') as f:
+                 f.write("{\"Content-Length\": \"" + str(len(self.data_string)) + "\", \"Content-Type\": \""+str(self.headers['Content-Type'])+"\"}")
+             with open(cached_file_content, 'w+') as f:
+                 f.write(self.data_string)
+             return True
      elif (self.path.startswith("/onap/policy/clamp/acm/v2/instanceProperties")) and http_type == "DELETE":
          print("self.path start with /instanceProperties Deleting instance properties, generating response json...")
          jsonGenerated = "{\"errorDetails\": null,\"affectedControlLoopDefinitions\": [{ \"name\": \"PMSH_Instance1\", \"version\": \"2.3.1\" }]}"
