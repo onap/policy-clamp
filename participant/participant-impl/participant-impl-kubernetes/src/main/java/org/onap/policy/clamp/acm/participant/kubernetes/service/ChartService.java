@@ -93,7 +93,7 @@ public class ChartService {
      * @throws IOException in case of IO errors
      */
     public boolean installChart(ChartInfo chart) throws ServiceException, IOException {
-        boolean whiteListed = false;
+        boolean permittedRepo = false;
         if (chart.getRepository() == null) {
             String repoName = findChartRepo(chart);
             if (repoName == null) {
@@ -106,17 +106,18 @@ public class ChartService {
             }
         } else {
             // Add remote repository if passed via TOSCA
-            // check whether the repo is whitelisted
+            // check whether the repo is permitted
             for (HelmRepository repo : helmRepositoryConfig.getRepos()) {
                 if (repo.getAddress().equals(chart.getRepository().getAddress())
-                        && chart.getRepository().getAddress().contains("https")) {
+                        && helmRepositoryConfig.getProtocols()
+                    .contains(chart.getRepository().getAddress().split(":")[0])) {
                     configureRepository(chart.getRepository());
-                    whiteListed = true;
+                    permittedRepo = true;
                     break;
                 }
             }
-            if (!whiteListed) {
-                logger.error("Repository is not Whitelisted / plain http in not allowed");
+            if (!permittedRepo) {
+                logger.error("Helm Repository/Protocol is not permitted for {}", chart.getRepository().getAddress());
                 return false;
             }
         }

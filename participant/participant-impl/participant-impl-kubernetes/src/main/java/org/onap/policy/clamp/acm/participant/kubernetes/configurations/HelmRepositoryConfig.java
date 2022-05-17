@@ -38,4 +38,6 @@ public class HelmRepositoryConfig {
     private final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private List<HelmRepository> repos = new ArrayList<>();
+
+    private List<String> protocols = new ArrayList<>();
 }
