@@ -58,7 +58,7 @@ logging:
 chart:
   api:
     enabled: false
-
+# Update the config here for permitting repositories and protocols
 helm:
   repos:
     -
@@ -67,3 +67,7 @@ helm:
     -
       repoName: bitnami
       address: https://charts.bitnami.com/bitnami
+
+  protocols:
+    - http
+    - https

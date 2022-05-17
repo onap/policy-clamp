@@ -123,6 +123,7 @@ class ChartServiceTest {
         List<HelmRepository> helmRepositoryList = new ArrayList<>();
         helmRepositoryList.add(HelmRepository.builder().address("https://localhost:8080").build());
         doReturn(helmRepositoryList).when(helmRepositoryConfig).getRepos();
+        doReturn(List.of("http", "https")).when(helmRepositoryConfig).getProtocols();
         assertDoesNotThrow(() -> chartService.installChart(charts.get(0)));
         doThrow(ServiceException.class).when(helmClient).installChart(any());
         assertThatThrownBy(() -> chartService.installChart(charts.get(0))).isInstanceOf(ServiceException.class);
