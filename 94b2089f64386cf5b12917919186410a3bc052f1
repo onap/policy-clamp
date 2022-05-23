@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a38b4c80_517d334b",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/persistence/provider/ServiceTemplateProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-05-23T14:15:18Z",
+      "side": 1,
+      "message": "add 2022 license - general comment, this would apply to most files",
+      "revId": "94b2089f64386cf5b12917919186410a3bc052f1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
