@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ae3c3c4e_f37748e2",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/persistence/provider/AutomationCompositionProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2022-05-24T09:07:05Z",
+      "side": 1,
+      "message": "No other changes in this file?",
+      "range": {
+        "startLine": 3,
+        "startChar": 22,
+        "endLine": 3,
+        "endChar": 26
+      },
+      "revId": "04edc8e98e29c82750a1348837c3470a530ead69",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "97b875f1_f4fded86",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/commissioning/CommissioningProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2022-05-24T09:07:05Z",
+      "side": 1,
+      "message": "Do we require this check, since we are setting the value to null anyway?",
+      "range": {
+        "startLine": 252,
+        "startChar": 25,
+        "endLine": 252,
+        "endChar": 78
+      },
+      "revId": "04edc8e98e29c82750a1348837c3470a530ead69",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "15e2ccce_5c3a9502",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/commissioning/CommissioningProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 315,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2022-05-24T09:07:05Z",
+      "side": 1,
+      "message": "Same comment as previous",
+      "range": {
+        "startLine": 315,
+        "startChar": 25,
+        "endLine": 315,
+        "endChar": 45
+      },
+      "revId": "04edc8e98e29c82750a1348837c3470a530ead69",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
