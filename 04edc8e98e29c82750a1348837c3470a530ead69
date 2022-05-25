@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "af745dc4_437571e7",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/persistence/provider/AutomationCompositionProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2022-05-25T14:33:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ae3c3c4e_f37748e2",
+      "range": {
+        "startLine": 3,
+        "startChar": 22,
+        "endLine": 3,
+        "endChar": 26
+      },
+      "revId": "04edc8e98e29c82750a1348837c3470a530ead69",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "97b875f1_f4fded86",
         "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/commissioning/CommissioningProvider.java",
         "patchSetId": 2
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "67101ad5_04e635ed",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/commissioning/CommissioningProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2022-05-25T14:33:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "97b875f1_f4fded86",
+      "range": {
+        "startLine": 252,
+        "startChar": 25,
+        "endLine": 252,
+        "endChar": 78
+      },
+      "revId": "04edc8e98e29c82750a1348837c3470a530ead69",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "15e2ccce_5c3a9502",
         "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/commissioning/CommissioningProvider.java",
         "patchSetId": 2
@@ -68,6 +116,30 @@
       "revId": "04edc8e98e29c82750a1348837c3470a530ead69",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "36d9ebd9_ef950a26",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/commissioning/CommissioningProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 315,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2022-05-25T14:33:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "15e2ccce_5c3a9502",
+      "range": {
+        "startLine": 315,
+        "startChar": 25,
+        "endLine": 315,
+        "endChar": 45
+      },
+      "revId": "04edc8e98e29c82750a1348837c3470a530ead69",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
