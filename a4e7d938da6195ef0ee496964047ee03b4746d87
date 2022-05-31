@@ -16,6 +16,29 @@
       "revId": "a4e7d938da6195ef0ee496964047ee03b4746d87",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f004ebcd_13974a98",
+        "filename": "packages/policy-clamp-docker/src/main/docker/PolicyParticipantDockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2022-05-31T14:03:52Z",
+      "side": 1,
+      "message": "should be impl-policy.jar",
+      "range": {
+        "startLine": 43,
+        "startChar": 42,
+        "endLine": 43,
+        "endChar": 46
+      },
+      "revId": "a4e7d938da6195ef0ee496964047ee03b4746d87",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
