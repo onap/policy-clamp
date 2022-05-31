@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "c9894491_1e8939c6",
+        "filename": "packages/policy-clamp-docker/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2022-05-31T14:22:47Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "d947e965_33dd8f0d",
+      "revId": "a4e7d938da6195ef0ee496964047ee03b4746d87",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f004ebcd_13974a98",
         "filename": "packages/policy-clamp-docker/src/main/docker/PolicyParticipantDockerfile",
         "patchSetId": 1
@@ -63,6 +81,30 @@
       "revId": "a4e7d938da6195ef0ee496964047ee03b4746d87",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3022a19c_a95491ba",
+        "filename": "packages/policy-clamp-docker/src/main/docker/PolicyParticipantDockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2022-05-31T14:22:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "af474d61_39c8256e",
+      "range": {
+        "startLine": 43,
+        "startChar": 42,
+        "endLine": 43,
+        "endChar": 46
+      },
+      "revId": "a4e7d938da6195ef0ee496964047ee03b4746d87",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
