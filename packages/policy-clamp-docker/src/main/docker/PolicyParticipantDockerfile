@@ -40,7 +40,7 @@ RUN tar xvfz /packages/policy-participant.tar.gz --directory $POLICY_HOME && \
 
 WORKDIR $POLICY_HOME
 COPY policy-participant.sh  bin/.
-COPY /maven/app.jar /app
+COPY /maven/policy-clamp-participant-impl-http.jar /app/app.jar
 
 RUN chown -R policy:policy * && \
     chmod 755 bin/*.sh && \

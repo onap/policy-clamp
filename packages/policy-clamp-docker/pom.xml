@@ -115,7 +115,7 @@
                                                 <includes>
                                                     <include>org.onap.policy.clamp:policy-clamp-runtime-acm</include>
                                                 </includes>
-                                                <outputFileNameMapping>app.jar</outputFileNameMapping>
+                                                <outputFileNameMapping>policy-clamp-runtime-acm.jar</outputFileNameMapping>
                                             </dependencySet>
                                         </dependencySets>
                                     </inline>
@@ -147,7 +147,7 @@
                                                 <includes>
                                                     <include>org.onap.policy.clamp.participant:policy-clamp-participant-impl-policy</include>
                                                 </includes>
-                                                <outputFileNameMapping>app.jar</outputFileNameMapping>
+                                                <outputFileNameMapping>policy-clamp-participant-impl-policy.jar</outputFileNameMapping>
                                             </dependencySet>
                                         </dependencySets>
                                     </inline>
@@ -179,7 +179,7 @@
                                                 <includes>
                                                     <include>org.onap.policy.clamp.participant:policy-clamp-participant-impl-kubernetes</include>
                                                 </includes>
-                                                <outputFileNameMapping>app.jar</outputFileNameMapping>
+                                                <outputFileNameMapping>policy-clamp-participant-impl-kubernetes.jar</outputFileNameMapping>
                                             </dependencySet>
                                         </dependencySets>
                                     </inline>
@@ -211,7 +211,7 @@
                                                 <includes>
                                                     <include>org.onap.policy.clamp.participant:policy-clamp-participant-impl-http</include>
                                                 </includes>
-                                                <outputFileNameMapping>app.jar</outputFileNameMapping>
+                                                <outputFileNameMapping>policy-clamp-participant-impl-http.jar</outputFileNameMapping>
                                             </dependencySet>
                                         </dependencySets>
                                     </inline>
