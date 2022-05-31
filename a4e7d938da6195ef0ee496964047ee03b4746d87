@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d947e965_33dd8f0d",
+        "filename": "packages/policy-clamp-docker/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2022-05-31T10:30:23Z",
+      "side": 1,
+      "message": "The assemblies are changed here because if you are building all 4 images at once, then the last \"app.jar\" that gets created ends up in all images.",
+      "revId": "a4e7d938da6195ef0ee496964047ee03b4746d87",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}

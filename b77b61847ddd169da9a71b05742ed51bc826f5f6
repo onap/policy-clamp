@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "189f6375_a68f56c8",
+        "filename": "packages/policy-clamp-docker/src/main/docker/acm-runtime.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2022-05-31T10:30:23Z",
+      "side": 0,
+      "message": "This line is unnecessary, same comment in all scritps",
+      "revId": "b77b61847ddd169da9a71b05742ed51bc826f5f6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0aa09ef3_effd13f8",
+        "filename": "packages/policy-clamp-docker/src/main/docker/acm-runtime.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2022-05-31T10:30:23Z",
+      "side": 0,
+      "message": "The config file is executed from the $CONFIG_FILE location, that is in ${POLICY_HOME}/etc/AcRuntimeParameters.yaml, there is no reason to copy this file into the config directory.\n\nSame comment in other scripts.",
+      "revId": "b77b61847ddd169da9a71b05742ed51bc826f5f6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a9a7e05d_0da39640",
+        "filename": "packages/policy-clamp-docker/src/main/docker/acm-runtime.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2022-05-31T10:30:23Z",
+      "side": 0,
+      "message": "This Java property turns on HTTPS always, no matter what the config files have defined.",
+      "range": {
+        "startLine": 59,
+        "startChar": 20,
+        "endLine": 59,
+        "endChar": 47
+      },
+      "revId": "b77b61847ddd169da9a71b05742ed51bc826f5f6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
