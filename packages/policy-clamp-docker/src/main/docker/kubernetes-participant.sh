@@ -19,7 +19,6 @@
 # ============LICENSE_END=========================================================
 #
 
-JAVA_HOME=/usr/lib/jvm/java-11-openjdk/
 KEYSTORE="${KEYSTORE:-$POLICY_HOME/etc/ssl/policy-keystore}"
 TRUSTSTORE="${TRUSTSTORE:-$POLICY_HOME/etc/ssl/policy-truststore}"
 KEYSTORE_PASSWD="${KEYSTORE_PASSWD:-Pol1cy_0nap}"
