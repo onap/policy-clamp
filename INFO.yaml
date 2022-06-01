@@ -61,6 +61,11 @@ committers:
       company: 'Bell Canada'
       id: 'a.sreekumar'
       timezone: 'Europe/Ireland'
+    - name: 'Ramesh Murugan Iyer'
+      email: 'ramesh.murugan.iyer@est.tech'
+      company: 'Ericsson'
+      id: 'rameshiyer27'
+      timezone: 'Europe/Ireland'
 tsc:
     approval: 'https://lists.onap.org/pipermail/onap-tsc'
     changes:
@@ -114,3 +119,6 @@ tsc:
         - type: 'Removal'
           name: 'Xue Gao'
           link: https://lists.onap.org/g/onap-tsc/message/8096
+        - type: 'Addition'
+          name: 'Ramesh Murugan Iyer'
+          link: https://lists.onap.org/g/onap-tsc/message/8689
