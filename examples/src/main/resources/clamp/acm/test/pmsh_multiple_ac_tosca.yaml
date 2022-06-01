@@ -17,17 +17,17 @@ node_types:
     properties:
       provider:
         type: string
-        requred: false
+        required: false
   org.onap.policy.clamp.acm.AutomationCompositionElement:
     version: 1.0.1
     derived_from: tosca.nodetypes.Root
     properties:
       provider:
         type: string
-        requred: false
+        required: false
       participantType:
         type: onap.datatypes.ToscaConceptIdentifier
-        requred: true
+        required: true
       startPhase:
         type: integer
         required: false
@@ -45,7 +45,7 @@ node_types:
     properties:
       provider:
         type: string
-        requred: false
+        required: false
       elements:
         type: list
         required: true
@@ -57,21 +57,21 @@ node_types:
     properties:
       dcae_blueprint_id:
         type: onap.datatypes.ToscaConceptIdentifier
-        requred: true
+        required: true
   org.onap.policy.clamp.acm.PolicyTypeAutomationCompositionElement:
     version: 1.0.1
     derived_from: org.onap.policy.clamp.acm.AutomationCompositionElement
     properties:
       policy_type_id:
         type: onap.datatypes.ToscaConceptIdentifier
-        requred: true
+        required: true
   org.onap.policy.clamp.acm.CDSAutomationCompositionElement:
     version: 1.0.1
     derived_from: org.onap.policy.clamp.acm.AutomationCompositionElement
     properties:
       cds_blueprint_id:
         type: onap.datatypes.ToscaConceptIdentifier
-        requred: true
+        required: true
 topology_template:
   node_templates:
     org.onap.dcae.acm.DCAEMicroserviceAutomationCompositionParticipant:

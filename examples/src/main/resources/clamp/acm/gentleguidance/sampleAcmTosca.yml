@@ -34,7 +34,7 @@ data_types:
     properties:
       restRequestId:
         type: onap.datatypes.ToscaConceptIdentifier
-        typeVersion: 1.0.0
+        type_version: 0.0.0
         required: true
         description: The name and version of a REST request to be sent to a REST endpoint
       httpMethod:
@@ -62,14 +62,14 @@ data_types:
     properties:
       configurationEntityId:
         type: onap.datatypes.ToscaConceptIdentifier
-        typeVersion: 1.0.0
+        type_version: 0.0.0
         required: true
         description: The name and version of a Configuration Entity to be handled by the HTTP Automation Composition Element
       restSequence:
         type: list
         entry_schema:
           type: org.onap.datatypes.policy.clamp.acm.httpAutomationCompositionElement.RestRequest
-          typeVersion: 1.0.0
+          type_version: 1.0.0
         description: A sequence of REST commands to send to the REST endpoint
 
   node_types:
@@ -79,7 +79,7 @@ data_types:
       properties:
         provider:
           type: string
-          requred: false
+          required: false
     org.onap.policy.clamp.acm.AutomationCompositionElement:
       version: 1.0.1
       derived_from: tosca.nodetypes.Root
@@ -92,7 +92,7 @@ data_types:
           description: Specifies the organization that provides the automation composition element
         participant_id:
           type: onap.datatypes.ToscaConceptIdentifier
-          requred: true
+          required: true
           metadata:
             common: true
         participantType:
@@ -185,7 +185,7 @@ data_types:
           required: true
           entry_schema:
             type: org.onap.datatypes.policy.clamp.acm.httpAutomationCompositionElement.ConfigurationEntity
-            typeVersion: 1.0.0
+            type_version: 1.0.0
           description: The connfiguration entities the Automation Composition Element is managing and their associated REST requests
 
 topology_template:

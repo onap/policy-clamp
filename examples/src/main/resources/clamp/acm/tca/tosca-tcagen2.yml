@@ -140,25 +140,25 @@ data_types:
       measurementTypes:
         name: measurementTypes
         type: list
-        typeVersion: 0.0.0
+        type_version: 0.0.0
         description: List of measurement types
         required: true
         constraints: [ ]
         entry_schema:
           type: onap.datatypes.monitoring.measurementTypes
-          typeVersion: 0.0.0
+          type_version: 0.0.0
           constraints: [ ]
         metadata: { }
       managedObjectDNsBasic:
         name: managedObjectDNsBasic
         type: list
-        typeVersion: 0.0.0
+        type_version: 0.0.0
         description: List of managed object distinguished names
         required: true
         constraints: [ ]
         entry_schema:
           type: onap.datatypes.monitoring.managedObjectDNsBasics
-          typeVersion: 0.0.0
+          type_version: 0.0.0
           constraints: [ ]
         metadata: { }
     name: onap.datatypes.monitoring.measurementGroup
@@ -171,13 +171,13 @@ data_types:
       measurementGroup:
         name: measurementGroup
         type: map
-        typeVersion: 0.0.0
+        type_version: 0.0.0
         description: Measurement Group
         required: true
         constraints: [ ]
         entry_schema:
           type: onap.datatypes.monitoring.measurementGroup
-          typeVersion: 0.0.0
+          type_version: 0.0.0
           constraints: [ ]
         metadata: { }
     name: onap.datatypes.monitoring.measurementGroups
@@ -190,7 +190,7 @@ data_types:
       measurementType:
         name: measurementType
         type: string
-        typeVersion: 0.0.0
+        type_version: 0.0.0
         description: Measurement type
         required: true
         constraints: [ ]
@@ -205,13 +205,13 @@ data_types:
       measurementType:
         name: measurementType
         type: map
-        typeVersion: 0.0.0
+        type_version: 0.0.0
         description: Measurement type object
         required: true
         constraints: [ ]
         entry_schema:
           type: onap.datatypes.monitoring.measurementType
-          typeVersion: 0.0.0
+          type_version: 0.0.0
           constraints: [ ]
         metadata: { }
     name: onap.datatypes.monitoring.measurementTypes
@@ -224,7 +224,7 @@ data_types:
       DN:
         name: DN
         type: string
-        typeVersion: 0.0.0
+        type_version: 0.0.0
         description: Managed object distinguished name
         required: true
         constraints: [ ]
@@ -239,13 +239,13 @@ data_types:
       managedObjectDNsBasic:
         name: managedObjectDNsBasic
         type: map
-        typeVersion: 0.0.0
+        type_version: 0.0.0
         description: Managed object distinguished name object
         required: true
         constraints: [ ]
         entry_schema:
           type: onap.datatypes.monitoring.managedObjectDNsBasic
-          typeVersion: 0.0.0
+          type_version: 0.0.0
           constraints: [ ]
         metadata: { }
     name: onap.datatypes.monitoring.managedObjectDNsBasics
@@ -258,49 +258,49 @@ data_types:
       modelNames:
         name: modelNames
         type: list
-        typeVersion: 0.0.0
+        type_version: 0.0.0
         description: List of model names
         required: true
         constraints: [ ]
         entry_schema:
           type: string
-          typeVersion: 0.0.0
+          type_version: 0.0.0
           constraints: [ ]
         metadata: { }
       modelInvariantIDs:
         name: modelInvariantIDs
         type: list
-        typeVersion: 0.0.0
+        type_version: 0.0.0
         description: List of model invariant IDs
         required: true
         constraints: [ ]
         entry_schema:
           type: string
-          typeVersion: 0.0.0
+          type_version: 0.0.0
           constraints: [ ]
         metadata: { }
       modelVersionIDs:
         name: modelVersionIDs
         type: list
-        typeVersion: 0.0.0
+        type_version: 0.0.0
         description: List of model version IDs
         required: true
         constraints: [ ]
         entry_schema:
           type: string
-          typeVersion: 0.0.0
+          type_version: 0.0.0
           constraints: [ ]
         metadata: { }
       nfNames:
         name: nfNames
         type: list
-        typeVersion: 0.0.0
+        type_version: 0.0.0
         description: List of network functions
         required: true
         constraints: [ ]
         entry_schema:
           type: string
-          typeVersion: 0.0.0
+          type_version: 0.0.0
           constraints: [ ]
         metadata: { }
     name: onap.datatypes.monitoring.nfFilter
@@ -313,19 +313,19 @@ data_types:
       measurementGroups:
         name: measurementGroups
         type: list
-        typeVersion: 0.0.0
+        type_version: 0.0.0
         description: Measurement Groups
         required: true
         constraints: [ ]
         entry_schema:
           type: onap.datatypes.monitoring.measurementGroups
-          typeVersion: 0.0.0
+          type_version: 0.0.0
           constraints: [ ]
         metadata: { }
       fileBasedGP:
         name: fileBasedGP
         type: integer
-        typeVersion: 0.0.0
+        type_version: 0.0.0
         description: File based granularity period
         required: true
         constraints: [ ]
@@ -333,7 +333,7 @@ data_types:
       fileLocation:
         name: fileLocation
         type: string
-        typeVersion: 0.0.0
+        type_version: 0.0.0
         description: ROP file location
         required: true
         constraints: [ ]
@@ -341,7 +341,7 @@ data_types:
       subscriptionName:
         name: subscriptionName
         type: string
-        typeVersion: 0.0.0
+        type_version: 0.0.0
         description: Name of the subscription
         required: true
         constraints: [ ]
@@ -349,7 +349,7 @@ data_types:
       administrativeState:
         name: administrativeState
         type: string
-        typeVersion: 0.0.0
+        type_version: 0.0.0
         description: State of the subscription
         required: true
         constraints:
@@ -360,13 +360,13 @@ data_types:
       nfFilter:
         name: nfFilter
         type: map
-        typeVersion: 0.0.0
+        type_version: 0.0.0
         description: Network function filter
         required: true
         constraints: [ ]
         entry_schema:
           type: onap.datatypes.monitoring.nfFilter
-          typeVersion: 0.0.0
+          type_version: 0.0.0
           constraints: [ ]
         metadata: { }
     name: onap.datatypes.monitoring.subscription
@@ -379,7 +379,7 @@ data_types:
     properties:
       restRequestId:
         type: onap.datatypes.ToscaConceptIdentifier
-        typeVersion: 1.0.0
+        type_version: 0.0.0
         required: true
         description: The name and version of a REST request to be sent to a REST endpoint
       httpMethod:
@@ -407,14 +407,14 @@ data_types:
     properties:
       configurationEntityId:
         type: onap.datatypes.ToscaConceptIdentifier
-        typeVersion: 1.0.0
+        type_version: 0.0.0
         required: true
         description: The name and version of a Configuration Entity to be handled by the HTTP Automation composition Element
       restSequence:
         type: list
         entry_schema:
           type: org.onap.datatypes.policy.clamp.acm.httpAutomationCompositionElement.RestRequest
-          typeVersion: 1.0.0
+          type_version: 1.0.0
         description: A sequence of REST commands to send to the REST endpoint
 policy_types:
   onap.policies.Monitoring:
@@ -427,7 +427,7 @@ policy_types:
       tca.policy:
         name: tca.policy
         type: onap.datatypes.monitoring.subscription
-        typeVersion: 0.0.0
+        type_version: 0.0.0
         description: TCA Gen2 Policy JSON
         required: false
         constraints: [ ]
@@ -497,7 +497,7 @@ node_types:
     properties:
       provider:
         type: string
-        requred: false
+        required: false
   org.onap.policy.clamp.acm.AutomationCompositionElement:
     version: 1.0.1
     derived_from: tosca.nodetypes.Root
@@ -510,7 +510,7 @@ node_types:
         description: Specifies the organization that provides the Automation composition element
       participant_id:
         type: onap.datatypes.ToscaConceptIdentifier
-        requred: true
+        required: true
         metadata:
           common: true
       participantType:
@@ -606,7 +606,7 @@ node_types:
         required: false
       requirements:
         type: string
-        requred: false
+        required: false
       templates:
         type: list
         required: false
@@ -634,7 +634,7 @@ node_types:
         required: true
         entry_schema:
           type: org.onap.datatypes.policy.clamp.acm.httpAutomationCompositionElement.ConfigurationEntity
-          typeVersion: 1.0.0
+          type_version: 1.0.0
         description: The connfiguration entities the Automation composition Element is managing and their associated REST requests
 
 topology_template:
@@ -737,7 +737,7 @@ topology_template:
     org.onap.domain.sample.GenericK8s_AutomationCompositionDefinition:
       version: 1.2.3
       type: org.onap.policy.clamp.acm.AutomationComposition
-      type_version: 1.0.0
+      type_version: 1.0.1
       description: Automation composition for TCA Gen2 microservice
       properties:
         provider: ONAP

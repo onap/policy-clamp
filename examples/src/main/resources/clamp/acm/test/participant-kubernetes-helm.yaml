@@ -33,17 +33,17 @@ node_types:
     properties:
       provider:
         type: string
-        requred: false
+        required: false
   org.onap.policy.clamp.acm.AutomationCompositionElement:
     version: 1.0.1
     derived_from: tosca.nodetypes.Root
     properties:
       provider:
         type: string
-        requred: false
+        required: false
       participantType:
         type: onap.datatypes.ToscaConceptIdentifier
-        requred: true
+        required: true
       startPhase:
         type: integer
         required: false
@@ -61,7 +61,7 @@ node_types:
     properties:
       provider:
         type: string
-        requred: false
+        required: false
       elements:
         type: list
         required: true
@@ -79,14 +79,14 @@ node_types:
         required: false
       requirements:
         type: string
-        requred: false
+        required: false
       templates:
         type: list
         required: false
         entry_schema:
       values:
         type: string
-        requred: true
+        required: true
 topology_template:
   node_templates:
     org.onap.k8s.acm.K8SAutomationCompositionParticipant:
