@@ -36,7 +36,7 @@ data_types:
     properties:
       restRequestId:
         type: onap.datatypes.ToscaConceptIdentifier
-        typeVersion: 1.0.0
+        type_version: 0.0.0
         required: true
         description: The name and version of a REST request to be sent to a REST endpoint
       httpMethod:
@@ -64,14 +64,14 @@ data_types:
     properties:
       configurationEntityId:
         type: onap.datatypes.ToscaConceptIdentifier
-        typeVersion: 1.0.0
+        type_version: 0.0.0
         required: true
         description: The name and version of a Configuration Entity to be handled by the HTTP Automation Composition Element
       restSequence:
         type: list
         entry_schema:
           type: org.onap.datatypes.policy.clamp.acm.httpAutomationCompositionElement.RestRequest
-          typeVersion: 1.0.0
+          type_version: 1.0.0
         description: A sequence of REST commands to send to the REST endpoint
 policy_types:
   # The following policy types will be created in policy framework by the acm policy participant
@@ -92,7 +92,7 @@ node_types:
     properties:
       provider:
         type: string
-        requred: false
+        required: false
   org.onap.policy.clamp.acm.AutomationCompositionElement:
     version: 1.0.1
     derived_from: tosca.nodetypes.Root
@@ -105,7 +105,7 @@ node_types:
         description: Specifies the organization that provides the automation composition element
       participant_id:
         type: onap.datatypes.ToscaConceptIdentifier
-        requred: true
+        required: true
         metadata:
           common: true
       participantType:
@@ -185,10 +185,10 @@ node_types:
     properties:
       policy_type_id:
         type: onap.datatypes.ToscaConceptIdentifier
-        requred: true
+        required: true
       policy_id:
         type: onap.datatypes.ToscaConceptIdentifier
-        requred: false
+        required: false
   org.onap.policy.clamp.acm.K8SMicroserviceAutomationCompositionElement:
     version: 1.0.1
     derived_from: org.onap.policy.clamp.acm.AutomationCompositionElement
@@ -201,14 +201,14 @@ node_types:
         required: false
       requirements:
         type: string
-        requred: false
+        required: false
       templates:
         type: list
         required: false
         entry_schema:
       values:
         type: string
-        requred: true
+        required: true
   org.onap.policy.clamp.acm.HttpAutomationCompositionElement:
     version: 1.0.1
     derived_from: org.onap.policy.clamp.acm.AutomationCompositionElement
@@ -228,7 +228,7 @@ node_types:
         required: true
         entry_schema:
           type: org.onap.datatypes.policy.clamp.acm.httpAutomationCompositionElement.ConfigurationEntity
-          typeVersion: 1.0.0
+          type_version: 1.0.0
         description: The connfiguration entities the Automation Composition Element is managing and their associated REST requests
 
 topology_template:
@@ -251,7 +251,7 @@ topology_template:
       # The policy Acm element that deploys decision maker policy in policy framework.
       version: 1.2.3
       type: org.onap.policy.clamp.acm.PolicyAutomationCompositionElement
-      type_version: 1.0.0
+      type_version: 1.0.1
       description: Automation composition element for deploying sample decision maker policy
       properties:
         provider: Ericsson
@@ -277,7 +277,7 @@ topology_template:
       # The k8s Acm element that deploys the helm chart of nginx-ingress from nginx repo.
       version: 1.2.3
       type: org.onap.policy.clamp.acm.K8SMicroserviceAutomationCompositionElement
-      type_version: 1.0.0
+      type_version: 1.0.1
       description: Automation composition element for the K8S microservice to deploy nginx app
       properties:
         provider: ONAP
@@ -344,7 +344,7 @@ topology_template:
       # The ACM definition that comprises multiple Acm elements
       version: 1.2.3
       type: org.onap.policy.clamp.acm.AutomationComposition
-      type_version: 1.0.0
+      type_version: 1.0.1
       description: Automation composition with multiple Acm elements
       properties:
         provider: ONAP

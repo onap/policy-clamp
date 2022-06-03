@@ -23,7 +23,7 @@ data_types:
     properties:
       chartId:
         type:  onap.datatypes.ToscaConceptIdentifier
-        typeVersion: 1.0.0
+        type_version: 0.0.0
         required: true
         description: The name and version of the chart
       releaseName:
@@ -51,7 +51,7 @@ node_types:
     properties:
       chart:
         type: org.onap.datatypes.policy.clamp.acm.kubernetesAutomationCompositionElement.Chart
-        typeVersion: 1.0.0
+        type_version: 1.0.0
         required: true
         description: The helm chart for the microservice
       configs:
