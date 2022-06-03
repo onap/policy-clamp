@@ -59,7 +59,7 @@
 
         To start POLICY-CLAMP (Build it before. In order to start frontend, is also required policy/gui repo built):
         - Use docker-compose file in ./extra/docker/clamp/docker-compose.yml
-        - Use the script located in ./extra/bin/start-backend.sh + start-frontend.sh
+        - Use the scripts located in ./extra/bin-for-dev/: start-db.sh + start-backend.sh
         - Use your IDE to use the Jar or start NVM
 
     </description>

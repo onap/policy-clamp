@@ -150,11 +150,7 @@ resource clds/aaf/org.onap.clamp.p12.
 - wget https://nexus.onap.org/content/repositories/releases/org/onap/aaf/authz/aaf-cadi-aaf/2.1.13/aaf-cadi-aaf-2.1.13-full.jar
 - to encrypt or decrypt the store passwords:  java -jar aaf-cadi-aaf-2.1.13-full.jar cadi <digest|undigest> changeit testos.key
 - you can also use the agent.sh script to decrypt the passwords, by running the showpass commands (see wiki below) 
-- Extract private key from P12: 'openssl pkcs12 -in org.onap.clamp.p12 -nocerts -nodes > clamp.key'
-- Extract public certificate from P12: 'openssl pkcs12 -in org.onap.clamp.p12 -clcerts -nokeys > clamp.pem'
-- Extract CA certificate from P12: 'openssl pkcs12 -in org.onap.clamp.p12 -cacerts -nokeys -chain > ca-certs.pem'
 - reference wiki: https://wiki.onap.org/display/DW/AAF+Certificate+Management+for+Dummies
-- you need to place new clamp.key, clamp.pem and ca-certs.pem into src/main/resources/clds/aaf/ssl, this will be used by the FrontEnd
 - you need to replace the password of the generated keystore (clamp uses the p12 keystore), we want to keep the same demo password across release
    to do so, you can use keytool to update the password and set it back to 'China in the Spring'
    keytool -storepasswd -keystore ./org.onap.clamp.p12
