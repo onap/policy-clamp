@@ -141,6 +141,18 @@
                 <docker.skip.tag>false</docker.skip.tag>
                 <docker.skip.push>false</docker.skip.push>
                 <docker.skip>false</docker.skip>
+                <dockerFile>backend/Dockerfile</dockerFile>
+            </properties>
+        </profile>
+        <profile>
+            <id>dockersuse</id>
+            <properties>
+                <skip.staging.artifacts>true</skip.staging.artifacts>
+                <docker.skip.build>false</docker.skip.build>
+                <docker.skip.tag>false</docker.skip.tag>
+                <docker.skip.push>false</docker.skip.push>
+                <docker.skip>false</docker.skip>
+                <dockerFile>backend/suse.Dockerfile</dockerFile>
             </properties>
         </profile>
     </profiles>
@@ -734,7 +746,7 @@
                                 </tags>
                                 <!-- A relative path is looked up in ${project.basedir}/src/main/docker by
                                     default -->
-                                <dockerFile>backend/Dockerfile</dockerFile>
+                                <dockerFile>${dockerFile}</dockerFile>
                                 <assembly>
                                     <descriptor>backend/backend-files.xml</descriptor>
                                     <name>onap-policy-clamp-backend</name>
