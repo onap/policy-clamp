@@ -125,7 +125,7 @@ class InstantiationControllerTest extends CommonRestController {
     }
 
     @Test
-    void testSwagger() throws Exception {
+    void testSwagger() {
         super.testSwagger(INSTANTIATION_ENDPOINT);
     }
 
@@ -138,7 +138,7 @@ class InstantiationControllerTest extends CommonRestController {
     }
 
     @Test
-    void testQuery_Unauthorized() throws Exception {
+    void testQuery_Unauthorized() {
         assertUnauthorizedGet(INSTANTIATION_ENDPOINT);
     }
 
@@ -151,7 +151,7 @@ class InstantiationControllerTest extends CommonRestController {
     }
 
     @Test
-    void testDelete_Unauthorized() throws Exception {
+    void testDelete_Unauthorized() {
         assertUnauthorizedDelete(INSTANTIATION_ENDPOINT);
     }
 
@@ -214,7 +214,7 @@ class InstantiationControllerTest extends CommonRestController {
     }
 
     @Test
-    void testQuery_NoResultWithThisName() throws Exception {
+    void testQuery_NoResultWithThisName() {
         Invocation.Builder invocationBuilder = super.sendRequest(INSTANTIATION_ENDPOINT + "?name=noResultWithThisName");
         Response rawresp = invocationBuilder.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
@@ -273,7 +273,7 @@ class InstantiationControllerTest extends CommonRestController {
     }
 
     @Test
-    void testDelete_NoResultWithThisName() throws Exception {
+    void testDelete_NoResultWithThisName() {
         Invocation.Builder invocationBuilder =
             super.sendRequest(INSTANTIATION_ENDPOINT + "?name=noResultWithThisName&version=1.0.1");
         Response resp = invocationBuilder.delete();
@@ -325,7 +325,7 @@ class InstantiationControllerTest extends CommonRestController {
     }
 
     @Test
-    void testCreateInstanceProperties() throws Exception {
+    void testCreateInstanceProperties() {
         Invocation.Builder invocationBuilder = super.sendRequest(INSTANTIATION_PROPERTIES);
         Response resp = invocationBuilder.post(Entity.json(serviceTemplate));
         assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
@@ -358,7 +358,7 @@ class InstantiationControllerTest extends CommonRestController {
     }
 
     @Test
-    void testDeleteInstancePropertiesBadRequest() throws Exception {
+    void testDeleteInstancePropertiesBadRequest() {
         Invocation.Builder invocationBuilder = super.sendRequest(INSTANTIATION_PROPERTIES);
         Response resp = invocationBuilder.post(Entity.json(serviceTemplate));
         assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
@@ -408,7 +408,7 @@ class InstantiationControllerTest extends CommonRestController {
     }
 
     @Test
-    void testCommand_NotFound1() throws Exception {
+    void testCommand_NotFound1() {
         Invocation.Builder invocationBuilder = super.sendRequest(INSTANTIATION_COMMAND_ENDPOINT);
         Response resp = invocationBuilder.put(Entity.json(new InstantiationCommand()));
         assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), resp.getStatus());

@@ -91,8 +91,8 @@ public class InstantiationUtils {
         AutomationCompositions automationCompositions) {
         assertThat(response).isNotNull();
         assertThat(response.getErrorDetails()).isNull();
-        assertThat(response.getAffectedAutomationCompositions().size())
-            .isEqualTo(automationCompositions.getAutomationCompositionList().size());
+        assertThat(response.getAffectedAutomationCompositions())
+            .hasSameSizeAs(automationCompositions.getAutomationCompositionList());
         for (AutomationComposition automationComposition : automationCompositions.getAutomationCompositionList()) {
             assertTrue(response.getAffectedAutomationCompositions().stream()
                 .anyMatch(ac -> ac.equals(automationComposition.getKey().asIdentifier())));

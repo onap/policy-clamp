@@ -32,8 +32,6 @@ security:
 
 server:
   port: 6969
-  servlet:
-    context-path: /onap/policy/clamp/acm
   error:
     path: /error
 
@@ -62,5 +60,6 @@ runtime:
 management:
   endpoints:
     web:
+      base-path: /
       exposure:
         include: health, metrics, prometheus

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021 Nordix Foundation.
+ * Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * Common superclass to provide REST endpoints for the participant simulator.
  */
 // @formatter:off
-@RequestMapping(value = "/v2", produces = {MediaType.APPLICATION_JSON, AbstractRestController.APPLICATION_YAML})
+@RequestMapping(value = "/onap/policy/clamp/acm/v2",
+    produces = {MediaType.APPLICATION_JSON, AbstractRestController.APPLICATION_YAML})
 @Api(value = "Automation Composition Commissioning API")
 @SwaggerDefinition(
         info = @Info(description =

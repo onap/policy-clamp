@@ -12,10 +12,6 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.HSQLDialect
 
-server:
-  servlet:
-    context-path: /onap/automationcomposition
-
 runtime:
   participantParameters:
     updateParameters:

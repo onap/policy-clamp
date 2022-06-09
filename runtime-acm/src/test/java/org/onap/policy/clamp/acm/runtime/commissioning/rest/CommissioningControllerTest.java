@@ -90,42 +90,42 @@ class CommissioningControllerTest extends CommonRestController {
     }
 
     @Test
-    void testSwagger() throws Exception {
+    void testSwagger() {
         super.testSwagger(COMMISSIONING_ENDPOINT);
     }
 
     @Test
-    void testUnauthorizedCreate() throws Exception {
+    void testUnauthorizedCreate() {
         assertUnauthorizedPost(COMMISSIONING_ENDPOINT, Entity.json(serviceTemplate));
     }
 
     @Test
-    void testUnauthorizedQuery() throws Exception {
+    void testUnauthorizedQuery() {
         assertUnauthorizedGet(COMMISSIONING_ENDPOINT);
     }
 
     @Test
-    void testUnauthorizedQueryElements() throws Exception {
+    void testUnauthorizedQueryElements() {
         assertUnauthorizedGet(COMMISSIONING_ENDPOINT + "/elements");
     }
 
     @Test
-    void testUnauthorizedDelete() throws Exception {
+    void testUnauthorizedDelete() {
         assertUnauthorizedDelete(COMMISSIONING_ENDPOINT);
     }
 
     @Test
-    void testUnauthorizedQueryToscaServiceTemplate() throws Exception {
+    void testUnauthorizedQueryToscaServiceTemplate() {
         assertUnauthorizedGet(COMMISSIONING_ENDPOINT + "/toscaservicetemplate");
     }
 
     @Test
-    void testUnauthorizedQueryToscaServiceTemplateSchema() throws Exception {
+    void testUnauthorizedQueryToscaServiceTemplateSchema() {
         assertUnauthorizedGet(COMMISSIONING_ENDPOINT + "/toscaServiceTemplateSchema");
     }
 
     @Test
-    void testUnauthorizedQueryToscaServiceCommonOrInstanceProperties() throws Exception {
+    void testUnauthorizedQueryToscaServiceCommonOrInstanceProperties() {
         assertUnauthorizedGet(COMMISSIONING_ENDPOINT + "/getCommonOrInstanceProperties");
     }
 
@@ -170,7 +170,7 @@ class CommissioningControllerTest extends CommonRestController {
     }
 
     @Test
-    void testCreateBadRequest() throws Exception {
+    void testCreateBadRequest() {
         Invocation.Builder invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT);
         Response resp = invocationBuilder.post(Entity.json("NotToscaServiceTempalte"));
 
@@ -181,7 +181,7 @@ class CommissioningControllerTest extends CommonRestController {
     }
 
     @Test
-    void testCreate() throws Exception {
+    void testCreate() {
         Invocation.Builder invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT);
         Response resp = invocationBuilder.post(Entity.json(serviceTemplate));
         assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());

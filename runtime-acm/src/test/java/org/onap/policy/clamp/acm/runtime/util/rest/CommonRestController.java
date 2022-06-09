@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,9 +42,8 @@ import org.onap.policy.common.utils.network.NetworkUtil;
 public class CommonRestController {
 
     public static final String SELF = NetworkUtil.getHostname();
-    public static final String CONTEXT_PATH = "onap/automationcomposition";
+    public static final String CONTEXT_PATH = "onap/policy/clamp/acm";
     public static final String ENDPOINT_PREFIX = CONTEXT_PATH + "/v2/";
-    public static final String ACTUATOR_ENDPOINT = CONTEXT_PATH + "/actuator/";
 
     private static String httpPrefix;
 
@@ -52,10 +51,9 @@ public class CommonRestController {
      * Verifies that an endpoint appears within the swagger response.
      *
      * @param endpoint the endpoint of interest
-     * @throws Exception if an error occurs
      */
-    protected void testSwagger(final String endpoint) throws Exception {
-        final Invocation.Builder invocationBuilder = sendRequest("api-docs");
+    protected void testSwagger(final String endpoint) {
+        final Invocation.Builder invocationBuilder = sendActRequest("v2/api-docs");
         final String resp = invocationBuilder.get(String.class);
 
         assertThat(resp).contains(endpoint);
@@ -66,9 +64,8 @@ public class CommonRestController {
      *
      * @param endpoint the target endpoint
      * @return a request builder
-     * @throws Exception if an error occurs
      */
-    protected Invocation.Builder sendRequest(final String endpoint) throws Exception {
+    protected Invocation.Builder sendRequest(final String endpoint) {
         return sendFqeRequest(httpPrefix + ENDPOINT_PREFIX + endpoint, true);
     }
 
@@ -77,10 +74,9 @@ public class CommonRestController {
      *
      * @param endpoint the target endpoint
      * @return a request builder
-     * @throws Exception if an error occurs
      */
-    protected Invocation.Builder sendActRequest(final String endpoint) throws Exception {
-        return sendFqeRequest(httpPrefix + ACTUATOR_ENDPOINT + endpoint, true);
+    protected Invocation.Builder sendActRequest(final String endpoint) {
+        return sendFqeRequest(httpPrefix + endpoint, true);
     }
 
     /**
@@ -88,9 +84,8 @@ public class CommonRestController {
      *
      * @param endpoint the target endpoint
      * @return a request builder
-     * @throws Exception if an error occurs
      */
-    protected Invocation.Builder sendNoAuthRequest(final String endpoint) throws Exception {
+    protected Invocation.Builder sendNoAuthRequest(final String endpoint) {
         return sendFqeRequest(httpPrefix + ENDPOINT_PREFIX + endpoint, false);
     }
 
@@ -99,10 +94,9 @@ public class CommonRestController {
      *
      * @param endpoint the target endpoint
      * @return a request builder
-     * @throws Exception if an error occurs
      */
-    protected Invocation.Builder sendNoAuthActRequest(final String endpoint) throws Exception {
-        return sendFqeRequest(httpPrefix + ACTUATOR_ENDPOINT + endpoint, false);
+    protected Invocation.Builder sendNoAuthActRequest(final String endpoint) {
+        return sendFqeRequest(httpPrefix + endpoint, false);
     }
 
     /**
@@ -111,10 +105,8 @@ public class CommonRestController {
      * @param fullyQualifiedEndpoint the fully qualified target endpoint
      * @param includeAuth if authorization header should be included
      * @return a request builder
-     * @throws Exception if an error occurs
      */
-    protected Invocation.Builder sendFqeRequest(final String fullyQualifiedEndpoint, boolean includeAuth)
-            throws Exception {
+    protected Invocation.Builder sendFqeRequest(final String fullyQualifiedEndpoint, boolean includeAuth) {
         final Client client = ClientBuilder.newBuilder().build();
 
         client.property(ClientProperties.METAINF_SERVICES_LOOKUP_DISABLE, "true");
@@ -134,9 +126,8 @@ public class CommonRestController {
      *
      * @param endPoint the endpoint
      * @param entity the entity ofthe body
-     * @throws Exception if an error occurs
      */
-    protected void assertUnauthorizedPost(final String endPoint, final Entity<?> entity) throws Exception {
+    protected void assertUnauthorizedPost(final String endPoint, final Entity<?> entity) {
         Response rawresp = sendNoAuthRequest(endPoint).post(entity);
         assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), rawresp.getStatus());
     }
@@ -146,9 +137,8 @@ public class CommonRestController {
      *
      * @param endPoint the endpoint
      * @param entity the entity ofthe body
-     * @throws Exception if an error occurs
      */
-    protected void assertUnauthorizedPut(final String endPoint, final Entity<?> entity) throws Exception {
+    protected void assertUnauthorizedPut(final String endPoint, final Entity<?> entity) {
         Response rawresp = sendNoAuthRequest(endPoint).put(entity);
         assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), rawresp.getStatus());
     }
@@ -157,9 +147,8 @@ public class CommonRestController {
      * Assert that GET call is Unauthorized.
      *
      * @param endPoint the endpoint
-     * @throws Exception if an error occurs
      */
-    protected void assertUnauthorizedGet(final String endPoint) throws Exception {
+    protected void assertUnauthorizedGet(final String endPoint) {
         Response rawresp = sendNoAuthRequest(endPoint).buildGet().invoke();
         assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), rawresp.getStatus());
     }
@@ -168,9 +157,8 @@ public class CommonRestController {
      * Assert that GET call to actuator endpoint is Unauthorized.
      *
      * @param endPoint the endpoint
-     * @throws Exception if an error occurs
      */
-    protected void assertUnauthorizedActGet(final String endPoint) throws Exception {
+    protected void assertUnauthorizedActGet(final String endPoint) {
         Response rawresp = sendNoAuthActRequest(endPoint).buildGet().invoke();
         assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), rawresp.getStatus());
     }
@@ -179,9 +167,8 @@ public class CommonRestController {
      * Assert that DELETE call is Unauthorized.
      *
      * @param endPoint the endpoint
-     * @throws Exception if an error occurs
      */
-    protected void assertUnauthorizedDelete(final String endPoint) throws Exception {
+    protected void assertUnauthorizedDelete(final String endPoint) {
         Response rawresp = sendNoAuthRequest(endPoint).delete();
         assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), rawresp.getStatus());
     }

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,24 +20,21 @@
 
 package org.onap.policy.clamp.acm.runtime.config;
 
-import java.util.List;
-import org.onap.policy.clamp.common.acm.rest.CoderHttpMesageConverter;
+import io.micrometer.core.instrument.MeterRegistry;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class ConverterConfiguration implements WebMvcConfigurer {
+public class MetricsConfiguration {
 
-    @Override
-    public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
-        converters.add(new CoderHttpMesageConverter<>("yaml"));
-        converters.add(new CoderHttpMesageConverter<>("json"));
-
-        StringHttpMessageConverter converter = new StringHttpMessageConverter();
-        converter.setSupportedMediaTypes(List.of(MediaType.TEXT_PLAIN));
-        converters.add(converter);
+    /**
+     * Load up the metrics registry.
+     */
+    @Bean
+    InitializingBean forcePrometheusPostProcessor(BeanPostProcessor meterRegistryPostProcessor,
+                                                  MeterRegistry registry) {
+        return () -> meterRegistryPostProcessor.postProcessAfterInitialization(registry, "");
     }
 }

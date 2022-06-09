@@ -100,27 +100,27 @@ class MonitoringQueryControllerTest extends CommonRestController {
     }
 
     @Test
-    void testQuery_Unauthorized_for_AcElementStats() throws Exception {
+    void testQuery_Unauthorized_for_AcElementStats() {
         assertUnauthorizedGet(AC_ELEMENT_STATS_ENDPOINT);
     }
 
     @Test
-    void testQuery_Unauthorized_for_AcParticipantStats() throws Exception {
+    void testQuery_Unauthorized_for_AcParticipantStats() {
         assertUnauthorizedGet(PARTICIPANT_STATS_ENDPOINT);
     }
 
     @Test
-    void testQuery_Unauthorized_for_ParticipantStatsPerAc() throws Exception {
+    void testQuery_Unauthorized_for_ParticipantStatsPerAc() {
         assertUnauthorizedGet(PARTICIPANT_STATS_PER_AC_ENDPOINT);
     }
 
     @Test
-    void testQuery_Unauthorized_for_AcElementStatsPerAc() throws Exception {
+    void testQuery_Unauthorized_for_AcElementStatsPerAc() {
         assertUnauthorizedGet(AC_ELEMENT_STATS_PER_AC_ENDPOINT);
     }
 
     @Test
-    void testSwagger_AcStats() throws Exception {
+    void testSwagger_AcStats() {
         super.testSwagger(AC_ELEMENT_STATS_ENDPOINT);
         super.testSwagger(PARTICIPANT_STATS_ENDPOINT);
         super.testSwagger(AC_ELEMENT_STATS_PER_AC_ENDPOINT);
@@ -128,7 +128,7 @@ class MonitoringQueryControllerTest extends CommonRestController {
     }
 
     @Test
-    void testAcElementStatisticsEndpoint() throws Exception {
+    void testAcElementStatisticsEndpoint() {
         // Filter statistics only based on participant Id and UUID
         Invocation.Builder invokeRequest1 = super.sendRequest(AC_ELEMENT_STATS_ENDPOINT + "?name="
                 + acElementStatisticsList.getAcElementStatistics().get(0).getParticipantId().getName() + "&version="
@@ -164,14 +164,14 @@ class MonitoringQueryControllerTest extends CommonRestController {
     }
 
     @Test
-    void testAcElementStats_BadRequest() throws Exception {
+    void testAcElementStats_BadRequest() {
         Invocation.Builder invokeRequest1 = super.sendRequest(AC_ELEMENT_STATS_ENDPOINT + "?version=1.0.0");
         Response response1 = invokeRequest1.buildGet().invoke();
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), response1.getStatus());
     }
 
     @Test
-    void testParticipantStatisticsEndpoint() throws Exception {
+    void testParticipantStatisticsEndpoint() {
 
         // Filter statistics only based on participant Id
         Invocation.Builder invokeRequest1 = super.sendRequest(PARTICIPANT_STATS_ENDPOINT + "?name="
@@ -200,14 +200,14 @@ class MonitoringQueryControllerTest extends CommonRestController {
     }
 
     @Test
-    void testParticipantStats_BadRequest() throws Exception {
+    void testParticipantStats_BadRequest() {
         Invocation.Builder invokeRequest1 = super.sendRequest(PARTICIPANT_STATS_ENDPOINT + "?version=0.0");
         Response response1 = invokeRequest1.buildGet().invoke();
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), response1.getStatus());
     }
 
     @Test
-    void testParticipantStatsPerAcEndpoint() throws Exception {
+    void testParticipantStatsPerAcEndpoint() {
         Invocation.Builder invokeRequest1 =
                 super.sendRequest(PARTICIPANT_STATS_PER_AC_ENDPOINT + "?name=dummyName&version=1.001");
         Response response1 = invokeRequest1.buildGet().invoke();
@@ -217,14 +217,14 @@ class MonitoringQueryControllerTest extends CommonRestController {
     }
 
     @Test
-    void testParticipantStatsPerAc_BadRequest() throws Exception {
+    void testParticipantStatsPerAc_BadRequest() {
         Invocation.Builder invokeRequest1 = super.sendRequest(PARTICIPANT_STATS_PER_AC_ENDPOINT);
         Response response1 = invokeRequest1.buildGet().invoke();
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), response1.getStatus());
     }
 
     @Test
-    void testAcElementStatisticsPerAcEndpoint() throws Exception {
+    void testAcElementStatisticsPerAcEndpoint() {
         Invocation.Builder invokeRequest1 =
                 super.sendRequest(AC_ELEMENT_STATS_PER_AC_ENDPOINT + "?name=dummyName&version=1.001");
         Response response1 = invokeRequest1.buildGet().invoke();
@@ -234,7 +234,7 @@ class MonitoringQueryControllerTest extends CommonRestController {
     }
 
     @Test
-    void testAcElementStatsPerAc_BadRequest() throws Exception {
+    void testAcElementStatsPerAc_BadRequest() {
         Invocation.Builder invokeRequest1 = super.sendRequest(AC_ELEMENT_STATS_PER_AC_ENDPOINT);
         Response response1 = invokeRequest1.buildGet().invoke();
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), response1.getStatus());

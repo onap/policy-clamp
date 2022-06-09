@@ -54,36 +54,36 @@ class ActuatorControllerTest extends CommonRestController {
     }
 
     @Test
-    void testGetHealth_Unauthorized() throws Exception {
+    void testGetHealth_Unauthorized() {
         assertUnauthorizedActGet(HEALTH_ENDPOINT);
     }
 
     @Test
-    void testGetMetrics_Unauthorized() throws Exception {
+    void testGetMetrics_Unauthorized() {
         assertUnauthorizedActGet(METRICS_ENDPOINT);
     }
 
     @Test
-    void testGetPrometheus_Unauthorized() throws Exception {
+    void testGetPrometheus_Unauthorized() {
         assertUnauthorizedActGet(PROMETHEUS_ENDPOINT);
     }
 
     @Test
-    void testGetHealth() throws Exception {
+    void testGetHealth() {
         Invocation.Builder invocationBuilder = super.sendActRequest(HEALTH_ENDPOINT);
         Response rawresp = invocationBuilder.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
     }
 
     @Test
-    void testGetMetrics() throws Exception {
+    void testGetMetrics() {
         Invocation.Builder invocationBuilder = super.sendActRequest(METRICS_ENDPOINT);
         Response rawresp = invocationBuilder.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
     }
 
     @Test
-    void testGePrometheus() throws Exception {
+    void testGetPrometheus() {
         Invocation.Builder invocationBuilder = super.sendActRequest(PROMETHEUS_ENDPOINT);
         Response rawresp = invocationBuilder.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
