@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 #
 # ============LICENSE_START=======================================================
-#  Copyright (C) 2021 Nordix Foundation.
+#  Copyright (C) 2021-2022 Nordix Foundation.
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -50,6 +50,7 @@ if [ -f "${POLICY_HOME}/etc/mounted/logback.xml" ]; then
 fi
 
 $JAVA_HOME/bin/java \
+    -Dlogging.config="${POLICY_HOME}/etc/logback.xml" \
     -Dserver.ssl.keyStore="${KEYSTORE}" \
     -Dserver.ssl.keyStorePassword="${KEYSTORE_PASSWD}" \
     -Djavax.net.ssl.trustStore="${TRUSTSTORE}" \
