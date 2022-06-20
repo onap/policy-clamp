@@ -26,9 +26,10 @@ data_types:
       version:
         type: string
         required: true
-  onap.datatype.acm.Target:
+  onap.datatype.controlloop.Target:
     derived_from: tosca.datatypes.Root
-    description: Definition for a entity in A&AI to perform an Automation Composition  operation on
+    description: Definition for a entity in A&AI to perform a control loop operation
+      on
     properties:
       targetType:
         type: string
@@ -50,7 +51,7 @@ data_types:
           clamp_possible_values: ClampExecution:CSAR_RESOURCES
         entry_schema:
           type: string
-  onap.datatype.acm.Actor:
+  onap.datatype.controlloop.Actor:
     derived_from: tosca.datatypes.Root
     description: An actor/operation/target definition
     properties:
@@ -67,18 +68,19 @@ data_types:
           clamp_possible_values: Dictionary:DefaultOperations,ClampExecution:CDS/operation
         required: true
       target:
-        type: onap.datatype.acm.Target
+        type: onap.datatype.controlloop.Target
         description: The resource the operation should be performed on.
         required: true
       payload:
         type: map
-        description: Name/value pairs of payload information passed by Policy to the actor
+        description: Name/value pairs of payload information passed by Policy to the
+          actor
         required: false
         metadata:
           clamp_possible_values: ClampExecution:CDS/payload
         entry_schema:
           type: string
-  onap.datatype.acm.Operation:
+  onap.datatype.controlloop.Operation:
     derived_from: tosca.datatypes.Root
     description: An operation supported by an actor
     properties:
@@ -91,7 +93,7 @@ data_types:
         description: A user-friendly description of the intent for the operation
         required: false
       operation:
-        type: onap.datatype.acm.Actor
+        type: onap.datatype.controlloop.Actor
         description: The definition of the operation to be performed.
         required: true
       timeout:
@@ -100,12 +102,14 @@ data_types:
         required: true
       retries:
         type: integer
-        description: The number of retries the actor should attempt to perform the operation.
+        description: The number of retries the actor should attempt to perform the
+          operation.
         required: true
         default: 0
       success:
         type: string
-        description: Points to the operation to invoke on success. A value of "final_success" indicates and end to the operation.
+        description: Points to the operation to invoke on success. A value of "final_success"
+          indicates and end to the operation.
         required: false
         default: final_success
       failure:
@@ -115,277 +119,46 @@ data_types:
         default: final_failure
       failure_timeout:
         type: string
-        description: Points to the operation to invoke when the time out for the operation occurs.
+        description: Points to the operation to invoke when the time out for the operation
+          occurs.
         required: false
         default: final_failure_timeout
       failure_retries:
         type: string
-        description: Points to the operation to invoke when the current operation has exceeded its max retries.
+        description: Points to the operation to invoke when the current operation
+          has exceeded its max retries.
         required: false
         default: final_failure_retries
       failure_exception:
         type: string
-        description: Points to the operation to invoke when the current operation causes an exception.
+        description: Points to the operation to invoke when the current operation
+          causes an exception.
         required: false
         default: final_failure_exception
       failure_guard:
         type: string
-        description: Points to the operation to invoke when the current operation is blocked due to guard policy enforcement.
+        description: Points to the operation to invoke when the current operation
+          is blocked due to guard policy enforcement.
         required: false
         default: final_failure_guard
-  onap.datatypes.monitoring.managedObjectDNsBasic:
-    constraints: [ ]
-    properties:
-      DN:
-        name: DN
-        type: string
-        type_version: 0.0.0
-        description: Managed object distinguished name
-        required: true
-        constraints: [ ]
-        metadata: { }
-    name: onap.datatypes.monitoring.managedObjectDNsBasic
-    version: 0.0.0
-    derived_from: tosca.datatypes.Root
-    metadata: { }
-  onap.datatypes.monitoring.managedObjectDNsBasics:
-    constraints: [ ]
-    properties:
-      managedObjectDNsBasic:
-        name: managedObjectDNsBasic
-        type: map
-        type_version: 0.0.0
-        description: Managed object distinguished name object
-        required: true
-        constraints: [ ]
-        entry_schema:
-          type: onap.datatypes.monitoring.managedObjectDNsBasic
-          type_version: 0.0.0
-          constraints: [ ]
-        metadata: { }
-    name: onap.datatypes.monitoring.managedObjectDNsBasics
-    version: 0.0.0
-    derived_from: tosca.datatypes.Root
-    metadata: { }
-  onap.datatypes.monitoring.measurementGroup:
-    constraints: [ ]
-    properties:
-      measurementTypes:
-        name: measurementTypes
-        type: list
-        type_version: 0.0.0
-        description: List of measurement types
-        required: true
-        constraints: [ ]
-        entry_schema:
-          type: onap.datatypes.monitoring.measurementTypes
-          type_version: 0.0.0
-          constraints: [ ]
-        metadata: { }
-      managedObjectDNsBasic:
-        name: managedObjectDNsBasic
-        type: list
-        type_version: 0.0.0
-        description: List of managed object distinguished names
-        required: true
-        constraints: [ ]
-        entry_schema:
-          type: onap.datatypes.monitoring.managedObjectDNsBasics
-          type_version: 0.0.0
-          constraints: [ ]
-        metadata: { }
-    name: onap.datatypes.monitoring.measurementGroup
-    version: 0.0.0
-    derived_from: tosca.datatypes.Root
-    metadata: { }
-  onap.datatypes.monitoring.measurementGroups:
-    constraints: [ ]
-    properties:
-      measurementGroup:
-        name: measurementGroup
-        type: map
-        type_version: 0.0.0
-        description: Measurement Group
-        required: true
-        constraints: [ ]
-        entry_schema:
-          type: onap.datatypes.monitoring.measurementGroup
-          type_version: 0.0.0
-          constraints: [ ]
-        metadata: { }
-    name: onap.datatypes.monitoring.measurementGroups
-    version: 0.0.0
-    derived_from: tosca.datatypes.Root
-    metadata: { }
-  onap.datatypes.monitoring.measurementType:
-    constraints: [ ]
-    properties:
-      measurementType:
-        name: measurementType
-        type: string
-        type_version: 0.0.0
-        description: Measurement type
-        required: true
-        constraints: [ ]
-        metadata: { }
-    name: onap.datatypes.monitoring.measurementType
-    version: 0.0.0
-    derived_from: tosca.datatypes.Root
-    metadata: { }
-  onap.datatypes.monitoring.measurementTypes:
-    constraints: [ ]
-    properties:
-      measurementType:
-        name: measurementType
-        type: map
-        type_version: 0.0.0
-        description: Measurement type object
-        required: true
-        constraints: [ ]
-        entry_schema:
-          type: onap.datatypes.monitoring.measurementType
-          type_version: 0.0.0
-          constraints: [ ]
-        metadata: { }
-    name: onap.datatypes.monitoring.measurementTypes
-    version: 0.0.0
-    derived_from: tosca.datatypes.Root
-    metadata: { }
-  onap.datatypes.monitoring.nfFilter:
-    constraints: [ ]
-    properties:
-      modelNames:
-        name: modelNames
-        type: list
-        type_version: 0.0.0
-        description: List of model names
-        required: true
-        constraints: [ ]
-        entry_schema:
-          type: string
-          type_version: 0.0.0
-          constraints: [ ]
-        metadata: { }
-      modelInvariantIDs:
-        name: modelInvariantIDs
-        type: list
-        type_version: 0.0.0
-        description: List of model invariant IDs
-        required: true
-        constraints: [ ]
-        entry_schema:
-          type: string
-          type_version: 0.0.0
-          constraints: [ ]
-        metadata: { }
-      modelVersionIDs:
-        name: modelVersionIDs
-        type: list
-        type_version: 0.0.0
-        description: List of model version IDs
-        required: true
-        constraints: [ ]
-        entry_schema:
-          type: string
-          type_version: 0.0.0
-          constraints: [ ]
-        metadata: { }
-      nfNames:
-        name: nfNames
-        type: list
-        type_version: 0.0.0
-        description: List of network functions
-        required: true
-        constraints: [ ]
-        entry_schema:
-          type: string
-          type_version: 0.0.0
-          constraints: [ ]
-        metadata: { }
-    name: onap.datatypes.monitoring.nfFilter
-    version: 0.0.0
-    derived_from: tosca.datatypes.Root
-    metadata: { }
-  onap.datatypes.monitoring.subscription:
-    constraints: [ ]
-    properties:
-      measurementGroups:
-        name: measurementGroups
-        type: list
-        type_version: 0.0.0
-        description: Measurement Groups
-        required: true
-        constraints: [ ]
-        entry_schema:
-          type: onap.datatypes.monitoring.measurementGroups
-          type_version: 0.0.0
-          constraints: [ ]
-        metadata: { }
-      fileBasedGP:
-        name: fileBasedGP
-        type: integer
-        type_version: 0.0.0
-        description: File based granularity period
-        required: true
-        constraints: [ ]
-        metadata: { }
-      fileLocation:
-        name: fileLocation
-        type: string
-        type_version: 0.0.0
-        description: ROP file location
-        required: true
-        constraints: [ ]
-        metadata: { }
-      subscriptionName:
-        name: subscriptionName
-        type: string
-        type_version: 0.0.0
-        description: Name of the subscription
-        required: true
-        constraints: [ ]
-        metadata: { }
-      administrativeState:
-        name: administrativeState
-        type: string
-        type_version: 0.0.0
-        description: State of the subscription
-        required: true
-        constraints:
-          - valid_values:
-              - LOCKED
-              - UNLOCKED
-        metadata: { }
-      nfFilter:
-        name: nfFilter
-        type: map
-        type_version: 0.0.0
-        description: Network function filter
-        required: true
-        constraints: [ ]
-        entry_schema:
-          type: onap.datatypes.monitoring.nfFilter
-          type_version: 0.0.0
-          constraints: [ ]
-        metadata: { }
-    name: onap.datatypes.monitoring.subscription
-    version: 0.0.0
-    derived_from: tosca.datatypes.Root
-    metadata: { }
-  org.onap.datatypes.policy.clamp.acm.httpAutomationCompositionElement.RestRequest:
+  org.onap.datatypes.policy.clamp.acm.httpControlLoopElement.RestRequest:
     version: 1.0.0
     derived_from: tosca.datatypes.Root
     properties:
       restRequestId:
         type: onap.datatypes.ToscaConceptIdentifier
-        type_version: 0.0.0
+        typeVersion: 1.0.0
         required: true
         description: The name and version of a REST request to be sent to a REST endpoint
       httpMethod:
         type: string
         required: true
         constraints:
-          - valid_values: [ POST, PUT, GET, DELETE ]
+          - valid_values:
+              - POST
+              - PUT
+              - GET
+              - DELETE
         description: The REST method to use
       path:
         type: string
@@ -398,22 +171,23 @@ data_types:
       expectedResponse:
         type: integer
         required: true
-        constraints: [ ]
+        constraints: []
         description: THe expected HTTP status code for the REST request
-  org.onap.datatypes.policy.clamp.acm.httpAutomationCompositionElement.ConfigurationEntity:
+  org.onap.datatypes.policy.clamp.acm.httpControlLoopElement.ConfigurationEntity:
     version: 1.0.0
     derived_from: tosca.datatypes.Root
     properties:
       configurationEntityId:
         type: onap.datatypes.ToscaConceptIdentifier
-        type_version: 0.0.0
+        typeVersion: 1.0.0
         required: true
-        description: The name and version of a Configuration Entity to be handled by the HTTP Automation Composition Element
+        description: The name and version of a Configuration Entity to be handled
+          by the HTTP Automation Composition Element
       restSequence:
         type: list
         entry_schema:
-          type: org.onap.datatypes.policy.clamp.acm.httpAutomationCompositionElement.RestRequest
-          type_version: 1.0.0
+          type: org.onap.datatypes.policy.clamp.acm.httpControlLoopElement.RestRequest
+          typeVersion: 1.0.0
         description: A sequence of REST commands to send to the REST endpoint
 policy_types:
   onap.policies.Monitoring:
@@ -421,36 +195,22 @@ policy_types:
     description: a base policy type for all policies that govern monitoring provisioning
     version: 1.0.0
     name: onap.policies.Monitoring
-  onap.policies.Sirisha:
+  onap.policies.customPolicyType:
     derived_from: tosca.policies.Root
     description: a base policy type for all policies that govern monitoring provisioning
     version: 1.0.0
-    name: onap.policies.Sirisha
-  onap.policies.monitoring.dcae-pm-subscription-handler:
-    properties:
-      pmsh_policy:
-        name: pmsh_policy
-        type: onap.datatypes.monitoring.subscription
-        type_version: 0.0.0
-        description: PMSH Policy JSON
-        required: false
-        constraints: [ ]
-        metadata: { }
-    name: onap.policies.monitoring.dcae-pm-subscription-handler
-    version: 1.0.0
-    derived_from: onap.policies.Monitoring
-    metadata: { }
-  onap.policies.acm.operational.Common:
+    name: onap.policies.customPolicyType
+  onap.policies.controlloop.operational.Common:
     derived_from: tosca.policies.Root
     version: 1.0.0
-    name: onap.policies.acm.operational.Common
+    name: onap.policies.controlloop.operational.Common
     description: |
-      Operational Policy for Automation Composition execution. Originated in Frankfurt to support TOSCA Compliant
+      Operational Policy for Control Loop execution. Originated in Frankfurt to support TOSCA Compliant
       Policy Types. This does NOT support the legacy Policy YAML policy type.
     properties:
       id:
         type: string
-        description: The unique Automation Composition id.
+        description: The unique control loop id.
         required: true
       timeout:
         type: integer
@@ -460,29 +220,32 @@ policy_types:
         required: true
       abatement:
         type: boolean
-        description: Whether an abatement event message will be expected for the Automation Composition from DCAE.
+        description: Whether an abatement event message will be expected for the control
+          loop from DCAE.
         required: true
         default: false
       trigger:
         type: string
-        description: Initial operation to execute upon receiving an Onset event message for the Automation Composition.
+        description: Initial operation to execute upon receiving an Onset event message
+          for the Control Loop.
         required: true
       operations:
         type: list
-        description: List of operations to be performed when Automation Composition is triggered.
+        description: List of operations to be performed when Control Loop is triggered.
         required: true
         entry_schema:
-          type: onap.datatype.acm.Operation
-  onap.policies.acm.operational.common.Apex:
-    derived_from: onap.policies.acm.operational.Common
+          type: onap.datatype.controlloop.Operation
+  onap.policies.controlloop.operational.common.Apex:
+    derived_from: onap.policies.controlloop.operational.Common
     type_version: 1.0.0
     version: 1.0.0
-    name: onap.policies.acm.operational.common.Apex
+    name: onap.policies.controlloop.operational.common.Apex
     description: Operational policies for Apex PDP
     properties:
       engineServiceParameters:
         type: string
-        description: The engine parameters like name, instanceCount, policy implementation, parameters etc.
+        description: The engine parameters like name, instanceCount, policy implementation,
+          parameters etc.
         required: true
       eventInputParameters:
         type: string
@@ -496,6 +259,7 @@ policy_types:
         type: string
         description: Name/value pairs of properties to be set for APEX if needed.
         required: false
+
 node_types:
   org.onap.policy.clamp.acm.Participant:
     version: 1.0.1
@@ -503,7 +267,7 @@ node_types:
     properties:
       provider:
         type: string
-        required: false
+        requred: false
   org.onap.policy.clamp.acm.AutomationCompositionElement:
     version: 1.0.1
     derived_from: tosca.nodetypes.Root
@@ -516,7 +280,7 @@ node_types:
         description: Specifies the organization that provides the automation composition element
       participant_id:
         type: onap.datatypes.ToscaConceptIdentifier
-        required: true
+        requred: true
         metadata:
           common: true
       participantType:
@@ -596,17 +360,17 @@ node_types:
     properties:
       policy_type_id:
         type: onap.datatypes.ToscaConceptIdentifier
-        required: true
+        requred: true
       policy_id:
         type: onap.datatypes.ToscaConceptIdentifier
-        required: false
+        requred: false
   org.onap.policy.clamp.acm.CDSAutomationCompositionElement:
     version: 1.0.1
     derived_from: org.onap.policy.clamp.acm.AutomationCompositionElement
     properties:
       cds_blueprint_id:
         type: onap.datatypes.ToscaConceptIdentifier
-        required: true
+        requred: true
   org.onap.policy.clamp.acm.K8SMicroserviceAutomationCompositionElement:
     version: 1.0.1
     derived_from: org.onap.policy.clamp.acm.AutomationCompositionElement
@@ -619,14 +383,14 @@ node_types:
         required: false
       requirements:
         type: string
-        required: false
+        requred: false
       templates:
         type: list
         required: false
         entry_schema:
       values:
         type: string
-        required: true
+        requred: true
   org.onap.policy.clamp.acm.HttpAutomationCompositionElement:
     version: 1.0.1
     derived_from: org.onap.policy.clamp.acm.AutomationCompositionElement
@@ -646,17 +410,11 @@ node_types:
         required: true
         entry_schema:
           type: org.onap.datatypes.policy.clamp.acm.httpAutomationCompositionElement.ConfigurationEntity
-          type_version: 1.0.0
+          typeVersion: 1.0.0
         description: The connfiguration entities the Automation Composition Element is managing and their associated REST requests
 
 topology_template:
   inputs:
-    pmsh_monitoring_policy:
-      type: onap.datatypes.ToscaConceptIdentifier
-      description: The ID of the PMSH monitoring policy to use
-      default:
-        name: MICROSERVICE_vLoadBalancerMS_v1_0_dcae-pm-subscription-handler_1_0_0test
-        version: 1.0.0
     pmsh_operational_policy:
       type: onap.datatypes.ToscaConceptIdentifier
       description: The ID of the PMSH operational policy to use
@@ -671,28 +429,10 @@ topology_template:
       description: Participant for DCAE microservices
       properties:
         provider: ONAP
-    org.onap.domain.pmsh.PMSH_MonitoringPolicyAutomationCompositionElement:
-      version: 1.2.3
-      type: org.onap.policy.clamp.acm.PolicyAutomationCompositionElement
-      type_version: 1.0.1
-      description: Automation composition element for the monitoring policy for Performance Management Subscription Handling
-      properties:
-        provider: Ericsson
-        participant_id:
-          name: org.onap.PM_Policy
-          version: 1.0.0
-        participantType:
-          name: org.onap.policy.clamp.acm.PolicyParticipant
-          version: 2.3.1
-        policy_type_id:
-          name: onap.policies.monitoring.pm-subscription-handler
-          version: 1.0.0
-        policy_id:
-          get_input: pmsh_monitoring_policy
     org.onap.domain.pmsh.PMSH_OperationalPolicyAutomationCompositionElement:
       version: 1.2.3
       type: org.onap.policy.clamp.acm.PolicyAutomationCompositionElement
-      type_version: 1.0.1
+      type_version: 1.0.0
       description: Automation composition element for the operational policy for Performance Management Subscription Handling
       properties:
         provider: Ericsson
@@ -707,6 +447,8 @@ topology_template:
           version: 1.0.0
         policy_id:
           get_input: pmsh_operational_policy
+
+
     org.onap.policy.clamp.acm.KubernetesParticipant:
       version: 2.3.4
       type: org.onap.policy.clamp.acm.Participant
@@ -718,7 +460,7 @@ topology_template:
       # Chart from new repository
       version: 1.2.3
       type: org.onap.policy.clamp.acm.K8SMicroserviceAutomationCompositionElement
-      type_version: 1.0.1
+      type_version: 1.0.0
       description: Automation composition element for the K8S microservice for PMSH
       properties:
         provider: ONAP
@@ -733,7 +475,7 @@ topology_template:
             name: dcae-pmsh
             version: 10.0.0
           namespace: onap
-          releaseName: onap-dcae-pmsh
+          releaseName: dcae-pmsh
           repository:
             repoName: chartmuseum
             address: http://chart-museum:80
@@ -741,6 +483,7 @@ topology_template:
             password: demo123456!
           overrideParams:
             global.masterPassword: test
+            global.centralizedLoggingEnabled: false
     org.onap.policy.clamp.acm.HttpParticipant:
       version: 2.3.4
       type: org.onap.policy.clamp.acm.Participant
@@ -749,7 +492,7 @@ topology_template:
       properties:
         provider: ONAP
     org.onap.domain.database.Http_PMSHMicroserviceAutomationCompositionElement:
-      # Consul http config for PMSH.
+      # Http config for PMSH.
       version: 1.2.3
       type: org.onap.policy.clamp.acm.HttpAutomationCompositionElement
       type_version: 1.0.1
@@ -778,64 +521,66 @@ topology_template:
                 httpMethod: POST
                 path: subscription
                 body: '{
-  "subscription":{
-     "subscriptionName":"new_sub_01",
-     "operationalPolicyName":"pmsh-operational-policy",
-     "controlLoopName":"controlLoop-name",
-     "nfFilter":{
-        "nfNames":[
-           "^pnf*"
-        ],
-        "modelInvariantIDs":[
-           "7129e420-d396-4efb-af02-6b83499b12f5"
-        ],
-        "modelVersionIDs":[
-           "e80a6ae3-cafd-4d24-850d-e14c084a5ca7"
-        ],
-        "modelNames":[
-           "pnf_134"
-        ]
-     },
-     "measurementGroups":[
-        {
-           "measurementGroup":{
-              "measurementGroupName":"msgroup_01",
-              "administrativeState":"UNLOCKED",
-              "fileBasedGP":15,
-              "fileLocation":"/pm/pm.xml",
-              "measurementTypes":[
-                 {
-                    "measurementType":"EutranCell.*"
-                 },
-                 {
-                    "measurementType":"EutranCellRelation.pmCounter1"
-                 },
-                 {
-                    "measurementType":"EutranCellRelation.pmCounter2"
-                 }
-              ],
-              "managedObjectDNsBasic":[
-                 {
-                    "DN":"ManagedElement=1,ENodeBFunction=1,EUtranCell=CityCenter1"
-                 },
-                 {
-                    "DN":"ManagedElement=1,ENodeBFunction=1,EUtranCell=CityCenter1, EUtranCellRelation=CityCenter2"
-                 },
-                 {
-                    "DN":"ManagedElement=1,ENodeBFunction=1,EUtranCell=CityCenter1, EUtranCellRelation=CityCenter3"
-                 }
-              ]
-           }
-        }
-     ]
-  }
-}'
+                         "subscription":{
+                         "subscriptionName":"new_sub_01",
+                         "operationalPolicyName":"pmsh-operational-policy",
+                         "controlLoopName":"controlLoop-name",
+                         "nfFilter":{
+                         "nfNames":[
+                                "^pnf*"
+                         ],
+                         "modelInvariantIDs":[
+                            "7129e420-d396-4efb-af02-6b83499b12f5"
+                         ],
+                            "modelVersionIDs":[
+                         "e80a6ae3-cafd-4d24-850d-e14c084a5ca7"
+                         ],
+                        "modelNames":[
+                        "pnf_134"
+                        ]
+                        },
+                        "measurementGroups":[
+                        {
+                            "measurementGroup":{
+                            "measurementGroupName":"msgroup_01",
+                            "administrativeState":"UNLOCKED",
+                            "fileBasedGP":15,
+                            "fileLocation":"/pm/pm.xml",
+                            "measurementTypes":[
+                            {
+                            "measurementType":"EutranCell.*"
+                            },
+                            {
+                            "measurementType":"EutranCellRelation.pmCounter1"
+                            },
+                            {
+                            "measurementType":"EutranCellRelation.pmCounter2"
+                            }
+                        ],
+                        "managedObjectDNsBasic":[
+                        {
+                        "DN":"ManagedElement=1,ENodeBFunction=1,EUtranCell=CityCenter1"
+                        },
+                        {
+                        "DN":"ManagedElement=1,ENodeBFunction=1,EUtranCell=CityCenter1, EUtranCellRelation=CityCenter2"
+                        },
+                        {
+                        "DN":"ManagedElement=1,ENodeBFunction=1,EUtranCell=CityCenter1, EUtranCellRelation=CityCenter3"
+                        }
+                        ]
+                        }
+                            }
+                        ]
+                        }
+                }'
                 expectedResponse: 201
+
+
     org.onap.domain.sample.GenericK8s_AutomationCompositionDefinition:
       version: 1.2.3
       type: org.onap.policy.clamp.acm.AutomationComposition
-      type_version: 1.0.1
-      description: Automation composition for Hello World
+      type_version: 1.0.0
+      description: Automation composition for PMSH
       properties:
         provider: ONAP
         elements:
@@ -843,13 +588,11 @@ topology_template:
             version: 1.2.3
           - name: org.onap.domain.database.Http_PMSHMicroserviceAutomationCompositionElement
             version: 1.2.3
-          - name: org.onap.domain.pmsh.PMSH_MonitoringPolicyAutomationCompositionElement
-            version: 1.2.3
           - name: org.onap.domain.pmsh.PMSH_OperationalPolicyAutomationCompositionElement
             version: 1.2.3
   policies:
     - operational.apex.pmcontrol:
-        type: onap.policies.acm.operational.common.Apex
+        type: onap.policies.controlloop.operational.common.Apex
         type_version: 1.0.0
         version: 1.0.0
         properties:
@@ -1531,14 +1274,10 @@ topology_template:
                                        * SPDX-License-Identifier: Apache-2.0
                                        * ============LICENSE_END=========================================================
                                        */
-
                                       executor.logger.info(executor.subject.id);
-
                                       var pmSubscriptionInfo = executor.getContextAlbum("PMSubscriptionAlbum").get(executor.inFields.get("albumID").toString())
                                       var changeType = pmSubscriptionInfo.get("changeType").toString()
-
                                       executor.logger.info("Change Type is " + changeType)
-
                                       if ("CREATE".equals(changeType)) {
                                           executor.logger.info("Choosing to create a subscription")
                                           executor.subject.getTaskKey("CreateSubscriptionPayloadTask").copyTo(executor.selectedTask);
@@ -1547,9 +1286,7 @@ topology_template:
                                           executor.logger.info("Choosing to delete a subscription")
                                           executor.subject.getTaskKey("DeleteSubscriptionPayloadTask").copyTo(executor.selectedTask);
                                       }
-
                                       returnValue = executor.isTrue;
-
                                       true;
                                   stateFinalizerLogicMap:
                                     entry: [ ]
@@ -1863,45 +1600,32 @@ topology_template:
                                * SPDX-License-Identifier: Apache-2.0
                                * ============LICENSE_END=========================================================
                                */
-
                               executor.logger.info(executor.subject.id);
-
                               var commonHeader = executor.inFields.get("commonHeader")
                               var response = executor.inFields.get("payload")
                               var albumID = commonHeader.get("requestId")
-
                               var pmSubscriptionInfo = executor.getContextAlbum("PMSubscriptionAlbum").get(albumID.toString());
                               var responseStatus = executor.subject.getOutFieldSchemaHelper("status").createNewInstance();
-
                               var changeType = pmSubscriptionInfo.get("changeType").toUpperCase()
-
                               responseStatus.put("nfName", pmSubscriptionInfo.get("nfName"))
                               responseStatus.put("changeType", pmSubscriptionInfo.get("changeType"))
-
                               if ("CREATE".equals(changeType)) {
                                   responseStatus.put("subscriptionName", pmSubscriptionInfo.get("subscription").get("subscriptionName"))
                                   responseStatus.put("measurementGroupName", pmSubscriptionInfo.get("subscription").get("measurementGroup").get("measurementGroupName"))
-
                               }
                               else if ("DELETE".equals(changeType)) {
                                   responseStatus.put("subscriptionName", pmSubscriptionInfo.get("subscriptionName"))
                                   responseStatus.put("measurementGroupName", pmSubscriptionInfo.get("measurementGroupName"))
                               }
-
                               var status = response.get(pmSubscriptionInfo.get("changeType").toLowerCase() + "_DasH_subscription_DasH_response").get("odl_DasH_response").get("status")
-
                               executor.logger.info("RESPONSE STATUS = " + status)
-
                               if(status == "success") {
                                   responseStatus.put("message", "success")
                               } else {
                                   responseStatus.put("message", "failed")
                               }
-
                               executor.outFields.put("status", responseStatus)
-
                               returnValue = executor.isTrue;
-
                               true;
                       - key:
                           name: CDSDeleteResponseTask
@@ -1994,45 +1718,32 @@ topology_template:
                                * SPDX-License-Identifier: Apache-2.0
                                * ============LICENSE_END=========================================================
                                */
-
                               executor.logger.info(executor.subject.id);
-
                               var commonHeader = executor.inFields.get("commonHeader")
                               var response = executor.inFields.get("payload")
                               var albumID = commonHeader.get("requestId")
-
                               var pmSubscriptionInfo = executor.getContextAlbum("PMSubscriptionAlbum").get(albumID.toString());
                               var responseStatus = executor.subject.getOutFieldSchemaHelper("status").createNewInstance();
-
                               var changeType = pmSubscriptionInfo.get("changeType").toUpperCase()
-
                               responseStatus.put("nfName", pmSubscriptionInfo.get("nfName"))
                               responseStatus.put("changeType", pmSubscriptionInfo.get("changeType"))
-
                               if ("CREATE".equals(changeType)) {
                                   responseStatus.put("subscriptionName", pmSubscriptionInfo.get("subscription").get("subscriptionName"))
                                   responseStatus.put("measurementGroupName", pmSubscriptionInfo.get("subscription").get("measurementGroup").get("measurementGroupName"))
-
                               }
                               else if ("DELETE".equals(changeType)) {
                                   responseStatus.put("subscriptionName", pmSubscriptionInfo.get("subscriptionName"))
                                   responseStatus.put("measurementGroupName", pmSubscriptionInfo.get("measurementGroupName"))
                               }
-
                               var status = response.get(pmSubscriptionInfo.get("changeType").toLowerCase() + "_DasH_subscription_DasH_response").get("odl_DasH_response").get("status")
-
                               executor.logger.info("RESPONSE STATUS = " + status)
-
                               if(status == "success") {
                                   responseStatus.put("message", "success")
                               } else {
                                   responseStatus.put("message", "failed")
                               }
-
                               executor.outFields.put("status", responseStatus)
-
                               returnValue = executor.isTrue;
-
                               true;
                       - key:
                           name: CreateSubscriptionPayloadTask
@@ -2111,18 +1822,12 @@ topology_template:
                                * SPDX-License-Identifier: Apache-2.0
                                * ============LICENSE_END=========================================================
                                */
-
                               executor.logger.info(executor.subject.id);
-
                               var pmSubscriptionInfo = executor.getContextAlbum("PMSubscriptionAlbum").get(executor.inFields.get("albumID").toString())
-
                               var changeType = pmSubscriptionInfo.get("changeType").toLowerCase()
-
                               var payloadProperties = executor.subject.getOutFieldSchemaHelper("payload").createNewSubInstance(changeType + "_DasH_subscription_DasH_properties_record");
-
                               payloadProperties.put("nfName",  pmSubscriptionInfo.get("nfName"))
                               payloadProperties.put("ipAddress", pmSubscriptionInfo.get("ipAddress"))
-
                               if ("create".equals(changeType)) {
                                   payloadProperties.put("subscriptionName",  pmSubscriptionInfo.get("subscription").get("subscriptionName"))
                                   payloadProperties.put("fileBasedGP",  pmSubscriptionInfo.get("subscription").get("fileBasedGP").toString())
@@ -2133,18 +1838,13 @@ topology_template:
                                   payloadProperties.put("subscriptionName", pmSubscriptionInfo.get("subscriptionName"))
                                   payloadProperties.put("measurementGroupName", pmSubscriptionInfo.get("measurementGroupName"))
                               }
-
                               var payloadEntry = executor.subject.getOutFieldSchemaHelper("payload").createNewSubInstance("CDSRequestPayloadEntry");
                               payloadEntry.put(changeType + "_DasH_subscription_DasH_properties", payloadProperties)
-
                               var payload = executor.subject.getOutFieldSchemaHelper("payload").createNewInstance();
                               payload.put(changeType + "_DasH_subscription_DasH_request", payloadEntry);
-
                               executor.outFields.put("albumID", executor.inFields.get("albumID"))
                               executor.outFields.put("payload", payload);
-
                               returnValue = executor.isTrue;
-
                               true;
                       - key:
                           name: CreateSubscriptionRequestTask
@@ -2237,36 +1937,27 @@ topology_template:
                                * SPDX-License-Identifier: Apache-2.0
                                * ============LICENSE_END=========================================================
                                */
-
                               executor.logger.info(executor.subject.id);
-
                               var pmSubscriptionInfo = executor.getContextAlbum("PMSubscriptionAlbum").get(executor.inFields.get("albumID").toString())
-
                               executor.logger.info(pmSubscriptionInfo)
-
                               var changeType = pmSubscriptionInfo.get("changeType").toLowerCase()
                               var blueprintName = pmSubscriptionInfo.get("blueprintName").toLowerCase()
                               var blueprintVersion = pmSubscriptionInfo.get("blueprintVersion").toLowerCase()
                               var payload = executor.inFields.get("payload")
                               var actionName = changeType + "-subscription"
-
                               var commonHeader = executor.subject.getOutFieldSchemaHelper("commonHeader").createNewInstance();
                               commonHeader.put("originatorId", "sdnc");
                               commonHeader.put("requestId", executor.inFields.get("albumID").toString());
                               commonHeader.put("subRequestId", "sub-123456-1000");
-
                               var actionIdentifiers = executor.subject.getOutFieldSchemaHelper("actionIdentifiers").createNewInstance();
                               actionIdentifiers.put("actionName", actionName);
                               actionIdentifiers.put("blueprintName", blueprintName);
                               actionIdentifiers.put("blueprintVersion", blueprintVersion);
                               actionIdentifiers.put("mode", "sync");
-
                               executor.outFields.put("commonHeader", commonHeader);
                               executor.outFields.put("actionIdentifiers", actionIdentifiers);
                               executor.outFields.put("payload", payload);
-
                               returnValue = executor.isTrue;
-
                               true;
                       - key:
                           name: DeleteSubscriptionPayloadTask
@@ -2345,18 +2036,12 @@ topology_template:
                                * SPDX-License-Identifier: Apache-2.0
                                * ============LICENSE_END=========================================================
                                */
-
                               executor.logger.info(executor.subject.id);
-
                               var pmSubscriptionInfo = executor.getContextAlbum("PMSubscriptionAlbum").get(executor.inFields.get("albumID").toString())
-
                               var changeType = pmSubscriptionInfo.get("changeType").toLowerCase()
-
                               var payloadProperties = executor.subject.getOutFieldSchemaHelper("payload").createNewSubInstance(changeType + "_DasH_subscription_DasH_properties_record");
-
                               payloadProperties.put("nfName",  pmSubscriptionInfo.get("nfName"))
                               payloadProperties.put("ipAddress", pmSubscriptionInfo.get("ipAddress"))
-
                               if ("create".equals(changeType)) {
                                   payloadProperties.put("subscriptionName",  pmSubscriptionInfo.get("subscription").get("subscriptionName"))
                                   payloadProperties.put("fileBasedGP",  pmSubscriptionInfo.get("subscription").get("fileBasedGP").toString())
@@ -2367,18 +2052,13 @@ topology_template:
                                   payloadProperties.put("subscriptionName", pmSubscriptionInfo.get("subscriptionName"))
                                   payloadProperties.put("measurementGroupName", pmSubscriptionInfo.get("measurementGroupName"))
                               }
-
                               var payloadEntry = executor.subject.getOutFieldSchemaHelper("payload").createNewSubInstance("CDSRequestPayloadEntry");
                               payloadEntry.put(changeType + "_DasH_subscription_DasH_properties", payloadProperties)
-
                               var payload = executor.subject.getOutFieldSchemaHelper("payload").createNewInstance();
                               payload.put(changeType + "_DasH_subscription_DasH_request", payloadEntry);
-
                               executor.outFields.put("albumID", executor.inFields.get("albumID"))
                               executor.outFields.put("payload", payload);
-
                               returnValue = executor.isTrue;
-
                               true;
                       - key:
                           name: DeleteSubscriptionRequestTask
@@ -2471,36 +2151,27 @@ topology_template:
                                * SPDX-License-Identifier: Apache-2.0
                                * ============LICENSE_END=========================================================
                                */
-
                               executor.logger.info(executor.subject.id);
-
                               var pmSubscriptionInfo = executor.getContextAlbum("PMSubscriptionAlbum").get(executor.inFields.get("albumID").toString())
-
                               executor.logger.info(pmSubscriptionInfo)
-
                               var changeType = pmSubscriptionInfo.get("changeType").toLowerCase()
                               var blueprintName = pmSubscriptionInfo.get("blueprintName").toLowerCase()
                               var blueprintVersion = pmSubscriptionInfo.get("blueprintVersion").toLowerCase()
                               var payload = executor.inFields.get("payload")
                               var actionName = changeType + "-subscription"
-
                               var commonHeader = executor.subject.getOutFieldSchemaHelper("commonHeader").createNewInstance();
                               commonHeader.put("originatorId", "sdnc");
                               commonHeader.put("requestId", executor.inFields.get("albumID").toString());
                               commonHeader.put("subRequestId", "sub-123456-1000");
-
                               var actionIdentifiers = executor.subject.getOutFieldSchemaHelper("actionIdentifiers").createNewInstance();
                               actionIdentifiers.put("actionName", actionName);
                               actionIdentifiers.put("blueprintName", blueprintName);
                               actionIdentifiers.put("blueprintVersion", blueprintVersion);
                               actionIdentifiers.put("mode", "sync");
-
                               executor.outFields.put("commonHeader", commonHeader);
                               executor.outFields.put("actionIdentifiers", actionIdentifiers);
                               executor.outFields.put("payload", payload);
-
                               returnValue = executor.isTrue;
-
                               true;
                       - key:
                           name: ReceiveSubscriptionTask
@@ -2636,17 +2307,13 @@ topology_template:
                                * ============LICENSE_END=========================================================
                                */
                               var uuidType = java.util.UUID;
-
                               executor.logger.info(executor.subject.id);
-
                               //albumID will be used to fetch info from our album later
                               var albumID = uuidType.randomUUID();
                               var pmSubscriptionInfo = executor.getContextAlbum("PMSubscriptionAlbum").getSchemaHelper().createNewInstance();
                               var returnValue = true;
-
                               if(executor.inFields.get("operationalPolicyName") != null) {
                                   executor.logger.info("nfName in receive sub event " + executor.inFields.get("nfName"));
-
                                   var changeType = executor.inFields.get("changeType")
                                   var nfName = executor.inFields.get("nfName")
                                   var ipAddress = executor.inFields.get("ipAddress")
@@ -2655,7 +2322,6 @@ topology_template:
                                   var subscription = executor.inFields.get("subscription")
                                   var blueprintName = executor.inFields.get("blueprintName")
                                   var blueprintVersion = executor.inFields.get("blueprintVersion")
-
                                   pmSubscriptionInfo.put("nfName", executor.inFields.get("nfName"));
                                   pmSubscriptionInfo.put("ipAddress", executor.inFields.get("ipAddress"));
                                   pmSubscriptionInfo.put("changeType", executor.inFields.get("changeType"))
@@ -2664,20 +2330,16 @@ topology_template:
                                   pmSubscriptionInfo.put("subscription", subscription)
                                   pmSubscriptionInfo.put("blueprintName", blueprintName)
                                   pmSubscriptionInfo.put("blueprintVersion", blueprintVersion)
-
                                   if ("delete".equals(changeType.toLowerCase())) {
                                       pmSubscriptionInfo.put("subscriptionName",  executor.inFields.get("subscriptionName"))
                                       pmSubscriptionInfo.put("measurementGroupName",  executor.inFields.get("measurementGroupName"))
                                   }
-
                                   executor.getContextAlbum("PMSubscriptionAlbum").put(albumID.toString(), pmSubscriptionInfo);
-
                                   executor.outFields.put("albumID", albumID)
                               } else {
                                   executor.message = "Received invalid event"
                                   returnValue = false;
                               }
-
                               returnValue;
                 events:
                   key:
