@@ -76,7 +76,7 @@ class ServiceTemplateProviderTest {
             inputServiceTemplate.getToscaTopologyTemplate().getNodeTemplates(), commonOrInstanceNodeTypeProps);
 
         assertNotNull(result);
-        assertThat(result).hasSize(5);
+        assertThat(result).hasSize(4);
     }
 
     @Test

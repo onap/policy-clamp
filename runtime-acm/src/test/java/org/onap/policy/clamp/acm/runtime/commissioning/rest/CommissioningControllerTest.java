@@ -166,7 +166,7 @@ class CommissioningControllerTest extends CommonRestController {
         Map<String, ToscaNodeTemplate> commonProperties = rawresp.readEntity(Map.class);
 
         assertNotNull(commonProperties);
-        assertThat(commonProperties).hasSize(5);
+        assertThat(commonProperties).hasSize(4);
     }
 
     @Test

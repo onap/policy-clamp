@@ -139,7 +139,7 @@ class CommissioningProviderTest {
         Map<String, ToscaNodeTemplate> nodeTemplates =
                 returnedServiceTemplate.getToscaTopologyTemplate().getNodeTemplates();
 
-        assertThat(nodeTemplates).hasSize(8);
+        assertThat(nodeTemplates).hasSize(7);
     }
 
     /**
@@ -168,7 +168,7 @@ class CommissioningProviderTest {
         assertThat(returnedServiceTemplate).isNotNull();
         ToscaServiceTemplate parsedServiceTemplate = CODER.decode(returnedServiceTemplate, ToscaServiceTemplate.class);
 
-        assertThat(parsedServiceTemplate.getToscaTopologyTemplate().getNodeTemplates()).hasSize(8);
+        assertThat(parsedServiceTemplate.getToscaTopologyTemplate().getNodeTemplates()).hasSize(7);
     }
 
     /**
