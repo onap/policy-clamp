@@ -91,8 +91,8 @@ public class PodStatusValidator implements Runnable {
     }
 
     private ProcessBuilder verifyPodStatusCommand(ChartInfo chart) {
-        String podName = chart.getReleaseName() + "-" + chart.getChartId().getName();
-        String cmd = "kubectl get pods --namespace " +  chart.getNamespace() + " | grep " + podName;
+        String cmd = "kubectl get pods --namespace " +  chart.getNamespace() + " | grep "
+                + chart.getChartId().getName();
         return new ProcessBuilder("sh", "-c", cmd);
     }
 
