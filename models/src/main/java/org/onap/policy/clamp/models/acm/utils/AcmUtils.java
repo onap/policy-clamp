@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ public class AcmUtils {
         var participantExists = false;
         for (ParticipantUpdates participantUpdate : participantUpdates) {
             if (participantUpdate.getParticipantId().equals(acElement.getParticipantId())) {
-                participantUpdate.setAutomationCompositionElementList(List.of(acElement));
+                participantUpdate.getAutomationCompositionElementList().add(acElement);
                 participantExists = true;
             }
         }
@@ -71,7 +71,7 @@ public class AcmUtils {
     private static ParticipantUpdates getAutomationCompositionElementList(AutomationCompositionElement acElement) {
         var participantUpdate = new ParticipantUpdates();
         participantUpdate.setParticipantId(acElement.getParticipantId());
-        participantUpdate.setAutomationCompositionElementList(List.of(acElement));
+        participantUpdate.getAutomationCompositionElementList().add(acElement);
         return participantUpdate;
     }
 
