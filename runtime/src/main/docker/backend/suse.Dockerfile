@@ -22,8 +22,16 @@
 
 FROM opensuse/leap:15.3
 
-MAINTAINER "The Onap Team"
+LABEL maintainer="Policy Team"
 LABEL Description="This image contains opensuse, openjdk 11 and policy clamp"
+LABEL org.opencontainers.image.title="Policy CLAMP runtime"
+LABEL org.opencontainers.image.description="Policy CLAMP runtime image based on OpenSuse"
+LABEL org.opencontainers.image.url="https://github.com/onap/policy-clamp"
+LABEL org.opencontainers.image.vendor="ONAP Policy Team"
+LABEL org.opencontainers.image.licenses="Apache-2.0"
+LABEL org.opencontainers.image.created="${git.build.time}"
+LABEL org.opencontainers.image.version="${git.build.version}"
+LABEL org.opencontainers.image.revision="${git.commit.id.abbrev}"
 
 ARG http_proxy
 ARG https_proxy

@@ -2,8 +2,8 @@
 # ============LICENSE_START=======================================================
 # ONAP CLAMP
 # ================================================================================
-# Copyright (C) 2018, 2021 AT&T Intellectual Property. All rights
-#                             reserved.
+# Copyright (C) 2018, 2021 AT&T Intellectual Property. All rights reserved.
+# Modifications Copyright (C) 2022 Nordix Foundation.
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,8 +23,16 @@
 
 FROM onap/integration-java11:8.0.0
 
-MAINTAINER "The Onap Team"
+LABEL maintainer="Policy Team"
 LABEL Description="This image contains alpine, openjdk 11 and policy clamp"
+LABEL org.opencontainers.image.title="Policy CLAMP runtime"
+LABEL org.opencontainers.image.description="Policy CLAMP runtime image based on Alpine"
+LABEL org.opencontainers.image.url="https://github.com/onap/policy-clamp"
+LABEL org.opencontainers.image.vendor="ONAP Policy Team"
+LABEL org.opencontainers.image.licenses="Apache-2.0"
+LABEL org.opencontainers.image.created="${git.build.time}"
+LABEL org.opencontainers.image.version="${git.build.version}"
+LABEL org.opencontainers.image.revision="${git.commit.id.abbrev}"
 
 ARG http_proxy
 ARG https_proxy
