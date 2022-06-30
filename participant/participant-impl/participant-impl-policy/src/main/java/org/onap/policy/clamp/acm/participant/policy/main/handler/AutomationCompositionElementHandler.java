@@ -27,7 +27,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
+import javax.ws.rs.core.Response;
 import lombok.Setter;
+import org.apache.http.HttpStatus;
 import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.acm.participant.policy.client.PolicyApiHttpClient;
@@ -98,14 +100,14 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
                         automationCompositionElementId, orderedState, AutomationCompositionState.UNINITIALISED,
                         ParticipantMessageType.AUTOMATION_COMPOSITION_STATE_CHANGE);
                 } catch (PfModelRuntimeException e) {
-                    LOGGER.debug("Undeploying/Deleting policy failed {}", automationCompositionElementId, e);
+                    LOGGER.error("Undeploying/Deleting policy failed {}", automationCompositionElementId, e);
                 }
                 break;
             case PASSIVE:
                 try {
                     undeployPolicies(automationCompositionElementId);
                 } catch (PfModelRuntimeException e) {
-                    LOGGER.debug("Undeploying policies failed - no policies to undeploy {}",
+                    LOGGER.error("Undeploying policies failed - no policies to undeploy {}",
                         automationCompositionElementId);
                 }
                 intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
@@ -133,26 +135,30 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
             apiHttpClient.deletePolicyType(policyType.getKey(), policyType.getValue());
         }
         policyTypeMap.clear();
-        intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
-            automationCompositionElementId, newState, AutomationCompositionState.UNINITIALISED,
-            ParticipantMessageType.AUTOMATION_COMPOSITION_STATE_CHANGE);
     }
 
     private void deployPolicies(ToscaConceptIdentifier automationCompositionId, UUID automationCompositionElementId,
                                 AutomationCompositionOrderedState newState) {
+        var deployFailure = false;
         // Deploy all policies of this automationComposition from Policy Framework
         if (!policyMap.entrySet().isEmpty()) {
             for (Entry<String, String> policy : policyMap.entrySet()) {
-                papHttpClient.handlePolicyDeployOrUndeploy(policy.getKey(), policy.getValue(),
-                    DeploymentSubGroup.Action.POST);
+                var deployPolicyResp = papHttpClient.handlePolicyDeployOrUndeploy(policy.getKey(), policy.getValue(),
+                        DeploymentSubGroup.Action.POST).getStatus();
+                if (deployPolicyResp != HttpStatus.SC_OK) {
+                    deployFailure = true;
+                }
             }
-            LOGGER.debug("Policies deployed to {} successfully", automationCompositionElementId);
+            LOGGER.info("Policies deployed to {} successfully", automationCompositionElementId);
         } else {
             LOGGER.debug("No policies to deploy to {}", automationCompositionElementId);
         }
-        intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
-            automationCompositionElementId, newState, AutomationCompositionState.PASSIVE,
-            ParticipantMessageType.AUTOMATION_COMPOSITION_STATE_CHANGE);
+        if (! deployFailure) {
+            // Update the AC element state
+            intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
+                    automationCompositionElementId, newState, AutomationCompositionState.PASSIVE,
+                    ParticipantMessageType.AUTOMATION_COMPOSITION_STATE_CHANGE);
+        }
     }
 
     private void undeployPolicies(UUID automationCompositionElementId) {
@@ -180,18 +186,18 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
                                                    AutomationCompositionElement element,
                                                    ToscaNodeTemplate acElementDefinition)
         throws PfModelException {
-        intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
-            element.getOrderedState(),
-            AutomationCompositionState.PASSIVE, ParticipantMessageType.AUTOMATION_COMPOSITION_UPDATE);
+        var createPolicyTypeResp = HttpStatus.SC_OK;
+        var createPolicyResp = HttpStatus.SC_OK;
+
         ToscaServiceTemplate automationCompositionDefinition = element.getToscaServiceTemplateFragment();
         if (automationCompositionDefinition.getToscaTopologyTemplate() != null) {
             if (automationCompositionDefinition.getPolicyTypes() != null) {
                 for (ToscaPolicyType policyType : automationCompositionDefinition.getPolicyTypes().values()) {
                     policyTypeMap.put(policyType.getName(), policyType.getVersion());
                 }
-                LOGGER.debug("Found Policy Types in automation composition definition: {} , Creating Policy Types",
+                LOGGER.info("Found Policy Types in automation composition definition: {} , Creating Policy Types",
                     automationCompositionDefinition.getName());
-                apiHttpClient.createPolicyType(automationCompositionDefinition);
+                createPolicyTypeResp = apiHttpClient.createPolicyType(automationCompositionDefinition).getStatus();
             }
             if (automationCompositionDefinition.getToscaTopologyTemplate().getPolicies() != null) {
                 for (Map<String, ToscaPolicy> gotPolicyMap : automationCompositionDefinition.getToscaTopologyTemplate()
@@ -200,12 +206,18 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
                         policyMap.put(policy.getName(), policy.getVersion());
                     }
                 }
-                LOGGER.debug("Found Policies in automation composition definition: {} , Creating Policies",
+                LOGGER.info("Found Policies in automation composition definition: {} , Creating Policies",
                     automationCompositionDefinition.getName());
-                apiHttpClient.createPolicy(automationCompositionDefinition);
+                createPolicyResp = apiHttpClient.createPolicy(automationCompositionDefinition).getStatus();
+            }
+            if (createPolicyTypeResp == HttpStatus.SC_OK && createPolicyResp == HttpStatus.SC_OK) {
+                LOGGER.info("PolicyTypes/Policies for the automation composition element : {} are created "
+                        + "successfully", element.getId());
+                deployPolicies(automationCompositionId, element.getId(), element.getOrderedState());
+            } else {
+                LOGGER.error("Creation of PolicyTypes/Policies failed. Policies will not be deployed.");
             }
         }
-        deployPolicies(automationCompositionId, element.getId(), element.getOrderedState());
     }
 
     /**
