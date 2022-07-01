@@ -53,7 +53,7 @@
 
     <properties>
         <policy.common.version>1.10.4-SNAPSHOT</policy.common.version>
-        <policy.models.version>2.6.4-SNAPSHOT</policy.models.version>
+        <policy.models.version>2.6.5-SNAPSHOT</policy.models.version>
     </properties>
 
     <modules>
