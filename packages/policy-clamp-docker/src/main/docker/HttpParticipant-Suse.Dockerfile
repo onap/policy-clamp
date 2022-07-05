@@ -33,7 +33,7 @@ LABEL org.opencontainers.image.created="${git.build.time}"
 LABEL org.opencontainers.image.version="${git.build.version}"
 LABEL org.opencontainers.image.revision="${git.commit.id.abbrev}"
 
-ARG POLICY_LOGS=/var/log/onap/policy/clamp
+ARG POLICY_LOGS=/var/log/onap/policy/http-participant
 
 ENV POLICY_LOGS=$POLICY_LOGS
 ENV POLICY_HOME=/opt/app/policy/clamp
