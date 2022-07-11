@@ -18,9 +18,11 @@
 # ============LICENSE_END=========================================================
 #-------------------------------------------------------------------------------
 
-#
-# Docker file to build an image that runs the CLAMP ACM K8S Participant on Java 11 or better in OpenSuse
-#
+FROM busybox AS tarball
+RUN mkdir /packages /extracted
+COPY /maven/lib/kubernetes-participant.tar.gz /packages/
+RUN tar xvzf /packages/kubernetes-participant.tar.gz --directory /extracted/
+
 FROM opensuse/leap:15.4
 
 LABEL maintainer="Policy Team"
@@ -44,22 +46,16 @@ RUN zypper -n -q install --no-recommends gzip java-11-openjdk-headless netcat-op
     zypper -n -q update && zypper -n -q clean --all && \
     groupadd --system policy && \
     useradd --system --shell /bin/sh -G policy policy && \
-    mkdir -p /app $POLICY_LOGS $POLICY_HOME $POLICY_HOME/bin && \
-    chown -R policy:policy /app $POLICY_HOME $POLICY_LOGS && \
-    mkdir /packages
+    mkdir -p /app $POLICY_HOME $POLICY_LOGS && \
+    chown -R policy:policy /app $POLICY_HOME $POLICY_LOGS
 
-COPY /maven/lib/kubernetes-participant.tar.gz /packages
-
-RUN tar xvfz /packages/kubernetes-participant.tar.gz --directory $POLICY_HOME && \
-    rm /packages/kubernetes-participant.tar.gz
+COPY --chown=policy:policy --from=tarball /extracted $POLICY_HOME
 
 WORKDIR $POLICY_HOME
-COPY kubernetes-participant.sh  bin/.
-COPY /maven/policy-clamp-participant-impl-kubernetes.jar /app/app.jar
+COPY --chown=policy:policy kubernetes-participant.sh bin/
+COPY --chown=policy:policy /maven/policy-clamp-participant-impl-kubernetes.jar /app/app.jar
 
-RUN chown -R policy:policy * && \
-    chmod 755 bin/*.sh && \
-    chown -R policy:policy /app && \
+RUN chmod 755 bin/*.sh && \
     wget https://get.helm.sh/helm-v3.5.2-linux-amd64.tar.gz && \
     tar xvf helm-v3.5.2-linux-amd64.tar.gz && \
     mv linux-amd64/helm /usr/local/bin && \

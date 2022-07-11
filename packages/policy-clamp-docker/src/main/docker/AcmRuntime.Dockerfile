@@ -18,9 +18,11 @@
 # ============LICENSE_END=========================================================
 #-------------------------------------------------------------------------------
 
-#
-# Docker file to build an image that runs the CLAMP ACM runtime on Java 11 or better in alpine
-#
+FROM busybox AS tarball
+RUN mkdir /packages /extracted
+COPY /maven/lib/policy-clamp-runtime-acm.tar.gz /packages/
+RUN tar xvzf /packages/policy-clamp-runtime-acm.tar.gz --directory /extracted/
+
 FROM onap/policy-jre-alpine:2.4.3
 
 LABEL maintainer="Policy Team"
@@ -38,21 +40,16 @@ ARG POLICY_LOGS=/var/log/onap/policy/policy-clamp-runtime-acm
 ENV POLICY_LOGS=$POLICY_LOGS
 ENV POLICY_HOME=$POLICY_HOME/clamp
 
-RUN mkdir -p $POLICY_LOGS $POLICY_HOME $POLICY_HOME/bin && \
-    chown -R policy:policy $POLICY_HOME $POLICY_LOGS && \
-    mkdir /packages
-COPY /maven/lib/policy-clamp-runtime-acm.tar.gz /packages
+RUN mkdir -p $POLICY_HOME $POLICY_LOGS && \
+    chown -R policy:policy $POLICY_HOME $POLICY_LOGS
 
-RUN tar xvfz /packages/policy-clamp-runtime-acm.tar.gz --directory $POLICY_HOME && \
-    rm /packages/policy-clamp-runtime-acm.tar.gz
+COPY --chown=policy:policy --from=tarball /extracted $POLICY_HOME
 
 WORKDIR $POLICY_HOME
-COPY acm-runtime.sh  bin/.
-COPY /maven/policy-clamp-runtime-acm.jar /app/app.jar
+COPY --chown=policy:policy acm-runtime.sh bin/
+COPY --chown=policy:policy /maven/policy-clamp-runtime-acm.jar /app/app.jar
 
-RUN chown -R policy:policy * && \
-    chmod 755 bin/*.sh && \
-    chown -R policy:policy /app
+RUN chmod 755 bin/*.sh
 
 EXPOSE 6969
 

@@ -18,9 +18,10 @@
 # ============LICENSE_END=========================================================
 #-------------------------------------------------------------------------------
 
-#
-# Docker file to build an image that runs the CLAMP ACM HTTP Participant on Java 11 or better in alpine
-#
+FROM busybox AS tarball
+RUN mkdir /packages /extracted
+COPY /maven/lib/http-participant.tar.gz /packages/
+RUN tar xvzf /packages/http-participant.tar.gz --directory /extracted/
 
 FROM onap/policy-jre-alpine:2.4.3
 
@@ -39,21 +40,16 @@ ARG POLICY_LOGS=/var/log/onap/policy/http-participant
 ENV POLICY_LOGS=$POLICY_LOGS
 ENV POLICY_HOME=$POLICY_HOME/clamp
 
-RUN mkdir -p $POLICY_LOGS $POLICY_HOME $POLICY_HOME/bin && \
-    chown -R policy:policy $POLICY_HOME $POLICY_LOGS && \
-    mkdir /packages
-COPY /maven/lib/http-participant.tar.gz /packages
+RUN mkdir -p $POLICY_LOGS $POLICY_HOME && \
+    chown -R policy:policy $POLICY_HOME $POLICY_LOGS
 
-RUN tar xvfz /packages/http-participant.tar.gz --directory $POLICY_HOME && \
-    rm /packages/http-participant.tar.gz
+COPY --chown=policy:policy --from=tarball /extracted $POLICY_HOME
 
 WORKDIR $POLICY_HOME
-COPY http-participant.sh  bin/.
-COPY /maven/policy-clamp-participant-impl-http.jar /app/app.jar
+COPY --chown=policy:policy http-participant.sh bin/
+COPY --chown=policy:policy /maven/policy-clamp-participant-impl-http.jar /app/app.jar
 
-RUN chown -R policy:policy * && \
-    chmod 755 bin/*.sh && \
-    chown -R policy:policy /app
+RUN chmod 755 bin/*.sh
 
 EXPOSE 8084
 
