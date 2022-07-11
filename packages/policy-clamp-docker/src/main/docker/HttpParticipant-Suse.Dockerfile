@@ -21,7 +21,7 @@
 #
 # Docker file to build an image that runs the CLAMP ACM HTTP Participant on Java 11 or better in OpenSuse
 #
-FROM opensuse/leap:15.3
+FROM opensuse/leap:15.4
 
 LABEL maintainer="Policy Team"
 LABEL org.opencontainers.image.title="Policy CLAMP ACM HTTP Participant"

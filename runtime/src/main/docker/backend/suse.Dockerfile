@@ -20,7 +20,7 @@
 # ============LICENSE_END=========================================================
 #
 
-FROM opensuse/leap:15.3
+FROM opensuse/leap:15.4
 
 LABEL maintainer="Policy Team"
 LABEL Description="This image contains opensuse, openjdk 11 and policy clamp"
