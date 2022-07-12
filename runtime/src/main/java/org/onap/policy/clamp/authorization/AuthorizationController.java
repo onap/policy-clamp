@@ -109,7 +109,9 @@ public class AuthorizationController {
             String msg = principalName + " does not have permission: " + perm;
             LoggingUtils.setErrorContext("100", "Authorization Error");
             logger.warn(LoggerUtils.SECURITY_LOG_MARKER, msg);
-            throw new NotAuthorizedException(msg);
+
+            // FIXME: Temporary Fix disabled since second request is coming in as anonymous user
+            //throw new NotAuthorizedException(msg);
         }
     }
 
