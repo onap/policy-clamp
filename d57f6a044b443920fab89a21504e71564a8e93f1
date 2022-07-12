@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "29f5fd76_170d38b9",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/authorization/AuthorizationController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-07-12T15:02:06Z",
+      "side": 1,
+      "message": "I am kind of reluctant on loss of existing security functionality, as there is not guarantees it will be tackled timely and properly.\nCan a permanent solution be provided that preserves security properties instead?",
+      "revId": "d57f6a044b443920fab89a21504e71564a8e93f1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
