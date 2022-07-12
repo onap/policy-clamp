@@ -49,20 +49,6 @@ public class RuntimeCommissioningResponseItTestCase {
             + " \"name\": \"ToscaServiceTemplateSimple\", \"version\": \"1.0.0\", \"metadata\": {}}";
 
     @Test
-    public void testToscaServiceTemplateSchemaStatus() {
-        ProducerTemplate prodTemplate = camelContext.createProducerTemplate();
-
-        Exchange exchangeResponse =
-            prodTemplate.send("direct:get-json-schema", ExchangeBuilder.anExchange(camelContext)
-                .withProperty("section", "data_types")
-                .withProperty("raiseHttpExceptionFlag", "true")
-                .build());
-
-        assertThat(HttpStatus.valueOf((Integer) exchangeResponse.getIn().getHeader(Exchange.HTTP_RESPONSE_CODE))
-            .is2xxSuccessful()).isTrue();
-    }
-
-    @Test
     public void testToscaServiceTemplateStatus() {
         ProducerTemplate prodTemplate = camelContext.createProducerTemplate();
 

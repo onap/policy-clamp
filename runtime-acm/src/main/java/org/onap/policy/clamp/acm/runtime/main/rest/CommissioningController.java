@@ -314,62 +314,6 @@ public class CommissioningController extends AbstractRestController {
     }
 
     /**
-     * Retrieves the Json Schema for the specified Tosca Service Template.
-     *
-     * @param requestId request ID used in ONAP logging
-     * @param section section of the tosca service template to get schema for
-     * @return the specified tosca service template or section Json Schema
-     * @throws PfModelException on errros getting the Json Schema for the specified Tosca Service Template
-     */
-    // @formatter:off
-    @GetMapping(value = "/commission/toscaServiceTemplateSchema",
-        produces = {MediaType.APPLICATION_JSON_VALUE, APPLICATION_YAML})
-    @ApiOperation(value = "Query details of the requested tosca service template json schema",
-        notes = "Queries details of the requested commissioned tosca service template json schema, "
-            + "returning all tosca service template json schema details",
-        response = ToscaServiceTemplate.class,
-        tags = {TAGS},
-        authorizations = @Authorization(value = AUTHORIZATION_TYPE),
-        responseHeaders = {
-            @ResponseHeader(
-                name = VERSION_MINOR_NAME, description = VERSION_MINOR_DESCRIPTION,
-                response = String.class),
-            @ResponseHeader(name = VERSION_PATCH_NAME, description = VERSION_PATCH_DESCRIPTION,
-                response = String.class),
-            @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
-                response = String.class),
-            @ResponseHeader(name = REQUEST_ID_NAME, description = REQUEST_ID_HDR_DESCRIPTION,
-                response = UUID.class)},
-        extensions = {
-            @Extension
-                (
-                    name = EXTENSION_NAME,
-                    properties = {
-                        @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
-                        @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
-                    }
-                )
-        }
-    )
-    @ApiResponses(
-        value = {
-            @ApiResponse(code = AUTHENTICATION_ERROR_CODE, message = AUTHENTICATION_ERROR_MESSAGE),
-            @ApiResponse(code = AUTHORIZATION_ERROR_CODE, message = AUTHORIZATION_ERROR_MESSAGE),
-            @ApiResponse(code = SERVER_ERROR_CODE, message = SERVER_ERROR_MESSAGE)
-        }
-    )
-    // @formatter:on
-    public ResponseEntity<String> queryToscaServiceTemplateJsonSchema(
-        @RequestHeader(name = REQUEST_ID_NAME, required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-        @ApiParam(
-            value = "Section of Template schema is desired for",
-            required = false) @RequestParam(value = "section", required = false, defaultValue = "all") String section)
-        throws PfModelException {
-
-        return ResponseEntity.ok().body(provider.getToscaServiceTemplateSchema(section));
-    }
-
-    /**
      * Retrieves the Common or Instance Properties for the specified Tosca Service Template.
      *
      * @param requestId request ID used in ONAP logging

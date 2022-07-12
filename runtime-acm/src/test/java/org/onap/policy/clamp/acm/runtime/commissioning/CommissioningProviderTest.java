@@ -29,9 +29,6 @@ import static org.mockito.Mockito.when;
 import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVICE_TEMPLATE_YAML;
 import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_ST_TEMPLATE_YAML;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.module.jsonSchema.factories.SchemaFactoryWrapper;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -42,20 +39,13 @@ import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider
 import org.onap.policy.clamp.models.acm.persistence.provider.ServiceTemplateProvider;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.StandardCoder;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaCapabilityType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaDataType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeType;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaRelationshipType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
 
 class CommissioningProviderTest {
 
     private static final Coder CODER = new StandardCoder();
-    private final ObjectMapper mapper = new ObjectMapper();
 
     /**
      * Test the fetching of automation composition definitions (ToscaServiceTemplates).
@@ -169,51 +159,5 @@ class CommissioningProviderTest {
         ToscaServiceTemplate parsedServiceTemplate = CODER.decode(returnedServiceTemplate, ToscaServiceTemplate.class);
 
         assertThat(parsedServiceTemplate.getToscaTopologyTemplate().getNodeTemplates()).hasSize(7);
-    }
-
-    /**
-     * Tests the different schemas being returned from the schema endpoint. As schemas of the different
-     * sections of the Tosca Service Templates can be returned by the API, this test must cover all of the
-     * different sections.
-     *
-     */
-    @Test
-    void testGetToscaServiceTemplateSchema() throws Exception {
-        var serviceTemplateProvider = mock(ServiceTemplateProvider.class);
-        var acProvider = mock(AutomationCompositionProvider.class);
-        var participantProvider = mock(ParticipantProvider.class);
-
-        CommissioningProvider provider =
-                new CommissioningProvider(serviceTemplateProvider, acProvider, null, participantProvider);
-        ToscaServiceTemplate serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_ST_TEMPLATE_YAML);
-        when(serviceTemplateProvider.createServiceTemplate(serviceTemplate)).thenReturn(serviceTemplate);
-
-        provider.createAutomationCompositionDefinitions(serviceTemplate);
-        provider.initialize();
-
-        mapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
-
-        Map<String, Class<?>> sections = Map.of("all", ToscaServiceTemplate.class, "data_types", ToscaDataType.class,
-                "capability_types", ToscaCapabilityType.class, "node_types", ToscaNodeType.class, "relationship_types",
-                ToscaRelationshipType.class, "policy_types", ToscaPolicyType.class, "topology_template",
-                ToscaTopologyTemplate.class, "node_templates", List.class);
-
-        for (Map.Entry<String, Class<?>> entry : sections.entrySet()) {
-            String returnedServiceTemplateSchema = provider.getToscaServiceTemplateSchema(entry.getKey());
-            assertThat(returnedServiceTemplateSchema).isNotNull();
-
-            var visitor = new SchemaFactoryWrapper();
-
-            if (entry.getKey().equals("node_templates")) {
-                mapper.acceptJsonFormatVisitor(
-                        mapper.getTypeFactory().constructCollectionType(List.class, ToscaNodeTemplate.class), visitor);
-            } else {
-                mapper.acceptJsonFormatVisitor(mapper.constructType(entry.getValue()), visitor);
-            }
-
-            var jsonSchema = visitor.finalSchema();
-            String localServiceTemplateSchema = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonSchema);
-            assertThat(localServiceTemplateSchema).isEqualTo(returnedServiceTemplateSchema);
-        }
     }
 }
