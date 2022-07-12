@@ -1,0 +1,10 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Liam Fallon <liam.fallon@est.tech>
+Code-Review+1: Ramesh Murugan Iyer <ramesh.murugan.iyer@est.tech>
+Code-Review+2: Ajith Sreekumar <ajith.sreekumar@bell.ca>
+Code-Review+1: Jorge Hernandez <jorge.hernandez-herrero@att.com>
+Submitted-by: Liam Fallon <liam.fallon@est.tech>
+Submitted-at: Tue, 12 Jul 2022 14:56:37 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/policy/clamp/+/129847
+Project: policy/clamp
+Branch: refs/heads/istanbul
