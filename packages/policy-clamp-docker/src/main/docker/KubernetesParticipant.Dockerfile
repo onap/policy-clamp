@@ -52,12 +52,12 @@ COPY --chown=policy:policy /maven/policy-clamp-participant-impl-kubernetes.jar /
 RUN chmod 755 bin/*.sh && \
     apk update && \
     apk add wget && \
-    wget https://get.helm.sh/helm-v3.5.2-linux-amd64.tar.gz && \
+    wget -nv https://get.helm.sh/helm-v3.5.2-linux-amd64.tar.gz && \
     tar xvf helm-v3.5.2-linux-amd64.tar.gz && \
     mv linux-amd64/helm /usr/local/bin && \
     rm -rf linux-amd64 && \
     rm helm-v3.5.2-linux-amd64.tar.gz && \
-    wget https://storage.googleapis.com/kubernetes-release/release/v1.21.1/bin/linux/amd64/kubectl && \
+    wget -nv https://storage.googleapis.com/kubernetes-release/release/v1.21.1/bin/linux/amd64/kubectl && \
     chmod +x kubectl && \
     mv kubectl /usr/local/bin/kubectl
 
