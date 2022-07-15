@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "08763f85_a98049bd",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-07-15T17:01:30Z",
+      "side": 1,
+      "message": "Why are the exclusions removed here?",
+      "revId": "a1b6bef1eea5144fb9a6f33b89f2daf914415e08",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5f54afa9_bc9bccef",
+        "filename": "runtime-acm/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-07-15T17:01:30Z",
+      "side": 1,
+      "message": "is this needed, isn\u0027t it picked up from parent\u0027s pom (previous file)?",
+      "revId": "a1b6bef1eea5144fb9a6f33b89f2daf914415e08",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
