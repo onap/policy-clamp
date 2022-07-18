@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e98e0018_37afe3c6",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2022-07-18T09:50:33Z",
+      "side": 1,
+      "message": "spring-boot-starter-web dependency tree contains jackson library",
+      "parentUuid": "08763f85_a98049bd",
+      "revId": "a1b6bef1eea5144fb9a6f33b89f2daf914415e08",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5f54afa9_bc9bccef",
         "filename": "runtime-acm/pom.xml",
         "patchSetId": 1
@@ -33,6 +51,24 @@
       "revId": "a1b6bef1eea5144fb9a6f33b89f2daf914415e08",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d827d446_ebbc1ce1",
+        "filename": "runtime-acm/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2022-07-18T09:50:33Z",
+      "side": 1,
+      "message": "I have create a new Jira tk POLICY-4289, to remove redundant spring libraries definitions",
+      "parentUuid": "5f54afa9_bc9bccef",
+      "revId": "a1b6bef1eea5144fb9a6f33b89f2daf914415e08",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
