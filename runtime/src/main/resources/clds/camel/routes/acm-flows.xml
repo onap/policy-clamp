@@ -312,34 +312,6 @@
             </doFinally>
         </doTry>
     </route>
-    <route id="get-json-schema">
-        <from uri="direct:get-json-schema"/>
-        <doTry>
-            <log loggingLevel="INFO"
-                 message="Getting the JSON Schema"/>
-            <to
-                    uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('AutomationComposition', 'Getting the JSON Schema')"/>
-            <setHeader name="CamelHttpMethod">
-                <constant>GET</constant>
-            </setHeader>
-            <setHeader name="Content-Type">
-                <constant>application/json</constant>
-            </setHeader>
-            <setProperty name="section">
-                <simple>${header.section}</simple>
-            </setProperty>
-            <log loggingLevel="INFO"
-                 message="Endpoint to get Json Schema: {{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/commission/toscaServiceTemplateSchema"></log>
-            <toD
-                    uri="{{clamp.config.acm.runtime.url}}/onap/policy/clamp/acm/v2/commission/toscaServiceTemplateSchema?section=${exchangeProperty[section]}&amp;bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.acm.runtime.userName}}&amp;authPassword={{clamp.config.acm.runtime.password}}&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
-            <convertBodyTo type="java.lang.String"/>
-            <doFinally>
-                <to uri="direct:reset-raise-http-exception-flag"/>
-                <to
-                        uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
-            </doFinally>
-        </doTry>
-    </route>
     <route id="get-element-definitions">
         <from uri="direct:get-element-definitions"/>
         <doTry>

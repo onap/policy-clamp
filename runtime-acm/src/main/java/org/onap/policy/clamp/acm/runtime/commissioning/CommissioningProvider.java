@@ -21,11 +21,6 @@
 
 package org.onap.policy.clamp.acm.runtime.commissioning;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.module.jsonSchema.factories.SchemaFactoryWrapper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -42,20 +37,15 @@ import org.onap.policy.clamp.models.acm.messages.rest.commissioning.Commissionin
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ServiceTemplateProvider;
+import org.onap.policy.common.utils.coder.Coder;
+import org.onap.policy.common.utils.coder.CoderException;
+import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaCapabilityType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaDataType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeType;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaRelationshipType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplates;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTypedEntityFilter;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -71,11 +61,9 @@ public class CommissioningProvider {
 
     private final ServiceTemplateProvider serviceTemplateProvider;
     private final AutomationCompositionProvider acProvider;
-    private final ObjectMapper mapper = new ObjectMapper();
+    private static final Coder CODER = new StandardCoder();
     private final ParticipantProvider participantProvider;
     private final SupervisionHandler supervisionHandler;
-
-    private static final Map<String, JavaType> sections = new HashMap<>();
 
     /**
      * Create a commissioning provider.
@@ -92,24 +80,6 @@ public class CommissioningProvider {
         this.acProvider = acProvider;
         this.supervisionHandler = supervisionHandler;
         this.participantProvider = participantProvider;
-        mapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
-    }
-
-    /**
-     * Event listener initiilize function called at ApplicationReadyEvent.
-     *
-     */
-    @EventListener(ApplicationReadyEvent.class)
-    public void initialize() {
-        sections.put("data_types", mapper.constructType(ToscaDataType.class));
-        sections.put("capability_types", mapper.constructType(ToscaCapabilityType.class));
-        sections.put("node_types", mapper.constructType(ToscaNodeType.class));
-        sections.put("relationship_types", mapper.constructType(ToscaRelationshipType.class));
-        sections.put("policy_types", mapper.constructType(ToscaPolicyType.class));
-        sections.put("topology_template", mapper.constructType(ToscaTopologyTemplate.class));
-        sections.put("node_templates",
-                mapper.getTypeFactory().constructCollectionType(List.class, ToscaNodeTemplate.class));
-        sections.put("all", mapper.constructType(ToscaServiceTemplate.class));
     }
 
     /**
@@ -330,28 +300,9 @@ public class CommissioningProvider {
         template.put("topology_template", fullTemplate.getToscaTopologyTemplate());
 
         try {
-            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(template);
+            return CODER.encode(template);
 
-        } catch (JsonProcessingException e) {
-            throw new PfModelException(Status.BAD_REQUEST, "Converion to Json Schema failed", e);
-        }
-    }
-
-    /**
-     * Get the requested json schema.
-     *
-     * @param section section of the tosca service template to get schema for
-     * @return the specified tosca service template or section Json Schema
-     * @throws PfModelException on errors with retrieving the classes
-     */
-    public String getToscaServiceTemplateSchema(String section) throws PfModelException {
-        var visitor = new SchemaFactoryWrapper();
-        var sectionMapper = sections.getOrDefault(section, sections.get("all"));
-        try {
-            mapper.acceptJsonFormatVisitor(sectionMapper, visitor);
-            var jsonSchema = visitor.finalSchema();
-            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonSchema);
-        } catch (JsonProcessingException e) {
+        } catch (CoderException e) {
             throw new PfModelException(Status.BAD_REQUEST, "Converion to Json Schema failed", e);
         }
     }

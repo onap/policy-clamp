@@ -1713,41 +1713,6 @@
                 </doTry>
             </route>
         </get>
-        <get uri="/v2/acm/getJsonSchema" outType="java.lang.String" bindingMode="off" produces="application/json">
-            <route>
-                <removeHeaders pattern="*"
-                               excludePattern="section"/>
-                <doTry>
-                    <to uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=startLog(*, 'GET Json Schema ')"/>
-                    <to uri="bean:org.onap.policy.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','read')"/>
-                    <setHeader name="Content-Type">
-                        <constant>application/json</constant>
-                    </setHeader>
-                    <setProperty name="raiseHttpExceptionFlag">
-                        <simple resultType="java.lang.Boolean">true</simple>
-                    </setProperty>
-                    <to uri="direct:get-json-schema"/>
-                    <to uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=endLog()"/>
-                    <doCatch>
-                        <exception>java.lang.Exception</exception>
-                        <handled>
-                            <constant>true</constant>
-                        </handled>
-                        <to
-                                uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=errorLog()"/>
-                        <log loggingLevel="ERROR"
-                             message="GET JSON Schema request failed: ${exception.stacktrace}"/>
-                        <setHeader name="CamelHttpResponseCode">
-                            <constant>500</constant>
-                        </setHeader>
-                        <setBody>
-                            <simple>GET JSON Schema FAILED</simple>
-                        </setBody>
-                    </doCatch>
-                </doTry>
-            </route>
-        </get>
-
         <get uri="/v2/acm/getElementDefinitions" outType="java.lang.String" bindingMode="off" produces="application/json">
             <route>
                 <removeHeaders pattern="*"

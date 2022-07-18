@@ -142,18 +142,6 @@ class CommissioningControllerTest extends CommonRestController {
     }
 
     @Test
-    void testQueryToscaServiceTemplateSchema() throws Exception {
-        createFullEntryInDbWithCommonProps();
-
-        Invocation.Builder invocationBuilder =
-                super.sendRequest(COMMISSIONING_ENDPOINT + "/toscaServiceTemplateSchema");
-        Response rawresp = invocationBuilder.buildGet().invoke();
-        assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
-        String schema = rawresp.readEntity(String.class);
-        assertNotNull(schema);
-    }
-
-    @Test
     void testQueryCommonOrInstanceProperties() throws Exception {
         createFullEntryInDbWithCommonProps();
 
