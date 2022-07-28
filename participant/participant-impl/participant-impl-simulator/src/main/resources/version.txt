@@ -1,4 +1,0 @@
-ONAP Tosca defined automation composition Participant
-Version: ${project.version}
-Built (UTC): ${maven.build.timestamp}
-ONAP https://wiki.onap.org
