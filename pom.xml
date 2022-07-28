@@ -1,6 +1,6 @@
 <!--
   ============LICENSE_START=======================================================
-  Copyright (C) 2021 Nordix Foundation.
+  Copyright (C) 2021-2022 Nordix Foundation.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@
             o policy-clamp-participant-impl-cds: A standard participant for interworking with CDS
             o policy-clamp-participant-impl-kubernetes: A standard participant for Kubernetes microservices
             o policy-clamp-participant-impl-policy: A standard participant for handling polcies for Policy Framework
-            o policy-clamp-participant-impl-simulator: A participant simulator for integration testing
+            o policy-clamp-acm-element-impl: ACM element implementation for integration testing
             o policy-clamp-participant-impl-http: A standard participant for http configurations
     </description>
 
