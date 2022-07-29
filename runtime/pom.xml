@@ -690,7 +690,7 @@
                     <apiVersion>1.35</apiVersion>
                     <images>
                         <image>
-                            <name>docker.io/mariadb:10.5.4</name>
+                            <name>mariadb:10.5.4</name>
                             <alias>mariadb</alias>
                             <run>
                                 <env>
@@ -719,7 +719,7 @@
                             </run>
                         </image>
                         <image>
-                            <name>docker.io/python:2-slim</name>
+                            <name>python:2-slim</name>
                             <alias>python</alias>
                             <run>
                                 <hostname>python</hostname>
