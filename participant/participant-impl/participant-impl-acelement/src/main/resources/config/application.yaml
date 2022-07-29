@@ -1,0 +1,22 @@
+spring:
+  security:
+    user:
+      name: acmUser
+      password: zb!XztG34
+
+server:
+  port: 8084
+  servlet:
+    context-path: /onap/policy/clamp/acelement/
+  error:
+    path: /error
+
+element:
+  elementId:
+    name: onap.policy.clamp.ac.element1
+    version: 1.0.0
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, metrics, prometheus
