@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a88cbfa9_6f774e53",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/messages/dmaap/element/ElementMessage.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2022-08-02T08:07:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "535a4676_f58492be",
+      "range": {
+        "startLine": 3,
+        "startChar": 16,
+        "endLine": 3,
+        "endChar": 26
+      },
+      "revId": "017adb5a56904d183645b56f97ab16f1d33e69f0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b5c44ec6_24cbdc2c",
         "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/element/DmaapConfig.java",
         "patchSetId": 1
@@ -45,6 +69,30 @@
       "revId": "017adb5a56904d183645b56f97ab16f1d33e69f0",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c27fdead_472151ad",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/element/DmaapConfig.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2022-08-02T08:07:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b5c44ec6_24cbdc2c",
+      "range": {
+        "startLine": 3,
+        "startChar": 17,
+        "endLine": 3,
+        "endChar": 26
+      },
+      "revId": "017adb5a56904d183645b56f97ab16f1d33e69f0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
