@@ -1,0 +1,9 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Jorge Hernandez <jorge.hernandez-herrero@att.com>
+Code-Review+1: Ram Krishna Verma <ram_krishna.verma@bell.ca>
+Code-Review+2: Ramesh Murugan Iyer <ramesh.murugan.iyer@est.tech>
+Submitted-by: Ramesh Murugan Iyer <ramesh.murugan.iyer@est.tech>
+Submitted-at: Thu, 04 Aug 2022 14:02:45 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/policy/clamp/+/130076
+Project: policy/clamp
+Branch: refs/heads/master
