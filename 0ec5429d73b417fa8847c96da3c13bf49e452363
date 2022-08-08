@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8f68d3c5_1cfa79c9",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/messages/dmaap/element/ElementMessageType.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2022-08-08T09:23:19Z",
+      "side": 1,
+      "message": "should we name this something like \"ACK_MSG\" if it is an acknowledgement msg?",
+      "range": {
+        "startLine": 24,
+        "startChar": 12,
+        "endLine": 24,
+        "endChar": 23
+      },
+      "revId": "0ec5429d73b417fa8847c96da3c13bf49e452363",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
