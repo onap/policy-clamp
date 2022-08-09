@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1eee5d2f_6cdd11ea",
+        "filename": "participant/participant-impl/participant-impl-acelement/src/main/java/org/onap/policy/clamp/acm/element/service/ConfigService.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2022-08-09T11:25:30Z",
+      "side": 1,
+      "message": "Should we assign the input config after line:66? If activate is triggered the second time by the user, messageActivator throws exception, in this scenario we should not change the element config I believe.",
+      "range": {
+        "startLine": 52,
+        "startChar": 7,
+        "endLine": 52,
+        "endChar": 43
+      },
+      "revId": "a4e1a8d749fa7f50685f08aab76360c90b92ae84",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
