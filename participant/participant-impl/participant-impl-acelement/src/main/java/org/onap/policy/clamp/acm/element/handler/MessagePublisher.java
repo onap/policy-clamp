@@ -22,10 +22,10 @@ package org.onap.policy.clamp.acm.element.handler;
 
 import java.util.List;
 import javax.ws.rs.core.Response;
+import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
 import org.onap.policy.clamp.models.acm.messages.dmaap.element.ElementMessage;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
-import org.onap.policy.models.base.PfModelRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -58,7 +58,7 @@ public class MessagePublisher {
      */
     public void publishMsg(final ElementMessage msg) {
         if (!active) {
-            throw new PfModelRuntimeException(Response.Status.CONFLICT, NOT_ACTIVE_TEXT);
+            throw new AutomationCompositionRuntimeException(Response.Status.CONFLICT, NOT_ACTIVE_TEXT);
         }
 
         topicSinkClient.send(msg);

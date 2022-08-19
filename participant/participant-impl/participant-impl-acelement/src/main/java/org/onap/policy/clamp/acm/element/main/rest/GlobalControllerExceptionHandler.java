@@ -22,7 +22,7 @@
 
 package org.onap.policy.clamp.acm.element.main.rest;
 
-import org.onap.policy.clamp.common.acm.exception.AutomationCompositionException;
+import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
 import org.onap.policy.clamp.models.acm.messages.rest.SimpleResponse;
 import org.onap.policy.clamp.models.acm.rest.RestUtils;
 import org.springframework.http.ResponseEntity;
@@ -38,8 +38,8 @@ public class GlobalControllerExceptionHandler {
      * @param ex AutomationCompositionException
      * @return ResponseEntity
      */
-    @ExceptionHandler(AutomationCompositionException.class)
-    public ResponseEntity<SimpleResponse> handleBadRequest(AutomationCompositionException ex) {
+    @ExceptionHandler(AutomationCompositionRuntimeException.class)
+    public ResponseEntity<SimpleResponse> handleBadRequest(AutomationCompositionRuntimeException ex) {
         return RestUtils.toSimpleResponse(ex);
     }
 }
