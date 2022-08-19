@@ -29,10 +29,10 @@ import lombok.Getter;
 import lombok.NonNull;
 import org.onap.policy.clamp.acm.element.main.parameters.AcElement;
 import org.onap.policy.clamp.acm.element.service.ElementService;
+import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
 import org.onap.policy.clamp.models.acm.messages.dmaap.element.ElementMessage;
 import org.onap.policy.clamp.models.acm.messages.rest.element.ElementConfig;
 import org.onap.policy.clamp.models.acm.messages.rest.element.ElementType;
-import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.springframework.stereotype.Component;
 
@@ -75,10 +75,10 @@ public class MessageHandler {
      */
     public void update(@NonNull ElementConfig elementConfig) {
         if (elementType == null) {
-            throw new PfModelRuntimeException(Response.Status.CONFLICT, "ElementType not defined!");
+            throw new AutomationCompositionRuntimeException(Response.Status.CONFLICT, "ElementType not defined!");
         }
         if (!elementType.equals(elementConfig.getElementType())) {
-            throw new PfModelRuntimeException(Response.Status.CONFLICT, "wrong ElementType!");
+            throw new AutomationCompositionRuntimeException(Response.Status.CONFLICT, "wrong ElementType!");
         }
         getActiveService().update(elementConfig);
     }
@@ -90,11 +90,11 @@ public class MessageHandler {
      */
     public ElementService getActiveService() {
         if (elementType == null) {
-            throw new PfModelRuntimeException(Response.Status.CONFLICT, "ElementType not defined!");
+            throw new AutomationCompositionRuntimeException(Response.Status.CONFLICT, "ElementType not defined!");
         }
         var service = map.get(elementType);
         if (service == null) {
-            throw new PfModelRuntimeException(Response.Status.CONFLICT, "ElementService not found!");
+            throw new AutomationCompositionRuntimeException(Response.Status.CONFLICT, "ElementService not found!");
         }
         return service;
     }

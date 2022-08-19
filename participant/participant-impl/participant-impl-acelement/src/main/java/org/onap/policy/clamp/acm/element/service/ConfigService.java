@@ -26,11 +26,11 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.element.handler.MessageActivator;
 import org.onap.policy.clamp.acm.element.handler.MessageHandler;
+import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
 import org.onap.policy.clamp.models.acm.messages.dmaap.element.ElementMessage;
 import org.onap.policy.clamp.models.acm.messages.rest.element.ElementConfig;
 import org.onap.policy.common.endpoints.parameters.TopicParameterGroup;
 import org.onap.policy.common.endpoints.parameters.TopicParameters;
-import org.onap.policy.models.base.PfModelRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -64,12 +64,12 @@ public class ConfigService {
         parameters.setTopicSources(List.of(topicParameters));
 
         if (!parameters.isValid()) {
-            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
+            throw new AutomationCompositionRuntimeException(Response.Status.BAD_REQUEST,
                     "Validation failed for topic parameter group. Kafka config not activated");
         }
 
         if (messageActivator.isAlive()) {
-            throw new PfModelRuntimeException(Response.Status.CONFLICT,
+            throw new AutomationCompositionRuntimeException(Response.Status.CONFLICT,
                     "Service Manager already running, cannot add Topic endpoint management");
         }
 

@@ -1,0 +1,14 @@
+{
+  "elementId":{
+    "name":"onap.policy.clamp.ac.element2",
+    "version":"1.0.0"
+  },
+  "timerSec":2000,
+  "elementType":"STARTER",
+  "topicParameterGroup":{
+    "server":"localhost",
+    "topic":"POLICY_UPDATE_MSG",
+    "fetchTimeout":15000,
+    "topicCommInfrastructure":"dmaap"
+  }
+}
