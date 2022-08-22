@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9cec8323_78ae5335",
+        "filename": "participant/participant-impl/participant-impl-acelement/src/test/java/org/onap/policy/clamp/acm/element/service/BridgeServiceTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2022-08-22T12:12:00Z",
+      "side": 1,
+      "message": "ugh - extra spaces.",
+      "range": {
+        "startLine": 52,
+        "startChar": 0,
+        "endLine": 52,
+        "endChar": 8
+      },
+      "revId": "76408e30153cf0456fa251c1eacde4f2e1fbf8d8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
