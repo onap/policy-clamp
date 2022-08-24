@@ -22,6 +22,30 @@
       "revId": "76408e30153cf0456fa251c1eacde4f2e1fbf8d8",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b0f0a77e_7c42b24b",
+        "filename": "participant/participant-impl/participant-impl-acelement/src/test/java/org/onap/policy/clamp/acm/element/service/BridgeServiceTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2022-08-24T08:13:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9cec8323_78ae5335",
+      "range": {
+        "startLine": 52,
+        "startChar": 0,
+        "endLine": 52,
+        "endChar": 8
+      },
+      "revId": "76408e30153cf0456fa251c1eacde4f2e1fbf8d8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
