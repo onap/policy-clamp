@@ -83,8 +83,6 @@ class MessageHandlerTest {
         var message = new ElementStatus();
         messageHandler.handleMessage(message);
         verify(bridge).handleMessage(message);
-        assertThat(messageHandler.getMessages()).hasSize(1);
-        assertThat(messageHandler.getMessages().get(0)).isEqualTo(message);
         messageHandler.deactivateElement();
     }
 
@@ -104,8 +102,6 @@ class MessageHandlerTest {
         var message = new ElementStatus();
         messageHandler.handleMessage(message);
         verify(sink).handleMessage(message);
-        assertThat(messageHandler.getMessages()).hasSize(1);
-        assertThat(messageHandler.getMessages().get(0)).isEqualTo(message);
         messageHandler.deactivateElement();
     }
 

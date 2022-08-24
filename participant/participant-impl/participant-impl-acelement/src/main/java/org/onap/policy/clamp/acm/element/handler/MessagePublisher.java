@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.acm.element.handler;
 
+import io.micrometer.core.annotation.Timed;
 import java.util.List;
 import javax.ws.rs.core.Response;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
@@ -56,6 +57,7 @@ public class MessagePublisher {
      *
      * @param msg the acknowledgement message
      */
+    @Timed(value = "publisher.status", description = "STATUS messages published")
     public void publishMsg(final ElementMessage msg) {
         if (!active) {
             throw new AutomationCompositionRuntimeException(Response.Status.CONFLICT, NOT_ACTIVE_TEXT);
