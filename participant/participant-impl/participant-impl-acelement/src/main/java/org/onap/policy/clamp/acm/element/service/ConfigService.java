@@ -98,8 +98,4 @@ public class ConfigService {
         elementConfig = new ElementConfig();
         LOGGER.info("Messages and service deactivated");
     }
-
-    public List<ElementMessage> getMessages() {
-        return handler.getMessages();
-    }
 }

@@ -20,12 +20,11 @@
 
 package org.onap.policy.clamp.acm.element.handler;
 
-import java.util.ArrayList;
+import io.micrometer.core.annotation.Timed;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.ws.rs.core.Response;
-import lombok.Getter;
 import lombok.NonNull;
 import org.onap.policy.clamp.acm.element.main.parameters.AcElement;
 import org.onap.policy.clamp.acm.element.service.ElementService;
@@ -43,9 +42,6 @@ public class MessageHandler {
     private ToscaConceptIdentifier elementId;
 
     private Map<ElementType, ElementService> map = new HashMap<>();
-
-    @Getter
-    private List<ElementMessage> messages = new ArrayList<>();
 
     /**
      * Constructor.
@@ -99,8 +95,8 @@ public class MessageHandler {
         return service;
     }
 
+    @Timed(value = "listener.status", description = "STATUS messages received")
     public void handleMessage(ElementMessage message) {
-        messages.add(message);
         getActiveService().handleMessage(message);
     }
 
