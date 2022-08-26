@@ -26,11 +26,11 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.element.handler.MessageActivator;
 import org.onap.policy.clamp.acm.element.handler.MessageHandler;
+import org.onap.policy.clamp.acm.element.main.parameters.ElementTopicParameters;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
 import org.onap.policy.clamp.models.acm.messages.dmaap.element.ElementMessage;
 import org.onap.policy.clamp.models.acm.messages.rest.element.ElementConfig;
 import org.onap.policy.common.endpoints.parameters.TopicParameterGroup;
-import org.onap.policy.common.endpoints.parameters.TopicParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -52,16 +52,14 @@ public class ConfigService {
      * @param elementConfig the configuration
      */
     public void activateElement(@NonNull ElementConfig elementConfig) {
-        var topicParameters = new TopicParameters();
-        topicParameters.setTopic(elementConfig.getTopicParameterGroup().getTopic());
-        topicParameters.setServers(List.of(elementConfig.getTopicParameterGroup().getServer()));
-        topicParameters.setFetchTimeout(elementConfig.getTopicParameterGroup().getFetchTimeout());
-        topicParameters.setTopicCommInfrastructure(elementConfig.getTopicParameterGroup().getTopicCommInfrastructure());
-        topicParameters.setUseHttps(elementConfig.getTopicParameterGroup().isUseHttps());
+        var listenerTopicParameters = new ElementTopicParameters(elementConfig.getTopicParameterGroup());
+
+        var publisherTopicParameters = new ElementTopicParameters(elementConfig.getTopicParameterGroup());
+        publisherTopicParameters.setTopic(elementConfig.getTopicParameterGroup().getPublisherTopic());
 
         var parameters = new TopicParameterGroup();
-        parameters.setTopicSinks(List.of(topicParameters));
-        parameters.setTopicSources(List.of(topicParameters));
+        parameters.setTopicSinks(List.of(listenerTopicParameters));
+        parameters.setTopicSources(List.of(publisherTopicParameters));
 
         if (!parameters.isValid()) {
             throw new AutomationCompositionRuntimeException(Response.Status.BAD_REQUEST,

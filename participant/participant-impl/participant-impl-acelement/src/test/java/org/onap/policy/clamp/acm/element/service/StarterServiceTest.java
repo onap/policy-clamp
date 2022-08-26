@@ -47,8 +47,8 @@ class StarterServiceTest {
             assertThat(starterService.getType()).isEqualTo(ElementType.STARTER);
 
             var elementConfig = new ElementConfig();
-            elementConfig.setTimerSec(100);
-            elementConfig.setElementId(new ToscaConceptIdentifier("onap.policy.clamp.ac.element2", "1.0.0"));
+            elementConfig.setTimerMs(100);
+            elementConfig.setReceiverId(new ToscaConceptIdentifier("onap.policy.clamp.ac.element2", "1.0.0"));
             starterService.active(elementConfig);
             verify(messagePublisher, timeout(200).atLeastOnce()).publishMsg(any(ElementMessage.class));
             starterService.deactivate();

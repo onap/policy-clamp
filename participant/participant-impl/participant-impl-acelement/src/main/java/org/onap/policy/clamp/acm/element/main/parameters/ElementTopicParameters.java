@@ -18,19 +18,27 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.models.acm.messages.rest.element;
+package org.onap.policy.clamp.acm.element.main.parameters;
 
+import java.util.List;
 import lombok.Data;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.clamp.models.acm.messages.rest.element.DmaapConfig;
+import org.onap.policy.common.endpoints.parameters.TopicParameters;
 
 @Data
-public class ElementConfig {
+public class ElementTopicParameters extends TopicParameters {
 
-    private ToscaConceptIdentifier receiverId;
+    /**
+     * Constructor.
+     * @param parameters DmaapConfig
+     */
+    public ElementTopicParameters(DmaapConfig parameters) {
+        super();
+        this.setTopic(parameters.getListenerTopic());
+        this.setServers(List.of(parameters.getServer()));
+        this.setFetchTimeout(parameters.getFetchTimeout());
+        this.setTopicCommInfrastructure(parameters.getTopicCommInfrastructure());
+        this.setUseHttps(parameters.isUseHttps());
+    }
 
-    private ElementType elementType;
-
-    private Integer timerMs;
-
-    private DmaapConfig topicParameterGroup;
 }
