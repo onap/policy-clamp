@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5ff47049_924c6530",
+        "filename": "participant/participant-impl/participant-impl-acelement/src/main/java/org/onap/policy/clamp/acm/element/config/MicrometerConfig.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2022-08-26T13:08:56Z",
+      "side": 1,
+      "message": "2022",
+      "range": {
+        "startLine": 3,
+        "startChar": 17,
+        "endLine": 3,
+        "endChar": 26
+      },
+      "revId": "e933fa4c6e7c0116062d2b87bf7d71acad909c80",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
