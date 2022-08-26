@@ -75,12 +75,12 @@ public class StarterService extends AbstractElementService implements AutoClosea
         if (timerPool != null) {
             throw new PfModelRuntimeException(Response.Status.CONFLICT, "StarterService alredy actived!");
         }
-        receiver = elementConfig.getElementId();
+        receiver = elementConfig.getReceiverId();
 
         timerPool = new ScheduledThreadPoolExecutor(1);
         timerPool.setRemoveOnCancelPolicy(true);
-        future = timerPool.scheduleAtFixedRate(this::sendMessage, elementConfig.getTimerSec(),
-                elementConfig.getTimerSec(), TimeUnit.MILLISECONDS);
+        future = timerPool.scheduleAtFixedRate(this::sendMessage, elementConfig.getTimerMs(),
+                elementConfig.getTimerMs(), TimeUnit.MILLISECONDS);
     }
 
     private void sendMessage() {
@@ -99,8 +99,8 @@ public class StarterService extends AbstractElementService implements AutoClosea
         if (future != null) {
             future.cancel(true);
         }
-        future = timerPool.scheduleAtFixedRate(this::sendMessage, elementConfig.getTimerSec(),
-                elementConfig.getTimerSec(), TimeUnit.MILLISECONDS);
+        future = timerPool.scheduleAtFixedRate(this::sendMessage, elementConfig.getTimerMs(),
+                elementConfig.getTimerMs(), TimeUnit.MILLISECONDS);
     }
 
     @Override
