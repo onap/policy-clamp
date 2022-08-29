@@ -40,8 +40,7 @@ import org.onap.policy.common.utils.network.NetworkUtil;
 public class CommonActuatorController {
 
     public static final String SELF = NetworkUtil.getHostname();
-    public static final String CONTEXT_PATH = "onap/policy/clamp/acm/httpparticipant";
-    public static final String ACTUATOR_ENDPOINT = CONTEXT_PATH + "/actuator/";
+    public static final String CONTEXT_PATH = "onap/policy/clamp/acm/httpparticipant/";
 
     private static String httpPrefix;
 
@@ -52,7 +51,7 @@ public class CommonActuatorController {
      * @return a request builder
      */
     protected Invocation.Builder sendActRequest(final String endpoint) {
-        return sendFqeRequest(httpPrefix + ACTUATOR_ENDPOINT + endpoint, true);
+        return sendFqeRequest(httpPrefix + CONTEXT_PATH + endpoint, true);
     }
 
     /**
@@ -62,7 +61,7 @@ public class CommonActuatorController {
      * @return a request builder
      */
     protected Invocation.Builder sendNoAuthActRequest(final String endpoint) {
-        return sendFqeRequest(httpPrefix + ACTUATOR_ENDPOINT + endpoint, false);
+        return sendFqeRequest(httpPrefix + CONTEXT_PATH + endpoint, false);
     }
 
     /**

@@ -3,6 +3,13 @@ spring:
     user:
       name: participantUser
       password: zb!XztG34
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration
+
 security:
   enable-csrf: false
 participant:
@@ -19,17 +26,18 @@ participant:
       topicSources:
         - topic: POLICY-ACRUNTIME-PARTICIPANT
           servers:
-            - ${topicServer:message-router}
+            - ${topicServer:localhost}
           topicCommInfrastructure: dmaap
           fetchTimeout: 15000
       topicSinks:
         - topic: POLICY-ACRUNTIME-PARTICIPANT
           servers:
-            - ${topicServer:message-router}
+            - ${topicServer:localhost}
           topicCommInfrastructure: dmaap
 management:
   endpoints:
     web:
+      base-path: /
       exposure:
         include: health, metrics, prometheus
 server:

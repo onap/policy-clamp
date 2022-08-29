@@ -3,6 +3,12 @@ spring:
     user:
       name: ${REST_USER:acmUser}
       password: ${REST_PASSWORD:zb!XztG34}
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration
 
 server:
   port: ${PORT:8084}

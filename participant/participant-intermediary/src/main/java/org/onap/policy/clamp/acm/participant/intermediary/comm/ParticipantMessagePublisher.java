@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,6 +21,7 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.comm;
 
+import io.micrometer.core.annotation.Timed;
 import java.util.List;
 import javax.ws.rs.core.Response.Status;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.Publisher;
@@ -67,10 +68,9 @@ public class ParticipantMessagePublisher implements Publisher {
      *
      * @param participantStatus the Participant Status
      */
+    @Timed(value = "publisher.participant_status", description = "PARTICIPANT_STATUS messages published")
     public void sendParticipantStatus(final ParticipantStatus participantStatus) {
-        if (!active) {
-            throw new AutomationCompositionRuntimeException(Status.NOT_ACCEPTABLE, NOT_ACTIVE_TEXT);
-        }
+        validate();
         topicSinkClient.send(participantStatus);
         LOGGER.debug("Sent Participant Status message to CLAMP - {}", participantStatus);
     }
@@ -80,10 +80,9 @@ public class ParticipantMessagePublisher implements Publisher {
      *
      * @param participantRegister the Participant Status
      */
+    @Timed(value = "publisher.participant_register", description = "PARTICIPANT_REGISTER messages published")
     public void sendParticipantRegister(final ParticipantRegister participantRegister) {
-        if (!active) {
-            throw new AutomationCompositionRuntimeException(Status.NOT_ACCEPTABLE, NOT_ACTIVE_TEXT);
-        }
+        validate();
         topicSinkClient.send(participantRegister);
         LOGGER.debug("Sent Participant Register message to CLAMP - {}", participantRegister);
     }
@@ -93,10 +92,9 @@ public class ParticipantMessagePublisher implements Publisher {
      *
      * @param participantDeregister the Participant Status
      */
+    @Timed(value = "publisher.participant_deregister", description = "PARTICIPANT_DEREGISTER messages published")
     public void sendParticipantDeregister(final ParticipantDeregister participantDeregister) {
-        if (!active) {
-            throw new AutomationCompositionRuntimeException(Status.NOT_ACCEPTABLE, NOT_ACTIVE_TEXT);
-        }
+        validate();
         topicSinkClient.send(participantDeregister);
         LOGGER.debug("Sent Participant Deregister message to CLAMP - {}", participantDeregister);
     }
@@ -106,10 +104,9 @@ public class ParticipantMessagePublisher implements Publisher {
      *
      * @param participantUpdateAck the Participant Update Ack
      */
+    @Timed(value = "publisher.participant_update_ack", description = "PARTICIPANT_UPDATE_ACK messages published")
     public void sendParticipantUpdateAck(final ParticipantUpdateAck participantUpdateAck) {
-        if (!active) {
-            throw new AutomationCompositionRuntimeException(Status.NOT_ACCEPTABLE, NOT_ACTIVE_TEXT);
-        }
+        validate();
         topicSinkClient.send(participantUpdateAck);
         LOGGER.debug("Sent Participant Update Ack message to CLAMP - {}", participantUpdateAck);
     }
@@ -119,10 +116,10 @@ public class ParticipantMessagePublisher implements Publisher {
      *
      * @param automationCompositionAck AutomationComposition Update/StateChange Ack
      */
+    @Timed(value = "publisher.automation_composition_update_ack",
+            description = "AUTOMATION_COMPOSITION_UPDATE_ACK/AUTOMATION_COMPOSITION_STATECHANGE_ACK messages published")
     public void sendAutomationCompositionAck(final AutomationCompositionAck automationCompositionAck) {
-        if (!active) {
-            throw new AutomationCompositionRuntimeException(Status.NOT_ACCEPTABLE, NOT_ACTIVE_TEXT);
-        }
+        validate();
         topicSinkClient.send(automationCompositionAck);
         LOGGER.debug("Sent AutomationComposition Update/StateChange Ack to runtime - {}", automationCompositionAck);
     }
@@ -132,12 +129,17 @@ public class ParticipantMessagePublisher implements Publisher {
      *
      * @param participantStatus the Participant Status
      */
+    @Timed(value = "publisher.participant_status", description = "PARTICIPANT_STATUS messages published")
     public void sendHeartbeat(final ParticipantStatus participantStatus) {
+        validate();
+        topicSinkClient.send(participantStatus);
+        LOGGER.debug("Sent Participant heartbeat to CLAMP - {}", participantStatus);
+    }
+
+    private void validate() {
         if (!active) {
             throw new AutomationCompositionRuntimeException(Status.NOT_ACCEPTABLE, NOT_ACTIVE_TEXT);
         }
-        topicSinkClient.send(participantStatus);
-        LOGGER.debug("Sent Participant heartbeat to CLAMP - {}", participantStatus);
     }
 
     @Override

@@ -22,6 +22,7 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.handler;
 
+import io.micrometer.core.annotation.Timed;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -99,6 +100,8 @@ public class ParticipantHandler {
      *
      * @param participantStatusReqMsg participant participantStatusReq message
      */
+    @Timed(value = "listener.participant_status_req",
+            description = "PARTICIPANT_STATUS_REQ messages received")
     public void handleParticipantStatusReq(final ParticipantStatusReq participantStatusReqMsg) {
         var participantStatus = makeHeartbeat(true);
         publisher.sendParticipantStatus(participantStatus);
@@ -109,6 +112,8 @@ public class ParticipantHandler {
      *
      * @param updateMsg the update message
      */
+    @Timed(value = "listener.automation_composition_update",
+            description = "AUTOMATION_COMPOSITION_UPDATE messages received")
     public void handleAutomationCompositionUpdate(AutomationCompositionUpdate updateMsg) {
         automationCompositionHandler.handleAutomationCompositionUpdate(updateMsg, acElementDefsOnThisParticipant);
     }
@@ -118,6 +123,8 @@ public class ParticipantHandler {
      *
      * @param stateChangeMsg the state change message
      */
+    @Timed(value = "listener.automation_composition_state_change",
+            description = "AUTOMATION_COMPOSITION_STATE_CHANGE messages received")
     public void handleAutomationCompositionStateChange(AutomationCompositionStateChange stateChangeMsg) {
         automationCompositionHandler.handleAutomationCompositionStateChange(stateChangeMsg,
             acElementDefsOnThisParticipant);
@@ -223,6 +230,8 @@ public class ParticipantHandler {
      *
      * @param participantRegisterAckMsg the participantRegisterAck message
      */
+    @Timed(value = "listener.participant_register_ack",
+            description = "PARTICIPANT_REGISTER_ACK messages received")
     public void handleParticipantRegisterAck(ParticipantRegisterAck participantRegisterAckMsg) {
         LOGGER.debug("ParticipantRegisterAck message received as responseTo {}",
             participantRegisterAckMsg.getResponseTo());
@@ -257,6 +266,8 @@ public class ParticipantHandler {
      *
      * @param participantDeregisterAckMsg the participantDeregisterAck message
      */
+    @Timed(value = "listener.participant_deregister_ack",
+            description = "PARTICIPANT_DEREGISTER_ACK messages received")
     public void handleParticipantDeregisterAck(ParticipantDeregisterAck participantDeregisterAckMsg) {
         LOGGER.debug("ParticipantDeregisterAck message received as responseTo {}",
             participantDeregisterAckMsg.getResponseTo());
@@ -267,6 +278,8 @@ public class ParticipantHandler {
      *
      * @param participantUpdateMsg the ParticipantUpdate message
      */
+    @Timed(value = "listener.participant_update",
+            description = "PARTICIPANT_UPDATE messages received")
     public void handleParticipantUpdate(ParticipantUpdate participantUpdateMsg) {
         LOGGER.debug("ParticipantUpdate message received for participantId {}",
             participantUpdateMsg.getParticipantId());
