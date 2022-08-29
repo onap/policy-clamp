@@ -60,6 +60,6 @@ public class BridgeService extends AbstractElementService {
 
     @Override
     public void active(ElementConfig elementConfig) {
-        receiver = elementConfig.getElementId();
+        receiver = elementConfig.getReceiverId();
     }
 }

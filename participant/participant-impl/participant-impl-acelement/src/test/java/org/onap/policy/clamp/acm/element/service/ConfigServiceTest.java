@@ -39,7 +39,8 @@ class ConfigServiceTest {
         var elementConfig = new ElementConfig();
         elementConfig.setTopicParameterGroup(new DmaapConfig());
         elementConfig.getTopicParameterGroup().setTopicCommInfrastructure("dmaap");
-        elementConfig.getTopicParameterGroup().setTopic("topic");
+        elementConfig.getTopicParameterGroup().setListenerTopic("topic");
+        elementConfig.getTopicParameterGroup().setPublisherTopic("topic");
         elementConfig.getTopicParameterGroup().setServer("localhost");
         elementConfig.getTopicParameterGroup().setFetchTimeout(1000);
 

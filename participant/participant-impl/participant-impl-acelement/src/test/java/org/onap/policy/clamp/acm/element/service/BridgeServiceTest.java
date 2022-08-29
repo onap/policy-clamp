@@ -47,7 +47,7 @@ class BridgeServiceTest {
         assertThat(bridgeService.getType()).isEqualTo(ElementType.BRIDGE);
 
         var elementConfig = new ElementConfig();
-        elementConfig.setElementId(new ToscaConceptIdentifier("onap.policy.clamp.ac.element2", "1.0.0"));
+        elementConfig.setReceiverId(new ToscaConceptIdentifier("onap.policy.clamp.ac.element2", "1.0.0"));
         bridgeService.active(elementConfig);
 
         bridgeService.handleMessage(new ElementStatus());

@@ -26,7 +26,9 @@ import lombok.Data;
 public class DmaapConfig {
     private String server;
 
-    private String topic;
+    private String listenerTopic;
+
+    private String publisherTopic;
 
     private Integer fetchTimeout;
 
