@@ -1,0 +1,22 @@
+spring:
+  security:
+    user:
+      name: ${REST_USER}
+      password: ${REST_PASSWORD}
+
+server:
+  port: ${PORT}
+  servlet:
+    context-path: /onap/policy/clamp/acelement/
+  error:
+    path: /error
+
+element:
+  elementId:
+    name: ${ELEMENT_ID}
+    version: ${ELEMENT_VERSION}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, metrics, prometheus
