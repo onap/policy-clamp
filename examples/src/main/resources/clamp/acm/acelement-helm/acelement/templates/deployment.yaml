@@ -1,0 +1,66 @@
+# ============LICENSE_START=======================================================
+# Copyright (C) 2022 Nordix Foundation.
+# ================================================================================
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# SPDX-License-Identifier: Apache-2.0
+# ============LICENSE_END=========================================================
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "acelement.fullname" . }}
+  labels:
+    {{- include "acelement.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "acelement.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "acelement.selectorLabels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ include "acelement.serviceAccountName" . }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}/{{ .Values.image.name }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          env:
+          - name: REST_USER
+            value: {{ .Values.acelement.restserver.username | quote }}
+          - name: REST_PASSWORD
+            value: {{ .Values.acelement.restserver.password | quote }}
+          - name: PORT
+            value: {{ .Values.acelement.restserver.port | quote }}
+          - name: ELEMENT_ID
+            value: {{ .Values.acelement.elementId.name | quote }}
+          - name: ELEMENT_VERSION
+            value: {{ .Values.acelement.elementId.version | quote }}
+
+          volumeMounts:
+            - mountPath: /opt/app/policy/clamp/etc/mounted/
+              name: config-volume
+          command: ["/opt/app/policy/clamp/bin/element-participant.sh"]
+          args: ["/opt/app/policy/clamp/etc/mounted/application.yaml"]
+
+      volumes:
+        - name: config-volume
+          configMap:
+            name: application-config
+            defaultMode: 0755

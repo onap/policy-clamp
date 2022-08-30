@@ -1,0 +1,9 @@
+Helm chart for AC element microservice that exposes REST endpoints for activation and deactivation of Dmaap topic.
+
+1. Push helm chart to local repository for testing ACM workflow:
+   cd examples/acelement-helm/ and execute "helm push acelement <repo name>
+
+2. Installation from cli and override element id and port:
+   helm install <release-name> acelement/  --set acelement.elementId.name=<name> acelement.restserver.port=<port>
+
+
