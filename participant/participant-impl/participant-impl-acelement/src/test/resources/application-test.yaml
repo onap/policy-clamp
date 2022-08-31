@@ -6,8 +6,6 @@ spring:
 
 server:
   port: 8084
-  servlet:
-    context-path: /onap/policy/clamp/acelement/
   error:
     path: /error
 
@@ -18,5 +16,6 @@ element:
 management:
   endpoints:
     web:
+      base-path: /
       exposure:
         include: health, metrics, prometheus
