@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021 Nordix Foundation.
+ * Copyright (C) 2021,2022 Nordix Foundation.
  * ================================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -22,6 +22,7 @@
 
 package org.onap.policy.clamp.acm.runtime.supervision.comm;
 
+import io.micrometer.core.annotation.Timed;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +58,7 @@ public class ParticipantUpdatePublisher extends AbstractParticipantPublisher<Par
      * @param name the ToscaServiceTemplate name
      * @param version the ToscaServiceTemplate version
      */
+    @Timed(value = "publisher.participant_update", description = "PARTICIPANT_UPDATE messages published")
     public void sendComissioningBroadcast(String name, String version) {
         sendCommissioning(name, version, null, null);
     }
@@ -70,6 +72,7 @@ public class ParticipantUpdatePublisher extends AbstractParticipantPublisher<Par
      * @param participantType the ParticipantType
      * @param participantId the ParticipantId
      */
+    @Timed(value = "publisher.participant_update", description = "PARTICIPANT_UPDATE messages published")
     public boolean sendCommissioning(String name, String version, ToscaConceptIdentifier participantType,
             ToscaConceptIdentifier participantId) {
         var message = new ParticipantUpdate();
@@ -115,6 +118,7 @@ public class ParticipantUpdatePublisher extends AbstractParticipantPublisher<Par
     /**
      * Send ParticipantUpdate to Participant after that commissioning has been removed.
      */
+    @Timed(value = "publisher.participant_update", description = "PARTICIPANT_UPDATE messages published")
     public void sendDecomisioning() {
         var message = new ParticipantUpdate();
         message.setTimestamp(Instant.now());

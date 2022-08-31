@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021,2022 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,6 +21,7 @@
 
 package org.onap.policy.clamp.acm.runtime.supervision;
 
+import io.micrometer.core.annotation.Timed;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -135,6 +136,7 @@ public class SupervisionHandler {
      * @param participantStatusMessage the ParticipantStatus message received from a participant
      */
     @MessageIntercept
+    @Timed(value = "listener.participant_status", description = "PARTICIPANT_STATUS messages received")
     public void handleParticipantMessage(ParticipantStatus participantStatusMessage) {
         LOGGER.debug("Participant Status received {}", participantStatusMessage);
         try {
@@ -157,6 +159,7 @@ public class SupervisionHandler {
      * @param participantRegisterMessage the ParticipantRegister message received from a participant
      */
     @MessageIntercept
+    @Timed(value = "listener.participant_register", description = "PARTICIPANT_REGISTER messages received")
     public boolean handleParticipantMessage(ParticipantRegister participantRegisterMessage) {
         LOGGER.debug("Participant Register received {}", participantRegisterMessage);
         try {
@@ -179,6 +182,7 @@ public class SupervisionHandler {
      * @param participantDeregisterMessage the ParticipantDeregister message received from a participant
      */
     @MessageIntercept
+    @Timed(value = "listener.participant_deregister", description = "PARTICIPANT_DEREGISTER messages received")
     public void handleParticipantMessage(ParticipantDeregister participantDeregisterMessage) {
         LOGGER.debug("Participant Deregister received {}", participantDeregisterMessage);
         try {
@@ -206,6 +210,7 @@ public class SupervisionHandler {
      * @param participantUpdateAckMessage the ParticipantUpdateAck message received from a participant
      */
     @MessageIntercept
+    @Timed(value = "listener.participant_update_ack", description = "PARTICIPANT_UPDATE_ACK messages received")
     public void handleParticipantMessage(ParticipantUpdateAck participantUpdateAckMessage) {
         LOGGER.debug("Participant Update Ack received {}", participantUpdateAckMessage);
         try {
@@ -253,6 +258,8 @@ public class SupervisionHandler {
      * @param automationCompositionAckMessage the AutomationCompositionAck message received from a participant
      */
     @MessageIntercept
+    @Timed(value = "listener.automation_composition_update_ack",
+        description = "AUTOMATION_COMPOSITION_UPDATE_ACK messages received")
     public void handleAutomationCompositionUpdateAckMessage(AutomationCompositionAck automationCompositionAckMessage) {
         LOGGER.debug("AutomationComposition Update Ack message received {}", automationCompositionAckMessage);
         setAcElementStateInDb(automationCompositionAckMessage);
@@ -264,6 +271,8 @@ public class SupervisionHandler {
      * @param automationCompositionAckMessage the AutomationCompositionAck message received from a participant
      */
     @MessageIntercept
+    @Timed(value = "listener.automation_composition_statechange_ack",
+        description = "AUTOMATION_COMPOSITION_STATECHANGE_ACK messages received")
     public void handleAutomationCompositionStateChangeAckMessage(
         AutomationCompositionAck automationCompositionAckMessage) {
         LOGGER.debug("AutomationComposition StateChange Ack message received {}", automationCompositionAckMessage);

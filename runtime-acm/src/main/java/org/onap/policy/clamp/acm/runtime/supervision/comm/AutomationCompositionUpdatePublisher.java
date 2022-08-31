@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021 Nordix Foundation.
+ * Copyright (C) 2021,2022 Nordix Foundation.
  * ================================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -22,6 +22,7 @@
 
 package org.onap.policy.clamp.acm.runtime.supervision.comm;
 
+import io.micrometer.core.annotation.Timed;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +55,8 @@ public class AutomationCompositionUpdatePublisher extends AbstractParticipantPub
      *
      * @param automationComposition the AutomationComposition
      */
+    @Timed(value = "publisher.automation_composition_update",
+            description = "AUTOMATION_COMPOSITION_UPDATE messages published")
     public void send(AutomationComposition automationComposition) {
         send(automationComposition, 0);
     }
@@ -64,6 +67,8 @@ public class AutomationCompositionUpdatePublisher extends AbstractParticipantPub
      * @param automationComposition the AutomationComposition
      * @param startPhase the Start Phase
      */
+    @Timed(value = "publisher.automation_composition_update",
+            description = "AUTOMATION_COMPOSITION_UPDATE messages published")
     public void send(AutomationComposition automationComposition, int startPhase) {
         var automationCompositionUpdateMsg = new AutomationCompositionUpdate();
         automationCompositionUpdateMsg.setStartPhase(startPhase);

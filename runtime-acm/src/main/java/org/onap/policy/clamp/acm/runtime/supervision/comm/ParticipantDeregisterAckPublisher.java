@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021 Nordix Foundation.
+ * Copyright (C) 2021,2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.acm.runtime.supervision.comm;
 
+import io.micrometer.core.annotation.Timed;
 import java.util.UUID;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDeregisterAck;
 import org.springframework.stereotype.Component;
@@ -35,6 +36,8 @@ public class ParticipantDeregisterAckPublisher extends AbstractParticipantAckPub
      *
      * @param responseTo the original request id in the request.
      */
+    @Timed(value = "publisher.participant_deregister_ack",
+            description = "PARTICIPANT_DEREGISTER_ACK messages published")
     public void send(UUID responseTo) {
         var message = new ParticipantDeregisterAck();
         message.setResponseTo(responseTo);

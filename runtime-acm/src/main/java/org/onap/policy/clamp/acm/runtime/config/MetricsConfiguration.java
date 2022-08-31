@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.acm.runtime.config;
 
+import io.micrometer.core.aop.TimedAspect;
 import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -33,8 +34,19 @@ public class MetricsConfiguration {
      * Load up the metrics registry.
      */
     @Bean
-    InitializingBean forcePrometheusPostProcessor(BeanPostProcessor meterRegistryPostProcessor,
-                                                  MeterRegistry registry) {
+    public InitializingBean forcePrometheusPostProcessor(BeanPostProcessor meterRegistryPostProcessor,
+            MeterRegistry registry) {
         return () -> meterRegistryPostProcessor.postProcessAfterInitialization(registry, "");
+    }
+
+    /**
+     * Register TimedAspect.
+     *
+     * @param registry MeterRegistry
+     * @return TimedAspect
+     */
+    @Bean
+    public TimedAspect timedAspect(MeterRegistry registry) {
+        return new TimedAspect(registry);
     }
 }

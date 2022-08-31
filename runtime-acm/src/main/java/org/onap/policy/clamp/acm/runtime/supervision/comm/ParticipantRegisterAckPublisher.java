@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021 Nordix Foundation.
+ * Copyright (C) 2021,2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.acm.runtime.supervision.comm;
 
+import io.micrometer.core.annotation.Timed;
 import java.util.UUID;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegisterAck;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -38,6 +39,7 @@ public class ParticipantRegisterAckPublisher extends AbstractParticipantAckPubli
      * @param participantId the participant Id
      * @param participantType the participant Type
      */
+    @Timed(value = "publisher.participant_register_ack", description = "PARTICIPANT_REGISTER_ACK messages published")
     public void send(UUID responseTo, ToscaConceptIdentifier participantId, ToscaConceptIdentifier participantType) {
         var message = new ParticipantRegisterAck();
         message.setParticipantId(participantId);
