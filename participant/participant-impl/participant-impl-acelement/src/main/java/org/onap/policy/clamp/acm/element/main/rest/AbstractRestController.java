@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 // @formatter:off
 @RequestMapping(
-        value = "/v2",
+        value = "/onap/policy/clamp/acelement/v2",
         produces = {
             MediaType.APPLICATION_JSON,
             AbstractRestController.APPLICATION_YAML
