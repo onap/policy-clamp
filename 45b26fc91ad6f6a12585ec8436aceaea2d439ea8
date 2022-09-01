@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8fdef71c_d8c27ef8",
+        "filename": "examples/src/main/resources/clamp/acm/acelement-helm/acelement/templates/deployment.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2022-09-01T13:49:35Z",
+      "side": 1,
+      "message": "I guess an envronment substitution initContainer will be required here to replace the values in your config file with the actual values in the environment variables... Note this will also require the associated configMaps/volumes/volumeMounts",
+      "revId": "45b26fc91ad6f6a12585ec8436aceaea2d439ea8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "67738841_df274e05",
+        "filename": "examples/src/main/resources/clamp/acm/acelement-helm/acelement/templates/deployment.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2022-09-01T13:49:35Z",
+      "side": 1,
+      "message": "Is there a Dockerfile for this image somewhere? Perhaps it is in a different repo?",
+      "range": {
+        "startLine": 42,
+        "startChar": 17,
+        "endLine": 42,
+        "endChar": 126
+      },
+      "revId": "45b26fc91ad6f6a12585ec8436aceaea2d439ea8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ecacf8f1_88c4ca29",
+        "filename": "examples/src/main/resources/clamp/acm/acelement-helm/acelement/templates/deployment.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2022-09-01T13:49:35Z",
+      "side": 1,
+      "message": "Is this script in the clamp repo currently? I do not see it on this review.",
+      "range": {
+        "startLine": 61,
+        "startChar": 47,
+        "endLine": 61,
+        "endChar": 69
+      },
+      "revId": "45b26fc91ad6f6a12585ec8436aceaea2d439ea8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
