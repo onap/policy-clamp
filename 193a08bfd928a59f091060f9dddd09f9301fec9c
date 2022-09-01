@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a543a997_0c7f543a",
+        "filename": "participant/participant-impl/participant-impl-acelement/src/main/resources/config/application.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2022-09-01T11:39:22Z",
+      "side": 1,
+      "message": "could these be environment variables also? most likely this file is overridden during runtime, but perhaps someone would prefer this also??",
+      "revId": "193a08bfd928a59f091060f9dddd09f9301fec9c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "985bd655_96dc1298",
+        "filename": "participant/participant-impl/participant-impl-acelement/src/test/java/org/onap/policy/clamp/acm/element/rest/ActuatorControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2022-09-01T11:39:22Z",
+      "side": 1,
+      "message": "curious, does line 48 initialize this randomly?",
+      "range": {
+        "startLine": 53,
+        "startChar": 28,
+        "endLine": 53,
+        "endChar": 44
+      },
+      "revId": "193a08bfd928a59f091060f9dddd09f9301fec9c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
