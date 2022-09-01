@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "228b8448_dbb0db6a",
+        "filename": "examples/src/main/resources/clamp/acm/acelement-helm/acelement/templates/deployment.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2022-09-01T14:27:50Z",
+      "side": 1,
+      "message": "Ok, perfect",
+      "parentUuid": "eabf615e_1d0be71f",
+      "revId": "45b26fc91ad6f6a12585ec8436aceaea2d439ea8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "67738841_df274e05",
         "filename": "examples/src/main/resources/clamp/acm/acelement-helm/acelement/templates/deployment.yaml",
         "patchSetId": 2
