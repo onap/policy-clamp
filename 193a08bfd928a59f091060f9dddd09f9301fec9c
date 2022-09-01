@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "c7ed4376_cd2a56bf",
+        "filename": "participant/participant-impl/participant-impl-acelement/src/main/resources/config/application.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2022-09-01T15:13:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a543a997_0c7f543a",
+      "revId": "193a08bfd928a59f091060f9dddd09f9301fec9c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "985bd655_96dc1298",
         "filename": "participant/participant-impl/participant-impl-acelement/src/test/java/org/onap/policy/clamp/acm/element/rest/ActuatorControllerTest.java",
         "patchSetId": 2
@@ -39,6 +57,30 @@
       "revId": "193a08bfd928a59f091060f9dddd09f9301fec9c",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "39240f45_2f071664",
+        "filename": "participant/participant-impl/participant-impl-acelement/src/test/java/org/onap/policy/clamp/acm/element/rest/ActuatorControllerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2022-09-01T15:13:38Z",
+      "side": 1,
+      "message": "Spring Boot Test starts with WebEnvironment.RANDOM_PORT, @LocalServerPort annotation will inject that port into randomServerPort",
+      "parentUuid": "985bd655_96dc1298",
+      "range": {
+        "startLine": 53,
+        "startChar": 28,
+        "endLine": 53,
+        "endChar": 44
+      },
+      "revId": "193a08bfd928a59f091060f9dddd09f9301fec9c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
