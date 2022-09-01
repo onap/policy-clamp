@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ad200d29_adc5468d",
+        "filename": "participant/participant-impl/participant-impl-policy/src/test/java/org/onap/policy/clamp/acm/participant/policy/main/utils/TestListenerUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2022-09-01T11:41:37Z",
+      "side": 1,
+      "message": "if these checks on line 161-162 are null, should an assert then still be called? Would that be an error one would want to understand?",
+      "revId": "a6896ee8eaa79588ac45638ed236ba4d37ec1c42",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
