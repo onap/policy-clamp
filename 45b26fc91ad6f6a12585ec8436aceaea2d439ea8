@@ -42,6 +42,30 @@
     },
     {
       "key": {
+        "uuid": "b74035ee_1a60c520",
+        "filename": "examples/src/main/resources/clamp/acm/acelement-helm/acelement/templates/deployment.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2022-09-01T13:58:36Z",
+      "side": 1,
+      "message": "Found this in the clamp repo. Disregard comment...",
+      "parentUuid": "67738841_df274e05",
+      "range": {
+        "startLine": 42,
+        "startChar": 17,
+        "endLine": 42,
+        "endChar": 126
+      },
+      "revId": "45b26fc91ad6f6a12585ec8436aceaea2d439ea8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ecacf8f1_88c4ca29",
         "filename": "examples/src/main/resources/clamp/acm/acelement-helm/acelement/templates/deployment.yaml",
         "patchSetId": 2
@@ -62,6 +86,30 @@
       "revId": "45b26fc91ad6f6a12585ec8436aceaea2d439ea8",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8b32adea_dc8ba1ec",
+        "filename": "examples/src/main/resources/clamp/acm/acelement-helm/acelement/templates/deployment.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2022-09-01T13:58:36Z",
+      "side": 1,
+      "message": "Found this in clamp repo. Disregard comment...",
+      "parentUuid": "ecacf8f1_88c4ca29",
+      "range": {
+        "startLine": 61,
+        "startChar": 47,
+        "endLine": 61,
+        "endChar": 69
+      },
+      "revId": "45b26fc91ad6f6a12585ec8436aceaea2d439ea8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
