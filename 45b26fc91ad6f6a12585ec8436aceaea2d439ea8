@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "eabf615e_1d0be71f",
+        "filename": "examples/src/main/resources/clamp/acm/acelement-helm/acelement/templates/deployment.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2022-09-01T14:24:49Z",
+      "side": 1,
+      "message": "Thanks for the comment Saul. Here I have not used init container but directly setting the env variables in to the container. The spring config file is updated correspondingly to consume the values from the environment and hence we are able to pass on the values directly without init container. Hope this is okay in this case.",
+      "parentUuid": "8fdef71c_d8c27ef8",
+      "revId": "45b26fc91ad6f6a12585ec8436aceaea2d439ea8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "67738841_df274e05",
         "filename": "examples/src/main/resources/clamp/acm/acelement-helm/acelement/templates/deployment.yaml",
         "patchSetId": 2
