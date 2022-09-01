@@ -146,19 +146,23 @@ public final class TestListenerUtils {
      * @param toscaServiceTemplate to add policies
      */
     public static void addPoliciesToToscaServiceTemplate(ToscaServiceTemplate toscaServiceTemplate) {
-        Set<String> policiesDirectoryContents = ResourceUtils.getDirectoryContents("policies");
+        var policiesDirectoryContents = ResourceUtils.getDirectoryContents("policies");
+        toscaServiceTemplate.getToscaTopologyTemplate().setPolicies(new ArrayList<>());
 
-        for (String policiesFilePath : policiesDirectoryContents) {
+        for (var policiesFilePath : policiesDirectoryContents) {
             if (!policiesFilePath.endsWith("yaml")) {
                 continue;
             }
 
-            String policiesString = ResourceUtils.getResourceAsString(policiesFilePath);
+            var policiesString = ResourceUtils.getResourceAsString(policiesFilePath);
 
-            ToscaServiceTemplate foundPoliciesSt =
+            var foundPoliciesSt =
                 yamlTranslator.fromYaml(policiesString, ToscaServiceTemplate.class);
-            toscaServiceTemplate.getToscaTopologyTemplate()
-                .setPolicies(foundPoliciesSt.getToscaTopologyTemplate().getPolicies());
+            if (foundPoliciesSt.getToscaTopologyTemplate() != null
+                    && foundPoliciesSt.getToscaTopologyTemplate().getPolicies() != null) {
+                toscaServiceTemplate.getToscaTopologyTemplate().getPolicies()
+                        .addAll(foundPoliciesSt.getToscaTopologyTemplate().getPolicies());
+            }
         }
     }
 
