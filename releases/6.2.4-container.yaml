@@ -1,0 +1,16 @@
+distribution_type: 'container'
+container_release_tag: '6.2.4'
+project: 'policy-clamp'
+log_dir: 'policy-clamp-maven-docker-stage-jakarta/119'
+ref: 941d38b30f2fc7f8f3704d295df89c2877684b3a
+containers:
+    - name: 'policy-clamp-backend'
+      version: '6.2-STAGING-20220902T132422Z'
+    - name: 'policy-clamp-ac-pf-ppnt'
+      version: '6.2.4-20220902T1324'
+    - name: 'policy-clamp-ac-k8s-ppnt'
+      version: '6.2.4-20220902T1324'
+    - name: 'policy-clamp-ac-http-ppnt'
+      version: '6.2.4-20220902T1324'
+    - name: 'policy-clamp-runtime-acm'
+      version: '6.2.4-20220902T1324'
