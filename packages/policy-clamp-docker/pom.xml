@@ -43,6 +43,16 @@
         <docker.skip.push>false</docker.skip.push>
         <docker.pull.registry>nexus3.onap.org:10001</docker.pull.registry>
         <docker.push.registry>nexus3.onap.org:10003</docker.push.registry>
+        <docker.clamp-runtime-acm.dockerFile>AcmRuntime.Dockerfile</docker.clamp-runtime-acm.dockerFile>
+        <docker.clamp-runtime-acm.contextDir>${project.basedir}/src/main/docker</docker.clamp-runtime-acm.contextDir>
+        <docker.clamp-ac-pf-ppnt.dockerFile>PolicyParticipant.Dockerfile</docker.clamp-ac-pf-ppnt.dockerFile>
+        <docker.clamp-ac-pf-ppnt.contextDir>${project.basedir}/src/main/docker</docker.clamp-ac-pf-ppnt.contextDir>
+        <docker.clamp-ac-k8s-ppnt.dockerFile>KubernetesParticipant.Dockerfile</docker.clamp-ac-k8s-ppnt.dockerFile>
+        <docker.clamp-ac-k8s-ppnt.contextDir>${project.basedir}/src/main/docker</docker.clamp-ac-k8s-ppnt.contextDir>
+        <docker.clamp-ac-http-ppnt.dockerFile>HttpParticipant.Dockerfile</docker.clamp-ac-http-ppnt.dockerFile>
+        <docker.clamp-ac-http-ppnt.contextDir>${project.basedir}/src/main/docker</docker.clamp-ac-http-ppnt.contextDir>
+        <docker.clamp-acm-element-impl.dockerFile>ElementParticipant.Dockerfile</docker.clamp-acm-element-impl.dockerFile>
+        <docker.clamp-acm-element-impl.contextDir>${project.basedir}/src/main/docker</docker.clamp-acm-element-impl.contextDir>
         <maven.build.timestamp.format>yyyyMMdd'T'HHmm</maven.build.timestamp.format>
     </properties>
 
@@ -105,7 +115,8 @@
                             <name>onap/policy-clamp-runtime-acm</name>
                             <build>
                                 <cleanup>try</cleanup>
-                                <dockerFile>AcmRuntime${dockerFileFlavor}.Dockerfile</dockerFile>
+                                <dockerFile>${docker.clamp-runtime-acm.dockerFile}</dockerFile>
+                                <contextDir>${docker.clamp-runtime-acm.contextDir}</contextDir>
                                 <tags>
                                     <tag>${project.version}</tag>
                                     <tag>${project.version}-${maven.build.timestamp}</tag>
@@ -137,7 +148,8 @@
                             <alias>onap-policy-clamp-ac-pf-ppnt</alias>
                             <build>
                                 <cleanup>try</cleanup>
-                                <dockerFile>PolicyParticipant${dockerFileFlavor}.Dockerfile</dockerFile>
+                                <dockerFile>${docker.clamp-ac-pf-ppnt.dockerFile}</dockerFile>
+                                <contextDir>${docker.clamp-ac-pf-ppnt.contextDir}</contextDir>
                                 <tags>
                                     <tag>${project.version}</tag>
                                     <tag>${project.version}-${maven.build.timestamp}</tag>
@@ -169,7 +181,8 @@
                             <alias>onap-policy-clamp-ac-k8s-ppnt</alias>
                             <build>
                                 <cleanup>try</cleanup>
-                                <dockerFile>KubernetesParticipant${dockerFileFlavor}.Dockerfile</dockerFile>
+                                <dockerFile>${docker.clamp-ac-k8s-ppnt.dockerFile}</dockerFile>
+                                <contextDir>${docker.clamp-ac-k8s-ppnt.contextDir}</contextDir>
                                 <tags>
                                     <tag>${project.version}</tag>
                                     <tag>${project.version}-${maven.build.timestamp}</tag>
@@ -201,7 +214,8 @@
                             <alias>onap-policy-clamp-ac-http-ppnt</alias>
                             <build>
                                 <cleanup>try</cleanup>
-                                <dockerFile>HttpParticipant${dockerFileFlavor}.Dockerfile</dockerFile>
+                                <dockerFile>${docker.clamp-ac-http-ppnt.dockerFile}</dockerFile>
+                                <contextDir>${docker.clamp-ac-http-ppnt.contextDir}</contextDir>
                                 <tags>
                                     <tag>${project.version}</tag>
                                     <tag>${project.version}-${maven.build.timestamp}</tag>
@@ -233,7 +247,8 @@
                             <alias>onap-policy-clamp-acm-element-impl</alias>
                             <build>
                                 <cleanup>try</cleanup>
-                                <dockerFile>ElementParticipant${dockerFileFlavor}.Dockerfile</dockerFile>
+                                <dockerFile>${docker.clamp-acm-element-impl.dockerFile}</dockerFile>
+                                <contextDir>${docker.clamp-acm-element-impl.contextDir}</contextDir>
                                 <tags>
                                     <tag>${project.version}</tag>
                                     <tag>${project.version}-${maven.build.timestamp}</tag>

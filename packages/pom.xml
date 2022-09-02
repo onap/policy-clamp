@@ -54,7 +54,6 @@
             </modules>
             <properties>
                 <docker.skip.push>false</docker.skip.push>
-                <dockerFileFlavor/>
             </properties>
         </profile>
         <profile>
@@ -65,7 +64,11 @@
             </modules>
             <properties>
                 <docker.skip.push>false</docker.skip.push>
-                <dockerFileFlavor>-Suse</dockerFileFlavor>
+                <docker.clamp-runtime-acm.dockerFile>AcmRuntime-Suse.Dockerfile</docker.clamp-runtime-acm.dockerFile>
+                <docker.clamp-ac-pf-ppnt.dockerFile>PolicyParticipant-Suse.Dockerfile</docker.clamp-ac-pf-ppnt.dockerFile>
+                <docker.clamp-ac-k8s-ppnt.dockerFile>KubernetesParticipant-Suse.Dockerfile</docker.clamp-ac-k8s-ppnt.dockerFile>
+                <docker.clamp-ac-http-ppnt.dockerFile>HttpParticipant-Suse.Dockerfile</docker.clamp-ac-http-ppnt.dockerFile>
+                <docker.clamp-acm-element-impl.dockerFile>ElementParticipant-Suse.Dockerfile</docker.clamp-acm-element-impl.dockerFile>
             </properties>
         </profile>
     </profiles>
