@@ -1,0 +1,5 @@
+distribution_type: 'maven'
+version: '6.2.4'
+project: 'policy-clamp'
+tag_release: false
+log_dir: 'policy-clamp-maven-stage-jakarta/121/'
