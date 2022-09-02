@@ -21,7 +21,7 @@
 #
 # Docker file to build an image that runs the CLAMP ACM Policy Framework Participant on Java 11 or better in alpine
 #
-FROM onap/policy-jre-alpine:2.4.3
+FROM onap/policy-jre-alpine:2.4.4
 
 LABEL maintainer="Policy Team"
 
