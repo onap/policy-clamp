@@ -1,22 +1,21 @@
 spring:
   security:
     user:
-      name: acmUser
-      password: zb!XztG34
+      name: ${REST_USER:acmUser}
+      password: ${REST_PASSWORD:zb!XztG34}
 
 server:
-  port: 8084
-  servlet:
-    context-path: /onap/policy/clamp/acelement/
+  port: ${PORT:8084}
   error:
     path: /error
 
 element:
   elementId:
-    name: onap.policy.clamp.ac.element1
-    version: 1.0.0
+    name: ${ELEMENT_ID:onap.policy.clamp.ac.element1}
+    version: ${ELEMENT_VERSION:1.0.0}
 management:
   endpoints:
     web:
+      base-path: /
       exposure:
         include: health, metrics, prometheus
