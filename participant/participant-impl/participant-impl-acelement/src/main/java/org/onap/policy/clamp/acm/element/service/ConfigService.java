@@ -28,7 +28,6 @@ import org.onap.policy.clamp.acm.element.handler.MessageActivator;
 import org.onap.policy.clamp.acm.element.handler.MessageHandler;
 import org.onap.policy.clamp.acm.element.main.parameters.ElementTopicParameters;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
-import org.onap.policy.clamp.models.acm.messages.dmaap.element.ElementMessage;
 import org.onap.policy.clamp.models.acm.messages.rest.element.ElementConfig;
 import org.onap.policy.common.endpoints.parameters.TopicParameterGroup;
 import org.slf4j.Logger;

@@ -46,11 +46,11 @@ fi
 
 if [ -f "${POLICY_HOME}/etc/mounted/logback.xml" ]; then
     echo "overriding logback xml files"
-    cp -f "${POLICY_HOME}"/etc/mounted/logback*.xml "${POLICY_HOME}"/etc/
+    cp -f "${POLICY_HOME}"/etc/mounted/logback.xml "${POLICY_HOME}"/etc/logback_element.xml
 fi
 
 $JAVA_HOME/bin/java \
-    -Dlogging.config="${POLICY_HOME}/etc/logback.xml" \
+    -Dlogging.config="${POLICY_HOME}/etc/logback_element.xml" \
     -Dserver.ssl.keyStore="${KEYSTORE}" \
     -Dserver.ssl.keyStorePassword="${KEYSTORE_PASSWD}" \
     -Djavax.net.ssl.trustStore="${TRUSTSTORE}" \
