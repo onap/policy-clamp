@@ -20,7 +20,10 @@
 
 package org.onap.policy.clamp.acm.element.service;
 
+import org.onap.policy.clamp.models.acm.messages.dmaap.element.ElementMessage;
 import org.onap.policy.clamp.models.acm.messages.rest.element.ElementType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 /**
@@ -28,6 +31,13 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class SinkService extends AbstractElementService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SinkService.class);
+
+    @Override
+    public void handleMessage(ElementMessage message) {
+        LOGGER.info("Cycle completed in sink service with the full message: " + message);
+    }
 
     @Override
     public ElementType getType() {

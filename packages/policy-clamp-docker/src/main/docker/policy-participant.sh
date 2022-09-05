@@ -45,8 +45,8 @@ if [ -f "${POLICY_HOME}/etc/mounted/policy-keystore" ]; then
 fi
 
 if [ -f "${POLICY_HOME}/etc/mounted/logback.xml" ]; then
-    echo "overriding logback xml files"
-    cp -f "${POLICY_HOME}"/etc/mounted/logback*.xml "${POLICY_HOME}"/etc/
+    echo "overriding logback xml file"
+    cp -f "${POLICY_HOME}"/etc/mounted/logback.xml "${POLICY_HOME}"/etc/
 fi
 
 $JAVA_HOME/bin/java \
