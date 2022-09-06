@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4a8b27c1_a904239d",
+        "filename": "packages/policy-clamp-docker/src/main/docker/element-participant.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-09-06T14:29:04Z",
+      "side": 1,
+      "message": "should you make it logback_element.xml for clarity?",
+      "revId": "d47f39599f209dfb63b19e435403cf3177b9c242",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9ea7d6dd_4246c826",
+        "filename": "packages/policy-clamp-tarball/src/main/resources/etc/logback_element.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-09-06T14:29:04Z",
+      "side": 1,
+      "message": "2022",
+      "revId": "d47f39599f209dfb63b19e435403cf3177b9c242",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "98c4e226_00ff7a80",
+        "filename": "packages/policy-clamp-tarball/src/main/resources/etc/logback_element.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-09-06T14:29:04Z",
+      "side": 1,
+      "message": "It would be best to standardize on pattern lines as we do in core components.  Not sure if setting colors may run correctly in all cases.   I think it is preferable to be conservative in the files that are deployed, as they can be always be overriden if the user desires it.",
+      "revId": "d47f39599f209dfb63b19e435403cf3177b9c242",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7f7885a0_ffaaac9d",
+        "filename": "packages/policy-clamp-tarball/src/main/resources/etc/logback_element.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-09-06T14:29:04Z",
+      "side": 1,
+      "message": "I think this is toobroad on debug mode for this top level package as it captures many subpackages, etc .. I think, may be remove?  I am of the opinion of that default log level should be info max, they should be overwritable in a deployment with the logback.xml override that you have in the previous file .sh.   In addition, you could have added to the configuration element on top a watcher to detect log level changes in the file, so will do it automatically if changed, see for example logback.xml in core components, pap, etc .. for an example.",
+      "revId": "d47f39599f209dfb63b19e435403cf3177b9c242",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
