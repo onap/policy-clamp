@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "664ac91f_ce6c1767",
+        "filename": "examples/src/main/resources/clamp/acm/acelement-helm/acelement/resources/config/application.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2022-09-06T08:15:19Z",
+      "side": 1,
+      "message": "this part could be delete, acm-element has been refactored",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 47
+      },
+      "revId": "c7f22aa85ed2c37a8eb5eb34097382d88770a9f7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "03a1ded6_82eacd4b",
+        "filename": "examples/src/main/resources/clamp/acm/acelement-helm/acelement/resources/config/application.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2022-09-06T08:15:19Z",
+      "side": 1,
+      "message": "base-path: /",
+      "revId": "c7f22aa85ed2c37a8eb5eb34097382d88770a9f7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
