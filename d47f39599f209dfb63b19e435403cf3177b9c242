@@ -107,6 +107,24 @@
     },
     {
       "key": {
+        "uuid": "13acf410_b7f74775",
+        "filename": "packages/policy-clamp-tarball/src/main/resources/etc/logback_element.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2022-09-08T14:01:02Z",
+      "side": 1,
+      "message": "I am OK with removing this file but give it some thought to my original comment so logging in acm is consistent with how policy core components do it, ie. placing UTC timestamps, auto-reconfiguration ..",
+      "parentUuid": "68401781_91dfb7d9",
+      "revId": "d47f39599f209dfb63b19e435403cf3177b9c242",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7f7885a0_ffaaac9d",
         "filename": "packages/policy-clamp-tarball/src/main/resources/etc/logback_element.xml",
         "patchSetId": 2
