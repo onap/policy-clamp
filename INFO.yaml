@@ -31,11 +31,6 @@ repositories:
     - 'policy/clamp'
 committers:
     - <<: *onap_releng_ptl
-    - name: 'Sébastien Determe'
-      email: 'sebastien.determe@intl.att.com'
-      company: 'ATT'
-      id: 'sebdet'
-      timezone: 'Europe/Brussels'
     - name: 'Gervais-Martial Ngueko'
       email: 'gervais-martial.ngueko@intl.att.com'
       company: 'ATT'
@@ -56,11 +51,6 @@ committers:
       company: 'Bell Canada'
       id: 'ramverma'
       timezone: 'America/Montreal'
-    - name: 'Ajith Sreekumar'
-      email: 'ajith.sreekumar@bell.ca'
-      company: 'Bell Canada'
-      id: 'a.sreekumar'
-      timezone: 'Europe/Ireland'
     - name: 'Ramesh Murugan Iyer'
       email: 'ramesh.murugan.iyer@est.tech'
       company: 'Ericsson'
@@ -107,18 +97,27 @@ tsc:
           link: 'https://jira.onap.org/browse/REQ-473'
         - type: 'Addition'
           name: 'Liam Fallon'
-          # new PTL
           link: https://lists.onap.org/g/onap-tsc/message/8032
+          # Retired
         - type: 'Removal'
           name: 'Jim Hahn'
-          # Retired
           link: https://lists.onap.org/g/onap-tsc/message/8056
+          # Stepped Down
         - type: 'Removal'
           name: 'Christophe Closset'
           link: https://lists.onap.org/g/onap-tsc/message/8096
+          # Stepped Down
         - type: 'Removal'
           name: 'Xue Gao'
           link: https://lists.onap.org/g/onap-tsc/message/8096
         - type: 'Addition'
           name: 'Ramesh Murugan Iyer'
           link: https://lists.onap.org/g/onap-tsc/message/8689
+          # Stepped Down
+        - type: 'Removal'
+          name: 'Sébastien Determe'
+          link: https://lists.onap.org/g/onap-tsc/message/8873
+          # Stepped Down
+        - type: 'Removal'
+          name: 'Ajith Sreekumar'
+          link: https://lists.onap.org/g/onap-tsc/message/8878
