@@ -22,7 +22,7 @@
 # Docker file to build an image that runs CLAMP on Java 11 or better in alpine
 #
 
-FROM onap/policy-jre-alpine:2.3.2
+FROM onap/policy-jre-alpine:2.3.3-SNAPSHOT
 
 LABEL maintainer="Policy Team"
 
