@@ -6,6 +6,8 @@ spring:
 
 server:
   port: ${PORT}
+  ssl:
+    enabled: false
   error:
     path: /error
 
