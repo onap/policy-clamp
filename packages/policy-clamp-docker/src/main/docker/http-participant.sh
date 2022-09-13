@@ -55,7 +55,7 @@ fi
 mkdir -p "${POLICY_HOME}"/config/
 cp -f "${CONFIG_FILE}" "${POLICY_HOME}"/config/HttpParticipantParameters.yaml
 
-$JAVA_HOME/bin/java -Dserver.ssl.enabled="true" \
+$JAVA_HOME/bin/java \
     -Dserver.ssl.keyStore="${KEYSTORE}" \
     -Dserver.ssl.keyStorePassword="${KEYSTORE_PASSWD}" \
     -Djavax.net.ssl.trustStore="${TRUSTSTORE}" \
