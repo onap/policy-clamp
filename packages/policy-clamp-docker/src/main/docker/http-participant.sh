@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 #
 # ============LICENSE_START=======================================================
-#  Copyright (C) 2021 Nordix Foundation.
+#  Copyright (C) 2021-2022 Nordix Foundation.
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ fi
 mkdir -p "${POLICY_HOME}"/config/
 cp -f "${CONFIG_FILE}" "${POLICY_HOME}"/config/HttpParticipantParameters.yaml
 
-$JAVA_HOME/bin/java -Dserver.ssl.enabled="true" \
+$JAVA_HOME/bin/java \
     -Dserver.ssl.keyStore="${KEYSTORE}" \
     -Dserver.ssl.keyStorePassword="${KEYSTORE_PASSWD}" \
     -Djavax.net.ssl.trustStore="${TRUSTSTORE}" \
