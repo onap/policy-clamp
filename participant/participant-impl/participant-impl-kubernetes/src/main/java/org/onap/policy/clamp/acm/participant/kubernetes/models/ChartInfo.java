@@ -34,6 +34,8 @@ public class ChartInfo {
     @NonNull
     private ToscaConceptIdentifier chartId;
 
+    private String podName;
+
     @NonNull
     private String namespace;
 

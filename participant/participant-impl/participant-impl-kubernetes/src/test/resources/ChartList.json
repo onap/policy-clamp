@@ -19,6 +19,19 @@
       },
       "namespace" : "onap",
       "releaseName" : "nginxapp"
+    },
+    {
+      "chartId" : {
+        "name" : "HelloWorld",
+        "version" :   "1.2"
+      },
+      "namespace" : "onap",
+      "repository" : {
+        "repoName": "chartMuseum",
+        "address" : "https://localhost:8080"
+      },
+      "releaseName" : "helloworld",
+      "podName" : "helloallworld"
     }
   ]
 }

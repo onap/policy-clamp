@@ -1,6 +1,6 @@
 /*-
  * ========================LICENSE_START=================================
- * Copyright (C) 2021 Nordix Foundation. All rights reserved.
+ * Copyright (C) 2021-2022 Nordix Foundation. All rights reserved.
  * ======================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.onap.policy.clamp.acm.participant.kubernetes.exception.ServiceException;
 import org.onap.policy.clamp.acm.participant.kubernetes.handler.AutomationCompositionElementHandler;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartInfo;
@@ -62,58 +63,64 @@ public class PodStatusValidator implements Runnable {
     @Override
     public void run() {
         logger.info("Polling the status of deployed pods for the chart {}", chart.getChartId().getName());
-        Map<String, String> podStatusMap;
-        String output = null;
+
+        try {
+            verifyPodStatus();
+        } catch (ServiceException | IOException e) {
+            throw new ServiceException("Error verifying the status of the pod. Exiting", e);
+        }
+    }
+
+    private void verifyPodStatus() throws ServiceException, IOException, InterruptedException {
         var isVerified = false;
         long endTime = System.currentTimeMillis() + (timeout * 1000L);
 
         while (!isVerified && System.currentTimeMillis() < endTime) {
-            try {
-                output = HelmClient.executeCommand(verifyPodStatusCommand(chart));
-                podStatusMap = mapPodStatus(output);
-                isVerified = podStatusMap.values()
-                    .stream()
-                    .allMatch("Running"::equals);
-                if (! isVerified) {
-                    logger.info("Waiting for the pods to be active for the chart {}", chart.getChartId().getName());
-                    podStatusMap.forEach((key, value) -> logger.info("Pod: {} , state: {}", key, value));
-                    AutomationCompositionElementHandler.getPodStatusMap().put(chart.getReleaseName(), podStatusMap);
-                    // Recheck status of pods in specific intervals.
-                    Thread.sleep(statusCheckInterval * 1000L);
-                } else {
-                    logger.info("All pods are in running state for the helm chart {}", chart.getChartId().getName());
-                    AutomationCompositionElementHandler.getPodStatusMap().put(chart.getReleaseName(), podStatusMap);
-                }
-            } catch (ServiceException | IOException  e) {
-                throw new ServiceException("Error verifying the status of the pod. Exiting", e);
+            var output = HelmClient.executeCommand(verifyPodStatusCommand(chart));
+            var podStatusMap = mapPodStatus(output);
+            isVerified = !podStatusMap.isEmpty()
+                    && podStatusMap.values().stream().allMatch("Running"::equals);
+            if (!isVerified) {
+                logger.info("Waiting for the pods to be active for the chart {}", chart.getChartId().getName());
+                podStatusMap.forEach((key, value) -> logger.info("Pod: {} , state: {}", key, value));
+                // Recheck status of pods in specific intervals.
+                Thread.sleep(statusCheckInterval * 1000L);
+            } else {
+                logger.info("All pods are in running state for the helm chart {}", chart.getChartId().getName());
+                AutomationCompositionElementHandler.getPodStatusMap().put(chart.getReleaseName(), podStatusMap);
             }
+        }
+        if (!isVerified) {
+            throw new ServiceException("Time out Exception verifying the status of the pod");
         }
     }
 
     private ProcessBuilder verifyPodStatusCommand(ChartInfo chart) {
-        String cmd = "kubectl get pods --namespace " +  chart.getNamespace() + " | grep "
-                + chart.getChartId().getName();
+        String cmd = "kubectl get pods --namespace " + chart.getNamespace() + " | grep " + getPodName();
         return new ProcessBuilder("sh", "-c", cmd);
     }
 
+    private String getPodName() {
+        return StringUtils.isNotEmpty(chart.getPodName()) ? chart.getPodName() : chart.getChartId().getName();
+    }
 
-    private Map<String, String> mapPodStatus(String output) throws IOException, ServiceException {
+    private Map<String, String> mapPodStatus(String output) throws IOException {
         Map<String, String> podStatusMap = new HashMap<>();
+        var podName = getPodName();
         try (var reader = new BufferedReader(new InputStreamReader(IOUtils.toInputStream(output,
             StandardCharsets.UTF_8)))) {
             var line = reader.readLine();
             while (line != null) {
-                if (line.contains(chart.getChartId().getName())) {
+                if (line.contains(podName)) {
                     var result = line.split("\\s+");
                     podStatusMap.put(result[0], result[2]);
                 }
                 line = reader.readLine();
             }
         }
-        if (!podStatusMap.isEmpty()) {
-            return podStatusMap;
-        } else {
-            throw new ServiceException("Status of Pod is empty");
+        if (podStatusMap.isEmpty()) {
+            logger.warn("Status of  Pod {} is empty", podName);
         }
+        return podStatusMap;
     }
 }
