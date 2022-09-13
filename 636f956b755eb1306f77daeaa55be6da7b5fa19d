@@ -69,6 +69,24 @@
       "revId": "636f956b755eb1306f77daeaa55be6da7b5fa19d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dcfd47d6_fa7fe74e",
+        "filename": "participant/participant-impl/participant-impl-acelement/src/main/java/org/onap/policy/clamp/acm/element/service/SinkService.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2022-09-13T07:40:52Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "9b1f614f_d3285c4f",
+      "revId": "636f956b755eb1306f77daeaa55be6da7b5fa19d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
