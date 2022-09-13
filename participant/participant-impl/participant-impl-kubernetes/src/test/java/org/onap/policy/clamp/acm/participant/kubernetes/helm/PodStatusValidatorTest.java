@@ -35,7 +35,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.MockedStatic;
 import org.onap.policy.clamp.acm.participant.kubernetes.exception.ServiceException;
 import org.onap.policy.clamp.acm.participant.kubernetes.handler.AutomationCompositionElementHandler;
@@ -51,10 +50,9 @@ class PodStatusValidatorTest {
 
     private static final Coder CODER = new StandardCoder();
     private static final String CHART_INFO_YAML = "src/test/resources/ChartList.json";
+    private static int TIMEOUT = 2;
+    private static int STATUS_CHECK_INTERVAL = 1;
     private static List<ChartInfo> charts;
-
-    @InjectMocks
-    private static PodStatusValidator podStatusValidator;
 
     private static MockedStatic<HelmClient> mockedClient;
 
@@ -62,9 +60,6 @@ class PodStatusValidatorTest {
     static void init() throws CoderException {
         charts = CODER.decode(new File(CHART_INFO_YAML), ChartList.class).getCharts();
         mockedClient = mockStatic(HelmClient.class);
-        int timeout = 60;
-        int statusCheckInterval = 30;
-        podStatusValidator = new PodStatusValidator(charts.get(0), timeout, statusCheckInterval);
     }
 
     @AfterEach
@@ -77,28 +72,27 @@ class PodStatusValidatorTest {
         mockedClient.close();
     }
 
-
     @Test
     void test_RunningPodState() {
-        String runningPod = "NAME\tREADY\tSTATUS\tRESTARTS\tAGE\r\nHelloWorld-54777df9f8-qpzqr\t1/1\tRunning\t0\t9h";
+        String runningPod = "NAME\tREADY\tSTATUS\tRESTARTS\tAGE\r\nhelloworld-54777df9f8-qpzqr\t1/1\tRunning\t0\t9h";
         mockedClient.when(() -> HelmClient.executeCommand(any()))
             .thenReturn(runningPod);
+        var podStatusValidator = new PodStatusValidator(charts.get(0), TIMEOUT, STATUS_CHECK_INTERVAL);
         assertDoesNotThrow(() -> podStatusValidator.run());
         assertThat(AutomationCompositionElementHandler.getPodStatusMap()).hasSize(1);
         assertThat(AutomationCompositionElementHandler.getPodStatusMap()).containsKey(charts.get(0).getReleaseName());
         assertThat(AutomationCompositionElementHandler.getPodStatusMap())
-            .containsValue(Map.of("HelloWorld-54777df9f8-qpzqr", "Running"));
+            .containsValue(Map.of("helloworld-54777df9f8-qpzqr", "Running"));
     }
-
 
     @Test
     void test_InvalidPodState() {
         String invalidPod = "NAME\tREADY\tSTATUS\tRESTARTS\tAGE\nhellofromdocker-54777df9f8-qpzqr\t1/1\tInit\t0\t9h";
         mockedClient.when(() -> HelmClient.executeCommand(any()))
             .thenReturn(invalidPod);
+        var podStatusValidator = new PodStatusValidator(charts.get(1), TIMEOUT, STATUS_CHECK_INTERVAL);
         assertThatThrownBy(() -> podStatusValidator.run())
             .isInstanceOf(ServiceException.class).hasMessage("Error verifying the status of the pod. Exiting");
         assertThat(AutomationCompositionElementHandler.getPodStatusMap()).isEmpty();
     }
-
 }
