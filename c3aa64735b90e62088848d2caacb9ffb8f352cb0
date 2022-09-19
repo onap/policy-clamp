@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "162193ce_0d5571fa",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/acm/participant/kubernetes/helm/PodStatusValidator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2022-09-19T10:52:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1d51781e_315bfa1a",
+      "range": {
+        "startLine": 3,
+        "startChar": 17,
+        "endLine": 3,
+        "endChar": 22
+      },
+      "revId": "c3aa64735b90e62088848d2caacb9ffb8f352cb0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dd048248_eb880d51",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/acm/participant/kubernetes/helm/PodStatusValidator.java",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2022-09-19T09:24:19Z",
       "side": 1,
       "message": "Are we sure the release name gets appended to the pods all the time? Otherwise it might cause an issue fetching the pod based on helm release name.",
+      "range": {
+        "startLine": 110,
+        "startChar": 40,
+        "endLine": 110,
+        "endChar": 54
+      },
+      "revId": "c3aa64735b90e62088848d2caacb9ffb8f352cb0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "312e7182_a914172e",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/acm/participant/kubernetes/helm/PodStatusValidator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2022-09-19T10:52:51Z",
+      "side": 1,
+      "message": "In ACM demo element, chartId is the same for all elements and no gets appended to any pods",
+      "parentUuid": "dd048248_eb880d51",
       "range": {
         "startLine": 110,
         "startChar": 40,
