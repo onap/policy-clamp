@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a20aa03a_f59b8d1c",
+        "filename": "examples/src/main/resources/clamp/acm/acelement-helm/acelement/resources/config/logback.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2022-09-19T12:31:42Z",
+      "side": 1,
+      "message": "2022",
+      "range": {
+        "startLine": 5,
+        "startChar": 16,
+        "endLine": 5,
+        "endChar": 20
+      },
+      "revId": "96f2494f4681d15973930cb4d42a401afaa71abe",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
