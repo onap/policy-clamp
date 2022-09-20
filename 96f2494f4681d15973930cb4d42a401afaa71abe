@@ -22,6 +22,30 @@
       "revId": "96f2494f4681d15973930cb4d42a401afaa71abe",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c7b7159c_6d4ea21d",
+        "filename": "examples/src/main/resources/clamp/acm/acelement-helm/acelement/resources/config/logback.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2022-09-20T09:26:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a20aa03a_f59b8d1c",
+      "range": {
+        "startLine": 5,
+        "startChar": 16,
+        "endLine": 5,
+        "endChar": 20
+      },
+      "revId": "96f2494f4681d15973930cb4d42a401afaa71abe",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
