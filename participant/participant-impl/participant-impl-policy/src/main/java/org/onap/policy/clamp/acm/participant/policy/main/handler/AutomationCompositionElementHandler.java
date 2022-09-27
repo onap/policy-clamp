@@ -175,9 +175,9 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
     }
 
     /**
-     * Callback method to handle an update on a automation composition element.
+     * Callback method to handle an update on automation composition element.
      *
-     * @param element             the information on the automation composition element
+     * @param element the information on the automation composition element
      * @param acElementDefinition toscaNodeTemplate
      * @throws PfModelException in case of an exception
      */
