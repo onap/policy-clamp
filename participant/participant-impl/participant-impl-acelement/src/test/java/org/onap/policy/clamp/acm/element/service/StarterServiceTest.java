@@ -21,6 +21,7 @@
 package org.onap.policy.clamp.acm.element.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.timeout;
@@ -32,6 +33,7 @@ import org.onap.policy.clamp.acm.element.main.parameters.AcElement;
 import org.onap.policy.clamp.models.acm.messages.dmaap.element.ElementMessage;
 import org.onap.policy.clamp.models.acm.messages.rest.element.ElementConfig;
 import org.onap.policy.clamp.models.acm.messages.rest.element.ElementType;
+import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class StarterServiceTest {
@@ -49,10 +51,15 @@ class StarterServiceTest {
             var elementConfig = new ElementConfig();
             elementConfig.setTimerMs(100);
             elementConfig.setReceiverId(new ToscaConceptIdentifier("onap.policy.clamp.ac.element2", "1.0.0"));
+
+            assertThatThrownBy(() -> starterService.update(elementConfig)).isInstanceOf(PfModelRuntimeException.class);
+
             starterService.active(elementConfig);
-            verify(messagePublisher, timeout(200).atLeastOnce()).publishMsg(any(ElementMessage.class));
+            verify(messagePublisher, timeout(500).atLeastOnce()).publishMsg(any(ElementMessage.class));
+
+            assertThatThrownBy(() -> starterService.active(elementConfig)).isInstanceOf(PfModelRuntimeException.class);
+
             starterService.deactivate();
         }
     }
-
 }
