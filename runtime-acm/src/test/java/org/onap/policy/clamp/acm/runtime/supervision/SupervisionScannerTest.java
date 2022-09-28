@@ -30,6 +30,7 @@ import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_ST_TEM
 
 import java.util.List;
 import java.util.Objects;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
@@ -57,6 +58,12 @@ class SupervisionScannerTest {
     private static final String AC_JSON = "src/test/resources/rest/acm/AutomationCompositionsSmoke.json";
 
     private static final ServiceTemplateProvider serviceTemplateProvider = mock(ServiceTemplateProvider.class);
+
+    private static final String PARTICIPANT_NAME = "Participant0";
+    private static final String PARTICIPANT_VERSION = "1.0.0";
+
+    private static final ToscaConceptIdentifier PARTICIPANT_TYPE =
+            new ToscaConceptIdentifier("org.onap.policy.clamp.acm.PolicyParticipant", PARTICIPANT_VERSION);
 
     @BeforeAll
     public static void setUpBeforeAll() throws Exception {
@@ -119,8 +126,8 @@ class SupervisionScannerTest {
 
         var participantProvider = mock(ParticipantProvider.class);
         var participant = new Participant();
-        participant.setName("Participant0");
-        participant.setVersion("1.0.0");
+        participant.setName(PARTICIPANT_NAME);
+        participant.setVersion(PARTICIPANT_VERSION);
         when(participantProvider.getParticipants(null, null)).thenReturn(List.of(participant));
 
         var automationCompositionUpdatePublisher = mock(AutomationCompositionUpdatePublisher.class);
@@ -186,12 +193,12 @@ class SupervisionScannerTest {
         acRuntimeParameterGroup.getParticipantParameters().setMaxStatusWaitMs(-1);
 
         var participant = new Participant();
-        participant.setName("Participant0");
-        participant.setVersion("1.0.0");
+        participant.setName(PARTICIPANT_NAME);
+        participant.setVersion(PARTICIPANT_VERSION);
         participant.setHealthStatus(ParticipantHealthStatus.HEALTHY);
         participant.setParticipantState(ParticipantState.ACTIVE);
         participant.setDefinition(new ToscaConceptIdentifier("unknown", "0.0.0"));
-        participant.setParticipantType(new ToscaConceptIdentifier("ParticipantType1", "1.0.0"));
+        participant.setParticipantType(PARTICIPANT_TYPE);
         var participantProvider = mock(ParticipantProvider.class);
         when(participantProvider.getParticipants()).thenReturn(List.of(participant));
 
@@ -204,11 +211,15 @@ class SupervisionScannerTest {
             automationCompositionStateChangePublisher, automationCompositionUpdatePublisher, participantProvider,
             participantStatusReqPublisher, participantUpdatePublisher, acRuntimeParameterGroup);
 
+        supervisionScanner
+                .handleParticipantRegister(new ImmutablePair<>(participant.getKey().asIdentifier(), PARTICIPANT_TYPE));
         supervisionScanner.handleParticipantStatus(participant.getKey().asIdentifier());
         supervisionScanner.run(true);
         verify(participantStatusReqPublisher).send(any(ToscaConceptIdentifier.class));
         verify(participantProvider).saveParticipant(any());
 
+        supervisionScanner
+                .handleParticipantUpdateAck(new ImmutablePair<>(participant.getKey().asIdentifier(), PARTICIPANT_TYPE));
         supervisionScanner.run(true);
         verify(participantProvider, times(2)).saveParticipant(any());
     }

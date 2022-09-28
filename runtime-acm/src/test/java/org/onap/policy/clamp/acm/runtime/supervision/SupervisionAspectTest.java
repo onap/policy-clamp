@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,19 +22,27 @@
 package org.onap.policy.clamp.acm.runtime.supervision;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegister;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatus;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUpdateAck;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class SupervisionAspectTest {
 
+    private static final ToscaConceptIdentifier PARTICIPANT_ID =
+            new ToscaConceptIdentifier("org.onap.PM_Policy", "1.0.0");
+
+    private static final ToscaConceptIdentifier PARTICIPANT_TYPE =
+            new ToscaConceptIdentifier("org.onap.policy.clamp.acm.PolicyParticipant", "1.0.0");
+
     @Test
     void testSchedule() throws Exception {
-        var supervisionScanner = spy(mock(SupervisionScanner.class));
+        var supervisionScanner = mock(SupervisionScanner.class);
         try (var supervisionAspect = new SupervisionAspect(supervisionScanner)) {
             supervisionAspect.schedule();
             verify(supervisionScanner, timeout(500)).run(true);
@@ -43,7 +51,7 @@ class SupervisionAspectTest {
 
     @Test
     void testDoCheck() throws Exception {
-        var supervisionScanner = spy(mock(SupervisionScanner.class));
+        var supervisionScanner = mock(SupervisionScanner.class);
         try (var supervisionAspect = new SupervisionAspect(supervisionScanner)) {
             supervisionAspect.doCheck();
             supervisionAspect.doCheck();
@@ -53,14 +61,41 @@ class SupervisionAspectTest {
 
     @Test
     void testHandleParticipantStatus() throws Exception {
-        var supervisionScanner = spy(mock(SupervisionScanner.class));
         var participantStatusMessage = new ParticipantStatus();
-        var identifier = new ToscaConceptIdentifier("abc", "1.0.0");
-        participantStatusMessage.setParticipantId(identifier);
+        participantStatusMessage.setParticipantId(PARTICIPANT_ID);
 
+        var supervisionScanner = mock(SupervisionScanner.class);
         try (var supervisionAspect = new SupervisionAspect(supervisionScanner)) {
             supervisionAspect.handleParticipantStatus(participantStatusMessage);
-            verify(supervisionScanner, timeout(500)).handleParticipantStatus(identifier);
+            verify(supervisionScanner, timeout(500)).handleParticipantStatus(PARTICIPANT_ID);
+        }
+    }
+
+    @Test
+    void testHandleParticipantUpdateAck() throws Exception {
+        var updateAckMessage = new ParticipantUpdateAck();
+        updateAckMessage.setParticipantId(PARTICIPANT_ID);
+        updateAckMessage.setParticipantType(PARTICIPANT_TYPE);
+
+        var supervisionScanner = mock(SupervisionScanner.class);
+        try (var supervisionAspect = new SupervisionAspect(supervisionScanner)) {
+            supervisionAspect.handleParticipantUpdateAck(updateAckMessage);
+            verify(supervisionScanner, timeout(500))
+                    .handleParticipantUpdateAck(new ImmutablePair<>(PARTICIPANT_ID, PARTICIPANT_TYPE));
+        }
+    }
+
+    @Test
+    void testHandleParticipantRegister() throws Exception {
+        var participantRegister = new ParticipantRegister();
+        participantRegister.setParticipantId(PARTICIPANT_ID);
+        participantRegister.setParticipantType(PARTICIPANT_TYPE);
+
+        var supervisionScanner = mock(SupervisionScanner.class);
+        try (var supervisionAspect = new SupervisionAspect(supervisionScanner)) {
+            supervisionAspect.handleParticipantRegister(participantRegister, true);
+            verify(supervisionScanner, timeout(500))
+                    .handleParticipantRegister(new ImmutablePair<>(PARTICIPANT_ID, PARTICIPANT_TYPE));
         }
     }
 }
