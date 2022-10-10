@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * Common superclass to provide REST endpoints for the participant simulator.
  */
 // @formatter:off
-@RequestMapping(value = "/onap/policy/clamp/acm/v2",
+@RequestMapping(value = "/v2",
     produces = {MediaType.APPLICATION_JSON, AbstractRestController.APPLICATION_YAML})
 @Api(value = "Automation Composition Commissioning API")
 @SwaggerDefinition(

@@ -44,6 +44,7 @@ public class CommonRestController {
     public static final String SELF = NetworkUtil.getHostname();
     public static final String CONTEXT_PATH = "onap/policy/clamp/acm";
     public static final String ENDPOINT_PREFIX = CONTEXT_PATH + "/v2/";
+    public static final String ACTUATOR_ENDPOINT = CONTEXT_PATH + "/";
 
     private static String httpPrefix;
 
@@ -76,7 +77,7 @@ public class CommonRestController {
      * @return a request builder
      */
     protected Invocation.Builder sendActRequest(final String endpoint) {
-        return sendFqeRequest(httpPrefix + endpoint, true);
+        return sendFqeRequest(httpPrefix + ACTUATOR_ENDPOINT + endpoint, true);
     }
 
     /**
@@ -96,7 +97,7 @@ public class CommonRestController {
      * @return a request builder
      */
     protected Invocation.Builder sendNoAuthActRequest(final String endpoint) {
-        return sendFqeRequest(httpPrefix + endpoint, false);
+        return sendFqeRequest(httpPrefix + ACTUATOR_ENDPOINT + endpoint, false);
     }
 
     /**

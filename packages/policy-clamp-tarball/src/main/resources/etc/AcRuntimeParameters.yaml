@@ -31,6 +31,8 @@ security:
   enable-csrf: false
 
 server:
+  servlet:
+    context-path: /onap/policy/clamp/acm
   port: 6969
   error:
     path: /error
