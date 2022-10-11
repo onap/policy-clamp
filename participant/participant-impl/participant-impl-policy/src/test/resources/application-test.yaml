@@ -4,7 +4,7 @@ participant:
     description: Participant Description
     participantId:
       version: 1.0.0
-      name: org.onap.PM_CDS_Blueprint
+      name: org.onap.PM_Policy
     participantType:
       version: 1.0.0
       name: org.onap.PM_CDS_Blueprint

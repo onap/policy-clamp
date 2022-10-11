@@ -109,7 +109,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
-            <version>${version.springboot}</version>
         </dependency>
         <dependency>
             <groupId>io.micrometer</groupId>
@@ -119,7 +118,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
-            <version>${version.springboot}</version>
         </dependency>
     </dependencies>
 
