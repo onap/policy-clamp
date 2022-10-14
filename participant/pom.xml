@@ -93,31 +93,11 @@
             <groupId>org.onap.policy.clamp</groupId>
             <artifactId>policy-clamp-models</artifactId>
             <version>${project.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-data-jpa</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.onap.policy.clamp</groupId>
             <artifactId>policy-clamp-examples</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <!-- Actuator dependencies for participants added here to avoid http security conflicts in clamp/runtime -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.micrometer</groupId>
-            <artifactId>micrometer-registry-prometheus</artifactId>
-            <version>${version.io.micrometer}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
     </dependencies>
 

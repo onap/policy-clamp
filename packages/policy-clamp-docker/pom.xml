@@ -56,6 +56,36 @@
         <maven.build.timestamp.format>yyyyMMdd'T'HHmm</maven.build.timestamp.format>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.onap.policy.clamp</groupId>
+            <artifactId>policy-clamp-tarball</artifactId>
+            <version>${project.version}</version>
+            <classifier>tarball</classifier>
+            <type>tar.gz</type>
+        </dependency>
+        <dependency>
+            <groupId>org.onap.policy.clamp.participant</groupId>
+            <artifactId>policy-clamp-participant-impl-policy</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.onap.policy.clamp.participant</groupId>
+            <artifactId>policy-clamp-participant-impl-kubernetes</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.onap.policy.clamp.participant</groupId>
+            <artifactId>policy-clamp-participant-impl-http</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.onap.policy.clamp.participant</groupId>
+            <artifactId>policy-clamp-acm-element-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
     <build>
         <finalName>${project.artifactId}-${project.version}</finalName>
         <plugins>
@@ -318,34 +348,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.onap.policy.clamp</groupId>
-            <artifactId>policy-clamp-tarball</artifactId>
-            <version>${project.version}</version>
-            <classifier>tarball</classifier>
-            <type>tar.gz</type>
-        </dependency>
-        <dependency>
-            <groupId>org.onap.policy.clamp.participant</groupId>
-            <artifactId>policy-clamp-participant-impl-policy</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.onap.policy.clamp.participant</groupId>
-            <artifactId>policy-clamp-participant-impl-kubernetes</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.onap.policy.clamp.participant</groupId>
-            <artifactId>policy-clamp-participant-impl-http</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.onap.policy.clamp.participant</groupId>
-            <artifactId>policy-clamp-acm-element-impl</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-    </dependencies>
 </project>

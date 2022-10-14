@@ -32,16 +32,6 @@
     <name>${project.artifactId}</name>
     <description>Kubernetes participant, that allows k8s pods to partake in automation compositions</description>
 
-    <!-- Dependency added here to take precedence over Mockito-core in parent pom-->
-    <dependencies>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-inline</artifactId>
-            <version>3.8.0</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-
     <build>
         <resources>
             <!-- Output the version of the automation composition system -->
