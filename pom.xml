@@ -23,13 +23,13 @@
     <parent>
         <groupId>org.onap.policy.parent</groupId>
         <artifactId>integration</artifactId>
-        <version>3.6.2-SNAPSHOT</version>
+        <version>3.7.0-SNAPSHOT</version>
         <relativePath />
     </parent>
 
     <groupId>org.onap.policy.clamp</groupId>
     <artifactId>policy-clamp</artifactId>
-    <version>6.3.2-SNAPSHOT</version>
+    <version>6.4.0-SNAPSHOT</version>
     <name>${project.artifactId}</name>
 
     <packaging>pom</packaging>
@@ -52,8 +52,8 @@
     </description>
 
     <properties>
-        <policy.common.version>1.11.2-SNAPSHOT</policy.common.version>
-        <policy.models.version>2.7.2-SNAPSHOT</policy.models.version>
+        <policy.common.version>1.12.0-SNAPSHOT</policy.common.version>
+        <policy.models.version>2.8.0-SNAPSHOT</policy.models.version>
     </properties>
 
     <modules>
