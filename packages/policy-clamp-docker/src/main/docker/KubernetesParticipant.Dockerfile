@@ -23,7 +23,7 @@ RUN mkdir /packages /extracted
 COPY /maven/lib/kubernetes-participant.tar.gz /packages/
 RUN tar xvzf /packages/kubernetes-participant.tar.gz --directory /extracted/
 
-FROM onap/policy-jre-alpine:2.5.1-SNAPSHOT
+FROM onap/policy-jre-alpine:2.5.1
 
 LABEL maintainer="Policy Team"
 LABEL org.opencontainers.image.title="Policy CLAMP ACM K8S Participant"
