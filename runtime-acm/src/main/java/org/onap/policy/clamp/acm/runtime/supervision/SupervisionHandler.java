@@ -30,7 +30,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
-import org.onap.policy.clamp.acm.runtime.monitoring.MonitoringProvider;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionStateChangePublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionUpdatePublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantDeregisterAckPublisher;
@@ -39,7 +38,6 @@ import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantUpdatePubli
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionException;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementAck;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionInfo;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantHealthStatus;
@@ -83,7 +81,6 @@ public class SupervisionHandler {
 
     private final AutomationCompositionProvider automationCompositionProvider;
     private final ParticipantProvider participantProvider;
-    private final MonitoringProvider monitoringProvider;
     private final ServiceTemplateProvider serviceTemplateProvider;
 
     // Publishers for participant communication
@@ -141,13 +138,6 @@ public class SupervisionHandler {
         LOGGER.debug("Participant Status received {}", participantStatusMessage);
         try {
             superviseParticipant(participantStatusMessage);
-        } catch (PfModelException | AutomationCompositionException svExc) {
-            LOGGER.warn("error supervising participant {}", participantStatusMessage.getParticipantId(), svExc);
-            return;
-        }
-
-        try {
-            superviseAutomationCompositions(participantStatusMessage);
         } catch (PfModelException | AutomationCompositionException svExc) {
             LOGGER.warn("error supervising participant {}", participantStatusMessage.getParticipantId(), svExc);
         }
@@ -499,26 +489,6 @@ public class SupervisionHandler {
 
         checkParticipant(participantStatusMessage, participantStatusMessage.getState(),
             participantStatusMessage.getHealthStatus());
-
-        monitoringProvider.createParticipantStatistics(List.of(participantStatusMessage.getParticipantStatistics()));
-    }
-
-    private void superviseAutomationCompositions(ParticipantStatus participantStatusMessage)
-        throws PfModelException, AutomationCompositionException {
-        if (participantStatusMessage.getAutomationCompositionInfoList() != null) {
-            for (AutomationCompositionInfo acEntry : participantStatusMessage.getAutomationCompositionInfoList()) {
-                var dbAutomationComposition = automationCompositionProvider
-                    .getAutomationComposition(new ToscaConceptIdentifier(acEntry.getAutomationCompositionId()));
-                if (dbAutomationComposition == null) {
-                    exceptionOccured(Response.Status.NOT_FOUND,
-                        "PARTICIPANT_STATUS automation composition not found in database: "
-                            + acEntry.getAutomationCompositionId());
-                }
-                dbAutomationComposition.setState(acEntry.getState());
-                monitoringProvider.createAcElementStatistics(
-                    acEntry.getAutomationCompositionStatistics().getAcElementStatisticsList().getAcElementStatistics());
-            }
-        }
     }
 
     private void exceptionOccured(Response.Status status, String reason) throws AutomationCompositionException {

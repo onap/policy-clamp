@@ -20,7 +20,7 @@
 
 package org.onap.policy.clamp.acm.runtime.config;
 
-import org.onap.policy.clamp.acm.runtime.main.rest.MonitoringQueryController;
+import org.onap.policy.clamp.acm.runtime.main.rest.CommissioningController;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.PathSelectors;
@@ -39,7 +39,7 @@ public class SpringFoxConfig {
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2).select()
-                .apis(RequestHandlerSelectors.basePackage(MonitoringQueryController.class.getPackageName()))
+                .apis(RequestHandlerSelectors.basePackage(CommissioningController.class.getPackageName()))
                 .paths(PathSelectors.any()).build();
     }
 }

@@ -35,7 +35,6 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.onap.policy.clamp.acm.runtime.monitoring.MonitoringProvider;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionHandler;
 import org.onap.policy.clamp.acm.runtime.util.rest.CommonRestController;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
@@ -44,10 +43,8 @@ import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDe
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDeregisterAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegisterAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUpdateAck;
-import org.onap.policy.clamp.models.acm.persistence.provider.AcElementStatisticsProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
-import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantStatisticsProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ServiceTemplateProvider;
 import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
@@ -70,10 +67,6 @@ class SupervisionMessagesTest extends CommonRestController {
     @BeforeAll
     public static void setupDbProviderParameters() throws PfModelException {
         var acProvider = mock(AutomationCompositionProvider.class);
-        var participantStatisticsProvider = mock(ParticipantStatisticsProvider.class);
-        var acElementStatisticsProvider = mock(AcElementStatisticsProvider.class);
-        var monitoringProvider =
-            new MonitoringProvider(participantStatisticsProvider, acElementStatisticsProvider, acProvider);
         var participantProvider = mock(ParticipantProvider.class);
         var serviceTemplateProvider = Mockito.mock(ServiceTemplateProvider.class);
         var automationCompositionUpdatePublisher = Mockito.mock(AutomationCompositionUpdatePublisher.class);
@@ -81,7 +74,7 @@ class SupervisionMessagesTest extends CommonRestController {
         var participantRegisterAckPublisher = Mockito.mock(ParticipantRegisterAckPublisher.class);
         var participantDeregisterAckPublisher = Mockito.mock(ParticipantDeregisterAckPublisher.class);
         var participantUpdatePublisher = Mockito.mock(ParticipantUpdatePublisher.class);
-        supervisionHandler = new SupervisionHandler(acProvider, participantProvider, monitoringProvider,
+        supervisionHandler = new SupervisionHandler(acProvider, participantProvider,
             serviceTemplateProvider, automationCompositionUpdatePublisher, automationCompositionStateChangePublisher,
             participantRegisterAckPublisher, participantDeregisterAckPublisher, participantUpdatePublisher);
     }
