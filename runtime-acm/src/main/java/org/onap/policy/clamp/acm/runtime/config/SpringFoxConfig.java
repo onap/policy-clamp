@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@
 
 package org.onap.policy.clamp.acm.runtime.config;
 
-import org.onap.policy.clamp.acm.runtime.main.rest.MonitoringQueryController;
+import org.onap.policy.clamp.acm.runtime.main.rest.CommissioningController;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.PathSelectors;
@@ -39,7 +39,7 @@ public class SpringFoxConfig {
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2).select()
-                .apis(RequestHandlerSelectors.basePackage(MonitoringQueryController.class.getPackageName()))
+                .apis(RequestHandlerSelectors.basePackage(CommissioningController.class.getPackageName()))
                 .paths(PathSelectors.any()).build();
     }
 }
