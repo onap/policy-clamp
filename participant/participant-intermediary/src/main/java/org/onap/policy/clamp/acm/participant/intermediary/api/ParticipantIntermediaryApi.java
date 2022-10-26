@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,14 +24,12 @@ package org.onap.policy.clamp.acm.participant.intermediary.api;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import org.onap.policy.clamp.models.acm.concepts.AcElementStatistics;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantStatistics;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaProperty;
@@ -76,13 +74,6 @@ public interface ParticipantIntermediaryApi {
     Participant updateParticipantState(ToscaConceptIdentifier definition, ParticipantState state);
 
     /**
-     * Update the statistics of a participant.
-     *
-     * @param participantStatistics the statistics of the participant
-     */
-    void updateParticipantStatistics(ParticipantStatistics participantStatistics);
-
-    /**
      * Get automation compositions from the intermediary API.
      *
      * @param name the automation composition element name, null for all
@@ -119,12 +110,4 @@ public interface ParticipantIntermediaryApi {
     AutomationCompositionElement updateAutomationCompositionElementState(ToscaConceptIdentifier automationCompositionId,
         UUID id, AutomationCompositionOrderedState currentState, AutomationCompositionState newState,
         ParticipantMessageType messageType);
-
-    /**
-     * Update the automation composition element statistics.
-     *
-     * @param id the ID of the automation composition element to update the state on
-     * @param elementStatistics the updated statistics
-     */
-    void updateAutomationCompositionElementStatistics(UUID id, AcElementStatistics elementStatistics);
 }

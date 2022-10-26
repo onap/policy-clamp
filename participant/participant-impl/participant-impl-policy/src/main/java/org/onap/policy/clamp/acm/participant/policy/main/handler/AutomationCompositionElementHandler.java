@@ -22,19 +22,16 @@
 
 package org.onap.policy.clamp.acm.participant.policy.main.handler;
 
-import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
-import javax.ws.rs.core.Response;
 import lombok.Setter;
 import org.apache.http.HttpStatus;
 import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.acm.participant.policy.client.PolicyApiHttpClient;
 import org.onap.policy.clamp.acm.participant.policy.client.PolicyPapHttpClient;
-import org.onap.policy.clamp.models.acm.concepts.AcElementStatistics;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
@@ -217,23 +214,6 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
             } else {
                 LOGGER.error("Creation of PolicyTypes/Policies failed. Policies will not be deployed.");
             }
-        }
-    }
-
-    /**
-     * Handle automationCompositionElement statistics.
-     *
-     * @param automationCompositionElementId automation composition element id
-     */
-    @Override
-    public void handleStatistics(UUID automationCompositionElementId) {
-        var acElement = intermediaryApi.getAutomationCompositionElement(automationCompositionElementId);
-        if (acElement != null) {
-            var acElementStatistics = new AcElementStatistics();
-            acElementStatistics.setState(acElement.getState());
-            acElementStatistics.setTimeStamp(Instant.now());
-            intermediaryApi.updateAutomationCompositionElementStatistics(automationCompositionElementId,
-                acElementStatistics);
         }
     }
 }

@@ -25,18 +25,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.time.Instant;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
-import org.onap.policy.clamp.models.acm.concepts.AcElementStatistics;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantHealthStatus;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantStatistics;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -66,13 +62,6 @@ class ParticipantIntermediaryApiImplTest {
         assertNotNull(apiImpl.getAutomationCompositions(id.getName(), id.getVersion()));
         assertThat(apiImpl.getAcElementDefinitionCommonProperties(id)).isEmpty();
 
-        var participantStatistics = new ParticipantStatistics();
-        participantStatistics.setParticipantId(id);
-        participantStatistics.setTimeStamp(Instant.ofEpochMilli(123456L));
-        participantStatistics.setState(ParticipantState.PASSIVE);
-        participantStatistics.setHealthStatus(ParticipantHealthStatus.HEALTHY);
-        apiImpl.updateParticipantStatistics(participantStatistics);
-
         var participants = apiImpl.getParticipants(id.getName(), id.getVersion());
         assertEquals(ParticipantState.UNKNOWN, participants.get(0).getParticipantState());
 
@@ -86,13 +75,6 @@ class ParticipantIntermediaryApiImplTest {
         var idType = new ToscaConceptIdentifier(ID_NAME_TYPE, ID_VERSION_TYPE);
         assertEquals(idType, element.getParticipantType());
 
-        var acElementStatistics = new AcElementStatistics();
-        var automationCompositionId = new ToscaConceptIdentifier("defName", "0.0.1");
-        acElementStatistics.setParticipantId(automationCompositionId);
-        acElementStatistics.setState(AutomationCompositionState.RUNNING);
-        acElementStatistics.setTimeStamp(Instant.now());
-
-        apiImpl.updateAutomationCompositionElementStatistics(uuid, acElementStatistics);
         var acElement =
             apiImpl.updateAutomationCompositionElementState(id, uuid, AutomationCompositionOrderedState.UNINITIALISED,
                 AutomationCompositionState.PASSIVE, ParticipantMessageType.AUTOMATION_COMPOSITION_STATECHANGE_ACK);

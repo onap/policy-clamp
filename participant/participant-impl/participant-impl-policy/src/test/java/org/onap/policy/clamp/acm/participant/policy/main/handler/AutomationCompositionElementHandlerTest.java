@@ -78,9 +78,6 @@ class AutomationCompositionElementHandlerTest {
                 automationCompositionElementId,
                 AutomationCompositionState.PASSIVE,
                 AutomationCompositionOrderedState.RUNNING));
-
-        assertDoesNotThrow(() -> handler
-            .handleStatistics(automationCompositionElementId));
     }
 
     private AutomationCompositionElementHandler getTestingHandler() {

@@ -23,7 +23,6 @@ package org.onap.policy.clamp.acm.participant.intermediary.handler;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
@@ -35,7 +34,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
-import org.onap.policy.clamp.models.acm.concepts.AcElementStatistics;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
@@ -84,16 +82,6 @@ class AutomationCompositionHandlerTest {
 
         assertNull(ach.updateAutomationCompositionElementState(null, id,
             AutomationCompositionOrderedState.UNINITIALISED, AutomationCompositionState.PASSIVE));
-
-        var acElementStatistics = new AcElementStatistics();
-        var automationCompositionId = new ToscaConceptIdentifier("defName", "0.0.1");
-        acElementStatistics.setParticipantId(automationCompositionId);
-        acElementStatistics.setState(AutomationCompositionState.RUNNING);
-        acElementStatistics.setTimeStamp(Instant.now());
-
-        ach.updateAutomationCompositionElementStatistics(id, acElementStatistics);
-        assertNull(ach.updateAutomationCompositionElementState(automationCompositionId, id,
-            AutomationCompositionOrderedState.UNINITIALISED, AutomationCompositionState.PASSIVE));
     }
 
     @Test
@@ -113,15 +101,6 @@ class AutomationCompositionHandlerTest {
         ach.updateAutomationCompositionElementState(id, key, AutomationCompositionOrderedState.PASSIVE,
             AutomationCompositionState.RUNNING);
         assertEquals(AutomationCompositionState.RUNNING, value.getState());
-
-        var acElementStatistics = new AcElementStatistics();
-        acElementStatistics.setParticipantId(id);
-        acElementStatistics.setState(AutomationCompositionState.RUNNING);
-        acElementStatistics.setTimeStamp(Instant.now());
-
-        assertNotEquals(uuid, value.getAcElementStatistics().getId());
-        ach.updateAutomationCompositionElementStatistics(uuid, acElementStatistics);
-        assertEquals(uuid, value.getAcElementStatistics().getId());
 
         ach.getElementsOnThisParticipant().remove(key, value);
         ach.getAutomationCompositionMap().values().iterator().next().getElements().clear();

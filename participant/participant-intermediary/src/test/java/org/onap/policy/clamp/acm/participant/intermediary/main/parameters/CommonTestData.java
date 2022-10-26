@@ -21,7 +21,6 @@
 package org.onap.policy.clamp.acm.participant.intermediary.main.parameters;
 
 import java.io.File;
-import java.time.Instant;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -34,11 +33,9 @@ import org.onap.policy.clamp.acm.participant.intermediary.handler.AutomationComp
 import org.onap.policy.clamp.acm.participant.intermediary.handler.DummyParticipantParameters;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.ParticipantHandler;
 import org.onap.policy.clamp.acm.participant.intermediary.parameters.ParticipantIntermediaryParameters;
-import org.onap.policy.clamp.models.acm.concepts.AcElementStatistics;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDeregisterAck;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
@@ -255,13 +252,6 @@ public class CommonTestData {
         acElement.setParticipantId(id);
         acElement.setDefinition(id);
         acElement.setOrderedState(AutomationCompositionOrderedState.UNINITIALISED);
-
-        var acElementStatistics = new AcElementStatistics();
-        acElementStatistics.setParticipantId(id);
-        acElementStatistics.setState(AutomationCompositionState.UNINITIALISED);
-        acElementStatistics.setTimeStamp(Instant.now());
-
-        acElement.setAcElementStatistics(acElementStatistics);
 
         Map<UUID, AutomationCompositionElement> elementsOnThisParticipant = new LinkedHashMap<>();
         elementsOnThisParticipant.put(uuid, acElement);

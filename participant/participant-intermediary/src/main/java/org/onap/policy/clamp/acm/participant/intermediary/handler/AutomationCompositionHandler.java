@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,7 +32,6 @@ import lombok.Getter;
 import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.acm.participant.intermediary.parameters.ParticipantParameters;
-import org.onap.policy.clamp.models.acm.concepts.AcElementStatistics;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementAck;
@@ -144,21 +143,6 @@ public class AutomationCompositionHandler {
             return acElement;
         }
         return null;
-    }
-
-    /**
-     * Handle a automation composition element statistics.
-     *
-     * @param id automation composition element id
-     * @param elementStatistics automation composition element Statistics
-     */
-    public void updateAutomationCompositionElementStatistics(UUID id, AcElementStatistics elementStatistics) {
-        var acElement = elementsOnThisParticipant.get(id);
-        if (acElement != null) {
-            elementStatistics.setParticipantId(participantId);
-            elementStatistics.setId(id);
-            acElement.setAcElementStatistics(elementStatistics);
-        }
     }
 
     /**

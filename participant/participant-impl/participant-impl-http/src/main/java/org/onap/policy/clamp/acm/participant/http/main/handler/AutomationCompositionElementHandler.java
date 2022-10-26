@@ -75,17 +75,6 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
     private ParticipantIntermediaryApi intermediaryApi;
 
     /**
-     * Handle automationCompositionElement statistics.
-     *
-     * @param automationCompositionElementId automation composition element id
-     */
-    @Override
-    public void handleStatistics(UUID automationCompositionElementId) {
-        // Implementation not needed for http participant
-
-    }
-
-    /**
      * Handle a automation composition element state change.
      *
      * @param automationCompositionElementId the ID of the automation composition element

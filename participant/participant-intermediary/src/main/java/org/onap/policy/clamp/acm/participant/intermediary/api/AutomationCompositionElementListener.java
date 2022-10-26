@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,12 +54,4 @@ public interface AutomationCompositionElementListener {
     public void automationCompositionElementUpdate(ToscaConceptIdentifier automationCompositionId,
         AutomationCompositionElement element, ToscaNodeTemplate automationCompositionElementDefinition)
         throws PfModelException;
-
-    /**
-     * Handle automationCompositionElement statistics.
-     *
-     * @param automationCompositionElementId automationCompositionElement id
-     * @throws PfModelException in case of a model exception
-     */
-    public void handleStatistics(UUID automationCompositionElementId) throws PfModelException;
 }
