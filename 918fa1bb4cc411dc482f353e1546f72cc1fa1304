@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bad99b95_94aae783",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/config/SpringFoxConfig.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2022-10-27T11:44:26Z",
+      "side": 1,
+      "message": "license",
+      "revId": "918fa1bb4cc411dc482f353e1546f72cc1fa1304",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5948351c_c45264b0",
+        "filename": "runtime-acm/src/test/java/org/onap/policy/clamp/acm/runtime/supervision/comm/SupervisionMessagesTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2022-10-27T11:44:26Z",
+      "side": 1,
+      "message": "license",
+      "revId": "918fa1bb4cc411dc482f353e1546f72cc1fa1304",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
