@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021 Nordix Foundation.
+ * Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,6 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionInfo;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantHealthStatus;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantStatistics;
 import org.onap.policy.models.base.PfUtils;
 
 /**
@@ -44,12 +43,10 @@ public class ParticipantStatus extends ParticipantMessage {
     private ParticipantState state;
     private ParticipantHealthStatus healthStatus;
 
-    private ParticipantStatistics participantStatistics;
-
     // A list of ParticipantDefinition updates, returned in response to ParticipantStatusReq only
     private List<ParticipantDefinition> participantDefinitionUpdates = new ArrayList<>();
 
-    // List of AutomationCompositionInfo types with AutomationCompositionId, its state and statistics
+    // List of AutomationCompositionInfo types with AutomationCompositionId and its state
     private List<AutomationCompositionInfo> automationCompositionInfoList = new ArrayList<>();
 
     /**
@@ -70,7 +67,6 @@ public class ParticipantStatus extends ParticipantMessage {
 
         this.state = source.state;
         this.healthStatus = source.healthStatus;
-        this.participantStatistics = (source.participantStatistics == null ? null : new ParticipantStatistics());
         this.participantDefinitionUpdates =
             PfUtils.mapList(source.participantDefinitionUpdates, ParticipantDefinition::new);
         this.automationCompositionInfoList =

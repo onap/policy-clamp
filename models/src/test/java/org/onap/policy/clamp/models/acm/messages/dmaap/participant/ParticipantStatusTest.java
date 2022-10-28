@@ -30,12 +30,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
-import org.onap.policy.clamp.models.acm.concepts.AcElementStatistics;
-import org.onap.policy.clamp.models.acm.concepts.AcElementStatisticsList;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionInfo;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionStatistics;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantHealthStatus;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
@@ -88,23 +85,6 @@ class ParticipantStatusTest {
         acInfo.setState(AutomationCompositionState.PASSIVE2RUNNING);
         acInfo.setAutomationCompositionId(id);
 
-        AutomationCompositionStatistics acStatistics = new AutomationCompositionStatistics();
-        acStatistics.setAutomationCompositionId(id);
-        acStatistics.setAverageExecutionTime(12345);
-        acStatistics.setEventCount(12345);
-        acStatistics.setLastEnterTime(12345);
-        acStatistics.setLastExecutionTime(12345);
-        acStatistics.setLastStart(12345);
-        acStatistics.setTimeStamp(Instant.ofEpochMilli(3000));
-        acStatistics.setUpTime(12345);
-        AcElementStatisticsList acElementStatisticsList = new AcElementStatisticsList();
-        AcElementStatistics acElementStatistics = new AcElementStatistics();
-        acElementStatistics.setParticipantId(new ToscaConceptIdentifier("defName", "0.0.1"));
-        acElementStatistics.setTimeStamp(Instant.now());
-        acElementStatisticsList.setAcElementStatistics(List.of(acElementStatistics));
-        acStatistics.setAcElementStatisticsList(acElementStatisticsList);
-
-        acInfo.setAutomationCompositionStatistics(acStatistics);
         return acInfo;
     }
 

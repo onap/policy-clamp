@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   ============LICENSE_START=======================================================
-   Copyright (C) 2021 Nordix Foundation.
+   Copyright (C) 2021-2022 Nordix Foundation.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@
         <class>org.onap.policy.models.dao.converters.Uuid2String</class>
         <class>org.onap.policy.models.pdp.persistence.concepts.JpaPdp</class>
         <class>org.onap.policy.models.pdp.persistence.concepts.JpaPdpGroup</class>
-        <class>org.onap.policy.models.pdp.persistence.concepts.JpaPdpStatistics</class>
         <class>org.onap.policy.models.pdp.persistence.concepts.JpaPdpSubGroup</class>
         <class>org.onap.policy.models.tosca.simple.concepts.JpaToscaCapabilityAssignment</class>
         <class>org.onap.policy.models.tosca.simple.concepts.JpaToscaCapabilityAssignments</class>
@@ -55,24 +54,11 @@
         <class>org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationComposition</class>
         <class>org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationCompositionElement</class>
         <class>org.onap.policy.clamp.models.acm.persistence.concepts.JpaParticipant</class>
-        <class>org.onap.policy.clamp.models.acm.persistence.concepts.JpaParticipantStatistics</class>
-        <class>org.onap.policy.clamp.models.acm.persistence.concepts.JpaClElementStatistics</class>
 
         <properties>
             <property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
             <property name="eclipselink.ddl-generation.output-mode" value="database" />
             <property name="eclipselink.logging.level" value="INFO" />
-
-          <!--  <property name="eclipselink.logging.level" value="ALL" />
-            <property name="eclipselink.logging.level.jpa" value="ALL" />
-            <property name="eclipselink.logging.level.ddl" value="ALL" />
-            <property name="eclipselink.logging.level.connection" value="ALL" />
-            <property name="eclipselink.logging.level.sql" value="ALL" />
-            <property name="eclipselink.logging.level.transaction" value="ALL" />
-            <property name="eclipselink.logging.level.sequencing" value="ALL" />
-            <property name="eclipselink.logging.level.server" value="ALL" />
-            <property name="eclipselink.logging.level.query" value="ALL" />
-            <property name="eclipselink.logging.level.properties" value="ALL"/> -->
         </properties>
     </persistence-unit>
 </persistence>

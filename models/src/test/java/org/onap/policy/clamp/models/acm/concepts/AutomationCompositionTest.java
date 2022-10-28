@@ -27,9 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import java.time.Instant;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.models.base.PfKey;
@@ -104,56 +102,12 @@ class AutomationCompositionTest {
 
     }
 
-    @Test
-    void testAutomationCompositionElementStatisticsList() {
-        var ac = new AutomationComposition();
-        List<AcElementStatistics> emptylist = ac.getAutomationCompositionElementStatisticsList(ac);
-        assertEquals(List.of(), emptylist);
-
-        var ac1 = getAutomationCompositionTest();
-        List<AcElementStatistics> list = ac1.getAutomationCompositionElementStatisticsList(ac1);
-        assertNotNull(list);
-        assertEquals(2, list.size());
-        assertEquals(AutomationCompositionState.UNINITIALISED, list.get(0).getState());
-    }
-
-    private AutomationComposition getAutomationCompositionTest() {
-        var ac = new AutomationComposition();
-        ac.setDefinition(new ToscaConceptIdentifier("defName", "1.2.3"));
-        ac.setDescription("Description");
-        ac.setElements(new LinkedHashMap<>());
-        ac.setName("Name");
-        ac.setOrderedState(AutomationCompositionOrderedState.UNINITIALISED);
-        ac.setState(AutomationCompositionState.UNINITIALISED);
-        ac.setVersion("0.0.1");
-
-        var uuid = UUID.randomUUID();
-        var id = new ToscaConceptIdentifier("org.onap.policy.acm.PolicyAutomationCompositionParticipant", "1.0.1");
-        var acElement = getAutomationCompositionElementTest(uuid, id);
-
-        var uuid2 = UUID.randomUUID();
-        var id2 = new ToscaConceptIdentifier("org.onap.policy.acm.PolicyAutomationCompositionParticipantIntermediary",
-            "0.0.1");
-        var acElement2 = getAutomationCompositionElementTest(uuid2, id2);
-
-        ac.getElements().put(uuid, acElement);
-        ac.getElements().put(uuid2, acElement2);
-        return ac;
-    }
-
     private AutomationCompositionElement getAutomationCompositionElementTest(UUID uuid, ToscaConceptIdentifier id) {
         var acElement = new AutomationCompositionElement();
         acElement.setId(uuid);
         acElement.setParticipantId(id);
         acElement.setDefinition(id);
         acElement.setOrderedState(AutomationCompositionOrderedState.UNINITIALISED);
-
-        var acElementStatistics = new AcElementStatistics();
-        acElementStatistics.setParticipantId(id);
-        acElementStatistics.setState(AutomationCompositionState.UNINITIALISED);
-        acElementStatistics.setTimeStamp(Instant.now());
-
-        acElement.setAcElementStatistics(acElementStatistics);
 
         return acElement;
     }

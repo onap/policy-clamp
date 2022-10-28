@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021 Nordix Foundation.
+ * Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,8 +37,6 @@ public class AutomationCompositionInfo {
 
     private AutomationCompositionState state = AutomationCompositionState.UNINITIALISED;
 
-    private AutomationCompositionStatistics automationCompositionStatistics;
-
     /**
      * Copy constructor, does a deep copy but as all fields here are immutable, it's just a regular copy.
      *
@@ -47,6 +45,5 @@ public class AutomationCompositionInfo {
     public AutomationCompositionInfo(final AutomationCompositionInfo otherElement) {
         this.automationCompositionId = otherElement.automationCompositionId;
         this.state = otherElement.state;
-        this.automationCompositionStatistics = otherElement.automationCompositionStatistics;
     }
 }

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021 Nordix Foundation.
+ * Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,8 +63,6 @@ public class AutomationCompositionElement {
 
     private String description;
 
-    private AcElementStatistics acElementStatistics;
-
     // A map indexed by the property name. Each map entry is the serialized value of the property,
     // which can be deserialized into an instance of the type of the property.
     private Map<String, ToscaProperty> propertiesMap = new LinkedHashMap<>();
@@ -83,7 +81,6 @@ public class AutomationCompositionElement {
         this.orderedState = otherElement.orderedState;
         this.toscaServiceTemplateFragment = otherElement.toscaServiceTemplateFragment;
         this.description = otherElement.description;
-        this.acElementStatistics = otherElement.acElementStatistics;
         this.propertiesMap = PfUtils.mapMap(otherElement.propertiesMap, UnaryOperator.identity());
     }
 }

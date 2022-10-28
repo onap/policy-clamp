@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021 Nordix Foundation.
+ * Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +20,8 @@
 
 package org.onap.policy.clamp.models.acm.concepts;
 
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -97,21 +95,5 @@ public class AutomationComposition extends ToscaEntity implements Comparable<Aut
         }
 
         elements.values().forEach(element -> element.setOrderedState(orderedState));
-    }
-
-    /**
-     * Get a list of automation composition element statistics.
-     *
-     * @param automationComposition the automation composition
-     * @return List of AcElementStatistics
-     */
-    public List<AcElementStatistics> getAutomationCompositionElementStatisticsList(
-        final AutomationComposition automationComposition) {
-        if (MapUtils.isEmpty(automationComposition.elements)) {
-            return List.of();
-        }
-
-        return automationComposition.elements.values().stream()
-            .map(AutomationCompositionElement::getAcElementStatistics).collect(Collectors.toList());
     }
 }
