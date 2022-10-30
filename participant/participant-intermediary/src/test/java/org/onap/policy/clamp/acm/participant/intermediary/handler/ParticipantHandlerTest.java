@@ -88,7 +88,6 @@ class ParticipantHandlerTest {
 
         var heartbeatF = participantHandler.makeHeartbeat(false);
         assertEquals(id, heartbeatF.getParticipantId());
-        assertEquals(ParticipantState.UNKNOWN, heartbeatF.getParticipantStatistics().getState());
         assertThat(heartbeatF.getAutomationCompositionInfoList()).isEmpty();
 
         participantHandler.handleParticipantUpdate(participantUpdateMsg);
@@ -96,7 +95,6 @@ class ParticipantHandlerTest {
 
         var heartbeatT = participantHandler.makeHeartbeat(true);
         assertEquals(id, heartbeatT.getParticipantId());
-        assertEquals(ParticipantState.TERMINATED, heartbeatT.getParticipantStatistics().getState());
         assertThat(heartbeatT.getParticipantDefinitionUpdates()).isNotEmpty();
         assertEquals(id, heartbeatT.getParticipantDefinitionUpdates().get(0).getParticipantId());
 
@@ -104,8 +102,6 @@ class ParticipantHandlerTest {
         participantHandler.handleParticipantUpdate(pum);
         var heartbeatTAfterUpdate = participantHandler.makeHeartbeat(true);
         assertEquals(id, heartbeatTAfterUpdate.getParticipantId());
-        assertEquals(ParticipantState.PASSIVE, heartbeatTAfterUpdate.getParticipantStatistics().getState());
-
     }
 
     private ParticipantUpdate setListParticipantDefinition(ParticipantUpdate participantUpdateMsg) {

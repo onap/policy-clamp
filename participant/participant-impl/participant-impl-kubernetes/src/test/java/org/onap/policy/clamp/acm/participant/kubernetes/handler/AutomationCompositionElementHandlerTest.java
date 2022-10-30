@@ -28,7 +28,6 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
@@ -157,15 +156,6 @@ class AutomationCompositionElementHandlerTest {
             nodeTemplatesMap.get(K8S_AUTOMATION_COMPOSITION_ELEMENT));
 
         assertThat(automationCompositionElementHandler.getChartMap().containsKey(elementId2)).isFalse();
-    }
-
-    @Test
-    void test_handleStatistics() {
-        UUID elementId1 = UUID.randomUUID();
-        automationCompositionElementHandler.getChartMap().put(elementId1, charts.get(0));
-        when(participantIntermediaryApi.getAutomationCompositionElement(elementId1))
-            .thenReturn(new AutomationCompositionElement());
-        assertDoesNotThrow(() -> automationCompositionElementHandler.handleStatistics(elementId1));
     }
 
     @Test

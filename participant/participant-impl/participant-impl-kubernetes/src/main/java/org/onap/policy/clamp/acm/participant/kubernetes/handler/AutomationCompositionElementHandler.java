@@ -22,7 +22,6 @@ package org.onap.policy.clamp.acm.participant.kubernetes.handler;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
-import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -40,7 +39,6 @@ import org.onap.policy.clamp.acm.participant.kubernetes.exception.ServiceExcepti
 import org.onap.policy.clamp.acm.participant.kubernetes.helm.PodStatusValidator;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartInfo;
 import org.onap.policy.clamp.acm.participant.kubernetes.service.ChartService;
-import org.onap.policy.clamp.models.acm.concepts.AcElementStatistics;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
@@ -175,24 +173,6 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
             intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, elementId,
                 AutomationCompositionOrderedState.PASSIVE, AutomationCompositionState.PASSIVE,
                 ParticipantMessageType.AUTOMATION_COMPOSITION_STATE_CHANGE);
-        }
-    }
-
-    /**
-     * Overridden method.
-     *
-     * @param automationCompositionElementId automationCompositionElement id
-     * @throws PfModelException in case of error
-     */
-    @Override
-    public synchronized void handleStatistics(UUID automationCompositionElementId) throws PfModelException {
-        var acElement = intermediaryApi.getAutomationCompositionElement(automationCompositionElementId);
-        if (acElement != null) {
-            var acElementStatistics = new AcElementStatistics();
-            acElementStatistics.setState(acElement.getState());
-            acElementStatistics.setTimeStamp(Instant.now());
-            intermediaryApi.updateAutomationCompositionElementStatistics(automationCompositionElementId,
-                acElementStatistics);
         }
     }
 }

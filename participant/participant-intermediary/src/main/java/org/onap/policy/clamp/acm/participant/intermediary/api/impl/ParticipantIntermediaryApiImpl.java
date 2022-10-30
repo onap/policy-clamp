@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,7 +29,6 @@ import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationComposit
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.AutomationCompositionHandler;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.ParticipantHandler;
-import org.onap.policy.clamp.models.acm.concepts.AcElementStatistics;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
@@ -37,7 +36,6 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantStatistics;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaProperty;
@@ -89,11 +87,6 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
     }
 
     @Override
-    public void updateParticipantStatistics(ParticipantStatistics participantStatistics) {
-        participantHandler.updateParticipantStatistics(participantStatistics);
-    }
-
-    @Override
     public AutomationCompositions getAutomationCompositions(String name, String version) {
         return automationCompositionHandler.getAutomationCompositions();
     }
@@ -131,10 +124,5 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
         AutomationCompositionState newState, ParticipantMessageType messageType) {
         return automationCompositionHandler.updateAutomationCompositionElementState(automationCompositionId, id,
             currentState, newState);
-    }
-
-    @Override
-    public void updateAutomationCompositionElementStatistics(UUID id, AcElementStatistics elementStatistics) {
-        automationCompositionHandler.updateAutomationCompositionElementStatistics(id, elementStatistics);
     }
 }

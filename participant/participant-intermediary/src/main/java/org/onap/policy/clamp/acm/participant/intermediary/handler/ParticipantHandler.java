@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -22,31 +22,22 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.handler;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
-import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.acm.participant.intermediary.parameters.ParticipantParameters;
-import org.onap.policy.clamp.models.acm.concepts.AcElementStatisticsList;
-import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionInfo;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionStatistics;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantHealthStatus;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantStatistics;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionStateChange;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionUpdate;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantAckMessage;
@@ -59,7 +50,6 @@ import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantSt
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatusReq;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUpdate;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUpdateAck;
-import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaProperty;
 import org.slf4j.Logger;
@@ -80,7 +70,6 @@ public class ParticipantHandler {
     private final ToscaConceptIdentifier participantId;
 
     private final AutomationCompositionHandler automationCompositionHandler;
-    private final ParticipantStatistics participantStatistics;
     private final ParticipantMessagePublisher publisher;
 
     @Setter
@@ -103,11 +92,6 @@ public class ParticipantHandler {
         this.participantId = parameters.getIntermediaryParameters().getParticipantId();
         this.publisher = publisher;
         this.automationCompositionHandler = automationCompositionHandler;
-        this.participantStatistics = new ParticipantStatistics();
-        this.participantStatistics.setParticipantId(participantId);
-        this.participantStatistics.setState(state);
-        this.participantStatistics.setHealthStatus(healthStatus);
-        this.participantStatistics.setTimeStamp(Instant.now());
     }
 
     /**
@@ -118,29 +102,6 @@ public class ParticipantHandler {
     public void handleParticipantStatusReq(final ParticipantStatusReq participantStatusReqMsg) {
         var participantStatus = makeHeartbeat(true);
         publisher.sendParticipantStatus(participantStatus);
-    }
-
-    /**
-     * Update AutomationCompositionElement statistics. The automation composition elements listening will be
-     * notified to retrieve statistics from respective automation composition elements, and automation
-     * compositionelements
-     * data on the handler will be updated.
-     *
-     * @param automationCompositions the automation compositions
-     * @param acElementListener automation composition element listener
-     */
-    private void updateAcElementStatistics(AutomationCompositions automationCompositions,
-        AutomationCompositionElementListener acElementListener) {
-        for (AutomationComposition automationComposition : automationCompositions.getAutomationCompositionList()) {
-            for (AutomationCompositionElement element : automationComposition.getElements().values()) {
-                try {
-                    acElementListener.handleStatistics(element.getId());
-                } catch (PfModelException e) {
-                    LOGGER.debug("Getting statistics for automation composition element failed for element ID {}",
-                        element.getId(), e);
-                }
-            }
-        }
     }
 
     /**
@@ -190,19 +151,6 @@ public class ParticipantHandler {
         handleStateChange(participantState, participantUpdateAck);
         publisher.sendParticipantUpdateAck(participantUpdateAck);
         return getParticipant(definition.getName(), definition.getVersion());
-    }
-
-    /**
-     * Method to update participant statistics.
-     *
-     * @param statistics participant statistics
-     */
-    public void updateParticipantStatistics(ParticipantStatistics statistics) {
-        participantStatistics.setState(statistics.getState());
-        participantStatistics.setHealthStatus(statistics.getHealthStatus());
-        participantStatistics.setTimeStamp(statistics.getTimeStamp());
-        participantStatistics.setAverageExecutionTime(statistics.getAverageExecutionTime());
-        participantStatistics.setEventCount(statistics.getEventCount());
     }
 
     /**
@@ -366,19 +314,8 @@ public class ParticipantHandler {
      * Method to send heartbeat to automation composition runtime.
      */
     public ParticipantStatus makeHeartbeat(boolean responseToParticipantStatusReq) {
-        if (!responseToParticipantStatusReq) {
-            var automationCompositions = automationCompositionHandler.getAutomationCompositions();
-            for (var acElementListener : automationCompositionHandler.getListeners()) {
-                updateAcElementStatistics(automationCompositions, acElementListener);
-            }
-        }
-        this.participantStatistics.setState(state);
-        this.participantStatistics.setHealthStatus(healthStatus);
-        this.participantStatistics.setTimeStamp(Instant.now());
-
         var heartbeat = new ParticipantStatus();
         heartbeat.setParticipantId(participantId);
-        heartbeat.setParticipantStatistics(participantStatistics);
         heartbeat.setParticipantType(participantType);
         heartbeat.setHealthStatus(healthStatus);
         heartbeat.setState(state);
@@ -400,14 +337,6 @@ public class ParticipantHandler {
         for (var entry : automationCompositionHandler.getAutomationCompositionMap().entrySet()) {
             var acInfo = new AutomationCompositionInfo();
             acInfo.setAutomationCompositionId(entry.getKey());
-            var acStatitistics = new AutomationCompositionStatistics();
-            acStatitistics.setAutomationCompositionId(entry.getKey());
-            var acElementStatisticsList = new AcElementStatisticsList();
-            acElementStatisticsList.setAcElementStatistics(entry.getValue().getElements().values().stream()
-                .map(AutomationCompositionElement::getAcElementStatistics).filter(Objects::nonNull)
-                .collect(Collectors.toList()));
-            acStatitistics.setAcElementStatisticsList(acElementStatisticsList);
-            acInfo.setAutomationCompositionStatistics(acStatitistics);
             acInfo.setState(entry.getValue().getState());
             automationCompositionInfoList.add(acInfo);
         }
