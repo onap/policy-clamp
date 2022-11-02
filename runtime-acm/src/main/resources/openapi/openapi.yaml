@@ -1,0 +1,2148 @@
+openapi: 3.0.1
+info:
+  title: Api Documentation
+  description: Api Documentation
+  termsOfService: urn:tos
+  contact: {}
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0
+  version: "1.0"
+servers:
+- url: /onap/acm/v3
+tags:
+- name: commissioning-controller
+  description: Commissioning Controller
+- name: instantiation-controller
+  description: Instantiation Controller
+
+paths:
+
+  /compositions:
+    get:
+      tags:
+      - Commissioning Controller
+      summary: Query the commissioned automation composition
+        definitions
+      description: Query the commissioned automation composition
+        definitions, returning the automation composition details
+      operationId: queryComposition
+      parameters:
+      - name: name
+        in: query
+        description: Automation composition  definition name
+        schema:
+          type: string
+      - name: version
+        in: query
+        description: Automation composition  definition version
+        schema:
+          type: string
+      - name: X-onap-RequestId
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/ToscaServiceTemplate'
+            application/yaml:
+              schema:
+                  $ref: '#/components/schemas/ToscaServiceTemplate'
+        401:
+          description: Authentication Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        403:
+          description: Authorization Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        404:
+          description: Not Found
+          content: {}
+        500:
+          description: Internal Server Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+      security:
+      - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: Istanbul
+    post:
+      tags:
+      - Commissioning Controller
+      summary: Commissions automation composition definitions
+      description: Commissions automation composition definitions, returning commissioned
+        definition IDs
+      operationId: createComposition
+      parameters:
+      - name: X-onap-RequestId
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: Entity Body of Automation Composition
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ToscaServiceTemplate'
+          application/yaml:
+            schema:
+              $ref: '#/components/schemas/ToscaServiceTemplate'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommissioningResponse'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/CommissioningResponse'
+        201:
+          description: Created
+          content: {}
+        401:
+          description: Authentication Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        403:
+          description: Authorization Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        404:
+          description: Not Found
+          content: {}
+        500:
+          description: Internal Server Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+      security:
+      - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: Istanbul
+      x-codegen-request-body-name: body
+  /compositions/{compositionId}:
+    get:
+      tags:
+      - Commissioning Controller
+      summary: Get details of the requested commissioned automation composition
+        definitions
+      description: Get details of the requested commissioned automation composition
+        definitions, returning all automation composition details
+      operationId: getComposition
+      parameters:
+      - name : compositionId
+        in: path
+        description: Composition UUID
+        required: true
+        schema:
+          type: string
+      - name: X-onap-RequestId
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/ToscaServiceTemplate'
+            application/yaml:
+              schema:
+                  $ref: '#/components/schemas/ToscaServiceTemplate'
+        401:
+          description: Authentication Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        403:
+          description: Authorization Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        404:
+          description: Not Found
+          content: {}
+        500:
+          description: Internal Server Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+      security:
+      - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: Istanbul
+    put:
+      tags:
+      - Commissioning Controller
+      summary: Updates common properties
+      description: Updates common properties, returning the saved instances properties
+        and it's version
+      operationId: updateCommonProperties
+      parameters:
+      - name : compositionId
+        in: path
+        description: Composition UUID
+        required: true
+        schema:
+          type: string
+      - name: X-onap-RequestId
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: Body of instance properties
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ToscaServiceTemplate'
+          application/yaml:
+            schema:
+              $ref: '#/components/schemas/ToscaServiceTemplate'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstancePropertiesResponse'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/InstancePropertiesResponse'
+        201:
+          description: Created
+          content: {}
+        401:
+          description: Authentication Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        403:
+          description: Authorization Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        404:
+          description: Not Found
+          content: {}
+        500:
+          description: Internal Server Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+      security:
+      - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: Istanbul
+      x-codegen-request-body-name: body
+    delete:
+      tags:
+      - Commissioning Controller
+      summary: Delete a commissioned automation composition
+      description: Deletes a Commissioned Automation Composition, returning optional
+        error details
+      operationId: deleteComposition
+      parameters:
+      - name : compositionId
+        in: path
+        description: Composition UUID
+        required: true
+        schema:
+          type: string
+      - name: X-onap-RequestId
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommissioningResponse'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/CommissioningResponse'
+        204:
+          description: No Content
+          content: {}
+        401:
+          description: Authentication Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        403:
+          description: Authorization Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        500:
+          description: Internal Server Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+      security:
+      - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: Istanbul
+  /compositions/{compositionId}/instances:
+    get:
+      tags:
+      - Instantiation Controller
+      summary: Get details of the requested automation compositions
+      description: Get details of the requested automation compositions, returning
+        all composition details
+      operationId: getInstance
+      parameters:
+      - name : compositionId
+        in: path
+        description: Composition UUID
+        required: true
+        schema:
+          type: string
+      - name: X-onap-RequestId
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AutomationCompositions'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/AutomationCompositions'
+        401:
+          description: Authentication Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        403:
+          description: Authorization Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        404:
+          description: Not Found
+          content: {}
+        500:
+          description: Internal Server Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+      security:
+      - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: Istanbul
+    put:
+      tags:
+      - Instantiation Controller
+      summary: Updates automation composition definitions
+      description: Updates automation composition definitions, returning the updated
+        composition definition IDs
+      operationId: updateCompositionDefinition
+      parameters:
+      - name : compositionId
+        in: path
+        description: Composition UUID
+        required: true
+        schema:
+          type: string
+      - name: X-onap-RequestId
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: Entity Body of Automation Composition
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AutomationCompositions'
+          application/yaml:
+            schema:
+              $ref: '#/components/schemas/AutomationCompositions'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstantiationResponse'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/InstantiationResponse'
+        201:
+          description: Created
+          content: {}
+        401:
+          description: Authentication Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        403:
+          description: Authorization Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        404:
+          description: Not Found
+          content: {}
+        500:
+          description: Internal Server Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+      security:
+      - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: Istanbul
+      x-codegen-request-body-name: automationCompositions
+    post:
+      tags:
+      - Instantiation Controller
+      summary: Commissions automation composition definitions
+      description: Commissions automation composition definitions, returning the automation
+        composition IDs
+      operationId: createCompositionDefinition
+      parameters:
+      - name : compositionId
+        in: path
+        description: Composition UUID
+        required: true
+        schema:
+          type: string
+      - name: X-onap-RequestId
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: Body of instance properties
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AutomationCompositions'
+          application/yaml:
+            schema:
+              $ref: '#/components/schemas/AutomationCompositions'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstantiationResponse'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/InstantiationResponse'
+        201:
+          description: Created
+          content: {}
+        401:
+          description: Authentication Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        403:
+          description: Authorization Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        404:
+          description: Not Found
+          content: {}
+        500:
+          description: Internal Server Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+      security:
+      - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: Istanbul
+      x-codegen-request-body-name: body
+  /compositions/{compositionId}/instances/{instanceId}:
+    get:
+      tags:
+      - Instantiation Controller
+      summary: Get details of the requested tosca service template instance
+        properties
+      description: Get details of the requested commissioned tosca service template
+        instance properties, returning all tosca service template instance property details
+      operationId: getToscaServiceInstanceProperties
+      parameters:
+      - name : compositionId
+        in: path
+        description: Composition UUID
+        required: true
+        schema:
+          type: string
+      - name : instanceId
+        in: path
+        description: Instance UUID
+        required: true
+        schema:
+          type: string
+      - name: X-onap-RequestId
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/ToscaNodeTemplate'
+            application/yaml:
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/ToscaNodeTemplate'
+        401:
+          description: Authentication Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        403:
+          description: Authorization Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        404:
+          description: Not Found
+          content: {}
+        500:
+          description: Internal Server Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+      security:
+      - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: Istanbul
+    put:
+      tags:
+      - Instantiation Controller
+      summary: Issue a command to the requested automation compositions
+      description: Issues a command to an automation composition, ordering a state
+        change on the composition
+      operationId: issueAutomationCompositionCommand
+      parameters:
+      - name : compositionId
+        in: path
+        description: Composition UUID
+        required: true
+        schema:
+          type: string
+      - name : instanceId
+        in: path
+        description: Instance UUID
+        required: true
+        schema:
+          type: string
+      - name: X-onap-RequestId
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: Entity Body of automation composition command
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InstantiationCommand'
+          application/yaml:
+            schema:
+              $ref: '#/components/schemas/InstantiationCommand'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstantiationResponse'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/InstantiationResponse'
+        201:
+          description: Created
+          content: {}
+        401:
+          description: Authentication Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        403:
+          description: Authorization Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        404:
+          description: Not Found
+          content: {}
+        500:
+          description: Internal Server Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+      security:
+      - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: Istanbul
+      x-codegen-request-body-name: command
+    delete:
+      tags:
+      - Instantiation Controller
+      summary: Delete a automation composition
+      description: Deletes a automation composition, returning optional error details
+      operationId: deleteInstanceProperties
+      parameters:
+      - name : compositionId
+        in: path
+        description: Composition UUID
+        required: true
+        schema:
+          type: string
+      - name : instanceId
+        in: path
+        description: Instance UUID
+        required: true
+        schema:
+          type: string
+      - name: X-onap-RequestId
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstantiationResponse'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/InstantiationResponse'
+        204:
+          description: No Content
+          content: {}
+        401:
+          description: Authentication Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        403:
+          description: Authorization Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+        500:
+          description: Internal Server Error
+          headers:
+            X-LatestVersion:
+              schema:
+                type: string
+            X-PatchVersion:
+              schema:
+                type: string
+            X-MinorVersion:
+              schema:
+                type: string
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+          content: {}
+      security:
+      - basicAuth: []
+      x-interface info:
+        api-version: 1.0.0
+        last-mod-release: Istanbul
+
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+  schemas:
+    state:
+      type: string
+      enum:
+      - PASSIVE
+      - PASSIVE2RUNNING
+      - PASSIVE2UNINITIALISED
+      - RUNNING
+      - RUNNING2PASSIVE
+      - UNINITIALISED
+      - UNINITIALISED2PASSIVE
+    orderedState:
+      type: string
+      enum:
+      - PASSIVE
+      - RUNNING
+      - UNINITIALISED
+    status:
+      type: string
+      enum:
+      - DEPRECATED
+      - EXPERIMENTAL
+      - SUPPORTED
+      - UNSUPPORTED
+    AutomationCompositionElementReq:
+      title: AutomationCompositionElementReq
+      type: object
+      properties:
+        definition:
+          $ref: '#/components/schemas/ToscaConceptIdentifier'
+        description:
+          type: string
+        id:
+          type: string
+          format: uuid
+        orderedState:
+          $ref: '#/components/schemas/orderedState'
+        participantId:
+          $ref: '#/components/schemas/ToscaConceptIdentifier'
+        participantType:
+          $ref: '#/components/schemas/ToscaConceptIdentifier'
+        propertiesMap:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ToscaProperty'
+        state:
+            $ref: '#/components/schemas/state'
+        toscaServiceTemplateFragment:
+          $ref: '#/components/schemas/ToscaServiceTemplateReq'
+    AutomationCompositionElementRes:
+      title: AutomationCompositionElementRes
+      type: object
+      properties:
+        definition:
+          $ref: '#/components/schemas/ToscaConceptIdentifier'
+        description:
+          type: string
+        id:
+          type: string
+          format: uuid
+        orderedState:
+          $ref: '#/components/schemas/orderedState'
+        participantId:
+          $ref: '#/components/schemas/ToscaConceptIdentifier'
+        participantType:
+          $ref: '#/components/schemas/ToscaConceptIdentifier'
+        propertiesMap:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ToscaProperty'
+        state:
+          $ref: '#/components/schemas/state'
+        toscaServiceTemplateFragment:
+          $ref: '#/components/schemas/ToscaServiceTemplateRes'
+    AutomationCompositionReq:
+      title: AutomationCompositionReq
+      type: object
+      properties:
+        cascadedOrderedState:
+          $ref: '#/components/schemas/orderedState'
+        definition:
+          $ref: '#/components/schemas/ToscaConceptIdentifier'
+        derivedFrom:
+          type: string
+        description:
+          type: string
+        elements:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/AutomationCompositionElementReq'
+        metadata:
+          type: object
+          properties: {}
+        name:
+          type: string
+        orderedState:
+          $ref: '#/components/schemas/orderedState'
+        primed:
+          type: boolean
+        state:
+          $ref: '#/components/schemas/state'
+        version:
+          type: string
+    AutomationCompositionRes:
+      title: AutomationCompositionRes
+      type: object
+      properties:
+        definedName:
+          type: string
+        definedVersion:
+          type: string
+        definition:
+          $ref: '#/components/schemas/ToscaConceptIdentifier'
+        derivedFrom:
+          type: string
+        description:
+          type: string
+        elements:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/AutomationCompositionElementRes'
+        key:
+          $ref: '#/components/schemas/ToscaEntityKey'
+        metadata:
+          type: object
+          properties: {}
+        name:
+          type: string
+        orderedState:
+          $ref: '#/components/schemas/orderedState'
+        primed:
+          type: boolean
+        state:
+          $ref: '#/components/schemas/state'
+        type:
+          type: string
+        typeVersion:
+          type: string
+        version:
+          type: string
+    AutomationCompositions:
+      title: AutomationCompositions
+      type: object
+      properties:
+        automationCompositionList:
+          type: array
+          items:
+            $ref: '#/components/schemas/AutomationCompositionReq'
+    AutomationCompositionsReq:
+      title: AutomationCompositionsReq
+      type: object
+      properties:
+        automationCompositionList:
+          type: array
+          items:
+            $ref: '#/components/schemas/AutomationCompositionReq'
+    AutomationCompositionsRes:
+      title: AutomationCompositionsRes
+      type: object
+      properties:
+        automationCompositionList:
+          type: array
+          items:
+            $ref: '#/components/schemas/AutomationCompositionRes'
+    CommissioningResponse:
+      title: CommissioningResponse
+      type: object
+      properties:
+        affectedAutomationCompositionDefinitions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ToscaConceptIdentifier'
+        errorDetails:
+          type: string
+    InstancePropertiesResponse:
+      title: InstancePropertiesResponse
+      type: object
+      properties:
+        affectedInstanceProperties:
+          type: array
+          items:
+            $ref: '#/components/schemas/ToscaConceptIdentifier'
+        errorDetails:
+          type: string
+    InstantiationCommand:
+      title: InstantiationCommand
+      type: object
+      properties:
+        automationCompositionIdentifierList:
+          type: array
+          items:
+            $ref: '#/components/schemas/ToscaConceptIdentifier'
+        orderedState:
+          $ref: '#/components/schemas/orderedState'
+    InstantiationResponse:
+      title: InstantiationResponse
+      type: object
+      properties:
+        affectedAutomationCompositions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ToscaConceptIdentifier'
+        errorDetails:
+          type: string
+    ToscaCapabilityAssignmentReq:
+      title: ToscaCapabilityAssignmentReq
+      type: object
+      properties:
+        attributes:
+          type: object
+          properties: {}
+        derivedFrom:
+          type: string
+        description:
+          type: string
+        metadata:
+          type: object
+          properties: {}
+        name:
+          type: string
+        occurrences:
+          type: array
+          items:
+            type: object
+            properties: {}
+        properties:
+          type: object
+          properties: {}
+        type:
+          type: string
+        typeVersion:
+          type: string
+        version:
+          type: string
+    ToscaCapabilityAssignmentRes:
+      title: ToscaCapabilityAssignmentRes
+      type: object
+      properties:
+        attributes:
+          type: object
+          properties: {}
+        definedName:
+          type: string
+        definedVersion:
+          type: string
+        derivedFrom:
+          type: string
+        description:
+          type: string
+        identifier:
+          $ref: '#/components/schemas/ToscaConceptIdentifier'
+        key:
+          $ref: '#/components/schemas/ToscaEntityKey'
+        metadata:
+          type: object
+          properties: {}
+        name:
+          type: string
+        occurrences:
+          type: array
+          items:
+            type: object
+            properties: {}
+        properties:
+          type: object
+          properties: {}
+        type:
+          type: string
+        typeIdentifier:
+          $ref: '#/components/schemas/ToscaConceptIdentifier'
+        typeVersion:
+          type: string
+        version:
+          type: string
+    ToscaCapabilityTypeReq:
+      title: ToscaCapabilityTypeReq
+      type: object
+      properties:
+        derivedFrom:
+          type: string
+        description:
+          type: string
+        metadata:
+          type: object
+          properties: {}
+        name:
+          type: string
+        properties:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ToscaProperty'
+        version:
+          type: string
+    ToscaCapabilityTypeRes:
+      title: ToscaCapabilityTypeRes
+      type: object
+      properties:
+        definedName:
+          type: string
+        definedVersion:
+          type: string
+        derivedFrom:
+          type: string
+        description:
+          type: string
+        key:
+          $ref: '#/components/schemas/ToscaEntityKey'
+        metadata:
+          type: object
+          properties: {}
+        name:
+          type: string
+        properties:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ToscaProperty'
+        type:
+          type: string
+        typeVersion:
+          type: string
+        version:
+          type: string
+    ToscaConceptIdentifier:
+      title: ToscaConceptIdentifier
+      type: object
+      properties:
+        name:
+          type: string
+        version:
+          type: string
+    ToscaConstraint:
+      title: ToscaConstraint
+      type: object
+      properties:
+        equal:
+          type: string
+        greaterOrEqual:
+          type: string
+        greaterThan:
+          type: string
+        lessOrEqual:
+          type: string
+        lessThan:
+          type: string
+        rangeValues:
+          type: array
+          items:
+            type: string
+        validValues:
+          type: array
+          items:
+            type: string
+    ToscaDataTypeReq:
+      title: ToscaDataTypeReq
+      type: object
+      properties:
+        constraints:
+          type: array
+          items:
+            $ref: '#/components/schemas/ToscaConstraint'
+        derivedFrom:
+          type: string
+        description:
+          type: string
+        metadata:
+          type: object
+          properties: {}
+        name:
+          type: string
+        properties:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ToscaProperty'
+        version:
+          type: string
+    ToscaDataTypeRes:
+      title: ToscaDataTypeRes
+      type: object
+      properties:
+        constraints:
+          type: array
+          items:
+            $ref: '#/components/schemas/ToscaConstraint'
+        definedName:
+          type: string
+        definedVersion:
+          type: string
+        derivedFrom:
+          type: string
+        description:
+          type: string
+        key:
+          $ref: '#/components/schemas/ToscaEntityKey'
+        metadata:
+          type: object
+          properties: {}
+        name:
+          type: string
+        properties:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ToscaProperty'
+        type:
+          type: string
+        typeVersion:
+          type: string
+        version:
+          type: string
+    ToscaEntityKey:
+      title: ToscaEntityKey
+      type: object
+      properties:
+        name:
+          type: string
+        version:
+          type: string
+    ToscaNodeTemplate:
+      title: ToscaNodeTemplateReq
+      type: object
+      properties:
+        capabilities:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ToscaCapabilityAssignmentReq'
+        derivedFrom:
+          type: string
+        description:
+          type: string
+        metadata:
+          type: object
+          properties: {}
+        name:
+          type: string
+        properties:
+          type: object
+          properties: {}
+        requirements:
+          type: array
+          items:
+            type: object
+            additionalProperties:
+              $ref: '#/components/schemas/ToscaRequirementReq'
+        type:
+          type: string
+        typeVersion:
+          type: string
+        version:
+          type: string
+    ToscaNodeTemplateReq:
+      title: ToscaNodeTemplateReq
+      type: object
+      properties:
+        capabilities:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ToscaCapabilityAssignmentReq'
+        derivedFrom:
+          type: string
+        description:
+          type: string
+        metadata:
+          type: object
+          properties: {}
+        name:
+          type: string
+        properties:
+          type: object
+          properties: {}
+        requirements:
+          type: array
+          items:
+            type: object
+            additionalProperties:
+              $ref: '#/components/schemas/ToscaRequirementReq'
+        type:
+          type: string
+        typeVersion:
+          type: string
+        version:
+          type: string
+    ToscaNodeTemplateRes:
+      title: ToscaNodeTemplateRes
+      type: object
+      properties:
+        capabilities:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ToscaCapabilityAssignmentRes'
+        definedName:
+          type: string
+        definedVersion:
+          type: string
+        derivedFrom:
+          type: string
+        description:
+          type: string
+        identifier:
+          $ref: '#/components/schemas/ToscaConceptIdentifier'
+        key:
+          $ref: '#/components/schemas/ToscaEntityKey'
+        metadata:
+          type: object
+          properties: {}
+        name:
+          type: string
+        properties:
+          type: object
+          properties: {}
+        requirements:
+          type: array
+          items:
+            type: object
+            additionalProperties:
+              $ref: '#/components/schemas/ToscaRequirementRes'
+        type:
+          type: string
+        typeIdentifier:
+          $ref: '#/components/schemas/ToscaConceptIdentifier'
+        typeVersion:
+          type: string
+        version:
+          type: string
+    ToscaNodeTypeReq:
+      title: ToscaNodeTypeReq
+      type: object
+      properties:
+        derivedFrom:
+          type: string
+        description:
+          type: string
+        metadata:
+          type: object
+          properties: {}
+        name:
+          type: string
+        properties:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ToscaProperty'
+        requirements:
+          type: array
+          items:
+            type: object
+            additionalProperties:
+              $ref: '#/components/schemas/ToscaRequirementReq'
+        version:
+          type: string
+    ToscaNodeTypeRes:
+      title: ToscaNodeTypeRes
+      type: object
+      properties:
+        definedName:
+          type: string
+        definedVersion:
+          type: string
+        derivedFrom:
+          type: string
+        description:
+          type: string
+        key:
+          $ref: '#/components/schemas/ToscaEntityKey'
+        metadata:
+          type: object
+          properties: {}
+        name:
+          type: string
+        properties:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ToscaProperty'
+        requirements:
+          type: array
+          items:
+            type: object
+            additionalProperties:
+              $ref: '#/components/schemas/ToscaRequirementRes'
+        type:
+          type: string
+        typeVersion:
+          type: string
+        version:
+          type: string
+    ToscaParameter:
+      title: ToscaParameter
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        typeVersion:
+          type: string
+        value:
+          type: object
+          properties: {}
+    ToscaPolicyReq:
+      title: ToscaPolicyReq
+      type: object
+      properties:
+        derivedFrom:
+          type: string
+        description:
+          type: string
+        metadata:
+          type: object
+          properties: {}
+        name:
+          type: string
+        properties:
+          type: object
+          properties: {}
+        type:
+          type: string
+        typeVersion:
+          type: string
+        version:
+          type: string
+    ToscaPolicyRes:
+      title: ToscaPolicyRes
+      type: object
+      properties:
+        definedName:
+          type: string
+        definedVersion:
+          type: string
+        derivedFrom:
+          type: string
+        description:
+          type: string
+        identifier:
+          $ref: '#/components/schemas/ToscaConceptIdentifier'
+        key:
+          $ref: '#/components/schemas/ToscaEntityKey'
+        metadata:
+          type: object
+          properties: {}
+        name:
+          type: string
+        properties:
+          type: object
+          properties: {}
+        type:
+          type: string
+        typeIdentifier:
+          $ref: '#/components/schemas/ToscaConceptIdentifier'
+        typeVersion:
+          type: string
+        version:
+          type: string
+    ToscaPolicyTypeReq:
+      title: ToscaPolicyTypeReq
+      type: object
+      properties:
+        derivedFrom:
+          type: string
+        description:
+          type: string
+        metadata:
+          type: object
+          properties: {}
+        name:
+          type: string
+        properties:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ToscaProperty'
+        version:
+          type: string
+    ToscaPolicyTypeRes:
+      title: ToscaPolicyTypeRes
+      type: object
+      properties:
+        definedName:
+          type: string
+        definedVersion:
+          type: string
+        derivedFrom:
+          type: string
+        description:
+          type: string
+        key:
+          $ref: '#/components/schemas/ToscaEntityKey'
+        metadata:
+          type: object
+          properties: {}
+        name:
+          type: string
+        properties:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ToscaProperty'
+        type:
+          type: string
+        typeVersion:
+          type: string
+        version:
+          type: string
+    ToscaProperty:
+      title: ToscaProperty
+      type: object
+      properties:
+        constraints:
+          type: array
+          items:
+            $ref: '#/components/schemas/ToscaConstraint'
+        defaultValue:
+          type: object
+          properties: {}
+        description:
+          type: string
+        entrySchema:
+          $ref: '#/components/schemas/ToscaSchemaDefinition'
+        keySchema:
+          $ref: '#/components/schemas/ToscaSchemaDefinition'
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+        name:
+          type: string
+        required:
+          type: boolean
+        status:
+          $ref: '#/components/schemas/status'
+        type:
+          type: string
+        typeVersion:
+          type: string
+    ToscaRelationshipTypeReq:
+      title: ToscaRelationshipTypeReq
+      type: object
+      properties:
+        derivedFrom:
+          type: string
+        description:
+          type: string
+        metadata:
+          type: object
+          properties: {}
+        name:
+          type: string
+        properties:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ToscaProperty'
+        version:
+          type: string
+    ToscaRelationshipTypeRes:
+      title: ToscaRelationshipTypeRes
+      type: object
+      properties:
+        definedName:
+          type: string
+        definedVersion:
+          type: string
+        derivedFrom:
+          type: string
+        description:
+          type: string
+        key:
+          $ref: '#/components/schemas/ToscaEntityKey'
+        metadata:
+          type: object
+          properties: {}
+        name:
+          type: string
+        properties:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ToscaProperty'
+        type:
+          type: string
+        typeVersion:
+          type: string
+        version:
+          type: string
+    ToscaRequirementReq:
+      title: ToscaRequirementReq
+      type: object
+      properties:
+        capability:
+          type: string
+        derivedFrom:
+          type: string
+        description:
+          type: string
+        metadata:
+          type: object
+          properties: {}
+        name:
+          type: string
+        node:
+          type: string
+        occurrences:
+          type: array
+          items:
+            type: object
+            properties: {}
+        properties:
+          type: object
+          properties: {}
+        relationship:
+          type: string
+        type:
+          type: string
+        typeVersion:
+          type: string
+        version:
+          type: string
+    ToscaRequirementRes:
+      title: ToscaRequirementRes
+      type: object
+      properties:
+        capability:
+          type: string
+        definedName:
+          type: string
+        definedVersion:
+          type: string
+        derivedFrom:
+          type: string
+        description:
+          type: string
+        identifier:
+          $ref: '#/components/schemas/ToscaConceptIdentifier'
+        key:
+          $ref: '#/components/schemas/ToscaEntityKey'
+        metadata:
+          type: object
+          properties: {}
+        name:
+          type: string
+        node:
+          type: string
+        occurrences:
+          type: array
+          items:
+            type: object
+            properties: {}
+        properties:
+          type: object
+          properties: {}
+        relationship:
+          type: string
+        type:
+          type: string
+        typeIdentifier:
+          $ref: '#/components/schemas/ToscaConceptIdentifier'
+        typeVersion:
+          type: string
+        version:
+          type: string
+    ToscaSchemaDefinition:
+      title: ToscaSchemaDefinition
+      type: object
+      properties:
+        constraints:
+          type: array
+          items:
+            $ref: '#/components/schemas/ToscaConstraint'
+        description:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        typeVersion:
+          type: string
+    ToscaServiceTemplate:
+      title: ToscaServiceTemplateReq
+      type: object
+      properties:
+        capabilityTypes:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ToscaCapabilityTypeReq'
+        dataTypes:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ToscaDataTypeReq'
+        derivedFrom:
+          type: string
+        description:
+          type: string
+        metadata:
+          type: object
+          properties: {}
+        name:
+          type: string
+        nodeTypes:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ToscaNodeTypeReq'
+        policyTypes:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ToscaPolicyTypeReq'
+        relationshipTypes:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ToscaRelationshipTypeReq'
+        toscaDefinitionsVersion:
+          type: string
+        toscaTopologyTemplate:
+          $ref: '#/components/schemas/ToscaTopologyTemplateReq'
+        version:
+          type: string
+    ToscaServiceTemplateReq:
+      title: ToscaServiceTemplateReq
+      type: object
+      properties:
+        capabilityTypes:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ToscaCapabilityTypeReq'
+        dataTypes:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ToscaDataTypeReq'
+        derivedFrom:
+          type: string
+        description:
+          type: string
+        metadata:
+          type: object
+          properties: {}
+        name:
+          type: string
+        nodeTypes:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ToscaNodeTypeReq'
+        policyTypes:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ToscaPolicyTypeReq'
+        relationshipTypes:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ToscaRelationshipTypeReq'
+        toscaDefinitionsVersion:
+          type: string
+        toscaTopologyTemplate:
+          $ref: '#/components/schemas/ToscaTopologyTemplateReq'
+        version:
+          type: string
+    ToscaServiceTemplateRes:
+      title: ToscaServiceTemplateRes
+      type: object
+      properties:
+        capabilityTypes:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ToscaCapabilityTypeRes'
+        dataTypes:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ToscaDataTypeRes'
+        dataTypesAsMap:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ToscaDataTypeRes'
+        definedName:
+          type: string
+        definedVersion:
+          type: string
+        derivedFrom:
+          type: string
+        description:
+          type: string
+        key:
+          $ref: '#/components/schemas/ToscaEntityKey'
+        metadata:
+          type: object
+          properties: {}
+        name:
+          type: string
+        nodeTypes:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ToscaNodeTypeRes'
+        policyTypes:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ToscaPolicyTypeRes'
+        policyTypesAsMap:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ToscaPolicyTypeRes'
+        relationshipTypes:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ToscaRelationshipTypeRes'
+        toscaDefinitionsVersion:
+          type: string
+        toscaTopologyTemplate:
+          $ref: '#/components/schemas/ToscaTopologyTemplateRes'
+        type:
+          type: string
+        typeVersion:
+          type: string
+        version:
+          type: string
+    ToscaTopologyTemplateReq:
+      title: ToscaTopologyTemplateReq
+      type: object
+      properties:
+        description:
+          type: string
+        inputs:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ToscaParameter'
+        nodeTemplates:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ToscaNodeTemplateReq'
+        policies:
+          type: array
+          items:
+            type: object
+            additionalProperties:
+              $ref: '#/components/schemas/ToscaPolicyReq'
+    ToscaTopologyTemplateRes:
+      title: ToscaTopologyTemplateRes
+      type: object
+      properties:
+        description:
+          type: string
+        inputs:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ToscaParameter'
+        nodeTemplates:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ToscaNodeTemplateRes'
+        policies:
+          type: array
+          items:
+            type: object
+            additionalProperties:
+              $ref: '#/components/schemas/ToscaPolicyRes'
+        policiesAsMap:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ToscaPolicyRes'
