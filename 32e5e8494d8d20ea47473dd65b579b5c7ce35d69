@@ -22,6 +22,23 @@
       "revId": "32e5e8494d8d20ea47473dd65b579b5c7ce35d69",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bf1e3bbc_f3d92412",
+        "filename": "runtime-acm/src/main/resources/openapi/openapi.yaml",
+        "patchSetId": 4
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2022-11-02T18:07:56Z",
+      "side": 1,
+      "message": "Lines 70-75:\n\nI know you have put a lot of effort into defining the schemas below but they are not in the format that we actually get back. I think it would be better to just refer to the Java type definitions and to put in examples.\n\nFor example, replace lines 70-75 with:\n          content:\n            application/json:\n              schema:\n                title: ToscaServiceTemplate\n                type: object\n              example:\n                $ref: \"examples/GetAllACDefinitions.json\"\n            application/yaml:\n              schema:\n                title: ToscaServiceTemplate\n                type: object\n              example:\n                $ref: \"examples/GetAllACDefinitions.yaml\"\n\n\nAnd the we put examples of the output in the examples/\u003cblah blah\u003e.\u003cjson|yaml\u003e files.",
+      "revId": "32e5e8494d8d20ea47473dd65b579b5c7ce35d69",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
