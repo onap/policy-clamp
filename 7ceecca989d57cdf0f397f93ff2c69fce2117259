@@ -1,0 +1,136 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0cd85079_7583e2cc",
+        "filename": "runtime-acm/src/main/resources/openapi/openapi.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2022-11-02T13:55:40Z",
+      "side": 1,
+      "message": "onap/clamp/acm/v3\n\nCan this be a variable?",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 4
+      },
+      "revId": "7ceecca989d57cdf0f397f93ff2c69fce2117259",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "047725d7_1c0c2366",
+        "filename": "runtime-acm/src/main/resources/openapi/openapi.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2022-11-02T13:55:40Z",
+      "side": 1,
+      "message": "acm-controller",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 4
+      },
+      "revId": "7ceecca989d57cdf0f397f93ff2c69fce2117259",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d2e1c4f7_bb4b8655",
+        "filename": "runtime-acm/src/main/resources/openapi/openapi.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2022-11-02T13:55:40Z",
+      "side": 1,
+      "message": "Automation Composition Controller",
+      "range": {
+        "startLine": 32,
+        "startChar": 0,
+        "endLine": 32,
+        "endChar": 6
+      },
+      "revId": "7ceecca989d57cdf0f397f93ff2c69fce2117259",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6f8c3e11_212e3dab",
+        "filename": "runtime-acm/src/main/resources/openapi/openapi.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2022-11-02T13:55:40Z",
+      "side": 1,
+      "message": "remove",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 6
+      },
+      "revId": "7ceecca989d57cdf0f397f93ff2c69fce2117259",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5e2b12c3_a65f4464",
+        "filename": "runtime-acm/src/main/resources/openapi/openapi.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2022-11-02T13:55:40Z",
+      "side": 1,
+      "message": "We support wild cards here so we should mention that in the description",
+      "revId": "7ceecca989d57cdf0f397f93ff2c69fce2117259",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4188b036_4b477f41",
+        "filename": "runtime-acm/src/main/resources/openapi/openapi.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2022-11-02T13:55:40Z",
+      "side": 1,
+      "message": "London?",
+      "range": {
+        "startLine": 132,
+        "startChar": 0,
+        "endLine": 132,
+        "endChar": 4
+      },
+      "revId": "7ceecca989d57cdf0f397f93ff2c69fce2117259",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
