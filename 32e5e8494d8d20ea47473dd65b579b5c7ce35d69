@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8183d1d3_de3fde3e",
+        "filename": "runtime-acm/src/main/resources/openapi/openapi.yaml",
+        "patchSetId": 4
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2022-11-02T17:55:07Z",
+      "side": 1,
+      "message": "It would be great to refer to the Java classes that are returned/sent\n\n        200:\n          description: Serialised instance of\u003cbr\u003ehttps://github.com/onap/policy-models/blob/master/models-tosca/src/main/java/org/onap/policy/models/tosca/authorative/concepts/ToscaServiceTemplate.java",
+      "range": {
+        "startLine": 68,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 4
+      },
+      "revId": "32e5e8494d8d20ea47473dd65b579b5c7ce35d69",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
