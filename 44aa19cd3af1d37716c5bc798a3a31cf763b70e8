@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a79de56e_654063f3",
+        "filename": "runtime-acm/src/main/resources/openapi/openapi.yaml",
+        "patchSetId": 6
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2022-11-07T10:25:35Z",
+      "side": 1,
+      "message": "white space",
+      "range": {
+        "startLine": 381,
+        "startChar": 85,
+        "endLine": 381,
+        "endChar": 87
+      },
+      "revId": "44aa19cd3af1d37716c5bc798a3a31cf763b70e8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
