@@ -231,6 +231,9 @@ paths:
         404:
           description: Not Found
           content: {}
+        406:
+          description: Specified automation composition definition is not acceptable. See the content for error messages.
+          content: {}
         500:
           description: Internal Server Error
           headers:
@@ -790,6 +793,9 @@ paths:
         404:
           description: The specified automation composition definition was not found
           content: {}
+        406:
+          description: Specified automation composition instance definition is not acceptable. See the content for error messages.
+          content: {}
         500:
           description: Internal Server Error
           headers:
@@ -922,7 +928,7 @@ paths:
       tags:
       - Automation Composition Controller
       summary: Update an automation composition instance
-      description: THis request updates an automation composition instance. It may update instance properties or change the state of the automation composition instance
+      description: This request updates an automation composition instance. It may update instance properties or change the state of the automation composition instance
       operationId: updateCompositionInstance
       parameters:
       - name : compositionId
