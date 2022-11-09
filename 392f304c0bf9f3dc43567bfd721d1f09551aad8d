@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f615bf99_24773c9d",
+        "filename": "runtime-acm/src/main/resources/openapi/openapi.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2022-11-09T11:50:11Z",
+      "side": 1,
+      "message": "Change to:\n\nSpecified automation composition definition is not acceptable. See the content for error messages.",
+      "range": {
+        "startLine": 235,
+        "startChar": 0,
+        "endLine": 235,
+        "endChar": 34
+      },
+      "revId": "392f304c0bf9f3dc43567bfd721d1f09551aad8d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7d275584_ebc9fff6",
+        "filename": "runtime-acm/src/main/resources/openapi/openapi.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 797,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2022-11-09T11:50:11Z",
+      "side": 1,
+      "message": "Change to:\nSpecified automation composition instance definition is not acceptable. See the content for error messages.",
+      "range": {
+        "startLine": 797,
+        "startChar": 0,
+        "endLine": 797,
+        "endChar": 34
+      },
+      "revId": "392f304c0bf9f3dc43567bfd721d1f09551aad8d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
