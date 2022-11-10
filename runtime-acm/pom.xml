@@ -67,12 +67,14 @@
                         <configuration>
                             <inputSpec>${project.basedir}/src/main/resources/openapi/openapi.yaml</inputSpec>
                             <invokerPackage>org.onap.acm.rest.controller</invokerPackage>
-                            <modelPackage>org.onap.acm.rest.model</modelPackage>
-                            <apiPackage>org.onap.acm.rest.api</apiPackage>
+                            <modelPackage>org.onap.policy.clamp.models.acm.concepts</modelPackage>
+                            <apiPackage>org.onap.policy.clamp.acm.runtime.main.rest</apiPackage>
                             <language>spring</language>
                             <generateModels>false</generateModels>
                             <generateSupportingFiles>false</generateSupportingFiles>
-                            <importMappings>InstancePropertiesResponse=org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstancePropertiesResponse,
+                            <importMappings>ToscaServiceTemplates=org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplates,
+                            SimpleResponse=org.onap.policy.clamp.models.acm.messages.rest.SimpleResponse,
+                            InstancePropertiesResponse=org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstancePropertiesResponse,
                             CommissioningResponse=org.onap.policy.clamp.models.acm.messages.rest.commissioning.CommissioningResponse,
                             ToscaNodeTemplate=org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate,
                             ToscaServiceTemplate=org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate,
