@@ -1,9 +1,0 @@
-{
-  "dcaeDeployParameters": {
-    "uniqueBlueprintParameters": {
-      "location_id": "",
-      "service_id": "",
-      "policy_id": "testName1"
-    }
-  }
-}
