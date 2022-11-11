@@ -19,9 +19,7 @@
   ============LICENSE_END=========================================================
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -72,15 +70,17 @@
                             <language>spring</language>
                             <generateModels>false</generateModels>
                             <generateSupportingFiles>false</generateSupportingFiles>
-                            <importMappings>ToscaServiceTemplates=org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplates,
-                            SimpleResponse=org.onap.policy.clamp.models.acm.messages.rest.SimpleResponse,
-                            InstancePropertiesResponse=org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstancePropertiesResponse,
-                            CommissioningResponse=org.onap.policy.clamp.models.acm.messages.rest.commissioning.CommissioningResponse,
-                            ToscaNodeTemplate=org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate,
-                            ToscaServiceTemplate=org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate,
-                            AutomationCompositions=org.onap.policy.clamp.models.acm.concepts.AutomationCompositions,
-                            InstantiationCommand=org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationCommand,
-                            InstantiationResponse=org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse</importMappings>
+                            <importMappings>
+                                ToscaServiceTemplates=org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplates,
+                                ToscaServiceTemplate=org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate,
+                                ToscaNodeTemplate=org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate,
+                                AutomationCompositions=org.onap.policy.clamp.models.acm.concepts.AutomationCompositions,
+                                SimpleResponse=org.onap.policy.clamp.models.acm.messages.rest.SimpleResponse,
+                                InstancePropertiesResponse=org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstancePropertiesResponse,
+                                CommissioningResponse=org.onap.policy.clamp.models.acm.messages.rest.commissioning.CommissioningResponse,
+                                InstantiationCommand=org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationCommand,
+                                InstantiationResponse=org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse
+                            </importMappings>
                             <configOptions>
                                 <sourceFolder>src/gen/java</sourceFolder>
                                 <dateLibrary>java11</dateLibrary>
