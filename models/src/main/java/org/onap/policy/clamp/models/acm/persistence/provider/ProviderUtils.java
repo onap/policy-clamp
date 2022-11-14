@@ -64,7 +64,15 @@ public final class ProviderUtils {
         return jpaConceptList;
     }
 
-    protected static <A, J extends PfConcept & PfAuthorative<A>> J getJpaAndValidate(A authorativeConcept,
+    /**
+     * Convert a concept to a Jpa object.
+     *
+     * @param authorativeConcept the concept
+     * @param jpaSupplier  the Jpa Supplier
+     * @param conceptDescription the description used for validation result
+     * @return the Jpa object
+     */
+    public static <A, J extends PfConcept & PfAuthorative<A>> J getJpaAndValidate(A authorativeConcept,
             Supplier<J> jpaSupplier, String conceptDescription) {
         var validationResult = new BeanValidationResult(conceptDescription, authorativeConcept);
 
