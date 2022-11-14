@@ -23,7 +23,6 @@ package org.onap.policy.clamp.acm.runtime.instantiation.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVICE_TEMPLATE_YAML;
@@ -42,11 +41,7 @@ import org.onap.policy.clamp.acm.runtime.main.rest.InstantiationController;
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
 import org.onap.policy.clamp.acm.runtime.util.rest.CommonRestController;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
-import org.onap.policy.clamp.models.acm.messages.rest.instantiation.AutomationCompositionOrderStateResponse;
-import org.onap.policy.clamp.models.acm.messages.rest.instantiation.AutomationCompositionPrimedResponse;
-import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstancePropertiesResponse;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationCommand;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
@@ -83,9 +78,6 @@ class InstantiationControllerTest extends CommonRestController {
 
     private static final String INSTANTIATION_ENDPOINT = "instantiation";
     private static final String INSTANTIATION_COMMAND_ENDPOINT = "instantiation/command";
-    private static final String PRIMING_ENDPOINT = "automationCompositionPriming";
-    private static final String INSTANTIATION_PROPERTIES = "instanceProperties";
-    private static final String INSTANTIATION_STATE = "instantiationState";
 
     private static ToscaServiceTemplate serviceTemplate = new ToscaServiceTemplate();
 
@@ -185,14 +177,6 @@ class InstantiationControllerTest extends CommonRestController {
             assertEquals(automationCompositionFromRsc,
                 automationCompositionsFromDb.getAutomationCompositionList().get(0));
         }
-
-        invocationBuilder =
-            super.sendRequest(PRIMING_ENDPOINT + "?name=" + "PMSHInstance0Create" + "&version=" + "1.0.1");
-        Response rawresp = invocationBuilder.buildGet().invoke();
-        assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
-        AutomationCompositionPrimedResponse primResponse =
-            rawresp.readEntity(AutomationCompositionPrimedResponse.class);
-        assertFalse(primResponse.getPrimedAutomationCompositionsList().get(0).isPrimed());
     }
 
     @Test
@@ -273,17 +257,6 @@ class InstantiationControllerTest extends CommonRestController {
     }
 
     @Test
-    void testDelete_NoResultWithThisName() {
-        Invocation.Builder invocationBuilder =
-            super.sendRequest(INSTANTIATION_ENDPOINT + "?name=noResultWithThisName&version=1.0.1");
-        Response resp = invocationBuilder.delete();
-        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), resp.getStatus());
-        InstantiationResponse instResponse = resp.readEntity(InstantiationResponse.class);
-        assertNotNull(instResponse.getErrorDetails());
-        assertNull(instResponse.getAffectedAutomationCompositions());
-    }
-
-    @Test
     void testDelete() throws Exception {
 
         AutomationCompositions automationCompositionsFromRsc =
@@ -320,89 +293,6 @@ class InstantiationControllerTest extends CommonRestController {
             Invocation.Builder invocationBuilder =
                 super.sendRequest(INSTANTIATION_ENDPOINT + "?name=" + automationCompositionFromRsc.getKey().getName());
             Response resp = invocationBuilder.delete();
-            assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), resp.getStatus());
-        }
-    }
-
-    @Test
-    void testCreateInstanceProperties() {
-        Invocation.Builder invocationBuilder = super.sendRequest(INSTANTIATION_PROPERTIES);
-        Response resp = invocationBuilder.post(Entity.json(serviceTemplate));
-        assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
-        var instancePropertyList = resp.readEntity(InstancePropertiesResponse.class);
-        assertNull(instancePropertyList.getErrorDetails());
-        var id = new ToscaConceptIdentifier(ID_NAME, ID_VERSION);
-        assertEquals(id, instancePropertyList.getAffectedInstanceProperties().get(0));
-
-        invocationBuilder = super.sendRequest(INSTANTIATION_ENDPOINT);
-        resp = invocationBuilder.get();
-        assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
-        var automationCompositionsGet = resp.readEntity(AutomationCompositions.class);
-        assertThat(automationCompositionsGet.getAutomationCompositionList()).hasSize(1);
-    }
-
-    @Test
-    void testDeleteInstanceProperties() throws Exception {
-        Invocation.Builder invocationBuilder = super.sendRequest(INSTANTIATION_PROPERTIES);
-        Response resp = invocationBuilder.post(Entity.json(serviceTemplate));
-        assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
-
-        invocationBuilder = super.sendRequest(INSTANTIATION_PROPERTIES + "?name=" + ID_NAME + "&version=" + ID_VERSION);
-        resp = invocationBuilder.delete();
-        assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
-        var instanceResponse = resp.readEntity(InstantiationResponse.class);
-        assertEquals(ID_NAME, instanceResponse.getAffectedAutomationCompositions().get(0).getName());
-        AutomationCompositions automationCompositionsGet =
-            instantiationProvider.getAutomationCompositions(ID_NAME, ID_VERSION);
-        assertThat(automationCompositionsGet.getAutomationCompositionList()).isEmpty();
-    }
-
-    @Test
-    void testDeleteInstancePropertiesBadRequest() {
-        Invocation.Builder invocationBuilder = super.sendRequest(INSTANTIATION_PROPERTIES);
-        Response resp = invocationBuilder.post(Entity.json(serviceTemplate));
-        assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
-
-        invocationBuilder = super.sendRequest(INSTANTIATION_PROPERTIES + "?name=" + ID_NAME);
-        resp = invocationBuilder.delete();
-        assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), resp.getStatus());
-    }
-
-    @Test
-    void testDeleteInstancePropertiesPassiveMode() throws Exception {
-        Invocation.Builder invocationBuilder = super.sendRequest(INSTANTIATION_PROPERTIES);
-        Response resp = invocationBuilder.post(Entity.json(serviceTemplate));
-        assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
-
-        var automationCompositions =
-            InstantiationUtils.getAutomationCompositionsFromResource(AC_INSTANTIATION_CREATE_JSON, "Command");
-        instantiationProvider.createAutomationCompositions(automationCompositions);
-
-        var participants = CommonTestData.createParticipants();
-        for (var participant : participants) {
-            participantProvider.saveParticipant(participant);
-        }
-
-        InstantiationCommand command =
-            InstantiationUtils.getInstantiationCommandFromResource(AC_INSTANTIATION_CHANGE_STATE_JSON, "Command");
-
-        invocationBuilder = super.sendRequest(INSTANTIATION_COMMAND_ENDPOINT);
-        resp = invocationBuilder.put(Entity.json(command));
-        assertEquals(Response.Status.ACCEPTED.getStatusCode(), resp.getStatus());
-        InstantiationResponse instResponse = resp.readEntity(InstantiationResponse.class);
-        InstantiationUtils.assertInstantiationResponse(instResponse, command);
-
-        // check passive state on DB and delete properties
-        for (ToscaConceptIdentifier toscaConceptIdentifier : command.getAutomationCompositionIdentifierList()) {
-            AutomationCompositions automationCompositionsGet = instantiationProvider
-                .getAutomationCompositions(toscaConceptIdentifier.getName(), toscaConceptIdentifier.getVersion());
-            assertThat(automationCompositionsGet.getAutomationCompositionList()).hasSize(1);
-            assertEquals(command.getOrderedState(),
-                automationCompositionsGet.getAutomationCompositionList().get(0).getOrderedState());
-
-            invocationBuilder = super.sendRequest(INSTANTIATION_PROPERTIES + "?name=" + toscaConceptIdentifier.getName()
-                + "&version=" + toscaConceptIdentifier.getVersion());
-            resp = invocationBuilder.delete();
             assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), resp.getStatus());
         }
     }
@@ -453,78 +343,6 @@ class InstantiationControllerTest extends CommonRestController {
             assertEquals(command.getOrderedState(),
                 automationCompositionsGet.getAutomationCompositionList().get(0).getOrderedState());
         }
-    }
-
-    @Test
-    void testIntanceProperties() throws Exception {
-        Invocation.Builder invocationBuilder = super.sendRequest(INSTANTIATION_PROPERTIES);
-        Response resp = invocationBuilder.post(Entity.json(serviceTemplate));
-        assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
-        var instancePropertyList = resp.readEntity(InstancePropertiesResponse.class);
-        assertNull(instancePropertyList.getErrorDetails());
-        var id = new ToscaConceptIdentifier(ID_NAME, ID_VERSION);
-        assertEquals(id, instancePropertyList.getAffectedInstanceProperties().get(0));
-
-        invocationBuilder = super.sendRequest(INSTANTIATION_STATE + "?name=" + ID_NAME + "&version=" + ID_VERSION);
-        resp = invocationBuilder.buildGet().invoke();
-        assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
-        var instanceOrderState = resp.readEntity(AutomationCompositionOrderStateResponse.class);
-        assertEquals(AutomationCompositionOrderedState.UNINITIALISED, instanceOrderState.getOrderedState());
-        assertEquals(ID_NAME, instanceOrderState.getAutomationCompositionIdentifierList().get(0).getName());
-        AutomationCompositions automationCompositionsGet =
-            instantiationProvider.getAutomationCompositions(ID_NAME, ID_VERSION);
-        assertThat(automationCompositionsGet.getAutomationCompositionList()).hasSize(1);
-
-        invocationBuilder = super.sendRequest(INSTANTIATION_PROPERTIES + "?name=" + ID_NAME + "&version=" + ID_VERSION);
-        resp = invocationBuilder.delete();
-        assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
-        var instanceResponse = resp.readEntity(InstantiationResponse.class);
-        assertEquals(ID_NAME, instanceResponse.getAffectedAutomationCompositions().get(0).getName());
-        automationCompositionsGet = instantiationProvider.getAutomationCompositions(ID_NAME, ID_VERSION);
-        assertThat(automationCompositionsGet.getAutomationCompositionList()).isEmpty();
-    }
-
-    @Test
-    void testChangeOrderStateFromUninitializedPassiveMode() throws Exception {
-        Invocation.Builder invocationBuilder = super.sendRequest(INSTANTIATION_PROPERTIES);
-        Response resp = invocationBuilder.post(Entity.json(serviceTemplate));
-        assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
-
-        var automationCompositions =
-            InstantiationUtils.getAutomationCompositionsFromResource(AC_INSTANTIATION_CREATE_JSON, "CommandPassive");
-        instantiationProvider.createAutomationCompositions(automationCompositions);
-
-        var participants = CommonTestData.createParticipants();
-        for (var participant : participants) {
-            participantProvider.saveParticipant(participant);
-        }
-
-        InstantiationCommand command = InstantiationUtils
-            .getInstantiationCommandFromResource(AC_INSTANTIATION_CHANGE_STATE_JSON, "CommandPassive");
-
-        invocationBuilder = super.sendRequest(INSTANTIATION_COMMAND_ENDPOINT);
-        resp = invocationBuilder.put(Entity.json(command));
-        assertEquals(Response.Status.ACCEPTED.getStatusCode(), resp.getStatus());
-        InstantiationResponse instResponse = resp.readEntity(InstantiationResponse.class);
-        InstantiationUtils.assertInstantiationResponse(instResponse, command);
-    }
-
-    @Test
-    void testChangeOrderStateWithoutRegisteredParticipants() throws Exception {
-        Invocation.Builder invocationBuilder = super.sendRequest(INSTANTIATION_PROPERTIES);
-        Response resp = invocationBuilder.post(Entity.json(serviceTemplate));
-        assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
-
-        var automationCompositions =
-            InstantiationUtils.getAutomationCompositionsFromResource(AC_INSTANTIATION_CREATE_JSON, "CommandPassive");
-        instantiationProvider.createAutomationCompositions(automationCompositions);
-
-        InstantiationCommand command = InstantiationUtils
-            .getInstantiationCommandFromResource(AC_INSTANTIATION_CHANGE_STATE_JSON, "CommandPassive");
-
-        invocationBuilder = super.sendRequest(INSTANTIATION_COMMAND_ENDPOINT);
-        resp = invocationBuilder.put(Entity.json(command));
-        assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), resp.getStatus());
     }
 
     private synchronized void deleteEntryInDB() throws Exception {

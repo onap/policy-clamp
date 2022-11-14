@@ -65,21 +65,6 @@ class ServiceTemplateProviderTest {
     }
 
     @Test
-    void testGetDerivedCommonOrInstanceNodeTemplates() throws PfModelException {
-        var serviceTemplateRepository = mock(ToscaServiceTemplateRepository.class);
-        var serviceTemplateProvider = new ServiceTemplateProvider(serviceTemplateRepository);
-
-        var commonOrInstanceNodeTypeProps =
-            serviceTemplateProvider.getCommonOrInstancePropertiesFromNodeTypes(true, inputServiceTemplate);
-
-        var result = serviceTemplateProvider.getDerivedCommonOrInstanceNodeTemplates(
-            inputServiceTemplate.getToscaTopologyTemplate().getNodeTemplates(), commonOrInstanceNodeTypeProps);
-
-        assertNotNull(result);
-        assertThat(result).hasSize(4);
-    }
-
-    @Test
     void testCreateServiceTemplate() throws PfModelException {
         var serviceTemplateRepository = mock(ToscaServiceTemplateRepository.class);
         var serviceTemplateProvider = new ServiceTemplateProvider(serviceTemplateRepository);

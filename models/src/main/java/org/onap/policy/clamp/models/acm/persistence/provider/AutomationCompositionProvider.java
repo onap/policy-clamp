@@ -22,9 +22,7 @@
 
 package org.onap.policy.clamp.models.acm.persistence.provider;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import javax.persistence.EntityNotFoundException;
 import javax.ws.rs.core.Response;
@@ -35,15 +33,12 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationComposition;
 import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionRepository;
 import org.onap.policy.clamp.models.acm.persistence.repository.ToscaNodeTemplateRepository;
-import org.onap.policy.clamp.models.acm.persistence.repository.ToscaNodeTemplatesRepository;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTypedEntityFilter;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaNodeTemplate;
-import org.onap.policy.models.tosca.simple.concepts.JpaToscaNodeTemplates;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,7 +52,6 @@ public class AutomationCompositionProvider {
 
     private final AutomationCompositionRepository automationCompositionRepository;
     private final ToscaNodeTemplateRepository toscaNodeTemplateRepository;
-    private final ToscaNodeTemplatesRepository toscaNodeTemplatesRepository;
 
     /**
      * Get automation composition.
@@ -136,10 +130,9 @@ public class AutomationCompositionProvider {
      * Get all automation compositions.
      *
      * @return all automation compositions found
-     * @throws PfModelException on errors getting automation compositions
      */
     @Transactional(readOnly = true)
-    public List<AutomationComposition> getAutomationCompositions() throws PfModelException {
+    public List<AutomationComposition> getAutomationCompositions() {
 
         return ProviderUtils.asEntityList(automationCompositionRepository.findAll());
     }
@@ -150,11 +143,9 @@ public class AutomationCompositionProvider {
      * @param name the name of the automation composition to get, null to get all automation compositions
      * @param version the version of the automation composition to get, null to get all automation compositions
      * @return the automation compositions found
-     * @throws PfModelException on errors getting automation compositions
      */
     @Transactional(readOnly = true)
-    public List<AutomationComposition> getAutomationCompositions(final String name, final String version)
-        throws PfModelException {
+    public List<AutomationComposition> getAutomationCompositions(final String name, final String version) {
 
         return ProviderUtils
             .asEntityList(automationCompositionRepository.getFiltered(JpaAutomationComposition.class, name, version));
@@ -179,24 +170,6 @@ public class AutomationCompositionProvider {
         } catch (IllegalArgumentException e) {
             throw new PfModelException(Status.BAD_REQUEST, "Error in save AutomationCompositions", e);
         }
-    }
-
-    /**
-     * Saves Instance Properties to the database.
-     *
-     * @param serviceTemplate the service template
-     * @return a Map of tosca node templates
-     */
-    public Map<String, ToscaNodeTemplate> saveInstanceProperties(ToscaServiceTemplate serviceTemplate) {
-        Map<String, ToscaNodeTemplate> savedNodeTemplates = new HashMap<>();
-
-        var jpaToscaNodeTemplates = new JpaToscaNodeTemplates();
-        jpaToscaNodeTemplates.fromAuthorative(List.of(serviceTemplate.getToscaTopologyTemplate().getNodeTemplates()));
-
-        toscaNodeTemplatesRepository.save(jpaToscaNodeTemplates);
-        serviceTemplate.getToscaTopologyTemplate().getNodeTemplates().forEach(savedNodeTemplates::put);
-
-        return savedNodeTemplates;
     }
 
     /**
@@ -225,31 +198,9 @@ public class AutomationCompositionProvider {
     }
 
     /**
-     * Deletes Instance Properties on the database.
-     *
-     * @param filteredToscaNodeTemplateMap filtered node templates map to delete
-     * @param filteredToscaNodeTemplateList filtered node template list to delete
-     */
-    public void deleteInstanceProperties(Map<String, ToscaNodeTemplate> filteredToscaNodeTemplateMap,
-        List<ToscaNodeTemplate> filteredToscaNodeTemplateList) {
-
-        var jpaToscaNodeTemplates = new JpaToscaNodeTemplates();
-        jpaToscaNodeTemplates.fromAuthorative(List.of(filteredToscaNodeTemplateMap));
-
-        toscaNodeTemplatesRepository.save(jpaToscaNodeTemplates);
-
-        filteredToscaNodeTemplateList.forEach(template -> {
-            var jpaToscaNodeTemplate = new JpaToscaNodeTemplate(template);
-
-            toscaNodeTemplateRepository.delete(jpaToscaNodeTemplate);
-        });
-    }
-
-    /**
      * Get All Node Templates.
      *
      * @return the list of node templates found
-     * @throws PfModelException on errors getting node templates
      */
     @Transactional(readOnly = true)
     public List<ToscaNodeTemplate> getAllNodeTemplates() {

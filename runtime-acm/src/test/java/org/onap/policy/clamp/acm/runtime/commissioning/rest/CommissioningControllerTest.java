@@ -30,7 +30,6 @@ import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVIC
 import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_ST_TEMPLATE_YAML;
 
 import java.util.List;
-import java.util.Map;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.Response;
@@ -45,7 +44,6 @@ import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
 import org.onap.policy.clamp.acm.runtime.util.rest.CommonRestController;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.CommissioningResponse;
 import org.onap.policy.clamp.models.acm.persistence.provider.ServiceTemplateProvider;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -142,22 +140,6 @@ class CommissioningControllerTest extends CommonRestController {
     }
 
     @Test
-    void testQueryCommonOrInstanceProperties() throws Exception {
-        createFullEntryInDbWithCommonProps();
-
-        Invocation.Builder invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT
-                + "/getCommonOrInstanceProperties?common=true");
-        Response rawresp = invocationBuilder.buildGet().invoke();
-        assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
-
-        @SuppressWarnings("unchecked")
-        Map<String, ToscaNodeTemplate> commonProperties = rawresp.readEntity(Map.class);
-
-        assertNotNull(commonProperties);
-        assertThat(commonProperties).hasSize(4);
-    }
-
-    @Test
     void testCreateBadRequest() {
         Invocation.Builder invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT);
         Response resp = invocationBuilder.post(Entity.json("NotToscaServiceTempalte"));
@@ -206,29 +188,6 @@ class CommissioningControllerTest extends CommonRestController {
         List<?> entityList = rawresp.readEntity(List.class);
         assertNotNull(entityList);
         assertThat(entityList).hasSize(2);
-    }
-
-    @Test
-    void testQueryElementsBadRequest() throws Exception {
-        createEntryInDB();
-
-        // Call get elements with no info
-        Invocation.Builder invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT + "/elements");
-        Response resp = invocationBuilder.buildGet().invoke();
-        assertEquals(Response.Status.NOT_ACCEPTABLE.getStatusCode(), resp.getStatus());
-    }
-
-    @Test
-    void testQueryElements() throws Exception {
-        createEntryInDB();
-
-        Invocation.Builder invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT + "/elements"
-                + "?name=org.onap.domain.pmsh.PMSHAutomationCompositionDefinition");
-        Response rawresp = invocationBuilder.buildGet().invoke();
-        assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
-        List<?> entityList = rawresp.readEntity(List.class);
-        assertNotNull(entityList);
-        assertThat(entityList).hasSize(4);
     }
 
     @Test
