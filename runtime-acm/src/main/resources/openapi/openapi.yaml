@@ -67,7 +67,7 @@ paths:
       responses:
         200:
           description: Serialised instance of
-            [ToscaServiceTemplate](https://github.com/onap/policy-models/blob/master/models-tosca/src/main/java/org/onap/policy/models/tosca/authorative/concepts/ToscaServiceTemplate.java)
+            [ToscaServiceTemplates](https://github.com/onap/policy-models/blob/master/models-tosca/src/main/java/org/onap/policy/models/tosca/authorative/concepts/ToscaServiceTemplates.java)
             that contains the automation composition definitions that match the requested filters.
           headers:
             X-LatestVersion:
@@ -86,18 +86,17 @@ paths:
           content:
             application/json:
               schema:
-                title: ToscaServiceTemplate
-                type: ToscaServiceTemplates
+                $ref: '#/components/schemas/ToscaServiceTemplates'
               example:
                 externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getAllCompositionDefinitions.json'
             application/yaml:
               schema:
-                title: ToscaServiceTemplate
-                type: ToscaServiceTemplates
+                $ref: '#/components/schemas/ToscaServiceTemplates'
               example:
                 externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getAllCompositionDefinitions.yaml'
         401:
-          description: Authentication Error
+          description: Authentication Error, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
               schema:
@@ -115,8 +114,7 @@ paths:
           content:
             application/json:
               schema:
-                title: SimpleResponse
-                type: SimpleResponse
+                $ref: '#/components/schemas/SimpleResponse'
       security:
       - basicAuth: []
       x-interface info:
@@ -143,14 +141,12 @@ paths:
         content:
           application/json:
             schema:
-              title: ToscaServiceTemplate
-              type: ToscaServiceTemplate
+              $ref: '#/components/schemas/ToscaServiceTemplate'
             example:
               externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/postCompositionDefinitions.json'
           application/yaml:
             schema:
-              title: ToscaServiceTemplate
-              type: ToscaServiceTemplate
+              $ref: '#/components/schemas/ToscaServiceTemplate'
             example:
               externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/postCompositionDefinitions.yaml'
         required: true
@@ -176,18 +172,17 @@ paths:
           content:
             application/json:
               schema:
-                title: CommissioningResponse
-                type: CommissioningResponse
+                $ref: '#/components/schemas/CommissioningResponse'
               example:
                 externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/postCommissionCompositionDefinitionsResponse.json'
             application/yaml:
               schema:
-                title: CommissioningResponse
-                type: CommissioningResponse
+                $ref: '#/components/schemas/CommissioningResponse'
               example:
                 externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/postCommissionCompositionDefinitionsResponse.yaml'
         401:
-          description: Authentication Error
+          description: Authentication Error, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
               schema:
@@ -205,10 +200,10 @@ paths:
           content:
             application/json:
               schema:
-                title: SimpleResponse
-                type: SimpleResponse
+                $ref: '#/components/schemas/SimpleResponse'
         400:
-          description: Bad Request
+          description: Bad Request, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
               schema:
@@ -226,8 +221,7 @@ paths:
           content:
             application/json:
               schema:
-                title: SimpleResponse
-                type: SimpleResponse
+                $ref: '#/components/schemas/SimpleResponse'
       security:
       - basicAuth: []
       x-interface info:
@@ -280,18 +274,17 @@ paths:
           content:
             application/json:
               schema:
-                title: ToscaServiceTemplate
-                type: ToscaServiceTemplate
+                $ref: '#/components/schemas/ToscaServiceTemplate'
               example:
                 externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getSingleCompositionDefinition.json'
             application/yaml:
               schema:
-                title: ToscaServiceTemplate
-                type: ToscaServiceTemplate
+                $ref: '#/components/schemas/ToscaServiceTemplate'
               example:
                 externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getSingleCompositionDefinition.yaml'
         401:
-          description: Authentication Error
+          description: Authentication Error, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
               schema:
@@ -309,10 +302,10 @@ paths:
           content:
             application/json:
               schema:
-                title: SimpleResponse
-                type: SimpleResponse
+                $ref: '#/components/schemas/SimpleResponse'
         404:
-          description: Specified automation composition definition not found
+          description: Specified automation composition definition not found, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
               schema:
@@ -330,8 +323,7 @@ paths:
           content:
             application/json:
               schema:
-                title: SimpleResponse
-                type: SimpleResponse
+                $ref: '#/components/schemas/SimpleResponse'
       security:
       - basicAuth: []
       x-interface info:
@@ -364,14 +356,12 @@ paths:
         content:
           application/json:
             schema:
-              title: ToscaServiceTemplate
-              type: ToscaServiceTemplate
+              $ref: '#/components/schemas/ToscaServiceTemplate'
             example:
               externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/putCompositionDefinitionUpdate.json'
           application/yaml:
             schema:
-              title: ToscaServiceTemplate
-              type: ToscaServiceTemplate
+              $ref: '#/components/schemas/ToscaServiceTemplate'
             example:
               externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/putCompositionDefinitionUpdate.yaml'
         required: true
@@ -397,18 +387,17 @@ paths:
           content:
             application/json:
               schema:
-                title: CommissioningResponse
-                type: CommissioningResponse
+                $ref: '#/components/schemas/CommissioningResponse'
               example:
                 externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/putCompositionDefinitionUpdateResponse.json'
             application/yaml:
               schema:
-                title: CommissioningResponse
-                type: CommissioningResponse
+                $ref: '#/components/schemas/CommissioningResponse'
               example:
                 externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/putCompositionDefinitionUpdateResponse.yaml'
         401:
-          description: Authentication Error
+          description: Authentication Error, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
               schema:
@@ -426,10 +415,10 @@ paths:
           content:
             application/json:
               schema:
-                title: SimpleResponse
-                type: SimpleResponse
+                $ref: '#/components/schemas/SimpleResponse'
         404:
-          description: Specified automation composition definition not found
+          description: Specified automation composition definition not found, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
               schema:
@@ -447,10 +436,10 @@ paths:
           content:
             application/json:
               schema:
-                title: SimpleResponse
-                type: SimpleResponse
+                $ref: '#/components/schemas/SimpleResponse'
         400:
-          description: Bad Request
+          description: Bad Request, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
               schema:
@@ -468,8 +457,7 @@ paths:
           content:
             application/json:
               schema:
-                title: SimpleResponse
-                type: SimpleResponse
+                $ref: '#/components/schemas/SimpleResponse'
       security:
       - basicAuth: []
       x-interface info:
@@ -518,18 +506,17 @@ paths:
           content:
             application/json:
               schema:
-                title: CommissioningResponse
-                type: CommissioningResponse
+                $ref: '#/components/schemas/CommissioningResponse'
               example:
                 externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/deleteCompositionDefinitionResponse.json'
             application/yaml:
               schema:
-                title: CommissioningResponse
-                type: CommissioningResponse
+                $ref: '#/components/schemas/CommissioningResponse'
               example:
                 externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/deleteCompositionDefinitionResponse.yaml'
         401:
-          description: Authentication Error
+          description: Authentication Error, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
               schema:
@@ -547,10 +534,10 @@ paths:
           content:
             application/json:
               schema:
-                title: SimpleResponse
-                type: SimpleResponse
+                $ref: '#/components/schemas/SimpleResponse'
         404:
-          description: Specified automation composition definition not found
+          description: Specified automation composition definition not found, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
               schema:
@@ -568,10 +555,10 @@ paths:
           content:
             application/json:
               schema:
-                title: SimpleResponse
-                type: SimpleResponse
+                $ref: '#/components/schemas/SimpleResponse'
         400:
-          description: Bad Request
+          description: Bad Request, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
               schema:
@@ -589,8 +576,7 @@ paths:
           content:
             application/json:
               schema:
-                title: SimpleResponse
-                type: SimpleResponse
+                $ref: '#/components/schemas/SimpleResponse'
       security:
       - basicAuth: []
       x-interface info:
@@ -652,18 +638,17 @@ paths:
           content:
             application/json:
               schema:
-                title: AutomationCompositions
-                type: AutomationCompositions
+                $ref: '#/components/schemas/AutomationCompositions'
               example:
                 externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getCompositionInstancesResponse.json'
             application/yaml:
               schema:
-                title: AutomationCompositions
-                type: AutomationCompositions
+                $ref: '#/components/schemas/AutomationCompositions'
               example:
                 externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getCompositionInstancesResponse.yaml'
         401:
-          description: Authentication Error
+          description: Authentication Error, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
               schema:
@@ -681,10 +666,10 @@ paths:
           content:
             application/json:
               schema:
-                title: SimpleResponse
-                type: SimpleResponse
+                $ref: '#/components/schemas/SimpleResponse'
         404:
-          description: The specified automation composition definition was not found
+          description: The specified automation composition definition was not found, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
               schema:
@@ -702,8 +687,7 @@ paths:
           content:
             application/json:
               schema:
-                title: SimpleResponse
-                type: SimpleResponse
+                $ref: '#/components/schemas/SimpleResponse'
       security:
       - basicAuth: []
       x-interface info:
@@ -737,14 +721,12 @@ paths:
         content:
           application/json:
             schema:
-              title: AutomationCompositions
-              type: AutomationCompositions
+                $ref: '#/components/schemas/AutomationCompositions'
             example:
               externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/postCompositionInstances.json'
           application/yaml:
             schema:
-              title: AutomationCompositions
-              type: AutomationCompositions
+                $ref: '#/components/schemas/AutomationCompositions'
             example:
               externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/postCompositionInstances.yaml'
         required: true
@@ -770,18 +752,17 @@ paths:
           content:
             application/json:
               schema:
-                title: InstantiationResponse
-                type: InstantiationResponse
+                $ref: '#/components/schemas/InstantiationResponse'
               example:
                 externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/postCompositionInstancesResponse.json'
             application/yaml:
               schema:
-                title: InstantiationResponse
-                type: InstantiationResponse
+                $ref: '#/components/schemas/InstantiationResponse'
               example:
                 externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/postCompositionInstancesResponse.yaml'
         401:
-          description: Authentication Error
+          description: Authentication Error, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
               schema:
@@ -799,10 +780,10 @@ paths:
           content:
             application/json:
               schema:
-                title: SimpleResponse
-                type: SimpleResponse
+                $ref: '#/components/schemas/SimpleResponse'
         404:
-          description: The specified automation composition definition was not found
+          description: The specified automation composition definition was not found, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
               schema:
@@ -820,10 +801,10 @@ paths:
           content:
             application/json:
               schema:
-                title: SimpleResponse
-                type: SimpleResponse
+                $ref: '#/components/schemas/SimpleResponse'
         400:
-          description: Bad Request
+          description: Bad Request, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
               schema:
@@ -841,8 +822,7 @@ paths:
           content:
             application/json:
               schema:
-                title: SimpleResponse
-                type: SimpleResponse
+                $ref: '#/components/schemas/SimpleResponse'
       security:
       - basicAuth: []
       x-interface info:
@@ -899,18 +879,17 @@ paths:
           content:
             application/json:
               schema:
-                title: AutomationCompositions
-                type: AutomationComposition
+                $ref: '#/components/schemas/AutomationCompositions'
               example:
                 externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getCompositionInstanceResponse.json'
             application/yaml:
               schema:
-                title: AutomationCompositions
-                type: AutomationComposition
+                $ref: '#/components/schemas/AutomationCompositions'
               example:
                 externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getCompositionInstanceResponse.yaml'
         401:
-          description: Authentication Error
+          description: Authentication Error, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
               schema:
@@ -928,10 +907,10 @@ paths:
           content:
             application/json:
               schema:
-                title: SimpleResponse
-                type: SimpleResponse
+                $ref: '#/components/schemas/SimpleResponse'
         404:
-          description: The automation composition instance was not found
+          description: The automation composition instance was not found, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
               schema:
@@ -949,8 +928,7 @@ paths:
           content:
             application/json:
               schema:
-                title: SimpleResponse
-                type: SimpleResponse
+                $ref: '#/components/schemas/SimpleResponse'
       security:
       - basicAuth: []
       x-interface info:
@@ -1023,18 +1001,17 @@ paths:
           content:
             application/json:
               schema:
-                title: InstantiationResponse
-                type: InstantiationResponse
+                $ref: '#/components/schemas/InstantiationResponse'
               example:
                 externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/putCompositionInstanceUpdateResponse.json'
             application/yaml:
               schema:
-                title: InstantiationResponse
-                type: InstantiationResponse
+                $ref: '#/components/schemas/InstantiationResponse'
               example:
                 externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/putCompositionInstanceUpdateResponse.yaml'
         401:
-          description: Authentication Error
+          description: Authentication Error, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
               schema:
@@ -1052,10 +1029,10 @@ paths:
           content:
             application/json:
               schema:
-                title: SimpleResponse
-                type: SimpleResponse
+                $ref: '#/components/schemas/SimpleResponse'
         404:
-          description: The specified automation composition instance was not found
+          description: The specified automation composition instance was not found, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
               schema:
@@ -1073,10 +1050,10 @@ paths:
           content:
             application/json:
               schema:
-                title: SimpleResponse
-                type: SimpleResponse
+                $ref: '#/components/schemas/SimpleResponse'
         400:
-          description: Bad Request
+          description: Bad Request, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
               schema:
@@ -1094,8 +1071,7 @@ paths:
           content:
             application/json:
               schema:
-                title: SimpleResponse
-                type: SimpleResponse
+                $ref: '#/components/schemas/SimpleResponse'
       security:
       - basicAuth: []
       x-interface info:
@@ -1151,18 +1127,17 @@ paths:
           content:
             application/json:
               schema:
-                title: InstantiationResponse
-                type: InstantiationResponse
+                $ref: '#/components/schemas/InstantiationResponse'
               example:
                 externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/deleteCompositionInstanceResponse.json'
             application/yaml:
               schema:
-                title: InstantiationResponse
-                type: InstantiationResponse
+                $ref: '#/components/schemas/InstantiationResponse'
               example:
                 externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/deleteCompositionInstanceResponse.yaml'
         401:
-          description: Authentication Error
+          description: Authentication Error, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
               schema:
@@ -1180,10 +1155,10 @@ paths:
           content:
             application/json:
               schema:
-                title: SimpleResponse
-                type: SimpleResponse
+                $ref: '#/components/schemas/SimpleResponse'
         404:
-          description: The specified automation composition instance was not found
+          description: The specified automation composition instance was not found, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
               schema:
@@ -1201,10 +1176,10 @@ paths:
           content:
             application/json:
               schema:
-                title: SimpleResponse
-                type: SimpleResponse
+                $ref: '#/components/schemas/SimpleResponse'
         400:
-          description: Bad Request
+          description: Bad Request, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
               schema:
@@ -1222,8 +1197,7 @@ paths:
           content:
             application/json:
               schema:
-                title: SimpleResponse
-                type: SimpleResponse
+                $ref: '#/components/schemas/SimpleResponse'
       security:
       - basicAuth: []
       x-interface info:
@@ -1235,3 +1209,22 @@ components:
     basicAuth:
       type: http
       scheme: basic
+  schemas:
+    ToscaServiceTemplates:
+      title: ToscaServiceTemplates
+      type: object
+    ToscaServiceTemplate:
+      title: ToscaServiceTemplate
+      type: object
+    AutomationCompositions:
+      title: AutomationCompositions
+      type: object
+    SimpleResponse:
+      title: SimpleResponse
+      type: object
+    CommissioningResponse:
+      title: CommissioningResponse
+      type: object
+    InstantiationResponse:
+      title: InstantiationResponse
+      type: object
