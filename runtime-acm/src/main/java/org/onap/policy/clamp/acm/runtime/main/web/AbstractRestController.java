@@ -27,7 +27,11 @@ import io.swagger.annotations.SecurityDefinition;
 import io.swagger.annotations.SwaggerDefinition;
 import io.swagger.annotations.Tag;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -88,5 +92,13 @@ public abstract class AbstractRestController {
      * Constructor.
      */
     protected AbstractRestController() {
+    }
+
+    protected URI createUri(String str) {
+        try {
+            return new URI(str);
+        } catch (URISyntaxException e) {
+            throw new AutomationCompositionRuntimeException(Response.Status.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
     }
 }
