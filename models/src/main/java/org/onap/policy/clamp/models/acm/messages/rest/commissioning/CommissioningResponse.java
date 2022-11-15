@@ -21,6 +21,7 @@
 package org.onap.policy.clamp.models.acm.messages.rest.commissioning;
 
 import java.util.List;
+import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -34,5 +35,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 @Setter
 @ToString(callSuper = true)
 public class CommissioningResponse extends SimpleResponse {
+    private UUID compositionId;
+
     private List<ToscaConceptIdentifier> affectedAutomationCompositionDefinitions;
 }

@@ -26,17 +26,13 @@ import io.micrometer.core.annotation.Timed;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import lombok.AllArgsConstructor;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUpdate;
 import org.onap.policy.clamp.models.acm.persistence.provider.ServiceTemplateProvider;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
-import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeType;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -80,31 +76,22 @@ public class ParticipantUpdatePublisher extends AbstractParticipantPublisher<Par
         message.setParticipantId(participantId);
         message.setTimestamp(Instant.now());
 
-        ToscaServiceTemplate toscaServiceTemplate = null;
-        Map<String, ToscaNodeType> commonPropertiesMap = null;
-        try {
-            var list = serviceTemplateProvider.getServiceTemplateList(name, version);
-            if (!list.isEmpty()) {
-                toscaServiceTemplate = list.get(0);
-                commonPropertiesMap =
-                        serviceTemplateProvider.getCommonOrInstancePropertiesFromNodeTypes(true, toscaServiceTemplate);
-            } else {
-                LOGGER.warn("No tosca service template found, cannot send participantupdate {} {}", name, version);
-                return false;
-            }
-        } catch (PfModelException pfme) {
-            LOGGER.warn("Get of tosca service template failed, cannot send participantupdate", pfme);
+        var list = serviceTemplateProvider.getServiceTemplateList(name, version);
+        if (list.isEmpty()) {
+            LOGGER.warn("No tosca service template found, cannot send participantupdate {} {}", name, version);
             return false;
         }
+        var toscaServiceTemplate = list.get(0);
+        var commonPropertiesMap = AcmUtils.getCommonOrInstancePropertiesFromNodeTypes(true, toscaServiceTemplate);
 
         List<ParticipantDefinition> participantDefinitionUpdates = new ArrayList<>();
         for (var toscaInputEntry : toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates().entrySet()) {
             if (ParticipantUtils.checkIfNodeTemplateIsAutomationCompositionElement(toscaInputEntry.getValue(),
                     toscaServiceTemplate)) {
                 AcmUtils.prepareParticipantDefinitionUpdate(
-                    ParticipantUtils.findParticipantType(toscaInputEntry.getValue().getProperties()),
-                    toscaInputEntry.getKey(), toscaInputEntry.getValue(),
-                    participantDefinitionUpdates, commonPropertiesMap);
+                        ParticipantUtils.findParticipantType(toscaInputEntry.getValue().getProperties()),
+                        toscaInputEntry.getKey(), toscaInputEntry.getValue(), participantDefinitionUpdates,
+                        commonPropertiesMap);
             }
         }
 

@@ -25,16 +25,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import lombok.AllArgsConstructor;
-import org.onap.policy.clamp.acm.runtime.commissioning.CommissioningProvider;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionHandler;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionException;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
@@ -42,13 +39,13 @@ import org.onap.policy.clamp.models.acm.messages.rest.instantiation.Instantiatio
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
+import org.onap.policy.clamp.models.acm.persistence.provider.ServiceTemplateProvider;
+import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.common.parameters.ObjectValidationResult;
-import org.onap.policy.common.parameters.ValidationResult;
 import org.onap.policy.common.parameters.ValidationStatus;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -62,9 +59,9 @@ public class AutomationCompositionInstantiationProvider {
     private static final String AUTOMATION_COMPOSITION_NODE_ELEMENT_TYPE = "AutomationCompositionElement";
 
     private final AutomationCompositionProvider automationCompositionProvider;
-    private final CommissioningProvider commissioningProvider;
     private final SupervisionHandler supervisionHandler;
     private final ParticipantProvider participantProvider;
+    private final ServiceTemplateProvider serviceTemplateProvider;
     private static final String ENTRY = "entry ";
 
     /**
@@ -126,64 +123,22 @@ public class AutomationCompositionInstantiationProvider {
      * @return the result of validation
      * @throws PfModelException if automationCompositions is not valid
      */
-    private BeanValidationResult validateAutomationCompositions(AutomationCompositions automationCompositions)
-        throws PfModelException {
+    private BeanValidationResult validateAutomationCompositions(AutomationCompositions automationCompositions) {
 
         var result = new BeanValidationResult("AutomationCompositions", automationCompositions);
+        var serviceTemplates = serviceTemplateProvider.getAllServiceTemplates();
+        if (serviceTemplates.isEmpty()) {
+            result.addResult(new ObjectValidationResult("ServiceTemplate", "", ValidationStatus.INVALID,
+                    "Commissioned automation composition definition not found"));
+            return result;
+        }
 
-        for (AutomationComposition automationComposition : automationCompositions.getAutomationCompositionList()) {
-            var subResult = new BeanValidationResult(ENTRY + automationComposition.getDefinition().getName(),
-                automationComposition);
+        var serviceTemplate = serviceTemplateProvider.getAllServiceTemplates().get(0);
 
-            List<ToscaNodeTemplate> toscaNodeTemplates = commissioningProvider.getAutomationCompositionDefinitions(
-                automationComposition.getDefinition().getName(), automationComposition.getDefinition().getVersion());
-
-            if (toscaNodeTemplates.isEmpty()) {
-                subResult.addResult(
-                    new ObjectValidationResult("AutomationComposition", automationComposition.getDefinition().getName(),
-                        ValidationStatus.INVALID, "Commissioned automation composition definition not found"));
-            } else if (toscaNodeTemplates.size() > 1) {
-                subResult.addResult(
-                    new ObjectValidationResult("AutomationComposition", automationComposition.getDefinition().getName(),
-                        ValidationStatus.INVALID, "Commissioned automation composition definition not valid"));
-            } else {
-
-                List<ToscaNodeTemplate> acElementDefinitions =
-                    commissioningProvider.getAutomationCompositionElementDefinitions(toscaNodeTemplates.get(0));
-
-                // @formatter:off
-                Map<String, ToscaConceptIdentifier> definitions = acElementDefinitions
-                        .stream()
-                        .map(nodeTemplate -> nodeTemplate.getKey().asIdentifier())
-                        .collect(Collectors.toMap(ToscaConceptIdentifier::getName, UnaryOperator.identity()));
-                // @formatter:on
-
-                for (AutomationCompositionElement element : automationComposition.getElements().values()) {
-                    subResult.addResult(validateDefinition(definitions, element.getDefinition()));
-                }
-            }
-            result.addResult(subResult);
+        for (var automationComposition : automationCompositions.getAutomationCompositionList()) {
+            result.addResult(AcmUtils.validateAutomationComposition(automationComposition, serviceTemplate));
         }
         return result;
-    }
-
-    /**
-     * Validate ToscaConceptIdentifier, checking if exist in ToscaConceptIdentifiers map.
-     *
-     * @param definitions map of all ToscaConceptIdentifiers
-     * @param definition ToscaConceptIdentifier to validate
-     * @return the validation result
-     */
-    private ValidationResult validateDefinition(Map<String, ToscaConceptIdentifier> definitions,
-        ToscaConceptIdentifier definition) {
-        var result = new BeanValidationResult(ENTRY + definition.getName(), definition);
-        ToscaConceptIdentifier identifier = definitions.get(definition.getName());
-        if (identifier == null) {
-            result.setResult(ValidationStatus.INVALID, "Not found");
-        } else if (!identifier.equals(definition)) {
-            result.setResult(ValidationStatus.INVALID, "Version not matching");
-        }
-        return (result.isClean() ? null : result);
     }
 
     /**
