@@ -27,7 +27,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -40,15 +39,12 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationComposition;
 import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionRepository;
 import org.onap.policy.clamp.models.acm.persistence.repository.ToscaNodeTemplateRepository;
-import org.onap.policy.clamp.models.acm.persistence.repository.ToscaNodeTemplatesRepository;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.StandardCoder;
-import org.onap.policy.common.utils.coder.YamlJsonTranslator;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTypedEntityFilter;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaNodeTemplate;
 
@@ -65,9 +61,6 @@ class AutomationCompositionProviderTest {
     private static final Coder CODER = new StandardCoder();
     private static final String AUTOMATION_COMPOSITION_JSON =
         "src/test/resources/providers/TestAutomationCompositions.json";
-    private static final String TOSCA_TEMPLATE_YAML = "examples/acm/test-pm-subscription-handling.yaml";
-
-    private static final YamlJsonTranslator yamlTranslator = new YamlJsonTranslator();
 
     private AutomationCompositions inputAutomationCompositions;
     private List<JpaAutomationComposition> inputAutomationCompositionsJpa;
@@ -85,7 +78,7 @@ class AutomationCompositionProviderTest {
     void testAutomationCompositionsSave() throws Exception {
         var automationCompositionRepository = mock(AutomationCompositionRepository.class);
         var automationCompositionProvider = new AutomationCompositionProvider(automationCompositionRepository,
-            mock(ToscaNodeTemplateRepository.class), mock(ToscaNodeTemplatesRepository.class));
+            mock(ToscaNodeTemplateRepository.class));
 
         assertThatThrownBy(() -> automationCompositionProvider.saveAutomationCompositions(null))
             .hasMessageMatching(LIST_IS_NULL);
@@ -110,7 +103,7 @@ class AutomationCompositionProviderTest {
     void testAutomationCompositionSave() throws Exception {
         var automationCompositionRepository = mock(AutomationCompositionRepository.class);
         var automationCompositionProvider = new AutomationCompositionProvider(automationCompositionRepository,
-            mock(ToscaNodeTemplateRepository.class), mock(ToscaNodeTemplatesRepository.class));
+            mock(ToscaNodeTemplateRepository.class));
 
         assertThatThrownBy(() -> automationCompositionProvider.saveAutomationComposition(null))
             .hasMessageMatching(OBJECT_IS_NULL);
@@ -134,7 +127,7 @@ class AutomationCompositionProviderTest {
     void testGetAutomationCompositions() throws Exception {
         var automationCompositionRepository = mock(AutomationCompositionRepository.class);
         var automationCompositionProvider = new AutomationCompositionProvider(automationCompositionRepository,
-            mock(ToscaNodeTemplateRepository.class), mock(ToscaNodeTemplatesRepository.class));
+            mock(ToscaNodeTemplateRepository.class));
 
         // Return empty list when no data present in db
         List<AutomationComposition> getResponse = automationCompositionProvider.getAutomationCompositions();
@@ -193,7 +186,7 @@ class AutomationCompositionProviderTest {
     void testDeleteAutomationComposition() throws Exception {
         var automationCompositionRepository = mock(AutomationCompositionRepository.class);
         var automationCompositionProvider = new AutomationCompositionProvider(automationCompositionRepository,
-            mock(ToscaNodeTemplateRepository.class), mock(ToscaNodeTemplatesRepository.class));
+            mock(ToscaNodeTemplateRepository.class));
 
         assertThatThrownBy(() -> automationCompositionProvider
             .deleteAutomationComposition(ID_NAME_NOT_EXTST, ID_VERSION))
@@ -211,49 +204,10 @@ class AutomationCompositionProviderTest {
     }
 
     @Test
-    void testDeleteAllInstanceProperties() throws Exception {
-        var automationCompositionProvider =
-            new AutomationCompositionProvider(mock(AutomationCompositionRepository.class),
-                mock(ToscaNodeTemplateRepository.class), mock(ToscaNodeTemplatesRepository.class));
-        var toscaServiceTemplate = testAutomationCompositionRead();
-        automationCompositionProvider.deleteInstanceProperties(
-            automationCompositionProvider.saveInstanceProperties(toscaServiceTemplate),
-            automationCompositionProvider.getAllNodeTemplates());
-        assertThat(automationCompositionProvider.getAutomationCompositions()).isEmpty();
-    }
-
-    @Test
-    void testSaveAndDeleteInstanceProperties() {
-        var toscaNodeTemplatesRepository = mock(ToscaNodeTemplatesRepository.class);
-        var toscaNodeTemplateRepository = mock(ToscaNodeTemplateRepository.class);
-        var automationCompositionProvider = new AutomationCompositionProvider(
-            mock(AutomationCompositionRepository.class), toscaNodeTemplateRepository, toscaNodeTemplatesRepository);
-        var toscaServiceTest = testAutomationCompositionRead();
-
-        automationCompositionProvider.saveInstanceProperties(toscaServiceTest);
-        verify(toscaNodeTemplatesRepository).save(any());
-
-        var name = "org.onap.policy.acm.PolicyAutomationCompositionParticipant";
-        var version = "2.3.1";
-        var elem = toscaServiceTest.getToscaTopologyTemplate().getNodeTemplates().get(name);
-        when(toscaNodeTemplateRepository.getFiltered(JpaToscaNodeTemplate.class, name, version))
-            .thenReturn(List.of(new JpaToscaNodeTemplate(elem)));
-
-        var filtered = automationCompositionProvider.getNodeTemplates(name, version);
-        verify(toscaNodeTemplateRepository).getFiltered(JpaToscaNodeTemplate.class, name, version);
-
-        automationCompositionProvider
-            .deleteInstanceProperties(automationCompositionProvider.saveInstanceProperties(toscaServiceTest), filtered);
-
-        verify(toscaNodeTemplateRepository).delete(any());
-    }
-
-    @Test
     void testGetNodeTemplates() {
         var toscaNodeTemplateRepository = mock(ToscaNodeTemplateRepository.class);
         var automationCompositionProvider =
-            new AutomationCompositionProvider(mock(AutomationCompositionRepository.class), toscaNodeTemplateRepository,
-                mock(ToscaNodeTemplatesRepository.class));
+            new AutomationCompositionProvider(mock(AutomationCompositionRepository.class), toscaNodeTemplateRepository);
 
         var toscaNodeTemplate0 = new JpaToscaNodeTemplate(new PfConceptKey(ID_NAME, ID_VERSION));
         var toscaNodeTemplate1 = new JpaToscaNodeTemplate(new PfConceptKey("PMSHInstance2", ID_VERSION));
@@ -286,15 +240,5 @@ class AutomationCompositionProviderTest {
 
         assertThatThrownBy(() -> automationCompositionProvider.getFilteredNodeTemplates(null))
             .hasMessageMatching("filter is marked non-null but is null");
-    }
-
-    private static ToscaServiceTemplate testAutomationCompositionRead() {
-        return testAutomationCompositionYamlSerialization();
-    }
-
-    private static ToscaServiceTemplate testAutomationCompositionYamlSerialization() {
-        var automationCompositionString = ResourceUtils.getResourceAsString(
-            AutomationCompositionProviderTest.TOSCA_TEMPLATE_YAML);
-        return yamlTranslator.fromYaml(automationCompositionString, ToscaServiceTemplate.class);
     }
 }

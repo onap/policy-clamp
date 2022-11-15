@@ -23,17 +23,13 @@ package org.onap.policy.clamp.acm.runtime.instantiation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVICE_TEMPLATE_YAML;
 
 import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.onap.policy.clamp.acm.runtime.commissioning.CommissioningProvider;
@@ -41,24 +37,19 @@ import org.onap.policy.clamp.acm.runtime.supervision.SupervisionHandler;
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationCommand;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 /**
  * Class to perform unit test of {@link AutomationCompositionInstantiationProvider}}.
  *
  */
 class AutomationCompositionInstantiationProviderTest {
-    private static final String ID_NAME = "PMSH_Test_Instance";
-    private static final String ID_VERSION = "1.2.3";
     private static final String AC_INSTANTIATION_CREATE_JSON =
         "src/test/resources/rest/acm/AutomationCompositions.json";
     private static final String AC_INSTANTIATION_UPDATE_JSON =
@@ -88,54 +79,6 @@ class AutomationCompositionInstantiationProviderTest {
             + " {2}\"entry org.onap.domain.PMSHAutomationCompositionDefinition\" INVALID, item has status INVALID\n"
             + " {4}item \"AutomationComposition\" value \"org.onap.domain.PMSHAutomationCompositionDefinition\""
             + " INVALID, Commissioned automation composition definition not found\n";
-
-    private static ToscaServiceTemplate serviceTemplate = new ToscaServiceTemplate();
-
-    @BeforeAll
-    public static void setUpBeforeClass() {
-        serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
-    }
-
-    @Test
-    void testInstanceResponse() throws Exception {
-        var participantProvider = Mockito.mock(ParticipantProvider.class);
-        var acProvider = mock(AutomationCompositionProvider.class);
-        var supervisionHandler = mock(SupervisionHandler.class);
-        var commissioningProvider = mock(CommissioningProvider.class);
-
-        when(commissioningProvider.getAllToscaServiceTemplate()).thenReturn(List.of(serviceTemplate));
-        when(commissioningProvider.getToscaServiceTemplate(ID_NAME, ID_VERSION)).thenReturn(serviceTemplate);
-
-        var instantiationProvider = new AutomationCompositionInstantiationProvider(acProvider, commissioningProvider,
-            supervisionHandler, participantProvider);
-        var instancePropertyList = instantiationProvider.createInstanceProperties(serviceTemplate);
-        assertNull(instancePropertyList.getErrorDetails());
-        var id = new ToscaConceptIdentifier(ID_NAME, ID_VERSION);
-        assertEquals(id, instancePropertyList.getAffectedInstanceProperties().get(0));
-
-        AutomationCompositions automationCompositions =
-            InstantiationUtils.getAutomationCompositionsFromResource(AC_INSTANTIATION_CREATE_JSON, "Crud");
-        var automationComposition = automationCompositions.getAutomationCompositionList().get(0);
-        automationComposition.setName(ID_NAME);
-        automationComposition.setVersion(ID_VERSION);
-        when(acProvider.getAutomationCompositions(ID_NAME, ID_VERSION)).thenReturn(List.of(automationComposition));
-
-        var updatedInstancePropertyList = instantiationProvider.createInstanceProperties(serviceTemplate);
-        assertNull(updatedInstancePropertyList.getErrorDetails());
-        var updatedId = new ToscaConceptIdentifier(ID_NAME, ID_VERSION);
-        assertEquals(updatedId, instancePropertyList.getAffectedInstanceProperties().get(0));
-
-        var instanceOrderState = instantiationProvider.getInstantiationOrderState(ID_NAME, ID_VERSION);
-        assertEquals(AutomationCompositionOrderedState.UNINITIALISED, instanceOrderState.getOrderedState());
-        assertEquals(ID_NAME, instanceOrderState.getAutomationCompositionIdentifierList().get(0).getName());
-
-        when(acProvider.findAutomationComposition(ID_NAME, ID_VERSION)).thenReturn(Optional.of(automationComposition));
-        when(acProvider.deleteAutomationComposition(ID_NAME, ID_VERSION)).thenReturn(automationComposition);
-
-        var instanceResponse = instantiationProvider.deleteInstanceProperties(ID_NAME, ID_VERSION);
-        assertEquals(ID_NAME, instanceResponse.getAffectedAutomationCompositions().get(0).getName());
-
-    }
 
     @Test
     void testInstantiationCrud() throws Exception {

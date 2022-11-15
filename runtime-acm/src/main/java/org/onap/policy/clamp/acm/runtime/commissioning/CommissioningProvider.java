@@ -44,7 +44,6 @@ import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplates;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTypedEntityFilter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -203,44 +202,6 @@ public class CommissioningProvider {
         // @formatter:on
 
         return automationCompositionElementList;
-    }
-
-    /**
-     * Get node templates with common properties added.
-     *
-     * @param name the name of the definition to use, null for all definitions
-     * @param version the version of the definition to use, null for all definitions
-     * @param instanceName automation composition name
-     * @param common boolean indicating common or instance properties to be used
-     * @return the nodes templates with common or instance properties
-     * @throws PfModelException on errors getting common or instance properties from node_templates
-     */
-    @Transactional(readOnly = true)
-    public Map<String, ToscaNodeTemplate> getNodeTemplatesWithCommonOrInstanceProperties(
-            final String name, final String version, final String instanceName, final boolean common)
-            throws PfModelException {
-
-        if (common && verifyIfInstancePropertiesExists()) {
-            throw new PfModelException(Status.BAD_REQUEST,
-                    "Cannot create or edit common properties, delete all the instantiations first");
-        }
-
-        var serviceTemplateList = serviceTemplateProvider.getServiceTemplateList(name, version);
-
-        if (serviceTemplateList.isEmpty()) {
-            throw new PfModelException(Status.BAD_REQUEST,
-                    "Tosca service template has to be commissioned before saving instance properties");
-        }
-
-        var commonOrInstanceNodeTypeProps =
-                serviceTemplateProvider.getCommonOrInstancePropertiesFromNodeTypes(common, serviceTemplateList.get(0));
-
-        var serviceTemplates = new ToscaServiceTemplates();
-        serviceTemplates.setServiceTemplates(filterToscaNodeTemplateInstance(serviceTemplateList, instanceName));
-
-        return serviceTemplateProvider.getDerivedCommonOrInstanceNodeTemplates(
-                serviceTemplates.getServiceTemplates().get(0).getToscaTopologyTemplate().getNodeTemplates(),
-                commonOrInstanceNodeTypeProps);
     }
 
     /**

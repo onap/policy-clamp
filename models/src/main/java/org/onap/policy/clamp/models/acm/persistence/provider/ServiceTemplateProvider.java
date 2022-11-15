@@ -29,7 +29,6 @@ import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.models.acm.persistence.repository.ToscaServiceTemplateRepository;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaProperty;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
@@ -214,56 +213,6 @@ public class ServiceTemplateProvider {
     }
 
     /**
-     * Get the node types derived from those that have been saved by instantiation.
-     *
-     * @param initialNodeTypes map of all the node types in the specified template
-     * @param filteredNodeTypes map of all the node types that have common or instance properties
-     * @param instanceName automation composition name
-     * @return all node types that have common properties including their children
-     */
-    private Map<String, ToscaNodeType> getFinalSavedInstanceNodeTypesMap(
-            Map<String, ToscaNodeType> initialNodeTypes,
-            Map<String, ToscaNodeType> filteredNodeTypes, String instanceName) {
-
-        for (var i = 0; i < initialNodeTypes.size(); i++) {
-            initialNodeTypes.forEach((key, nodeType) -> {
-                var tempToscaNodeType = new ToscaNodeType();
-                tempToscaNodeType.setName(key);
-
-                if (filteredNodeTypes.get(nodeType.getDerivedFrom()) != null) {
-                    tempToscaNodeType.setName(key);
-
-                    var finalProps = new HashMap<String, ToscaProperty>(
-                            filteredNodeTypes.get(nodeType.getDerivedFrom()).getProperties());
-
-                    tempToscaNodeType.setProperties(finalProps);
-                } else {
-                    return;
-                }
-                filteredNodeTypes.putIfAbsent(key, tempToscaNodeType);
-
-            });
-        }
-        return filteredNodeTypes;
-    }
-
-    /**
-     * Get the requested node types by automation composition.
-     *
-     * @param instanceName automation composition name
-     * @param serviceTemplate the ToscaServiceTemplate
-     * @return the node types with common or instance properties
-     */
-    public Map<String, ToscaNodeType> getSavedInstanceInstancePropertiesFromNodeTypes(
-            String instanceName, ToscaServiceTemplate serviceTemplate) {
-        var tempNodeTypesMap =
-                this.getInitialNodeTypesMap(serviceTemplate.getNodeTypes(), false);
-
-        return this.getFinalSavedInstanceNodeTypesMap(serviceTemplate.getNodeTypes(), tempNodeTypesMap, instanceName);
-
-    }
-
-    /**
      * Get the requested node types with common or instance properties.
      *
      * @param common boolean indicating common or instance properties
@@ -277,34 +226,5 @@ public class ServiceTemplateProvider {
 
         return this.getFinalNodeTypesMap(serviceTemplate.getNodeTypes(), tempNodeTypesMap);
 
-    }
-
-    /**
-     * Get node templates with appropriate common or instance properties added.
-     *
-     * @param initialNodeTemplates map of all the node templates in the specified template
-     * @param nodeTypeProps map of all the node types that have common or instance properties including children
-     * @return all node templates with appropriate common or instance properties added
-     * @throws PfModelException on errors getting map of node templates with common or instance properties added
-     */
-    public Map<String, ToscaNodeTemplate> getDerivedCommonOrInstanceNodeTemplates(
-            Map<String, ToscaNodeTemplate> initialNodeTemplates, Map<String, ToscaNodeType> nodeTypeProps) {
-
-        var finalNodeTemplatesMap = new HashMap<String, ToscaNodeTemplate>();
-
-        initialNodeTemplates.forEach((templateKey, template) -> {
-            if (nodeTypeProps.containsKey(template.getType())) {
-                var finalMergedProps = new HashMap<String, Object>();
-
-                nodeTypeProps.get(template.getType()).getProperties().forEach(finalMergedProps::putIfAbsent);
-
-                template.setProperties(finalMergedProps);
-
-                finalNodeTemplatesMap.put(templateKey, template);
-            } else {
-                return;
-            }
-        });
-        return finalNodeTemplatesMap;
     }
 }
