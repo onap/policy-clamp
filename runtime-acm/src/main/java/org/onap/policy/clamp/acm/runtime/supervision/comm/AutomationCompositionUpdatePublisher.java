@@ -34,8 +34,6 @@ import org.onap.policy.clamp.models.acm.concepts.ParticipantUpdates;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionUpdate;
 import org.onap.policy.clamp.models.acm.persistence.provider.ServiceTemplateProvider;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
-import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -75,13 +73,7 @@ public class AutomationCompositionUpdatePublisher extends AbstractParticipantPub
         automationCompositionUpdateMsg.setAutomationCompositionId(automationComposition.getKey().asIdentifier());
         automationCompositionUpdateMsg.setMessageId(UUID.randomUUID());
         automationCompositionUpdateMsg.setTimestamp(Instant.now());
-        ToscaServiceTemplate toscaServiceTemplate;
-        try {
-            toscaServiceTemplate = serviceTemplateProvider.getAllServiceTemplates().get(0);
-        } catch (PfModelException pfme) {
-            LOGGER.warn("Get of tosca service template failed, cannot send participantupdate", pfme);
-            return;
-        }
+        var toscaServiceTemplate = serviceTemplateProvider.getAllServiceTemplates().get(0);
 
         List<ParticipantUpdates> participantUpdates = new ArrayList<>();
         for (AutomationCompositionElement element : automationComposition.getElements().values()) {

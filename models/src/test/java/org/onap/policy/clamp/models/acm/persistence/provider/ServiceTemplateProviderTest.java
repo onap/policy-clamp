@@ -22,7 +22,6 @@ package org.onap.policy.clamp.models.acm.persistence.provider;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -30,13 +29,16 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
+import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationCompositionDefinition;
+import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionDefinitionRepository;
 import org.onap.policy.clamp.models.acm.persistence.repository.ToscaServiceTemplateRepository;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
-import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
@@ -55,97 +57,68 @@ class ServiceTemplateProviderTest {
     }
 
     @Test
-    void testGetCommonOrInstancePropertiesFromNodeTypes() throws PfModelException {
-        var serviceTemplateRepository = mock(ToscaServiceTemplateRepository.class);
-        var serviceTemplateProvider = new ServiceTemplateProvider(serviceTemplateRepository);
-
-        var result = serviceTemplateProvider.getCommonOrInstancePropertiesFromNodeTypes(true, inputServiceTemplate);
-        assertNotNull(result);
-        assertThat(result).hasSize(6);
-    }
-
-    @Test
     void testCreateServiceTemplate() throws PfModelException {
-        var serviceTemplateRepository = mock(ToscaServiceTemplateRepository.class);
-        var serviceTemplateProvider = new ServiceTemplateProvider(serviceTemplateRepository);
+        var acmDefinitionRepository = mock(AutomationCompositionDefinitionRepository.class);
 
         var jpaServiceTemplate = ProviderUtils.getJpaAndValidate(inputServiceTemplate, JpaToscaServiceTemplate::new,
-            "toscaServiceTemplate");
-        when(serviceTemplateRepository.save(jpaServiceTemplate)).thenReturn(jpaServiceTemplate);
+                "toscaServiceTemplate");
+        var acmDefinition = new AutomationCompositionDefinition();
+        acmDefinition.setCompositionId(UUID.randomUUID());
+        acmDefinition.setServiceTemplate(jpaServiceTemplate.toAuthorative());
 
-        var result = serviceTemplateProvider.createServiceTemplate(inputServiceTemplate);
+        when(acmDefinitionRepository.save(any(JpaAutomationCompositionDefinition.class)))
+                .thenReturn(new JpaAutomationCompositionDefinition(acmDefinition));
 
-        assertThat(result).isEqualTo(jpaServiceTemplate.toAuthorative());
+        var serviceTemplateRepository = mock(ToscaServiceTemplateRepository.class);
+        var serviceTemplateProvider = new ServiceTemplateProvider(serviceTemplateRepository, acmDefinitionRepository);
+        var result = serviceTemplateProvider.createAutomationCompositionDefinition(inputServiceTemplate);
+
+        assertThat(result.getServiceTemplate()).isEqualTo(jpaServiceTemplate.toAuthorative());
     }
 
     @Test
     void testDeleteServiceTemplate() throws PfModelException {
         var jpaServiceTemplate = ProviderUtils.getJpaAndValidate(inputServiceTemplate, JpaToscaServiceTemplate::new,
-            "toscaServiceTemplate");
-        var serviceTemplateRepository = mock(ToscaServiceTemplateRepository.class);
-        when(serviceTemplateRepository
-            .findById(new PfConceptKey(inputServiceTemplate.getName(), inputServiceTemplate.getVersion())))
-            .thenReturn(Optional.of(jpaServiceTemplate));
+                "toscaServiceTemplate");
+        var acmDefinition = new AutomationCompositionDefinition();
+        acmDefinition.setCompositionId(UUID.randomUUID());
+        acmDefinition.setServiceTemplate(jpaServiceTemplate.toAuthorative());
 
-        var serviceTemplateProvider = new ServiceTemplateProvider(serviceTemplateRepository);
-        var result = serviceTemplateProvider.deleteServiceTemplate(inputServiceTemplate.getName(),
-            inputServiceTemplate.getVersion());
+        var serviceTemplateRepository = mock(ToscaServiceTemplateRepository.class);
+        var acmDefinitionRepository = mock(AutomationCompositionDefinitionRepository.class);
+        when(acmDefinitionRepository.findById(acmDefinition.getCompositionId().toString()))
+                .thenReturn(Optional.of(new JpaAutomationCompositionDefinition(acmDefinition)));
+
+        var serviceTemplateProvider = new ServiceTemplateProvider(serviceTemplateRepository, acmDefinitionRepository);
+        var result = serviceTemplateProvider.deleteServiceTemplate(acmDefinition.getCompositionId());
 
         assertThat(result).isEqualTo(jpaServiceTemplate.toAuthorative());
     }
 
     @Test
     void testDeleteServiceTemplateEmpty() throws PfModelException {
-        var jpaServiceTemplate = ProviderUtils.getJpaAndValidate(inputServiceTemplate, JpaToscaServiceTemplate::new,
-            "toscaServiceTemplate");
         var serviceTemplateRepository = mock(ToscaServiceTemplateRepository.class);
-        when(serviceTemplateRepository
-            .findById(new PfConceptKey(inputServiceTemplate.getName(), inputServiceTemplate.getVersion())))
-            .thenReturn(Optional.empty());
+        when(serviceTemplateRepository.findAll()).thenReturn(List.of());
 
-        var serviceTemplateProvider = new ServiceTemplateProvider(serviceTemplateRepository);
-        assertThatThrownBy(() -> serviceTemplateProvider.deleteServiceTemplate(inputServiceTemplate.getName(),
-            inputServiceTemplate.getVersion()))
-            .hasMessage("delete of serviceTemplate \"NULL:0.0.0\" failed, serviceTemplate does not exist");
-    }
-
-    @Test
-    void testGetServiceTemplateListEmpty() {
-        var serviceTemplateRepository = mock(ToscaServiceTemplateRepository.class);
-        when(serviceTemplateRepository.findById(any())).thenReturn(Optional.empty());
-
-        var serviceTemplateProvider = new ServiceTemplateProvider(serviceTemplateRepository);
-        assertThatThrownBy(() -> serviceTemplateProvider.getToscaServiceTemplate("Name", "1.0.0"))
-            .hasMessage("Automation composition definitions not found");
-    }
-
-    @Test
-    void testGetServiceTemplateList() throws PfModelException {
-        var jpaServiceTemplate = ProviderUtils.getJpaAndValidate(inputServiceTemplate, JpaToscaServiceTemplate::new,
-            "toscaServiceTemplate");
-        var serviceTemplateRepository = mock(ToscaServiceTemplateRepository.class);
-        when(serviceTemplateRepository
-            .findById(new PfConceptKey(inputServiceTemplate.getName(), inputServiceTemplate.getVersion())))
-            .thenReturn(Optional.of(jpaServiceTemplate));
-
-        var serviceTemplateProvider = new ServiceTemplateProvider(serviceTemplateRepository);
-        var result = serviceTemplateProvider.getToscaServiceTemplate(inputServiceTemplate.getName(),
-            inputServiceTemplate.getVersion());
-
-        assertThat(result).isEqualTo(jpaServiceTemplate.toAuthorative());
+        var compositionId = UUID.randomUUID();
+        var acmDefinitionRepository = mock(AutomationCompositionDefinitionRepository.class);
+        var serviceTemplateProvider = new ServiceTemplateProvider(serviceTemplateRepository, acmDefinitionRepository);
+        assertThatThrownBy(() -> serviceTemplateProvider.deleteServiceTemplate(compositionId)).hasMessage(
+                "delete of serviceTemplate \"" + compositionId + "\" failed, serviceTemplate does not exist");
     }
 
     @Test
     void testGetServiceTemplate() throws PfModelException {
         var jpaServiceTemplate = ProviderUtils.getJpaAndValidate(inputServiceTemplate, JpaToscaServiceTemplate::new,
-            "toscaServiceTemplate");
+                "toscaServiceTemplate");
         var serviceTemplateRepository = mock(ToscaServiceTemplateRepository.class);
         when(serviceTemplateRepository.getFiltered(JpaToscaServiceTemplate.class, inputServiceTemplate.getName(),
-            inputServiceTemplate.getVersion())).thenReturn(List.of(jpaServiceTemplate));
+                inputServiceTemplate.getVersion())).thenReturn(List.of(jpaServiceTemplate));
 
-        var serviceTemplateProvider = new ServiceTemplateProvider(serviceTemplateRepository);
+        var acmDefinitionRepository = mock(AutomationCompositionDefinitionRepository.class);
+        var serviceTemplateProvider = new ServiceTemplateProvider(serviceTemplateRepository, acmDefinitionRepository);
         var result = serviceTemplateProvider.getServiceTemplateList(inputServiceTemplate.getName(),
-            inputServiceTemplate.getVersion());
+                inputServiceTemplate.getVersion());
 
         assertThat(result).hasSize(1);
         assertThat(result.get(0)).isEqualTo(jpaServiceTemplate.toAuthorative());
