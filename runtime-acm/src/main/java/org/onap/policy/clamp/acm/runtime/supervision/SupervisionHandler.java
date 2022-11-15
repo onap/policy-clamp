@@ -27,7 +27,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionStateChangePublisher;
@@ -49,13 +48,11 @@ import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMe
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegister;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatus;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUpdateAck;
+import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
-import org.onap.policy.clamp.models.acm.persistence.provider.ServiceTemplateProvider;
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -81,7 +78,7 @@ public class SupervisionHandler {
 
     private final AutomationCompositionProvider automationCompositionProvider;
     private final ParticipantProvider participantProvider;
-    private final ServiceTemplateProvider serviceTemplateProvider;
+    private final AcDefinitionProvider acDefinitionProvider;
 
     // Publishers for participant communication
     private final AutomationCompositionUpdatePublisher automationCompositionUpdatePublisher;
@@ -448,12 +445,7 @@ public class SupervisionHandler {
     }
 
     private int getFirstStartPhase(AutomationComposition automationComposition) {
-        ToscaServiceTemplate toscaServiceTemplate = null;
-        try {
-            toscaServiceTemplate = serviceTemplateProvider.getAllServiceTemplates().get(0);
-        } catch (PfModelException e) {
-            throw new PfModelRuntimeException(Status.BAD_REQUEST, "Canont load ToscaServiceTemplate from DB", e);
-        }
+        var toscaServiceTemplate = acDefinitionProvider.getAllServiceTemplates().get(0);
         return ParticipantUtils.getFirstStartPhase(automationComposition, toscaServiceTemplate);
     }
 

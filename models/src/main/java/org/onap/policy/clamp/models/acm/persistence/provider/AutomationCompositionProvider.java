@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021 Nordix Foundation.
+ * Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -189,7 +189,7 @@ public class AutomationCompositionProvider {
         if (jpaDeleteAutomationComposition.isEmpty()) {
             String errorMessage = "delete of automation composition \"" + automationCompositionKey.getId()
                 + "\" failed, automation composition does not exist";
-            throw new PfModelException(Response.Status.BAD_REQUEST, errorMessage);
+            throw new PfModelException(Response.Status.NOT_FOUND, errorMessage);
         }
 
         automationCompositionRepository.deleteById(automationCompositionKey);

@@ -43,9 +43,9 @@ import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDe
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDeregisterAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegisterAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUpdateAck;
+import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
-import org.onap.policy.clamp.models.acm.persistence.provider.ServiceTemplateProvider;
 import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
 import org.onap.policy.models.base.PfModelException;
@@ -68,14 +68,14 @@ class SupervisionMessagesTest extends CommonRestController {
     public static void setupDbProviderParameters() throws PfModelException {
         var acProvider = mock(AutomationCompositionProvider.class);
         var participantProvider = mock(ParticipantProvider.class);
-        var serviceTemplateProvider = Mockito.mock(ServiceTemplateProvider.class);
+        var acDefinitionProvider = Mockito.mock(AcDefinitionProvider.class);
         var automationCompositionUpdatePublisher = Mockito.mock(AutomationCompositionUpdatePublisher.class);
         var automationCompositionStateChangePublisher = Mockito.mock(AutomationCompositionStateChangePublisher.class);
         var participantRegisterAckPublisher = Mockito.mock(ParticipantRegisterAckPublisher.class);
         var participantDeregisterAckPublisher = Mockito.mock(ParticipantDeregisterAckPublisher.class);
         var participantUpdatePublisher = Mockito.mock(ParticipantUpdatePublisher.class);
         supervisionHandler = new SupervisionHandler(acProvider, participantProvider,
-            serviceTemplateProvider, automationCompositionUpdatePublisher, automationCompositionStateChangePublisher,
+            acDefinitionProvider, automationCompositionUpdatePublisher, automationCompositionStateChangePublisher,
             participantRegisterAckPublisher, participantDeregisterAckPublisher, participantUpdatePublisher);
     }
 
@@ -157,7 +157,7 @@ class SupervisionMessagesTest extends CommonRestController {
 
     @Test
     void testParticipantUpdatePublisherDecomisioning() {
-        var publisher = new ParticipantUpdatePublisher(mock(ServiceTemplateProvider.class));
+        var publisher = new ParticipantUpdatePublisher(mock(AcDefinitionProvider.class));
         var topicSink = mock(TopicSink.class);
         publisher.active(List.of(topicSink));
         publisher.sendDecomisioning();
@@ -166,7 +166,7 @@ class SupervisionMessagesTest extends CommonRestController {
 
     @Test
     void testParticipantUpdatePublisherComissioning() {
-        var publisher = new ParticipantUpdatePublisher(mock(ServiceTemplateProvider.class));
+        var publisher = new ParticipantUpdatePublisher(mock(AcDefinitionProvider.class));
         var topicSink = mock(TopicSink.class);
         publisher.active(List.of(topicSink));
         publisher.sendComissioningBroadcast("NAME", "1.0.0");

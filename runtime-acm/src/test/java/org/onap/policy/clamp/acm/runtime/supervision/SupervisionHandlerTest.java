@@ -54,9 +54,9 @@ import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMe
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegister;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatus;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUpdateAck;
+import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
-import org.onap.policy.clamp.models.acm.persistence.provider.ServiceTemplateProvider;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -119,15 +119,15 @@ class SupervisionHandlerTest {
             .thenReturn(Optional.of(automationComposition));
         when(automationCompositionProvider.getAutomationComposition(identifier)).thenReturn(automationComposition);
 
-        var serviceTemplateProvider = Mockito.mock(ServiceTemplateProvider.class);
-        when(serviceTemplateProvider.getAllServiceTemplates())
+        var acDefinitionProvider = Mockito.mock(AcDefinitionProvider.class);
+        when(acDefinitionProvider.getAllServiceTemplates())
             .thenReturn(List.of(Objects.requireNonNull(InstantiationUtils.getToscaServiceTemplate(
                     TOSCA_SERVICE_TEMPLATE_YAML))));
 
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
 
         var handler = new SupervisionHandler(automationCompositionProvider, mock(ParticipantProvider.class),
-            serviceTemplateProvider, mock(AutomationCompositionUpdatePublisher.class),
+            acDefinitionProvider, mock(AutomationCompositionUpdatePublisher.class),
             automationCompositionStateChangePublisher, mock(ParticipantRegisterAckPublisher.class),
             mock(ParticipantDeregisterAckPublisher.class), mock(ParticipantUpdatePublisher.class));
 
@@ -355,18 +355,18 @@ class SupervisionHandlerTest {
             .thenReturn(Optional.of(automationComposition));
         when(automationCompositionProvider.getAutomationComposition(identifier)).thenReturn(automationComposition);
 
-        var serviceTemplateProvider = Mockito.mock(ServiceTemplateProvider.class);
-        when(serviceTemplateProvider.getServiceTemplateList(any(), any()))
+        var acDefinitionProvider = Mockito.mock(AcDefinitionProvider.class);
+        when(acDefinitionProvider.getServiceTemplateList(any(), any()))
             .thenReturn(List.of(Objects.requireNonNull(InstantiationUtils.getToscaServiceTemplate(
                     TOSCA_SERVICE_TEMPLATE_YAML))));
-        when(serviceTemplateProvider.getAllServiceTemplates())
+        when(acDefinitionProvider.getAllServiceTemplates())
             .thenReturn(List.of(Objects.requireNonNull(InstantiationUtils.getToscaServiceTemplate(
                     TOSCA_SERVICE_TEMPLATE_YAML))));
 
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
 
         return new SupervisionHandler(automationCompositionProvider, participantProvider,
-            serviceTemplateProvider, automationCompositionUpdatePublisher, automationCompositionStateChangePublisher,
+            acDefinitionProvider, automationCompositionUpdatePublisher, automationCompositionStateChangePublisher,
             participantRegisterAckPublisher, participantDeregisterAckPublisher, participantUpdatePublisher);
 
     }

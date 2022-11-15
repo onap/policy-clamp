@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021 Nordix Foundation.
+ * Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -36,9 +36,9 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantHealthStatus;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
+import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
-import org.onap.policy.clamp.models.acm.persistence.provider.ServiceTemplateProvider;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
@@ -62,7 +62,7 @@ public class SupervisionScanner {
     private final Map<ToscaConceptIdentifier, Integer> phaseMap = new HashMap<>();
 
     private final AutomationCompositionProvider automationCompositionProvider;
-    private final ServiceTemplateProvider serviceTemplateProvider;
+    private final AcDefinitionProvider acDefinitionProvider;
     private final AutomationCompositionStateChangePublisher automationCompositionStateChangePublisher;
     private final AutomationCompositionUpdatePublisher automationCompositionUpdatePublisher;
     private final ParticipantProvider participantProvider;
@@ -73,7 +73,7 @@ public class SupervisionScanner {
      * Constructor for instantiating SupervisionScanner.
      *
      * @param automationCompositionProvider the provider to use to read automation compositions from the database
-     * @param serviceTemplateProvider the Policy Models Provider
+     * @param acDefinitionProvider the Policy Models Provider
      * @param automationCompositionStateChangePublisher the AutomationComposition StateChange Publisher
      * @param automationCompositionUpdatePublisher the AutomationCompositionUpdate Publisher
      * @param participantProvider the Participant Provider
@@ -82,13 +82,13 @@ public class SupervisionScanner {
      * @param acRuntimeParameterGroup the parameters for the automation composition runtime
      */
     public SupervisionScanner(final AutomationCompositionProvider automationCompositionProvider,
-        ServiceTemplateProvider serviceTemplateProvider,
+        AcDefinitionProvider acDefinitionProvider,
         final AutomationCompositionStateChangePublisher automationCompositionStateChangePublisher,
         AutomationCompositionUpdatePublisher automationCompositionUpdatePublisher,
         ParticipantProvider participantProvider, ParticipantStatusReqPublisher participantStatusReqPublisher,
         ParticipantUpdatePublisher participantUpdatePublisher, final AcRuntimeParameterGroup acRuntimeParameterGroup) {
         this.automationCompositionProvider = automationCompositionProvider;
-        this.serviceTemplateProvider = serviceTemplateProvider;
+        this.acDefinitionProvider = acDefinitionProvider;
         this.automationCompositionStateChangePublisher = automationCompositionStateChangePublisher;
         this.automationCompositionUpdatePublisher = automationCompositionUpdatePublisher;
         this.participantProvider = participantProvider;
@@ -130,7 +130,7 @@ public class SupervisionScanner {
         }
 
         try {
-            var list = serviceTemplateProvider.getAllServiceTemplates();
+            var list = acDefinitionProvider.getAllServiceTemplates();
             if (list != null && !list.isEmpty()) {
                 ToscaServiceTemplate toscaServiceTemplate = list.get(0);
 

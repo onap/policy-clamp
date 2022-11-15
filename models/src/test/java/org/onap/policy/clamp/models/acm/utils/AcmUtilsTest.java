@@ -23,6 +23,7 @@ package org.onap.policy.clamp.models.acm.utils;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.ArrayList;
@@ -34,6 +35,8 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUpdates;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
+import org.onap.policy.common.utils.coder.StandardYamlCoder;
+import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaDataType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
@@ -46,7 +49,9 @@ class AcmUtilsTest {
 
     private final ToscaConceptIdentifier id = new ToscaConceptIdentifier("id", "1.0.0");
     private final ToscaConceptIdentifier idNode =
-        new ToscaConceptIdentifier("org.onap.dcae.acm.DCAEMicroserviceAutomationCompositionParticipant", "0.0.0");
+            new ToscaConceptIdentifier("org.onap.dcae.acm.DCAEMicroserviceAutomationCompositionParticipant", "0.0.0");
+    private static final StandardYamlCoder YAML_TRANSLATOR = new StandardYamlCoder();
+    private static final String TOSCA_SERVICE_TEMPLATE_YAML = "clamp/acm/pmsh/funtional-pmsh-usecase.yaml";
 
     @Test
     void testCommonUtilsParticipantUpdate() {
@@ -71,7 +76,7 @@ class AcmUtilsTest {
     void testCommonUtilsServiceTemplate() {
         var acElement = new AutomationCompositionElement();
         var toscaServiceTemplate = getDummyToscaServiceTemplate();
-        AcmUtils.setServiceTemplatePolicyInfo(acElement, toscaServiceTemplate);
+        AcmUtils.setAcPolicyInfo(acElement, toscaServiceTemplate);
         assertEquals(getDummyToscaDataTypeMap(), acElement.getToscaServiceTemplateFragment().getDataTypes());
     }
 
@@ -87,7 +92,7 @@ class AcmUtilsTest {
 
         checkParticipantDefinitionUpdate(toscaServiceTemplate, participantDefinitionUpdates);
         assertEquals(idNode, participantDefinitionUpdates.get(0).getAutomationCompositionElementDefinitionList().get(0)
-            .getAcElementDefinitionId());
+                .getAcElementDefinitionId());
     }
 
     @Test
@@ -96,8 +101,18 @@ class AcmUtilsTest {
         toscaServiceTemplate.setPolicyTypes(null);
         toscaServiceTemplate.getToscaTopologyTemplate().setPolicies(null);
         AutomationCompositionElement acElement = new AutomationCompositionElement();
-        AcmUtils.setServiceTemplatePolicyInfo(new AutomationCompositionElement(), toscaServiceTemplate);
+        AcmUtils.setAcPolicyInfo(new AutomationCompositionElement(), toscaServiceTemplate);
         assertNull(acElement.getToscaServiceTemplateFragment());
+    }
+
+    @Test
+    void testGetCommonOrInstancePropertiesFromNodeTypes() throws Exception {
+        var inputServiceTemplate = YAML_TRANSLATOR
+                .decode(ResourceUtils.getResourceAsStream(TOSCA_SERVICE_TEMPLATE_YAML), ToscaServiceTemplate.class);
+
+        var result = AcmUtils.getCommonOrInstancePropertiesFromNodeTypes(true, inputServiceTemplate);
+        assertNotNull(result);
+        assertThat(result).hasSize(6);
     }
 
     private ToscaServiceTemplate getDummyToscaServiceTemplate() {
@@ -146,14 +161,14 @@ class AcmUtilsTest {
     }
 
     private void checkParticipantDefinitionUpdate(ToscaServiceTemplate toscaServiceTemplate,
-        List<ParticipantDefinition> participantDefinitionUpdates) {
+            List<ParticipantDefinition> participantDefinitionUpdates) {
 
         for (Map.Entry<String, ToscaNodeTemplate> toscaInputEntry : toscaServiceTemplate.getToscaTopologyTemplate()
-            .getNodeTemplates().entrySet()) {
+                .getNodeTemplates().entrySet()) {
             if (ParticipantUtils.checkIfNodeTemplateIsAutomationCompositionElement(toscaInputEntry.getValue(),
-                toscaServiceTemplate)) {
+                    toscaServiceTemplate)) {
                 AcmUtils.prepareParticipantDefinitionUpdate(id, toscaInputEntry.getKey(), toscaInputEntry.getValue(),
-                    participantDefinitionUpdates, null);
+                        participantDefinitionUpdates, null);
             }
         }
     }

@@ -3,7 +3,7 @@ spring:
     user:
       name: runtimeUser
       password: zb!XztG34
-  http:
+  mvc:
     converters:
       preferred-json-mapper: gson
   datasource:

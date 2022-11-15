@@ -21,30 +21,23 @@
 
 package org.onap.policy.clamp.acm.runtime.commissioning;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.Response.Status;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.MapUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionHandler;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.CommissioningResponse;
+import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
-import org.onap.policy.clamp.models.acm.persistence.provider.ServiceTemplateProvider;
-import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
+import org.onap.policy.clamp.models.acm.utils.AcmUtils;
+import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
+import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaTypedEntityFilter;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplates;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,51 +49,33 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class CommissioningProvider {
     public static final String AUTOMATION_COMPOSITION_NODE_TYPE = "org.onap.policy.clamp.acm.AutomationComposition";
-    private static final String HYPHEN = "-";
 
-    private final ServiceTemplateProvider serviceTemplateProvider;
+    private final AcDefinitionProvider acDefinitionProvider;
     private final AutomationCompositionProvider acProvider;
-    private static final Coder CODER = new StandardCoder();
     private final ParticipantProvider participantProvider;
     private final SupervisionHandler supervisionHandler;
 
     /**
      * Create a commissioning provider.
      *
-     * @param serviceTemplateProvider the ServiceTemplate Provider
+     * @param acDefinitionProvider the ServiceTemplate Provider
      * @param acProvider the AutomationComposition Provider
      * @param supervisionHandler the Supervision Handler
      * @param participantProvider the Participant Provider
      */
-    public CommissioningProvider(ServiceTemplateProvider serviceTemplateProvider,
+    public CommissioningProvider(AcDefinitionProvider acDefinitionProvider,
             AutomationCompositionProvider acProvider, SupervisionHandler supervisionHandler,
             ParticipantProvider participantProvider) {
-        this.serviceTemplateProvider = serviceTemplateProvider;
+        this.acDefinitionProvider = acDefinitionProvider;
         this.acProvider = acProvider;
         this.supervisionHandler = supervisionHandler;
         this.participantProvider = participantProvider;
     }
 
-    /**
-     * Create automation compositions from a service template.
-     *
-     * @param serviceTemplate the service template
-     * @return the result of the commissioning operation
-     * @throws PfModelException on creation errors
-     */
-    public CommissioningResponse createAutomationCompositionDefinitions(ToscaServiceTemplate serviceTemplate)
-            throws PfModelException {
-
-        if (verifyIfInstancePropertiesExists()) {
-            throw new PfModelException(Status.BAD_REQUEST,
-                    "Delete instances, to commission automation composition definitions");
-        }
-        serviceTemplate = serviceTemplateProvider.createServiceTemplate(serviceTemplate);
-        List<Participant> participantList = participantProvider.getParticipants();
-        if (!participantList.isEmpty()) {
-            supervisionHandler.handleSendCommissionMessage(serviceTemplate.getName(), serviceTemplate.getVersion());
-        }
+    private CommissioningResponse createCommissioningResponse(UUID compositionId,
+            ToscaServiceTemplate serviceTemplate) {
         var response = new CommissioningResponse();
+        response.setCompositionId(compositionId);
         // @formatter:off
         response.setAffectedAutomationCompositionDefinitions(
             serviceTemplate.getToscaTopologyTemplate().getNodeTemplates()
@@ -114,201 +89,117 @@ public class CommissioningProvider {
     }
 
     /**
+     * Create automation compositions from a service template.
+     *
+     * @param serviceTemplate the service template
+     * @return the result of the commissioning operation
+     */
+    public CommissioningResponse createAutomationCompositionDefinitions(ToscaServiceTemplate serviceTemplate) {
+
+        if (verifyIfDefinitionExists()) {
+            throw new PfModelRuntimeException(Status.BAD_REQUEST,
+                    "Delete instances, to commission automation composition definitions");
+        }
+        var acmDefinition = acDefinitionProvider.createAutomationCompositionDefinition(serviceTemplate);
+        serviceTemplate = acmDefinition.getServiceTemplate();
+        var participantList = participantProvider.getParticipants();
+        if (!participantList.isEmpty()) {
+            supervisionHandler.handleSendCommissionMessage(serviceTemplate.getName(), serviceTemplate.getVersion());
+        }
+        return createCommissioningResponse(acmDefinition.getCompositionId(), serviceTemplate);
+    }
+
+    /**
+     * Update Composition Definition.
+     *
+     * @param compositionId The UUID of the automation composition definition to update
+     * @param serviceTemplate the service template
+     * @return the result of the commissioning operation
+     */
+    public CommissioningResponse updateCompositionDefinition(UUID compositionId, ToscaServiceTemplate serviceTemplate) {
+
+        var automationCompositions = acProvider.getAutomationCompositions();
+        var result = new BeanValidationResult("AutomationCompositions", automationCompositions);
+        for (var automationComposition : automationCompositions) {
+            if (!AutomationCompositionState.UNINITIALISED.equals(automationComposition.getState())) {
+                throw new PfModelRuntimeException(Status.BAD_REQUEST,
+                        "There is an Automation Composition instantioation with state in "
+                                + automationComposition.getState());
+            }
+            result.addResult(AcmUtils.validateAutomationComposition(automationComposition, serviceTemplate));
+        }
+        if (!result.isValid()) {
+            throw new PfModelRuntimeException(Status.BAD_REQUEST, "Service template non valid: " + result.getMessage());
+        }
+
+        acDefinitionProvider.updateServiceTemplate(compositionId, serviceTemplate);
+
+        return createCommissioningResponse(compositionId, serviceTemplate);
+    }
+
+    /**
      * Delete the automation composition definition with the given name and version.
      *
-     * @param name the name of the automation composition definition to delete
-     * @param version the version of the automation composition to delete
+     * @param compositionId The UUID of the automation composition definition to delete
      * @return the result of the deletion
-     * @throws PfModelException on deletion errors
      */
-    public CommissioningResponse deleteAutomationCompositionDefinition(String name, String version)
-            throws PfModelException {
+    public CommissioningResponse deleteAutomationCompositionDefinition(UUID compositionId) {
 
-        if (verifyIfInstancePropertiesExists()) {
-            throw new PfModelException(Status.BAD_REQUEST,
+        if (verifyIfInstanceExists()) {
+            throw new PfModelRuntimeException(Status.BAD_REQUEST,
                     "Delete instances, to commission automation composition definitions");
         }
         List<Participant> participantList = participantProvider.getParticipants();
         if (!participantList.isEmpty()) {
             supervisionHandler.handleSendDeCommissionMessage();
         }
-        serviceTemplateProvider.deleteServiceTemplate(name, version);
-        var response = new CommissioningResponse();
-        response.setAffectedAutomationCompositionDefinitions(List.of(new ToscaConceptIdentifier(name, version)));
-
-        return response;
+        var serviceTemplate = acDefinitionProvider.deleteAcDefintion(compositionId);
+        return createCommissioningResponse(compositionId, serviceTemplate);
     }
 
     /**
-     * Get automation composition node templates.
+     * Get automation composition definition.
      *
      * @param acName the name of the automation composition, null for all
      * @param acVersion the version of the automation composition, null for all
-     * @return list of automation composition node templates
+     * @return automation composition definition
      * @throws PfModelException on errors getting automation composition definitions
      */
     @Transactional(readOnly = true)
-    public List<ToscaNodeTemplate> getAutomationCompositionDefinitions(String acName, String acVersion)
-            throws PfModelException {
+    public ToscaServiceTemplates getAutomationCompositionDefinitions(String acName, String acVersion) {
 
-        // @formatter:off
-        ToscaTypedEntityFilter<ToscaNodeTemplate> nodeTemplateFilter = ToscaTypedEntityFilter
-                .<ToscaNodeTemplate>builder()
-                .name(acName)
-                .version(acVersion)
-                .type(AUTOMATION_COMPOSITION_NODE_TYPE)
-                .build();
-        // @formatter:on
-
-        return acProvider.getFilteredNodeTemplates(nodeTemplateFilter);
+        var result = new ToscaServiceTemplates();
+        result.setServiceTemplates(acDefinitionProvider.getServiceTemplateList(acName, acVersion));
+        return result;
     }
 
     /**
-     * Get the automation composition elements from a automation composition node template.
+     * Get automation composition definition.
      *
-     * @param automationCompositionNodeTemplate the automation composition node template
-     * @return a list of the automation composition element node templates in a automation composition node template
-     * @throws PfModelException on errors get automation composition element node templates
+     * @param compositionId the compositionId
+     * @return automation composition definition
      */
     @Transactional(readOnly = true)
-    public List<ToscaNodeTemplate> getAutomationCompositionElementDefinitions(
-            ToscaNodeTemplate automationCompositionNodeTemplate) throws PfModelException {
-        if (!AUTOMATION_COMPOSITION_NODE_TYPE.equals(automationCompositionNodeTemplate.getType())) {
-            return Collections.emptyList();
-        }
+    public ToscaServiceTemplate getAutomationCompositionDefinitions(UUID compositionId) {
 
-        if (MapUtils.isEmpty(automationCompositionNodeTemplate.getProperties())) {
-            return Collections.emptyList();
-        }
-
-        @SuppressWarnings("unchecked")
-        List<Map<String, String>> automationCompositionElements =
-                (List<Map<String, String>>) automationCompositionNodeTemplate.getProperties().get("elements");
-
-        if (CollectionUtils.isEmpty(automationCompositionElements)) {
-            return Collections.emptyList();
-        }
-
-        List<ToscaNodeTemplate> automationCompositionElementList = new ArrayList<>();
-        // @formatter:off
-        automationCompositionElementList.addAll(
-                automationCompositionElements
-                        .stream()
-                        .map(elementMap -> acProvider.getNodeTemplates(elementMap.get("name"),
-                                elementMap.get("version")))
-                        .flatMap(List::stream)
-                        .collect(Collectors.toList())
-        );
-        // @formatter:on
-
-        return automationCompositionElementList;
+        return acDefinitionProvider.getAcDefinition(compositionId);
     }
 
     /**
-     * Get the requested automation composition definitions.
+     * Validates to see if there is any instance saved.
      *
-     * @param name the name of the definition to get, null for all definitions
-     * @param version the version of the definition to get, null for all definitions
-     * @return the automation composition definitions
-     * @throws PfModelException on errors getting automation composition definitions
+     * @return true if exists instance
      */
-    @Transactional(readOnly = true)
-    public ToscaServiceTemplate getToscaServiceTemplate(String name, String version) throws PfModelException {
-        return serviceTemplateProvider.getToscaServiceTemplate(name, version);
+    private boolean verifyIfInstanceExists() {
+        return !acProvider.getAutomationCompositions().isEmpty();
     }
 
     /**
-     * Get All the requested automation composition definitions.
+     * Validates to see if there is any instance saved.
      *
-     * @return the automation composition definitions
-     * @throws PfModelException on errors getting automation composition definitions
+     * @return true if exists instance
      */
-    @Transactional(readOnly = true)
-    public List<ToscaServiceTemplate> getAllToscaServiceTemplate() throws PfModelException {
-        return serviceTemplateProvider.getAllServiceTemplates();
-    }
-
-    /**
-     * Get the tosca service template with only required sections.
-     *
-     * @param name the name of the template to get, null for all definitions
-     * @param version the version of the template to get, null for all definitions
-     * @param instanceName automation composition name
-     * @return the tosca service template
-     * @throws PfModelException on errors getting tosca service template
-     */
-    @Transactional(readOnly = true)
-    public String getToscaServiceTemplateReduced(
-            final String name, final String version, final String instanceName)
-            throws PfModelException {
-
-        var serviceTemplateList = serviceTemplateProvider.getServiceTemplateList(name, version);
-
-        List<ToscaServiceTemplate> filteredServiceTemplateList =
-                filterToscaNodeTemplateInstance(serviceTemplateList, instanceName);
-
-        if (filteredServiceTemplateList.isEmpty()) {
-            throw new PfModelException(Status.BAD_REQUEST, "Invalid Service Template");
-        }
-
-        ToscaServiceTemplate fullTemplate = filteredServiceTemplateList.get(0);
-
-        var template = new HashMap<String, Object>();
-        template.put("tosca_definitions_version", fullTemplate.getToscaDefinitionsVersion());
-        template.put("data_types", fullTemplate.getDataTypes());
-        template.put("policy_types", fullTemplate.getPolicyTypes());
-        template.put("node_types", fullTemplate.getNodeTypes());
-        template.put("topology_template", fullTemplate.getToscaTopologyTemplate());
-
-        try {
-            return CODER.encode(template);
-
-        } catch (CoderException e) {
-            throw new PfModelException(Status.BAD_REQUEST, "Converion to Json Schema failed", e);
-        }
-    }
-
-    /**
-     * Filters service templates if is not an instantiation type.
-     *
-     * @param serviceTemplates tosca service template
-     * @param instanceName     automation composition name
-     * @return List of tosca service templates
-     */
-    private List<ToscaServiceTemplate> filterToscaNodeTemplateInstance(
-            List<ToscaServiceTemplate> serviceTemplates, String instanceName) {
-
-        List<ToscaServiceTemplate> toscaServiceTemplates = new ArrayList<>();
-
-        serviceTemplates.forEach(serviceTemplate -> {
-
-            Map<String, ToscaNodeTemplate> toscaNodeTemplates = new HashMap<>();
-
-            serviceTemplate.getToscaTopologyTemplate().getNodeTemplates().forEach((key, nodeTemplate) -> {
-                if (StringUtils.isNotEmpty(instanceName) && nodeTemplate.getName().contains(instanceName)) {
-                    toscaNodeTemplates.put(key, nodeTemplate);
-                } else if (!nodeTemplate.getName().contains(HYPHEN)) {
-                    toscaNodeTemplates.put(key, nodeTemplate);
-                }
-            });
-
-            serviceTemplate.getToscaTopologyTemplate().getNodeTemplates().clear();
-            serviceTemplate.getToscaTopologyTemplate().setNodeTemplates(toscaNodeTemplates);
-
-            toscaServiceTemplates.add(serviceTemplate);
-        });
-
-        return toscaServiceTemplates;
-    }
-
-    /**
-     * Validates to see if there is any instance properties saved.
-     *
-     * @return true if exists instance properties
-     */
-    private boolean verifyIfInstancePropertiesExists() {
-        return acProvider.getAllNodeTemplates().stream()
-                .anyMatch(nodeTemplate -> nodeTemplate.getKey().getName().contains(HYPHEN));
-
+    private boolean verifyIfDefinitionExists() {
+        return !acDefinitionProvider.getAllServiceTemplates().isEmpty();
     }
 }

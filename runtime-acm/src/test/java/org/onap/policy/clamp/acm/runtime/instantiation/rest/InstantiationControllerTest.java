@@ -27,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVICE_TEMPLATE_YAML;
 
+import java.util.UUID;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.Response;
@@ -44,8 +45,8 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationCommand;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse;
+import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
-import org.onap.policy.clamp.models.acm.persistence.provider.ServiceTemplateProvider;
 import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionRepository;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
@@ -65,9 +66,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ActiveProfiles("test")
 class InstantiationControllerTest extends CommonRestController {
 
-    private static final String ID_NAME = "PMSH_Test_Instance";
-    private static final String ID_VERSION = "1.2.3";
-
     private static final String AC_INSTANTIATION_CREATE_JSON =
         "src/test/resources/rest/acm/AutomationCompositions.json";
 
@@ -80,12 +78,13 @@ class InstantiationControllerTest extends CommonRestController {
     private static final String INSTANTIATION_COMMAND_ENDPOINT = "instantiation/command";
 
     private static ToscaServiceTemplate serviceTemplate = new ToscaServiceTemplate();
+    private UUID compositionId;
 
     @Autowired
     private AutomationCompositionRepository automationCompositionRepository;
 
     @Autowired
-    private ServiceTemplateProvider serviceTemplateProvider;
+    private AcDefinitionProvider acDefinitionProvider;
 
     @Autowired
     private AutomationCompositionInstantiationProvider instantiationProvider;
@@ -347,14 +346,15 @@ class InstantiationControllerTest extends CommonRestController {
 
     private synchronized void deleteEntryInDB() throws Exception {
         automationCompositionRepository.deleteAll();
-        var list = serviceTemplateProvider.getAllServiceTemplates();
+        var list = acDefinitionProvider.getAllServiceTemplates();
         if (!list.isEmpty()) {
-            serviceTemplateProvider.deleteServiceTemplate(list.get(0).getName(), list.get(0).getVersion());
+            acDefinitionProvider.deleteAcDefintion(compositionId);
         }
     }
 
     private synchronized void createEntryInDB() throws Exception {
         deleteEntryInDB();
-        serviceTemplateProvider.createServiceTemplate(serviceTemplate);
+        var acmDefinition = acDefinitionProvider.createAutomationCompositionDefinition(serviceTemplate);
+        compositionId = acmDefinition.getCompositionId();
     }
 }
