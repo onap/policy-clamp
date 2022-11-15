@@ -20,17 +20,15 @@
 
 package org.onap.policy.clamp.models.acm.persistence.provider;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.UUID;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import lombok.RequiredArgsConstructor;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
+import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationCompositionDefinition;
+import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionDefinitionRepository;
 import org.onap.policy.clamp.models.acm.persistence.repository.ToscaServiceTemplateRepository;
-import org.onap.policy.models.base.PfConceptKey;
-import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeType;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaProperty;
+import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
 import org.springframework.stereotype.Service;
@@ -42,71 +40,79 @@ import org.springframework.transaction.annotation.Transactional;
 public class ServiceTemplateProvider {
 
     private final ToscaServiceTemplateRepository serviceTemplateRepository;
+    private final AutomationCompositionDefinitionRepository acmDefinitionRepository;
 
     /**
-     * Create service template.
+     * Create Automation Composition Definition.
      *
      * @param serviceTemplate the service template to be created
-     * @return the created service template
-     * @throws PfModelException on errors creating the service template
+     * @return the created ACM Definition
      */
-    public ToscaServiceTemplate createServiceTemplate(final ToscaServiceTemplate serviceTemplate)
-            throws PfModelException {
-        try {
-            var result = serviceTemplateRepository.save(ProviderUtils.getJpaAndValidate(serviceTemplate,
-                    JpaToscaServiceTemplate::new, "toscaServiceTemplate"));
-            return result.toAuthorative();
-        } catch (IllegalArgumentException e) {
-            throw new PfModelException(Status.BAD_REQUEST, "Error in save serviceTemplate", e);
-        }
+    public AutomationCompositionDefinition createAutomationCompositionDefinition(
+            final ToscaServiceTemplate serviceTemplate) {
+        var acmDefinition = new AutomationCompositionDefinition();
+        acmDefinition.setCompositionId(UUID.randomUUID());
+        acmDefinition.setServiceTemplate(serviceTemplate);
+        var result = acmDefinitionRepository.save(new JpaAutomationCompositionDefinition(acmDefinition));
+        return result.toAuthorative();
+    }
+
+    /**
+     * Update the ServiceTemplate.
+     *
+     * @param compositionId The UUID of the automation composition definition to delete
+     * @param serviceTemplate the service template to be created
+     */
+    public void updateServiceTemplate(UUID compositionId, ToscaServiceTemplate serviceTemplate) {
+        var jpaServiceTemplate =
+                ProviderUtils.getJpaAndValidate(serviceTemplate, JpaToscaServiceTemplate::new, "toscaServiceTemplate");
+        serviceTemplateRepository.save(jpaServiceTemplate);
     }
 
     /**
      * Delete service template.
      *
-     * @param name the name of the service template to delete.
-     * @param version the version of the service template to delete.
+     * @param compositionId The UUID of the automation composition definition to delete
      * @return the TOSCA service template that was deleted
-     * @throws PfModelException on errors deleting policy types
      */
-    public ToscaServiceTemplate deleteServiceTemplate(final String name, final String version) throws PfModelException {
-        var serviceTemplateKey = new PfConceptKey(name, version);
-        var jpaDelete = serviceTemplateRepository.findById(serviceTemplateKey);
+    public ToscaServiceTemplate deleteServiceTemplate(UUID compositionId) {
+        var jpaDelete = acmDefinitionRepository.findById(compositionId.toString());
         if (jpaDelete.isEmpty()) {
-            String errorMessage = "delete of serviceTemplate \"" + serviceTemplateKey.getId()
-                    + "\" failed, serviceTemplate does not exist";
-            throw new PfModelException(Response.Status.BAD_REQUEST, errorMessage);
+            String errorMessage =
+                    "delete of serviceTemplate \"" + compositionId + "\" failed, serviceTemplate does not exist";
+            throw new PfModelRuntimeException(Response.Status.NOT_FOUND, errorMessage);
         }
-        serviceTemplateRepository.deleteById(serviceTemplateKey);
-        return jpaDelete.get().toAuthorative();
+
+        var item = jpaDelete.get().getServiceTemplate();
+        serviceTemplateRepository.deleteById(item.getKey());
+        acmDefinitionRepository.deleteById(compositionId.toString());
+        return item.toAuthorative();
     }
 
     /**
      * Get the requested automation composition definitions.
      *
-     * @param name the name of the definition to get, null for all definitions
-     * @param version the version of the definition to get, null for all definitions
-     * @return the automation composition definitions
-     * @throws PfModelException on errors getting automation composition definitions
+     * @param compositionId The UUID of the automation composition definition to delete
+     * @return the automation composition definition
      */
     @Transactional(readOnly = true)
-    public ToscaServiceTemplate getToscaServiceTemplate(String name, String version) throws PfModelException {
-        var serviceTemplateKey = new PfConceptKey(name, version);
-        var jpaServiceTemplates = serviceTemplateRepository.findById(serviceTemplateKey);
-        if (jpaServiceTemplates.isEmpty()) {
-            throw new PfModelException(Status.NOT_FOUND, "Automation composition definitions not found");
+    public ToscaServiceTemplate getToscaServiceTemplate(UUID compositionId) {
+        var jpaGet = acmDefinitionRepository.findById(compositionId.toString());
+        if (jpaGet.isEmpty()) {
+            String errorMessage =
+                    "Get serviceTemplate \"" + compositionId + "\" failed, serviceTemplate does not exist";
+            throw new PfModelRuntimeException(Response.Status.NOT_FOUND, errorMessage);
         }
-        return jpaServiceTemplates.get().toAuthorative();
+        return jpaGet.get().getServiceTemplate().toAuthorative();
     }
 
     /**
      * Get service templates.
      *
      * @return the topology templates found
-     * @throws PfModelException on errors getting service templates
      */
     @Transactional(readOnly = true)
-    public List<ToscaServiceTemplate> getAllServiceTemplates() throws PfModelException {
+    public List<ToscaServiceTemplate> getAllServiceTemplates() {
         var jpaList = serviceTemplateRepository.findAll();
         return ProviderUtils.asEntityList(jpaList);
     }
@@ -117,114 +123,10 @@ public class ServiceTemplateProvider {
      * @param name the name of the topology template to get, set to null to get all service templates
      * @param version the version of the service template to get, set to null to get all service templates
      * @return the topology templates found
-     * @throws PfModelException on errors getting service templates
      */
     @Transactional(readOnly = true)
-    public List<ToscaServiceTemplate> getServiceTemplateList(final String name, final String version)
-            throws PfModelException {
+    public List<ToscaServiceTemplate> getServiceTemplateList(final String name, final String version) {
         var jpaList = serviceTemplateRepository.getFiltered(JpaToscaServiceTemplate.class, name, version);
         return ProviderUtils.asEntityList(jpaList);
-    }
-
-    /**
-     * Get the initial node types with common or instance properties.
-     *
-     * @param fullNodeTypes map of all the node types in the specified template
-     * @param common boolean to indicate whether common or instance properties are required
-     * @return node types map that only has common properties
-     */
-    private Map<String, ToscaNodeType> getInitialNodeTypesMap(Map<String, ToscaNodeType> fullNodeTypes,
-            boolean common) {
-
-        var tempNodeTypesMap = new HashMap<String, ToscaNodeType>();
-
-        fullNodeTypes.forEach((key, nodeType) -> {
-            var tempToscaNodeType = new ToscaNodeType();
-            tempToscaNodeType.setName(key);
-
-            var resultantPropertyMap = findCommonOrInstancePropsInNodeTypes(nodeType, common);
-
-            if (!resultantPropertyMap.isEmpty()) {
-                tempToscaNodeType.setProperties(resultantPropertyMap);
-                tempNodeTypesMap.put(key, tempToscaNodeType);
-            }
-        });
-        return tempNodeTypesMap;
-    }
-
-    private Map<String, ToscaProperty> findCommonOrInstancePropsInNodeTypes(ToscaNodeType nodeType, boolean common) {
-
-        var tempCommonPropertyMap = new HashMap<String, ToscaProperty>();
-        var tempInstancePropertyMap = new HashMap<String, ToscaProperty>();
-
-        nodeType.getProperties().forEach((propKey, prop) -> {
-
-            if (prop.getMetadata() != null) {
-                prop.getMetadata().forEach((k, v) -> {
-                    if (k.equals("common") && v.equals("true") && common) {
-                        tempCommonPropertyMap.put(propKey, prop);
-                    } else if (k.equals("common") && v.equals("false") && !common) {
-                        tempInstancePropertyMap.put(propKey, prop);
-                    }
-
-                });
-            } else {
-                tempInstancePropertyMap.put(propKey, prop);
-            }
-        });
-
-        if (tempCommonPropertyMap.isEmpty() && !common) {
-            return tempInstancePropertyMap;
-        } else {
-            return tempCommonPropertyMap;
-        }
-    }
-
-    /**
-     * Get the node types derived from those that have common properties.
-     *
-     * @param initialNodeTypes map of all the node types in the specified template
-     * @param filteredNodeTypes map of all the node types that have common or instance properties
-     * @return all node types that have common properties including their children
-     * @throws PfModelException on errors getting node type with common properties
-     */
-    private Map<String, ToscaNodeType> getFinalNodeTypesMap(Map<String, ToscaNodeType> initialNodeTypes,
-            Map<String, ToscaNodeType> filteredNodeTypes) {
-        for (var i = 0; i < initialNodeTypes.size(); i++) {
-            initialNodeTypes.forEach((key, nodeType) -> {
-                var tempToscaNodeType = new ToscaNodeType();
-                tempToscaNodeType.setName(key);
-
-                if (filteredNodeTypes.get(nodeType.getDerivedFrom()) != null) {
-                    tempToscaNodeType.setName(key);
-
-                    var finalProps = new HashMap<String, ToscaProperty>(
-                            filteredNodeTypes.get(nodeType.getDerivedFrom()).getProperties());
-
-                    tempToscaNodeType.setProperties(finalProps);
-                } else {
-                    return;
-                }
-                filteredNodeTypes.putIfAbsent(key, tempToscaNodeType);
-
-            });
-        }
-        return filteredNodeTypes;
-    }
-
-    /**
-     * Get the requested node types with common or instance properties.
-     *
-     * @param common boolean indicating common or instance properties
-     * @param serviceTemplate the ToscaServiceTemplate
-     * @return the node types with common or instance properties
-     * @throws PfModelException on errors getting node type properties
-     */
-    public Map<String, ToscaNodeType> getCommonOrInstancePropertiesFromNodeTypes(boolean common,
-            ToscaServiceTemplate serviceTemplate) throws PfModelException {
-        var tempNodeTypesMap = this.getInitialNodeTypesMap(serviceTemplate.getNodeTypes(), common);
-
-        return this.getFinalNodeTypesMap(serviceTemplate.getNodeTypes(), tempNodeTypesMap);
-
     }
 }

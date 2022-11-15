@@ -27,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVICE_TEMPLATE_YAML;
 
+import java.util.UUID;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.Response;
@@ -65,9 +66,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ActiveProfiles("test")
 class InstantiationControllerTest extends CommonRestController {
 
-    private static final String ID_NAME = "PMSH_Test_Instance";
-    private static final String ID_VERSION = "1.2.3";
-
     private static final String AC_INSTANTIATION_CREATE_JSON =
         "src/test/resources/rest/acm/AutomationCompositions.json";
 
@@ -80,6 +78,7 @@ class InstantiationControllerTest extends CommonRestController {
     private static final String INSTANTIATION_COMMAND_ENDPOINT = "instantiation/command";
 
     private static ToscaServiceTemplate serviceTemplate = new ToscaServiceTemplate();
+    private UUID compositionId;
 
     @Autowired
     private AutomationCompositionRepository automationCompositionRepository;
@@ -349,12 +348,13 @@ class InstantiationControllerTest extends CommonRestController {
         automationCompositionRepository.deleteAll();
         var list = serviceTemplateProvider.getAllServiceTemplates();
         if (!list.isEmpty()) {
-            serviceTemplateProvider.deleteServiceTemplate(list.get(0).getName(), list.get(0).getVersion());
+            serviceTemplateProvider.deleteServiceTemplate(compositionId);
         }
     }
 
     private synchronized void createEntryInDB() throws Exception {
         deleteEntryInDB();
-        serviceTemplateProvider.createServiceTemplate(serviceTemplate);
+        var acmDefinition = serviceTemplateProvider.createAutomationCompositionDefinition(serviceTemplate);
+        compositionId = acmDefinition.getCompositionId();
     }
 }

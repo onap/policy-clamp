@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021 Nordix Foundation.
+ * Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,10 +51,9 @@ public class ParticipantProvider {
      * @param name the name of the participant to get, null to get all participants
      * @param version the version of the participant to get, null to get all participants
      * @return the participants found
-     * @throws PfModelException on errors getting participants
      */
     @Transactional(readOnly = true)
-    public List<Participant> getParticipants(final String name, final String version) throws PfModelException {
+    public List<Participant> getParticipants(final String name, final String version) {
 
         return ProviderUtils.asEntityList(participantRepository.getFiltered(JpaParticipant.class, name, version));
     }
@@ -63,10 +62,9 @@ public class ParticipantProvider {
      * Get all participants.
      *
      * @return the participants found
-     * @throws PfModelException on errors getting policies
      */
     @Transactional(readOnly = true)
-    public List<Participant> getParticipants() throws PfModelException {
+    public List<Participant> getParticipants() {
         return ProviderUtils.asEntityList(participantRepository.findAll());
     }
 
@@ -93,11 +91,9 @@ public class ParticipantProvider {
      *
      * @param filter the filter for the participants to get
      * @return the participants found
-     * @throws PfModelException on errors getting policies
      */
     @Transactional(readOnly = true)
-    public List<Participant> getFilteredParticipants(@NonNull final ToscaTypedEntityFilter<Participant> filter)
-            throws PfModelException {
+    public List<Participant> getFilteredParticipants(@NonNull final ToscaTypedEntityFilter<Participant> filter) {
 
         return filter.filter(ProviderUtils.asEntityList(
                 participantRepository.getFiltered(JpaParticipant.class, filter.getName(), filter.getVersion())));
