@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8693a2bb_2cb5f66f",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/persistence/provider/ServiceTemplateProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2022-11-16T18:05:34Z",
+      "side": 1,
+      "message": "Should we handle the case where multiple automation compositions are included in a single service template?",
+      "range": {
+        "startLine": 56,
+        "startChar": 45,
+        "endLine": 56,
+        "endChar": 49
+      },
+      "revId": "c05d8ffd7bdd5115f4309a2f0e3305b621edf18e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b06130a0_d95f1fc0",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/commissioning/CommissioningProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2022-11-16T18:05:34Z",
+      "side": 1,
+      "message": "\u0027create\u0027 typo",
+      "range": {
+        "startLine": 75,
+        "startChar": 34,
+        "endLine": 75,
+        "endChar": 60
+      },
+      "revId": "c05d8ffd7bdd5115f4309a2f0e3305b621edf18e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
