@@ -18,13 +18,14 @@
 
 package org.onap.policy.clamp.acm.participant.kubernetes.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
+import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.participant.kubernetes.exception.ServiceException;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartInfo;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartList;
@@ -35,7 +36,6 @@ import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -51,15 +51,15 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+@RequiredArgsConstructor
 @RestController("chartController")
 @ConditionalOnExpression("${chart.api.enabled:false}")
 @RequestMapping("helm")
-@Api(tags = {"k8s-participant"})
+@Tag(name = "k8s-participant")
 public class ChartController {
     private final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    @Autowired
-    private ChartService chartService;
+    private final ChartService chartService;
 
     private static final StandardCoder CODER = new StandardCoder();
 
@@ -69,8 +69,8 @@ public class ChartController {
      * @return List of charts installed
      */
     @GetMapping(path = "/charts", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Return all Charts")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "chart List")})
+    @Operation(summary = "Return all Charts")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "chart List")})
     public ResponseEntity<ChartList> getAllCharts() {
         return new ResponseEntity<>(ChartList.builder().charts(new ArrayList<>(chartService.getAllCharts())).build(),
                 HttpStatus.OK);
@@ -86,9 +86,9 @@ public class ChartController {
      */
     @PostMapping(path = "/install", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Install the chart")
-    @ApiResponses(value = {@ApiResponse(code = 201, message = "chart Installed")})
-    public ResponseEntity<Object> installChart(@RequestBody InstallationInfo info)
+    @Operation(summary = "Install the chart")
+    @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "chart Installed")})
+    public ResponseEntity<Void> installChart(@RequestBody InstallationInfo info)
             throws ServiceException, IOException {
         ChartInfo chart = chartService.getChart(info.getName(), info.getVersion());
         if (chart == null) {
@@ -108,9 +108,9 @@ public class ChartController {
      * @throws ServiceException in case of error.
      */
     @DeleteMapping(path = "/uninstall/{name}/{version}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Uninstall the Chart")
-    @ApiResponses(value = {@ApiResponse(code = 201, message = "chart Uninstalled")})
-    public ResponseEntity<Object> uninstallChart(@PathVariable("name") String name,
+    @Operation(summary = "Uninstall the Chart")
+    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "chart Uninstalled")})
+    public ResponseEntity<Void> uninstallChart(@PathVariable("name") String name,
             @PathVariable("version") String version) throws ServiceException {
         ChartInfo chart = chartService.getChart(name, version);
         if (chart == null) {
@@ -133,9 +133,9 @@ public class ChartController {
      */
     @PostMapping(path = "/onboard/chart", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Onboard the Chart")
-    @ApiResponses(value = {@ApiResponse(code = 201, message = "Chart Onboarded")})
-    public ResponseEntity<String> onboardChart(@RequestPart("chart") MultipartFile chartFile,
+    @Operation(summary = "Onboard the Chart")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Chart Onboarded")})
+    public ResponseEntity<Void> onboardChart(@RequestPart("chart") MultipartFile chartFile,
             @RequestParam(name = "values", required = false) MultipartFile overrideFile,
             @RequestParam("info") String infoJson) throws ServiceException, IOException {
 
@@ -158,9 +158,9 @@ public class ChartController {
      * @return Status of operation
      */
     @DeleteMapping(path = "/chart/{name}/{version}")
-    @ApiOperation(value = "Delete the chart")
-    @ApiResponses(value = {@ApiResponse(code = 204, message = "Chart Deleted")})
-    public ResponseEntity<Object> deleteChart(@PathVariable("name") String name,
+    @Operation(summary = "Delete the chart")
+    @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Chart Deleted")})
+    public ResponseEntity<Void> deleteChart(@PathVariable("name") String name,
             @PathVariable("version") String version) {
 
         ChartInfo chart = chartService.getChart(name, version);
@@ -182,10 +182,10 @@ public class ChartController {
      */
     @PostMapping(path = "/repo", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Configure helm repository")
-    @ApiResponses(value = {@ApiResponse(code = 201, message = "Repository added"),
-                           @ApiResponse(code = 409, message = "Repository already Exist")})
-    public ResponseEntity<Object> configureRepo(@RequestBody String repo)
+    @ApiResponses(
+            value = {@ApiResponse(responseCode = "201", description = "Repository added"),
+                @ApiResponse(responseCode = "409", description = "Repository already Exist")})
+    public ResponseEntity<String> configureRepo(@RequestBody String repo)
             throws ServiceException, IOException {
         HelmRepository repository;
         try {

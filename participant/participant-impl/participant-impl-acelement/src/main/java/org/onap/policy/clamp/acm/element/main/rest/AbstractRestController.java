@@ -20,13 +20,6 @@
 
 package org.onap.policy.clamp.acm.element.main.rest;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.BasicAuthDefinition;
-import io.swagger.annotations.Info;
-import io.swagger.annotations.SecurityDefinition;
-import io.swagger.annotations.SwaggerDefinition;
-import io.swagger.annotations.Tag;
-import java.net.HttpURLConnection;
 import javax.ws.rs.core.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -41,32 +34,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
             AbstractRestController.APPLICATION_YAML
         }
 )
-@Api(value = "AC Element API")
-@SwaggerDefinition(
-        info = @Info(
-                description = "AC Element",
-                version = "v1.0",
-                title = "AC Element"
-        ),
-        consumes = {MediaType.APPLICATION_JSON, AbstractRestController.APPLICATION_YAML},
-        produces = {MediaType.APPLICATION_JSON, AbstractRestController.APPLICATION_YAML},
-        schemes = {SwaggerDefinition.Scheme.HTTP, SwaggerDefinition.Scheme.HTTPS},
-        tags = {
-            @Tag(name = "acelement", description = "Ac element implementation")
-        },
-        securityDefinition = @SecurityDefinition(basicAuthDefinitions = {@BasicAuthDefinition(key = "basicAuth")})
-)
 // @formatter:on
 public abstract class AbstractRestController {
     public static final String APPLICATION_YAML = "application/yaml";
 
-    public static final String EXTENSION_NAME = "interface info";
-
     public static final String API_VERSION_NAME = "api-version";
-    public static final String API_VERSION = "1.0.0";
-
-    public static final String LAST_MOD_NAME = "last-mod-release";
-    public static final String LAST_MOD_RELEASE = "Dublin";
 
     public static final String VERSION_MINOR_NAME = "X-MinorVersion";
     public static final String VERSION_MINOR_DESCRIPTION =
@@ -83,14 +55,13 @@ public abstract class AbstractRestController {
     public static final String REQUEST_ID_NAME = "X-ONAP-RequestID";
     public static final String REQUEST_ID_HDR_DESCRIPTION = "Used to track REST transactions for logging purpose";
 
-    public static final String AUTHORIZATION_TYPE = "basicAuth";
-
-    public static final int AUTHENTICATION_ERROR_CODE = HttpURLConnection.HTTP_UNAUTHORIZED;
-    public static final int AUTHORIZATION_ERROR_CODE = HttpURLConnection.HTTP_FORBIDDEN;
-    public static final int SERVER_ERROR_CODE = HttpURLConnection.HTTP_INTERNAL_ERROR;
+    public static final String OK_CODE = "200";
+    public static final String CREATED_CODE = "201";
+    public static final String NO_CONTENT_CODE = "204";
+    public static final String AUTHENTICATION_ERROR_CODE = "401";
+    public static final String BAD_REQUEST_ERROR_CODE = "400";
 
     public static final String AUTHENTICATION_ERROR_MESSAGE = "Authentication Error";
-    public static final String AUTHORIZATION_ERROR_MESSAGE = "Authorization Error";
-    public static final String SERVER_ERROR_MESSAGE = "Internal Server Error";
-
+    public static final String BAD_REQUEST_ERROR_MESSAGE = "Bad request";
+    public static final String SERVER_OK_MESSAGE = "Success";
 }
