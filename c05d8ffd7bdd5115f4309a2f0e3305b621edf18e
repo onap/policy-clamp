@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "668c7f3e_718d842d",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/persistence/provider/ServiceTemplateProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2022-11-17T16:33:53Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "30121cfa_178f092b",
+      "range": {
+        "startLine": 56,
+        "startChar": 45,
+        "endLine": 56,
+        "endChar": 49
+      },
+      "revId": "c05d8ffd7bdd5115f4309a2f0e3305b621edf18e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b06130a0_d95f1fc0",
         "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/commissioning/CommissioningProvider.java",
         "patchSetId": 3
