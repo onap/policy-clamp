@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "30121cfa_178f092b",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/persistence/provider/ServiceTemplateProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2022-11-17T11:19:56Z",
+      "side": 1,
+      "message": "JpaAutomationCompositionDefinition is made to save the compositionId as a key related to a ServiceTemplate",
+      "parentUuid": "8693a2bb_2cb5f66f",
+      "range": {
+        "startLine": 56,
+        "startChar": 45,
+        "endLine": 56,
+        "endChar": 49
+      },
+      "revId": "c05d8ffd7bdd5115f4309a2f0e3305b621edf18e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b06130a0_d95f1fc0",
         "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/commissioning/CommissioningProvider.java",
         "patchSetId": 3
