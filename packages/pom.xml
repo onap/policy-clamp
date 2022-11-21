@@ -68,6 +68,7 @@
                 <docker.clamp-ac-pf-ppnt.dockerFile>PolicyParticipant-Suse.Dockerfile</docker.clamp-ac-pf-ppnt.dockerFile>
                 <docker.clamp-ac-k8s-ppnt.dockerFile>KubernetesParticipant-Suse.Dockerfile</docker.clamp-ac-k8s-ppnt.dockerFile>
                 <docker.clamp-ac-http-ppnt.dockerFile>HttpParticipant-Suse.Dockerfile</docker.clamp-ac-http-ppnt.dockerFile>
+                <docker.clamp-ac-a1pms-ppnt.dockerFile>A1pmsParticipant-Suse.Dockerfile</docker.clamp-ac-a1pms-ppnt.dockerFile>
                 <docker.clamp-acm-element-impl.dockerFile>ElementParticipant-Suse.Dockerfile</docker.clamp-acm-element-impl.dockerFile>
             </properties>
         </profile>
