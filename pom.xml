@@ -49,6 +49,7 @@
             o policy-clamp-participant-impl-policy: A standard participant for handling polcies for Policy Framework
             o policy-clamp-acm-element-impl: ACM element implementation for integration testing
             o policy-clamp-participant-impl-http: A standard participant for http configurations
+            o policy-clamp-participant-impl-a1: A standard participant for A1PMS configurations
     </description>
 
     <properties>
