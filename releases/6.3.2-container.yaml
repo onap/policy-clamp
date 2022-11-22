@@ -1,0 +1,16 @@
+distribution_type: 'container'
+container_release_tag: '6.3.2'
+project: 'policy-clamp'
+log_dir: 'policy-clamp-maven-docker-stage-kohn/30'
+ref: 737ab4ffb2c304d0197854332bc84b90bec12df6
+containers:
+    - name: 'policy-clamp-ac-pf-ppnt'
+      version: '6.3.2-20221122T1824'
+    - name: 'policy-clamp-ac-k8s-ppnt'
+      version: '6.3.2-20221122T1824'
+    - name: 'policy-clamp-ac-http-ppnt'
+      version: '6.3.2-20221122T1824'
+    - name: 'policy-clamp-runtime-acm'
+      version: '6.3.2-20221122T1824'
+    - name: 'policy-clamp-acm-element-impl'
+      version: '6.3.2-20221122T1824'
