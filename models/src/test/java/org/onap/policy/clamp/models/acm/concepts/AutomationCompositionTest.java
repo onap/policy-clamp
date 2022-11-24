@@ -30,16 +30,12 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import java.util.LinkedHashMap;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
-import org.onap.policy.models.base.PfKey;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class AutomationCompositionTest {
     @Test
     void testAutomationComposition() {
         var ac0 = new AutomationComposition();
-        ac0.setDefinition(new ToscaConceptIdentifier("dfName", "1.2.3"));
-        assertEquals("dfName", ac0.getType());
-        assertEquals("1.2.3", ac0.getTypeVersion());
+        ac0.setCompositionId(UUID.randomUUID());
 
         var ac1 = new AutomationComposition(ac0);
         assertEquals(ac0, ac1);
@@ -60,7 +56,7 @@ class AutomationCompositionTest {
 
         var ac1 = new AutomationComposition();
 
-        ac1.setDefinition(new ToscaConceptIdentifier("defName", "0.0.1"));
+        ac1.setCompositionId(UUID.randomUUID());
         ac1.setDescription("Description");
         ac1.setElements(new LinkedHashMap<>());
         ac1.setName("Name");
@@ -79,7 +75,7 @@ class AutomationCompositionTest {
         ac2.setElements(new LinkedHashMap<>());
 
         // @formatter:off
-        assertThatThrownBy(() -> ac2.setDefinition(null)).  isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> ac2.setCompositionId(null)).  isInstanceOf(NullPointerException.class);
         assertThatThrownBy(() -> ac2.setOrderedState(null)).isInstanceOf(NullPointerException.class);
         assertThatThrownBy(() -> ac2.setState(null)).       isInstanceOf(NullPointerException.class);
         // @formatter:on
@@ -97,18 +93,5 @@ class AutomationCompositionTest {
 
         assertNull(ac0.getElements().get(UUID.randomUUID()));
         assertNull(ac1.getElements().get(UUID.randomUUID()));
-
-        assertEquals(PfKey.NULL_KEY_NAME, ac0.getDefinition().getName());
-
-    }
-
-    private AutomationCompositionElement getAutomationCompositionElementTest(UUID uuid, ToscaConceptIdentifier id) {
-        var acElement = new AutomationCompositionElement();
-        acElement.setId(uuid);
-        acElement.setParticipantId(id);
-        acElement.setDefinition(id);
-        acElement.setOrderedState(AutomationCompositionOrderedState.UNINITIALISED);
-
-        return acElement;
     }
 }

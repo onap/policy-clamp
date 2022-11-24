@@ -32,11 +32,14 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NonNull;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
-import org.onap.policy.clamp.models.acm.persistence.provider.ProviderUtils;
+import org.onap.policy.clamp.models.acm.utils.AcmUtils;
+import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.common.parameters.annotations.NotNull;
 import org.onap.policy.common.parameters.annotations.Valid;
 import org.onap.policy.models.base.PfAuthorative;
+import org.onap.policy.models.base.Validated;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
 
 /**
@@ -47,7 +50,8 @@ import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class JpaAutomationCompositionDefinition implements PfAuthorative<AutomationCompositionDefinition> {
+public class JpaAutomationCompositionDefinition extends Validated
+        implements PfAuthorative<AutomationCompositionDefinition> {
 
     @Id
     @NotNull
@@ -69,9 +73,7 @@ public class JpaAutomationCompositionDefinition implements PfAuthorative<Automat
     @Override
     public void fromAuthorative(final AutomationCompositionDefinition copyConcept) {
         compositionId = copyConcept.getCompositionId().toString();
-        serviceTemplate = ProviderUtils.getJpaAndValidate(copyConcept.getServiceTemplate(),
-                JpaToscaServiceTemplate::new, "toscaServiceTemplate");
-
+        serviceTemplate = new JpaToscaServiceTemplate(copyConcept.getServiceTemplate());
     }
 
     public JpaAutomationCompositionDefinition(final AutomationCompositionDefinition acmDefinition) {
@@ -82,4 +84,16 @@ public class JpaAutomationCompositionDefinition implements PfAuthorative<Automat
         super();
     }
 
+    @Override
+    public BeanValidationResult validate(@NonNull String fieldName) {
+        var result = super.validate(fieldName);
+
+        AcmUtils.validateToscaTopologyTemplate(result, serviceTemplate);
+
+        if (!result.isValid()) {
+            return result;
+        }
+
+        return result;
+    }
 }

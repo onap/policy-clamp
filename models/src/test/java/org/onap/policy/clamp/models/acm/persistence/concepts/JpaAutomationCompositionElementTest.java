@@ -136,10 +136,10 @@ class JpaAutomationCompositionElementTest {
 
     @Test
     void testJpaAutomationCompositionElement() {
-        JpaAutomationCompositionElement testJpaAutomationCompositionElement =
+        var testJpaAutomationCompositionElement =
             createJpaAutomationCompositionElementInstance();
 
-        AutomationCompositionElement ace = createAutomationCompositionElementInstance();
+        var ace = createAutomationCompositionElementInstance();
         assertEquals(ace, testJpaAutomationCompositionElement.toAuthorative());
 
         assertThatThrownBy(() -> {
@@ -149,7 +149,7 @@ class JpaAutomationCompositionElementTest {
         assertThatThrownBy(() -> new JpaAutomationCompositionElement((JpaAutomationCompositionElement) null))
             .isInstanceOf(NullPointerException.class);
 
-        JpaAutomationCompositionElement testJpaAutomationCompositionElementFa = new JpaAutomationCompositionElement();
+        var testJpaAutomationCompositionElementFa = new JpaAutomationCompositionElement();
         testJpaAutomationCompositionElementFa.setKey(null);
         testJpaAutomationCompositionElementFa.fromAuthorative(ace);
         assertEquals(testJpaAutomationCompositionElement, testJpaAutomationCompositionElementFa);
@@ -177,26 +177,26 @@ class JpaAutomationCompositionElementTest {
         testJpaAutomationCompositionElement.clean();
         assertEquals("A Message", testJpaAutomationCompositionElement.getDescription());
 
-        JpaAutomationCompositionElement testJpaAutomationCompositionElement2 =
+        var testJpaAutomationCompositionElement2 =
             new JpaAutomationCompositionElement(testJpaAutomationCompositionElement);
         assertEquals(testJpaAutomationCompositionElement, testJpaAutomationCompositionElement2);
     }
 
     @Test
     void testJpaAutomationCompositionElementOrderedState() throws CoderException {
-        AutomationCompositionElement testAutomationCompositionElement = createAutomationCompositionElementInstance();
-        JpaAutomationCompositionElement testJpaAutomationCompositionElement =
+        var testAutomationCompositionElement = createAutomationCompositionElementInstance();
+        var testJpaAutomationCompositionElement =
             createJpaAutomationCompositionElementInstance();
 
         testJpaAutomationCompositionElement.setOrderedState(null);
         assertEquals(testAutomationCompositionElement, testJpaAutomationCompositionElement.toAuthorative());
         testJpaAutomationCompositionElement.setOrderedState(AutomationCompositionOrderedState.UNINITIALISED);
 
-        AutomationCompositionElement noOrderedStateAce = new StandardCoder().decode(
+        var noOrderedStateAce = new StandardCoder().decode(
             new File("src/test/resources/json/AutomationCompositionElementNoOrderedState.json"),
             AutomationCompositionElement.class);
 
-        JpaAutomationCompositionElement noOrderedStateJpaAce = new JpaAutomationCompositionElement(noOrderedStateAce);
+        var noOrderedStateJpaAce = new JpaAutomationCompositionElement(noOrderedStateAce);
         assertNull(noOrderedStateJpaAce.getOrderedState());
         noOrderedStateAce.setOrderedState(AutomationCompositionOrderedState.UNINITIALISED);
         noOrderedStateJpaAce = new JpaAutomationCompositionElement(noOrderedStateAce);
@@ -205,7 +205,7 @@ class JpaAutomationCompositionElementTest {
 
     @Test
     void testJpaAutomationCompositionElementValidation() {
-        JpaAutomationCompositionElement testJpaAutomationCompositionElement =
+        var testJpaAutomationCompositionElement =
             createJpaAutomationCompositionElementInstance();
 
         assertThatThrownBy(() -> testJpaAutomationCompositionElement.validate(null))
@@ -216,10 +216,10 @@ class JpaAutomationCompositionElementTest {
 
     @Test
     void testJpaAutomationCompositionElementCompareTo() {
-        JpaAutomationCompositionElement testJpaAutomationCompositionElement =
+        var testJpaAutomationCompositionElement =
             createJpaAutomationCompositionElementInstance();
 
-        JpaAutomationCompositionElement otherJpaAutomationCompositionElement =
+        var otherJpaAutomationCompositionElement =
             new JpaAutomationCompositionElement(testJpaAutomationCompositionElement);
         assertEquals(0, testJpaAutomationCompositionElement.compareTo(otherJpaAutomationCompositionElement));
         assertEquals(-1, testJpaAutomationCompositionElement.compareTo(null));
@@ -266,14 +266,14 @@ class JpaAutomationCompositionElementTest {
     @Test
     void testJpaAutomationCompositionElementLombok() {
         assertNotNull(new Participant());
-        JpaAutomationCompositionElement ace0 = new JpaAutomationCompositionElement();
+        var ace0 = new JpaAutomationCompositionElement();
 
         assertThat(ace0.toString()).contains("JpaAutomationCompositionElement(");
         assertThat(ace0.hashCode()).isNotZero();
         assertEquals(ace0, ace0);
         assertNotEquals(null, ace0);
 
-        JpaAutomationCompositionElement ace1 = new JpaAutomationCompositionElement();
+        var ace1 = new JpaAutomationCompositionElement();
 
         ace1.setDefinition(new PfConceptKey("defName", "0.0.1"));
         ace1.setDescription("Description");
@@ -288,13 +288,13 @@ class JpaAutomationCompositionElementTest {
 
         assertNotEquals(ace1, ace0);
 
-        JpaAutomationCompositionElement ace2 = new JpaAutomationCompositionElement();
+        var ace2 = new JpaAutomationCompositionElement();
         assertEquals(ace2, ace0);
     }
 
     private JpaAutomationCompositionElement createJpaAutomationCompositionElementInstance() {
-        AutomationCompositionElement testAce = createAutomationCompositionElementInstance();
-        JpaAutomationCompositionElement testJpaAutomationCompositionElement = new JpaAutomationCompositionElement();
+        var testAce = createAutomationCompositionElementInstance();
+        var testJpaAutomationCompositionElement = new JpaAutomationCompositionElement();
         testJpaAutomationCompositionElement.setKey(null);
         testJpaAutomationCompositionElement.fromAuthorative(testAce);
         testJpaAutomationCompositionElement.setKey(PfReferenceKey.getNullKey());
@@ -304,7 +304,7 @@ class JpaAutomationCompositionElementTest {
     }
 
     private AutomationCompositionElement createAutomationCompositionElementInstance() {
-        AutomationCompositionElement automationCompositionElement = new AutomationCompositionElement();
+        var automationCompositionElement = new AutomationCompositionElement();
         automationCompositionElement.setId(UUID.fromString("a95757ba-b34a-4049-a2a8-46773abcbe5e"));
         automationCompositionElement.setDefinition(new ToscaConceptIdentifier("aceDef", "0.0.1"));
         automationCompositionElement.setParticipantType(new ToscaConceptIdentifier("participantType", "0.0.1"));

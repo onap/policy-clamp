@@ -43,8 +43,8 @@ class ParticipantIntermediaryApiImplTest {
     private static final String ID_NAME = "org.onap.PM_CDS_Blueprint";
     private static final String ID_VERSION = "1.0.1";
 
-    private static final String ID_NAME_E = "org.onap.domain.pmsh.PMSHAutomationCompositionDefinition";
-    private static final String ID_VERSION_E = "1.0.0";
+    private static final String ID_NAME_E = "PMSHInstance1";
+    private static final String ID_VERSION_E = "1.0.1";
 
     private static final String ID_NAME_TYPE = "org.onap.dcae.acm.DCAEMicroserviceAutomationCompositionParticipant";
     private static final String ID_VERSION_TYPE = "2.3.4";

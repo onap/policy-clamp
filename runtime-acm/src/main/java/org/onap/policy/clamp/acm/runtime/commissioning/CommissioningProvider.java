@@ -21,13 +21,11 @@
 
 package org.onap.policy.clamp.acm.runtime.commissioning;
 
-import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.Response.Status;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionHandler;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
-import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.CommissioningResponse;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
@@ -118,7 +116,7 @@ public class CommissioningProvider {
      */
     public CommissioningResponse updateCompositionDefinition(UUID compositionId, ToscaServiceTemplate serviceTemplate) {
 
-        var automationCompositions = acProvider.getAutomationCompositions();
+        var automationCompositions = acProvider.getAcInstancesByCompositionId(compositionId);
         var result = new BeanValidationResult("AutomationCompositions", automationCompositions);
         for (var automationComposition : automationCompositions) {
             if (!AutomationCompositionState.UNINITIALISED.equals(automationComposition.getState())) {
@@ -145,11 +143,11 @@ public class CommissioningProvider {
      */
     public CommissioningResponse deleteAutomationCompositionDefinition(UUID compositionId) {
 
-        if (verifyIfInstanceExists()) {
+        if (verifyIfInstanceExists(compositionId)) {
             throw new PfModelRuntimeException(Status.BAD_REQUEST,
                     "Delete instances, to commission automation composition definitions");
         }
-        List<Participant> participantList = participantProvider.getParticipants();
+        var participantList = participantProvider.getParticipants();
         if (!participantList.isEmpty()) {
             supervisionHandler.handleSendDeCommissionMessage();
         }
@@ -190,8 +188,8 @@ public class CommissioningProvider {
      *
      * @return true if exists instance
      */
-    private boolean verifyIfInstanceExists() {
-        return !acProvider.getAutomationCompositions().isEmpty();
+    private boolean verifyIfInstanceExists(UUID compositionId) {
+        return !acProvider.getAcInstancesByCompositionId(compositionId).isEmpty();
     }
 
     /**
@@ -200,6 +198,6 @@ public class CommissioningProvider {
      * @return true if exists instance
      */
     private boolean verifyIfDefinitionExists() {
-        return !acDefinitionProvider.getAllServiceTemplates().isEmpty();
+        return !acDefinitionProvider.getAllAcDefinitions().isEmpty();
     }
 }

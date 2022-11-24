@@ -126,17 +126,14 @@ public class AutomationCompositionInstantiationProvider {
     private BeanValidationResult validateAutomationCompositions(AutomationCompositions automationCompositions) {
 
         var result = new BeanValidationResult("AutomationCompositions", automationCompositions);
-        var serviceTemplates = acDefinitionProvider.getAllServiceTemplates();
-        if (serviceTemplates.isEmpty()) {
-            result.addResult(new ObjectValidationResult("ServiceTemplate", "", ValidationStatus.INVALID,
-                    "Commissioned automation composition definition not found"));
-            return result;
-        }
-
-        var serviceTemplate = acDefinitionProvider.getAllServiceTemplates().get(0);
-
         for (var automationComposition : automationCompositions.getAutomationCompositionList()) {
-            result.addResult(AcmUtils.validateAutomationComposition(automationComposition, serviceTemplate));
+            var serviceTemplate = acDefinitionProvider.findAcDefinition(automationComposition.getCompositionId());
+            if (serviceTemplate.isEmpty()) {
+                result.addResult(new ObjectValidationResult("ServiceTemplate", "", ValidationStatus.INVALID,
+                        "Commissioned automation composition definition not found"));
+            } else {
+                result.addResult(AcmUtils.validateAutomationComposition(automationComposition, serviceTemplate.get()));
+            }
         }
         return result;
     }

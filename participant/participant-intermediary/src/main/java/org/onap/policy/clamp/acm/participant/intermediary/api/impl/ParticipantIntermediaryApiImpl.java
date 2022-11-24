@@ -60,14 +60,14 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
      * @param automationCompositionHandler AutomationCompositionHandler
      */
     public ParticipantIntermediaryApiImpl(ParticipantHandler participantHandler,
-        AutomationCompositionHandler automationCompositionHandler) {
+            AutomationCompositionHandler automationCompositionHandler) {
         this.participantHandler = participantHandler;
         this.automationCompositionHandler = automationCompositionHandler;
     }
 
     @Override
     public void registerAutomationCompositionElementListener(
-        AutomationCompositionElementListener automationCompositionElementListener) {
+            AutomationCompositionElementListener automationCompositionElementListener) {
         automationCompositionHandler.registerAutomationCompositionElementListener(automationCompositionElementListener);
     }
 
@@ -93,11 +93,11 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
 
     @Override
     public Map<UUID, AutomationCompositionElement> getAutomationCompositionElements(String name, String version) {
-        List<AutomationComposition> automationCompositions =
-            automationCompositionHandler.getAutomationCompositions().getAutomationCompositionList();
+        var automationCompositions =
+                automationCompositionHandler.getAutomationCompositions().getAutomationCompositionList();
 
-        for (AutomationComposition automationComposition : automationCompositions) {
-            if (name.equals(automationComposition.getDefinition().getName())) {
+        for (var automationComposition : automationCompositions) {
+            if (name.equals(automationComposition.getName())) {
                 return automationComposition.getElements();
             }
         }
@@ -107,7 +107,7 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
     @Override
     public AutomationCompositionElement getAutomationCompositionElement(UUID id) {
         List<AutomationComposition> automationCompositions =
-            automationCompositionHandler.getAutomationCompositions().getAutomationCompositionList();
+                automationCompositionHandler.getAutomationCompositions().getAutomationCompositionList();
 
         for (AutomationComposition automationComposition : automationCompositions) {
             AutomationCompositionElement acElement = automationComposition.getElements().get(id);
@@ -120,9 +120,9 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
 
     @Override
     public AutomationCompositionElement updateAutomationCompositionElementState(
-        ToscaConceptIdentifier automationCompositionId, UUID id, AutomationCompositionOrderedState currentState,
-        AutomationCompositionState newState, ParticipantMessageType messageType) {
+            ToscaConceptIdentifier automationCompositionId, UUID id, AutomationCompositionOrderedState currentState,
+            AutomationCompositionState newState, ParticipantMessageType messageType) {
         return automationCompositionHandler.updateAutomationCompositionElementState(automationCompositionId, id,
-            currentState, newState);
+                currentState, newState);
     }
 }

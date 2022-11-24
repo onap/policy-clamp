@@ -48,6 +48,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaProperty;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
+import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
 
 /**
  * Utility functions used in acm-runtime and participants.
@@ -57,6 +58,8 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
 public final class AcmUtils {
 
     private static final String AUTOMATION_COMPOSITION_NODE_TYPE = "org.onap.policy.clamp.acm.AutomationComposition";
+    private static final String AC_NODE_TYPE_NOT_PRESENT =
+            "NodeTemplate with type " + AUTOMATION_COMPOSITION_NODE_TYPE + " must exist!";
     public static final String ENTRY = "entry ";
 
     /**
@@ -175,20 +178,19 @@ public final class AcmUtils {
      */
     public static BeanValidationResult validateAutomationComposition(AutomationComposition automationComposition,
             ToscaServiceTemplate serviceTemplate) {
-        var result = new BeanValidationResult(ENTRY + automationComposition.getDefinition().getName(),
-                automationComposition);
+        var result = new BeanValidationResult(ENTRY + automationComposition.getName(), automationComposition);
 
         var map = getMapToscaNodeTemplates(serviceTemplate);
 
-        var toscaNodeTemplate = map.get(new ToscaConceptIdentifier(automationComposition.getDefinition().getName(),
-                automationComposition.getDefinition().getVersion()));
+        var nodeTemplateGet = map.values().stream()
+                .filter(nodeTemplate -> AUTOMATION_COMPOSITION_NODE_TYPE.equals(nodeTemplate.getType())).findFirst();
 
-        if (toscaNodeTemplate == null || !AUTOMATION_COMPOSITION_NODE_TYPE.equals(toscaNodeTemplate.getType())) {
-            result.addResult(
-                    new ObjectValidationResult("AutomationComposition", automationComposition.getDefinition().getName(),
-                            ValidationStatus.INVALID, "Commissioned automation composition definition not found"));
+        if (nodeTemplateGet.isEmpty()) {
+            result.addResult(new ObjectValidationResult("ToscaServiceTemplate", serviceTemplate.getName(),
+                    ValidationStatus.INVALID, "Commissioned automation composition definition not consistent"));
         } else {
 
+            var toscaNodeTemplate = nodeTemplateGet.get();
             var acElementDefinitions = getAutomationCompositionElementDefinitions(map, toscaNodeTemplate);
 
             // @formatter:off
@@ -354,4 +356,32 @@ public final class AcmUtils {
 
         return getFinalNodeTypesMap(serviceTemplate.getNodeTypes(), tempNodeTypesMap);
     }
+
+    /**
+     * Validate ToscaTopologyTemplate.
+     *
+     * @param result
+     *
+     * @param serviceTemplate the ToscaServiceTemplate
+     */
+    public static void validateToscaTopologyTemplate(BeanValidationResult result,
+            JpaToscaServiceTemplate serviceTemplate) {
+        if (serviceTemplate.getTopologyTemplate() != null
+                && serviceTemplate.getTopologyTemplate().getNodeTemplates() != null) {
+            var nodeTemplates = serviceTemplate.getTopologyTemplate().getNodeTemplates();
+            var acNumber = nodeTemplates.getConceptMap().values().stream()
+                    .filter(nodeTemplate -> AUTOMATION_COMPOSITION_NODE_TYPE.equals(nodeTemplate.getType().getName()))
+                    .count();
+            if (acNumber == 0) {
+                result.addResult("TopologyTemplate", nodeTemplates, ValidationStatus.INVALID, AC_NODE_TYPE_NOT_PRESENT);
+            }
+            if (acNumber > 1) {
+                result.addResult("TopologyTemplate", nodeTemplates, ValidationStatus.INVALID, "NodeTemplate with type "
+                        + AUTOMATION_COMPOSITION_NODE_TYPE + " not allowed to be more than one!");
+            }
+        } else {
+            result.addResult("ServiceTemplate", serviceTemplate, ValidationStatus.INVALID, AC_NODE_TYPE_NOT_PRESENT);
+        }
+    }
+
 }

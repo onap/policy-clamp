@@ -30,6 +30,7 @@ import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVIC
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -40,7 +41,6 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationCommand;
-import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
@@ -67,15 +67,21 @@ class AutomationCompositionInstantiationProviderTest {
     private static final String ORDERED_STATE_INVALID = "ordered state invalid or not specified on command";
     private static final String AC_ELEMENT_NAME_NOT_FOUND =
             "\"AutomationCompositions\" INVALID, item has status INVALID\n"
-                    + " {2}\"entry org.onap.domain.pmsh.PMSHAutomationCompositionDefinition\" "
-                    + "INVALID, item has status INVALID\n"
-                    + " {4}\"entry org.onap.domain.pmsh.DCAEMicroservice\" INVALID, Not found\n"
-                    + " {2}\"entry org.onap.domain.pmsh.PMSHAutomationCompositionDefinition\" "
-                    + "INVALID, item has status INVALID\n"
-                    + " {4}\"entry org.onap.domain.pmsh.DCAEMicroservice\" INVALID, Not found\n";
+            + "  \"entry PMSHInstance0AcElementNotFound\" INVALID, item has status INVALID\n"
+            + "    \"entry org.onap.domain.pmsh.DCAEMicroservice\" INVALID, Not found\n"
+            + "    \"entry org.onap.domain.pmsh.PMSH_MonitoringPolicyAutomationCompositionElement\""
+            + " INVALID, Not found\n"
+            + "    \"entry org.onap.domain.pmsh.PMSH_CDS_AutomationCompositionElement\" INVALID, Not found\n"
+            + "  \"entry PMSHInstance1AcElementNotFound\" INVALID, item has status INVALID\n"
+            + "    \"entry org.onap.domain.pmsh.DCAEMicroservice\" INVALID, Not found\n"
+            + "    \"entry org.onap.domain.pmsh.PMSH_MonitoringPolicyAutomationCompositionElement\""
+            + " INVALID, Not found\n"
+            + "    \"entry org.onap.domain.pmsh.PMSH_CDS_AutomationCompositionElement\" INVALID, Not found\n";
 
     private static final String AC_DEFINITION_NOT_FOUND =
             "\"AutomationCompositions\" INVALID, item has status INVALID\n"
+                    + "  item \"ServiceTemplate\" value \"\" INVALID,"
+                    + " Commissioned automation composition definition not found\n"
                     + "  item \"ServiceTemplate\" value \"\" INVALID,"
                     + " Commissioned automation composition definition not found\n";
 
@@ -96,13 +102,17 @@ class AutomationCompositionInstantiationProviderTest {
         when(participantProvider.getParticipants()).thenReturn(participants);
 
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
-        when(acDefinitionProvider.getAllServiceTemplates()).thenReturn(List.of(serviceTemplate));
+        var compositionId = UUID.randomUUID();
+        when(acDefinitionProvider.findAcDefinition(compositionId)).thenReturn(Optional.of(serviceTemplate));
         var supervisionHandler = mock(SupervisionHandler.class);
         var acProvider = mock(AutomationCompositionProvider.class);
         var instantiationProvider = new AutomationCompositionInstantiationProvider(acProvider, supervisionHandler,
                 participantProvider, acDefinitionProvider);
         var automationCompositionsCreate =
                 InstantiationUtils.getAutomationCompositionsFromResource(AC_INSTANTIATION_CREATE_JSON, "Crud");
+        for (var automationComposition : automationCompositionsCreate.getAutomationCompositionList()) {
+            automationComposition.setCompositionId(compositionId);
+        }
         var instantiationResponse = instantiationProvider.createAutomationCompositions(automationCompositionsCreate);
         InstantiationUtils.assertInstantiationResponse(instantiationResponse, automationCompositionsCreate);
 
@@ -121,6 +131,9 @@ class AutomationCompositionInstantiationProviderTest {
 
         var automationCompositionsUpdate =
                 InstantiationUtils.getAutomationCompositionsFromResource(AC_INSTANTIATION_UPDATE_JSON, "Crud");
+        for (var automationComposition : automationCompositionsUpdate.getAutomationCompositionList()) {
+            automationComposition.setCompositionId(compositionId);
+        }
 
         instantiationResponse = instantiationProvider.updateAutomationCompositions(automationCompositionsUpdate);
         InstantiationUtils.assertInstantiationResponse(instantiationResponse, automationCompositionsUpdate);
@@ -217,10 +230,14 @@ class AutomationCompositionInstantiationProviderTest {
     @Test
     void testCreateAutomationCompositions_NoDuplicates() throws Exception {
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
-        when(acDefinitionProvider.getAllServiceTemplates()).thenReturn(List.of(serviceTemplate));
+        var compositionId = UUID.randomUUID();
+        when(acDefinitionProvider.findAcDefinition(compositionId)).thenReturn(Optional.of(serviceTemplate));
 
-        AutomationCompositions automationCompositionsCreate =
+        var automationCompositionsCreate =
                 InstantiationUtils.getAutomationCompositionsFromResource(AC_INSTANTIATION_CREATE_JSON, "NoDuplicates");
+        for (var automationComposition : automationCompositionsCreate.getAutomationCompositionList()) {
+            automationComposition.setCompositionId(compositionId);
+        }
 
         var acProvider = mock(AutomationCompositionProvider.class);
         var participantProvider = Mockito.mock(ParticipantProvider.class);
@@ -229,7 +246,7 @@ class AutomationCompositionInstantiationProviderTest {
         var instantiationProvider = new AutomationCompositionInstantiationProvider(acProvider, supervisionHandler,
                 participantProvider, acDefinitionProvider);
 
-        InstantiationResponse instantiationResponse =
+        var instantiationResponse =
                 instantiationProvider.createAutomationCompositions(automationCompositionsCreate);
         InstantiationUtils.assertInstantiationResponse(instantiationResponse, automationCompositionsCreate);
 
@@ -246,9 +263,13 @@ class AutomationCompositionInstantiationProviderTest {
     @Test
     void testCreateAutomationCompositions_CommissionedAcElementNotFound() throws Exception {
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
-        when(acDefinitionProvider.getAllServiceTemplates()).thenReturn(List.of(serviceTemplate));
-        AutomationCompositions automationCompositions = InstantiationUtils.getAutomationCompositionsFromResource(
+        var compositionId = UUID.randomUUID();
+        when(acDefinitionProvider.findAcDefinition(compositionId)).thenReturn(Optional.of(serviceTemplate));
+        var automationCompositions = InstantiationUtils.getAutomationCompositionsFromResource(
                 AC_INSTANTIATION_DEFINITION_NAME_NOT_FOUND_JSON, "AcElementNotFound");
+        for (var automationComposition : automationCompositions.getAutomationCompositionList()) {
+            automationComposition.setCompositionId(compositionId);
+        }
 
         var acProvider = mock(AutomationCompositionProvider.class);
         var participantProvider = mock(ParticipantProvider.class);

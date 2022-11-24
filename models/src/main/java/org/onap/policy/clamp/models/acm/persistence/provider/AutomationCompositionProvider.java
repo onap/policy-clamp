@@ -24,6 +24,7 @@ package org.onap.policy.clamp.models.acm.persistence.provider;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import javax.persistence.EntityNotFoundException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -32,13 +33,9 @@ import lombok.NonNull;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationComposition;
 import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionRepository;
-import org.onap.policy.clamp.models.acm.persistence.repository.ToscaNodeTemplateRepository;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaTypedEntityFilter;
-import org.onap.policy.models.tosca.simple.concepts.JpaToscaNodeTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,7 +48,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class AutomationCompositionProvider {
 
     private final AutomationCompositionRepository automationCompositionRepository;
-    private final ToscaNodeTemplateRepository toscaNodeTemplateRepository;
 
     /**
      * Get automation composition.
@@ -62,7 +58,7 @@ public class AutomationCompositionProvider {
      */
     @Transactional(readOnly = true)
     public AutomationComposition getAutomationComposition(final ToscaConceptIdentifier automationCompositionId)
-        throws PfModelException {
+            throws PfModelException {
         try {
             return automationCompositionRepository.getById(automationCompositionId.asConceptKey()).toAuthorative();
         } catch (EntityNotFoundException e) {
@@ -80,7 +76,7 @@ public class AutomationCompositionProvider {
      */
     @Transactional(readOnly = true)
     public Optional<AutomationComposition> findAutomationComposition(@NonNull final String name,
-        @NonNull final String version) throws PfModelException {
+            @NonNull final String version) throws PfModelException {
         return findAutomationComposition(new PfConceptKey(name, version));
     }
 
@@ -93,12 +89,12 @@ public class AutomationCompositionProvider {
      */
     @Transactional(readOnly = true)
     public Optional<AutomationComposition> findAutomationComposition(
-        final ToscaConceptIdentifier automationCompositionId) throws PfModelException {
+            final ToscaConceptIdentifier automationCompositionId) throws PfModelException {
         return findAutomationComposition(automationCompositionId.asConceptKey());
     }
 
     private Optional<AutomationComposition> findAutomationComposition(@NonNull final PfConceptKey key)
-        throws PfModelException {
+            throws PfModelException {
         try {
             return automationCompositionRepository.findById(key).map(JpaAutomationComposition::toAuthorative);
         } catch (IllegalArgumentException e) {
@@ -114,10 +110,10 @@ public class AutomationCompositionProvider {
      * @throws PfModelException on errors updating the automation composition
      */
     public AutomationComposition saveAutomationComposition(final AutomationComposition automationComposition)
-        throws PfModelException {
+            throws PfModelException {
         try {
             var result = automationCompositionRepository.save(ProviderUtils.getJpaAndValidate(automationComposition,
-                JpaAutomationComposition::new, "automation composition"));
+                    JpaAutomationComposition::new, "automation composition"));
 
             // Return the saved participant
             return result.toAuthorative();
@@ -127,14 +123,15 @@ public class AutomationCompositionProvider {
     }
 
     /**
-     * Get all automation compositions.
+     * Get all automation compositions by compositionId.
      *
+     * @param compositionId the compositionId of the automation composition definition
      * @return all automation compositions found
      */
     @Transactional(readOnly = true)
-    public List<AutomationComposition> getAutomationCompositions() {
-
-        return ProviderUtils.asEntityList(automationCompositionRepository.findAll());
+    public List<AutomationComposition> getAcInstancesByCompositionId(UUID compositionId) {
+        return ProviderUtils
+                .asEntityList(automationCompositionRepository.findByCompositionId(compositionId.toString()));
     }
 
     /**
@@ -147,8 +144,8 @@ public class AutomationCompositionProvider {
     @Transactional(readOnly = true)
     public List<AutomationComposition> getAutomationCompositions(final String name, final String version) {
 
-        return ProviderUtils
-            .asEntityList(automationCompositionRepository.getFiltered(JpaAutomationComposition.class, name, version));
+        return ProviderUtils.asEntityList(
+                automationCompositionRepository.getFiltered(JpaAutomationComposition.class, name, version));
     }
 
     /**
@@ -159,11 +156,11 @@ public class AutomationCompositionProvider {
      * @throws PfModelException on errors creating automation compositions
      */
     public List<AutomationComposition> saveAutomationCompositions(
-        @NonNull final List<AutomationComposition> automationCompositions) throws PfModelException {
+            @NonNull final List<AutomationComposition> automationCompositions) throws PfModelException {
         try {
             var result =
-                automationCompositionRepository.saveAll(ProviderUtils.getJpaAndValidateList(automationCompositions,
-                    JpaAutomationComposition::new, "automation compositions"));
+                    automationCompositionRepository.saveAll(ProviderUtils.getJpaAndValidateList(automationCompositions,
+                            JpaAutomationComposition::new, "automation compositions"));
 
             // Return the saved participant
             return ProviderUtils.asEntityList(result);
@@ -181,58 +178,19 @@ public class AutomationCompositionProvider {
      * @throws PfModelException on errors deleting the automation composition
      */
     public AutomationComposition deleteAutomationComposition(@NonNull final String name, @NonNull final String version)
-        throws PfModelException {
+            throws PfModelException {
 
         var automationCompositionKey = new PfConceptKey(name, version);
         var jpaDeleteAutomationComposition = automationCompositionRepository.findById(automationCompositionKey);
 
         if (jpaDeleteAutomationComposition.isEmpty()) {
             String errorMessage = "delete of automation composition \"" + automationCompositionKey.getId()
-                + "\" failed, automation composition does not exist";
+                    + "\" failed, automation composition does not exist";
             throw new PfModelException(Response.Status.NOT_FOUND, errorMessage);
         }
 
         automationCompositionRepository.deleteById(automationCompositionKey);
 
         return jpaDeleteAutomationComposition.get().toAuthorative();
-    }
-
-    /**
-     * Get All Node Templates.
-     *
-     * @return the list of node templates found
-     */
-    @Transactional(readOnly = true)
-    public List<ToscaNodeTemplate> getAllNodeTemplates() {
-        return ProviderUtils.asEntityList(toscaNodeTemplateRepository.findAll());
-    }
-
-    /**
-     * Get Node Templates.
-     *
-     * @param name the name of the node template to get, null to get all node templates
-     * @param version the version of the node template to get, null to get all node templates
-     * @return the node templates found
-     * @throws PfModelException on errors getting node templates
-     */
-    @Transactional(readOnly = true)
-    public List<ToscaNodeTemplate> getNodeTemplates(final String name, final String version) {
-        return ProviderUtils
-            .asEntityList(toscaNodeTemplateRepository.getFiltered(JpaToscaNodeTemplate.class, name, version));
-    }
-
-    /**
-     * Get filtered node templates.
-     *
-     * @param filter the filter for the node templates to get
-     * @return the node templates found
-     * @throws PfModelException on errors getting node templates
-     */
-    @Transactional(readOnly = true)
-    public List<ToscaNodeTemplate> getFilteredNodeTemplates(
-        @NonNull final ToscaTypedEntityFilter<ToscaNodeTemplate> filter) {
-
-        return filter.filter(ProviderUtils.asEntityList(toscaNodeTemplateRepository
-            .getFiltered(JpaToscaNodeTemplate.class, filter.getName(), filter.getVersion())));
     }
 }

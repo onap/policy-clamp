@@ -113,6 +113,7 @@ class SupervisionHandlerTest {
         var automationComposition = automationCompositionsCreate.getAutomationCompositionList().get(0);
         automationComposition.setOrderedState(AutomationCompositionOrderedState.UNINITIALISED);
         automationComposition.setState(AutomationCompositionState.PASSIVE);
+        automationComposition.setCompositionId(UUID.randomUUID());
 
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         when(automationCompositionProvider.findAutomationComposition(identifier))
@@ -120,9 +121,9 @@ class SupervisionHandlerTest {
         when(automationCompositionProvider.getAutomationComposition(identifier)).thenReturn(automationComposition);
 
         var acDefinitionProvider = Mockito.mock(AcDefinitionProvider.class);
-        when(acDefinitionProvider.getAllServiceTemplates())
-            .thenReturn(List.of(Objects.requireNonNull(InstantiationUtils.getToscaServiceTemplate(
-                    TOSCA_SERVICE_TEMPLATE_YAML))));
+        when(acDefinitionProvider.getAcDefinition(automationComposition.getCompositionId()))
+            .thenReturn(Objects.requireNonNull(InstantiationUtils.getToscaServiceTemplate(
+                    TOSCA_SERVICE_TEMPLATE_YAML)));
 
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
 
@@ -133,7 +134,7 @@ class SupervisionHandlerTest {
 
         handler.triggerAutomationCompositionSupervision(List.of(identifier));
 
-        verify(automationCompositionStateChangePublisher).send(any(AutomationComposition.class), eq(0));
+        verify(automationCompositionStateChangePublisher).send(any(AutomationComposition.class), eq(1));
     }
 
     @Test
@@ -357,9 +358,6 @@ class SupervisionHandlerTest {
 
         var acDefinitionProvider = Mockito.mock(AcDefinitionProvider.class);
         when(acDefinitionProvider.getServiceTemplateList(any(), any()))
-            .thenReturn(List.of(Objects.requireNonNull(InstantiationUtils.getToscaServiceTemplate(
-                    TOSCA_SERVICE_TEMPLATE_YAML))));
-        when(acDefinitionProvider.getAllServiceTemplates())
             .thenReturn(List.of(Objects.requireNonNull(InstantiationUtils.getToscaServiceTemplate(
                     TOSCA_SERVICE_TEMPLATE_YAML))));
 
