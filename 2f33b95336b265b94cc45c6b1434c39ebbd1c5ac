@@ -1,0 +1,464 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b90a1ed7_19054229",
+        "filename": "packages/policy-clamp-tarball/src/main/resources/etc/A1pmsParticipantParameters.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 5519
+      },
+      "writtenOn": "2022-11-24T19:24:11Z",
+      "side": 1,
+      "message": "See comment later - A1PParticipant  or similar",
+      "range": {
+        "startLine": 32,
+        "startChar": 38,
+        "endLine": 32,
+        "endChar": 51
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "765199f1_2acbac16",
+        "filename": "packages/policy-clamp-tarball/src/main/resources/etc/A1pmsParticipantParameters.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 5519
+      },
+      "writtenOn": "2022-11-24T19:24:11Z",
+      "side": 1,
+      "message": "a1pparticipant   or a1pmsparticipant",
+      "range": {
+        "startLine": 57,
+        "startChar": 41,
+        "endLine": 57,
+        "endChar": 54
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c3c85d8b_8c1b98a6",
+        "filename": "participant/participant-impl/participant-impl-a1/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 5519
+      },
+      "writtenOn": "2022-11-24T19:24:11Z",
+      "side": 1,
+      "message": "a1p\n\nSee comments later about groupid, package \u0026 directory name",
+      "range": {
+        "startLine": 31,
+        "startChar": 46,
+        "endLine": 31,
+        "endChar": 48
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "753f3b9a_d6f73dce",
+        "filename": "participant/participant-impl/participant-impl-a1/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 5519
+      },
+      "writtenOn": "2022-11-24T19:24:11Z",
+      "side": 1,
+      "message": ".... to access the A1 Policy Management Service to perform A1 Policy Operations",
+      "range": {
+        "startLine": 33,
+        "startChar": 73,
+        "endLine": 33,
+        "endChar": 76
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "edd536ba_bdba304d",
+        "filename": "participant/participant-impl/participant-impl-a1/src/main/java/org/onap/policy/clamp/acm/participant/a1/Application.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 5519
+      },
+      "writtenOn": "2022-11-24T19:24:11Z",
+      "side": 1,
+      "message": "might need to change group name (and java package name, and directory name) from \"... participant.a1\" to \"participant.a1p\" or \"participant.a1pms\"\n\nWe only do A1 Policy (A1-P) operations with this participant and A1-PMS .. not all other A1-EI nor A1-ML operations.",
+      "range": {
+        "startLine": 21,
+        "startChar": 46,
+        "endLine": 21,
+        "endChar": 48
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "023aaab7_7a1d04fd",
+        "filename": "participant/participant-impl/participant-impl-a1/src/main/java/org/onap/policy/clamp/acm/participant/a1/Application.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 5519
+      },
+      "writtenOn": "2022-11-24T19:24:11Z",
+      "side": 1,
+      "message": "as above.",
+      "range": {
+        "startLine": 37,
+        "startChar": 68,
+        "endLine": 37,
+        "endChar": 70
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "be4e0ff1_622b7f12",
+        "filename": "participant/participant-impl/participant-impl-a1/src/main/java/org/onap/policy/clamp/acm/participant/a1/exception/PolicyServiceException.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 5519
+      },
+      "writtenOn": "2022-11-24T19:24:11Z",
+      "side": 1,
+      "message": "A1PolicyServiceException",
+      "range": {
+        "startLine": 26,
+        "startChar": 13,
+        "endLine": 26,
+        "endChar": 36
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8f20107b_3e8be0b4",
+        "filename": "participant/participant-impl/participant-impl-a1/src/main/java/org/onap/policy/clamp/acm/participant/a1/handler/AutomationCompositionElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 5519
+      },
+      "writtenOn": "2022-11-24T19:24:11Z",
+      "side": 1,
+      "message": "alot of nesting happening here .... 6 deep ...",
+      "range": {
+        "startLine": 96,
+        "startChar": 36,
+        "endLine": 96,
+        "endChar": 66
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "23c64c6a_60681709",
+        "filename": "participant/participant-impl/participant-impl-a1/src/main/java/org/onap/policy/clamp/acm/participant/a1/handler/AutomationCompositionElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 5519
+      },
+      "writtenOn": "2022-11-24T19:24:11Z",
+      "side": 1,
+      "message": "maybe include the caught exception\u003e",
+      "range": {
+        "startLine": 101,
+        "startChar": 64,
+        "endLine": 101,
+        "endChar": 67
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "684239b0_e2365249",
+        "filename": "participant/participant-impl/participant-impl-a1/src/main/java/org/onap/policy/clamp/acm/participant/a1/handler/AutomationCompositionElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 5519
+      },
+      "writtenOn": "2022-11-24T19:24:11Z",
+      "side": 1,
+      "message": "Same comment re name PMS",
+      "range": {
+        "startLine": 105,
+        "startChar": 60,
+        "endLine": 105,
+        "endChar": 63
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ac987185_97890f01",
+        "filename": "participant/participant-impl/participant-impl-a1/src/main/java/org/onap/policy/clamp/acm/participant/a1/handler/AutomationCompositionElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 5519
+      },
+      "writtenOn": "2022-11-24T19:24:11Z",
+      "side": 1,
+      "message": "same comment re PMS naming",
+      "range": {
+        "startLine": 161,
+        "startChar": 45,
+        "endLine": 161,
+        "endChar": 49
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "af0bf2f1_a4cbb1a5",
+        "filename": "participant/participant-impl/participant-impl-a1/src/main/java/org/onap/policy/clamp/acm/participant/a1/models/PolicyServiceEntity.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 5519
+      },
+      "writtenOn": "2022-11-24T19:24:11Z",
+      "side": 1,
+      "message": "A1PolicyServiceEntity",
+      "range": {
+        "startLine": 33,
+        "startChar": 13,
+        "endLine": 33,
+        "endChar": 33
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c8a3b841_073532ac",
+        "filename": "participant/participant-impl/participant-impl-a1/src/main/java/org/onap/policy/clamp/acm/participant/a1/models/PolicyServiceEntity.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 5519
+      },
+      "writtenOn": "2022-11-24T19:24:11Z",
+      "side": 1,
+      "message": "Could add an optional list of A1 Policy Types, or an optional list of rics ... but maybe add this later?",
+      "range": {
+        "startLine": 33,
+        "startChar": 33,
+        "endLine": 33,
+        "endChar": 34
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "03335373_14342748",
+        "filename": "participant/participant-impl/participant-impl-a1/src/main/java/org/onap/policy/clamp/acm/participant/a1/models/PolicyServiceEntity.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 5519
+      },
+      "writtenOn": "2022-11-24T19:24:11Z",
+      "side": 1,
+      "message": "clientid might be better. \n(\"Service\" was originally used for the A1PMS client to optional give themselves a tag/name. But we should have used the term client I think)",
+      "range": {
+        "startLine": 36,
+        "startChar": 19,
+        "endLine": 36,
+        "endChar": 28
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cc085ac1_f29a91e9",
+        "filename": "participant/participant-impl/participant-impl-a1/src/main/java/org/onap/policy/clamp/acm/participant/a1/parameters/PmsParameters.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 5519
+      },
+      "writtenOn": "2022-11-24T19:24:11Z",
+      "side": 1,
+      "message": "Can we use A1PMS as the name \nOr A1PolicyMananger\nOr A1P\n\nBut not PMS please",
+      "range": {
+        "startLine": 30,
+        "startChar": 47,
+        "endLine": 30,
+        "endChar": 51
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9bf1504c_ba8ab0e8",
+        "filename": "participant/participant-impl/participant-impl-a1/src/main/java/org/onap/policy/clamp/acm/participant/a1/parameters/PmsParameters.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 5519
+      },
+      "writtenOn": "2022-11-24T19:24:11Z",
+      "side": 1,
+      "message": "same comment as above",
+      "range": {
+        "startLine": 34,
+        "startChar": 35,
+        "endLine": 34,
+        "endChar": 38
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "75ca54e4_f6f76534",
+        "filename": "participant/participant-impl/participant-impl-a1/src/main/java/org/onap/policy/clamp/acm/participant/a1/parameters/PmsParticipantParameters.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 5519
+      },
+      "writtenOn": "2022-11-24T19:24:11Z",
+      "side": 1,
+      "message": "as above - comment re \"PMS\"",
+      "range": {
+        "startLine": 33,
+        "startChar": 47,
+        "endLine": 33,
+        "endChar": 51
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bbad141f_c5ec1446",
+        "filename": "participant/participant-impl/participant-impl-a1/src/main/java/org/onap/policy/clamp/acm/participant/a1/webclient/AcPmsClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 5519
+      },
+      "writtenOn": "2022-11-24T19:24:11Z",
+      "side": 1,
+      "message": "same comment re PMS naming",
+      "range": {
+        "startLine": 44,
+        "startChar": 25,
+        "endLine": 44,
+        "endChar": 28
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dc9baf6a_26a338db",
+        "filename": "participant/participant-impl/participant-impl-a1/src/test/resources/application-test.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 5519
+      },
+      "writtenOn": "2022-11-24T19:24:11Z",
+      "side": 1,
+      "message": "A1PParticipant (or A1-P-Participant ... or something similar)",
+      "range": {
+        "startLine": 10,
+        "startChar": 31,
+        "endLine": 10,
+        "endChar": 44
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3fc5d51e_7073aecf",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 5519
+      },
+      "writtenOn": "2022-11-24T19:24:11Z",
+      "side": 1,
+      "message": "for accessing A1-Policy Management Service",
+      "range": {
+        "startLine": 52,
+        "startChar": 75,
+        "endLine": 52,
+        "endChar": 95
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
