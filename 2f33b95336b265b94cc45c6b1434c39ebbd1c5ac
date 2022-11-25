@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "49f2ea7d_c1589e26",
+        "filename": "packages/policy-clamp-tarball/src/main/resources/etc/A1pmsParticipantParameters.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 8109
+      },
+      "writtenOn": "2022-11-25T11:36:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b90a1ed7_19054229",
+      "range": {
+        "startLine": 32,
+        "startChar": 38,
+        "endLine": 32,
+        "endChar": 51
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "765199f1_2acbac16",
         "filename": "packages/policy-clamp-tarball/src/main/resources/etc/A1pmsParticipantParameters.yaml",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2022-11-24T19:24:11Z",
       "side": 1,
       "message": "a1pparticipant   or a1pmsparticipant",
+      "range": {
+        "startLine": 57,
+        "startChar": 41,
+        "endLine": 57,
+        "endChar": 54
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c6e62989_894db265",
+        "filename": "packages/policy-clamp-tarball/src/main/resources/etc/A1pmsParticipantParameters.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 8109
+      },
+      "writtenOn": "2022-11-25T11:36:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "765199f1_2acbac16",
       "range": {
         "startLine": 57,
         "startChar": 41,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "ef2b9ea0_ee79e99c",
+        "filename": "participant/participant-impl/participant-impl-a1/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 8109
+      },
+      "writtenOn": "2022-11-25T11:36:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c3c85d8b_8c1b98a6",
+      "range": {
+        "startLine": 31,
+        "startChar": 46,
+        "endLine": 31,
+        "endChar": 48
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "753f3b9a_d6f73dce",
         "filename": "participant/participant-impl/participant-impl-a1/pom.xml",
         "patchSetId": 1
@@ -82,6 +154,30 @@
       "writtenOn": "2022-11-24T19:24:11Z",
       "side": 1,
       "message": ".... to access the A1 Policy Management Service to perform A1 Policy Operations",
+      "range": {
+        "startLine": 33,
+        "startChar": 73,
+        "endLine": 33,
+        "endChar": 76
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e8a218e2_31b38011",
+        "filename": "participant/participant-impl/participant-impl-a1/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 8109
+      },
+      "writtenOn": "2022-11-25T11:36:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "753f3b9a_d6f73dce",
       "range": {
         "startLine": 33,
         "startChar": 73,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "0e6b1c23_e4712043",
+        "filename": "participant/participant-impl/participant-impl-a1/src/main/java/org/onap/policy/clamp/acm/participant/a1/Application.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 8109
+      },
+      "writtenOn": "2022-11-25T11:36:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "edd536ba_bdba304d",
+      "range": {
+        "startLine": 21,
+        "startChar": 46,
+        "endLine": 21,
+        "endChar": 48
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "023aaab7_7a1d04fd",
         "filename": "participant/participant-impl/participant-impl-a1/src/main/java/org/onap/policy/clamp/acm/participant/a1/Application.java",
         "patchSetId": 1
@@ -128,6 +248,30 @@
       "writtenOn": "2022-11-24T19:24:11Z",
       "side": 1,
       "message": "as above.",
+      "range": {
+        "startLine": 37,
+        "startChar": 68,
+        "endLine": 37,
+        "endChar": 70
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5c7967a2_26d21896",
+        "filename": "participant/participant-impl/participant-impl-a1/src/main/java/org/onap/policy/clamp/acm/participant/a1/Application.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 8109
+      },
+      "writtenOn": "2022-11-25T11:36:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "023aaab7_7a1d04fd",
       "range": {
         "startLine": 37,
         "startChar": 68,
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "ee24f85a_b46cbb8f",
+        "filename": "participant/participant-impl/participant-impl-a1/src/main/java/org/onap/policy/clamp/acm/participant/a1/exception/PolicyServiceException.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 8109
+      },
+      "writtenOn": "2022-11-25T11:36:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "be4e0ff1_622b7f12",
+      "range": {
+        "startLine": 26,
+        "startChar": 13,
+        "endLine": 26,
+        "endChar": 36
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1f21e5e6_5bd2fae9",
         "filename": "participant/participant-impl/participant-impl-a1/src/main/java/org/onap/policy/clamp/acm/participant/a1/handler/AutomationCompositionElementHandler.java",
         "patchSetId": 1
@@ -174,6 +342,30 @@
       "writtenOn": "2022-11-25T09:22:49Z",
       "side": 1,
       "message": "Spring components should use constructor injection (https://rules.sonarsource.com/java/RSPEC-4288)",
+      "range": {
+        "startLine": 68,
+        "startChar": 4,
+        "endLine": 69,
+        "endChar": 36
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "39ce9e38_db4cb577",
+        "filename": "participant/participant-impl/participant-impl-a1/src/main/java/org/onap/policy/clamp/acm/participant/a1/handler/AutomationCompositionElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 8109
+      },
+      "writtenOn": "2022-11-25T11:36:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1f21e5e6_5bd2fae9",
       "range": {
         "startLine": 68,
         "startChar": 4,
@@ -209,6 +401,30 @@
     },
     {
       "key": {
+        "uuid": "ce258e06_36b2ae82",
+        "filename": "participant/participant-impl/participant-impl-a1/src/main/java/org/onap/policy/clamp/acm/participant/a1/handler/AutomationCompositionElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 8109
+      },
+      "writtenOn": "2022-11-25T11:36:56Z",
+      "side": 1,
+      "message": "Reduced the nesting",
+      "parentUuid": "8f20107b_3e8be0b4",
+      "range": {
+        "startLine": 96,
+        "startChar": 36,
+        "endLine": 96,
+        "endChar": 66
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "23c64c6a_60681709",
         "filename": "participant/participant-impl/participant-impl-a1/src/main/java/org/onap/policy/clamp/acm/participant/a1/handler/AutomationCompositionElementHandler.java",
         "patchSetId": 1
@@ -220,6 +436,30 @@
       "writtenOn": "2022-11-24T19:24:11Z",
       "side": 1,
       "message": "maybe include the caught exception\u003e",
+      "range": {
+        "startLine": 101,
+        "startChar": 64,
+        "endLine": 101,
+        "endChar": 67
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b640a330_e1d3c219",
+        "filename": "participant/participant-impl/participant-impl-a1/src/main/java/org/onap/policy/clamp/acm/participant/a1/handler/AutomationCompositionElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 8109
+      },
+      "writtenOn": "2022-11-25T11:36:56Z",
+      "side": 1,
+      "message": "This block removed as the same exception has been thrown in the method level",
+      "parentUuid": "23c64c6a_60681709",
       "range": {
         "startLine": 101,
         "startChar": 64,
@@ -255,6 +495,30 @@
     },
     {
       "key": {
+        "uuid": "d2042d4f_4b05c7c0",
+        "filename": "participant/participant-impl/participant-impl-a1/src/main/java/org/onap/policy/clamp/acm/participant/a1/handler/AutomationCompositionElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 8109
+      },
+      "writtenOn": "2022-11-25T11:36:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "684239b0_e2365249",
+      "range": {
+        "startLine": 105,
+        "startChar": 60,
+        "endLine": 105,
+        "endChar": 63
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ac987185_97890f01",
         "filename": "participant/participant-impl/participant-impl-a1/src/main/java/org/onap/policy/clamp/acm/participant/a1/handler/AutomationCompositionElementHandler.java",
         "patchSetId": 1
@@ -266,6 +530,30 @@
       "writtenOn": "2022-11-24T19:24:11Z",
       "side": 1,
       "message": "same comment re PMS naming",
+      "range": {
+        "startLine": 161,
+        "startChar": 45,
+        "endLine": 161,
+        "endChar": 49
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "140792b1_75cc60fb",
+        "filename": "participant/participant-impl/participant-impl-a1/src/main/java/org/onap/policy/clamp/acm/participant/a1/handler/AutomationCompositionElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 8109
+      },
+      "writtenOn": "2022-11-25T11:36:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ac987185_97890f01",
       "range": {
         "startLine": 161,
         "startChar": 45,
@@ -324,6 +612,54 @@
     },
     {
       "key": {
+        "uuid": "5cccb643_cdeb1fba",
+        "filename": "participant/participant-impl/participant-impl-a1/src/main/java/org/onap/policy/clamp/acm/participant/a1/models/PolicyServiceEntity.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 8109
+      },
+      "writtenOn": "2022-11-25T11:36:56Z",
+      "side": 1,
+      "message": "This implementation creates the A1 policy service only. It doesn\u0027t requires the policy types and rics.\n\nAdding a A1 policy requires these details, Creating A1 policy from participant can be implemented with the policy types and rics?",
+      "parentUuid": "c8a3b841_073532ac",
+      "range": {
+        "startLine": 33,
+        "startChar": 33,
+        "endLine": 33,
+        "endChar": 34
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7124d047_ed58cff4",
+        "filename": "participant/participant-impl/participant-impl-a1/src/main/java/org/onap/policy/clamp/acm/participant/a1/models/PolicyServiceEntity.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 8109
+      },
+      "writtenOn": "2022-11-25T11:36:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "af0bf2f1_a4cbb1a5",
+      "range": {
+        "startLine": 33,
+        "startChar": 13,
+        "endLine": 33,
+        "endChar": 33
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "03335373_14342748",
         "filename": "participant/participant-impl/participant-impl-a1/src/main/java/org/onap/policy/clamp/acm/participant/a1/models/PolicyServiceEntity.java",
         "patchSetId": 1
@@ -335,6 +671,30 @@
       "writtenOn": "2022-11-24T19:24:11Z",
       "side": 1,
       "message": "clientid might be better. \n(\"Service\" was originally used for the A1PMS client to optional give themselves a tag/name. But we should have used the term client I think)",
+      "range": {
+        "startLine": 36,
+        "startChar": 19,
+        "endLine": 36,
+        "endChar": 28
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a6e3fc12_2188fcd3",
+        "filename": "participant/participant-impl/participant-impl-a1/src/main/java/org/onap/policy/clamp/acm/participant/a1/models/PolicyServiceEntity.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 8109
+      },
+      "writtenOn": "2022-11-25T11:36:56Z",
+      "side": 1,
+      "message": "Changed to clientId.\nRequest payload to A1PMS contains the argument as \"service_id\". Did the conversion using lombok and jackson",
+      "parentUuid": "03335373_14342748",
       "range": {
         "startLine": 36,
         "startChar": 19,
@@ -370,6 +730,30 @@
     },
     {
       "key": {
+        "uuid": "a99b57ae_79013c31",
+        "filename": "participant/participant-impl/participant-impl-a1/src/main/java/org/onap/policy/clamp/acm/participant/a1/parameters/PmsParameters.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 8109
+      },
+      "writtenOn": "2022-11-25T11:36:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cc085ac1_f29a91e9",
+      "range": {
+        "startLine": 30,
+        "startChar": 47,
+        "endLine": 30,
+        "endChar": 51
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9bf1504c_ba8ab0e8",
         "filename": "participant/participant-impl/participant-impl-a1/src/main/java/org/onap/policy/clamp/acm/participant/a1/parameters/PmsParameters.java",
         "patchSetId": 1
@@ -381,6 +765,30 @@
       "writtenOn": "2022-11-24T19:24:11Z",
       "side": 1,
       "message": "same comment as above",
+      "range": {
+        "startLine": 34,
+        "startChar": 35,
+        "endLine": 34,
+        "endChar": 38
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "08836ff1_72081b23",
+        "filename": "participant/participant-impl/participant-impl-a1/src/main/java/org/onap/policy/clamp/acm/participant/a1/parameters/PmsParameters.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 8109
+      },
+      "writtenOn": "2022-11-25T11:36:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9bf1504c_ba8ab0e8",
       "range": {
         "startLine": 34,
         "startChar": 35,
@@ -416,6 +824,30 @@
     },
     {
       "key": {
+        "uuid": "e5084363_9a716d1d",
+        "filename": "participant/participant-impl/participant-impl-a1/src/main/java/org/onap/policy/clamp/acm/participant/a1/parameters/PmsParticipantParameters.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 8109
+      },
+      "writtenOn": "2022-11-25T11:36:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "75ca54e4_f6f76534",
+      "range": {
+        "startLine": 33,
+        "startChar": 47,
+        "endLine": 33,
+        "endChar": 51
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bbad141f_c5ec1446",
         "filename": "participant/participant-impl/participant-impl-a1/src/main/java/org/onap/policy/clamp/acm/participant/a1/webclient/AcPmsClient.java",
         "patchSetId": 1
@@ -427,6 +859,30 @@
       "writtenOn": "2022-11-24T19:24:11Z",
       "side": 1,
       "message": "same comment re PMS naming",
+      "range": {
+        "startLine": 44,
+        "startChar": 25,
+        "endLine": 44,
+        "endChar": 28
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a2f5c295_bee7588d",
+        "filename": "participant/participant-impl/participant-impl-a1/src/main/java/org/onap/policy/clamp/acm/participant/a1/webclient/AcPmsClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 8109
+      },
+      "writtenOn": "2022-11-25T11:36:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bbad141f_c5ec1446",
       "range": {
         "startLine": 44,
         "startChar": 25,
@@ -462,6 +918,30 @@
     },
     {
       "key": {
+        "uuid": "9ec2b6e2_aa103342",
+        "filename": "participant/participant-impl/participant-impl-a1/src/test/resources/application-test.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 8109
+      },
+      "writtenOn": "2022-11-25T11:36:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dc9baf6a_26a338db",
+      "range": {
+        "startLine": 10,
+        "startChar": 31,
+        "endLine": 10,
+        "endChar": 44
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3fc5d51e_7073aecf",
         "filename": "pom.xml",
         "patchSetId": 1
@@ -473,6 +953,30 @@
       "writtenOn": "2022-11-24T19:24:11Z",
       "side": 1,
       "message": "for accessing A1-Policy Management Service",
+      "range": {
+        "startLine": 52,
+        "startChar": 75,
+        "endLine": 52,
+        "endChar": 95
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4a826c8e_27c10bc8",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 8109
+      },
+      "writtenOn": "2022-11-25T11:36:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3fc5d51e_7073aecf",
       "range": {
         "startLine": 52,
         "startChar": 75,
