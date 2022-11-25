@@ -378,6 +378,30 @@
     },
     {
       "key": {
+        "uuid": "85c3912c_5ede4c35",
+        "filename": "participant/participant-impl/participant-impl-a1/src/main/java/org/onap/policy/clamp/acm/participant/a1/handler/AutomationCompositionElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2022-11-25T14:33:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "39ce9e38_db4cb577",
+      "range": {
+        "startLine": 68,
+        "startChar": 4,
+        "endLine": 69,
+        "endChar": 36
+      },
+      "revId": "2f33b95336b265b94cc45c6b1434c39ebbd1c5ac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8f20107b_3e8be0b4",
         "filename": "participant/participant-impl/participant-impl-a1/src/main/java/org/onap/policy/clamp/acm/participant/a1/handler/AutomationCompositionElementHandler.java",
         "patchSetId": 1
