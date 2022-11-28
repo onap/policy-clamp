@@ -57,7 +57,7 @@ public class SupervisionScanner {
     private final HandleCounter<ToscaConceptIdentifier> automationCompositionCounter = new HandleCounter<>();
     private final HandleCounter<ToscaConceptIdentifier> participantStatusCounter = new HandleCounter<>();
     private final HandleCounter<Pair<ToscaConceptIdentifier, ToscaConceptIdentifier>> participantUpdateCounter =
-        new HandleCounter<>();
+            new HandleCounter<>();
 
     private final Map<ToscaConceptIdentifier, Integer> phaseMap = new HashMap<>();
 
@@ -82,11 +82,12 @@ public class SupervisionScanner {
      * @param acRuntimeParameterGroup the parameters for the automation composition runtime
      */
     public SupervisionScanner(final AutomationCompositionProvider automationCompositionProvider,
-        AcDefinitionProvider acDefinitionProvider,
-        final AutomationCompositionStateChangePublisher automationCompositionStateChangePublisher,
-        AutomationCompositionUpdatePublisher automationCompositionUpdatePublisher,
-        ParticipantProvider participantProvider, ParticipantStatusReqPublisher participantStatusReqPublisher,
-        ParticipantUpdatePublisher participantUpdatePublisher, final AcRuntimeParameterGroup acRuntimeParameterGroup) {
+            AcDefinitionProvider acDefinitionProvider,
+            final AutomationCompositionStateChangePublisher automationCompositionStateChangePublisher,
+            AutomationCompositionUpdatePublisher automationCompositionUpdatePublisher,
+            ParticipantProvider participantProvider, ParticipantStatusReqPublisher participantStatusReqPublisher,
+            ParticipantUpdatePublisher participantUpdatePublisher,
+            final AcRuntimeParameterGroup acRuntimeParameterGroup) {
         this.automationCompositionProvider = automationCompositionProvider;
         this.acDefinitionProvider = acDefinitionProvider;
         this.automationCompositionStateChangePublisher = automationCompositionStateChangePublisher;
@@ -96,17 +97,17 @@ public class SupervisionScanner {
         this.participantUpdatePublisher = participantUpdatePublisher;
 
         automationCompositionCounter.setMaxRetryCount(
-            acRuntimeParameterGroup.getParticipantParameters().getUpdateParameters().getMaxRetryCount());
+                acRuntimeParameterGroup.getParticipantParameters().getUpdateParameters().getMaxRetryCount());
         automationCompositionCounter
-            .setMaxWaitMs(acRuntimeParameterGroup.getParticipantParameters().getMaxStatusWaitMs());
+                .setMaxWaitMs(acRuntimeParameterGroup.getParticipantParameters().getMaxStatusWaitMs());
 
         participantUpdateCounter.setMaxRetryCount(
-            acRuntimeParameterGroup.getParticipantParameters().getUpdateParameters().getMaxRetryCount());
+                acRuntimeParameterGroup.getParticipantParameters().getUpdateParameters().getMaxRetryCount());
         participantUpdateCounter
-            .setMaxWaitMs(acRuntimeParameterGroup.getParticipantParameters().getUpdateParameters().getMaxWaitMs());
+                .setMaxWaitMs(acRuntimeParameterGroup.getParticipantParameters().getUpdateParameters().getMaxWaitMs());
 
         participantStatusCounter.setMaxRetryCount(
-            acRuntimeParameterGroup.getParticipantParameters().getUpdateParameters().getMaxRetryCount());
+                acRuntimeParameterGroup.getParticipantParameters().getUpdateParameters().getMaxRetryCount());
         participantStatusCounter.setMaxWaitMs(acRuntimeParameterGroup.getParticipantParameters().getMaxStatusWaitMs());
     }
 
@@ -130,13 +131,12 @@ public class SupervisionScanner {
         }
 
         try {
-            var list = acDefinitionProvider.getAllServiceTemplates();
-            if (list != null && !list.isEmpty()) {
-                ToscaServiceTemplate toscaServiceTemplate = list.get(0);
-
-                for (AutomationComposition automationComposition : automationCompositionProvider
-                    .getAutomationCompositions()) {
-                    scanAutomationComposition(automationComposition, toscaServiceTemplate, counterCheck);
+            var list = acDefinitionProvider.getAllAcDefinitions();
+            for (var acDefinition : list) {
+                var acList =
+                        automationCompositionProvider.getAcInstancesByCompositionId(acDefinition.getCompositionId());
+                for (var automationComposition : acList) {
+                    scanAutomationComposition(automationComposition, acDefinition.getServiceTemplate(), counterCheck);
                 }
             }
         } catch (PfModelException pfme) {
@@ -208,7 +208,7 @@ public class SupervisionScanner {
     }
 
     private void scanAutomationComposition(final AutomationComposition automationComposition,
-        ToscaServiceTemplate toscaServiceTemplate, boolean counterCheck) throws PfModelException {
+            ToscaServiceTemplate toscaServiceTemplate, boolean counterCheck) throws PfModelException {
         LOGGER.debug("scanning automation composition {} . . .", automationComposition.getKey().asIdentifier());
 
         if (automationComposition.getState().equals(automationComposition.getOrderedState().asState())) {
@@ -226,7 +226,7 @@ public class SupervisionScanner {
         var defaultMax = 0; // max startPhase
         for (AutomationCompositionElement element : automationComposition.getElements().values()) {
             ToscaNodeTemplate toscaNodeTemplate = toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates()
-                .get(element.getDefinition().getName());
+                    .get(element.getDefinition().getName());
             int startPhase = ParticipantUtils.findStartPhase(toscaNodeTemplate.getProperties());
             defaultMin = Math.min(defaultMin, startPhase);
             defaultMax = Math.max(defaultMax, startPhase);
@@ -239,7 +239,7 @@ public class SupervisionScanner {
 
         if (completed) {
             LOGGER.debug("automation composition scan: transition from state {} to {} completed",
-                automationComposition.getState(), automationComposition.getOrderedState());
+                    automationComposition.getState(), automationComposition.getOrderedState());
 
             automationComposition.setState(automationComposition.getOrderedState().asState());
             automationCompositionProvider.saveAutomationComposition(automationComposition);
@@ -248,21 +248,22 @@ public class SupervisionScanner {
             clearFaultAndCounter(automationComposition);
         } else {
             LOGGER.debug("automation composition scan: transition from state {} to {} not completed",
-                automationComposition.getState(), automationComposition.getOrderedState());
+                    automationComposition.getState(), automationComposition.getOrderedState());
 
             var nextSpNotCompleted =
-                AutomationCompositionState.UNINITIALISED2PASSIVE.equals(automationComposition.getState())
-                    || AutomationCompositionState.PASSIVE2RUNNING.equals(automationComposition.getState())
-                        ? minSpNotCompleted
-                        : maxSpNotCompleted;
+                    AutomationCompositionState.UNINITIALISED2PASSIVE.equals(automationComposition.getState())
+                            || AutomationCompositionState.PASSIVE2RUNNING.equals(automationComposition.getState())
+                                    ? minSpNotCompleted
+                                    : maxSpNotCompleted;
 
             var firstStartPhase =
-                AutomationCompositionState.UNINITIALISED2PASSIVE.equals(automationComposition.getState())
-                    || AutomationCompositionState.PASSIVE2RUNNING.equals(automationComposition.getState()) ? defaultMin
-                        : defaultMax;
+                    AutomationCompositionState.UNINITIALISED2PASSIVE.equals(automationComposition.getState())
+                            || AutomationCompositionState.PASSIVE2RUNNING.equals(automationComposition.getState())
+                                    ? defaultMin
+                                    : defaultMax;
 
             if (nextSpNotCompleted != phaseMap.getOrDefault(automationComposition.getKey().asIdentifier(),
-                firstStartPhase)) {
+                    firstStartPhase)) {
                 phaseMap.put(automationComposition.getKey().asIdentifier(), nextSpNotCompleted);
                 sendAutomationCompositionMsg(automationComposition, nextSpNotCompleted);
             } else if (counterCheck) {

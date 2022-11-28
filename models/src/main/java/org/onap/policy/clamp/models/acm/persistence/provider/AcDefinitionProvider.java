@@ -21,6 +21,7 @@
 package org.onap.policy.clamp.models.acm.persistence.provider;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
@@ -53,7 +54,10 @@ public class AcDefinitionProvider {
         var acmDefinition = new AutomationCompositionDefinition();
         acmDefinition.setCompositionId(UUID.randomUUID());
         acmDefinition.setServiceTemplate(serviceTemplate);
-        var result = acmDefinitionRepository.save(new JpaAutomationCompositionDefinition(acmDefinition));
+        var jpaAcmDefinition = ProviderUtils.getJpaAndValidate(acmDefinition, JpaAutomationCompositionDefinition::new,
+                "AutomationCompositionDefinition");
+        var result = acmDefinitionRepository.save(jpaAcmDefinition);
+
         return result.toAuthorative();
     }
 
@@ -107,13 +111,26 @@ public class AcDefinitionProvider {
     }
 
     /**
-     * Get service templates.
+     * Get the requested automation composition definition.
      *
-     * @return the topology templates found
+     * @param compositionId The UUID of the automation composition definition to delete
+     * @return the automation composition definition
      */
     @Transactional(readOnly = true)
-    public List<ToscaServiceTemplate> getAllServiceTemplates() {
-        var jpaList = serviceTemplateRepository.findAll();
+    public Optional<ToscaServiceTemplate> findAcDefinition(UUID compositionId) {
+        var jpaGet = acmDefinitionRepository.findById(compositionId.toString());
+        return jpaGet.stream().map(JpaAutomationCompositionDefinition::getServiceTemplate)
+                .map(JpaToscaServiceTemplate::toAuthorative).findFirst();
+    }
+
+    /**
+     * Get Automation Composition Definitions.
+     *
+     * @return the Automation Composition Definitions found
+     */
+    @Transactional(readOnly = true)
+    public List<AutomationCompositionDefinition> getAllAcDefinitions() {
+        var jpaList = acmDefinitionRepository.findAll();
         return ProviderUtils.asEntityList(jpaList);
     }
 

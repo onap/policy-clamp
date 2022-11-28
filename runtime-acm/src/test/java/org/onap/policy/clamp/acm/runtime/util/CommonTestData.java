@@ -38,8 +38,6 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 public class CommonTestData {
     private static final Coder CODER = new StandardCoder();
     public static final String TOSCA_SERVICE_TEMPLATE_YAML =
-        "clamp/acm/test/pmsh_multiple_ac_tosca.yaml";
-    public static final String TOSCA_ST_TEMPLATE_YAML =
         "clamp/acm/pmsh/funtional-pmsh-usecase.yaml";
 
     /**
@@ -77,16 +75,14 @@ public class CommonTestData {
      */
     public static List<Participant> createParticipants() {
         var participant1 = createParticipant(
-            new ToscaConceptIdentifier("org.onap.dcae.acm.DCAEMicroserviceAutomationCompositionParticipant",
-                "2.3.4"),
-            new ToscaConceptIdentifier("org.onap.dcae.acm.DCAEMicroserviceAutomationCompositionParticipant",
-                "2.3.4"));
+            new ToscaConceptIdentifier("org.onap.policy.clamp.acm.KubernetesParticipant", "2.3.4"),
+            new ToscaConceptIdentifier("K8sParticipant0", "1.0.0"));
         var participant2 = createParticipant(
-            new ToscaConceptIdentifier("org.onap.policy.acm.PolicyAutomationCompositionParticipant", "2.3.1"),
-            new ToscaConceptIdentifier("org.onap.policy.acm.PolicyAutomationCompositionParticipant", "2.3.1"));
+            new ToscaConceptIdentifier("org.onap.policy.clamp.acm.HttpParticipant", "2.3.4"),
+            new ToscaConceptIdentifier("HttpParticipant0", "1.0.0"));
         var participant3 = createParticipant(
-            new ToscaConceptIdentifier("org.onap.ccsdk.cds.acm.CdsAutomationCompositionParticipant", "2.2.1"),
-            new ToscaConceptIdentifier("org.onap.ccsdk.cds.acm.CdsAutomationCompositionParticipant", "2.2.1"));
+            new ToscaConceptIdentifier("org.onap.policy.clamp.acm.PolicyParticipant", "2.3.1"),
+            new ToscaConceptIdentifier("org.onap.PM_Policy", "1.0.0"));
         return List.of(participant1, participant2, participant3);
     }
 

@@ -26,7 +26,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVICE_TEMPLATE_YAML;
-import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_ST_TEMPLATE_YAML;
 
 import java.util.List;
 import java.util.UUID;
@@ -84,7 +83,7 @@ class CommissioningProviderTest {
         List<ToscaConceptIdentifier> affectedDefinitions = provider
                 .createAutomationCompositionDefinitions(serviceTemplate).getAffectedAutomationCompositionDefinitions();
         verify(acDefinitionProvider).createAutomationCompositionDefinition(serviceTemplate);
-        assertThat(affectedDefinitions).hasSize(13);
+        assertThat(affectedDefinitions).hasSize(7);
     }
 
     /**
@@ -100,7 +99,7 @@ class CommissioningProviderTest {
 
         var provider =
                 new CommissioningProvider(acDefinitionProvider, acProvider, null, participantProvider);
-        ToscaServiceTemplate serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_ST_TEMPLATE_YAML);
+        ToscaServiceTemplate serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
         when(acDefinitionProvider.getServiceTemplateList(null, null)).thenReturn(List.of(serviceTemplate));
 
         var returnedServiceTemplate = provider.getAutomationCompositionDefinitions(null, null);

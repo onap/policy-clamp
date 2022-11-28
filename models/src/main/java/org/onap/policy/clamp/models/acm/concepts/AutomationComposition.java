@@ -27,9 +27,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.apache.commons.collections4.MapUtils;
-import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfUtils;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaEntity;
 
 /**
@@ -40,7 +38,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaEntity;
 @EqualsAndHashCode(callSuper = true)
 public class AutomationComposition extends ToscaEntity implements Comparable<AutomationComposition> {
     @NonNull
-    private ToscaConceptIdentifier definition = new ToscaConceptIdentifier(PfConceptKey.getNullKey());
+    private UUID compositionId;
 
     @NonNull
     private AutomationCompositionState state = AutomationCompositionState.UNINITIALISED;
@@ -53,16 +51,6 @@ public class AutomationComposition extends ToscaEntity implements Comparable<Aut
     @NonNull
     private Boolean primed = false;
 
-    @Override
-    public String getType() {
-        return definition.getName();
-    }
-
-    @Override
-    public String getTypeVersion() {
-        return definition.getVersion();
-    }
-
     /**
      * Copy contructor, does a deep copy.
      *
@@ -70,7 +58,7 @@ public class AutomationComposition extends ToscaEntity implements Comparable<Aut
      */
     public AutomationComposition(final AutomationComposition otherAutomationComposition) {
         super(otherAutomationComposition);
-        this.definition = new ToscaConceptIdentifier(otherAutomationComposition.definition);
+        this.compositionId = otherAutomationComposition.compositionId;
         this.state = otherAutomationComposition.state;
         this.orderedState = otherAutomationComposition.orderedState;
         this.elements = PfUtils.mapMap(otherAutomationComposition.elements, AutomationCompositionElement::new);

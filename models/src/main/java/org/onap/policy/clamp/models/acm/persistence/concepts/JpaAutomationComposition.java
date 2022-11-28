@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021 Nordix Foundation.
+ * Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,12 +25,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
-import javax.persistence.AttributeOverride;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.Index;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToMany;
@@ -52,7 +52,6 @@ import org.onap.policy.models.base.PfKey;
 import org.onap.policy.models.base.PfReferenceKey;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.base.validation.annotations.VerifyKey;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
  * Class to represent a automation composition in the database.
@@ -60,7 +59,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
  * @author Liam Fallon (liam.fallon@est.tech)
  */
 @Entity
-@Table(name = "AutomationComposition")
+@Table(name = "AutomationComposition", indexes = {@Index(name = "ac_compositionId", columnList = "compositionId")})
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -72,13 +71,8 @@ public class JpaAutomationComposition extends PfConcept implements PfAuthorative
     @NotNull
     private PfConceptKey key;
 
-    // @formatter:off
-    @VerifyKey
     @NotNull
-    @AttributeOverride(name = "name",    column = @Column(name = "definition_name"))
-    @AttributeOverride(name = "version", column = @Column(name = "definition_version"))
-    private PfConceptKey definition;
-    // @formatter:on
+    private String compositionId;
 
     @Column
     @NotNull
@@ -112,22 +106,22 @@ public class JpaAutomationComposition extends PfConcept implements PfAuthorative
      * @param key the key
      */
     public JpaAutomationComposition(@NonNull final PfConceptKey key) {
-        this(key, new PfConceptKey(), AutomationCompositionState.UNINITIALISED, new LinkedHashMap<>());
+        this(key, UUID.randomUUID().toString(), AutomationCompositionState.UNINITIALISED, new LinkedHashMap<>());
     }
 
     /**
      * The Key Constructor creates a {@link JpaAutomationComposition} object with all mandatory fields.
      *
      * @param key the key
-     * @param definition the TOSCA definition of the automation composition
+     * @param compositionId the TOSCA compositionId of the automation composition definition
      * @param state the state of the automation composition
      * @param elements the elements of the automation composition in participants
      */
-    public JpaAutomationComposition(@NonNull final PfConceptKey key, @NonNull final PfConceptKey definition,
-        @NonNull final AutomationCompositionState state,
-        @NonNull final Map<UUID, JpaAutomationCompositionElement> elements) {
+    public JpaAutomationComposition(@NonNull final PfConceptKey key, @NonNull final String compositionId,
+            @NonNull final AutomationCompositionState state,
+            @NonNull final Map<UUID, JpaAutomationCompositionElement> elements) {
         this.key = key;
-        this.definition = definition;
+        this.compositionId = compositionId;
         this.state = state;
         this.elements = elements;
     }
@@ -140,12 +134,12 @@ public class JpaAutomationComposition extends PfConcept implements PfAuthorative
     public JpaAutomationComposition(@NonNull final JpaAutomationComposition copyConcept) {
         super(copyConcept);
         this.key = new PfConceptKey(copyConcept.key);
-        this.definition = new PfConceptKey(copyConcept.definition);
+        this.compositionId = copyConcept.compositionId;
         this.state = copyConcept.state;
         this.orderedState = copyConcept.orderedState;
         this.description = copyConcept.description;
         this.elements =
-            PfUtils.mapMap(copyConcept.elements, JpaAutomationCompositionElement::new, new LinkedHashMap<>(0));
+                PfUtils.mapMap(copyConcept.elements, JpaAutomationCompositionElement::new, new LinkedHashMap<>(0));
         this.primed = copyConcept.primed;
     }
 
@@ -164,12 +158,12 @@ public class JpaAutomationComposition extends PfConcept implements PfAuthorative
 
         automationComposition.setName(getKey().getName());
         automationComposition.setVersion(getKey().getVersion());
-        automationComposition.setDefinition(new ToscaConceptIdentifier(definition));
+        automationComposition.setCompositionId(UUID.fromString(compositionId));
         automationComposition.setState(state);
         automationComposition.setOrderedState(orderedState != null ? orderedState : state.asOrderedState());
         automationComposition.setDescription(description);
         automationComposition.setElements(
-            PfUtils.mapMap(elements, JpaAutomationCompositionElement::toAuthorative, new LinkedHashMap<>(0)));
+                PfUtils.mapMap(elements, JpaAutomationCompositionElement::toAuthorative, new LinkedHashMap<>(0)));
         automationComposition.setPrimed(primed);
 
         return automationComposition;
@@ -181,7 +175,7 @@ public class JpaAutomationComposition extends PfConcept implements PfAuthorative
             this.setKey(new PfConceptKey(automationComposition.getName(), automationComposition.getVersion()));
         }
 
-        this.definition = automationComposition.getDefinition().asConceptKey();
+        this.compositionId = automationComposition.getCompositionId().toString();
         this.state = automationComposition.getState();
         this.orderedState = automationComposition.getOrderedState();
         this.description = automationComposition.getDescription();
@@ -191,7 +185,7 @@ public class JpaAutomationComposition extends PfConcept implements PfAuthorative
         for (Entry<UUID, AutomationCompositionElement> elementEntry : automationComposition.getElements().entrySet()) {
             var jpaAutomationCompositionElement = new JpaAutomationCompositionElement();
             jpaAutomationCompositionElement
-                .setKey(new PfReferenceKey(getKey(), elementEntry.getValue().getId().toString()));
+                    .setKey(new PfReferenceKey(getKey(), elementEntry.getValue().getId().toString()));
             jpaAutomationCompositionElement.fromAuthorative(elementEntry.getValue());
             this.elements.put(elementEntry.getKey(), jpaAutomationCompositionElement);
         }
@@ -200,8 +194,6 @@ public class JpaAutomationComposition extends PfConcept implements PfAuthorative
     @Override
     public List<PfKey> getKeys() {
         List<PfKey> keyList = getKey().getKeys();
-
-        keyList.add(definition);
 
         for (JpaAutomationCompositionElement element : elements.values()) {
             keyList.addAll(element.getKeys());
@@ -213,7 +205,6 @@ public class JpaAutomationComposition extends PfConcept implements PfAuthorative
     @Override
     public void clean() {
         key.clean();
-        definition.clean();
         description = (description == null ? null : description.trim());
 
         for (JpaAutomationCompositionElement element : elements.values()) {
@@ -239,7 +230,7 @@ public class JpaAutomationComposition extends PfConcept implements PfAuthorative
             return result;
         }
 
-        result = definition.compareTo(other.definition);
+        result = ObjectUtils.compare(compositionId, other.compositionId);
         if (result != 0) {
             return result;
         }

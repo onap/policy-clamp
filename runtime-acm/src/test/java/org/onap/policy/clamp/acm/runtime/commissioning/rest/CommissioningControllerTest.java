@@ -29,7 +29,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVICE_TEMPLATE_YAML;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
@@ -130,7 +129,7 @@ class CommissioningControllerTest extends CommonRestController {
         assertNotNull(commissioningResponse);
         assertNull(commissioningResponse.getErrorDetails());
         // Response should return the number of node templates present in the service template
-        assertThat(commissioningResponse.getAffectedAutomationCompositionDefinitions()).hasSize(13);
+        assertThat(commissioningResponse.getAffectedAutomationCompositionDefinitions()).hasSize(7);
         for (String nodeTemplateName : serviceTemplate.getToscaTopologyTemplate().getNodeTemplates().keySet()) {
             assertTrue(commissioningResponse.getAffectedAutomationCompositionDefinitions().stream()
                     .anyMatch(ac -> ac.getName().equals(nodeTemplateName)));
@@ -162,7 +161,7 @@ class CommissioningControllerTest extends CommonRestController {
         assertNotNull(commissioningResponse);
         assertNull(commissioningResponse.getErrorDetails());
         // Response should return the number of node templates present in the service template
-        assertThat(commissioningResponse.getAffectedAutomationCompositionDefinitions()).hasSize(13);
+        assertThat(commissioningResponse.getAffectedAutomationCompositionDefinitions()).hasSize(7);
         for (String nodeTemplateName : serviceTemplate.getToscaTopologyTemplate().getNodeTemplates().keySet()) {
             assertTrue(commissioningResponse.getAffectedAutomationCompositionDefinitions().stream()
                     .anyMatch(ac -> ac.getName().equals(nodeTemplateName)));
@@ -216,7 +215,7 @@ class CommissioningControllerTest extends CommonRestController {
         Response resp = invocationBuilder.delete();
         assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
 
-        List<ToscaServiceTemplate> templatesInDB = acDefinitionProvider.getAllServiceTemplates();
+        var templatesInDB = acDefinitionProvider.getAllAcDefinitions();
         assertThat(templatesInDB).isEmpty();
     }
 
@@ -228,7 +227,7 @@ class CommissioningControllerTest extends CommonRestController {
 
     // Delete entries from the DB after relevant tests
     private synchronized void deleteEntryInDB() throws Exception {
-        var list = acDefinitionProvider.getAllServiceTemplates();
+        var list = acDefinitionProvider.getAllAcDefinitions();
         if (!list.isEmpty()) {
             acDefinitionProvider.deleteAcDefintion(compositionId);
         }

@@ -26,10 +26,11 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_ST_TEMPLATE_YAML;
+import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVICE_TEMPLATE_YAML;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -40,6 +41,7 @@ import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantStatusReqPu
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantUpdatePublisher;
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
@@ -51,7 +53,6 @@ import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 class SupervisionScannerTest {
 
@@ -62,14 +63,19 @@ class SupervisionScannerTest {
     private static final String PARTICIPANT_NAME = "Participant0";
     private static final String PARTICIPANT_VERSION = "1.0.0";
 
+    private static UUID compositionId;
+
     private static final ToscaConceptIdentifier PARTICIPANT_TYPE =
             new ToscaConceptIdentifier("org.onap.policy.clamp.acm.PolicyParticipant", PARTICIPANT_VERSION);
 
     @BeforeAll
     public static void setUpBeforeAll() throws Exception {
-        ToscaServiceTemplate serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_ST_TEMPLATE_YAML);
-        when(acDefinitionProvider.getAllServiceTemplates())
-            .thenReturn(List.of(Objects.requireNonNull(serviceTemplate)));
+        var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
+        var acDefinition = new AutomationCompositionDefinition();
+        compositionId = UUID.randomUUID();
+        acDefinition.setCompositionId(compositionId);
+        acDefinition.setServiceTemplate(serviceTemplate);
+        when(acDefinitionProvider.getAllAcDefinitions()).thenReturn(List.of(Objects.requireNonNull(acDefinition)));
     }
 
     @Test
@@ -82,13 +88,14 @@ class SupervisionScannerTest {
         var participantUpdatePublisher = mock(ParticipantUpdatePublisher.class);
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
 
-        var automationCompositions =
-            InstantiationUtils.getAutomationCompositionsFromResource(AC_JSON, "Crud").getAutomationCompositionList();
-        when(automationCompositionProvider.getAutomationCompositions()).thenReturn(automationCompositions);
+        var automationCompositions = InstantiationUtils.getAutomationCompositionsFromResource(AC_JSON, "Crud")
+                .getAutomationCompositionList();
+        when(automationCompositionProvider.getAcInstancesByCompositionId(compositionId))
+                .thenReturn(automationCompositions);
 
         var supervisionScanner = new SupervisionScanner(automationCompositionProvider, acDefinitionProvider,
-            automationCompositionStateChangePublisher, automationCompositionUpdatePublisher, participantProvider,
-            participantStatusReqPublisher, participantUpdatePublisher, acRuntimeParameterGroup);
+                automationCompositionStateChangePublisher, automationCompositionUpdatePublisher, participantProvider,
+                participantStatusReqPublisher, participantUpdatePublisher, acRuntimeParameterGroup);
         supervisionScanner.run(false);
 
         verify(automationCompositionProvider, times(0)).saveAutomationComposition(any(AutomationComposition.class));
@@ -96,12 +103,13 @@ class SupervisionScannerTest {
 
     @Test
     void testScannerOrderedStateDifferentToState() throws PfModelException, CoderException {
-        var automationCompositions =
-            InstantiationUtils.getAutomationCompositionsFromResource(AC_JSON, "Crud").getAutomationCompositionList();
+        var automationCompositions = InstantiationUtils.getAutomationCompositionsFromResource(AC_JSON, "Crud")
+                .getAutomationCompositionList();
         automationCompositions.get(0).setState(AutomationCompositionState.UNINITIALISED2PASSIVE);
         automationCompositions.get(0).setOrderedState(AutomationCompositionOrderedState.UNINITIALISED);
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
-        when(automationCompositionProvider.getAutomationCompositions()).thenReturn(automationCompositions);
+        when(automationCompositionProvider.getAcInstancesByCompositionId(compositionId))
+                .thenReturn(automationCompositions);
 
         var automationCompositionUpdatePublisher = mock(AutomationCompositionUpdatePublisher.class);
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
@@ -111,8 +119,8 @@ class SupervisionScannerTest {
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
 
         var supervisionScanner = new SupervisionScanner(automationCompositionProvider, acDefinitionProvider,
-            automationCompositionStateChangePublisher, automationCompositionUpdatePublisher, participantProvider,
-            participantStatusReqPublisher, participantUpdatePublisher, acRuntimeParameterGroup);
+                automationCompositionStateChangePublisher, automationCompositionUpdatePublisher, participantProvider,
+                participantStatusReqPublisher, participantUpdatePublisher, acRuntimeParameterGroup);
         supervisionScanner.run(false);
 
         verify(automationCompositionProvider, times(1)).saveAutomationComposition(any(AutomationComposition.class));
@@ -122,7 +130,8 @@ class SupervisionScannerTest {
     void testScanner() throws PfModelException {
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         var automationComposition = new AutomationComposition();
-        when(automationCompositionProvider.getAutomationCompositions()).thenReturn(List.of(automationComposition));
+        when(automationCompositionProvider.getAcInstancesByCompositionId(compositionId))
+                .thenReturn(List.of(automationComposition));
 
         var participantProvider = mock(ParticipantProvider.class);
         var participant = new Participant();
@@ -137,8 +146,8 @@ class SupervisionScannerTest {
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
 
         var supervisionScanner = new SupervisionScanner(automationCompositionProvider, acDefinitionProvider,
-            automationCompositionStateChangePublisher, automationCompositionUpdatePublisher, participantProvider,
-            participantStatusReqPublisher, participantUpdatePublisher, acRuntimeParameterGroup);
+                automationCompositionStateChangePublisher, automationCompositionUpdatePublisher, participantProvider,
+                participantStatusReqPublisher, participantUpdatePublisher, acRuntimeParameterGroup);
 
         supervisionScanner.handleParticipantStatus(participant.getKey().asIdentifier());
         supervisionScanner.run(true);
@@ -148,13 +157,13 @@ class SupervisionScannerTest {
 
     @Test
     void testSendAutomationCompositionMsgUpdate() throws PfModelException, CoderException {
-        var automationCompositions =
-            InstantiationUtils.getAutomationCompositionsFromResource(AC_JSON, "Crud").getAutomationCompositionList();
+        var automationCompositions = InstantiationUtils.getAutomationCompositionsFromResource(AC_JSON, "Crud")
+                .getAutomationCompositionList();
         automationCompositions.get(0).setState(AutomationCompositionState.UNINITIALISED2PASSIVE);
         automationCompositions.get(0).setOrderedState(AutomationCompositionOrderedState.PASSIVE);
         for (var element : automationCompositions.get(0).getElements().values()) {
             if ("org.onap.domain.database.Http_PMSHMicroserviceAutomationCompositionElement"
-                .equals(element.getDefinition().getName())) {
+                    .equals(element.getDefinition().getName())) {
                 element.setOrderedState(AutomationCompositionOrderedState.PASSIVE);
                 element.setState(AutomationCompositionState.UNINITIALISED);
             } else {
@@ -164,7 +173,8 @@ class SupervisionScannerTest {
         }
 
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
-        when(automationCompositionProvider.getAutomationCompositions()).thenReturn(automationCompositions);
+        when(automationCompositionProvider.getAcInstancesByCompositionId(compositionId))
+                .thenReturn(automationCompositions);
 
         var participantProvider = mock(ParticipantProvider.class);
         var automationCompositionUpdatePublisher = mock(AutomationCompositionUpdatePublisher.class);
@@ -174,8 +184,8 @@ class SupervisionScannerTest {
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
 
         var supervisionScanner = new SupervisionScanner(automationCompositionProvider, acDefinitionProvider,
-            automationCompositionStateChangePublisher, automationCompositionUpdatePublisher, participantProvider,
-            participantStatusReqPublisher, participantUpdatePublisher, acRuntimeParameterGroup);
+                automationCompositionStateChangePublisher, automationCompositionUpdatePublisher, participantProvider,
+                participantStatusReqPublisher, participantUpdatePublisher, acRuntimeParameterGroup);
 
         supervisionScanner.run(false);
 
@@ -186,7 +196,8 @@ class SupervisionScannerTest {
     void testScanParticipant() throws PfModelException {
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         var automationComposition = new AutomationComposition();
-        when(automationCompositionProvider.getAutomationCompositions()).thenReturn(List.of(automationComposition));
+        when(automationCompositionProvider.getAcInstancesByCompositionId(compositionId))
+                .thenReturn(List.of(automationComposition));
 
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanParticipant");
         acRuntimeParameterGroup.getParticipantParameters().getUpdateParameters().setMaxWaitMs(-1);
@@ -208,8 +219,8 @@ class SupervisionScannerTest {
         var participantUpdatePublisher = mock(ParticipantUpdatePublisher.class);
 
         var supervisionScanner = new SupervisionScanner(automationCompositionProvider, acDefinitionProvider,
-            automationCompositionStateChangePublisher, automationCompositionUpdatePublisher, participantProvider,
-            participantStatusReqPublisher, participantUpdatePublisher, acRuntimeParameterGroup);
+                automationCompositionStateChangePublisher, automationCompositionUpdatePublisher, participantProvider,
+                participantStatusReqPublisher, participantUpdatePublisher, acRuntimeParameterGroup);
 
         supervisionScanner
                 .handleParticipantRegister(new ImmutablePair<>(participant.getKey().asIdentifier(), PARTICIPANT_TYPE));

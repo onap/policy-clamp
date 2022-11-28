@@ -202,7 +202,7 @@ public class AutomationCompositionHandler {
                 break;
             default:
                 LOGGER.debug("StateChange message has no state, state is null {}",
-                    automationComposition.getDefinition());
+                    automationComposition.getKey());
                 break;
         }
     }
@@ -255,11 +255,11 @@ public class AutomationCompositionHandler {
             return;
         }
 
-        var acElements = storeElementsOnThisParticipant(updateMsg.getParticipantUpdatesList());
-
-        var acElementMap = prepareAcElementMap(acElements);
         automationComposition = new AutomationComposition();
-        automationComposition.setDefinition(updateMsg.getAutomationCompositionId());
+        automationComposition.setName(updateMsg.getAutomationCompositionId().getName());
+        automationComposition.setVersion(updateMsg.getAutomationCompositionId().getVersion());
+        var acElements = storeElementsOnThisParticipant(updateMsg.getParticipantUpdatesList());
+        var acElementMap = prepareAcElementMap(acElements);
         automationComposition.setElements(acElementMap);
         automationCompositionMap.put(updateMsg.getAutomationCompositionId(), automationComposition);
 
@@ -347,7 +347,7 @@ public class AutomationCompositionHandler {
             .filter(element -> !AutomationCompositionState.UNINITIALISED.equals(element.getState())).findAny()
             .isEmpty();
         if (isAllUninitialised) {
-            automationCompositionMap.remove(automationComposition.getDefinition());
+            automationCompositionMap.remove(automationComposition.getKey().asIdentifier());
             automationComposition.getElements().values()
                 .forEach(element -> elementsOnThisParticipant.remove(element.getId()));
         }
@@ -400,7 +400,7 @@ public class AutomationCompositionHandler {
             automationCompositionAck.setParticipantType(participantType);
             automationCompositionAck.setMessage("Automation composition is already in state " + orderedState);
             automationCompositionAck.setResult(false);
-            automationCompositionAck.setAutomationCompositionId(automationComposition.getDefinition());
+            automationCompositionAck.setAutomationCompositionId(automationComposition.getKey().asIdentifier());
             publisher.sendAutomationCompositionAck(automationCompositionAck);
             return;
         }
@@ -419,11 +419,12 @@ public class AutomationCompositionHandler {
             if (startPhaseMsg.equals(startPhase)) {
                 for (var acElementListener : listeners) {
                     try {
-                        acElementListener.automationCompositionElementStateChange(automationComposition.getDefinition(),
-                            acElement.getId(), acElement.getState(), orderedState);
+                        acElementListener.automationCompositionElementStateChange(
+                                automationComposition.getKey().asIdentifier(), acElement.getId(), acElement.getState(),
+                                orderedState);
                     } catch (PfModelException e) {
                         LOGGER.debug("Automation composition element update failed {}",
-                            automationComposition.getDefinition());
+                            automationComposition.getKey().asIdentifier());
                     }
                 }
             }

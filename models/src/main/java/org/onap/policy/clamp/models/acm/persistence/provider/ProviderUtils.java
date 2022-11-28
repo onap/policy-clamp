@@ -31,7 +31,7 @@ import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.models.base.PfAuthorative;
 import org.onap.policy.models.base.PfConcept;
 import org.onap.policy.models.base.PfModelRuntimeException;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaEntity;
+import org.onap.policy.models.base.Validated;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ProviderUtils {
@@ -72,7 +72,7 @@ public final class ProviderUtils {
      * @param conceptDescription the description used for validation result
      * @return the Jpa object
      */
-    public static <A, J extends PfConcept & PfAuthorative<A>> J getJpaAndValidate(A authorativeConcept,
+    public static <A, J extends Validated & PfAuthorative<A>> J getJpaAndValidate(A authorativeConcept,
             Supplier<J> jpaSupplier, String conceptDescription) {
         var validationResult = new BeanValidationResult(conceptDescription, authorativeConcept);
 
@@ -95,7 +95,7 @@ public final class ProviderUtils {
      * @param jpaEntityList the list to convert
      * @return the authorative list
      */
-    public static <T extends ToscaEntity, J extends PfAuthorative<T>> List<T> asEntityList(List<J> jpaEntityList) {
+    public static <T, J extends PfAuthorative<T>> List<T> asEntityList(List<J> jpaEntityList) {
         return jpaEntityList.stream().map(J::toAuthorative).collect(Collectors.toList());
     }
 }
