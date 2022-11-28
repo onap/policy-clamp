@@ -16,6 +16,24 @@
       "revId": "30d6e72f137602ef318dbb38b714cf3625dd17f1",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6eb4c817_7b89aba6",
+        "filename": "participant/participant-impl/participant-impl-a1pms/src/test/java/org/onap/policy/clamp/acm/participant/a1pms/utils/CommonActuatorController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 8109
+      },
+      "writtenOn": "2022-11-28T15:00:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "131a179a_eed3f33b",
+      "revId": "30d6e72f137602ef318dbb38b714cf3625dd17f1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
