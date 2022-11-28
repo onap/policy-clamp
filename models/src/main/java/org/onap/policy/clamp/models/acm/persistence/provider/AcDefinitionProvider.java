@@ -23,15 +23,16 @@ package org.onap.policy.clamp.models.acm.persistence.provider;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
+import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplate;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionDefinitionRepository;
-import org.onap.policy.clamp.models.acm.persistence.repository.ToscaServiceTemplateRepository;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
-import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,7 +41,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AcDefinitionProvider {
 
-    private final ToscaServiceTemplateRepository serviceTemplateRepository;
     private final AutomationCompositionDefinitionRepository acmDefinitionRepository;
 
     /**
@@ -68,9 +68,12 @@ public class AcDefinitionProvider {
      * @param serviceTemplate the service template to be created
      */
     public void updateServiceTemplate(UUID compositionId, ToscaServiceTemplate serviceTemplate) {
-        var jpaServiceTemplate =
-                ProviderUtils.getJpaAndValidate(serviceTemplate, JpaToscaServiceTemplate::new, "toscaServiceTemplate");
-        serviceTemplateRepository.save(jpaServiceTemplate);
+        var acmDefinition = new AutomationCompositionDefinition();
+        acmDefinition.setCompositionId(compositionId);
+        acmDefinition.setServiceTemplate(serviceTemplate);
+        var jpaAcmDefinition = ProviderUtils.getJpaAndValidate(acmDefinition, JpaAutomationCompositionDefinition::new,
+                "AutomationCompositionDefinition");
+        acmDefinitionRepository.save(jpaAcmDefinition);
     }
 
     /**
@@ -88,7 +91,6 @@ public class AcDefinitionProvider {
         }
 
         var item = jpaDelete.get().getServiceTemplate();
-        serviceTemplateRepository.deleteById(item.getKey());
         acmDefinitionRepository.deleteById(compositionId.toString());
         return item.toAuthorative();
     }
@@ -120,7 +122,7 @@ public class AcDefinitionProvider {
     public Optional<ToscaServiceTemplate> findAcDefinition(UUID compositionId) {
         var jpaGet = acmDefinitionRepository.findById(compositionId.toString());
         return jpaGet.stream().map(JpaAutomationCompositionDefinition::getServiceTemplate)
-                .map(JpaToscaServiceTemplate::toAuthorative).findFirst();
+                .map(DocToscaServiceTemplate::toAuthorative).findFirst();
     }
 
     /**
@@ -143,7 +145,18 @@ public class AcDefinitionProvider {
      */
     @Transactional(readOnly = true)
     public List<ToscaServiceTemplate> getServiceTemplateList(final String name, final String version) {
-        var jpaList = serviceTemplateRepository.getFiltered(JpaToscaServiceTemplate.class, name, version);
-        return ProviderUtils.asEntityList(jpaList);
+        List<JpaAutomationCompositionDefinition> jpaList = null;
+        if (name != null || version != null) {
+            var entity = new JpaAutomationCompositionDefinition();
+            entity.setName(name);
+            entity.setVersion(version);
+            var example = Example.of(entity);
+            jpaList = acmDefinitionRepository.findAll(example);
+        } else {
+            jpaList = acmDefinitionRepository.findAll();
+        }
+
+        return jpaList.stream().map(JpaAutomationCompositionDefinition::getServiceTemplate)
+                .map(DocToscaServiceTemplate::toAuthorative).collect(Collectors.toList());
     }
 }

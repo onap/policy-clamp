@@ -153,9 +153,10 @@ class CommissioningControllerTest extends CommonRestController {
         toscaProperty.setType("onap.datatypes.ToscaConceptIdentifier");
         toscaDataType.getProperties().put(toscaProperty.getName(), toscaProperty);
 
-        serviceTemplate.getDataTypes().put(toscaDataType.getName(), toscaDataType);
+        var serviceTemplateUpdate = new ToscaServiceTemplate(serviceTemplate);
+        serviceTemplateUpdate.getDataTypes().put(toscaDataType.getName(), toscaDataType);
         invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT + "/" + compositionId);
-        resp = invocationBuilder.put(Entity.json(serviceTemplate));
+        resp = invocationBuilder.put(Entity.json(serviceTemplateUpdate));
         assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
         commissioningResponse = resp.readEntity(CommissioningResponse.class);
         assertNotNull(commissioningResponse);

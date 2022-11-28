@@ -22,10 +22,11 @@ package org.onap.policy.clamp.models.acm.persistence.repository;
 
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationCompositionDefinition;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.query.QueryByExampleExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AutomationCompositionDefinitionRepository
-        extends JpaRepository<JpaAutomationCompositionDefinition, String> {
-
+        extends JpaRepository<JpaAutomationCompositionDefinition, String>,
+        QueryByExampleExecutor<JpaAutomationCompositionDefinition> {
 }

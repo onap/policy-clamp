@@ -41,7 +41,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 })
 @ConfigurationPropertiesScan("org.onap.policy.clamp.acm.runtime.main.parameters")
 @EntityScan({
-    "org.onap.policy.models.tosca.simple.concepts",
     "org.onap.policy.clamp.models.acm.persistence.concepts"
 })
 //@formatter:on

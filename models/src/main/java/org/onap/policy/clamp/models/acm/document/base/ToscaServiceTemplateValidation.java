@@ -29,6 +29,8 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaEntity;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplate;
+import org.onap.policy.clamp.models.acm.document.concepts.DocToscaTopologyTemplate;
+import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.common.parameters.ValidationStatus;
 import org.onap.policy.models.base.Validated;
@@ -37,6 +39,8 @@ import org.onap.policy.models.base.Validated;
 public final class ToscaServiceTemplateValidation {
 
     private static final String ROOT_KEY_NAME_SUFFIX = ".Root";
+    private static final String AC_NODE_TYPE_NOT_PRESENT =
+            "NodeTemplate with type " + AcmUtils.AUTOMATION_COMPOSITION_NODE_TYPE + " must exist!";
 
     /**
      * validate a serviceTemplate.
@@ -62,6 +66,8 @@ public final class ToscaServiceTemplateValidation {
             }
         }
 
+        validateToscaTopologyTemplate(result, serviceTemplate.getToscaTopologyTemplate());
+
         if (serviceTemplate.getToscaTopologyTemplate() != null) {
             validEntityTypeAncestors(serviceTemplate.getToscaTopologyTemplate().getNodeTemplates(),
                     references.get(DocUtil.REF_NODE_TEMPLATES), result);
@@ -82,6 +88,32 @@ public final class ToscaServiceTemplateValidation {
 
         validatePolicyTypesInPolicies(result, serviceTemplate, references);
 
+    }
+
+    /**
+     * Validate ToscaTopologyTemplate.
+     *
+     * @param result
+     *
+     * @param topologyTemplate the ToscaServiceTemplate
+     */
+    public static void validateToscaTopologyTemplate(BeanValidationResult result,
+            DocToscaTopologyTemplate topologyTemplate) {
+        if (topologyTemplate != null && topologyTemplate.getNodeTemplates() != null) {
+            var nodeTemplates = topologyTemplate.getNodeTemplates();
+            var acNumber = nodeTemplates.values().stream().filter(
+                    nodeTemplate -> AcmUtils.AUTOMATION_COMPOSITION_NODE_TYPE.equals(nodeTemplate.getType()))
+                    .count();
+            if (acNumber == 0) {
+                result.addResult("TopologyTemplate", nodeTemplates, ValidationStatus.INVALID, AC_NODE_TYPE_NOT_PRESENT);
+            }
+            if (acNumber > 1) {
+                result.addResult("TopologyTemplate", nodeTemplates, ValidationStatus.INVALID, "NodeTemplate with type "
+                        + AcmUtils.AUTOMATION_COMPOSITION_NODE_TYPE + " not allowed to be more than one!");
+            }
+        } else {
+            result.addResult("TopologyTemplate", topologyTemplate, ValidationStatus.INVALID, AC_NODE_TYPE_NOT_PRESENT);
+        }
     }
 
     /**
@@ -199,8 +231,7 @@ public final class ToscaServiceTemplateValidation {
                     continue;
                 }
                 if (!isTypePresent(parentEntityTypeKey, reference)) {
-                    result.addResult("parent", parentEntityTypeKey, ValidationStatus.INVALID,
-                            Validated.NOT_FOUND);
+                    result.addResult("parent", parentEntityTypeKey, ValidationStatus.INVALID, Validated.NOT_FOUND);
                 }
             }
         }
@@ -222,8 +253,7 @@ public final class ToscaServiceTemplateValidation {
                         continue;
                     }
                     if (!isTypePresent(parentEntityTypeKey, reference)) {
-                        result.addResult("parent", parentEntityTypeKey, ValidationStatus.INVALID,
-                                Validated.NOT_FOUND);
+                        result.addResult("parent", parentEntityTypeKey, ValidationStatus.INVALID, Validated.NOT_FOUND);
                     }
                 }
             }

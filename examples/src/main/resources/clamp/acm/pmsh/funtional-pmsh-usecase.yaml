@@ -147,7 +147,6 @@ data_types:
     properties:
       restRequestId:
         type: onap.datatypes.ToscaConceptIdentifier
-        typeVersion: 1.0.0
         required: true
         description: The name and version of a REST request to be sent to a REST endpoint
       httpMethod:
@@ -179,7 +178,6 @@ data_types:
     properties:
       configurationEntityId:
         type: onap.datatypes.ToscaConceptIdentifier
-        typeVersion: 1.0.0
         required: true
         description: The name and version of a Configuration Entity to be handled
           by the HTTP Automation Composition Element
@@ -187,7 +185,7 @@ data_types:
         type: list
         entry_schema:
           type: org.onap.datatypes.policy.clamp.acm.httpAutomationCompositionElement.RestRequest
-          typeVersion: 1.0.0
+          type_version: 1.0.0
         description: A sequence of REST commands to send to the REST endpoint
 policy_types:
   onap.policies.Monitoring:
@@ -410,7 +408,7 @@ node_types:
         required: true
         entry_schema:
           type: org.onap.datatypes.policy.clamp.acm.httpAutomationCompositionElement.ConfigurationEntity
-          typeVersion: 1.0.0
+          type_version: 1.0.0
         description: The connfiguration entities the Automation Composition Element is managing and their associated REST requests
 
 topology_template:
@@ -432,7 +430,7 @@ topology_template:
     org.onap.domain.pmsh.PMSH_OperationalPolicyAutomationCompositionElement:
       version: 1.2.3
       type: org.onap.policy.clamp.acm.PolicyAutomationCompositionElement
-      type_version: 1.0.0
+      type_version: 1.0.1
       description: Automation composition element for the operational policy for Performance Management Subscription Handling
       properties:
         provider: Ericsson
@@ -460,7 +458,7 @@ topology_template:
       # Chart from new repository
       version: 1.2.3
       type: org.onap.policy.clamp.acm.K8SMicroserviceAutomationCompositionElement
-      type_version: 1.0.0
+      type_version: 1.0.1
       description: Automation composition element for the K8S microservice for PMSH
       properties:
         provider: ONAP
@@ -579,7 +577,7 @@ topology_template:
     org.onap.domain.pmsh.PMSHAutomationCompositionDefinition:
       version: 1.2.3
       type: org.onap.policy.clamp.acm.AutomationComposition
-      type_version: 1.0.0
+      type_version: 1.0.1
       description: Automation composition for PMSH
       properties:
         provider: ONAP

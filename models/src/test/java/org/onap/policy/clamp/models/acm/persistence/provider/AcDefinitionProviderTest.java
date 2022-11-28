@@ -32,16 +32,16 @@ import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
+import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplate;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionDefinitionRepository;
-import org.onap.policy.clamp.models.acm.persistence.repository.ToscaServiceTemplateRepository;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
-import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
-import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
+import org.springframework.data.domain.Example;
 
 class AcDefinitionProviderTest {
 
@@ -57,72 +57,66 @@ class AcDefinitionProviderTest {
     }
 
     @Test
-    void testCreateServiceTemplate() throws PfModelException {
+    void testCreateServiceTemplate() {
+        var docServiceTemplate = new DocToscaServiceTemplate(inputServiceTemplate);
+        var acmDefinition = getAcDefinition(docServiceTemplate);
+
         var acmDefinitionRepository = mock(AutomationCompositionDefinitionRepository.class);
-
-        var jpaServiceTemplate = ProviderUtils.getJpaAndValidate(inputServiceTemplate, JpaToscaServiceTemplate::new,
-                "toscaServiceTemplate");
-        var acmDefinition = new AutomationCompositionDefinition();
-        acmDefinition.setCompositionId(UUID.randomUUID());
-        acmDefinition.setServiceTemplate(jpaServiceTemplate.toAuthorative());
-
         when(acmDefinitionRepository.save(any(JpaAutomationCompositionDefinition.class)))
                 .thenReturn(new JpaAutomationCompositionDefinition(acmDefinition));
 
-        var serviceTemplateRepository = mock(ToscaServiceTemplateRepository.class);
-        var acDefinitionProvider = new AcDefinitionProvider(serviceTemplateRepository, acmDefinitionRepository);
+        var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository);
         var result = acDefinitionProvider.createAutomationCompositionDefinition(inputServiceTemplate);
 
-        assertThat(result.getServiceTemplate()).isEqualTo(jpaServiceTemplate.toAuthorative());
+        assertThat(result.getServiceTemplate()).isEqualTo(docServiceTemplate.toAuthorative());
     }
 
     @Test
-    void testDeleteAcDefintion() throws PfModelException {
-        var jpaServiceTemplate = ProviderUtils.getJpaAndValidate(inputServiceTemplate, JpaToscaServiceTemplate::new,
-                "toscaServiceTemplate");
-        var acmDefinition = new AutomationCompositionDefinition();
-        acmDefinition.setCompositionId(UUID.randomUUID());
-        acmDefinition.setServiceTemplate(jpaServiceTemplate.toAuthorative());
+    void testDeleteAcDefintion() {
+        var docServiceTemplate = new DocToscaServiceTemplate(inputServiceTemplate);
+        var acmDefinition = getAcDefinition(docServiceTemplate);
 
-        var serviceTemplateRepository = mock(ToscaServiceTemplateRepository.class);
         var acmDefinitionRepository = mock(AutomationCompositionDefinitionRepository.class);
         when(acmDefinitionRepository.findById(acmDefinition.getCompositionId().toString()))
                 .thenReturn(Optional.of(new JpaAutomationCompositionDefinition(acmDefinition)));
 
-        var acDefinitionProvider = new AcDefinitionProvider(serviceTemplateRepository, acmDefinitionRepository);
+        var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository);
         var result = acDefinitionProvider.deleteAcDefintion(acmDefinition.getCompositionId());
 
-        assertThat(result).isEqualTo(jpaServiceTemplate.toAuthorative());
+        assertThat(result).isEqualTo(docServiceTemplate.toAuthorative());
     }
 
     @Test
-    void testDeleteServiceTemplateEmpty() throws PfModelException {
-        var serviceTemplateRepository = mock(ToscaServiceTemplateRepository.class);
-        when(serviceTemplateRepository.findAll()).thenReturn(List.of());
-
+    void testDeleteServiceTemplateEmpty() {
         var compositionId = UUID.randomUUID();
         var acmDefinitionRepository = mock(AutomationCompositionDefinitionRepository.class);
-        var acDefinitionProvider = new AcDefinitionProvider(serviceTemplateRepository, acmDefinitionRepository);
+        var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository);
         assertThatThrownBy(() -> acDefinitionProvider.deleteAcDefintion(compositionId))
                 .hasMessage("delete of Automation Composition Definition \"" + compositionId
                         + "\" failed, Automation Composition Definition does not exist");
     }
 
     @Test
-    void testGetServiceTemplate() throws PfModelException {
-        var jpaServiceTemplate = ProviderUtils.getJpaAndValidate(inputServiceTemplate, JpaToscaServiceTemplate::new,
-                "toscaServiceTemplate");
-        var serviceTemplateRepository = mock(ToscaServiceTemplateRepository.class);
-        when(serviceTemplateRepository.getFiltered(JpaToscaServiceTemplate.class, inputServiceTemplate.getName(),
-                inputServiceTemplate.getVersion())).thenReturn(List.of(jpaServiceTemplate));
-
+    void testGetServiceTemplate() {
+        var docServiceTemplate = new DocToscaServiceTemplate(inputServiceTemplate);
+        var acmDefinition = getAcDefinition(docServiceTemplate);
         var acmDefinitionRepository = mock(AutomationCompositionDefinitionRepository.class);
-        var acDefinitionProvider = new AcDefinitionProvider(serviceTemplateRepository, acmDefinitionRepository);
+        when(acmDefinitionRepository.findAll(Mockito.<Example<JpaAutomationCompositionDefinition>>any()))
+                .thenReturn(List.of(new JpaAutomationCompositionDefinition(acmDefinition)));
+
+        var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository);
         var result = acDefinitionProvider.getServiceTemplateList(inputServiceTemplate.getName(),
                 inputServiceTemplate.getVersion());
 
         assertThat(result).hasSize(1);
-        assertThat(result.get(0)).isEqualTo(jpaServiceTemplate.toAuthorative());
+        assertThat(result.get(0)).isEqualTo(acmDefinition.getServiceTemplate());
+    }
+
+    private AutomationCompositionDefinition getAcDefinition(DocToscaServiceTemplate docServiceTemplate) {
+        var acmDefinition = new AutomationCompositionDefinition();
+        acmDefinition.setCompositionId(UUID.randomUUID());
+        acmDefinition.setServiceTemplate(docServiceTemplate.toAuthorative());
+        return acmDefinition;
     }
 
     /**
