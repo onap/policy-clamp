@@ -51,6 +51,8 @@
         <docker.clamp-ac-k8s-ppnt.contextDir>${project.basedir}/src/main/docker</docker.clamp-ac-k8s-ppnt.contextDir>
         <docker.clamp-ac-http-ppnt.dockerFile>HttpParticipant.Dockerfile</docker.clamp-ac-http-ppnt.dockerFile>
         <docker.clamp-ac-http-ppnt.contextDir>${project.basedir}/src/main/docker</docker.clamp-ac-http-ppnt.contextDir>
+        <docker.clamp-ac-a1pms-ppnt.dockerFile>A1pmsParticipant.Dockerfile</docker.clamp-ac-a1pms-ppnt.dockerFile>
+        <docker.clamp-ac-a1pms-ppnt.contextDir>${project.basedir}/src/main/docker</docker.clamp-ac-a1pms-ppnt.contextDir>
         <docker.clamp-acm-element-impl.dockerFile>ElementParticipant.Dockerfile</docker.clamp-acm-element-impl.dockerFile>
         <docker.clamp-acm-element-impl.contextDir>${project.basedir}/src/main/docker</docker.clamp-acm-element-impl.contextDir>
         <maven.build.timestamp.format>yyyyMMdd'T'HHmm</maven.build.timestamp.format>
@@ -77,6 +79,11 @@
         <dependency>
             <groupId>org.onap.policy.clamp.participant</groupId>
             <artifactId>policy-clamp-participant-impl-http</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.onap.policy.clamp.participant</groupId>
+            <artifactId>policy-clamp-participant-impl-a1pms</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -247,6 +254,39 @@
                                                     <include>org.onap.policy.clamp.participant:policy-clamp-participant-impl-http</include>
                                                 </includes>
                                                 <outputFileNameMapping>policy-clamp-participant-impl-http.jar</outputFileNameMapping>
+                                            </dependencySet>
+                                        </dependencySets>
+                                    </inline>
+                                </assembly>
+                            </build>
+                        </image>
+                        <image>
+                            <name>onap/policy-clamp-ac-a1pms-ppnt</name>
+                            <alias>onap-policy-clamp-ac-a1pms-ppnt</alias>
+                            <build>
+                                <cleanup>try</cleanup>
+                                <dockerFile>${docker.clamp-ac-a1pms-ppnt.dockerFile}</dockerFile>
+                                <contextDir>${docker.clamp-ac-a1pms-ppnt.contextDir}</contextDir>
+                                <tags>
+                                    <tag>${project.version}</tag>
+                                    <tag>${project.version}-${maven.build.timestamp}</tag>
+                                    <tag>${project.docker.latest.minmax.tag.version}</tag>
+                                </tags>
+                                <assembly>
+                                    <inline>
+                                        <dependencySets>
+                                            <dependencySet>
+                                                <includes>
+                                                    <include>org.onap.policy.clamp:policy-clamp-tarball</include>
+                                                </includes>
+                                                <outputDirectory>/lib</outputDirectory>
+                                                <outputFileNameMapping>a1pms-participant.tar.gz</outputFileNameMapping>
+                                            </dependencySet>
+                                            <dependencySet>
+                                                <includes>
+                                                    <include>org.onap.policy.clamp.participant:policy-clamp-participant-impl-a1pms</include>
+                                                </includes>
+                                                <outputFileNameMapping>policy-clamp-participant-impl-a1pms.jar</outputFileNameMapping>
                                             </dependencySet>
                                         </dependencySets>
                                     </inline>

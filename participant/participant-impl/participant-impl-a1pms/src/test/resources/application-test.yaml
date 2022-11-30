@@ -1,0 +1,24 @@
+participant:
+  intermediaryParameters:
+    reportingTimeInterval: 120000
+    description: Participant Description
+    participantId:
+      name: A1PMSParticipant0
+      version: 1.0.0
+    participantType:
+      name: org.onap.policy.clamp.acm.A1PMSParticipant
+      version: 2.3.4
+    clampAutomationCompositionTopics:
+      topicSources:
+        -
+          topic: POLICY-ACRUNTIME-PARTICIPANT
+          servers:
+            - localhost
+          topicCommInfrastructure: dmaap
+          fetchTimeout: 15000
+      topicSinks:
+        -
+          topicCommInfrastructure: dmaap
+          servers:
+            - localhost
+          topic: POLICY-ACRUNTIME-PARTICIPANT
