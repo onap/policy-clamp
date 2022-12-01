@@ -67,9 +67,9 @@ class AcElementControllerTest {
 
     private static final Coder CODER = new StandardCoder();
     private static final String ELEMENT_CONFIG_YAML = "src/test/resources/config.json";
-    private static final String RETRIEVE_CONFIG = "/onap/policy/clamp/acelement/v2/config";
-    private static final String ACTIVATE_CONFIG = "/onap/policy/clamp/acelement/v2/activate";
-    private static final String DEACTIVATE_CONFIG = "/onap/policy/clamp/acelement/v2/deactivate";
+    private static final String RETRIEVE_CONFIG = "/config";
+    private static final String ACTIVATE_CONFIG = "/activate";
+    private static final String DEACTIVATE_CONFIG = "/deactivate";
     private static ElementConfig config;
 
 

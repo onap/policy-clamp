@@ -36,6 +36,36 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>io.swagger.codegen.v3</groupId>
+                <artifactId>swagger-codegen-maven-plugin</artifactId>
+                <version>${version.swagger.codegen.v3}</version>
+                <executions>
+                    <execution>
+                        <id>code-gen</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/openapi/openapi.yaml</inputSpec>
+                            <invokerPackage>org.onap.policy.clamp.acm.runtime.main.rest</invokerPackage>
+                            <apiPackage>org.onap.policy.clamp.acm.element.main.rest.genapi</apiPackage>
+                            <language>spring</language>
+                            <generateModels>false</generateModels>
+                            <generateSupportingFiles>false</generateSupportingFiles>
+                            <importMappings>
+                                ElementConfig=org.onap.policy.clamp.models.acm.messages.rest.element.ElementConfig
+                            </importMappings>
+                            <configOptions>
+                                <sourceFolder>src/gen/java</sourceFolder>
+                                <dateLibrary>java11</dateLibrary>
+                                <interfaceOnly>true</interfaceOnly>
+                                <useTags>true</useTags>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <executions>
