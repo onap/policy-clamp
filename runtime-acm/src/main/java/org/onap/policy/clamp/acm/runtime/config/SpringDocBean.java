@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,28 +18,31 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.acm.participant.kubernetes.configurations;
+package org.onap.policy.clamp.acm.runtime.config;
 
-import org.onap.policy.clamp.acm.participant.kubernetes.controller.ChartController;
+import io.swagger.v3.oas.models.ExternalDocumentation;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
 
 @Configuration
-public class SpringFoxConfig {
+public class SpringDocBean {
 
     /**
-     * Docket Spring Fox Config.
+     * Bean to configure SpringDoc.
      *
-     * @return Docket
+     * @return the OpenAPI specification
      */
     @Bean
-    public Docket api() {
-        return new Docket(DocumentationType.SWAGGER_2).select()
-                .apis(RequestHandlerSelectors.basePackage(ChartController.class.getPackageName()))
-                .paths(PathSelectors.any()).build();
+    public OpenAPI kubernetesParticipantOpenApi() {
+        return new OpenAPI()
+                .info(new Info().title("ACM Runtime")
+                .description("CLAMP Automation Composition Management Runtime API")
+                .license(new License().name("Apache 2.0").url("http://www.apache.org/licenses/LICENSE-2.0")))
+                .externalDocs(new ExternalDocumentation()
+                .description("CLAMP Automation Composition Management Documentation")
+                .url("https://docs.onap.org/projects/onap-policy-parent/en/latest/clamp/clamp.html"));
     }
 }
