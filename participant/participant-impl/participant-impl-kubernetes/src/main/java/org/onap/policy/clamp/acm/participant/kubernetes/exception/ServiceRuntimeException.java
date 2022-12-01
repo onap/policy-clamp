@@ -18,19 +18,20 @@
 
 package org.onap.policy.clamp.acm.participant.kubernetes.exception;
 
-public class ServiceException extends Exception {
+public class ServiceRuntimeException extends RuntimeException {
 
-    private static final long serialVersionUID = 6810785674716590648L;
 
-    public ServiceException(String message) {
+    private static final long serialVersionUID = -4702572294307202439L;
+
+    public ServiceRuntimeException(String message) {
         super(message);
     }
 
-    public ServiceException(String message, Exception originalException) {
+    public ServiceRuntimeException(String message, Exception originalException) {
         super(message, originalException);
     }
 
-    public ServiceRuntimeException asRuntimeException() {
-        return new ServiceRuntimeException(this);
+    public ServiceRuntimeException(Exception originalException) {
+        super(originalException);
     }
 }

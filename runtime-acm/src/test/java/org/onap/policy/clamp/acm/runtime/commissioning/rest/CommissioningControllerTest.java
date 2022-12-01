@@ -60,7 +60,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @Execution(ExecutionMode.SAME_THREAD)
 class CommissioningControllerTest extends CommonRestController {
 
-    private static final String COMMISSIONING_ENDPOINT = "commission";
+    private static final String COMMISSIONING_ENDPOINT = "compositions";
     private static ToscaServiceTemplate serviceTemplate = new ToscaServiceTemplate();
     private UUID compositionId;
 

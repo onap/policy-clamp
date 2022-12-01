@@ -44,6 +44,7 @@ class ActuatorControllerTest extends CommonActuatorController {
     private static final String HEALTH_ENDPOINT = "health";
     private static final String METRICS_ENDPOINT = "metrics";
     private static final String PROMETHEUS_ENDPOINT = "prometheus";
+    private static final String SWAGGER_ENDPOINT = "v3/api-docs";
 
     @LocalServerPort
     private int randomServerPort;
@@ -69,6 +70,11 @@ class ActuatorControllerTest extends CommonActuatorController {
     }
 
     @Test
+    void testGetSwagger_Unauthorized() {
+        assertUnauthorizedActGet(SWAGGER_ENDPOINT);
+    }
+
+    @Test
     void testGetHealth() {
         Invocation.Builder invocationBuilder = super.sendActRequest(HEALTH_ENDPOINT);
         Response rawresp = invocationBuilder.buildGet().invoke();
@@ -83,10 +89,16 @@ class ActuatorControllerTest extends CommonActuatorController {
     }
 
     @Test
-    void testGePrometheus() {
+    void testGetPrometheus() {
         Invocation.Builder invocationBuilder = super.sendActRequest(PROMETHEUS_ENDPOINT);
         Response rawresp = invocationBuilder.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
     }
 
+    @Test
+    void testGetSwagger() {
+        Invocation.Builder invocationBuilder = super.sendActRequest(SWAGGER_ENDPOINT);
+        Response rawresp = invocationBuilder.buildGet().invoke();
+        assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
+    }
 }

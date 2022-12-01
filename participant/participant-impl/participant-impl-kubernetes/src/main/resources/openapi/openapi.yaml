@@ -1,0 +1,494 @@
+openapi: 3.0.3
+info:
+  title: ACM Kubernetes Participant
+  description: CLAMP Automation Composition Management Kubernetes Participant API
+  contact:
+    name: ONAP Support
+    url: https://lists.onap.org/g/onap-discuss
+    email: onap-discuss@lists.onap.org
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0
+  version: '1.0'
+externalDocs:
+  description: CLAMP Automation Composition Management Documentation
+  url: https://docs.onap.org/projects/onap-policy-parent/en/latest/clamp/clamp.html
+tags:
+  - name: kubernetes-participant-controller
+    description: Automation Composition Element Test Participant controller
+servers:
+  - url: http:{port}/{server}
+    variables:
+      port:
+        default: "30295"
+        description: This value is assigned by the service provider
+      server:
+        default: /onap/policy/clamp/acm/k8sparticipant
+        description: This value is assigned by the service provider
+paths:
+  /charts:
+    get:
+      tags:
+        - kubernetes-participant-controller
+      summary: Return all Charts
+      description: Return all the charts configured in the Kubernetes Participant
+      operationId: getAllCharts
+      parameters:
+      - name: X-onap-RequestId
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: OK, reutrns a serialised instance of
+            [ChartList](https://github.com/onap/policy-clamp/blob/master/participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/acm/participant/kubernetes/models/ChartList.java)
+          headers:
+            api-version:
+              schema:
+                type: string
+            X-LatestVersion:
+              schema:
+                type: string
+                description: Used only to communicate an API's latest version
+            X-PatchVersion:
+              schema:
+                type: string
+                description:
+                  Used only to communicate a PATCH version in a response for troubleshooting purposes only,
+                  and will not be provided by the client on request
+            X-MinorVersion:
+              schema:
+                type: string
+                description:
+                  Used to request or communicate a MINOR version back from the client
+                  to the server, and from the server back to the client
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+                description: Used to track REST transactions for logging purposes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChartList'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/ChartList'
+        401:
+          description: Authorization Error
+        404:
+          description: Not Found
+        500:
+          description: Internal Server Error
+      security:
+        - basicAuth: []
+  /install:
+    post:
+      tags:
+        - kubernetes-participant-controller
+      summary: Installs a chart
+      description: >-
+        Installs a Helm Chart for use by an Automation Composition Element in the Kubernetes Participant
+      operationId: installChart
+      parameters:
+        - name: X-ONAP-RequestID
+          in: header
+          description: RequestID for http transaction
+          required: false
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: The installation information for the chart to install in a serialised instance of
+            [InstallationInfo](https://github.com/onap/policy-clamp/blob/master/participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/acm/participant/kubernetes/models/InstallationInfo.java)
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InstallationInfo'
+          application/yaml:
+            schema:
+              $ref: '#/components/schemas/InstallationInfo'
+      responses:
+        201:
+          description: OK, the Helm chart has been installed
+          headers:
+            api-version:
+              schema:
+                type: string
+            X-LatestVersion:
+              schema:
+                type: string
+                description: Used only to communicate an API's latest version
+            X-PatchVersion:
+              schema:
+                type: string
+                description:
+                  Used only to communicate a PATCH version in a response for troubleshooting purposes only,
+                  and will not be provided by the client on request
+            X-MinorVersion:
+              schema:
+                type: string
+                description:
+                  Used to request or communicate a MINOR version back from the client
+                  to the server, and from the server back to the client
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+                description: Used to track REST transactions for logging purposes
+        400:
+          description: Bad Request
+        401:
+          description: Authorization Error
+        500:
+          description: Internal Server Error
+      security:
+        - basicAuth: []
+  /uninstall/{name}/{version}:
+    delete:
+      tags:
+        - kubernetes-participant-controller
+      summary: Uninstall a Helm Chart
+      description: Uninstall a Helm Chart from the helm charts that can be used by an Automation Composition element in the
+        Kubernetes Participant
+      operationId: uninstallChart
+      parameters:
+      - name: X-onap-RequestId
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      - name : name
+        in: path
+        description: The name of the chart to uninstall
+        required: true
+        schema:
+          type: string
+      - name : version
+        in: path
+        description: The version of the chart to uninstall
+        required: true
+        schema:
+          type: string
+      responses:
+        204:
+          description: No Content, the chart has been uninstalled
+          headers:
+            api-version:
+              schema:
+                type: string
+            X-LatestVersion:
+              schema:
+                type: string
+                description: Used only to communicate an API's latest version
+            X-PatchVersion:
+              schema:
+                type: string
+                description:
+                  Used only to communicate a PATCH version in a response for troubleshooting purposes only,
+                  and will not be provided by the client on request
+            X-MinorVersion:
+              schema:
+                type: string
+                description:
+                  Used to request or communicate a MINOR version back from the client
+                  to the server, and from the server back to the client
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+                description: Used to track REST transactions for logging purposes
+        400:
+          description: Bad Request
+        401:
+          description: Authorization Error
+        409:
+          description: Not Defined, the chart is not defined
+          headers:
+            api-version:
+              schema:
+                type: string
+            X-LatestVersion:
+              schema:
+                type: string
+                description: Used only to communicate an API's latest version
+            X-PatchVersion:
+              schema:
+                type: string
+                description:
+                  Used only to communicate a PATCH version in a response for troubleshooting purposes only,
+                  and will not be provided by the client on request
+            X-MinorVersion:
+              schema:
+                type: string
+                description:
+                  Used to request or communicate a MINOR version back from the client
+                  to the server, and from the server back to the client
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+                description: Used to track REST transactions for logging purposes
+        500:
+          description: Internal Server Error
+      security:
+        - basicAuth: []
+  /onboard/chart:
+    post:
+      tags:
+        - kubernetes-participant-controller
+      summary: Onboards a chart onto Kubernetes
+      description: >-
+        Onboards a Helm Chart onto a Kubernetes Cluster
+      operationId: onboardChart
+      parameters:
+        - name: X-ONAP-RequestID
+          in: header
+          description: RequestID for http transaction
+          required: false
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - chartFile
+                - info
+              type: object
+              properties:
+                chartFile:
+                  type: string
+                  format: binary
+                  nullable: false
+                overrideFile:
+                  type: string
+                  format: binary
+                  nullable: true
+                info:
+                  type: string
+                  description: A JSON or YAML serialized instance of
+                    [ChartInfo](https://github.com/onap/policy-clamp/blob/master/participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/acm/participant/kubernetes/models/ChartInfo.java)
+            encoding:
+              chartFile: 
+                contentType: application/octet-stream
+              overrideFile: 
+                contentType: application/octet-stream
+              info:
+                contentType: application/json
+      responses:
+        200:
+          description: OK, the Helm chart has been onboarded
+          headers:
+            api-version:
+              schema:
+                type: string
+            X-LatestVersion:
+              schema:
+                type: string
+                description: Used only to communicate an API's latest version
+            X-PatchVersion:
+              schema:
+                type: string
+                description:
+                  Used only to communicate a PATCH version in a response for troubleshooting purposes only,
+                  and will not be provided by the client on request
+            X-MinorVersion:
+              schema:
+                type: string
+                description:
+                  Used to request or communicate a MINOR version back from the client
+                  to the server, and from the server back to the client
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+                description: Used to track REST transactions for logging purposes
+        400:
+          description: Bad Request
+        401:
+          description: Authorization Error
+        500:
+          description: Internal Server Error
+      security:
+        - basicAuth: []
+  /chart/{name}/{version}:
+    delete:
+      tags:
+        - kubernetes-participant-controller
+      summary: Delete a Helm Chart
+      description: Delete a Helm Chart from the helm charts that can be used by an Automation Composition element in the
+        Kubernetes Participant
+      operationId: deleteChart
+      parameters:
+      - name: X-onap-RequestId
+        required: false
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      - name : name
+        in: path
+        description: The name of the chart to uninstall
+        required: true
+        schema:
+          type: string
+      - name : version
+        in: path
+        description: The version of the chart to uninstall
+        required: true
+        schema:
+          type: string
+      responses:
+        204:
+          description: No Content, the chart has been deleted
+          headers:
+            api-version:
+              schema:
+                type: string
+            X-LatestVersion:
+              schema:
+                type: string
+                description: Used only to communicate an API's latest version
+            X-PatchVersion:
+              schema:
+                type: string
+                description:
+                  Used only to communicate a PATCH version in a response for troubleshooting purposes only,
+                  and will not be provided by the client on request
+            X-MinorVersion:
+              schema:
+                type: string
+                description:
+                  Used to request or communicate a MINOR version back from the client
+                  to the server, and from the server back to the client
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+                description: Used to track REST transactions for logging purposes
+        400:
+          description: Bad Request
+        401:
+          description: Authorization Error
+        409:
+          description: Not Defined, the chart is not defined
+          headers:
+            api-version:
+              schema:
+                type: string
+            X-LatestVersion:
+              schema:
+                type: string
+                description: Used only to communicate an API's latest version
+            X-PatchVersion:
+              schema:
+                type: string
+                description:
+                  Used only to communicate a PATCH version in a response for troubleshooting purposes only,
+                  and will not be provided by the client on request
+            X-MinorVersion:
+              schema:
+                type: string
+                description:
+                  Used to request or communicate a MINOR version back from the client
+                  to the server, and from the server back to the client
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+                description: Used to track REST transactions for logging purposes
+        500:
+          description: Internal Server Error
+      security:
+        - basicAuth: []
+  /repo:
+    post:
+      tags:
+        - kubernetes-participant-controller
+      summary: Configure a Helm repository
+      description: >-
+        Configure a Helm repository to the Kubernetes Participant, which the participant can then use
+      operationId: configureRepo
+      parameters:
+        - name: X-ONAP-RequestID
+          in: header
+          description: RequestID for http transaction
+          required: false
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: The Helm repository to be configured
+        content:
+          application/json:
+            schema:
+              type: string
+          application/yaml:
+            schema:
+              type: string
+      responses:
+        201:
+          description: OK, the repository has been configured
+          headers:
+            api-version:
+              schema:
+                type: string
+            X-LatestVersion:
+              schema:
+                type: string
+                description: Used only to communicate an API's latest version
+            X-PatchVersion:
+              schema:
+                type: string
+                description:
+                  Used only to communicate a PATCH version in a response for troubleshooting purposes only,
+                  and will not be provided by the client on request
+            X-MinorVersion:
+              schema:
+                type: string
+                description:
+                  Used to request or communicate a MINOR version back from the client
+                  to the server, and from the server back to the client
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+                description: Used to track REST transactions for logging purposes
+          content:
+            application/json:
+              schema:
+                type: string
+              example: Success
+            application/yaml:
+              schema:
+                type: string
+              example: Success
+        400:
+          description: Bad Request
+        401:
+          description: Authorization Error
+        409:
+          description: Conflict, the repository already exists
+        500:
+          description: Internal Server Error
+      security:
+        - basicAuth: []
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+  schemas:
+    ChartList:
+      title: ChartList
+      type: object
+    InstallationInfo:
+      title: InstallationInfo
+      type: object

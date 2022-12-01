@@ -20,26 +20,16 @@
 
 package org.onap.policy.clamp.acm.runtime.main.rest;
 
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.runtime.commissioning.CommissioningProvider;
+import org.onap.policy.clamp.acm.runtime.main.rest.gen.AutomationCompositionDefinitionApi;
 import org.onap.policy.clamp.acm.runtime.main.web.AbstractRestController;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.CommissioningResponse;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplates;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -59,20 +49,11 @@ public class CommissioningController extends AbstractRestController implements A
      * @return a response
      */
     @Override
-    // @formatter:off
-    @PostMapping(value = "/commission",
-            consumes = {MediaType.APPLICATION_JSON_VALUE, APPLICATION_YAML},
-            produces = {MediaType.APPLICATION_JSON_VALUE, APPLICATION_YAML})
-    // @formatter:on
-    public ResponseEntity<CommissioningResponse> createCompositionDefinitions(
-            @Parameter(
-                    description = "Entity Body of Automation Composition",
-                    required = true) @RequestBody ToscaServiceTemplate body,
-            @RequestHeader(name = REQUEST_ID_NAME, required = false) @Parameter(
-                    description = REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
+    public ResponseEntity<CommissioningResponse> createCompositionDefinitions(ToscaServiceTemplate body,
+        UUID requestId) {
 
         var response = provider.createAutomationCompositionDefinitions(body);
-        return ResponseEntity.created(createUri("/commission/" + response.getCompositionId())).body(response);
+        return ResponseEntity.created(createUri("/compositions/" + response.getCompositionId())).body(response);
     }
 
     /**
@@ -83,18 +64,7 @@ public class CommissioningController extends AbstractRestController implements A
      * @return a response
      */
     @Override
-    // @formatter:off
-    @DeleteMapping(value = "/commission/{compositionId}",
-            produces = {MediaType.APPLICATION_JSON_VALUE, APPLICATION_YAML})
-    // @formatter:on
-    public ResponseEntity<CommissioningResponse> deleteCompositionDefinition(
-            @Parameter(
-                    in = ParameterIn.PATH,
-                    description = "The UUID of the automation composition definition to delete",
-                    required = true) @PathVariable("compositionId") UUID compositionId,
-            @RequestHeader(name = REQUEST_ID_NAME, required = false) @Parameter(
-                    description = REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
-
+    public ResponseEntity<CommissioningResponse> deleteCompositionDefinition(UUID compositionId, UUID requestId) {
         return ResponseEntity.ok().body(provider.deleteAutomationCompositionDefinition(compositionId));
     }
 
@@ -108,57 +78,19 @@ public class CommissioningController extends AbstractRestController implements A
      * @throws PfModelException on errors getting details of all or specific automation composition definitions
      */
     @Override
-    // @formatter:off
-    @GetMapping(value = "/commission",
-            produces = {MediaType.APPLICATION_JSON_VALUE, APPLICATION_YAML})
-    // @formatter:on
-    public ResponseEntity<ToscaServiceTemplates> queryCompositionDefinitions(
-
-            @Parameter(description = "Automation composition  definition name", required = false) @RequestParam(
-                    value = "name",
-                    required = false) String name,
-            @Parameter(description = "Automation composition  definition version", required = false) @RequestParam(
-                    value = "version",
-                    required = false) String version,
-            @RequestHeader(name = REQUEST_ID_NAME, required = false) @Parameter(
-                    description = REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
-
+    public ResponseEntity<ToscaServiceTemplates> queryCompositionDefinitions(String name, String version,
+        UUID requestId) {
         return ResponseEntity.ok().body(provider.getAutomationCompositionDefinitions(name, version));
     }
 
-    // @formatter:off
     @Override
-    @GetMapping(value = "/commission/{compositionId}",
-            produces = {MediaType.APPLICATION_JSON_VALUE, APPLICATION_YAML})
-    // @formatter:on
-    public ResponseEntity<ToscaServiceTemplate> getCompositionDefinition(
-            @Parameter(
-                    in = ParameterIn.PATH,
-                    description = "The UUID of the automation composition definition to get",
-                    required = true) @PathVariable("compositionId") UUID compositionId,
-            @RequestHeader(name = REQUEST_ID_NAME, required = false) @Parameter(
-                    description = REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
-
+    public ResponseEntity<ToscaServiceTemplate> getCompositionDefinition(UUID compositionId, UUID requestId) {
         return ResponseEntity.ok().body(provider.getAutomationCompositionDefinitions(compositionId));
     }
 
-    // @formatter:off
     @Override
-    @PutMapping(value = "/commission/{compositionId}",
-            consumes = {MediaType.APPLICATION_JSON_VALUE, APPLICATION_YAML},
-            produces = {MediaType.APPLICATION_JSON_VALUE, APPLICATION_YAML})
-    // @formatter:on
-    public ResponseEntity<CommissioningResponse> updateCompositionDefinition(
-            @Parameter(
-                    in = ParameterIn.PATH,
-                    description = "The UUID of the automation composition definition to update",
-                    required = true) @PathVariable("compositionId") UUID compositionId,
-            @Parameter(
-                    in = ParameterIn.DEFAULT,
-                    description = "Serialised instance of.",
-                    required = true) @RequestBody ToscaServiceTemplate body,
-            @RequestHeader(name = REQUEST_ID_NAME, required = false) @Parameter(
-                    description = REQUEST_ID_PARAM_DESCRIPTION) UUID requestId) {
+    public ResponseEntity<CommissioningResponse> updateCompositionDefinition(UUID compositionId,
+        ToscaServiceTemplate body, UUID requestId) {
         return ResponseEntity.ok().body(provider.updateCompositionDefinition(compositionId, body));
     }
 }
