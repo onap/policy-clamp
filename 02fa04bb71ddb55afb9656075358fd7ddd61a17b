@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a99f3d8b_fee38195",
+        "filename": "participant/participant-impl/participant-impl-acelement/src/main/java/org/onap/policy/clamp/acm/element/main/rest/AcElementController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2022-12-01T18:09:08Z",
+      "side": 1,
+      "message": "All the Swagger annotations move to the generated code.",
+      "range": {
+        "startLine": 34,
+        "startChar": 33,
+        "endLine": 34,
+        "endChar": 66
+      },
+      "revId": "02fa04bb71ddb55afb9656075358fd7ddd61a17b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
