@@ -50,13 +50,12 @@ import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
-import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class SupervisionScannerTest {
 
-    private static final String AC_JSON = "src/test/resources/rest/acm/AutomationCompositionsSmoke.json";
+    private static final String AC_JSON = "src/test/resources/rest/acm/AutomationCompositionSmoke.json";
 
     private static final AcDefinitionProvider acDefinitionProvider = mock(AcDefinitionProvider.class);
 
@@ -69,7 +68,7 @@ class SupervisionScannerTest {
             new ToscaConceptIdentifier("org.onap.policy.clamp.acm.PolicyParticipant", PARTICIPANT_VERSION);
 
     @BeforeAll
-    public static void setUpBeforeAll() throws Exception {
+    public static void setUpBeforeAll() {
         var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
         var acDefinition = new AutomationCompositionDefinition();
         compositionId = UUID.randomUUID();
@@ -79,7 +78,7 @@ class SupervisionScannerTest {
     }
 
     @Test
-    void testScannerOrderedStateEqualsToState() throws PfModelException, CoderException {
+    void testScannerOrderedStateEqualsToState() {
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
         var automationCompositionUpdatePublisher = mock(AutomationCompositionUpdatePublisher.class);
@@ -88,10 +87,9 @@ class SupervisionScannerTest {
         var participantUpdatePublisher = mock(ParticipantUpdatePublisher.class);
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
 
-        var automationCompositions = InstantiationUtils.getAutomationCompositionsFromResource(AC_JSON, "Crud")
-                .getAutomationCompositionList();
+        var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
         when(automationCompositionProvider.getAcInstancesByCompositionId(compositionId))
-                .thenReturn(automationCompositions);
+                .thenReturn(List.of(automationComposition));
 
         var supervisionScanner = new SupervisionScanner(automationCompositionProvider, acDefinitionProvider,
                 automationCompositionStateChangePublisher, automationCompositionUpdatePublisher, participantProvider,
@@ -102,14 +100,13 @@ class SupervisionScannerTest {
     }
 
     @Test
-    void testScannerOrderedStateDifferentToState() throws PfModelException, CoderException {
-        var automationCompositions = InstantiationUtils.getAutomationCompositionsFromResource(AC_JSON, "Crud")
-                .getAutomationCompositionList();
-        automationCompositions.get(0).setState(AutomationCompositionState.UNINITIALISED2PASSIVE);
-        automationCompositions.get(0).setOrderedState(AutomationCompositionOrderedState.UNINITIALISED);
+    void testScannerOrderedStateDifferentToState() {
+        var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
+        automationComposition.setState(AutomationCompositionState.UNINITIALISED2PASSIVE);
+        automationComposition.setOrderedState(AutomationCompositionOrderedState.UNINITIALISED);
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         when(automationCompositionProvider.getAcInstancesByCompositionId(compositionId))
-                .thenReturn(automationCompositions);
+                .thenReturn(List.of(automationComposition));
 
         var automationCompositionUpdatePublisher = mock(AutomationCompositionUpdatePublisher.class);
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
@@ -127,7 +124,7 @@ class SupervisionScannerTest {
     }
 
     @Test
-    void testScanner() throws PfModelException {
+    void testScanner() {
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         var automationComposition = new AutomationComposition();
         when(automationCompositionProvider.getAcInstancesByCompositionId(compositionId))
@@ -156,12 +153,11 @@ class SupervisionScannerTest {
     }
 
     @Test
-    void testSendAutomationCompositionMsgUpdate() throws PfModelException, CoderException {
-        var automationCompositions = InstantiationUtils.getAutomationCompositionsFromResource(AC_JSON, "Crud")
-                .getAutomationCompositionList();
-        automationCompositions.get(0).setState(AutomationCompositionState.UNINITIALISED2PASSIVE);
-        automationCompositions.get(0).setOrderedState(AutomationCompositionOrderedState.PASSIVE);
-        for (var element : automationCompositions.get(0).getElements().values()) {
+    void testSendAutomationCompositionMsgUpdate() {
+        var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
+        automationComposition.setState(AutomationCompositionState.UNINITIALISED2PASSIVE);
+        automationComposition.setOrderedState(AutomationCompositionOrderedState.PASSIVE);
+        for (var element : automationComposition.getElements().values()) {
             if ("org.onap.domain.database.Http_PMSHMicroserviceAutomationCompositionElement"
                     .equals(element.getDefinition().getName())) {
                 element.setOrderedState(AutomationCompositionOrderedState.PASSIVE);
@@ -174,7 +170,7 @@ class SupervisionScannerTest {
 
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         when(automationCompositionProvider.getAcInstancesByCompositionId(compositionId))
-                .thenReturn(automationCompositions);
+                .thenReturn(List.of(automationComposition));
 
         var participantProvider = mock(ParticipantProvider.class);
         var automationCompositionUpdatePublisher = mock(AutomationCompositionUpdatePublisher.class);

@@ -34,7 +34,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationComposition;
 import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionRepository;
 import org.onap.policy.models.base.PfConceptKey;
-import org.onap.policy.models.base.PfModelException;
+import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,15 +54,13 @@ public class AutomationCompositionProvider {
      *
      * @param automationCompositionId the ID of the automation composition to get
      * @return the automation composition found
-     * @throws PfModelException on errors getting the automation composition
      */
     @Transactional(readOnly = true)
-    public AutomationComposition getAutomationComposition(final ToscaConceptIdentifier automationCompositionId)
-            throws PfModelException {
+    public AutomationComposition getAutomationComposition(final ToscaConceptIdentifier automationCompositionId) {
         try {
             return automationCompositionRepository.getById(automationCompositionId.asConceptKey()).toAuthorative();
         } catch (EntityNotFoundException e) {
-            throw new PfModelException(Status.NOT_FOUND, "AutomationComposition not found", e);
+            throw new PfModelRuntimeException(Status.NOT_FOUND, "AutomationComposition not found", e);
         }
     }
 
@@ -72,11 +70,10 @@ public class AutomationCompositionProvider {
      * @param name the name of the automation composition to get, null to get all automation compositions
      * @param version the version of the automation composition to get, null to get all automation compositions
      * @return the automation composition found
-     * @throws PfModelException on errors getting the automation composition
      */
     @Transactional(readOnly = true)
     public Optional<AutomationComposition> findAutomationComposition(@NonNull final String name,
-            @NonNull final String version) throws PfModelException {
+            @NonNull final String version) {
         return findAutomationComposition(new PfConceptKey(name, version));
     }
 
@@ -85,21 +82,15 @@ public class AutomationCompositionProvider {
      *
      * @param automationCompositionId the ID of the automation composition to get
      * @return the automation composition found
-     * @throws PfModelException on errors getting the automation composition
      */
     @Transactional(readOnly = true)
     public Optional<AutomationComposition> findAutomationComposition(
-            final ToscaConceptIdentifier automationCompositionId) throws PfModelException {
+            final ToscaConceptIdentifier automationCompositionId) {
         return findAutomationComposition(automationCompositionId.asConceptKey());
     }
 
-    private Optional<AutomationComposition> findAutomationComposition(@NonNull final PfConceptKey key)
-            throws PfModelException {
-        try {
-            return automationCompositionRepository.findById(key).map(JpaAutomationComposition::toAuthorative);
-        } catch (IllegalArgumentException e) {
-            throw new PfModelException(Status.BAD_REQUEST, "Not valid parameter", e);
-        }
+    private Optional<AutomationComposition> findAutomationComposition(@NonNull final PfConceptKey key) {
+        return automationCompositionRepository.findById(key).map(JpaAutomationComposition::toAuthorative);
     }
 
     /**
@@ -107,19 +98,13 @@ public class AutomationCompositionProvider {
      *
      * @param automationComposition the automation composition to update
      * @return the updated automation composition
-     * @throws PfModelException on errors updating the automation composition
      */
-    public AutomationComposition saveAutomationComposition(final AutomationComposition automationComposition)
-            throws PfModelException {
-        try {
-            var result = automationCompositionRepository.save(ProviderUtils.getJpaAndValidate(automationComposition,
-                    JpaAutomationComposition::new, "automation composition"));
+    public AutomationComposition saveAutomationComposition(final AutomationComposition automationComposition) {
+        var result = automationCompositionRepository.save(ProviderUtils.getJpaAndValidate(automationComposition,
+                JpaAutomationComposition::new, "automation composition"));
 
-            // Return the saved participant
-            return result.toAuthorative();
-        } catch (IllegalArgumentException e) {
-            throw new PfModelException(Status.BAD_REQUEST, "Error in save automationComposition", e);
-        }
+        // Return the saved automation composition
+        return result.toAuthorative();
     }
 
     /**
@@ -149,36 +134,14 @@ public class AutomationCompositionProvider {
     }
 
     /**
-     * Saves automation compositions.
-     *
-     * @param automationCompositions a specification of the automation compositions to create
-     * @return the automation compositions created
-     * @throws PfModelException on errors creating automation compositions
-     */
-    public List<AutomationComposition> saveAutomationCompositions(
-            @NonNull final List<AutomationComposition> automationCompositions) throws PfModelException {
-        try {
-            var result =
-                    automationCompositionRepository.saveAll(ProviderUtils.getJpaAndValidateList(automationCompositions,
-                            JpaAutomationComposition::new, "automation compositions"));
-
-            // Return the saved participant
-            return ProviderUtils.asEntityList(result);
-        } catch (IllegalArgumentException e) {
-            throw new PfModelException(Status.BAD_REQUEST, "Error in save AutomationCompositions", e);
-        }
-    }
-
-    /**
      * Delete a automation composition.
      *
      * @param name the name of the automation composition to delete
      * @param version the version of the automation composition to delete
      * @return the automation composition deleted
-     * @throws PfModelException on errors deleting the automation composition
      */
-    public AutomationComposition deleteAutomationComposition(@NonNull final String name, @NonNull final String version)
-            throws PfModelException {
+    public AutomationComposition deleteAutomationComposition(@NonNull final String name,
+            @NonNull final String version) {
 
         var automationCompositionKey = new PfConceptKey(name, version);
         var jpaDeleteAutomationComposition = automationCompositionRepository.findById(automationCompositionKey);
@@ -186,7 +149,7 @@ public class AutomationCompositionProvider {
         if (jpaDeleteAutomationComposition.isEmpty()) {
             String errorMessage = "delete of automation composition \"" + automationCompositionKey.getId()
                     + "\" failed, automation composition does not exist";
-            throw new PfModelException(Response.Status.NOT_FOUND, errorMessage);
+            throw new PfModelRuntimeException(Response.Status.NOT_FOUND, errorMessage);
         }
 
         automationCompositionRepository.deleteById(automationCompositionKey);

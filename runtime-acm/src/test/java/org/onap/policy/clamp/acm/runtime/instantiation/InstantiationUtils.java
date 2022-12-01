@@ -22,12 +22,10 @@ package org.onap.policy.clamp.acm.runtime.instantiation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationCommand;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse;
 import org.onap.policy.common.utils.coder.Coder;
@@ -35,7 +33,6 @@ import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 /**
@@ -47,21 +44,23 @@ public class InstantiationUtils {
     private static final StandardYamlCoder YAML_TRANSLATOR = new StandardYamlCoder();
 
     /**
-     * Gets the AutomationCompositions from Resource.
+     * Gets the AutomationComposition from Resource.
      *
      * @param path path of the resource
      * @param suffix suffix to add to all names in AutomationCompositions
-     * @return the AutomationCompositions from Resource
-     * @throws CoderException if an error occurs
+     * @return the AutomationComposition from Resource
      */
-    public static AutomationCompositions getAutomationCompositionsFromResource(final String path, final String suffix)
-        throws CoderException {
-        AutomationCompositions automationCompositions = CODER.decode(new File(path), AutomationCompositions.class);
+    public static AutomationComposition getAutomationCompositionFromResource(final String path, final String suffix) {
+        try {
+            var automationComposition = CODER.decode(new File(path), AutomationComposition.class);
 
-        // add suffix to all names
-        automationCompositions.getAutomationCompositionList()
-            .forEach(automationComposition -> automationComposition.setName(automationComposition.getName() + suffix));
-        return automationCompositions;
+            // add suffix to name
+            automationComposition.setName(automationComposition.getName() + suffix);
+            return automationComposition;
+        } catch (CoderException e) {
+            fail("Cannot read or decode " + path);
+            return null;
+        }
     }
 
     /**
@@ -70,32 +69,18 @@ public class InstantiationUtils {
      * @param path path of the resource
      * @param suffix suffix to add to all names in AutomationCompositions
      * @return the InstantiationCommand
-     * @throws CoderException if an error occurs
      */
-    public static InstantiationCommand getInstantiationCommandFromResource(final String path, final String suffix)
-        throws CoderException {
-        InstantiationCommand instantiationCommand = CODER.decode(new File(path), InstantiationCommand.class);
+    public static InstantiationCommand getInstantiationCommandFromResource(final String path, final String suffix) {
+        try {
+            var instantiationCommand = CODER.decode(new File(path), InstantiationCommand.class);
 
-        // add suffix to all names
-        instantiationCommand.getAutomationCompositionIdentifierList().forEach(ac -> ac.setName(ac.getName() + suffix));
-        return instantiationCommand;
-    }
-
-    /**
-     * Assert that Instantiation Response contains proper AutomationCompositions.
-     *
-     * @param response InstantiationResponse
-     * @param automationCompositions AutomationCompositions
-     */
-    public static void assertInstantiationResponse(InstantiationResponse response,
-        AutomationCompositions automationCompositions) {
-        assertThat(response).isNotNull();
-        assertThat(response.getErrorDetails()).isNull();
-        assertThat(response.getAffectedAutomationCompositions())
-            .hasSameSizeAs(automationCompositions.getAutomationCompositionList());
-        for (AutomationComposition automationComposition : automationCompositions.getAutomationCompositionList()) {
-            assertTrue(response.getAffectedAutomationCompositions().stream()
-                .anyMatch(ac -> ac.equals(automationComposition.getKey().asIdentifier())));
+            // add suffix to the name
+            var id = instantiationCommand.getAutomationCompositionIdentifier();
+            id.setName(id.getName() + suffix);
+            return instantiationCommand;
+        } catch (CoderException e) {
+            fail("Cannot read or decode " + path);
+            return null;
         }
     }
 
@@ -107,12 +92,7 @@ public class InstantiationUtils {
      */
     public static void assertInstantiationResponse(InstantiationResponse response, InstantiationCommand command) {
         assertThat(response).isNotNull();
-        assertEquals(response.getAffectedAutomationCompositions().size(),
-            command.getAutomationCompositionIdentifierList().size());
-        for (ToscaConceptIdentifier toscaConceptIdentifier : command.getAutomationCompositionIdentifierList()) {
-            assertTrue(response.getAffectedAutomationCompositions().stream()
-                .anyMatch(ac -> ac.compareTo(toscaConceptIdentifier) == 0));
-        }
+        assertEquals(response.getAffectedAutomationComposition(), command.getAutomationCompositionIdentifier());
     }
 
     /**
@@ -122,12 +102,10 @@ public class InstantiationUtils {
      * @param automationComposition AutomationComposition
      */
     public static void assertInstantiationResponse(InstantiationResponse response,
-        AutomationComposition automationComposition) {
+            AutomationComposition automationComposition) {
         assertThat(response).isNotNull();
         assertThat(response.getErrorDetails()).isNull();
-        assertEquals(1, response.getAffectedAutomationCompositions().size());
-        assertEquals(0, response.getAffectedAutomationCompositions().get(0)
-            .compareTo(automationComposition.getKey().asIdentifier()));
+        assertEquals(response.getAffectedAutomationComposition(), automationComposition.getKey().asIdentifier());
     }
 
     /**
@@ -136,7 +114,6 @@ public class InstantiationUtils {
      * @param path path of the resource
      */
     public static ToscaServiceTemplate getToscaServiceTemplate(String path) {
-
         try {
             return YAML_TRANSLATOR.decode(ResourceUtils.getResourceAsStream(path), ToscaServiceTemplate.class);
         } catch (CoderException e) {

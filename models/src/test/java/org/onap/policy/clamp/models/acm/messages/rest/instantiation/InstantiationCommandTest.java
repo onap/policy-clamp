@@ -25,15 +25,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class InstantiationCommandTest {
     @Test
     void testInstantiationCommandLombok() {
         assertNotNull(new InstantiationCommand());
-        InstantiationCommand ic0 = new InstantiationCommand();
+        var ic0 = new InstantiationCommand();
 
         assertThat(ic0.toString()).contains("InstantiationCommand(");
         assertNotEquals(0, ic0.hashCode());
@@ -41,9 +41,9 @@ class InstantiationCommandTest {
         assertNotEquals(null, ic0);
 
 
-        InstantiationCommand ic1 = new InstantiationCommand();
+        var ic1 = new InstantiationCommand();
 
-        ic1.setAutomationCompositionIdentifierList(new ArrayList<>());
+        ic1.setAutomationCompositionIdentifier(new ToscaConceptIdentifier());
         ic1.setOrderedState(AutomationCompositionOrderedState.UNINITIALISED);
 
         assertThat(ic1.toString()).contains("InstantiationCommand(");
@@ -53,7 +53,7 @@ class InstantiationCommandTest {
 
         assertNotEquals(ic1, ic0);
 
-        InstantiationCommand ic2 = new InstantiationCommand();
+        var ic2 = new InstantiationCommand();
 
         assertEquals(ic2, ic0);
     }
