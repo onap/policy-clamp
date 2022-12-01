@@ -22,10 +22,12 @@ package org.onap.policy.clamp.acm.element.main.parameters;
 
 import java.util.List;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.onap.policy.clamp.models.acm.messages.rest.element.DmaapConfig;
 import org.onap.policy.common.endpoints.parameters.TopicParameters;
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class ElementTopicParameters extends TopicParameters {
 
     /**

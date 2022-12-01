@@ -1,0 +1,242 @@
+openapi: 3.0.3
+info:
+  title: ACM Element Test Participant
+  description: ApiCLAMP Automation Composition Management Element Test Participant API
+  contact:
+    name: ONAP Support
+    url: https://lists.onap.org/g/onap-discuss
+    email: onap-discuss@lists.onap.org
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0
+  version: '1.0'
+externalDocs:
+  description: CLAMP Automation Composition Management Documentation
+  url: https://docs.onap.org/projects/onap-policy-parent/en/latest/clamp/clamp.html
+servers:
+  - url: http:{port}/{server}
+    variables:
+      port:
+        default: "30296"
+        description: This value is assigned by the service provider
+      server:
+        default: /onap/policy/clamp/acelement/v2
+        description: This value is assigned by the service provider
+tags:
+  - name: ac-element-controller
+    description: Automation Composition Element Test Participant controller
+paths:
+  /config:
+    get:
+      tags:
+        - ac-element-controller
+      summary: Return the element configuration
+      description: Return the configuraiton of this AC element
+      operationId: getElementConfig
+      parameters:
+      - name: X-onap-RequestId
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: OK, serialised instance of
+            [ElementConfig](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/element/ElementConfig.java)
+          headers:
+            api-version:
+              schema:
+                type: string
+            X-LatestVersion:
+              schema:
+                type: string
+                description: Used only to communicate an API's latest version
+            X-PatchVersion:
+              schema:
+                type: string
+                description:
+                  Used only to communicate a PATCH version in a response for troubleshooting purposes only,
+                  and will not be provided by the client on request
+            X-MinorVersion:
+              schema:
+                type: string
+                description:
+                  Used to request or communicate a MINOR version back from the client
+                  to the server, and from the server back to the client
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+                description: Used to track REST transactions for logging purposes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ElementConfig'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/ElementConfig'
+        401:
+          description: Authorization Error
+        404:
+          description: Not Found
+        500:
+          description: Internal Server Error
+      security:
+        - basicAuth: []
+  /activate:
+    post:
+      tags:
+        - ac-element-controller
+      summary: Activates the element configuration
+      description: >-
+        Activates a configuration on an Automation Composition Element
+      operationId: activateElement
+      parameters:
+      - name: X-onap-RequestId
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: The AC element configuration to apply in a serialised instance of
+            [ElementConfig](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/element/ElementConfig.java)
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ElementConfig'
+          application/yaml:
+            schema:
+              $ref: '#/components/schemas/ElementConfig'
+      responses:
+        201:
+          description: OK, configuration has been created
+          headers:
+            api-version:
+              schema:
+                type: string
+            X-LatestVersion:
+              schema:
+                type: string
+                description: Used only to communicate an API's latest version
+            X-PatchVersion:
+              schema:
+                type: string
+                description:
+                  Used only to communicate a PATCH version in a response for troubleshooting purposes only,
+                  and will not be provided by the client on request
+            X-MinorVersion:
+              schema:
+                type: string
+                description:
+                  Used to request or communicate a MINOR version back from the client
+                  to the server, and from the server back to the client
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+                description: Used to track REST transactions for logging purposes
+          content:
+            application/json:
+              schema:
+                type: string
+              example: Success
+            application/yaml:
+              schema:
+                type: string
+              example: Success
+        400:
+          description: Bad Request
+        401:
+          description: Authorization Error
+        500:
+          description: Internal Server Error
+      security:
+        - basicAuth: []
+  /deactivate:
+    delete:
+      tags:
+        - ac-element-controller
+      summary: Delete the AC element configuration
+      description: Deletes the configuration of an Automation Composition Element
+      operationId: deleteConfig
+      parameters:
+      - name: X-onap-RequestId
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      responses:
+        204:
+          description: No Content
+          headers:
+            api-version:
+              schema:
+                type: string
+            X-LatestVersion:
+              schema:
+                type: string
+                description: Used only to communicate an API's latest version
+            X-PatchVersion:
+              schema:
+                type: string
+                description:
+                  Used only to communicate a PATCH version in a response for troubleshooting purposes only,
+                  and will not be provided by the client on request
+            X-MinorVersion:
+              schema:
+                type: string
+                description:
+                  Used to request or communicate a MINOR version back from the client
+                  to the server, and from the server back to the client
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+                description: Used to track REST transactions for logging purposes
+        400:
+          description: Bad Request
+        401:
+          description: Authorization Error
+        409:
+          description: Not Defined, the elemet type is not defined
+          headers:
+            api-version:
+              schema:
+                type: string
+            X-LatestVersion:
+              schema:
+                type: string
+                description: Used only to communicate an API's latest version
+            X-PatchVersion:
+              schema:
+                type: string
+                description:
+                  Used only to communicate a PATCH version in a response for troubleshooting purposes only,
+                  and will not be provided by the client on request
+            X-MinorVersion:
+              schema:
+                type: string
+                description:
+                  Used to request or communicate a MINOR version back from the client
+                  to the server, and from the server back to the client
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+                description: Used to track REST transactions for logging purposes
+        500:
+          description: Internal Server Error
+      security:
+        - basicAuth: []
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+  schemas:
+    ElementConfig:
+      title: ElementConfig
+      type: object

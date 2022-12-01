@@ -29,4 +29,3 @@ participant:
             - localhost
           topicCommInfrastructure: dmaap
       name: AutomationComposition Topics
-

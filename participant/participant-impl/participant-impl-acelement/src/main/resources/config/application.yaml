@@ -3,9 +3,16 @@ spring:
     user:
       name: ${REST_USER:acmUser}
       password: ${REST_PASSWORD:zb!XztG34}
+  autoconfigure:
+    exclude: >
+      org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration,
+      org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration,
+      org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration
 
 server:
   port: ${PORT:8084}
+  servlet:
+    context-path: /onap/policy/clamp/acelement/v2
   error:
     path: /error
 
@@ -13,6 +20,7 @@ element:
   elementId:
     name: ${ELEMENT_ID:onap.policy.clamp.ac.element1}
     version: ${ELEMENT_VERSION:1.0.0}
+
 management:
   endpoints:
     web:
