@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fe06dcd1_f3378226",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/main/rest/CommissioningController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2022-12-02T14:54:09Z",
+      "side": 1,
+      "message": "compositions",
+      "range": {
+        "startLine": 56,
+        "startChar": 50,
+        "endLine": 56,
+        "endChar": 60
+      },
+      "revId": "eb1839fecde824acbe81f66a6e8f143f3be8d01b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
