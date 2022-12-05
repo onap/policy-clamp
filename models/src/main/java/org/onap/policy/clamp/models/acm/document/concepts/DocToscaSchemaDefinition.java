@@ -70,7 +70,8 @@ public class DocToscaSchemaDefinition
         var toscaEntrySchema = new ToscaSchemaDefinition();
 
         toscaEntrySchema.setName(name);
-        toscaEntrySchema.setType(getTypeDocConceptKey().getId());
+        toscaEntrySchema.setType(type);
+        toscaEntrySchema.setTypeVersion(typeVersion);
         toscaEntrySchema.setDescription(description);
 
         if (constraints != null) {

@@ -106,7 +106,8 @@ public class DocToscaProperty implements PfAuthorative<ToscaProperty>, Serializa
         var toscaProperty = new ToscaProperty();
 
         toscaProperty.setName(name);
-        toscaProperty.setType(getTypeDocConceptKey().getId());
+        toscaProperty.setType(type);
+        toscaProperty.setTypeVersion(typeVersion);
         toscaProperty.setDescription(description);
         toscaProperty.setRequired(required);
         toscaProperty.setStatus(status);

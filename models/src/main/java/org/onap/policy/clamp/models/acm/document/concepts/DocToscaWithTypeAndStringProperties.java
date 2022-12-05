@@ -66,8 +66,8 @@ public class DocToscaWithTypeAndStringProperties<T extends ToscaWithTypeAndObjec
     public T toAuthorative() {
         var tosca = super.toAuthorative();
 
-        tosca.setType(getTypeDocConceptKey().getId());
-        tosca.setTypeVersion("");
+        tosca.setType(type);
+        tosca.setTypeVersion(typeVersion);
 
         tosca.setProperties(PfUtils.mapMap(properties, x -> x));
 
