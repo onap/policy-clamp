@@ -29,7 +29,6 @@ import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVIC
 
 import java.util.UUID;
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.Response;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -47,6 +46,7 @@ import org.onap.policy.clamp.models.acm.messages.rest.instantiation.Instantiatio
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
 import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionRepository;
+import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -65,10 +65,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 class InstantiationControllerTest extends CommonRestController {
 
     private static final String AC_INSTANTIATION_CREATE_JSON =
-            "src/test/resources/rest/acm/AutomationCompositions.json";
+            "src/test/resources/rest/acm/AutomationComposition.json";
 
     private static final String AC_INSTANTIATION_UPDATE_JSON =
-            "src/test/resources/rest/acm/AutomationCompositionsUpdate.json";
+            "src/test/resources/rest/acm/AutomationCompositionUpdate.json";
 
     private static final String AC_INSTANTIATION_CHANGE_STATE_JSON = "src/test/resources/rest/acm/PassiveCommand.json";
 
@@ -119,11 +119,11 @@ class InstantiationControllerTest extends CommonRestController {
     }
 
     @Test
-    void testCreate_Unauthorized() throws Exception {
-        AutomationCompositions automationCompositions =
-                InstantiationUtils.getAutomationCompositionsFromResource(AC_INSTANTIATION_CREATE_JSON, "Unauthorized");
+    void testCreate_Unauthorized() {
+        var automationComposition =
+                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Unauthorized");
 
-        assertUnauthorizedPost(INSTANTIATION_ENDPOINT, Entity.json(automationCompositions));
+        assertUnauthorizedPost(INSTANTIATION_ENDPOINT, Entity.json(automationComposition));
     }
 
     @Test
@@ -133,10 +133,10 @@ class InstantiationControllerTest extends CommonRestController {
 
     @Test
     void testUpdate_Unauthorized() throws Exception {
-        AutomationCompositions automationCompositions =
-                InstantiationUtils.getAutomationCompositionsFromResource(AC_INSTANTIATION_UPDATE_JSON, "Unauthorized");
+        var automationComposition =
+                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_UPDATE_JSON, "Unauthorized");
 
-        assertUnauthorizedPut(INSTANTIATION_ENDPOINT, Entity.json(automationCompositions));
+        assertUnauthorizedPut(INSTANTIATION_ENDPOINT, Entity.json(automationComposition));
     }
 
     @Test
@@ -145,197 +145,164 @@ class InstantiationControllerTest extends CommonRestController {
     }
 
     @Test
-    void testCommand_Unauthorized() throws Exception {
-        InstantiationCommand instantiationCommand = InstantiationUtils
+    void testCommand_Unauthorized() {
+        var instantiationCommand = InstantiationUtils
                 .getInstantiationCommandFromResource(AC_INSTANTIATION_CHANGE_STATE_JSON, "Unauthorized");
 
         assertUnauthorizedPut(INSTANTIATION_COMMAND_ENDPOINT, Entity.json(instantiationCommand));
     }
 
     @Test
-    void testCreate() throws Exception {
-
-        var automationCompositionsFromRsc =
-                InstantiationUtils.getAutomationCompositionsFromResource(AC_INSTANTIATION_CREATE_JSON, "Create");
-        for (var automationComposition : automationCompositionsFromRsc.getAutomationCompositionList()) {
-            automationComposition.setCompositionId(compositionId);
-        }
+    void testCreate() {
+        var automationCompositionFromRsc =
+                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Create");
+        automationCompositionFromRsc.setCompositionId(compositionId);
 
         var invocationBuilder = super.sendRequest(INSTANTIATION_ENDPOINT);
-        var resp = invocationBuilder.post(Entity.json(automationCompositionsFromRsc));
+        var resp = invocationBuilder.post(Entity.json(automationCompositionFromRsc));
         assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
-        InstantiationResponse instResponse = resp.readEntity(InstantiationResponse.class);
-        InstantiationUtils.assertInstantiationResponse(instResponse, automationCompositionsFromRsc);
+        var instResponse = resp.readEntity(InstantiationResponse.class);
+        InstantiationUtils.assertInstantiationResponse(instResponse, automationCompositionFromRsc);
 
-        for (var automationCompositionFromRsc : automationCompositionsFromRsc.getAutomationCompositionList()) {
-            var automationCompositionsFromDb =
-                    instantiationProvider.getAutomationCompositions(automationCompositionFromRsc.getKey().getName(),
-                            automationCompositionFromRsc.getKey().getVersion());
+        var automationCompositionsFromDb = instantiationProvider.getAutomationCompositions(
+                automationCompositionFromRsc.getKey().getName(), automationCompositionFromRsc.getKey().getVersion());
 
-            assertNotNull(automationCompositionsFromDb);
-            assertThat(automationCompositionsFromDb.getAutomationCompositionList()).hasSize(1);
-            assertEquals(automationCompositionFromRsc,
-                    automationCompositionsFromDb.getAutomationCompositionList().get(0));
-        }
+        assertNotNull(automationCompositionsFromDb);
+        assertThat(automationCompositionsFromDb.getAutomationCompositionList()).hasSize(1);
+        assertEquals(automationCompositionFromRsc, automationCompositionsFromDb.getAutomationCompositionList().get(0));
+
     }
 
     @Test
-    void testCreateBadRequest() throws Exception {
-        var automationCompositionsFromRsc = InstantiationUtils
-                .getAutomationCompositionsFromResource(AC_INSTANTIATION_CREATE_JSON, "CreateBadRequest");
-        for (var automationComposition : automationCompositionsFromRsc.getAutomationCompositionList()) {
-            automationComposition.setCompositionId(compositionId);
-        }
+    void testCreateBadRequest() {
+        var automationCompositionFromRsc = InstantiationUtils
+                .getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "CreateBadRequest");
+        automationCompositionFromRsc.setCompositionId(compositionId);
 
         var invocationBuilder = super.sendRequest(INSTANTIATION_ENDPOINT);
-        var resp = invocationBuilder.post(Entity.json(automationCompositionsFromRsc));
+        var resp = invocationBuilder.post(Entity.json(automationCompositionFromRsc));
         assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
 
         // testing Bad Request: AC already defined
-        resp = invocationBuilder.post(Entity.json(automationCompositionsFromRsc));
+        resp = invocationBuilder.post(Entity.json(automationCompositionFromRsc));
         assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), resp.getStatus());
-        InstantiationResponse instResponse = resp.readEntity(InstantiationResponse.class);
+        var instResponse = resp.readEntity(InstantiationResponse.class);
         assertNotNull(instResponse.getErrorDetails());
-        assertNull(instResponse.getAffectedAutomationCompositions());
+        assertNull(instResponse.getAffectedAutomationComposition());
     }
 
     @Test
     void testQuery_NoResultWithThisName() {
-        Invocation.Builder invocationBuilder = super.sendRequest(INSTANTIATION_ENDPOINT + "?name=noResultWithThisName");
-        Response rawresp = invocationBuilder.buildGet().invoke();
+        var invocationBuilder = super.sendRequest(INSTANTIATION_ENDPOINT + "?name=noResultWithThisName");
+        var rawresp = invocationBuilder.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
-        AutomationCompositions resp = rawresp.readEntity(AutomationCompositions.class);
+        var resp = rawresp.readEntity(AutomationCompositions.class);
         assertThat(resp.getAutomationCompositionList()).isEmpty();
     }
 
     @Test
-    void testQuery() throws Exception {
+    void testQuery() {
+        var automationComposition =
+                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Query");
+        automationComposition.setCompositionId(compositionId);
 
-        var automationCompositions =
-                InstantiationUtils.getAutomationCompositionsFromResource(AC_INSTANTIATION_CREATE_JSON, "Query");
-        for (var acFromRsc : automationCompositions.getAutomationCompositionList()) {
-            acFromRsc.setCompositionId(compositionId);
-        }
-        instantiationProvider.createAutomationCompositions(automationCompositions);
+        instantiationProvider.createAutomationComposition(automationComposition);
 
-        for (var automationCompositionFromRsc : automationCompositions.getAutomationCompositionList()) {
-            var invocationBuilder = super.sendRequest(
-                    INSTANTIATION_ENDPOINT + "?name=" + automationCompositionFromRsc.getKey().getName());
-            Response rawresp = invocationBuilder.buildGet().invoke();
-            assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
-            AutomationCompositions automationCompositionsQuery = rawresp.readEntity(AutomationCompositions.class);
-            assertNotNull(automationCompositionsQuery);
-            assertThat(automationCompositionsQuery.getAutomationCompositionList()).hasSize(1);
-            assertEquals(automationCompositionFromRsc,
-                    automationCompositionsQuery.getAutomationCompositionList().get(0));
-        }
+        var invocationBuilder =
+                super.sendRequest(INSTANTIATION_ENDPOINT + "?name=" + automationComposition.getKey().getName());
+        var rawresp = invocationBuilder.buildGet().invoke();
+        assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
+        var automationCompositionsQuery = rawresp.readEntity(AutomationCompositions.class);
+        assertNotNull(automationCompositionsQuery);
+        assertThat(automationCompositionsQuery.getAutomationCompositionList()).hasSize(1);
+        assertEquals(automationComposition, automationCompositionsQuery.getAutomationCompositionList().get(0));
     }
 
     @Test
-    void testUpdate() throws Exception {
+    void testUpdate() {
+        var automationCompositionCreate =
+                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Update");
+        automationCompositionCreate.setCompositionId(compositionId);
 
-        var automationCompositionsCreate =
-                InstantiationUtils.getAutomationCompositionsFromResource(AC_INSTANTIATION_CREATE_JSON, "Update");
-        for (var automationComposition : automationCompositionsCreate.getAutomationCompositionList()) {
-            automationComposition.setCompositionId(compositionId);
-        }
-
-        instantiationProvider.createAutomationCompositions(automationCompositionsCreate);
+        instantiationProvider.createAutomationComposition(automationCompositionCreate);
 
         var invocationBuilder = super.sendRequest(INSTANTIATION_ENDPOINT);
-        var automationCompositions =
-                InstantiationUtils.getAutomationCompositionsFromResource(AC_INSTANTIATION_UPDATE_JSON, "Update");
-        for (var automationComposition : automationCompositions.getAutomationCompositionList()) {
-            automationComposition.setCompositionId(compositionId);
-        }
-        var resp = invocationBuilder.put(Entity.json(automationCompositions));
+        var automationComposition =
+                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_UPDATE_JSON, "Update");
+        automationComposition.setCompositionId(compositionId);
+        var resp = invocationBuilder.put(Entity.json(automationComposition));
         assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
 
         var instResponse = resp.readEntity(InstantiationResponse.class);
-        InstantiationUtils.assertInstantiationResponse(instResponse, automationCompositions);
+        InstantiationUtils.assertInstantiationResponse(instResponse, automationComposition);
 
-        for (var automationCompositionUpdate : automationCompositions.getAutomationCompositionList()) {
-            var automationCompositionsFromDb = instantiationProvider.getAutomationCompositions(
-                    automationCompositionUpdate.getKey().getName(), automationCompositionUpdate.getKey().getVersion());
+        var automationCompositionsFromDb = instantiationProvider.getAutomationCompositions(
+                automationComposition.getKey().getName(), automationComposition.getKey().getVersion());
 
-            assertNotNull(automationCompositionsFromDb);
-            assertThat(automationCompositionsFromDb.getAutomationCompositionList()).hasSize(1);
-            assertEquals(automationCompositionUpdate,
-                    automationCompositionsFromDb.getAutomationCompositionList().get(0));
-        }
+        assertNotNull(automationCompositionsFromDb);
+        assertThat(automationCompositionsFromDb.getAutomationCompositionList()).hasSize(1);
+        assertEquals(automationComposition, automationCompositionsFromDb.getAutomationCompositionList().get(0));
     }
 
     @Test
-    void testDelete() throws Exception {
+    void testDelete() {
+        var automationCompositionFromRsc =
+                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Delete");
+        automationCompositionFromRsc.setCompositionId(compositionId);
 
-        var automationCompositionsFromRsc =
-                InstantiationUtils.getAutomationCompositionsFromResource(AC_INSTANTIATION_CREATE_JSON, "Delete");
-        for (var automationComposition : automationCompositionsFromRsc.getAutomationCompositionList()) {
-            automationComposition.setCompositionId(compositionId);
-        }
+        instantiationProvider.createAutomationComposition(automationCompositionFromRsc);
 
-        instantiationProvider.createAutomationCompositions(automationCompositionsFromRsc);
+        var invocationBuilder =
+                super.sendRequest(INSTANTIATION_ENDPOINT + "?name=" + automationCompositionFromRsc.getKey().getName()
+                        + "&version=" + automationCompositionFromRsc.getKey().getVersion());
+        var resp = invocationBuilder.delete();
+        assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
+        var instResponse = resp.readEntity(InstantiationResponse.class);
+        InstantiationUtils.assertInstantiationResponse(instResponse, automationCompositionFromRsc);
 
-        for (var automationCompositionFromRsc : automationCompositionsFromRsc.getAutomationCompositionList()) {
-            var invocationBuilder = super.sendRequest(
-                    INSTANTIATION_ENDPOINT + "?name=" + automationCompositionFromRsc.getKey().getName() + "&version="
-                            + automationCompositionFromRsc.getKey().getVersion());
-            var resp = invocationBuilder.delete();
-            assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
-            var instResponse = resp.readEntity(InstantiationResponse.class);
-            InstantiationUtils.assertInstantiationResponse(instResponse, automationCompositionFromRsc);
-
-            var automationCompositionsFromDb =
-                    instantiationProvider.getAutomationCompositions(automationCompositionFromRsc.getKey().getName(),
-                            automationCompositionFromRsc.getKey().getVersion());
-            assertThat(automationCompositionsFromDb.getAutomationCompositionList()).isEmpty();
-        }
+        var automationCompositionsFromDb = instantiationProvider.getAutomationCompositions(
+                automationCompositionFromRsc.getKey().getName(), automationCompositionFromRsc.getKey().getVersion());
+        assertThat(automationCompositionsFromDb.getAutomationCompositionList()).isEmpty();
     }
 
     @Test
-    void testDeleteBadRequest() throws Exception {
-        var automationCompositionsFromRsc =
-                InstantiationUtils.getAutomationCompositionsFromResource(AC_INSTANTIATION_CREATE_JSON, "DelBadRequest");
-        for (var automationComposition : automationCompositionsFromRsc.getAutomationCompositionList()) {
-            automationComposition.setCompositionId(compositionId);
-        }
+    void testDeleteBadRequest() {
+        var automationCompositionFromRsc =
+                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "DelBadRequest");
+        automationCompositionFromRsc.setCompositionId(compositionId);
 
-        instantiationProvider.createAutomationCompositions(automationCompositionsFromRsc);
+        instantiationProvider.createAutomationComposition(automationCompositionFromRsc);
 
-        for (var automationCompositionFromRsc : automationCompositionsFromRsc.getAutomationCompositionList()) {
-            var invocationBuilder = super.sendRequest(
-                    INSTANTIATION_ENDPOINT + "?name=" + automationCompositionFromRsc.getKey().getName());
-            var resp = invocationBuilder.delete();
-            assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), resp.getStatus());
-        }
+        var invocationBuilder =
+                super.sendRequest(INSTANTIATION_ENDPOINT + "?name=" + automationCompositionFromRsc.getKey().getName());
+        var resp = invocationBuilder.delete();
+        assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), resp.getStatus());
     }
 
     @Test
     void testCommand_NotFound1() {
-        Invocation.Builder invocationBuilder = super.sendRequest(INSTANTIATION_COMMAND_ENDPOINT);
-        Response resp = invocationBuilder.put(Entity.json(new InstantiationCommand()));
+        var invocationBuilder = super.sendRequest(INSTANTIATION_COMMAND_ENDPOINT);
+        var resp = invocationBuilder.put(Entity.json(new InstantiationCommand()));
         assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), resp.getStatus());
     }
 
     @Test
-    void testCommand_NotFound2() throws Exception {
-        InstantiationCommand command =
+    void testCommand_NotFound2() {
+        var command =
                 InstantiationUtils.getInstantiationCommandFromResource(AC_INSTANTIATION_CHANGE_STATE_JSON, "Command");
         command.setOrderedState(null);
 
-        Invocation.Builder invocationBuilder = super.sendRequest(INSTANTIATION_COMMAND_ENDPOINT);
-        Response resp = invocationBuilder.put(Entity.json(command));
+        var invocationBuilder = super.sendRequest(INSTANTIATION_COMMAND_ENDPOINT);
+        var resp = invocationBuilder.put(Entity.json(command));
         assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), resp.getStatus());
     }
 
     @Test
-    void testCommand() throws Exception {
-        var automationCompositions =
-                InstantiationUtils.getAutomationCompositionsFromResource(AC_INSTANTIATION_CREATE_JSON, "Command");
-        for (var automationComposition : automationCompositions.getAutomationCompositionList()) {
-            automationComposition.setCompositionId(compositionId);
-        }
-        instantiationProvider.createAutomationCompositions(automationCompositions);
+    void testCommand() throws PfModelException {
+        var automationComposition =
+                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Command");
+        automationComposition.setCompositionId(compositionId);
+        instantiationProvider.createAutomationComposition(automationComposition);
 
         var participants = CommonTestData.createParticipants();
         for (var participant : participants) {
@@ -352,13 +319,12 @@ class InstantiationControllerTest extends CommonRestController {
         InstantiationUtils.assertInstantiationResponse(instResponse, command);
 
         // check passive state on DB
-        for (var toscaConceptIdentifier : command.getAutomationCompositionIdentifierList()) {
-            var automationCompositionsGet = instantiationProvider
-                    .getAutomationCompositions(toscaConceptIdentifier.getName(), toscaConceptIdentifier.getVersion());
-            assertThat(automationCompositionsGet.getAutomationCompositionList()).hasSize(1);
-            assertEquals(command.getOrderedState(),
-                    automationCompositionsGet.getAutomationCompositionList().get(0).getOrderedState());
-        }
+        var toscaConceptIdentifier = command.getAutomationCompositionIdentifier();
+        var automationCompositionsGet = instantiationProvider
+                .getAutomationCompositions(toscaConceptIdentifier.getName(), toscaConceptIdentifier.getVersion());
+        assertThat(automationCompositionsGet.getAutomationCompositionList()).hasSize(1);
+        assertEquals(command.getOrderedState(),
+                automationCompositionsGet.getAutomationCompositionList().get(0).getOrderedState());
     }
 
     private synchronized void deleteEntryInDB() throws Exception {

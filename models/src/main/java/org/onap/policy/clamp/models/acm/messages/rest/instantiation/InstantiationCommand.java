@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021 Nordix Foundation.
+ * Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@
 
 package org.onap.policy.clamp.models.acm.messages.rest.instantiation;
 
-import java.util.List;
 import lombok.Data;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -30,6 +29,6 @@ public class InstantiationCommand {
     // The state to which the automation compositions are to be set
     private AutomationCompositionOrderedState orderedState;
 
-    // The list of automation compositions on which the command is to be issued
-    private List<ToscaConceptIdentifier> automationCompositionIdentifierList;
+    // The automation composition on which the command is to be issued
+    private ToscaConceptIdentifier automationCompositionIdentifier;
 }

@@ -1,13 +1,7 @@
 {
     "orderedState": "PASSIVE",
-    "automationCompositionIdentifierList": [
-        {
-            "name": "PMSHInstance0",
-            "version": "1.0.1"
-        },
-        {
-            "name": "PMSHInstance1",
-            "version": "1.0.1"
-        }
-    ]
+    "automationCompositionIdentifier": {
+        "name": "PMSHInstance0",
+        "version": "1.0.1"
+    }
 }

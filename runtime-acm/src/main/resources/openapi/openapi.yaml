@@ -696,14 +696,14 @@ paths:
     post:
       tags:
       - Automation Composition Instance
-      summary: Create automation composition instances
-      description: Creates automation composition instances that use the sepcified automation composition definition. The IDs of the created
-        automation composition instances are returned.
-      operationId: createCompositionInstances
+      summary: Create automation composition instance
+      description: Creates automation composition instance that use the sepcified automation composition definition. The ID of the created
+        automation composition instance is returned.
+      operationId: createCompositionInstance
       parameters:
       - name : compositionId
         in: path
-        description: The UUID of the automation composition definition on which to create instances
+        description: The UUID of the automation composition definition on which to create instance
         required: true
         schema:
           type: string
@@ -716,25 +716,25 @@ paths:
           format: uuid
       requestBody:
         description: Serialised instance of
-          [AutomationCompositions](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationCompositions.java)
-          containing a list of automation composition instances to create
+          [AutomationComposition](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationComposition.java)
+          containing a automation composition instance to create
         content:
           application/json:
             schema:
-                $ref: '#/components/schemas/AutomationCompositions'
+                $ref: '#/components/schemas/AutomationComposition'
             example:
-              externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/postCompositionInstances.json'
+              externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/postCompositionInstance.json'
           application/yaml:
             schema:
-                $ref: '#/components/schemas/AutomationCompositions'
+                $ref: '#/components/schemas/AutomationComposition'
             example:
-              externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/postCompositionInstances.yaml'
+              externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/postCompositionInstance.yaml'
         required: true
       responses:
         201:
           description: Serialised instance of
             [InstantiationResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/instantiation/InstantiationResponse.java)
-            containing the UUIDs of the created automation composition instances
+            containing the UUID of the created automation composition instance
           headers:
             X-LatestVersion:
               schema:
@@ -860,8 +860,8 @@ paths:
       responses:
         200:
           description: Serialised instance of
-            [AutomationCompositions](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationCompositions.java)
-            containing a list of automation composition instances with one entry
+            [AutomationComposition](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationComposition.java)
+            containing the automation composition instance
           headers:
             X-LatestVersion:
               schema:
@@ -879,12 +879,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AutomationCompositions'
+                $ref: '#/components/schemas/AutomationComposition'
               example:
                 externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getCompositionInstanceResponse.json'
             application/yaml:
               schema:
-                $ref: '#/components/schemas/AutomationCompositions'
+                $ref: '#/components/schemas/AutomationComposition'
               example:
                 externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getCompositionInstanceResponse.yaml'
         401:
@@ -1215,6 +1215,9 @@ components:
       type: object
     ToscaServiceTemplate:
       title: ToscaServiceTemplate
+      type: object
+    AutomationComposition:
+      title: AutomationComposition
       type: object
     AutomationCompositions:
       title: AutomationCompositions

@@ -9,7 +9,7 @@
         "709c62b3-8918-41b9-a747-d21eb79c6c20": {
             "id": "709c62b3-8918-41b9-a747-d21eb79c6c20",
             "definition": {
-                "name": "org.onap.domain.pmsh.DCAEMicroservice",
+                "name": "org.onap.domain.pmsh.PMSH_DCAEMicroservice",
                 "version": "1.2.3"
             },
             "participantType": {
@@ -51,16 +51,12 @@
         "709c62b3-8918-41b9-a747-d21eb79c6c23": {
             "id": "709c62b3-8918-41b9-a747-d21eb79c6c23",
             "definition": {
-                "name": "org.onap.domain.pmsh.PMSH_OperationalPolicyAutomationCompositionElement",
+                "name": "org.onap.domain.pmsh.PMSH_CDS_AutomationCompositionElement",
                 "version": "1.2.3"
             },
-            "participantId": {
-                "name": "org.onap.PM_Policy",
-                "version": "1.0.0"
-            },
             "participantType": {
-                "name": "org.onap.policy.clamp.acm.PolicyParticipant",
-                "version": "2.3.1"
+                "name": "org.onap.ccsdk.cds.acm.CdsAutomationCompositionParticipant",
+                "version": "2.2.1"
             },
             "state": "UNINITIALISED",
             "orderedState": "UNINITIALISED",

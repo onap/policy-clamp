@@ -21,9 +21,7 @@
 
 package org.onap.policy.clamp.acm.runtime.instantiation;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.Response;
@@ -44,8 +42,7 @@ import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.common.parameters.ObjectValidationResult;
 import org.onap.policy.common.parameters.ValidationStatus;
-import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.base.PfModelRuntimeException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,75 +62,66 @@ public class AutomationCompositionInstantiationProvider {
     private static final String ENTRY = "entry ";
 
     /**
-     * Create automation compositions.
+     * Create automation composition.
      *
-     * @param automationCompositions the automation composition
+     * @param automationComposition the automation composition
      * @return the result of the instantiation operation
-     * @throws PfModelException on creation errors
      */
-    public InstantiationResponse createAutomationCompositions(AutomationCompositions automationCompositions)
-        throws PfModelException {
-        for (AutomationComposition automationComposition : automationCompositions.getAutomationCompositionList()) {
-            var checkAutomationCompositionOpt =
+    public InstantiationResponse createAutomationComposition(AutomationComposition automationComposition) {
+
+        var checkAutomationCompositionOpt =
                 automationCompositionProvider.findAutomationComposition(automationComposition.getKey().asIdentifier());
-            if (checkAutomationCompositionOpt.isPresent()) {
-                throw new PfModelException(Response.Status.BAD_REQUEST,
+        if (checkAutomationCompositionOpt.isPresent()) {
+            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
                     automationComposition.getKey().asIdentifier() + " already defined");
-            }
         }
-        BeanValidationResult validationResult = validateAutomationCompositions(automationCompositions);
+
+        var validationResult = validateAutomationComposition(automationComposition);
         if (!validationResult.isValid()) {
-            throw new PfModelException(Response.Status.BAD_REQUEST, validationResult.getResult());
+            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, validationResult.getResult());
         }
-        automationCompositionProvider.saveAutomationCompositions(automationCompositions.getAutomationCompositionList());
+        automationComposition = automationCompositionProvider.saveAutomationComposition(automationComposition);
 
         var response = new InstantiationResponse();
-        response.setAffectedAutomationCompositions(automationCompositions.getAutomationCompositionList().stream()
-            .map(ac -> ac.getKey().asIdentifier()).collect(Collectors.toList()));
+        response.setAffectedAutomationComposition(automationComposition.getKey().asIdentifier());
 
         return response;
     }
 
     /**
-     * Update automation compositions.
+     * Update automation composition.
      *
-     * @param automationCompositions the automation composition
+     * @param automationComposition the automation composition
      * @return the result of the instantiation operation
-     * @throws PfModelException on update errors
      */
-    public InstantiationResponse updateAutomationCompositions(AutomationCompositions automationCompositions)
-        throws PfModelException {
-        BeanValidationResult validationResult = validateAutomationCompositions(automationCompositions);
+    public InstantiationResponse updateAutomationComposition(AutomationComposition automationComposition) {
+        var validationResult = validateAutomationComposition(automationComposition);
         if (!validationResult.isValid()) {
-            throw new PfModelException(Response.Status.BAD_REQUEST, validationResult.getResult());
+            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, validationResult.getResult());
         }
-        automationCompositionProvider.saveAutomationCompositions(automationCompositions.getAutomationCompositionList());
+        automationCompositionProvider.saveAutomationComposition(automationComposition);
 
         var response = new InstantiationResponse();
-        response.setAffectedAutomationCompositions(automationCompositions.getAutomationCompositionList().stream()
-            .map(ac -> ac.getKey().asIdentifier()).collect(Collectors.toList()));
+        response.setAffectedAutomationComposition(automationComposition.getKey().asIdentifier());
 
         return response;
     }
 
     /**
-     * Validate AutomationCompositions.
+     * Validate AutomationComposition.
      *
-     * @param automationCompositions AutomationCompositions to validate
+     * @param automationComposition AutomationComposition to validate
      * @return the result of validation
-     * @throws PfModelException if automationCompositions is not valid
      */
-    private BeanValidationResult validateAutomationCompositions(AutomationCompositions automationCompositions) {
+    private BeanValidationResult validateAutomationComposition(AutomationComposition automationComposition) {
 
-        var result = new BeanValidationResult("AutomationCompositions", automationCompositions);
-        for (var automationComposition : automationCompositions.getAutomationCompositionList()) {
-            var serviceTemplate = acDefinitionProvider.findAcDefinition(automationComposition.getCompositionId());
-            if (serviceTemplate.isEmpty()) {
-                result.addResult(new ObjectValidationResult("ServiceTemplate", "", ValidationStatus.INVALID,
-                        "Commissioned automation composition definition not found"));
-            } else {
-                result.addResult(AcmUtils.validateAutomationComposition(automationComposition, serviceTemplate.get()));
-            }
+        var result = new BeanValidationResult("AutomationComposition", automationComposition);
+        var serviceTemplate = acDefinitionProvider.findAcDefinition(automationComposition.getCompositionId());
+        if (serviceTemplate.isEmpty()) {
+            result.addResult(new ObjectValidationResult("ServiceTemplate", "", ValidationStatus.INVALID,
+                    "Commissioned automation composition definition not found"));
+        } else {
+            result.addResult(AcmUtils.validateAutomationComposition(automationComposition, serviceTemplate.get()));
         }
         return result;
     }
@@ -144,21 +132,20 @@ public class AutomationCompositionInstantiationProvider {
      * @param name the name of the automation composition to delete
      * @param version the version of the automation composition to delete
      * @return the result of the deletion
-     * @throws PfModelException on deletion errors
      */
-    public InstantiationResponse deleteAutomationComposition(String name, String version) throws PfModelException {
+    public InstantiationResponse deleteAutomationComposition(String name, String version) {
         var automationCompositionOpt = automationCompositionProvider.findAutomationComposition(name, version);
         if (automationCompositionOpt.isEmpty()) {
-            throw new PfModelException(Response.Status.NOT_FOUND, "Automation composition not found");
+            throw new PfModelRuntimeException(Response.Status.NOT_FOUND, "Automation composition not found");
         }
         var automationComposition = automationCompositionOpt.get();
         if (!AutomationCompositionState.UNINITIALISED.equals(automationComposition.getState())) {
-            throw new PfModelException(Response.Status.BAD_REQUEST,
-                "Automation composition state is still " + automationComposition.getState());
+            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
+                    "Automation composition state is still " + automationComposition.getState());
         }
         var response = new InstantiationResponse();
-        response.setAffectedAutomationCompositions(
-            List.of(automationCompositionProvider.deleteAutomationComposition(name, version).getKey().asIdentifier()));
+        response.setAffectedAutomationComposition(
+                automationCompositionProvider.deleteAutomationComposition(name, version).getKey().asIdentifier());
         return response;
     }
 
@@ -168,13 +155,12 @@ public class AutomationCompositionInstantiationProvider {
      * @param name the name of the automation composition to get, null for all automation compositions
      * @param version the version of the automation composition to get, null for all automation compositions
      * @return the automation compositions
-     * @throws PfModelException on errors getting automation compositions
      */
     @Transactional(readOnly = true)
-    public AutomationCompositions getAutomationCompositions(String name, String version) throws PfModelException {
+    public AutomationCompositions getAutomationCompositions(String name, String version) {
         var automationCompositions = new AutomationCompositions();
         automationCompositions
-            .setAutomationCompositionList(automationCompositionProvider.getAutomationCompositions(name, version));
+                .setAutomationCompositionList(automationCompositionProvider.getAutomationCompositions(name, version));
 
         return automationCompositions;
     }
@@ -184,76 +170,64 @@ public class AutomationCompositionInstantiationProvider {
      *
      * @param command the command to issue to automation compositions
      * @return the result of the initiation command
-     * @throws PfModelException on errors setting the ordered state on the automation compositions
      * @throws AutomationCompositionException on ordered state invalid
      */
     public InstantiationResponse issueAutomationCompositionCommand(InstantiationCommand command)
-        throws AutomationCompositionException, PfModelException {
+            throws AutomationCompositionException {
 
         if (command.getOrderedState() == null) {
             throw new AutomationCompositionException(Status.BAD_REQUEST,
-                "ordered state invalid or not specified on command");
+                    "ordered state invalid or not specified on command");
         }
 
         var participants = participantProvider.getParticipants();
         if (participants.isEmpty()) {
             throw new AutomationCompositionException(Status.BAD_REQUEST, "No participants registered");
         }
-        var validationResult = new BeanValidationResult("InstantiationCommand", command);
-        List<AutomationComposition> automationCompositions =
-            new ArrayList<>(command.getAutomationCompositionIdentifierList().size());
-        for (ToscaConceptIdentifier id : command.getAutomationCompositionIdentifierList()) {
-            var automationCompositionOpt = automationCompositionProvider.findAutomationComposition(id);
-            if (automationCompositionOpt.isEmpty()) {
-                validationResult.addResult("ToscaConceptIdentifier", id, ValidationStatus.INVALID,
-                    "AutomationComposition with id " + id + " not found");
-            } else {
-                var automationComposition = automationCompositionOpt.get();
-                automationComposition.setCascadedOrderedState(command.getOrderedState());
-                automationCompositions.add(automationComposition);
-            }
+        var automationCompositionOpt =
+                automationCompositionProvider.findAutomationComposition(command.getAutomationCompositionIdentifier());
+        if (automationCompositionOpt.isEmpty()) {
+            throw new AutomationCompositionException(Response.Status.BAD_REQUEST,
+                    "AutomationComposition with id " + command.getAutomationCompositionIdentifier() + " not found");
         }
-        if (validationResult.isValid()) {
-            validationResult = validateIssueAutomationCompositions(automationCompositions, participants);
-        }
-        if (!validationResult.isValid()) {
-            throw new PfModelException(Response.Status.BAD_REQUEST, validationResult.getResult());
-        }
-        automationCompositionProvider.saveAutomationCompositions(automationCompositions);
 
-        supervisionHandler.triggerAutomationCompositionSupervision(command.getAutomationCompositionIdentifierList());
+        var automationComposition = automationCompositionOpt.get();
+        var validationResult = validateIssueAutomationComposition(automationComposition, participants);
+        if (!validationResult.isValid()) {
+            throw new AutomationCompositionException(Response.Status.BAD_REQUEST, validationResult.getResult());
+        }
+
+        automationComposition.setCascadedOrderedState(command.getOrderedState());
+        supervisionHandler.triggerAutomationCompositionSupervision(automationComposition);
+        automationCompositionProvider.saveAutomationComposition(automationComposition);
         var response = new InstantiationResponse();
-        response.setAffectedAutomationCompositions(command.getAutomationCompositionIdentifierList());
+        response.setAffectedAutomationComposition(command.getAutomationCompositionIdentifier());
 
         return response;
     }
 
-    private BeanValidationResult validateIssueAutomationCompositions(List<AutomationComposition> automationCompositions,
-        List<Participant> participants) {
-        var result = new BeanValidationResult("AutomationCompositions", automationCompositions);
+    private BeanValidationResult validateIssueAutomationComposition(AutomationComposition automationComposition,
+            List<Participant> participants) {
+        var result = new BeanValidationResult("AutomationComposition", automationComposition);
 
-        Map<ToscaConceptIdentifier, Participant> participantMap = participants.stream()
-            .collect(Collectors.toMap(participant -> participant.getKey().asIdentifier(), Function.identity()));
+        var participantMap = participants.stream()
+                .collect(Collectors.toMap(participant -> participant.getKey().asIdentifier(), Function.identity()));
 
-        for (AutomationComposition automationComposition : automationCompositions) {
+        for (var element : automationComposition.getElements().values()) {
 
-            for (var element : automationComposition.getElements().values()) {
-
-                var subResult = new BeanValidationResult(ENTRY + element.getDefinition().getName(), element);
-                Participant p = participantMap.get(element.getParticipantId());
-                if (p == null) {
-                    subResult.addResult(new ObjectValidationResult(AUTOMATION_COMPOSITION_NODE_ELEMENT_TYPE,
+            var subResult = new BeanValidationResult(ENTRY + element.getDefinition().getName(), element);
+            var p = participantMap.get(element.getParticipantId());
+            if (p == null) {
+                subResult.addResult(new ObjectValidationResult(AUTOMATION_COMPOSITION_NODE_ELEMENT_TYPE,
                         element.getDefinition().getName(), ValidationStatus.INVALID,
                         "Participant with ID " + element.getParticipantId() + " is not registered"));
-                } else if (!p.getParticipantType().equals(element.getParticipantType())) {
-                    subResult.addResult(new ObjectValidationResult(AUTOMATION_COMPOSITION_NODE_ELEMENT_TYPE,
+            } else if (!p.getParticipantType().equals(element.getParticipantType())) {
+                subResult.addResult(new ObjectValidationResult(AUTOMATION_COMPOSITION_NODE_ELEMENT_TYPE,
                         element.getDefinition().getName(), ValidationStatus.INVALID,
                         "Participant with ID " + element.getParticipantType() + " - " + element.getParticipantId()
-                            + " is not registered"));
-                }
-                result.addResult(subResult);
+                                + " is not registered"));
             }
-
+            result.addResult(subResult);
         }
 
         return result;

@@ -22,13 +22,11 @@
 package org.onap.policy.clamp.acm.runtime.supervision;
 
 import io.micrometer.core.annotation.Timed;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import javax.ws.rs.core.Response;
 import lombok.AllArgsConstructor;
-import org.apache.commons.collections4.CollectionUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionStateChangePublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionUpdatePublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantDeregisterAckPublisher;
@@ -52,7 +50,6 @@ import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvide
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -86,43 +83,6 @@ public class SupervisionHandler {
     private final ParticipantRegisterAckPublisher participantRegisterAckPublisher;
     private final ParticipantDeregisterAckPublisher participantDeregisterAckPublisher;
     private final ParticipantUpdatePublisher participantUpdatePublisher;
-
-    /**
-     * Supervision trigger called when a command is issued on automation compositions.
-     *
-     * <p/>
-     * Causes supervision to start or continue supervision on the automation compositions in question.
-     *
-     * @param automationCompositionIdentifierList the automation compositions for which the supervision command has been
-     *        issued
-     * @throws AutomationCompositionException on supervision triggering exceptions
-     */
-    public void triggerAutomationCompositionSupervision(
-        List<ToscaConceptIdentifier> automationCompositionIdentifierList) throws AutomationCompositionException {
-
-        LOGGER.debug("triggering automation composition supervision on automation compositions {}",
-            automationCompositionIdentifierList);
-
-        if (CollectionUtils.isEmpty(automationCompositionIdentifierList)) {
-            // This is just to force throwing of the exception in certain circumstances.
-            exceptionOccured(Response.Status.NOT_ACCEPTABLE,
-                "The list of automation compositions for supervision is empty");
-        }
-
-        for (ToscaConceptIdentifier automationCompositionId : automationCompositionIdentifierList) {
-            try {
-                var automationComposition =
-                    automationCompositionProvider.getAutomationComposition(automationCompositionId);
-
-                superviseAutomationComposition(automationComposition);
-
-                automationCompositionProvider.saveAutomationComposition(automationComposition);
-            } catch (PfModelException pfme) {
-                throw new AutomationCompositionException(pfme.getErrorResponse().getResponseCode(), pfme.getMessage(),
-                    pfme);
-            }
-        }
-    }
 
     /**
      * Handle a ParticipantStatus message from a participant.
@@ -268,23 +228,18 @@ public class SupervisionHandler {
 
     private void setAcElementStateInDb(AutomationCompositionAck automationCompositionAckMessage) {
         if (automationCompositionAckMessage.getAutomationCompositionResultMap() != null) {
-            try {
-                var automationComposition = automationCompositionProvider
-                    .getAutomationComposition(automationCompositionAckMessage.getAutomationCompositionId());
-                if (automationComposition != null) {
-                    var updated = updateState(automationComposition,
+            var automationComposition = automationCompositionProvider
+                    .findAutomationComposition(automationCompositionAckMessage.getAutomationCompositionId());
+            if (automationComposition.isPresent()) {
+                var updated = updateState(automationComposition.get(),
                         automationCompositionAckMessage.getAutomationCompositionResultMap().entrySet());
-                    updated |= setPrimed(automationComposition);
-                    if (updated) {
-                        automationCompositionProvider.saveAutomationComposition(automationComposition);
-                    }
-                } else {
-                    LOGGER.warn("AutomationComposition not found in database {}",
-                        automationCompositionAckMessage.getAutomationCompositionId());
+                updated |= setPrimed(automationComposition.get());
+                if (updated) {
+                    automationCompositionProvider.saveAutomationComposition(automationComposition.get());
                 }
-            } catch (PfModelException pfme) {
-                LOGGER.warn("Model exception occured with AutomationComposition Id {}",
-                    automationCompositionAckMessage.getAutomationCompositionId());
+            } else {
+                LOGGER.warn("AutomationComposition not found in database {}",
+                        automationCompositionAckMessage.getAutomationCompositionId());
             }
         }
     }
@@ -327,7 +282,7 @@ public class SupervisionHandler {
      * @param automationComposition the automation composition to supervises
      * @throws AutomationCompositionException on supervision errors
      */
-    private void superviseAutomationComposition(AutomationComposition automationComposition)
+    public void triggerAutomationCompositionSupervision(AutomationComposition automationComposition)
         throws AutomationCompositionException {
         switch (automationComposition.getOrderedState()) {
             case UNINITIALISED:

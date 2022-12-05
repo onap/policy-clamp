@@ -34,10 +34,10 @@ import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.runtime.instantiation.AutomationCompositionInstantiationProvider;
 import org.onap.policy.clamp.acm.runtime.main.web.AbstractRestController;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionException;
+import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationCommand;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse;
-import org.onap.policy.models.base.PfModelException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -65,9 +65,8 @@ public class InstantiationController extends AbstractRestController {
      * Creates a automation composition.
      *
      * @param requestId request ID used in ONAP logging
-     * @param automationCompositions the automation compositions
+     * @param automationComposition the automation composition
      * @return a response
-     * @throws PfModelException on errors creating a automation composition
      */
     // @formatter:off
     @PostMapping(value = "/instantiation",
@@ -116,14 +115,13 @@ public class InstantiationController extends AbstractRestController {
             }
         )
     // @formatter:on
-    public ResponseEntity<InstantiationResponse> create(
+    public ResponseEntity<InstantiationResponse> createCompositionInstance(
         @RequestHeader(name = REQUEST_ID_NAME, required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
         @ApiParam(
             value = "Entity Body of automation composition",
-            required = true) @RequestBody AutomationCompositions automationCompositions)
-        throws PfModelException {
+            required = true) @RequestBody AutomationComposition automationComposition) {
 
-        return ResponseEntity.ok().body(provider.createAutomationCompositions(automationCompositions));
+        return ResponseEntity.ok().body(provider.createAutomationComposition(automationComposition));
     }
 
     /**
@@ -133,7 +131,6 @@ public class InstantiationController extends AbstractRestController {
      * @param name the name of the automation composition to get, null for all automation compositions
      * @param version the version of the automation composition to get, null for all automation compositions
      * @return the automation compositions
-     * @throws PfModelException on errors getting commissioning of automation composition
      */
     // @formatter:off
     @GetMapping(value = "/instantiation",
@@ -172,15 +169,14 @@ public class InstantiationController extends AbstractRestController {
             }
         )
     // @formatter:on
-    public ResponseEntity<AutomationCompositions> query(
+    public ResponseEntity<AutomationCompositions> queryCompositionInstances(
         @RequestHeader(name = REQUEST_ID_NAME, required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
         @ApiParam(value = "Automation composition  definition name", required = false) @RequestParam(
             value = "name",
             required = false) String name,
         @ApiParam(value = "Automation composition  definition version", required = false) @RequestParam(
             value = "version",
-            required = false) String version)
-        throws PfModelException {
+            required = false) String version) {
 
         return ResponseEntity.ok().body(provider.getAutomationCompositions(name, version));
     }
@@ -189,9 +185,8 @@ public class InstantiationController extends AbstractRestController {
      * Updates a automation composition.
      *
      * @param requestId request ID used in ONAP logging
-     * @param automationCompositions the automation compositions
+     * @param automationComposition the automation composition
      * @return a response
-     * @throws PfModelException on errors updating of automation compositions
      */
     // @formatter:off
     @PutMapping(value = "/instantiation",
@@ -240,14 +235,13 @@ public class InstantiationController extends AbstractRestController {
             }
         )
     // @formatter:on
-    public ResponseEntity<InstantiationResponse> update(
+    public ResponseEntity<InstantiationResponse> updateCompositionInstance(
         @RequestHeader(name = REQUEST_ID_NAME, required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
         @ApiParam(
             value = "Entity Body of Automation Composition",
-            required = true) @RequestBody AutomationCompositions automationCompositions)
-        throws PfModelException {
+            required = true) @RequestBody AutomationComposition automationComposition) {
 
-        return ResponseEntity.ok().body(provider.updateAutomationCompositions(automationCompositions));
+        return ResponseEntity.ok().body(provider.updateAutomationComposition(automationComposition));
     }
 
     /**
@@ -257,7 +251,6 @@ public class InstantiationController extends AbstractRestController {
      * @param name the name of the automation composition to delete
      * @param version the version of the automation composition to delete
      * @return a response
-     * @throws PfModelException on errors deleting of automation composition
      */
     // @formatter:off
     @DeleteMapping(value = "/instantiation",
@@ -304,13 +297,12 @@ public class InstantiationController extends AbstractRestController {
     )
     // @formatter:on
 
-    public ResponseEntity<InstantiationResponse> delete(
+    public ResponseEntity<InstantiationResponse> deleteCompositionInstance(
         @RequestHeader(name = REQUEST_ID_NAME, required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
         @ApiParam(value = "Automation composition  definition name", required = true) @RequestParam("name") String name,
         @ApiParam(value = "Automation composition  definition version") @RequestParam(
             value = "version",
-            required = true) String version)
-        throws PfModelException {
+            required = true) String version) {
 
         return ResponseEntity.ok().body(provider.deleteAutomationComposition(name, version));
     }
@@ -321,7 +313,6 @@ public class InstantiationController extends AbstractRestController {
      * @param requestId request ID used in ONAP logging
      * @param command the command to issue to automation compositions
      * @return the automation composition definitions
-     * @throws PfModelException on errors issuing a command
      * @throws AutomationCompositionException on errors issuing a command
      */
     // @formatter:off
@@ -367,7 +358,7 @@ public class InstantiationController extends AbstractRestController {
         @ApiParam(
             value = "Entity Body of automation composition command",
             required = true) @RequestBody InstantiationCommand command)
-        throws AutomationCompositionException, PfModelException {
+        throws AutomationCompositionException {
 
         return ResponseEntity.accepted().body(provider.issueAutomationCompositionCommand(command));
     }
