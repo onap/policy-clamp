@@ -27,15 +27,13 @@ TRUSTSTORE_PASSWD="${TRUSTSTORE_PASSWD:-Pol1cy_0nap}"
 
 if [ "$#" -eq 1 ]; then
     CONFIG_FILE=$1
-else
-    CONFIG_FILE=${CONFIG_FILE}
 fi
 
 if [ -z "$CONFIG_FILE" ]; then
     CONFIG_FILE="${POLICY_HOME}/etc/ClRuntimeParameters.yaml"
 fi
 
-echo "Policy clamp config file: $CONFIG_FILE"
+echo "Policy clamp Control Loop Runtime config file: $CONFIG_FILE"
 
 if [ -f "${POLICY_HOME}/etc/mounted/policy-truststore" ]; then
     echo "overriding policy-truststore"
@@ -52,10 +50,6 @@ if [ -f "${POLICY_HOME}/etc/mounted/logback.xml" ]; then
     cp -f "${POLICY_HOME}"/etc/mounted/logback*.xml "${POLICY_HOME}"/etc/
 fi
 
-touch /app/app.jar
-mkdir -p "${POLICY_HOME}"/config/
-cp -f "${CONFIG_FILE}" "${POLICY_HOME}"/config/ClRuntimeParameters.yaml
-
 $JAVA_HOME/bin/java \
     -Dserver.ssl.keyStore="${KEYSTORE}" \
     -Dserver.ssl.keyStorePassword="${KEYSTORE_PASSWD}" \
@@ -68,4 +62,4 @@ $JAVA_HOME/bin/java \
     -Dcom.sun.management.jmxremote.authenticate=false \
     -Dcom.sun.management.jmxremote.local.only=false \
     -jar /app/app.jar \
-    --spring.config.location="${POLICY_HOME}/config/ClRuntimeParameters.yaml"
+    --spring.config.location="${CONFIG_FILE}"
