@@ -20,7 +20,6 @@
 
 package org.onap.policy.clamp.acm.participant.policy.main.utils;
 
-import io.swagger.annotations.ApiParam;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -46,8 +45,7 @@ public class MockRestEndpoint {
      */
     @Path("policy/api/v1/policytypes")
     @POST
-    public Response createPolicyType(
-            @RequestBody @ApiParam(value = "Entity body", required = true) ToscaServiceTemplate body) {
+    public Response createPolicyType(@RequestBody ToscaServiceTemplate body) {
         return Response.status(200).build();
     }
 
@@ -59,8 +57,7 @@ public class MockRestEndpoint {
      */
     @Path("policy/api/v1/policies")
     @POST
-    public Response createPolicy(
-            @RequestBody @ApiParam(value = "Entity body ", required = true) ToscaServiceTemplate body) {
+    public Response createPolicy(@RequestBody ToscaServiceTemplate body) {
         return Response.status(200).build();
     }
 
@@ -94,8 +91,7 @@ public class MockRestEndpoint {
      */
     @Path("policy/pap/v1/pdps/deployments/batch")
     @POST
-    public Response handlePolicyDeployOrUndeploy(
-            @RequestBody @ApiParam(value = "Entity body", required = true) DeploymentGroups body) {
+    public Response handlePolicyDeployOrUndeploy(@RequestBody DeploymentGroups body) {
         return Response.status(200).build();
     }
 

@@ -54,7 +54,7 @@ public class CommonRestController {
      * @param endpoint the endpoint of interest
      */
     protected void testSwagger(final String endpoint) {
-        final Invocation.Builder invocationBuilder = sendActRequest("v2/api-docs");
+        final Invocation.Builder invocationBuilder = sendActRequest("v3/api-docs");
         final String resp = invocationBuilder.get(String.class);
 
         assertThat(resp).contains(endpoint);

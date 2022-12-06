@@ -41,9 +41,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ActiveProfiles("test")
 class ActuatorControllerTest extends CommonActuatorController {
 
-    private static final String HEALTH_ENDPOINT = "health";
-    private static final String METRICS_ENDPOINT = "metrics";
-    private static final String PROMETHEUS_ENDPOINT = "prometheus";
+    private static final String HEALTH_ENDPOINT = "onap/policy/clamp/acelement/v2/health/";
+    private static final String METRICS_ENDPOINT = "onap/policy/clamp/acelement/v2/metrics/";
+    private static final String PROMETHEUS_ENDPOINT = "onap/policy/clamp/acelement/v2/prometheus/";
+    private static final String SWAGGER_ENDPOINT = "onap/policy/clamp/acelement/v2/v3/api-docs/";
 
     @LocalServerPort
     private int randomServerPort;
@@ -69,6 +70,11 @@ class ActuatorControllerTest extends CommonActuatorController {
     }
 
     @Test
+    void testGetSwagger_Unauthorized() throws Exception {
+        assertUnauthorizedActGet(SWAGGER_ENDPOINT);
+    }
+
+    @Test
     void testGetHealth() throws Exception {
         Invocation.Builder invocationBuilder = super.sendActRequest(HEALTH_ENDPOINT);
         Response rawresp = invocationBuilder.buildGet().invoke();
@@ -83,8 +89,15 @@ class ActuatorControllerTest extends CommonActuatorController {
     }
 
     @Test
-    void testGePrometheus() throws Exception {
+    void testGetPrometheus() throws Exception {
         Invocation.Builder invocationBuilder = super.sendActRequest(PROMETHEUS_ENDPOINT);
+        Response rawresp = invocationBuilder.buildGet().invoke();
+        assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
+    }
+
+    @Test
+    void testGetSwagger() throws Exception {
+        Invocation.Builder invocationBuilder = super.sendActRequest(SWAGGER_ENDPOINT);
         Response rawresp = invocationBuilder.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
     }

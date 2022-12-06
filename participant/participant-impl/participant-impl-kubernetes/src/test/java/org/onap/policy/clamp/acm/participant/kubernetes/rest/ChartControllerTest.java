@@ -64,7 +64,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(value = ChartController.class, properties = "chart.api.enabled=true")
 @Import({MetricsAutoConfiguration.class, CompositeMeterRegistryAutoConfiguration.class})
@@ -182,13 +181,13 @@ class ChartControllerTest {
     @Test
     void onboardChart() throws Exception {
         RequestBuilder requestBuilder;
-        MockMultipartFile chartFile = new MockMultipartFile("chart", "hello.tgz",
+        MockMultipartFile chartFile = new MockMultipartFile("file", "hello.tgz",
             MediaType.TEXT_PLAIN_VALUE, "Dummy data".getBytes());
 
-        MockMultipartFile overrideFile = new MockMultipartFile("values", "values.yaml",
+        MockMultipartFile overrideFile = new MockMultipartFile("file", "values.yaml",
             MediaType.TEXT_PLAIN_VALUE, "Dummy data".getBytes());
 
-        //Mocking successful scenario for void uninstall method
+        // Mocking successful scenario for void uninstall method
         when(chartService.saveChart(charts.get(0), chartFile, null)).thenReturn(charts.get(0));
 
         requestBuilder = MockMvcRequestBuilders.multipart(ONBOARD_CHART_URL)
