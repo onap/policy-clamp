@@ -1,0 +1,25 @@
+{
+    "compositionId": "562ed027-2689-481a-b3a5-e284b1fbc33f",
+    "affectedAutomationCompositionDefinitions": [
+        {
+            "name": "org.onap.policy.clamp.acm.HttpParticipant",
+            "version": "2.3.4"
+        },
+        {
+            "name": "onap.policy.clamp.ac.element.Http_StarterAutomationCompositionElement",
+            "version": "1.2.3"
+        },
+        {
+            "name": "onap.policy.clamp.ac.element.Http_BridgeAutomationCompositionElement",
+            "version": "1.2.3"
+        },
+        {
+            "name": "onap.policy.clamp.ac.element.Http_SinkAutomationCompositionElement",
+            "version": "1.2.3"
+        },
+        {
+            "name": "onap.policy.clamp.ac.element.AutomationCompositionDefinition",
+            "version": "1.2.3"
+        }
+    ]
+}
