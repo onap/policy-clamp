@@ -145,12 +145,8 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
                 LOGGER.error("Violations found in the config request parameters: {}", violations);
                 throw new ValidationException("Constraint violations in the config request");
             }
-        } catch (ValidationException | CoderException e) {
-            LOGGER.error("Error invoking the A1PMS request for the config ", e);
+        } catch (ValidationException | CoderException | A1PolicyServiceException e) {
             throw new A1PolicyServiceException(HttpStatus.SC_BAD_REQUEST, "Invalid Configuration", e);
-        } catch (A1PolicyServiceException e) {
-            LOGGER.error("Error invoking the A1PMS request for the config ", e);
-            throw e;
         }
     }
 }
