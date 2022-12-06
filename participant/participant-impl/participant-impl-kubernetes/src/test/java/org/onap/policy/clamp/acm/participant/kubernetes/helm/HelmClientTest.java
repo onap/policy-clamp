@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
@@ -42,8 +42,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.onap.policy.clamp.acm.participant.kubernetes.exception.ServiceException;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartInfo;
@@ -74,25 +72,20 @@ class HelmClientTest {
     @Mock
     HelmRepository repo;
 
-    private static MockedStatic<HelmClient> mockedClient;
 
     @BeforeAll
     static void init() throws CoderException {
         charts = CODER.decode(new File(CHART_INFO_YAML), ChartList.class).getCharts();
-        //Mock static method for bash command execution
-        mockedClient = mockStatic(HelmClient.class);
     }
 
     @AfterAll
     public static void close() throws IOException {
-        mockedClient.close();
         FileSystemUtils.deleteRecursively(Path.of("target/tmp"));
     }
 
     @Test
-    void test_installChart() {
-        mockedClient.when(() -> HelmClient.executeCommand(any()))
-            .thenReturn("success");
+    void test_installChart() throws ServiceException {
+        doReturn("success").when(helmClient).executeCommand(any());
         doReturn(new File("/target/tmp/override.yaml")).when(chartStore)
             .getOverrideFile(any());
         var chartinfo = charts.get(0);
@@ -101,29 +94,28 @@ class HelmClientTest {
         chartinfo.setNamespace("");
         assertDoesNotThrow(() -> helmClient.installChart(chartinfo));
 
-        mockedClient.when(() -> HelmClient.executeCommand(any())).thenReturn("");
+        doReturn("").when(helmClient).executeCommand(any());
         assertDoesNotThrow(() -> helmClient.installChart(chartinfo));
 
     }
 
     @Test
-    void test_addRepository() {
-        mockedClient.when(() -> HelmClient.executeCommand(any())).thenReturn("");
+    void test_addRepository() throws ServiceException {
+        doReturn("").when(helmClient).executeCommand(any());
         when(repo.getRepoName()).thenReturn("RepoName");
         when(repo.getAddress()).thenReturn("http://localhost:8080");
         assertDoesNotThrow(() -> helmClient.addRepository(repo));
 
-        mockedClient.when(() -> HelmClient.executeCommand(any()))
-            .thenReturn("failed");
+        doReturn("failed").when(helmClient).executeCommand(any());
         assertDoesNotThrow(() -> helmClient.addRepository(repo));
     }
 
     @Test
     void test_findChartRepository() throws IOException, ServiceException {
         String tmpPath = "target/tmp/dummyChart/1.0/";
-        mockedClient.when(() -> HelmClient.executeCommand(Mockito.any()))
-            .thenReturn("nginx-stable/nginx-ingress\t0.9.3\t1.11.3"
-                + " \tNGINX Ingress Controller");
+        doReturn("nginx-stable/nginx-ingress\t0.9.3\t1.11.3"
+                + " \tNGINX Ingress Controller").when(helmClient).executeCommand(any());
+
         String configuredRepo = helmClient.findChartRepository(charts.get(1));
         assertThat(configuredRepo).isEqualTo("nginx-stable");
 
@@ -143,8 +135,9 @@ class HelmClientTest {
 
     @Test
     void test_uninstallChart() throws ServiceException {
+        doReturn("success").when(helmClient).executeCommand(any());
         helmClient.uninstallChart(charts.get(0));
-        mockedClient.when(() -> HelmClient.executeCommand(any())).thenThrow(new ServiceException("error in execution"));
+        doThrow(ServiceException.class).when(helmClient).executeCommand(any());
 
         assertThatThrownBy(() -> helmClient.uninstallChart(charts.get(0)))
             .isInstanceOf(ServiceException.class);
@@ -152,8 +145,7 @@ class HelmClientTest {
 
     @Test
     void test_verifyConfiguredRepoForInvalidChart() throws IOException, ServiceException {
-        mockedClient.when(() -> HelmClient.executeCommand(Mockito.any()))
-            .thenReturn("");
+        doReturn("").when(helmClient).executeCommand(any());
         String configuredRepo = helmClient.verifyConfiguredRepo(charts.get(1));
         assertNull(configuredRepo);
     }

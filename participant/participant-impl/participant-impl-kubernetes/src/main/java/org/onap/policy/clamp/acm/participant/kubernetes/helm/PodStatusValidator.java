@@ -46,6 +46,8 @@ public class PodStatusValidator implements Runnable {
 
     private ChartInfo chart;
 
+    private HelmClient client = new HelmClient();
+
     /**
      * Constructor for PodStatusValidator.
      * @param chart chartInfo
@@ -76,7 +78,7 @@ public class PodStatusValidator implements Runnable {
         long endTime = System.currentTimeMillis() + (timeout * 1000L);
 
         while (!isVerified && System.currentTimeMillis() < endTime) {
-            var output = HelmClient.executeCommand(verifyPodStatusCommand(chart));
+            var output = client.executeCommand(verifyPodStatusCommand(chart));
             var podStatusMap = mapPodStatus(output);
             isVerified = !podStatusMap.isEmpty()
                     && podStatusMap.values().stream().allMatch("Running"::equals);
