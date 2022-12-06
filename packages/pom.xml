@@ -54,6 +54,12 @@
             </modules>
             <properties>
                 <docker.skip.push>false</docker.skip.push>
+                <docker.clamp-runtime-acm.dockerFile>AcmRuntime.Dockerfile</docker.clamp-runtime-acm.dockerFile>
+                <docker.clamp-ac-pf-ppnt.dockerFile>PolicyParticipant.Dockerfile</docker.clamp-ac-pf-ppnt.dockerFile>
+                <docker.clamp-ac-k8s-ppnt.dockerFile>KubernetesParticipant.Dockerfile</docker.clamp-ac-k8s-ppnt.dockerFile>
+                <docker.clamp-ac-http-ppnt.dockerFile>HttpParticipant.Dockerfile</docker.clamp-ac-http-ppnt.dockerFile>
+                <docker.clamp-ac-a1pms-ppnt.dockerFile>A1pmsParticipant.Dockerfile</docker.clamp-ac-a1pms-ppnt.dockerFile>
+                <docker.clamp-acm-element-impl.dockerFile>ElementParticipant.Dockerfile</docker.clamp-acm-element-impl.dockerFile>
             </properties>
         </profile>
         <profile>
