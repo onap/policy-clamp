@@ -53,7 +53,7 @@ COPY --chown=policy:policy --from=tarball /extracted $POLICY_HOME
 
 WORKDIR $POLICY_HOME
 COPY --chown=policy:policy a1pms-participant.sh bin/
-COPY --chown=policy:policy /maven/policy-clamp-participant-impl-a1.jar /app/app.jar
+COPY --chown=policy:policy /maven/policy-clamp-participant-impl-a1pms.jar /app/app.jar
 
 RUN chmod 755 bin/*.sh
 
