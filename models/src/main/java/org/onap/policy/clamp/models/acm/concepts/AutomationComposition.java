@@ -38,6 +38,9 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaEntity;
 @EqualsAndHashCode(callSuper = true)
 public class AutomationComposition extends ToscaEntity implements Comparable<AutomationComposition> {
     @NonNull
+    private UUID instanceId;
+
+    @NonNull
     private UUID compositionId;
 
     @NonNull
@@ -58,6 +61,7 @@ public class AutomationComposition extends ToscaEntity implements Comparable<Aut
      */
     public AutomationComposition(final AutomationComposition otherAutomationComposition) {
         super(otherAutomationComposition);
+        this.instanceId = otherAutomationComposition.instanceId;
         this.compositionId = otherAutomationComposition.compositionId;
         this.state = otherAutomationComposition.state;
         this.orderedState = otherAutomationComposition.orderedState;

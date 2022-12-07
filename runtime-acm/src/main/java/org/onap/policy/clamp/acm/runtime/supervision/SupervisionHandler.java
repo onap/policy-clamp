@@ -235,7 +235,7 @@ public class SupervisionHandler {
                         automationCompositionAckMessage.getAutomationCompositionResultMap().entrySet());
                 updated |= setPrimed(automationComposition.get());
                 if (updated) {
-                    automationCompositionProvider.saveAutomationComposition(automationComposition.get());
+                    automationCompositionProvider.updateAutomationComposition(automationComposition.get());
                 }
             } else {
                 LOGGER.warn("AutomationComposition not found in database {}",

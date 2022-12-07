@@ -235,7 +235,7 @@ class SupervisionHandlerTest {
 
         handler.handleAutomationCompositionStateChangeAckMessage(automationCompositionAckMessage);
 
-        verify(automationCompositionProvider).saveAutomationComposition(any(AutomationComposition.class));
+        verify(automationCompositionProvider).updateAutomationComposition(any(AutomationComposition.class));
     }
 
     @Test
@@ -255,7 +255,7 @@ class SupervisionHandlerTest {
 
         handler.handleAutomationCompositionUpdateAckMessage(automationCompositionAckMessage);
 
-        verify(automationCompositionProvider).saveAutomationComposition(any(AutomationComposition.class));
+        verify(automationCompositionProvider).updateAutomationComposition(any(AutomationComposition.class));
     }
 
     @Test
