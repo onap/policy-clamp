@@ -22,19 +22,26 @@ package org.onap.policy.clamp.models.acm.utils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUpdates;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
+import org.onap.policy.common.utils.coder.CoderException;
+import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -113,6 +120,36 @@ class AcmUtilsTest {
         var result = AcmUtils.getCommonOrInstancePropertiesFromNodeTypes(true, inputServiceTemplate);
         assertNotNull(result);
         assertThat(result).hasSize(6);
+    }
+
+    @Test
+    void testValidateAutomationComposition() throws Exception {
+        var automationComposition = getDummyAutomationComposition();
+        var toscaServiceTemplate = getDummyToscaServiceTemplate();
+        var result = AcmUtils.validateAutomationComposition(automationComposition, toscaServiceTemplate);
+        assertNotNull(result);
+        assertFalse(result.isValid());
+
+        Map<String, ToscaNodeTemplate> nodeTemplates = new HashMap<>();
+        var nodeTemplate = new ToscaNodeTemplate();
+        nodeTemplate.setType("org.onap.policy.clamp.acm.AutomationComposition");
+        nodeTemplates.put("org.onap.dcae.acm.DCAEMicroserviceAutomationCompositionParticipant", nodeTemplate);
+        toscaServiceTemplate.getToscaTopologyTemplate().setNodeTemplates(nodeTemplates);
+        var result2 = AcmUtils.validateAutomationComposition(automationComposition, toscaServiceTemplate);
+        toscaServiceTemplate.setToscaTopologyTemplate(null);
+        assertFalse(result2.isValid());
+    }
+
+    private AutomationComposition getDummyAutomationComposition() throws CoderException {
+        var automationComposition = new AutomationComposition();
+        var element = new StandardCoder().decode(
+                new File("src/test/resources/json/AutomationCompositionElementNoOrderedState.json"),
+                AutomationCompositionElement.class);
+        automationComposition.setCompositionId(UUID.randomUUID());
+        Map<UUID, AutomationCompositionElement> map = new LinkedHashMap<>();
+        map.put(UUID.randomUUID(), element);
+        automationComposition.setElements(map);
+        return automationComposition;
     }
 
     private ToscaServiceTemplate getDummyToscaServiceTemplate() {
