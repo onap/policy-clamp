@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.models.acm.messages.rest.instantiation;
 
+import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -33,5 +34,6 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 @Setter
 @ToString(callSuper = true)
 public class InstantiationResponse extends SimpleResponse {
+    private UUID instanceId;
     ToscaConceptIdentifier affectedAutomationComposition;
 }

@@ -96,7 +96,7 @@ class SupervisionScannerTest {
                 participantStatusReqPublisher, participantUpdatePublisher, acRuntimeParameterGroup);
         supervisionScanner.run(false);
 
-        verify(automationCompositionProvider, times(0)).saveAutomationComposition(any(AutomationComposition.class));
+        verify(automationCompositionProvider, times(0)).updateAutomationComposition(any(AutomationComposition.class));
     }
 
     @Test
@@ -120,7 +120,7 @@ class SupervisionScannerTest {
                 participantStatusReqPublisher, participantUpdatePublisher, acRuntimeParameterGroup);
         supervisionScanner.run(false);
 
-        verify(automationCompositionProvider, times(1)).saveAutomationComposition(any(AutomationComposition.class));
+        verify(automationCompositionProvider, times(1)).updateAutomationComposition(any(AutomationComposition.class));
     }
 
     @Test
@@ -148,7 +148,7 @@ class SupervisionScannerTest {
 
         supervisionScanner.handleParticipantStatus(participant.getKey().asIdentifier());
         supervisionScanner.run(true);
-        verify(automationCompositionProvider, times(0)).saveAutomationComposition(any(AutomationComposition.class));
+        verify(automationCompositionProvider, times(0)).updateAutomationComposition(any(AutomationComposition.class));
         verify(participantStatusReqPublisher, times(0)).send(any(ToscaConceptIdentifier.class));
     }
 

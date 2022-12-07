@@ -52,6 +52,21 @@ public class AutomationCompositionProvider {
     /**
      * Get automation composition.
      *
+     * @param instanceId the ID of the automation composition to get
+     * @return the automation composition found
+     */
+    @Transactional(readOnly = true)
+    public AutomationComposition getAutomationComposition(final UUID instanceId) {
+        var result = automationCompositionRepository.findByInstanceId(instanceId.toString());
+        if (result.isEmpty()) {
+            throw new PfModelRuntimeException(Status.NOT_FOUND, "AutomationComposition not found");
+        }
+        return result.get().toAuthorative();
+    }
+
+    /**
+     * Get automation composition.
+     *
      * @param automationCompositionId the ID of the automation composition to get
      * @return the automation composition found
      */
@@ -62,19 +77,6 @@ public class AutomationCompositionProvider {
         } catch (EntityNotFoundException e) {
             throw new PfModelRuntimeException(Status.NOT_FOUND, "AutomationComposition not found", e);
         }
-    }
-
-    /**
-     * Find automation composition by automationCompositionId.
-     *
-     * @param name the name of the automation composition to get, null to get all automation compositions
-     * @param version the version of the automation composition to get, null to get all automation compositions
-     * @return the automation composition found
-     */
-    @Transactional(readOnly = true)
-    public Optional<AutomationComposition> findAutomationComposition(@NonNull final String name,
-            @NonNull final String version) {
-        return findAutomationComposition(new PfConceptKey(name, version));
     }
 
     /**
@@ -94,12 +96,27 @@ public class AutomationCompositionProvider {
     }
 
     /**
-     * Save automation composition.
+     * Create automation composition.
+     *
+     * @param automationComposition the automation composition to create
+     * @return the create automation composition
+     */
+    public AutomationComposition createAutomationComposition(final AutomationComposition automationComposition) {
+        automationComposition.setInstanceId(UUID.randomUUID());
+        var result = automationCompositionRepository.save(ProviderUtils.getJpaAndValidate(automationComposition,
+                JpaAutomationComposition::new, "automation composition"));
+
+        // Return the saved automation composition
+        return result.toAuthorative();
+    }
+
+    /**
+     * Update automation composition.
      *
      * @param automationComposition the automation composition to update
      * @return the updated automation composition
      */
-    public AutomationComposition saveAutomationComposition(final AutomationComposition automationComposition) {
+    public AutomationComposition updateAutomationComposition(final AutomationComposition automationComposition) {
         var result = automationCompositionRepository.save(ProviderUtils.getJpaAndValidate(automationComposition,
                 JpaAutomationComposition::new, "automation composition"));
 
@@ -136,23 +153,18 @@ public class AutomationCompositionProvider {
     /**
      * Delete a automation composition.
      *
-     * @param name the name of the automation composition to delete
-     * @param version the version of the automation composition to delete
+     * @param instanceId the ID of the automation composition to get
      * @return the automation composition deleted
      */
-    public AutomationComposition deleteAutomationComposition(@NonNull final String name,
-            @NonNull final String version) {
-
-        var automationCompositionKey = new PfConceptKey(name, version);
-        var jpaDeleteAutomationComposition = automationCompositionRepository.findById(automationCompositionKey);
-
+    public AutomationComposition deleteAutomationComposition(@NonNull final UUID instanceId) {
+        var jpaDeleteAutomationComposition = automationCompositionRepository.findByInstanceId(instanceId.toString());
         if (jpaDeleteAutomationComposition.isEmpty()) {
-            String errorMessage = "delete of automation composition \"" + automationCompositionKey.getId()
+            var errorMessage = "delete of automation composition \"" + instanceId
                     + "\" failed, automation composition does not exist";
             throw new PfModelRuntimeException(Response.Status.NOT_FOUND, errorMessage);
         }
 
-        automationCompositionRepository.deleteById(automationCompositionKey);
+        automationCompositionRepository.deleteById(jpaDeleteAutomationComposition.get().getKey());
 
         return jpaDeleteAutomationComposition.get().toAuthorative();
     }
