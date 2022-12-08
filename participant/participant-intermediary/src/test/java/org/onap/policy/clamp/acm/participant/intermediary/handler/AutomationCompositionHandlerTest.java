@@ -135,7 +135,6 @@ class AutomationCompositionHandlerTest {
         assertDoesNotThrow(() -> ach.handleAutomationCompositionUpdate(updateMsg, acElementDefinitions));
         updateMsg.setStartPhase(1);
         assertDoesNotThrow(() -> ach.handleAutomationCompositionUpdate(updateMsg, acElementDefinitions));
-        assertThat(ach.getAcElementInstanceProperties(uuid)).isEmpty();
 
         ach.getAutomationCompositionMap().clear();
         updateMsg.setStartPhase(0);

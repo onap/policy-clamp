@@ -9,5 +9,6 @@
         "version": "0.0.1"
     },
     "state": "UNINITIALISED",
-    "orderedState": null
+    "orderedState": null,
+    "properties":{"key":"{}"}
 }

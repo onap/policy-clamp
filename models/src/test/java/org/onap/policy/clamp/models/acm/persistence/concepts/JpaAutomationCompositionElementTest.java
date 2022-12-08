@@ -29,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
+import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
@@ -299,6 +300,7 @@ class JpaAutomationCompositionElementTest {
         testJpaAutomationCompositionElement.fromAuthorative(testAce);
         testJpaAutomationCompositionElement.setKey(PfReferenceKey.getNullKey());
         testJpaAutomationCompositionElement.fromAuthorative(testAce);
+        testJpaAutomationCompositionElement.setProperties(Map.of("key", "{}"));
 
         return testJpaAutomationCompositionElement;
     }
@@ -308,6 +310,7 @@ class JpaAutomationCompositionElementTest {
         automationCompositionElement.setId(UUID.fromString("a95757ba-b34a-4049-a2a8-46773abcbe5e"));
         automationCompositionElement.setDefinition(new ToscaConceptIdentifier("aceDef", "0.0.1"));
         automationCompositionElement.setParticipantType(new ToscaConceptIdentifier("participantType", "0.0.1"));
+        automationCompositionElement.setProperties(Map.of("key", "{}"));
 
         return automationCompositionElement;
     }

@@ -22,7 +22,6 @@
 package org.onap.policy.clamp.acm.participant.intermediary.handler;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +47,6 @@ import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMe
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -440,22 +438,5 @@ public class AutomationCompositionHandler {
         var automationCompositions = new AutomationCompositions();
         automationCompositions.setAutomationCompositionList(new ArrayList<>(automationCompositionMap.values()));
         return automationCompositions;
-    }
-
-    /**
-     * Get properties of a automation composition element.
-     *
-     * @param id the automation composition element id
-     * @return the instance properties
-     */
-    public Map<String, ToscaProperty> getAcElementInstanceProperties(UUID id) {
-        Map<String, ToscaProperty> propertiesMap = new HashMap<>();
-        for (var automationComposition : automationCompositionMap.values()) {
-            var element = automationComposition.getElements().get(id);
-            if (element != null) {
-                propertiesMap.putAll(element.getPropertiesMap());
-            }
-        }
-        return propertiesMap;
     }
 }

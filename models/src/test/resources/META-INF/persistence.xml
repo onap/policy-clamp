@@ -29,6 +29,7 @@
         <class>org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationCompositionDefinition</class>
         <class>org.onap.policy.clamp.models.acm.persistence.concepts.StringToServiceTemplateConverter</class>
         <class>org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationCompositionElement</class>
+        <class>org.onap.policy.clamp.models.acm.persistence.concepts.StringToMapConverter</class>
         <class>org.onap.policy.clamp.models.acm.persistence.concepts.JpaParticipant</class>
 
         <properties>

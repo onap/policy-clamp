@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021 Nordix Foundation.
+ * Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -22,14 +22,19 @@
 
 package org.onap.policy.clamp.models.acm.persistence.concepts;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.UnaryOperator;
 import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -39,11 +44,13 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.common.parameters.annotations.NotNull;
+import org.onap.policy.common.parameters.annotations.Valid;
 import org.onap.policy.models.base.PfAuthorative;
 import org.onap.policy.models.base.PfConcept;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfKey;
 import org.onap.policy.models.base.PfReferenceKey;
+import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.base.validation.annotations.VerifyKey;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
@@ -95,6 +102,12 @@ public class JpaAutomationCompositionElement extends PfConcept implements PfAuth
     @Column
     private String description;
 
+    @Lob
+    @NotNull
+    @Valid
+    @Convert(converter = StringToMapConverter.class)
+    private Map<String, Object> properties;
+
     /**
      * The Default Constructor creates a {@link JpaAutomationCompositionElement} object with a null key.
      */
@@ -141,6 +154,7 @@ public class JpaAutomationCompositionElement extends PfConcept implements PfAuth
         this.state = copyConcept.state;
         this.orderedState = copyConcept.orderedState;
         this.description = copyConcept.description;
+        this.properties = (copyConcept.properties != null ? new LinkedHashMap<>(copyConcept.properties) : null);
     }
 
     /**
@@ -163,6 +177,7 @@ public class JpaAutomationCompositionElement extends PfConcept implements PfAuth
         element.setState(state);
         element.setOrderedState(orderedState != null ? orderedState : state.asOrderedState());
         element.setDescription(description);
+        element.setProperties(PfUtils.mapMap(properties, UnaryOperator.identity()));
 
         return element;
     }
@@ -180,6 +195,7 @@ public class JpaAutomationCompositionElement extends PfConcept implements PfAuth
         this.state = element.getState();
         this.orderedState = element.getOrderedState();
         this.description = element.getDescription();
+        properties = PfUtils.mapMap(element.getProperties(), UnaryOperator.identity());
     }
 
     @Override
