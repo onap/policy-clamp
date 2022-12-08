@@ -1,0 +1,226 @@
+# ============LICENSE_START=======================================================
+# Copyright (C) 2022 Nordix Foundation.
+# ================================================================================
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# SPDX-License-Identifier: Apache-2.0
+# ============LICENSE_END=========================================================
+tosca_definitions_version: tosca_simple_yaml_1_3
+data_types:
+  onap.datatypes.ToscaConceptIdentifier:
+    derived_from: tosca.datatypes.Root
+    properties:
+      name:
+        type: string
+        required: true
+      version:
+        type: string
+        required: true
+    derived_from: tosca.datatypes.Root
+    description: Definition for a entity in A&AI to perform a control loop operation
+      on
+    properties:
+      targetType:
+        type: string
+        description: Category for the target type
+        required: true
+        constraints:
+          - valid_values:
+              - VNF
+              - VM
+              - VFMODULE
+              - PNF
+      entityIds:
+        type: map
+        description: |
+          Map of values that identify the resource. If none are provided, it is assumed that the
+          entity that generated the ONSET event will be the target.
+        required: false
+        metadata:
+          clamp_possible_values: ClampExecution:CSAR_RESOURCES
+        entry_schema:
+          type: string
+    version: 1.0.0
+    derived_from: tosca.datatypes.Root
+    properties:
+      configurationEntityId:
+        type: onap.datatypes.ToscaConceptIdentifier
+        required: true
+        description: The name and version of a Configuration Entity to be handled
+          by the HTTP Automation Composition Element
+      restSequence:
+        type: list
+        entry_schema:
+          type: org.onap.datatypes.policy.clamp.acm.httpAutomationCompositionElement.RestRequest
+          type_version: 1.0.0
+        description: A sequence of REST commands to send to the REST endpoint
+policy_types:
+  onap.policies.controlloop.operational.common.Apex:
+    derived_from: onap.policies.controlloop.operational.Common
+    type_version: 1.0.0
+    version: 1.0.0
+    name: onap.policies.controlloop.operational.common.Apex
+    description: Operational policies for Apex PDP
+    properties:
+      engineServiceParameters:
+        type: string
+        description: The engine parameters like name, instanceCount, policy implementation,
+          parameters etc.
+        required: true
+      eventInputParameters:
+        type: string
+        description: The event input parameters.
+        required: true
+      eventOutputParameters:
+        type: string
+        description: The event output parameters.
+        required: true
+      javaProperties:
+        type: string
+        description: Name/value pairs of properties to be set for APEX if needed.
+        required: false
+
+node_types:
+  org.onap.policy.clamp.acm.Participant:
+    version: 1.0.1
+    derived_from: tosca.nodetypes.Root
+    properties:
+      provider:
+        type: string
+        required: false
+    version: 1.0.1
+    derived_from: org.onap.policy.clamp.acm.AutomationCompositionElement
+    properties:
+      baseUrl:
+        type: string
+        required: true
+        description: The base URL to be prepended to each path, identifies the host for the REST endpoints.
+      httpHeaders:
+        type: map
+        required: false
+        entry_schema:
+          type: string
+        description: HTTP headers to send on REST requests
+      configurationEntities:
+        type: map
+        required: true
+        entry_schema:
+          type: org.onap.datatypes.policy.clamp.acm.httpAutomationCompositionElement.ConfigurationEntity
+          type_version: 1.0.0
+        description: The connfiguration entities the Automation Composition Element is managing and their associated REST requests
+
+topology_template:
+  inputs:
+    pmsh_operational_policy:
+      type: onap.datatypes.ToscaConceptIdentifier
+      description: The ID of the PMSH operational policy to use
+      default:
+        name: operational.apex.pmcontrol
+        version: 1.0.0
+  node_templates:
+    org.onap.policy.clamp.acm.PolicyParticipant:
+      version: 2.3.1
+      type: org.onap.policy.clamp.acm.Participant
+      type_version: 1.0.1
+      description: Participant for DCAE microservices
+      properties:
+        provider: ONAP
+      requirements:
+        -
+          org.onap.policy.clamp.acm.Required:
+            type: org.onap
+            type_version: 1.0.1
+            name: org.onap.policy.clamp.acm.Required
+            version: 1.0.0
+            capability: Capable
+            node: node1
+            occurrences:
+              - V1
+              - V2
+      capabilities:
+        org.onap.policy.clamp.acm.Capability:
+          type: org.onap
+          type_version: 1.0.1
+          name: org.onap.policy.clamp.acm.Capability
+          version: 1.0.0
+          attributes:
+            attribute: attribute0
+          occurrences:
+            - V1
+            - V2
+capability_types:
+  org.onap.policy.clamp.acm.capability.Type:
+    name: org.onap.policy.clamp.acm.capability.Type
+    version: 1.0.0
+    metadata:
+      key0: value0
+    description: Capability Type
+    properties:
+      prop1:
+        name: org.onap.policy.clamp.acm.PolicyAutomationCompositionElement2
+        type: string
+        type_version: 1.0.0
+        description: Test RelationshipType
+        deafault: 0
+        key_schema:
+          name: org.onap.policy.clamp.acm.PolicyAutomationCompositionElement3
+          type: string
+          type_version: 1.0.0
+          description: Test Schema
+          constraints:
+            - valid_values:
+              - V1
+              - V2
+      entry_schema:
+        name: org.onap.policy.clamp.acm.PolicyAutomationCompositionElement4
+        type: string
+        type_version: 1.0.0
+        description: Test Schema
+        constraints:
+          - valid_values:
+            - V1
+            - V2
+relationship_types:
+  org.onap.policy.clamp.acm.Relationship:
+    version: 1.0.0
+    metadata:
+      key: value
+      key2: value2
+    description: Hello
+    properties:
+      prop1:
+        name: org.onap.policy.clamp.acm.PolicyAutomationCompositionElement2
+        type: string
+        type_version: 1.0.0
+        description: Test RelationshipType
+        deafault: 0
+        key_schema:
+          name: org.onap.policy.clamp.acm.PolicyAutomationCompositionElement3
+          type: string
+          type_version: 1.0.0
+          description: Test Schema
+          constraints:
+            - valid_values:
+              - V1
+              - V2
+        entry_schema:
+          name: org.onap.policy.clamp.acm.PolicyAutomationCompositionElement4
+          type: string
+          type_version: 1.0.0
+          description: Test Schema
+          constraints:
+            - valid_values:
+              - V1
+              - V2
+        metadata:
+          clamp_possible_values: ClampExecution:CSAR_RESOURCES

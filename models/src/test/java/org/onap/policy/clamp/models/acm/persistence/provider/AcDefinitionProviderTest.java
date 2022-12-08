@@ -22,6 +22,7 @@ package org.onap.policy.clamp.models.acm.persistence.provider;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -46,6 +47,8 @@ import org.springframework.data.domain.Example;
 class AcDefinitionProviderTest {
 
     private static final String TOSCA_SERVICE_TEMPLATE_YAML = "clamp/acm/pmsh/funtional-pmsh-usecase.yaml";
+    private static final String TOSCA_SERVICE_TEMPLATE_YAML_PROP =
+            "clamp/acm/test/tosca-template-additional-properties.yaml";
 
     private static final StandardYamlCoder YAML_TRANSLATOR = new StandardYamlCoder();
 
@@ -54,6 +57,24 @@ class AcDefinitionProviderTest {
     @BeforeAll
     static void loadServiceTemplate() {
         inputServiceTemplate = getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
+    }
+
+    @Test
+    void testDocCopyCompare() {
+
+        var inputServiceTemplateProperties = getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML_PROP);
+        var docServiceTemplate = new DocToscaServiceTemplate(inputServiceTemplateProperties);
+        var docServiceTemplateCopy = new DocToscaServiceTemplate(docServiceTemplate);
+
+        assertTrue(docServiceTemplate.compareTo(docServiceTemplateCopy) < -1);
+        assertThat(docServiceTemplate.compareToWithoutEntities(docServiceTemplateCopy)).isZero();
+
+        var acmDefinition = getAcDefinition(docServiceTemplate);
+        var acmDefinitionCopy = getAcDefinition(docServiceTemplateCopy);
+
+        assertThat(acmDefinition.getServiceTemplate().getName()).isEqualTo(
+                acmDefinitionCopy.getServiceTemplate().getName());
+
     }
 
     @Test
