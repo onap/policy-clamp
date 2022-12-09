@@ -37,15 +37,14 @@ import org.mockito.Mockito;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionHandler;
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionException;
-import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationCommand;
+import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationUpdate;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ProviderUtils;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
 
@@ -62,7 +61,6 @@ class AutomationCompositionInstantiationProviderTest {
             "src/test/resources/rest/acm/AutomationCompositionElementsNotFound.json";
     private static final String AC_INSTANTIATION_AC_DEFINITION_NOT_FOUND_JSON =
             "src/test/resources/rest/acm/AutomationCompositionNotFound.json";
-    private static final String AUTOMATION_COMPOSITION_NOT_FOUND = "Automation composition not found";
     private static final String DELETE_BAD_REQUEST = "Automation composition state is still %s";
     private static final String ORDERED_STATE_INVALID = "ordered state invalid or not specified on command";
     private static final String AC_ELEMENT_NAME_NOT_FOUND =
@@ -74,6 +72,7 @@ class AutomationCompositionInstantiationProviderTest {
     private static final String AC_DEFINITION_NOT_FOUND = "\"AutomationComposition\" INVALID, item has status INVALID\n"
             + "  item \"ServiceTemplate\" value \"\" INVALID,"
             + " Commissioned automation composition definition not found\n";
+    private static final String DO_NOT_MATCH = " do not match with ";
 
     private static ToscaServiceTemplate serviceTemplate = new ToscaServiceTemplate();
 
@@ -104,7 +103,8 @@ class AutomationCompositionInstantiationProviderTest {
         when(acProvider.createAutomationComposition(automationCompositionCreate))
                 .thenReturn(automationCompositionCreate);
 
-        var instantiationResponse = instantiationProvider.createAutomationComposition(automationCompositionCreate);
+        var instantiationResponse = instantiationProvider.createAutomationComposition(
+                automationCompositionCreate.getCompositionId(), automationCompositionCreate);
         InstantiationUtils.assertInstantiationResponse(instantiationResponse, automationCompositionCreate);
 
         verify(acProvider).createAutomationComposition(automationCompositionCreate);
@@ -117,33 +117,41 @@ class AutomationCompositionInstantiationProviderTest {
         assertThat(automationCompositionCreate)
                 .isEqualTo(automationCompositionsGet.getAutomationCompositionList().get(0));
 
+        var instanceUpdate = new InstantiationUpdate();
         var automationCompositionUpdate =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_UPDATE_JSON, "Crud");
         automationCompositionUpdate.setCompositionId(compositionId);
+        instanceUpdate.setElements(automationCompositionUpdate.getElements());
+        when(acProvider.getAutomationComposition(automationCompositionUpdate.getInstanceId()))
+                .thenReturn(automationCompositionUpdate);
+        when(acProvider.updateAutomationComposition(automationCompositionUpdate))
+                .thenReturn(automationCompositionUpdate);
 
-        instantiationResponse = instantiationProvider.updateAutomationComposition(automationCompositionUpdate);
+        instantiationResponse =
+                instantiationProvider.updateAutomationComposition(automationCompositionUpdate.getCompositionId(),
+                        automationCompositionUpdate.getInstanceId(), instanceUpdate);
         InstantiationUtils.assertInstantiationResponse(instantiationResponse, automationCompositionUpdate);
 
         verify(acProvider).updateAutomationComposition(automationCompositionUpdate);
 
-        when(acProvider.findAutomationComposition(automationCompositionUpdate.getKey().asIdentifier()))
-                .thenReturn(Optional.of(automationCompositionUpdate));
-        when(acProvider.deleteAutomationComposition(automationCompositionUpdate.getInstanceId()))
-                .thenReturn(automationCompositionUpdate);
-
+        var instanceUpdateCommand = new InstantiationUpdate();
         var instantiationCommand =
-                InstantiationUtils.getInstantiationCommandFromResource(AC_INSTANTIATION_CHANGE_STATE_JSON, "Crud");
-        instantiationResponse = instantiationProvider.issueAutomationCompositionCommand(instantiationCommand);
-        InstantiationUtils.assertInstantiationResponse(instantiationResponse, instantiationCommand);
+                InstantiationUtils.getInstantiationCommandFromResource(AC_INSTANTIATION_CHANGE_STATE_JSON);
+        instanceUpdateCommand.setInstantiationCommand(instantiationCommand);
+        instantiationResponse =
+                instantiationProvider.updateAutomationComposition(automationCompositionUpdate.getCompositionId(),
+                        automationCompositionUpdate.getInstanceId(), instanceUpdateCommand);
+        InstantiationUtils.assertInstantiationResponse(instantiationResponse, automationCompositionUpdate);
 
         verify(supervisionHandler).triggerAutomationCompositionSupervision(automationCompositionUpdate);
 
         // in order to delete a automationComposition the state must be UNINITIALISED
         automationCompositionCreate.setState(AutomationCompositionState.UNINITIALISED);
-        instantiationProvider.updateAutomationComposition(automationCompositionCreate);
 
-        instantiationProvider.deleteAutomationComposition(automationCompositionCreate.getName(),
-                automationCompositionCreate.getVersion());
+        when(acProvider.deleteAutomationComposition(automationCompositionUpdate.getInstanceId()))
+                .thenReturn(automationCompositionUpdate);
+        instantiationProvider.deleteAutomationComposition(automationCompositionCreate.getCompositionId(),
+                automationCompositionCreate.getInstanceId());
 
         verify(acProvider).deleteAutomationComposition(automationCompositionCreate.getInstanceId());
     }
@@ -161,8 +169,14 @@ class AutomationCompositionInstantiationProviderTest {
         var instantiationProvider = new AutomationCompositionInstantiationProvider(acProvider, supervisionHandler,
                 participantProvider, acDefinitionProvider);
 
-        assertThatThrownBy(() -> instantiationProvider.deleteAutomationComposition(automationComposition.getName(),
-                automationComposition.getVersion())).hasMessageMatching(AUTOMATION_COMPOSITION_NOT_FOUND);
+        when(acProvider.getAutomationComposition(automationComposition.getInstanceId()))
+                .thenReturn(automationComposition);
+
+        var wrongCompositionId = UUID.randomUUID();
+        var instanceId = automationComposition.getInstanceId();
+        var compositionId = automationComposition.getCompositionId();
+        assertThatThrownBy(() -> instantiationProvider.deleteAutomationComposition(wrongCompositionId, instanceId))
+                .hasMessageMatching(compositionId + DO_NOT_MATCH + wrongCompositionId);
 
         for (var state : AutomationCompositionState.values()) {
             if (!AutomationCompositionState.UNINITIALISED.equals(state)) {
@@ -170,16 +184,9 @@ class AutomationCompositionInstantiationProviderTest {
             }
         }
         automationComposition.setState(AutomationCompositionState.UNINITIALISED);
-        automationComposition.setInstanceId(UUID.randomUUID());
+        when(acProvider.deleteAutomationComposition(instanceId)).thenReturn(automationComposition);
 
-        when(acProvider.findAutomationComposition(
-                new ToscaConceptIdentifier(automationComposition.getName(), automationComposition.getVersion())))
-                        .thenReturn(Optional.of(automationComposition));
-        when(acProvider.deleteAutomationComposition(automationComposition.getInstanceId()))
-                .thenReturn(automationComposition);
-
-        instantiationProvider.deleteAutomationComposition(automationComposition.getName(),
-                automationComposition.getVersion());
+        instantiationProvider.deleteAutomationComposition(compositionId, instanceId);
     }
 
     private void assertThatDeleteThrownBy(AutomationComposition automationComposition,
@@ -193,11 +200,13 @@ class AutomationCompositionInstantiationProviderTest {
         var instantiationProvider = new AutomationCompositionInstantiationProvider(acProvider, supervisionHandler,
                 participantProvider, acDefinitionProvider);
 
-        var key = new ToscaConceptIdentifier(automationComposition.getName(), automationComposition.getVersion());
-        when(acProvider.findAutomationComposition(key)).thenReturn(Optional.of(automationComposition));
+        when(acProvider.getAutomationComposition(automationComposition.getInstanceId()))
+                .thenReturn(automationComposition);
 
-        assertThatThrownBy(() -> instantiationProvider.deleteAutomationComposition(automationComposition.getName(),
-                automationComposition.getVersion())).hasMessageMatching(String.format(DELETE_BAD_REQUEST, state));
+        var compositionId = automationComposition.getCompositionId();
+        var instanceId = automationComposition.getInstanceId();
+        assertThatThrownBy(() -> instantiationProvider.deleteAutomationComposition(compositionId, instanceId))
+                .hasMessageMatching(String.format(DELETE_BAD_REQUEST, state));
     }
 
     @Test
@@ -221,14 +230,16 @@ class AutomationCompositionInstantiationProviderTest {
         var instantiationProvider = new AutomationCompositionInstantiationProvider(acProvider, supervisionHandler,
                 participantProvider, acDefinitionProvider);
 
-        var instantiationResponse = instantiationProvider.createAutomationComposition(automationCompositionCreate);
+        var instantiationResponse = instantiationProvider.createAutomationComposition(
+                automationCompositionCreate.getCompositionId(), automationCompositionCreate);
         InstantiationUtils.assertInstantiationResponse(instantiationResponse, automationCompositionCreate);
 
         when(acProvider.findAutomationComposition(automationCompositionCreate.getKey().asIdentifier()))
                 .thenReturn(Optional.of(automationCompositionCreate));
 
-        assertThatThrownBy(() -> instantiationProvider.createAutomationComposition(automationCompositionCreate))
-                .hasMessageMatching(automationCompositionCreate.getKey().asIdentifier() + " already defined");
+        assertThatThrownBy(
+                () -> instantiationProvider.createAutomationComposition(compositionId, automationCompositionCreate))
+                        .hasMessageMatching(automationCompositionCreate.getKey().asIdentifier() + " already defined");
     }
 
     @Test
@@ -246,41 +257,70 @@ class AutomationCompositionInstantiationProviderTest {
         var provider = new AutomationCompositionInstantiationProvider(acProvider, supervisionHandler,
                 participantProvider, acDefinitionProvider);
 
-        assertThatThrownBy(() -> provider.createAutomationComposition(automationComposition))
+        assertThatThrownBy(() -> provider.createAutomationComposition(compositionId, automationComposition))
                 .hasMessageMatching(AC_ELEMENT_NAME_NOT_FOUND);
 
-        assertThatThrownBy(() -> provider.updateAutomationComposition(automationComposition))
+        when(acProvider.getAutomationComposition(automationComposition.getInstanceId()))
+                .thenReturn(automationComposition);
+        var instanceUpdate = new InstantiationUpdate();
+        instanceUpdate.setElements(automationComposition.getElements());
+
+        var instanceId = automationComposition.getInstanceId();
+        assertThatThrownBy(() -> provider.updateAutomationComposition(compositionId, instanceId, instanceUpdate))
                 .hasMessageMatching(AC_ELEMENT_NAME_NOT_FOUND);
     }
 
     @Test
-    void testCreateAutomationCompositions_CommissionedAcNotFound() throws Exception {
+    void testCreateAutomationCompositions_CommissionedAcNotFound() {
         var automationComposition = InstantiationUtils
                 .getAutomationCompositionFromResource(AC_INSTANTIATION_AC_DEFINITION_NOT_FOUND_JSON, "AcNotFound");
 
         var participantProvider = Mockito.mock(ParticipantProvider.class);
         var acProvider = mock(AutomationCompositionProvider.class);
+        when(acProvider.getAutomationComposition(automationComposition.getInstanceId()))
+                .thenReturn(automationComposition);
         var supervisionHandler = mock(SupervisionHandler.class);
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
         var provider = new AutomationCompositionInstantiationProvider(acProvider, supervisionHandler,
                 participantProvider, acDefinitionProvider);
 
-        assertThatThrownBy(() -> provider.createAutomationComposition(automationComposition))
+        var compositionId = automationComposition.getCompositionId();
+        assertThatThrownBy(() -> provider.createAutomationComposition(compositionId, automationComposition))
                 .hasMessageMatching(AC_DEFINITION_NOT_FOUND);
 
-        assertThatThrownBy(() -> provider.updateAutomationComposition(automationComposition))
+        var instanceUpdate = new InstantiationUpdate();
+        instanceUpdate.setElements(automationComposition.getElements());
+        var instanceId = automationComposition.getInstanceId();
+        assertThatThrownBy(() -> provider.updateAutomationComposition(compositionId, instanceId, instanceUpdate))
                 .hasMessageMatching(AC_DEFINITION_NOT_FOUND);
+
+        var wrongCompositionId = UUID.randomUUID();
+        assertThatThrownBy(() -> provider.createAutomationComposition(wrongCompositionId, automationComposition))
+                .hasMessageMatching(compositionId + DO_NOT_MATCH + wrongCompositionId);
+
+        assertThatThrownBy(() -> provider.updateAutomationComposition(wrongCompositionId, instanceId, instanceUpdate))
+                .hasMessageMatching(compositionId + DO_NOT_MATCH + wrongCompositionId);
     }
 
     @Test
-    void testIssueAutomationCompositionCommand_OrderedStateInvalid() throws AutomationCompositionRuntimeException {
+    void testIssueAutomationCompositionCommand_OrderedStateInvalid() {
         var participantProvider = Mockito.mock(ParticipantProvider.class);
         var acProvider = mock(AutomationCompositionProvider.class);
         var supervisionHandler = mock(SupervisionHandler.class);
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
         var instantiationProvider = new AutomationCompositionInstantiationProvider(acProvider, supervisionHandler,
                 participantProvider, acDefinitionProvider);
-        assertThatThrownBy(() -> instantiationProvider.issueAutomationCompositionCommand(new InstantiationCommand()))
-                .hasMessageMatching(ORDERED_STATE_INVALID);
+        var instanceUpdate = new InstantiationUpdate();
+        instanceUpdate.setInstantiationCommand(new InstantiationCommand());
+        var automationComposition = InstantiationUtils
+                .getAutomationCompositionFromResource(AC_INSTANTIATION_AC_DEFINITION_NOT_FOUND_JSON, "AcNotFound");
+        when(acProvider.getAutomationComposition(automationComposition.getInstanceId()))
+                .thenReturn(automationComposition);
+
+        var compositionId = automationComposition.getCompositionId();
+        var instanceId = automationComposition.getInstanceId();
+        assertThatThrownBy(
+                () -> instantiationProvider.updateAutomationComposition(compositionId, instanceId, instanceUpdate))
+                        .hasMessageMatching(ORDERED_STATE_INVALID);
     }
 }

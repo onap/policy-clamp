@@ -101,7 +101,7 @@ topology_template:
       # Chart from any chart repository configured on helm client.
       version: 1.2.3
       type: org.onap.policy.clamp.acm.K8SMicroserviceAutomationCompositionElement
-      type_version: 1.0.0
+      type_version: 1.0.1
       description: Automation composition element for the K8S microservice for Hello World
       properties:
         provider: ONAP
@@ -123,7 +123,7 @@ topology_template:
       # Chart from local file system
       version: 1.2.3
       type: org.onap.policy.clamp.acm.K8SMicroserviceAutomationCompositionElement
-      type_version: 1.0.0
+      type_version: 1.0.1
       description: Automation composition element for the K8S microservice for PMSH
       properties:
         provider: ONAP
@@ -146,7 +146,7 @@ topology_template:
       # Chart installation without passing repository name
       version: 1.2.3
       type: org.onap.policy.clamp.acm.K8SMicroserviceAutomationCompositionElement
-      type_version: 1.0.0
+      type_version: 1.0.1
       description: Automation composition element for the K8S microservice for local chart
       properties:
         provider: ONAP
@@ -166,7 +166,7 @@ topology_template:
     org.onap.domain.sample.GenericK8s_AutomationCompositionDefinition:
       version: 1.2.3
       type: org.onap.policy.clamp.acm.AutomationComposition
-      type_version: 1.0.0
+      type_version: 1.0.1
       description: Automation composition for Hello World
       properties:
         provider: ONAP

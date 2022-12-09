@@ -20,7 +20,7 @@
 
 package org.onap.policy.clamp.acm.runtime.main.web;
 
-import org.onap.policy.clamp.common.acm.exception.AutomationCompositionException;
+import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
 import org.onap.policy.clamp.models.acm.messages.rest.SimpleResponse;
 import org.onap.policy.clamp.models.acm.rest.RestUtils;
 import org.onap.policy.models.base.PfModelException;
@@ -33,13 +33,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalControllerExceptionHandler {
 
     /**
-     * Handle AutomationCompositionException.
+     * Handle AutomationCompositionRuntimeException.
      *
-     * @param ex AutomationCompositionException
+     * @param ex AutomationCompositionRuntimeException
      * @return ResponseEntity
      */
-    @ExceptionHandler(AutomationCompositionException.class)
-    public ResponseEntity<SimpleResponse> handleBadRequest(AutomationCompositionException ex) {
+    @ExceptionHandler(AutomationCompositionRuntimeException.class)
+    public ResponseEntity<SimpleResponse> handleBadRequest(AutomationCompositionRuntimeException ex) {
         return RestUtils.toSimpleResponse(ex);
     }
 

@@ -94,10 +94,6 @@ public class CommissioningProvider {
      */
     public CommissioningResponse createAutomationCompositionDefinitions(ToscaServiceTemplate serviceTemplate) {
 
-        if (verifyIfDefinitionExists()) {
-            throw new PfModelRuntimeException(Status.BAD_REQUEST,
-                    "Delete instances, to commission automation composition definitions");
-        }
         var acmDefinition = acDefinitionProvider.createAutomationCompositionDefinition(serviceTemplate);
         serviceTemplate = acmDefinition.getServiceTemplate();
         var participantList = participantProvider.getParticipants();
@@ -190,14 +186,5 @@ public class CommissioningProvider {
      */
     private boolean verifyIfInstanceExists(UUID compositionId) {
         return !acProvider.getAcInstancesByCompositionId(compositionId).isEmpty();
-    }
-
-    /**
-     * Validates to see if there is any instance saved.
-     *
-     * @return true if exists instance
-     */
-    private boolean verifyIfDefinitionExists() {
-        return !acDefinitionProvider.getAllAcDefinitions().isEmpty();
     }
 }

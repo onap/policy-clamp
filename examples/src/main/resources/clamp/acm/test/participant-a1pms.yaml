@@ -97,7 +97,7 @@ node_types:
         type: list
         required: true
         entry_schema:
-          type: org.onap.datatypes.policy.clamp.acm.a1pmsAutomationCompositionElement.A1PolicyServiceEntity
+          type: org.onap.datatypes.policy.clamp.acm.a1PmsAutomationCompositionElement.A1PolicyServiceEntity
           type_version: 1.0.0
         description: The configuration entities of A1 policy services
 topology_template:
@@ -137,7 +137,7 @@ topology_template:
     org.onap.domain.sample.A1PMSAutomationCompositionDefinition:
       version: 1.2.3
       type: org.onap.policy.clamp.acm.AutomationComposition
-      type_version: 1.0.0
+      type_version: 1.0.1
       description: Automation composition for A1PMS request
       properties:
         provider: ONAP
