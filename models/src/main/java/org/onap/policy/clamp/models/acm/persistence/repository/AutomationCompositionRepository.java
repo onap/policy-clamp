@@ -21,6 +21,7 @@
 package org.onap.policy.clamp.models.acm.persistence.repository;
 
 import java.util.List;
+import java.util.Optional;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationComposition;
 import org.onap.policy.models.base.PfConceptKey;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -28,7 +29,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AutomationCompositionRepository
-    extends JpaRepository<JpaAutomationComposition, PfConceptKey>, FilterRepository {
+        extends JpaRepository<JpaAutomationComposition, PfConceptKey>, FilterRepository {
+
+    Optional<JpaAutomationComposition> findByInstanceId(String instanceId);
 
     List<JpaAutomationComposition> findByCompositionId(String compositionId);
 }

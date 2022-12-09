@@ -242,7 +242,7 @@ public class SupervisionScanner {
                     automationComposition.getState(), automationComposition.getOrderedState());
 
             automationComposition.setState(automationComposition.getOrderedState().asState());
-            automationCompositionProvider.saveAutomationComposition(automationComposition);
+            automationCompositionProvider.updateAutomationComposition(automationComposition);
 
             // Clear missed report counter on automation composition
             clearFaultAndCounter(automationComposition);

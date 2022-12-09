@@ -46,7 +46,8 @@ import org.onap.policy.models.base.PfConceptKey;
  */
 class JpaAutomationCompositionTest {
 
-    private static final String NULL_KEY_ERROR = "key is marked .*ull but is null";
+    private static final String NULL_KEY_ERROR = "instanceId is marked .*ull but is null";
+    private static final UUID INSTANCE_ID = UUID.fromString("709c62b3-8918-41b9-a747-d21eb79c6c20");
     private static final String COMPOSITION_ID = "709c62b3-8918-41b9-a747-e21eb79c6c41";
 
     @Test
@@ -56,74 +57,70 @@ class JpaAutomationCompositionTest {
         }).hasMessageMatching("copyConcept is marked .*ull but is null");
 
         assertThatThrownBy(() -> {
-            new JpaAutomationComposition((PfConceptKey) null);
+            new JpaAutomationComposition(null, null, null, null, null);
         }).hasMessageMatching(NULL_KEY_ERROR);
 
         assertThatThrownBy(() -> {
-            new JpaAutomationComposition(null, null, null, null);
+            new JpaAutomationComposition(null, null, null, null, new LinkedHashMap<>());
         }).hasMessageMatching(NULL_KEY_ERROR);
 
         assertThatThrownBy(() -> {
-            new JpaAutomationComposition(null, null, null, new LinkedHashMap<>());
+            new JpaAutomationComposition(null, null, null, AutomationCompositionState.UNINITIALISED, null);
         }).hasMessageMatching(NULL_KEY_ERROR);
 
         assertThatThrownBy(() -> {
-            new JpaAutomationComposition(null, null, AutomationCompositionState.UNINITIALISED, null);
-        }).hasMessageMatching(NULL_KEY_ERROR);
-
-        assertThatThrownBy(() -> {
-            new JpaAutomationComposition(null, null, AutomationCompositionState.UNINITIALISED, new LinkedHashMap<>());
-        }).hasMessageMatching(NULL_KEY_ERROR);
-
-        assertThatThrownBy(() -> {
-            new JpaAutomationComposition(null, "key", null, null);
-        }).hasMessageMatching(NULL_KEY_ERROR);
-
-        assertThatThrownBy(() -> {
-            new JpaAutomationComposition(null, "key", null, new LinkedHashMap<>());
-        }).hasMessageMatching(NULL_KEY_ERROR);
-
-        assertThatThrownBy(() -> {
-            new JpaAutomationComposition(null, "key", AutomationCompositionState.UNINITIALISED, null);
-        }).hasMessageMatching(NULL_KEY_ERROR);
-
-        assertThatThrownBy(() -> {
-            new JpaAutomationComposition(null, "key", AutomationCompositionState.UNINITIALISED, new LinkedHashMap<>());
-        }).hasMessageMatching(NULL_KEY_ERROR);
-
-        assertThatThrownBy(() -> {
-            new JpaAutomationComposition(new PfConceptKey(), null, null, null);
-        }).hasMessageMatching("compositionId is marked .*ull but is null");
-
-        assertThatThrownBy(() -> {
-            new JpaAutomationComposition(new PfConceptKey(), null, null, new LinkedHashMap<>());
-        }).hasMessageMatching("compositionId is marked .*ull but is null");
-
-        assertThatThrownBy(() -> {
-            new JpaAutomationComposition(new PfConceptKey(), null, AutomationCompositionState.UNINITIALISED, null);
-        }).hasMessageMatching("compositionId is marked .*ull but is null");
-
-        assertThatThrownBy(() -> {
-            new JpaAutomationComposition(new PfConceptKey(), null, AutomationCompositionState.UNINITIALISED,
+            new JpaAutomationComposition(null, null, null, AutomationCompositionState.UNINITIALISED,
                     new LinkedHashMap<>());
+        }).hasMessageMatching(NULL_KEY_ERROR);
+
+        assertThatThrownBy(() -> {
+            new JpaAutomationComposition(null, null, "key", null, new LinkedHashMap<>());
+        }).hasMessageMatching(NULL_KEY_ERROR);
+
+        assertThatThrownBy(() -> {
+            new JpaAutomationComposition(null, null, "key", AutomationCompositionState.UNINITIALISED, null);
+        }).hasMessageMatching(NULL_KEY_ERROR);
+
+        assertThatThrownBy(() -> {
+            new JpaAutomationComposition(null, null, "key", AutomationCompositionState.UNINITIALISED,
+                    new LinkedHashMap<>());
+        }).hasMessageMatching(NULL_KEY_ERROR);
+
+        assertThatThrownBy(() -> {
+            new JpaAutomationComposition(INSTANCE_ID.toString(), new PfConceptKey(), null, null, null);
         }).hasMessageMatching("compositionId is marked .*ull but is null");
 
         assertThatThrownBy(() -> {
-            new JpaAutomationComposition(new PfConceptKey(), "key", null, null);
+            new JpaAutomationComposition(INSTANCE_ID.toString(), new PfConceptKey(), null, null, new LinkedHashMap<>());
+        }).hasMessageMatching("compositionId is marked .*ull but is null");
+
+        assertThatThrownBy(() -> {
+            new JpaAutomationComposition(INSTANCE_ID.toString(), new PfConceptKey(), null,
+                    AutomationCompositionState.UNINITIALISED, null);
+        }).hasMessageMatching("compositionId is marked .*ull but is null");
+
+        assertThatThrownBy(() -> {
+            new JpaAutomationComposition(INSTANCE_ID.toString(), new PfConceptKey(), null,
+                    AutomationCompositionState.UNINITIALISED, new LinkedHashMap<>());
+        }).hasMessageMatching("compositionId is marked .*ull but is null");
+
+        assertThatThrownBy(() -> {
+            new JpaAutomationComposition(INSTANCE_ID.toString(), new PfConceptKey(), "key", null, null);
         }).hasMessageMatching("state is marked .*ull but is null");
 
         assertThatThrownBy(() -> {
-            new JpaAutomationComposition(new PfConceptKey(), "key", null, new LinkedHashMap<>());
+            new JpaAutomationComposition(INSTANCE_ID.toString(), new PfConceptKey(), "key", null,
+                    new LinkedHashMap<>());
         }).hasMessageMatching("state is marked .*ull but is null");
 
         assertThatThrownBy(() -> {
-            new JpaAutomationComposition(new PfConceptKey(), "key", AutomationCompositionState.UNINITIALISED, null);
+            new JpaAutomationComposition(INSTANCE_ID.toString(), new PfConceptKey(), "key",
+                    AutomationCompositionState.UNINITIALISED, null);
         }).hasMessageMatching("elements is marked .*ull but is null");
 
         assertNotNull(new JpaAutomationComposition());
-        assertNotNull(new JpaAutomationComposition((new PfConceptKey())));
-        assertNotNull(new JpaAutomationComposition(new PfConceptKey(), "key", AutomationCompositionState.UNINITIALISED,
-                new LinkedHashMap<>()));
+        assertNotNull(new JpaAutomationComposition(INSTANCE_ID.toString(), new PfConceptKey(), "key",
+                AutomationCompositionState.UNINITIALISED, new LinkedHashMap<>()));
     }
 
     @Test
@@ -182,23 +179,24 @@ class JpaAutomationCompositionTest {
                 new StandardCoder().decode(new File("src/test/resources/json/AutomationCompositionNoOrderedState.json"),
                         AutomationComposition.class);
 
+        noOrderedStateAc.setInstanceId(INSTANCE_ID);
         var noOrderedStateJpaAc = new JpaAutomationComposition(noOrderedStateAc);
         assertNull(noOrderedStateJpaAc.getOrderedState());
         noOrderedStateAc.setOrderedState(AutomationCompositionOrderedState.UNINITIALISED);
         noOrderedStateJpaAc = new JpaAutomationComposition(noOrderedStateAc);
         assertEquals(testJpaAutomationComposition, noOrderedStateJpaAc);
 
-        var automationCompositionsWithElements = new StandardCoder().decode(
-                new File("src/test/resources/providers/TestAutomationCompositions.json"), AutomationCompositions.class);
+        var acWithElements =
+                new StandardCoder().decode(new File("src/test/resources/providers/TestAutomationCompositions.json"),
+                        AutomationCompositions.class).getAutomationCompositionList().get(0);
 
-        var jpaAutomationCompositionWithElements =
-                new JpaAutomationComposition(automationCompositionsWithElements.getAutomationCompositionList().get(0));
+        acWithElements.setInstanceId(INSTANCE_ID);
+        var jpaAutomationCompositionWithElements = new JpaAutomationComposition(acWithElements);
         assertEquals(4, jpaAutomationCompositionWithElements.getElements().size());
         assertEquals(17, jpaAutomationCompositionWithElements.getKeys().size());
         assertThatCode(jpaAutomationCompositionWithElements::clean).doesNotThrowAnyException();
 
-        assertEquals(automationCompositionsWithElements.getAutomationCompositionList().get(0),
-                jpaAutomationCompositionWithElements.toAuthorative());
+        assertEquals(acWithElements, jpaAutomationCompositionWithElements.toAuthorative());
     }
 
     @Test
@@ -282,6 +280,7 @@ class JpaAutomationCompositionTest {
 
         var ac2 = new JpaAutomationComposition();
         ac2.setCompositionId(COMPOSITION_ID);
+        ac2.setInstanceId(ac0.getInstanceId());
         assertEquals(ac2, ac0);
     }
 
@@ -299,6 +298,7 @@ class JpaAutomationCompositionTest {
     private AutomationComposition createAutomationCompositionInstance() {
         var testAutomationComposition = new AutomationComposition();
         testAutomationComposition.setName("automation-composition");
+        testAutomationComposition.setInstanceId(INSTANCE_ID);
         testAutomationComposition.setVersion("0.0.1");
         testAutomationComposition.setCompositionId(UUID.fromString(COMPOSITION_ID));
         testAutomationComposition.setElements(new LinkedHashMap<>());

@@ -45,6 +45,7 @@ import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvide
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ProviderUtils;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
 
@@ -66,14 +67,13 @@ class AutomationCompositionInstantiationProviderTest {
     private static final String ORDERED_STATE_INVALID = "ordered state invalid or not specified on command";
     private static final String AC_ELEMENT_NAME_NOT_FOUND =
             "\"AutomationComposition\" INVALID, item has status INVALID\n"
-            + "  \"entry PMSHInstance0AcElementNotFound\" INVALID, item has status INVALID\n"
-            + "    \"entry org.onap.domain.pmsh.DCAEMicroservice\" INVALID, Not found\n"
-            + "    \"entry org.onap.domain.pmsh.PMSH_MonitoringPolicyAutomationCompositionElement\""
-            + " INVALID, Not found\n";
-    private static final String AC_DEFINITION_NOT_FOUND =
-            "\"AutomationComposition\" INVALID, item has status INVALID\n"
-                    + "  item \"ServiceTemplate\" value \"\" INVALID,"
-                    + " Commissioned automation composition definition not found\n";
+                    + "  \"entry PMSHInstance0AcElementNotFound\" INVALID, item has status INVALID\n"
+                    + "    \"entry org.onap.domain.pmsh.DCAEMicroservice\" INVALID, Not found\n"
+                    + "    \"entry org.onap.domain.pmsh.PMSH_MonitoringPolicyAutomationCompositionElement\""
+                    + " INVALID, Not found\n";
+    private static final String AC_DEFINITION_NOT_FOUND = "\"AutomationComposition\" INVALID, item has status INVALID\n"
+            + "  item \"ServiceTemplate\" value \"\" INVALID,"
+            + " Commissioned automation composition definition not found\n";
 
     private static ToscaServiceTemplate serviceTemplate = new ToscaServiceTemplate();
 
@@ -101,12 +101,13 @@ class AutomationCompositionInstantiationProviderTest {
         var automationCompositionCreate =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Crud");
         automationCompositionCreate.setCompositionId(compositionId);
-        when(acProvider.saveAutomationComposition(automationCompositionCreate)).thenReturn(automationCompositionCreate);
+        when(acProvider.createAutomationComposition(automationCompositionCreate))
+                .thenReturn(automationCompositionCreate);
 
         var instantiationResponse = instantiationProvider.createAutomationComposition(automationCompositionCreate);
         InstantiationUtils.assertInstantiationResponse(instantiationResponse, automationCompositionCreate);
 
-        verify(acProvider).saveAutomationComposition(automationCompositionCreate);
+        verify(acProvider).createAutomationComposition(automationCompositionCreate);
 
         when(acProvider.getAutomationCompositions(automationCompositionCreate.getName(),
                 automationCompositionCreate.getVersion())).thenReturn(List.of(automationCompositionCreate));
@@ -123,14 +124,12 @@ class AutomationCompositionInstantiationProviderTest {
         instantiationResponse = instantiationProvider.updateAutomationComposition(automationCompositionUpdate);
         InstantiationUtils.assertInstantiationResponse(instantiationResponse, automationCompositionUpdate);
 
-        verify(acProvider).saveAutomationComposition(automationCompositionUpdate);
+        verify(acProvider).updateAutomationComposition(automationCompositionUpdate);
 
         when(acProvider.findAutomationComposition(automationCompositionUpdate.getKey().asIdentifier()))
                 .thenReturn(Optional.of(automationCompositionUpdate));
-        when(acProvider.findAutomationComposition(automationCompositionUpdate.getName(),
-                automationCompositionUpdate.getVersion())).thenReturn(Optional.of(automationCompositionUpdate));
-        when(acProvider.deleteAutomationComposition(automationCompositionUpdate.getName(),
-                automationCompositionUpdate.getVersion())).thenReturn(automationCompositionUpdate);
+        when(acProvider.deleteAutomationComposition(automationCompositionUpdate.getInstanceId()))
+                .thenReturn(automationCompositionUpdate);
 
         var instantiationCommand =
                 InstantiationUtils.getInstantiationCommandFromResource(AC_INSTANTIATION_CHANGE_STATE_JSON, "Crud");
@@ -146,8 +145,7 @@ class AutomationCompositionInstantiationProviderTest {
         instantiationProvider.deleteAutomationComposition(automationCompositionCreate.getName(),
                 automationCompositionCreate.getVersion());
 
-        verify(acProvider).deleteAutomationComposition(automationCompositionCreate.getName(),
-                automationCompositionCreate.getVersion());
+        verify(acProvider).deleteAutomationComposition(automationCompositionCreate.getInstanceId());
     }
 
     @Test
@@ -172,11 +170,13 @@ class AutomationCompositionInstantiationProviderTest {
             }
         }
         automationComposition.setState(AutomationCompositionState.UNINITIALISED);
+        automationComposition.setInstanceId(UUID.randomUUID());
 
-        when(acProvider.findAutomationComposition(automationComposition.getName(), automationComposition.getVersion()))
-                .thenReturn(Optional.of(automationComposition));
-        when(acProvider.deleteAutomationComposition(automationComposition.getName(),
-                automationComposition.getVersion())).thenReturn(automationComposition);
+        when(acProvider.findAutomationComposition(
+                new ToscaConceptIdentifier(automationComposition.getName(), automationComposition.getVersion())))
+                        .thenReturn(Optional.of(automationComposition));
+        when(acProvider.deleteAutomationComposition(automationComposition.getInstanceId()))
+                .thenReturn(automationComposition);
 
         instantiationProvider.deleteAutomationComposition(automationComposition.getName(),
                 automationComposition.getVersion());
@@ -193,8 +193,8 @@ class AutomationCompositionInstantiationProviderTest {
         var instantiationProvider = new AutomationCompositionInstantiationProvider(acProvider, supervisionHandler,
                 participantProvider, acDefinitionProvider);
 
-        when(acProvider.findAutomationComposition(automationComposition.getName(), automationComposition.getVersion()))
-                .thenReturn(Optional.of(automationComposition));
+        var key = new ToscaConceptIdentifier(automationComposition.getName(), automationComposition.getVersion());
+        when(acProvider.findAutomationComposition(key)).thenReturn(Optional.of(automationComposition));
 
         assertThatThrownBy(() -> instantiationProvider.deleteAutomationComposition(automationComposition.getName(),
                 automationComposition.getVersion())).hasMessageMatching(String.format(DELETE_BAD_REQUEST, state));
@@ -209,9 +209,11 @@ class AutomationCompositionInstantiationProviderTest {
         var automationCompositionCreate =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "NoDuplicates");
         automationCompositionCreate.setCompositionId(compositionId);
+        automationCompositionCreate.setInstanceId(UUID.randomUUID());
 
         var acProvider = mock(AutomationCompositionProvider.class);
-        when(acProvider.saveAutomationComposition(automationCompositionCreate)).thenReturn(automationCompositionCreate);
+        when(acProvider.createAutomationComposition(automationCompositionCreate))
+                .thenReturn(automationCompositionCreate);
 
         var participantProvider = Mockito.mock(ParticipantProvider.class);
         var supervisionHandler = mock(SupervisionHandler.class);

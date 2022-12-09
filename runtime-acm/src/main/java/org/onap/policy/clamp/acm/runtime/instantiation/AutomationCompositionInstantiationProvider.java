@@ -43,6 +43,7 @@ import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.common.parameters.ObjectValidationResult;
 import org.onap.policy.common.parameters.ValidationStatus;
 import org.onap.policy.models.base.PfModelRuntimeException;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -80,9 +81,10 @@ public class AutomationCompositionInstantiationProvider {
         if (!validationResult.isValid()) {
             throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, validationResult.getResult());
         }
-        automationComposition = automationCompositionProvider.saveAutomationComposition(automationComposition);
+        automationComposition = automationCompositionProvider.createAutomationComposition(automationComposition);
 
         var response = new InstantiationResponse();
+        response.setInstanceId(automationComposition.getInstanceId());
         response.setAffectedAutomationComposition(automationComposition.getKey().asIdentifier());
 
         return response;
@@ -99,9 +101,10 @@ public class AutomationCompositionInstantiationProvider {
         if (!validationResult.isValid()) {
             throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, validationResult.getResult());
         }
-        automationCompositionProvider.saveAutomationComposition(automationComposition);
+        automationCompositionProvider.updateAutomationComposition(automationComposition);
 
         var response = new InstantiationResponse();
+        response.setInstanceId(automationComposition.getInstanceId());
         response.setAffectedAutomationComposition(automationComposition.getKey().asIdentifier());
 
         return response;
@@ -134,7 +137,8 @@ public class AutomationCompositionInstantiationProvider {
      * @return the result of the deletion
      */
     public InstantiationResponse deleteAutomationComposition(String name, String version) {
-        var automationCompositionOpt = automationCompositionProvider.findAutomationComposition(name, version);
+        var automationCompositionOpt =
+                automationCompositionProvider.findAutomationComposition(new ToscaConceptIdentifier(name, version));
         if (automationCompositionOpt.isEmpty()) {
             throw new PfModelRuntimeException(Response.Status.NOT_FOUND, "Automation composition not found");
         }
@@ -144,8 +148,10 @@ public class AutomationCompositionInstantiationProvider {
                     "Automation composition state is still " + automationComposition.getState());
         }
         var response = new InstantiationResponse();
-        response.setAffectedAutomationComposition(
-                automationCompositionProvider.deleteAutomationComposition(name, version).getKey().asIdentifier());
+        automationComposition =
+                automationCompositionProvider.deleteAutomationComposition(automationComposition.getInstanceId());
+        response.setInstanceId(automationComposition.getInstanceId());
+        response.setAffectedAutomationComposition(automationComposition.getKey().asIdentifier());
         return response;
     }
 
@@ -199,7 +205,7 @@ public class AutomationCompositionInstantiationProvider {
 
         automationComposition.setCascadedOrderedState(command.getOrderedState());
         supervisionHandler.triggerAutomationCompositionSupervision(automationComposition);
-        automationCompositionProvider.saveAutomationComposition(automationComposition);
+        automationCompositionProvider.updateAutomationComposition(automationComposition);
         var response = new InstantiationResponse();
         response.setAffectedAutomationComposition(command.getAutomationCompositionIdentifier());
 

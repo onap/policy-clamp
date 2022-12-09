@@ -166,6 +166,7 @@ class InstantiationControllerTest extends CommonRestController {
         assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
         var instResponse = resp.readEntity(InstantiationResponse.class);
         InstantiationUtils.assertInstantiationResponse(instResponse, automationCompositionFromRsc);
+        automationCompositionFromRsc.setInstanceId(instResponse.getInstanceId());
 
         var automationCompositionsFromDb = instantiationProvider.getAutomationCompositions(
                 automationCompositionFromRsc.getKey().getName(), automationCompositionFromRsc.getKey().getVersion());
@@ -227,12 +228,13 @@ class InstantiationControllerTest extends CommonRestController {
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Update");
         automationCompositionCreate.setCompositionId(compositionId);
 
-        instantiationProvider.createAutomationComposition(automationCompositionCreate);
+        var response = instantiationProvider.createAutomationComposition(automationCompositionCreate);
 
         var invocationBuilder = super.sendRequest(INSTANTIATION_ENDPOINT);
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_UPDATE_JSON, "Update");
         automationComposition.setCompositionId(compositionId);
+        automationComposition.setInstanceId(response.getInstanceId());
         var resp = invocationBuilder.put(Entity.json(automationComposition));
         assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
 
