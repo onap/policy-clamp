@@ -143,7 +143,7 @@ public class HelmClient {
      * @return string output
      * @throws ServiceException incase of error.
      */
-    public static String executeCommand(ProcessBuilder processBuilder) throws ServiceException {
+    public String executeCommand(ProcessBuilder processBuilder) throws ServiceException {
         var commandStr = toString(processBuilder);
 
         try {

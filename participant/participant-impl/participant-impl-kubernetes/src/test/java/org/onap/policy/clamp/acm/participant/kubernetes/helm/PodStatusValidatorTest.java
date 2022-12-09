@@ -25,17 +25,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.doReturn;
 
 import java.io.File;
 import java.util.List;
 import java.util.Map;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.MockedStatic;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.onap.policy.clamp.acm.participant.kubernetes.exception.ServiceException;
 import org.onap.policy.clamp.acm.participant.kubernetes.handler.AutomationCompositionElementHandler;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartInfo;
@@ -54,12 +54,21 @@ class PodStatusValidatorTest {
     private static int STATUS_CHECK_INTERVAL = 1;
     private static List<ChartInfo> charts;
 
-    private static MockedStatic<HelmClient> mockedClient;
+    @InjectMocks
+    private PodStatusValidator podStatusValidator = new PodStatusValidator(charts.get(0), TIMEOUT,
+            STATUS_CHECK_INTERVAL);
+
+    @InjectMocks
+    private PodStatusValidator podValidatorWithPodName = new PodStatusValidator(charts.get(2), TIMEOUT,
+            STATUS_CHECK_INTERVAL);
+
+
+    @Mock
+    private HelmClient client;
 
     @BeforeAll
     static void init() throws CoderException {
         charts = CODER.decode(new File(CHART_INFO_YAML), ChartList.class).getCharts();
-        mockedClient = mockStatic(HelmClient.class);
     }
 
     @AfterEach
@@ -67,17 +76,11 @@ class PodStatusValidatorTest {
         AutomationCompositionElementHandler.getPodStatusMap().clear();
     }
 
-    @AfterAll
-    public static void close() {
-        mockedClient.close();
-    }
 
     @Test
-    void test_RunningPodState() {
+    void test_RunningPodState() throws ServiceException {
         String runningPod = "NAME\tREADY\tSTATUS\tRESTARTS\tAGE\r\nHelloWorld-54777df9f8-qpzqr\t1/1\tRunning\t0\t9h";
-        mockedClient.when(() -> HelmClient.executeCommand(any()))
-            .thenReturn(runningPod);
-        var podStatusValidator = new PodStatusValidator(charts.get(0), TIMEOUT, STATUS_CHECK_INTERVAL);
+        doReturn(runningPod).when(client).executeCommand(any());
         assertDoesNotThrow(() -> podStatusValidator.run());
         assertThat(AutomationCompositionElementHandler.getPodStatusMap()).hasSize(1);
         assertThat(AutomationCompositionElementHandler.getPodStatusMap()).containsKey(charts.get(0).getReleaseName());
@@ -86,11 +89,9 @@ class PodStatusValidatorTest {
     }
 
     @Test
-    void test_InvalidPodState() {
+    void test_InvalidPodState() throws ServiceException {
         String invalidPod = "NAME\tREADY\tSTATUS\tRESTARTS\tAGE\nhellofromdocker-54777df9f8-qpzqr\t1/1\tInit\t0\t9h";
-        mockedClient.when(() -> HelmClient.executeCommand(any()))
-            .thenReturn(invalidPod);
-        var podStatusValidator = new PodStatusValidator(charts.get(1), TIMEOUT, STATUS_CHECK_INTERVAL);
+        doReturn(invalidPod).when(client).executeCommand(any());
         assertThatThrownBy(() -> podStatusValidator.run())
             .isInstanceOf(ServiceException.class).hasMessage("Error verifying the status of the pod. Exiting");
         assertThat(AutomationCompositionElementHandler.getPodStatusMap()).isEmpty();
@@ -98,12 +99,10 @@ class PodStatusValidatorTest {
 
     // Use case scenario: Hard coded pod name
     @Test
-    void test_RunningPodStateWhitPodName() {
+    void test_RunningPodStateWithPodName() throws ServiceException {
         String runningPod = "NAME\tREADY\tSTATUS\tRESTARTS\tAGE\r\nhelloallworld-54777df9f8-qpzqr\t1/1\tRunning\t0\t9h";
-        mockedClient.when(() -> HelmClient.executeCommand(any()))
-            .thenReturn(runningPod);
-        var podStatusValidator = new PodStatusValidator(charts.get(2), TIMEOUT, STATUS_CHECK_INTERVAL);
-        assertDoesNotThrow(() -> podStatusValidator.run());
+        doReturn(runningPod).when(client).executeCommand(any());
+        assertDoesNotThrow(() -> podValidatorWithPodName.run());
         assertThat(AutomationCompositionElementHandler.getPodStatusMap()).hasSize(1);
         assertThat(AutomationCompositionElementHandler.getPodStatusMap()).containsKey(charts.get(2).getReleaseName());
         assertThat(AutomationCompositionElementHandler.getPodStatusMap())
