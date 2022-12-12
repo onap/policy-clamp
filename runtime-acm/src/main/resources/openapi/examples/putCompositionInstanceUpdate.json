@@ -1,0 +1,64 @@
+{
+    "name": "InstanceHttp",
+    "version": "1.0.1",
+    "compositionId": "562ed027-2689-481a-b3a5-e284b1fbc33f",
+    "state": "UNINITIALISED",
+    "orderedState": "PASSIVE",
+    "description": "Demo automation composition instance Http",
+    "elements": {
+        "709c62b3-8918-41b9-a747-d21eb79c6c24": {
+            "id": "709c62b3-8918-41b9-a747-d21eb79c6c24",
+            "definition": {
+                "name": "onap.policy.clamp.ac.element.Http_StarterAutomationCompositionElement",
+                "version": "1.2.3"
+            },
+            "participantId": {
+                "name": "HttpParticipant0",
+                "version": "1.0.0"
+            },
+            "participantType": {
+                "name": "org.onap.policy.clamp.acm.HttpParticipant",
+                "version": "2.3.4"
+            },
+            "state": "UNINITIALISED",
+            "orderedState": "UNINITIALISED",
+            "description": "Starter Automation Composition Element for the Demo"
+        },
+        "709c62b3-8918-41b9-a747-d21eb79c6c25": {
+            "id": "709c62b3-8918-41b9-a747-d21eb79c6c25",
+            "definition": {
+                "name": "onap.policy.clamp.ac.element.Http_BridgeAutomationCompositionElement",
+                "version": "1.2.3"
+            },
+            "participantId": {
+                "name": "HttpParticipant0",
+                "version": "1.0.0"
+            },
+            "participantType": {
+                "name": "org.onap.policy.clamp.acm.HttpParticipant",
+                "version": "2.3.4"
+            },
+            "state": "UNINITIALISED",
+            "orderedState": "UNINITIALISED",
+            "description": "Bridge Automation Composition Element for the Demo"
+        },
+        "709c62b3-8918-41b9-a747-d21eb79c6c23": {
+            "id": "709c62b3-8918-41b9-a747-d21eb79c6c23",
+            "definition": {
+                "name": "onap.policy.clamp.ac.element.Http_SinkAutomationCompositionElement",
+                "version": "1.2.3"
+            },
+            "participantId": {
+                "name": "HttpParticipant0",
+                "version": "1.0.0"
+            },
+            "participantType": {
+                "name": "org.onap.policy.clamp.acm.HttpParticipant",
+                "version": "2.3.4"
+            },
+            "state": "UNINITIALISED",
+            "orderedState": "UNINITIALISED",
+            "description": "Sink Automation Composition Element for the Demo"
+        }
+    }
+}
