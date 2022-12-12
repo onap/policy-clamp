@@ -66,7 +66,7 @@ class AcDefinitionProviderTest {
         var docServiceTemplate = new DocToscaServiceTemplate(inputServiceTemplateProperties);
         var docServiceTemplateCopy = new DocToscaServiceTemplate(docServiceTemplate);
 
-        assertTrue(docServiceTemplate.compareTo(docServiceTemplateCopy) < -1);
+        assertTrue(docServiceTemplate.compareTo(docServiceTemplateCopy) < 1);
         assertThat(docServiceTemplate.compareToWithoutEntities(docServiceTemplateCopy)).isZero();
 
         var acmDefinition = getAcDefinition(docServiceTemplate);
