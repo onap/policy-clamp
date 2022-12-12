@@ -35,6 +35,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedSta
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUpdates;
 import org.onap.policy.common.utils.coder.CoderException;
+import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaProperty;
 
@@ -46,15 +47,15 @@ class AutomationCompositionUpdateTest {
     void testCopyConstructor() throws CoderException {
         assertThatThrownBy(() -> new AutomationCompositionUpdate(null)).isInstanceOf(NullPointerException.class);
 
-        AutomationCompositionUpdate orig = new AutomationCompositionUpdate();
+        var orig = new AutomationCompositionUpdate();
         // verify with all values
-        ToscaConceptIdentifier id = new ToscaConceptIdentifier("id", "1.2.3");
+        var id = new ToscaConceptIdentifier("id", "1.2.3");
         orig.setAutomationCompositionId(id);
         orig.setParticipantId(null);
         orig.setMessageId(UUID.randomUUID());
         orig.setTimestamp(Instant.ofEpochMilli(3000));
 
-        AutomationCompositionElement acElement = new AutomationCompositionElement();
+        var acElement = new AutomationCompositionElement();
         acElement.setId(UUID.randomUUID());
         acElement.setDefinition(id);
         acElement.setDescription("Description");
@@ -63,18 +64,20 @@ class AutomationCompositionUpdateTest {
         acElement.setParticipantId(id);
         acElement.setParticipantType(id);
 
-        ToscaProperty property = new ToscaProperty();
+        var property = new ToscaProperty();
         property.setName("test");
         property.setType("testType");
-        Map<String, ToscaProperty> propertiesMap = Map.of("Prop1", property);
-        acElement.setPropertiesMap(propertiesMap);
+        var standardCoder = new StandardCoder();
+        var json = standardCoder.encode(property);
+        var propertiesMap = Map.of("Prop1", (Object) json);
+        acElement.setProperties(propertiesMap);
 
-        ParticipantUpdates participantUpdates = new ParticipantUpdates();
+        var participantUpdates = new ParticipantUpdates();
         participantUpdates.setParticipantId(id);
         participantUpdates.setAutomationCompositionElementList(List.of(acElement));
         orig.setParticipantUpdatesList(List.of(participantUpdates));
 
-        AutomationCompositionUpdate other = new AutomationCompositionUpdate(orig);
+        var other = new AutomationCompositionUpdate(orig);
 
         assertEquals(removeVariableFields(orig.toString()), removeVariableFields(other.toString()));
         assertSerializable(orig, AutomationCompositionUpdate.class);
