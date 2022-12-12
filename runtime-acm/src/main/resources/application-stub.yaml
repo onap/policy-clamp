@@ -1,0 +1,21 @@
+spring:
+    application:
+        name: "policy-clamp-runtime-acm-stub"
+stub:
+    deleteCompositionDefinitionResponse: "/openapi/examples/deleteCompositionDefinitionResponse.json"
+    deleteCompositionInstanceResponse: "/openapi/examples/deleteCompositionInstanceResponse.json"
+    getAllCompositionDefinitions: "/openapi/examples/getAllCompositionDefinitions.json"
+    getAllCompositionInstancesResponse: "/openapi/examples/getAllCompositionInstancesResponse.json"
+    getCompositionInstancesResponse: "/openapi/examples/getCompositionInstancesResponse.json"
+    getSingleCompositionDefinition: "/openapi/examples/getSingleCompositionDefinition.json"
+    postCommissionResponse: "/openapi/examples/postCommissionCompositionDefinitionsResponse.json"
+    postCompositionDefinitions: "/openapi/examples/postCompositionDefinitions.json"
+    postCompositionInstance: "/openapi/examples/postCompositionInstance.json"
+    postInstanceResponse: "/openapi/examples/postCompositionInstancesResponse.json"
+    putCompositionDefinitionUpdate: "/openapi/examples/putCompositionDefinitionUpdate.json"
+    putCompositionDefinitionUpdateResponse: "/openapi/examples/putCompositionDefinitionUpdateResponse.json"
+    putCompositionInstanceUpdate: "/openapi/examples/putCompositionInstanceUpdate.json"
+    putCompositionInstanceUpdateResponse: " /openapi/examples/putCompositionInstanceUpdateResponse.json"
+    
+
+   

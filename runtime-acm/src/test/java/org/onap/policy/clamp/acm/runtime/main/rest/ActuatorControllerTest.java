@@ -38,7 +38,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @AutoConfigureMetrics
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
+@ActiveProfiles({ "test", "default" })
 class ActuatorControllerTest extends CommonRestController {
 
     private static final String HEALTH_ENDPOINT = "health";
