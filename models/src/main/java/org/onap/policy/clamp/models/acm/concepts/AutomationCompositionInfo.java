@@ -20,10 +20,10 @@
 
 package org.onap.policy.clamp.models.acm.concepts;
 
+import java.util.UUID;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
  * Class to represent a automation composition info instance.
@@ -33,7 +33,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 @ToString
 public class AutomationCompositionInfo {
 
-    private ToscaConceptIdentifier automationCompositionId;
+    private UUID automationCompositionId;
 
     private AutomationCompositionState state = AutomationCompositionState.UNINITIALISED;
 

@@ -47,7 +47,7 @@ class ParticipantDeregisterTest {
         ToscaConceptIdentifier id = new ToscaConceptIdentifier();
         id.setName("id");
         id.setVersion("1.2.3");
-        orig.setAutomationCompositionId(id);
+        orig.setAutomationCompositionId(UUID.randomUUID());
         orig.setParticipantId(id);
         orig.setParticipantType(id);
         orig.setMessageId(UUID.randomUUID());

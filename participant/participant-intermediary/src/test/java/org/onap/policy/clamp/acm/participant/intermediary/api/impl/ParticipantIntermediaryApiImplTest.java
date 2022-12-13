@@ -75,9 +75,9 @@ class ParticipantIntermediaryApiImplTest {
         var idType = new ToscaConceptIdentifier(ID_NAME_TYPE, ID_VERSION_TYPE);
         assertEquals(idType, element.getParticipantType());
 
-        var acElement =
-            apiImpl.updateAutomationCompositionElementState(id, uuid, AutomationCompositionOrderedState.UNINITIALISED,
-                AutomationCompositionState.PASSIVE, ParticipantMessageType.AUTOMATION_COMPOSITION_STATECHANGE_ACK);
+        var acElement = apiImpl.updateAutomationCompositionElementState(UUID.randomUUID(), uuid,
+                AutomationCompositionOrderedState.UNINITIALISED, AutomationCompositionState.PASSIVE,
+                ParticipantMessageType.AUTOMATION_COMPOSITION_STATECHANGE_ACK);
         assertEquals(AutomationCompositionOrderedState.UNINITIALISED, acElement.getOrderedState());
         assertEquals(uuid, acElement.getId());
 

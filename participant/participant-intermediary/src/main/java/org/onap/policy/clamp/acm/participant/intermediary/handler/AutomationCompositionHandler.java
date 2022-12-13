@@ -22,6 +22,7 @@
 package org.onap.policy.clamp.acm.participant.intermediary.handler;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,7 +64,7 @@ public class AutomationCompositionHandler {
     private final ParticipantMessagePublisher publisher;
 
     @Getter
-    private final Map<ToscaConceptIdentifier, AutomationComposition> automationCompositionMap = new LinkedHashMap<>();
+    private final Map<UUID, AutomationComposition> automationCompositionMap = new LinkedHashMap<>();
 
     @Getter
     private final Map<UUID, AutomationCompositionElement> elementsOnThisParticipant = new LinkedHashMap<>();
@@ -97,7 +98,7 @@ public class AutomationCompositionHandler {
      * @return automationCompositionElement the updated automation composition element
      */
     public AutomationCompositionElement updateAutomationCompositionElementState(
-        ToscaConceptIdentifier automationCompositionId, UUID id, AutomationCompositionOrderedState orderedState,
+        UUID automationCompositionId, UUID id, AutomationCompositionOrderedState orderedState,
         AutomationCompositionState newState) {
 
         if (id == null) {
@@ -254,8 +255,7 @@ public class AutomationCompositionHandler {
         }
 
         automationComposition = new AutomationComposition();
-        automationComposition.setName(updateMsg.getAutomationCompositionId().getName());
-        automationComposition.setVersion(updateMsg.getAutomationCompositionId().getVersion());
+        automationComposition.setInstanceId(updateMsg.getAutomationCompositionId());
         var acElements = storeElementsOnThisParticipant(updateMsg.getParticipantUpdatesList());
         var acElementMap = prepareAcElementMap(acElements);
         automationComposition.setElements(acElementMap);
@@ -278,7 +278,7 @@ public class AutomationCompositionHandler {
 
     private void handleAutomationCompositionElementUpdate(List<AutomationCompositionElement> acElements,
         List<AutomationCompositionElementDefinition> acElementDefinitions, Integer startPhaseMsg,
-        ToscaConceptIdentifier automationCompositionId) {
+        UUID automationCompositionId) {
         try {
             for (var element : acElements) {
                 var acElementNodeTemplate = getAcElementNodeTemplate(acElementDefinitions, element.getDefinition());
@@ -286,8 +286,9 @@ public class AutomationCompositionHandler {
                     int startPhase = ParticipantUtils.findStartPhase(acElementNodeTemplate.getProperties());
                     if (startPhaseMsg.equals(startPhase)) {
                         for (var acElementListener : listeners) {
-                            acElementListener.automationCompositionElementUpdate(automationCompositionId, element,
-                                acElementNodeTemplate);
+                            var map = new HashMap<>(acElementNodeTemplate.getProperties());
+                            map.putAll(element.getProperties());
+                            acElementListener.automationCompositionElementUpdate(automationCompositionId, element, map);
                         }
                     }
                 }
@@ -345,7 +346,7 @@ public class AutomationCompositionHandler {
             .filter(element -> !AutomationCompositionState.UNINITIALISED.equals(element.getState())).findAny()
             .isEmpty();
         if (isAllUninitialised) {
-            automationCompositionMap.remove(automationComposition.getKey().asIdentifier());
+            automationCompositionMap.remove(automationComposition.getInstanceId());
             automationComposition.getElements().values()
                 .forEach(element -> elementsOnThisParticipant.remove(element.getId()));
         }
@@ -398,7 +399,7 @@ public class AutomationCompositionHandler {
             automationCompositionAck.setParticipantType(participantType);
             automationCompositionAck.setMessage("Automation composition is already in state " + orderedState);
             automationCompositionAck.setResult(false);
-            automationCompositionAck.setAutomationCompositionId(automationComposition.getKey().asIdentifier());
+            automationCompositionAck.setAutomationCompositionId(automationComposition.getInstanceId());
             publisher.sendAutomationCompositionAck(automationCompositionAck);
             return;
         }
@@ -418,11 +419,11 @@ public class AutomationCompositionHandler {
                 for (var acElementListener : listeners) {
                     try {
                         acElementListener.automationCompositionElementStateChange(
-                                automationComposition.getKey().asIdentifier(), acElement.getId(), acElement.getState(),
+                                automationComposition.getInstanceId(), acElement.getId(), acElement.getState(),
                                 orderedState);
                     } catch (PfModelException e) {
                         LOGGER.debug("Automation composition element update failed {}",
-                            automationComposition.getKey().asIdentifier());
+                                automationComposition.getInstanceId());
                     }
                 }
             }

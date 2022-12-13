@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021 Nordix Foundation.
+ * Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,6 @@ import lombok.Setter;
 import lombok.ToString;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementAck;
 import org.onap.policy.models.base.PfUtils;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
  * Class to represent the AUTOMATION_COMPOSITION_ACK message that a participant sends
@@ -41,7 +40,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 @ToString(callSuper = true)
 public class AutomationCompositionAck extends ParticipantAckMessage {
 
-    private ToscaConceptIdentifier automationCompositionId;
+    private UUID automationCompositionId;
     private Integer startPhase;
 
     // A map with AutomationCompositionElementID as its key, and a pair of result and message as value per

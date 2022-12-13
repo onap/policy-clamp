@@ -62,7 +62,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class SupervisionHandlerTest {
     private static final String AC_INSTANTIATION_CREATE_JSON = "src/test/resources/rest/acm/AutomationComposition.json";
-    private static final ToscaConceptIdentifier identifier = new ToscaConceptIdentifier("PMSHInstance0Crud", "1.0.1");
+    private static final UUID identifier = UUID.randomUUID();
     private static final ToscaConceptIdentifier participantId = new ToscaConceptIdentifier("ParticipantId", "1.0.0");
     private static final ToscaConceptIdentifier participantType =
             new ToscaConceptIdentifier("ParticipantType", "1.0.0");

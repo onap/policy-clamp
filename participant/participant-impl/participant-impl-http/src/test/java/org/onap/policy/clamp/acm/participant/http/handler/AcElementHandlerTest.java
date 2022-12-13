@@ -25,7 +25,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 
 import java.io.IOException;
-import java.util.Map;
+import java.util.HashMap;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,10 +38,8 @@ import org.onap.policy.clamp.acm.participant.http.main.models.ConfigRequest;
 import org.onap.policy.clamp.acm.participant.http.utils.CommonTestData;
 import org.onap.policy.clamp.acm.participant.http.utils.ToscaUtils;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -96,12 +94,13 @@ class AcElementHandlerTest {
     @Test
     void test_AutomationCompositionElementUpdate() throws Exception {
         doNothing().when(automationCompositionElementHandler).invokeHttpClient(any());
-        AutomationCompositionElement element = commonTestData.getAutomationCompositionElement();
+        var element = commonTestData.getAutomationCompositionElement();
 
-        Map<String, ToscaNodeTemplate> nodeTemplatesMap = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
+        var nodeTemplatesMap = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
+        var map = new HashMap<>(nodeTemplatesMap.get(HTTP_AUTOMATION_COMPOSITION_ELEMENT).getProperties());
+        map.putAll(element.getProperties());
 
         assertDoesNotThrow(() -> automationCompositionElementHandler.automationCompositionElementUpdate(
-            commonTestData.getAutomationCompositionId(), element,
-            nodeTemplatesMap.get(HTTP_AUTOMATION_COMPOSITION_ELEMENT)));
+            commonTestData.getAutomationCompositionId(), element, map));
     }
 }

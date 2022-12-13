@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,6 +34,7 @@ public class CommonTestData {
 
     private static final String TEST_KEY_NAME =
         "org.onap.domain.database.Http_PMSHMicroserviceAutomationCompositionElement";
+    public static final UUID AC_ID = UUID.randomUUID();
 
     /**
      * Get a automationComposition Element.
@@ -119,10 +120,10 @@ public class CommonTestData {
     /**
      * Get automation composition id.
      *
-     * @return ToscaConceptIdentifier automationCompositionId
+     * @return UUID automationCompositionId
      */
-    public ToscaConceptIdentifier getAutomationCompositionId() {
-        return new ToscaConceptIdentifier("PMSHInstance0", "1.0.0");
+    public UUID getAutomationCompositionId() {
+        return AC_ID;
     }
 
     /**

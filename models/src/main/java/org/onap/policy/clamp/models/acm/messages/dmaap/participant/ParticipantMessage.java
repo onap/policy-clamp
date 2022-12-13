@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021 Nordix Foundation.
+ * Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ public class ParticipantMessage {
     /**
      * Automation Composition ID, or {@code null} for messages to participants.
      */
-    private ToscaConceptIdentifier automationCompositionId;
+    private UUID automationCompositionId;
 
     /**
      * Constructor for instantiating a participant message class.

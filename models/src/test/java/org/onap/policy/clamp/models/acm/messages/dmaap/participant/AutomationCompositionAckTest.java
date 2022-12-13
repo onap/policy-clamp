@@ -48,7 +48,7 @@ class AutomationCompositionAckTest {
 
         // verify with all values
         var id = new ToscaConceptIdentifier("id", "1.2.3");
-        orig.setAutomationCompositionId(id);
+        orig.setAutomationCompositionId(UUID.randomUUID());
         orig.setParticipantId(id);
         orig.setParticipantType(id);
         var acElementResult = new AutomationCompositionElementAck(AutomationCompositionState.UNINITIALISED,

@@ -63,7 +63,7 @@ class AutomationCompositionHandlerTest {
         var element = new AutomationCompositionElement();
         element.setId(elementId1);
         element.setDefinition(
-            new ToscaConceptIdentifier("org.onap.policy.acm.PolicyAutomationCompositionParticipant", "1.0.1"));
+                new ToscaConceptIdentifier("org.onap.policy.acm.PolicyAutomationCompositionParticipant", "1.0.1"));
 
         element.setOrderedState(AutomationCompositionOrderedState.PASSIVE);
 
@@ -78,10 +78,10 @@ class AutomationCompositionHandlerTest {
 
         var ach = commonTestData.getMockAutomationCompositionHandler();
         assertNull(ach.updateAutomationCompositionElementState(null, null,
-            AutomationCompositionOrderedState.UNINITIALISED, AutomationCompositionState.PASSIVE));
+                AutomationCompositionOrderedState.UNINITIALISED, AutomationCompositionState.PASSIVE));
 
         assertNull(ach.updateAutomationCompositionElementState(null, id,
-            AutomationCompositionOrderedState.UNINITIALISED, AutomationCompositionState.PASSIVE));
+                AutomationCompositionOrderedState.UNINITIALISED, AutomationCompositionState.PASSIVE));
     }
 
     @Test
@@ -93,19 +93,19 @@ class AutomationCompositionHandlerTest {
         var key = ach.getElementsOnThisParticipant().keySet().iterator().next();
         var value = ach.getElementsOnThisParticipant().get(key);
         assertEquals(AutomationCompositionState.UNINITIALISED, value.getState());
-        ach.updateAutomationCompositionElementState(id, uuid, AutomationCompositionOrderedState.UNINITIALISED,
-            AutomationCompositionState.PASSIVE);
+        ach.updateAutomationCompositionElementState(CommonTestData.AC_ID_1, uuid,
+                AutomationCompositionOrderedState.UNINITIALISED, AutomationCompositionState.PASSIVE);
         assertEquals(AutomationCompositionState.PASSIVE, value.getState());
 
         ach.getAutomationCompositionMap().values().iterator().next().getElements().putIfAbsent(key, value);
-        ach.updateAutomationCompositionElementState(id, key, AutomationCompositionOrderedState.PASSIVE,
-            AutomationCompositionState.RUNNING);
+        ach.updateAutomationCompositionElementState(CommonTestData.AC_ID_1, key,
+                AutomationCompositionOrderedState.PASSIVE, AutomationCompositionState.RUNNING);
         assertEquals(AutomationCompositionState.RUNNING, value.getState());
 
         ach.getElementsOnThisParticipant().remove(key, value);
         ach.getAutomationCompositionMap().values().iterator().next().getElements().clear();
-        assertNull(ach.updateAutomationCompositionElementState(id, key, AutomationCompositionOrderedState.PASSIVE,
-            AutomationCompositionState.RUNNING));
+        assertNull(ach.updateAutomationCompositionElementState(CommonTestData.AC_ID_1, key,
+                AutomationCompositionOrderedState.PASSIVE, AutomationCompositionState.RUNNING));
 
     }
 
@@ -115,19 +115,19 @@ class AutomationCompositionHandlerTest {
         var id = CommonTestData.getParticipantId();
         var stateChange = getStateChange(id, uuid, AutomationCompositionOrderedState.RUNNING);
         var ach = commonTestData.setTestAutomationCompositionHandler(id, uuid);
-        assertDoesNotThrow(
-            () -> ach.handleAutomationCompositionStateChange(mock(AutomationCompositionStateChange.class), List.of()));
+        assertDoesNotThrow(() -> ach
+                .handleAutomationCompositionStateChange(mock(AutomationCompositionStateChange.class), List.of()));
 
         ach.handleAutomationCompositionStateChange(stateChange, List.of());
         var newid = new ToscaConceptIdentifier("id", "1.2.3");
-        stateChange.setAutomationCompositionId(newid);
+        stateChange.setAutomationCompositionId(UUID.randomUUID());
         stateChange.setParticipantId(newid);
         assertDoesNotThrow(() -> ach.handleAutomationCompositionStateChange(stateChange, List.of()));
 
         var acd = new AutomationCompositionElementDefinition();
         acd.setAcElementDefinitionId(id);
         var updateMsg = new AutomationCompositionUpdate();
-        updateMsg.setAutomationCompositionId(id);
+        updateMsg.setAutomationCompositionId(UUID.randomUUID());
         updateMsg.setMessageId(uuid);
         updateMsg.setParticipantId(id);
         updateMsg.setStartPhase(0);
@@ -140,7 +140,7 @@ class AutomationCompositionHandlerTest {
         updateMsg.setStartPhase(0);
         assertDoesNotThrow(() -> ach.handleAutomationCompositionUpdate(updateMsg, acElementDefinitions));
 
-        updateMsg.setAutomationCompositionId(new ToscaConceptIdentifier("new", "0.0.1"));
+        updateMsg.setAutomationCompositionId(UUID.randomUUID());
         updateMsg.setParticipantUpdatesList(List.of(mock(ParticipantUpdates.class)));
         assertDoesNotThrow(() -> ach.handleAutomationCompositionUpdate(updateMsg, acElementDefinitions));
 
@@ -170,7 +170,7 @@ class AutomationCompositionHandlerTest {
         var ach = commonTestData.setTestAutomationCompositionHandler(id, uuid);
         ach.handleAutomationCompositionStateChange(stateChangeUninitialised, List.of());
         var newid = new ToscaConceptIdentifier("id", "1.2.3");
-        stateChangeUninitialised.setAutomationCompositionId(newid);
+        stateChangeUninitialised.setAutomationCompositionId(UUID.randomUUID());
         stateChangeUninitialised.setParticipantId(newid);
         assertDoesNotThrow(() -> ach.handleAutomationCompositionStateChange(stateChangeUninitialised, List.of()));
     }
@@ -185,15 +185,15 @@ class AutomationCompositionHandlerTest {
         var ach = commonTestData.setTestAutomationCompositionHandler(id, uuid);
         ach.handleAutomationCompositionStateChange(stateChangePassive, List.of());
         var newid = new ToscaConceptIdentifier("id", "1.2.3");
-        stateChangePassive.setAutomationCompositionId(newid);
+        stateChangePassive.setAutomationCompositionId(UUID.randomUUID());
         stateChangePassive.setParticipantId(newid);
         assertDoesNotThrow(() -> ach.handleAutomationCompositionStateChange(stateChangePassive, List.of()));
     }
 
     private AutomationCompositionStateChange getStateChange(ToscaConceptIdentifier id, UUID uuid,
-        AutomationCompositionOrderedState state) {
+            AutomationCompositionOrderedState state) {
         var stateChange = new AutomationCompositionStateChange();
-        stateChange.setAutomationCompositionId(id);
+        stateChange.setAutomationCompositionId(UUID.randomUUID());
         stateChange.setParticipantId(id);
         stateChange.setMessageId(uuid);
         stateChange.setOrderedState(state);

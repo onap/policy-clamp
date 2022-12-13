@@ -24,6 +24,7 @@ package org.onap.policy.clamp.acm.participant.kubernetes.parameters;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.UUID;
 import org.onap.policy.common.endpoints.parameters.TopicParameters;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
@@ -37,7 +38,7 @@ public class CommonTestData {
     public static final long TIME_INTERVAL = 2000;
     public static final List<TopicParameters> TOPIC_PARAMS = List.of(getTopicParams());
     public static final Coder CODER = new StandardCoder();
-
+    private static final UUID AC_ID = UUID.randomUUID();
 
     /**
      * Get ParticipantK8sParameters.
@@ -152,9 +153,9 @@ public class CommonTestData {
 
     /**
      * Get automation composition id.
-     * @return ToscaConceptIdentifier automationCompositionId
+     * @return UUID automationCompositionId
      */
-    public ToscaConceptIdentifier getAutomationCompositionId() {
-        return new ToscaConceptIdentifier("PMSHInstance0", "1.0.0");
+    public UUID getAutomationCompositionId() {
+        return AC_ID;
     }
 }

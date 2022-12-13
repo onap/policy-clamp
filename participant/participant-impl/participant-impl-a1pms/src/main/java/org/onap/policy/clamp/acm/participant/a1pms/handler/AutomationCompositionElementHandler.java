@@ -23,9 +23,7 @@ package org.onap.policy.clamp.acm.participant.a1pms.handler;
 import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
-import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.ValidationException;
 import lombok.AccessLevel;
@@ -46,8 +44,6 @@ import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -75,18 +71,19 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
     /**
      * Handle a automation composition element state change.
      *
+     * @param automationCompositionId the ID of the automation composition
      * @param automationCompositionElementId the ID of the automation composition element
      * @param currentState                   the current state of the automation composition element
      * @param newState                       the state to which the automation composition element is changing to
      * @throws PfModelException in case of a model exception
      */
     @Override
-    public void automationCompositionElementStateChange(ToscaConceptIdentifier automationCompositionId,
+    public void automationCompositionElementStateChange(UUID automationCompositionId,
             UUID automationCompositionElementId, AutomationCompositionState currentState,
             AutomationCompositionOrderedState newState) throws A1PolicyServiceException {
         switch (newState) {
             case UNINITIALISED:
-                ConfigurationEntity configurationEntity = configRequestMap.get(automationCompositionElementId);
+                var configurationEntity = configRequestMap.get(automationCompositionElementId);
                 if (configurationEntity != null && acA1PmsClient.isPmsHealthy()) {
                     acA1PmsClient.deleteService(configurationEntity.getPolicyServiceEntities());
                     configRequestMap.remove(automationCompositionElementId);
@@ -118,15 +115,16 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
     /**
      * Callback method to handle an update on an automation composition element.
      *
+     * @param automationCompositionId the ID of the automation composition
      * @param element      the information on the automation composition element
-     * @param nodeTemplate toscaNodeTemplate
+     * @param properties properties Map
      */
     @Override
-    public void automationCompositionElementUpdate(ToscaConceptIdentifier automationCompositionId,
-            AutomationCompositionElement element, ToscaNodeTemplate nodeTemplate) throws A1PolicyServiceException {
+    public void automationCompositionElementUpdate(UUID automationCompositionId,
+            AutomationCompositionElement element, Map<String, Object> properties) throws A1PolicyServiceException {
         try {
-            var configurationEntity = CODER.convert(nodeTemplate.getProperties(), ConfigurationEntity.class);
-            Set<ConstraintViolation<ConfigurationEntity>> violations =
+            var configurationEntity = CODER.convert(properties, ConfigurationEntity.class);
+            var violations =
                     Validation.buildDefaultValidatorFactory().getValidator().validate(configurationEntity);
             if (violations.isEmpty()) {
                 if (acA1PmsClient.isPmsHealthy()) {
