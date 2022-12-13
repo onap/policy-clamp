@@ -27,7 +27,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class InstantiationCommandTest {
     @Test
@@ -43,7 +42,6 @@ class InstantiationCommandTest {
 
         var ic1 = new InstantiationCommand();
 
-        ic1.setAutomationCompositionIdentifier(new ToscaConceptIdentifier());
         ic1.setOrderedState(AutomationCompositionOrderedState.UNINITIALISED);
 
         assertThat(ic1.toString()).contains("InstantiationCommand(");

@@ -968,14 +968,12 @@ paths:
         content:
           application/json:
             schema:
-              title: InstantiationUpdate
-              type: object
+              $ref: '#/components/schemas/InstantiationUpdate'
             example:
               externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/putCompositionInstanceUpdate.json'
           application/yaml:
             schema:
-              title: InstantiationUpdate
-              type: object
+              $ref: '#/components/schemas/InstantiationUpdate'
             example:
               externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/putCompositionInstanceUpdate.yaml'
         required: true
@@ -1227,6 +1225,9 @@ components:
       type: object
     CommissioningResponse:
       title: CommissioningResponse
+      type: object
+    InstantiationUpdate:
+      title: InstantiationUpdate
       type: object
     InstantiationResponse:
       title: InstantiationResponse

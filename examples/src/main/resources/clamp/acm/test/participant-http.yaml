@@ -211,7 +211,7 @@ topology_template:
     org.onap.domain.sample.GenericK8s_AutomationCompositionDefinition:
       version: 1.2.3
       type: org.onap.policy.clamp.acm.AutomationComposition
-      type_version: 1.0.0
+      type_version: 1.0.1
       description: Automation composition for HTTP request
       properties:
         provider: ONAP

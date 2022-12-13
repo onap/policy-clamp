@@ -22,6 +22,7 @@
 package org.onap.policy.clamp.acm.runtime.instantiation;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.Response;
@@ -29,12 +30,14 @@ import javax.ws.rs.core.Response.Status;
 import lombok.AllArgsConstructor;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionHandler;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionException;
+import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationCommand;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse;
+import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationUpdate;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
@@ -43,7 +46,6 @@ import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.common.parameters.ObjectValidationResult;
 import org.onap.policy.common.parameters.ValidationStatus;
 import org.onap.policy.models.base.PfModelRuntimeException;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,6 +57,7 @@ import org.springframework.transaction.annotation.Transactional;
 @AllArgsConstructor
 public class AutomationCompositionInstantiationProvider {
     private static final String AUTOMATION_COMPOSITION_NODE_ELEMENT_TYPE = "AutomationCompositionElement";
+    private static final String DO_NOT_MATCH = " do not match with ";
 
     private final AutomationCompositionProvider automationCompositionProvider;
     private final SupervisionHandler supervisionHandler;
@@ -65,11 +68,16 @@ public class AutomationCompositionInstantiationProvider {
     /**
      * Create automation composition.
      *
+     * @param compositionId The UUID of the automation composition definition
      * @param automationComposition the automation composition
      * @return the result of the instantiation operation
      */
-    public InstantiationResponse createAutomationComposition(AutomationComposition automationComposition) {
-
+    public InstantiationResponse createAutomationComposition(UUID compositionId,
+            AutomationComposition automationComposition) {
+        if (!compositionId.equals(automationComposition.getCompositionId())) {
+            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
+                    automationComposition.getCompositionId() + DO_NOT_MATCH + compositionId);
+        }
         var checkAutomationCompositionOpt =
                 automationCompositionProvider.findAutomationComposition(automationComposition.getKey().asIdentifier());
         if (checkAutomationCompositionOpt.isPresent()) {
@@ -93,20 +101,34 @@ public class AutomationCompositionInstantiationProvider {
     /**
      * Update automation composition.
      *
-     * @param automationComposition the automation composition
-     * @return the result of the instantiation operation
+     * @param compositionId The UUID of the automation composition definition
+     * @param instanceId The UUID of the automation composition instance
+     * @param instanceUpdate the automation composition
+     * @return the result of the update
      */
-    public InstantiationResponse updateAutomationComposition(AutomationComposition automationComposition) {
-        var validationResult = validateAutomationComposition(automationComposition);
-        if (!validationResult.isValid()) {
-            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, validationResult.getResult());
+    public InstantiationResponse updateAutomationComposition(UUID compositionId, UUID instanceId,
+            InstantiationUpdate instanceUpdate) {
+        var automationComposition = automationCompositionProvider.getAutomationComposition(instanceId);
+        if (!compositionId.equals(automationComposition.getCompositionId())) {
+            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
+                    automationComposition.getCompositionId() + DO_NOT_MATCH + compositionId);
         }
-        automationCompositionProvider.updateAutomationComposition(automationComposition);
+        if (instanceUpdate.getElements() != null) {
+            automationComposition.setElements(instanceUpdate.getElements());
+            var validationResult = validateAutomationComposition(automationComposition);
+            if (!validationResult.isValid()) {
+                throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, validationResult.getResult());
+            }
+            automationComposition = automationCompositionProvider.updateAutomationComposition(automationComposition);
+        }
+
+        if (instanceUpdate.getInstantiationCommand() != null) {
+            issueAutomationCompositionCommand(automationComposition, instanceUpdate.getInstantiationCommand());
+        }
 
         var response = new InstantiationResponse();
-        response.setInstanceId(automationComposition.getInstanceId());
+        response.setInstanceId(instanceId);
         response.setAffectedAutomationComposition(automationComposition.getKey().asIdentifier());
-
         return response;
     }
 
@@ -130,19 +152,35 @@ public class AutomationCompositionInstantiationProvider {
     }
 
     /**
+     * Get Automation Composition.
+     *
+     * @param compositionId The UUID of the automation composition definition
+     * @param instanceId The UUID of the automation composition instance
+     * @return the Automation Composition
+     */
+    @Transactional(readOnly = true)
+    public AutomationComposition getAutomationComposition(UUID compositionId, UUID instanceId) {
+        var automationComposition = automationCompositionProvider.getAutomationComposition(instanceId);
+        if (!automationComposition.getCompositionId().equals(compositionId)) {
+            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
+                    "Composition Id " + compositionId + DO_NOT_MATCH + automationComposition.getCompositionId());
+        }
+        return automationComposition;
+    }
+
+    /**
      * Delete the automation composition with the given name and version.
      *
-     * @param name the name of the automation composition to delete
-     * @param version the version of the automation composition to delete
+     * @param compositionId The UUID of the automation composition definition
+     * @param instanceId The UUID of the automation composition instance
      * @return the result of the deletion
      */
-    public InstantiationResponse deleteAutomationComposition(String name, String version) {
-        var automationCompositionOpt =
-                automationCompositionProvider.findAutomationComposition(new ToscaConceptIdentifier(name, version));
-        if (automationCompositionOpt.isEmpty()) {
-            throw new PfModelRuntimeException(Response.Status.NOT_FOUND, "Automation composition not found");
+    public InstantiationResponse deleteAutomationComposition(UUID compositionId, UUID instanceId) {
+        var automationComposition = automationCompositionProvider.getAutomationComposition(instanceId);
+        if (!compositionId.equals(automationComposition.getCompositionId())) {
+            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
+                    automationComposition.getCompositionId() + DO_NOT_MATCH + compositionId);
         }
-        var automationComposition = automationCompositionOpt.get();
         if (!AutomationCompositionState.UNINITIALISED.equals(automationComposition.getState())) {
             throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
                     "Automation composition state is still " + automationComposition.getState());
@@ -174,42 +212,33 @@ public class AutomationCompositionInstantiationProvider {
     /**
      * Issue a command to automation compositions, setting their ordered state.
      *
+     * @param automationComposition the AutomationComposition
      * @param command the command to issue to automation compositions
-     * @return the result of the initiation command
-     * @throws AutomationCompositionException on ordered state invalid
      */
-    public InstantiationResponse issueAutomationCompositionCommand(InstantiationCommand command)
-            throws AutomationCompositionException {
+    public void issueAutomationCompositionCommand(AutomationComposition automationComposition,
+            InstantiationCommand command) {
 
         if (command.getOrderedState() == null) {
-            throw new AutomationCompositionException(Status.BAD_REQUEST,
+            throw new AutomationCompositionRuntimeException(Status.BAD_REQUEST,
                     "ordered state invalid or not specified on command");
         }
 
         var participants = participantProvider.getParticipants();
         if (participants.isEmpty()) {
-            throw new AutomationCompositionException(Status.BAD_REQUEST, "No participants registered");
+            throw new AutomationCompositionRuntimeException(Status.BAD_REQUEST, "No participants registered");
         }
-        var automationCompositionOpt =
-                automationCompositionProvider.findAutomationComposition(command.getAutomationCompositionIdentifier());
-        if (automationCompositionOpt.isEmpty()) {
-            throw new AutomationCompositionException(Response.Status.BAD_REQUEST,
-                    "AutomationComposition with id " + command.getAutomationCompositionIdentifier() + " not found");
-        }
-
-        var automationComposition = automationCompositionOpt.get();
         var validationResult = validateIssueAutomationComposition(automationComposition, participants);
         if (!validationResult.isValid()) {
-            throw new AutomationCompositionException(Response.Status.BAD_REQUEST, validationResult.getResult());
+            throw new AutomationCompositionRuntimeException(Response.Status.BAD_REQUEST, validationResult.getResult());
         }
 
         automationComposition.setCascadedOrderedState(command.getOrderedState());
-        supervisionHandler.triggerAutomationCompositionSupervision(automationComposition);
+        try {
+            supervisionHandler.triggerAutomationCompositionSupervision(automationComposition);
+        } catch (AutomationCompositionException e) {
+            throw new AutomationCompositionRuntimeException(Response.Status.BAD_REQUEST, e.getMessage());
+        }
         automationCompositionProvider.updateAutomationComposition(automationComposition);
-        var response = new InstantiationResponse();
-        response.setAffectedAutomationComposition(command.getAutomationCompositionIdentifier());
-
-        return response;
     }
 
     private BeanValidationResult validateIssueAutomationComposition(AutomationComposition automationComposition,

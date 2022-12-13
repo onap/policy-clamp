@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,11 +20,15 @@
 
 package org.onap.policy.clamp.models.acm.messages.rest.instantiation;
 
+import java.util.Map;
+import java.util.UUID;
 import lombok.Data;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 
 @Data
-public class InstantiationCommand {
-    // The state to which the automation compositions are to be set
-    private AutomationCompositionOrderedState orderedState;
+public class InstantiationUpdate {
+
+    private InstantiationCommand instantiationCommand;
+
+    private Map<UUID, AutomationCompositionElement> elements;
 }

@@ -31,15 +31,11 @@ import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVIC
 import java.util.HashMap;
 import java.util.UUID;
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.Response;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
 import org.onap.policy.clamp.acm.runtime.util.rest.CommonRestController;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.CommissioningResponse;
@@ -57,12 +53,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-@Execution(ExecutionMode.SAME_THREAD)
 class CommissioningControllerTest extends CommonRestController {
 
     private static final String COMMISSIONING_ENDPOINT = "compositions";
     private static ToscaServiceTemplate serviceTemplate = new ToscaServiceTemplate();
-    private UUID compositionId;
 
     @Autowired
     private AcDefinitionProvider acDefinitionProvider;
@@ -81,11 +75,6 @@ class CommissioningControllerTest extends CommonRestController {
     @BeforeEach
     public void setUpPort() {
         super.setHttpPrefix(randomServerPort);
-    }
-
-    @AfterEach
-    public void cleanDatabase() throws Exception {
-        deleteEntryInDB();
     }
 
     @Test
@@ -110,27 +99,29 @@ class CommissioningControllerTest extends CommonRestController {
 
     @Test
     void testCreateBadRequest() {
-        Invocation.Builder invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT);
-        Response resp = invocationBuilder.post(Entity.json("NotToscaServiceTempalte"));
+        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT);
+        var resp = invocationBuilder.post(Entity.json("NotToscaServiceTempalte"));
 
         assertThat(Response.Status.BAD_REQUEST.getStatusCode()).isEqualTo(resp.getStatus());
-        CommissioningResponse commissioningResponse = resp.readEntity(CommissioningResponse.class);
+        var commissioningResponse = resp.readEntity(CommissioningResponse.class);
         assertThat(commissioningResponse.getErrorDetails()).isNotNull();
         assertThat(commissioningResponse.getAffectedAutomationCompositionDefinitions()).isNull();
     }
 
     @Test
     void testCreate() {
-        Invocation.Builder invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT);
-        Response resp = invocationBuilder.post(Entity.json(serviceTemplate));
+        var serviceTemplateCreate = new ToscaServiceTemplate(serviceTemplate);
+        serviceTemplateCreate.setName("Create");
+
+        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT);
+        var resp = invocationBuilder.post(Entity.json(serviceTemplateCreate));
         assertEquals(Response.Status.CREATED.getStatusCode(), resp.getStatus());
-        CommissioningResponse commissioningResponse = resp.readEntity(CommissioningResponse.class);
-        compositionId = commissioningResponse.getCompositionId();
+        var commissioningResponse = resp.readEntity(CommissioningResponse.class);
         assertNotNull(commissioningResponse);
         assertNull(commissioningResponse.getErrorDetails());
         // Response should return the number of node templates present in the service template
         assertThat(commissioningResponse.getAffectedAutomationCompositionDefinitions()).hasSize(7);
-        for (String nodeTemplateName : serviceTemplate.getToscaTopologyTemplate().getNodeTemplates().keySet()) {
+        for (var nodeTemplateName : serviceTemplateCreate.getToscaTopologyTemplate().getNodeTemplates().keySet()) {
             assertTrue(commissioningResponse.getAffectedAutomationCompositionDefinitions().stream()
                     .anyMatch(ac -> ac.getName().equals(nodeTemplateName)));
         }
@@ -138,12 +129,6 @@ class CommissioningControllerTest extends CommonRestController {
 
     @Test
     void testUpdate() {
-        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT);
-        var resp = invocationBuilder.post(Entity.json(serviceTemplate));
-        assertEquals(Response.Status.CREATED.getStatusCode(), resp.getStatus());
-        var commissioningResponse = resp.readEntity(CommissioningResponse.class);
-        compositionId = commissioningResponse.getCompositionId();
-
         var toscaDataType = new ToscaDataType();
         toscaDataType.setName("org.onap.datatypes.policy.clamp.Configuration");
         toscaDataType.setDerivedFrom("tosca.datatypes.Root");
@@ -153,17 +138,18 @@ class CommissioningControllerTest extends CommonRestController {
         toscaProperty.setType("onap.datatypes.ToscaConceptIdentifier");
         toscaDataType.getProperties().put(toscaProperty.getName(), toscaProperty);
 
+        var compositionId = createEntryInDB("forUpdate");
         var serviceTemplateUpdate = new ToscaServiceTemplate(serviceTemplate);
         serviceTemplateUpdate.getDataTypes().put(toscaDataType.getName(), toscaDataType);
-        invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT + "/" + compositionId);
-        resp = invocationBuilder.put(Entity.json(serviceTemplateUpdate));
+        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT + "/" + compositionId);
+        var resp = invocationBuilder.put(Entity.json(serviceTemplateUpdate));
         assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
-        commissioningResponse = resp.readEntity(CommissioningResponse.class);
+        var commissioningResponse = resp.readEntity(CommissioningResponse.class);
         assertNotNull(commissioningResponse);
         assertNull(commissioningResponse.getErrorDetails());
         // Response should return the number of node templates present in the service template
         assertThat(commissioningResponse.getAffectedAutomationCompositionDefinitions()).hasSize(7);
-        for (String nodeTemplateName : serviceTemplate.getToscaTopologyTemplate().getNodeTemplates().keySet()) {
+        for (var nodeTemplateName : serviceTemplateUpdate.getToscaTopologyTemplate().getNodeTemplates().keySet()) {
             assertTrue(commissioningResponse.getAffectedAutomationCompositionDefinitions().stream()
                     .anyMatch(ac -> ac.getName().equals(nodeTemplateName)));
         }
@@ -176,61 +162,52 @@ class CommissioningControllerTest extends CommonRestController {
     }
 
     @Test
-    void testQuery_NoResultWithThisName() throws Exception {
-        createEntryInDB();
-
-        Invocation.Builder invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT + "?name=noResultWithThisName");
-        Response rawresp = invocationBuilder.buildGet().invoke();
+    void testQuery_NoResultWithThisName() {
+        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT + "?name=noResultWithThisName");
+        var rawresp = invocationBuilder.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
         var entityList = rawresp.readEntity(ToscaServiceTemplate.class);
         assertThat(entityList.getNodeTypes()).isNull();
     }
 
     @Test
-    void testQuery() throws Exception {
-        createEntryInDB();
+    void testQuery() {
+        createEntryInDB("forQuery");
 
-        Invocation.Builder invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT);
-        Response rawresp = invocationBuilder.buildGet().invoke();
+        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT);
+        var rawresp = invocationBuilder.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
         var entityList = rawresp.readEntity(ToscaServiceTemplate.class);
         assertNotNull(entityList);
     }
 
     @Test
-    void testDeleteBadRequest() throws Exception {
-        createEntryInDB();
+    void testDeleteBadRequest() {
+        createEntryInDB("DeleteBadRequest");
 
-        Invocation.Builder invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT + "/" + UUID.randomUUID());
+        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT + "/" + UUID.randomUUID());
         // Call delete with no info
-        Response resp = invocationBuilder.delete();
+        var resp = invocationBuilder.delete();
         assertEquals(Response.Status.NOT_FOUND.getStatusCode(), resp.getStatus());
     }
 
     @Test
-    void testDelete() throws Exception {
-        createEntryInDB();
+    void testDelete() {
+        var compositionId = createEntryInDB("forDelete");
 
-        Invocation.Builder invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT + "/" + compositionId);
+        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT + "/" + compositionId);
         // Call delete with no info
-        Response resp = invocationBuilder.delete();
+        var resp = invocationBuilder.delete();
         assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
 
-        var templatesInDB = acDefinitionProvider.getAllAcDefinitions();
+        var templatesInDB = acDefinitionProvider.findAcDefinition(compositionId);
         assertThat(templatesInDB).isEmpty();
     }
 
-    private synchronized void createEntryInDB() throws Exception {
-        deleteEntryInDB();
-        var acmDefinition = acDefinitionProvider.createAutomationCompositionDefinition(serviceTemplate);
-        compositionId = acmDefinition.getCompositionId();
-    }
-
-    // Delete entries from the DB after relevant tests
-    private synchronized void deleteEntryInDB() throws Exception {
-        var list = acDefinitionProvider.getAllAcDefinitions();
-        if (!list.isEmpty()) {
-            acDefinitionProvider.deleteAcDefintion(compositionId);
-        }
+    private UUID createEntryInDB(String name) {
+        var serviceTemplateCreate = new ToscaServiceTemplate(serviceTemplate);
+        serviceTemplateCreate.setName(name);
+        var acmDefinition = acDefinitionProvider.createAutomationCompositionDefinition(serviceTemplateCreate);
+        return acmDefinition.getCompositionId();
     }
 }

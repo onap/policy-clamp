@@ -33,6 +33,7 @@ import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 /**
@@ -67,17 +68,11 @@ public class InstantiationUtils {
      * Gets InstantiationCommand from Resource.
      *
      * @param path path of the resource
-     * @param suffix suffix to add to all names in AutomationCompositions
      * @return the InstantiationCommand
      */
-    public static InstantiationCommand getInstantiationCommandFromResource(final String path, final String suffix) {
+    public static InstantiationCommand getInstantiationCommandFromResource(final String path) {
         try {
-            var instantiationCommand = CODER.decode(new File(path), InstantiationCommand.class);
-
-            // add suffix to the name
-            var id = instantiationCommand.getAutomationCompositionIdentifier();
-            id.setName(id.getName() + suffix);
-            return instantiationCommand;
+            return CODER.decode(new File(path), InstantiationCommand.class);
         } catch (CoderException e) {
             fail("Cannot read or decode " + path);
             return null;
@@ -88,11 +83,12 @@ public class InstantiationUtils {
      * Assert that Instantiation Response contains proper AutomationCompositions.
      *
      * @param response InstantiationResponse
-     * @param command InstantiationCommand
+     * @param affectedAutomationComposition ToscaConceptIdentifier
      */
-    public static void assertInstantiationResponse(InstantiationResponse response, InstantiationCommand command) {
+    public static void assertInstantiationResponse(InstantiationResponse response,
+            ToscaConceptIdentifier affectedAutomationComposition) {
         assertThat(response).isNotNull();
-        assertEquals(response.getAffectedAutomationComposition(), command.getAutomationCompositionIdentifier());
+        assertEquals(response.getAffectedAutomationComposition(), affectedAutomationComposition);
     }
 
     /**

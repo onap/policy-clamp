@@ -98,7 +98,7 @@ topology_template:
     org.onap.domain.pmsh.PMSH_DCAEMicroservice:
       version: 1.2.3
       type: org.onap.policy.clamp.acm.DCAEMicroserviceAutomationCompositionElement
-      type_version: 1.0.0
+      type_version: 1.0.1
       description: Automation composition element for the DCAE microservice for Performance Management Subscription Handling
       properties:
         provider: Ericsson
@@ -111,7 +111,7 @@ topology_template:
     org.onap.domain.pmsh.PMSH_MonitoringPolicyAutomationCompositionElement:
       version: 1.2.3
       type: org.onap.policy.clamp.acm.PolicyTypeAutomationCompositionElement
-      type_version: 1.0.0
+      type_version: 1.0.1
       description: Automation composition element for the monitoring policy for Performance Management Subscription Handling
       properties:
         provider: Ericsson
@@ -124,7 +124,7 @@ topology_template:
     org.onap.domain.pmsh.PMSH_OperationalPolicyAutomationCompositionElement:
       version: 1.2.3
       type: org.onap.policy.clamp.acm.PolicyTypeAutomationCompositionElement
-      type_version: 1.0.0
+      type_version: 1.0.1
       description: Automation composition element for the operational policy for Performance Management Subscription Handling
       properties:
         provider: Ericsson
@@ -137,7 +137,7 @@ topology_template:
     org.onap.domain.pmsh.PMSH_CDS_AutomationCompositionElement:
       version: 1.2.3
       type: org.onap.policy.clamp.acm.AutomationCompositionElement
-      type_version: 1.0.0
+      type_version: 1.0.1
       description: Automation composition element for CDS for Performance Management Subscription Handling
       properties:
         provider: Ericsson
@@ -150,7 +150,7 @@ topology_template:
     org.onap.domain.pmsh.PMSHAutomationCompositionDefinition:
       version: 1.2.3
       type: org.onap.policy.clamp.acm.AutomationComposition
-      type_version: 1.0.0
+      type_version: 1.0.1
       description: Automation composition for Performance Management Subscription Handling
       properties:
         provider: Ericsson

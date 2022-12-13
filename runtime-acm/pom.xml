@@ -79,7 +79,8 @@
                                 InstancePropertiesResponse=org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstancePropertiesResponse,
                                 CommissioningResponse=org.onap.policy.clamp.models.acm.messages.rest.commissioning.CommissioningResponse,
                                 InstantiationCommand=org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationCommand,
-                                InstantiationResponse=org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse
+                                InstantiationResponse=org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse,
+                                InstantiationUpdate=org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationUpdate
                             </importMappings>
                             <configOptions>
                                 <sourceFolder>src/gen/java</sourceFolder>
