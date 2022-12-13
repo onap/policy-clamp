@@ -49,14 +49,14 @@ class AutomationCompositionUpdateTest {
 
         var orig = new AutomationCompositionUpdate();
         // verify with all values
-        var id = new ToscaConceptIdentifier("id", "1.2.3");
-        orig.setAutomationCompositionId(id);
+        orig.setAutomationCompositionId(UUID.randomUUID());
         orig.setParticipantId(null);
         orig.setMessageId(UUID.randomUUID());
         orig.setTimestamp(Instant.ofEpochMilli(3000));
 
         var acElement = new AutomationCompositionElement();
         acElement.setId(UUID.randomUUID());
+        var id = new ToscaConceptIdentifier("id", "1.2.3");
         acElement.setDefinition(id);
         acElement.setDescription("Description");
         acElement.setOrderedState(AutomationCompositionOrderedState.PASSIVE);

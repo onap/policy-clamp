@@ -107,7 +107,7 @@ public interface ParticipantIntermediaryApi {
      * @param newState the state of the automation composition element
      * @return AutomationCompositionElement updated automation composition element
      */
-    AutomationCompositionElement updateAutomationCompositionElementState(ToscaConceptIdentifier automationCompositionId,
+    AutomationCompositionElement updateAutomationCompositionElementState(UUID automationCompositionId,
         UUID id, AutomationCompositionOrderedState currentState, AutomationCompositionState newState,
         ParticipantMessageType messageType);
 }

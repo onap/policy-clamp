@@ -31,6 +31,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 public class CommonTestData {
 
     private static final String TEST_KEY_NAME = "org.onap.domain.database.A1PMSAutomationCompositionElement";
+    private static final List<UUID> AC_ID_LIST = List.of(UUID.randomUUID(), UUID.randomUUID());
 
     /**
      * Get a automationComposition Element.
@@ -38,7 +39,7 @@ public class CommonTestData {
      * @return automationCompositionElement object
      */
     public AutomationCompositionElement getAutomationCompositionElement() {
-        AutomationCompositionElement element = new AutomationCompositionElement();
+        var element = new AutomationCompositionElement();
         element.setId(UUID.randomUUID());
         element.setDefinition(new ToscaConceptIdentifier(TEST_KEY_NAME, "1.0.1"));
         element.setOrderedState(AutomationCompositionOrderedState.PASSIVE);
@@ -48,30 +49,41 @@ public class CommonTestData {
     /**
      * Get automation composition id.
      *
+     * @param instanceNo Identifier instance no
      * @return ToscaConceptIdentifier automationCompositionId
      */
-    public ToscaConceptIdentifier getAutomationCompositionId() {
+    public ToscaConceptIdentifier getA1PolicyServiceId(int instanceNo) {
+        return new ToscaConceptIdentifier("A1PMSInstance" + instanceNo, "1.0.0");
+    }
+
+    /**
+     * Get automation composition id.
+     *
+     * @return UUID automationCompositionId
+     */
+    public UUID getAutomationCompositionId() {
         return getAutomationCompositionId(0);
     }
 
     /**
      * Get automation composition id.
+     *
      * @param instanceNo Identifier instance no
-     * @return ToscaConceptIdentifier automationCompositionId
+     * @return UUID automationCompositionId
      */
-    public ToscaConceptIdentifier getAutomationCompositionId(int instanceNo) {
-        return new ToscaConceptIdentifier("A1PMSInstance" + instanceNo, "1.0.0");
+    public UUID getAutomationCompositionId(int instanceNo) {
+        return AC_ID_LIST.get(instanceNo);
     }
-
 
     /**
      * Get valid policy entities.
+     *
      * @return List of policy entities
      */
     public List<A1PolicyServiceEntity> getValidPolicyEntities() {
-        A1PolicyServiceEntity a1PolicyServiceEntity1 = new A1PolicyServiceEntity(getAutomationCompositionId(0),
+        var a1PolicyServiceEntity1 = new A1PolicyServiceEntity(getA1PolicyServiceId(0),
                 "testService1", "http://localhost", 0);
-        A1PolicyServiceEntity a1PolicyServiceEntity2 = new A1PolicyServiceEntity(getAutomationCompositionId(1),
+        var a1PolicyServiceEntity2 = new A1PolicyServiceEntity(getA1PolicyServiceId(1),
                 "testService2", "http://127.0.0.1", 0);
         return List.of(a1PolicyServiceEntity1, a1PolicyServiceEntity2);
     }

@@ -80,6 +80,18 @@ public class AutomationCompositionProvider {
     }
 
     /**
+     * Find automation composition.
+     *
+     * @param instanceId the ID of the automation composition to get
+     * @return the automation composition found
+     */
+    @Transactional(readOnly = true)
+    public Optional<AutomationComposition> findAutomationComposition(final UUID instanceId) {
+        var result = automationCompositionRepository.findByInstanceId(instanceId.toString());
+        return result.stream().map(JpaAutomationComposition::toAuthorative).findFirst();
+    }
+
+    /**
      * Find automation composition by automationCompositionId.
      *
      * @param automationCompositionId the ID of the automation composition to get

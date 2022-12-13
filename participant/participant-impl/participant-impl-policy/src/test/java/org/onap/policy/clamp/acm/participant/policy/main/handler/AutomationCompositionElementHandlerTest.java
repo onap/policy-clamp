@@ -39,45 +39,34 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedSta
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
-
 
 class AutomationCompositionElementHandlerTest {
 
     private static final String ID_NAME = "org.onap.PM_CDS_Blueprint";
     private static final String ID_VERSION = "1.0.1";
     private static final UUID automationCompositionElementId = UUID.randomUUID();
-    private static final ToscaConceptIdentifier automationCompositionId =
-        new ToscaConceptIdentifier(ID_NAME, ID_VERSION);
+    public static final UUID AC_ID = UUID.randomUUID();
+    private static final ToscaConceptIdentifier PARTICIPANT_ID = new ToscaConceptIdentifier(ID_NAME, ID_VERSION);
 
     private PolicyApiHttpClient api = Mockito.mock(PolicyApiHttpClient.class);
-    private PolicyPapHttpClient  pap = Mockito.mock(PolicyPapHttpClient.class);
+    private PolicyPapHttpClient pap = Mockito.mock(PolicyPapHttpClient.class);
 
     @Test
     void testHandlerDoesNotThrowExceptions() {
-        AutomationCompositionElementHandler handler = getTestingHandler();
+        var handler = getTestingHandler();
 
-        assertDoesNotThrow(() -> handler
-            .automationCompositionElementStateChange(automationCompositionId,
-                automationCompositionElementId,
-                AutomationCompositionState.UNINITIALISED,
-                AutomationCompositionOrderedState.PASSIVE));
+        assertDoesNotThrow(() -> handler.automationCompositionElementStateChange(AC_ID, automationCompositionElementId,
+                AutomationCompositionState.UNINITIALISED, AutomationCompositionOrderedState.PASSIVE));
 
-        assertDoesNotThrow(() -> handler
-            .automationCompositionElementStateChange(automationCompositionId,
-                automationCompositionElementId,
-                AutomationCompositionState.RUNNING,
-                AutomationCompositionOrderedState.UNINITIALISED));
+        assertDoesNotThrow(() -> handler.automationCompositionElementStateChange(AC_ID, automationCompositionElementId,
+                AutomationCompositionState.RUNNING, AutomationCompositionOrderedState.UNINITIALISED));
 
-        assertDoesNotThrow(() -> handler
-            .automationCompositionElementStateChange(automationCompositionId,
-                automationCompositionElementId,
-                AutomationCompositionState.PASSIVE,
-                AutomationCompositionOrderedState.RUNNING));
+        assertDoesNotThrow(() -> handler.automationCompositionElementStateChange(AC_ID, automationCompositionElementId,
+                AutomationCompositionState.PASSIVE, AutomationCompositionOrderedState.RUNNING));
     }
 
     private AutomationCompositionElementHandler getTestingHandler() {
@@ -91,11 +80,11 @@ class AutomationCompositionElementHandlerTest {
 
     private AutomationCompositionElement getTestingAcElement() {
         var element = new AutomationCompositionElement();
-        element.setDefinition(automationCompositionId);
+        element.setDefinition(PARTICIPANT_ID);
         element.setDescription("Description");
         element.setId(automationCompositionElementId);
         element.setOrderedState(AutomationCompositionOrderedState.UNINITIALISED);
-        element.setParticipantId(automationCompositionId);
+        element.setParticipantId(PARTICIPANT_ID);
         element.setState(AutomationCompositionState.UNINITIALISED);
         var template = new ToscaServiceTemplate();
         template.setToscaTopologyTemplate(new ToscaTopologyTemplate());
@@ -112,28 +101,20 @@ class AutomationCompositionElementHandlerTest {
         doReturn(Response.ok().build()).when(api).createPolicy(any());
         doReturn(Response.accepted().build()).when(pap).handlePolicyDeployOrUndeploy(any(), any(), any());
 
-        AutomationCompositionElementHandler handler = getTestingHandler();
+        var handler = getTestingHandler();
         var element = getTestingAcElement();
-        var acElementDefinition = Mockito.mock(ToscaNodeTemplate.class);
 
-        assertDoesNotThrow(() -> handler
-                .automationCompositionElementUpdate(automationCompositionId, element, acElementDefinition));
+        assertDoesNotThrow(() -> handler.automationCompositionElementUpdate(AC_ID, element, Map.of()));
 
-        assertDoesNotThrow(() -> handler
-                .automationCompositionElementStateChange(automationCompositionId,
-                        automationCompositionElementId,
-                        AutomationCompositionState.PASSIVE,
-                        AutomationCompositionOrderedState.UNINITIALISED));
+        assertDoesNotThrow(() -> handler.automationCompositionElementStateChange(AC_ID, automationCompositionElementId,
+                AutomationCompositionState.PASSIVE, AutomationCompositionOrderedState.UNINITIALISED));
 
-
-        //Mock failure in policy deployment
+        // Mock failure in policy deployment
         doReturn(Response.serverError().build()).when(pap).handlePolicyDeployOrUndeploy(any(), any(), any());
-        assertDoesNotThrow(() -> handler
-                .automationCompositionElementUpdate(automationCompositionId, element, acElementDefinition));
+        assertDoesNotThrow(() -> handler.automationCompositionElementUpdate(AC_ID, element, Map.of()));
 
         // Mock failure in policy type creation
         doReturn(Response.serverError().build()).when(api).createPolicyType(any());
-        assertDoesNotThrow(() -> handler
-                .automationCompositionElementUpdate(automationCompositionId, element, acElementDefinition));
+        assertDoesNotThrow(() -> handler.automationCompositionElementUpdate(AC_ID, element, Map.of()));
     }
 }

@@ -120,7 +120,7 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
 
     @Override
     public AutomationCompositionElement updateAutomationCompositionElementState(
-            ToscaConceptIdentifier automationCompositionId, UUID id, AutomationCompositionOrderedState currentState,
+            UUID automationCompositionId, UUID id, AutomationCompositionOrderedState currentState,
             AutomationCompositionState newState, ParticipantMessageType messageType) {
         return automationCompositionHandler.updateAutomationCompositionElementState(automationCompositionId, id,
                 currentState, newState);

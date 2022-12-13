@@ -55,6 +55,8 @@ public class CommonTestData {
     public static final List<TopicParameters> TOPIC_PARAMS = List.of(getTopicParams());
     public static final Coder CODER = new StandardCoder();
     private static final Object lockit = new Object();
+    public static final UUID AC_ID_0 = UUID.randomUUID();
+    public static final UUID AC_ID_1 = UUID.randomUUID();
 
     /**
      * Get ParticipantIntermediaryParameters.
@@ -64,7 +66,7 @@ public class CommonTestData {
     public ParticipantIntermediaryParameters getParticipantIntermediaryParameters() {
         try {
             return CODER.convert(getIntermediaryParametersMap(PARTICIPANT_GROUP_NAME),
-                ParticipantIntermediaryParameters.class);
+                    ParticipantIntermediaryParameters.class);
         } catch (final CoderException e) {
             throw new RuntimeException("cannot create ParticipantSimulatorParameters from map", e);
         }
@@ -195,9 +197,9 @@ public class CommonTestData {
     public ParticipantHandler getParticipantHandlerAutomationCompositions() throws CoderException {
         var automationCompositionHandler = Mockito.mock(AutomationCompositionHandler.class);
         Mockito.doReturn(getTestAutomationCompositions()).when(automationCompositionHandler)
-            .getAutomationCompositions();
+                .getAutomationCompositions();
         Mockito.doReturn(getTestAutomationCompositionMap()).when(automationCompositionHandler)
-            .getAutomationCompositionMap();
+                .getAutomationCompositionMap();
         var publisher = new ParticipantMessagePublisher();
         publisher.active(Collections.singletonList(Mockito.mock(TopicSink.class)));
         var parameters = getParticipantParameters();
@@ -218,12 +220,11 @@ public class CommonTestData {
      *
      * @throws CoderException if there is an error with .json file.
      */
-    public Map<ToscaConceptIdentifier, AutomationComposition> getTestAutomationCompositionMap() throws CoderException {
+    public Map<UUID, AutomationComposition> getTestAutomationCompositionMap() throws CoderException {
         var automationCompositions = getTestAutomationCompositions();
         var automationComposition = automationCompositions.getAutomationCompositionList().get(1);
-        var id = getParticipantId();
-        Map<ToscaConceptIdentifier, AutomationComposition> automationCompositionMap = new LinkedHashMap<>();
-        automationCompositionMap.put(id, automationComposition);
+        Map<UUID, AutomationComposition> automationCompositionMap = new LinkedHashMap<>();
+        automationCompositionMap.put(automationComposition.getInstanceId(), automationComposition);
         return automationCompositionMap;
     }
 
@@ -235,8 +236,11 @@ public class CommonTestData {
      * @throws CoderException if there is an error with .json file.
      */
     public AutomationCompositions getTestAutomationCompositions() throws CoderException {
-        return new StandardCoder().decode(new File("src/test/resources/providers/TestAutomationCompositions.json"),
-            AutomationCompositions.class);
+        var automationCompositions = new StandardCoder().decode(
+                new File("src/test/resources/providers/TestAutomationCompositions.json"), AutomationCompositions.class);
+        automationCompositions.getAutomationCompositionList().get(1).setInstanceId(AC_ID_0);
+        automationCompositions.getAutomationCompositionList().get(1).setInstanceId(AC_ID_1);
+        return automationCompositions;
     }
 
     /**
@@ -246,7 +250,7 @@ public class CommonTestData {
      * @return a map suitable for elementsOnThisParticipant
      */
     public Map<UUID, AutomationCompositionElement> setAutomationCompositionElementTest(UUID uuid,
-        ToscaConceptIdentifier id) {
+            ToscaConceptIdentifier id) {
         var acElement = new AutomationCompositionElement();
         acElement.setId(uuid);
         acElement.setParticipantId(id);
@@ -265,7 +269,7 @@ public class CommonTestData {
      * @return a AutomationCompositionHander with elements
      */
     public AutomationCompositionHandler setTestAutomationCompositionHandler(ToscaConceptIdentifier id, UUID uuid)
-        throws CoderException {
+            throws CoderException {
         var ach = getMockAutomationCompositionHandler();
 
         var key = getTestAutomationCompositionMap().keySet().iterator().next();

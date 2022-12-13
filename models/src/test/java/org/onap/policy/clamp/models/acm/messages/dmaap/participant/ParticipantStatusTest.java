@@ -47,15 +47,16 @@ class ParticipantStatusTest {
     void testCopyConstructor() throws CoderException {
         assertThatThrownBy(() -> new ParticipantStatus(null)).isInstanceOf(NullPointerException.class);
 
-        final ParticipantStatus orig = new ParticipantStatus();
+        final var orig = new ParticipantStatus();
 
         // verify with null values
         assertEquals(removeVariableFields(orig.toString()),
                 removeVariableFields(new ParticipantStatus(orig).toString()));
 
         // verify with all values
-        ToscaConceptIdentifier id = new ToscaConceptIdentifier("id", "1.2.3");
-        orig.setAutomationCompositionId(id);
+        var automationCompositionId = UUID.randomUUID();
+        orig.setAutomationCompositionId(automationCompositionId);
+        var id = new ToscaConceptIdentifier("id", "1.2.3");
         orig.setParticipantId(id);
         ToscaConceptIdentifier type = new ToscaConceptIdentifier("type", "2.3.4");
         orig.setParticipantType(type);
@@ -64,13 +65,13 @@ class ParticipantStatusTest {
         orig.setHealthStatus(ParticipantHealthStatus.HEALTHY);
         orig.setTimestamp(Instant.ofEpochMilli(3000));
 
-        AutomationCompositionInfo acInfo = getAutomationCompositionInfo(id);
+        var acInfo = getAutomationCompositionInfo(automationCompositionId);
         orig.setAutomationCompositionInfoList(List.of(acInfo));
 
-        ParticipantDefinition participantDefinitionUpdate = new ParticipantDefinition();
+        var participantDefinitionUpdate = new ParticipantDefinition();
         participantDefinitionUpdate.setParticipantId(id);
         participantDefinitionUpdate.setParticipantType(type);
-        AutomationCompositionElementDefinition acDefinition = getAcElementDefinition(id);
+        var acDefinition = getAcElementDefinition(id);
         participantDefinitionUpdate.setAutomationCompositionElementDefinitionList(List.of(acDefinition));
         orig.setParticipantDefinitionUpdates(List.of(participantDefinitionUpdate));
 
@@ -80,8 +81,8 @@ class ParticipantStatusTest {
         assertSerializable(orig, ParticipantStatus.class);
     }
 
-    private AutomationCompositionInfo getAutomationCompositionInfo(ToscaConceptIdentifier id) {
-        AutomationCompositionInfo acInfo = new AutomationCompositionInfo();
+    private AutomationCompositionInfo getAutomationCompositionInfo(UUID id) {
+        var acInfo = new AutomationCompositionInfo();
         acInfo.setState(AutomationCompositionState.PASSIVE2RUNNING);
         acInfo.setAutomationCompositionId(id);
 
@@ -89,20 +90,20 @@ class ParticipantStatusTest {
     }
 
     private AutomationCompositionElementDefinition getAcElementDefinition(ToscaConceptIdentifier id) {
-        ToscaNodeTemplate toscaNodeTemplate = new ToscaNodeTemplate();
+        var toscaNodeTemplate = new ToscaNodeTemplate();
         toscaNodeTemplate.setName("nodeTemplate");
         toscaNodeTemplate.setDerivedFrom("parentNodeTemplate");
         toscaNodeTemplate.setDescription("Description of nodeTemplate");
         toscaNodeTemplate.setVersion("1.2.3");
 
-        AutomationCompositionElementDefinition acDefinition = new AutomationCompositionElementDefinition();
+        var acDefinition = new AutomationCompositionElementDefinition();
         acDefinition.setAcElementDefinitionId(id);
         acDefinition.setAutomationCompositionElementToscaNodeTemplate(toscaNodeTemplate);
 
-        ToscaProperty property = new ToscaProperty();
+        var property = new ToscaProperty();
         property.setName("test");
         property.setType("testType");
-        Map<String, ToscaProperty> commonPropertiesMap = Map.of("Prop1", property);
+        var commonPropertiesMap = Map.of("Prop1", property);
         acDefinition.setCommonPropertiesMap(commonPropertiesMap);
         return acDefinition;
     }

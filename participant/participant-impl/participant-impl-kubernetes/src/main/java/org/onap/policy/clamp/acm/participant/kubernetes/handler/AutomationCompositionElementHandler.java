@@ -29,7 +29,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -47,8 +46,6 @@ import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,12 +89,12 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
      * @param newState the state to which the automation composition element is changing to
      */
     @Override
-    public synchronized void automationCompositionElementStateChange(ToscaConceptIdentifier automationCompositionId,
+    public synchronized void automationCompositionElementStateChange(UUID automationCompositionId,
         UUID automationCompositionElementId, AutomationCompositionState currentState,
         AutomationCompositionOrderedState newState) {
         switch (newState) {
             case UNINITIALISED:
-                ChartInfo chart = chartMap.get(automationCompositionElementId);
+                var chart = chartMap.get(automationCompositionElementId);
                 if (chart != null) {
                     LOGGER.info("Helm deployment to be deleted {} ", chart.getReleaseName());
                     try {
@@ -131,15 +128,16 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
     /**
      * Callback method to handle an update on a automation composition element.
      *
+     * @param automationCompositionId the automationComposition Id
      * @param element the information on the automation composition element
-     * @param nodeTemplate toscaNodeTemplate
+     * @param properties properties Map
      * @throws PfModelException in case of an exception
      */
     @Override
-    public synchronized void automationCompositionElementUpdate(ToscaConceptIdentifier automationCompositionId,
-        AutomationCompositionElement element, ToscaNodeTemplate nodeTemplate) throws PfModelException {
+    public synchronized void automationCompositionElementUpdate(UUID automationCompositionId,
+        AutomationCompositionElement element, Map<String, Object> properties) throws PfModelException {
         @SuppressWarnings("unchecked")
-        Map<String, Object> chartData = (Map<String, Object>) nodeTemplate.getProperties().get("chart");
+        var chartData = (Map<String, Object>) properties.get("chart");
 
         LOGGER.info("Installation request received for the Helm Chart {} ", chartData);
         try {
@@ -147,8 +145,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
             if (chartService.installChart(chartInfo)) {
                 chartMap.put(element.getId(), chartInfo);
 
-                var config = CODER.convert(nodeTemplate.getProperties(),
-                        ThreadConfig.class);
+                var config = CODER.convert(properties, ThreadConfig.class);
                 checkPodStatus(automationCompositionId, element.getId(), chartInfo,
                         config.uninitializedToPassiveTimeout, config.podStatusCheckInterval);
             }
@@ -163,10 +160,10 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
      *
      * @param chart ChartInfo
      */
-    public void checkPodStatus(ToscaConceptIdentifier automationCompositionId, UUID elementId,
+    public void checkPodStatus(UUID automationCompositionId, UUID elementId,
             ChartInfo chart, int timeout, int podStatusCheckInterval) throws ExecutionException, InterruptedException {
         // Invoke runnable thread to check pod status
-        Future<String> result = executor.submit(new PodStatusValidator(chart, timeout,
+        var result = executor.submit(new PodStatusValidator(chart, timeout,
                 podStatusCheckInterval), "Done");
         if (!result.get().isEmpty()) {
             LOGGER.info("Pod Status Validator Completed: {}", result.isDone());

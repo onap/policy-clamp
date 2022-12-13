@@ -50,7 +50,7 @@ class AutomationCompositionStateChangeTest {
 
         // verify with all values
         ToscaConceptIdentifier id = new ToscaConceptIdentifier("id", "1.2.3");
-        orig.setAutomationCompositionId(id);
+        orig.setAutomationCompositionId(UUID.randomUUID());
         orig.setParticipantId(id);
         orig.setMessageId(UUID.randomUUID());
         orig.setOrderedState(AutomationCompositionOrderedState.RUNNING);

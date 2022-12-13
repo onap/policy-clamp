@@ -20,13 +20,12 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.api;
 
+import java.util.Map;
 import java.util.UUID;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 
 /**
  * This interface is implemented by participant implementations to receive updates on automation composition elements.
@@ -40,18 +39,18 @@ public interface AutomationCompositionElementListener {
      * @param newState the state to which the automation composition element is changing to
      * @throws PfModelException in case of a model exception
      */
-    public void automationCompositionElementStateChange(ToscaConceptIdentifier automationCompositionId,
+    public void automationCompositionElementStateChange(UUID automationCompositionId,
         UUID automationCompositionElementId, AutomationCompositionState currentState,
         AutomationCompositionOrderedState newState) throws PfModelException;
 
     /**
      * Handle an update on a automation composition element.
      *
+     * @param automationCompositionId the automationComposition Id
      * @param element the information on the automation composition element
-     * @param automationCompositionElementDefinition toscaNodeTemplate
+     * @param properties properties Map
      * @throws PfModelException from Policy framework
      */
-    public void automationCompositionElementUpdate(ToscaConceptIdentifier automationCompositionId,
-        AutomationCompositionElement element, ToscaNodeTemplate automationCompositionElementDefinition)
-        throws PfModelException;
+    public void automationCompositionElementUpdate(UUID automationCompositionId,
+        AutomationCompositionElement element, Map<String, Object> properties) throws PfModelException;
 }

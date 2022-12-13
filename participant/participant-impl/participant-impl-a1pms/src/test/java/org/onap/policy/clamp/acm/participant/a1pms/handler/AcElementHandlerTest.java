@@ -39,10 +39,8 @@ import org.onap.policy.clamp.acm.participant.a1pms.utils.CommonTestData;
 import org.onap.policy.clamp.acm.participant.a1pms.utils.ToscaUtils;
 import org.onap.policy.clamp.acm.participant.a1pms.webclient.AcA1PmsClient;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -54,14 +52,13 @@ class AcElementHandlerTest {
     @InjectMocks
     @Spy
     private AutomationCompositionElementHandler automationCompositionElementHandler =
-        new AutomationCompositionElementHandler(acA1PmsClient);
-
+            new AutomationCompositionElementHandler(acA1PmsClient);
 
     private final CommonTestData commonTestData = new CommonTestData();
 
     private static ToscaServiceTemplate serviceTemplate;
     private static final String A1_AUTOMATION_COMPOSITION_ELEMENT =
-        "org.onap.domain.database.A1PMSAutomationCompositionElement";
+            "org.onap.domain.database.A1PMSAutomationCompositionElement";
 
     @BeforeAll
     static void init() {
@@ -81,22 +78,22 @@ class AcElementHandlerTest {
         var element = commonTestData.getAutomationCompositionElement();
         var automationCompositionElementId = element.getId();
 
-        Map<String, ToscaNodeTemplate> nodeTemplatesMap = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
-        automationCompositionElementHandler.automationCompositionElementUpdate(
-                commonTestData.getAutomationCompositionId(), element,
-                nodeTemplatesMap.get(A1_AUTOMATION_COMPOSITION_ELEMENT));
+        var nodeTemplatesMap = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
+        automationCompositionElementHandler
+                .automationCompositionElementUpdate(commonTestData.getAutomationCompositionId(), element,
+                        nodeTemplatesMap.get(A1_AUTOMATION_COMPOSITION_ELEMENT).getProperties());
 
         assertDoesNotThrow(() -> automationCompositionElementHandler.automationCompositionElementStateChange(
-            automationCompositionId, automationCompositionElementId, AutomationCompositionState.PASSIVE,
-            AutomationCompositionOrderedState.PASSIVE));
+                automationCompositionId, automationCompositionElementId, AutomationCompositionState.PASSIVE,
+                AutomationCompositionOrderedState.PASSIVE));
 
         assertDoesNotThrow(() -> automationCompositionElementHandler.automationCompositionElementStateChange(
-            automationCompositionId, automationCompositionElementId, AutomationCompositionState.PASSIVE,
-            AutomationCompositionOrderedState.UNINITIALISED));
+                automationCompositionId, automationCompositionElementId, AutomationCompositionState.PASSIVE,
+                AutomationCompositionOrderedState.UNINITIALISED));
 
         assertDoesNotThrow(() -> automationCompositionElementHandler.automationCompositionElementStateChange(
-            automationCompositionId, automationCompositionElementId, AutomationCompositionState.PASSIVE,
-            AutomationCompositionOrderedState.RUNNING));
+                automationCompositionId, automationCompositionElementId, AutomationCompositionState.PASSIVE,
+                AutomationCompositionOrderedState.RUNNING));
 
         when(acA1PmsClient.isPmsHealthy()).thenReturn(Boolean.FALSE);
         assertThrows(A1PolicyServiceException.class,
@@ -107,35 +104,30 @@ class AcElementHandlerTest {
 
     @Test
     void test_AutomationCompositionElementUpdate() {
-        AutomationCompositionElement element = commonTestData.getAutomationCompositionElement();
+        var element = commonTestData.getAutomationCompositionElement();
 
-        Map<String, ToscaNodeTemplate> nodeTemplatesMap = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
-        assertDoesNotThrow(() -> automationCompositionElementHandler.automationCompositionElementUpdate(
-            commonTestData.getAutomationCompositionId(), element,
-            nodeTemplatesMap.get(A1_AUTOMATION_COMPOSITION_ELEMENT)));
+        var nodeTemplatesMap = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
+        assertDoesNotThrow(() -> automationCompositionElementHandler
+                .automationCompositionElementUpdate(commonTestData.getAutomationCompositionId(), element,
+                        nodeTemplatesMap.get(A1_AUTOMATION_COMPOSITION_ELEMENT).getProperties()));
     }
 
     @Test
     void test_AutomationCompositionElementUpdateWithUnhealthyA1pms() {
-        AutomationCompositionElement element = commonTestData.getAutomationCompositionElement();
+        var element = commonTestData.getAutomationCompositionElement();
         when(acA1PmsClient.isPmsHealthy()).thenReturn(Boolean.FALSE);
 
-        Map<String, ToscaNodeTemplate> nodeTemplatesMap = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
-        assertThrows(A1PolicyServiceException.class,
-                () -> automationCompositionElementHandler.automationCompositionElementUpdate(
-                        commonTestData.getAutomationCompositionId(), element,
-                        nodeTemplatesMap.get(A1_AUTOMATION_COMPOSITION_ELEMENT)));
+        var nodeTemplatesMap = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
+        assertThrows(A1PolicyServiceException.class, () -> automationCompositionElementHandler
+                .automationCompositionElementUpdate(commonTestData.getAutomationCompositionId(), element,
+                        nodeTemplatesMap.get(A1_AUTOMATION_COMPOSITION_ELEMENT).getProperties()));
     }
 
     @Test
     void test_AutomationCompositionElementUpdateWithInvalidConfiguration() {
-        AutomationCompositionElement element = commonTestData.getAutomationCompositionElement();
-
-        Map<String, ToscaNodeTemplate> nodeTemplatesMap = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
-        ToscaNodeTemplate toscaNodeTemplate = nodeTemplatesMap.get(A1_AUTOMATION_COMPOSITION_ELEMENT);
-        toscaNodeTemplate.setProperties(Map.of());
-        assertThrows(A1PolicyServiceException.class,
-                () -> automationCompositionElementHandler.automationCompositionElementUpdate(
-                        commonTestData.getAutomationCompositionId(), element, toscaNodeTemplate));
+        var element = commonTestData.getAutomationCompositionElement();
+        assertThrows(A1PolicyServiceException.class, () -> automationCompositionElementHandler
+                .automationCompositionElementUpdate(commonTestData.getAutomationCompositionId(), element,
+                        Map.of()));
     }
 }

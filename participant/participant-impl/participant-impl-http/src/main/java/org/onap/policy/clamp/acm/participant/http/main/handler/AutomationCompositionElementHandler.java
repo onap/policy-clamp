@@ -23,17 +23,13 @@ package org.onap.policy.clamp.acm.participant.http.main.handler;
 import java.io.Closeable;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.stream.Collectors;
-import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.ValidationException;
 import lombok.Setter;
@@ -51,7 +47,6 @@ import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -83,7 +78,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
      * @throws PfModelException in case of a model exception
      */
     @Override
-    public void automationCompositionElementStateChange(ToscaConceptIdentifier automationCompositionId,
+    public void automationCompositionElementStateChange(UUID automationCompositionId,
         UUID automationCompositionElementId, AutomationCompositionState currentState,
         AutomationCompositionOrderedState newState) {
         switch (newState) {
@@ -111,19 +106,20 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
     /**
      * Callback method to handle an update on a automation composition element.
      *
+     * @param automationCompositionId the automationComposition Id
      * @param element the information on the automation composition element
-     * @param nodeTemplate toscaNodeTemplate
+     * @param properties properties Map
      */
     @Override
-    public void automationCompositionElementUpdate(ToscaConceptIdentifier automationCompositionId,
-        AutomationCompositionElement element, ToscaNodeTemplate nodeTemplate) {
+    public void automationCompositionElementUpdate(UUID automationCompositionId,
+        AutomationCompositionElement element, Map<String, Object> properties) {
         try {
-            var configRequest = CODER.convert(nodeTemplate.getProperties(), ConfigRequest.class);
-            Set<ConstraintViolation<ConfigRequest>> violations =
+            var configRequest = CODER.convert(properties, ConfigRequest.class);
+            var violations =
                 Validation.buildDefaultValidatorFactory().getValidator().validate(configRequest);
             if (violations.isEmpty()) {
                 invokeHttpClient(configRequest);
-                List<Pair<Integer, String>> failedResponseStatus = restResponseMap.values().stream()
+                var failedResponseStatus = restResponseMap.values().stream()
                         .filter(response -> !HttpStatus.valueOf(response.getKey())
                         .is2xxSuccessful()).collect(Collectors.toList());
                 if (failedResponseStatus.isEmpty()) {
@@ -149,7 +145,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
      */
     public void invokeHttpClient(ConfigRequest configRequest) throws ExecutionException, InterruptedException {
         // Invoke runnable thread to execute https requests of all config entities
-        Future<Map> result = executor.submit(new AcHttpClient(configRequest, restResponseMap), restResponseMap);
+        var result = executor.submit(new AcHttpClient(configRequest, restResponseMap), restResponseMap);
         if (!result.get().isEmpty()) {
             LOGGER.debug("Http Request Completed: {}", result.isDone());
         }

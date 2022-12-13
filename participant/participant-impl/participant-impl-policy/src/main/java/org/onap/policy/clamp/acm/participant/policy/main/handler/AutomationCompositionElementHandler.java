@@ -24,7 +24,6 @@ package org.onap.policy.clamp.acm.participant.policy.main.handler;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.UUID;
 import lombok.Setter;
 import org.apache.http.HttpStatus;
@@ -39,11 +38,7 @@ import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMe
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.pdp.concepts.DeploymentSubGroup;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -84,7 +79,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
      * @param orderedState                   the state to which the automation composition element is changing to
      */
     @Override
-    public void automationCompositionElementStateChange(ToscaConceptIdentifier automationCompositionId,
+    public void automationCompositionElementStateChange(UUID automationCompositionId,
                                                         UUID automationCompositionElementId,
                                                         AutomationCompositionState currentState,
                                                         AutomationCompositionOrderedState orderedState) {
@@ -120,26 +115,26 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
         }
     }
 
-    private void deletePolicyData(ToscaConceptIdentifier automationCompositionId,
+    private void deletePolicyData(UUID automationCompositionId,
                                   UUID automationCompositionElementId, AutomationCompositionOrderedState newState) {
         // Delete all policies of this automationComposition from policy framework
-        for (Entry<String, String> policy : policyMap.entrySet()) {
+        for (var policy : policyMap.entrySet()) {
             apiHttpClient.deletePolicy(policy.getKey(), policy.getValue());
         }
         policyMap.clear();
         // Delete all policy types of this automation composition from policy framework
-        for (Entry<String, String> policyType : policyTypeMap.entrySet()) {
+        for (var policyType : policyTypeMap.entrySet()) {
             apiHttpClient.deletePolicyType(policyType.getKey(), policyType.getValue());
         }
         policyTypeMap.clear();
     }
 
-    private void deployPolicies(ToscaConceptIdentifier automationCompositionId, UUID automationCompositionElementId,
+    private void deployPolicies(UUID automationCompositionId, UUID automationCompositionElementId,
                                 AutomationCompositionOrderedState newState) {
         var deployFailure = false;
         // Deploy all policies of this automationComposition from Policy Framework
         if (!policyMap.entrySet().isEmpty()) {
-            for (Entry<String, String> policy : policyMap.entrySet()) {
+            for (var policy : policyMap.entrySet()) {
                 var deployPolicyResp = papHttpClient.handlePolicyDeployOrUndeploy(policy.getKey(), policy.getValue(),
                         DeploymentSubGroup.Action.POST).getStatus();
                 if (deployPolicyResp != HttpStatus.SC_ACCEPTED) {
@@ -161,7 +156,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
     private void undeployPolicies(UUID automationCompositionElementId) {
         // Undeploy all policies of this automation composition from Policy Framework
         if (!policyMap.entrySet().isEmpty()) {
-            for (Entry<String, String> policy : policyMap.entrySet()) {
+            for (var policy : policyMap.entrySet()) {
                 papHttpClient.handlePolicyDeployOrUndeploy(policy.getKey(), policy.getValue(),
                     DeploymentSubGroup.Action.DELETE);
             }
@@ -174,22 +169,21 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
     /**
      * Callback method to handle an update on automation composition element.
      *
+     * @param automationCompositionId the automationComposition Id
      * @param element the information on the automation composition element
-     * @param acElementDefinition toscaNodeTemplate
+     * @param properties properties Map
      * @throws PfModelException in case of an exception
      */
     @Override
-    public void automationCompositionElementUpdate(ToscaConceptIdentifier automationCompositionId,
-                                                   AutomationCompositionElement element,
-                                                   ToscaNodeTemplate acElementDefinition)
-        throws PfModelException {
+    public void automationCompositionElementUpdate(UUID automationCompositionId,
+            AutomationCompositionElement element, Map<String, Object> properties) throws PfModelException {
         var createPolicyTypeResp = HttpStatus.SC_OK;
         var createPolicyResp = HttpStatus.SC_OK;
 
-        ToscaServiceTemplate automationCompositionDefinition = element.getToscaServiceTemplateFragment();
+        var automationCompositionDefinition = element.getToscaServiceTemplateFragment();
         if (automationCompositionDefinition.getToscaTopologyTemplate() != null) {
             if (automationCompositionDefinition.getPolicyTypes() != null) {
-                for (ToscaPolicyType policyType : automationCompositionDefinition.getPolicyTypes().values()) {
+                for (var policyType : automationCompositionDefinition.getPolicyTypes().values()) {
                     policyTypeMap.put(policyType.getName(), policyType.getVersion());
                 }
                 LOGGER.info("Found Policy Types in automation composition definition: {} , Creating Policy Types",
@@ -197,8 +191,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
                 createPolicyTypeResp = apiHttpClient.createPolicyType(automationCompositionDefinition).getStatus();
             }
             if (automationCompositionDefinition.getToscaTopologyTemplate().getPolicies() != null) {
-                for (Map<String, ToscaPolicy> gotPolicyMap : automationCompositionDefinition.getToscaTopologyTemplate()
-                    .getPolicies()) {
+                for (var gotPolicyMap : automationCompositionDefinition.getToscaTopologyTemplate().getPolicies()) {
                     for (ToscaPolicy policy : gotPolicyMap.values()) {
                         policyMap.put(policy.getName(), policy.getVersion());
                     }

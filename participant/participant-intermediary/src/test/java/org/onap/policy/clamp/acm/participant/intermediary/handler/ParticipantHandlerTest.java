@@ -80,7 +80,7 @@ class ParticipantHandlerTest {
         var participantHandler = commonTestData.getMockParticipantHandler();
 
         var id = new ToscaConceptIdentifier(ID_NAME, ID_VERSION);
-        participantUpdateMsg.setAutomationCompositionId(id);
+        participantUpdateMsg.setAutomationCompositionId(CommonTestData.AC_ID_1);
         participantUpdateMsg.setParticipantId(id);
         participantUpdateMsg.setParticipantType(id);
         participantUpdateMsg.setMessageId(UUID.randomUUID());
@@ -160,9 +160,8 @@ class ParticipantHandlerTest {
     @Test
     void getAutomationCompositionInfoListTest() throws CoderException {
         var participantHandler = commonTestData.getParticipantHandlerAutomationCompositions();
-        var id = new ToscaConceptIdentifier(ID_NAME, ID_VERSION);
         participantHandler.sendHeartbeat();
-        assertEquals(id, participantHandler.makeHeartbeat(false)
+        assertEquals(CommonTestData.AC_ID_1, participantHandler.makeHeartbeat(false)
                 .getAutomationCompositionInfoList()
                 .get(0)
                 .getAutomationCompositionId());

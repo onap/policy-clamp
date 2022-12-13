@@ -32,7 +32,6 @@ import static org.mockito.Mockito.doThrow;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -59,7 +58,6 @@ import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -100,8 +98,8 @@ class AutomationCompositionElementHandlerTest {
 
     @Test
     void test_AutomationCompositionElementStateChange() throws ServiceException {
-        UUID automationCompositionElementId1 = UUID.randomUUID();
-        UUID automationCompositionElementId2 = UUID.randomUUID();
+        var automationCompositionElementId1 = UUID.randomUUID();
+        var automationCompositionElementId2 = UUID.randomUUID();
 
         automationCompositionElementHandler.getChartMap().put(automationCompositionElementId1, charts.get(0));
         automationCompositionElementHandler.getChartMap().put(automationCompositionElementId2, charts.get(1));
@@ -133,27 +131,27 @@ class AutomationCompositionElementHandlerTest {
         ExecutionException, InterruptedException {
         doReturn(true).when(chartService).installChart(any());
         doNothing().when(automationCompositionElementHandler).checkPodStatus(any(), any(), any(), anyInt(), anyInt());
-        UUID elementId1 = UUID.randomUUID();
-        AutomationCompositionElement element = new AutomationCompositionElement();
+        var elementId1 = UUID.randomUUID();
+        var element = new AutomationCompositionElement();
         element.setId(elementId1);
         element.setDefinition(new ToscaConceptIdentifier(KEY_NAME, "1.0.1"));
         element.setOrderedState(AutomationCompositionOrderedState.PASSIVE);
 
-        Map<String, ToscaNodeTemplate> nodeTemplatesMap =
+        var nodeTemplatesMap =
             toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates();
         automationCompositionElementHandler.automationCompositionElementUpdate(
             commonTestData.getAutomationCompositionId(), element,
-            nodeTemplatesMap.get(K8S_AUTOMATION_COMPOSITION_ELEMENT));
+            nodeTemplatesMap.get(K8S_AUTOMATION_COMPOSITION_ELEMENT).getProperties());
 
         assertThat(automationCompositionElementHandler.getChartMap()).hasSize(1).containsKey(elementId1);
 
         doThrow(new ServiceException("Error installing the chart")).when(chartService).installChart(Mockito.any());
 
-        UUID elementId2 = UUID.randomUUID();
+        var elementId2 = UUID.randomUUID();
         element.setId(elementId2);
         automationCompositionElementHandler.automationCompositionElementUpdate(
             commonTestData.getAutomationCompositionId(), element,
-            nodeTemplatesMap.get(K8S_AUTOMATION_COMPOSITION_ELEMENT));
+            nodeTemplatesMap.get(K8S_AUTOMATION_COMPOSITION_ELEMENT).getProperties());
 
         assertThat(automationCompositionElementHandler.getChartMap().containsKey(elementId2)).isFalse();
     }
@@ -164,8 +162,8 @@ class AutomationCompositionElementHandlerTest {
         doReturn("Done").when(result).get();
         doReturn(true).when(result).isDone();
         var chartInfo = charts.get(0);
-        ToscaConceptIdentifier automationCompositionId = new ToscaConceptIdentifier();
-        AutomationCompositionElement element = new AutomationCompositionElement();
+        var automationCompositionId = UUID.randomUUID();
+        var element = new AutomationCompositionElement();
         assertDoesNotThrow(
             () -> automationCompositionElementHandler.checkPodStatus(automationCompositionId,
                     element.getId(), chartInfo, 1, 1));
