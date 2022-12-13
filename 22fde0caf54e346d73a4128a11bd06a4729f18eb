@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a5e564b6_f662bba6",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/main/rest/stub/CommissioningControllerStub.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2022-12-13T17:19:47Z",
+      "side": 1,
+      "message": "stubUtils could be injected by constructor, see comment in StubUtils class",
+      "range": {
+        "startLine": 48,
+        "startChar": 40,
+        "endLine": 48,
+        "endChar": 56
+      },
+      "revId": "22fde0caf54e346d73a4128a11bd06a4729f18eb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "57945428_13484d97",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/main/rest/stub/CommissioningControllerStub.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2022-12-13T17:19:47Z",
+      "side": 1,
+      "message": "Autowired in constructor is obsolete, you can remove it",
+      "range": {
+        "startLine": 66,
+        "startChar": 4,
+        "endLine": 66,
+        "endChar": 59
+      },
+      "revId": "22fde0caf54e346d73a4128a11bd06a4729f18eb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "89343aa9_1ff5a8c3",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/main/rest/stub/StubUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2022-12-13T17:19:47Z",
+      "side": 1,
+      "message": "This class could be defined as Service and injected into CommissioningControllerStub:\n@Service\n@Profile(\"stub\")",
+      "range": {
+        "startLine": 35,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 22
+      },
+      "revId": "22fde0caf54e346d73a4128a11bd06a4729f18eb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
