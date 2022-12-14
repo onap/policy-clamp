@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,28 +22,29 @@ package org.onap.policy.clamp.models.acm.persistence.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
-import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.Participant;
+import org.onap.policy.clamp.models.acm.persistence.concepts.JpaParticipant;
 import org.onap.policy.clamp.models.acm.persistence.provider.ProviderUtils;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.dao.PfDao;
-import org.onap.policy.models.dao.PfFilterParameters;
 import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.provider.impl.ModelsProvider;
 
 class FilterRepositoryImplTest {
-    private static final String AUTOMATION_COMPOSITION_JSON =
-        "src/test/resources/providers/TestAutomationCompositions.json";
+    private static final String PARTICIPANT_JSON = "src/test/resources/providers/TestParticipant.json";
+    private final List<Participant> inputParticipants = new ArrayList<>();
+    private List<JpaParticipant> jpaParticipantList;
+    private final String originalJson = ResourceUtils.getResourceAsString(PARTICIPANT_JSON);
     private static final Coder CODER = new StandardCoder();
+
     private static final AtomicInteger dbNameCounter = new AtomicInteger();
-    private static final String originalJson = ResourceUtils.getResourceAsString(AUTOMATION_COMPOSITION_JSON);
-    private static List<JpaAutomationComposition> jpaAutomationCompositions;
     private PfDao pfDao;
 
     @BeforeEach
@@ -58,12 +59,9 @@ class FilterRepositoryImplTest {
         parameters.setPersistenceUnit("ToscaConceptTest");
 
         pfDao = ModelsProvider.init(parameters);
-        var inputAutomationCompositions = CODER.decode(originalJson, AutomationCompositions.class);
-        jpaAutomationCompositions =
-            ProviderUtils.getJpaAndValidateList(inputAutomationCompositions.getAutomationCompositionList(),
-                JpaAutomationComposition::new, "AutomationCompositions");
-
-        pfDao.createCollection(jpaAutomationCompositions);
+        inputParticipants.add(CODER.decode(originalJson, Participant.class));
+        jpaParticipantList = ProviderUtils.getJpaAndValidateList(inputParticipants, JpaParticipant::new, "participant");
+        pfDao.createCollection(jpaParticipantList);
     }
 
     @Test
@@ -79,31 +77,10 @@ class FilterRepositoryImplTest {
                 return pfDao;
             }
         };
-        var result = filterRepositoryImpl.getFiltered(JpaAutomationComposition.class, null, null);
-        assertThat(result).hasSize(2);
-
-        result = filterRepositoryImpl.getFiltered(JpaAutomationComposition.class,
-            jpaAutomationCompositions.get(0).getName(), null);
+        var result = filterRepositoryImpl.getFiltered(JpaParticipant.class, null, null);
         assertThat(result).hasSize(1);
-    }
 
-    @Test
-    void testGetFiltered() {
-        var filterRepositoryImpl = new FilterRepositoryImpl() {
-            @Override
-            protected PfDao getPfDao() {
-                return pfDao;
-            }
-        };
-
-        // @formatter:off
-        PfFilterParameters filterParams = PfFilterParameters
-                .builder()
-                .name(jpaAutomationCompositions.get(0).getName())
-                .build();
-        // @formatter:on
-
-        var result = filterRepositoryImpl.getFiltered(JpaAutomationComposition.class, filterParams);
+        result = filterRepositoryImpl.getFiltered(JpaParticipant.class, jpaParticipantList.get(0).getName(), null);
         assertThat(result).hasSize(1);
     }
 }

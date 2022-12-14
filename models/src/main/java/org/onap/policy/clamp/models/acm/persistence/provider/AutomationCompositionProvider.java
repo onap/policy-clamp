@@ -25,7 +25,6 @@ package org.onap.policy.clamp.models.acm.persistence.provider;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import javax.persistence.EntityNotFoundException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import lombok.AllArgsConstructor;
@@ -33,9 +32,9 @@ import lombok.NonNull;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationComposition;
 import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionRepository;
-import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,26 +56,11 @@ public class AutomationCompositionProvider {
      */
     @Transactional(readOnly = true)
     public AutomationComposition getAutomationComposition(final UUID instanceId) {
-        var result = automationCompositionRepository.findByInstanceId(instanceId.toString());
+        var result = automationCompositionRepository.findById(instanceId.toString());
         if (result.isEmpty()) {
             throw new PfModelRuntimeException(Status.NOT_FOUND, "AutomationComposition not found");
         }
         return result.get().toAuthorative();
-    }
-
-    /**
-     * Get automation composition.
-     *
-     * @param automationCompositionId the ID of the automation composition to get
-     * @return the automation composition found
-     */
-    @Transactional(readOnly = true)
-    public AutomationComposition getAutomationComposition(final ToscaConceptIdentifier automationCompositionId) {
-        try {
-            return automationCompositionRepository.getById(automationCompositionId.asConceptKey()).toAuthorative();
-        } catch (EntityNotFoundException e) {
-            throw new PfModelRuntimeException(Status.NOT_FOUND, "AutomationComposition not found", e);
-        }
     }
 
     /**
@@ -87,7 +71,7 @@ public class AutomationCompositionProvider {
      */
     @Transactional(readOnly = true)
     public Optional<AutomationComposition> findAutomationComposition(final UUID instanceId) {
-        var result = automationCompositionRepository.findByInstanceId(instanceId.toString());
+        var result = automationCompositionRepository.findById(instanceId.toString());
         return result.stream().map(JpaAutomationComposition::toAuthorative).findFirst();
     }
 
@@ -100,11 +84,9 @@ public class AutomationCompositionProvider {
     @Transactional(readOnly = true)
     public Optional<AutomationComposition> findAutomationComposition(
             final ToscaConceptIdentifier automationCompositionId) {
-        return findAutomationComposition(automationCompositionId.asConceptKey());
-    }
-
-    private Optional<AutomationComposition> findAutomationComposition(@NonNull final PfConceptKey key) {
-        return automationCompositionRepository.findById(key).map(JpaAutomationComposition::toAuthorative);
+        return automationCompositionRepository
+                .findOne(createExample(null, automationCompositionId.getName(), automationCompositionId.getVersion()))
+                .map(JpaAutomationComposition::toAuthorative);
     }
 
     /**
@@ -156,10 +138,24 @@ public class AutomationCompositionProvider {
      * @return the automation compositions found
      */
     @Transactional(readOnly = true)
-    public List<AutomationComposition> getAutomationCompositions(final String name, final String version) {
+    public List<AutomationComposition> getAutomationCompositions(final UUID compositionId, final String name,
+            final String version) {
 
-        return ProviderUtils.asEntityList(
-                automationCompositionRepository.getFiltered(JpaAutomationComposition.class, name, version));
+        return ProviderUtils
+                .asEntityList(automationCompositionRepository.findAll(createExample(compositionId, name, version)));
+    }
+
+    private Example<JpaAutomationComposition> createExample(final UUID compositionId, final String name,
+            final String version) {
+        var example = new JpaAutomationComposition();
+        example.setCompositionId(compositionId != null ? compositionId.toString() : null);
+        example.setName(name);
+        example.setVersion(version);
+        example.setInstanceId(null);
+        example.setElements(null);
+        example.setState(null);
+
+        return Example.of(example);
     }
 
     /**
@@ -169,14 +165,14 @@ public class AutomationCompositionProvider {
      * @return the automation composition deleted
      */
     public AutomationComposition deleteAutomationComposition(@NonNull final UUID instanceId) {
-        var jpaDeleteAutomationComposition = automationCompositionRepository.findByInstanceId(instanceId.toString());
+        var jpaDeleteAutomationComposition = automationCompositionRepository.findById(instanceId.toString());
         if (jpaDeleteAutomationComposition.isEmpty()) {
             var errorMessage = "delete of automation composition \"" + instanceId
                     + "\" failed, automation composition does not exist";
             throw new PfModelRuntimeException(Response.Status.NOT_FOUND, errorMessage);
         }
 
-        automationCompositionRepository.deleteById(jpaDeleteAutomationComposition.get().getKey());
+        automationCompositionRepository.deleteById(instanceId.toString());
 
         return jpaDeleteAutomationComposition.get().toAuthorative();
     }
