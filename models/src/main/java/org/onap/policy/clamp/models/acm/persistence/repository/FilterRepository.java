@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,21 +22,8 @@ package org.onap.policy.clamp.models.acm.persistence.repository;
 
 import java.util.List;
 import org.onap.policy.models.base.PfConcept;
-import org.onap.policy.models.dao.PfFilterParametersIntfc;
 
 public interface FilterRepository {
-
-    /**
-     * Get an object from the database, referred to by concept key.
-     *
-     * @param <T> the type of the object to get, a subclass of {@link PfConcept}
-     * @param someClass the class of the object to get, a subclass of {@link PfConcept}, if name is null, all concepts
-     *        of type T are returned, if name is not null and version is null, all versions of that concept matching the
-     *        name are returned.
-     * @param filterParams filter parameters
-     * @return the objects that was retrieved from the database
-     */
-    <T extends PfConcept> List<T> getFiltered(Class<T> someClass, PfFilterParametersIntfc filterParams);
 
     /**
      * Get an object from the database, referred to by concept key.

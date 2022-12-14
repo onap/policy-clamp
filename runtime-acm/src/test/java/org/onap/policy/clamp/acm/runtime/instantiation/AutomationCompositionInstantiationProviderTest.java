@@ -109,10 +109,10 @@ class AutomationCompositionInstantiationProviderTest {
 
         verify(acProvider).createAutomationComposition(automationCompositionCreate);
 
-        when(acProvider.getAutomationCompositions(automationCompositionCreate.getName(),
+        when(acProvider.getAutomationCompositions(compositionId, automationCompositionCreate.getName(),
                 automationCompositionCreate.getVersion())).thenReturn(List.of(automationCompositionCreate));
 
-        var automationCompositionsGet = instantiationProvider.getAutomationCompositions(
+        var automationCompositionsGet = instantiationProvider.getAutomationCompositions(compositionId,
                 automationCompositionCreate.getName(), automationCompositionCreate.getVersion());
         assertThat(automationCompositionCreate)
                 .isEqualTo(automationCompositionsGet.getAutomationCompositionList().get(0));

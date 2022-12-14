@@ -238,7 +238,7 @@ class InstantiationControllerTest extends CommonRestController {
         var instResponse = resp.readEntity(InstantiationResponse.class);
         InstantiationUtils.assertInstantiationResponse(instResponse, automationComposition);
 
-        var automationCompositionsFromDb = instantiationProvider.getAutomationCompositions(
+        var automationCompositionsFromDb = instantiationProvider.getAutomationCompositions(compositionId,
                 automationComposition.getKey().getName(), automationComposition.getKey().getVersion());
 
         assertNotNull(automationCompositionsFromDb);
@@ -261,7 +261,7 @@ class InstantiationControllerTest extends CommonRestController {
         instResponse = resp.readEntity(InstantiationResponse.class);
         InstantiationUtils.assertInstantiationResponse(instResponse, automationCompositionFromRsc);
 
-        var automationCompositionsFromDb = instantiationProvider.getAutomationCompositions(
+        var automationCompositionsFromDb = instantiationProvider.getAutomationCompositions(compositionId,
                 automationCompositionFromRsc.getKey().getName(), automationCompositionFromRsc.getKey().getVersion());
         assertThat(automationCompositionsFromDb.getAutomationCompositionList()).isEmpty();
     }
@@ -327,8 +327,8 @@ class InstantiationControllerTest extends CommonRestController {
 
         // check passive state on DB
         var toscaConceptIdentifier = instResponse.getAffectedAutomationComposition();
-        var automationCompositionsGet = instantiationProvider
-                .getAutomationCompositions(toscaConceptIdentifier.getName(), toscaConceptIdentifier.getVersion());
+        var automationCompositionsGet = instantiationProvider.getAutomationCompositions(compositionId,
+                toscaConceptIdentifier.getName(), toscaConceptIdentifier.getVersion());
         assertThat(automationCompositionsGet.getAutomationCompositionList()).hasSize(1);
         assertEquals(command.getOrderedState(),
                 automationCompositionsGet.getAutomationCompositionList().get(0).getOrderedState());

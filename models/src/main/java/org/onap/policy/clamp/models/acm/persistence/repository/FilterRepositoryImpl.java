@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.onap.policy.models.base.PfConcept;
 import org.onap.policy.models.dao.PfDao;
-import org.onap.policy.models.dao.PfFilterParametersIntfc;
 import org.onap.policy.models.dao.impl.ProxyDao;
 import org.springframework.stereotype.Repository;
 
@@ -37,11 +36,6 @@ public class FilterRepositoryImpl implements FilterRepository {
 
     protected PfDao getPfDao() {
         return new ProxyDao(entityManager);
-    }
-
-    @Override
-    public <T extends PfConcept> List<T> getFiltered(Class<T> someClass, PfFilterParametersIntfc filterParams) {
-        return getPfDao().getFiltered(someClass, filterParams);
     }
 
     @Override
