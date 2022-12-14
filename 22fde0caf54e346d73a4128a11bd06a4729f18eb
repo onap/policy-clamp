@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6d2f4375_7f87524c",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/main/rest/stub/CommissioningControllerStub.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 7629
+      },
+      "writtenOn": "2022-12-14T13:47:23Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "a5e564b6_f662bba6",
+      "range": {
+        "startLine": 48,
+        "startChar": 40,
+        "endLine": 48,
+        "endChar": 56
+      },
+      "revId": "22fde0caf54e346d73a4128a11bd06a4729f18eb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57945428_13484d97",
         "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/main/rest/stub/CommissioningControllerStub.java",
         "patchSetId": 1
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "a3a8b8c6_d4ccfc12",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/main/rest/stub/CommissioningControllerStub.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 7629
+      },
+      "writtenOn": "2022-12-14T13:47:23Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "57945428_13484d97",
+      "range": {
+        "startLine": 66,
+        "startChar": 4,
+        "endLine": 66,
+        "endChar": 59
+      },
+      "revId": "22fde0caf54e346d73a4128a11bd06a4729f18eb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "89343aa9_1ff5a8c3",
         "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/main/rest/stub/StubUtils.java",
         "patchSetId": 1
@@ -68,6 +116,30 @@
       "revId": "22fde0caf54e346d73a4128a11bd06a4729f18eb",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "92235151_30f0104a",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/main/rest/stub/StubUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 7629
+      },
+      "writtenOn": "2022-12-14T13:47:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "89343aa9_1ff5a8c3",
+      "range": {
+        "startLine": 35,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 22
+      },
+      "revId": "22fde0caf54e346d73a4128a11bd06a4729f18eb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
