@@ -70,8 +70,8 @@ public class DocToscaTopologyTemplate extends Validated
         this.description = copyConcept.description;
         this.inputs = PfUtils.mapMap(copyConcept.inputs, DocToscaParameter::new);
         this.nodeTemplates =
-                DocUtil.docMapToMap(copyConcept.nodeTemplates, DocToscaNodeTemplate::new, new LinkedHashMap<>());
-        this.policies = DocUtil.docMapToMap(copyConcept.policies, DocToscaPolicy::new, new LinkedHashMap<>());
+                PfUtils.mapMap(copyConcept.nodeTemplates, DocToscaNodeTemplate::new, new LinkedHashMap<>());
+        this.policies = PfUtils.mapMap(copyConcept.policies, DocToscaPolicy::new, new LinkedHashMap<>());
     }
 
     @Override
@@ -102,7 +102,8 @@ public class DocToscaTopologyTemplate extends Validated
 
         nodeTemplates = DocUtil.mapToDocMap(toscaTopologyTemplate.getNodeTemplates(), DocToscaNodeTemplate::new);
 
-        policies = DocUtil.listToDocMap(toscaTopologyTemplate.getPolicies(), DocToscaPolicy::new);
+        policies =
+                DocUtil.listToDocMap(toscaTopologyTemplate.getPolicies(), DocToscaPolicy::new, new LinkedHashMap<>());
     }
 
     @Override
@@ -112,16 +113,16 @@ public class DocToscaTopologyTemplate extends Validated
             return result;
         }
 
-        result = PfUtils.compareMaps(inputs, otherConcept.inputs);
+        result = DocUtil.compareMaps(inputs, otherConcept.inputs);
         if (result != 0) {
             return result;
         }
 
-        result = PfUtils.compareMaps(nodeTemplates, otherConcept.nodeTemplates);
+        result = DocUtil.compareMaps(nodeTemplates, otherConcept.nodeTemplates);
         if (result != 0) {
             return result;
         }
-        return PfUtils.compareMaps(policies, otherConcept.policies);
+        return DocUtil.compareMaps(policies, otherConcept.policies);
     }
 
     /**

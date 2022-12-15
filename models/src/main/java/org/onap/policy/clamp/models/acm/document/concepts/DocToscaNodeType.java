@@ -51,7 +51,7 @@ public class DocToscaNodeType extends DocToscaWithToscaProperties<ToscaNodeType>
     public DocToscaNodeType(final DocToscaNodeType copyConcept) {
         super(copyConcept);
         this.requirements =
-                PfUtils.mapList(copyConcept.requirements, map -> DocUtil.docMapToMap(map, DocToscaRequirement::new));
+                PfUtils.mapList(copyConcept.requirements, map -> PfUtils.mapMap(map, DocToscaRequirement::new));
     }
 
     @Override

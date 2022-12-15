@@ -90,13 +90,13 @@ public class DocToscaServiceTemplate extends DocToscaEntity<ToscaServiceTemplate
     public DocToscaServiceTemplate(final DocToscaServiceTemplate copyConcept) {
         super(copyConcept);
         this.toscaDefinitionsVersion = copyConcept.toscaDefinitionsVersion;
-        this.dataTypes = DocUtil.docMapToMap(copyConcept.dataTypes, DocToscaDataType::new, new LinkedHashMap<>());
+        this.dataTypes = PfUtils.mapMap(copyConcept.dataTypes, DocToscaDataType::new, new LinkedHashMap<>());
         this.capabilityTypes =
-                DocUtil.docMapToMap(copyConcept.capabilityTypes, DocToscaCapabilityType::new, new LinkedHashMap<>());
-        this.nodeTypes = DocUtil.docMapToMap(copyConcept.nodeTypes, DocToscaNodeType::new, new LinkedHashMap<>());
-        this.relationshipTypes = DocUtil.docMapToMap(copyConcept.relationshipTypes, DocToscaRelationshipType::new,
+                PfUtils.mapMap(copyConcept.capabilityTypes, DocToscaCapabilityType::new, new LinkedHashMap<>());
+        this.nodeTypes = PfUtils.mapMap(copyConcept.nodeTypes, DocToscaNodeType::new, new LinkedHashMap<>());
+        this.relationshipTypes = PfUtils.mapMap(copyConcept.relationshipTypes, DocToscaRelationshipType::new,
                 new LinkedHashMap<>());
-        this.policyTypes = DocUtil.docMapToMap(copyConcept.policyTypes, DocToscaPolicyType::new, new LinkedHashMap<>());
+        this.policyTypes = PfUtils.mapMap(copyConcept.policyTypes, DocToscaPolicyType::new, new LinkedHashMap<>());
         if (copyConcept.toscaTopologyTemplate != null) {
             this.toscaTopologyTemplate = new DocToscaTopologyTemplate(copyConcept.toscaTopologyTemplate);
         }
@@ -158,29 +158,29 @@ public class DocToscaServiceTemplate extends DocToscaEntity<ToscaServiceTemplate
             return result;
         }
 
-        final DocToscaServiceTemplate other = (DocToscaServiceTemplate) otherConcept;
+        final var other = (DocToscaServiceTemplate) otherConcept;
 
-        result = PfUtils.compareMaps(dataTypes, other.dataTypes);
+        result = DocUtil.compareMaps(dataTypes, other.dataTypes);
         if (result != 0) {
             return result;
         }
 
-        result = PfUtils.compareMaps(capabilityTypes, other.capabilityTypes);
+        result = DocUtil.compareMaps(capabilityTypes, other.capabilityTypes);
         if (result != 0) {
             return result;
         }
 
-        result = PfUtils.compareMaps(relationshipTypes, other.relationshipTypes);
+        result = DocUtil.compareMaps(relationshipTypes, other.relationshipTypes);
         if (result != 0) {
             return result;
         }
 
-        result = PfUtils.compareMaps(nodeTypes, other.nodeTypes);
+        result = DocUtil.compareMaps(nodeTypes, other.nodeTypes);
         if (result != 0) {
             return result;
         }
 
-        result = PfUtils.compareMaps(policyTypes, other.policyTypes);
+        result = DocUtil.compareMaps(policyTypes, other.policyTypes);
         if (result != 0) {
             return result;
         }
