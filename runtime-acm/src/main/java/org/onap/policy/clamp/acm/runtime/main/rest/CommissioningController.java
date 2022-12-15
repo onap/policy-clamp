@@ -29,6 +29,7 @@ import org.onap.policy.clamp.models.acm.messages.rest.commissioning.Commissionin
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplates;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,6 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequiredArgsConstructor
+@Profile("default")
 public class CommissioningController extends AbstractRestController implements AutomationCompositionDefinitionApi {
 
     private final CommissioningProvider provider;

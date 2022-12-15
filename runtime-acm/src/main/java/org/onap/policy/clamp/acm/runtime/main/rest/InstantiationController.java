@@ -30,6 +30,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationUpdate;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,6 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequiredArgsConstructor
+@Profile("default")
 public class InstantiationController extends AbstractRestController implements AutomationCompositionInstanceApi {
 
     // The Automation Composition provider for instantiation requests
