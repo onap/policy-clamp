@@ -22,7 +22,6 @@ package org.onap.policy.clamp.models.acm.persistence.provider;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -66,7 +65,7 @@ class AcDefinitionProviderTest {
         var docServiceTemplate = new DocToscaServiceTemplate(inputServiceTemplateProperties);
         var docServiceTemplateCopy = new DocToscaServiceTemplate(docServiceTemplate);
 
-        assertNotEquals(0, docServiceTemplate.compareTo(docServiceTemplateCopy));
+        assertThat(docServiceTemplate.compareTo(docServiceTemplateCopy)).isEqualByComparingTo(0);
         assertThat(docServiceTemplate.compareToWithoutEntities(docServiceTemplateCopy)).isZero();
 
         var acmDefinition = getAcDefinition(docServiceTemplate);

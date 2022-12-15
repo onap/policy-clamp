@@ -102,17 +102,17 @@ public class DocToscaRequirement extends DocToscaWithTypeAndStringProperties<Tos
 
         final var other = (DocToscaRequirement) otherConcept;
 
-        result = capability.compareTo(other.capability);
+        result = PfUtils.compareObjects(capability, other.capability);
         if (result != 0) {
             return result;
         }
 
-        result = node.compareTo(other.node);
+        result = PfUtils.compareObjects(node, other.node);
         if (result != 0) {
             return result;
         }
 
-        result = relationship.compareTo(other.relationship);
+        result = PfUtils.compareObjects(relationship, other.relationship);
         if (result != 0) {
             return result;
         }

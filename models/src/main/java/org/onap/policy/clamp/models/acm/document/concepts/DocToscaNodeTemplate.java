@@ -60,8 +60,8 @@ public class DocToscaNodeTemplate extends DocToscaWithTypeAndStringProperties<To
     public DocToscaNodeTemplate(final DocToscaNodeTemplate copyConcept) {
         super(copyConcept);
         this.requirements =
-                PfUtils.mapList(copyConcept.requirements, map -> DocUtil.docMapToMap(map, DocToscaRequirement::new));
-        this.capabilities = DocUtil.docMapToMap(copyConcept.capabilities, DocToscaCapabilityAssignment::new);
+                PfUtils.mapList(copyConcept.requirements, map -> PfUtils.mapMap(map, DocToscaRequirement::new));
+        this.capabilities = PfUtils.mapMap(copyConcept.capabilities, DocToscaCapabilityAssignment::new);
     }
 
     @Override
@@ -102,11 +102,11 @@ public class DocToscaNodeTemplate extends DocToscaWithTypeAndStringProperties<To
 
         final var other = (DocToscaNodeTemplate) otherConcept;
 
-        result = PfUtils.compareCollections(requirements, other.requirements);
+        result = DocUtil.compareCollections(requirements, other.requirements);
         if (result != 0) {
             return result;
         }
 
-        return PfUtils.compareMaps(capabilities, other.capabilities);
+        return DocUtil.compareMaps(capabilities, other.capabilities);
     }
 }
