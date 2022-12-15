@@ -22,6 +22,30 @@
       "revId": "76da63c65bb8173bfe1ec8b05939548a63f8e9f8",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d13efaa3_3ccbd834",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/main/rest/InstantiationController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2022-12-15T12:24:33Z",
+      "side": 1,
+      "message": "queryCompositionInstances method is generated from openapi.yaml, name and version are used as filters to get a list of AutomationComposition:\nso GET \"/compositions/{compositionId}/instances?name\u003dPMSHInstance0\" returns all instances related to compositionId with name \"PMSHInstance0\"",
+      "parentUuid": "71eb4af0_3b15a117",
+      "range": {
+        "startLine": 93,
+        "startChar": 0,
+        "endLine": 93,
+        "endChar": 5
+      },
+      "revId": "76da63c65bb8173bfe1ec8b05939548a63f8e9f8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
