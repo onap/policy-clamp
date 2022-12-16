@@ -40,7 +40,7 @@
         <dependency>
             <groupId>org.onap.policy.clamp</groupId>
             <artifactId>policy-clamp-models</artifactId>
-            <version>${project.version}</version>
+            <version>6.4.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.onap.policy.clamp</groupId>
@@ -76,6 +76,8 @@
                                 ToscaNodeTemplate=org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate,
                                 AutomationCompositions=org.onap.policy.clamp.models.acm.concepts.AutomationCompositions,
                                 SimpleResponse=org.onap.policy.clamp.models.acm.messages.rest.SimpleResponse,
+                                AcTypeStateUpdate=org.onap.policy.clamp.models.acm.messages.rest.commissioning.AcTypeStateUpdate,
+                                AcInstanceStateUpdate=org.onap.policy.clamp.models.acm.messages.rest.instantiation.AcInstanceStateUpdate,
                                 InstancePropertiesResponse=org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstancePropertiesResponse,
                                 CommissioningResponse=org.onap.policy.clamp.models.acm.messages.rest.commissioning.CommissioningResponse,
                                 InstantiationCommand=org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationCommand,

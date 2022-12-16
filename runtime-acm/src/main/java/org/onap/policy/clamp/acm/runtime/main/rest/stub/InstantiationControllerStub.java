@@ -27,6 +27,7 @@ import org.onap.policy.clamp.acm.runtime.main.rest.gen.AutomationCompositionInst
 import org.onap.policy.clamp.acm.runtime.main.web.AbstractRestController;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
+import org.onap.policy.clamp.models.acm.messages.rest.instantiation.AcInstanceStateUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationUpdate;
 import org.slf4j.Logger;
@@ -101,12 +102,18 @@ public class InstantiationControllerStub extends AbstractRestController implemen
         return stubUtils.getResponse(pathToAllIntances, AutomationCompositions.class, request, log);
     }
 
-    @Override
     public ResponseEntity<InstantiationResponse> updateCompositionInstance(
             UUID compositionId,
             UUID instanceId,
             InstantiationUpdate body,
             UUID xonaprequestid) {
         return stubUtils.getResponse(pathToResponseFile, InstantiationResponse.class, request, log);
+    }
+
+    @Override
+    public ResponseEntity<Void> ompositionInstanceState(UUID compositionId, UUID instanceId,
+        @Valid AcInstanceStateUpdate body, UUID requestId) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

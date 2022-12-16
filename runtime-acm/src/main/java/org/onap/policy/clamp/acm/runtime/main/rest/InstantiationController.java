@@ -22,12 +22,14 @@
 package org.onap.policy.clamp.acm.runtime.main.rest;
 
 import java.util.UUID;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.runtime.instantiation.AutomationCompositionInstantiationProvider;
 import org.onap.policy.clamp.acm.runtime.main.rest.gen.AutomationCompositionInstanceApi;
 import org.onap.policy.clamp.acm.runtime.main.web.AbstractRestController;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
+import org.onap.policy.clamp.models.acm.messages.rest.instantiation.AcInstanceStateUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationUpdate;
 import org.springframework.context.annotation.Profile;
@@ -102,7 +104,6 @@ public class InstantiationController extends AbstractRestController implements A
      * @param requestId request ID used in ONAP logging
      * @return a response
      */
-    @Override
     public ResponseEntity<InstantiationResponse> updateCompositionInstance(UUID compositionId, UUID instanceId,
             InstantiationUpdate instanceUpdate, UUID requestId) {
 
@@ -123,5 +124,12 @@ public class InstantiationController extends AbstractRestController implements A
             UUID requestId) {
 
         return ResponseEntity.ok().body(provider.deleteAutomationComposition(compositionId, instanceId));
+    }
+
+    @Override
+    public ResponseEntity<Void> ompositionInstanceState(UUID compositionId, UUID instanceId,
+        @Valid AcInstanceStateUpdate body, UUID requestId) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.onap.policy.clamp.acm.runtime.main.rest.gen.AutomationCompositionDefinitionApi;
 import org.onap.policy.clamp.acm.runtime.main.web.AbstractRestController;
+import org.onap.policy.clamp.models.acm.messages.rest.commissioning.AcTypeStateUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.CommissioningResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplates;
@@ -97,11 +98,17 @@ public class CommissioningControllerStub extends AbstractRestController
         return stubUtils.getResponse(pathToAllDefinitions, ToscaServiceTemplates.class, request, log);
     }
 
-    @Override
     public ResponseEntity<CommissioningResponse> updateCompositionDefinition(
             @PathVariable("compositionId") UUID compositionId,
             @Valid @RequestBody ToscaServiceTemplate body,
             @RequestHeader(value = "X-onap-RequestId", required = false) UUID xonaprequestid) {
         return stubUtils.getResponse(pathToPutUpdate, CommissioningResponse.class, request, log);
+    }
+
+    @Override
+    public ResponseEntity<Void> compositionDefinitionPriming(UUID compositionId, UUID requestId,
+        AcTypeStateUpdate body) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

@@ -21,10 +21,12 @@
 package org.onap.policy.clamp.acm.runtime.main.rest;
 
 import java.util.UUID;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.runtime.commissioning.CommissioningProvider;
 import org.onap.policy.clamp.acm.runtime.main.rest.gen.AutomationCompositionDefinitionApi;
 import org.onap.policy.clamp.acm.runtime.main.web.AbstractRestController;
+import org.onap.policy.clamp.models.acm.messages.rest.commissioning.AcTypeStateUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.CommissioningResponse;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
@@ -90,9 +92,15 @@ public class CommissioningController extends AbstractRestController implements A
         return ResponseEntity.ok().body(provider.getAutomationCompositionDefinitions(compositionId));
     }
 
-    @Override
     public ResponseEntity<CommissioningResponse> updateCompositionDefinition(UUID compositionId,
         ToscaServiceTemplate body, UUID requestId) {
         return ResponseEntity.ok().body(provider.updateCompositionDefinition(compositionId, body));
+    }
+
+    @Override
+    public ResponseEntity<Void> compositionDefinitionPriming(UUID compositionId, UUID requestId,
+        @Valid AcTypeStateUpdate body) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

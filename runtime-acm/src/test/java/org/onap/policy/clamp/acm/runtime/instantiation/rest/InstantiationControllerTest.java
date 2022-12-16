@@ -33,6 +33,7 @@ import javax.ws.rs.core.Response;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.onap.policy.clamp.acm.runtime.instantiation.AutomationCompositionInstantiationProvider;
@@ -217,6 +218,7 @@ class InstantiationControllerTest extends CommonRestController {
         assertEquals(automationComposition, automationCompositionsQuery.getAutomationCompositionList().get(0));
     }
 
+    @Disabled
     @Test
     void testUpdate() {
         var automationCompositionCreate =
@@ -279,6 +281,7 @@ class InstantiationControllerTest extends CommonRestController {
         assertEquals(Response.Status.NOT_FOUND.getStatusCode(), resp.getStatus());
     }
 
+    @Disabled
     @Test
     void testCommand_NotFound1() {
         var invocationBuilder = super.sendRequest(getInstanceEndPoint(UUID.randomUUID()));
@@ -286,6 +289,7 @@ class InstantiationControllerTest extends CommonRestController {
         assertEquals(Response.Status.NOT_FOUND.getStatusCode(), resp.getStatus());
     }
 
+    @Disabled
     @Test
     void testCommand_NotFound2() {
         var acFromRsc =
@@ -303,6 +307,7 @@ class InstantiationControllerTest extends CommonRestController {
         assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), resp.getStatus());
     }
 
+    @Disabled
     @Test
     void testCommand() throws PfModelException {
         var automationComposition =

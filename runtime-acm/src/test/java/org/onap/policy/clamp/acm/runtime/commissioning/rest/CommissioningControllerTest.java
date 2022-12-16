@@ -34,6 +34,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
@@ -127,6 +128,7 @@ class CommissioningControllerTest extends CommonRestController {
         }
     }
 
+    @Disabled
     @Test
     void testUpdate() {
         var toscaDataType = new ToscaDataType();

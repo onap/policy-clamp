@@ -44,6 +44,7 @@ public class StringToMapConverter implements AttributeConverter<Map<String, Obje
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Map<String, Object> convertToEntityAttribute(String dbData) {
         if (dbData == null) {
