@@ -88,7 +88,7 @@ public class JpaAutomationComposition extends PfConcept implements PfAuthorative
     @Column
     private String description;
 
-    @Column
+    @Column(columnDefinition = "TINYINT DEFAULT 1")
     private Boolean primed;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
