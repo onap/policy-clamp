@@ -27,7 +27,6 @@ import static org.onap.policy.clamp.models.acm.messages.dmaap.participant.Partic
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
@@ -39,7 +38,6 @@ import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaProperty;
 
 class ParticipantStatusTest {
 
@@ -100,11 +98,6 @@ class ParticipantStatusTest {
         acDefinition.setAcElementDefinitionId(id);
         acDefinition.setAutomationCompositionElementToscaNodeTemplate(toscaNodeTemplate);
 
-        var property = new ToscaProperty();
-        property.setName("test");
-        property.setType("testType");
-        var commonPropertiesMap = Map.of("Prop1", property);
-        acDefinition.setCommonPropertiesMap(commonPropertiesMap);
         return acDefinition;
     }
 }

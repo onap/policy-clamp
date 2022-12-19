@@ -26,7 +26,9 @@ import io.micrometer.core.annotation.Timed;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUpdate;
@@ -51,47 +53,56 @@ public class ParticipantUpdatePublisher extends AbstractParticipantPublisher<Par
     /**
      * Send ParticipantUpdate to all Participants.
      *
-     * @param name the ToscaServiceTemplate name
-     * @param version the ToscaServiceTemplate version
+     * @param acmDefinition the AutomationComposition Definition
      */
     @Timed(value = "publisher.participant_update", description = "PARTICIPANT_UPDATE messages published")
-    public void sendComissioningBroadcast(String name, String version) {
-        sendCommissioning(name, version, null, null);
+    public void sendComissioningBroadcast(AutomationCompositionDefinition acmDefinition) {
+        sendCommissioning(acmDefinition, null, null);
     }
 
     /**
      * Send ParticipantUpdate to Participant
      * if participantType and participantId are null then message is broadcast.
      *
-     * @param name the ToscaServiceTemplate name
-     * @param version the ToscaServiceTemplate version
      * @param participantType the ParticipantType
      * @param participantId the ParticipantId
      */
     @Timed(value = "publisher.participant_update", description = "PARTICIPANT_UPDATE messages published")
-    public boolean sendCommissioning(String name, String version, ToscaConceptIdentifier participantType,
-            ToscaConceptIdentifier participantId) {
+    public void sendCommissioning(ToscaConceptIdentifier participantType, ToscaConceptIdentifier participantId) {
+        var list = acDefinitionProvider.getAllAcDefinitions();
+        if (list.isEmpty()) {
+            LOGGER.warn("No tosca service template found, cannot send participantupdate");
+        }
+        for (var acmDefinition : list) {
+            sendCommissioning(acmDefinition, participantType, participantId);
+        }
+    }
+
+    /**
+     * Send ParticipantUpdate to Participant
+     * if participantType and participantId are null then message is broadcast.
+     *
+     * @param acmDefinition the AutomationComposition Definition
+     * @param participantType the ParticipantType
+     * @param participantId the ParticipantId
+     */
+    @Timed(value = "publisher.participant_update", description = "PARTICIPANT_UPDATE messages published")
+    public void sendCommissioning(AutomationCompositionDefinition acmDefinition,
+            ToscaConceptIdentifier participantType, ToscaConceptIdentifier participantId) {
         var message = new ParticipantUpdate();
+        message.setCompositionId(acmDefinition.getCompositionId());
         message.setParticipantType(participantType);
         message.setParticipantId(participantId);
         message.setTimestamp(Instant.now());
 
-        var list = acDefinitionProvider.getServiceTemplateList(name, version);
-        if (list.isEmpty()) {
-            LOGGER.warn("No tosca service template found, cannot send participantupdate {} {}", name, version);
-            return false;
-        }
-        var toscaServiceTemplate = list.get(0);
-        var commonPropertiesMap = AcmUtils.getCommonOrInstancePropertiesFromNodeTypes(true, toscaServiceTemplate);
-
+        var toscaServiceTemplate = acmDefinition.getServiceTemplate();
         List<ParticipantDefinition> participantDefinitionUpdates = new ArrayList<>();
         for (var toscaInputEntry : toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates().entrySet()) {
             if (ParticipantUtils.checkIfNodeTemplateIsAutomationCompositionElement(toscaInputEntry.getValue(),
                     toscaServiceTemplate)) {
                 AcmUtils.prepareParticipantDefinitionUpdate(
                         ParticipantUtils.findParticipantType(toscaInputEntry.getValue().getProperties()),
-                        toscaInputEntry.getKey(), toscaInputEntry.getValue(), participantDefinitionUpdates,
-                        commonPropertiesMap);
+                        toscaInputEntry.getKey(), toscaInputEntry.getValue(), participantDefinitionUpdates);
             }
         }
 
@@ -99,15 +110,15 @@ public class ParticipantUpdatePublisher extends AbstractParticipantPublisher<Par
         message.setParticipantDefinitionUpdates(participantDefinitionUpdates);
         LOGGER.debug("Participant Update sent {}", message);
         super.send(message);
-        return true;
     }
 
     /**
      * Send ParticipantUpdate to Participant after that commissioning has been removed.
      */
     @Timed(value = "publisher.participant_update", description = "PARTICIPANT_UPDATE messages published")
-    public void sendDecomisioning() {
+    public void sendDecomisioning(UUID compositionId) {
         var message = new ParticipantUpdate();
+        message.setCompositionId(compositionId);
         message.setTimestamp(Instant.now());
         // DeCommission the automation composition but deleting participantdefinitions on participants
         message.setParticipantDefinitionUpdates(null);

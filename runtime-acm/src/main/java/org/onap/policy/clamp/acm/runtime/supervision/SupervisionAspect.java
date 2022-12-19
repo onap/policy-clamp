@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,14 +26,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.aspectj.lang.annotation.After;
-import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegister;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatus;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUpdateAck;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -73,29 +69,6 @@ public class SupervisionAspect implements Closeable {
     @Before("@annotation(MessageIntercept) && args(participantStatusMessage,..)")
     public void handleParticipantStatus(ParticipantStatus participantStatusMessage) {
         executor.execute(() -> supervisionScanner.handleParticipantStatus(participantStatusMessage.getParticipantId()));
-    }
-
-    /**
-     * Intercepts participant Register Message
-     * if there is a Commissioning starts an execution of handleParticipantRegister.
-     *
-     * @param participantRegisterMessage the ParticipantRegister message
-     * @param isCommissioning is Commissioning
-     */
-    @AfterReturning(
-            value = "@annotation(MessageIntercept) && args(participantRegisterMessage,..)",
-            returning = "isCommissioning")
-    public void handleParticipantRegister(ParticipantRegister participantRegisterMessage, boolean isCommissioning) {
-        if (isCommissioning) {
-            executor.execute(() -> supervisionScanner.handleParticipantRegister(new ImmutablePair<>(
-                    participantRegisterMessage.getParticipantId(), participantRegisterMessage.getParticipantType())));
-        }
-    }
-
-    @Before("@annotation(MessageIntercept) && args(participantUpdateAckMessage,..)")
-    public void handleParticipantUpdateAck(ParticipantUpdateAck participantUpdateAckMessage) {
-        executor.execute(() -> supervisionScanner.handleParticipantUpdateAck(new ImmutablePair<>(
-                participantUpdateAckMessage.getParticipantId(), participantUpdateAckMessage.getParticipantType())));
     }
 
     @Override

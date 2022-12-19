@@ -24,14 +24,12 @@ package org.onap.policy.clamp.acm.runtime.supervision;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.commons.lang3.tuple.Pair;
+import java.util.UUID;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionStateChangePublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionUpdatePublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantStatusReqPublisher;
-import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantUpdatePublisher;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantHealthStatus;
@@ -41,7 +39,6 @@ import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositi
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,12 +51,10 @@ import org.springframework.stereotype.Component;
 public class SupervisionScanner {
     private static final Logger LOGGER = LoggerFactory.getLogger(SupervisionScanner.class);
 
-    private final HandleCounter<ToscaConceptIdentifier> automationCompositionCounter = new HandleCounter<>();
+    private final HandleCounter<UUID> automationCompositionCounter = new HandleCounter<>();
     private final HandleCounter<ToscaConceptIdentifier> participantStatusCounter = new HandleCounter<>();
-    private final HandleCounter<Pair<ToscaConceptIdentifier, ToscaConceptIdentifier>> participantUpdateCounter =
-            new HandleCounter<>();
 
-    private final Map<ToscaConceptIdentifier, Integer> phaseMap = new HashMap<>();
+    private final Map<UUID, Integer> phaseMap = new HashMap<>();
 
     private final AutomationCompositionProvider automationCompositionProvider;
     private final AcDefinitionProvider acDefinitionProvider;
@@ -67,7 +62,6 @@ public class SupervisionScanner {
     private final AutomationCompositionUpdatePublisher automationCompositionUpdatePublisher;
     private final ParticipantProvider participantProvider;
     private final ParticipantStatusReqPublisher participantStatusReqPublisher;
-    private final ParticipantUpdatePublisher participantUpdatePublisher;
 
     /**
      * Constructor for instantiating SupervisionScanner.
@@ -78,7 +72,6 @@ public class SupervisionScanner {
      * @param automationCompositionUpdatePublisher the AutomationCompositionUpdate Publisher
      * @param participantProvider the Participant Provider
      * @param participantStatusReqPublisher the Participant StatusReq Publisher
-     * @param participantUpdatePublisher the Participant Update Publisher
      * @param acRuntimeParameterGroup the parameters for the automation composition runtime
      */
     public SupervisionScanner(final AutomationCompositionProvider automationCompositionProvider,
@@ -86,7 +79,6 @@ public class SupervisionScanner {
             final AutomationCompositionStateChangePublisher automationCompositionStateChangePublisher,
             AutomationCompositionUpdatePublisher automationCompositionUpdatePublisher,
             ParticipantProvider participantProvider, ParticipantStatusReqPublisher participantStatusReqPublisher,
-            ParticipantUpdatePublisher participantUpdatePublisher,
             final AcRuntimeParameterGroup acRuntimeParameterGroup) {
         this.automationCompositionProvider = automationCompositionProvider;
         this.acDefinitionProvider = acDefinitionProvider;
@@ -94,17 +86,11 @@ public class SupervisionScanner {
         this.automationCompositionUpdatePublisher = automationCompositionUpdatePublisher;
         this.participantProvider = participantProvider;
         this.participantStatusReqPublisher = participantStatusReqPublisher;
-        this.participantUpdatePublisher = participantUpdatePublisher;
 
         automationCompositionCounter.setMaxRetryCount(
                 acRuntimeParameterGroup.getParticipantParameters().getUpdateParameters().getMaxRetryCount());
         automationCompositionCounter
                 .setMaxWaitMs(acRuntimeParameterGroup.getParticipantParameters().getMaxStatusWaitMs());
-
-        participantUpdateCounter.setMaxRetryCount(
-                acRuntimeParameterGroup.getParticipantParameters().getUpdateParameters().getMaxRetryCount());
-        participantUpdateCounter
-                .setMaxWaitMs(acRuntimeParameterGroup.getParticipantParameters().getUpdateParameters().getMaxWaitMs());
 
         participantStatusCounter.setMaxRetryCount(
                 acRuntimeParameterGroup.getParticipantParameters().getUpdateParameters().getMaxRetryCount());
@@ -130,46 +116,15 @@ public class SupervisionScanner {
             }
         }
 
-        try {
-            var list = acDefinitionProvider.getAllAcDefinitions();
-            for (var acDefinition : list) {
-                var acList =
-                        automationCompositionProvider.getAcInstancesByCompositionId(acDefinition.getCompositionId());
-                for (var automationComposition : acList) {
-                    scanAutomationComposition(automationComposition, acDefinition.getServiceTemplate(), counterCheck);
-                }
+        var list = acDefinitionProvider.getAllAcDefinitions();
+        for (var acDefinition : list) {
+            var acList = automationCompositionProvider.getAcInstancesByCompositionId(acDefinition.getCompositionId());
+            for (var automationComposition : acList) {
+                scanAutomationComposition(automationComposition, acDefinition.getServiceTemplate(), counterCheck);
             }
-        } catch (PfModelException pfme) {
-            LOGGER.warn("error reading automation compositions from database", pfme);
-        }
-
-        if (counterCheck) {
-            scanParticipantUpdate();
         }
 
         LOGGER.debug("Automation composition scan complete . . .");
-    }
-
-    private void scanParticipantUpdate() {
-        LOGGER.debug("Scanning participants to update . . .");
-
-        for (var id : participantUpdateCounter.keySet()) {
-            if (participantUpdateCounter.isFault(id)) {
-                LOGGER.debug("report Participant Update fault");
-
-            } else if (participantUpdateCounter.getDuration(id) > participantUpdateCounter.getMaxWaitMs()) {
-
-                if (participantUpdateCounter.count(id)) {
-                    LOGGER.debug("retry message ParticipantUpdate");
-                    participantUpdatePublisher.sendCommissioning(null, null, id.getLeft(), id.getRight());
-                } else {
-                    LOGGER.debug("report Participant Update fault");
-                    participantUpdateCounter.setFault(id);
-                }
-            }
-        }
-
-        LOGGER.debug("Participants to update scan complete . . .");
     }
 
     private void scanParticipantStatus(Participant participant) throws PfModelException {
@@ -199,20 +154,12 @@ public class SupervisionScanner {
         participantStatusCounter.clear(id);
     }
 
-    public void handleParticipantRegister(Pair<ToscaConceptIdentifier, ToscaConceptIdentifier> id) {
-        participantUpdateCounter.clear(id);
-    }
-
-    public void handleParticipantUpdateAck(Pair<ToscaConceptIdentifier, ToscaConceptIdentifier> id) {
-        participantUpdateCounter.remove(id);
-    }
-
     private void scanAutomationComposition(final AutomationComposition automationComposition,
-            ToscaServiceTemplate toscaServiceTemplate, boolean counterCheck) throws PfModelException {
-        LOGGER.debug("scanning automation composition {} . . .", automationComposition.getKey().asIdentifier());
+            ToscaServiceTemplate toscaServiceTemplate, boolean counterCheck) {
+        LOGGER.debug("scanning automation composition {} . . .", automationComposition.getInstanceId());
 
         if (automationComposition.getState().equals(automationComposition.getOrderedState().asState())) {
-            LOGGER.debug("automation composition {} scanned, OK", automationComposition.getKey().asIdentifier());
+            LOGGER.debug("automation composition {} scanned, OK", automationComposition.getInstanceId());
 
             // Clear missed report counter on automation composition
             clearFaultAndCounter(automationComposition);
@@ -224,8 +171,8 @@ public class SupervisionScanner {
         var maxSpNotCompleted = 0; // max startPhase not completed
         var defaultMin = 1000; // min startPhase
         var defaultMax = 0; // max startPhase
-        for (AutomationCompositionElement element : automationComposition.getElements().values()) {
-            ToscaNodeTemplate toscaNodeTemplate = toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates()
+        for (var element : automationComposition.getElements().values()) {
+            var toscaNodeTemplate = toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates()
                     .get(element.getDefinition().getName());
             int startPhase = ParticipantUtils.findStartPhase(toscaNodeTemplate.getProperties());
             defaultMin = Math.min(defaultMin, startPhase);
@@ -262,36 +209,36 @@ public class SupervisionScanner {
                                     ? defaultMin
                                     : defaultMax;
 
-            if (nextSpNotCompleted != phaseMap.getOrDefault(automationComposition.getKey().asIdentifier(),
+            if (nextSpNotCompleted != phaseMap.getOrDefault(automationComposition.getInstanceId(),
                     firstStartPhase)) {
-                phaseMap.put(automationComposition.getKey().asIdentifier(), nextSpNotCompleted);
+                phaseMap.put(automationComposition.getInstanceId(), nextSpNotCompleted);
                 sendAutomationCompositionMsg(automationComposition, nextSpNotCompleted);
             } else if (counterCheck) {
-                phaseMap.put(automationComposition.getKey().asIdentifier(), nextSpNotCompleted);
+                phaseMap.put(automationComposition.getInstanceId(), nextSpNotCompleted);
                 handleCounter(automationComposition, nextSpNotCompleted);
             }
         }
     }
 
     private void clearFaultAndCounter(AutomationComposition automationComposition) {
-        automationCompositionCounter.clear(automationComposition.getKey().asIdentifier());
-        phaseMap.clear();
+        automationCompositionCounter.clear(automationComposition.getInstanceId());
+        phaseMap.remove(automationComposition.getInstanceId());
     }
 
     private void handleCounter(AutomationComposition automationComposition, int startPhase) {
-        ToscaConceptIdentifier id = automationComposition.getKey().asIdentifier();
-        if (automationCompositionCounter.isFault(id)) {
+        var instanceId = automationComposition.getInstanceId();
+        if (automationCompositionCounter.isFault(instanceId)) {
             LOGGER.debug("report AutomationComposition fault");
             return;
         }
 
-        if (automationCompositionCounter.getDuration(id) > automationCompositionCounter.getMaxWaitMs()) {
-            if (automationCompositionCounter.count(id)) {
-                phaseMap.put(id, startPhase);
+        if (automationCompositionCounter.getDuration(instanceId) > automationCompositionCounter.getMaxWaitMs()) {
+            if (automationCompositionCounter.count(instanceId)) {
+                phaseMap.put(instanceId, startPhase);
                 sendAutomationCompositionMsg(automationComposition, startPhase);
             } else {
                 LOGGER.debug("report AutomationComposition fault");
-                automationCompositionCounter.setFault(id);
+                automationCompositionCounter.setFault(instanceId);
             }
         }
     }

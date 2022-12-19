@@ -24,15 +24,17 @@ package org.onap.policy.clamp.acm.runtime.supervision.comm;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVICE_TEMPLATE_YAML;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionHandler;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDeregister;
@@ -133,7 +135,7 @@ class SupervisionMessagesTest {
         var publisher = new ParticipantUpdatePublisher(mock(AcDefinitionProvider.class));
         var topicSink = mock(TopicSink.class);
         publisher.active(List.of(topicSink));
-        publisher.sendDecomisioning();
+        publisher.sendDecomisioning(UUID.randomUUID());
         verify(topicSink).send(anyString());
     }
 
@@ -142,8 +144,14 @@ class SupervisionMessagesTest {
         var publisher = new ParticipantUpdatePublisher(mock(AcDefinitionProvider.class));
         var topicSink = mock(TopicSink.class);
         publisher.active(List.of(topicSink));
-        publisher.sendComissioningBroadcast("NAME", "1.0.0");
-        verify(topicSink, times(0)).send(anyString());
+        var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
+        serviceTemplate.setName("Name");
+        serviceTemplate.setVersion("1.0.0");
+        var acmDefinition = new AutomationCompositionDefinition();
+        acmDefinition.setCompositionId(UUID.randomUUID());
+        acmDefinition.setServiceTemplate(serviceTemplate);
+        publisher.sendComissioningBroadcast(acmDefinition);
+        verify(topicSink).send(anyString());
     }
 
     @Test

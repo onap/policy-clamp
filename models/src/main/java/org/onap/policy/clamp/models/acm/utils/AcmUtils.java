@@ -22,7 +22,6 @@ package org.onap.policy.clamp.models.acm.utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -41,11 +40,8 @@ import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.common.parameters.ObjectValidationResult;
 import org.onap.policy.common.parameters.ValidationResult;
 import org.onap.policy.common.parameters.ValidationStatus;
-import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeType;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaProperty;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
 
@@ -120,21 +116,13 @@ public final class AcmUtils {
      * @param entryKey key for the entry
      * @param entryValue value relates to toscaNodeTemplate
      * @param participantDefinitionUpdates list of participantDefinitionUpdates
-     * @param commonPropertiesMap common properties map
      */
     public static void prepareParticipantDefinitionUpdate(ToscaConceptIdentifier acParticipantType, String entryKey,
-            ToscaNodeTemplate entryValue, List<ParticipantDefinition> participantDefinitionUpdates,
-            Map<String, ToscaNodeType> commonPropertiesMap) {
+            ToscaNodeTemplate entryValue, List<ParticipantDefinition> participantDefinitionUpdates) {
 
         var acDefinition = new AutomationCompositionElementDefinition();
         acDefinition.setAcElementDefinitionId(new ToscaConceptIdentifier(entryKey, entryValue.getVersion()));
         acDefinition.setAutomationCompositionElementToscaNodeTemplate(entryValue);
-        if (commonPropertiesMap != null) {
-            ToscaNodeType nodeType = commonPropertiesMap.get(entryValue.getType());
-            if (nodeType != null) {
-                acDefinition.setCommonPropertiesMap(nodeType.getProperties());
-            }
-        }
 
         List<AutomationCompositionElementDefinition> automationCompositionElementDefinitionList = new ArrayList<>();
 
@@ -251,106 +239,5 @@ public final class AcmUtils {
                     map.get(new ToscaConceptIdentifier(elementMap.get("name"), elementMap.get("version"))))
                 .collect(Collectors.toList());
         // @formatter:on
-    }
-
-    /**
-     * Get the initial node types with common or instance properties.
-     *
-     * @param fullNodeTypes map of all the node types in the specified template
-     * @param common boolean to indicate whether common or instance properties are required
-     * @return node types map that only has common properties
-     */
-    private static Map<String, ToscaNodeType> getInitialNodeTypesMap(Map<String, ToscaNodeType> fullNodeTypes,
-            boolean common) {
-
-        var tempNodeTypesMap = new HashMap<String, ToscaNodeType>();
-
-        fullNodeTypes.forEach((key, nodeType) -> {
-            var tempToscaNodeType = new ToscaNodeType();
-            tempToscaNodeType.setName(key);
-
-            var resultantPropertyMap = findCommonOrInstancePropsInNodeTypes(nodeType, common);
-
-            if (!resultantPropertyMap.isEmpty()) {
-                tempToscaNodeType.setProperties(resultantPropertyMap);
-                tempNodeTypesMap.put(key, tempToscaNodeType);
-            }
-        });
-        return tempNodeTypesMap;
-    }
-
-    private static Map<String, ToscaProperty> findCommonOrInstancePropsInNodeTypes(ToscaNodeType nodeType,
-            boolean common) {
-
-        var tempCommonPropertyMap = new HashMap<String, ToscaProperty>();
-        var tempInstancePropertyMap = new HashMap<String, ToscaProperty>();
-
-        nodeType.getProperties().forEach((propKey, prop) -> {
-
-            if (prop.getMetadata() != null) {
-                prop.getMetadata().forEach((k, v) -> {
-                    if (k.equals("common") && v.equals("true") && common) {
-                        tempCommonPropertyMap.put(propKey, prop);
-                    } else if (k.equals("common") && v.equals("false") && !common) {
-                        tempInstancePropertyMap.put(propKey, prop);
-                    }
-
-                });
-            } else {
-                tempInstancePropertyMap.put(propKey, prop);
-            }
-        });
-
-        if (tempCommonPropertyMap.isEmpty() && !common) {
-            return tempInstancePropertyMap;
-        } else {
-            return tempCommonPropertyMap;
-        }
-    }
-
-    /**
-     * Get the node types derived from those that have common properties.
-     *
-     * @param initialNodeTypes map of all the node types in the specified template
-     * @param filteredNodeTypes map of all the node types that have common or instance properties
-     * @return all node types that have common properties including their children
-     * @throws PfModelException on errors getting node type with common properties
-     */
-    private static Map<String, ToscaNodeType> getFinalNodeTypesMap(Map<String, ToscaNodeType> initialNodeTypes,
-            Map<String, ToscaNodeType> filteredNodeTypes) {
-        for (var i = 0; i < initialNodeTypes.size(); i++) {
-            initialNodeTypes.forEach((key, nodeType) -> {
-                var tempToscaNodeType = new ToscaNodeType();
-                tempToscaNodeType.setName(key);
-
-                if (filteredNodeTypes.get(nodeType.getDerivedFrom()) != null) {
-                    tempToscaNodeType.setName(key);
-
-                    var finalProps = new HashMap<String, ToscaProperty>(
-                            filteredNodeTypes.get(nodeType.getDerivedFrom()).getProperties());
-
-                    tempToscaNodeType.setProperties(finalProps);
-                } else {
-                    return;
-                }
-                filteredNodeTypes.putIfAbsent(key, tempToscaNodeType);
-
-            });
-        }
-        return filteredNodeTypes;
-    }
-
-    /**
-     * Get the requested node types with common or instance properties.
-     *
-     * @param common boolean indicating common or instance properties
-     * @param serviceTemplate the ToscaServiceTemplate
-     * @return the node types with common or instance properties
-     */
-    public static Map<String, ToscaNodeType> getCommonOrInstancePropertiesFromNodeTypes(boolean common,
-            ToscaServiceTemplate serviceTemplate) {
-        var tempNodeTypesMap = getInitialNodeTypesMap(serviceTemplate.getNodeTypes(), common);
-
-        return getFinalNodeTypesMap(serviceTemplate.getNodeTypes(), tempNodeTypesMap);
     }
 }

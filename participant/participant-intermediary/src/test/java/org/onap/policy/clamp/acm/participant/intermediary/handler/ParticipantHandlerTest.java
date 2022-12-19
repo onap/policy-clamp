@@ -24,7 +24,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Instant;
@@ -35,12 +34,9 @@ import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantHealthStatus;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantAckMessage;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessage;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegisterAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUpdate;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -50,19 +46,6 @@ class ParticipantHandlerTest {
     private final CommonTestData commonTestData = new CommonTestData();
     private static final String ID_NAME = "org.onap.PM_CDS_Blueprint";
     private static final String ID_VERSION = "1.0.1";
-
-    @Test
-    void mockParticipantHandlerTest() {
-        var participantHandler = commonTestData.getMockParticipantHandler();
-        assertNull(participantHandler.getParticipant(null, null));
-        assertEquals("org.onap.PM_CDS_Blueprint 1.0.1", participantHandler.getParticipantId().toString());
-
-        var id = new ToscaConceptIdentifier(ID_NAME, ID_VERSION);
-        assertEquals(id, participantHandler.getParticipantId());
-        assertEquals(id, participantHandler.getParticipantType());
-        assertThat(participantHandler.getAcElementDefinitionCommonProperties(id)).isEmpty();
-
-    }
 
     @Test
     void handleUpdateTest() {
@@ -81,6 +64,7 @@ class ParticipantHandlerTest {
 
         var id = new ToscaConceptIdentifier(ID_NAME, ID_VERSION);
         participantUpdateMsg.setAutomationCompositionId(CommonTestData.AC_ID_1);
+        participantUpdateMsg.setCompositionId(CommonTestData.AC_ID_1);
         participantUpdateMsg.setParticipantId(id);
         participantUpdateMsg.setParticipantType(id);
         participantUpdateMsg.setMessageId(UUID.randomUUID());
@@ -91,7 +75,6 @@ class ParticipantHandlerTest {
         assertThat(heartbeatF.getAutomationCompositionInfoList()).isEmpty();
 
         participantHandler.handleParticipantUpdate(participantUpdateMsg);
-        assertThat(participantHandler.getAcElementDefinitionCommonProperties(id)).isEmpty();
 
         var heartbeatT = participantHandler.makeHeartbeat(true);
         assertEquals(id, heartbeatT.getParticipantId());
@@ -113,31 +96,6 @@ class ParticipantHandlerTest {
         participantDefinitionUpdates.add(def);
         participantUpdateMsg.setParticipantDefinitionUpdates(participantDefinitionUpdates);
         return participantUpdateMsg;
-    }
-
-    @Test
-    void handleParticipantTest() {
-        var participantHandler = commonTestData.getMockParticipantHandler();
-        var id = new ToscaConceptIdentifier(ID_NAME, ID_VERSION);
-        var p = participantHandler.getParticipant(id.getName(), id.getVersion());
-        assertEquals(ParticipantState.UNKNOWN, p.getParticipantState());
-
-        participantHandler.updateParticipantState(id, ParticipantState.PASSIVE);
-        var p2 = participantHandler.getParticipant(id.getName(), id.getVersion());
-        assertEquals(ParticipantState.PASSIVE, p2.getParticipantState());
-
-        var participantRegisterAckMsg = new ParticipantRegisterAck();
-        participantRegisterAckMsg.setState(ParticipantState.TERMINATED);
-        participantHandler.handleParticipantRegisterAck(participantRegisterAckMsg);
-        assertEquals(ParticipantHealthStatus.HEALTHY, participantHandler.makeHeartbeat(false).getHealthStatus());
-
-        var emptyid = new ToscaConceptIdentifier("", ID_VERSION);
-        assertNull(participantHandler.updateParticipantState(emptyid, ParticipantState.PASSIVE));
-
-        var sameid = new ToscaConceptIdentifier(ID_NAME, ID_VERSION);
-        var participant = participantHandler.updateParticipantState(sameid, ParticipantState.PASSIVE);
-        assertEquals(participant.getDefinition(), sameid);
-
     }
 
     @Test

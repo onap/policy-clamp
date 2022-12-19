@@ -98,7 +98,7 @@ public class CommissioningProvider {
         serviceTemplate = acmDefinition.getServiceTemplate();
         var participantList = participantProvider.getParticipants();
         if (!participantList.isEmpty()) {
-            supervisionHandler.handleSendCommissionMessage(serviceTemplate.getName(), serviceTemplate.getVersion());
+            supervisionHandler.handleSendCommissionMessage(acmDefinition);
         }
         return createCommissioningResponse(acmDefinition.getCompositionId(), serviceTemplate);
     }
@@ -145,7 +145,7 @@ public class CommissioningProvider {
         }
         var participantList = participantProvider.getParticipants();
         if (!participantList.isEmpty()) {
-            supervisionHandler.handleSendDeCommissionMessage();
+            supervisionHandler.handleSendDeCommissionMessage(compositionId);
         }
         var serviceTemplate = acDefinitionProvider.deleteAcDefintion(compositionId);
         return createCommissioningResponse(compositionId, serviceTemplate);

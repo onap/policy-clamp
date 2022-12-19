@@ -43,6 +43,7 @@ import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantRegisterAck
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantUpdatePublisher;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionException;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
@@ -365,10 +366,10 @@ class SupervisionHandlerTest {
                 mock(ParticipantDeregisterAckPublisher.class), mock(AutomationCompositionUpdatePublisher.class),
                 mock(AutomationCompositionStateChangePublisher.class), participantUpdatePublisher,
                 AutomationCompositionOrderedState.PASSIVE, AutomationCompositionState.UNINITIALISED);
-        handler.handleSendCommissionMessage(participantId.getName(), participantId.getVersion());
+        var acmDefinition = new AutomationCompositionDefinition();
+        handler.handleSendCommissionMessage(acmDefinition);
 
-        verify(participantUpdatePublisher).sendComissioningBroadcast(participantId.getName(),
-                participantId.getVersion());
+        verify(participantUpdatePublisher).sendComissioningBroadcast(acmDefinition);
     }
 
     @Test
@@ -379,9 +380,9 @@ class SupervisionHandlerTest {
                 mock(ParticipantDeregisterAckPublisher.class), mock(AutomationCompositionUpdatePublisher.class),
                 mock(AutomationCompositionStateChangePublisher.class), participantUpdatePublisher,
                 AutomationCompositionOrderedState.PASSIVE, AutomationCompositionState.UNINITIALISED);
-        handler.handleSendDeCommissionMessage();
+        handler.handleSendDeCommissionMessage(identifier);
 
-        verify(participantUpdatePublisher).sendDecomisioning();
+        verify(participantUpdatePublisher).sendDecomisioning(identifier);
     }
 
     private SupervisionHandler createSupervisionHandler(AutomationCompositionProvider automationCompositionProvider,

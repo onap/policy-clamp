@@ -21,24 +21,14 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.api.impl;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.AutomationCompositionHandler;
-import org.onap.policy.clamp.acm.participant.intermediary.handler.ParticipantHandler;
-import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
-import org.onap.policy.clamp.models.acm.concepts.Participant;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaProperty;
 import org.springframework.stereotype.Component;
 
 /**
@@ -47,21 +37,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryApi {
 
-    // The handler for the participant intermediary
-    private final ParticipantHandler participantHandler;
-
     // The handler for the automationComposition intermediary
     private final AutomationCompositionHandler automationCompositionHandler;
 
     /**
      * Constructor.
      *
-     * @param participantHandler ParticipantHandler
      * @param automationCompositionHandler AutomationCompositionHandler
      */
-    public ParticipantIntermediaryApiImpl(ParticipantHandler participantHandler,
-            AutomationCompositionHandler automationCompositionHandler) {
-        this.participantHandler = participantHandler;
+    public ParticipantIntermediaryApiImpl(AutomationCompositionHandler automationCompositionHandler) {
         this.automationCompositionHandler = automationCompositionHandler;
     }
 
@@ -72,56 +56,9 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
     }
 
     @Override
-    public List<Participant> getParticipants(String name, String version) {
-        return List.of(participantHandler.getParticipant(name, version));
-    }
-
-    @Override
-    public Map<String, ToscaProperty> getAcElementDefinitionCommonProperties(ToscaConceptIdentifier acElementDef) {
-        return participantHandler.getAcElementDefinitionCommonProperties(acElementDef);
-    }
-
-    @Override
-    public Participant updateParticipantState(ToscaConceptIdentifier definition, ParticipantState state) {
-        return participantHandler.updateParticipantState(definition, state);
-    }
-
-    @Override
-    public AutomationCompositions getAutomationCompositions(String name, String version) {
-        return automationCompositionHandler.getAutomationCompositions();
-    }
-
-    @Override
-    public Map<UUID, AutomationCompositionElement> getAutomationCompositionElements(String name, String version) {
-        var automationCompositions =
-                automationCompositionHandler.getAutomationCompositions().getAutomationCompositionList();
-
-        for (var automationComposition : automationCompositions) {
-            if (name.equals(automationComposition.getName())) {
-                return automationComposition.getElements();
-            }
-        }
-        return new LinkedHashMap<>();
-    }
-
-    @Override
-    public AutomationCompositionElement getAutomationCompositionElement(UUID id) {
-        List<AutomationComposition> automationCompositions =
-                automationCompositionHandler.getAutomationCompositions().getAutomationCompositionList();
-
-        for (AutomationComposition automationComposition : automationCompositions) {
-            AutomationCompositionElement acElement = automationComposition.getElements().get(id);
-            if (acElement != null) {
-                return acElement;
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public AutomationCompositionElement updateAutomationCompositionElementState(
-            UUID automationCompositionId, UUID id, AutomationCompositionOrderedState currentState,
-            AutomationCompositionState newState, ParticipantMessageType messageType) {
+    public AutomationCompositionElement updateAutomationCompositionElementState(UUID automationCompositionId, UUID id,
+            AutomationCompositionOrderedState currentState, AutomationCompositionState newState,
+            ParticipantMessageType messageType) {
         return automationCompositionHandler.updateAutomationCompositionElementState(automationCompositionId, id,
                 currentState, newState);
     }

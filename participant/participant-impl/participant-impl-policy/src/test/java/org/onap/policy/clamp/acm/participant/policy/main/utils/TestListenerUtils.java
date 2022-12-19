@@ -25,20 +25,14 @@ import static org.junit.Assert.assertTrue;
 import java.io.FileNotFoundException;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUpdate;
-import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.common.utils.coder.YamlJsonTranslator;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,19 +64,7 @@ public final class TestListenerUtils {
         // Add policies to the toscaServiceTemplate
         TestListenerUtils.addPoliciesToToscaServiceTemplate(toscaServiceTemplate);
 
-        List<ParticipantDefinition> participantDefinitionUpdates = new ArrayList<>();
-        for (Map.Entry<String, ToscaNodeTemplate> toscaInputEntry : toscaServiceTemplate.getToscaTopologyTemplate()
-            .getNodeTemplates().entrySet()) {
-            if (ParticipantUtils.checkIfNodeTemplateIsAutomationCompositionElement(toscaInputEntry.getValue(),
-                toscaServiceTemplate)) {
-                AcmUtils.prepareParticipantDefinitionUpdate(
-                    ParticipantUtils.findParticipantType(toscaInputEntry.getValue().getProperties()),
-                    toscaInputEntry.getKey(), toscaInputEntry.getValue(),
-                    participantDefinitionUpdates, null);
-            }
-        }
-
-        participantUpdateMsg.setParticipantDefinitionUpdates(participantDefinitionUpdates);
+        participantUpdateMsg.setParticipantDefinitionUpdates(new ArrayList<>());
         return participantUpdateMsg;
     }
 

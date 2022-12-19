@@ -43,6 +43,7 @@ public class AutomationCompositionStateChangePublisher
             description = "AUTOMATION_COMPOSITION_STATE_CHANGE messages published")
     public void send(AutomationComposition automationComposition, int startPhase) {
         var acsc = new AutomationCompositionStateChange();
+        acsc.setCompositionId(automationComposition.getCompositionId());
         acsc.setAutomationCompositionId(automationComposition.getInstanceId());
         acsc.setMessageId(UUID.randomUUID());
         acsc.setOrderedState(automationComposition.getOrderedState());
