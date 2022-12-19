@@ -47,8 +47,7 @@ public class InstantiationControllerStub extends AbstractRestController implemen
 
     private static final Logger log = LoggerFactory.getLogger(InstantiationControllerStub.class);
 
-    @Autowired
-    private StubUtils stubUtils;
+    private StubUtils stubUtils = new StubUtils();
 
     @Autowired
     private HttpServletRequest request;
