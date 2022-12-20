@@ -92,7 +92,7 @@ public class InstantiationController extends AbstractRestController implements A
     public ResponseEntity<AutomationCompositions> queryCompositionInstances(UUID compositionId, String name,
             String version, UUID requestId) {
 
-        return ResponseEntity.ok().body(provider.getAutomationCompositions(name, version));
+        return ResponseEntity.ok().body(provider.getAutomationCompositions(compositionId, name, version));
     }
 
     /**

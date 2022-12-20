@@ -201,10 +201,10 @@ public class AutomationCompositionInstantiationProvider {
      * @return the automation compositions
      */
     @Transactional(readOnly = true)
-    public AutomationCompositions getAutomationCompositions(String name, String version) {
+    public AutomationCompositions getAutomationCompositions(UUID compositionId, String name, String version) {
         var automationCompositions = new AutomationCompositions();
-        automationCompositions
-                .setAutomationCompositionList(automationCompositionProvider.getAutomationCompositions(name, version));
+        automationCompositions.setAutomationCompositionList(
+                automationCompositionProvider.getAutomationCompositions(compositionId, name, version));
 
         return automationCompositions;
     }

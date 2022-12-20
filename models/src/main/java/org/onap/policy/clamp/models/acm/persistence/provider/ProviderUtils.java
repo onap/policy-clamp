@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,6 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.models.base.PfAuthorative;
-import org.onap.policy.models.base.PfConcept;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.base.Validated;
 
@@ -44,7 +43,7 @@ public final class ProviderUtils {
      * @param conceptDescription the description used for validation result
      * @return the list of Jpa objects
      */
-    public static <A, J extends PfConcept & PfAuthorative<A>> List<J> getJpaAndValidateList(
+    public static <A, J extends Validated & PfAuthorative<A>> List<J> getJpaAndValidateList(
             List<A> authorativeConceptList, Supplier<J> jpaSupplier, String conceptDescription) {
         var validationResult = new BeanValidationResult(conceptDescription + " List", authorativeConceptList);
 

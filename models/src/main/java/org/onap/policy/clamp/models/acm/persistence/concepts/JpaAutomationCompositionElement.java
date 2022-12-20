@@ -23,15 +23,14 @@
 package org.onap.policy.clamp.models.acm.persistence.concepts;
 
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.UnaryOperator;
 import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
 import javax.persistence.Convert;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Lob;
@@ -46,11 +45,9 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.common.parameters.annotations.NotNull;
 import org.onap.policy.common.parameters.annotations.Valid;
 import org.onap.policy.models.base.PfAuthorative;
-import org.onap.policy.models.base.PfConcept;
 import org.onap.policy.models.base.PfConceptKey;
-import org.onap.policy.models.base.PfKey;
-import org.onap.policy.models.base.PfReferenceKey;
 import org.onap.policy.models.base.PfUtils;
+import org.onap.policy.models.base.Validated;
 import org.onap.policy.models.base.validation.annotations.VerifyKey;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
@@ -64,13 +61,16 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class JpaAutomationCompositionElement extends PfConcept implements PfAuthorative<AutomationCompositionElement> {
-    private static final long serialVersionUID = -1791732273187890213L;
+public class JpaAutomationCompositionElement extends Validated
+        implements PfAuthorative<AutomationCompositionElement>, Comparable<JpaAutomationCompositionElement> {
 
-    @EmbeddedId
-    @VerifyKey
+    @Id
     @NotNull
-    private PfReferenceKey key;
+    private String elementId;
+
+    @Column
+    @NotNull
+    private String instanceId;
 
     // @formatter:off
     @VerifyKey
@@ -112,29 +112,33 @@ public class JpaAutomationCompositionElement extends PfConcept implements PfAuth
      * The Default Constructor creates a {@link JpaAutomationCompositionElement} object with a null key.
      */
     public JpaAutomationCompositionElement() {
-        this(new PfReferenceKey());
+        this(UUID.randomUUID().toString(), UUID.randomUUID().toString());
     }
 
     /**
      * The Key Constructor creates a {@link JpaAutomationCompositionElement} object with the given concept key.
      *
-     * @param key the key
+     * @param elementId The id of the automation composition instance Element
+     * @param instanceId The id of the automation composition instance
      */
-    public JpaAutomationCompositionElement(@NonNull final PfReferenceKey key) {
-        this(key, new PfConceptKey(), new PfConceptKey(), AutomationCompositionState.UNINITIALISED);
+    public JpaAutomationCompositionElement(@NonNull final String elementId, @NonNull final String instanceId) {
+        this(elementId, instanceId, new PfConceptKey(), new PfConceptKey(), AutomationCompositionState.UNINITIALISED);
     }
 
     /**
      * The Key Constructor creates a {@link JpaAutomationCompositionElement} object with all mandatory fields.
      *
-     * @param key the key
+     * @param elementId The id of the automation composition instance Element
+     * @param instanceId The id of the automation composition instance
      * @param definition the TOSCA definition of the automation composition element
      * @param participantType the TOSCA definition of the participant running the automation composition element
      * @param state the state of the automation composition
      */
-    public JpaAutomationCompositionElement(@NonNull final PfReferenceKey key, @NonNull final PfConceptKey definition,
-        @NonNull final PfConceptKey participantType, @NonNull final AutomationCompositionState state) {
-        this.key = key;
+    public JpaAutomationCompositionElement(@NonNull final String elementId, @NonNull final String instanceId,
+            @NonNull final PfConceptKey definition, @NonNull final PfConceptKey participantType,
+            @NonNull final AutomationCompositionState state) {
+        this.elementId = elementId;
+        this.instanceId = instanceId;
         this.definition = definition;
         this.participantType = participantType;
         this.state = state;
@@ -146,8 +150,8 @@ public class JpaAutomationCompositionElement extends PfConcept implements PfAuth
      * @param copyConcept the concept to copy from
      */
     public JpaAutomationCompositionElement(@NonNull final JpaAutomationCompositionElement copyConcept) {
-        super(copyConcept);
-        this.key = new PfReferenceKey(copyConcept.key);
+        this.elementId = copyConcept.elementId;
+        this.instanceId = copyConcept.instanceId;
         this.definition = new PfConceptKey(copyConcept.definition);
         this.participantType = new PfConceptKey(copyConcept.participantType);
         this.participantId = new PfConceptKey(copyConcept.participantId);
@@ -170,7 +174,7 @@ public class JpaAutomationCompositionElement extends PfConcept implements PfAuth
     public AutomationCompositionElement toAuthorative() {
         var element = new AutomationCompositionElement();
 
-        element.setId(UUID.fromString(getKey().getLocalName()));
+        element.setId(UUID.fromString(elementId));
         element.setDefinition(new ToscaConceptIdentifier(definition));
         element.setParticipantType(new ToscaConceptIdentifier(participantType));
         element.setParticipantId(new ToscaConceptIdentifier(participantId));
@@ -184,11 +188,6 @@ public class JpaAutomationCompositionElement extends PfConcept implements PfAuth
 
     @Override
     public void fromAuthorative(@NonNull final AutomationCompositionElement element) {
-        if (this.key == null || this.getKey().isNullKey()) {
-            this.setKey(new PfReferenceKey());
-            getKey().setLocalName(element.getId().toString());
-        }
-
         this.definition = element.getDefinition().asConceptKey();
         this.participantType = element.getParticipantType().asConceptKey();
         this.participantId = element.getParticipantId().asConceptKey();
@@ -199,42 +198,20 @@ public class JpaAutomationCompositionElement extends PfConcept implements PfAuth
     }
 
     @Override
-    public List<PfKey> getKeys() {
-        List<PfKey> keyList = getKey().getKeys();
-
-        keyList.add(definition);
-        keyList.add(participantType);
-        keyList.add(participantId);
-
-        return keyList;
-    }
-
-    @Override
-    public void clean() {
-        key.clean();
-        definition.clean();
-        participantType.clean();
-        participantId.clean();
-
-        if (description != null) {
-            description = description.trim();
-        }
-    }
-
-    @Override
-    public int compareTo(final PfConcept otherConcept) {
-        if (otherConcept == null) {
+    public int compareTo(final JpaAutomationCompositionElement other) {
+        if (other == null) {
             return -1;
         }
-        if (this == otherConcept) {
+        if (this == other) {
             return 0;
         }
-        if (getClass() != otherConcept.getClass()) {
-            return this.getClass().getName().compareTo(otherConcept.getClass().getName());
+
+        var result = ObjectUtils.compare(elementId, other.elementId);
+        if (result != 0) {
+            return result;
         }
 
-        final JpaAutomationCompositionElement other = (JpaAutomationCompositionElement) otherConcept;
-        int result = key.compareTo(other.key);
+        result = ObjectUtils.compare(instanceId, other.instanceId);
         if (result != 0) {
             return result;
         }

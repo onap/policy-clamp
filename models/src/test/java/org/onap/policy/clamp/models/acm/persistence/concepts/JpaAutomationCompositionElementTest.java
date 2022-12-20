@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ * Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,16 +39,18 @@ import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.base.PfConceptKey;
-import org.onap.policy.models.base.PfKey;
-import org.onap.policy.models.base.PfReferenceKey;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
- * Test the {@link JpaAutomationCompositionElement} class.
+ * Test the{@link JpaAutomationCompositionElement} class.
  */
 class JpaAutomationCompositionElementTest {
 
-    private static final String NULL_KEY_ERROR = "key is marked .*ull but is null";
+    private static final String NULL_INSTANCE_ID_ERROR = "instanceId is marked .*ull but is null";
+    private static final String NULL_ELEMENT_ID_ERROR = "elementId is marked .*ull but is null";
+    private static final String NULL_ERROR = " is marked .*ull but is null";
+    private static final String ELEMENT_ID = "a95757ba-b34a-4049-a2a8-46773abcbe5e";
+    private static final String INSTANCE_ID = "a78757co-b34a-8949-a2a8-46773abcbe2a";
 
     @Test
     void testJpaAutomationCompositionElementConstructor() {
@@ -57,182 +59,121 @@ class JpaAutomationCompositionElementTest {
         }).hasMessageMatching("copyConcept is marked .*ull but is null");
 
         assertThatThrownBy(() -> {
-            new JpaAutomationCompositionElement((PfReferenceKey) null);
-        }).hasMessageMatching(NULL_KEY_ERROR);
+            new JpaAutomationCompositionElement("key", null);
+        }).hasMessageMatching(NULL_INSTANCE_ID_ERROR);
 
         assertThatThrownBy(() -> {
-            new JpaAutomationCompositionElement(null, null, null, null);
-        }).hasMessageMatching(NULL_KEY_ERROR);
+            new JpaAutomationCompositionElement(null, "key");
+        }).hasMessageMatching(NULL_ELEMENT_ID_ERROR);
 
         assertThatThrownBy(() -> {
-            new JpaAutomationCompositionElement(null, null, null, AutomationCompositionState.UNINITIALISED);
-        }).hasMessageMatching(NULL_KEY_ERROR);
+            new JpaAutomationCompositionElement(null, null);
+        }).hasMessageMatching(NULL_ELEMENT_ID_ERROR);
 
         assertThatThrownBy(() -> {
-            new JpaAutomationCompositionElement(null, null, new PfConceptKey("participant", "0.0.1"), null);
-        }).hasMessageMatching(NULL_KEY_ERROR);
+            new JpaAutomationCompositionElement(null, null, null, null, null);
+        }).hasMessageMatching(NULL_ELEMENT_ID_ERROR);
 
         assertThatThrownBy(() -> {
-            new JpaAutomationCompositionElement(null, null, new PfConceptKey("participant", "0.0.1"),
-                AutomationCompositionState.UNINITIALISED);
-        }).hasMessageMatching(NULL_KEY_ERROR);
+            new JpaAutomationCompositionElement("key", null, null, null, AutomationCompositionState.UNINITIALISED);
+        }).hasMessageMatching(NULL_INSTANCE_ID_ERROR);
 
         assertThatThrownBy(() -> {
-            new JpaAutomationCompositionElement(null, new PfConceptKey(), null, null);
-        }).hasMessageMatching(NULL_KEY_ERROR);
+            new JpaAutomationCompositionElement("key", "key", null, new PfConceptKey("participant", "0.0.1"), null);
+        }).hasMessageMatching("definition" + NULL_ERROR);
 
         assertThatThrownBy(() -> {
-            new JpaAutomationCompositionElement(null, new PfConceptKey(), null,
-                AutomationCompositionState.UNINITIALISED);
-        }).hasMessageMatching(NULL_KEY_ERROR);
+            new JpaAutomationCompositionElement("key", "key", new PfConceptKey(), null,
+                    AutomationCompositionState.UNINITIALISED);
+        }).hasMessageMatching("participantType" + NULL_ERROR);
 
         assertThatThrownBy(() -> {
-            new JpaAutomationCompositionElement(null, new PfConceptKey(), new PfConceptKey("participant", "0.0.1"),
-                null);
-        }).hasMessageMatching(NULL_KEY_ERROR);
-
-        assertThatThrownBy(() -> {
-            new JpaAutomationCompositionElement(null, new PfConceptKey(), new PfConceptKey("participant", "0.0.1"),
-                AutomationCompositionState.UNINITIALISED);
-        }).hasMessageMatching(NULL_KEY_ERROR);
-
-        assertThatThrownBy(() -> {
-            new JpaAutomationCompositionElement(new PfReferenceKey(), null, null, null);
-        }).hasMessageMatching("definition is marked .*ull but is null");
-
-        assertThatThrownBy(() -> {
-            new JpaAutomationCompositionElement(new PfReferenceKey(), null, null,
-                AutomationCompositionState.UNINITIALISED);
-        }).hasMessageMatching("definition is marked .*ull but is null");
-
-        assertThatThrownBy(() -> {
-            new JpaAutomationCompositionElement(new PfReferenceKey(), null, new PfConceptKey("participant", "0.0.1"),
-                null);
-        }).hasMessageMatching("definition is marked .*ull but is null");
-
-        assertThatThrownBy(() -> {
-            new JpaAutomationCompositionElement(new PfReferenceKey(), null, new PfConceptKey("participant", "0.0.1"),
-                AutomationCompositionState.UNINITIALISED);
-        }).hasMessageMatching("definition is marked .*ull but is null");
-
-        assertThatThrownBy(() -> {
-            new JpaAutomationCompositionElement(new PfReferenceKey(), new PfConceptKey(), null, null);
-        }).hasMessageMatching("participantType is marked .*ull but is null");
-
-        assertThatThrownBy(() -> {
-            new JpaAutomationCompositionElement(new PfReferenceKey(), new PfConceptKey(), null,
-                AutomationCompositionState.UNINITIALISED);
-        }).hasMessageMatching("participantType is marked .*ull but is null");
-
-        assertThatThrownBy(() -> {
-            new JpaAutomationCompositionElement(new PfReferenceKey(), new PfConceptKey(),
-                new PfConceptKey("participant", "0.0.1"), null);
-        }).hasMessageMatching("state is marked .*ull but is null");
+            new JpaAutomationCompositionElement("key", "key", new PfConceptKey(), new PfConceptKey(), null);
+        }).hasMessageMatching("state" + NULL_ERROR);
 
         assertNotNull(new JpaAutomationCompositionElement());
-        assertNotNull(new JpaAutomationCompositionElement((new PfReferenceKey())));
-        assertNotNull(new JpaAutomationCompositionElement(new PfReferenceKey(), new PfConceptKey(),
-            new PfConceptKey("participant", "0.0.1"), AutomationCompositionState.UNINITIALISED));
+        assertNotNull(new JpaAutomationCompositionElement("key", "key"));
+        assertNotNull(new JpaAutomationCompositionElement("key", "key", new PfConceptKey(),
+                new PfConceptKey("participant", "0.0.1"), AutomationCompositionState.UNINITIALISED));
     }
 
     @Test
     void testJpaAutomationCompositionElement() {
-        var testJpaAutomationCompositionElement =
-            createJpaAutomationCompositionElementInstance();
+        var testJpaAcElement = createJpaAutomationCompositionElementInstance();
 
         var ace = createAutomationCompositionElementInstance();
-        assertEquals(ace, testJpaAutomationCompositionElement.toAuthorative());
+        assertEquals(ace, testJpaAcElement.toAuthorative());
 
         assertThatThrownBy(() -> {
-            testJpaAutomationCompositionElement.fromAuthorative(null);
+            testJpaAcElement.fromAuthorative(null);
         }).hasMessageMatching("element is marked .*ull but is null");
 
         assertThatThrownBy(() -> new JpaAutomationCompositionElement((JpaAutomationCompositionElement) null))
-            .isInstanceOf(NullPointerException.class);
+                .isInstanceOf(NullPointerException.class);
 
-        var testJpaAutomationCompositionElementFa = new JpaAutomationCompositionElement();
-        testJpaAutomationCompositionElementFa.setKey(null);
-        testJpaAutomationCompositionElementFa.fromAuthorative(ace);
-        assertEquals(testJpaAutomationCompositionElement, testJpaAutomationCompositionElementFa);
-        testJpaAutomationCompositionElementFa.setKey(PfReferenceKey.getNullKey());
-        testJpaAutomationCompositionElementFa.fromAuthorative(ace);
-        assertEquals(testJpaAutomationCompositionElement, testJpaAutomationCompositionElementFa);
-        testJpaAutomationCompositionElementFa.setKey(
-            new PfReferenceKey(PfKey.NULL_KEY_NAME, PfKey.NULL_KEY_VERSION, "a95757ba-b34a-4049-a2a8-46773abcbe5e"));
-        testJpaAutomationCompositionElementFa.fromAuthorative(ace);
-        assertEquals(testJpaAutomationCompositionElement, testJpaAutomationCompositionElementFa);
+        var testJpaAcElementFa =
+                new JpaAutomationCompositionElement(ace.getId().toString(), testJpaAcElement.getInstanceId());
+        testJpaAcElementFa.fromAuthorative(ace);
+        assertEquals(testJpaAcElement, testJpaAcElementFa);
 
-        assertEquals("a95757ba-b34a-4049-a2a8-46773abcbe5e",
-            testJpaAutomationCompositionElement.getKey().getLocalName());
-        assertEquals("a95757ba-b34a-4049-a2a8-46773abcbe5e",
-            new JpaAutomationCompositionElement(createAutomationCompositionElementInstance()).getKey().getLocalName());
-        assertEquals("a95757ba-b34a-4049-a2a8-46773abcbe5e",
-            ((PfReferenceKey) new JpaAutomationCompositionElement(createAutomationCompositionElementInstance())
-                .getKeys().get(0)).getLocalName());
+        assertEquals(ELEMENT_ID, testJpaAcElement.getElementId());
 
-        testJpaAutomationCompositionElement.clean();
-        assertEquals("a95757ba-b34a-4049-a2a8-46773abcbe5e",
-            testJpaAutomationCompositionElement.getKey().getLocalName());
-
-        testJpaAutomationCompositionElement.setDescription(" A Message ");
-        testJpaAutomationCompositionElement.clean();
-        assertEquals("A Message", testJpaAutomationCompositionElement.getDescription());
-
-        var testJpaAutomationCompositionElement2 =
-            new JpaAutomationCompositionElement(testJpaAutomationCompositionElement);
-        assertEquals(testJpaAutomationCompositionElement, testJpaAutomationCompositionElement2);
+        var testJpaAutomationCompositionElement2 = new JpaAutomationCompositionElement(testJpaAcElement);
+        assertEquals(testJpaAcElement, testJpaAutomationCompositionElement2);
     }
 
     @Test
     void testJpaAutomationCompositionElementOrderedState() throws CoderException {
         var testAutomationCompositionElement = createAutomationCompositionElementInstance();
-        var testJpaAutomationCompositionElement =
-            createJpaAutomationCompositionElementInstance();
+        var testJpaAutomationCompositionElement = createJpaAutomationCompositionElementInstance();
 
         testJpaAutomationCompositionElement.setOrderedState(null);
         assertEquals(testAutomationCompositionElement, testJpaAutomationCompositionElement.toAuthorative());
         testJpaAutomationCompositionElement.setOrderedState(AutomationCompositionOrderedState.UNINITIALISED);
 
         var noOrderedStateAce = new StandardCoder().decode(
-            new File("src/test/resources/json/AutomationCompositionElementNoOrderedState.json"),
-            AutomationCompositionElement.class);
+                new File("src/test/resources/json/AutomationCompositionElementNoOrderedState.json"),
+                AutomationCompositionElement.class);
 
         var noOrderedStateJpaAce = new JpaAutomationCompositionElement(noOrderedStateAce);
         assertNull(noOrderedStateJpaAce.getOrderedState());
         noOrderedStateAce.setOrderedState(AutomationCompositionOrderedState.UNINITIALISED);
         noOrderedStateJpaAce = new JpaAutomationCompositionElement(noOrderedStateAce);
+        noOrderedStateJpaAce.setInstanceId(testJpaAutomationCompositionElement.getInstanceId());
+        noOrderedStateJpaAce.setElementId(testJpaAutomationCompositionElement.getElementId());
         assertEquals(testJpaAutomationCompositionElement, noOrderedStateJpaAce);
     }
 
     @Test
     void testJpaAutomationCompositionElementValidation() {
-        var testJpaAutomationCompositionElement =
-            createJpaAutomationCompositionElementInstance();
+        var testJpaAutomationCompositionElement = createJpaAutomationCompositionElementInstance();
 
         assertThatThrownBy(() -> testJpaAutomationCompositionElement.validate(null))
-            .hasMessageMatching("fieldName is marked .*ull but is null");
+                .hasMessageMatching("fieldName is marked .*ull but is null");
 
         assertTrue(testJpaAutomationCompositionElement.validate("").isValid());
     }
 
     @Test
     void testJpaAutomationCompositionElementCompareTo() {
-        var testJpaAutomationCompositionElement =
-            createJpaAutomationCompositionElementInstance();
+        var testJpaAutomationCompositionElement = createJpaAutomationCompositionElementInstance();
 
         var otherJpaAutomationCompositionElement =
-            new JpaAutomationCompositionElement(testJpaAutomationCompositionElement);
+                new JpaAutomationCompositionElement(testJpaAutomationCompositionElement);
         assertEquals(0, testJpaAutomationCompositionElement.compareTo(otherJpaAutomationCompositionElement));
         assertEquals(-1, testJpaAutomationCompositionElement.compareTo(null));
         assertEquals(0, testJpaAutomationCompositionElement.compareTo(testJpaAutomationCompositionElement));
         assertNotEquals(0,
-            testJpaAutomationCompositionElement.compareTo(new DummyJpaAutomationCompositionElementChild()));
+                testJpaAutomationCompositionElement.compareTo(new DummyJpaAutomationCompositionElementChild()));
 
-        testJpaAutomationCompositionElement
-            .setKey(new PfReferenceKey("BadValue", "0.0.1", "a95757ba-b34a-4049-a2a8-46773abcbe5e"));
+        testJpaAutomationCompositionElement.setElementId("BadValue");
         assertNotEquals(0, testJpaAutomationCompositionElement.compareTo(otherJpaAutomationCompositionElement));
-        testJpaAutomationCompositionElement.setKey(
-            new PfReferenceKey(PfKey.NULL_KEY_NAME, PfKey.NULL_KEY_VERSION, "a95757ba-b34a-4049-a2a8-46773abcbe5e"));
+        testJpaAutomationCompositionElement.setElementId(ELEMENT_ID);
+        assertEquals(0, testJpaAutomationCompositionElement.compareTo(otherJpaAutomationCompositionElement));
+
+        testJpaAutomationCompositionElement.setInstanceId("BadValue");
+        assertNotEquals(0, testJpaAutomationCompositionElement.compareTo(otherJpaAutomationCompositionElement));
+        testJpaAutomationCompositionElement.setInstanceId(INSTANCE_ID);
         assertEquals(0, testJpaAutomationCompositionElement.compareTo(otherJpaAutomationCompositionElement));
 
         testJpaAutomationCompositionElement.setDefinition(new PfConceptKey("BadValue", "0.0.1"));
@@ -261,7 +202,7 @@ class JpaAutomationCompositionElementTest {
         assertEquals(0, testJpaAutomationCompositionElement.compareTo(otherJpaAutomationCompositionElement));
 
         assertEquals(testJpaAutomationCompositionElement,
-            new JpaAutomationCompositionElement(testJpaAutomationCompositionElement));
+                new JpaAutomationCompositionElement(testJpaAutomationCompositionElement));
     }
 
     @Test
@@ -274,7 +215,7 @@ class JpaAutomationCompositionElementTest {
         assertEquals(ace0, ace0);
         assertNotEquals(null, ace0);
 
-        var ace1 = new JpaAutomationCompositionElement();
+        var ace1 = new JpaAutomationCompositionElement(ace0.getElementId(), ace0.getInstanceId());
 
         ace1.setDefinition(new PfConceptKey("defName", "0.0.1"));
         ace1.setDescription("Description");
@@ -289,25 +230,23 @@ class JpaAutomationCompositionElementTest {
 
         assertNotEquals(ace1, ace0);
 
-        var ace2 = new JpaAutomationCompositionElement();
+        var ace2 = new JpaAutomationCompositionElement(ace0.getElementId(), ace0.getInstanceId());
         assertEquals(ace2, ace0);
     }
 
     private JpaAutomationCompositionElement createJpaAutomationCompositionElementInstance() {
         var testAce = createAutomationCompositionElementInstance();
-        var testJpaAutomationCompositionElement = new JpaAutomationCompositionElement();
-        testJpaAutomationCompositionElement.setKey(null);
-        testJpaAutomationCompositionElement.fromAuthorative(testAce);
-        testJpaAutomationCompositionElement.setKey(PfReferenceKey.getNullKey());
-        testJpaAutomationCompositionElement.fromAuthorative(testAce);
-        testJpaAutomationCompositionElement.setProperties(Map.of("key", "{}"));
+        var testJpaAcElement =
+                new JpaAutomationCompositionElement(testAce.getId().toString(), INSTANCE_ID);
+        testJpaAcElement.fromAuthorative(testAce);
+        testJpaAcElement.setProperties(Map.of("key", "{}"));
 
-        return testJpaAutomationCompositionElement;
+        return testJpaAcElement;
     }
 
     private AutomationCompositionElement createAutomationCompositionElementInstance() {
         var automationCompositionElement = new AutomationCompositionElement();
-        automationCompositionElement.setId(UUID.fromString("a95757ba-b34a-4049-a2a8-46773abcbe5e"));
+        automationCompositionElement.setId(UUID.fromString(ELEMENT_ID));
         automationCompositionElement.setDefinition(new ToscaConceptIdentifier("aceDef", "0.0.1"));
         automationCompositionElement.setParticipantType(new ToscaConceptIdentifier("participantType", "0.0.1"));
         automationCompositionElement.setProperties(Map.of("key", "{}"));

@@ -24,32 +24,26 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import javax.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.mockito.Mockito;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationComposition;
 import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionRepository;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.springframework.data.domain.Example;
 
 class AutomationCompositionProviderTest {
 
     private static final String OBJECT_IS_NULL = "automationComposition is marked non-null but is null";
-
-    private static final String ID_NAME = "PMSHInstance1";
-    private static final String ID_VERSION = "1.0.1";
-    private static final String ID_NAME_NOT_EXTST = "not_exist";
 
     private static final Coder CODER = new StandardCoder();
     private static final String AUTOMATION_COMPOSITION_JSON =
@@ -100,43 +94,19 @@ class AutomationCompositionProviderTest {
 
     @Test
     void testGetAutomationCompositions() throws Exception {
-        var automationComposition0 = inputAutomationCompositions.getAutomationCompositionList().get(1);
-        var name = automationComposition0.getName();
-        var version = automationComposition0.getVersion();
-        var automationComposition1 = inputAutomationCompositions.getAutomationCompositionList().get(1);
-
         var automationCompositionRepository = mock(AutomationCompositionRepository.class);
-        when(automationCompositionRepository.getFiltered(eq(JpaAutomationComposition.class), any(), any()))
-                .thenReturn(List.of(new JpaAutomationComposition(automationComposition0),
-                        new JpaAutomationComposition(automationComposition1)));
-        when(automationCompositionRepository.findById(automationComposition0.getKey().asIdentifier().asConceptKey()))
-                .thenReturn(Optional.of(new JpaAutomationComposition(automationComposition0)));
-        when(automationCompositionRepository.getById(automationComposition0.getKey().asIdentifier().asConceptKey()))
-                .thenReturn(new JpaAutomationComposition(automationComposition0));
-        when(automationCompositionRepository.getFiltered(JpaAutomationComposition.class, name, version))
-                .thenReturn(List.of(new JpaAutomationComposition(automationComposition0)));
-        when(automationCompositionRepository.findById(automationComposition1.getKey().asIdentifier().asConceptKey()))
-                .thenReturn(Optional.of(new JpaAutomationComposition(automationComposition1)));
-
         var automationCompositionProvider = new AutomationCompositionProvider(automationCompositionRepository);
-        assertEquals(1, automationCompositionProvider.getAutomationCompositions(name, version).size());
 
-        var ac = automationCompositionProvider
-                .findAutomationComposition(new ToscaConceptIdentifier(ID_NAME, ID_VERSION))
-                .orElse(new AutomationComposition());
-        assertEquals(inputAutomationCompositions.getAutomationCompositionList().get(1), ac);
+        var automationComposition = inputAutomationCompositions.getAutomationCompositionList().get(0);
+        var acList = automationCompositionProvider.getAutomationCompositions(UUID.randomUUID(),
+                automationComposition.getName(), automationComposition.getVersion());
+        assertThat(acList).isEmpty();
 
-        ac = automationCompositionProvider.getAutomationComposition(new ToscaConceptIdentifier(ID_NAME, ID_VERSION));
-        assertEquals(inputAutomationCompositions.getAutomationCompositionList().get(1), ac);
-
-        when(automationCompositionRepository.getById(any())).thenThrow(EntityNotFoundException.class);
-
-        assertThatThrownBy(() -> automationCompositionProvider
-                .getAutomationComposition(new ToscaConceptIdentifier(ID_NAME_NOT_EXTST, ID_VERSION)))
-                        .hasMessageMatching("AutomationComposition not found");
-
-        assertThat(automationCompositionProvider
-                .findAutomationComposition(new ToscaConceptIdentifier(ID_NAME_NOT_EXTST, ID_VERSION))).isEmpty();
+        when(automationCompositionRepository.findAll(Mockito.<Example<JpaAutomationComposition>>any()))
+                .thenReturn(inputAutomationCompositionsJpa);
+        acList = automationCompositionProvider.getAutomationCompositions(automationComposition.getCompositionId(), null,
+                null);
+        assertThat(acList).hasSize(2);
     }
 
     @Test
@@ -145,10 +115,37 @@ class AutomationCompositionProviderTest {
         var automationCompositionProvider = new AutomationCompositionProvider(automationCompositionRepository);
 
         var automationComposition = inputAutomationCompositions.getAutomationCompositionList().get(0);
-        when(automationCompositionRepository.findByInstanceId(automationComposition.getInstanceId().toString()))
+        assertThatThrownBy(
+                () -> automationCompositionProvider.getAutomationComposition(automationComposition.getInstanceId()))
+                        .hasMessageMatching("AutomationComposition not found");
+
+        when(automationCompositionRepository.findById(automationComposition.getInstanceId().toString()))
                 .thenReturn(Optional.of(inputAutomationCompositionsJpa.get(0)));
         var ac = automationCompositionProvider.getAutomationComposition(automationComposition.getInstanceId());
-        assertEquals(inputAutomationCompositions.getAutomationCompositionList().get(0), ac);
+        assertEquals(automationComposition, ac);
+    }
+
+    @Test
+    void testFindAutomationComposition() {
+        var automationCompositionRepository = mock(AutomationCompositionRepository.class);
+        var automationCompositionProvider = new AutomationCompositionProvider(automationCompositionRepository);
+
+        var automationComposition = inputAutomationCompositions.getAutomationCompositionList().get(0);
+        var acOpt = automationCompositionProvider.findAutomationComposition(automationComposition.getInstanceId());
+        assertThat(acOpt).isEmpty();
+
+        acOpt = automationCompositionProvider.findAutomationComposition(automationComposition.getKey().asIdentifier());
+        assertThat(acOpt).isEmpty();
+
+        when(automationCompositionRepository.findById(automationComposition.getInstanceId().toString()))
+                .thenReturn(Optional.of(inputAutomationCompositionsJpa.get(0)));
+        acOpt = automationCompositionProvider.findAutomationComposition(automationComposition.getInstanceId());
+        assertEquals(automationComposition, acOpt.get());
+
+        when(automationCompositionRepository.findOne(Mockito.<Example<JpaAutomationComposition>>any()))
+                .thenReturn(Optional.of(inputAutomationCompositionsJpa.get(0)));
+        acOpt = automationCompositionProvider.findAutomationComposition(automationComposition.getKey().asIdentifier());
+        assertEquals(automationComposition, acOpt.get());
     }
 
     @Test
@@ -173,7 +170,7 @@ class AutomationCompositionProviderTest {
                 .hasMessageMatching(".*.failed, automation composition does not exist");
 
         var automationComposition = inputAutomationCompositions.getAutomationCompositionList().get(0);
-        when(automationCompositionRepository.findByInstanceId(automationComposition.getInstanceId().toString()))
+        when(automationCompositionRepository.findById(automationComposition.getInstanceId().toString()))
                 .thenReturn(Optional.of(inputAutomationCompositionsJpa.get(0)));
 
         var deletedAc =
