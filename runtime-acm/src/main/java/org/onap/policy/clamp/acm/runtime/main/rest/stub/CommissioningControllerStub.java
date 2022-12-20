@@ -48,11 +48,10 @@ public class CommissioningControllerStub extends AbstractRestController
 
     private static final Logger log = LoggerFactory.getLogger(CommissioningControllerStub.class);
 
-    @Autowired
-    private HttpServletRequest request;
+    private StubUtils stubUtils = new StubUtils();
 
     @Autowired
-    private StubUtils stubUtils;
+    private HttpServletRequest request;
 
     @Value("${stub.deleteCompositionDefinitionResponse}")
     private String pathToResponseFile;

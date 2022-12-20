@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import javax.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.slf4j.Logger;
@@ -34,6 +35,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+@RequiredArgsConstructor
 @Service
 @Profile("stub")
 public class StubUtils {
@@ -46,26 +48,19 @@ public class StubUtils {
     <T> ResponseEntity<T> getResponse(String path, Class<T> clazz,
             HttpServletRequest request, Logger log) {
         String accept = request.getHeader(ACCEPT);
-        if (accept.contains(YAML)) {
-            path = path.replace("json", "yaml");
-            final ClassPathResource resourceY = new ClassPathResource(path);
-            try (InputStream inputStreamY = resourceY.getInputStream()) {
-                var targetObj = YAML_TRANSLATOR.decode(inputStreamY, clazz);
-                return new ResponseEntity<>(targetObj, HttpStatus.OK);
-            } catch (IOException | CoderException e) {
-                log.error("Error reading the file.", e);
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-            }
-        } else {
-            final ClassPathResource resource = new ClassPathResource(path);
-            try (InputStream inputStream = resource.getInputStream()) {
+        final ClassPathResource resource = new ClassPathResource(path);
+        try (InputStream inputStream = resource.getInputStream()) {
+            if (accept.contains(YAML)) {
+                var targetObject = YAML_TRANSLATOR.decode(inputStream, clazz);
+                return new ResponseEntity<>(targetObject, HttpStatus.OK);
+            } else {
                 final String string = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
                 var targetObject = JSON_TRANSLATOR.fromJson(string, clazz);
                 return new ResponseEntity<>(targetObject, HttpStatus.OK);
-            } catch (final IOException exception) {
-                log.error("Error reading the file.", exception);
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
             }
+        } catch (IOException | CoderException exception) {
+            log.error("Error reading the file.", exception);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }
