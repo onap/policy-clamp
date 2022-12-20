@@ -32,6 +32,9 @@ import java.util.function.Function;
 import javax.ws.rs.core.Response;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaEntity;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplate;
@@ -316,5 +319,69 @@ public final class DocUtil {
             result.add(entity.getDocConceptKey().getName()); // ref for derived from
         }
         return result;
+    }
+
+    /**
+     * Compare two maps of the same type, nulls are allowed.
+     *
+     * @param leftMap the first map
+     * @param rightMap the second map
+     * @return a measure of the comparison
+     */
+    public static <V extends Comparable<? super V>> int compareMaps(final Map<String, V> leftMap,
+            final Map<String, V> rightMap) {
+        if ((MapUtils.isEmpty(leftMap) && MapUtils.isEmpty(rightMap))) {
+            return 0;
+        }
+        if (leftMap == null) {
+            return 1;
+        }
+
+        if (rightMap == null) {
+            return -1;
+        }
+        if (leftMap.size() != rightMap.size()) {
+            return leftMap.hashCode() - rightMap.hashCode();
+        }
+
+        for (var leftEntry : leftMap.entrySet()) {
+            var result = ObjectUtils.compare(leftEntry.getValue(), rightMap.get(leftEntry.getKey()));
+            if (result != 0) {
+                return result;
+            }
+        }
+        return 0;
+    }
+
+    /**
+     * Compare two lists of Map of the same type, nulls are allowed.
+     *
+     * @param leftCollection the first list
+     * @param rightCollection the second list
+     * @return a measure of the comparison
+     */
+    public static <V extends Comparable<? super V>> int compareCollections(final List<Map<String, V>> leftCollection,
+            final List<Map<String, V>> rightCollection) {
+        if ((CollectionUtils.isEmpty(leftCollection) && CollectionUtils.isEmpty(rightCollection))) {
+            return 0;
+        }
+        if (leftCollection == null) {
+            return 1;
+        }
+
+        if (rightCollection == null) {
+            return -1;
+        }
+        if (leftCollection.size() != rightCollection.size()) {
+            return leftCollection.hashCode() - rightCollection.hashCode();
+        }
+
+        for (var i = 0; i < leftCollection.size(); i++) {
+            var result = compareMaps(leftCollection.get(i), rightCollection.get(i));
+            if (result != 0) {
+                return result;
+            }
+        }
+        return 0;
     }
 }
