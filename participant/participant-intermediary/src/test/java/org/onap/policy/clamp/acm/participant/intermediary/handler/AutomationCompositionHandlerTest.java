@@ -54,8 +54,6 @@ class AutomationCompositionHandlerTest {
     @Test
     void automationCompositionHandlerTest() {
         var ach = commonTestData.getMockAutomationCompositionHandler();
-        assertNotNull(ach.getAutomationCompositions());
-
         assertNotNull(ach.getAutomationCompositionMap());
         assertNotNull(ach.getElementsOnThisParticipant());
 

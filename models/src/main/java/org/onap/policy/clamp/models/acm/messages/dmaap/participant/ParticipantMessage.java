@@ -62,6 +62,8 @@ public class ParticipantMessage {
      */
     private UUID automationCompositionId;
 
+    private UUID compositionId;
+
     /**
      * Constructor for instantiating a participant message class.
      *
@@ -81,6 +83,7 @@ public class ParticipantMessage {
         this.participantType = source.participantType;
         this.participantId = source.participantId;
         this.automationCompositionId = source.automationCompositionId;
+        this.compositionId = source.compositionId;
     }
 
     /**

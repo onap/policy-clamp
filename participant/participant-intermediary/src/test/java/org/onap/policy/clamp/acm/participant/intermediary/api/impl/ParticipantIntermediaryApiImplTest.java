@@ -20,10 +20,7 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.api.impl;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -32,7 +29,6 @@ import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationComposit
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -43,37 +39,14 @@ class ParticipantIntermediaryApiImplTest {
     private static final String ID_NAME = "org.onap.PM_CDS_Blueprint";
     private static final String ID_VERSION = "1.0.1";
 
-    private static final String ID_NAME_E = "PMSHInstance1";
-    private static final String ID_VERSION_E = "1.0.1";
-
-    private static final String ID_NAME_TYPE = "org.onap.dcae.acm.DCAEMicroserviceAutomationCompositionParticipant";
-    private static final String ID_VERSION_TYPE = "2.3.4";
-
     @Test
     void mockParticipantIntermediaryApiImplTest() throws CoderException {
         var uuid = UUID.randomUUID();
         var id = new ToscaConceptIdentifier(ID_NAME, ID_VERSION);
-        var participantHandler = commonTestData.getParticipantHandlerAutomationCompositions();
         var automationComposiitonHandler = commonTestData.setTestAutomationCompositionHandler(id, uuid);
-        var apiImpl = new ParticipantIntermediaryApiImpl(participantHandler, automationComposiitonHandler);
+        var apiImpl = new ParticipantIntermediaryApiImpl(automationComposiitonHandler);
         var acElementListener = Mockito.mock(AutomationCompositionElementListener.class);
         apiImpl.registerAutomationCompositionElementListener(acElementListener);
-
-        assertNotNull(apiImpl.getAutomationCompositions(id.getName(), id.getVersion()));
-        assertThat(apiImpl.getAcElementDefinitionCommonProperties(id)).isEmpty();
-
-        var participants = apiImpl.getParticipants(id.getName(), id.getVersion());
-        assertEquals(ParticipantState.UNKNOWN, participants.get(0).getParticipantState());
-
-        var participant = apiImpl.updateParticipantState(id, ParticipantState.TERMINATED);
-        assertEquals(ParticipantState.TERMINATED, participant.getParticipantState());
-
-        var elements = apiImpl.getAutomationCompositionElements(ID_NAME_E, ID_VERSION_E);
-        assertFalse(elements.containsKey(uuid));
-
-        var element = apiImpl.getAutomationCompositionElement(elements.keySet().iterator().next());
-        var idType = new ToscaConceptIdentifier(ID_NAME_TYPE, ID_VERSION_TYPE);
-        assertEquals(idType, element.getParticipantType());
 
         var acElement = apiImpl.updateAutomationCompositionElementState(UUID.randomUUID(), uuid,
                 AutomationCompositionOrderedState.UNINITIALISED, AutomationCompositionState.PASSIVE,

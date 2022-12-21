@@ -196,8 +196,6 @@ public class CommonTestData {
      */
     public ParticipantHandler getParticipantHandlerAutomationCompositions() throws CoderException {
         var automationCompositionHandler = Mockito.mock(AutomationCompositionHandler.class);
-        Mockito.doReturn(getTestAutomationCompositions()).when(automationCompositionHandler)
-                .getAutomationCompositions();
         Mockito.doReturn(getTestAutomationCompositionMap()).when(automationCompositionHandler)
                 .getAutomationCompositionMap();
         var publisher = new ParticipantMessagePublisher();

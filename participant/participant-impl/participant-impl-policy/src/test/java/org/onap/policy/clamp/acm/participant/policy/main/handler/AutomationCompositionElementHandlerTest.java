@@ -23,7 +23,6 @@ package org.onap.policy.clamp.acm.participant.policy.main.handler;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.Map;
@@ -72,8 +71,6 @@ class AutomationCompositionElementHandlerTest {
     private AutomationCompositionElementHandler getTestingHandler() {
         var handler = new AutomationCompositionElementHandler(api, pap);
         var intermediaryApi = Mockito.mock(ParticipantIntermediaryApi.class);
-        var element = getTestingAcElement();
-        when(intermediaryApi.getAutomationCompositionElement(automationCompositionElementId)).thenReturn(element);
         handler.setIntermediaryApi(intermediaryApi);
         return handler;
     }

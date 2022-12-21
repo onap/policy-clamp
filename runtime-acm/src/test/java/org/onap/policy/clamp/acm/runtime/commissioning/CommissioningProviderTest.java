@@ -90,7 +90,7 @@ class CommissioningProviderTest {
         var affectedDefinitions = provider
                 .createAutomationCompositionDefinitions(serviceTemplate).getAffectedAutomationCompositionDefinitions();
         verify(acDefinitionProvider).createAutomationCompositionDefinition(serviceTemplate);
-        verify(supervisionHandler).handleSendCommissionMessage(serviceTemplate.getName(), serviceTemplate.getVersion());
+        verify(supervisionHandler).handleSendCommissionMessage(acmDefinition);
         // Response should return the number of node templates present in the service template
         assertThat(affectedDefinitions).hasSize(7);
     }
@@ -148,7 +148,7 @@ class CommissioningProviderTest {
 
         provider.deleteAutomationCompositionDefinition(compositionId);
 
-        verify(supervisionHandler).handleSendDeCommissionMessage();
+        verify(supervisionHandler).handleSendDeCommissionMessage(compositionId);
         verify(acDefinitionProvider).deleteAcDefintion(compositionId);
     }
 }

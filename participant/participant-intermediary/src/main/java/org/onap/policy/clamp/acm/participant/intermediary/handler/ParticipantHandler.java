@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,7 +34,6 @@ import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessag
 import org.onap.policy.clamp.acm.participant.intermediary.parameters.ParticipantParameters;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionInfo;
-import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantHealthStatus;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
@@ -52,7 +50,6 @@ import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantSt
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUpdate;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUpdateAck;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -79,7 +76,7 @@ public class ParticipantHandler {
     @Setter
     private ParticipantHealthStatus healthStatus = ParticipantHealthStatus.UNKNOWN;
 
-    private final List<AutomationCompositionElementDefinition> acElementDefsOnThisParticipant = new ArrayList<>();
+    private final Map<UUID, List<AutomationCompositionElementDefinition>> acElementDefsMap = new HashMap<>();
 
     /**
      * Constructor, set the participant ID and sender.
@@ -88,7 +85,7 @@ public class ParticipantHandler {
      * @param publisher the publisher for sending responses to messages
      */
     public ParticipantHandler(ParticipantParameters parameters, ParticipantMessagePublisher publisher,
-        AutomationCompositionHandler automationCompositionHandler) {
+            AutomationCompositionHandler automationCompositionHandler) {
         this.participantType = parameters.getIntermediaryParameters().getParticipantType();
         this.participantId = parameters.getIntermediaryParameters().getParticipantId();
         this.publisher = publisher;
@@ -100,8 +97,7 @@ public class ParticipantHandler {
      *
      * @param participantStatusReqMsg participant participantStatusReq message
      */
-    @Timed(value = "listener.participant_status_req",
-            description = "PARTICIPANT_STATUS_REQ messages received")
+    @Timed(value = "listener.participant_status_req", description = "PARTICIPANT_STATUS_REQ messages received")
     public void handleParticipantStatusReq(final ParticipantStatusReq participantStatusReqMsg) {
         var participantStatus = makeHeartbeat(true);
         publisher.sendParticipantStatus(participantStatus);
@@ -112,10 +108,12 @@ public class ParticipantHandler {
      *
      * @param updateMsg the update message
      */
-    @Timed(value = "listener.automation_composition_update",
+    @Timed(
+            value = "listener.automation_composition_update",
             description = "AUTOMATION_COMPOSITION_UPDATE messages received")
     public void handleAutomationCompositionUpdate(AutomationCompositionUpdate updateMsg) {
-        automationCompositionHandler.handleAutomationCompositionUpdate(updateMsg, acElementDefsOnThisParticipant);
+        automationCompositionHandler.handleAutomationCompositionUpdate(updateMsg,
+                acElementDefsMap.get(updateMsg.getCompositionId()));
     }
 
     /**
@@ -123,75 +121,12 @@ public class ParticipantHandler {
      *
      * @param stateChangeMsg the state change message
      */
-    @Timed(value = "listener.automation_composition_state_change",
+    @Timed(
+            value = "listener.automation_composition_state_change",
             description = "AUTOMATION_COMPOSITION_STATE_CHANGE messages received")
     public void handleAutomationCompositionStateChange(AutomationCompositionStateChange stateChangeMsg) {
         automationCompositionHandler.handleAutomationCompositionStateChange(stateChangeMsg,
-            acElementDefsOnThisParticipant);
-    }
-
-    private void handleStateChange(ParticipantState newParticipantState, ParticipantUpdateAck response) {
-        if (state.equals(newParticipantState)) {
-            response.setResult(false);
-            response.setMessage("Participant already in state " + newParticipantState);
-        } else {
-            response.setResult(true);
-            response.setMessage("Participant state changed from " + state + " to " + newParticipantState);
-            state = newParticipantState;
-        }
-    }
-
-    /**
-     * Method to update participant state.
-     *
-     * @param definition participant definition
-     * @param participantState participant state
-     * @return the participant
-     */
-    public Participant updateParticipantState(ToscaConceptIdentifier definition, ParticipantState participantState) {
-        if (!Objects.equals(definition, participantId)) {
-            LOGGER.debug("No participant with this ID {}", definition.getName());
-            return null;
-        }
-
-        var participantUpdateAck = new ParticipantUpdateAck();
-        handleStateChange(participantState, participantUpdateAck);
-        publisher.sendParticipantUpdateAck(participantUpdateAck);
-        return getParticipant(definition.getName(), definition.getVersion());
-    }
-
-    /**
-     * Get participants as a {@link Participant} class.
-     *
-     * @param name the participant name to get
-     * @param version the version of the participant to get
-     * @return the participant
-     */
-    public Participant getParticipant(String name, String version) {
-        if (participantId.getName().equals(name)) {
-            var participant = new Participant();
-            participant.setDefinition(participantId);
-            participant.setParticipantState(state);
-            participant.setHealthStatus(healthStatus);
-            return participant;
-        }
-        return null;
-    }
-
-    /**
-     * Get common properties of a automation composition element.
-     *
-     * @param acElementDef the automation composition element definition
-     * @return the common properties
-     */
-    public Map<String, ToscaProperty> getAcElementDefinitionCommonProperties(ToscaConceptIdentifier acElementDef) {
-        Map<String, ToscaProperty> commonPropertiesMap = new HashMap<>();
-        acElementDefsOnThisParticipant.stream().forEach(definition -> {
-            if (definition.getAcElementDefinitionId().equals(acElementDef)) {
-                commonPropertiesMap.putAll(definition.getCommonPropertiesMap());
-            }
-        });
-        return commonPropertiesMap;
+                acElementDefsMap.get(stateChangeMsg.getCompositionId()));
     }
 
     /**
@@ -230,11 +165,10 @@ public class ParticipantHandler {
      *
      * @param participantRegisterAckMsg the participantRegisterAck message
      */
-    @Timed(value = "listener.participant_register_ack",
-            description = "PARTICIPANT_REGISTER_ACK messages received")
+    @Timed(value = "listener.participant_register_ack", description = "PARTICIPANT_REGISTER_ACK messages received")
     public void handleParticipantRegisterAck(ParticipantRegisterAck participantRegisterAckMsg) {
         LOGGER.debug("ParticipantRegisterAck message received as responseTo {}",
-            participantRegisterAckMsg.getResponseTo());
+                participantRegisterAckMsg.getResponseTo());
         statusToPassive();
         publisher.sendParticipantStatus(makeHeartbeat(false));
     }
@@ -266,11 +200,10 @@ public class ParticipantHandler {
      *
      * @param participantDeregisterAckMsg the participantDeregisterAck message
      */
-    @Timed(value = "listener.participant_deregister_ack",
-            description = "PARTICIPANT_DEREGISTER_ACK messages received")
+    @Timed(value = "listener.participant_deregister_ack", description = "PARTICIPANT_DEREGISTER_ACK messages received")
     public void handleParticipantDeregisterAck(ParticipantDeregisterAck participantDeregisterAckMsg) {
         LOGGER.debug("ParticipantDeregisterAck message received as responseTo {}",
-            participantDeregisterAckMsg.getResponseTo());
+                participantDeregisterAckMsg.getResponseTo());
     }
 
     /**
@@ -278,25 +211,25 @@ public class ParticipantHandler {
      *
      * @param participantUpdateMsg the ParticipantUpdate message
      */
-    @Timed(value = "listener.participant_update",
-            description = "PARTICIPANT_UPDATE messages received")
+    @Timed(value = "listener.participant_update", description = "PARTICIPANT_UPDATE messages received")
     public void handleParticipantUpdate(ParticipantUpdate participantUpdateMsg) {
         LOGGER.debug("ParticipantUpdate message received for participantId {}",
-            participantUpdateMsg.getParticipantId());
+                participantUpdateMsg.getParticipantId());
 
+        acElementDefsMap.putIfAbsent(participantUpdateMsg.getCompositionId(), new ArrayList<>());
         if (!participantUpdateMsg.getParticipantDefinitionUpdates().isEmpty()) {
             statusToPassive();
             // This message is to commission the automation composition
-            for (ParticipantDefinition participantDefinition : participantUpdateMsg.getParticipantDefinitionUpdates()) {
+            for (var participantDefinition : participantUpdateMsg.getParticipantDefinitionUpdates()) {
                 if (participantDefinition.getParticipantType().equals(participantType)) {
-                    acElementDefsOnThisParticipant
-                        .addAll(participantDefinition.getAutomationCompositionElementDefinitionList());
+                    acElementDefsMap.get(participantUpdateMsg.getCompositionId())
+                            .addAll(participantDefinition.getAutomationCompositionElementDefinitionList());
                     break;
                 }
             }
         } else {
             // This message is to decommission the automation composition
-            acElementDefsOnThisParticipant.clear();
+            acElementDefsMap.get(participantUpdateMsg.getCompositionId()).clear();
             this.state = ParticipantState.TERMINATED;
         }
         sendParticipantUpdateAck(participantUpdateMsg.getMessageId());
@@ -335,11 +268,15 @@ public class ParticipantHandler {
         heartbeat.setAutomationCompositionInfoList(getAutomationCompositionInfoList());
 
         if (responseToParticipantStatusReq) {
-            ParticipantDefinition participantDefinition = new ParticipantDefinition();
-            participantDefinition.setParticipantId(participantId);
-            participantDefinition.setParticipantType(participantType);
-            participantDefinition.setAutomationCompositionElementDefinitionList(acElementDefsOnThisParticipant);
-            heartbeat.setParticipantDefinitionUpdates(List.of(participantDefinition));
+            List<ParticipantDefinition> participantDefinitionList = new ArrayList<>(acElementDefsMap.size());
+            for (var acElementDefsOnThisParticipant : acElementDefsMap.values()) {
+                var participantDefinition = new ParticipantDefinition();
+                participantDefinition.setParticipantId(participantId);
+                participantDefinition.setParticipantType(participantType);
+                participantDefinition.setAutomationCompositionElementDefinitionList(acElementDefsOnThisParticipant);
+                participantDefinitionList.add(participantDefinition);
+            }
+            heartbeat.setParticipantDefinitionUpdates(participantDefinitionList);
         }
 
         return heartbeat;

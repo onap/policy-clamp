@@ -31,14 +31,12 @@ import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVIC
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionStateChangePublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionUpdatePublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantStatusReqPublisher;
-import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantUpdatePublisher;
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
@@ -84,7 +82,6 @@ class SupervisionScannerTest {
         var automationCompositionUpdatePublisher = mock(AutomationCompositionUpdatePublisher.class);
         var participantProvider = mock(ParticipantProvider.class);
         var participantStatusReqPublisher = mock(ParticipantStatusReqPublisher.class);
-        var participantUpdatePublisher = mock(ParticipantUpdatePublisher.class);
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
 
         var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
@@ -93,7 +90,7 @@ class SupervisionScannerTest {
 
         var supervisionScanner = new SupervisionScanner(automationCompositionProvider, acDefinitionProvider,
                 automationCompositionStateChangePublisher, automationCompositionUpdatePublisher, participantProvider,
-                participantStatusReqPublisher, participantUpdatePublisher, acRuntimeParameterGroup);
+                participantStatusReqPublisher, acRuntimeParameterGroup);
         supervisionScanner.run(false);
 
         verify(automationCompositionProvider, times(0)).updateAutomationComposition(any(AutomationComposition.class));
@@ -112,12 +109,11 @@ class SupervisionScannerTest {
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
         var participantProvider = mock(ParticipantProvider.class);
         var participantStatusReqPublisher = mock(ParticipantStatusReqPublisher.class);
-        var participantUpdatePublisher = mock(ParticipantUpdatePublisher.class);
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
 
         var supervisionScanner = new SupervisionScanner(automationCompositionProvider, acDefinitionProvider,
                 automationCompositionStateChangePublisher, automationCompositionUpdatePublisher, participantProvider,
-                participantStatusReqPublisher, participantUpdatePublisher, acRuntimeParameterGroup);
+                participantStatusReqPublisher, acRuntimeParameterGroup);
         supervisionScanner.run(false);
 
         verify(automationCompositionProvider, times(1)).updateAutomationComposition(any(AutomationComposition.class));
@@ -139,12 +135,11 @@ class SupervisionScannerTest {
         var automationCompositionUpdatePublisher = mock(AutomationCompositionUpdatePublisher.class);
         var participantStatusReqPublisher = mock(ParticipantStatusReqPublisher.class);
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
-        var participantUpdatePublisher = mock(ParticipantUpdatePublisher.class);
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
 
         var supervisionScanner = new SupervisionScanner(automationCompositionProvider, acDefinitionProvider,
                 automationCompositionStateChangePublisher, automationCompositionUpdatePublisher, participantProvider,
-                participantStatusReqPublisher, participantUpdatePublisher, acRuntimeParameterGroup);
+                participantStatusReqPublisher, acRuntimeParameterGroup);
 
         supervisionScanner.handleParticipantStatus(participant.getKey().asIdentifier());
         supervisionScanner.run(true);
@@ -176,12 +171,11 @@ class SupervisionScannerTest {
         var automationCompositionUpdatePublisher = mock(AutomationCompositionUpdatePublisher.class);
         var participantStatusReqPublisher = mock(ParticipantStatusReqPublisher.class);
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
-        var participantUpdatePublisher = mock(ParticipantUpdatePublisher.class);
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
 
         var supervisionScanner = new SupervisionScanner(automationCompositionProvider, acDefinitionProvider,
                 automationCompositionStateChangePublisher, automationCompositionUpdatePublisher, participantProvider,
-                participantStatusReqPublisher, participantUpdatePublisher, acRuntimeParameterGroup);
+                participantStatusReqPublisher, acRuntimeParameterGroup);
 
         supervisionScanner.run(false);
 
@@ -212,21 +206,16 @@ class SupervisionScannerTest {
         var automationCompositionUpdatePublisher = mock(AutomationCompositionUpdatePublisher.class);
         var participantStatusReqPublisher = mock(ParticipantStatusReqPublisher.class);
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
-        var participantUpdatePublisher = mock(ParticipantUpdatePublisher.class);
 
         var supervisionScanner = new SupervisionScanner(automationCompositionProvider, acDefinitionProvider,
                 automationCompositionStateChangePublisher, automationCompositionUpdatePublisher, participantProvider,
-                participantStatusReqPublisher, participantUpdatePublisher, acRuntimeParameterGroup);
+                participantStatusReqPublisher, acRuntimeParameterGroup);
 
-        supervisionScanner
-                .handleParticipantRegister(new ImmutablePair<>(participant.getKey().asIdentifier(), PARTICIPANT_TYPE));
         supervisionScanner.handleParticipantStatus(participant.getKey().asIdentifier());
         supervisionScanner.run(true);
         verify(participantStatusReqPublisher).send(any(ToscaConceptIdentifier.class));
         verify(participantProvider).saveParticipant(any());
 
-        supervisionScanner
-                .handleParticipantUpdateAck(new ImmutablePair<>(participant.getKey().asIdentifier(), PARTICIPANT_TYPE));
         supervisionScanner.run(true);
         verify(participantProvider, times(2)).saveParticipant(any());
     }

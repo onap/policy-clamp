@@ -20,17 +20,12 @@
 
 package org.onap.policy.clamp.models.acm.concepts;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.function.UnaryOperator;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaProperty;
 
 /**
  * Class to represent an automation composition element definition instance.
@@ -46,10 +41,6 @@ public class AutomationCompositionElementDefinition {
     // The definition of the Automation Composition Element in TOSCA
     private ToscaNodeTemplate automationCompositionElementToscaNodeTemplate;
 
-    // A map indexed by the property name. Each map entry is the serialized value of the property,
-    // which can be deserialized into an instance of the type of the property.
-    private Map<String, ToscaProperty> commonPropertiesMap = new LinkedHashMap<>();
-
     /**
      * Copy constructor, does a deep copy but as all fields here are immutable, it's just a regular copy.
      *
@@ -59,6 +50,5 @@ public class AutomationCompositionElementDefinition {
         this.acElementDefinitionId = acElementDefinition.acElementDefinitionId;
         this.automationCompositionElementToscaNodeTemplate =
                 new ToscaNodeTemplate(acElementDefinition.automationCompositionElementToscaNodeTemplate);
-        this.commonPropertiesMap = PfUtils.mapMap(acElementDefinition.commonPropertiesMap, UnaryOperator.identity());
     }
 }

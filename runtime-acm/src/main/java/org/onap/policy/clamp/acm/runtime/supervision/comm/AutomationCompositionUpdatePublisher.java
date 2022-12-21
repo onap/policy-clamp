@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUpdates;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionUpdate;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
@@ -69,6 +68,7 @@ public class AutomationCompositionUpdatePublisher extends AbstractParticipantPub
             description = "AUTOMATION_COMPOSITION_UPDATE messages published")
     public void send(AutomationComposition automationComposition, int startPhase) {
         var automationCompositionUpdateMsg = new AutomationCompositionUpdate();
+        automationCompositionUpdateMsg.setCompositionId(automationComposition.getCompositionId());
         automationCompositionUpdateMsg.setStartPhase(startPhase);
         automationCompositionUpdateMsg.setAutomationCompositionId(automationComposition.getInstanceId());
         automationCompositionUpdateMsg.setMessageId(UUID.randomUUID());
@@ -76,7 +76,7 @@ public class AutomationCompositionUpdatePublisher extends AbstractParticipantPub
         var toscaServiceTemplate = acDefinitionProvider.getAcDefinition(automationComposition.getCompositionId());
 
         List<ParticipantUpdates> participantUpdates = new ArrayList<>();
-        for (AutomationCompositionElement element : automationComposition.getElements().values()) {
+        for (var element : automationComposition.getElements().values()) {
             AcmUtils.setAcPolicyInfo(element, toscaServiceTemplate);
             AcmUtils.prepareParticipantUpdate(element, participantUpdates);
         }

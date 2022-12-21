@@ -25,11 +25,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.jupiter.api.Test;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegister;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatus;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUpdateAck;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class SupervisionAspectTest {
@@ -68,34 +65,6 @@ class SupervisionAspectTest {
         try (var supervisionAspect = new SupervisionAspect(supervisionScanner)) {
             supervisionAspect.handleParticipantStatus(participantStatusMessage);
             verify(supervisionScanner, timeout(500)).handleParticipantStatus(PARTICIPANT_ID);
-        }
-    }
-
-    @Test
-    void testHandleParticipantUpdateAck() throws Exception {
-        var updateAckMessage = new ParticipantUpdateAck();
-        updateAckMessage.setParticipantId(PARTICIPANT_ID);
-        updateAckMessage.setParticipantType(PARTICIPANT_TYPE);
-
-        var supervisionScanner = mock(SupervisionScanner.class);
-        try (var supervisionAspect = new SupervisionAspect(supervisionScanner)) {
-            supervisionAspect.handleParticipantUpdateAck(updateAckMessage);
-            verify(supervisionScanner, timeout(500))
-                    .handleParticipantUpdateAck(new ImmutablePair<>(PARTICIPANT_ID, PARTICIPANT_TYPE));
-        }
-    }
-
-    @Test
-    void testHandleParticipantRegister() throws Exception {
-        var participantRegister = new ParticipantRegister();
-        participantRegister.setParticipantId(PARTICIPANT_ID);
-        participantRegister.setParticipantType(PARTICIPANT_TYPE);
-
-        var supervisionScanner = mock(SupervisionScanner.class);
-        try (var supervisionAspect = new SupervisionAspect(supervisionScanner)) {
-            supervisionAspect.handleParticipantRegister(participantRegister, true);
-            verify(supervisionScanner, timeout(500))
-                    .handleParticipantRegister(new ImmutablePair<>(PARTICIPANT_ID, PARTICIPANT_TYPE));
         }
     }
 }
