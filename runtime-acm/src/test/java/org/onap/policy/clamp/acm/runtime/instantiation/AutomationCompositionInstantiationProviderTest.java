@@ -40,7 +40,6 @@ import org.onap.policy.clamp.common.acm.exception.AutomationCompositionException
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationCommand;
-import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationUpdate;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
@@ -117,32 +116,24 @@ class AutomationCompositionInstantiationProviderTest {
         assertThat(automationCompositionCreate)
                 .isEqualTo(automationCompositionsGet.getAutomationCompositionList().get(0));
 
-        var instanceUpdate = new InstantiationUpdate();
         var automationCompositionUpdate =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_UPDATE_JSON, "Crud");
         automationCompositionUpdate.setCompositionId(compositionId);
-        instanceUpdate.setElements(automationCompositionUpdate.getElements());
         when(acProvider.getAutomationComposition(automationCompositionUpdate.getInstanceId()))
                 .thenReturn(automationCompositionUpdate);
         when(acProvider.updateAutomationComposition(automationCompositionUpdate))
                 .thenReturn(automationCompositionUpdate);
 
-        instantiationResponse =
-                instantiationProvider.updateAutomationComposition(automationCompositionUpdate.getCompositionId(),
-                        automationCompositionUpdate.getInstanceId(), instanceUpdate);
+        instantiationResponse = instantiationProvider.updateAutomationComposition(
+                automationCompositionUpdate.getCompositionId(), automationCompositionUpdate);
         InstantiationUtils.assertInstantiationResponse(instantiationResponse, automationCompositionUpdate);
 
         verify(acProvider).updateAutomationComposition(automationCompositionUpdate);
 
-        var instanceUpdateCommand = new InstantiationUpdate();
         var instantiationCommand =
                 InstantiationUtils.getInstantiationCommandFromResource(AC_INSTANTIATION_CHANGE_STATE_JSON);
-        instanceUpdateCommand.setInstantiationCommand(instantiationCommand);
-        instantiationResponse =
-                instantiationProvider.updateAutomationComposition(automationCompositionUpdate.getCompositionId(),
-                        automationCompositionUpdate.getInstanceId(), instanceUpdateCommand);
-        InstantiationUtils.assertInstantiationResponse(instantiationResponse, automationCompositionUpdate);
-
+        instantiationProvider.issueAutomationCompositionCommand(automationCompositionUpdate,
+                instantiationCommand);
         verify(supervisionHandler).triggerAutomationCompositionSupervision(automationCompositionUpdate);
 
         // in order to delete a automationComposition the state must be UNINITIALISED
@@ -262,11 +253,8 @@ class AutomationCompositionInstantiationProviderTest {
 
         when(acProvider.getAutomationComposition(automationComposition.getInstanceId()))
                 .thenReturn(automationComposition);
-        var instanceUpdate = new InstantiationUpdate();
-        instanceUpdate.setElements(automationComposition.getElements());
 
-        var instanceId = automationComposition.getInstanceId();
-        assertThatThrownBy(() -> provider.updateAutomationComposition(compositionId, instanceId, instanceUpdate))
+        assertThatThrownBy(() -> provider.updateAutomationComposition(compositionId, automationComposition))
                 .hasMessageMatching(AC_ELEMENT_NAME_NOT_FOUND);
     }
 
@@ -288,17 +276,14 @@ class AutomationCompositionInstantiationProviderTest {
         assertThatThrownBy(() -> provider.createAutomationComposition(compositionId, automationComposition))
                 .hasMessageMatching(AC_DEFINITION_NOT_FOUND);
 
-        var instanceUpdate = new InstantiationUpdate();
-        instanceUpdate.setElements(automationComposition.getElements());
-        var instanceId = automationComposition.getInstanceId();
-        assertThatThrownBy(() -> provider.updateAutomationComposition(compositionId, instanceId, instanceUpdate))
+        assertThatThrownBy(() -> provider.updateAutomationComposition(compositionId, automationComposition))
                 .hasMessageMatching(AC_DEFINITION_NOT_FOUND);
 
         var wrongCompositionId = UUID.randomUUID();
         assertThatThrownBy(() -> provider.createAutomationComposition(wrongCompositionId, automationComposition))
                 .hasMessageMatching(compositionId + DO_NOT_MATCH + wrongCompositionId);
 
-        assertThatThrownBy(() -> provider.updateAutomationComposition(wrongCompositionId, instanceId, instanceUpdate))
+        assertThatThrownBy(() -> provider.updateAutomationComposition(wrongCompositionId, automationComposition))
                 .hasMessageMatching(compositionId + DO_NOT_MATCH + wrongCompositionId);
     }
 
@@ -310,17 +295,12 @@ class AutomationCompositionInstantiationProviderTest {
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
         var instantiationProvider = new AutomationCompositionInstantiationProvider(acProvider, supervisionHandler,
                 participantProvider, acDefinitionProvider);
-        var instanceUpdate = new InstantiationUpdate();
-        instanceUpdate.setInstantiationCommand(new InstantiationCommand());
         var automationComposition = InstantiationUtils
                 .getAutomationCompositionFromResource(AC_INSTANTIATION_AC_DEFINITION_NOT_FOUND_JSON, "AcNotFound");
         when(acProvider.getAutomationComposition(automationComposition.getInstanceId()))
                 .thenReturn(automationComposition);
 
-        var compositionId = automationComposition.getCompositionId();
-        var instanceId = automationComposition.getInstanceId();
-        assertThatThrownBy(
-                () -> instantiationProvider.updateAutomationComposition(compositionId, instanceId, instanceUpdate))
-                        .hasMessageMatching(ORDERED_STATE_INVALID);
+        assertThatThrownBy(() -> instantiationProvider.issueAutomationCompositionCommand(automationComposition,
+                new InstantiationCommand())).hasMessageMatching(ORDERED_STATE_INVALID);
     }
 }

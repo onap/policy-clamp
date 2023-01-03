@@ -37,7 +37,6 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationCommand;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse;
-import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationUpdate;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
@@ -102,29 +101,27 @@ public class AutomationCompositionInstantiationProvider {
      * Update automation composition.
      *
      * @param compositionId The UUID of the automation composition definition
-     * @param instanceId The UUID of the automation composition instance
-     * @param instanceUpdate the automation composition
+     * @param automationComposition the automation composition
      * @return the result of the update
      */
-    public InstantiationResponse updateAutomationComposition(UUID compositionId, UUID instanceId,
-            InstantiationUpdate instanceUpdate) {
-        var automationComposition = automationCompositionProvider.getAutomationComposition(instanceId);
-        if (!compositionId.equals(automationComposition.getCompositionId())) {
+    public InstantiationResponse updateAutomationComposition(UUID compositionId,
+            AutomationComposition automationComposition) {
+        var instanceId = automationComposition.getInstanceId();
+        var acToUpdate = automationCompositionProvider.getAutomationComposition(instanceId);
+        if (!compositionId.equals(acToUpdate.getCompositionId())) {
             throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
                     automationComposition.getCompositionId() + DO_NOT_MATCH + compositionId);
         }
-        if (instanceUpdate.getElements() != null) {
-            automationComposition.setElements(instanceUpdate.getElements());
-            var validationResult = validateAutomationComposition(automationComposition);
-            if (!validationResult.isValid()) {
-                throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, validationResult.getResult());
-            }
-            automationComposition = automationCompositionProvider.updateAutomationComposition(automationComposition);
+        acToUpdate.setElements(automationComposition.getElements());
+        acToUpdate.setName(automationComposition.getName());
+        acToUpdate.setVersion(automationComposition.getVersion());
+        acToUpdate.setDescription(automationComposition.getDescription());
+        acToUpdate.setDerivedFrom(automationComposition.getDerivedFrom());
+        var validationResult = validateAutomationComposition(acToUpdate);
+        if (!validationResult.isValid()) {
+            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, validationResult.getResult());
         }
-
-        if (instanceUpdate.getInstantiationCommand() != null) {
-            issueAutomationCompositionCommand(automationComposition, instanceUpdate.getInstantiationCommand());
-        }
+        automationComposition = automationCompositionProvider.updateAutomationComposition(acToUpdate);
 
         var response = new InstantiationResponse();
         response.setInstanceId(instanceId);

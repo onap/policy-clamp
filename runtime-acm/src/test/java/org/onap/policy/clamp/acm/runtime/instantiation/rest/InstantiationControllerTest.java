@@ -41,10 +41,10 @@ import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
 import org.onap.policy.clamp.acm.runtime.main.rest.InstantiationController;
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
 import org.onap.policy.clamp.acm.runtime.util.rest.CommonRestController;
+import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
-import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationCommand;
+import org.onap.policy.clamp.models.acm.messages.rest.instantiation.AcInstanceStateUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse;
-import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationUpdate;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
 import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionRepository;
@@ -218,7 +218,6 @@ class InstantiationControllerTest extends CommonRestController {
         assertEquals(automationComposition, automationCompositionsQuery.getAutomationCompositionList().get(0));
     }
 
-    @Disabled
     @Test
     void testUpdate() {
         var automationCompositionCreate =
@@ -231,10 +230,8 @@ class InstantiationControllerTest extends CommonRestController {
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_UPDATE_JSON, "Update");
         automationComposition.setCompositionId(compositionId);
         automationComposition.setInstanceId(response.getInstanceId());
-        var instantiationUpdate = new InstantiationUpdate();
-        instantiationUpdate.setElements(automationComposition.getElements());
-        var invocationBuilder = super.sendRequest(getInstanceEndPoint(response.getInstanceId()));
-        var resp = invocationBuilder.put(Entity.json(automationComposition));
+        var invocationBuilder = super.sendRequest(getInstanceEndPoint());
+        var resp = invocationBuilder.post(Entity.json(automationComposition));
         assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
 
         var instResponse = resp.readEntity(InstantiationResponse.class);
@@ -285,7 +282,7 @@ class InstantiationControllerTest extends CommonRestController {
     @Test
     void testCommand_NotFound1() {
         var invocationBuilder = super.sendRequest(getInstanceEndPoint(UUID.randomUUID()));
-        var resp = invocationBuilder.put(Entity.json(new InstantiationUpdate()));
+        var resp = invocationBuilder.post(Entity.json(new AutomationComposition()));
         assertEquals(Response.Status.NOT_FOUND.getStatusCode(), resp.getStatus());
     }
 
@@ -298,9 +295,9 @@ class InstantiationControllerTest extends CommonRestController {
 
         var instResponse = instantiationProvider.createAutomationComposition(compositionId, acFromRsc);
 
-        var command = new InstantiationUpdate();
-        command.setInstantiationCommand(new InstantiationCommand());
-        command.getInstantiationCommand().setOrderedState(null);
+        var command = new AcInstanceStateUpdate();
+        command.setDeployOrder(null);
+        command.setLockOrder(null);
 
         var invocationBuilder = super.sendRequest(getInstanceEndPoint(instResponse.getInstanceId()));
         var resp = invocationBuilder.put(Entity.json(command));
@@ -320,9 +317,7 @@ class InstantiationControllerTest extends CommonRestController {
             participantProvider.saveParticipant(participant);
         }
 
-        var instantiationUpdate = new InstantiationUpdate();
-        var command = InstantiationUtils.getInstantiationCommandFromResource(AC_INSTANTIATION_CHANGE_STATE_JSON);
-        instantiationUpdate.setInstantiationCommand(command);
+        var instantiationUpdate = new AcInstanceStateUpdate();
 
         var invocationBuilder = super.sendRequest(getInstanceEndPoint(instResponse.getInstanceId()));
         var resp = invocationBuilder.put(Entity.json(instantiationUpdate));
@@ -335,8 +330,6 @@ class InstantiationControllerTest extends CommonRestController {
         var automationCompositionsGet = instantiationProvider.getAutomationCompositions(compositionId,
                 toscaConceptIdentifier.getName(), toscaConceptIdentifier.getVersion());
         assertThat(automationCompositionsGet.getAutomationCompositionList()).hasSize(1);
-        assertEquals(command.getOrderedState(),
-                automationCompositionsGet.getAutomationCompositionList().get(0).getOrderedState());
     }
 
     private synchronized void deleteEntryInDB() {

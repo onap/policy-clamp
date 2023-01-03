@@ -28,7 +28,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.onap.policy.clamp.acm.runtime.util.rest.CommonRestController;
-import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationUpdate;
+import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.messages.rest.instantiation.AcInstanceStateUpdate;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -44,7 +45,6 @@ class InstantiationControllerStubTest extends CommonRestController {
     private static final String INSTANTIATION_ENDPOINT = "instances";
     private static final String COMPOSITION_ID = "1aeed185-a98b-45b6-af22-8d5d20485ea3";
     private static final String INSTANCE_ID = "709c62b3-8918-41b9-a747-d21eb79c6c23";
-    private static InstantiationUpdate instantiationUpdate = new InstantiationUpdate();
 
     @LocalServerPort
     private int randomServerPort;
@@ -79,7 +79,7 @@ class InstantiationControllerStubTest extends CommonRestController {
                 + "/" + COMPOSITION_ID
                 + "/" + INSTANTIATION_ENDPOINT
                 + "/" + INSTANCE_ID);
-        var respPost = invocationBuilder.put(Entity.json(instantiationUpdate));
+        var respPost = invocationBuilder.put(Entity.json(new AcInstanceStateUpdate()));
         assertThat(Response.Status.OK.getStatusCode()).isEqualTo(respPost.getStatus());
     }
 
@@ -88,7 +88,7 @@ class InstantiationControllerStubTest extends CommonRestController {
         var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT
                 + "/" + COMPOSITION_ID
                 + "/" + INSTANTIATION_ENDPOINT);
-        var respPost = invocationBuilder.post(Entity.json(instantiationUpdate));
+        var respPost = invocationBuilder.post(Entity.json(new AutomationComposition()));
         assertThat(Response.Status.OK.getStatusCode()).isEqualTo(respPost.getStatus());
     }
 

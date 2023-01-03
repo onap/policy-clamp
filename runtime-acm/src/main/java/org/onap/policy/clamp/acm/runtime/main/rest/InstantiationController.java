@@ -31,7 +31,6 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.AcInstanceStateUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse;
-import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationUpdate;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -59,10 +58,14 @@ public class InstantiationController extends AbstractRestController implements A
     public ResponseEntity<InstantiationResponse> createCompositionInstance(UUID compositionId,
             AutomationComposition automationComposition, UUID requestId) {
 
-        var response = provider.createAutomationComposition(compositionId, automationComposition);
-        return ResponseEntity
-                .created(createUri("/compositions/" + compositionId + "/instances/" + response.getInstanceId()))
-                .body(response);
+        if (automationComposition.getInstanceId() == null) {
+            var response = provider.createAutomationComposition(compositionId, automationComposition);
+            return ResponseEntity
+                    .created(createUri("/compositions/" + compositionId + "/instances/" + response.getInstanceId()))
+                    .body(response);
+        } else {
+            return ResponseEntity.ok().body(provider.updateAutomationComposition(compositionId, automationComposition));
+        }
     }
 
     /**
@@ -96,22 +99,6 @@ public class InstantiationController extends AbstractRestController implements A
     }
 
     /**
-     * Updates a automation composition.
-     *
-     * @param compositionId The UUID of the automation composition definition
-     * @param instanceId The UUID of the automation composition instance
-     * @param instanceUpdate the automation composition to update
-     * @param requestId request ID used in ONAP logging
-     * @return a response
-     */
-    public ResponseEntity<InstantiationResponse> updateCompositionInstance(UUID compositionId, UUID instanceId,
-            InstantiationUpdate instanceUpdate, UUID requestId) {
-
-        return ResponseEntity.ok()
-                .body(provider.updateAutomationComposition(compositionId, instanceId, instanceUpdate));
-    }
-
-    /**
      * Deletes a automation composition definition.
      *
      * @param compositionId The UUID of the automation composition definition
@@ -127,8 +114,8 @@ public class InstantiationController extends AbstractRestController implements A
     }
 
     @Override
-    public ResponseEntity<Void> ompositionInstanceState(UUID compositionId, UUID instanceId,
-        @Valid AcInstanceStateUpdate body, UUID requestId) {
+    public ResponseEntity<Void> compositionInstanceState(UUID compositionId, UUID instanceId,
+            @Valid AcInstanceStateUpdate body, UUID requestId) {
         // TODO Auto-generated method stub
         return null;
     }
