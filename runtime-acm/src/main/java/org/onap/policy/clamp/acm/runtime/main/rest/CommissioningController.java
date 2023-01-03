@@ -28,7 +28,6 @@ import org.onap.policy.clamp.acm.runtime.main.rest.gen.AutomationCompositionDefi
 import org.onap.policy.clamp.acm.runtime.main.web.AbstractRestController;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.AcTypeStateUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.CommissioningResponse;
-import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplates;
 import org.springframework.context.annotation.Profile;
@@ -54,10 +53,15 @@ public class CommissioningController extends AbstractRestController implements A
      */
     @Override
     public ResponseEntity<CommissioningResponse> createCompositionDefinitions(ToscaServiceTemplate body,
-        UUID requestId) {
-
-        var response = provider.createAutomationCompositionDefinitions(body);
-        return ResponseEntity.created(createUri("/compositions/" + response.getCompositionId())).body(response);
+            UUID requestId) {
+        var compositionId = body.getMetadata() != null ? body.getMetadata().get("compositionId") : null;
+        if (compositionId == null) {
+            var response = provider.createAutomationCompositionDefinitions(body);
+            return ResponseEntity.created(createUri("/compositions/" + response.getCompositionId())).body(response);
+        } else {
+            return ResponseEntity.ok()
+                    .body(provider.updateCompositionDefinition(UUID.fromString(compositionId.toString()), body));
+        }
     }
 
     /**
@@ -79,7 +83,6 @@ public class CommissioningController extends AbstractRestController implements A
      * @param version the version of the automation composition definition to get, null for all definitions
      * @param requestId request ID used in ONAP logging
      * @return the automation composition definitions
-     * @throws PfModelException on errors getting details of all or specific automation composition definitions
      */
     @Override
     public ResponseEntity<ToscaServiceTemplates> queryCompositionDefinitions(String name, String version,
@@ -90,11 +93,6 @@ public class CommissioningController extends AbstractRestController implements A
     @Override
     public ResponseEntity<ToscaServiceTemplate> getCompositionDefinition(UUID compositionId, UUID requestId) {
         return ResponseEntity.ok().body(provider.getAutomationCompositionDefinitions(compositionId));
-    }
-
-    public ResponseEntity<CommissioningResponse> updateCompositionDefinition(UUID compositionId,
-        ToscaServiceTemplate body, UUID requestId) {
-        return ResponseEntity.ok().body(provider.updateCompositionDefinition(compositionId, body));
     }
 
     @Override

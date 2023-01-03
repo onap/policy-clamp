@@ -29,12 +29,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVICE_TEMPLATE_YAML;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
@@ -128,7 +128,6 @@ class CommissioningControllerTest extends CommonRestController {
         }
     }
 
-    @Disabled
     @Test
     void testUpdate() {
         var toscaDataType = new ToscaDataType();
@@ -143,8 +142,9 @@ class CommissioningControllerTest extends CommonRestController {
         var compositionId = createEntryInDB("forUpdate");
         var serviceTemplateUpdate = new ToscaServiceTemplate(serviceTemplate);
         serviceTemplateUpdate.getDataTypes().put(toscaDataType.getName(), toscaDataType);
-        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT + "/" + compositionId);
-        var resp = invocationBuilder.put(Entity.json(serviceTemplateUpdate));
+        serviceTemplateUpdate.setMetadata(Map.of("compositionId", compositionId));
+        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT);
+        var resp = invocationBuilder.post(Entity.json(serviceTemplateUpdate));
         assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
         var commissioningResponse = resp.readEntity(CommissioningResponse.class);
         assertNotNull(commissioningResponse);

@@ -25,13 +25,10 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.Response.Status;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionHandler;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.CommissioningResponse;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
-import org.onap.policy.clamp.models.acm.utils.AcmUtils;
-import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
@@ -61,9 +58,8 @@ public class CommissioningProvider {
      * @param supervisionHandler the Supervision Handler
      * @param participantProvider the Participant Provider
      */
-    public CommissioningProvider(AcDefinitionProvider acDefinitionProvider,
-            AutomationCompositionProvider acProvider, SupervisionHandler supervisionHandler,
-            ParticipantProvider participantProvider) {
+    public CommissioningProvider(AcDefinitionProvider acDefinitionProvider, AutomationCompositionProvider acProvider,
+            SupervisionHandler supervisionHandler, ParticipantProvider participantProvider) {
         this.acDefinitionProvider = acDefinitionProvider;
         this.acProvider = acProvider;
         this.supervisionHandler = supervisionHandler;
@@ -113,19 +109,10 @@ public class CommissioningProvider {
     public CommissioningResponse updateCompositionDefinition(UUID compositionId, ToscaServiceTemplate serviceTemplate) {
 
         var automationCompositions = acProvider.getAcInstancesByCompositionId(compositionId);
-        var result = new BeanValidationResult("AutomationCompositions", automationCompositions);
-        for (var automationComposition : automationCompositions) {
-            if (!AutomationCompositionState.UNINITIALISED.equals(automationComposition.getState())) {
-                throw new PfModelRuntimeException(Status.BAD_REQUEST,
-                        "There is an Automation Composition instantioation with state in "
-                                + automationComposition.getState());
-            }
-            result.addResult(AcmUtils.validateAutomationComposition(automationComposition, serviceTemplate));
+        if (!automationCompositions.isEmpty()) {
+            throw new PfModelRuntimeException(Status.BAD_REQUEST,
+                    "There are ACM instances, Update of ACM Definition not allowed");
         }
-        if (!result.isValid()) {
-            throw new PfModelRuntimeException(Status.BAD_REQUEST, "Service template non valid: " + result.getMessage());
-        }
-
         acDefinitionProvider.updateServiceTemplate(compositionId, serviceTemplate);
 
         return createCommissioningResponse(compositionId, serviceTemplate);

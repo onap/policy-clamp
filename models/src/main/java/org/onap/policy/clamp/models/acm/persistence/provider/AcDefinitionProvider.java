@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.models.acm.persistence.provider;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -52,7 +53,12 @@ public class AcDefinitionProvider {
     public AutomationCompositionDefinition createAutomationCompositionDefinition(
             final ToscaServiceTemplate serviceTemplate) {
         var acmDefinition = new AutomationCompositionDefinition();
-        acmDefinition.setCompositionId(UUID.randomUUID());
+        var compositionId = UUID.randomUUID();
+        acmDefinition.setCompositionId(compositionId);
+        if (serviceTemplate.getMetadata() == null) {
+            serviceTemplate.setMetadata(new HashMap<>());
+        }
+        serviceTemplate.getMetadata().put("compositionId", compositionId);
         acmDefinition.setServiceTemplate(serviceTemplate);
         var jpaAcmDefinition = ProviderUtils.getJpaAndValidate(acmDefinition, JpaAutomationCompositionDefinition::new,
                 "AutomationCompositionDefinition");
