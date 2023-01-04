@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2022 Nordix Foundation.
+ * Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,13 +40,14 @@ import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfConceptKey;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaTypedEntityFilter;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class ParticipantProviderTest {
 
     private static final Coder CODER = new StandardCoder();
     private static final String PARTICIPANT_JSON = "src/test/resources/providers/TestParticipant.json";
     private static final String LIST_IS_NULL = ".*. is marked .*ull but is null";
+    private static final ToscaConceptIdentifier INVALID_ID = new ToscaConceptIdentifier("invalid_name", "1.0.1");
 
     private final List<Participant> inputParticipants = new ArrayList<>();
     private List<JpaParticipant> jpaParticipantList;
@@ -67,18 +68,12 @@ class ParticipantProviderTest {
         }
         var participantProvider = new ParticipantProvider(participantRepository);
 
-        assertThatThrownBy(() -> participantProvider.saveParticipant(null))
-            .hasMessageMatching(LIST_IS_NULL);
+        assertThatThrownBy(() -> participantProvider.saveParticipant(null)).hasMessageMatching(LIST_IS_NULL);
 
         when(participantRepository.save(any())).thenReturn(jpaParticipantList.get(0));
 
         Participant savedParticipant = participantProvider.saveParticipant(inputParticipants.get(0));
         assertEquals(savedParticipant, inputParticipants.get(0));
-
-        when(participantRepository.save(any())).thenThrow(IllegalArgumentException.class);
-
-        assertThatThrownBy(() -> participantProvider.saveParticipant(inputParticipants.get(0)))
-            .hasMessageMatching("Error in save Participant");
     }
 
     @Test
@@ -98,26 +93,10 @@ class ParticipantProviderTest {
 
         assertThat(participantProvider.getParticipants("invalid_name", "1.0.1")).isEmpty();
 
-        assertThat(participantProvider.findParticipant("invalid_name", "1.0.1")).isEmpty();
+        assertThat(participantProvider.findParticipant(INVALID_ID)).isEmpty();
 
         when(participantRepository.findAll()).thenReturn(jpaParticipantList);
         assertThat(participantProvider.getParticipants()).hasSize(inputParticipants.size());
-
-        when(participantRepository.findById(any())).thenThrow(IllegalArgumentException.class);
-
-        assertThatThrownBy(() -> participantProvider.findParticipant("notValid", "notValid"))
-            .hasMessageMatching("Error in find Participant");
-
-        assertThatThrownBy(() -> participantProvider.getFilteredParticipants(null))
-            .hasMessageMatching("filter is marked .*ull but is null");
-
-        when(participantRepository.getFiltered((JpaParticipant.class), (null), (null)))
-                .thenReturn(jpaParticipantList);
-
-        final ToscaTypedEntityFilter<Participant> filter = ToscaTypedEntityFilter.<Participant>builder()
-                .type("org.onap.domain.pmsh.PMSHAutomationCompositionDefinition").build();
-        assertEquals(1, participantProvider.getFilteredParticipants(filter).size());
-
     }
 
     @Test
@@ -125,19 +104,13 @@ class ParticipantProviderTest {
         var participantRepository = mock(ParticipantRepository.class);
         var participantProvider = new ParticipantProvider(participantRepository);
 
-        assertThatThrownBy(() -> participantProvider.deleteParticipant("Invalid_name", "1.0.1"))
-            .hasMessageMatching(".*.failed, participant does not exist");
-
-        String name = inputParticipants.get(0).getName();
-        String version = inputParticipants.get(0).getVersion();
+        assertThatThrownBy(() -> participantProvider.deleteParticipant(INVALID_ID))
+                .hasMessageMatching(".*.failed, participant does not exist");
 
         when(participantRepository.findById(any())).thenReturn(Optional.of(jpaParticipantList.get(0)));
 
-        Participant deletedParticipant = participantProvider.deleteParticipant(name, version);
+        Participant deletedParticipant =
+                participantProvider.deleteParticipant(inputParticipants.get(0).getDefinition());
         assertEquals(inputParticipants.get(0), deletedParticipant);
-
-        when(participantRepository.findById(any())).thenThrow(IllegalArgumentException.class);
-        assertThatThrownBy(() -> participantProvider.deleteParticipant(name, version))
-            .hasMessageMatching("Error in delete Participant");
     }
 }

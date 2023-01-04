@@ -5,8 +5,7 @@
     "name": "org.onap.domain.pmsh.PMSHAutomationCompositionDefinition",
     "version": "1.0.0"
   },
-  "participantState": "PASSIVE",
-  "healthStatus": "HEALTHY",
+  "participantState": "ON_LINE",
   "description": "A dummy PMSH participant1",
   "participantType":{
     "name": "org.onap.domain.pmsh.PolicyAutomationCompositionDefinition",

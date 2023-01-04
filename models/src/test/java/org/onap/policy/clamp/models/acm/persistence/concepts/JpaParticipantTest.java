@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantHealthStatus;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -48,58 +47,52 @@ class JpaParticipantTest {
 
         assertThatThrownBy(() -> new JpaParticipant((PfConceptKey) null)).hasMessageMatching(NULL_KEY_ERROR);
 
-        assertThatThrownBy(() -> new JpaParticipant(null, null, null, null)).hasMessageMatching(NULL_KEY_ERROR);
+        assertThatThrownBy(() -> new JpaParticipant(null, null, null)).hasMessageMatching(NULL_KEY_ERROR);
 
-        assertThatThrownBy(() -> new JpaParticipant(null, null, null, ParticipantHealthStatus.HEALTHY))
+        assertThatThrownBy(() -> new JpaParticipant(null, null, null))
             .hasMessageMatching(NULL_KEY_ERROR);
 
-        assertThatThrownBy(() -> new JpaParticipant(null, null, ParticipantState.ACTIVE, null))
+        assertThatThrownBy(() -> new JpaParticipant(null, null, ParticipantState.ON_LINE))
             .hasMessageMatching(NULL_KEY_ERROR);
 
         assertThatThrownBy(
-            () -> new JpaParticipant(null, null, ParticipantState.ACTIVE, ParticipantHealthStatus.HEALTHY))
+            () -> new JpaParticipant(null, null, ParticipantState.ON_LINE))
             .hasMessageMatching(NULL_KEY_ERROR);
 
-        assertThatThrownBy(() -> new JpaParticipant(null, new PfConceptKey(), null, null))
+        assertThatThrownBy(() -> new JpaParticipant(null, new PfConceptKey(), null))
             .hasMessageMatching(NULL_KEY_ERROR);
 
-        assertThatThrownBy(() -> new JpaParticipant(null, new PfConceptKey(), null, ParticipantHealthStatus.HEALTHY))
+        assertThatThrownBy(() -> new JpaParticipant(null, new PfConceptKey(), null))
             .hasMessageMatching(NULL_KEY_ERROR);
 
-        assertThatThrownBy(() -> new JpaParticipant(null, new PfConceptKey(), ParticipantState.ACTIVE, null))
+        assertThatThrownBy(() -> new JpaParticipant(null, new PfConceptKey(), ParticipantState.ON_LINE))
             .hasMessageMatching(NULL_KEY_ERROR);
 
-        assertThatThrownBy(() -> new JpaParticipant(null, new PfConceptKey(), ParticipantState.ACTIVE,
-            ParticipantHealthStatus.HEALTHY))
+        assertThatThrownBy(() -> new JpaParticipant(null, new PfConceptKey(), ParticipantState.ON_LINE))
             .hasMessageMatching(NULL_KEY_ERROR);
 
-        assertThatThrownBy(() -> new JpaParticipant(new PfConceptKey(), null, null, null))
+        assertThatThrownBy(() -> new JpaParticipant(new PfConceptKey(), null, null))
             .hasMessageMatching("definition is marked .*ull but is null");
 
-        assertThatThrownBy(() -> new JpaParticipant(new PfConceptKey(), null, null, ParticipantHealthStatus.HEALTHY))
+        assertThatThrownBy(() -> new JpaParticipant(new PfConceptKey(), null, null))
             .hasMessageMatching("definition is marked .*ull but is null");
 
-        assertThatThrownBy(() -> new JpaParticipant(new PfConceptKey(), null, ParticipantState.ACTIVE, null))
+        assertThatThrownBy(() -> new JpaParticipant(new PfConceptKey(), null, ParticipantState.ON_LINE))
             .hasMessageMatching("definition is marked .*ull but is null");
 
-        assertThatThrownBy(() -> new JpaParticipant(new PfConceptKey(), null, ParticipantState.ACTIVE,
-            ParticipantHealthStatus.HEALTHY)).hasMessageMatching("definition is marked .*ull but is null");
+        assertThatThrownBy(() -> new JpaParticipant(new PfConceptKey(), null, ParticipantState.ON_LINE
+            )).hasMessageMatching("definition is marked .*ull but is null");
 
-        assertThatThrownBy(() -> new JpaParticipant(new PfConceptKey(), new PfConceptKey(), null, null))
+        assertThatThrownBy(() -> new JpaParticipant(new PfConceptKey(), new PfConceptKey(), null))
             .hasMessageMatching("participantState is marked .*ull but is null");
 
         assertThatThrownBy(
-            () -> new JpaParticipant(new PfConceptKey(), new PfConceptKey(), null, ParticipantHealthStatus.HEALTHY))
+            () -> new JpaParticipant(new PfConceptKey(), new PfConceptKey(), null))
             .hasMessageMatching("participantState is marked .*ull but is null");
-
-        assertThatThrownBy(
-            () -> new JpaParticipant(new PfConceptKey(), new PfConceptKey(), ParticipantState.ACTIVE, null))
-            .hasMessageMatching("healthStatus is marked .*ull but is null");
 
         assertNotNull(new JpaParticipant());
         assertNotNull(new JpaParticipant((new PfConceptKey())));
-        assertNotNull(new JpaParticipant(new PfConceptKey(), new PfConceptKey(), ParticipantState.ACTIVE,
-            ParticipantHealthStatus.HEALTHY));
+        assertNotNull(new JpaParticipant(new PfConceptKey(), new PfConceptKey(), ParticipantState.ON_LINE));
     }
 
     @Test
@@ -171,16 +164,10 @@ class JpaParticipantTest {
         testJpaParticipant.setDefinition(new PfConceptKey("participantDefinitionName", "0.0.1"));
         assertEquals(0, testJpaParticipant.compareTo(otherJpaParticipant));
 
-        testJpaParticipant.setParticipantState(ParticipantState.PASSIVE);
+        testJpaParticipant.setParticipantState(ParticipantState.OFF_LINE);
         assertNotEquals(0, testJpaParticipant.compareTo(otherJpaParticipant));
-        testJpaParticipant.setParticipantState(ParticipantState.UNKNOWN);
+        testJpaParticipant.setParticipantState(ParticipantState.ON_LINE);
         assertEquals(0, testJpaParticipant.compareTo(otherJpaParticipant));
-
-        testJpaParticipant.setHealthStatus(ParticipantHealthStatus.NOT_HEALTHY);
-        assertNotEquals(0, testJpaParticipant.compareTo(otherJpaParticipant));
-        testJpaParticipant.setHealthStatus(ParticipantHealthStatus.UNKNOWN);
-        assertEquals(0, testJpaParticipant.compareTo(otherJpaParticipant));
-
         assertEquals(testJpaParticipant, new JpaParticipant(testJpaParticipant));
     }
 
@@ -199,9 +186,8 @@ class JpaParticipantTest {
 
         p1.setDefinition(new PfConceptKey("defName", "0.0.1"));
         p1.setDescription("Description");
-        p1.setHealthStatus(ParticipantHealthStatus.HEALTHY);
         p1.setKey(new PfConceptKey("participant", "0.0.1"));
-        p1.setParticipantState(ParticipantState.ACTIVE);
+        p1.setParticipantState(ParticipantState.ON_LINE);
 
         assertThat(p1.toString()).contains("Participant(");
         assertNotEquals(0, p1.hashCode());

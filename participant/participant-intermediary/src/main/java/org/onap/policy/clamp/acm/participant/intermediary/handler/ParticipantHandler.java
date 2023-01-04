@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -29,13 +29,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import lombok.Getter;
-import lombok.Setter;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.acm.participant.intermediary.parameters.ParticipantParameters;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionInfo;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantHealthStatus;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionStateChange;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionUpdate;
@@ -69,12 +67,6 @@ public class ParticipantHandler {
 
     private final AutomationCompositionHandler automationCompositionHandler;
     private final ParticipantMessagePublisher publisher;
-
-    @Setter
-    private ParticipantState state = ParticipantState.UNKNOWN;
-
-    @Setter
-    private ParticipantHealthStatus healthStatus = ParticipantHealthStatus.UNKNOWN;
 
     private final Map<UUID, List<AutomationCompositionElementDefinition>> acElementDefsMap = new HashMap<>();
 
@@ -169,19 +161,7 @@ public class ParticipantHandler {
     public void handleParticipantRegisterAck(ParticipantRegisterAck participantRegisterAckMsg) {
         LOGGER.debug("ParticipantRegisterAck message received as responseTo {}",
                 participantRegisterAckMsg.getResponseTo());
-        statusToPassive();
         publisher.sendParticipantStatus(makeHeartbeat(false));
-    }
-
-    private void statusToPassive() {
-        if (ParticipantHealthStatus.UNKNOWN.equals(this.healthStatus)) {
-            this.healthStatus = ParticipantHealthStatus.HEALTHY;
-        }
-
-        if (ParticipantState.UNKNOWN.equals(this.state) || ParticipantState.TERMINATED.equals(this.state)) {
-            this.state = ParticipantState.PASSIVE;
-        }
-
     }
 
     /**
@@ -218,7 +198,6 @@ public class ParticipantHandler {
 
         acElementDefsMap.putIfAbsent(participantUpdateMsg.getCompositionId(), new ArrayList<>());
         if (!participantUpdateMsg.getParticipantDefinitionUpdates().isEmpty()) {
-            statusToPassive();
             // This message is to commission the automation composition
             for (var participantDefinition : participantUpdateMsg.getParticipantDefinitionUpdates()) {
                 if (participantDefinition.getParticipantType().equals(participantType)) {
@@ -230,7 +209,6 @@ public class ParticipantHandler {
         } else {
             // This message is to decommission the automation composition
             acElementDefsMap.get(participantUpdateMsg.getCompositionId()).clear();
-            this.state = ParticipantState.TERMINATED;
         }
         sendParticipantUpdateAck(participantUpdateMsg.getMessageId());
     }
@@ -245,7 +223,7 @@ public class ParticipantHandler {
         participantUpdateAck.setResult(true);
         participantUpdateAck.setParticipantId(participantId);
         participantUpdateAck.setParticipantType(participantType);
-        participantUpdateAck.setState(state);
+        participantUpdateAck.setState(ParticipantState.ON_LINE);
         publisher.sendParticipantUpdateAck(participantUpdateAck);
     }
 
@@ -263,8 +241,7 @@ public class ParticipantHandler {
         var heartbeat = new ParticipantStatus();
         heartbeat.setParticipantId(participantId);
         heartbeat.setParticipantType(participantType);
-        heartbeat.setHealthStatus(healthStatus);
-        heartbeat.setState(state);
+        heartbeat.setState(ParticipantState.ON_LINE);
         heartbeat.setAutomationCompositionInfoList(getAutomationCompositionInfoList());
 
         if (responseToParticipantStatusReq) {

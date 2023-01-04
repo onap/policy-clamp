@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2022 Nordix Foundation.
+ * Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,15 +23,13 @@ package org.onap.policy.clamp.models.acm.persistence.provider;
 import java.util.List;
 import java.util.Optional;
 import javax.ws.rs.core.Response.Status;
-import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaParticipant;
 import org.onap.policy.clamp.models.acm.persistence.repository.ParticipantRepository;
-import org.onap.policy.models.base.PfConceptKey;
-import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaTypedEntityFilter;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,10 +38,10 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ParticipantProvider {
 
-    private ParticipantRepository participantRepository;
+    private final ParticipantRepository participantRepository;
 
     /**
      * Get participants.
@@ -71,32 +69,12 @@ public class ParticipantProvider {
     /**
      * Get participant.
      *
-     * @param name the name of the participant to get
-     * @param version the version of the participant to get
+     * @param participantId the Id of the participant to get
      * @return the participant found
-     * @throws PfModelException on errors getting participant
      */
     @Transactional(readOnly = true)
-    public Optional<Participant> findParticipant(@NonNull final String name, @NonNull final String version)
-            throws PfModelException {
-        try {
-            return participantRepository.findById(new PfConceptKey(name, version)).map(JpaParticipant::toAuthorative);
-        } catch (IllegalArgumentException e) {
-            throw new PfModelException(Status.BAD_REQUEST, "Error in find Participant", e);
-        }
-    }
-
-    /**
-     * Get filtered participants.
-     *
-     * @param filter the filter for the participants to get
-     * @return the participants found
-     */
-    @Transactional(readOnly = true)
-    public List<Participant> getFilteredParticipants(@NonNull final ToscaTypedEntityFilter<Participant> filter) {
-
-        return filter.filter(ProviderUtils.asEntityList(
-                participantRepository.getFiltered(JpaParticipant.class, filter.getName(), filter.getVersion())));
+    public Optional<Participant> findParticipant(@NonNull final ToscaConceptIdentifier participantId) {
+        return participantRepository.findById(participantId.asConceptKey()).map(JpaParticipant::toAuthorative);
     }
 
     /**
@@ -104,45 +82,31 @@ public class ParticipantProvider {
      *
      * @param participant participant to save
      * @return the participant created
-     * @throws PfModelException on errors creating participants
      */
-    public Participant saveParticipant(@NonNull final Participant participant) throws PfModelException {
-        try {
-            var result = participantRepository
-                    .save(ProviderUtils.getJpaAndValidate(participant, JpaParticipant::new, "participant"));
+    public Participant saveParticipant(@NonNull final Participant participant) {
+        var result = participantRepository
+                .save(ProviderUtils.getJpaAndValidate(participant, JpaParticipant::new, "participant"));
 
-            // Return the saved participant
-            return result.toAuthorative();
-        } catch (IllegalArgumentException e) {
-            throw new PfModelException(Status.BAD_REQUEST, "Error in save Participant", e);
-        }
+        // Return the saved participant
+        return result.toAuthorative();
     }
 
     /**
      * Delete a participant.
      *
-     * @param name the name of the participant to delete
-     * @param version the version of the participant to get
+     * @param participantId the Id of the participant to delete
      * @return the participant deleted
-     * @throws PfModelRuntimeException on errors deleting participants
      */
-    public Participant deleteParticipant(@NonNull final String name, @NonNull final String version)
-            throws PfModelException {
-        try {
-            var participantKey = new PfConceptKey(name, version);
+    public Participant deleteParticipant(@NonNull final ToscaConceptIdentifier participantId) {
+        var jpaDeleteParticipantOpt = participantRepository.findById(participantId.asConceptKey());
 
-            var jpaDeleteParticipantOpt = participantRepository.findById(participantKey);
-
-            if (jpaDeleteParticipantOpt.isEmpty()) {
-                String errorMessage =
-                        "delete of participant \"" + participantKey.getId() + "\" failed, participant does not exist";
-                throw new PfModelRuntimeException(Status.BAD_REQUEST, errorMessage);
-            }
-            participantRepository.delete(jpaDeleteParticipantOpt.get());
-
-            return jpaDeleteParticipantOpt.get().toAuthorative();
-        } catch (IllegalArgumentException e) {
-            throw new PfModelException(Status.BAD_REQUEST, "Error in delete Participant", e);
+        if (jpaDeleteParticipantOpt.isEmpty()) {
+            String errorMessage =
+                    "delete of participant \"" + participantId + "\" failed, participant does not exist";
+            throw new PfModelRuntimeException(Status.BAD_REQUEST, errorMessage);
         }
+        participantRepository.delete(jpaDeleteParticipantOpt.get());
+
+        return jpaDeleteParticipantOpt.get().toAuthorative();
     }
 }

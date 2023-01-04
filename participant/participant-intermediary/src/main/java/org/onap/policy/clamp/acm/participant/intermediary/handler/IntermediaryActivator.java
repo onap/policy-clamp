@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -62,14 +62,14 @@ public class IntermediaryActivator extends ServiceManagerContainer implements Cl
      * @param listeners list of Listeners
      */
     public <T> IntermediaryActivator(final ParticipantParameters parameters, ParticipantHandler participantHandler,
-        List<Publisher> publishers, List<Listener<T>> listeners) {
+            List<Publisher> publishers, List<Listener<T>> listeners) {
         this.participantHandler = participantHandler;
 
         topicSinks = TopicEndpointManager.getManager().addTopicSinks(
-            parameters.getIntermediaryParameters().getClampAutomationCompositionTopics().getTopicSinks());
+                parameters.getIntermediaryParameters().getClampAutomationCompositionTopics().getTopicSinks());
 
         topicSources = TopicEndpointManager.getManager().addTopicSources(
-            parameters.getIntermediaryParameters().getClampAutomationCompositionTopics().getTopicSources());
+                parameters.getIntermediaryParameters().getClampAutomationCompositionTopics().getTopicSources());
 
         msgDispatcher = new MessageTypeDispatcher(MSG_TYPE_NAMES);
 
@@ -109,11 +109,13 @@ public class IntermediaryActivator extends ServiceManagerContainer implements Cl
      * Handle ContextClosedEvent.
      *
      * @param ctxClosedEvent ContextClosedEvent
+     * @throws InterruptedException if execution has been interrupted
      */
     @EventListener
-    public void handleContextClosedEvent(ContextClosedEvent ctxClosedEvent) {
+    public void handleContextClosedEvent(ContextClosedEvent ctxClosedEvent) throws InterruptedException {
         if (isAlive()) {
             sendParticipantDeregister();
+            Thread.sleep(1000L);
             stop();
         }
     }

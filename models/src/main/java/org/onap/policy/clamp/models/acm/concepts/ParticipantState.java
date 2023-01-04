@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021 Nordix Foundation.
+ * Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,36 +25,12 @@ package org.onap.policy.clamp.models.acm.concepts;
  */
 public enum ParticipantState {
     /**
-     * Participant state is unknown.
+     * Participant state is online.
      */
-    UNKNOWN,
+    ON_LINE,
 
     /**
-     * Participant is passive, automation composition element execution is always rejected.
+     * Participant is offline, automation composition element execution is always rejected.
      */
-    PASSIVE,
-
-    /**
-     * Automation composition element execution execution proceeds, but changes to domain state or context are not
-     * carried out. The participant returns an indication that it is running in SAFE mode together with the action it
-     * would have performed if it was operating in ACTIVE mode.
-     */
-    SAFE,
-
-    /**
-     * Automation composition element execution execution proceeds and changes to domain and state are carried out in a
-     * test environment. The participant returns an indication that it is running in TEST mode together with the action
-     * it has performed on the test environment.
-     */
-    TEST,
-
-    /**
-     * Automation composition element execution is executed in the live environment by the participant.
-     */
-    ACTIVE,
-
-    /**
-     * Automation composition element execution has been terminated.
-     */
-    TERMINATED
+    OFF_LINE
 }

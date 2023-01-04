@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2022 Nordix Foundation.
+ * Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@ import lombok.Setter;
 import lombok.ToString;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionInfo;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantHealthStatus;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.models.base.PfUtils;
 
@@ -41,7 +40,6 @@ public class ParticipantStatus extends ParticipantMessage {
 
     // State and health status of the participant
     private ParticipantState state;
-    private ParticipantHealthStatus healthStatus;
 
     // A list of ParticipantDefinition updates, returned in response to ParticipantStatusReq only
     private List<ParticipantDefinition> participantDefinitionUpdates = new ArrayList<>();
@@ -66,7 +64,6 @@ public class ParticipantStatus extends ParticipantMessage {
         super(source);
 
         this.state = source.state;
-        this.healthStatus = source.healthStatus;
         this.participantDefinitionUpdates =
             PfUtils.mapList(source.participantDefinitionUpdates, ParticipantDefinition::new);
         this.automationCompositionInfoList =

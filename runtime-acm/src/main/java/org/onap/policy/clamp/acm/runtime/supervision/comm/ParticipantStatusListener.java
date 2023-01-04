@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021 Nordix Foundation.
+ * Copyright (C) 2021-2023 Nordix Foundation.
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,7 +22,7 @@
 package org.onap.policy.clamp.acm.runtime.supervision.comm;
 
 import org.onap.policy.clamp.acm.runtime.config.messaging.Listener;
-import org.onap.policy.clamp.acm.runtime.supervision.SupervisionHandler;
+import org.onap.policy.clamp.acm.runtime.supervision.SupervisionParticipantHandler;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatus;
 import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
@@ -39,12 +39,12 @@ import org.springframework.stereotype.Component;
 public class ParticipantStatusListener extends ScoListener<ParticipantStatus> implements Listener<ParticipantStatus> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantStatusListener.class);
 
-    private final SupervisionHandler supervisionHandler;
+    private final SupervisionParticipantHandler supervisionHandler;
 
     /**
      * Constructs the object.
      */
-    public ParticipantStatusListener(SupervisionHandler supervisionHandler) {
+    public ParticipantStatusListener(SupervisionParticipantHandler supervisionHandler) {
         super(ParticipantStatus.class);
         this.supervisionHandler = supervisionHandler;
     }

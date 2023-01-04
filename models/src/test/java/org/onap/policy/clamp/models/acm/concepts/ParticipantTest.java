@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,9 +59,8 @@ class ParticipantTest {
 
         p1.setDefinition(new ToscaConceptIdentifier("defName", "0.0.1"));
         p1.setDescription("Description");
-        p1.setHealthStatus(ParticipantHealthStatus.HEALTHY);
         p1.setName("Name");
-        p1.setParticipantState(ParticipantState.ACTIVE);
+        p1.setParticipantState(ParticipantState.ON_LINE);
         p1.setVersion("0.0.1");
 
         assertThat(p1.toString()).contains("Participant(");
@@ -75,7 +74,6 @@ class ParticipantTest {
 
         // @formatter:off
         assertThatThrownBy(() -> p2.setDefinition(null)).      isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> p2.setHealthStatus(null)).    isInstanceOf(NullPointerException.class);
         assertThatThrownBy(() -> p2.setParticipantState(null)).isInstanceOf(NullPointerException.class);
         // @formatter:on
 
