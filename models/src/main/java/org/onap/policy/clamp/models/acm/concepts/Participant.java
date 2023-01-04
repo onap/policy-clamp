@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021 Nordix Foundation.
+ * Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,10 +39,7 @@ public class Participant extends ToscaEntity implements Comparable<Participant> 
     private ToscaConceptIdentifier definition = new ToscaConceptIdentifier(PfConceptKey.getNullKey());
 
     @NonNull
-    private ParticipantState participantState = ParticipantState.UNKNOWN;
-
-    @NonNull
-    private ParticipantHealthStatus healthStatus = ParticipantHealthStatus.UNKNOWN;
+    private ParticipantState participantState = ParticipantState.ON_LINE;
 
     @NonNull
     private ToscaConceptIdentifier participantType = new ToscaConceptIdentifier();
@@ -71,7 +68,6 @@ public class Participant extends ToscaEntity implements Comparable<Participant> 
         super(otherParticipant);
         this.definition = new ToscaConceptIdentifier(otherParticipant.definition);
         this.participantState = otherParticipant.participantState;
-        this.healthStatus = otherParticipant.healthStatus;
         this.participantType = otherParticipant.participantType;
     }
 }

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021,2022 Nordix Foundation.
+ *  Copyright (C) 2021,2023 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,28 +29,17 @@ import javax.ws.rs.core.Response;
 import lombok.AllArgsConstructor;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionStateChangePublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionUpdatePublisher;
-import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantDeregisterAckPublisher;
-import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantRegisterAckPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantUpdatePublisher;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionException;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementAck;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
-import org.onap.policy.clamp.models.acm.concepts.Participant;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantHealthStatus;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionAck;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDeregister;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessage;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegister;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatus;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUpdateAck;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
-import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
-import org.onap.policy.models.base.PfModelException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -75,108 +64,12 @@ public class SupervisionHandler {
     private static final String AND_TRANSITIONING_TO_STATE = " and transitioning to state ";
 
     private final AutomationCompositionProvider automationCompositionProvider;
-    private final ParticipantProvider participantProvider;
     private final AcDefinitionProvider acDefinitionProvider;
 
     // Publishers for participant communication
     private final AutomationCompositionUpdatePublisher automationCompositionUpdatePublisher;
     private final AutomationCompositionStateChangePublisher automationCompositionStateChangePublisher;
-    private final ParticipantRegisterAckPublisher participantRegisterAckPublisher;
-    private final ParticipantDeregisterAckPublisher participantDeregisterAckPublisher;
     private final ParticipantUpdatePublisher participantUpdatePublisher;
-
-    /**
-     * Handle a ParticipantStatus message from a participant.
-     *
-     * @param participantStatusMessage the ParticipantStatus message received from a participant
-     */
-    @MessageIntercept
-    @Timed(value = "listener.participant_status", description = "PARTICIPANT_STATUS messages received")
-    public void handleParticipantMessage(ParticipantStatus participantStatusMessage) {
-        LOGGER.debug("Participant Status received {}", participantStatusMessage);
-        try {
-            superviseParticipant(participantStatusMessage);
-        } catch (PfModelException | AutomationCompositionException svExc) {
-            LOGGER.warn("error supervising participant {}", participantStatusMessage.getParticipantId(), svExc);
-        }
-    }
-
-    /**
-     * Handle a ParticipantRegister message from a participant.
-     *
-     * @param participantRegisterMessage the ParticipantRegister message received from a participant
-     */
-    @MessageIntercept
-    @Timed(value = "listener.participant_register", description = "PARTICIPANT_REGISTER messages received")
-    public void handleParticipantMessage(ParticipantRegister participantRegisterMessage) {
-        LOGGER.debug("Participant Register received {}", participantRegisterMessage);
-        try {
-            checkParticipant(participantRegisterMessage, ParticipantState.UNKNOWN, ParticipantHealthStatus.UNKNOWN);
-        } catch (PfModelException | AutomationCompositionException svExc) {
-            LOGGER.warn("error saving participant {}", participantRegisterMessage.getParticipantId(), svExc);
-        }
-
-        participantUpdatePublisher.sendCommissioning(participantRegisterMessage.getParticipantId(),
-                participantRegisterMessage.getParticipantType());
-
-        participantRegisterAckPublisher.send(participantRegisterMessage.getMessageId(),
-                participantRegisterMessage.getParticipantId(), participantRegisterMessage.getParticipantType());
-    }
-
-    /**
-     * Handle a ParticipantDeregister message from a participant.
-     *
-     * @param participantDeregisterMessage the ParticipantDeregister message received from a participant
-     */
-    @MessageIntercept
-    @Timed(value = "listener.participant_deregister", description = "PARTICIPANT_DEREGISTER messages received")
-    public void handleParticipantMessage(ParticipantDeregister participantDeregisterMessage) {
-        LOGGER.debug("Participant Deregister received {}", participantDeregisterMessage);
-        try {
-            var participantOpt =
-                    participantProvider.findParticipant(participantDeregisterMessage.getParticipantId().getName(),
-                            participantDeregisterMessage.getParticipantId().getVersion());
-
-            if (participantOpt.isPresent()) {
-                var participant = participantOpt.get();
-                participant.setParticipantState(ParticipantState.TERMINATED);
-                participant.setHealthStatus(ParticipantHealthStatus.OFF_LINE);
-                participantProvider.saveParticipant(participant);
-            }
-        } catch (PfModelException pfme) {
-            LOGGER.warn("Model exception occured with participant id {}",
-                    participantDeregisterMessage.getParticipantId());
-        }
-
-        participantDeregisterAckPublisher.send(participantDeregisterMessage.getMessageId());
-    }
-
-    /**
-     * Handle a ParticipantUpdateAck message from a participant.
-     *
-     * @param participantUpdateAckMessage the ParticipantUpdateAck message received from a participant
-     */
-    @MessageIntercept
-    @Timed(value = "listener.participant_update_ack", description = "PARTICIPANT_UPDATE_ACK messages received")
-    public void handleParticipantMessage(ParticipantUpdateAck participantUpdateAckMessage) {
-        LOGGER.debug("Participant Update Ack received {}", participantUpdateAckMessage);
-        try {
-            var participantOpt =
-                    participantProvider.findParticipant(participantUpdateAckMessage.getParticipantId().getName(),
-                            participantUpdateAckMessage.getParticipantId().getVersion());
-
-            if (participantOpt.isPresent()) {
-                var participant = participantOpt.get();
-                participant.setParticipantState(participantUpdateAckMessage.getState());
-                participantProvider.saveParticipant(participant);
-            } else {
-                LOGGER.warn("Participant not found in database {}", participantUpdateAckMessage.getParticipantId());
-            }
-        } catch (PfModelException pfme) {
-            LOGGER.warn("Model exception occured with participant id {}",
-                    participantUpdateAckMessage.getParticipantId());
-        }
-    }
 
     /**
      * Send commissioning update message to dmaap.
@@ -210,6 +103,17 @@ public class SupervisionHandler {
     public void handleAutomationCompositionUpdateAckMessage(AutomationCompositionAck automationCompositionAckMessage) {
         LOGGER.debug("AutomationComposition Update Ack message received {}", automationCompositionAckMessage);
         setAcElementStateInDb(automationCompositionAckMessage);
+    }
+
+    /**
+     * Handle a ParticipantUpdateAck message from a participant.
+     *
+     * @param participantUpdateAckMessage the ParticipantUpdateAck message received from a participant
+     */
+    @MessageIntercept
+    @Timed(value = "listener.participant_update_ack", description = "PARTICIPANT_UPDATE_ACK messages received")
+    public void handleParticipantMessage(ParticipantUpdateAck participantUpdateAckMessage) {
+        LOGGER.debug("Participant Update Ack message received {}", participantUpdateAckMessage);
     }
 
     /**
@@ -403,40 +307,6 @@ public class SupervisionHandler {
     private int getFirstStartPhase(AutomationComposition automationComposition) {
         var toscaServiceTemplate = acDefinitionProvider.getAcDefinition(automationComposition.getCompositionId());
         return ParticipantUtils.getFirstStartPhase(automationComposition, toscaServiceTemplate);
-    }
-
-    private void checkParticipant(ParticipantMessage participantMessage, ParticipantState participantState,
-            ParticipantHealthStatus healthStatus) throws AutomationCompositionException, PfModelException {
-        if (participantMessage.getParticipantId() == null) {
-            exceptionOccured(Response.Status.NOT_FOUND, "Participant ID on PARTICIPANT_STATUS message is null");
-        }
-        var participantOpt = participantProvider.findParticipant(participantMessage.getParticipantId().getName(),
-                participantMessage.getParticipantId().getVersion());
-
-        if (participantOpt.isEmpty()) {
-            var participant = new Participant();
-            participant.setName(participantMessage.getParticipantId().getName());
-            participant.setVersion(participantMessage.getParticipantId().getVersion());
-            participant.setDefinition(participantMessage.getParticipantId());
-            participant.setParticipantType(participantMessage.getParticipantType());
-            participant.setParticipantState(participantState);
-            participant.setHealthStatus(healthStatus);
-
-            participantProvider.saveParticipant(participant);
-        } else {
-            var participant = participantOpt.get();
-            participant.setParticipantState(participantState);
-            participant.setHealthStatus(healthStatus);
-
-            participantProvider.saveParticipant(participant);
-        }
-    }
-
-    private void superviseParticipant(ParticipantStatus participantStatusMessage)
-            throws PfModelException, AutomationCompositionException {
-
-        checkParticipant(participantStatusMessage, participantStatusMessage.getState(),
-                participantStatusMessage.getHealthStatus());
     }
 
     private void exceptionOccured(Response.Status status, String reason) throws AutomationCompositionException {

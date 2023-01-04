@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2022 Nordix Foundation.
+ * Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -28,16 +28,14 @@ import java.util.UUID;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionStateChangePublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionUpdatePublisher;
-import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantStatusReqPublisher;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantHealthStatus;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
-import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
@@ -61,7 +59,6 @@ public class SupervisionScanner {
     private final AutomationCompositionStateChangePublisher automationCompositionStateChangePublisher;
     private final AutomationCompositionUpdatePublisher automationCompositionUpdatePublisher;
     private final ParticipantProvider participantProvider;
-    private final ParticipantStatusReqPublisher participantStatusReqPublisher;
 
     /**
      * Constructor for instantiating SupervisionScanner.
@@ -71,21 +68,18 @@ public class SupervisionScanner {
      * @param automationCompositionStateChangePublisher the AutomationComposition StateChange Publisher
      * @param automationCompositionUpdatePublisher the AutomationCompositionUpdate Publisher
      * @param participantProvider the Participant Provider
-     * @param participantStatusReqPublisher the Participant StatusReq Publisher
      * @param acRuntimeParameterGroup the parameters for the automation composition runtime
      */
     public SupervisionScanner(final AutomationCompositionProvider automationCompositionProvider,
             AcDefinitionProvider acDefinitionProvider,
             final AutomationCompositionStateChangePublisher automationCompositionStateChangePublisher,
             AutomationCompositionUpdatePublisher automationCompositionUpdatePublisher,
-            ParticipantProvider participantProvider, ParticipantStatusReqPublisher participantStatusReqPublisher,
-            final AcRuntimeParameterGroup acRuntimeParameterGroup) {
+            ParticipantProvider participantProvider, final AcRuntimeParameterGroup acRuntimeParameterGroup) {
         this.automationCompositionProvider = automationCompositionProvider;
         this.acDefinitionProvider = acDefinitionProvider;
         this.automationCompositionStateChangePublisher = automationCompositionStateChangePublisher;
         this.automationCompositionUpdatePublisher = automationCompositionUpdatePublisher;
         this.participantProvider = participantProvider;
-        this.participantStatusReqPublisher = participantStatusReqPublisher;
 
         automationCompositionCounter.setMaxRetryCount(
                 acRuntimeParameterGroup.getParticipantParameters().getUpdateParameters().getMaxRetryCount());
@@ -106,13 +100,8 @@ public class SupervisionScanner {
         LOGGER.debug("Scanning automation compositions in the database . . .");
 
         if (counterCheck) {
-            try {
-                for (var participant : participantProvider.getParticipants()) {
-                    scanParticipantStatus(participant);
-                }
-            } catch (PfModelException pfme) {
-                LOGGER.warn("error reading participant from database", pfme);
-                return;
+            for (var participant : participantProvider.getParticipants()) {
+                scanParticipantStatus(participant);
             }
         }
 
@@ -127,22 +116,17 @@ public class SupervisionScanner {
         LOGGER.debug("Automation composition scan complete . . .");
     }
 
-    private void scanParticipantStatus(Participant participant) throws PfModelException {
-        ToscaConceptIdentifier id = participant.getKey().asIdentifier();
+    private void scanParticipantStatus(Participant participant) {
+        var id = participant.getKey().asIdentifier();
         if (participantStatusCounter.isFault(id)) {
             LOGGER.debug("report Participant fault");
             return;
         }
-        if (participantStatusCounter.getDuration(id) > participantStatusCounter.getMaxWaitMs()) {
-            if (participantStatusCounter.count(id)) {
-                LOGGER.debug("retry message ParticipantStatusReq");
-                participantStatusReqPublisher.send(id);
-                participant.setHealthStatus(ParticipantHealthStatus.NOT_HEALTHY);
-            } else {
-                LOGGER.debug("report Participant fault");
-                participantStatusCounter.setFault(id);
-                participant.setHealthStatus(ParticipantHealthStatus.OFF_LINE);
-            }
+        if (participantStatusCounter.getDuration(id) > participantStatusCounter.getMaxWaitMs()
+                && !participantStatusCounter.count(id)) {
+            LOGGER.debug("report Participant fault");
+            participantStatusCounter.setFault(id);
+            participant.setParticipantState(ParticipantState.OFF_LINE);
             participantProvider.saveParticipant(participant);
         }
     }
@@ -209,8 +193,7 @@ public class SupervisionScanner {
                                     ? defaultMin
                                     : defaultMax;
 
-            if (nextSpNotCompleted != phaseMap.getOrDefault(automationComposition.getInstanceId(),
-                    firstStartPhase)) {
+            if (nextSpNotCompleted != phaseMap.getOrDefault(automationComposition.getInstanceId(), firstStartPhase)) {
                 phaseMap.put(automationComposition.getInstanceId(), nextSpNotCompleted);
                 sendAutomationCompositionMsg(automationComposition, nextSpNotCompleted);
             } else if (counterCheck) {

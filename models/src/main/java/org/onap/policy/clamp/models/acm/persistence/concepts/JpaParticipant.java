@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021 Nordix Foundation.
+ * Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import org.apache.commons.lang3.ObjectUtils;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantHealthStatus;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.common.parameters.annotations.NotNull;
 import org.onap.policy.models.base.PfAuthorative;
@@ -80,10 +79,6 @@ public class JpaParticipant extends PfConcept implements PfAuthorative<Participa
     private ParticipantState participantState;
 
     @Column
-    @NotNull
-    private ParticipantHealthStatus healthStatus;
-
-    @Column
     private String description;
 
     /**
@@ -99,7 +94,7 @@ public class JpaParticipant extends PfConcept implements PfAuthorative<Participa
      * @param key the key
      */
     public JpaParticipant(@NonNull final PfConceptKey key) {
-        this(key, new PfConceptKey(), ParticipantState.PASSIVE, ParticipantHealthStatus.UNKNOWN);
+        this(key, new PfConceptKey(), ParticipantState.ON_LINE);
     }
 
     /**
@@ -108,14 +103,12 @@ public class JpaParticipant extends PfConcept implements PfAuthorative<Participa
      * @param key the key
      * @param definition the TOSCA definition of the participant
      * @param participantState the state of the participant
-     * @param healthStatus the health state of the participant
      */
     public JpaParticipant(@NonNull final PfConceptKey key, @NonNull final PfConceptKey definition,
-            @NonNull final ParticipantState participantState, @NonNull ParticipantHealthStatus healthStatus) {
+            @NonNull final ParticipantState participantState) {
         this.key = key;
         this.definition = definition;
         this.participantState = participantState;
-        this.healthStatus = healthStatus;
     }
 
     /**
@@ -128,7 +121,6 @@ public class JpaParticipant extends PfConcept implements PfAuthorative<Participa
         this.key = new PfConceptKey(copyConcept.key);
         this.definition = new PfConceptKey(copyConcept.definition);
         this.participantState = copyConcept.participantState;
-        this.healthStatus = copyConcept.healthStatus;
         this.description = copyConcept.description;
         this.participantType = copyConcept.participantType;
     }
@@ -150,7 +142,6 @@ public class JpaParticipant extends PfConcept implements PfAuthorative<Participa
         participant.setVersion(key.getVersion());
         participant.setDefinition(new ToscaConceptIdentifier(definition));
         participant.setParticipantState(participantState);
-        participant.setHealthStatus(healthStatus);
         participant.setDescription(description);
         participant.setParticipantType(new ToscaConceptIdentifier(participantType));
 
@@ -165,7 +156,6 @@ public class JpaParticipant extends PfConcept implements PfAuthorative<Participa
 
         this.definition = participant.getDefinition().asConceptKey();
         this.setParticipantState(participant.getParticipantState());
-        this.setHealthStatus(participant.getHealthStatus());
         this.setDescription(participant.getDescription());
         this.participantType = participant.getParticipantType().asConceptKey();
     }
@@ -212,11 +202,6 @@ public class JpaParticipant extends PfConcept implements PfAuthorative<Participa
         }
 
         result = ObjectUtils.compare(participantState, other.participantState);
-        if (result != 0) {
-            return result;
-        }
-
-        result = ObjectUtils.compare(healthStatus, other.healthStatus);
         if (result != 0) {
             return result;
         }

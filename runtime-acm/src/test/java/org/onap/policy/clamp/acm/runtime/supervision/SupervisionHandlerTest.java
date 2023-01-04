@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,8 +38,6 @@ import org.mockito.Mockito;
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionStateChangePublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionUpdatePublisher;
-import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantDeregisterAckPublisher;
-import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantRegisterAckPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantUpdatePublisher;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionException;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
@@ -47,17 +45,12 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantHealthStatus;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionAck;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDeregister;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegister;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatus;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUpdateAck;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
-import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
@@ -109,10 +102,9 @@ class SupervisionHandlerTest {
 
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
 
-        var handler = new SupervisionHandler(automationCompositionProvider, mock(ParticipantProvider.class),
-                acDefinitionProvider, mock(AutomationCompositionUpdatePublisher.class),
-                automationCompositionStateChangePublisher, mock(ParticipantRegisterAckPublisher.class),
-                mock(ParticipantDeregisterAckPublisher.class), mock(ParticipantUpdatePublisher.class));
+        var handler = new SupervisionHandler(automationCompositionProvider, acDefinitionProvider,
+                mock(AutomationCompositionUpdatePublisher.class), automationCompositionStateChangePublisher,
+                mock(ParticipantUpdatePublisher.class));
 
         handler.triggerAutomationCompositionSupervision(automationComposition);
 
@@ -160,10 +152,9 @@ class SupervisionHandlerTest {
     void testAcRunningToPassive() throws AutomationCompositionException {
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
         var handler = createSupervisionHandler(mock(AutomationCompositionProvider.class),
-                mock(ParticipantProvider.class), mock(ParticipantRegisterAckPublisher.class),
-                mock(ParticipantDeregisterAckPublisher.class), mock(AutomationCompositionUpdatePublisher.class),
-                automationCompositionStateChangePublisher, mock(ParticipantUpdatePublisher.class),
-                AutomationCompositionOrderedState.PASSIVE, AutomationCompositionState.UNINITIALISED);
+                mock(AutomationCompositionUpdatePublisher.class), automationCompositionStateChangePublisher,
+                mock(ParticipantUpdatePublisher.class), AutomationCompositionOrderedState.PASSIVE,
+                AutomationCompositionState.UNINITIALISED);
 
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Crud");
@@ -206,10 +197,9 @@ class SupervisionHandlerTest {
     void testAcPassiveToRunning() throws AutomationCompositionException {
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
         var handler = createSupervisionHandler(mock(AutomationCompositionProvider.class),
-                mock(ParticipantProvider.class), mock(ParticipantRegisterAckPublisher.class),
-                mock(ParticipantDeregisterAckPublisher.class), mock(AutomationCompositionUpdatePublisher.class),
-                automationCompositionStateChangePublisher, mock(ParticipantUpdatePublisher.class),
-                AutomationCompositionOrderedState.PASSIVE, AutomationCompositionState.UNINITIALISED);
+                mock(AutomationCompositionUpdatePublisher.class), automationCompositionStateChangePublisher,
+                mock(ParticipantUpdatePublisher.class), AutomationCompositionOrderedState.PASSIVE,
+                AutomationCompositionState.UNINITIALISED);
 
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Crud");
@@ -224,8 +214,7 @@ class SupervisionHandlerTest {
     @Test
     void testHandleAutomationCompositionStateChangeAckMessage() {
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
-        var handler = createSupervisionHandler(automationCompositionProvider, mock(ParticipantProvider.class),
-                mock(ParticipantRegisterAckPublisher.class), mock(ParticipantDeregisterAckPublisher.class),
+        var handler = createSupervisionHandler(automationCompositionProvider,
                 mock(AutomationCompositionUpdatePublisher.class), mock(AutomationCompositionStateChangePublisher.class),
                 mock(ParticipantUpdatePublisher.class), AutomationCompositionOrderedState.PASSIVE,
                 AutomationCompositionState.UNINITIALISED);
@@ -248,8 +237,7 @@ class SupervisionHandlerTest {
         automationCompositionAckMessage.setAutomationCompositionResultMap(Map.of());
         automationCompositionAckMessage.setAutomationCompositionId(identifier);
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
-        var handler = createSupervisionHandler(automationCompositionProvider, mock(ParticipantProvider.class),
-                mock(ParticipantRegisterAckPublisher.class), mock(ParticipantDeregisterAckPublisher.class),
+        var handler = createSupervisionHandler(automationCompositionProvider,
                 mock(AutomationCompositionUpdatePublisher.class), mock(AutomationCompositionStateChangePublisher.class),
                 mock(ParticipantUpdatePublisher.class), AutomationCompositionOrderedState.PASSIVE,
                 AutomationCompositionState.UNINITIALISED);
@@ -260,112 +248,31 @@ class SupervisionHandlerTest {
     }
 
     @Test
-    void testHandleParticipantDeregister() throws PfModelException {
-        var participant = new Participant();
-        participant.setName(participantId.getName());
-        participant.setVersion(participantId.getVersion());
-        participant.setParticipantType(participantType);
-
-        var participantProvider = mock(ParticipantProvider.class);
-        when(participantProvider.findParticipant(participantId.getName(), participantId.getVersion()))
-                .thenReturn(Optional.of(participant));
-
-        var participantDeregisterMessage = new ParticipantDeregister();
-        participantDeregisterMessage.setMessageId(UUID.randomUUID());
-        participantDeregisterMessage.setParticipantId(participantId);
-        participantDeregisterMessage.setParticipantType(participantType);
-        var participantDeregisterAckPublisher = mock(ParticipantDeregisterAckPublisher.class);
-        var handler = createSupervisionHandler(mock(AutomationCompositionProvider.class), participantProvider,
-                mock(ParticipantRegisterAckPublisher.class), participantDeregisterAckPublisher,
-                mock(AutomationCompositionUpdatePublisher.class), mock(AutomationCompositionStateChangePublisher.class),
-                mock(ParticipantUpdatePublisher.class), AutomationCompositionOrderedState.PASSIVE,
-                AutomationCompositionState.UNINITIALISED);
-
-        handler.handleParticipantMessage(participantDeregisterMessage);
-
-        verify(participantProvider).saveParticipant(any());
-        verify(participantDeregisterAckPublisher).send(participantDeregisterMessage.getMessageId());
-    }
-
-    @Test
-    void testHandleParticipantRegister() throws PfModelException {
-        var participant = new Participant();
-        participant.setName(participantId.getName());
-        participant.setVersion(participantId.getVersion());
-        participant.setParticipantType(participantType);
-
-        var participantRegisterMessage = new ParticipantRegister();
-        participantRegisterMessage.setMessageId(UUID.randomUUID());
-        participantRegisterMessage.setParticipantId(participantId);
-        participantRegisterMessage.setParticipantType(participantType);
-        var participantProvider = mock(ParticipantProvider.class);
-        var participantRegisterAckPublisher = mock(ParticipantRegisterAckPublisher.class);
-        var handler = createSupervisionHandler(mock(AutomationCompositionProvider.class), participantProvider,
-                participantRegisterAckPublisher, mock(ParticipantDeregisterAckPublisher.class),
-                mock(AutomationCompositionUpdatePublisher.class), mock(AutomationCompositionStateChangePublisher.class),
-                mock(ParticipantUpdatePublisher.class), AutomationCompositionOrderedState.PASSIVE,
-                AutomationCompositionState.UNINITIALISED);
-
-        handler.handleParticipantMessage(participantRegisterMessage);
-
-        verify(participantProvider).saveParticipant(any());
-        verify(participantRegisterAckPublisher).send(participantRegisterMessage.getMessageId(), participantId,
-                participantType);
-    }
-
-    @Test
     void testParticipantUpdateAck() throws PfModelException {
         var participant = new Participant();
         participant.setName(participantId.getName());
         participant.setVersion(participantId.getVersion());
         participant.setParticipantType(participantType);
 
-        var participantProvider = mock(ParticipantProvider.class);
-        when(participantProvider.findParticipant(participantId.getName(), participantId.getVersion()))
-                .thenReturn(Optional.of(participant));
-
         var participantUpdateAckMessage = new ParticipantUpdateAck();
         participantUpdateAckMessage.setParticipantId(participantId);
         participantUpdateAckMessage.setParticipantType(participantType);
-        participantUpdateAckMessage.setState(ParticipantState.PASSIVE);
-        var handler = createSupervisionHandler(mock(AutomationCompositionProvider.class), participantProvider,
-                mock(ParticipantRegisterAckPublisher.class), mock(ParticipantDeregisterAckPublisher.class),
+        participantUpdateAckMessage.setState(ParticipantState.ON_LINE);
+        var handler = createSupervisionHandler(mock(AutomationCompositionProvider.class),
                 mock(AutomationCompositionUpdatePublisher.class), mock(AutomationCompositionStateChangePublisher.class),
                 mock(ParticipantUpdatePublisher.class), AutomationCompositionOrderedState.PASSIVE,
                 AutomationCompositionState.UNINITIALISED);
 
         handler.handleParticipantMessage(participantUpdateAckMessage);
-
-        verify(participantProvider).saveParticipant(any());
-    }
-
-    @Test
-    void testHandleParticipantStatus() throws PfModelException {
-        var participantStatusMessage = new ParticipantStatus();
-        participantStatusMessage.setParticipantId(participantId);
-        participantStatusMessage.setParticipantType(participantType);
-        participantStatusMessage.setState(ParticipantState.PASSIVE);
-        participantStatusMessage.setHealthStatus(ParticipantHealthStatus.HEALTHY);
-
-        var participantProvider = mock(ParticipantProvider.class);
-        var handler = createSupervisionHandler(mock(AutomationCompositionProvider.class), participantProvider,
-                mock(ParticipantRegisterAckPublisher.class), mock(ParticipantDeregisterAckPublisher.class),
-                mock(AutomationCompositionUpdatePublisher.class), mock(AutomationCompositionStateChangePublisher.class),
-                mock(ParticipantUpdatePublisher.class), AutomationCompositionOrderedState.PASSIVE,
-                AutomationCompositionState.UNINITIALISED);
-        handler.handleParticipantMessage(participantStatusMessage);
-
-        verify(participantProvider).saveParticipant(any());
     }
 
     @Test
     void testHandleSendCommissionMessage() throws PfModelException {
         var participantUpdatePublisher = mock(ParticipantUpdatePublisher.class);
         var handler = createSupervisionHandler(mock(AutomationCompositionProvider.class),
-                mock(ParticipantProvider.class), mock(ParticipantRegisterAckPublisher.class),
-                mock(ParticipantDeregisterAckPublisher.class), mock(AutomationCompositionUpdatePublisher.class),
-                mock(AutomationCompositionStateChangePublisher.class), participantUpdatePublisher,
-                AutomationCompositionOrderedState.PASSIVE, AutomationCompositionState.UNINITIALISED);
+                mock(AutomationCompositionUpdatePublisher.class), mock(AutomationCompositionStateChangePublisher.class),
+                participantUpdatePublisher, AutomationCompositionOrderedState.PASSIVE,
+                AutomationCompositionState.UNINITIALISED);
         var acmDefinition = new AutomationCompositionDefinition();
         handler.handleSendCommissionMessage(acmDefinition);
 
@@ -376,18 +283,15 @@ class SupervisionHandlerTest {
     void testHandleSendDeCommissionMessage() throws PfModelException {
         var participantUpdatePublisher = mock(ParticipantUpdatePublisher.class);
         var handler = createSupervisionHandler(mock(AutomationCompositionProvider.class),
-                mock(ParticipantProvider.class), mock(ParticipantRegisterAckPublisher.class),
-                mock(ParticipantDeregisterAckPublisher.class), mock(AutomationCompositionUpdatePublisher.class),
-                mock(AutomationCompositionStateChangePublisher.class), participantUpdatePublisher,
-                AutomationCompositionOrderedState.PASSIVE, AutomationCompositionState.UNINITIALISED);
+                mock(AutomationCompositionUpdatePublisher.class), mock(AutomationCompositionStateChangePublisher.class),
+                participantUpdatePublisher, AutomationCompositionOrderedState.PASSIVE,
+                AutomationCompositionState.UNINITIALISED);
         handler.handleSendDeCommissionMessage(identifier);
 
         verify(participantUpdatePublisher).sendDecomisioning(identifier);
     }
 
     private SupervisionHandler createSupervisionHandler(AutomationCompositionProvider automationCompositionProvider,
-            ParticipantProvider participantProvider, ParticipantRegisterAckPublisher participantRegisterAckPublisher,
-            ParticipantDeregisterAckPublisher participantDeregisterAckPublisher,
             AutomationCompositionUpdatePublisher automationCompositionUpdatePublisher,
             AutomationCompositionStateChangePublisher automationCompositionStateChangePublisher,
             ParticipantUpdatePublisher participantUpdatePublisher, AutomationCompositionOrderedState orderedState,
@@ -406,24 +310,22 @@ class SupervisionHandlerTest {
         when(acDefinitionProvider.getAcDefinition(automationComposition.getCompositionId()))
                 .thenReturn(InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML));
 
-        return new SupervisionHandler(automationCompositionProvider, participantProvider, acDefinitionProvider,
+        return new SupervisionHandler(automationCompositionProvider, acDefinitionProvider,
                 automationCompositionUpdatePublisher, automationCompositionStateChangePublisher,
-                participantRegisterAckPublisher, participantDeregisterAckPublisher, participantUpdatePublisher);
+                participantUpdatePublisher);
     }
 
     private SupervisionHandler createSupervisionHandlerForTrigger() {
-        return new SupervisionHandler(mock(AutomationCompositionProvider.class), mock(ParticipantProvider.class),
-                mock(AcDefinitionProvider.class), mock(AutomationCompositionUpdatePublisher.class),
-                mock(AutomationCompositionStateChangePublisher.class), mock(ParticipantRegisterAckPublisher.class),
-                mock(ParticipantDeregisterAckPublisher.class), mock(ParticipantUpdatePublisher.class));
+        return new SupervisionHandler(mock(AutomationCompositionProvider.class), mock(AcDefinitionProvider.class),
+                mock(AutomationCompositionUpdatePublisher.class), mock(AutomationCompositionStateChangePublisher.class),
+                mock(ParticipantUpdatePublisher.class));
     }
 
     private SupervisionHandler createSupervisionHandlerForTrigger(
             AutomationCompositionUpdatePublisher automationCompositionUpdatePublisher) {
 
-        return new SupervisionHandler(mock(AutomationCompositionProvider.class), mock(ParticipantProvider.class),
-                mock(AcDefinitionProvider.class), automationCompositionUpdatePublisher,
-                mock(AutomationCompositionStateChangePublisher.class), mock(ParticipantRegisterAckPublisher.class),
-                mock(ParticipantDeregisterAckPublisher.class), mock(ParticipantUpdatePublisher.class));
+        return new SupervisionHandler(mock(AutomationCompositionProvider.class), mock(AcDefinitionProvider.class),
+                automationCompositionUpdatePublisher, mock(AutomationCompositionStateChangePublisher.class),
+                mock(ParticipantUpdatePublisher.class));
     }
 }

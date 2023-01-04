@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2022 Nordix Foundation.
+ * Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,6 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDef
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionInfo;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantHealthStatus;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -59,8 +58,7 @@ class ParticipantStatusTest {
         ToscaConceptIdentifier type = new ToscaConceptIdentifier("type", "2.3.4");
         orig.setParticipantType(type);
         orig.setMessageId(UUID.randomUUID());
-        orig.setState(ParticipantState.ACTIVE);
-        orig.setHealthStatus(ParticipantHealthStatus.HEALTHY);
+        orig.setState(ParticipantState.ON_LINE);
         orig.setTimestamp(Instant.ofEpochMilli(3000));
 
         var acInfo = getAutomationCompositionInfo(automationCompositionId);

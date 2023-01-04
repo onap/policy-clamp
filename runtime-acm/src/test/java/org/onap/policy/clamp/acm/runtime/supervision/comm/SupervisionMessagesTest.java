@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,6 +33,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionHandler;
+import org.onap.policy.clamp.acm.runtime.supervision.SupervisionParticipantHandler;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
@@ -75,7 +76,7 @@ class SupervisionMessagesTest {
     @Test
     void testReceiveParticipantDeregister() {
         final var participantDeregisterMsg = new ParticipantDeregister();
-        var supervisionHandler = mock(SupervisionHandler.class);
+        var supervisionHandler = mock(SupervisionParticipantHandler.class);
         var participantDeregisterListener = new ParticipantDeregisterListener(supervisionHandler);
         participantDeregisterListener.onTopicEvent(INFRA, TOPIC, null, participantDeregisterMsg);
         verify(supervisionHandler).handleParticipantMessage(participantDeregisterMsg);
@@ -192,7 +193,7 @@ class SupervisionMessagesTest {
     @Test
     void testParticipantRegisterListener() {
         final var participantRegister = new ParticipantRegister();
-        var supervisionHandler = mock(SupervisionHandler.class);
+        var supervisionHandler = mock(SupervisionParticipantHandler.class);
         var participantRegisterListener = new ParticipantRegisterListener(supervisionHandler);
         participantRegisterListener.onTopicEvent(INFRA, TOPIC, null, participantRegister);
         verify(supervisionHandler).handleParticipantMessage(participantRegister);
@@ -201,7 +202,7 @@ class SupervisionMessagesTest {
     @Test
     void testParticipantStatusListener() {
         final var participantStatus = new ParticipantStatus();
-        var supervisionHandler = mock(SupervisionHandler.class);
+        var supervisionHandler = mock(SupervisionParticipantHandler.class);
         var participantStatusListener = new ParticipantStatusListener(supervisionHandler);
         participantStatusListener.onTopicEvent(INFRA, TOPIC, null, participantStatus);
         verify(supervisionHandler).handleParticipantMessage(participantStatus);
