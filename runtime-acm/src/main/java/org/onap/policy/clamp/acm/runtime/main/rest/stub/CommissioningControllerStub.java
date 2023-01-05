@@ -21,37 +21,24 @@
 package org.onap.policy.clamp.acm.runtime.main.rest.stub;
 
 import java.util.UUID;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.runtime.main.rest.gen.AutomationCompositionDefinitionApi;
 import org.onap.policy.clamp.acm.runtime.main.web.AbstractRestController;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.AcTypeStateUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.CommissioningResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplates;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Profile("stub")
-public class CommissioningControllerStub extends AbstractRestController
-    implements AutomationCompositionDefinitionApi {
+@RequiredArgsConstructor
+public class CommissioningControllerStub extends AbstractRestController implements AutomationCompositionDefinitionApi {
 
-    private static final Logger log = LoggerFactory.getLogger(CommissioningControllerStub.class);
-
-    private StubUtils stubUtils = new StubUtils();
-
-    @Autowired
-    private HttpServletRequest request;
+    private final StubUtils stubUtils;
 
     @Value("${stub.deleteCompositionDefinitionResponse}")
     private String pathToResponseFile;
@@ -69,44 +56,35 @@ public class CommissioningControllerStub extends AbstractRestController
     private String pathToPutUpdate;
 
     @Override
-    public ResponseEntity<CommissioningResponse> createCompositionDefinitions(
-            @Valid @RequestBody ToscaServiceTemplate body,
-            @RequestHeader(value = "X-onap-RequestId", required = false) UUID xonaprequestid) {
-        return stubUtils.getResponse(pathToPostResponse, CommissioningResponse.class, request, log);
+    public ResponseEntity<CommissioningResponse> createCompositionDefinitions(ToscaServiceTemplate body,
+            UUID xonaprequestid) {
+        var compositionId = body.getMetadata() != null ? body.getMetadata().get("compositionId") : null;
+        if (compositionId == null) {
+            return stubUtils.getResponse(pathToPostResponse, CommissioningResponse.class);
+        } else {
+            return stubUtils.getResponse(pathToPutUpdate, CommissioningResponse.class);
+        }
     }
 
     @Override
-    public ResponseEntity<CommissioningResponse> deleteCompositionDefinition(
-            @PathVariable("compositionId") UUID compositionId,
-            @RequestHeader(value = "X-onap-RequestId", required = false) UUID xonaprequestid) {
-        return stubUtils.getResponse(pathToResponseFile, CommissioningResponse.class, request, log);
+    public ResponseEntity<CommissioningResponse> deleteCompositionDefinition(UUID compositionId, UUID xonaprequestid) {
+        return stubUtils.getResponse(pathToResponseFile, CommissioningResponse.class);
     }
 
     @Override
-    public ResponseEntity<ToscaServiceTemplate> getCompositionDefinition(
-            @PathVariable("compositionId") UUID compositionId,
-            @RequestHeader(value = "X-onap-RequestId", required = false) UUID xonaprequestid) {
-        return stubUtils.getResponse(pathToSingleDefinition, ToscaServiceTemplate.class, request, log);
+    public ResponseEntity<ToscaServiceTemplate> getCompositionDefinition(UUID compositionId, UUID xonaprequestid) {
+        return stubUtils.getResponse(pathToSingleDefinition, ToscaServiceTemplate.class);
     }
 
     @Override
-    public ResponseEntity<ToscaServiceTemplates> queryCompositionDefinitions(
-            @Valid @RequestParam(value = "name", required = false) String name,
-            @Valid @RequestParam(value = "version", required = false) String version,
-            @RequestHeader(value = "X-onap-RequestId", required = false) UUID xonaprequestid) {
-        return stubUtils.getResponse(pathToAllDefinitions, ToscaServiceTemplates.class, request, log);
-    }
-
-    public ResponseEntity<CommissioningResponse> updateCompositionDefinition(
-            @PathVariable("compositionId") UUID compositionId,
-            @Valid @RequestBody ToscaServiceTemplate body,
-            @RequestHeader(value = "X-onap-RequestId", required = false) UUID xonaprequestid) {
-        return stubUtils.getResponse(pathToPutUpdate, CommissioningResponse.class, request, log);
+    public ResponseEntity<ToscaServiceTemplates> queryCompositionDefinitions(String name, String version,
+            UUID xonaprequestid) {
+        return stubUtils.getResponse(pathToAllDefinitions, ToscaServiceTemplates.class);
     }
 
     @Override
     public ResponseEntity<Void> compositionDefinitionPriming(UUID compositionId, UUID requestId,
-        AcTypeStateUpdate body) {
+            AcTypeStateUpdate body) {
         // TODO Auto-generated method stub
         return null;
     }

@@ -21,37 +21,25 @@
 package org.onap.policy.clamp.acm.runtime.main.rest.stub;
 
 import java.util.UUID;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.runtime.main.rest.gen.AutomationCompositionInstanceApi;
 import org.onap.policy.clamp.acm.runtime.main.web.AbstractRestController;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.AcInstanceStateUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse;
-import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationUpdate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Profile("stub")
+@RequiredArgsConstructor
 public class InstantiationControllerStub extends AbstractRestController implements AutomationCompositionInstanceApi {
 
-    private static final Logger log = LoggerFactory.getLogger(InstantiationControllerStub.class);
-
-    private StubUtils stubUtils = new StubUtils();
-
-    @Autowired
-    private HttpServletRequest request;
+    private final StubUtils stubUtils;
 
     @Value("${stub.deleteCompositionInstanceResponse}")
     private String pathToResponseFile;
@@ -69,49 +57,36 @@ public class InstantiationControllerStub extends AbstractRestController implemen
     private String pathToPutUpdate;
 
     @Override
-    public ResponseEntity<InstantiationResponse> createCompositionInstance(
-          @PathVariable("compositionId") UUID compositionId,
-          @Valid @RequestBody AutomationComposition body,
-          @RequestHeader(value = "X-onap-RequestId", required = false) UUID xonaprequestid) {
-        return stubUtils.getResponse(pathPostIntance, InstantiationResponse.class, request, log);
+    public ResponseEntity<InstantiationResponse> createCompositionInstance(UUID compositionId,
+            AutomationComposition body, UUID xonaprequestid) {
+        if (body.getInstanceId() == null) {
+            return stubUtils.getResponse(pathPostIntance, InstantiationResponse.class);
+        } else {
+            return stubUtils.getResponse(pathToResponseFile, InstantiationResponse.class);
+        }
     }
 
     @Override
-    public ResponseEntity<InstantiationResponse> deleteCompositionInstance(
-          @PathVariable("compositionId") UUID compositionId,
-          @PathVariable("instanceId") UUID instanceId,
-          @RequestHeader(value = "X-onap-RequestId", required = false) UUID xonaprequestid) {
-        return stubUtils.getResponse(pathToResponseFile, InstantiationResponse.class, request, log);
-    }
-
-    @Override
-    public ResponseEntity<AutomationComposition> getCompositionInstance(
-            @PathVariable("compositionId") UUID compositionId,
-            @PathVariable("instanceId") UUID instanceId,
-            @RequestHeader(value = "X-onap-RequestId", required = false) UUID xonaprequestid) {
-        return stubUtils.getResponse(pathToSingleIntance, AutomationComposition.class, request, log);
-    }
-
-    @Override
-    public ResponseEntity<AutomationCompositions> queryCompositionInstances(
-            @PathVariable("compositionId") UUID compositionId,
-            @Valid @RequestParam(value = "name", required = false) String name,
-            @Valid @RequestParam(value = "version", required = false) String version,
-            @RequestHeader(value = "X-onap-RequestId", required = false) UUID xonaprequestid) {
-        return stubUtils.getResponse(pathToAllIntances, AutomationCompositions.class, request, log);
-    }
-
-    public ResponseEntity<InstantiationResponse> updateCompositionInstance(
-            UUID compositionId,
-            UUID instanceId,
-            InstantiationUpdate body,
+    public ResponseEntity<InstantiationResponse> deleteCompositionInstance(UUID compositionId, UUID instanceId,
             UUID xonaprequestid) {
-        return stubUtils.getResponse(pathToResponseFile, InstantiationResponse.class, request, log);
+        return stubUtils.getResponse(pathToResponseFile, InstantiationResponse.class);
     }
 
     @Override
-    public ResponseEntity<Void> ompositionInstanceState(UUID compositionId, UUID instanceId,
-        @Valid AcInstanceStateUpdate body, UUID requestId) {
+    public ResponseEntity<AutomationComposition> getCompositionInstance(UUID compositionId, UUID instanceId,
+            UUID xonaprequestid) {
+        return stubUtils.getResponse(pathToSingleIntance, AutomationComposition.class);
+    }
+
+    @Override
+    public ResponseEntity<AutomationCompositions> queryCompositionInstances(UUID compositionId, String name,
+            String version, UUID xonaprequestid) {
+        return stubUtils.getResponse(pathToAllIntances, AutomationCompositions.class);
+    }
+
+    @Override
+    public ResponseEntity<Void> compositionInstanceState(UUID compositionId, UUID instanceId,
+            @Valid AcInstanceStateUpdate body, UUID requestId) {
         // TODO Auto-generated method stub
         return null;
     }

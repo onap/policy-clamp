@@ -22,13 +22,13 @@ package org.onap.policy.clamp.acm.runtime.main.rest.stub;
 
 import com.google.gson.Gson;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
@@ -40,21 +40,23 @@ import org.springframework.stereotype.Service;
 @Profile("stub")
 public class StubUtils {
 
+    private static final Logger log = LoggerFactory.getLogger(StubUtils.class);
+    private final HttpServletRequest request;
+
     private static final StandardYamlCoder YAML_TRANSLATOR = new StandardYamlCoder();
     private static final Gson JSON_TRANSLATOR = new Gson();
     private static final String YAML = "application/yaml";
     private static final String ACCEPT = "Accept";
 
-    <T> ResponseEntity<T> getResponse(String path, Class<T> clazz,
-            HttpServletRequest request, Logger log) {
-        String accept = request.getHeader(ACCEPT);
-        final ClassPathResource resource = new ClassPathResource(path);
-        try (InputStream inputStream = resource.getInputStream()) {
+    <T> ResponseEntity<T> getResponse(String path, Class<T> clazz) {
+        var accept = request.getHeader(ACCEPT);
+        final var resource = new ClassPathResource(path);
+        try (var inputStream = resource.getInputStream()) {
             if (accept.contains(YAML)) {
                 var targetObject = YAML_TRANSLATOR.decode(inputStream, clazz);
                 return new ResponseEntity<>(targetObject, HttpStatus.OK);
             } else {
-                final String string = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+                final var string = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
                 var targetObject = JSON_TRANSLATOR.fromJson(string, clazz);
                 return new ResponseEntity<>(targetObject, HttpStatus.OK);
             }

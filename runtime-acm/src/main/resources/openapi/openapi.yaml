@@ -1316,7 +1316,7 @@ paths:
       description: This request manages deployment and locking of an automation composition instance. This endpoint can
         order deployment and undeployment of an AC Instance to participants and order unlocking and locking of AC instances
         on participants
-      operationId: ompositionInstanceState
+      operationId: compositionInstanceState
       parameters:
       - name : compositionId
         in: path
