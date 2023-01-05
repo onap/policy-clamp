@@ -22,6 +22,30 @@
       "revId": "3ba4f682555258083b2ebbf6b313896224bf6b4e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cf02504e_2b6540e7",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/handler/IntermediaryActivator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2023-01-05T16:49:49Z",
+      "side": 1,
+      "message": "I cannot find a pendingmessagecount method from Dmaap, no way to know when the message is sent. any suggestion?",
+      "parentUuid": "441c60f3_ec738641",
+      "range": {
+        "startLine": 118,
+        "startChar": 0,
+        "endLine": 118,
+        "endChar": 3
+      },
+      "revId": "3ba4f682555258083b2ebbf6b313896224bf6b4e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
