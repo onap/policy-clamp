@@ -46,6 +46,30 @@
       "revId": "3ba4f682555258083b2ebbf6b313896224bf6b4e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "da34509d_6c4803de",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/handler/IntermediaryActivator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2023-01-06T09:07:51Z",
+      "side": 1,
+      "message": "I have removed this change that will be refactored in POLICY-4499",
+      "parentUuid": "cf02504e_2b6540e7",
+      "range": {
+        "startLine": 118,
+        "startChar": 0,
+        "endLine": 118,
+        "endChar": 3
+      },
+      "revId": "3ba4f682555258083b2ebbf6b313896224bf6b4e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
