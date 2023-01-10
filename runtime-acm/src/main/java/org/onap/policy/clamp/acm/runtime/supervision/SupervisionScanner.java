@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2023 Nordix Foundation.
+ * Copyright (C) 2021-2022 Nordix Foundation.
  * ================================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -71,10 +71,11 @@ public class SupervisionScanner {
      * @param acRuntimeParameterGroup the parameters for the automation composition runtime
      */
     public SupervisionScanner(final AutomationCompositionProvider automationCompositionProvider,
-            AcDefinitionProvider acDefinitionProvider,
-            final AutomationCompositionStateChangePublisher automationCompositionStateChangePublisher,
-            AutomationCompositionUpdatePublisher automationCompositionUpdatePublisher,
-            ParticipantProvider participantProvider, final AcRuntimeParameterGroup acRuntimeParameterGroup) {
+                              AcDefinitionProvider acDefinitionProvider,
+                              final AutomationCompositionStateChangePublisher automationCompositionStateChangePublisher,
+                              AutomationCompositionUpdatePublisher automationCompositionUpdatePublisher,
+                              ParticipantProvider participantProvider,
+                              final AcRuntimeParameterGroup acRuntimeParameterGroup) {
         this.automationCompositionProvider = automationCompositionProvider;
         this.acDefinitionProvider = acDefinitionProvider;
         this.automationCompositionStateChangePublisher = automationCompositionStateChangePublisher;
@@ -82,12 +83,12 @@ public class SupervisionScanner {
         this.participantProvider = participantProvider;
 
         automationCompositionCounter.setMaxRetryCount(
-                acRuntimeParameterGroup.getParticipantParameters().getUpdateParameters().getMaxRetryCount());
+            acRuntimeParameterGroup.getParticipantParameters().getUpdateParameters().getMaxRetryCount());
         automationCompositionCounter
-                .setMaxWaitMs(acRuntimeParameterGroup.getParticipantParameters().getMaxStatusWaitMs());
+            .setMaxWaitMs(acRuntimeParameterGroup.getParticipantParameters().getMaxStatusWaitMs());
 
         participantStatusCounter.setMaxRetryCount(
-                acRuntimeParameterGroup.getParticipantParameters().getUpdateParameters().getMaxRetryCount());
+            acRuntimeParameterGroup.getParticipantParameters().getUpdateParameters().getMaxRetryCount());
         participantStatusCounter.setMaxWaitMs(acRuntimeParameterGroup.getParticipantParameters().getMaxStatusWaitMs());
     }
 
@@ -123,11 +124,11 @@ public class SupervisionScanner {
             return;
         }
         if (participantStatusCounter.getDuration(id) > participantStatusCounter.getMaxWaitMs()
-                && !participantStatusCounter.count(id)) {
+            && !participantStatusCounter.count(id)) {
             LOGGER.debug("report Participant fault");
             participantStatusCounter.setFault(id);
             participant.setParticipantState(ParticipantState.OFF_LINE);
-            participantProvider.saveParticipant(participant);
+            participantProvider.updateParticipant(participant);
         }
     }
 
@@ -139,7 +140,7 @@ public class SupervisionScanner {
     }
 
     private void scanAutomationComposition(final AutomationComposition automationComposition,
-            ToscaServiceTemplate toscaServiceTemplate, boolean counterCheck) {
+                                           ToscaServiceTemplate toscaServiceTemplate, boolean counterCheck) {
         LOGGER.debug("scanning automation composition {} . . .", automationComposition.getInstanceId());
 
         if (automationComposition.getState().equals(automationComposition.getOrderedState().asState())) {
@@ -157,7 +158,7 @@ public class SupervisionScanner {
         var defaultMax = 0; // max startPhase
         for (var element : automationComposition.getElements().values()) {
             var toscaNodeTemplate = toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates()
-                    .get(element.getDefinition().getName());
+                .get(element.getDefinition().getName());
             int startPhase = ParticipantUtils.findStartPhase(toscaNodeTemplate.getProperties());
             defaultMin = Math.min(defaultMin, startPhase);
             defaultMax = Math.max(defaultMax, startPhase);
@@ -170,7 +171,7 @@ public class SupervisionScanner {
 
         if (completed) {
             LOGGER.debug("automation composition scan: transition from state {} to {} completed",
-                    automationComposition.getState(), automationComposition.getOrderedState());
+                automationComposition.getState(), automationComposition.getOrderedState());
 
             automationComposition.setState(automationComposition.getOrderedState().asState());
             automationCompositionProvider.updateAutomationComposition(automationComposition);
@@ -179,19 +180,19 @@ public class SupervisionScanner {
             clearFaultAndCounter(automationComposition);
         } else {
             LOGGER.debug("automation composition scan: transition from state {} to {} not completed",
-                    automationComposition.getState(), automationComposition.getOrderedState());
+                automationComposition.getState(), automationComposition.getOrderedState());
 
             var nextSpNotCompleted =
-                    AutomationCompositionState.UNINITIALISED2PASSIVE.equals(automationComposition.getState())
-                            || AutomationCompositionState.PASSIVE2RUNNING.equals(automationComposition.getState())
-                                    ? minSpNotCompleted
-                                    : maxSpNotCompleted;
+                AutomationCompositionState.UNINITIALISED2PASSIVE.equals(automationComposition.getState())
+                    || AutomationCompositionState.PASSIVE2RUNNING.equals(automationComposition.getState())
+                    ? minSpNotCompleted
+                    : maxSpNotCompleted;
 
             var firstStartPhase =
-                    AutomationCompositionState.UNINITIALISED2PASSIVE.equals(automationComposition.getState())
-                            || AutomationCompositionState.PASSIVE2RUNNING.equals(automationComposition.getState())
-                                    ? defaultMin
-                                    : defaultMax;
+                AutomationCompositionState.UNINITIALISED2PASSIVE.equals(automationComposition.getState())
+                    || AutomationCompositionState.PASSIVE2RUNNING.equals(automationComposition.getState())
+                    ? defaultMin
+                    : defaultMax;
 
             if (nextSpNotCompleted != phaseMap.getOrDefault(automationComposition.getInstanceId(), firstStartPhase)) {
                 phaseMap.put(automationComposition.getInstanceId(), nextSpNotCompleted);

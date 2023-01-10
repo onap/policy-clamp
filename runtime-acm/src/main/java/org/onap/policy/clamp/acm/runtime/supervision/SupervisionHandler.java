@@ -57,9 +57,9 @@ public class SupervisionHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(SupervisionHandler.class);
 
     private static final String AUTOMATION_COMPOSITION_CANNOT_TRANSITION_FROM_STATE =
-            "Automation composition can't transition from state ";
+        "Automation composition can't transition from state ";
     private static final String AUTOMATION_COMPOSITION_IS_ALREADY_IN_STATE =
-            "Automation composition is already in state ";
+        "Automation composition is already in state ";
     private static final String TO_STATE = " to state ";
     private static final String AND_TRANSITIONING_TO_STATE = " and transitioning to state ";
 
@@ -78,7 +78,7 @@ public class SupervisionHandler {
      */
     public void handleSendCommissionMessage(AutomationCompositionDefinition acmDefinition) {
         LOGGER.debug("Participant update message with serviveTemplate {} being sent to all participants",
-                acmDefinition.getCompositionId());
+            acmDefinition.getCompositionId());
         participantUpdatePublisher.sendComissioningBroadcast(acmDefinition);
     }
 
@@ -98,8 +98,8 @@ public class SupervisionHandler {
      */
     @MessageIntercept
     @Timed(
-            value = "listener.automation_composition_update_ack",
-            description = "AUTOMATION_COMPOSITION_UPDATE_ACK messages received")
+        value = "listener.automation_composition_update_ack",
+        description = "AUTOMATION_COMPOSITION_UPDATE_ACK messages received")
     public void handleAutomationCompositionUpdateAckMessage(AutomationCompositionAck automationCompositionAckMessage) {
         LOGGER.debug("AutomationComposition Update Ack message received {}", automationCompositionAckMessage);
         setAcElementStateInDb(automationCompositionAckMessage);
@@ -123,10 +123,10 @@ public class SupervisionHandler {
      */
     @MessageIntercept
     @Timed(
-            value = "listener.automation_composition_statechange_ack",
-            description = "AUTOMATION_COMPOSITION_STATECHANGE_ACK messages received")
+        value = "listener.automation_composition_statechange_ack",
+        description = "AUTOMATION_COMPOSITION_STATECHANGE_ACK messages received")
     public void handleAutomationCompositionStateChangeAckMessage(
-            AutomationCompositionAck automationCompositionAckMessage) {
+        AutomationCompositionAck automationCompositionAckMessage) {
         LOGGER.debug("AutomationComposition StateChange Ack message received {}", automationCompositionAckMessage);
         setAcElementStateInDb(automationCompositionAckMessage);
     }
@@ -134,23 +134,23 @@ public class SupervisionHandler {
     private void setAcElementStateInDb(AutomationCompositionAck automationCompositionAckMessage) {
         if (automationCompositionAckMessage.getAutomationCompositionResultMap() != null) {
             var automationComposition = automationCompositionProvider
-                    .findAutomationComposition(automationCompositionAckMessage.getAutomationCompositionId());
+                .findAutomationComposition(automationCompositionAckMessage.getAutomationCompositionId());
             if (automationComposition.isPresent()) {
                 var updated = updateState(automationComposition.get(),
-                        automationCompositionAckMessage.getAutomationCompositionResultMap().entrySet());
+                    automationCompositionAckMessage.getAutomationCompositionResultMap().entrySet());
                 updated |= setPrimed(automationComposition.get());
                 if (updated) {
                     automationCompositionProvider.updateAutomationComposition(automationComposition.get());
                 }
             } else {
                 LOGGER.warn("AutomationComposition not found in database {}",
-                        automationCompositionAckMessage.getAutomationCompositionId());
+                    automationCompositionAckMessage.getAutomationCompositionId());
             }
         }
     }
 
     private boolean updateState(AutomationComposition automationComposition,
-            Set<Map.Entry<UUID, AutomationCompositionElementAck>> automationCompositionResultSet) {
+                                Set<Map.Entry<UUID, AutomationCompositionElementAck>> automationCompositionResultSet) {
         var updated = false;
         for (var acElementAck : automationCompositionResultSet) {
             var element = automationComposition.getElements().get(acElementAck.getKey());
@@ -167,9 +167,9 @@ public class SupervisionHandler {
         if (acElements != null) {
             Boolean primedFlag = true;
             var checkOpt = automationComposition.getElements().values().stream()
-                    .filter(acElement -> (!acElement.getState().equals(AutomationCompositionState.PASSIVE)
-                            || !acElement.getState().equals(AutomationCompositionState.RUNNING)))
-                    .findAny();
+                .filter(acElement -> (!acElement.getState().equals(AutomationCompositionState.PASSIVE)
+                    || !acElement.getState().equals(AutomationCompositionState.RUNNING)))
+                .findAny();
             if (checkOpt.isEmpty()) {
                 primedFlag = false;
             }
@@ -188,7 +188,7 @@ public class SupervisionHandler {
      * @throws AutomationCompositionException on supervision errors
      */
     public void triggerAutomationCompositionSupervision(AutomationComposition automationComposition)
-            throws AutomationCompositionException {
+        throws AutomationCompositionException {
         switch (automationComposition.getOrderedState()) {
             case UNINITIALISED:
                 superviseAutomationCompositionUninitialization(automationComposition);
@@ -204,8 +204,8 @@ public class SupervisionHandler {
 
             default:
                 exceptionOccured(Response.Status.NOT_ACCEPTABLE,
-                        "A automation composition cannot be commanded to go into state "
-                                + automationComposition.getOrderedState().name());
+                    "A automation composition cannot be commanded to go into state "
+                        + automationComposition.getOrderedState().name());
         }
     }
 
@@ -218,39 +218,39 @@ public class SupervisionHandler {
      * @throws AutomationCompositionException on supervision errors
      */
     private void superviseAutomationCompositionUninitialization(AutomationComposition automationComposition)
-            throws AutomationCompositionException {
+        throws AutomationCompositionException {
         switch (automationComposition.getState()) {
             case UNINITIALISED:
                 exceptionOccured(Response.Status.NOT_ACCEPTABLE,
-                        AUTOMATION_COMPOSITION_IS_ALREADY_IN_STATE + automationComposition.getState().name());
+                    AUTOMATION_COMPOSITION_IS_ALREADY_IN_STATE + automationComposition.getState().name());
                 break;
 
             case UNINITIALISED2PASSIVE:
             case PASSIVE:
                 automationComposition.setState(AutomationCompositionState.PASSIVE2UNINITIALISED);
                 automationCompositionStateChangePublisher.send(automationComposition,
-                        getFirstStartPhase(automationComposition));
+                    getFirstStartPhase(automationComposition));
                 break;
 
             case PASSIVE2UNINITIALISED:
                 exceptionOccured(Response.Status.NOT_ACCEPTABLE,
-                        AUTOMATION_COMPOSITION_IS_ALREADY_IN_STATE + automationComposition.getState().name()
-                                + AND_TRANSITIONING_TO_STATE + automationComposition.getOrderedState());
+                    AUTOMATION_COMPOSITION_IS_ALREADY_IN_STATE + automationComposition.getState().name()
+                        + AND_TRANSITIONING_TO_STATE + automationComposition.getOrderedState());
                 break;
 
             default:
                 exceptionOccured(Response.Status.NOT_ACCEPTABLE, AUTOMATION_COMPOSITION_CANNOT_TRANSITION_FROM_STATE
-                        + automationComposition.getState().name() + TO_STATE + automationComposition.getOrderedState());
+                    + automationComposition.getState().name() + TO_STATE + automationComposition.getOrderedState());
                 break;
         }
     }
 
     private void superviseAutomationCompositionPassivation(AutomationComposition automationComposition)
-            throws AutomationCompositionException {
+        throws AutomationCompositionException {
         switch (automationComposition.getState()) {
             case PASSIVE:
                 exceptionOccured(Response.Status.NOT_ACCEPTABLE,
-                        AUTOMATION_COMPOSITION_IS_ALREADY_IN_STATE + automationComposition.getState().name());
+                    AUTOMATION_COMPOSITION_IS_ALREADY_IN_STATE + automationComposition.getState().name());
                 break;
             case UNINITIALISED:
                 automationComposition.setState(AutomationCompositionState.UNINITIALISED2PASSIVE);
@@ -260,46 +260,46 @@ public class SupervisionHandler {
             case UNINITIALISED2PASSIVE:
             case RUNNING2PASSIVE:
                 exceptionOccured(Response.Status.NOT_ACCEPTABLE,
-                        AUTOMATION_COMPOSITION_IS_ALREADY_IN_STATE + automationComposition.getState().name()
-                                + AND_TRANSITIONING_TO_STATE + automationComposition.getOrderedState());
+                    AUTOMATION_COMPOSITION_IS_ALREADY_IN_STATE + automationComposition.getState().name()
+                        + AND_TRANSITIONING_TO_STATE + automationComposition.getOrderedState());
                 break;
 
             case RUNNING:
                 automationComposition.setState(AutomationCompositionState.RUNNING2PASSIVE);
                 automationCompositionStateChangePublisher.send(automationComposition,
-                        getFirstStartPhase(automationComposition));
+                    getFirstStartPhase(automationComposition));
                 break;
 
             default:
                 exceptionOccured(Response.Status.NOT_ACCEPTABLE, AUTOMATION_COMPOSITION_CANNOT_TRANSITION_FROM_STATE
-                        + automationComposition.getState().name() + TO_STATE + automationComposition.getOrderedState());
+                    + automationComposition.getState().name() + TO_STATE + automationComposition.getOrderedState());
                 break;
         }
     }
 
     private void superviseAutomationCompositionActivation(AutomationComposition automationComposition)
-            throws AutomationCompositionException {
+        throws AutomationCompositionException {
         switch (automationComposition.getState()) {
             case RUNNING:
                 exceptionOccured(Response.Status.NOT_ACCEPTABLE,
-                        AUTOMATION_COMPOSITION_IS_ALREADY_IN_STATE + automationComposition.getState().name());
+                    AUTOMATION_COMPOSITION_IS_ALREADY_IN_STATE + automationComposition.getState().name());
                 break;
 
             case PASSIVE2RUNNING:
                 exceptionOccured(Response.Status.NOT_ACCEPTABLE,
-                        AUTOMATION_COMPOSITION_IS_ALREADY_IN_STATE + automationComposition.getState().name()
-                                + AND_TRANSITIONING_TO_STATE + automationComposition.getOrderedState());
+                    AUTOMATION_COMPOSITION_IS_ALREADY_IN_STATE + automationComposition.getState().name()
+                        + AND_TRANSITIONING_TO_STATE + automationComposition.getOrderedState());
                 break;
 
             case PASSIVE:
                 automationComposition.setState(AutomationCompositionState.PASSIVE2RUNNING);
                 automationCompositionStateChangePublisher.send(automationComposition,
-                        getFirstStartPhase(automationComposition));
+                    getFirstStartPhase(automationComposition));
                 break;
 
             default:
                 exceptionOccured(Response.Status.NOT_ACCEPTABLE, AUTOMATION_COMPOSITION_CANNOT_TRANSITION_FROM_STATE
-                        + automationComposition.getState().name() + TO_STATE + automationComposition.getOrderedState());
+                    + automationComposition.getState().name() + TO_STATE + automationComposition.getOrderedState());
                 break;
         }
     }

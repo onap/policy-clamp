@@ -65,7 +65,6 @@ paths:
       - name: X-onap-RequestId
         in: header
         description: RequestID for http transaction
-        required: true
         schema:
           type: string
           format: uuid
@@ -138,7 +137,7 @@ paths:
       description: Requests all participants to immediately generate a heartbeat report with their information and status
         and the information and status of all their AC Element Types and Instances. The results are published on subsequent
         GET REST requests on the "participants" endpoint.
-      operationId: orderAllParticiantsReport
+      operationId: orderAllParticipantsReport
       parameters:
       - name: X-onap-RequestId
         in: header
@@ -230,7 +229,6 @@ paths:
       - name: X-onap-RequestId
         in: header
         description: RequestID for http transaction
-        required: true
         schema:
           type: string
           format: uuid
@@ -331,7 +329,6 @@ paths:
           format: uuid
       - name: X-onap-RequestId
         in: header
-        required: true
         description: RequestID for http transaction
         schema:
           type: string
