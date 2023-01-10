@@ -22,12 +22,14 @@ package org.onap.policy.clamp.models.acm.persistence.provider;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import javax.ws.rs.core.Response.Status;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaParticipant;
 import org.onap.policy.clamp.models.acm.persistence.repository.ParticipantRepository;
+import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.springframework.stereotype.Service;
@@ -69,6 +71,24 @@ public class ParticipantProvider {
     /**
      * Get participant.
      *
+     * @param participantId the id of the participant to get
+     * @return the participant found
+     * @throws PfModelException on errors getting participant
+     */
+    @Transactional(readOnly = true)
+    public Participant getParticipantById(String participantId) {
+        var participant = participantRepository.findByParticipantId(participantId);
+        if (participant.isEmpty()) {
+            throw new PfModelRuntimeException(Status.NOT_FOUND,
+                "Participant Not Found with ID: " + participantId);
+        } else {
+            return participant.get().toAuthorative();
+        }
+    }
+
+    /**
+     * Get participant.
+     *
      * @param participantId the Id of the participant to get
      * @return the participant found
      */
@@ -84,8 +104,23 @@ public class ParticipantProvider {
      * @return the participant created
      */
     public Participant saveParticipant(@NonNull final Participant participant) {
+        participant.setParticipantId(UUID.randomUUID());
         var result = participantRepository
-                .save(ProviderUtils.getJpaAndValidate(participant, JpaParticipant::new, "participant"));
+            .save(ProviderUtils.getJpaAndValidate(participant, JpaParticipant::new, "participant"));
+
+        // Return the saved participant
+        return result.toAuthorative();
+    }
+
+    /**
+     * Updates an existing participant.
+     *
+     * @param participant participant to update
+     * @return the participant updated
+     */
+    public Participant updateParticipant(@NonNull final Participant participant) {
+        var result = participantRepository
+            .save(ProviderUtils.getJpaAndValidate(participant, JpaParticipant::new, "participant"));
 
         // Return the saved participant
         return result.toAuthorative();
@@ -102,7 +137,7 @@ public class ParticipantProvider {
 
         if (jpaDeleteParticipantOpt.isEmpty()) {
             String errorMessage =
-                    "delete of participant \"" + participantId + "\" failed, participant does not exist";
+                "delete of participant \"" + participantId + "\" failed, participant does not exist";
             throw new PfModelRuntimeException(Status.BAD_REQUEST, errorMessage);
         }
         participantRepository.delete(jpaDeleteParticipantOpt.get());

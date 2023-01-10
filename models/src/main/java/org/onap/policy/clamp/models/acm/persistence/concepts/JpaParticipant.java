@@ -22,6 +22,7 @@ package org.onap.policy.clamp.models.acm.persistence.concepts;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.UUID;
 import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
@@ -55,6 +56,10 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 @EqualsAndHashCode(callSuper = false)
 public class JpaParticipant extends PfConcept implements PfAuthorative<Participant>, Serializable {
     private static final long serialVersionUID = -4697758484642403483L;
+
+    @Column
+    @NotNull
+    private String participantId;
 
     @EmbeddedId
     @VerifyKey
@@ -94,21 +99,25 @@ public class JpaParticipant extends PfConcept implements PfAuthorative<Participa
      * @param key the key
      */
     public JpaParticipant(@NonNull final PfConceptKey key) {
-        this(key, new PfConceptKey(), ParticipantState.ON_LINE);
+        this(UUID.randomUUID().toString(), key, new PfConceptKey(), ParticipantState.ON_LINE);
     }
 
     /**
      * The Key Constructor creates a {@link JpaParticipant} object with all mandatory fields.
      *
+     * @param participantId the participant id
      * @param key the key
      * @param definition the TOSCA definition of the participant
      * @param participantState the state of the participant
      */
-    public JpaParticipant(@NonNull final PfConceptKey key, @NonNull final PfConceptKey definition,
-            @NonNull final ParticipantState participantState) {
+    public JpaParticipant(@NotNull String participantId,
+                          @NonNull final PfConceptKey key,
+                          @NonNull final PfConceptKey definition,
+                          @NonNull final ParticipantState participantState) {
         this.key = key;
         this.definition = definition;
         this.participantState = participantState;
+        this.participantId = participantId;
     }
 
     /**
@@ -123,6 +132,7 @@ public class JpaParticipant extends PfConcept implements PfAuthorative<Participa
         this.participantState = copyConcept.participantState;
         this.description = copyConcept.description;
         this.participantType = copyConcept.participantType;
+        this.participantId = copyConcept.participantId;
     }
 
     /**
@@ -144,6 +154,7 @@ public class JpaParticipant extends PfConcept implements PfAuthorative<Participa
         participant.setParticipantState(participantState);
         participant.setDescription(description);
         participant.setParticipantType(new ToscaConceptIdentifier(participantType));
+        participant.setParticipantId(UUID.fromString(participantId));
 
         return participant;
     }
@@ -158,6 +169,7 @@ public class JpaParticipant extends PfConcept implements PfAuthorative<Participa
         this.setParticipantState(participant.getParticipantState());
         this.setDescription(participant.getDescription());
         this.participantType = participant.getParticipantType().asConceptKey();
+        this.participantId = participant.getParticipantId().toString();
     }
 
     @Override

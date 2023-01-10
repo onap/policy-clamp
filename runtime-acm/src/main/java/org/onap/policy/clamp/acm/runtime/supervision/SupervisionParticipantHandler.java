@@ -59,7 +59,7 @@ public class SupervisionParticipantHandler {
         saveParticipantStatus(participantRegisterMsg);
 
         participantRegisterAckPublisher.send(participantRegisterMsg.getMessageId(),
-                participantRegisterMsg.getParticipantId(), participantRegisterMsg.getParticipantType());
+            participantRegisterMsg.getParticipantId(), participantRegisterMsg.getParticipantType());
     }
 
     /**
@@ -76,7 +76,7 @@ public class SupervisionParticipantHandler {
         if (participantOpt.isPresent()) {
             var participant = participantOpt.get();
             participant.setParticipantState(ParticipantState.OFF_LINE);
-            participantProvider.saveParticipant(participant);
+            participantProvider.updateParticipant(participant);
         }
 
         participantDeregisterAckPublisher.send(participantDeregisterMsg.getMessageId());
@@ -110,7 +110,7 @@ public class SupervisionParticipantHandler {
             var participant = participantOpt.get();
             participant.setParticipantState(ParticipantState.ON_LINE);
 
-            participantProvider.saveParticipant(participant);
+            participantProvider.updateParticipant(participant);
         }
     }
 }

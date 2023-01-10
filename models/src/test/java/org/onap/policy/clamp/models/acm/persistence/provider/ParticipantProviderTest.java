@@ -64,7 +64,7 @@ class ParticipantProviderTest {
         var participantRepository = mock(ParticipantRepository.class);
         for (var participant : jpaParticipantList) {
             when(participantRepository.getById(new PfConceptKey(participant.getName(), participant.getVersion())))
-                    .thenReturn(participant);
+                .thenReturn(participant);
         }
         var participantProvider = new ParticipantProvider(participantRepository);
 
@@ -73,7 +73,27 @@ class ParticipantProviderTest {
         when(participantRepository.save(any())).thenReturn(jpaParticipantList.get(0));
 
         Participant savedParticipant = participantProvider.saveParticipant(inputParticipants.get(0));
+        savedParticipant.setParticipantId(inputParticipants.get(0).getParticipantId());
         assertEquals(savedParticipant, inputParticipants.get(0));
+    }
+
+    @Test
+    void testParticipantUpdate() throws Exception {
+        var participantRepository = mock(ParticipantRepository.class);
+        for (var participant : jpaParticipantList) {
+            when(participantRepository.getById(new PfConceptKey(participant.getName(), participant.getVersion())))
+                .thenReturn(participant);
+        }
+        var participantProvider = new ParticipantProvider(participantRepository);
+
+        assertThatThrownBy(() -> participantProvider.updateParticipant(null))
+            .hasMessageMatching(LIST_IS_NULL);
+
+        when(participantRepository.save(any())).thenReturn(jpaParticipantList.get(0));
+
+        Participant updatedParticipant = participantProvider.updateParticipant(inputParticipants.get(0));
+        updatedParticipant.setParticipantId(inputParticipants.get(0).getParticipantId());
+        assertEquals(updatedParticipant, inputParticipants.get(0));
     }
 
     @Test
@@ -88,7 +108,7 @@ class ParticipantProviderTest {
         String name = inputParticipants.get(0).getName();
         String version = inputParticipants.get(0).getVersion();
         when(participantRepository.getFiltered(any(), eq(name), eq(version)))
-                .thenReturn(List.of(jpaParticipantList.get(0)));
+            .thenReturn(List.of(jpaParticipantList.get(0)));
         assertEquals(1, participantProvider.getParticipants(name, version).size());
 
         assertThat(participantProvider.getParticipants("invalid_name", "1.0.1")).isEmpty();
@@ -97,6 +117,14 @@ class ParticipantProviderTest {
 
         when(participantRepository.findAll()).thenReturn(jpaParticipantList);
         assertThat(participantProvider.getParticipants()).hasSize(inputParticipants.size());
+
+        when(participantRepository.findByParticipantId(any())).thenReturn(
+            Optional.ofNullable(jpaParticipantList.get(0)));
+
+        var participant = participantProvider.getParticipantById(inputParticipants.get(0)
+            .getParticipantId().toString());
+
+        assertThat(participant).isEqualTo(inputParticipants.get(0));
     }
 
     @Test
@@ -105,12 +133,12 @@ class ParticipantProviderTest {
         var participantProvider = new ParticipantProvider(participantRepository);
 
         assertThatThrownBy(() -> participantProvider.deleteParticipant(INVALID_ID))
-                .hasMessageMatching(".*.failed, participant does not exist");
+            .hasMessageMatching(".*.failed, participant does not exist");
 
         when(participantRepository.findById(any())).thenReturn(Optional.of(jpaParticipantList.get(0)));
 
         Participant deletedParticipant =
-                participantProvider.deleteParticipant(inputParticipants.get(0).getDefinition());
+            participantProvider.deleteParticipant(inputParticipants.get(0).getDefinition());
         assertEquals(inputParticipants.get(0), deletedParticipant);
     }
 }
