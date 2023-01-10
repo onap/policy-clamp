@@ -1,0 +1,15 @@
+{
+  "name": "dummy_participant2",
+  "version": "1.0.1",
+  "definition": {
+    "name": "org.onap.domain.pmsh.PMSHAutomationCompositionDefinition2",
+    "version": "1.0.0"
+  },
+  "participantState": "ON_LINE",
+  "description": "A dummy PMSH participant2",
+  "participantId": "cac01d0a-7ba8-4dda-b9be-6983c46c0546",
+  "participantType": {
+    "name": "org.onap.domain.pmsh.PolicyAutomationCompositionDefinition2",
+    "version": "1.0.0"
+  }
+}

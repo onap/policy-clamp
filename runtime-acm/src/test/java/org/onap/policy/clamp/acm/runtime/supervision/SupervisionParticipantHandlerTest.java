@@ -41,7 +41,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 class SupervisionParticipantHandlerTest {
     private static final ToscaConceptIdentifier PARTICIPANT_ID = new ToscaConceptIdentifier("ParticipantId", "1.0.0");
     private static final ToscaConceptIdentifier PARTICIPANT_TYPE =
-            new ToscaConceptIdentifier("ParticipantType", "1.0.0");
+        new ToscaConceptIdentifier("ParticipantType", "1.0.0");
 
     @Test
     void testHandleParticipantDeregister() {
@@ -59,11 +59,11 @@ class SupervisionParticipantHandlerTest {
         participantDeregisterMessage.setParticipantType(PARTICIPANT_TYPE);
         var participantDeregisterAckPublisher = mock(ParticipantDeregisterAckPublisher.class);
         var handler = new SupervisionParticipantHandler(participantProvider,
-                mock(ParticipantRegisterAckPublisher.class), participantDeregisterAckPublisher);
+            mock(ParticipantRegisterAckPublisher.class), participantDeregisterAckPublisher);
 
         handler.handleParticipantMessage(participantDeregisterMessage);
 
-        verify(participantProvider).saveParticipant(any());
+        verify(participantProvider).updateParticipant(any());
         verify(participantDeregisterAckPublisher).send(participantDeregisterMessage.getMessageId());
     }
 
@@ -81,13 +81,13 @@ class SupervisionParticipantHandlerTest {
         var participantProvider = mock(ParticipantProvider.class);
         var participantRegisterAckPublisher = mock(ParticipantRegisterAckPublisher.class);
         var handler = new SupervisionParticipantHandler(participantProvider, participantRegisterAckPublisher,
-                mock(ParticipantDeregisterAckPublisher.class));
+            mock(ParticipantDeregisterAckPublisher.class));
 
         handler.handleParticipantMessage(participantRegisterMessage);
 
         verify(participantProvider).saveParticipant(any());
         verify(participantRegisterAckPublisher).send(participantRegisterMessage.getMessageId(), PARTICIPANT_ID,
-                PARTICIPANT_TYPE);
+            PARTICIPANT_TYPE);
     }
 
     @Test
@@ -99,7 +99,7 @@ class SupervisionParticipantHandlerTest {
 
         var participantProvider = mock(ParticipantProvider.class);
         var handler = new SupervisionParticipantHandler(participantProvider,
-                mock(ParticipantRegisterAckPublisher.class), mock(ParticipantDeregisterAckPublisher.class));
+            mock(ParticipantRegisterAckPublisher.class), mock(ParticipantDeregisterAckPublisher.class));
         handler.handleParticipantMessage(participantStatusMessage);
 
         verify(participantProvider).saveParticipant(any());

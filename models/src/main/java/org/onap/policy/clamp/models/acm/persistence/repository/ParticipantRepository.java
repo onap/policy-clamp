@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.models.acm.persistence.repository;
 
+import java.util.Optional;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaParticipant;
 import org.onap.policy.models.base.PfConceptKey;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -28,4 +29,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ParticipantRepository extends JpaRepository<JpaParticipant, PfConceptKey>, FilterRepository {
 
+    Optional<JpaParticipant> findByParticipantId(String compositionId);
 }

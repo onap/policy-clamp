@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.models.acm.concepts;
 
+import java.util.UUID;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -35,6 +36,9 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaEntity;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class Participant extends ToscaEntity implements Comparable<Participant> {
+
+    @NonNull
+    private UUID participantId;
     @NonNull
     private ToscaConceptIdentifier definition = new ToscaConceptIdentifier(PfConceptKey.getNullKey());
 
@@ -69,5 +73,6 @@ public class Participant extends ToscaEntity implements Comparable<Participant> 
         this.definition = new ToscaConceptIdentifier(otherParticipant.definition);
         this.participantState = otherParticipant.participantState;
         this.participantType = otherParticipant.participantType;
+        this.participantId = otherParticipant.participantId;
     }
 }

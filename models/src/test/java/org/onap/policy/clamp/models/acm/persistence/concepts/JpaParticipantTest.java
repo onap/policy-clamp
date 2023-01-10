@@ -27,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
@@ -47,52 +48,54 @@ class JpaParticipantTest {
 
         assertThatThrownBy(() -> new JpaParticipant((PfConceptKey) null)).hasMessageMatching(NULL_KEY_ERROR);
 
-        assertThatThrownBy(() -> new JpaParticipant(null, null, null)).hasMessageMatching(NULL_KEY_ERROR);
+        assertThatThrownBy(() -> new JpaParticipant(null, null, null, null)).hasMessageMatching(NULL_KEY_ERROR);
 
-        assertThatThrownBy(() -> new JpaParticipant(null, null, null))
+        assertThatThrownBy(() -> new JpaParticipant(null, null, null, null))
             .hasMessageMatching(NULL_KEY_ERROR);
 
-        assertThatThrownBy(() -> new JpaParticipant(null, null, ParticipantState.ON_LINE))
+        assertThatThrownBy(() -> new JpaParticipant(null, null, null, ParticipantState.ON_LINE))
             .hasMessageMatching(NULL_KEY_ERROR);
 
         assertThatThrownBy(
-            () -> new JpaParticipant(null, null, ParticipantState.ON_LINE))
+            () -> new JpaParticipant(null, null, null, ParticipantState.ON_LINE))
             .hasMessageMatching(NULL_KEY_ERROR);
 
-        assertThatThrownBy(() -> new JpaParticipant(null, new PfConceptKey(), null))
+        assertThatThrownBy(() -> new JpaParticipant(null, null, new PfConceptKey(), null))
             .hasMessageMatching(NULL_KEY_ERROR);
 
-        assertThatThrownBy(() -> new JpaParticipant(null, new PfConceptKey(), null))
+        assertThatThrownBy(() -> new JpaParticipant(null, null, new PfConceptKey(), null))
             .hasMessageMatching(NULL_KEY_ERROR);
 
-        assertThatThrownBy(() -> new JpaParticipant(null, new PfConceptKey(), ParticipantState.ON_LINE))
+        assertThatThrownBy(() -> new JpaParticipant(null, null, new PfConceptKey(), ParticipantState.ON_LINE))
             .hasMessageMatching(NULL_KEY_ERROR);
 
-        assertThatThrownBy(() -> new JpaParticipant(null, new PfConceptKey(), ParticipantState.ON_LINE))
+        assertThatThrownBy(() -> new JpaParticipant(null, null, new PfConceptKey(), ParticipantState.ON_LINE))
             .hasMessageMatching(NULL_KEY_ERROR);
 
-        assertThatThrownBy(() -> new JpaParticipant(new PfConceptKey(), null, null))
+        assertThatThrownBy(() -> new JpaParticipant(null, new PfConceptKey(), null, null))
             .hasMessageMatching("definition is marked .*ull but is null");
 
-        assertThatThrownBy(() -> new JpaParticipant(new PfConceptKey(), null, null))
+        assertThatThrownBy(() -> new JpaParticipant(null, new PfConceptKey(), null, null))
             .hasMessageMatching("definition is marked .*ull but is null");
 
-        assertThatThrownBy(() -> new JpaParticipant(new PfConceptKey(), null, ParticipantState.ON_LINE))
+        assertThatThrownBy(() -> new JpaParticipant(null, new PfConceptKey(), null, ParticipantState.ON_LINE))
             .hasMessageMatching("definition is marked .*ull but is null");
 
-        assertThatThrownBy(() -> new JpaParticipant(new PfConceptKey(), null, ParticipantState.ON_LINE
-            )).hasMessageMatching("definition is marked .*ull but is null");
+        assertThatThrownBy(() -> new JpaParticipant(null, new PfConceptKey(), null, ParticipantState.ON_LINE
+        )).hasMessageMatching("definition is marked .*ull but is null");
 
-        assertThatThrownBy(() -> new JpaParticipant(new PfConceptKey(), new PfConceptKey(), null))
+        assertThatThrownBy(() -> new JpaParticipant(null, new PfConceptKey(), new PfConceptKey(), null))
             .hasMessageMatching("participantState is marked .*ull but is null");
 
         assertThatThrownBy(
-            () -> new JpaParticipant(new PfConceptKey(), new PfConceptKey(), null))
+            () -> new JpaParticipant(null, new PfConceptKey(), new PfConceptKey(), null))
             .hasMessageMatching("participantState is marked .*ull but is null");
 
         assertNotNull(new JpaParticipant());
         assertNotNull(new JpaParticipant((new PfConceptKey())));
-        assertNotNull(new JpaParticipant(new PfConceptKey(), new PfConceptKey(), ParticipantState.ON_LINE));
+        assertNotNull(new JpaParticipant(null, new PfConceptKey(), new PfConceptKey(), ParticipantState.ON_LINE));
+        assertNotNull(new JpaParticipant(UUID.randomUUID().toString(), new PfConceptKey(),
+            new PfConceptKey(), ParticipantState.ON_LINE));
     }
 
     @Test
@@ -100,6 +103,9 @@ class JpaParticipantTest {
         JpaParticipant testJpaParticipant = createJpaParticipantInstance();
 
         Participant participant = createParticipantInstance();
+
+        participant.setParticipantId(testJpaParticipant.toAuthorative().getParticipantId());
+
         assertEquals(participant, testJpaParticipant.toAuthorative());
 
         assertThatThrownBy(() -> testJpaParticipant.fromAuthorative(null))
@@ -110,6 +116,7 @@ class JpaParticipantTest {
         JpaParticipant testJpaParticipantFa = new JpaParticipant();
         testJpaParticipantFa.setKey(null);
         testJpaParticipantFa.fromAuthorative(participant);
+        testJpaParticipantFa.setParticipantId(testJpaParticipant.getParticipantId());
         assertEquals(testJpaParticipant, testJpaParticipantFa);
         testJpaParticipantFa.setKey(PfConceptKey.getNullKey());
         testJpaParticipantFa.fromAuthorative(participant);
@@ -119,9 +126,9 @@ class JpaParticipantTest {
         assertEquals(testJpaParticipant, testJpaParticipantFa);
 
         assertEquals("participant", testJpaParticipant.getKey().getName());
-        assertEquals("participant", new JpaParticipant(createParticipantInstance()).getKey().getName());
+        assertEquals("participant", new JpaParticipant(createJpaParticipantInstance()).getKey().getName());
         assertEquals("participant",
-            ((PfConceptKey) new JpaParticipant(createParticipantInstance()).getKeys().get(0)).getName());
+            ((PfConceptKey) new JpaParticipant(createJpaParticipantInstance()).getKeys().get(0)).getName());
 
         testJpaParticipant.clean();
         assertEquals("participant", testJpaParticipant.getKey().getName());
@@ -131,6 +138,7 @@ class JpaParticipantTest {
         assertEquals("A Message", testJpaParticipant.getDescription());
 
         JpaParticipant testJpaParticipant2 = new JpaParticipant(testJpaParticipant);
+        testJpaParticipant2.setParticipantId(testJpaParticipant.getParticipantId());
         assertEquals(testJpaParticipant, testJpaParticipant2);
     }
 
@@ -149,6 +157,7 @@ class JpaParticipantTest {
         JpaParticipant testJpaParticipant = createJpaParticipantInstance();
 
         JpaParticipant otherJpaParticipant = new JpaParticipant(testJpaParticipant);
+        otherJpaParticipant.setParticipantId(testJpaParticipant.getParticipantId());
         assertEquals(0, testJpaParticipant.compareTo(otherJpaParticipant));
         assertEquals(-1, testJpaParticipant.compareTo(null));
         assertEquals(0, testJpaParticipant.compareTo(testJpaParticipant));
@@ -169,6 +178,10 @@ class JpaParticipantTest {
         testJpaParticipant.setParticipantState(ParticipantState.ON_LINE);
         assertEquals(0, testJpaParticipant.compareTo(otherJpaParticipant));
         assertEquals(testJpaParticipant, new JpaParticipant(testJpaParticipant));
+
+        JpaParticipant newJpaParticipant = new JpaParticipant(testJpaParticipant);
+        newJpaParticipant.setParticipantId(testJpaParticipant.getParticipantId());
+        assertEquals(testJpaParticipant, newJpaParticipant);
     }
 
     @Test
@@ -197,6 +210,7 @@ class JpaParticipantTest {
         assertNotEquals(p1, p0);
 
         JpaParticipant p2 = new JpaParticipant();
+        p2.setParticipantId(p0.getParticipantId());
         assertEquals(p2, p0);
     }
 
@@ -204,6 +218,7 @@ class JpaParticipantTest {
         Participant testParticipant = createParticipantInstance();
         JpaParticipant testJpaParticipant = new JpaParticipant();
         testJpaParticipant.setKey(null);
+        testParticipant.setParticipantId(UUID.fromString(testJpaParticipant.getParticipantId()));
         testJpaParticipant.fromAuthorative(testParticipant);
         testJpaParticipant.setKey(PfConceptKey.getNullKey());
         testJpaParticipant.fromAuthorative(testParticipant);
