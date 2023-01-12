@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2023 Nordix Foundation.
+ *  Copyright (C) 2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,12 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.models.acm.messages.rest.commissioning;
+package org.onap.policy.clamp.models.acm.concepts;
 
-import lombok.Data;
+public enum AcTypeState {
 
-@Data
-public class AcTypeStateUpdate {
-
-    private PrimeOrder primeOrder;
+    COMMISSIONED,
+    PRIMING,
+    PRIMED,
+    DEPRIMING
 }
