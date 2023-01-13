@@ -21,11 +21,17 @@
 package org.onap.policy.clamp.acm.runtime.supervision;
 
 import io.micrometer.core.annotation.Timed;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
+import org.apache.commons.collections4.MapUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantDeregisterAckPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantRegisterAckPublisher;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDeregister;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessage;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegister;
@@ -98,11 +104,14 @@ public class SupervisionParticipantHandler {
         var participantOpt = participantProvider.findParticipant(participantMessage.getParticipantId());
 
         if (participantOpt.isEmpty()) {
+            ParticipantRegister registerMessage = (ParticipantRegister) participantMessage;
             var participant = new Participant();
-            participant.setName(participantMessage.getParticipantId().getName());
-            participant.setVersion(participantMessage.getParticipantId().getVersion());
-            participant.setDefinition(participantMessage.getParticipantId());
-            participant.setParticipantType(participantMessage.getParticipantType());
+            participant.setName(registerMessage.getParticipantId().getName());
+            participant.setVersion(registerMessage.getParticipantId().getVersion());
+            participant.setDefinition(registerMessage.getParticipantId());
+            participant.setParticipantType(registerMessage.getParticipantType());
+            participant.setParticipantSupportedElementTypes(listToMap(registerMessage
+                .getParticipantSupportedElementType()));
             participant.setParticipantState(ParticipantState.ON_LINE);
 
             participantProvider.saveParticipant(participant);
@@ -112,5 +121,11 @@ public class SupervisionParticipantHandler {
 
             participantProvider.updateParticipant(participant);
         }
+    }
+
+    private Map<UUID, ParticipantSupportedElementType> listToMap(List<ParticipantSupportedElementType> elementList) {
+        Map<UUID, ParticipantSupportedElementType> map = new HashMap<>();
+        MapUtils.populateMap(map, elementList, ParticipantSupportedElementType::getId);
+        return map;
     }
 }

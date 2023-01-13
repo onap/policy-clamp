@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -72,7 +72,7 @@ public class ParticipantMessagePublisher implements Publisher {
     public void sendParticipantStatus(final ParticipantStatus participantStatus) {
         validate();
         topicSinkClient.send(participantStatus);
-        LOGGER.debug("Sent Participant Status message to CLAMP - {}", participantStatus);
+        LOGGER.info("Sent Participant Status message to CLAMP - {}", participantStatus);
     }
 
     /**
@@ -84,7 +84,7 @@ public class ParticipantMessagePublisher implements Publisher {
     public void sendParticipantRegister(final ParticipantRegister participantRegister) {
         validate();
         topicSinkClient.send(participantRegister);
-        LOGGER.debug("Sent Participant Register message to CLAMP - {}", participantRegister);
+        LOGGER.info("Sent Participant Register message to CLAMP - {}", participantRegister);
     }
 
     /**

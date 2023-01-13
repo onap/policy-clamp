@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,9 @@
 package org.onap.policy.clamp.acm.participant.intermediary.main.parameters;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -111,6 +113,7 @@ public class CommonTestData {
         map.put("participantType", getParticipantId());
         map.put("reportingTimeIntervalMs", TIME_INTERVAL);
         map.put("clampAutomationCompositionTopics", getTopicParametersMap(false));
+        map.put("participantSupportedElementTypes", new ArrayList<>());
 
         return map;
     }

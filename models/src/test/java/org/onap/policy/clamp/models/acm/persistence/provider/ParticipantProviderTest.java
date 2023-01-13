@@ -22,7 +22,6 @@ package org.onap.policy.clamp.models.acm.persistence.provider;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -74,7 +73,8 @@ class ParticipantProviderTest {
 
         Participant savedParticipant = participantProvider.saveParticipant(inputParticipants.get(0));
         savedParticipant.setParticipantId(inputParticipants.get(0).getParticipantId());
-        assertEquals(savedParticipant, inputParticipants.get(0));
+
+        assertThat(savedParticipant).usingRecursiveComparison().isEqualTo(inputParticipants.get(0));
     }
 
     @Test
@@ -93,7 +93,7 @@ class ParticipantProviderTest {
 
         Participant updatedParticipant = participantProvider.updateParticipant(inputParticipants.get(0));
         updatedParticipant.setParticipantId(inputParticipants.get(0).getParticipantId());
-        assertEquals(updatedParticipant, inputParticipants.get(0));
+        assertThat(updatedParticipant).usingRecursiveComparison().isEqualTo(inputParticipants.get(0));
     }
 
     @Test
@@ -112,7 +112,7 @@ class ParticipantProviderTest {
         var participant = participantProvider.getParticipantById(inputParticipants.get(0)
             .getParticipantId());
 
-        assertThat(participant).isEqualTo(inputParticipants.get(0));
+        assertThat(inputParticipants.get(0)).usingRecursiveComparison().isEqualTo(participant);
     }
 
     @Test
@@ -127,7 +127,8 @@ class ParticipantProviderTest {
         when(participantRepository.findByParticipantId(participantId.toString()))
             .thenReturn(Optional.of(jpaParticipantList.get(0)));
 
-        var deletedParticipant = participantProvider.deleteParticipant(participantId);
-        assertEquals(inputParticipants.get(0), deletedParticipant);
+        Participant deletedParticipant =
+            participantProvider.deleteParticipant(participantId);
+        assertThat(inputParticipants.get(0)).usingRecursiveComparison().isEqualTo(deletedParticipant);
     }
 }

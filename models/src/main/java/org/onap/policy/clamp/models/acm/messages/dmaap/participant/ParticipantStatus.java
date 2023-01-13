@@ -28,6 +28,7 @@ import lombok.ToString;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionInfo;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
 import org.onap.policy.models.base.PfUtils;
 
 /**
@@ -47,10 +48,12 @@ public class ParticipantStatus extends ParticipantMessage {
     // List of AutomationCompositionInfo types with AutomationCompositionId and its state
     private List<AutomationCompositionInfo> automationCompositionInfoList = new ArrayList<>();
 
+    private List<ParticipantSupportedElementType> participantSupportedElementType;
     /**
      * Constructor for instantiating ParticipantStatus class with message name.
      *
      */
+
     public ParticipantStatus() {
         super(ParticipantMessageType.PARTICIPANT_STATUS);
     }
@@ -68,5 +71,6 @@ public class ParticipantStatus extends ParticipantMessage {
             PfUtils.mapList(source.participantDefinitionUpdates, ParticipantDefinition::new);
         this.automationCompositionInfoList =
             PfUtils.mapList(source.automationCompositionInfoList, AutomationCompositionInfo::new);
+        this.participantSupportedElementType = source.getParticipantSupportedElementType();
     }
 }

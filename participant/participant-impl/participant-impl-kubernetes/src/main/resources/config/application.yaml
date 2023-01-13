@@ -30,15 +30,22 @@ participant:
         -
           topic: POLICY-ACRUNTIME-PARTICIPANT
           servers:
-            - ${topicServer:localhost}
+            - ${topicServer:localhost:30227}
           topicCommInfrastructure: dmaap
           fetchTimeout: 15000
       topicSinks:
         -
           topic: POLICY-ACRUNTIME-PARTICIPANT
           servers:
-            - ${topicServer:localhost}
+            - ${topicServer:localhost:30227}
           topicCommInfrastructure: dmaap
+    participantSupportedElementTypes:
+      -
+        typeName: org.onap.policy.clamp.acm.K8SMicroserviceAutomationCompositionElement
+        typeVersion: 1.0.0
+      -
+        typeName: org.onap.policy.clamp.acm.AutomationCompositionElement
+        typeVersion: 1.0.0
 
 management:
   endpoints:

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.acm.participant.policy.main.parameters;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -123,6 +124,7 @@ public class CommonTestData {
             map.put("participantId", getParticipantId());
             map.put("participantType", getParticipantId());
             map.put("clampAutomationCompositionTopics", getTopicParametersMap(false));
+            map.put("participantSupportedElementTypes", new ArrayList<>());
         }
 
         return map;

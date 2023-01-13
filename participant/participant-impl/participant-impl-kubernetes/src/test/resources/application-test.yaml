@@ -29,3 +29,10 @@ participant:
             - localhost
           topicCommInfrastructure: dmaap
       name: AutomationComposition Topics
+    participantSupportedElementTypes:
+      -
+        typeName: org.onap.policy.clamp.acm.K8SMicroserviceAutomationCompositionElement
+        typeVersion: 1.0.0
+      -
+        typeName: org.onap.policy.clamp.acm.AutomationCompositionElement
+        typeVersion: 1.0.0

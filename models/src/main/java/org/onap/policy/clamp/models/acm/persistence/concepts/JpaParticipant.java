@@ -21,14 +21,21 @@
 package org.onap.policy.clamp.models.acm.persistence.concepts;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
 import javax.persistence.AttributeOverride;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -37,6 +44,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.common.parameters.annotations.NotNull;
+import org.onap.policy.common.parameters.annotations.Valid;
 import org.onap.policy.models.base.PfAuthorative;
 import org.onap.policy.models.base.PfConcept;
 import org.onap.policy.models.base.PfConceptKey;
@@ -86,6 +94,12 @@ public class JpaParticipant extends PfConcept implements PfAuthorative<Participa
     @Column
     private String description;
 
+    @NotNull
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "participantId", referencedColumnName = "participantId",
+        foreignKey = @ForeignKey(name = "supported_element_fk"))
+    private List<@NotNull @Valid JpaParticipantSupportedElementType> supportedElements;
+
     /**
      * The Default Constructor creates a {@link JpaParticipant} object with a null key.
      */
@@ -99,7 +113,7 @@ public class JpaParticipant extends PfConcept implements PfAuthorative<Participa
      * @param key the key
      */
     public JpaParticipant(@NonNull final PfConceptKey key) {
-        this(UUID.randomUUID().toString(), key, new PfConceptKey(), ParticipantState.ON_LINE);
+        this(UUID.randomUUID().toString(), key, new PfConceptKey(), ParticipantState.ON_LINE, new ArrayList<>());
     }
 
     /**
@@ -113,11 +127,13 @@ public class JpaParticipant extends PfConcept implements PfAuthorative<Participa
     public JpaParticipant(@NotNull String participantId,
                           @NonNull final PfConceptKey key,
                           @NonNull final PfConceptKey definition,
-                          @NonNull final ParticipantState participantState) {
+                          @NonNull final ParticipantState participantState,
+                          @NonNull final List<JpaParticipantSupportedElementType> supportedAcElementTypes) {
         this.key = key;
         this.definition = definition;
         this.participantState = participantState;
         this.participantId = participantId;
+        this.supportedElements = supportedAcElementTypes;
     }
 
     /**
@@ -133,6 +149,7 @@ public class JpaParticipant extends PfConcept implements PfAuthorative<Participa
         this.description = copyConcept.description;
         this.participantType = copyConcept.participantType;
         this.participantId = copyConcept.participantId;
+        this.supportedElements = copyConcept.supportedElements;
     }
 
     /**
@@ -155,6 +172,11 @@ public class JpaParticipant extends PfConcept implements PfAuthorative<Participa
         participant.setDescription(description);
         participant.setParticipantType(new ToscaConceptIdentifier(participantType));
         participant.setParticipantId(UUID.fromString(participantId));
+        participant.setParticipantSupportedElementTypes(new LinkedHashMap<>(this.supportedElements.size()));
+        for (var element : this.supportedElements) {
+            participant.getParticipantSupportedElementTypes()
+                .put(UUID.fromString(element.getId()), element.toAuthorative());
+        }
 
         return participant;
     }
@@ -170,6 +192,14 @@ public class JpaParticipant extends PfConcept implements PfAuthorative<Participa
         this.setDescription(participant.getDescription());
         this.participantType = participant.getParticipantType().asConceptKey();
         this.participantId = participant.getParticipantId().toString();
+        this.supportedElements = new ArrayList<>(participant.getParticipantSupportedElementTypes().size());
+
+        for (var elementEntry : participant.getParticipantSupportedElementTypes().entrySet()) {
+            var jpaParticipantSupportedElementType = new JpaParticipantSupportedElementType();
+            jpaParticipantSupportedElementType.setParticipantId(this.participantId);
+            jpaParticipantSupportedElementType.fromAuthorative(elementEntry.getValue());
+            this.supportedElements.add(jpaParticipantSupportedElementType);
+        }
     }
 
     @Override

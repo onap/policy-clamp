@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,6 +21,7 @@
 
 package org.onap.policy.clamp.acm.participant.kubernetes.parameters;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -105,6 +106,7 @@ public class CommonTestData {
             map.put("participantId", getParticipantId());
             map.put("participantType", getParticipantId());
             map.put("clampAutomationCompositionTopics", getTopicParametersMap(false));
+            map.put("participantSupportedElementTypes", new ArrayList<>());
         }
 
         return map;
