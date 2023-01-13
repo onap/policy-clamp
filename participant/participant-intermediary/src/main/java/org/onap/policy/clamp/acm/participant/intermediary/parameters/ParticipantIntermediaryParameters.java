@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,12 +20,14 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.parameters;
 
+import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.Setter;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
 import org.onap.policy.common.endpoints.parameters.TopicParameterGroup;
 import org.onap.policy.common.parameters.validation.ParameterGroupConstraint;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -58,4 +60,9 @@ public class ParticipantIntermediaryParameters {
     @NotNull
     @ParameterGroupConstraint
     private TopicParameterGroup clampAutomationCompositionTopics;
+
+    @NotNull
+    @Valid
+    private List<ParticipantSupportedElementType> participantSupportedElementTypes;
+
 }

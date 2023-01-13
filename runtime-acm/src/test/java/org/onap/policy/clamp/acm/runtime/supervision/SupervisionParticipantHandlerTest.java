@@ -25,6 +25,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -82,6 +83,7 @@ class SupervisionParticipantHandlerTest {
         var participantRegisterAckPublisher = mock(ParticipantRegisterAckPublisher.class);
         var handler = new SupervisionParticipantHandler(participantProvider, participantRegisterAckPublisher,
             mock(ParticipantDeregisterAckPublisher.class));
+        participantRegisterMessage.setParticipantSupportedElementType(new ArrayList<>());
 
         handler.handleParticipantMessage(participantRegisterMessage);
 
@@ -96,12 +98,15 @@ class SupervisionParticipantHandlerTest {
         participantStatusMessage.setParticipantId(PARTICIPANT_ID);
         participantStatusMessage.setParticipantType(PARTICIPANT_TYPE);
         participantStatusMessage.setState(ParticipantState.ON_LINE);
+        participantStatusMessage.setParticipantSupportedElementType(new ArrayList<>());
 
         var participantProvider = mock(ParticipantProvider.class);
         var handler = new SupervisionParticipantHandler(participantProvider,
             mock(ParticipantRegisterAckPublisher.class), mock(ParticipantDeregisterAckPublisher.class));
+        var participant = new Participant();
+        when(participantProvider.findParticipant(PARTICIPANT_ID)).thenReturn(Optional.of(participant));
         handler.handleParticipantMessage(participantStatusMessage);
 
-        verify(participantProvider).saveParticipant(any());
+        verify(participantProvider).updateParticipant(any());
     }
 }

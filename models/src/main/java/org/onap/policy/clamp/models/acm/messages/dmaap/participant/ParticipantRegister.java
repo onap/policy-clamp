@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021 Nordix Foundation.
+ * Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,11 @@
 
 package org.onap.policy.clamp.models.acm.messages.dmaap.participant;
 
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
 
 /**
  * Class to represent the PARTICIPANT_REGISTER message that all the participants send to the ACM runtime.
@@ -31,6 +33,8 @@ import lombok.ToString;
 @Setter
 @ToString(callSuper = true)
 public class ParticipantRegister extends ParticipantMessage {
+
+    private List<ParticipantSupportedElementType> participantSupportedElementType;
 
     /**
      * Constructor for instantiating ParticipantRegister class with message name.
@@ -47,5 +51,6 @@ public class ParticipantRegister extends ParticipantMessage {
      */
     public ParticipantRegister(final ParticipantRegister source) {
         super(source);
+        this.participantSupportedElementType = source.getParticipantSupportedElementType();
     }
 }

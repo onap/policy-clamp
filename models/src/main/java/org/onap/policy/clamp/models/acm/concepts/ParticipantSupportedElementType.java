@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2022-2023 Nordix Foundation.
+ * Copyright (C) 2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,33 +20,36 @@
 
 package org.onap.policy.clamp.models.acm.concepts;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.Setter;
+import org.onap.policy.common.parameters.annotations.NotNull;
+import org.springframework.validation.annotation.Validated;
 
-/**
- * Class to represent details of a running participant instance.
- */
 @NoArgsConstructor
-@Data
-@EqualsAndHashCode
-public class ParticipantInformation {
-    @NonNull
-    private Participant participant;
+@Getter
+@Setter
+@Validated
+public class ParticipantSupportedElementType {
 
-    private Map<UUID, AutomationCompositionElementDefinition> acElementDefinitionMap = new HashMap<>();
-    private Map<UUID, AutomationCompositionElement> acElementInstanceMap = new HashMap<>();
+    @NotNull
+    private UUID id = UUID.randomUUID();
+
+    @NotNull
+    private String typeName;
+
+    @NotNull
+    private String typeVersion;
 
     /**
-     * Copy constructor.
+     * Copy constructor, does a deep copy but as all fields here are immutable, it's just a regular copy.
      *
-     * @param otherInfo the participant information to copy from
+     * @param otherParticipantSupportedElementType the other element to copy from
      */
-    public ParticipantInformation(ParticipantInformation otherInfo) {
-        this.participant = otherInfo.participant;
+    public ParticipantSupportedElementType(final ParticipantSupportedElementType otherParticipantSupportedElementType) {
+        this.id = otherParticipantSupportedElementType.getId();
+        this.typeName = otherParticipantSupportedElementType.getTypeName();
+        this.typeVersion = otherParticipantSupportedElementType.getTypeVersion();
     }
 }

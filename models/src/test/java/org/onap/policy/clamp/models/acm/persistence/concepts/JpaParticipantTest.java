@@ -27,6 +27,9 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
@@ -48,54 +51,55 @@ class JpaParticipantTest {
 
         assertThatThrownBy(() -> new JpaParticipant((PfConceptKey) null)).hasMessageMatching(NULL_KEY_ERROR);
 
-        assertThatThrownBy(() -> new JpaParticipant(null, null, null, null)).hasMessageMatching(NULL_KEY_ERROR);
+        assertThatThrownBy(() -> new JpaParticipant(null, null, null, null, null)).hasMessageMatching(NULL_KEY_ERROR);
 
-        assertThatThrownBy(() -> new JpaParticipant(null, null, null, null))
+        assertThatThrownBy(() -> new JpaParticipant(null, null, null, null, null))
             .hasMessageMatching(NULL_KEY_ERROR);
 
-        assertThatThrownBy(() -> new JpaParticipant(null, null, null, ParticipantState.ON_LINE))
+        assertThatThrownBy(() -> new JpaParticipant(null, null, null, ParticipantState.ON_LINE, null))
             .hasMessageMatching(NULL_KEY_ERROR);
 
         assertThatThrownBy(
-            () -> new JpaParticipant(null, null, null, ParticipantState.ON_LINE))
+            () -> new JpaParticipant(null, null, null, ParticipantState.ON_LINE, null))
             .hasMessageMatching(NULL_KEY_ERROR);
 
-        assertThatThrownBy(() -> new JpaParticipant(null, null, new PfConceptKey(), null))
+        assertThatThrownBy(() -> new JpaParticipant(null, null, new PfConceptKey(), null, null))
             .hasMessageMatching(NULL_KEY_ERROR);
 
-        assertThatThrownBy(() -> new JpaParticipant(null, null, new PfConceptKey(), null))
+        assertThatThrownBy(() -> new JpaParticipant(null, null, new PfConceptKey(), null, null))
             .hasMessageMatching(NULL_KEY_ERROR);
 
-        assertThatThrownBy(() -> new JpaParticipant(null, null, new PfConceptKey(), ParticipantState.ON_LINE))
+        assertThatThrownBy(() -> new JpaParticipant(null, null, new PfConceptKey(), ParticipantState.ON_LINE, null))
             .hasMessageMatching(NULL_KEY_ERROR);
 
-        assertThatThrownBy(() -> new JpaParticipant(null, null, new PfConceptKey(), ParticipantState.ON_LINE))
+        assertThatThrownBy(() -> new JpaParticipant(null, null, new PfConceptKey(), ParticipantState.ON_LINE, null))
             .hasMessageMatching(NULL_KEY_ERROR);
 
-        assertThatThrownBy(() -> new JpaParticipant(null, new PfConceptKey(), null, null))
+        assertThatThrownBy(() -> new JpaParticipant(null, new PfConceptKey(), null, null, null))
             .hasMessageMatching("definition is marked .*ull but is null");
 
-        assertThatThrownBy(() -> new JpaParticipant(null, new PfConceptKey(), null, null))
+        assertThatThrownBy(() -> new JpaParticipant(null, new PfConceptKey(), null, null, null))
             .hasMessageMatching("definition is marked .*ull but is null");
 
-        assertThatThrownBy(() -> new JpaParticipant(null, new PfConceptKey(), null, ParticipantState.ON_LINE))
+        assertThatThrownBy(() -> new JpaParticipant(null, new PfConceptKey(), null, ParticipantState.ON_LINE, null))
             .hasMessageMatching("definition is marked .*ull but is null");
 
-        assertThatThrownBy(() -> new JpaParticipant(null, new PfConceptKey(), null, ParticipantState.ON_LINE
+        assertThatThrownBy(() -> new JpaParticipant(null, new PfConceptKey(), null, ParticipantState.ON_LINE, null
         )).hasMessageMatching("definition is marked .*ull but is null");
 
-        assertThatThrownBy(() -> new JpaParticipant(null, new PfConceptKey(), new PfConceptKey(), null))
+        assertThatThrownBy(() -> new JpaParticipant(null, new PfConceptKey(), new PfConceptKey(), null, null))
             .hasMessageMatching("participantState is marked .*ull but is null");
 
         assertThatThrownBy(
-            () -> new JpaParticipant(null, new PfConceptKey(), new PfConceptKey(), null))
+            () -> new JpaParticipant(null, new PfConceptKey(), new PfConceptKey(), null, null))
             .hasMessageMatching("participantState is marked .*ull but is null");
 
         assertNotNull(new JpaParticipant());
         assertNotNull(new JpaParticipant((new PfConceptKey())));
-        assertNotNull(new JpaParticipant(null, new PfConceptKey(), new PfConceptKey(), ParticipantState.ON_LINE));
+        assertNotNull(new JpaParticipant(null, new PfConceptKey(), new PfConceptKey(),
+            ParticipantState.ON_LINE, new ArrayList<>()));
         assertNotNull(new JpaParticipant(UUID.randomUUID().toString(), new PfConceptKey(),
-            new PfConceptKey(), ParticipantState.ON_LINE));
+            new PfConceptKey(), ParticipantState.ON_LINE, new ArrayList<>()));
     }
 
     @Test
@@ -232,6 +236,7 @@ class JpaParticipantTest {
         testParticipant.setVersion("0.0.1");
         testParticipant.setDefinition(new ToscaConceptIdentifier("participantDefinitionName", "0.0.1"));
         testParticipant.setParticipantType(new ToscaConceptIdentifier("participantTypeName", "0.0.1"));
+        testParticipant.setParticipantSupportedElementTypes(new LinkedHashMap<>());
 
         return testParticipant;
     }

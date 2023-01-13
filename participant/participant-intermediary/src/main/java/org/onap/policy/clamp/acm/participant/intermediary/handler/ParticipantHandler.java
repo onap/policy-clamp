@@ -35,6 +35,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDef
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionInfo;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionStateChange;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionUpdate;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantAckMessage;
@@ -70,6 +71,8 @@ public class ParticipantHandler {
 
     private final Map<UUID, List<AutomationCompositionElementDefinition>> acElementDefsMap = new HashMap<>();
 
+    private final List<ParticipantSupportedElementType> supportedAcElementTypes;
+
     /**
      * Constructor, set the participant ID and sender.
      *
@@ -82,6 +85,7 @@ public class ParticipantHandler {
         this.participantId = parameters.getIntermediaryParameters().getParticipantId();
         this.publisher = publisher;
         this.automationCompositionHandler = automationCompositionHandler;
+        this.supportedAcElementTypes = parameters.getIntermediaryParameters().getParticipantSupportedElementTypes();
     }
 
     /**
@@ -92,6 +96,7 @@ public class ParticipantHandler {
     @Timed(value = "listener.participant_status_req", description = "PARTICIPANT_STATUS_REQ messages received")
     public void handleParticipantStatusReq(final ParticipantStatusReq participantStatusReqMsg) {
         var participantStatus = makeHeartbeat(true);
+        participantStatus.setParticipantSupportedElementType(this.supportedAcElementTypes);
         publisher.sendParticipantStatus(participantStatus);
     }
 
@@ -148,6 +153,7 @@ public class ParticipantHandler {
         var participantRegister = new ParticipantRegister();
         participantRegister.setParticipantId(participantId);
         participantRegister.setParticipantType(participantType);
+        participantRegister.setParticipantSupportedElementType(supportedAcElementTypes);
 
         publisher.sendParticipantRegister(participantRegister);
     }

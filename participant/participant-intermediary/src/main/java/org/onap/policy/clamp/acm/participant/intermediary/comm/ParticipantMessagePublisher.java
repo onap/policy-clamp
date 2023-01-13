@@ -72,7 +72,7 @@ public class ParticipantMessagePublisher implements Publisher {
     public void sendParticipantStatus(final ParticipantStatus participantStatus) {
         validate();
         topicSinkClient.send(participantStatus);
-        LOGGER.debug("Sent Participant Status message to CLAMP - {}", participantStatus);
+        LOGGER.info("Sent Participant Status message to CLAMP - {}", participantStatus);
     }
 
     /**
@@ -84,7 +84,7 @@ public class ParticipantMessagePublisher implements Publisher {
     public void sendParticipantRegister(final ParticipantRegister participantRegister) {
         validate();
         topicSinkClient.send(participantRegister);
-        LOGGER.debug("Sent Participant Register message to CLAMP - {}", participantRegister);
+        LOGGER.info("Sent Participant Register message to CLAMP - {}", participantRegister);
     }
 
     /**

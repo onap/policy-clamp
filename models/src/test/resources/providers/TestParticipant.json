@@ -11,5 +11,19 @@
   "participantType":{
     "name": "org.onap.domain.pmsh.PolicyAutomationCompositionDefinition",
     "version": "1.0.0"
+  },
+  "participantSupportedElementTypes": {
+    "68fe8c61-7629-4be7-99d8-18bc6a92d178": {
+      "id": "68fe8c61-7629-4be7-99d8-18bc6a92d178",
+      "participantId": "82fd8ef9-1d1e-4343-9b28-7f9564ee3de6",
+      "typeName": "org.onap.policy.clamp.acm.PolicyAutomationCompositionElement",
+      "typeVersion": "1.0.0"
+    },
+    "e2429b9d-7195-4690-a5ea-8ccebff19a14": {
+      "id": "e2429b9d-7195-4690-a5ea-8ccebff19a14",
+      "participantId": "82fd8ef9-1d1e-4343-9b28-7f9564ee3de6",
+      "typeName": "org.onap.policy.clamp.acm.AutomationCompositionElement",
+      "typeVersion": "1.0.0"
+    }
   }
 }

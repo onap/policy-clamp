@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.models.acm.concepts;
 
+import java.util.Map;
 import java.util.UUID;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -47,6 +48,9 @@ public class Participant extends ToscaEntity implements Comparable<Participant> 
 
     @NonNull
     private ToscaConceptIdentifier participantType = new ToscaConceptIdentifier();
+
+    @NonNull
+    private Map<UUID, ParticipantSupportedElementType> participantSupportedElementTypes;
 
     @Override
     public String getType() {

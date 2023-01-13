@@ -52,6 +52,13 @@ participant:
           servers:
             - ${topicServer:localhost}
           topicCommInfrastructure: dmaap
+    participantSupportedElementTypes:
+      -
+        typeName: org.onap.policy.clamp.acm.PolicyAutomationCompositionElement
+        typeVersion: 1.0.0
+      -
+        typeName: org.onap.policy.clamp.acm.AutomationCompositionElement
+        typeVersion: 1.0.0
 management:
   endpoints:
     web:
@@ -62,3 +69,4 @@ server:
   port: 8085
   servlet:
     context-path: /onap/policy/clamp/acm/policyparticipant
+
