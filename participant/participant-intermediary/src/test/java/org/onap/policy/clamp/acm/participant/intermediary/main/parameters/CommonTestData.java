@@ -61,8 +61,7 @@ public class CommonTestData {
     private static final Object lockit = new Object();
     public static final UUID AC_ID_0 = UUID.randomUUID();
     public static final UUID AC_ID_1 = UUID.randomUUID();
-    public static final ToscaConceptIdentifier PARTCICIPANT_ID =
-            new ToscaConceptIdentifier("org.onap.PM_Policy", "0.0.0");
+    public static final UUID PARTCICIPANT_ID = UUID.randomUUID();
 
     /**
      * Get ParticipantIntermediaryParameters.
@@ -155,12 +154,12 @@ public class CommonTestData {
      *
      * @return participant Id
      */
-    public static ToscaConceptIdentifier getParticipantId() {
+    public static UUID getParticipantId() {
         return PARTCICIPANT_ID;
     }
 
-    public static ToscaConceptIdentifier getRndParticipantId() {
-        return new ToscaConceptIdentifier("diff", "0.0.0");
+    public static UUID getRndParticipantId() {
+        return UUID.randomUUID();
     }
 
     public static ToscaConceptIdentifier getDefinition() {
@@ -269,7 +268,7 @@ public class CommonTestData {
      * @return a map suitable for elementsOnThisParticipant
      */
     public Map<UUID, AutomationCompositionElement> setAutomationCompositionElementTest(UUID uuid,
-            ToscaConceptIdentifier definition, ToscaConceptIdentifier participantId) {
+            ToscaConceptIdentifier definition, UUID participantId) {
         var acElement = new AutomationCompositionElement();
         acElement.setId(uuid);
         acElement.setParticipantId(participantId);
@@ -289,7 +288,7 @@ public class CommonTestData {
      * @return a AutomationCompositionHander with elements
      */
     public AutomationCompositionHandler setTestAutomationCompositionHandler(ToscaConceptIdentifier definition,
-            UUID uuid, ToscaConceptIdentifier participantId) {
+            UUID uuid, UUID participantId) {
         var ach = getMockAutomationCompositionHandler();
 
         var key = getTestAutomationCompositionMap().keySet().iterator().next();
@@ -311,7 +310,7 @@ public class CommonTestData {
      * @param state a AutomationCompositionOrderedState
      * @return a AutomationCompositionStateChange
      */
-    public AutomationCompositionStateChange getStateChange(ToscaConceptIdentifier participantId, UUID uuid,
+    public AutomationCompositionStateChange getStateChange(UUID participantId, UUID uuid,
             AutomationCompositionOrderedState state) {
         var stateChange = new AutomationCompositionStateChange();
         stateChange.setAutomationCompositionId(UUID.randomUUID());

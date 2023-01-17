@@ -11,9 +11,7 @@ automationCompositionList:
       participantType:
         name: org.onap.policy.clamp.acm.HttpParticipant
         version: 2.3.4
-      participantId:
-        name: HttpParticipant0
-        version: 1.0.0
+      participantId: 101c62b3-8918-41b9-a747-d21eb79c6c01
       state: UNINITIALISED
       orderedState: UNINITIALISED
       description: Sink Automation Composition Element for the Demo
@@ -26,9 +24,7 @@ automationCompositionList:
       participantType:
         name: org.onap.policy.clamp.acm.HttpParticipant
         version: 2.3.4
-      participantId:
-        name: HttpParticipant0
-        version: 1.0.0
+      participantId: 101c62b3-8918-41b9-a747-d21eb79c6c01
       state: UNINITIALISED
       orderedState: UNINITIALISED
       description: Bridge Automation Composition Element for the Demo
@@ -41,9 +37,7 @@ automationCompositionList:
       participantType:
         name: org.onap.policy.clamp.acm.HttpParticipant
         version: 2.3.4
-      participantId:
-        name: HttpParticipant0
-        version: 1.0.0
+      participantId: 101c62b3-8918-41b9-a747-d21eb79c6c01
       state: UNINITIALISED
       orderedState: UNINITIALISED
       description: Starter Automation Composition Element for the Demo

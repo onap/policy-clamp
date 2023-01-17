@@ -40,7 +40,7 @@ public class ParticipantRegisterAckPublisher extends AbstractParticipantAckPubli
      * @param participantType the participant Type
      */
     @Timed(value = "publisher.participant_register_ack", description = "PARTICIPANT_REGISTER_ACK messages published")
-    public void send(UUID responseTo, ToscaConceptIdentifier participantId, ToscaConceptIdentifier participantType) {
+    public void send(UUID responseTo, UUID participantId, ToscaConceptIdentifier participantType) {
         var message = new ParticipantRegisterAck();
         message.setParticipantId(participantId);
         message.setParticipantType(participantType);

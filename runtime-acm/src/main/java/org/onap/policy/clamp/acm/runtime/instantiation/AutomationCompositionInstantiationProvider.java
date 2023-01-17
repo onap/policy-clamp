@@ -243,7 +243,7 @@ public class AutomationCompositionInstantiationProvider {
         var result = new BeanValidationResult("AutomationComposition", automationComposition);
 
         var participantMap = participants.stream()
-                .collect(Collectors.toMap(participant -> participant.getKey().asIdentifier(), Function.identity()));
+                .collect(Collectors.toMap(participant -> participant.getParticipantId(), Function.identity()));
 
         for (var element : automationComposition.getElements().values()) {
 

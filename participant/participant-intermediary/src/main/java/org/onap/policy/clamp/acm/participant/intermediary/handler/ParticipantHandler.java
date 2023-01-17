@@ -64,7 +64,7 @@ public class ParticipantHandler {
     private final ToscaConceptIdentifier participantType;
 
     @Getter
-    private final ToscaConceptIdentifier participantId;
+    private final UUID participantId;
 
     private final AutomationCompositionHandler automationCompositionHandler;
     private final ParticipantMessagePublisher publisher;

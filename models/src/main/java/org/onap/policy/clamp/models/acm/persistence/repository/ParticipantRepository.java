@@ -20,14 +20,11 @@
 
 package org.onap.policy.clamp.models.acm.persistence.repository;
 
-import java.util.Optional;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaParticipant;
-import org.onap.policy.models.base.PfConceptKey;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ParticipantRepository extends JpaRepository<JpaParticipant, PfConceptKey> {
+public interface ParticipantRepository extends JpaRepository<JpaParticipant, String> {
 
-    Optional<JpaParticipant> findByParticipantId(String participantId);
 }

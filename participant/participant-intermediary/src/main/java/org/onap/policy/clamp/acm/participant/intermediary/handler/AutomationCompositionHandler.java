@@ -59,7 +59,7 @@ public class AutomationCompositionHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(AutomationCompositionHandler.class);
 
     private final ToscaConceptIdentifier participantType;
-    private final ToscaConceptIdentifier participantId;
+    private final UUID participantId;
     private final ParticipantMessagePublisher publisher;
 
     @Getter

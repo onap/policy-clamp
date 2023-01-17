@@ -85,11 +85,9 @@ public class JpaAutomationCompositionElement extends Validated
     @AttributeOverride(name = "version", column = @Column(name = "participant_type_version"))
     private PfConceptKey participantType;
 
+    @Column
     @NotNull
-    @AttributeOverride(name = "name",    column = @Column(name = "participant_name"))
-    @AttributeOverride(name = "version", column = @Column(name = "participant_version"))
-    private PfConceptKey participantId;
-    // @formatter:on
+    private String participantId;
 
     @Column
     @NotNull
@@ -154,7 +152,7 @@ public class JpaAutomationCompositionElement extends Validated
         this.instanceId = copyConcept.instanceId;
         this.definition = new PfConceptKey(copyConcept.definition);
         this.participantType = new PfConceptKey(copyConcept.participantType);
-        this.participantId = new PfConceptKey(copyConcept.participantId);
+        this.participantId = copyConcept.participantId;
         this.state = copyConcept.state;
         this.orderedState = copyConcept.orderedState;
         this.description = copyConcept.description;
@@ -177,7 +175,7 @@ public class JpaAutomationCompositionElement extends Validated
         element.setId(UUID.fromString(elementId));
         element.setDefinition(new ToscaConceptIdentifier(definition));
         element.setParticipantType(new ToscaConceptIdentifier(participantType));
-        element.setParticipantId(new ToscaConceptIdentifier(participantId));
+        element.setParticipantId(UUID.fromString(participantId));
         element.setState(state);
         element.setOrderedState(orderedState != null ? orderedState : state.asOrderedState());
         element.setDescription(description);
@@ -190,7 +188,7 @@ public class JpaAutomationCompositionElement extends Validated
     public void fromAuthorative(@NonNull final AutomationCompositionElement element) {
         this.definition = element.getDefinition().asConceptKey();
         this.participantType = element.getParticipantType().asConceptKey();
-        this.participantId = element.getParticipantId().asConceptKey();
+        this.participantId = element.getParticipantId().toString();
         this.state = element.getState();
         this.orderedState = element.getOrderedState();
         this.description = element.getDescription();

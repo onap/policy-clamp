@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.acm.runtime.supervision;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -257,7 +258,7 @@ class SupervisionHandlerTest {
                 mock(ParticipantUpdatePublisher.class), AutomationCompositionOrderedState.PASSIVE,
                 AutomationCompositionState.UNINITIALISED);
 
-        handler.handleParticipantMessage(participantUpdateAckMessage);
+        assertThatCode(() -> handler.handleParticipantMessage(participantUpdateAckMessage)).doesNotThrowAnyException();
     }
 
     @Test

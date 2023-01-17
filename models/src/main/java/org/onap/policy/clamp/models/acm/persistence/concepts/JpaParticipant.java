@@ -28,10 +28,10 @@ import java.util.UUID;
 import javax.persistence.AttributeOverride;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
+import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
@@ -46,10 +46,8 @@ import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.common.parameters.annotations.NotNull;
 import org.onap.policy.common.parameters.annotations.Valid;
 import org.onap.policy.models.base.PfAuthorative;
-import org.onap.policy.models.base.PfConcept;
 import org.onap.policy.models.base.PfConceptKey;
-import org.onap.policy.models.base.PfKey;
-import org.onap.policy.models.base.validation.annotations.VerifyKey;
+import org.onap.policy.models.base.Validated;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
@@ -62,28 +60,16 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class JpaParticipant extends PfConcept implements PfAuthorative<Participant>, Serializable {
+public class JpaParticipant extends Validated
+        implements PfAuthorative<Participant>, Comparable<JpaParticipant>, Serializable {
     private static final long serialVersionUID = -4697758484642403483L;
 
-    @Column
+    @Id
     @NotNull
     private String participantId;
 
-    @EmbeddedId
-    @VerifyKey
     @NotNull
-    private PfConceptKey key;
-
-    // @formatter:off
-    @VerifyKey
-    @NotNull
-    @AttributeOverride(name = "name",    column = @Column(name = "definition_name"))
-    @AttributeOverride(name = "version", column = @Column(name = "definition_version"))
-    private PfConceptKey definition;
-    // @formatter:on
-
-    @NotNull
-    @AttributeOverride(name = "name",    column = @Column(name = "participant_type_name"))
+    @AttributeOverride(name = "name", column = @Column(name = "participant_type_name"))
     @AttributeOverride(name = "version", column = @Column(name = "participant_type_version"))
     private PfConceptKey participantType;
 
@@ -104,36 +90,20 @@ public class JpaParticipant extends PfConcept implements PfAuthorative<Participa
      * The Default Constructor creates a {@link JpaParticipant} object with a null key.
      */
     public JpaParticipant() {
-        this(new PfConceptKey());
-    }
-
-    /**
-     * The Key Constructor creates a {@link JpaParticipant} object with the given concept key.
-     *
-     * @param key the key
-     */
-    public JpaParticipant(@NonNull final PfConceptKey key) {
-        this(UUID.randomUUID().toString(), key, new PfConceptKey(), ParticipantState.ON_LINE, new ArrayList<>());
+        this(UUID.randomUUID().toString(), ParticipantState.ON_LINE, new ArrayList<>());
     }
 
     /**
      * The Key Constructor creates a {@link JpaParticipant} object with all mandatory fields.
      *
      * @param participantId the participant id
-     * @param key the key
-     * @param definition the TOSCA definition of the participant
      * @param participantState the state of the participant
      */
-    public JpaParticipant(@NotNull String participantId,
-                          @NonNull final PfConceptKey key,
-                          @NonNull final PfConceptKey definition,
-                          @NonNull final ParticipantState participantState,
-                          @NonNull final List<JpaParticipantSupportedElementType> supportedAcElementTypes) {
-        this.key = key;
-        this.definition = definition;
-        this.participantState = participantState;
+    public JpaParticipant(@NonNull String participantId, @NonNull final ParticipantState participantState,
+            @NonNull final List<JpaParticipantSupportedElementType> supportedElements) {
         this.participantId = participantId;
-        this.supportedElements = supportedAcElementTypes;
+        this.participantState = participantState;
+        this.supportedElements = supportedElements;
     }
 
     /**
@@ -142,9 +112,6 @@ public class JpaParticipant extends PfConcept implements PfAuthorative<Participa
      * @param copyConcept the concept to copy from
      */
     public JpaParticipant(@NonNull final JpaParticipant copyConcept) {
-        super(copyConcept);
-        this.key = new PfConceptKey(copyConcept.key);
-        this.definition = new PfConceptKey(copyConcept.definition);
         this.participantState = copyConcept.participantState;
         this.description = copyConcept.description;
         this.participantType = copyConcept.participantType;
@@ -165,11 +132,7 @@ public class JpaParticipant extends PfConcept implements PfAuthorative<Participa
     public Participant toAuthorative() {
         var participant = new Participant();
 
-        participant.setName(key.getName());
-        participant.setVersion(key.getVersion());
-        participant.setDefinition(new ToscaConceptIdentifier(definition));
         participant.setParticipantState(participantState);
-        participant.setDescription(description);
         participant.setParticipantType(new ToscaConceptIdentifier(participantType));
         participant.setParticipantId(UUID.fromString(participantId));
         participant.setParticipantSupportedElementTypes(new LinkedHashMap<>(this.supportedElements.size()));
@@ -183,13 +146,7 @@ public class JpaParticipant extends PfConcept implements PfAuthorative<Participa
 
     @Override
     public void fromAuthorative(@NonNull final Participant participant) {
-        if (this.key == null || this.getKey().isNullKey()) {
-            this.setKey(new PfConceptKey(participant.getName(), participant.getVersion()));
-        }
-
-        this.definition = participant.getDefinition().asConceptKey();
         this.setParticipantState(participant.getParticipantState());
-        this.setDescription(participant.getDescription());
         this.participantType = participant.getParticipantType().asConceptKey();
         this.participantId = participant.getParticipantId().toString();
         this.supportedElements = new ArrayList<>(participant.getParticipantSupportedElementTypes().size());
@@ -203,42 +160,15 @@ public class JpaParticipant extends PfConcept implements PfAuthorative<Participa
     }
 
     @Override
-    public List<PfKey> getKeys() {
-        List<PfKey> keyList = getKey().getKeys();
-
-        keyList.add(definition);
-        keyList.add(participantType);
-
-        return keyList;
-    }
-
-    @Override
-    public void clean() {
-        key.clean();
-        definition.clean();
-        description = (description == null ? null : description.trim());
-        participantType.clean();
-    }
-
-    @Override
-    public int compareTo(final PfConcept otherConcept) {
-        if (otherConcept == null) {
+    public int compareTo(final JpaParticipant other) {
+        if (other == null) {
             return -1;
         }
-        if (this == otherConcept) {
+        if (this == other) {
             return 0;
         }
-        if (getClass() != otherConcept.getClass()) {
-            return getClass().getName().compareTo(otherConcept.getClass().getName());
-        }
 
-        final JpaParticipant other = (JpaParticipant) otherConcept;
-        int result = key.compareTo(other.key);
-        if (result != 0) {
-            return result;
-        }
-
-        result = definition.compareTo(other.definition);
+        var result = participantId.compareTo(other.participantId);
         if (result != 0) {
             return result;
         }

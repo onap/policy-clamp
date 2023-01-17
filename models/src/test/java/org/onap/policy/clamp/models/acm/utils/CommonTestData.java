@@ -20,8 +20,7 @@
 
 package org.onap.policy.clamp.models.acm.utils;
 
-import org.onap.policy.models.base.PfConceptKey;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import java.util.UUID;
 
 /**
  * Class to hold/create all parameters for test cases.
@@ -29,14 +28,14 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
  */
 public class CommonTestData {
 
-    public static final ToscaConceptIdentifier PARTCICIPANT_ID = new ToscaConceptIdentifier("id", "1.2.3");
+    public static final UUID PARTCICIPANT_ID = UUID.randomUUID();
 
     /**
      * Returns participantId for test cases.
      *
      * @return participant Id
      */
-    public static ToscaConceptIdentifier getParticipantId() {
+    public static UUID getParticipantId() {
         return PARTCICIPANT_ID;
     }
 
@@ -45,16 +44,16 @@ public class CommonTestData {
      *
      * @return participant Id
      */
-    public static PfConceptKey getJpaParticipantId() {
-        return PARTCICIPANT_ID.asConceptKey();
+    public static String getJpaParticipantId() {
+        return PARTCICIPANT_ID.toString();
     }
 
     /**
-     * Returns second participantId for test cases.
+     * Returns random participantId for test cases.
      *
      * @return participant Id
      */
-    public static ToscaConceptIdentifier getRndParticipantId() {
-        return new ToscaConceptIdentifier("idDiff", "1.2.3");
+    public static UUID getRndParticipantId() {
+        return UUID.randomUUID();
     }
 }

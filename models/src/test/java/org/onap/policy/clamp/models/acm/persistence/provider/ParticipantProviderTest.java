@@ -38,22 +38,20 @@ import org.onap.policy.clamp.models.acm.persistence.repository.ParticipantReposi
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
-import org.onap.policy.models.base.PfConceptKey;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class ParticipantProviderTest {
 
     private static final Coder CODER = new StandardCoder();
     private static final String PARTICIPANT_JSON = "src/test/resources/providers/TestParticipant.json";
     private static final String LIST_IS_NULL = ".*. is marked .*ull but is null";
-    private static final ToscaConceptIdentifier INVALID_ID = new ToscaConceptIdentifier("invalid_name", "1.0.1");
+    private static final UUID INVALID_ID = UUID.randomUUID();
 
     private final List<Participant> inputParticipants = new ArrayList<>();
     private List<JpaParticipant> jpaParticipantList;
     private final String originalJson = ResourceUtils.getResourceAsString(PARTICIPANT_JSON);
 
     @BeforeEach
-    void beforeSetupDao() throws Exception {
+    void beforeSetup() throws Exception {
         inputParticipants.add(CODER.decode(originalJson, Participant.class));
         jpaParticipantList = ProviderUtils.getJpaAndValidateList(inputParticipants, JpaParticipant::new, "participant");
     }
@@ -62,7 +60,7 @@ class ParticipantProviderTest {
     void testParticipantSave() {
         var participantRepository = mock(ParticipantRepository.class);
         for (var participant : jpaParticipantList) {
-            when(participantRepository.getById(new PfConceptKey(participant.getName(), participant.getVersion())))
+            when(participantRepository.getById(participant.getParticipantId()))
                 .thenReturn(participant);
         }
         var participantProvider = new ParticipantProvider(participantRepository);
@@ -71,7 +69,7 @@ class ParticipantProviderTest {
 
         when(participantRepository.save(any())).thenReturn(jpaParticipantList.get(0));
 
-        Participant savedParticipant = participantProvider.saveParticipant(inputParticipants.get(0));
+        var savedParticipant = participantProvider.saveParticipant(inputParticipants.get(0));
         savedParticipant.setParticipantId(inputParticipants.get(0).getParticipantId());
 
         assertThat(savedParticipant).usingRecursiveComparison().isEqualTo(inputParticipants.get(0));
@@ -81,7 +79,7 @@ class ParticipantProviderTest {
     void testParticipantUpdate() {
         var participantRepository = mock(ParticipantRepository.class);
         for (var participant : jpaParticipantList) {
-            when(participantRepository.getById(new PfConceptKey(participant.getName(), participant.getVersion())))
+            when(participantRepository.getById(participant.getParticipantId()))
                 .thenReturn(participant);
         }
         var participantProvider = new ParticipantProvider(participantRepository);
@@ -91,7 +89,7 @@ class ParticipantProviderTest {
 
         when(participantRepository.save(any())).thenReturn(jpaParticipantList.get(0));
 
-        Participant updatedParticipant = participantProvider.updateParticipant(inputParticipants.get(0));
+        var updatedParticipant = participantProvider.updateParticipant(inputParticipants.get(0));
         updatedParticipant.setParticipantId(inputParticipants.get(0).getParticipantId());
         assertThat(updatedParticipant).usingRecursiveComparison().isEqualTo(inputParticipants.get(0));
     }
@@ -106,7 +104,7 @@ class ParticipantProviderTest {
         when(participantRepository.findAll()).thenReturn(jpaParticipantList);
         assertThat(participantProvider.getParticipants()).hasSize(inputParticipants.size());
 
-        when(participantRepository.findByParticipantId(any())).thenReturn(
+        when(participantRepository.findById(any())).thenReturn(
             Optional.ofNullable(jpaParticipantList.get(0)));
 
         var participant = participantProvider.getParticipantById(inputParticipants.get(0)
@@ -120,15 +118,14 @@ class ParticipantProviderTest {
         var participantRepository = mock(ParticipantRepository.class);
         var participantProvider = new ParticipantProvider(participantRepository);
 
-        var participantId = UUID.randomUUID();
+        var participantId = inputParticipants.get(0).getParticipantId();
         assertThatThrownBy(() -> participantProvider.deleteParticipant(participantId))
             .hasMessageMatching(".*.failed, participant does not exist");
 
-        when(participantRepository.findByParticipantId(participantId.toString()))
+        when(participantRepository.findById(participantId.toString()))
             .thenReturn(Optional.of(jpaParticipantList.get(0)));
 
-        Participant deletedParticipant =
-            participantProvider.deleteParticipant(participantId);
+        var deletedParticipant = participantProvider.deleteParticipant(participantId);
         assertThat(inputParticipants.get(0)).usingRecursiveComparison().isEqualTo(deletedParticipant);
     }
 }

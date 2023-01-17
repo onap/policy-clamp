@@ -55,7 +55,7 @@ public class ParticipantAckMessage {
     /**
      * Participant ID, or {@code null} for messages from participants.
      */
-    private ToscaConceptIdentifier participantId;
+    private UUID participantId;
 
     /**
      * Participant State, or {@code null} for messages from participants.
@@ -94,7 +94,7 @@ public class ParticipantAckMessage {
      * @return {@code true} if this message applies to this participant, {@code false} otherwise
      */
     public boolean appliesTo(@NonNull final ToscaConceptIdentifier participantType,
-            @NonNull final ToscaConceptIdentifier participantId) {
+            @NonNull final UUID participantId) {
         // Broadcast message to all participants
         if (this.participantType == null) {
             return true;

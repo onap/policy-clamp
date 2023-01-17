@@ -36,7 +36,6 @@ import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +49,7 @@ public class SupervisionScanner {
     private static final Logger LOGGER = LoggerFactory.getLogger(SupervisionScanner.class);
 
     private final HandleCounter<UUID> automationCompositionCounter = new HandleCounter<>();
-    private final HandleCounter<ToscaConceptIdentifier> participantStatusCounter = new HandleCounter<>();
+    private final HandleCounter<UUID> participantStatusCounter = new HandleCounter<>();
 
     private final Map<UUID, Integer> phaseMap = new HashMap<>();
 
@@ -118,7 +117,7 @@ public class SupervisionScanner {
     }
 
     private void scanParticipantStatus(Participant participant) {
-        var id = participant.getKey().asIdentifier();
+        var id = participant.getParticipantId();
         if (participantStatusCounter.isFault(id)) {
             LOGGER.debug("report Participant fault");
             return;
@@ -135,7 +134,7 @@ public class SupervisionScanner {
     /**
      * handle participant Status message.
      */
-    public void handleParticipantStatus(ToscaConceptIdentifier id) {
+    public void handleParticipantStatus(UUID id) {
         participantStatusCounter.clear(id);
     }
 

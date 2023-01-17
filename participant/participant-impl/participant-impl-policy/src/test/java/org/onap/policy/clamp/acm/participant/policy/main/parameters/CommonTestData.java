@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.UUID;
 import org.onap.policy.common.endpoints.parameters.TopicParameters;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
@@ -173,7 +174,7 @@ public class CommonTestData {
      *
      * @return participant Id
      */
-    public static ToscaConceptIdentifier getParticipantId() {
-        return new ToscaConceptIdentifier("org.onap.PM_Policy", "1.0.0");
+    public static UUID getParticipantId() {
+        return UUID.fromString("101c62b3-8918-41b9-a747-d21eb79c6c03");
     }
 }

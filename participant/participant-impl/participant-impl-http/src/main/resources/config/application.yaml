@@ -16,9 +16,7 @@ participant:
   intermediaryParameters:
     reportingTimeIntervalMs: 120000
     description: Participant Description
-    participantId:
-      name: HttpParticipant0
-      version: 1.0.0
+    participantId: 101c62b3-8918-41b9-a747-d21eb79c6c01
     participantType:
       name: org.onap.policy.clamp.acm.HttpParticipant
       version: 2.3.4

@@ -130,7 +130,7 @@ class SupervisionScannerTest {
             automationCompositionStateChangePublisher, automationCompositionUpdatePublisher, participantProvider,
             acRuntimeParameterGroup);
 
-        supervisionScanner.handleParticipantStatus(participant.getKey().asIdentifier());
+        supervisionScanner.handleParticipantStatus(participant.getParticipantId());
         supervisionScanner.run(true);
         verify(automationCompositionProvider, times(0)).updateAutomationComposition(any(AutomationComposition.class));
     }
@@ -182,7 +182,6 @@ class SupervisionScannerTest {
 
         var participant = CommonTestData.createParticipant(PARTICIPANT_TYPE, CommonTestData.getParticipantId());
         participant.setParticipantState(ParticipantState.OFF_LINE);
-        participant.setDefinition(new ToscaConceptIdentifier("unknown", "0.0.0"));
         var participantProvider = mock(ParticipantProvider.class);
         when(participantProvider.getParticipants()).thenReturn(List.of(participant));
 
@@ -193,9 +192,9 @@ class SupervisionScannerTest {
             automationCompositionStateChangePublisher, automationCompositionUpdatePublisher, participantProvider,
             acRuntimeParameterGroup);
 
-        supervisionScanner.handleParticipantStatus(participant.getKey().asIdentifier());
+        supervisionScanner.handleParticipantStatus(participant.getParticipantId());
         supervisionScanner.run(true);
-        verify(participantProvider, times(0)).updateParticipant(any());
+        verify(participantProvider, times(0)).saveParticipant(any());
 
         supervisionScanner.run(true);
         verify(participantProvider, times(1)).updateParticipant(any());

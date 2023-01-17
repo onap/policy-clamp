@@ -12,10 +12,7 @@
                 "name": "org.onap.domain.database.Http_PMSHMicroserviceAutomationCompositionElement",
                 "version": "1.2.3"
             },
-            "participantId": {
-                "name": "HttpParticipant0",
-                "version": "1.0.0"
-            },
+            "participantId": "101c62b3-8918-41b9-a747-d21eb79c6c01",
             "participantType": {
                 "name": "org.onap.policy.clamp.acm.HttpParticipant",
                 "version": "2.3.4"
@@ -30,10 +27,7 @@
                 "name": "org.onap.domain.pmsh.PMSH_OperationalPolicyAutomationCompositionElement",
                 "version": "1.2.3"
             },
-            "participantId": {
-                "name": "org.onap.PM_Policy",
-                "version": "1.0.0"
-            },
+            "participantId": "101c62b3-8918-41b9-a747-d21eb79c6c03",
             "participantType": {
                 "name": "org.onap.policy.clamp.acm.PolicyParticipant",
                 "version": "2.3.1"
@@ -48,10 +42,7 @@
                 "name": "org.onap.domain.database.PMSH_K8SMicroserviceAutomationCompositionElement",
                 "version": "1.2.3"
             },
-            "participantId": {
-                "name": "K8sParticipant0t",
-                "version": "1.0.0"
-            },
+            "participantId": "101c62b3-8918-41b9-a747-d21eb79c6c02",
             "participantType": {
                 "name": "org.onap.policy.clamp.acm.KubernetesParticipant",
                 "version": "2.3.4"

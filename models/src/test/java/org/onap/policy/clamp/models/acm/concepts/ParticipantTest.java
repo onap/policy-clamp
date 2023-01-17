@@ -27,22 +27,9 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.clamp.models.acm.utils.CommonTestData;
 
 class ParticipantTest {
-    @Test
-    void testParticipant() {
-
-        Participant p0 = new Participant();
-        p0.setDefinition(new ToscaConceptIdentifier("dfName", "1.2.3"));
-        assertEquals("dfName", p0.getType());
-        assertEquals("1.2.3", p0.getTypeVersion());
-
-        Participant p1 = new Participant(p0);
-        assertEquals(p0, p1);
-
-        assertEquals(0, p0.compareTo(p1));
-    }
 
     @Test
     void testParticipantLombok() {
@@ -57,11 +44,8 @@ class ParticipantTest {
 
         Participant p1 = new Participant();
 
-        p1.setDefinition(new ToscaConceptIdentifier("defName", "0.0.1"));
-        p1.setDescription("Description");
-        p1.setName("Name");
+        p1.setParticipantId(CommonTestData.getParticipantId());
         p1.setParticipantState(ParticipantState.ON_LINE);
-        p1.setVersion("0.0.1");
 
         assertThat(p1.toString()).contains("Participant(");
         assertNotEquals(0, p1.hashCode());
@@ -73,7 +57,6 @@ class ParticipantTest {
         Participant p2 = new Participant();
 
         // @formatter:off
-        assertThatThrownBy(() -> p2.setDefinition(null)).      isInstanceOf(NullPointerException.class);
         assertThatThrownBy(() -> p2.setParticipantState(null)).isInstanceOf(NullPointerException.class);
         // @formatter:on
 

@@ -68,7 +68,7 @@ public class ParticipantUpdatePublisher extends AbstractParticipantPublisher<Par
      * @param participantId the ParticipantId
      */
     @Timed(value = "publisher.participant_update", description = "PARTICIPANT_UPDATE messages published")
-    public void sendCommissioning(ToscaConceptIdentifier participantType, ToscaConceptIdentifier participantId) {
+    public void sendCommissioning(ToscaConceptIdentifier participantType, UUID participantId) {
         var list = acDefinitionProvider.getAllAcDefinitions();
         if (list.isEmpty()) {
             LOGGER.warn("No tosca service template found, cannot send participantupdate");
@@ -88,7 +88,7 @@ public class ParticipantUpdatePublisher extends AbstractParticipantPublisher<Par
      */
     @Timed(value = "publisher.participant_update", description = "PARTICIPANT_UPDATE messages published")
     public void sendCommissioning(AutomationCompositionDefinition acmDefinition,
-            ToscaConceptIdentifier participantType, ToscaConceptIdentifier participantId) {
+            ToscaConceptIdentifier participantType, UUID participantId) {
         var message = new ParticipantUpdate();
         message.setCompositionId(acmDefinition.getCompositionId());
         message.setParticipantType(participantType);

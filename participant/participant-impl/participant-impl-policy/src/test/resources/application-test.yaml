@@ -2,9 +2,7 @@ participant:
   intermediaryParameters:
     reportingTimeInterval: 120000
     description: Participant Description
-    participantId:
-      version: 1.0.0
-      name: org.onap.PM_Policy
+    participantId: 101c62b3-8918-41b9-a747-d21eb79c6c03
     participantType:
       version: 1.0.0
       name: org.onap.PM_CDS_Blueprint

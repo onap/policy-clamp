@@ -22,8 +22,8 @@ package org.onap.policy.clamp.acm.runtime.supervision.comm;
 
 import io.micrometer.core.annotation.Timed;
 import java.time.Instant;
+import java.util.UUID;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatusReq;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -39,7 +39,7 @@ public class ParticipantStatusReqPublisher extends AbstractParticipantPublisher<
      * @param participantId the participant Id
      */
     @Timed(value = "publisher.participant_status_req", description = "PARTICIPANT_STATUS_REQ messages published")
-    public void send(ToscaConceptIdentifier participantId) {
+    public void send(UUID participantId) {
         ParticipantStatusReq message = new ParticipantStatusReq();
         message.setParticipantId(participantId);
         message.setTimestamp(Instant.now());

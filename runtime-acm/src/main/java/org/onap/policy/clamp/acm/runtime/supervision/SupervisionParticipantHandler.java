@@ -106,9 +106,7 @@ public class SupervisionParticipantHandler {
         if (participantOpt.isEmpty()) {
             ParticipantRegister registerMessage = (ParticipantRegister) participantMessage;
             var participant = new Participant();
-            participant.setName(registerMessage.getParticipantId().getName());
-            participant.setVersion(registerMessage.getParticipantId().getVersion());
-            participant.setDefinition(registerMessage.getParticipantId());
+            participant.setParticipantId(participantMessage.getParticipantId());
             participant.setParticipantType(registerMessage.getParticipantType());
             participant.setParticipantSupportedElementTypes(listToMap(registerMessage
                 .getParticipantSupportedElementType()));

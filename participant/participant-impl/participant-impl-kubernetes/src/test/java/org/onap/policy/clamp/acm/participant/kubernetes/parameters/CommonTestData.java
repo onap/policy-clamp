@@ -104,7 +104,7 @@ public class CommonTestData {
             map.put("reportingTimeIntervalMs", TIME_INTERVAL);
             map.put("description", DESCRIPTION);
             map.put("participantId", getParticipantId());
-            map.put("participantType", getParticipantId());
+            map.put("participantType", getParticipantType());
             map.put("clampAutomationCompositionTopics", getTopicParametersMap(false));
             map.put("participantSupportedElementTypes", new ArrayList<>());
         }
@@ -113,17 +113,25 @@ public class CommonTestData {
     }
 
     /**
-     * Returns participantId for test cases.
+     * Returns participantType for test cases.
      *
-     * @return participant Id
+     * @return participant Type
      */
-    public static ToscaConceptIdentifier getParticipantId() {
-        final ToscaConceptIdentifier participantId = new ToscaConceptIdentifier();
+    public static ToscaConceptIdentifier getParticipantType() {
+        final var participantId = new ToscaConceptIdentifier();
         participantId.setName("K8sParticipant0");
         participantId.setVersion("1.0.0");
         return participantId;
     }
 
+    /**
+     * Returns participantId for test cases.
+     *
+     * @return participant Id
+     */
+    public static UUID getParticipantId() {
+        return UUID.fromString("101c62b3-8918-41b9-a747-d21eb79c6c02");
+    }
 
     /**
      * Returns a property map for a TopicParameters map for test cases.

@@ -21,6 +21,7 @@
 package org.onap.policy.clamp.acm.participant.intermediary.parameters;
 
 import java.util.List;
+import java.util.UUID;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -42,7 +43,7 @@ public class ParticipantIntermediaryParameters {
     // The ID and description of this participant
     @NotNull
     @Valid
-    private ToscaConceptIdentifier participantId;
+    private UUID participantId;
 
     @NotBlank
     private String description;

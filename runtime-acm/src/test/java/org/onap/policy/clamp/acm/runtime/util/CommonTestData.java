@@ -21,6 +21,7 @@
 package org.onap.policy.clamp.acm.runtime.util;
 
 import java.util.List;
+import java.util.UUID;
 import javax.ws.rs.core.Response.Status;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
@@ -76,13 +77,13 @@ public class CommonTestData {
     public static List<Participant> createParticipants() {
         var participant1 = createParticipant(
             new ToscaConceptIdentifier("org.onap.policy.clamp.acm.KubernetesParticipant", "2.3.4"),
-            new ToscaConceptIdentifier("K8sParticipant0", "1.0.0"));
+            UUID.fromString("101c62b3-8918-41b9-a747-d21eb79c6c02"));
         var participant2 = createParticipant(
             new ToscaConceptIdentifier("org.onap.policy.clamp.acm.HttpParticipant", "2.3.4"),
-            new ToscaConceptIdentifier("HttpParticipant0", "1.0.0"));
+            UUID.fromString("101c62b3-8918-41b9-a747-d21eb79c6c01"));
         var participant3 = createParticipant(
             new ToscaConceptIdentifier("org.onap.policy.clamp.acm.PolicyParticipant", "2.3.1"),
-            new ToscaConceptIdentifier("org.onap.PM_Policy", "1.0.0"));
+            UUID.fromString("101c62b3-8918-41b9-a747-d21eb79c6c03"));
         return List.of(participant1, participant2, participant3);
     }
 
@@ -94,16 +95,14 @@ public class CommonTestData {
      * @return a new Participant
      */
     public static Participant createParticipant(ToscaConceptIdentifier participantType,
-            ToscaConceptIdentifier participantId) {
+        UUID participantId) {
         var participant = new Participant();
-        participant.setDefinition(participantId);
+        participant.setParticipantId(participantId);
         participant.setParticipantType(participantType);
-        participant.setName(participantId.getName());
-        participant.setVersion(participantId.getVersion());
         return participant;
     }
 
-    public static ToscaConceptIdentifier getParticipantId() {
-        return new ToscaConceptIdentifier("org.onap.PM_Policy", "1.0.0");
+    public static UUID getParticipantId() {
+        return UUID.fromString("101c62b3-8918-41b9-a747-d21eb79c6c03");
     }
 }

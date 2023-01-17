@@ -29,9 +29,7 @@ import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaParticipant;
 import org.onap.policy.clamp.models.acm.persistence.repository.ParticipantRepository;
-import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,11 +58,10 @@ public class ParticipantProvider {
      *
      * @param participantId the id of the participant to get
      * @return the participant found
-     * @throws PfModelException on errors getting participant
      */
     @Transactional(readOnly = true)
     public Participant getParticipantById(UUID participantId) {
-        var participant = participantRepository.findByParticipantId(participantId.toString());
+        var participant = participantRepository.findById(participantId.toString());
         if (participant.isEmpty()) {
             throw new PfModelRuntimeException(Status.NOT_FOUND,
                 "Participant Not Found with ID: " + participantId);
@@ -80,8 +77,8 @@ public class ParticipantProvider {
      * @return the participant found
      */
     @Transactional(readOnly = true)
-    public Optional<Participant> findParticipant(@NonNull final ToscaConceptIdentifier participantId) {
-        return participantRepository.findById(participantId.asConceptKey()).map(JpaParticipant::toAuthorative);
+    public Optional<Participant> findParticipant(@NonNull final UUID participantId) {
+        return participantRepository.findById(participantId.toString()).map(JpaParticipant::toAuthorative);
     }
 
     /**
@@ -91,7 +88,6 @@ public class ParticipantProvider {
      * @return the participant created
      */
     public Participant saveParticipant(@NonNull final Participant participant) {
-        participant.setParticipantId(UUID.randomUUID());
         var result = participantRepository
             .save(ProviderUtils.getJpaAndValidate(participant, JpaParticipant::new, "participant"));
 
@@ -120,7 +116,7 @@ public class ParticipantProvider {
      * @return the participant deleted
      */
     public Participant deleteParticipant(@NonNull final UUID participantId) {
-        var jpaDeleteParticipantOpt = participantRepository.findByParticipantId(participantId.toString());
+        var jpaDeleteParticipantOpt = participantRepository.findById(participantId.toString());
 
         if (jpaDeleteParticipantOpt.isEmpty()) {
             String errorMessage =

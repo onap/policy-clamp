@@ -26,22 +26,18 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaEntity;
 
 /**
  * Class to represent details of a running participant instance.
  */
 @NoArgsConstructor
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class Participant extends ToscaEntity implements Comparable<Participant> {
+@EqualsAndHashCode
+public class Participant {
 
     @NonNull
     private UUID participantId;
-    @NonNull
-    private ToscaConceptIdentifier definition = new ToscaConceptIdentifier(PfConceptKey.getNullKey());
 
     @NonNull
     private ParticipantState participantState = ParticipantState.ON_LINE;
@@ -52,29 +48,12 @@ public class Participant extends ToscaEntity implements Comparable<Participant> 
     @NonNull
     private Map<UUID, ParticipantSupportedElementType> participantSupportedElementTypes;
 
-    @Override
-    public String getType() {
-        return definition.getName();
-    }
-
-    @Override
-    public String getTypeVersion() {
-        return definition.getVersion();
-    }
-
-    @Override
-    public int compareTo(final Participant other) {
-        return compareNameVersion(this, other);
-    }
-
     /**
      * Copy constructor.
      *
      * @param otherParticipant the participant to copy from
      */
     public Participant(Participant otherParticipant) {
-        super(otherParticipant);
-        this.definition = new ToscaConceptIdentifier(otherParticipant.definition);
         this.participantState = otherParticipant.participantState;
         this.participantType = otherParticipant.participantType;
         this.participantId = otherParticipant.participantId;

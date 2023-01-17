@@ -50,7 +50,7 @@ public class AutomationCompositionElement {
     private ToscaConceptIdentifier participantType = new ToscaConceptIdentifier(PfConceptKey.getNullKey());
 
     @NonNull
-    private ToscaConceptIdentifier participantId = new ToscaConceptIdentifier(PfConceptKey.getNullKey());
+    private UUID participantId = UUID.randomUUID();
 
     @NonNull
     private AutomationCompositionState state = AutomationCompositionState.UNINITIALISED;
@@ -75,7 +75,7 @@ public class AutomationCompositionElement {
         this.id = otherElement.id;
         this.definition = new ToscaConceptIdentifier(otherElement.definition);
         this.participantType = new ToscaConceptIdentifier(otherElement.participantType);
-        this.participantId = new ToscaConceptIdentifier(otherElement.participantId);
+        this.participantId = otherElement.participantId;
         this.state = otherElement.state;
         this.orderedState = otherElement.orderedState;
         this.toscaServiceTemplateFragment = otherElement.toscaServiceTemplateFragment;

@@ -55,7 +55,7 @@ public class ParticipantMessage {
     /**
      * Participant ID, or {@code null} for messages from participants.
      */
-    private ToscaConceptIdentifier participantId;
+    private UUID participantId;
 
     /**
      * Automation Composition ID, or {@code null} for messages to participants.
@@ -94,7 +94,7 @@ public class ParticipantMessage {
      * @return {@code true} if this message applies to this participant, {@code false} otherwise
      */
     public boolean appliesTo(@NonNull final ToscaConceptIdentifier participantType,
-            @NonNull final ToscaConceptIdentifier participantId) {
+            @NonNull final UUID participantId) {
         // Broadcast message to all participants
         if (this.participantType == null) {
             return true;

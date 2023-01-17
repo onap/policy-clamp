@@ -22,6 +22,7 @@ package org.onap.policy.clamp.models.acm.concepts;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,7 +39,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 @ToString
 public class ParticipantDefinition {
 
-    private ToscaConceptIdentifier participantId;
+    private UUID participantId;
 
     private ToscaConceptIdentifier participantType;
 

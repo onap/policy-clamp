@@ -22,12 +22,12 @@ package org.onap.policy.clamp.models.acm.concepts;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.onap.policy.models.base.PfUtils;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
  * Class to represent a participant definition update instance.
@@ -38,7 +38,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 @ToString
 public class ParticipantUpdates {
 
-    private ToscaConceptIdentifier participantId;
+    private UUID participantId;
 
     // List of AutomationCompositionElement values for a particular participant
     private List<AutomationCompositionElement> automationCompositionElementList = new ArrayList<>();
