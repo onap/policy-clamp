@@ -27,7 +27,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ParticipantRepository extends JpaRepository<JpaParticipant, PfConceptKey>, FilterRepository {
+public interface ParticipantRepository extends JpaRepository<JpaParticipant, PfConceptKey> {
 
-    Optional<JpaParticipant> findByParticipantId(String compositionId);
+    Optional<JpaParticipant> findByParticipantId(String participantId);
 }

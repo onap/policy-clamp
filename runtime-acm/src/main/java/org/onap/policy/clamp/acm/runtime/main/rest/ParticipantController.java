@@ -42,7 +42,7 @@ public class ParticipantController extends AbstractRestController implements Par
     @Override
     public ResponseEntity<ParticipantInformation> getParticipant(UUID participantId, UUID requestId) {
         ParticipantInformation participantInformation = acmParticipantProvider
-            .getParticipantById(participantId.toString());
+            .getParticipantById(participantId);
         return ResponseEntity.ok().body(participantInformation);
     }
 
@@ -54,7 +54,7 @@ public class ParticipantController extends AbstractRestController implements Par
 
     @Override
     public ResponseEntity<Void> orderParticipantReport(UUID participantId, UUID requestId) {
-        acmParticipantProvider.sendParticipantStatusRequest(participantId.toString());
+        acmParticipantProvider.sendParticipantStatusRequest(participantId);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 

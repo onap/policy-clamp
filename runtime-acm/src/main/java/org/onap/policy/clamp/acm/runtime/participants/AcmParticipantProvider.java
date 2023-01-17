@@ -22,6 +22,7 @@ package org.onap.policy.clamp.acm.runtime.participants;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantStatusReqPublisher;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantInformation;
@@ -70,7 +71,7 @@ public class AcmParticipantProvider {
      * @param participantId The UUID of the participant to get
      * @return The participant
      */
-    public ParticipantInformation getParticipantById(String participantId) {
+    public ParticipantInformation getParticipantById(UUID participantId) {
         Participant participant = this.participantProvider.getParticipantById(participantId);
         ParticipantInformation participantInformation = new ParticipantInformation();
         participantInformation.setParticipant(participant);
@@ -82,7 +83,7 @@ public class AcmParticipantProvider {
      *
      * @param participantId The UUID of the participant to send request to
      */
-    public void sendParticipantStatusRequest(String participantId) {
+    public void sendParticipantStatusRequest(UUID participantId) {
         Participant participant = this.participantProvider.getParticipantById(participantId);
         ToscaConceptIdentifier id = participant.getKey().asIdentifier();
 

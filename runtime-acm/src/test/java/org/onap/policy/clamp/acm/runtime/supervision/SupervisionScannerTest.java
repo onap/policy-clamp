@@ -126,7 +126,7 @@ class SupervisionScannerTest {
         var participant = new Participant();
         participant.setName(PARTICIPANT_NAME);
         participant.setVersion(PARTICIPANT_VERSION);
-        when(participantProvider.getParticipants(null, null)).thenReturn(List.of(participant));
+        when(participantProvider.getParticipants()).thenReturn(List.of(participant));
 
         var automationCompositionUpdatePublisher = mock(AutomationCompositionUpdatePublisher.class);
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);

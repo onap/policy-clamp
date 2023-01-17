@@ -46,19 +46,6 @@ public class ParticipantProvider {
     private final ParticipantRepository participantRepository;
 
     /**
-     * Get participants.
-     *
-     * @param name the name of the participant to get, null to get all participants
-     * @param version the version of the participant to get, null to get all participants
-     * @return the participants found
-     */
-    @Transactional(readOnly = true)
-    public List<Participant> getParticipants(final String name, final String version) {
-
-        return ProviderUtils.asEntityList(participantRepository.getFiltered(JpaParticipant.class, name, version));
-    }
-
-    /**
      * Get all participants.
      *
      * @return the participants found
@@ -76,8 +63,8 @@ public class ParticipantProvider {
      * @throws PfModelException on errors getting participant
      */
     @Transactional(readOnly = true)
-    public Participant getParticipantById(String participantId) {
-        var participant = participantRepository.findByParticipantId(participantId);
+    public Participant getParticipantById(UUID participantId) {
+        var participant = participantRepository.findByParticipantId(participantId.toString());
         if (participant.isEmpty()) {
             throw new PfModelRuntimeException(Status.NOT_FOUND,
                 "Participant Not Found with ID: " + participantId);
@@ -132,8 +119,8 @@ public class ParticipantProvider {
      * @param participantId the Id of the participant to delete
      * @return the participant deleted
      */
-    public Participant deleteParticipant(@NonNull final ToscaConceptIdentifier participantId) {
-        var jpaDeleteParticipantOpt = participantRepository.findById(participantId.asConceptKey());
+    public Participant deleteParticipant(@NonNull final UUID participantId) {
+        var jpaDeleteParticipantOpt = participantRepository.findByParticipantId(participantId.toString());
 
         if (jpaDeleteParticipantOpt.isEmpty()) {
             String errorMessage =

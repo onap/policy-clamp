@@ -24,13 +24,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
@@ -60,7 +60,7 @@ class ParticipantProviderTest {
     }
 
     @Test
-    void testParticipantSave() throws Exception {
+    void testParticipantSave() {
         var participantRepository = mock(ParticipantRepository.class);
         for (var participant : jpaParticipantList) {
             when(participantRepository.getById(new PfConceptKey(participant.getName(), participant.getVersion())))
@@ -78,7 +78,7 @@ class ParticipantProviderTest {
     }
 
     @Test
-    void testParticipantUpdate() throws Exception {
+    void testParticipantUpdate() {
         var participantRepository = mock(ParticipantRepository.class);
         for (var participant : jpaParticipantList) {
             when(participantRepository.getById(new PfConceptKey(participant.getName(), participant.getVersion())))
@@ -97,21 +97,9 @@ class ParticipantProviderTest {
     }
 
     @Test
-    void testGetAutomationCompositions() throws Exception {
+    void testGetAutomationCompositions() {
         var participantRepository = mock(ParticipantRepository.class);
         var participantProvider = new ParticipantProvider(participantRepository);
-
-        // Return empty list when no data present in db
-        List<Participant> getResponse = participantProvider.getParticipants(null, null);
-        assertThat(getResponse).isEmpty();
-
-        String name = inputParticipants.get(0).getName();
-        String version = inputParticipants.get(0).getVersion();
-        when(participantRepository.getFiltered(any(), eq(name), eq(version)))
-            .thenReturn(List.of(jpaParticipantList.get(0)));
-        assertEquals(1, participantProvider.getParticipants(name, version).size());
-
-        assertThat(participantProvider.getParticipants("invalid_name", "1.0.1")).isEmpty();
 
         assertThat(participantProvider.findParticipant(INVALID_ID)).isEmpty();
 
@@ -122,23 +110,24 @@ class ParticipantProviderTest {
             Optional.ofNullable(jpaParticipantList.get(0)));
 
         var participant = participantProvider.getParticipantById(inputParticipants.get(0)
-            .getParticipantId().toString());
+            .getParticipantId());
 
         assertThat(participant).isEqualTo(inputParticipants.get(0));
     }
 
     @Test
-    void testDeleteParticipant() throws Exception {
+    void testDeleteParticipant() {
         var participantRepository = mock(ParticipantRepository.class);
         var participantProvider = new ParticipantProvider(participantRepository);
 
-        assertThatThrownBy(() -> participantProvider.deleteParticipant(INVALID_ID))
+        var participantId = UUID.randomUUID();
+        assertThatThrownBy(() -> participantProvider.deleteParticipant(participantId))
             .hasMessageMatching(".*.failed, participant does not exist");
 
-        when(participantRepository.findById(any())).thenReturn(Optional.of(jpaParticipantList.get(0)));
+        when(participantRepository.findByParticipantId(participantId.toString()))
+            .thenReturn(Optional.of(jpaParticipantList.get(0)));
 
-        Participant deletedParticipant =
-            participantProvider.deleteParticipant(inputParticipants.get(0).getDefinition());
+        var deletedParticipant = participantProvider.deleteParticipant(participantId);
         assertEquals(inputParticipants.get(0), deletedParticipant);
     }
 }
