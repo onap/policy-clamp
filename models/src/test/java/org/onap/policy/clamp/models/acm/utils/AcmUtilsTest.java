@@ -50,7 +50,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
 
 class AcmUtilsTest {
 
-    private final ToscaConceptIdentifier id = new ToscaConceptIdentifier("id", "1.0.0");
+    private static final ToscaConceptIdentifier TYPE = new ToscaConceptIdentifier("id", "1.0.0");
 
     @Test
     void testCommonUtilsParticipantUpdate() {
@@ -63,12 +63,13 @@ class AcmUtilsTest {
         assertEquals(acElement, participantUpdates.get(0).getAutomationCompositionElementList().get(0));
 
         AcmUtils.prepareParticipantUpdate(acElement, participantUpdates);
-        assertNotEquals(id, participantUpdates.get(0).getParticipantId());
+        var participantId = CommonTestData.getParticipantId();
+        assertNotEquals(participantId, participantUpdates.get(0).getParticipantId());
 
-        acElement.setParticipantId(id);
-        acElement.setParticipantType(id);
+        acElement.setParticipantId(participantId);
+        acElement.setParticipantType(TYPE);
         AcmUtils.prepareParticipantUpdate(acElement, participantUpdates);
-        assertEquals(id, participantUpdates.get(1).getParticipantId());
+        assertEquals(participantId, participantUpdates.get(1).getParticipantId());
     }
 
     @Test

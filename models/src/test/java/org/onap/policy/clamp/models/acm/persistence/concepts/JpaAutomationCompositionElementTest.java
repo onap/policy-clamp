@@ -36,6 +36,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
+import org.onap.policy.clamp.models.acm.utils.CommonTestData;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.base.PfConceptKey;
@@ -141,6 +142,7 @@ class JpaAutomationCompositionElementTest {
         noOrderedStateJpaAce = new JpaAutomationCompositionElement(noOrderedStateAce);
         noOrderedStateJpaAce.setInstanceId(testJpaAutomationCompositionElement.getInstanceId());
         noOrderedStateJpaAce.setElementId(testJpaAutomationCompositionElement.getElementId());
+        noOrderedStateJpaAce.setParticipantId(testJpaAutomationCompositionElement.getParticipantId());
         assertEquals(testJpaAutomationCompositionElement, noOrderedStateJpaAce);
     }
 
@@ -221,7 +223,7 @@ class JpaAutomationCompositionElementTest {
         ace1.setDescription("Description");
         ace1.setOrderedState(AutomationCompositionOrderedState.UNINITIALISED);
         ace1.setState(AutomationCompositionState.UNINITIALISED);
-        ace1.setParticipantId(new PfConceptKey("participant", "0.0.1"));
+        ace1.setParticipantId(CommonTestData.getJpaParticipantId());
 
         assertThat(ace1.toString()).contains("AutomationCompositionElement(");
         assertNotEquals(0, ace1.hashCode());
@@ -249,6 +251,7 @@ class JpaAutomationCompositionElementTest {
         automationCompositionElement.setId(UUID.fromString(ELEMENT_ID));
         automationCompositionElement.setDefinition(new ToscaConceptIdentifier("aceDef", "0.0.1"));
         automationCompositionElement.setParticipantType(new ToscaConceptIdentifier("participantType", "0.0.1"));
+        automationCompositionElement.setParticipantId(CommonTestData.getParticipantId());
         automationCompositionElement.setProperties(Map.of("key", "{}"));
 
         return automationCompositionElement;

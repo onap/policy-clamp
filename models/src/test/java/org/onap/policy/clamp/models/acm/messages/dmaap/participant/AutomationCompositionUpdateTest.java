@@ -34,6 +34,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUpdates;
+import org.onap.policy.clamp.models.acm.utils.CommonTestData;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -61,7 +62,9 @@ class AutomationCompositionUpdateTest {
         acElement.setDescription("Description");
         acElement.setOrderedState(AutomationCompositionOrderedState.PASSIVE);
         acElement.setState(AutomationCompositionState.PASSIVE);
-        acElement.setParticipantId(id);
+
+        var participantId = CommonTestData.getParticipantId();
+        acElement.setParticipantId(participantId);
         acElement.setParticipantType(id);
 
         var property = new ToscaProperty();
@@ -73,7 +76,7 @@ class AutomationCompositionUpdateTest {
         acElement.setProperties(propertiesMap);
 
         var participantUpdates = new ParticipantUpdates();
-        participantUpdates.setParticipantId(id);
+        participantUpdates.setParticipantId(participantId);
         participantUpdates.setAutomationCompositionElementList(List.of(acElement));
         orig.setParticipantUpdatesList(List.of(participantUpdates));
 

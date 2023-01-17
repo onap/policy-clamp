@@ -30,6 +30,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementAck;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
+import org.onap.policy.clamp.models.acm.utils.CommonTestData;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
@@ -47,9 +48,9 @@ class AutomationCompositionAckTest {
                 removeVariableFields(new AutomationCompositionAck(orig).toString()));
 
         // verify with all values
-        var id = new ToscaConceptIdentifier("id", "1.2.3");
         orig.setAutomationCompositionId(UUID.randomUUID());
-        orig.setParticipantId(id);
+        orig.setParticipantId(CommonTestData.getParticipantId());
+        var id = new ToscaConceptIdentifier("id", "1.2.3");
         orig.setParticipantType(id);
         var acElementResult = new AutomationCompositionElementAck(AutomationCompositionState.UNINITIALISED,
             true, "AutomationCompositionElement result");

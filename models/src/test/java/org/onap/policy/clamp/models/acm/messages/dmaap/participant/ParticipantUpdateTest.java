@@ -31,6 +31,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
+import org.onap.policy.clamp.models.acm.utils.CommonTestData;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
@@ -44,34 +45,34 @@ class ParticipantUpdateTest {
     void testCopyConstructor() throws CoderException {
         assertThatThrownBy(() -> new ParticipantUpdate(null)).isInstanceOf(NullPointerException.class);
 
-        ParticipantUpdate orig = new ParticipantUpdate();
+        var orig = new ParticipantUpdate();
         // verify with all values
-        ToscaConceptIdentifier id = new ToscaConceptIdentifier("id", "1.2.3");
         orig.setAutomationCompositionId(UUID.randomUUID());
-        orig.setParticipantId(id);
-        orig.setParticipantType(id);
+        orig.setParticipantId(CommonTestData.getParticipantId());
+        var type = new ToscaConceptIdentifier("id", "1.2.3");
+        orig.setParticipantType(type);
         orig.setMessageId(UUID.randomUUID());
         orig.setTimestamp(Instant.ofEpochMilli(3000));
 
-        ToscaServiceTemplate toscaServiceTemplate = new ToscaServiceTemplate();
+        var toscaServiceTemplate = new ToscaServiceTemplate();
         toscaServiceTemplate.setName("serviceTemplate");
         toscaServiceTemplate.setDerivedFrom("parentServiceTemplate");
         toscaServiceTemplate.setDescription("Description of serviceTemplate");
         toscaServiceTemplate.setVersion("1.2.3");
 
-        ToscaNodeTemplate toscaNodeTemplate = new ToscaNodeTemplate();
+        var toscaNodeTemplate = new ToscaNodeTemplate();
         toscaNodeTemplate.setName("nodeTemplate");
         toscaNodeTemplate.setDerivedFrom("parentNodeTemplate");
         toscaNodeTemplate.setDescription("Description of nodeTemplate");
         toscaNodeTemplate.setVersion("1.2.3");
 
-        ParticipantDefinition participantDefinitionUpdate = new ParticipantDefinition();
-        participantDefinitionUpdate.setParticipantType(id);
-        AutomationCompositionElementDefinition acDefinition = getAcElementDefinition(id);
+        var participantDefinitionUpdate = new ParticipantDefinition();
+        participantDefinitionUpdate.setParticipantType(type);
+        var acDefinition = getAcElementDefinition(type);
         participantDefinitionUpdate.setAutomationCompositionElementDefinitionList(List.of(acDefinition));
         orig.setParticipantDefinitionUpdates(List.of(participantDefinitionUpdate));
 
-        ParticipantUpdate other = new ParticipantUpdate(orig);
+        var other = new ParticipantUpdate(orig);
 
         assertEquals(removeVariableFields(orig.toString()), removeVariableFields(other.toString()));
 
@@ -79,13 +80,13 @@ class ParticipantUpdateTest {
     }
 
     private AutomationCompositionElementDefinition getAcElementDefinition(ToscaConceptIdentifier id) {
-        ToscaNodeTemplate toscaNodeTemplate = new ToscaNodeTemplate();
+        var toscaNodeTemplate = new ToscaNodeTemplate();
         toscaNodeTemplate.setName("nodeTemplate");
         toscaNodeTemplate.setDerivedFrom("parentNodeTemplate");
         toscaNodeTemplate.setDescription("Description of nodeTemplate");
         toscaNodeTemplate.setVersion("1.2.3");
 
-        AutomationCompositionElementDefinition acDefinition = new AutomationCompositionElementDefinition();
+        var acDefinition = new AutomationCompositionElementDefinition();
         acDefinition.setAcElementDefinitionId(id);
         acDefinition.setAutomationCompositionElementToscaNodeTemplate(toscaNodeTemplate);
         return acDefinition;

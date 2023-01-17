@@ -29,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.clamp.models.acm.utils.CommonTestData;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class AutomationCompositionElementTest {
@@ -43,7 +44,7 @@ class AutomationCompositionElementTest {
         ace1.setDescription("Description");
         ace1.setId(UUID.randomUUID());
         ace1.setOrderedState(AutomationCompositionOrderedState.UNINITIALISED);
-        ace1.setParticipantId(new ToscaConceptIdentifier("id", "1.2.3"));
+        ace1.setParticipantId(CommonTestData.getParticipantId());
         ace1.setState(AutomationCompositionState.UNINITIALISED);
 
         var ace2 = new AutomationCompositionElement(ace1);
@@ -78,7 +79,7 @@ class AutomationCompositionElementTest {
         ace1.setDescription("Description");
         ace1.setId(UUID.randomUUID());
         ace1.setOrderedState(AutomationCompositionOrderedState.UNINITIALISED);
-        ace1.setParticipantId(new ToscaConceptIdentifier("id", "1.2.3"));
+        ace1.setParticipantId(CommonTestData.getParticipantId());
         ace1.setState(AutomationCompositionState.UNINITIALISED);
 
         assertThat(ace1.toString()).contains("AutomationCompositionElement(");
