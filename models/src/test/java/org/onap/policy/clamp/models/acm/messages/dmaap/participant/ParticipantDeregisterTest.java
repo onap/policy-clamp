@@ -28,6 +28,7 @@ import static org.onap.policy.clamp.models.acm.messages.dmaap.participant.Partic
 import java.time.Instant;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.clamp.models.acm.utils.CommonTestData;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
@@ -48,7 +49,7 @@ class ParticipantDeregisterTest {
         id.setName("id");
         id.setVersion("1.2.3");
         orig.setAutomationCompositionId(UUID.randomUUID());
-        orig.setParticipantId(id);
+        orig.setParticipantId(CommonTestData.getParticipantId());
         orig.setParticipantType(id);
         orig.setMessageId(UUID.randomUUID());
         orig.setTimestamp(Instant.ofEpochMilli(3000));

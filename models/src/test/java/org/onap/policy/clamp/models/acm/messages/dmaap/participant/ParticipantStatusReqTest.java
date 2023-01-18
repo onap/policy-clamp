@@ -28,8 +28,8 @@ import static org.onap.policy.clamp.models.acm.messages.dmaap.participant.Partic
 import java.time.Instant;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.clamp.models.acm.utils.CommonTestData;
 import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
  * Test the copy constructor.
@@ -39,10 +39,9 @@ class ParticipantStatusReqTest {
     void testCopyConstructor() throws CoderException {
         assertThatThrownBy(() -> new ParticipantStatusReq(null)).isInstanceOf(NullPointerException.class);
 
-        ParticipantStatusReq orig = new ParticipantStatusReq();
+        var orig = new ParticipantStatusReq();
         // verify with all values
-        ToscaConceptIdentifier id = new ToscaConceptIdentifier("id", "1.2.3");
-        orig.setParticipantId(id);
+        orig.setParticipantId(CommonTestData.getParticipantId());
         orig.setAutomationCompositionId(null);
         orig.setParticipantType(null);
         orig.setMessageId(UUID.randomUUID());

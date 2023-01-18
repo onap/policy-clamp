@@ -30,8 +30,8 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
+import org.onap.policy.clamp.models.acm.utils.CommonTestData;
 import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
  * Test the copy constructor and other methods.
@@ -49,9 +49,8 @@ class AutomationCompositionStateChangeTest {
                 removeVariableFields(new AutomationCompositionStateChange(orig).toString()));
 
         // verify with all values
-        ToscaConceptIdentifier id = new ToscaConceptIdentifier("id", "1.2.3");
         orig.setAutomationCompositionId(UUID.randomUUID());
-        orig.setParticipantId(id);
+        orig.setParticipantId(CommonTestData.getParticipantId());
         orig.setMessageId(UUID.randomUUID());
         orig.setOrderedState(AutomationCompositionOrderedState.RUNNING);
         orig.setCurrentState(AutomationCompositionState.PASSIVE);
