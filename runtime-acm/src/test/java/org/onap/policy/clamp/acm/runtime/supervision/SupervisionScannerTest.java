@@ -41,7 +41,6 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
-import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
@@ -55,13 +54,10 @@ class SupervisionScannerTest {
 
     private static final AcDefinitionProvider acDefinitionProvider = mock(AcDefinitionProvider.class);
 
-    private static final String PARTICIPANT_NAME = "Participant0";
-    private static final String PARTICIPANT_VERSION = "1.0.0";
-
     private static UUID compositionId;
 
     private static final ToscaConceptIdentifier PARTICIPANT_TYPE =
-        new ToscaConceptIdentifier("org.onap.policy.clamp.acm.PolicyParticipant", PARTICIPANT_VERSION);
+        new ToscaConceptIdentifier("org.onap.policy.clamp.acm.PolicyParticipant", "1.0.0");
 
     @BeforeAll
     public static void setUpBeforeAll() {
@@ -123,9 +119,7 @@ class SupervisionScannerTest {
             .thenReturn(List.of(automationComposition));
 
         var participantProvider = mock(ParticipantProvider.class);
-        var participant = new Participant();
-        participant.setName(PARTICIPANT_NAME);
-        participant.setVersion(PARTICIPANT_VERSION);
+        var participant = CommonTestData.createParticipant(PARTICIPANT_TYPE, CommonTestData.getParticipantId());
         when(participantProvider.getParticipants()).thenReturn(List.of(participant));
 
         var automationCompositionUpdatePublisher = mock(AutomationCompositionUpdatePublisher.class);
@@ -186,12 +180,9 @@ class SupervisionScannerTest {
         acRuntimeParameterGroup.getParticipantParameters().getUpdateParameters().setMaxWaitMs(-1);
         acRuntimeParameterGroup.getParticipantParameters().setMaxStatusWaitMs(-1);
 
-        var participant = new Participant();
-        participant.setName(PARTICIPANT_NAME);
-        participant.setVersion(PARTICIPANT_VERSION);
+        var participant = CommonTestData.createParticipant(PARTICIPANT_TYPE, CommonTestData.getParticipantId());
         participant.setParticipantState(ParticipantState.OFF_LINE);
         participant.setDefinition(new ToscaConceptIdentifier("unknown", "0.0.0"));
-        participant.setParticipantType(PARTICIPANT_TYPE);
         var participantProvider = mock(ParticipantProvider.class);
         when(participantProvider.getParticipants()).thenReturn(List.of(participant));
 

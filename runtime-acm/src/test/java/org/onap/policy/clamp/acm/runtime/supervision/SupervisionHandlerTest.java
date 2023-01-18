@@ -39,12 +39,12 @@ import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionStateChangePublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionUpdatePublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantUpdatePublisher;
+import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionException;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
-import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
@@ -56,9 +56,8 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class SupervisionHandlerTest {
     private static final String AC_INSTANTIATION_CREATE_JSON = "src/test/resources/rest/acm/AutomationComposition.json";
-    private static final UUID identifier = UUID.randomUUID();
-    private static final ToscaConceptIdentifier participantId = new ToscaConceptIdentifier("ParticipantId", "1.0.0");
-    private static final ToscaConceptIdentifier participantType =
+    private static final UUID IDENTIFIER = UUID.randomUUID();
+    private static final ToscaConceptIdentifier PARTICIPANT_TYPE =
             new ToscaConceptIdentifier("ParticipantType", "1.0.0");
 
     @Test
@@ -221,7 +220,7 @@ class SupervisionHandlerTest {
         var automationCompositionAckMessage =
                 new AutomationCompositionAck(ParticipantMessageType.AUTOMATION_COMPOSITION_STATECHANGE_ACK);
         automationCompositionAckMessage.setAutomationCompositionResultMap(Map.of());
-        automationCompositionAckMessage.setAutomationCompositionId(identifier);
+        automationCompositionAckMessage.setAutomationCompositionId(IDENTIFIER);
 
         handler.handleAutomationCompositionStateChangeAckMessage(automationCompositionAckMessage);
 
@@ -232,10 +231,10 @@ class SupervisionHandlerTest {
     void testHandleAutomationCompositionUpdateAckMessage() {
         var automationCompositionAckMessage =
                 new AutomationCompositionAck(ParticipantMessageType.AUTOMATION_COMPOSITION_UPDATE_ACK);
-        automationCompositionAckMessage.setParticipantId(participantId);
-        automationCompositionAckMessage.setParticipantType(participantType);
+        automationCompositionAckMessage.setParticipantId(CommonTestData.getParticipantId());
+        automationCompositionAckMessage.setParticipantType(PARTICIPANT_TYPE);
         automationCompositionAckMessage.setAutomationCompositionResultMap(Map.of());
-        automationCompositionAckMessage.setAutomationCompositionId(identifier);
+        automationCompositionAckMessage.setAutomationCompositionId(IDENTIFIER);
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         var handler = createSupervisionHandler(automationCompositionProvider,
                 mock(AutomationCompositionUpdatePublisher.class), mock(AutomationCompositionStateChangePublisher.class),
@@ -248,15 +247,10 @@ class SupervisionHandlerTest {
     }
 
     @Test
-    void testParticipantUpdateAck() throws PfModelException {
-        var participant = new Participant();
-        participant.setName(participantId.getName());
-        participant.setVersion(participantId.getVersion());
-        participant.setParticipantType(participantType);
-
+    void testParticipantUpdateAck() {
         var participantUpdateAckMessage = new ParticipantUpdateAck();
-        participantUpdateAckMessage.setParticipantId(participantId);
-        participantUpdateAckMessage.setParticipantType(participantType);
+        participantUpdateAckMessage.setParticipantId(CommonTestData.getParticipantId());
+        participantUpdateAckMessage.setParticipantType(PARTICIPANT_TYPE);
         participantUpdateAckMessage.setState(ParticipantState.ON_LINE);
         var handler = createSupervisionHandler(mock(AutomationCompositionProvider.class),
                 mock(AutomationCompositionUpdatePublisher.class), mock(AutomationCompositionStateChangePublisher.class),
@@ -267,7 +261,7 @@ class SupervisionHandlerTest {
     }
 
     @Test
-    void testHandleSendCommissionMessage() throws PfModelException {
+    void testHandleSendCommissionMessage() {
         var participantUpdatePublisher = mock(ParticipantUpdatePublisher.class);
         var handler = createSupervisionHandler(mock(AutomationCompositionProvider.class),
                 mock(AutomationCompositionUpdatePublisher.class), mock(AutomationCompositionStateChangePublisher.class),
@@ -286,9 +280,9 @@ class SupervisionHandlerTest {
                 mock(AutomationCompositionUpdatePublisher.class), mock(AutomationCompositionStateChangePublisher.class),
                 participantUpdatePublisher, AutomationCompositionOrderedState.PASSIVE,
                 AutomationCompositionState.UNINITIALISED);
-        handler.handleSendDeCommissionMessage(identifier);
+        handler.handleSendDeCommissionMessage(IDENTIFIER);
 
-        verify(participantUpdatePublisher).sendDecomisioning(identifier);
+        verify(participantUpdatePublisher).sendDecomisioning(IDENTIFIER);
     }
 
     private SupervisionHandler createSupervisionHandler(AutomationCompositionProvider automationCompositionProvider,
@@ -301,7 +295,7 @@ class SupervisionHandlerTest {
 
         automationComposition.setOrderedState(orderedState);
         automationComposition.setState(state);
-        when(automationCompositionProvider.findAutomationComposition(identifier))
+        when(automationCompositionProvider.findAutomationComposition(IDENTIFIER))
                 .thenReturn(Optional.of(automationComposition));
 
         var acDefinitionProvider = Mockito.mock(AcDefinitionProvider.class);

@@ -34,6 +34,7 @@ import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionHandler;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionParticipantHandler;
+import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
@@ -160,7 +161,7 @@ class SupervisionMessagesTest {
         var publisher = new ParticipantStatusReqPublisher();
         var topicSink = mock(TopicSink.class);
         publisher.active(List.of(topicSink));
-        publisher.send(getParticipantId());
+        publisher.send(CommonTestData.getParticipantId());
         verify(topicSink).send(anyString());
     }
 
@@ -169,12 +170,8 @@ class SupervisionMessagesTest {
         var publisher = new ParticipantRegisterAckPublisher();
         var topicSink = mock(TopicSink.class);
         publisher.active(List.of(topicSink));
-        publisher.send(UUID.randomUUID(), getParticipantId(), getParticipantType());
+        publisher.send(UUID.randomUUID(), CommonTestData.getParticipantId(), getParticipantType());
         verify(topicSink).send(anyString());
-    }
-
-    private ToscaConceptIdentifier getParticipantId() {
-        return new ToscaConceptIdentifier("org.onap.PM_Policy", "1.0.0");
     }
 
     private ToscaConceptIdentifier getParticipantType() {

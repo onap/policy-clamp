@@ -94,12 +94,16 @@ public class CommonTestData {
      * @return a new Participant
      */
     public static Participant createParticipant(ToscaConceptIdentifier participantType,
-        ToscaConceptIdentifier participantId) {
+            ToscaConceptIdentifier participantId) {
         var participant = new Participant();
         participant.setDefinition(participantId);
         participant.setParticipantType(participantType);
         participant.setName(participantId.getName());
         participant.setVersion(participantId.getVersion());
         return participant;
+    }
+
+    public static ToscaConceptIdentifier getParticipantId() {
+        return new ToscaConceptIdentifier("org.onap.PM_Policy", "1.0.0");
     }
 }

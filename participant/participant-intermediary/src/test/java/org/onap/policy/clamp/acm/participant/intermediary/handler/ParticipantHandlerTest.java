@@ -27,7 +27,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -62,39 +61,37 @@ class ParticipantHandlerTest {
 
         var participantHandler = commonTestData.getMockParticipantHandler();
 
-        var id = new ToscaConceptIdentifier(ID_NAME, ID_VERSION);
+        var participantType = new ToscaConceptIdentifier(ID_NAME, ID_VERSION);
+        var participantId = CommonTestData.getParticipantId();
         participantUpdateMsg.setAutomationCompositionId(CommonTestData.AC_ID_1);
         participantUpdateMsg.setCompositionId(CommonTestData.AC_ID_1);
-        participantUpdateMsg.setParticipantId(id);
-        participantUpdateMsg.setParticipantType(id);
+        participantUpdateMsg.setParticipantId(participantId);
+        participantUpdateMsg.setParticipantType(participantType);
         participantUpdateMsg.setMessageId(UUID.randomUUID());
         participantUpdateMsg.setTimestamp(Instant.ofEpochMilli(3000));
 
         var heartbeatF = participantHandler.makeHeartbeat(false);
-        assertEquals(id, heartbeatF.getParticipantId());
+        assertEquals(participantId, heartbeatF.getParticipantId());
         assertThat(heartbeatF.getAutomationCompositionInfoList()).isEmpty();
 
         participantHandler.handleParticipantUpdate(participantUpdateMsg);
 
         var heartbeatT = participantHandler.makeHeartbeat(true);
-        assertEquals(id, heartbeatT.getParticipantId());
+        assertEquals(participantId, heartbeatT.getParticipantId());
         assertThat(heartbeatT.getParticipantDefinitionUpdates()).isNotEmpty();
-        assertEquals(id, heartbeatT.getParticipantDefinitionUpdates().get(0).getParticipantId());
+        assertEquals(participantId, heartbeatT.getParticipantDefinitionUpdates().get(0).getParticipantId());
 
         var pum = setListParticipantDefinition(participantUpdateMsg);
         participantHandler.handleParticipantUpdate(pum);
         var heartbeatTAfterUpdate = participantHandler.makeHeartbeat(true);
-        assertEquals(id, heartbeatTAfterUpdate.getParticipantId());
+        assertEquals(participantId, heartbeatTAfterUpdate.getParticipantId());
     }
 
     private ParticipantUpdate setListParticipantDefinition(ParticipantUpdate participantUpdateMsg) {
-        var id = new ToscaConceptIdentifier(ID_NAME, ID_VERSION);
-        List<ParticipantDefinition> participantDefinitionUpdates = new ArrayList<>();
         var def = new ParticipantDefinition();
-        def.setParticipantId(id);
-        def.setParticipantType(id);
-        participantDefinitionUpdates.add(def);
-        participantUpdateMsg.setParticipantDefinitionUpdates(participantDefinitionUpdates);
+        def.setParticipantId(CommonTestData.getParticipantId());
+        def.setParticipantType(new ToscaConceptIdentifier(ID_NAME, ID_VERSION));
+        participantUpdateMsg.setParticipantDefinitionUpdates(List.of(def));
         return participantUpdateMsg;
     }
 
