@@ -35,6 +35,7 @@ import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessag
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantRegisterAckListener;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantUpdateListener;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.ParticipantHandler;
+import org.onap.policy.clamp.acm.participant.policy.main.parameters.CommonTestData;
 import org.onap.policy.clamp.acm.participant.policy.main.utils.TestListenerUtils;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDeregister;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDeregisterAck;
@@ -67,7 +68,7 @@ class ParticipantMessagesTest {
     @Test
     void testSendParticipantRegisterMessage() {
         final ParticipantRegister participantRegisterMsg = new ParticipantRegister();
-        participantRegisterMsg.setParticipantId(getParticipantId());
+        participantRegisterMsg.setParticipantId(CommonTestData.getParticipantId());
         participantRegisterMsg.setTimestamp(Instant.now());
         participantRegisterMsg.setParticipantType(getParticipantType());
 
@@ -98,7 +99,7 @@ class ParticipantMessagesTest {
     @Test
     void testSendParticipantDeregisterMessage() {
         final ParticipantDeregister participantDeregisterMsg = new ParticipantDeregister();
-        participantDeregisterMsg.setParticipantId(getParticipantId());
+        participantDeregisterMsg.setParticipantId(CommonTestData.getParticipantId());
         participantDeregisterMsg.setTimestamp(Instant.now());
         participantDeregisterMsg.setParticipantType(getParticipantType());
 
@@ -136,7 +137,7 @@ class ParticipantMessagesTest {
         }
 
         // Verify the result of GET participants with what is stored
-        assertEquals("org.onap.PM_Policy", participantHandler.getParticipantId().getName());
+        assertEquals(CommonTestData.getParticipantId(), participantHandler.getParticipantId());
     }
 
     @Test
@@ -162,10 +163,6 @@ class ParticipantMessagesTest {
             publisher.active(Collections.singletonList(Mockito.mock(TopicSink.class)));
             assertThatCode(() -> publisher.sendHeartbeat(heartbeat)).doesNotThrowAnyException();
         }
-    }
-
-    private ToscaConceptIdentifier getParticipantId() {
-        return new ToscaConceptIdentifier("org.onap.PM_Policy", "1.0.0");
     }
 
     private ToscaConceptIdentifier getParticipantType() {
