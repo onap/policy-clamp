@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4c9aa799_8f5f467b",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/concepts/ParticipantInformation.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2023-01-19T12:52:51Z",
+      "side": 1,
+      "message": "Was there any change to this file?",
+      "revId": "9c382abbf26b646d68c29ac805b923a62e08d0a5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8c736b13_0348c71f",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/messages/dmaap/participant/ParticipantAckMessage.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2023-01-19T12:52:51Z",
+      "side": 1,
+      "message": "Same comment.",
+      "revId": "9c382abbf26b646d68c29ac805b923a62e08d0a5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "02f42467_12031979",
+        "filename": "participant/participant-impl/participant-impl-policy/src/test/java/org/onap/policy/clamp/acm/participant/policy/main/parameters/CommonTestData.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2023-01-19T12:52:51Z",
+      "side": 1,
+      "message": "2023....Maybe check other files as well.",
+      "range": {
+        "startLine": 3,
+        "startChar": 0,
+        "endLine": 3,
+        "endChar": 1
+      },
+      "revId": "9c382abbf26b646d68c29ac805b923a62e08d0a5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
