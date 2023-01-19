@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "f130ef53_da8ee565",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/concepts/ParticipantInformation.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2023-01-19T13:16:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "641e8452_04c242a1",
+      "revId": "9c382abbf26b646d68c29ac805b923a62e08d0a5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8c736b13_0348c71f",
         "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/messages/dmaap/participant/ParticipantAckMessage.java",
         "patchSetId": 1
@@ -69,6 +87,24 @@
       "revId": "9c382abbf26b646d68c29ac805b923a62e08d0a5",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c2300072_f230a4bb",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/messages/dmaap/participant/ParticipantAckMessage.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2023-01-19T13:16:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2964e70f_80c49dd8",
+      "revId": "9c382abbf26b646d68c29ac805b923a62e08d0a5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -116,6 +152,30 @@
       "revId": "9c382abbf26b646d68c29ac805b923a62e08d0a5",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9ec08a9f_7d76e857",
+        "filename": "participant/participant-impl/participant-impl-policy/src/test/java/org/onap/policy/clamp/acm/participant/policy/main/parameters/CommonTestData.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2023-01-19T13:16:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "117074b2_c6357140",
+      "range": {
+        "startLine": 3,
+        "startChar": 0,
+        "endLine": 3,
+        "endChar": 1
+      },
+      "revId": "9c382abbf26b646d68c29ac805b923a62e08d0a5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
