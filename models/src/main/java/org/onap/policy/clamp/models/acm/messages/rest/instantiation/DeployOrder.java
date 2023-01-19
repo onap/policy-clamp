@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +20,8 @@
 
 package org.onap.policy.clamp.models.acm.messages.rest.instantiation;
 
-import lombok.Data;
-
-@Data
-public class AcInstanceStateUpdate {
-    private DeployOrder deployOrder;
-    private LockOrder lockOrder;
+public enum DeployOrder {
+    NONE,
+    UNDEPLOY,
+    DEPLOY
 }
