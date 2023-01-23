@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -146,7 +146,6 @@ class AutomationCompositionHandlerTest {
         var participantUpdate = new ParticipantUpdates();
         participantUpdate.setParticipantId(partecipantId);
         var element = new AutomationCompositionElement();
-        element.setParticipantType(definition);
         element.setDefinition(definition);
         participantUpdate.setAutomationCompositionElementList(List.of(element));
         updateMsg.setParticipantUpdatesList(List.of(participantUpdate));
@@ -189,5 +188,4 @@ class AutomationCompositionHandlerTest {
         stateChangePassive.setParticipantId(CommonTestData.getRndParticipantId());
         assertDoesNotThrow(() -> ach.handleAutomationCompositionStateChange(stateChangePassive, List.of()));
     }
-
 }

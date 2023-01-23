@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,6 @@ import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
@@ -45,13 +44,6 @@ class ParticipantUtilsTest {
         "org.onap.policy.clamp.acm.PolicyAutomationCompositionElement";
     private static final String PARTICIPANT_AUTOMATION_COMPOSITION_ELEMENT = "org.onap.policy.clamp.acm.Participant";
     private static final StandardYamlCoder YAML_TRANSLATOR = new StandardYamlCoder();
-
-    @Test
-    void testFindParticipantType() throws CoderException {
-        var identifier = new ToscaConceptIdentifier("Identifier", "1.0.1");
-        var result = ParticipantUtils.findParticipantType(Map.of("participantType", CODER.encode(identifier)));
-        assertThat(result).isEqualTo(identifier);
-    }
 
     @Test
     void testFindStartPhase() {

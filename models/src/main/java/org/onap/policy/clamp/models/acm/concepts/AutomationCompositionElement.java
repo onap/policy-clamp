@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2022 Nordix Foundation.
+ * Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,9 +47,6 @@ public class AutomationCompositionElement {
     private ToscaConceptIdentifier definition = new ToscaConceptIdentifier(PfConceptKey.getNullKey());
 
     @NonNull
-    private ToscaConceptIdentifier participantType = new ToscaConceptIdentifier(PfConceptKey.getNullKey());
-
-    @NonNull
     private UUID participantId = UUID.randomUUID();
 
     @NonNull
@@ -74,7 +71,6 @@ public class AutomationCompositionElement {
     public AutomationCompositionElement(final AutomationCompositionElement otherElement) {
         this.id = otherElement.id;
         this.definition = new ToscaConceptIdentifier(otherElement.definition);
-        this.participantType = new ToscaConceptIdentifier(otherElement.participantType);
         this.participantId = otherElement.participantId;
         this.state = otherElement.state;
         this.orderedState = otherElement.orderedState;

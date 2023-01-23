@@ -53,13 +53,10 @@ import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUp
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class SupervisionHandlerTest {
     private static final String AC_INSTANTIATION_CREATE_JSON = "src/test/resources/rest/acm/AutomationComposition.json";
     private static final UUID IDENTIFIER = UUID.randomUUID();
-    private static final ToscaConceptIdentifier PARTICIPANT_TYPE =
-            new ToscaConceptIdentifier("ParticipantType", "1.0.0");
 
     @Test
     void testTriggerAutomationCompositionSupervision() throws AutomationCompositionException {
@@ -235,7 +232,6 @@ class SupervisionHandlerTest {
         var automationCompositionAckMessage =
                 new AutomationCompositionAck(ParticipantMessageType.AUTOMATION_COMPOSITION_UPDATE_ACK);
         automationCompositionAckMessage.setParticipantId(CommonTestData.getParticipantId());
-        automationCompositionAckMessage.setParticipantType(PARTICIPANT_TYPE);
         automationCompositionAckMessage.setAutomationCompositionResultMap(Map.of());
         automationCompositionAckMessage.setAutomationCompositionId(IDENTIFIER);
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
@@ -253,7 +249,6 @@ class SupervisionHandlerTest {
     void testParticipantUpdateAck() {
         var participantUpdateAckMessage = new ParticipantUpdateAck();
         participantUpdateAckMessage.setParticipantId(CommonTestData.getParticipantId());
-        participantUpdateAckMessage.setParticipantType(PARTICIPANT_TYPE);
         participantUpdateAckMessage.setState(ParticipantState.ON_LINE);
         var handler = createSupervisionHandler(mock(AutomationCompositionProvider.class),
                 mock(AutomationCompositionUpdatePublisher.class), mock(AutomationCompositionStateChangePublisher.class),

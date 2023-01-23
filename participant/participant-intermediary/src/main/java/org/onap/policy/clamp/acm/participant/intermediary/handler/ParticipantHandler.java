@@ -48,7 +48,6 @@ import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantSt
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatusReq;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUpdate;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUpdateAck;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -59,9 +58,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class ParticipantHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantHandler.class);
-
-    @Getter
-    private final ToscaConceptIdentifier participantType;
 
     @Getter
     private final UUID participantId;
@@ -81,7 +77,6 @@ public class ParticipantHandler {
      */
     public ParticipantHandler(ParticipantParameters parameters, ParticipantMessagePublisher publisher,
             AutomationCompositionHandler automationCompositionHandler) {
-        this.participantType = parameters.getIntermediaryParameters().getParticipantType();
         this.participantId = parameters.getIntermediaryParameters().getParticipantId();
         this.publisher = publisher;
         this.automationCompositionHandler = automationCompositionHandler;
@@ -133,7 +128,7 @@ public class ParticipantHandler {
      * @return true if it applies, false otherwise
      */
     public boolean appliesTo(ParticipantMessage participantMsg) {
-        return participantMsg.appliesTo(participantType, participantId);
+        return participantMsg.appliesTo(participantId);
     }
 
     /**
@@ -143,7 +138,7 @@ public class ParticipantHandler {
      * @return true if it applies, false otherwise
      */
     public boolean appliesTo(ParticipantAckMessage participantMsg) {
-        return participantMsg.appliesTo(participantType, participantId);
+        return participantMsg.appliesTo(participantId);
     }
 
     /**
@@ -152,7 +147,6 @@ public class ParticipantHandler {
     public void sendParticipantRegister() {
         var participantRegister = new ParticipantRegister();
         participantRegister.setParticipantId(participantId);
-        participantRegister.setParticipantType(participantType);
         participantRegister.setParticipantSupportedElementType(supportedAcElementTypes);
 
         publisher.sendParticipantRegister(participantRegister);
@@ -176,7 +170,6 @@ public class ParticipantHandler {
     public void sendParticipantDeregister() {
         var participantDeregister = new ParticipantDeregister();
         participantDeregister.setParticipantId(participantId);
-        participantDeregister.setParticipantType(participantType);
 
         publisher.sendParticipantDeregister(participantDeregister);
     }
@@ -206,7 +199,7 @@ public class ParticipantHandler {
         if (!participantUpdateMsg.getParticipantDefinitionUpdates().isEmpty()) {
             // This message is to commission the automation composition
             for (var participantDefinition : participantUpdateMsg.getParticipantDefinitionUpdates()) {
-                if (participantDefinition.getParticipantType().equals(participantType)) {
+                if (participantDefinition.getParticipantId().equals(participantId)) {
                     acElementDefsMap.get(participantUpdateMsg.getCompositionId())
                             .addAll(participantDefinition.getAutomationCompositionElementDefinitionList());
                     break;
@@ -228,7 +221,6 @@ public class ParticipantHandler {
         participantUpdateAck.setMessage("Participant Update Ack message");
         participantUpdateAck.setResult(true);
         participantUpdateAck.setParticipantId(participantId);
-        participantUpdateAck.setParticipantType(participantType);
         participantUpdateAck.setState(ParticipantState.ON_LINE);
         publisher.sendParticipantUpdateAck(participantUpdateAck);
     }
@@ -246,7 +238,6 @@ public class ParticipantHandler {
     public ParticipantStatus makeHeartbeat(boolean responseToParticipantStatusReq) {
         var heartbeat = new ParticipantStatus();
         heartbeat.setParticipantId(participantId);
-        heartbeat.setParticipantType(participantType);
         heartbeat.setState(ParticipantState.ON_LINE);
         heartbeat.setAutomationCompositionInfoList(getAutomationCompositionInfoList());
 
@@ -255,7 +246,6 @@ public class ParticipantHandler {
             for (var acElementDefsOnThisParticipant : acElementDefsMap.values()) {
                 var participantDefinition = new ParticipantDefinition();
                 participantDefinition.setParticipantId(participantId);
-                participantDefinition.setParticipantType(participantType);
                 participantDefinition.setAutomationCompositionElementDefinitionList(acElementDefsOnThisParticipant);
                 participantDefinitionList.add(participantDefinition);
             }

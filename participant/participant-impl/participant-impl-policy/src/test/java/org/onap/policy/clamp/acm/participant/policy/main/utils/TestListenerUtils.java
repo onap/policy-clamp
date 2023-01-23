@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,6 @@ import org.onap.policy.clamp.acm.participant.policy.main.parameters.CommonTestDa
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUpdate;
 import org.onap.policy.common.utils.coder.YamlJsonTranslator;
 import org.onap.policy.common.utils.resources.ResourceUtils;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,12 +50,9 @@ public final class TestListenerUtils {
     public static ParticipantUpdate createParticipantUpdateMsg() {
         final var participantUpdateMsg = new ParticipantUpdate();
         var participantId = CommonTestData.getParticipantId();
-        var participantType =
-                new ToscaConceptIdentifier("org.onap.policy.acm.PolicyAutomationCompositionParticipant", "2.3.1");
 
         participantUpdateMsg.setParticipantId(participantId);
         participantUpdateMsg.setTimestamp(Instant.now());
-        participantUpdateMsg.setParticipantType(participantType);
         participantUpdateMsg.setTimestamp(Instant.ofEpochMilli(3000));
         participantUpdateMsg.setMessageId(UUID.randomUUID());
 

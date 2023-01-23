@@ -49,7 +49,6 @@ import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUp
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class SupervisionMessagesTest {
 
@@ -170,12 +169,8 @@ class SupervisionMessagesTest {
         var publisher = new ParticipantRegisterAckPublisher();
         var topicSink = mock(TopicSink.class);
         publisher.active(List.of(topicSink));
-        publisher.send(UUID.randomUUID(), CommonTestData.getParticipantId(), getParticipantType());
+        publisher.send(UUID.randomUUID(), CommonTestData.getParticipantId());
         verify(topicSink).send(anyString());
-    }
-
-    private ToscaConceptIdentifier getParticipantType() {
-        return new ToscaConceptIdentifier("org.onap.policy.acm.PolicyAutomationCompositionParticipant", "2.3.1");
     }
 
     @Test

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2022 Nordix Foundation.
+ * Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,6 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementAck
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.clamp.models.acm.utils.CommonTestData;
 import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class AutomationCompositionAckTest {
 
@@ -50,8 +49,6 @@ class AutomationCompositionAckTest {
         // verify with all values
         orig.setAutomationCompositionId(UUID.randomUUID());
         orig.setParticipantId(CommonTestData.getParticipantId());
-        var id = new ToscaConceptIdentifier("id", "1.2.3");
-        orig.setParticipantType(id);
         var acElementResult = new AutomationCompositionElementAck(AutomationCompositionState.UNINITIALISED,
             true, "AutomationCompositionElement result");
         final var automationCompositionResultMap = Map.of(UUID.randomUUID(), acElementResult);

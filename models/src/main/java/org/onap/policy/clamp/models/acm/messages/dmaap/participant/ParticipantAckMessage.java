@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2022 Nordix Foundation.
+ * Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
  * Class to represent participant Ack message.
@@ -46,11 +45,6 @@ public class ParticipantAckMessage {
     private String message;
 
     private ParticipantMessageType messageType;
-
-    /**
-     * Participant Type, or {@code null} for messages from participants.
-     */
-    private ToscaConceptIdentifier participantType;
 
     /**
      * Participant ID, or {@code null} for messages from participants.
@@ -81,7 +75,6 @@ public class ParticipantAckMessage {
         this.result = source.result;
         this.message = source.message;
         this.messageType = source.messageType;
-        this.participantType = source.participantType;
         this.participantId = source.participantId;
         this.state = source.state;
     }
@@ -89,22 +82,11 @@ public class ParticipantAckMessage {
     /**
      * Determines if this message applies to this participant type.
      *
-     * @param participantType type of the participant to match against
      * @param participantId id of the participant to match against
      * @return {@code true} if this message applies to this participant, {@code false} otherwise
      */
-    public boolean appliesTo(@NonNull final ToscaConceptIdentifier participantType,
-            @NonNull final UUID participantId) {
+    public boolean appliesTo(@NonNull final UUID participantId) {
         // Broadcast message to all participants
-        if (this.participantType == null) {
-            return true;
-        }
-
-        if (!participantType.equals(this.participantType)) {
-            return false;
-        }
-
-        // Broadcast message to all automation composition elements on this participant
         if (this.participantId == null) {
             return true;
         }

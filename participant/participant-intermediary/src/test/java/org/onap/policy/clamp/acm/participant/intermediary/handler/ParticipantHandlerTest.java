@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,6 @@ import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMe
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUpdate;
 import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class ParticipantHandlerTest {
 
@@ -61,12 +60,10 @@ class ParticipantHandlerTest {
 
         var participantHandler = commonTestData.getMockParticipantHandler();
 
-        var participantType = new ToscaConceptIdentifier(ID_NAME, ID_VERSION);
         var participantId = CommonTestData.getParticipantId();
         participantUpdateMsg.setAutomationCompositionId(CommonTestData.AC_ID_1);
         participantUpdateMsg.setCompositionId(CommonTestData.AC_ID_1);
         participantUpdateMsg.setParticipantId(participantId);
-        participantUpdateMsg.setParticipantType(participantType);
         participantUpdateMsg.setMessageId(UUID.randomUUID());
         participantUpdateMsg.setTimestamp(Instant.ofEpochMilli(3000));
 
@@ -90,7 +87,6 @@ class ParticipantHandlerTest {
     private ParticipantUpdate setListParticipantDefinition(ParticipantUpdate participantUpdateMsg) {
         var def = new ParticipantDefinition();
         def.setParticipantId(CommonTestData.getParticipantId());
-        def.setParticipantType(new ToscaConceptIdentifier(ID_NAME, ID_VERSION));
         participantUpdateMsg.setParticipantDefinitionUpdates(List.of(def));
         return participantUpdateMsg;
     }
@@ -106,8 +102,8 @@ class ParticipantHandlerTest {
                 new ParticipantMessage(ParticipantMessageType.PARTICIPANT_STATUS);
         assertTrue(participantHandler.appliesTo(participantMsg));
 
-        var emptyid = new ToscaConceptIdentifier("", ID_VERSION);
-        participantMsg.setParticipantType(emptyid);
+        var randomId = UUID.randomUUID();
+        participantMsg.setParticipantId(randomId);
         assertFalse(participantHandler.appliesTo(participantMsg));
 
     }

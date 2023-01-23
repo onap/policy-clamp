@@ -33,7 +33,6 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
  * Test the {@link JpaParticipant} class.
@@ -159,7 +158,6 @@ class JpaParticipantTest {
     private Participant createParticipantInstance() {
         var testParticipant = new Participant();
         testParticipant.setParticipantId(UUID.randomUUID());
-        testParticipant.setParticipantType(new ToscaConceptIdentifier("participantTypeName", "0.0.1"));
         testParticipant.setParticipantSupportedElementTypes(new LinkedHashMap<>());
 
         return testParticipant;

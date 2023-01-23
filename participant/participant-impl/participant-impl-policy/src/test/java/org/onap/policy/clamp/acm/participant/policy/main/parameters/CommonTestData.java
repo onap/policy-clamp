@@ -29,7 +29,6 @@ import org.onap.policy.common.endpoints.parameters.TopicParameters;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
  * Class to hold/create all parameters for test cases.
@@ -123,7 +122,6 @@ public class CommonTestData {
             map.put("reportingTimeIntervalMs", TIME_INTERVAL);
             map.put("description", DESCRIPTION);
             map.put("participantId", getParticipantId());
-            map.put("participantType", getParticipantType());
             map.put("clampAutomationCompositionTopics", getTopicParametersMap(false));
             map.put("participantSupportedElementTypes", new ArrayList<>());
         }
@@ -158,16 +156,6 @@ public class CommonTestData {
         topicParams.setServers(List.of("localhost"));
         return topicParams;
     }
-
-    /**
-     * Returns participantType for test cases.
-     *
-     * @return participant Type
-     */
-    public static ToscaConceptIdentifier getParticipantType() {
-        return new ToscaConceptIdentifier("org.onap.PM_Policy", "0.0.0");
-    }
-
 
     /**
      * Returns participantId for test cases.

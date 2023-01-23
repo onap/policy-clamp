@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2022 Nordix Foundation.
+ * Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -79,13 +79,6 @@ public class JpaAutomationCompositionElement extends Validated
     @AttributeOverride(name = "version", column = @Column(name = "definition_version"))
     private PfConceptKey definition;
 
-    @VerifyKey
-    @NotNull
-    @AttributeOverride(name = "name",    column = @Column(name = "participant_type_name"))
-    @AttributeOverride(name = "version", column = @Column(name = "participant_type_version"))
-    private PfConceptKey participantType;
-
-    @Column
     @NotNull
     private String participantId;
 
@@ -120,7 +113,7 @@ public class JpaAutomationCompositionElement extends Validated
      * @param instanceId The id of the automation composition instance
      */
     public JpaAutomationCompositionElement(@NonNull final String elementId, @NonNull final String instanceId) {
-        this(elementId, instanceId, new PfConceptKey(), new PfConceptKey(), AutomationCompositionState.UNINITIALISED);
+        this(elementId, instanceId, new PfConceptKey(), AutomationCompositionState.UNINITIALISED);
     }
 
     /**
@@ -129,16 +122,14 @@ public class JpaAutomationCompositionElement extends Validated
      * @param elementId The id of the automation composition instance Element
      * @param instanceId The id of the automation composition instance
      * @param definition the TOSCA definition of the automation composition element
-     * @param participantType the TOSCA definition of the participant running the automation composition element
      * @param state the state of the automation composition
      */
     public JpaAutomationCompositionElement(@NonNull final String elementId, @NonNull final String instanceId,
-            @NonNull final PfConceptKey definition, @NonNull final PfConceptKey participantType,
+            @NonNull final PfConceptKey definition,
             @NonNull final AutomationCompositionState state) {
         this.elementId = elementId;
         this.instanceId = instanceId;
         this.definition = definition;
-        this.participantType = participantType;
         this.state = state;
     }
 
@@ -151,7 +142,6 @@ public class JpaAutomationCompositionElement extends Validated
         this.elementId = copyConcept.elementId;
         this.instanceId = copyConcept.instanceId;
         this.definition = new PfConceptKey(copyConcept.definition);
-        this.participantType = new PfConceptKey(copyConcept.participantType);
         this.participantId = copyConcept.participantId;
         this.state = copyConcept.state;
         this.orderedState = copyConcept.orderedState;
@@ -174,7 +164,6 @@ public class JpaAutomationCompositionElement extends Validated
 
         element.setId(UUID.fromString(elementId));
         element.setDefinition(new ToscaConceptIdentifier(definition));
-        element.setParticipantType(new ToscaConceptIdentifier(participantType));
         element.setParticipantId(UUID.fromString(participantId));
         element.setState(state);
         element.setOrderedState(orderedState != null ? orderedState : state.asOrderedState());
@@ -187,7 +176,6 @@ public class JpaAutomationCompositionElement extends Validated
     @Override
     public void fromAuthorative(@NonNull final AutomationCompositionElement element) {
         this.definition = element.getDefinition().asConceptKey();
-        this.participantType = element.getParticipantType().asConceptKey();
         this.participantId = element.getParticipantId().toString();
         this.state = element.getState();
         this.orderedState = element.getOrderedState();
@@ -215,11 +203,6 @@ public class JpaAutomationCompositionElement extends Validated
         }
 
         result = definition.compareTo(other.definition);
-        if (result != 0) {
-            return result;
-        }
-
-        result = participantType.compareTo(other.participantType);
         if (result != 0) {
             return result;
         }

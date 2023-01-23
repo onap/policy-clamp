@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021,2022 Nordix Foundation.
+ * Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -34,7 +34,6 @@ import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUpdate;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -57,41 +56,38 @@ public class ParticipantUpdatePublisher extends AbstractParticipantPublisher<Par
      */
     @Timed(value = "publisher.participant_update", description = "PARTICIPANT_UPDATE messages published")
     public void sendComissioningBroadcast(AutomationCompositionDefinition acmDefinition) {
-        sendCommissioning(acmDefinition, null, null);
+        sendCommissioning(acmDefinition, null);
     }
 
     /**
      * Send ParticipantUpdate to Participant
-     * if participantType and participantId are null then message is broadcast.
+     * if participantId is null then message is broadcast.
      *
-     * @param participantType the ParticipantType
      * @param participantId the ParticipantId
      */
     @Timed(value = "publisher.participant_update", description = "PARTICIPANT_UPDATE messages published")
-    public void sendCommissioning(ToscaConceptIdentifier participantType, UUID participantId) {
+    public void sendCommissioning(UUID participantId) {
         var list = acDefinitionProvider.getAllAcDefinitions();
         if (list.isEmpty()) {
             LOGGER.warn("No tosca service template found, cannot send participantupdate");
         }
         for (var acmDefinition : list) {
-            sendCommissioning(acmDefinition, participantType, participantId);
+            sendCommissioning(acmDefinition, participantId);
         }
     }
 
     /**
      * Send ParticipantUpdate to Participant
-     * if participantType and participantId are null then message is broadcast.
+     * if participantId is null then message is broadcast.
      *
      * @param acmDefinition the AutomationComposition Definition
-     * @param participantType the ParticipantType
      * @param participantId the ParticipantId
      */
     @Timed(value = "publisher.participant_update", description = "PARTICIPANT_UPDATE messages published")
     public void sendCommissioning(AutomationCompositionDefinition acmDefinition,
-            ToscaConceptIdentifier participantType, UUID participantId) {
+            UUID participantId) {
         var message = new ParticipantUpdate();
         message.setCompositionId(acmDefinition.getCompositionId());
-        message.setParticipantType(participantType);
         message.setParticipantId(participantId);
         message.setTimestamp(Instant.now());
 
@@ -101,7 +97,7 @@ public class ParticipantUpdatePublisher extends AbstractParticipantPublisher<Par
             if (ParticipantUtils.checkIfNodeTemplateIsAutomationCompositionElement(toscaInputEntry.getValue(),
                     toscaServiceTemplate)) {
                 AcmUtils.prepareParticipantDefinitionUpdate(
-                        ParticipantUtils.findParticipantType(toscaInputEntry.getValue().getProperties()),
+                        participantId,
                         toscaInputEntry.getKey(), toscaInputEntry.getValue(), participantDefinitionUpdates);
             }
         }

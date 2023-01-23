@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2022 Nordix Foundation.
+ * Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,11 +61,7 @@ class ParticipantAckMessageTest {
     @Test
     void testAppliesTo_NullParticipantId() {
         message = makeMessage();
-
-        assertThatThrownBy(() -> message.appliesTo(null, null)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> message.appliesTo(PTYPE_456, null)).isInstanceOf(NullPointerException.class);
-        var participantId = CommonTestData.getParticipantId();
-        assertThatThrownBy(() -> message.appliesTo(null, participantId)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> message.appliesTo(null)).isInstanceOf(NullPointerException.class);
     }
 
     @Test
@@ -73,9 +69,8 @@ class ParticipantAckMessageTest {
         message = makeMessage();
 
         // ParticipantId matches
-        assertTrue(message.appliesTo(PTYPE_456, CommonTestData.getParticipantId()));
-        assertFalse(message.appliesTo(PTYPE_456, CommonTestData.getRndParticipantId()));
-        assertFalse(message.appliesTo(PTYPE_457, CommonTestData.getParticipantId()));
+        assertTrue(message.appliesTo(CommonTestData.getParticipantId()));
+        assertFalse(message.appliesTo(CommonTestData.getRndParticipantId()));
     }
 
     @Test
@@ -83,18 +78,13 @@ class ParticipantAckMessageTest {
         message = makeMessage();
 
         // ParticipantId does not match
-        ToscaConceptIdentifier id = new ToscaConceptIdentifier();
-        id.setName("id1111");
-        id.setVersion("3.2.1");
-        assertFalse(message.appliesTo(id, CommonTestData.getRndParticipantId()));
-        message.setParticipantType(null);
-        assertTrue(message.appliesTo(id, CommonTestData.getRndParticipantId()));
+        assertFalse(message.appliesTo(CommonTestData.getRndParticipantId()));
+        assertTrue(message.appliesTo(CommonTestData.getParticipantId()));
     }
 
     private ParticipantAckMessage makeMessage() {
         ParticipantAckMessage msg = new ParticipantAckMessage(ParticipantMessageType.PARTICIPANT_DEREGISTER_ACK);
 
-        msg.setParticipantType(PTYPE_456);
         msg.setParticipantId(CommonTestData.getParticipantId());
         msg.setMessage("Successfull Ack");
         msg.setResult(true);

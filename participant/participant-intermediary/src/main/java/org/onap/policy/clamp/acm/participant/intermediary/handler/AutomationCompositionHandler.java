@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -58,7 +58,6 @@ import org.springframework.stereotype.Component;
 public class AutomationCompositionHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(AutomationCompositionHandler.class);
 
-    private final ToscaConceptIdentifier participantType;
     private final UUID participantId;
     private final ParticipantMessagePublisher publisher;
 
@@ -78,7 +77,6 @@ public class AutomationCompositionHandler {
      * @param publisher the ParticipantMessage Publisher
      */
     public AutomationCompositionHandler(ParticipantParameters parameters, ParticipantMessagePublisher publisher) {
-        this.participantType = parameters.getIntermediaryParameters().getParticipantType();
         this.participantId = parameters.getIntermediaryParameters().getParticipantId();
         this.publisher = publisher;
     }
@@ -125,7 +123,6 @@ public class AutomationCompositionHandler {
             var automationCompositionStateChangeAck =
                     new AutomationCompositionAck(ParticipantMessageType.AUTOMATION_COMPOSITION_STATECHANGE_ACK);
             automationCompositionStateChangeAck.setParticipantId(participantId);
-            automationCompositionStateChangeAck.setParticipantType(participantType);
             automationCompositionStateChangeAck.setAutomationCompositionId(automationCompositionId);
             acElement.setOrderedState(orderedState);
             acElement.setState(newState);
@@ -160,7 +157,6 @@ public class AutomationCompositionHandler {
             var automationCompositionAck =
                     new AutomationCompositionAck(ParticipantMessageType.AUTOMATION_COMPOSITION_STATECHANGE_ACK);
             automationCompositionAck.setParticipantId(participantId);
-            automationCompositionAck.setParticipantType(participantType);
             automationCompositionAck.setMessage("Automation composition " + stateChangeMsg.getAutomationCompositionId()
                     + " does not use this participant " + participantId);
             automationCompositionAck.setResult(false);
@@ -212,7 +208,7 @@ public class AutomationCompositionHandler {
     public void handleAutomationCompositionUpdate(AutomationCompositionUpdate updateMsg,
             List<AutomationCompositionElementDefinition> acElementDefinitions) {
 
-        if (!updateMsg.appliesTo(participantType, participantId)) {
+        if (!updateMsg.appliesTo(participantId)) {
             return;
         }
 
@@ -234,7 +230,6 @@ public class AutomationCompositionHandler {
             var automationCompositionUpdateAck =
                     new AutomationCompositionAck(ParticipantMessageType.AUTOMATION_COMPOSITION_UPDATE_ACK);
             automationCompositionUpdateAck.setParticipantId(participantId);
-            automationCompositionUpdateAck.setParticipantType(participantType);
 
             automationCompositionUpdateAck.setMessage("Automation composition " + updateMsg.getAutomationCompositionId()
                     + " already defined on participant " + participantId);
@@ -267,7 +262,7 @@ public class AutomationCompositionHandler {
 
         var acElementList = updateMsg.getParticipantUpdatesList().stream()
                 .flatMap(participantUpdate -> participantUpdate.getAutomationCompositionElementList().stream())
-                .filter(element -> participantType.equals(element.getParticipantType())).collect(Collectors.toList());
+                .filter(element -> participantId.equals(element.getParticipantId())).collect(Collectors.toList());
 
         handleAutomationCompositionElementUpdate(acElementList, acElementDefinitions, updateMsg.getStartPhase(),
                 updateMsg.getAutomationCompositionId());
@@ -311,7 +306,7 @@ public class AutomationCompositionHandler {
             List<ParticipantUpdates> participantUpdates) {
         var acElementList = participantUpdates.stream()
                 .flatMap(participantUpdate -> participantUpdate.getAutomationCompositionElementList().stream())
-                .filter(element -> participantType.equals(element.getParticipantType())).collect(Collectors.toList());
+                .filter(element -> participantId.equals(element.getParticipantId())).collect(Collectors.toList());
 
         for (var element : acElementList) {
             elementsOnThisParticipant.put(element.getId(), element);
@@ -393,7 +388,6 @@ public class AutomationCompositionHandler {
             var automationCompositionAck =
                     new AutomationCompositionAck(ParticipantMessageType.AUTOMATION_COMPOSITION_STATECHANGE_ACK);
             automationCompositionAck.setParticipantId(participantId);
-            automationCompositionAck.setParticipantType(participantType);
             automationCompositionAck.setMessage("Automation composition is already in state " + orderedState);
             automationCompositionAck.setResult(false);
             automationCompositionAck.setAutomationCompositionId(automationComposition.getInstanceId());

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2022 Nordix Foundation.
+ * Copyright (C) 2021-2023 Nordix Foundation.
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -253,10 +253,10 @@ public class AutomationCompositionInstantiationProvider {
                 subResult.addResult(new ObjectValidationResult(AUTOMATION_COMPOSITION_NODE_ELEMENT_TYPE,
                         element.getDefinition().getName(), ValidationStatus.INVALID,
                         "Participant with ID " + element.getParticipantId() + " is not registered"));
-            } else if (!p.getParticipantType().equals(element.getParticipantType())) {
+            } else if (!p.getParticipantId().equals(element.getParticipantId())) {
                 subResult.addResult(new ObjectValidationResult(AUTOMATION_COMPOSITION_NODE_ELEMENT_TYPE,
                         element.getDefinition().getName(), ValidationStatus.INVALID,
-                        "Participant with ID " + element.getParticipantType() + " - " + element.getParticipantId()
+                        "Participant with ID " + " - " + element.getParticipantId()
                                 + " is not registered"));
             }
             result.addResult(subResult);

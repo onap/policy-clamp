@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,14 +21,10 @@
 package org.onap.policy.clamp.models.acm.concepts;
 
 import java.util.Map;
-import javax.ws.rs.core.Response;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
-import org.onap.policy.models.base.PfModelRuntimeException;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
@@ -38,24 +34,6 @@ public final class ParticipantUtils {
     private static final Coder CODER = new StandardCoder();
     private static final String AUTOMATION_COMPOSITION_ELEMENT =
         "org.onap.policy.clamp.acm.AutomationCompositionElement";
-
-    /**
-     * Finds participantType from a map of properties.
-     *
-     * @param properties Map of properties
-     * @return participantType
-     */
-    public static ToscaConceptIdentifier findParticipantType(Map<String, Object> properties) {
-        var objParticipantType = properties.get("participantType");
-        if (objParticipantType != null) {
-            try {
-                return CODER.decode(objParticipantType.toString(), ToscaConceptIdentifier.class);
-            } catch (CoderException e) {
-                throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, e.getMessage(), e);
-            }
-        }
-        return null;
-    }
 
     /**
      * Get the First StartPhase.
@@ -91,9 +69,9 @@ public final class ParticipantUtils {
      * @return startPhase
      */
     public static int findStartPhase(Map<String, Object> properties) {
-        var objParticipantType = properties.get("startPhase");
-        if (objParticipantType != null) {
-            return Integer.valueOf(objParticipantType.toString());
+        var objStartPhase = properties.get("startPhase");
+        if (objStartPhase != null) {
+            return Integer.valueOf(objStartPhase.toString());
         }
         return 0;
     }

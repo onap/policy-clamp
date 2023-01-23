@@ -65,7 +65,7 @@ public class SupervisionParticipantHandler {
         saveParticipantStatus(participantRegisterMsg);
 
         participantRegisterAckPublisher.send(participantRegisterMsg.getMessageId(),
-            participantRegisterMsg.getParticipantId(), participantRegisterMsg.getParticipantType());
+            participantRegisterMsg.getParticipantId());
     }
 
     /**
@@ -107,7 +107,6 @@ public class SupervisionParticipantHandler {
             ParticipantRegister registerMessage = (ParticipantRegister) participantMessage;
             var participant = new Participant();
             participant.setParticipantId(participantMessage.getParticipantId());
-            participant.setParticipantType(registerMessage.getParticipantType());
             participant.setParticipantSupportedElementTypes(listToMap(registerMessage
                 .getParticipantSupportedElementType()));
             participant.setParticipantState(ParticipantState.ON_LINE);

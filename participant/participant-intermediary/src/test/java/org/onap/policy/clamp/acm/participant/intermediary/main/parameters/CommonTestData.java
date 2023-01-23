@@ -113,7 +113,6 @@ public class CommonTestData {
         map.put("name", name);
         map.put("participantId", getParticipantId());
         map.put("description", DESCRIPTION);
-        map.put("participantType", getDefinition());
         map.put("reportingTimeIntervalMs", TIME_INTERVAL);
         map.put("clampAutomationCompositionTopics", getTopicParametersMap(false));
         map.put("participantSupportedElementTypes", new ArrayList<>());

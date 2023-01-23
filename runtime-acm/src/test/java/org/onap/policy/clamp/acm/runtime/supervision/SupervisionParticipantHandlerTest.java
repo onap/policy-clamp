@@ -40,12 +40,11 @@ import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class SupervisionParticipantHandlerTest {
-    private static final ToscaConceptIdentifier PARTICIPANT_TYPE =
-        new ToscaConceptIdentifier("ParticipantType", "1.0.0");
+    private static final ToscaConceptIdentifier PARTICIPANT_ID = new ToscaConceptIdentifier("ParticipantId", "1.0.0");
 
     @Test
     void testHandleParticipantDeregister() {
-        var participant = CommonTestData.createParticipant(PARTICIPANT_TYPE, CommonTestData.getParticipantId());
+        var participant = CommonTestData.createParticipant(CommonTestData.getParticipantId());
 
         var participantProvider = mock(ParticipantProvider.class);
         when(participantProvider.findParticipant(CommonTestData.getParticipantId()))
@@ -54,7 +53,6 @@ class SupervisionParticipantHandlerTest {
         var participantDeregisterMessage = new ParticipantDeregister();
         participantDeregisterMessage.setMessageId(UUID.randomUUID());
         participantDeregisterMessage.setParticipantId(CommonTestData.getParticipantId());
-        participantDeregisterMessage.setParticipantType(PARTICIPANT_TYPE);
         var participantDeregisterAckPublisher = mock(ParticipantDeregisterAckPublisher.class);
         var handler = new SupervisionParticipantHandler(participantProvider,
             mock(ParticipantRegisterAckPublisher.class), participantDeregisterAckPublisher);
@@ -70,7 +68,6 @@ class SupervisionParticipantHandlerTest {
         var participantRegisterMessage = new ParticipantRegister();
         participantRegisterMessage.setMessageId(UUID.randomUUID());
         participantRegisterMessage.setParticipantId(CommonTestData.getParticipantId());
-        participantRegisterMessage.setParticipantType(PARTICIPANT_TYPE);
         var participantProvider = mock(ParticipantProvider.class);
         var participantRegisterAckPublisher = mock(ParticipantRegisterAckPublisher.class);
         var handler = new SupervisionParticipantHandler(participantProvider, participantRegisterAckPublisher,
@@ -81,21 +78,20 @@ class SupervisionParticipantHandlerTest {
 
         verify(participantProvider).saveParticipant(any());
         verify(participantRegisterAckPublisher).send(participantRegisterMessage.getMessageId(),
-                CommonTestData.getParticipantId(), PARTICIPANT_TYPE);
+                CommonTestData.getParticipantId());
     }
 
     @Test
     void testHandleParticipantStatus() {
         var participantStatusMessage = new ParticipantStatus();
         participantStatusMessage.setParticipantId(CommonTestData.getParticipantId());
-        participantStatusMessage.setParticipantType(PARTICIPANT_TYPE);
         participantStatusMessage.setState(ParticipantState.ON_LINE);
         participantStatusMessage.setParticipantSupportedElementType(new ArrayList<>());
 
         var participantProvider = mock(ParticipantProvider.class);
         var handler = new SupervisionParticipantHandler(participantProvider,
             mock(ParticipantRegisterAckPublisher.class), mock(ParticipantDeregisterAckPublisher.class));
-        var participant = CommonTestData.createParticipant(PARTICIPANT_TYPE, CommonTestData.getParticipantId());
+        var participant = CommonTestData.createParticipant(CommonTestData.getParticipantId());
         when(participantProvider.findParticipant(CommonTestData.getParticipantId()))
                 .thenReturn(Optional.of(participant));
         handler.handleParticipantMessage(participantStatusMessage);
