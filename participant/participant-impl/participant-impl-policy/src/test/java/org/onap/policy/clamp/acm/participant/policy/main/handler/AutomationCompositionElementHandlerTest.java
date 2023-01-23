@@ -33,6 +33,7 @@ import org.mockito.Mockito;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.acm.participant.policy.client.PolicyApiHttpClient;
 import org.onap.policy.clamp.acm.participant.policy.client.PolicyPapHttpClient;
+import org.onap.policy.clamp.acm.participant.policy.main.parameters.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
@@ -49,7 +50,7 @@ class AutomationCompositionElementHandlerTest {
     private static final String ID_VERSION = "1.0.1";
     private static final UUID automationCompositionElementId = UUID.randomUUID();
     public static final UUID AC_ID = UUID.randomUUID();
-    private static final ToscaConceptIdentifier PARTICIPANT_ID = new ToscaConceptIdentifier(ID_NAME, ID_VERSION);
+    private static final ToscaConceptIdentifier DEFINITION = new ToscaConceptIdentifier(ID_NAME, ID_VERSION);
 
     private PolicyApiHttpClient api = Mockito.mock(PolicyApiHttpClient.class);
     private PolicyPapHttpClient pap = Mockito.mock(PolicyPapHttpClient.class);
@@ -77,11 +78,11 @@ class AutomationCompositionElementHandlerTest {
 
     private AutomationCompositionElement getTestingAcElement() {
         var element = new AutomationCompositionElement();
-        element.setDefinition(PARTICIPANT_ID);
+        element.setDefinition(DEFINITION);
         element.setDescription("Description");
         element.setId(automationCompositionElementId);
         element.setOrderedState(AutomationCompositionOrderedState.UNINITIALISED);
-        element.setParticipantId(PARTICIPANT_ID);
+        element.setParticipantId(CommonTestData.getParticipantId());
         element.setState(AutomationCompositionState.UNINITIALISED);
         var template = new ToscaServiceTemplate();
         template.setToscaTopologyTemplate(new ToscaTopologyTemplate());

@@ -27,7 +27,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -41,7 +40,6 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUpdates;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionStateChange;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionUpdate;
-import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -83,11 +81,12 @@ class AutomationCompositionHandlerTest {
     }
 
     @Test
-    void updateAutomationCompositionHandlerTest() throws CoderException {
+    void updateAutomationCompositionHandlerTest() {
         var uuid = UUID.randomUUID();
-        var id = CommonTestData.getParticipantId();
+        var partecipantId = CommonTestData.getParticipantId();
+        var definition = CommonTestData.getDefinition();
 
-        var ach = commonTestData.setTestAutomationCompositionHandler(id, uuid);
+        var ach = commonTestData.setTestAutomationCompositionHandler(definition, uuid, partecipantId);
         var key = ach.getElementsOnThisParticipant().keySet().iterator().next();
         var value = ach.getElementsOnThisParticipant().get(key);
         assertEquals(AutomationCompositionState.UNINITIALISED, value.getState());
@@ -108,26 +107,27 @@ class AutomationCompositionHandlerTest {
     }
 
     @Test
-    void handleAutomationCompositionUpdateExceptionTest() throws CoderException {
+    void handleAutomationCompositionUpdateExceptionTest() {
         var uuid = UUID.randomUUID();
-        var id = CommonTestData.getParticipantId();
-        var stateChange = getStateChange(id, uuid, AutomationCompositionOrderedState.RUNNING);
-        var ach = commonTestData.setTestAutomationCompositionHandler(id, uuid);
+        var partecipantId = CommonTestData.getParticipantId();
+        var definition = CommonTestData.getDefinition();
+        var stateChange = commonTestData.getStateChange(partecipantId, uuid, AutomationCompositionOrderedState.RUNNING);
+        var ach = commonTestData.setTestAutomationCompositionHandler(definition, uuid, partecipantId);
         assertDoesNotThrow(() -> ach
                 .handleAutomationCompositionStateChange(mock(AutomationCompositionStateChange.class), List.of()));
 
         ach.handleAutomationCompositionStateChange(stateChange, List.of());
-        var newid = new ToscaConceptIdentifier("id", "1.2.3");
+        var newPartecipantId = CommonTestData.getRndParticipantId();
         stateChange.setAutomationCompositionId(UUID.randomUUID());
-        stateChange.setParticipantId(newid);
+        stateChange.setParticipantId(newPartecipantId);
         assertDoesNotThrow(() -> ach.handleAutomationCompositionStateChange(stateChange, List.of()));
 
         var acd = new AutomationCompositionElementDefinition();
-        acd.setAcElementDefinitionId(id);
+        acd.setAcElementDefinitionId(definition);
         var updateMsg = new AutomationCompositionUpdate();
         updateMsg.setAutomationCompositionId(UUID.randomUUID());
         updateMsg.setMessageId(uuid);
-        updateMsg.setParticipantId(id);
+        updateMsg.setParticipantId(partecipantId);
         updateMsg.setStartPhase(0);
         var acElementDefinitions = List.of(acd);
         assertDoesNotThrow(() -> ach.handleAutomationCompositionUpdate(updateMsg, acElementDefinitions));
@@ -144,60 +144,50 @@ class AutomationCompositionHandlerTest {
 
         updateMsg.setStartPhase(1);
         var participantUpdate = new ParticipantUpdates();
-        participantUpdate.setParticipantId(id);
+        participantUpdate.setParticipantId(partecipantId);
         var element = new AutomationCompositionElement();
-        element.setParticipantType(id);
-        element.setDefinition(id);
+        element.setParticipantType(definition);
+        element.setDefinition(definition);
         participantUpdate.setAutomationCompositionElementList(List.of(element));
         updateMsg.setParticipantUpdatesList(List.of(participantUpdate));
 
         var acd2 = new AutomationCompositionElementDefinition();
-        acd2.setAcElementDefinitionId(id);
+        acd2.setAcElementDefinitionId(definition);
         acd2.setAutomationCompositionElementToscaNodeTemplate(mock(ToscaNodeTemplate.class));
         assertDoesNotThrow(() -> ach.handleAutomationCompositionUpdate(updateMsg, List.of(acd2)));
 
     }
 
     @Test
-    void automationCompositionStateChangeUninitialisedTest() throws CoderException {
+    void automationCompositionStateChangeUninitialisedTest() {
         var uuid = UUID.randomUUID();
-        var id = CommonTestData.getParticipantId();
+        var partecipantId = CommonTestData.getParticipantId();
+        var definition = CommonTestData.getDefinition();
 
-        var stateChangeUninitialised = getStateChange(id, uuid, AutomationCompositionOrderedState.UNINITIALISED);
+        var stateChangeUninitialised =
+                commonTestData.getStateChange(partecipantId, uuid, AutomationCompositionOrderedState.UNINITIALISED);
 
-        var ach = commonTestData.setTestAutomationCompositionHandler(id, uuid);
+        var ach = commonTestData.setTestAutomationCompositionHandler(definition, uuid, partecipantId);
         ach.handleAutomationCompositionStateChange(stateChangeUninitialised, List.of());
-        var newid = new ToscaConceptIdentifier("id", "1.2.3");
         stateChangeUninitialised.setAutomationCompositionId(UUID.randomUUID());
-        stateChangeUninitialised.setParticipantId(newid);
+        stateChangeUninitialised.setParticipantId(CommonTestData.getRndParticipantId());
         assertDoesNotThrow(() -> ach.handleAutomationCompositionStateChange(stateChangeUninitialised, List.of()));
     }
 
     @Test
-    void automationCompositionStateChangePassiveTest() throws CoderException {
+    void automationCompositionStateChangePassiveTest() {
         var uuid = UUID.randomUUID();
-        var id = CommonTestData.getParticipantId();
+        var partecipantId = CommonTestData.getParticipantId();
+        var definition = CommonTestData.getDefinition();
 
-        var stateChangePassive = getStateChange(id, uuid, AutomationCompositionOrderedState.PASSIVE);
+        var stateChangePassive =
+                commonTestData.getStateChange(partecipantId, uuid, AutomationCompositionOrderedState.PASSIVE);
 
-        var ach = commonTestData.setTestAutomationCompositionHandler(id, uuid);
+        var ach = commonTestData.setTestAutomationCompositionHandler(definition, uuid, partecipantId);
         ach.handleAutomationCompositionStateChange(stateChangePassive, List.of());
-        var newid = new ToscaConceptIdentifier("id", "1.2.3");
         stateChangePassive.setAutomationCompositionId(UUID.randomUUID());
-        stateChangePassive.setParticipantId(newid);
+        stateChangePassive.setParticipantId(CommonTestData.getRndParticipantId());
         assertDoesNotThrow(() -> ach.handleAutomationCompositionStateChange(stateChangePassive, List.of()));
-    }
-
-    private AutomationCompositionStateChange getStateChange(ToscaConceptIdentifier id, UUID uuid,
-            AutomationCompositionOrderedState state) {
-        var stateChange = new AutomationCompositionStateChange();
-        stateChange.setAutomationCompositionId(UUID.randomUUID());
-        stateChange.setParticipantId(id);
-        stateChange.setMessageId(uuid);
-        stateChange.setOrderedState(state);
-        stateChange.setCurrentState(AutomationCompositionState.UNINITIALISED);
-        stateChange.setTimestamp(Instant.ofEpochMilli(3000));
-        return stateChange;
     }
 
 }

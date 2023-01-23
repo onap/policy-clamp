@@ -31,19 +31,18 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedSta
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
 import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class ParticipantIntermediaryApiImplTest {
 
     private final CommonTestData commonTestData = new CommonTestData();
-    private static final String ID_NAME = "org.onap.PM_CDS_Blueprint";
-    private static final String ID_VERSION = "1.0.1";
 
     @Test
     void mockParticipantIntermediaryApiImplTest() throws CoderException {
         var uuid = UUID.randomUUID();
-        var id = new ToscaConceptIdentifier(ID_NAME, ID_VERSION);
-        var automationComposiitonHandler = commonTestData.setTestAutomationCompositionHandler(id, uuid);
+        var definition = CommonTestData.getDefinition();
+        var participantId = CommonTestData.getParticipantId();
+        var automationComposiitonHandler =
+                commonTestData.setTestAutomationCompositionHandler(definition, uuid, participantId);
         var apiImpl = new ParticipantIntermediaryApiImpl(automationComposiitonHandler);
         var acElementListener = Mockito.mock(AutomationCompositionElementListener.class);
         apiImpl.registerAutomationCompositionElementListener(acElementListener);

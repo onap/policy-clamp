@@ -122,7 +122,7 @@ public class CommonTestData {
             map.put("reportingTimeIntervalMs", TIME_INTERVAL);
             map.put("description", DESCRIPTION);
             map.put("participantId", getParticipantId());
-            map.put("participantType", getParticipantId());
+            map.put("participantType", getParticipantType());
             map.put("clampAutomationCompositionTopics", getTopicParametersMap(false));
             map.put("participantSupportedElementTypes", new ArrayList<>());
         }
@@ -159,12 +159,21 @@ public class CommonTestData {
     }
 
     /**
+     * Returns participantType for test cases.
+     *
+     * @return participant Type
+     */
+    public static ToscaConceptIdentifier getParticipantType() {
+        return new ToscaConceptIdentifier("org.onap.PM_Policy", "0.0.0");
+    }
+
+
+    /**
      * Returns participantId for test cases.
      *
      * @return participant Id
      */
     public static ToscaConceptIdentifier getParticipantId() {
-        return new ToscaConceptIdentifier("org.onap.PM_Policy", "0.0.0");
+        return new ToscaConceptIdentifier("org.onap.PM_Policy", "1.0.0");
     }
-
 }

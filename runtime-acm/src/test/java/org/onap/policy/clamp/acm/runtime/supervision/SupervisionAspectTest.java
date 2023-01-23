@@ -26,16 +26,10 @@ import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 
 import org.junit.jupiter.api.Test;
+import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatus;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class SupervisionAspectTest {
-
-    private static final ToscaConceptIdentifier PARTICIPANT_ID =
-            new ToscaConceptIdentifier("org.onap.PM_Policy", "1.0.0");
-
-    private static final ToscaConceptIdentifier PARTICIPANT_TYPE =
-            new ToscaConceptIdentifier("org.onap.policy.clamp.acm.PolicyParticipant", "1.0.0");
 
     @Test
     void testSchedule() throws Exception {
@@ -59,12 +53,12 @@ class SupervisionAspectTest {
     @Test
     void testHandleParticipantStatus() throws Exception {
         var participantStatusMessage = new ParticipantStatus();
-        participantStatusMessage.setParticipantId(PARTICIPANT_ID);
+        participantStatusMessage.setParticipantId(CommonTestData.getParticipantId());
 
         var supervisionScanner = mock(SupervisionScanner.class);
         try (var supervisionAspect = new SupervisionAspect(supervisionScanner)) {
             supervisionAspect.handleParticipantStatus(participantStatusMessage);
-            verify(supervisionScanner, timeout(500)).handleParticipantStatus(PARTICIPANT_ID);
+            verify(supervisionScanner, timeout(500)).handleParticipantStatus(CommonTestData.getParticipantId());
         }
     }
 }

@@ -25,10 +25,10 @@ import static org.junit.Assert.assertTrue;
 import java.io.FileNotFoundException;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Set;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.onap.policy.clamp.acm.participant.policy.main.parameters.CommonTestData;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUpdate;
 import org.onap.policy.common.utils.coder.YamlJsonTranslator;
 import org.onap.policy.common.utils.resources.ResourceUtils;
@@ -49,10 +49,10 @@ public final class TestListenerUtils {
      * @return ParticipantUpdate message
      */
     public static ParticipantUpdate createParticipantUpdateMsg() {
-        final ParticipantUpdate participantUpdateMsg = new ParticipantUpdate();
-        ToscaConceptIdentifier participantId = new ToscaConceptIdentifier("org.onap.PM_Policy", "1.0.0");
-        ToscaConceptIdentifier participantType =
-            new ToscaConceptIdentifier("org.onap.policy.acm.PolicyAutomationCompositionParticipant", "2.3.1");
+        final var participantUpdateMsg = new ParticipantUpdate();
+        var participantId = CommonTestData.getParticipantId();
+        var participantType =
+                new ToscaConceptIdentifier("org.onap.policy.acm.PolicyAutomationCompositionParticipant", "2.3.1");
 
         participantUpdateMsg.setParticipantId(participantId);
         participantUpdateMsg.setTimestamp(Instant.now());
@@ -60,7 +60,7 @@ public final class TestListenerUtils {
         participantUpdateMsg.setTimestamp(Instant.ofEpochMilli(3000));
         participantUpdateMsg.setMessageId(UUID.randomUUID());
 
-        ToscaServiceTemplate toscaServiceTemplate = testAutomationCompositionRead();
+        var toscaServiceTemplate = testAutomationCompositionRead();
         // Add policies to the toscaServiceTemplate
         TestListenerUtils.addPoliciesToToscaServiceTemplate(toscaServiceTemplate);
 
@@ -69,8 +69,7 @@ public final class TestListenerUtils {
     }
 
     private static ToscaServiceTemplate testAutomationCompositionRead() {
-        Set<String> automationCompositionDirectoryContents =
-            ResourceUtils.getDirectoryContents("clamp/acm/test");
+        var automationCompositionDirectoryContents = ResourceUtils.getDirectoryContents("clamp/acm/test");
 
         boolean atLeastOneAutomationCompositionTested = false;
         ToscaServiceTemplate toscaServiceTemplate = null;
@@ -91,13 +90,13 @@ public final class TestListenerUtils {
     }
 
     private static void addPolicyTypesToToscaServiceTemplate(ToscaServiceTemplate toscaServiceTemplate) {
-        Set<String> policyTypeDirectoryContents = ResourceUtils.getDirectoryContents("policytypes");
+        var policyTypeDirectoryContents = ResourceUtils.getDirectoryContents("policytypes");
 
         for (String policyTypeFilePath : policyTypeDirectoryContents) {
             String policyTypeString = ResourceUtils.getResourceAsString(policyTypeFilePath);
 
-            ToscaServiceTemplate foundPolicyTypeSt =
-                yamlTranslator.fromYaml(policyTypeString, ToscaServiceTemplate.class);
+            var foundPolicyTypeSt =
+                    yamlTranslator.fromYaml(policyTypeString, ToscaServiceTemplate.class);
 
             toscaServiceTemplate.setDerivedFrom(foundPolicyTypeSt.getDerivedFrom());
             toscaServiceTemplate.setDescription(foundPolicyTypeSt.getDescription());
@@ -138,8 +137,7 @@ public final class TestListenerUtils {
 
             var policiesString = ResourceUtils.getResourceAsString(policiesFilePath);
 
-            var foundPoliciesSt =
-                yamlTranslator.fromYaml(policiesString, ToscaServiceTemplate.class);
+            var foundPoliciesSt = yamlTranslator.fromYaml(policiesString, ToscaServiceTemplate.class);
             if (foundPoliciesSt.getToscaTopologyTemplate() != null
                     && foundPoliciesSt.getToscaTopologyTemplate().getPolicies() != null) {
                 toscaServiceTemplate.getToscaTopologyTemplate().getPolicies()
@@ -149,7 +147,7 @@ public final class TestListenerUtils {
     }
 
     private static ToscaServiceTemplate testAutomationCompositionYamlSerialization(
-        String automationCompositionFilePath) {
+            String automationCompositionFilePath) {
         try {
             String automationCompositionString = ResourceUtils.getResourceAsString(automationCompositionFilePath);
             if (automationCompositionString == null) {
