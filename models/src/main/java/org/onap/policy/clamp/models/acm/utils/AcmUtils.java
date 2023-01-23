@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
@@ -112,13 +113,14 @@ public final class AcmUtils {
     /**
      * Prepare ParticipantDefinitionUpdate to set in the message.
      *
-     * @param acParticipantType participant type
+     * @param acParticipantId participant id
      * @param entryKey key for the entry
      * @param entryValue value relates to toscaNodeTemplate
      * @param participantDefinitionUpdates list of participantDefinitionUpdates
      */
-    public static void prepareParticipantDefinitionUpdate(ToscaConceptIdentifier acParticipantType, String entryKey,
-            ToscaNodeTemplate entryValue, List<ParticipantDefinition> participantDefinitionUpdates) {
+    public static void prepareParticipantDefinitionUpdate(UUID acParticipantId, String entryKey,
+                                                          ToscaNodeTemplate entryValue,
+                                                          List<ParticipantDefinition> participantDefinitionUpdates) {
 
         var acDefinition = new AutomationCompositionElementDefinition();
         acDefinition.setAcElementDefinitionId(new ToscaConceptIdentifier(entryKey, entryValue.getVersion()));
@@ -127,28 +129,30 @@ public final class AcmUtils {
         List<AutomationCompositionElementDefinition> automationCompositionElementDefinitionList = new ArrayList<>();
 
         if (participantDefinitionUpdates.isEmpty()) {
-            participantDefinitionUpdates.add(getParticipantDefinition(acDefinition, acParticipantType,
+            participantDefinitionUpdates.add(getParticipantDefinition(acDefinition, acParticipantId,
                     automationCompositionElementDefinitionList));
         } else {
             var participantExists = false;
             for (ParticipantDefinition participantDefinitionUpdate : participantDefinitionUpdates) {
-                if (participantDefinitionUpdate.getParticipantType().equals(acParticipantType)) {
-                    participantDefinitionUpdate.getAutomationCompositionElementDefinitionList().add(acDefinition);
-                    participantExists = true;
+                if (acParticipantId != null || participantDefinitionUpdate.getParticipantId() != null) {
+                    if (participantDefinitionUpdate.getParticipantId().equals(acParticipantId)) {
+                        participantDefinitionUpdate.getAutomationCompositionElementDefinitionList().add(acDefinition);
+                        participantExists = true;
+                    }
                 }
             }
             if (!participantExists) {
-                participantDefinitionUpdates.add(getParticipantDefinition(acDefinition, acParticipantType,
+                participantDefinitionUpdates.add(getParticipantDefinition(acDefinition, acParticipantId,
                         automationCompositionElementDefinitionList));
             }
         }
     }
 
     private static ParticipantDefinition getParticipantDefinition(AutomationCompositionElementDefinition acDefinition,
-            ToscaConceptIdentifier acParticipantType,
+            UUID acParticipantId,
             List<AutomationCompositionElementDefinition> automationCompositionElementDefinitionList) {
         var participantDefinition = new ParticipantDefinition();
-        participantDefinition.setParticipantType(acParticipantType);
+        participantDefinition.setParticipantId(acParticipantId);
         automationCompositionElementDefinitionList.add(acDefinition);
         participantDefinition.setAutomationCompositionElementDefinitionList(automationCompositionElementDefinitionList);
         return participantDefinition;

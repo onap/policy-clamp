@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021 Nordix Foundation.
+ * Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.onap.policy.models.base.PfUtils;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
  * Class to represent a participant definition update instance.
@@ -41,7 +40,6 @@ public class ParticipantDefinition {
 
     private UUID participantId;
 
-    private ToscaConceptIdentifier participantType;
 
     // List of AutomationCompositionElementDefinition values for a particular participant
     private List<AutomationCompositionElementDefinition> automationCompositionElementDefinitionList = new ArrayList<>();
@@ -53,7 +51,6 @@ public class ParticipantDefinition {
      */
     public ParticipantDefinition(final ParticipantDefinition participantDefinition) {
         this.participantId = participantDefinition.participantId;
-        this.participantType = participantDefinition.participantType;
         this.automationCompositionElementDefinitionList =
             PfUtils.mapList(participantDefinition.automationCompositionElementDefinitionList,
                 AutomationCompositionElementDefinition::new);

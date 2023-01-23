@@ -57,7 +57,6 @@ class ParticipantStatusTest {
         var participantId = CommonTestData.getParticipantId();
         orig.setParticipantId(participantId);
         var type = new ToscaConceptIdentifier("type", "2.3.4");
-        orig.setParticipantType(type);
         orig.setMessageId(UUID.randomUUID());
         orig.setState(ParticipantState.ON_LINE);
         orig.setTimestamp(Instant.ofEpochMilli(3000));
@@ -67,7 +66,6 @@ class ParticipantStatusTest {
 
         var participantDefinitionUpdate = new ParticipantDefinition();
         participantDefinitionUpdate.setParticipantId(participantId);
-        participantDefinitionUpdate.setParticipantType(type);
         var acDefinition = getAcElementDefinition(new ToscaConceptIdentifier("id", "1.2.3"));
         participantDefinitionUpdate.setAutomationCompositionElementDefinitionList(List.of(acDefinition));
         orig.setParticipantDefinitionUpdates(List.of(participantDefinitionUpdate));

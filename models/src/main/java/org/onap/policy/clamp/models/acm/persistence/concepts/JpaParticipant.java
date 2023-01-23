@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
-import javax.persistence.AttributeOverride;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -46,9 +45,7 @@ import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.common.parameters.annotations.NotNull;
 import org.onap.policy.common.parameters.annotations.Valid;
 import org.onap.policy.models.base.PfAuthorative;
-import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.Validated;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
  * Class to represent a participant in the database.
@@ -67,11 +64,6 @@ public class JpaParticipant extends Validated
     @Id
     @NotNull
     private String participantId;
-
-    @NotNull
-    @AttributeOverride(name = "name", column = @Column(name = "participant_type_name"))
-    @AttributeOverride(name = "version", column = @Column(name = "participant_type_version"))
-    private PfConceptKey participantType;
 
     @Column
     @NotNull
@@ -114,7 +106,6 @@ public class JpaParticipant extends Validated
     public JpaParticipant(@NonNull final JpaParticipant copyConcept) {
         this.participantState = copyConcept.participantState;
         this.description = copyConcept.description;
-        this.participantType = copyConcept.participantType;
         this.participantId = copyConcept.participantId;
         this.supportedElements = copyConcept.supportedElements;
     }
@@ -133,7 +124,6 @@ public class JpaParticipant extends Validated
         var participant = new Participant();
 
         participant.setParticipantState(participantState);
-        participant.setParticipantType(new ToscaConceptIdentifier(participantType));
         participant.setParticipantId(UUID.fromString(participantId));
         participant.setParticipantSupportedElementTypes(new LinkedHashMap<>(this.supportedElements.size()));
         for (var element : this.supportedElements) {
@@ -147,7 +137,6 @@ public class JpaParticipant extends Validated
     @Override
     public void fromAuthorative(@NonNull final Participant participant) {
         this.setParticipantState(participant.getParticipantState());
-        this.participantType = participant.getParticipantType().asConceptKey();
         this.participantId = participant.getParticipantId().toString();
         this.supportedElements = new ArrayList<>(participant.getParticipantSupportedElementTypes().size());
 
@@ -174,11 +163,6 @@ public class JpaParticipant extends Validated
         }
 
         result = ObjectUtils.compare(participantState, other.participantState);
-        if (result != 0) {
-            return result;
-        }
-
-        result = ObjectUtils.compare(participantType, other.participantType);
         if (result != 0) {
             return result;
         }

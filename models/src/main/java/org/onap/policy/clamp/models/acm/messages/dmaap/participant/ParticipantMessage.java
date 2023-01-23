@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2022 Nordix Foundation.
+ * Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
  * Class to represent the base class for various messages that will be exchanged between the ACM runtime and
@@ -46,11 +45,6 @@ public class ParticipantMessage {
      * Time-stamp, in milliseconds, when the message was created. Defaults to the current time.
      */
     private Instant timestamp = Instant.now();
-
-    /**
-     * Participant Type, or {@code null} for messages from participants.
-     */
-    private ToscaConceptIdentifier participantType;
 
     /**
      * Participant ID, or {@code null} for messages from participants.
@@ -80,7 +74,6 @@ public class ParticipantMessage {
      */
     public ParticipantMessage(final ParticipantMessage source) {
         this.messageType = source.messageType;
-        this.participantType = source.participantType;
         this.participantId = source.participantId;
         this.automationCompositionId = source.automationCompositionId;
         this.compositionId = source.compositionId;
@@ -89,22 +82,11 @@ public class ParticipantMessage {
     /**
      * Determines if this message applies to this participant type.
      *
-     * @param participantType type of the participant to match against
      * @param participantId id of the participant to match against
      * @return {@code true} if this message applies to this participant, {@code false} otherwise
      */
-    public boolean appliesTo(@NonNull final ToscaConceptIdentifier participantType,
-            @NonNull final UUID participantId) {
+    public boolean appliesTo(@NonNull final UUID participantId) {
         // Broadcast message to all participants
-        if (this.participantType == null) {
-            return true;
-        }
-
-        if (!participantType.equals(this.participantType)) {
-            return false;
-        }
-
-        // Broadcast message to all automation composition elements on this participant
         if (this.participantId == null) {
             return true;
         }

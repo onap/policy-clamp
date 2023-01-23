@@ -26,7 +26,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
  * Class to represent details of a running participant instance.
@@ -43,9 +42,6 @@ public class Participant {
     private ParticipantState participantState = ParticipantState.ON_LINE;
 
     @NonNull
-    private ToscaConceptIdentifier participantType = new ToscaConceptIdentifier();
-
-    @NonNull
     private Map<UUID, ParticipantSupportedElementType> participantSupportedElementTypes;
 
     /**
@@ -55,7 +51,6 @@ public class Participant {
      */
     public Participant(Participant otherParticipant) {
         this.participantState = otherParticipant.participantState;
-        this.participantType = otherParticipant.participantType;
         this.participantId = otherParticipant.participantId;
     }
 }

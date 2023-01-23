@@ -65,10 +65,7 @@ class ParticipantMessageTest {
     void testAppliesTo_NullParticipantId() {
         message = makeMessage();
 
-        assertThatThrownBy(() -> message.appliesTo(null, null)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> message.appliesTo(PTYPE_456, null)).isInstanceOf(NullPointerException.class);
-        var participantId = CommonTestData.getParticipantId();
-        assertThatThrownBy(() -> message.appliesTo(null, participantId)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> message.appliesTo(null)).isInstanceOf(NullPointerException.class);
     }
 
     @Test
@@ -76,28 +73,20 @@ class ParticipantMessageTest {
         message = makeMessage();
 
         // ParticipantId matches
-        assertTrue(message.appliesTo(PTYPE_456, CommonTestData.getParticipantId()));
-        assertFalse(message.appliesTo(PTYPE_456, CommonTestData.getRndParticipantId()));
-        assertFalse(message.appliesTo(PTYPE_457, CommonTestData.getParticipantId()));
+        assertTrue(message.appliesTo(CommonTestData.getParticipantId()));
+        assertFalse(message.appliesTo(CommonTestData.getRndParticipantId()));
     }
 
     @Test
     void testAppliesTo_ParticipantIdNoMatch() {
         message = makeMessage();
-
-        // ParticipantId does not match
-        var id = new ToscaConceptIdentifier();
-        id.setName("id1111");
-        id.setVersion("3.2.1");
-        assertFalse(message.appliesTo(id, CommonTestData.getRndParticipantId()));
-        message.setParticipantType(null);
-        assertTrue(message.appliesTo(id, CommonTestData.getRndParticipantId()));
+        assertFalse(message.appliesTo(CommonTestData.getRndParticipantId()));
+        assertTrue(message.appliesTo(CommonTestData.getParticipantId()));
     }
 
     private ParticipantMessage makeMessage() {
         var msg = new ParticipantMessage(ParticipantMessageType.PARTICIPANT_STATE_CHANGE);
 
-        msg.setParticipantType(PTYPE_456);
         msg.setParticipantId(CommonTestData.getParticipantId());
         msg.setMessageId(UUID.randomUUID());
         msg.setTimestamp(Instant.ofEpochMilli(3000));

@@ -47,13 +47,6 @@ class ParticipantUtilsTest {
     private static final StandardYamlCoder YAML_TRANSLATOR = new StandardYamlCoder();
 
     @Test
-    void testFindParticipantType() throws CoderException {
-        var identifier = new ToscaConceptIdentifier("Identifier", "1.0.1");
-        var result = ParticipantUtils.findParticipantType(Map.of("participantType", CODER.encode(identifier)));
-        assertThat(result).isEqualTo(identifier);
-    }
-
-    @Test
     void testFindStartPhase() {
         var identifier = 13;
         var result = ParticipantUtils.findStartPhase(Map.of("startPhase", identifier));

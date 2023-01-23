@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -46,7 +46,6 @@ import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUp
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUpdateAck;
 import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -70,7 +69,6 @@ class ParticipantMessagesTest {
         final ParticipantRegister participantRegisterMsg = new ParticipantRegister();
         participantRegisterMsg.setParticipantId(CommonTestData.getParticipantId());
         participantRegisterMsg.setTimestamp(Instant.now());
-        participantRegisterMsg.setParticipantType(getParticipantType());
 
         synchronized (lockit) {
             ParticipantMessagePublisher participantMessagePublisher =
@@ -101,7 +99,6 @@ class ParticipantMessagesTest {
         final ParticipantDeregister participantDeregisterMsg = new ParticipantDeregister();
         participantDeregisterMsg.setParticipantId(CommonTestData.getParticipantId());
         participantDeregisterMsg.setTimestamp(Instant.now());
-        participantDeregisterMsg.setParticipantType(getParticipantType());
 
         synchronized (lockit) {
             ParticipantMessagePublisher participantMessagePublisher =
@@ -163,9 +160,5 @@ class ParticipantMessagesTest {
             publisher.active(Collections.singletonList(Mockito.mock(TopicSink.class)));
             assertThatCode(() -> publisher.sendHeartbeat(heartbeat)).doesNotThrowAnyException();
         }
-    }
-
-    private ToscaConceptIdentifier getParticipantType() {
-        return new ToscaConceptIdentifier("org.onap.policy.acm.PolicyAutomationCompositionParticipant", "2.3.1");
     }
 }

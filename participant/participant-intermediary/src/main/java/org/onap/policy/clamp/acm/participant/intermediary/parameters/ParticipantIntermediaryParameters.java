@@ -31,7 +31,6 @@ import lombok.Setter;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
 import org.onap.policy.common.endpoints.parameters.TopicParameterGroup;
 import org.onap.policy.common.parameters.validation.ParameterGroupConstraint;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
  * Class to hold all parameters needed for participant component.
@@ -47,11 +46,6 @@ public class ParticipantIntermediaryParameters {
 
     @NotBlank
     private String description;
-
-    // The participant type of this participant
-    @NotNull
-    @Valid
-    private ToscaConceptIdentifier participantType;
 
     // The time interval for periodic reporting of status to the CLAMP ACM server
     @Valid

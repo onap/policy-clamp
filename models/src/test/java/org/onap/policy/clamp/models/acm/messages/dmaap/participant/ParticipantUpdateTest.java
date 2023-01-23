@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2022 Nordix Foundation.
+ * Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,8 +49,6 @@ class ParticipantUpdateTest {
         // verify with all values
         orig.setAutomationCompositionId(UUID.randomUUID());
         orig.setParticipantId(CommonTestData.getParticipantId());
-        var type = new ToscaConceptIdentifier("id", "1.2.3");
-        orig.setParticipantType(type);
         orig.setMessageId(UUID.randomUUID());
         orig.setTimestamp(Instant.ofEpochMilli(3000));
 
@@ -67,7 +65,7 @@ class ParticipantUpdateTest {
         toscaNodeTemplate.setVersion("1.2.3");
 
         var participantDefinitionUpdate = new ParticipantDefinition();
-        participantDefinitionUpdate.setParticipantType(type);
+        var type = new ToscaConceptIdentifier("id", "1.2.3");
         var acDefinition = getAcElementDefinition(type);
         participantDefinitionUpdate.setAutomationCompositionElementDefinitionList(List.of(acDefinition));
         orig.setParticipantDefinitionUpdates(List.of(participantDefinitionUpdate));

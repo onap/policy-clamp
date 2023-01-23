@@ -119,7 +119,7 @@ class SupervisionScannerTest {
             .thenReturn(List.of(automationComposition));
 
         var participantProvider = mock(ParticipantProvider.class);
-        var participant = CommonTestData.createParticipant(PARTICIPANT_TYPE, CommonTestData.getParticipantId());
+        var participant = CommonTestData.createParticipant(CommonTestData.getParticipantId());
         when(participantProvider.getParticipants()).thenReturn(List.of(participant));
 
         var automationCompositionUpdatePublisher = mock(AutomationCompositionUpdatePublisher.class);
@@ -180,7 +180,7 @@ class SupervisionScannerTest {
         acRuntimeParameterGroup.getParticipantParameters().getUpdateParameters().setMaxWaitMs(-1);
         acRuntimeParameterGroup.getParticipantParameters().setMaxStatusWaitMs(-1);
 
-        var participant = CommonTestData.createParticipant(PARTICIPANT_TYPE, CommonTestData.getParticipantId());
+        var participant = CommonTestData.createParticipant(CommonTestData.getParticipantId());
         participant.setParticipantState(ParticipantState.OFF_LINE);
         var participantProvider = mock(ParticipantProvider.class);
         when(participantProvider.getParticipants()).thenReturn(List.of(participant));

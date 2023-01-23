@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,6 @@ import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
  * Class to hold/create all parameters for test cases.
@@ -75,30 +74,21 @@ public class CommonTestData {
      * @return a List of Participants
      */
     public static List<Participant> createParticipants() {
-        var participant1 = createParticipant(
-            new ToscaConceptIdentifier("org.onap.policy.clamp.acm.KubernetesParticipant", "2.3.4"),
-            UUID.fromString("101c62b3-8918-41b9-a747-d21eb79c6c02"));
-        var participant2 = createParticipant(
-            new ToscaConceptIdentifier("org.onap.policy.clamp.acm.HttpParticipant", "2.3.4"),
-            UUID.fromString("101c62b3-8918-41b9-a747-d21eb79c6c01"));
-        var participant3 = createParticipant(
-            new ToscaConceptIdentifier("org.onap.policy.clamp.acm.PolicyParticipant", "2.3.1"),
-            UUID.fromString("101c62b3-8918-41b9-a747-d21eb79c6c03"));
+        var participant1 = createParticipant(UUID.fromString("101c62b3-8918-41b9-a747-d21eb79c6c02"));
+        var participant2 = createParticipant(UUID.fromString("101c62b3-8918-41b9-a747-d21eb79c6c01"));
+        var participant3 = createParticipant(UUID.fromString("101c62b3-8918-41b9-a747-d21eb79c6c03"));
         return List.of(participant1, participant2, participant3);
     }
 
     /**
      * Create a new Participant.
      *
-     * @param participantType the participant Type
      * @param participantId the participant id
      * @return a new Participant
      */
-    public static Participant createParticipant(ToscaConceptIdentifier participantType,
-        UUID participantId) {
+    public static Participant createParticipant(UUID participantId) {
         var participant = new Participant();
         participant.setParticipantId(participantId);
-        participant.setParticipantType(participantType);
         return participant;
     }
 
