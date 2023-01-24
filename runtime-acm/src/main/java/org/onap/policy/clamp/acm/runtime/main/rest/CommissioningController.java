@@ -26,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.runtime.commissioning.CommissioningProvider;
 import org.onap.policy.clamp.acm.runtime.main.rest.gen.AutomationCompositionDefinitionApi;
 import org.onap.policy.clamp.acm.runtime.main.web.AbstractRestController;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.AcTypeStateUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.CommissioningResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
@@ -56,7 +57,7 @@ public class CommissioningController extends AbstractRestController implements A
             UUID requestId) {
         var compositionId = body.getMetadata() != null ? body.getMetadata().get("compositionId") : null;
         if (compositionId == null) {
-            var response = provider.createAutomationCompositionDefinitions(body);
+            var response = provider.createAutomationCompositionDefinition(body);
             return ResponseEntity.created(createUri("/compositions/" + response.getCompositionId())).body(response);
         } else {
             return ResponseEntity.ok()
@@ -91,8 +92,9 @@ public class CommissioningController extends AbstractRestController implements A
     }
 
     @Override
-    public ResponseEntity<ToscaServiceTemplate> getCompositionDefinition(UUID compositionId, UUID requestId) {
-        return ResponseEntity.ok().body(provider.getAutomationCompositionDefinitions(compositionId));
+    public ResponseEntity<AutomationCompositionDefinition> getCompositionDefinition(UUID compositionId,
+        UUID requestId) {
+        return ResponseEntity.ok().body(provider.getAutomationCompositionDefinition(compositionId));
     }
 
     @Override

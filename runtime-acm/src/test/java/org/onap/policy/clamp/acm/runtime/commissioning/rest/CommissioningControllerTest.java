@@ -39,6 +39,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
 import org.onap.policy.clamp.acm.runtime.util.rest.CommonRestController;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.CommissioningResponse;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaDataType;
@@ -159,8 +160,8 @@ class CommissioningControllerTest extends CommonRestController {
         invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT + "/" + compositionId);
         resp = invocationBuilder.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
-        var entity = resp.readEntity(ToscaServiceTemplate.class);
-        assertThat(entity.getDataTypes()).containsKey(toscaDataType.getName());
+        var entity = resp.readEntity(AutomationCompositionDefinition.class);
+        assertThat(entity.getServiceTemplate().getDataTypes()).containsKey(toscaDataType.getName());
     }
 
     @Test

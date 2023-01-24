@@ -88,7 +88,7 @@ class CommissioningProviderTest {
         var provider =
                 new CommissioningProvider(acDefinitionProvider, acProvider, supervisionHandler, participantProvider);
         var affectedDefinitions = provider
-                .createAutomationCompositionDefinitions(serviceTemplate).getAffectedAutomationCompositionDefinitions();
+                .createAutomationCompositionDefinition(serviceTemplate).getAffectedAutomationCompositionDefinitions();
         verify(acDefinitionProvider).createAutomationCompositionDefinition(serviceTemplate);
         verify(supervisionHandler).handleSendCommissionMessage(acmDefinition);
         // Response should return the number of node templates present in the service template

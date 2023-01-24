@@ -95,13 +95,15 @@ class SupervisionHandlerTest {
         automationComposition.setState(AutomationCompositionState.PASSIVE);
         automationComposition.setCompositionId(UUID.randomUUID());
 
-        var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         var acDefinitionProvider = Mockito.mock(AcDefinitionProvider.class);
-        when(acDefinitionProvider.getAcDefinition(automationComposition.getCompositionId())).thenReturn(
-                Objects.requireNonNull(InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML)));
+        var acDefinition = new AutomationCompositionDefinition();
+        acDefinition.setCompositionId(automationComposition.getCompositionId());
+        acDefinition.setServiceTemplate(InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML));
+        when(acDefinitionProvider.getAcDefinition(automationComposition.getCompositionId())).thenReturn(acDefinition);
 
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
 
+        var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         var handler = new SupervisionHandler(automationCompositionProvider, acDefinitionProvider,
                 mock(AutomationCompositionUpdatePublisher.class), automationCompositionStateChangePublisher,
                 mock(ParticipantUpdatePublisher.class));
@@ -302,8 +304,11 @@ class SupervisionHandlerTest {
         var acDefinitionProvider = Mockito.mock(AcDefinitionProvider.class);
         when(acDefinitionProvider.getServiceTemplateList(any(), any())).thenReturn(List
                 .of(Objects.requireNonNull(InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML))));
-        when(acDefinitionProvider.getAcDefinition(automationComposition.getCompositionId()))
-                .thenReturn(InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML));
+
+        var acDefinition = new AutomationCompositionDefinition();
+        acDefinition.setCompositionId(automationComposition.getCompositionId());
+        acDefinition.setServiceTemplate(InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML));
+        when(acDefinitionProvider.getAcDefinition(automationComposition.getCompositionId())).thenReturn(acDefinition);
 
         return new SupervisionHandler(automationCompositionProvider, acDefinitionProvider,
                 automationCompositionUpdatePublisher, automationCompositionStateChangePublisher,

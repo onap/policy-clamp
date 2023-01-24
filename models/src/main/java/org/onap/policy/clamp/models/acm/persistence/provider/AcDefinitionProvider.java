@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
+import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplate;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationCompositionDefinition;
@@ -55,6 +56,7 @@ public class AcDefinitionProvider {
         var acmDefinition = new AutomationCompositionDefinition();
         var compositionId = UUID.randomUUID();
         acmDefinition.setCompositionId(compositionId);
+        acmDefinition.setState(AcTypeState.COMMISSIONED);
         if (serviceTemplate.getMetadata() == null) {
             serviceTemplate.setMetadata(new HashMap<>());
         }
@@ -68,7 +70,7 @@ public class AcDefinitionProvider {
     }
 
     /**
-     * Update the ServiceTemplate.
+     * Update a commissioned ServiceTemplate.
      *
      * @param compositionId The UUID of the automation composition definition to delete
      * @param serviceTemplate the service template to be created
@@ -76,8 +78,18 @@ public class AcDefinitionProvider {
     public void updateServiceTemplate(UUID compositionId, ToscaServiceTemplate serviceTemplate) {
         var acmDefinition = new AutomationCompositionDefinition();
         acmDefinition.setCompositionId(compositionId);
+        acmDefinition.setState(AcTypeState.COMMISSIONED);
         acmDefinition.setServiceTemplate(serviceTemplate);
-        var jpaAcmDefinition = ProviderUtils.getJpaAndValidate(acmDefinition, JpaAutomationCompositionDefinition::new,
+        updateAcDefinition(acmDefinition);
+    }
+
+    /**
+     * Update the AutomationCompositionDefinition.
+     *
+     * @param acDefinition the AutomationCompositionDefinition to be updated
+     */
+    public void updateAcDefinition(AutomationCompositionDefinition acDefinition) {
+        var jpaAcmDefinition = ProviderUtils.getJpaAndValidate(acDefinition, JpaAutomationCompositionDefinition::new,
                 "AutomationCompositionDefinition");
         acmDefinitionRepository.save(jpaAcmDefinition);
     }
@@ -108,14 +120,14 @@ public class AcDefinitionProvider {
      * @return the automation composition definition
      */
     @Transactional(readOnly = true)
-    public ToscaServiceTemplate getAcDefinition(UUID compositionId) {
+    public AutomationCompositionDefinition getAcDefinition(UUID compositionId) {
         var jpaGet = acmDefinitionRepository.findById(compositionId.toString());
         if (jpaGet.isEmpty()) {
             String errorMessage =
                     "Get serviceTemplate \"" + compositionId + "\" failed, serviceTemplate does not exist";
             throw new PfModelRuntimeException(Response.Status.NOT_FOUND, errorMessage);
         }
-        return jpaGet.get().getServiceTemplate().toAuthorative();
+        return jpaGet.get().toAuthorative();
     }
 
     /**

@@ -305,7 +305,8 @@ public class SupervisionHandler {
     }
 
     private int getFirstStartPhase(AutomationComposition automationComposition) {
-        var toscaServiceTemplate = acDefinitionProvider.getAcDefinition(automationComposition.getCompositionId());
+        var toscaServiceTemplate =
+                acDefinitionProvider.getAcDefinition(automationComposition.getCompositionId()).getServiceTemplate();
         return ParticipantUtils.getFirstStartPhase(automationComposition, toscaServiceTemplate);
     }
 

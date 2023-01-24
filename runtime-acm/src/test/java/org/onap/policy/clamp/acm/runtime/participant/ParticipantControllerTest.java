@@ -61,7 +61,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles({ "test", "default" })
-public class ParticipantControllerTest extends CommonRestController {
+class ParticipantControllerTest extends CommonRestController {
     private static final String PARTICIPANTS_ENDPOINT = "participants";
 
     @LocalServerPort

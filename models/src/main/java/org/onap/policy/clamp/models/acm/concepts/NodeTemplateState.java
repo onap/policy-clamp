@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2023 Nordix Foundation.
+ *  Copyright (C) 2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,30 +24,31 @@ import java.util.UUID;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.onap.policy.common.parameters.annotations.NotNull;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 @NoArgsConstructor
 @Data
 @EqualsAndHashCode
-public class ParticipantSupportedElementType {
+public class NodeTemplateState {
 
-    @NotNull
-    private UUID id = UUID.randomUUID();
+    private UUID nodeTemplateStateId;
 
-    @NotNull
-    private String typeName;
+    // participantId assigned to this element
+    private UUID participantId;
 
-    @NotNull
-    private String typeVersion;
+    private ToscaConceptIdentifier nodeTemplateId;
+
+    private AcTypeState state;
 
     /**
      * Copy constructor, does a deep copy but as all fields here are immutable, it's just a regular copy.
      *
-     * @param otherParticipantSupportedElementType the other element to copy from
+     * @param copyConstructor the NodeTemplateState to copy from
      */
-    public ParticipantSupportedElementType(final ParticipantSupportedElementType otherParticipantSupportedElementType) {
-        this.id = otherParticipantSupportedElementType.getId();
-        this.typeName = otherParticipantSupportedElementType.getTypeName();
-        this.typeVersion = otherParticipantSupportedElementType.getTypeVersion();
+    public NodeTemplateState(NodeTemplateState copyConstructor) {
+        this.nodeTemplateStateId = copyConstructor.nodeTemplateStateId;
+        this.participantId = copyConstructor.participantId;
+        this.nodeTemplateId = new ToscaConceptIdentifier(copyConstructor.nodeTemplateId);
+        this.state = copyConstructor.state;
     }
 }

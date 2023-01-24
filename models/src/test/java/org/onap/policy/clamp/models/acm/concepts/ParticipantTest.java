@@ -26,6 +26,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.util.Map;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.utils.CommonTestData;
 
@@ -34,7 +36,7 @@ class ParticipantTest {
     @Test
     void testParticipantLombok() {
         assertNotNull(new Participant());
-        Participant p0 = new Participant();
+        var p0 = new Participant();
 
         assertThat(p0.toString()).contains("Participant(");
         assertThat(p0.hashCode()).isNotZero();
@@ -42,7 +44,7 @@ class ParticipantTest {
         assertNotEquals(null, p0);
 
 
-        Participant p1 = new Participant();
+        var p1 = new Participant();
 
         p1.setParticipantId(CommonTestData.getParticipantId());
         p1.setParticipantState(ParticipantState.ON_LINE);
@@ -54,12 +56,27 @@ class ParticipantTest {
 
         assertNotEquals(p1, p0);
 
-        Participant p2 = new Participant();
+        var p2 = new Participant();
 
         // @formatter:off
         assertThatThrownBy(() -> p2.setParticipantState(null)).isInstanceOf(NullPointerException.class);
         // @formatter:on
 
+        assertEquals(p2, p0);
+    }
+
+    @Test
+    void testCopyConstructor() {
+        var p0 = new Participant();
+        p0.setParticipantId(UUID.randomUUID());
+        p0.setParticipantState(ParticipantState.ON_LINE);
+        var supportedElementType = new ParticipantSupportedElementType();
+        supportedElementType.setId(UUID.randomUUID());
+        supportedElementType.setTypeName("type");
+        supportedElementType.setTypeVersion("1.0.0");
+        p0.setParticipantSupportedElementTypes(Map.of(supportedElementType.getId(), supportedElementType));
+
+        var p2 = new Participant(p0);
         assertEquals(p2, p0);
     }
 }

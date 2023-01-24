@@ -24,6 +24,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.runtime.main.rest.gen.AutomationCompositionDefinitionApi;
 import org.onap.policy.clamp.acm.runtime.main.web.AbstractRestController;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.AcTypeStateUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.CommissioningResponse;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
@@ -72,8 +73,9 @@ public class CommissioningControllerStub extends AbstractRestController implemen
     }
 
     @Override
-    public ResponseEntity<ToscaServiceTemplate> getCompositionDefinition(UUID compositionId, UUID xonaprequestid) {
-        return stubUtils.getResponse(pathToSingleDefinition, ToscaServiceTemplate.class);
+    public ResponseEntity<AutomationCompositionDefinition> getCompositionDefinition(UUID compositionId,
+            UUID xonaprequestid) {
+        return stubUtils.getResponse(pathToSingleDefinition, AutomationCompositionDefinition.class);
     }
 
     @Override

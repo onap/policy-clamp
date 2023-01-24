@@ -31,16 +31,15 @@ import org.junit.jupiter.api.Test;
 public class ParticipantsSupportedElementTypesTest {
 
     private static final String ID = "a95757ba-b34a-4049-a2a8-46773abcbe5e";
-    private static final String PARTICIPANT_ID = "a78757co-b34a-8949-a2a8-46773abcbe2a";
 
     @Test
     void testParticipant() {
 
-        ParticipantSupportedElementType p0 = new ParticipantSupportedElementType();
+        var p0 = new ParticipantSupportedElementType();
         p0.setId(UUID.fromString(ID));
         assertEquals(ID, p0.getId().toString());
 
-        ParticipantSupportedElementType p1 = new ParticipantSupportedElementType(p0);
+        var p1 = new ParticipantSupportedElementType(p0);
 
         assertThat(p0).usingRecursiveComparison().isEqualTo(p1);
     }
@@ -48,27 +47,27 @@ public class ParticipantsSupportedElementTypesTest {
     @Test
     void testParticipantLombok() {
         assertNotNull(new ParticipantSupportedElementType());
-        ParticipantSupportedElementType p0 = new ParticipantSupportedElementType();
+        var p0 = new ParticipantSupportedElementType();
 
-        assertThat(p0.toString()).contains("org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType");
+        assertThat(p0.toString()).contains("ParticipantSupportedElementType");
         assertThat(p0.hashCode()).isNotZero();
         assertThat(p0).usingRecursiveComparison().isEqualTo(new ParticipantSupportedElementType(p0));
         assertNotEquals(null, p0);
 
 
-        ParticipantSupportedElementType p1 = new ParticipantSupportedElementType();
+        var p1 = new ParticipantSupportedElementType();
 
         p1.setId(UUID.fromString(ID));
         p1.setTypeName("name");
         p1.setTypeVersion("1.0.0");
 
-        assertThat(p1.toString()).contains("org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType");
+        assertThat(p1.toString()).contains("ParticipantSupportedElementType");
         assertNotEquals(0, p1.hashCode());
         assertNotEquals(p1, p0);
         assertNotEquals(null, p1);
 
 
-        ParticipantSupportedElementType p2 = new ParticipantSupportedElementType();
+        var p2 = new ParticipantSupportedElementType();
         p2.setId(p0.getId());
 
         assertThat(p0).usingRecursiveComparison().isEqualTo(p2);

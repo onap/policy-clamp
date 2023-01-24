@@ -73,7 +73,8 @@ public class AutomationCompositionUpdatePublisher extends AbstractParticipantPub
         automationCompositionUpdateMsg.setAutomationCompositionId(automationComposition.getInstanceId());
         automationCompositionUpdateMsg.setMessageId(UUID.randomUUID());
         automationCompositionUpdateMsg.setTimestamp(Instant.now());
-        var toscaServiceTemplate = acDefinitionProvider.getAcDefinition(automationComposition.getCompositionId());
+        var toscaServiceTemplate =
+                acDefinitionProvider.getAcDefinition(automationComposition.getCompositionId()).getServiceTemplate();
 
         List<ParticipantUpdates> participantUpdates = new ArrayList<>();
         for (var element : automationComposition.getElements().values()) {

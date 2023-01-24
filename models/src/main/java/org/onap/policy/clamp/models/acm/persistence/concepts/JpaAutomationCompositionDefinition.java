@@ -20,17 +20,26 @@
 
 package org.onap.policy.clamp.models.acm.persistence.concepts;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
+import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.document.base.ToscaServiceTemplateValidation;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplate;
@@ -55,11 +64,21 @@ public class JpaAutomationCompositionDefinition extends Validated
     @NotNull
     private String compositionId;
 
+    @Column
     @NotNull
     private String name;
 
+    @Column
     @NotNull
     private String version;
+
+    @Column
+    @NotNull
+    private AcTypeState state;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "compositionId", foreignKey = @ForeignKey(name = "dt_element_fk"))
+    private Set<JpaNodeTemplateState> elements = new HashSet<>();
 
     @Lob
     @Convert(converter = StringToServiceTemplateConverter.class)
@@ -72,15 +91,26 @@ public class JpaAutomationCompositionDefinition extends Validated
         var acmDefinition = new AutomationCompositionDefinition();
         acmDefinition.setCompositionId(UUID.fromString(compositionId));
         acmDefinition.setServiceTemplate(serviceTemplate.toAuthorative());
+        for (var element : this.elements) {
+            var key = element.getNodeTemplateId().getName();
+            acmDefinition.getElementStateMap().put(key, element.toAuthorative());
+        }
         return acmDefinition;
     }
 
     @Override
     public void fromAuthorative(final AutomationCompositionDefinition copyConcept) {
-        compositionId = copyConcept.getCompositionId().toString();
-        serviceTemplate = new DocToscaServiceTemplate(copyConcept.getServiceTemplate());
-        setName(serviceTemplate.getName());
-        setVersion(serviceTemplate.getVersion());
+        this.compositionId = copyConcept.getCompositionId().toString();
+        this.state = copyConcept.getState();
+        this.serviceTemplate = new DocToscaServiceTemplate(copyConcept.getServiceTemplate());
+        setName(this.serviceTemplate.getName());
+        setVersion(this.serviceTemplate.getVersion());
+        elements = new HashSet<>(copyConcept.getElementStateMap().size());
+        for (var element : copyConcept.getElementStateMap().values()) {
+            var nodeTemplateStateId = element.getNodeTemplateStateId().toString();
+            var jpaNodeTemplateState = new JpaNodeTemplateState(nodeTemplateStateId, this.compositionId);
+            jpaNodeTemplateState.fromAuthorative(element);
+        }
     }
 
     public JpaAutomationCompositionDefinition(final AutomationCompositionDefinition acmDefinition) {
