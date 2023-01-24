@@ -20,12 +20,14 @@
 
 package org.onap.policy.clamp.models.acm.concepts;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
@@ -46,7 +48,7 @@ public class Participant {
     private ToscaConceptIdentifier participantType = new ToscaConceptIdentifier();
 
     @NonNull
-    private Map<UUID, ParticipantSupportedElementType> participantSupportedElementTypes;
+    private Map<UUID, ParticipantSupportedElementType> participantSupportedElementTypes = new HashMap<>();
 
     /**
      * Copy constructor.
@@ -57,5 +59,7 @@ public class Participant {
         this.participantState = otherParticipant.participantState;
         this.participantType = otherParticipant.participantType;
         this.participantId = otherParticipant.participantId;
+        this.participantSupportedElementTypes = PfUtils.mapMap(otherParticipant.getParticipantSupportedElementTypes(),
+                ParticipantSupportedElementType::new);
     }
 }

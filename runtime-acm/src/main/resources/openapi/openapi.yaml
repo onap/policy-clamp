@@ -640,7 +640,7 @@ paths:
         200:
           description:
             Serialised instance of
-            [ToscaServiceTemplate](https://github.com/onap/policy-models/blob/master/models-tosca/src/main/java/org/onap/policy/models/tosca/authorative/concepts/ToscaServiceTemplate.java)
+            [AutomationCompositionDefinition](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationCompositionDefinition.java)
             containing the requested automation composition definition.
           headers:
             X-LatestVersion:
@@ -659,12 +659,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ToscaServiceTemplate'
+                $ref: '#/components/schemas/AutomationCompositionDefinition'
               example:
                 externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getSingleCompositionDefinition.json'
             application/yaml:
               schema:
-                $ref: '#/components/schemas/ToscaServiceTemplate'
+                $ref: '#/components/schemas/AutomationCompositionDefinition'
               example:
                 externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getSingleCompositionDefinition.yaml'
         401:
@@ -1577,6 +1577,9 @@ components:
       type: object
     ToscaServiceTemplate:
       title: ToscaServiceTemplate
+      type: object
+    AutomationCompositionDefinition:
+      title: AutomationCompositionDefinition
       type: object
     AutomationComposition:
       title: AutomationComposition

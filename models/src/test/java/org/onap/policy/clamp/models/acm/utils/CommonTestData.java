@@ -20,7 +20,13 @@
 
 package org.onap.policy.clamp.models.acm.utils;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.UUID;
+import org.onap.policy.common.utils.coder.CoderException;
+import org.onap.policy.common.utils.coder.StandardYamlCoder;
+import org.onap.policy.common.utils.resources.ResourceUtils;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 /**
  * Class to hold/create all parameters for test cases.
@@ -29,6 +35,8 @@ import java.util.UUID;
 public class CommonTestData {
 
     public static final UUID PARTCICIPANT_ID = UUID.randomUUID();
+    private static final StandardYamlCoder YAML_TRANSLATOR = new StandardYamlCoder();
+
 
     /**
      * Returns participantId for test cases.
@@ -55,5 +63,19 @@ public class CommonTestData {
      */
     public static UUID getRndParticipantId() {
         return UUID.randomUUID();
+    }
+
+    /**
+     * Get ToscaServiceTemplate from resource.
+     *
+     * @param path path of the resource
+     */
+    public static ToscaServiceTemplate getToscaServiceTemplate(String path) {
+        try {
+            return YAML_TRANSLATOR.decode(ResourceUtils.getResourceAsStream(path), ToscaServiceTemplate.class);
+        } catch (CoderException e) {
+            fail("Cannot read or decode " + path);
+            return null;
+        }
     }
 }

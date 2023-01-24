@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021,2022 Nordix Foundation.
+ * Copyright (C) 2021,2023 Nordix Foundation.
  * ================================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -73,7 +73,8 @@ public class AutomationCompositionUpdatePublisher extends AbstractParticipantPub
         automationCompositionUpdateMsg.setAutomationCompositionId(automationComposition.getInstanceId());
         automationCompositionUpdateMsg.setMessageId(UUID.randomUUID());
         automationCompositionUpdateMsg.setTimestamp(Instant.now());
-        var toscaServiceTemplate = acDefinitionProvider.getAcDefinition(automationComposition.getCompositionId());
+        var toscaServiceTemplate =
+                acDefinitionProvider.getAcDefinition(automationComposition.getCompositionId()).getServiceTemplate();
 
         List<ParticipantUpdates> participantUpdates = new ArrayList<>();
         for (var element : automationComposition.getElements().values()) {

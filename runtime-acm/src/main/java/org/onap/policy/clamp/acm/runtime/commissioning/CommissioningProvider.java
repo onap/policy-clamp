@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2022 Nordix Foundation.
+ * Copyright (C) 2021-2023 Nordix Foundation.
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,7 +24,10 @@ package org.onap.policy.clamp.acm.runtime.commissioning;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.Response.Status;
+import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionHandler;
+import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.CommissioningResponse;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
@@ -42,29 +45,14 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class CommissioningProvider {
     public static final String AUTOMATION_COMPOSITION_NODE_TYPE = "org.onap.policy.clamp.acm.AutomationComposition";
 
     private final AcDefinitionProvider acDefinitionProvider;
     private final AutomationCompositionProvider acProvider;
-    private final ParticipantProvider participantProvider;
     private final SupervisionHandler supervisionHandler;
-
-    /**
-     * Create a commissioning provider.
-     *
-     * @param acDefinitionProvider the ServiceTemplate Provider
-     * @param acProvider the AutomationComposition Provider
-     * @param supervisionHandler the Supervision Handler
-     * @param participantProvider the Participant Provider
-     */
-    public CommissioningProvider(AcDefinitionProvider acDefinitionProvider, AutomationCompositionProvider acProvider,
-            SupervisionHandler supervisionHandler, ParticipantProvider participantProvider) {
-        this.acDefinitionProvider = acDefinitionProvider;
-        this.acProvider = acProvider;
-        this.supervisionHandler = supervisionHandler;
-        this.participantProvider = participantProvider;
-    }
+    private final ParticipantProvider participantProvider;
 
     private CommissioningResponse createCommissioningResponse(UUID compositionId,
             ToscaServiceTemplate serviceTemplate) {
@@ -83,12 +71,12 @@ public class CommissioningProvider {
     }
 
     /**
-     * Create automation compositions from a service template.
+     * Create automation composition from a service template.
      *
      * @param serviceTemplate the service template
      * @return the result of the commissioning operation
      */
-    public CommissioningResponse createAutomationCompositionDefinitions(ToscaServiceTemplate serviceTemplate) {
+    public CommissioningResponse createAutomationCompositionDefinition(ToscaServiceTemplate serviceTemplate) {
 
         var acmDefinition = acDefinitionProvider.createAutomationCompositionDefinition(serviceTemplate);
         serviceTemplate = acmDefinition.getServiceTemplate();
@@ -107,11 +95,14 @@ public class CommissioningProvider {
      * @return the result of the commissioning operation
      */
     public CommissioningResponse updateCompositionDefinition(UUID compositionId, ToscaServiceTemplate serviceTemplate) {
-
-        var automationCompositions = acProvider.getAcInstancesByCompositionId(compositionId);
-        if (!automationCompositions.isEmpty()) {
+        if (verifyIfInstanceExists(compositionId)) {
             throw new PfModelRuntimeException(Status.BAD_REQUEST,
                     "There are ACM instances, Update of ACM Definition not allowed");
+        }
+        var acDefinition = acDefinitionProvider.getAcDefinition(compositionId);
+        if (AcTypeState.COMMISSIONED.equals(acDefinition.getState())) {
+            throw new PfModelRuntimeException(Status.BAD_REQUEST,
+                    "ACM not in COMMISSIONED state, Update of ACM Definition not allowed");
         }
         acDefinitionProvider.updateServiceTemplate(compositionId, serviceTemplate);
 
@@ -161,7 +152,7 @@ public class CommissioningProvider {
      * @return automation composition definition
      */
     @Transactional(readOnly = true)
-    public ToscaServiceTemplate getAutomationCompositionDefinitions(UUID compositionId) {
+    public AutomationCompositionDefinition getAutomationCompositionDefinition(UUID compositionId) {
 
         return acDefinitionProvider.getAcDefinition(compositionId);
     }

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -88,7 +88,7 @@ class CommissioningProviderTest {
         var provider =
                 new CommissioningProvider(acDefinitionProvider, acProvider, supervisionHandler, participantProvider);
         var affectedDefinitions = provider
-                .createAutomationCompositionDefinitions(serviceTemplate).getAffectedAutomationCompositionDefinitions();
+                .createAutomationCompositionDefinition(serviceTemplate).getAffectedAutomationCompositionDefinitions();
         verify(acDefinitionProvider).createAutomationCompositionDefinition(serviceTemplate);
         verify(supervisionHandler).handleSendCommissionMessage(acmDefinition);
         // Response should return the number of node templates present in the service template

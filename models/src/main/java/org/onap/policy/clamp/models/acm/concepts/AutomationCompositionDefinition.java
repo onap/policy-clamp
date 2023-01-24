@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022 Nordix Foundation.
+ *  Copyright (C) 2022-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,11 +20,14 @@
 
 package org.onap.policy.clamp.models.acm.concepts;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 @NoArgsConstructor
@@ -38,6 +41,13 @@ public class AutomationCompositionDefinition {
     @NonNull
     private ToscaServiceTemplate serviceTemplate;
 
+    @NonNull
+    private AcTypeState state;
+
+    @NonNull
+    // Map used to store prime state with key as NodeTemplate Name and value as NodeTemplateState
+    private Map<String, NodeTemplateState> elementStateMap = new HashMap<>();
+
     /**
      * Copy contructor, does a deep copy.
      *
@@ -45,6 +55,8 @@ public class AutomationCompositionDefinition {
      */
     public AutomationCompositionDefinition(final AutomationCompositionDefinition otherAcmDefinition) {
         this.compositionId = otherAcmDefinition.compositionId;
-        this.serviceTemplate = otherAcmDefinition.serviceTemplate;
+        this.serviceTemplate = new ToscaServiceTemplate(otherAcmDefinition.serviceTemplate);
+        this.state = otherAcmDefinition.state;
+        this.elementStateMap = PfUtils.mapMap(otherAcmDefinition.elementStateMap, NodeTemplateState::new);
     }
 }
