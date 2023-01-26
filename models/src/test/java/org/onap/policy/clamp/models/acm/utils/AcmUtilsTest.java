@@ -21,11 +21,13 @@
 package org.onap.policy.clamp.models.acm.utils;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -38,7 +40,7 @@ import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUpdates;
-import org.onap.policy.common.utils.coder.CoderException;
+import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplate;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaDataType;
@@ -50,7 +52,10 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
 
 class AcmUtilsTest {
 
-    private static final ToscaConceptIdentifier TYPE = new ToscaConceptIdentifier("id", "1.0.0");
+    private static final String POLICY_AUTOMATION_COMPOSITION_ELEMENT =
+            "org.onap.policy.clamp.acm.PolicyAutomationCompositionElement";
+    private static final String PARTICIPANT_AUTOMATION_COMPOSITION_ELEMENT = "org.onap.policy.clamp.acm.Participant";
+    private static final String TOSCA_TEMPLATE_YAML = "clamp/acm/pmsh/funtional-pmsh-usecase.yaml";
 
     @Test
     void testCommonUtilsParticipantUpdate() {
@@ -72,6 +77,39 @@ class AcmUtilsTest {
     }
 
     @Test
+    void testCheckIfNodeTemplateIsAutomationCompositionElement() {
+        var serviceTemplate = CommonTestData.getToscaServiceTemplate(TOSCA_TEMPLATE_YAML);
+        var nodeTemplate = new ToscaNodeTemplate();
+        nodeTemplate.setType(AcmUtils.AUTOMATION_COMPOSITION_ELEMENT);
+        assertThat(AcmUtils.checkIfNodeTemplateIsAutomationCompositionElement(nodeTemplate, serviceTemplate)).isTrue();
+
+        nodeTemplate.setType(POLICY_AUTOMATION_COMPOSITION_ELEMENT);
+        assertThat(AcmUtils.checkIfNodeTemplateIsAutomationCompositionElement(nodeTemplate, serviceTemplate)).isTrue();
+
+        nodeTemplate.setType(PARTICIPANT_AUTOMATION_COMPOSITION_ELEMENT);
+        assertThat(AcmUtils.checkIfNodeTemplateIsAutomationCompositionElement(nodeTemplate, serviceTemplate)).isFalse();
+    }
+
+    @Test
+    void testPrepareParticipantPriming() {
+        var serviceTemplate = CommonTestData.getToscaServiceTemplate(TOSCA_TEMPLATE_YAML);
+
+        var acElements = AcmUtils.extractAcElementsFromServiceTemplate(serviceTemplate);
+        Map<ToscaConceptIdentifier, UUID> map = new HashMap<>();
+        var participantId = UUID.randomUUID();
+        assertThatThrownBy(() -> AcmUtils.prepareParticipantPriming(acElements, map)).hasMessageMatching(
+                "Element Type org.onap.policy.clamp.acm.PolicyAutomationCompositionElement 1.0.1 not supported");
+        map.put(new ToscaConceptIdentifier("org.onap.policy.clamp.acm.PolicyAutomationCompositionElement", "1.0.1"),
+                participantId);
+        map.put(new ToscaConceptIdentifier("org.onap.policy.clamp.acm.K8SMicroserviceAutomationCompositionElement",
+                "1.0.1"), participantId);
+        map.put(new ToscaConceptIdentifier("org.onap.policy.clamp.acm.HttpAutomationCompositionElement", "1.0.1"),
+                participantId);
+        var result = AcmUtils.prepareParticipantPriming(acElements, map);
+        assertThat(result).isNotEmpty().hasSize(1);
+    }
+
+    @Test
     void testCommonUtilsServiceTemplate() {
         var acElement = new AutomationCompositionElement();
         var toscaServiceTemplate = getDummyToscaServiceTemplate();
@@ -90,7 +128,7 @@ class AcmUtilsTest {
     }
 
     @Test
-    void testValidateAutomationComposition() throws Exception {
+    void testValidateAutomationComposition() {
         var automationComposition = getDummyAutomationComposition();
         var toscaServiceTemplate = getDummyToscaServiceTemplate();
         var result = AcmUtils.validateAutomationComposition(automationComposition, toscaServiceTemplate);
@@ -102,19 +140,27 @@ class AcmUtilsTest {
         nodeTemplate.setType("org.onap.policy.clamp.acm.AutomationComposition");
         nodeTemplates.put("org.onap.dcae.acm.DCAEMicroserviceAutomationCompositionParticipant", nodeTemplate);
         toscaServiceTemplate.getToscaTopologyTemplate().setNodeTemplates(nodeTemplates);
-        var result2 = AcmUtils.validateAutomationComposition(automationComposition, toscaServiceTemplate);
-        toscaServiceTemplate.setToscaTopologyTemplate(null);
-        assertFalse(result2.isValid());
+        result = AcmUtils.validateAutomationComposition(automationComposition, toscaServiceTemplate);
+        assertFalse(result.isValid());
+
+        var doc = new DocToscaServiceTemplate(CommonTestData.getToscaServiceTemplate(TOSCA_TEMPLATE_YAML));
+        result = AcmUtils.validateAutomationComposition(automationComposition, doc.toAuthorative());
+        assertFalse(result.isValid());
     }
 
-    private AutomationComposition getDummyAutomationComposition() throws CoderException {
+    private AutomationComposition getDummyAutomationComposition() {
         var automationComposition = new AutomationComposition();
-        var element = new StandardCoder().decode(
-                new File("src/test/resources/json/AutomationCompositionElementNoOrderedState.json"),
-                AutomationCompositionElement.class);
         automationComposition.setCompositionId(UUID.randomUUID());
         Map<UUID, AutomationCompositionElement> map = new LinkedHashMap<>();
-        map.put(UUID.randomUUID(), element);
+        try {
+            var element = new StandardCoder().decode(
+                new File("src/test/resources/json/AutomationCompositionElementNoOrderedState.json"),
+                AutomationCompositionElement.class);
+            map.put(UUID.randomUUID(), element);
+        } catch (Exception e) {
+            fail("Cannot read or decode " + e.getMessage());
+            return null;
+        }
         automationComposition.setElements(map);
         return automationComposition;
     }

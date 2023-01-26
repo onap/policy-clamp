@@ -40,7 +40,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
 import org.onap.policy.clamp.acm.runtime.util.rest.CommonRestController;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
+import org.onap.policy.clamp.models.acm.messages.rest.commissioning.AcTypeStateUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.CommissioningResponse;
+import org.onap.policy.clamp.models.acm.messages.rest.commissioning.PrimeOrder;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaDataType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaProperty;
@@ -205,6 +207,16 @@ class CommissioningControllerTest extends CommonRestController {
 
         var templatesInDB = acDefinitionProvider.findAcDefinition(compositionId);
         assertThat(templatesInDB).isEmpty();
+    }
+
+    @Test
+    void testPrimeBadRequest() {
+        var compositionId = createEntryInDB("Prime");
+        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT + "/" + compositionId);
+        var body = new AcTypeStateUpdate();
+        body.setPrimeOrder(PrimeOrder.PRIME);
+        var resp = invocationBuilder.put(Entity.json(body));
+        assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), resp.getStatus());
     }
 
     private UUID createEntryInDB(String name) {

@@ -104,6 +104,9 @@ class ParticipantProviderTest {
         when(participantRepository.findAll()).thenReturn(jpaParticipantList);
         assertThat(participantProvider.getParticipants()).hasSize(inputParticipants.size());
 
+        assertThatThrownBy(() -> participantProvider.getParticipantById(inputParticipants.get(0).getParticipantId()))
+                .hasMessageMatching("Participant Not Found with ID: " + inputParticipants.get(0).getParticipantId());
+
         when(participantRepository.findById(any())).thenReturn(
             Optional.ofNullable(jpaParticipantList.get(0)));
 
@@ -127,5 +130,15 @@ class ParticipantProviderTest {
 
         var deletedParticipant = participantProvider.deleteParticipant(participantId);
         assertThat(inputParticipants.get(0)).usingRecursiveComparison().isEqualTo(deletedParticipant);
+    }
+
+    @Test
+    void testGetSupportedElementMap() {
+        var participantRepository = mock(ParticipantRepository.class);
+        when(participantRepository.findAll()).thenReturn(jpaParticipantList);
+        var participantProvider = new ParticipantProvider(participantRepository);
+
+        var result = participantProvider.getSupportedElementMap();
+        assertThat(result).hasSize(2);
     }
 }

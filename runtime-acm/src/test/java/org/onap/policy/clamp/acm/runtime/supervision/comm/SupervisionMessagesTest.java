@@ -25,16 +25,20 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVICE_TEMPLATE_YAML;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionHandler;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionParticipantHandler;
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
+import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
@@ -46,9 +50,11 @@ import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRe
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegisterAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatus;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUpdateAck;
-import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
+import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
+import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class SupervisionMessagesTest {
 
@@ -133,16 +139,28 @@ class SupervisionMessagesTest {
 
     @Test
     void testParticipantUpdatePublisherDecomisioning() {
-        var publisher = new ParticipantUpdatePublisher(mock(AcDefinitionProvider.class));
+        var publisher = new ParticipantUpdatePublisher(mock(ParticipantProvider.class));
         var topicSink = mock(TopicSink.class);
         publisher.active(List.of(topicSink));
-        publisher.sendDecomisioning(UUID.randomUUID());
+        publisher.sendDepriming(UUID.randomUUID());
         verify(topicSink).send(anyString());
     }
 
     @Test
-    void testParticipantUpdatePublisherComissioning() {
-        var publisher = new ParticipantUpdatePublisher(mock(AcDefinitionProvider.class));
+    void testParticipantUpdatePublisherPriming() {
+        var participantId = UUID.randomUUID();
+        Map<ToscaConceptIdentifier, UUID> supportedElementMap = new HashMap<>();
+        supportedElementMap.put(
+                new ToscaConceptIdentifier("org.onap.policy.clamp.acm.PolicyAutomationCompositionElement", "1.0.1"),
+                participantId);
+        supportedElementMap.put(new ToscaConceptIdentifier(
+                "org.onap.policy.clamp.acm.K8SMicroserviceAutomationCompositionElement", "1.0.1"), participantId);
+        supportedElementMap.put(
+                new ToscaConceptIdentifier("org.onap.policy.clamp.acm.HttpAutomationCompositionElement", "1.0.1"),
+                participantId);
+        var participantProvider = mock(ParticipantProvider.class);
+        when(participantProvider.getSupportedElementMap()).thenReturn(supportedElementMap);
+        var publisher = new ParticipantUpdatePublisher(participantProvider);
         var topicSink = mock(TopicSink.class);
         publisher.active(List.of(topicSink));
         var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
@@ -151,7 +169,10 @@ class SupervisionMessagesTest {
         var acmDefinition = new AutomationCompositionDefinition();
         acmDefinition.setCompositionId(UUID.randomUUID());
         acmDefinition.setServiceTemplate(serviceTemplate);
-        publisher.sendComissioningBroadcast(acmDefinition);
+        var acElements = AcmUtils.extractAcElementsFromServiceTemplate(serviceTemplate);
+        acmDefinition.setElementStateMap(AcmUtils.createElementStateMap(acElements, AcTypeState.COMMISSIONED));
+        var preparation = publisher.prepareParticipantPriming(acmDefinition);
+        publisher.sendPriming(preparation, acmDefinition.getCompositionId(), null);
         verify(topicSink).send(anyString());
     }
 

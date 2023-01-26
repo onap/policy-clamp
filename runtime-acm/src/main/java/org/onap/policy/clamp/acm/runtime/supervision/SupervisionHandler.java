@@ -29,10 +29,9 @@ import javax.ws.rs.core.Response;
 import lombok.AllArgsConstructor;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionStateChangePublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionUpdatePublisher;
-import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantUpdatePublisher;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionException;
+import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementAck;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
@@ -69,27 +68,6 @@ public class SupervisionHandler {
     // Publishers for participant communication
     private final AutomationCompositionUpdatePublisher automationCompositionUpdatePublisher;
     private final AutomationCompositionStateChangePublisher automationCompositionStateChangePublisher;
-    private final ParticipantUpdatePublisher participantUpdatePublisher;
-
-    /**
-     * Send commissioning update message to dmaap.
-     *
-     * @param acmDefinition the AutomationComposition Definition
-     */
-    public void handleSendCommissionMessage(AutomationCompositionDefinition acmDefinition) {
-        LOGGER.debug("Participant update message with serviveTemplate {} being sent to all participants",
-            acmDefinition.getCompositionId());
-        participantUpdatePublisher.sendComissioningBroadcast(acmDefinition);
-    }
-
-    /**
-     * Send decommissioning update message to dmaap.
-     *
-     */
-    public void handleSendDeCommissionMessage(UUID compositionId) {
-        LOGGER.debug("Participant update message being sent {}", compositionId);
-        participantUpdatePublisher.sendDecomisioning(compositionId);
-    }
 
     /**
      * Handle a AutomationComposition update acknowledge message from a participant.
@@ -110,10 +88,34 @@ public class SupervisionHandler {
      *
      * @param participantUpdateAckMessage the ParticipantUpdateAck message received from a participant
      */
-    @MessageIntercept
     @Timed(value = "listener.participant_update_ack", description = "PARTICIPANT_UPDATE_ACK messages received")
     public void handleParticipantMessage(ParticipantUpdateAck participantUpdateAckMessage) {
         LOGGER.debug("Participant Update Ack message received {}", participantUpdateAckMessage);
+        var acDefinitionOpt = acDefinitionProvider.findAcDefinition(participantUpdateAckMessage.getCompositionId());
+        if (acDefinitionOpt.isEmpty()) {
+            LOGGER.warn("AC Definition not found in database {}", participantUpdateAckMessage.getCompositionId());
+            return;
+        }
+        var acDefinition = acDefinitionOpt.get();
+        if (!AcTypeState.PRIMING.equals(acDefinition.getState())
+                && !AcTypeState.DEPRIMING.equals(acDefinition.getState())) {
+            LOGGER.warn("AC Definition {} already primed/deprimed with participant {}",
+                    participantUpdateAckMessage.getCompositionId(), participantUpdateAckMessage.getParticipantId());
+            return;
+        }
+        var state = AcTypeState.PRIMING.equals(acDefinition.getState()) ? AcTypeState.PRIMED : AcTypeState.COMMISSIONED;
+        boolean completed = true;
+        for (var element : acDefinition.getElementStateMap().values()) {
+            if (participantUpdateAckMessage.getParticipantId().equals(element.getParticipantId())) {
+                element.setState(state);
+            } else if (!state.equals(element.getState())) {
+                completed = false;
+            }
+        }
+        if (completed) {
+            acDefinition.setState(state);
+        }
+        acDefinitionProvider.updateAcDefinition(acDefinition);
     }
 
     /**

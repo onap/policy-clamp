@@ -46,6 +46,8 @@ public class ParticipantAckMessage {
 
     private ParticipantMessageType messageType;
 
+    private UUID compositionId;
+
     /**
      * Participant ID, or {@code null} for messages from participants.
      */

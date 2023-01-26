@@ -20,7 +20,9 @@
 
 package org.onap.policy.clamp.models.acm.persistence.provider;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.Response.Status;
@@ -30,6 +32,7 @@ import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaParticipant;
 import org.onap.policy.clamp.models.acm.persistence.repository.ParticipantRepository;
 import org.onap.policy.models.base.PfModelRuntimeException;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -127,4 +130,23 @@ public class ParticipantProvider {
 
         return jpaDeleteParticipantOpt.get().toAuthorative();
     }
+
+
+    /**
+     * Get a map with SupportedElement as key and the participantId as value.
+     *
+     * @return a map
+     */
+    public Map<ToscaConceptIdentifier, UUID> getSupportedElementMap() {
+        var list = participantRepository.findAll();
+        Map<ToscaConceptIdentifier, UUID> map = new HashMap<>();
+        for (var participant : list) {
+            for (var element : participant.getSupportedElements()) {
+                var supportedElement = new ToscaConceptIdentifier(element.getTypeName(), element.getTypeVersion());
+                map.put(supportedElement, UUID.fromString(participant.getParticipantId()));
+            }
+        }
+        return map;
+    }
+
 }

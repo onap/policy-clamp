@@ -100,7 +100,7 @@ public class CommissioningController extends AbstractRestController implements A
     @Override
     public ResponseEntity<Void> compositionDefinitionPriming(UUID compositionId, UUID requestId,
         @Valid AcTypeStateUpdate body) {
-        // TODO Auto-generated method stub
-        return null;
+        provider.compositionDefinitionPriming(compositionId, body);
+        return ResponseEntity.accepted().build();
     }
 }

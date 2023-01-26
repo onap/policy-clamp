@@ -200,6 +200,7 @@ class AcDefinitionProviderTest {
         nodeTemplateState.setNodeTemplateStateId(UUID.randomUUID());
         nodeTemplateState.setNodeTemplateId(new ToscaConceptIdentifier("name", "1.0.0"));
         nodeTemplateState.setState(AcTypeState.COMMISSIONED);
+        nodeTemplateState.setParticipantId(UUID.randomUUID());
         acmDefinition.setElementStateMap(Map.of(nodeTemplateState.getNodeTemplateId().getName(), nodeTemplateState));
         return acmDefinition;
     }

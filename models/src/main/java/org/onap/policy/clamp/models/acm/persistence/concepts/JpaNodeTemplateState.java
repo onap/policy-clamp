@@ -21,6 +21,7 @@
 package org.onap.policy.clamp.models.acm.persistence.concepts;
 
 import java.util.UUID;
+import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -33,7 +34,9 @@ import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
 import org.onap.policy.common.parameters.annotations.NotNull;
 import org.onap.policy.models.base.PfAuthorative;
+import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.Validated;
+import org.onap.policy.models.base.validation.annotations.VerifyKey;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 @Entity
@@ -54,9 +57,11 @@ public class JpaNodeTemplateState extends Validated implements PfAuthorative<Nod
     @Column
     private String participantId;
 
-    @Column
+    @VerifyKey
     @NotNull
-    private ToscaConceptIdentifier nodeTemplateId;
+    @AttributeOverride(name = "name",    column = @Column(name = "nodeTemplate_name"))
+    @AttributeOverride(name = "version", column = @Column(name = "nodeTemplate_version"))
+    private PfConceptKey nodeTemplateId;
 
     @Column
     @NotNull
@@ -86,7 +91,8 @@ public class JpaNodeTemplateState extends Validated implements PfAuthorative<Nod
         if (copyConcept.getParticipantId() != null) {
             this.participantId = copyConcept.getParticipantId().toString();
         }
-        this.nodeTemplateId = copyConcept.getNodeTemplateId();
+        this.nodeTemplateId = copyConcept.getNodeTemplateId().asConceptKey();
+        this.state = copyConcept.getState();
     }
 
     @Override
@@ -96,7 +102,7 @@ public class JpaNodeTemplateState extends Validated implements PfAuthorative<Nod
         if (this.participantId != null) {
             nodeTemplateState.setParticipantId(UUID.fromString(this.participantId));
         }
-        nodeTemplateState.setNodeTemplateId(this.nodeTemplateId);
+        nodeTemplateState.setNodeTemplateId(new ToscaConceptIdentifier(this.nodeTemplateId));
         nodeTemplateState.setState(this.state);
         return nodeTemplateState;
     }
