@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -37,6 +37,7 @@ import org.mockito.Mockito;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionHandler;
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionException;
+import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationCommand;
@@ -90,8 +91,9 @@ class AutomationCompositionInstantiationProviderTest {
         when(participantProvider.getParticipants()).thenReturn(participants);
 
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
-        var compositionId = UUID.randomUUID();
-        when(acDefinitionProvider.findAcDefinition(compositionId)).thenReturn(Optional.of(serviceTemplate));
+        var acDefinition = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
+        var compositionId = acDefinition.getCompositionId();
+        when(acDefinitionProvider.findAcDefinition(compositionId)).thenReturn(Optional.of(acDefinition));
         var supervisionHandler = mock(SupervisionHandler.class);
         var acProvider = mock(AutomationCompositionProvider.class);
         var instantiationProvider = new AutomationCompositionInstantiationProvider(acProvider, supervisionHandler,
@@ -203,8 +205,9 @@ class AutomationCompositionInstantiationProviderTest {
     @Test
     void testCreateAutomationCompositions_NoDuplicates() {
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
-        var compositionId = UUID.randomUUID();
-        when(acDefinitionProvider.findAcDefinition(compositionId)).thenReturn(Optional.of(serviceTemplate));
+        var acDefinition = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
+        var compositionId = acDefinition.getCompositionId();
+        when(acDefinitionProvider.findAcDefinition(compositionId)).thenReturn(Optional.of(acDefinition));
 
         var automationCompositionCreate =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "NoDuplicates");
@@ -236,8 +239,9 @@ class AutomationCompositionInstantiationProviderTest {
     @Test
     void testCreateAutomationCompositions_CommissionedAcElementNotFound() {
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
-        var compositionId = UUID.randomUUID();
-        when(acDefinitionProvider.findAcDefinition(compositionId)).thenReturn(Optional.of(serviceTemplate));
+        var acDefinition = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
+        var compositionId = acDefinition.getCompositionId();
+        when(acDefinitionProvider.findAcDefinition(compositionId)).thenReturn(Optional.of(acDefinition));
         var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(
                 AC_INSTANTIATION_DEFINITION_NAME_NOT_FOUND_JSON, "AcElementNotFound");
         automationComposition.setCompositionId(compositionId);

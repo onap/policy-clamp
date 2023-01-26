@@ -25,13 +25,14 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.Response.Status;
 import lombok.RequiredArgsConstructor;
-import org.onap.policy.clamp.acm.runtime.supervision.SupervisionHandler;
+import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantUpdatePublisher;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
+import org.onap.policy.clamp.models.acm.messages.rest.commissioning.AcTypeStateUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.CommissioningResponse;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
+import org.onap.policy.clamp.models.acm.persistence.provider.AcTypeStateResolver;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
-import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
@@ -51,8 +52,8 @@ public class CommissioningProvider {
 
     private final AcDefinitionProvider acDefinitionProvider;
     private final AutomationCompositionProvider acProvider;
-    private final SupervisionHandler supervisionHandler;
-    private final ParticipantProvider participantProvider;
+    private final AcTypeStateResolver acTypeStateResolver;
+    private final ParticipantUpdatePublisher participantUpdatePublisher;
 
     private CommissioningResponse createCommissioningResponse(UUID compositionId,
             ToscaServiceTemplate serviceTemplate) {
@@ -80,10 +81,6 @@ public class CommissioningProvider {
 
         var acmDefinition = acDefinitionProvider.createAutomationCompositionDefinition(serviceTemplate);
         serviceTemplate = acmDefinition.getServiceTemplate();
-        var participantList = participantProvider.getParticipants();
-        if (!participantList.isEmpty()) {
-            supervisionHandler.handleSendCommissionMessage(acmDefinition);
-        }
         return createCommissioningResponse(acmDefinition.getCompositionId(), serviceTemplate);
     }
 
@@ -100,7 +97,7 @@ public class CommissioningProvider {
                     "There are ACM instances, Update of ACM Definition not allowed");
         }
         var acDefinition = acDefinitionProvider.getAcDefinition(compositionId);
-        if (AcTypeState.COMMISSIONED.equals(acDefinition.getState())) {
+        if (!AcTypeState.COMMISSIONED.equals(acDefinition.getState())) {
             throw new PfModelRuntimeException(Status.BAD_REQUEST,
                     "ACM not in COMMISSIONED state, Update of ACM Definition not allowed");
         }
@@ -116,14 +113,14 @@ public class CommissioningProvider {
      * @return the result of the deletion
      */
     public CommissioningResponse deleteAutomationCompositionDefinition(UUID compositionId) {
-
         if (verifyIfInstanceExists(compositionId)) {
             throw new PfModelRuntimeException(Status.BAD_REQUEST,
                     "Delete instances, to commission automation composition definitions");
         }
-        var participantList = participantProvider.getParticipants();
-        if (!participantList.isEmpty()) {
-            supervisionHandler.handleSendDeCommissionMessage(compositionId);
+        var acDefinition = acDefinitionProvider.getAcDefinition(compositionId);
+        if (!AcTypeState.COMMISSIONED.equals(acDefinition.getState())) {
+            throw new PfModelRuntimeException(Status.BAD_REQUEST,
+                    "ACM not in COMMISSIONED state, Update of ACM Definition not allowed");
         }
         var serviceTemplate = acDefinitionProvider.deleteAcDefintion(compositionId);
         return createCommissioningResponse(compositionId, serviceTemplate);
@@ -165,4 +162,49 @@ public class CommissioningProvider {
     private boolean verifyIfInstanceExists(UUID compositionId) {
         return !acProvider.getAcInstancesByCompositionId(compositionId).isEmpty();
     }
+
+    /**
+     * Composition Definition Priming.
+     *
+     * @param compositionId the compositionId
+     * @param acTypeStateUpdate the ACMTypeStateUpdate
+     */
+    public void compositionDefinitionPriming(UUID compositionId, AcTypeStateUpdate acTypeStateUpdate) {
+        if (verifyIfInstanceExists(compositionId)) {
+            throw new PfModelRuntimeException(Status.BAD_REQUEST, "There are instances, Priming/Depriming not allowed");
+        }
+        var acmDefinition = acDefinitionProvider.getAcDefinition(compositionId);
+        var stateOrdered = acTypeStateResolver.resolve(acTypeStateUpdate.getPrimeOrder(), acmDefinition.getState());
+        switch (stateOrdered) {
+            case PRIME:
+                prime(acmDefinition);
+                break;
+
+            case DEPRIME:
+                deprime(acmDefinition);
+
+                break;
+
+            default:
+                throw new PfModelRuntimeException(Status.BAD_REQUEST, "Not valid " + acTypeStateUpdate.getPrimeOrder());
+        }
+    }
+
+    private void prime(AutomationCompositionDefinition acmDefinition) {
+        var prearation = participantUpdatePublisher.prepareParticipantPriming(acmDefinition);
+        acDefinitionProvider.updateAcDefinition(acmDefinition);
+        participantUpdatePublisher.sendPriming(prearation, acmDefinition.getCompositionId(), null);
+    }
+
+    private void deprime(AutomationCompositionDefinition acmDefinition) {
+        if (!AcTypeState.COMMISSIONED.equals(acmDefinition.getState())) {
+            for (var elementState : acmDefinition.getElementStateMap().values()) {
+                elementState.setState(AcTypeState.DEPRIMING);
+            }
+            acmDefinition.setState(AcTypeState.DEPRIMING);
+            acDefinitionProvider.updateAcDefinition(acmDefinition);
+        }
+        participantUpdatePublisher.sendDepriming(acmDefinition.getCompositionId());
+    }
+
 }

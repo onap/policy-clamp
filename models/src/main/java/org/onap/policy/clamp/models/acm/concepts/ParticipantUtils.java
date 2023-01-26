@@ -32,8 +32,6 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 public final class ParticipantUtils {
 
     private static final Coder CODER = new StandardCoder();
-    private static final String AUTOMATION_COMPOSITION_ELEMENT =
-        "org.onap.policy.clamp.acm.AutomationCompositionElement";
 
     /**
      * Get the First StartPhase.
@@ -74,28 +72,5 @@ public final class ParticipantUtils {
             return Integer.valueOf(objStartPhase.toString());
         }
         return 0;
-    }
-
-    /**
-     * Checks if a NodeTemplate is an AutomationCompositionElement.
-     *
-     * @param nodeTemplate the ToscaNodeTemplate
-     * @param toscaServiceTemplate the ToscaServiceTemplate
-     * @return true if the NodeTemplate is an AutomationCompositionElement
-     */
-    public static boolean checkIfNodeTemplateIsAutomationCompositionElement(ToscaNodeTemplate nodeTemplate,
-        ToscaServiceTemplate toscaServiceTemplate) {
-        if (nodeTemplate.getType().contains(AUTOMATION_COMPOSITION_ELEMENT)) {
-            return true;
-        } else {
-            var nodeType = toscaServiceTemplate.getNodeTypes().get(nodeTemplate.getType());
-            if (nodeType != null) {
-                var derivedFrom = nodeType.getDerivedFrom();
-                if (derivedFrom != null) {
-                    return derivedFrom.contains(AUTOMATION_COMPOSITION_ELEMENT);
-                }
-            }
-        }
-        return false;
     }
 }

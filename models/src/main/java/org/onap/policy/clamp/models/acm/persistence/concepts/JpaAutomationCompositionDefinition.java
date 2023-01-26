@@ -89,8 +89,9 @@ public class JpaAutomationCompositionDefinition extends Validated
     @Override
     public AutomationCompositionDefinition toAuthorative() {
         var acmDefinition = new AutomationCompositionDefinition();
-        acmDefinition.setCompositionId(UUID.fromString(compositionId));
-        acmDefinition.setServiceTemplate(serviceTemplate.toAuthorative());
+        acmDefinition.setCompositionId(UUID.fromString(this.compositionId));
+        acmDefinition.setState(this.state);
+        acmDefinition.setServiceTemplate(this.serviceTemplate.toAuthorative());
         for (var element : this.elements) {
             var key = element.getNodeTemplateId().getName();
             acmDefinition.getElementStateMap().put(key, element.toAuthorative());
@@ -105,11 +106,12 @@ public class JpaAutomationCompositionDefinition extends Validated
         this.serviceTemplate = new DocToscaServiceTemplate(copyConcept.getServiceTemplate());
         setName(this.serviceTemplate.getName());
         setVersion(this.serviceTemplate.getVersion());
-        elements = new HashSet<>(copyConcept.getElementStateMap().size());
+        this.elements = new HashSet<>(copyConcept.getElementStateMap().size());
         for (var element : copyConcept.getElementStateMap().values()) {
             var nodeTemplateStateId = element.getNodeTemplateStateId().toString();
             var jpaNodeTemplateState = new JpaNodeTemplateState(nodeTemplateStateId, this.compositionId);
             jpaNodeTemplateState.fromAuthorative(element);
+            this.elements.add(jpaNodeTemplateState);
         }
     }
 

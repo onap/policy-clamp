@@ -32,6 +32,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplate;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionDefinitionRepository;
+import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.data.domain.Example;
@@ -62,6 +63,8 @@ public class AcDefinitionProvider {
         }
         serviceTemplate.getMetadata().put("compositionId", compositionId);
         acmDefinition.setServiceTemplate(serviceTemplate);
+        var acElements = AcmUtils.extractAcElementsFromServiceTemplate(serviceTemplate);
+        acmDefinition.setElementStateMap(AcmUtils.createElementStateMap(acElements, AcTypeState.COMMISSIONED));
         var jpaAcmDefinition = ProviderUtils.getJpaAndValidate(acmDefinition, JpaAutomationCompositionDefinition::new,
                 "AutomationCompositionDefinition");
         var result = acmDefinitionRepository.save(jpaAcmDefinition);
@@ -80,6 +83,8 @@ public class AcDefinitionProvider {
         acmDefinition.setCompositionId(compositionId);
         acmDefinition.setState(AcTypeState.COMMISSIONED);
         acmDefinition.setServiceTemplate(serviceTemplate);
+        var acElements = AcmUtils.extractAcElementsFromServiceTemplate(serviceTemplate);
+        acmDefinition.setElementStateMap(AcmUtils.createElementStateMap(acElements, AcTypeState.COMMISSIONED));
         updateAcDefinition(acmDefinition);
     }
 
@@ -137,10 +142,9 @@ public class AcDefinitionProvider {
      * @return the automation composition definition
      */
     @Transactional(readOnly = true)
-    public Optional<ToscaServiceTemplate> findAcDefinition(UUID compositionId) {
+    public Optional<AutomationCompositionDefinition> findAcDefinition(UUID compositionId) {
         var jpaGet = acmDefinitionRepository.findById(compositionId.toString());
-        return jpaGet.stream().map(JpaAutomationCompositionDefinition::getServiceTemplate)
-                .map(DocToscaServiceTemplate::toAuthorative).findFirst();
+        return jpaGet.stream().map(JpaAutomationCompositionDefinition::toAuthorative).findFirst();
     }
 
     /**

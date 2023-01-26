@@ -23,6 +23,7 @@ package org.onap.policy.clamp.acm.runtime.commissioning;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -32,13 +33,16 @@ import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
-import org.onap.policy.clamp.acm.runtime.supervision.SupervisionHandler;
+import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantUpdatePublisher;
+import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
+import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
-import org.onap.policy.clamp.models.acm.concepts.Participant;
+import org.onap.policy.clamp.models.acm.messages.rest.commissioning.AcTypeStateUpdate;
+import org.onap.policy.clamp.models.acm.messages.rest.commissioning.PrimeOrder;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
+import org.onap.policy.clamp.models.acm.persistence.provider.AcTypeStateResolver;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
-import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 class CommissioningProviderTest {
@@ -51,16 +55,14 @@ class CommissioningProviderTest {
     @Test
     void testGetAutomationCompositionDefinitions() {
         var acProvider = mock(AutomationCompositionProvider.class);
-        var participantProvider = mock(ParticipantProvider.class);
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
 
-        var provider = new CommissioningProvider(acDefinitionProvider, acProvider, null, participantProvider);
+        var provider = new CommissioningProvider(acDefinitionProvider, acProvider, null, null);
 
         var serviceTemplates = provider.getAutomationCompositionDefinitions(null, null);
         assertThat(serviceTemplates.getServiceTemplates()).isEmpty();
 
-        when(acDefinitionProvider.getServiceTemplateList(null, null))
-                .thenReturn(List.of(new ToscaServiceTemplate()));
+        when(acDefinitionProvider.getServiceTemplateList(null, null)).thenReturn(List.of(new ToscaServiceTemplate()));
         serviceTemplates = provider.getAutomationCompositionDefinitions(null, null);
         assertThat(serviceTemplates.getServiceTemplates()).hasSize(1);
     }
@@ -81,16 +83,11 @@ class CommissioningProviderTest {
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
         when(acDefinitionProvider.createAutomationCompositionDefinition(serviceTemplate)).thenReturn(acmDefinition);
 
-        var participantProvider = mock(ParticipantProvider.class);
-        when(participantProvider.getParticipants()).thenReturn(List.of(new Participant()));
         var acProvider = mock(AutomationCompositionProvider.class);
-        var supervisionHandler = mock(SupervisionHandler.class);
-        var provider =
-                new CommissioningProvider(acDefinitionProvider, acProvider, supervisionHandler, participantProvider);
-        var affectedDefinitions = provider
-                .createAutomationCompositionDefinition(serviceTemplate).getAffectedAutomationCompositionDefinitions();
+        var provider = new CommissioningProvider(acDefinitionProvider, acProvider, null, null);
+        var affectedDefinitions = provider.createAutomationCompositionDefinition(serviceTemplate)
+                .getAffectedAutomationCompositionDefinitions();
         verify(acDefinitionProvider).createAutomationCompositionDefinition(serviceTemplate);
-        verify(supervisionHandler).handleSendCommissionMessage(acmDefinition);
         // Response should return the number of node templates present in the service template
         assertThat(affectedDefinitions).hasSize(7);
     }
@@ -104,10 +101,8 @@ class CommissioningProviderTest {
     void testGetToscaServiceTemplateList() {
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
         var acProvider = mock(AutomationCompositionProvider.class);
-        var participantProvider = mock(ParticipantProvider.class);
 
-        var provider =
-                new CommissioningProvider(acDefinitionProvider, acProvider, null, participantProvider);
+        var provider = new CommissioningProvider(acDefinitionProvider, acProvider, null, null);
         var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
         when(acDefinitionProvider.getServiceTemplateList(null, null)).thenReturn(List.of(serviceTemplate));
 
@@ -120,12 +115,11 @@ class CommissioningProviderTest {
     void testDeletecDefinitionDabRequest() {
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
         var acProvider = mock(AutomationCompositionProvider.class);
-        var participantProvider = mock(ParticipantProvider.class);
 
         var compositionId = UUID.randomUUID();
         when(acProvider.getAcInstancesByCompositionId(compositionId)).thenReturn(List.of(new AutomationComposition()));
 
-        var provider = new CommissioningProvider(acDefinitionProvider, acProvider, null, participantProvider);
+        var provider = new CommissioningProvider(acDefinitionProvider, acProvider, null, null);
 
         assertThatThrownBy(() -> provider.deleteAutomationCompositionDefinition(compositionId))
                 .hasMessageMatching("Delete instances, to commission automation composition definitions");
@@ -133,22 +127,59 @@ class CommissioningProviderTest {
 
     @Test
     void testDeleteAutomationCompositionDefinition() {
-        var participantProvider = mock(ParticipantProvider.class);
-        when(participantProvider.getParticipants()).thenReturn(List.of(new Participant()));
-
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
         var compositionId = UUID.randomUUID();
         var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
         when(acDefinitionProvider.deleteAcDefintion(compositionId)).thenReturn(serviceTemplate);
 
+        var acmDefinition = new AutomationCompositionDefinition();
+        acmDefinition.setCompositionId(compositionId);
+        acmDefinition.setServiceTemplate(serviceTemplate);
+        acmDefinition.setState(AcTypeState.COMMISSIONED);
+        when(acDefinitionProvider.getAcDefinition(compositionId)).thenReturn(acmDefinition);
+
         var acProvider = mock(AutomationCompositionProvider.class);
-        var supervisionHandler = mock(SupervisionHandler.class);
-        var provider =
-                new CommissioningProvider(acDefinitionProvider, acProvider, supervisionHandler, participantProvider);
+        var provider = new CommissioningProvider(acDefinitionProvider, acProvider, null, null);
 
         provider.deleteAutomationCompositionDefinition(compositionId);
 
-        verify(supervisionHandler).handleSendDeCommissionMessage(compositionId);
         verify(acDefinitionProvider).deleteAcDefintion(compositionId);
+    }
+
+    @Test
+    void testPriming() {
+        var acDefinitionProvider = mock(AcDefinitionProvider.class);
+        var acmDefinition = CommonTestData.createAcDefinition(
+                InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML), AcTypeState.COMMISSIONED);
+        var compositionId = acmDefinition.getCompositionId();
+        when(acDefinitionProvider.getAcDefinition(compositionId)).thenReturn(acmDefinition);
+
+        var participantUpdatePublisher = mock(ParticipantUpdatePublisher.class);
+        var provider = new CommissioningProvider(acDefinitionProvider, mock(AutomationCompositionProvider.class),
+                new AcTypeStateResolver(), participantUpdatePublisher);
+
+        var acTypeStateUpdate = new AcTypeStateUpdate();
+        acTypeStateUpdate.setPrimeOrder(PrimeOrder.PRIME);
+        provider.compositionDefinitionPriming(compositionId, acTypeStateUpdate);
+        verify(acDefinitionProvider).updateAcDefinition(acmDefinition);
+        verify(participantUpdatePublisher).sendPriming(any(), any(), any());
+    }
+
+    @Test
+    void testDepriming() {
+        var acDefinitionProvider = mock(AcDefinitionProvider.class);
+        var acmDefinition = CommonTestData.createAcDefinition(
+                InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML), AcTypeState.PRIMED);
+        var compositionId = acmDefinition.getCompositionId();
+        when(acDefinitionProvider.getAcDefinition(compositionId)).thenReturn(acmDefinition);
+
+        var participantUpdatePublisher = mock(ParticipantUpdatePublisher.class);
+        var provider = new CommissioningProvider(acDefinitionProvider, mock(AutomationCompositionProvider.class),
+                new AcTypeStateResolver(), participantUpdatePublisher);
+
+        var acTypeStateUpdate = new AcTypeStateUpdate();
+        acTypeStateUpdate.setPrimeOrder(PrimeOrder.DEPRIME);
+        provider.compositionDefinitionPriming(compositionId, acTypeStateUpdate);
+        verify(participantUpdatePublisher).sendDepriming(compositionId);
     }
 }

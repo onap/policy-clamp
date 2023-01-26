@@ -25,11 +25,15 @@ import java.util.UUID;
 import javax.ws.rs.core.Response.Status;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
+import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
+import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 /**
  * Class to hold/create all parameters for test cases.
@@ -37,8 +41,7 @@ import org.onap.policy.common.utils.resources.ResourceUtils;
  */
 public class CommonTestData {
     private static final Coder CODER = new StandardCoder();
-    public static final String TOSCA_SERVICE_TEMPLATE_YAML =
-        "clamp/acm/pmsh/funtional-pmsh-usecase.yaml";
+    public static final String TOSCA_SERVICE_TEMPLATE_YAML = "clamp/acm/pmsh/funtional-pmsh-usecase.yaml";
 
     /**
      * Gets the standard automation composition parameters.
@@ -53,7 +56,7 @@ public class CommonTestData {
 
         } catch (CoderException e) {
             throw new AutomationCompositionRuntimeException(Status.NOT_ACCEPTABLE,
-                "cannot read automation composition parameters", e);
+                    "cannot read automation composition parameters", e);
         }
     }
 
@@ -65,7 +68,7 @@ public class CommonTestData {
      */
     public static String getParameterGroupAsString(final String dbName) {
         return ResourceUtils.getResourceAsString("src/test/resources/parameters/TestParameters.json")
-            .replace("${dbName}", "jdbc:h2:mem:" + dbName);
+                .replace("${dbName}", "jdbc:h2:mem:" + dbName);
     }
 
     /**
@@ -95,4 +98,23 @@ public class CommonTestData {
     public static UUID getParticipantId() {
         return UUID.fromString("101c62b3-8918-41b9-a747-d21eb79c6c03");
     }
+
+    /**
+     * Create a new AutomationCompositionDefinition.
+     *
+     * @param serviceTemplate the serviceTemplate
+     * @param state the AcTypeState
+     * @return a new AutomationCompositionDefinition
+     */
+    public static AutomationCompositionDefinition createAcDefinition(ToscaServiceTemplate serviceTemplate,
+            AcTypeState state) {
+        var acDefinition = new AutomationCompositionDefinition();
+        acDefinition.setCompositionId(UUID.randomUUID());
+        acDefinition.setState(state);
+        acDefinition.setServiceTemplate(serviceTemplate);
+        var acElements = AcmUtils.extractAcElementsFromServiceTemplate(serviceTemplate);
+        acDefinition.setElementStateMap(AcmUtils.createElementStateMap(acElements, state));
+        return acDefinition;
+    }
+
 }

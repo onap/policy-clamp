@@ -25,6 +25,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 import java.time.Instant;
 import java.util.List;
@@ -36,14 +39,13 @@ import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantAckMessage;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessage;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegisterAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUpdate;
 import org.onap.policy.common.utils.coder.CoderException;
 
 class ParticipantHandlerTest {
 
     private final CommonTestData commonTestData = new CommonTestData();
-    private static final String ID_NAME = "org.onap.PM_CDS_Blueprint";
-    private static final String ID_VERSION = "1.0.1";
 
     @Test
     void handleUpdateTest() {
@@ -119,4 +121,14 @@ class ParticipantHandlerTest {
 
     }
 
+    @Test
+    void testHandleParticipantRegisterAck() {
+        var parameters = CommonTestData.getParticipantParameters();
+        var automationCompositionHandler = commonTestData.getMockAutomationCompositionHandler();
+        var publisher = mock(ParticipantMessagePublisher.class);
+        var participantHandler = new ParticipantHandler(parameters, publisher, automationCompositionHandler);
+
+        participantHandler.handleParticipantRegisterAck(new ParticipantRegisterAck());
+        verify(publisher).sendParticipantStatus(any());
+    }
 }

@@ -209,15 +209,16 @@ public class ParticipantHandler {
             // This message is to decommission the automation composition
             acElementDefsMap.get(participantUpdateMsg.getCompositionId()).clear();
         }
-        sendParticipantUpdateAck(participantUpdateMsg.getMessageId());
+        sendParticipantUpdateAck(participantUpdateMsg.getMessageId(), participantUpdateMsg.getCompositionId());
     }
 
     /**
      * Method to send ParticipantUpdateAck message to automation composition runtime.
      */
-    public void sendParticipantUpdateAck(UUID messageId) {
+    public void sendParticipantUpdateAck(UUID messageId, UUID compositionId) {
         var participantUpdateAck = new ParticipantUpdateAck();
         participantUpdateAck.setResponseTo(messageId);
+        participantUpdateAck.setCompositionId(compositionId);
         participantUpdateAck.setMessage("Participant Update Ack message");
         participantUpdateAck.setResult(true);
         participantUpdateAck.setParticipantId(participantId);
