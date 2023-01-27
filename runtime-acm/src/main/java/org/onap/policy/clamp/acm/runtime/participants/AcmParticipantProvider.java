@@ -21,10 +21,15 @@
 package org.onap.policy.clamp.acm.runtime.participants;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.MapUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantStatusReqPublisher;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
+import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantInformation;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
@@ -69,6 +74,10 @@ public class AcmParticipantProvider {
         var participant = this.participantProvider.getParticipantById(participantId);
         var participantInformation = new ParticipantInformation();
         participantInformation.setParticipant(participant);
+
+        participantInformation.setAcElementInstanceMap(getAutomationCompositionElementsForParticipant(participantId));
+        participantInformation.setAcNodeTemplateStateDefinitionMap(getNodeTemplateStatesForParticipant(participantId));
+
         return participantInformation;
     }
 
@@ -92,5 +101,22 @@ public class AcmParticipantProvider {
      */
     public void sendAllParticipantStatusRequest() {
         this.participantStatusReqPublisher.send((UUID) null);
+    }
+
+    private Map<UUID, AutomationCompositionElement> getAutomationCompositionElementsForParticipant(UUID participantId) {
+        var automationCompositionElements = participantProvider
+            .getAutomationCompositionElements(participantId);
+        Map<UUID, AutomationCompositionElement> map = new HashMap<>();
+        MapUtils.populateMap(map, automationCompositionElements, AutomationCompositionElement::getId);
+
+        return map;
+    }
+
+    private Map<UUID, NodeTemplateState> getNodeTemplateStatesForParticipant(UUID participantId) {
+        var acNodeTemplateStates = participantProvider.getAcNodeTemplateStates(participantId);
+        Map<UUID, NodeTemplateState> map = new HashMap<>();
+        MapUtils.populateMap(map, acNodeTemplateStates, NodeTemplateState::getNodeTemplateStateId);
+
+        return map;
     }
 }
