@@ -87,6 +87,7 @@ public class JpaNodeTemplateState extends Validated implements PfAuthorative<Nod
             this.participantId = copyConcept.getParticipantId().toString();
         }
         this.nodeTemplateId = copyConcept.getNodeTemplateId();
+        this.state = copyConcept.getState();
     }
 
     @Override

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2022-2023 Nordix Foundation.
+ *  Copyright (C) 2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,36 +20,26 @@
 
 package org.onap.policy.clamp.models.acm.concepts;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import org.junit.jupiter.api.Test;
 
-/**
- * Class to represent details of a running participant instance.
- */
-@NoArgsConstructor
-@Data
-@EqualsAndHashCode
-public class ParticipantInformation {
-    @NonNull
-    private Participant participant;
+public class ParticipantInformationTest {
 
-    private Map<UUID, NodeTemplateState> acNodeTemplateStateDefinitionMap = new HashMap<>();
-    private Map<UUID, AutomationCompositionElement> acElementInstanceMap = new HashMap<>();
+    @Test
+    void testCopyConstructor() {
+        var participant = new Participant();
+        participant.setParticipantId(UUID.randomUUID());
+        participant.setParticipantState(ParticipantState.ON_LINE);
+        participant.setParticipantSupportedElementTypes(new HashMap<>());
+        var participantInfo1 = new ParticipantInformation();
+        participantInfo1.setParticipant(participant);
+        participantInfo1.setAcElementInstanceMap(new HashMap<>());
+        participantInfo1.setAcNodeTemplateStateDefinitionMap(new HashMap<>());
 
-    /**
-     * Copy constructor.
-     *
-     * @param otherInfo the participant information to copy from
-     */
-    public ParticipantInformation(ParticipantInformation otherInfo) {
-
-        this.participant = otherInfo.participant;
-        this.acNodeTemplateStateDefinitionMap = otherInfo.getAcNodeTemplateStateDefinitionMap();
-        this.acElementInstanceMap = otherInfo.getAcElementInstanceMap();
+        var participantInfo2 = new ParticipantInformation(participantInfo1);
+        assertEquals(participantInfo1, participantInfo2);
     }
 }

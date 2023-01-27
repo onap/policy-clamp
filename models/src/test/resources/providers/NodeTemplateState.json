@@ -1,0 +1,9 @@
+{
+  "nodeTemplateStateId": "c836dc19-d13d-4506-9dbe-96223e1fbad4",
+  "participantId": "24b694d4-a07c-11ed-a8fc-0242ac120002",
+  "nodeTemplateId": {
+    "name": "testNodeTemplate",
+    "version": "1.0.0"
+  },
+  "state": "COMMISSIONED"
+}

@@ -26,8 +26,12 @@ import java.util.UUID;
 import javax.ws.rs.core.Response.Status;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
+import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaParticipant;
+import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionElementRepository;
+import org.onap.policy.clamp.models.acm.persistence.repository.NodeTemplateStateRepository;
 import org.onap.policy.clamp.models.acm.persistence.repository.ParticipantRepository;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.springframework.stereotype.Service;
@@ -42,6 +46,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class ParticipantProvider {
 
     private final ParticipantRepository participantRepository;
+
+    private final AutomationCompositionElementRepository automationCompositionElementRepository;
+
+    private final NodeTemplateStateRepository nodeTemplateStateRepository;
+
 
     /**
      * Get all participants.
@@ -126,5 +135,27 @@ public class ParticipantProvider {
         participantRepository.delete(jpaDeleteParticipantOpt.get());
 
         return jpaDeleteParticipantOpt.get().toAuthorative();
+    }
+
+    /**
+     * Retrieve a list of automation composition elements associated with a participantId.
+     *
+     * @param participantId the participant id associated with the automation composition elements
+     * @return the list of associated elements
+     */
+    public List<AutomationCompositionElement> getAutomationCompositionElements(@NonNull final UUID participantId) {
+        return ProviderUtils.asEntityList(automationCompositionElementRepository
+            .findByParticipantId(participantId.toString()));
+    }
+
+    /**
+     * Retrieve a list of node template states elements associated with a participantId from ac definitions.
+     *
+     * @param participantId the participant id associated with the automation composition elements
+     * @return the list of associated elements
+     */
+    public List<NodeTemplateState> getAcNodeTemplateStates(@NonNull final UUID participantId) {
+        return ProviderUtils.asEntityList(nodeTemplateStateRepository
+            .findByParticipantId(participantId.toString()));
     }
 }
