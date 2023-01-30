@@ -42,6 +42,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.common.parameters.annotations.NotNull;
 import org.onap.policy.common.parameters.annotations.Valid;
 import org.onap.policy.models.base.PfAuthorative;
@@ -91,6 +92,10 @@ public class JpaAutomationCompositionElement extends Validated
     private AutomationCompositionOrderedState orderedState;
 
     @Column
+    @NotNull
+    private DeployState deployState;
+
+    @Column
     private String description;
 
     @Lob
@@ -113,7 +118,8 @@ public class JpaAutomationCompositionElement extends Validated
      * @param instanceId The id of the automation composition instance
      */
     public JpaAutomationCompositionElement(@NonNull final String elementId, @NonNull final String instanceId) {
-        this(elementId, instanceId, new PfConceptKey(), AutomationCompositionState.UNINITIALISED);
+        this(elementId, instanceId, new PfConceptKey(),
+            AutomationCompositionState.UNINITIALISED, DeployState.UNDEPLOYED);
     }
 
     /**
@@ -126,11 +132,13 @@ public class JpaAutomationCompositionElement extends Validated
      */
     public JpaAutomationCompositionElement(@NonNull final String elementId, @NonNull final String instanceId,
             @NonNull final PfConceptKey definition,
-            @NonNull final AutomationCompositionState state) {
+            @NonNull final AutomationCompositionState state,
+                                           @NonNull final DeployState deployState) {
         this.elementId = elementId;
         this.instanceId = instanceId;
         this.definition = definition;
         this.state = state;
+        this.deployState = deployState;
     }
 
     /**
@@ -147,6 +155,7 @@ public class JpaAutomationCompositionElement extends Validated
         this.orderedState = copyConcept.orderedState;
         this.description = copyConcept.description;
         this.properties = (copyConcept.properties != null ? new LinkedHashMap<>(copyConcept.properties) : null);
+        this.deployState = copyConcept.deployState;
     }
 
     /**
@@ -169,6 +178,7 @@ public class JpaAutomationCompositionElement extends Validated
         element.setOrderedState(orderedState != null ? orderedState : state.asOrderedState());
         element.setDescription(description);
         element.setProperties(PfUtils.mapMap(properties, UnaryOperator.identity()));
+        element.setDeployState(deployState);
 
         return element;
     }
@@ -181,6 +191,7 @@ public class JpaAutomationCompositionElement extends Validated
         this.orderedState = element.getOrderedState();
         this.description = element.getDescription();
         properties = PfUtils.mapMap(element.getProperties(), UnaryOperator.identity());
+        this.deployState = element.getDeployState();
     }
 
     @Override
@@ -218,6 +229,11 @@ public class JpaAutomationCompositionElement extends Validated
         }
 
         result = ObjectUtils.compare(orderedState, other.orderedState);
+        if (result != 0) {
+            return result;
+        }
+
+        result = ObjectUtils.compare(deployState, other.deployState);
         if (result != 0) {
             return result;
         }
