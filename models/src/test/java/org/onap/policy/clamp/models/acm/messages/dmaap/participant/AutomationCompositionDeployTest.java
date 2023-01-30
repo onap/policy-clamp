@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2023 Nordix Foundation.
+ * Copyright (C) 2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantUpdates;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.utils.CommonTestData;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -43,12 +43,12 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaProperty;
 /**
  * Test the copy constructor.
  */
-class AutomationCompositionUpdateTest {
+class AutomationCompositionDeployTest {
     @Test
     void testCopyConstructor() throws CoderException {
-        assertThatThrownBy(() -> new AutomationCompositionUpdate(null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> new AutomationCompositionDeploy(null)).isInstanceOf(NullPointerException.class);
 
-        var orig = new AutomationCompositionUpdate();
+        var orig = new AutomationCompositionDeploy();
         // verify with all values
         orig.setAutomationCompositionId(UUID.randomUUID());
         orig.setParticipantId(null);
@@ -74,14 +74,14 @@ class AutomationCompositionUpdateTest {
         var propertiesMap = Map.of("Prop1", (Object) json);
         acElement.setProperties(propertiesMap);
 
-        var participantUpdates = new ParticipantUpdates();
-        participantUpdates.setParticipantId(participantId);
-        participantUpdates.setAutomationCompositionElementList(List.of(acElement));
-        orig.setParticipantUpdatesList(List.of(participantUpdates));
+        var participantDeploy = new ParticipantDeploy();
+        participantDeploy.setParticipantId(participantId);
+        participantDeploy.setAutomationCompositionElementList(List.of(acElement));
+        orig.setParticipantUpdatesList(List.of(participantDeploy));
 
-        var other = new AutomationCompositionUpdate(orig);
+        var other = new AutomationCompositionDeploy(orig);
 
         assertEquals(removeVariableFields(orig.toString()), removeVariableFields(other.toString()));
-        assertSerializable(orig, AutomationCompositionUpdate.class);
+        assertSerializable(orig, AutomationCompositionDeploy.class);
     }
 }

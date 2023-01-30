@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionAck;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeployAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDeregister;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegister;
@@ -59,8 +59,8 @@ class ParticipantCommTest {
         var participantUpdateListener = new ParticipantUpdateListener(participantHandler);
         assertEquals(ParticipantMessageType.PARTICIPANT_UPDATE.name(), participantUpdateListener.getType());
 
-        var automationCompositionUpdateListener = new AutomationCompositionUpdateListener(participantHandler);
-        assertEquals(ParticipantMessageType.AUTOMATION_COMPOSITION_UPDATE.name(),
+        var automationCompositionUpdateListener = new AutomationCompositionDeployListener(participantHandler);
+        assertEquals(ParticipantMessageType.AUTOMATION_COMPOSITION_DEPLOY.name(),
             automationCompositionUpdateListener.getType());
 
         var automationCompositionStateChangeListener = new AutomationCompositionStateChangeListener(participantHandler);
@@ -86,7 +86,7 @@ class ParticipantCommTest {
         assertThrows(AutomationCompositionRuntimeException.class,
             () -> participantMessagePublisher.sendParticipantDeregister(participantDeregister));
 
-        var automationCompositionAck = Mockito.mock(AutomationCompositionAck.class);
+        var automationCompositionAck = Mockito.mock(AutomationCompositionDeployAck.class);
         assertThrows(AutomationCompositionRuntimeException.class,
             () -> participantMessagePublisher.sendAutomationCompositionAck(automationCompositionAck));
 

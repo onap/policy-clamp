@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2022 Nordix Foundation.
+ * Copyright (C) 2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import java.util.function.UnaryOperator;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementAck;
+import org.onap.policy.clamp.models.acm.concepts.AcElementDeployAck;
 import org.onap.policy.models.base.PfUtils;
 
 /**
@@ -38,20 +38,20 @@ import org.onap.policy.models.base.PfUtils;
 @Getter
 @Setter
 @ToString(callSuper = true)
-public class AutomationCompositionAck extends ParticipantAckMessage {
+public class AutomationCompositionDeployAck extends ParticipantAckMessage {
 
     private UUID automationCompositionId;
     private Integer startPhase;
 
     // A map with AutomationCompositionElementID as its key, and a pair of result and message as value per
     // AutomationCompositionElement.
-    private Map<UUID, AutomationCompositionElementAck> automationCompositionResultMap = new LinkedHashMap<>();
+    private Map<UUID, AcElementDeployAck> automationCompositionResultMap = new LinkedHashMap<>();
 
     /**
      * Constructor for instantiating ParticipantRegisterAck class with message name.
      *
      */
-    public AutomationCompositionAck(final ParticipantMessageType messageType) {
+    public AutomationCompositionDeployAck(final ParticipantMessageType messageType) {
         super(messageType);
     }
 
@@ -60,9 +60,10 @@ public class AutomationCompositionAck extends ParticipantAckMessage {
      *
      * @param source source from which to copy
      */
-    public AutomationCompositionAck(final AutomationCompositionAck source) {
+    public AutomationCompositionDeployAck(final AutomationCompositionDeployAck source) {
         super(source);
         this.automationCompositionId = source.automationCompositionId;
+        this.startPhase = source.startPhase;
         this.automationCompositionResultMap =
             PfUtils.mapMap(source.automationCompositionResultMap, UnaryOperator.identity());
     }

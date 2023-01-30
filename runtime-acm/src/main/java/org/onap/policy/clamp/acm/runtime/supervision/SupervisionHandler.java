@@ -27,15 +27,15 @@ import java.util.Set;
 import java.util.UUID;
 import javax.ws.rs.core.Response;
 import lombok.AllArgsConstructor;
+import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionDeployPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionStateChangePublisher;
-import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionUpdatePublisher;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionException;
+import org.onap.policy.clamp.models.acm.concepts.AcElementDeployAck;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementAck;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionAck;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeployAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUpdateAck;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
@@ -66,7 +66,7 @@ public class SupervisionHandler {
     private final AcDefinitionProvider acDefinitionProvider;
 
     // Publishers for participant communication
-    private final AutomationCompositionUpdatePublisher automationCompositionUpdatePublisher;
+    private final AutomationCompositionDeployPublisher automationCompositionDeployPublisher;
     private final AutomationCompositionStateChangePublisher automationCompositionStateChangePublisher;
 
     /**
@@ -76,9 +76,10 @@ public class SupervisionHandler {
      */
     @MessageIntercept
     @Timed(
-        value = "listener.automation_composition_update_ack",
-        description = "AUTOMATION_COMPOSITION_UPDATE_ACK messages received")
-    public void handleAutomationCompositionUpdateAckMessage(AutomationCompositionAck automationCompositionAckMessage) {
+        value = "listener.automation_composition_deploy_ack",
+        description = "AUTOMATION_COMPOSITION_DEPLOY_ACK messages received")
+    public void handleAutomationCompositionUpdateAckMessage(
+            AutomationCompositionDeployAck automationCompositionAckMessage) {
         LOGGER.debug("AutomationComposition Update Ack message received {}", automationCompositionAckMessage);
         setAcElementStateInDb(automationCompositionAckMessage);
     }
@@ -128,12 +129,12 @@ public class SupervisionHandler {
         value = "listener.automation_composition_statechange_ack",
         description = "AUTOMATION_COMPOSITION_STATECHANGE_ACK messages received")
     public void handleAutomationCompositionStateChangeAckMessage(
-        AutomationCompositionAck automationCompositionAckMessage) {
+        AutomationCompositionDeployAck automationCompositionAckMessage) {
         LOGGER.debug("AutomationComposition StateChange Ack message received {}", automationCompositionAckMessage);
         setAcElementStateInDb(automationCompositionAckMessage);
     }
 
-    private void setAcElementStateInDb(AutomationCompositionAck automationCompositionAckMessage) {
+    private void setAcElementStateInDb(AutomationCompositionDeployAck automationCompositionAckMessage) {
         if (automationCompositionAckMessage.getAutomationCompositionResultMap() != null) {
             var automationComposition = automationCompositionProvider
                 .findAutomationComposition(automationCompositionAckMessage.getAutomationCompositionId());
@@ -152,7 +153,7 @@ public class SupervisionHandler {
     }
 
     private boolean updateState(AutomationComposition automationComposition,
-                                Set<Map.Entry<UUID, AutomationCompositionElementAck>> automationCompositionResultSet) {
+                                Set<Map.Entry<UUID, AcElementDeployAck>> automationCompositionResultSet) {
         var updated = false;
         for (var acElementAck : automationCompositionResultSet) {
             var element = automationComposition.getElements().get(acElementAck.getKey());
@@ -256,7 +257,7 @@ public class SupervisionHandler {
                 break;
             case UNINITIALISED:
                 automationComposition.setState(AutomationCompositionState.UNINITIALISED2PASSIVE);
-                automationCompositionUpdatePublisher.send(automationComposition);
+                automationCompositionDeployPublisher.send(automationComposition);
                 break;
 
             case UNINITIALISED2PASSIVE:

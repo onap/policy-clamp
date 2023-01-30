@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2023 Nordix Foundation.
+ * Copyright (C) 2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,39 +28,39 @@ import static org.onap.policy.clamp.models.acm.messages.dmaap.participant.Partic
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementAck;
+import org.onap.policy.clamp.models.acm.concepts.AcElementDeployAck;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.clamp.models.acm.utils.CommonTestData;
 import org.onap.policy.common.utils.coder.CoderException;
 
-class AutomationCompositionAckTest {
+class AutomationCompositionDeployAckTest {
 
     @Test
     void testCopyConstructor() throws CoderException {
-        assertThatThrownBy(() -> new AutomationCompositionAck((AutomationCompositionAck) null))
+        assertThatThrownBy(() -> new AutomationCompositionDeployAck((AutomationCompositionDeployAck) null))
             .isInstanceOf(NullPointerException.class);
 
-        final var orig = new AutomationCompositionAck(ParticipantMessageType.AUTOMATION_COMPOSITION_UPDATE);
+        final var orig = new AutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_DEPLOY);
 
         // verify with null values
         assertEquals(removeVariableFields(orig.toString()),
-                removeVariableFields(new AutomationCompositionAck(orig).toString()));
+                removeVariableFields(new AutomationCompositionDeployAck(orig).toString()));
 
         // verify with all values
         orig.setAutomationCompositionId(UUID.randomUUID());
         orig.setParticipantId(CommonTestData.getParticipantId());
-        var acElementResult = new AutomationCompositionElementAck(AutomationCompositionState.UNINITIALISED,
+        var acElementResult = new AcElementDeployAck(AutomationCompositionState.UNINITIALISED, null,
             true, "AutomationCompositionElement result");
         final var automationCompositionResultMap = Map.of(UUID.randomUUID(), acElementResult);
         orig.setAutomationCompositionResultMap(automationCompositionResultMap);
 
         orig.setResponseTo(UUID.randomUUID());
         orig.setResult(true);
-        orig.setMessage("Successfully processed AutomationCompositionUpdate message");
+        orig.setMessage("Successfully processed AutomationCompositionDeploy message");
 
         assertEquals(removeVariableFields(orig.toString()),
-                removeVariableFields(new AutomationCompositionAck(orig).toString()));
+                removeVariableFields(new AutomationCompositionDeployAck(orig).toString()));
 
-        assertSerializable(orig, AutomationCompositionAck.class);
+        assertSerializable(orig, AutomationCompositionDeployAck.class);
     }
 }

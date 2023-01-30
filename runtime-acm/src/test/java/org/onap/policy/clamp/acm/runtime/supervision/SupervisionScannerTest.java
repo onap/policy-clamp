@@ -34,8 +34,8 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
+import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionDeployPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionStateChangePublisher;
-import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionUpdatePublisher;
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
@@ -73,7 +73,7 @@ class SupervisionScannerTest {
     void testScannerOrderedStateEqualsToState() {
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
-        var automationCompositionUpdatePublisher = mock(AutomationCompositionUpdatePublisher.class);
+        var automationCompositionDeployPublisher = mock(AutomationCompositionDeployPublisher.class);
         var participantProvider = mock(ParticipantProvider.class);
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
 
@@ -82,7 +82,7 @@ class SupervisionScannerTest {
             .thenReturn(List.of(automationComposition));
 
         var supervisionScanner = new SupervisionScanner(automationCompositionProvider, acDefinitionProvider,
-            automationCompositionStateChangePublisher, automationCompositionUpdatePublisher, participantProvider,
+            automationCompositionStateChangePublisher, automationCompositionDeployPublisher, participantProvider,
             acRuntimeParameterGroup);
         supervisionScanner.run(false);
 
@@ -98,13 +98,13 @@ class SupervisionScannerTest {
         when(automationCompositionProvider.getAcInstancesByCompositionId(compositionId))
             .thenReturn(List.of(automationComposition));
 
-        var automationCompositionUpdatePublisher = mock(AutomationCompositionUpdatePublisher.class);
+        var automationCompositionDeployPublisher = mock(AutomationCompositionDeployPublisher.class);
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
         var participantProvider = mock(ParticipantProvider.class);
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
 
         var supervisionScanner = new SupervisionScanner(automationCompositionProvider, acDefinitionProvider,
-            automationCompositionStateChangePublisher, automationCompositionUpdatePublisher, participantProvider,
+            automationCompositionStateChangePublisher, automationCompositionDeployPublisher, participantProvider,
             acRuntimeParameterGroup);
         supervisionScanner.run(false);
 
@@ -122,12 +122,12 @@ class SupervisionScannerTest {
         var participant = CommonTestData.createParticipant(CommonTestData.getParticipantId());
         when(participantProvider.getParticipants()).thenReturn(List.of(participant));
 
-        var automationCompositionUpdatePublisher = mock(AutomationCompositionUpdatePublisher.class);
+        var automationCompositionDeployPublisher = mock(AutomationCompositionDeployPublisher.class);
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
 
         var supervisionScanner = new SupervisionScanner(automationCompositionProvider, acDefinitionProvider,
-            automationCompositionStateChangePublisher, automationCompositionUpdatePublisher, participantProvider,
+            automationCompositionStateChangePublisher, automationCompositionDeployPublisher, participantProvider,
             acRuntimeParameterGroup);
 
         supervisionScanner.handleParticipantStatus(participant.getParticipantId());
@@ -156,17 +156,17 @@ class SupervisionScannerTest {
             .thenReturn(List.of(automationComposition));
 
         var participantProvider = mock(ParticipantProvider.class);
-        var automationCompositionUpdatePublisher = mock(AutomationCompositionUpdatePublisher.class);
+        var automationCompositionDeployPublisher = mock(AutomationCompositionDeployPublisher.class);
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
 
         var supervisionScanner = new SupervisionScanner(automationCompositionProvider, acDefinitionProvider,
-            automationCompositionStateChangePublisher, automationCompositionUpdatePublisher, participantProvider,
+            automationCompositionStateChangePublisher, automationCompositionDeployPublisher, participantProvider,
             acRuntimeParameterGroup);
 
         supervisionScanner.run(false);
 
-        verify(automationCompositionUpdatePublisher).send(any(AutomationComposition.class), anyInt());
+        verify(automationCompositionDeployPublisher).send(any(AutomationComposition.class), anyInt());
     }
 
     @Test
@@ -185,11 +185,11 @@ class SupervisionScannerTest {
         var participantProvider = mock(ParticipantProvider.class);
         when(participantProvider.getParticipants()).thenReturn(List.of(participant));
 
-        var automationCompositionUpdatePublisher = mock(AutomationCompositionUpdatePublisher.class);
+        var automationCompositionDeployPublisher = mock(AutomationCompositionDeployPublisher.class);
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
 
         var supervisionScanner = new SupervisionScanner(automationCompositionProvider, acDefinitionProvider,
-            automationCompositionStateChangePublisher, automationCompositionUpdatePublisher, participantProvider,
+            automationCompositionStateChangePublisher, automationCompositionDeployPublisher, participantProvider,
             acRuntimeParameterGroup);
 
         supervisionScanner.handleParticipantStatus(participant.getParticipantId());

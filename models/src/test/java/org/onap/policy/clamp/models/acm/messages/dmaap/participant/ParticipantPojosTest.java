@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021 Nordix Foundation.
+ * Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,15 +20,12 @@
 
 package org.onap.policy.clamp.models.acm.messages.dmaap.participant;
 
-import com.openpojo.reflection.PojoClass;
 import com.openpojo.reflection.impl.PojoClassFactory;
-import com.openpojo.validation.Validator;
 import com.openpojo.validation.ValidatorBuilder;
 import com.openpojo.validation.rule.impl.GetterMustExistRule;
 import com.openpojo.validation.rule.impl.SetterMustExistRule;
 import com.openpojo.validation.test.impl.GetterTester;
 import com.openpojo.validation.test.impl.SetterTester;
-import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.common.utils.test.ToStringTester;
 
@@ -39,18 +36,18 @@ class ParticipantPojosTest {
 
     @Test
     void testPojos() {
-        List<PojoClass> pojoClasses =
+        var pojoClasses =
                 PojoClassFactory.getPojoClasses(ParticipantPojosTest.class.getPackageName());
 
         pojoClasses.remove(PojoClassFactory.getPojoClass(ParticipantMessage.class));
         pojoClasses.remove(PojoClassFactory.getPojoClass(ParticipantMessageTest.class));
         pojoClasses.remove(PojoClassFactory.getPojoClass(ParticipantAckMessage.class));
         pojoClasses.remove(PojoClassFactory.getPojoClass(ParticipantAckMessageTest.class));
-        pojoClasses.remove(PojoClassFactory.getPojoClass(AutomationCompositionAck.class));
-        pojoClasses.remove(PojoClassFactory.getPojoClass(AutomationCompositionAckTest.class));
+        pojoClasses.remove(PojoClassFactory.getPojoClass(AutomationCompositionDeployAck.class));
+        pojoClasses.remove(PojoClassFactory.getPojoClass(AutomationCompositionDeployAckTest.class));
 
         // @formatter:off
-        final Validator validator = ValidatorBuilder
+        final var validator = ValidatorBuilder
                 .create()
                 .with(new ToStringTester())
                 .with(new SetterMustExistRule())

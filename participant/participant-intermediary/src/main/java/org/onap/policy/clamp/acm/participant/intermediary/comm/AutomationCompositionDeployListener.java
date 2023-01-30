@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,28 +21,28 @@
 package org.onap.policy.clamp.acm.participant.intermediary.comm;
 
 import org.onap.policy.clamp.acm.participant.intermediary.handler.ParticipantHandler;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionUpdate;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeploy;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
 import org.springframework.stereotype.Component;
 
 /**
- * Listener for Automation Composition Update messages sent by ACM.
+ * Listener for Automation Composition Deploy messages sent by ACM.
  */
 @Component
-public class AutomationCompositionUpdateListener extends ParticipantListener<AutomationCompositionUpdate> {
+public class AutomationCompositionDeployListener extends ParticipantListener<AutomationCompositionDeploy> {
 
     /**
      * Constructs the object.
      *
      * @param participantHandler the handler for managing the state of the participant
      */
-    public AutomationCompositionUpdateListener(final ParticipantHandler participantHandler) {
-        super(AutomationCompositionUpdate.class, participantHandler,
-            participantHandler::handleAutomationCompositionUpdate);
+    public AutomationCompositionDeployListener(final ParticipantHandler participantHandler) {
+        super(AutomationCompositionDeploy.class, participantHandler,
+            participantHandler::handleAutomationCompositionDeploy);
     }
 
     @Override
     public String getType() {
-        return ParticipantMessageType.AUTOMATION_COMPOSITION_UPDATE.name();
+        return ParticipantMessageType.AUTOMATION_COMPOSITION_DEPLOY.name();
     }
 }

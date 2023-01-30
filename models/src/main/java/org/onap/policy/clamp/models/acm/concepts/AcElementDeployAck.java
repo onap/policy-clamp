@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,10 +29,13 @@ import lombok.ToString;
 @Setter
 @AllArgsConstructor
 @ToString
-public class AutomationCompositionElementAck {
+public class AcElementDeployAck {
 
     // State of the AutomationCompositionElement
     private AutomationCompositionState state;
+
+    // State of the AutomationCompositionElement
+    private DeployState deployState;
 
     // Result: Success/Fail.
     private Boolean result;

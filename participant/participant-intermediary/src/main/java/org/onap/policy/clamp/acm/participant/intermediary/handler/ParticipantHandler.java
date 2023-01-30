@@ -36,8 +36,8 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionInfo;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeploy;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionStateChange;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionUpdate;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantAckMessage;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDeregister;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDeregisterAck;
@@ -103,8 +103,8 @@ public class ParticipantHandler {
     @Timed(
             value = "listener.automation_composition_update",
             description = "AUTOMATION_COMPOSITION_UPDATE messages received")
-    public void handleAutomationCompositionUpdate(AutomationCompositionUpdate updateMsg) {
-        automationCompositionHandler.handleAutomationCompositionUpdate(updateMsg,
+    public void handleAutomationCompositionDeploy(AutomationCompositionDeploy updateMsg) {
+        automationCompositionHandler.handleAutomationCompositionDeploy(updateMsg,
                 acElementDefsMap.get(updateMsg.getCompositionId()));
     }
 

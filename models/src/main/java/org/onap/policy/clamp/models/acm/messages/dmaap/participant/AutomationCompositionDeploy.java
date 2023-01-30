@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2022 Nordix Foundation.
+ * Copyright (C) 2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,11 +25,11 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantUpdates;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.models.base.PfUtils;
 
 /**
- * Class to represent the AUTOMATION_COMPOSITION_UPDATE message that the automation composition runtime sends to a
+ * Class to represent the AUTOMATION_COMPOSITION_DEPLOY message that the automation composition runtime sends to a
  * participant. When a participant receives this message, it creates the automation composition elements contained in
  * the message and sets them to state PASSIVE. subsequent AUTOMATION_COMPOSITION_STATE_CHANGE messages are used to
  * activate the automation compositions.
@@ -37,18 +37,18 @@ import org.onap.policy.models.base.PfUtils;
 @Getter
 @Setter
 @ToString(callSuper = true)
-public class AutomationCompositionUpdate extends ParticipantMessage {
+public class AutomationCompositionDeploy extends ParticipantMessage {
 
     // A list of ParticipantUpdates instances which carries details of an updated participant.
-    private List<ParticipantUpdates> participantUpdatesList = new ArrayList<>();
+    private List<ParticipantDeploy> participantUpdatesList = new ArrayList<>();
     private Integer startPhase = 0;
 
     /**
      * Constructor for instantiating class with message name.
      *
      */
-    public AutomationCompositionUpdate() {
-        super(ParticipantMessageType.AUTOMATION_COMPOSITION_UPDATE);
+    public AutomationCompositionDeploy() {
+        super(ParticipantMessageType.AUTOMATION_COMPOSITION_DEPLOY);
     }
 
     /**
@@ -56,9 +56,9 @@ public class AutomationCompositionUpdate extends ParticipantMessage {
      *
      * @param source source from which to copy
      */
-    public AutomationCompositionUpdate(AutomationCompositionUpdate source) {
+    public AutomationCompositionDeploy(AutomationCompositionDeploy source) {
         super(source);
         this.startPhase = source.startPhase;
-        this.participantUpdatesList = PfUtils.mapList(source.participantUpdatesList, ParticipantUpdates::new);
+        this.participantUpdatesList = PfUtils.mapList(source.participantUpdatesList, ParticipantDeploy::new);
     }
 }

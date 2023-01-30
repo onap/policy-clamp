@@ -23,7 +23,7 @@ package org.onap.policy.clamp.acm.runtime.supervision.comm;
 
 import org.onap.policy.clamp.acm.runtime.config.messaging.Listener;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionHandler;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionAck;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeployAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
 import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
 import org.onap.policy.common.endpoints.listeners.ScoListener;
@@ -36,8 +36,8 @@ import org.springframework.stereotype.Component;
  * Listener for AutomationCompositionStateChangeAck messages sent by participants.
  */
 @Component
-public class AutomationCompositionStateChangeAckListener extends ScoListener<AutomationCompositionAck>
-    implements Listener<AutomationCompositionAck> {
+public class AutomationCompositionStateChangeAckListener extends ScoListener<AutomationCompositionDeployAck>
+    implements Listener<AutomationCompositionDeployAck> {
     private static final Logger LOGGER = LoggerFactory.getLogger(AutomationCompositionStateChangeAckListener.class);
 
     private final SupervisionHandler supervisionHandler;
@@ -46,20 +46,20 @@ public class AutomationCompositionStateChangeAckListener extends ScoListener<Aut
      * Constructs the object.
      */
     public AutomationCompositionStateChangeAckListener(SupervisionHandler supervisionHandler) {
-        super(AutomationCompositionAck.class);
+        super(AutomationCompositionDeployAck.class);
         this.supervisionHandler = supervisionHandler;
     }
 
     @Override
     public void onTopicEvent(final CommInfrastructure infra, final String topic, final StandardCoderObject sco,
-        final AutomationCompositionAck automationCompositionStateChangeAckMessage) {
+        final AutomationCompositionDeployAck automationCompositionStateChangeAckMessage) {
         LOGGER.debug("AutomationCompositionStateChangeAck received from participant - {}",
             automationCompositionStateChangeAckMessage);
         supervisionHandler.handleAutomationCompositionStateChangeAckMessage(automationCompositionStateChangeAckMessage);
     }
 
     @Override
-    public ScoListener<AutomationCompositionAck> getScoListener() {
+    public ScoListener<AutomationCompositionDeployAck> getScoListener() {
         return this;
     }
 

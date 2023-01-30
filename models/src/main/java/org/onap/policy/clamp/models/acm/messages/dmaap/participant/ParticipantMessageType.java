@@ -37,10 +37,10 @@ public enum ParticipantMessageType {
     PARTICIPANT_STATE_CHANGE,
 
     /**
-     * Used by acm runtime to update the automation compositions running on participants, triggers a
-     * PARTICIPANT_STATUS message with the result of the AUTOMATION_COMPOSITION_UPDATE operation.
+     * Used by acm runtime to deploy the automation compositions running on participants, triggers a
+     * PARTICIPANT_STATUS message with the result of the AUTOMATION_COMPOSITION_DEPLOY operation.
      */
-    AUTOMATION_COMPOSITION_UPDATE,
+    AUTOMATION_COMPOSITION_DEPLOY,
 
     /**
      * Used by acm runtime to change the state of automation compositions in participants, triggers a
@@ -86,10 +86,10 @@ public enum ParticipantMessageType {
     PARTICIPANT_UPDATE_ACK,
 
     /**
-     * Used by participant to acknowledge the receipt of AUTOMATION_COMPOSITION_UPDATE message
+     * Used by participant to acknowledge the receipt of AUTOMATION_COMPOSITION_DEPLOY message
      * from automation composition runtime.
      */
-    AUTOMATION_COMPOSITION_UPDATE_ACK,
+    AUTOMATION_COMPOSITION_DEPLOY_ACK,
 
     /**
      * Used by participant to acknowledge the receipt of AUTOMATION_COMPOSITION_STATE_CHANGE message

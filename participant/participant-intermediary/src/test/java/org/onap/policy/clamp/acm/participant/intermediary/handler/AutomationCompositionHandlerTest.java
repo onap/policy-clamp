@@ -37,9 +37,9 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantUpdates;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeploy;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionStateChange;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionUpdate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -124,36 +124,36 @@ class AutomationCompositionHandlerTest {
 
         var acd = new AutomationCompositionElementDefinition();
         acd.setAcElementDefinitionId(definition);
-        var updateMsg = new AutomationCompositionUpdate();
+        var updateMsg = new AutomationCompositionDeploy();
         updateMsg.setAutomationCompositionId(UUID.randomUUID());
         updateMsg.setMessageId(uuid);
         updateMsg.setParticipantId(partecipantId);
         updateMsg.setStartPhase(0);
         var acElementDefinitions = List.of(acd);
-        assertDoesNotThrow(() -> ach.handleAutomationCompositionUpdate(updateMsg, acElementDefinitions));
+        assertDoesNotThrow(() -> ach.handleAutomationCompositionDeploy(updateMsg, acElementDefinitions));
         updateMsg.setStartPhase(1);
-        assertDoesNotThrow(() -> ach.handleAutomationCompositionUpdate(updateMsg, acElementDefinitions));
+        assertDoesNotThrow(() -> ach.handleAutomationCompositionDeploy(updateMsg, acElementDefinitions));
 
         ach.getAutomationCompositionMap().clear();
         updateMsg.setStartPhase(0);
-        assertDoesNotThrow(() -> ach.handleAutomationCompositionUpdate(updateMsg, acElementDefinitions));
+        assertDoesNotThrow(() -> ach.handleAutomationCompositionDeploy(updateMsg, acElementDefinitions));
 
         updateMsg.setAutomationCompositionId(UUID.randomUUID());
-        updateMsg.setParticipantUpdatesList(List.of(mock(ParticipantUpdates.class)));
-        assertDoesNotThrow(() -> ach.handleAutomationCompositionUpdate(updateMsg, acElementDefinitions));
+        updateMsg.setParticipantUpdatesList(List.of(mock(ParticipantDeploy.class)));
+        assertDoesNotThrow(() -> ach.handleAutomationCompositionDeploy(updateMsg, acElementDefinitions));
 
         updateMsg.setStartPhase(1);
-        var participantUpdate = new ParticipantUpdates();
-        participantUpdate.setParticipantId(partecipantId);
+        var participantDeploy = new ParticipantDeploy();
+        participantDeploy.setParticipantId(partecipantId);
         var element = new AutomationCompositionElement();
         element.setDefinition(definition);
-        participantUpdate.setAutomationCompositionElementList(List.of(element));
-        updateMsg.setParticipantUpdatesList(List.of(participantUpdate));
+        participantDeploy.setAutomationCompositionElementList(List.of(element));
+        updateMsg.setParticipantUpdatesList(List.of(participantDeploy));
 
         var acd2 = new AutomationCompositionElementDefinition();
         acd2.setAcElementDefinitionId(definition);
         acd2.setAutomationCompositionElementToscaNodeTemplate(mock(ToscaNodeTemplate.class));
-        assertDoesNotThrow(() -> ach.handleAutomationCompositionUpdate(updateMsg, List.of(acd2)));
+        assertDoesNotThrow(() -> ach.handleAutomationCompositionDeploy(updateMsg, List.of(acd2)));
 
     }
 
