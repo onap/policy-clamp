@@ -53,6 +53,9 @@ public class AutomationCompositionElement {
     private AutomationCompositionState state = AutomationCompositionState.UNINITIALISED;
 
     @NonNull
+    private DeployState deployState = DeployState.UNDEPLOYED;
+
+    @NonNull
     private AutomationCompositionOrderedState orderedState = AutomationCompositionOrderedState.UNINITIALISED;
 
     private ToscaServiceTemplate toscaServiceTemplateFragment;
@@ -77,5 +80,6 @@ public class AutomationCompositionElement {
         this.toscaServiceTemplateFragment = otherElement.toscaServiceTemplateFragment;
         this.description = otherElement.description;
         this.properties = PfUtils.mapMap(otherElement.properties, UnaryOperator.identity());
+        this.deployState = otherElement.deployState;
     }
 }

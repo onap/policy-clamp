@@ -35,6 +35,7 @@ import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.utils.CommonTestData;
 import org.onap.policy.common.utils.coder.CoderException;
@@ -56,6 +57,10 @@ class JpaAutomationCompositionElementTest {
     @Test
     void testJpaAutomationCompositionElementConstructor() {
         assertThatThrownBy(() -> {
+            new JpaAutomationCompositionElement((AutomationCompositionElement) null);
+        }).hasMessageMatching("authorativeConcept is marked .*ull but is null");
+
+        assertThatThrownBy(() -> {
             new JpaAutomationCompositionElement((JpaAutomationCompositionElement) null);
         }).hasMessageMatching("copyConcept is marked .*ull but is null");
 
@@ -72,21 +77,32 @@ class JpaAutomationCompositionElementTest {
         }).hasMessageMatching(NULL_ELEMENT_ID_ERROR);
 
         assertThatThrownBy(() -> {
-            new JpaAutomationCompositionElement(null, null, null, null);
+            new JpaAutomationCompositionElement(null, null, null, null, null);
         }).hasMessageMatching(NULL_ELEMENT_ID_ERROR);
 
         assertThatThrownBy(() -> {
-            new JpaAutomationCompositionElement("key", null, null, AutomationCompositionState.UNINITIALISED);
+            new JpaAutomationCompositionElement("key", null, null,
+                AutomationCompositionState.UNINITIALISED, DeployState.UNDEPLOYED);
         }).hasMessageMatching(NULL_INSTANCE_ID_ERROR);
 
         assertThatThrownBy(() -> {
-            new JpaAutomationCompositionElement("key", "key", new PfConceptKey(), null);
+            new JpaAutomationCompositionElement("key", "key", null,
+                AutomationCompositionState.UNINITIALISED, DeployState.UNDEPLOYED);
+        }).hasMessageMatching("definition" + NULL_ERROR);
+
+        assertThatThrownBy(() -> {
+            new JpaAutomationCompositionElement("key", "key", new PfConceptKey(), null, DeployState.UNDEPLOYED);
         }).hasMessageMatching("state" + NULL_ERROR);
+
+        assertThatThrownBy(() -> {
+            new JpaAutomationCompositionElement("key", "key", new PfConceptKey(),
+                AutomationCompositionState.UNINITIALISED, null);
+        }).hasMessageMatching("deployState" + NULL_ERROR);
 
         assertNotNull(new JpaAutomationCompositionElement());
         assertNotNull(new JpaAutomationCompositionElement("key", "key"));
         assertNotNull(new JpaAutomationCompositionElement("key", "key",
-            new PfConceptKey(), AutomationCompositionState.UNINITIALISED));
+            new PfConceptKey(), AutomationCompositionState.UNINITIALISED, DeployState.UNDEPLOYED));
     }
 
     @Test
@@ -187,6 +203,11 @@ class JpaAutomationCompositionElementTest {
         testJpaAutomationCompositionElement.setState(AutomationCompositionState.PASSIVE);
         assertNotEquals(0, testJpaAutomationCompositionElement.compareTo(otherJpaAutomationCompositionElement));
         testJpaAutomationCompositionElement.setState(AutomationCompositionState.UNINITIALISED);
+        assertEquals(0, testJpaAutomationCompositionElement.compareTo(otherJpaAutomationCompositionElement));
+
+        testJpaAutomationCompositionElement.setDeployState(DeployState.DEPLOYED);
+        assertNotEquals(0, testJpaAutomationCompositionElement.compareTo(otherJpaAutomationCompositionElement));
+        testJpaAutomationCompositionElement.setDeployState(DeployState.UNDEPLOYED);
         assertEquals(0, testJpaAutomationCompositionElement.compareTo(otherJpaAutomationCompositionElement));
 
         assertEquals(0, testJpaAutomationCompositionElement.compareTo(otherJpaAutomationCompositionElement));
