@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2022 Nordix Foundation.
+ * Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,6 +37,8 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.base.PfConceptKey;
@@ -58,30 +60,43 @@ class JpaAutomationCompositionTest {
         }).hasMessageMatching("copyConcept is marked .*ull but is null");
 
         assertThatThrownBy(() -> {
-            new JpaAutomationComposition(null, null, null, null, null);
+            new JpaAutomationComposition(null, null, null, null, null, null, null);
         }).hasMessageMatching(NULL_INSTANCE_ID_ERROR);
 
         assertThatThrownBy(() -> {
-            new JpaAutomationComposition(INSTANCE_ID, null, null, null, new ArrayList<>());
+            new JpaAutomationComposition(INSTANCE_ID, null, null, null, new ArrayList<>(),
+                DeployState.UNDEPLOYED, LockState.LOCKED);
         }).hasMessageMatching("key" + NULL_TEXT_ERROR);
 
         assertThatThrownBy(() -> {
             new JpaAutomationComposition(INSTANCE_ID, new PfConceptKey(), null,
-                    AutomationCompositionState.UNINITIALISED, null);
+                    AutomationCompositionState.UNINITIALISED, new ArrayList<>(),
+                DeployState.UNDEPLOYED, LockState.LOCKED);
         }).hasMessageMatching("compositionId" + NULL_TEXT_ERROR);
 
         assertThatThrownBy(() -> {
-            new JpaAutomationComposition(INSTANCE_ID, new PfConceptKey(), COMPOSITION_ID.toString(), null, null);
+            new JpaAutomationComposition(INSTANCE_ID, new PfConceptKey(), COMPOSITION_ID.toString(), null,
+                new ArrayList<>(), DeployState.UNDEPLOYED, LockState.LOCKED);
         }).hasMessageMatching("state" + NULL_TEXT_ERROR);
 
         assertThatThrownBy(() -> {
             new JpaAutomationComposition(INSTANCE_ID, new PfConceptKey(), COMPOSITION_ID.toString(),
-                    AutomationCompositionState.UNINITIALISED, null);
+                    AutomationCompositionState.UNINITIALISED, null, DeployState.UNDEPLOYED, LockState.LOCKED);
         }).hasMessageMatching("elements" + NULL_TEXT_ERROR);
+
+        assertThatThrownBy(() -> {
+            new JpaAutomationComposition(INSTANCE_ID, new PfConceptKey(), COMPOSITION_ID.toString(),
+                AutomationCompositionState.UNINITIALISED, new ArrayList<>(), null, LockState.LOCKED);
+        }).hasMessageMatching("deployState" + NULL_TEXT_ERROR);
+
+        assertThatThrownBy(() -> {
+            new JpaAutomationComposition(INSTANCE_ID, new PfConceptKey(), COMPOSITION_ID.toString(),
+                AutomationCompositionState.UNINITIALISED, new ArrayList<>(), DeployState.UNDEPLOYED, null);
+        }).hasMessageMatching("lockState" + NULL_TEXT_ERROR);
 
         assertNotNull(new JpaAutomationComposition());
         assertNotNull(new JpaAutomationComposition(INSTANCE_ID, new PfConceptKey(), COMPOSITION_ID.toString(),
-                AutomationCompositionState.UNINITIALISED, new ArrayList<>()));
+                AutomationCompositionState.UNINITIALISED, new ArrayList<>(), DeployState.UNDEPLOYED, LockState.LOCKED));
     }
 
     @Test
