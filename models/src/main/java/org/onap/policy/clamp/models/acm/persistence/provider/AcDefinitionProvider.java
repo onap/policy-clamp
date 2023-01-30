@@ -29,6 +29,8 @@ import javax.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplate;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionDefinitionRepository;
@@ -57,6 +59,8 @@ public class AcDefinitionProvider {
         var compositionId = UUID.randomUUID();
         acmDefinition.setCompositionId(compositionId);
         acmDefinition.setState(AcTypeState.COMMISSIONED);
+        acmDefinition.setDeployState(DeployState.UNDEPLOYED);
+        acmDefinition.setLockState(LockState.LOCKED);
         if (serviceTemplate.getMetadata() == null) {
             serviceTemplate.setMetadata(new HashMap<>());
         }
@@ -79,6 +83,8 @@ public class AcDefinitionProvider {
         var acmDefinition = new AutomationCompositionDefinition();
         acmDefinition.setCompositionId(compositionId);
         acmDefinition.setState(AcTypeState.COMMISSIONED);
+        acmDefinition.setDeployState(DeployState.UNDEPLOYED);
+        acmDefinition.setLockState(LockState.LOCKED);
         acmDefinition.setServiceTemplate(serviceTemplate);
         updateAcDefinition(acmDefinition);
     }

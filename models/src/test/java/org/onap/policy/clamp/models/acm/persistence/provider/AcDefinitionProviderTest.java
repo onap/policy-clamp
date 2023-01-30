@@ -27,6 +27,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -36,6 +37,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplate;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationCompositionDefinition;
@@ -89,6 +92,24 @@ class AcDefinitionProviderTest {
         var result = acDefinitionProvider.createAutomationCompositionDefinition(inputServiceTemplate);
 
         assertThat(result.getServiceTemplate()).isEqualTo(docServiceTemplate.toAuthorative());
+        assertThat(result.getServiceTemplate().getMetadata() != null);
+    }
+
+    @Test
+    void testCreateServiceTemplateWithMetadata() {
+        var docServiceTemplate = new DocToscaServiceTemplate(inputServiceTemplate);
+        var acmDefinition = getAcDefinition(docServiceTemplate);
+
+        var acmDefinitionRepository = mock(AutomationCompositionDefinitionRepository.class);
+        when(acmDefinitionRepository.save(any(JpaAutomationCompositionDefinition.class)))
+            .thenReturn(new JpaAutomationCompositionDefinition(acmDefinition));
+
+        var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository);
+        inputServiceTemplate.setMetadata(new HashMap<>());
+        var result = acDefinitionProvider.createAutomationCompositionDefinition(inputServiceTemplate);
+
+        assertThat(result.getServiceTemplate()).isEqualTo(docServiceTemplate.toAuthorative());
+        assertThat(result.getServiceTemplate().getMetadata() != null);
     }
 
     @Test
@@ -191,10 +212,40 @@ class AcDefinitionProviderTest {
         assertThat(result.get(0)).isEqualTo(acmDefinition.getServiceTemplate());
     }
 
+    @Test
+    void testGetServiceTemplateNulls() {
+        var docServiceTemplate = new DocToscaServiceTemplate(inputServiceTemplate);
+        var acmDefinition = getAcDefinition(docServiceTemplate);
+        var acmDefinitionRepository = mock(AutomationCompositionDefinitionRepository.class);
+        when(acmDefinitionRepository.findAll(Mockito.<Example<JpaAutomationCompositionDefinition>>any()))
+            .thenReturn(List.of(new JpaAutomationCompositionDefinition(acmDefinition)));
+
+        var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository);
+        var result = acDefinitionProvider.getServiceTemplateList(null,
+            inputServiceTemplate.getVersion());
+
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0)).isEqualTo(acmDefinition.getServiceTemplate());
+
+        result = acDefinitionProvider.getServiceTemplateList(inputServiceTemplate.getName(),
+            null);
+
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0)).isEqualTo(acmDefinition.getServiceTemplate());
+
+        result = acDefinitionProvider.getServiceTemplateList(null,
+            null);
+
+        assertThat(result).hasSize(0);
+        assertThat(result.isEmpty());
+    }
+
     private AutomationCompositionDefinition getAcDefinition(DocToscaServiceTemplate docServiceTemplate) {
         var acmDefinition = new AutomationCompositionDefinition();
         acmDefinition.setCompositionId(UUID.randomUUID());
         acmDefinition.setState(AcTypeState.COMMISSIONED);
+        acmDefinition.setDeployState(DeployState.UNDEPLOYED);
+        acmDefinition.setLockState(LockState.LOCKED);
         acmDefinition.setServiceTemplate(docServiceTemplate.toAuthorative());
         var nodeTemplateState = new NodeTemplateState();
         nodeTemplateState.setNodeTemplateStateId(UUID.randomUUID());

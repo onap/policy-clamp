@@ -41,6 +41,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.document.base.ToscaServiceTemplateValidation;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplate;
 import org.onap.policy.common.parameters.BeanValidationResult;
@@ -76,6 +78,14 @@ public class JpaAutomationCompositionDefinition extends Validated
     @NotNull
     private AcTypeState state;
 
+    @Column
+    @NotNull
+    private DeployState deployState;
+
+    @Column
+    @NotNull
+    private LockState lockState;
+
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "compositionId", foreignKey = @ForeignKey(name = "dt_element_fk"))
     private Set<JpaNodeTemplateState> elements = new HashSet<>();
@@ -102,6 +112,8 @@ public class JpaAutomationCompositionDefinition extends Validated
     public void fromAuthorative(final AutomationCompositionDefinition copyConcept) {
         this.compositionId = copyConcept.getCompositionId().toString();
         this.state = copyConcept.getState();
+        this.deployState = copyConcept.getDeployState();
+        this.lockState = copyConcept.getLockState();
         this.serviceTemplate = new DocToscaServiceTemplate(copyConcept.getServiceTemplate());
         setName(this.serviceTemplate.getName());
         setVersion(this.serviceTemplate.getVersion());
