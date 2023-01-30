@@ -1,5 +1,5 @@
 # ============LICENSE_START=======================================================
-# Copyright (C) 2021 Nordix Foundation.
+# Copyright (C) 2021-2023 Nordix Foundation.
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -317,9 +317,6 @@ node_types:
       provider:
         type: string
         required: false
-      participantType:
-        type: onap.datatypes.ToscaConceptIdentifier
-        required: true
       startPhase:
         type: integer
         required: false
@@ -418,9 +415,6 @@ topology_template:
       description: Automation composition element for the DCAE microservice for Performance Management Subscription Handling
       properties:
         provider: Ericsson
-        participantType:
-          name: org.onap.dcae.acm.DCAEMicroserviceAutomationCompositionParticipant
-          version: 2.3.4
         dcae_blueprint:
           tosca_definitions_version: cloudify_dsl_1_3
           imports:
@@ -642,9 +636,6 @@ topology_template:
       description: Automation composition element for the monitoring policy for Performance Management Subscription Handling
       properties:
         provider: Ericsson
-        participantType:
-          name: org.onap.policy.acm.PolicyAutomationCompositionParticipant
-          version: 2.3.1
         policy_type_id:
           name: onap.policies.monitoring.pm-subscription-handler
           version: 1.0.0
@@ -657,9 +648,6 @@ topology_template:
       description: Automation composition element for the operational policy for Performance Management Subscription Handling
       properties:
         provider: Ericsson
-        participantType:
-          name: org.onap.policy.acm.PolicyAutomationCompositionParticipant
-          version: 2.2.1
         policy_type_id:
           name: onap.policies.operational.pm-subscription-handler
           version: 1.0.0
@@ -672,9 +660,6 @@ topology_template:
       description: Automation composition element for CDS for Performance Management Subscription Handling
       properties:
         provider: Ericsson
-        participantType:
-          name: org.onap.ccsdk.cds.acm.CdsAutomationCompositionParticipant
-          version: 3.2.1
         cds_blueprint_id:
           name: org.onap.ccsdk.cds.PMSHCdsBlueprint
           version: 1.0.0

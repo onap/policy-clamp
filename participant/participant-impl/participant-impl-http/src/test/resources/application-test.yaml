@@ -3,9 +3,6 @@ participant:
     reportingTimeInterval: 120000
     description: Participant Description
     participantId: 101c62b3-8918-41b9-a747-d21eb79c6c01
-    participantType:
-      version: 2.3.4
-      name: org.onap.clamp.acm.HttpParticipant
     clampAutomationCompositionTopics:
       topicSources:
         -

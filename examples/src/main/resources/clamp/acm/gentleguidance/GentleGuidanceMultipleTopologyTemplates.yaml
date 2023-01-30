@@ -1,5 +1,5 @@
 # ============LICENSE_START=======================================================
-# Copyright (C) 2022 Nordix Foundation.
+# Copyright (C) 2022-2023 Nordix Foundation.
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -63,7 +63,6 @@ topology_template:
       description: Control loop element for the Gentle Guidance Kubernetes Microservice
       properties:
         provider: Ericsson
-        participantType: org.onap.policy.acm.participant.Kubernetes:1.0.0
         startPhase: 2
         uninitializedToPassiveTimeout: 180
     org.onap.domain.gentleguidance.RestAcmElementDefinition:
@@ -73,7 +72,6 @@ topology_template:
       description: Automation Composition element for the Gentle Guidance Microservice REST configuration
       properties:
         provider: Ericsson
-        participantType: org.onap.policy.acm.participant.Http:1.0.0
         startPhase: 1
         baseUrl: https://10.10.10.10:12345/gentleguidancemicroservice
     org.onap.domain.gentleguidance.PolicyAcmElementDefinition:
@@ -83,7 +81,6 @@ topology_template:
       description: Automation Composition element for the Gentle Guidance Operational Policy
       properties:
         provider: Ericsson
-        participantType: org.onap.policy.acm.participant.Policy:1.0.0
         startPhase: 0
     org.onap.domain.gentleguidance.CdsAcmElementDefinition:
       version: 1.0.0
@@ -92,7 +89,6 @@ topology_template:
       description: Automation Composition element for the Gentle Guidance CDS blueprint
       properties:
         provider: Ericsson
-        participantType: org.onap.policy.acm.participant.Cds:1.0.0
         startPhase: 0
     org.onap.domain.gentleguidance.AcmDefinition:
       version: 1.0.0
@@ -122,7 +118,6 @@ topology_template:
       description: Automation Composition element for the Gentle Guidance Kubernetes Microservice
       properties:
         provider: Ericsson
-        participantType: org.onap.policy.acm.participant.Kubernetes:1.0.0
         startPhase: 2
         uninitializedToPassiveTimeout: 180
         chart:
@@ -136,7 +131,6 @@ topology_template:
       description: Automation Composition element for the Gentle Guidance Microservice REST configuration
       properties:
         provider: Ericsson
-        participantType: org.onap.policy.acm.participant.Http:1.0.0
         startPhase: 1
         baseUrl: https://10.10.10.10:12345/gentleguidancemicroservice
         httpHeaders:
@@ -184,7 +178,6 @@ topology_template:
       description: Automation Composition element for the Gentle Guidance Operational Policy
       properties:
         provider: Ericsson
-        participantType: org.onap.policy.acm.participant.Policy:1.0.0
         startPhase: 0
         policyType: onap.policies.acm.operational.common.Apex:1.0.0
         policyId: org.onap.domain.gentleguidance.policy.GentleGuidanceAssertive:1.0.0
@@ -195,7 +188,6 @@ topology_template:
       description: Automation Composition element for the Gentle Guidance CDS blueprint
       properties:
         provider: Ericsson
-        participantType: org.onap.policy.acm.participant.Cds:1.0.0
         startPhase: 0
         cdsBlueprint: "Placeholder for the CDS blueprint"
     org.onap.domain.gentleguidance.AcmDefinition_Instance1:
@@ -224,7 +216,6 @@ topology_template:
       description: Automation Composition element for the Gentle Guidance Kubernetes Microservice
       properties:
         provider: Ericsson
-        participantType: org.onap.policy.acm.participant.Kubernetes:1.0.0
         startPhase: 2
         uninitializedToPassiveTimeout: 180
         chart:
@@ -238,7 +229,6 @@ topology_template:
       description: Automation Composition element for the Gentle Guidance Microservice REST configuration
       properties:
         provider: Ericsson
-        participantType: org.onap.policy.acm.participant.Http:1.0.0
         startPhase: 1
         baseUrl: https://10.10.10.10:12345/gentleguidancemicroservice
         httpHeaders:
@@ -286,7 +276,6 @@ topology_template:
       description: Automation Composition element for the Gentle Guidance Operational Policy
       properties:
         provider: Ericsson
-        participantType: org.onap.policy.acm.participant.Policy:1.0.0
         startPhase: 0
         policyType: onap.policies.acm.operational.common.Apex:1.0.0
         policyId: org.onap.domain.gentleguidance.policy.GentleGuidanceAssertive:1.0.0
@@ -297,7 +286,6 @@ topology_template:
       description: Automation Composition element for the Gentle Guidance CDS blueprint
       properties:
         provider: Ericsson
-        participantType: org.onap.policy.acm.participant.Cds:1.0.0
         startPhase: 0
         cdsBlueprint: "Placeholder for the CDS blueprint"
     org.onap.domain.gentleguidance.AcmDefinition_Instance2:

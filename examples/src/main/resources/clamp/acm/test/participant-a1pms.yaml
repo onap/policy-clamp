@@ -1,5 +1,5 @@
 # ============LICENSE_START=======================================================
-# Copyright (C) 2022 Nordix Foundation.
+# Copyright (C) 2022-2023 Nordix Foundation.
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -63,9 +63,6 @@ node_types:
       provider:
         type: string
         required: false
-      participantType:
-        type: onap.datatypes.ToscaConceptIdentifier
-        required: true
       startPhase:
         type: integer
         required: false
@@ -117,9 +114,6 @@ topology_template:
       description: Automation composition element for the A1 PMS Requests
       properties:
         provider: ONAP
-        participantType:
-          name: org.onap.policy.clamp.acm.A1PMSParticipant
-          version: 2.3.4
         policyServiceEntities:
           - a1PolicyServiceEntityId:
               name: entity1

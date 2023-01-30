@@ -1,5 +1,5 @@
 # ============LICENSE_START=======================================================
-# Copyright (C) 2022 Nordix Foundation.
+# Copyright (C) 2022-2023 Nordix Foundation.
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -276,17 +276,6 @@ node_types:
         metadata:
           common: true
         description: Specifies the organization that provides the automation composition element
-      participant_id:
-        type: onap.datatypes.ToscaConceptIdentifier
-        required: true
-        metadata:
-          common: true
-      participantType:
-        type: onap.datatypes.ToscaConceptIdentifier
-        required: true
-        metadata:
-          common: true
-        description: The identity of the participant type that hosts this type of Automation Composition Element
       startPhase:
         type: integer
         required: false
@@ -434,12 +423,6 @@ topology_template:
       description: Automation composition element for the operational policy for Performance Management Subscription Handling
       properties:
         provider: Ericsson
-        participant_id:
-          name: org.onap.PM_Policy
-          version: 1.0.0
-        participantType:
-          name: org.onap.policy.clamp.acm.PolicyParticipant
-          version: 2.3.1
         policy_type_id:
           name: onap.policies.operational.pm-subscription-handler
           version: 1.0.0
@@ -462,12 +445,6 @@ topology_template:
       description: Automation composition element for the K8S microservice for PMSH
       properties:
         provider: ONAP
-        participant_id:
-          name: K8sParticipant0
-          version: 1.0.0
-        participantType:
-          name: org.onap.policy.clamp.acm.KubernetesParticipant
-          version: 2.3.4
         chart:
           chartId:
             name: dcae-pmsh
@@ -497,12 +474,6 @@ topology_template:
       description: Automation composition element for the http requests of PMSH microservice
       properties:
         provider: ONAP
-        participant_id:
-          name: HttpParticipant0
-          version: 1.0.0
-        participantType:
-          name: org.onap.policy.clamp.acm.HttpParticipant
-          version: 2.3.4
         uninitializedToPassiveTimeout: 180
         startPhase: 1
         baseUrl: https://dcae-pmsh:8443

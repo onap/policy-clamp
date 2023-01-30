@@ -9,9 +9,6 @@ participant:
     description: Participant Description
     reportingTimeInterval: 120000
     participantId: 101c62b3-8918-41b9-a747-d21eb79c6c02
-    participantType:
-      version: 2.3.4
-      name: org.onap.k8s.acm.K8SAutomationCompositionParticipant
     clampAutomationCompositionTopics:
       topicSources:
         -

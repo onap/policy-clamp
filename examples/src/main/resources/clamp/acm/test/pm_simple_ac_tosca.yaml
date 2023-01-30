@@ -25,9 +25,6 @@ node_types:
       provider:
         type: string
         required: false
-      participantType:
-        type: onap.datatypes.ToscaConceptIdentifier
-        required: true
       startPhase:
         type: integer
         required: false
@@ -102,9 +99,6 @@ topology_template:
       description: Automation composition element for the DCAE microservice for Performance Management Subscription Handling
       properties:
         provider: Ericsson
-        participantType:
-          name: org.onap.dcae.acm.DCAEMicroserviceAutomationCompositionParticipant
-          version: 2.3.4
         dcae_blueprint_id:
           name: org.onap.dcae.blueprints.PMSHBlueprint
           version: 1.0.0
@@ -115,9 +109,6 @@ topology_template:
       description: Automation composition element for the monitoring policy for Performance Management Subscription Handling
       properties:
         provider: Ericsson
-        participantType:
-          name: org.onap.policy.acm.PolicyAutomationCompositionParticipant
-          version: 2.3.1
         policy_type_id:
           name: onap.policies.monitoring.pm-subscription-handler
           version: 1.0.0
@@ -128,9 +119,6 @@ topology_template:
       description: Automation composition element for the operational policy for Performance Management Subscription Handling
       properties:
         provider: Ericsson
-        participantType:
-          name: org.onap.policy.acm.PolicyAutomationCompositionParticipant
-          version: 2.3.1
         policy_type_id:
           name: onap.policies.operational.pm-subscription-handler
           version: 1.0.0
@@ -141,9 +129,6 @@ topology_template:
       description: Automation composition element for CDS for Performance Management Subscription Handling
       properties:
         provider: Ericsson
-        participantType:
-          name: org.onap.PM_CDS_Blueprint
-          version: 1.0.0
         cds_blueprint_id:
           name: org.onap.ccsdk.cds.PMSHCdsBlueprint
           version: 1.0.0
