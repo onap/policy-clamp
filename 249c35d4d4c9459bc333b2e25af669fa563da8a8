@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f2410cc_ef8e1a54",
+        "filename": "models/src/test/java/org/onap/policy/clamp/models/acm/persistence/provider/ParticipantProviderTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2023-01-31T13:24:54Z",
+      "side": 1,
+      "message": "could be removed, getById is not used in ParticipantProvider",
+      "range": {
+        "startLine": 63,
+        "startChar": 0,
+        "endLine": 66,
+        "endChar": 9
+      },
+      "revId": "249c35d4d4c9459bc333b2e25af669fa563da8a8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0e48ed0e_33aa2487",
+        "filename": "models/src/test/java/org/onap/policy/clamp/models/acm/persistence/provider/ParticipantProviderTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2023-01-31T13:24:54Z",
+      "side": 1,
+      "message": "could be removed, getById is not used in ParticipantProvider",
+      "range": {
+        "startLine": 83,
+        "startChar": 0,
+        "endLine": 86,
+        "endChar": 9
+      },
+      "revId": "249c35d4d4c9459bc333b2e25af669fa563da8a8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
