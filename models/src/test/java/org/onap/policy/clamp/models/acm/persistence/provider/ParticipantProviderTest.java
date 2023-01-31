@@ -59,10 +59,6 @@ class ParticipantProviderTest {
     @Test
     void testParticipantSave() {
         var participantRepository = mock(ParticipantRepository.class);
-        for (var participant : jpaParticipantList) {
-            when(participantRepository.getById(participant.getParticipantId()))
-                .thenReturn(participant);
-        }
         var participantProvider = new ParticipantProvider(participantRepository);
 
         assertThatThrownBy(() -> participantProvider.saveParticipant(null)).hasMessageMatching(LIST_IS_NULL);
@@ -78,10 +74,6 @@ class ParticipantProviderTest {
     @Test
     void testParticipantUpdate() {
         var participantRepository = mock(ParticipantRepository.class);
-        for (var participant : jpaParticipantList) {
-            when(participantRepository.getById(participant.getParticipantId()))
-                .thenReturn(participant);
-        }
         var participantProvider = new ParticipantProvider(participantRepository);
 
         assertThatThrownBy(() -> participantProvider.updateParticipant(null))

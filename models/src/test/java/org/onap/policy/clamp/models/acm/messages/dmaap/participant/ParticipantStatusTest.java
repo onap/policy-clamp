@@ -56,7 +56,6 @@ class ParticipantStatusTest {
         orig.setAutomationCompositionId(automationCompositionId);
         var participantId = CommonTestData.getParticipantId();
         orig.setParticipantId(participantId);
-        var type = new ToscaConceptIdentifier("type", "2.3.4");
         orig.setMessageId(UUID.randomUUID());
         orig.setState(ParticipantState.ON_LINE);
         orig.setTimestamp(Instant.ofEpochMilli(3000));

@@ -37,11 +37,8 @@ import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDe
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegister;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatus;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class SupervisionParticipantHandlerTest {
-    private static final ToscaConceptIdentifier PARTICIPANT_ID = new ToscaConceptIdentifier("ParticipantId", "1.0.0");
-
     @Test
     void testHandleParticipantDeregister() {
         var participant = CommonTestData.createParticipant(CommonTestData.getParticipantId());

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021,2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,5 +24,4 @@ package org.onap.policy.clamp.models.acm.persistence.concepts;
  * Test class for {@link JpaAutomationComposition} comparisons.
  */
 class DummyJpaAutomationCompositionChild extends JpaAutomationComposition {
-    private static final long serialVersionUID = -5101743610779424064L;
 }
