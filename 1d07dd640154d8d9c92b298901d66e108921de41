@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e9c8b9d6_50ce303a",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationCompositionDefinition.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2023-01-31T14:07:42Z",
+      "side": 1,
+      "message": "deployState and lockState are supposed to be add in AutomationComposition, not here",
+      "range": {
+        "startLine": 48,
+        "startChar": 0,
+        "endLine": 51,
+        "endChar": 32
+      },
+      "revId": "1d07dd640154d8d9c92b298901d66e108921de41",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c63b71f1_cc20ab1f",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/persistence/concepts/JpaAutomationCompositionDefinition.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2023-01-31T14:07:42Z",
+      "side": 1,
+      "message": "deployState and lockState are supposed to be add in JpaAutomationComposition, not here",
+      "range": {
+        "startLine": 81,
+        "startChar": 0,
+        "endLine": 87,
+        "endChar": 32
+      },
+      "revId": "1d07dd640154d8d9c92b298901d66e108921de41",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
