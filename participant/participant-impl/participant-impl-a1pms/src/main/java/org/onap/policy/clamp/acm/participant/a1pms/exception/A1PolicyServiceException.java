@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022 Nordix Foundation.
+ *  Copyright (C) 2022-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import javax.ws.rs.core.Response;
 import org.onap.policy.models.base.PfModelException;
 
 public class A1PolicyServiceException extends PfModelException {
+    private static final long serialVersionUID = 6438746904567105054L;
 
     public A1PolicyServiceException(int statusCode, String message) {
         super(Response.Status.fromStatusCode(statusCode), message);

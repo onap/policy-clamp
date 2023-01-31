@@ -56,6 +56,7 @@ class ParticipantProviderTest {
         jpaParticipantList = ProviderUtils.getJpaAndValidateList(inputParticipants, JpaParticipant::new, "participant");
     }
 
+    @SuppressWarnings("deprecation")
     @Test
     void testParticipantSave() {
         var participantRepository = mock(ParticipantRepository.class);
@@ -75,6 +76,7 @@ class ParticipantProviderTest {
         assertThat(savedParticipant).usingRecursiveComparison().isEqualTo(inputParticipants.get(0));
     }
 
+    @SuppressWarnings("deprecation")
     @Test
     void testParticipantUpdate() {
         var participantRepository = mock(ParticipantRepository.class);

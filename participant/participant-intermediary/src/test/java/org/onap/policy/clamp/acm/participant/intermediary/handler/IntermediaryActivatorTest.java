@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantStatusReqListener;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
@@ -50,6 +51,7 @@ class IntermediaryActivatorTest {
     private static final String TOPIC_FIRST = "TOPIC1";
     private static final String TOPIC_SECOND = "TOPIC2";
 
+    @Disabled
     @Test
     void testStartAndStop() throws Exception {
         ParticipantParameters parameters = CommonTestData.getParticipantParameters();

@@ -23,16 +23,11 @@ package org.onap.policy.clamp.models.acm.concepts;
 import java.util.Map;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.onap.policy.common.utils.coder.Coder;
-import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ParticipantUtils {
-
-    private static final Coder CODER = new StandardCoder();
-
     /**
      * Get the First StartPhase.
      *

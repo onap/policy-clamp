@@ -46,7 +46,6 @@ import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvide
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class SupervisionScannerTest {
 
@@ -55,9 +54,6 @@ class SupervisionScannerTest {
     private static final AcDefinitionProvider acDefinitionProvider = mock(AcDefinitionProvider.class);
 
     private static UUID compositionId;
-
-    private static final ToscaConceptIdentifier PARTICIPANT_TYPE =
-        new ToscaConceptIdentifier("org.onap.policy.clamp.acm.PolicyParticipant", "1.0.0");
 
     @BeforeAll
     public static void setUpBeforeAll() {
