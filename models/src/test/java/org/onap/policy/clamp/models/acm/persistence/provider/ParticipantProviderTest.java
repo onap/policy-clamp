@@ -96,10 +96,6 @@ class ParticipantProviderTest {
         var automationCompositionElementRepository = mock(AutomationCompositionElementRepository.class);
         var nodeTemplateStateRepository = mock(NodeTemplateStateRepository.class);
 
-        for (var participant : jpaParticipantList) {
-            when(participantRepository.getById(participant.getParticipantId()))
-                .thenReturn(participant);
-        }
         var participantProvider = new ParticipantProvider(participantRepository,
             automationCompositionElementRepository, nodeTemplateStateRepository);
 
@@ -118,10 +114,7 @@ class ParticipantProviderTest {
         var participantRepository = mock(ParticipantRepository.class);
         var automationCompositionElementRepository = mock(AutomationCompositionElementRepository.class);
         var nodeTemplateStateRepository = mock(NodeTemplateStateRepository.class);
-        for (var participant : jpaParticipantList) {
-            when(participantRepository.getById(participant.getParticipantId()))
-                .thenReturn(participant);
-        }
+
         var participantProvider = new ParticipantProvider(participantRepository,
             automationCompositionElementRepository, nodeTemplateStateRepository);
 

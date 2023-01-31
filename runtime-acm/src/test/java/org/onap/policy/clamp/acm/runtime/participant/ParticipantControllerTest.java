@@ -39,9 +39,7 @@ import org.onap.policy.clamp.acm.runtime.main.rest.ParticipantController;
 import org.onap.policy.clamp.acm.runtime.util.rest.CommonRestController;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantInformation;
-import org.onap.policy.clamp.models.acm.persistence.concepts.JpaParticipant;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
-import org.onap.policy.clamp.models.acm.persistence.provider.ProviderUtils;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -49,7 +47,7 @@ import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfModelException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -70,10 +68,8 @@ class ParticipantControllerTest extends CommonRestController {
     private static final Coder CODER = new StandardCoder();
     private static final String PARTICIPANT_JSON = "src/test/resources/providers/TestParticipant.json";
     private static final String PARTICIPANT_JSON2 = "src/test/resources/providers/TestParticipant2.json";
-    private static final String LIST_IS_NULL = ".*. is marked .*ull but is null";
 
     private static final List<Participant> inputParticipants = new ArrayList<>();
-    private static List<JpaParticipant> jpaParticipantList;
     private static final String originalJson = ResourceUtils.getResourceAsString(PARTICIPANT_JSON);
     private static final String originalJson2 = ResourceUtils.getResourceAsString(PARTICIPANT_JSON2);
 
@@ -87,8 +83,6 @@ class ParticipantControllerTest extends CommonRestController {
     public static void setUpBeforeClass() throws CoderException {
         inputParticipants.add(CODER.decode(originalJson, Participant.class));
         inputParticipants.add(CODER.decode(originalJson2, Participant.class));
-        jpaParticipantList = ProviderUtils.getJpaAndValidateList(
-            inputParticipants, JpaParticipant::new, "participant");
     }
 
     @BeforeEach
@@ -120,7 +114,6 @@ class ParticipantControllerTest extends CommonRestController {
     @Test
     void testBadQueryParticipant() {
         participantProvider.saveParticipant(inputParticipants.get(0));
-        UUID participantId = participantProvider.getParticipants().get(0).getParticipantId();
         var invocationBuilder = super.sendRequest(PARTICIPANTS_ENDPOINT + "/" + UUID.randomUUID());
         var response = invocationBuilder.buildGet().invoke();
         assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatus());

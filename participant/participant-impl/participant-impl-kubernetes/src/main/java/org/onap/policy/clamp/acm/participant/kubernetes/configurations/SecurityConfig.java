@@ -1,6 +1,6 @@
 /*-
  * ========================LICENSE_START=================================
- * Copyright (C) 2021 Nordix Foundation. All rights reserved.
+ * Copyright (C) 2021,2023 Nordix Foundation. All rights reserved.
  * ======================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,28 +18,30 @@
 
 package org.onap.policy.clamp.acm.participant.kubernetes.configurations;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.SecurityFilterChain;
 
+/**
+ * Configure how access to this module's REST end points is secured.
+ */
 @Configuration
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-    @Value("${security.enable-csrf:true}")
-    private boolean csrfEnabled = true;
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        // @formatter:off
-        http.authorizeRequests()
-            .antMatchers().authenticated()
-            .anyRequest().authenticated()
-            .and().httpBasic();
-        // @formatter:on
-
-        if (!csrfEnabled) {
-            http.csrf().disable();
-        }
+public class SecurityConfig {
+    /**
+     * Return the configuration of how access to this module's REST end points is secured.
+     *
+     * @param http the HTTP security settings
+     * @return the HTTP security settings
+     */
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+            .httpBasic()
+            .and()
+            .authorizeHttpRequests().anyRequest().authenticated()
+            .and()
+            .csrf().disable();
+        return http.build();
     }
 }
