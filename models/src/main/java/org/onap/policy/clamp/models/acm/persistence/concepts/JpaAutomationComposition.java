@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2022 Nordix Foundation.
+ * Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,6 +43,8 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.common.parameters.annotations.NotNull;
 import org.onap.policy.common.parameters.annotations.Valid;
 import org.onap.policy.models.base.PfAuthorative;
@@ -88,6 +90,14 @@ public class JpaAutomationComposition extends Validated
     private AutomationCompositionOrderedState orderedState;
 
     @Column
+    @NotNull
+    private DeployState deployState;
+
+    @Column
+    @NotNull
+    private LockState lockState;
+
+    @Column
     private String description;
 
     @Column(columnDefinition = "TINYINT DEFAULT 1")
@@ -103,7 +113,7 @@ public class JpaAutomationComposition extends Validated
      */
     public JpaAutomationComposition() {
         this(UUID.randomUUID().toString(), new PfConceptKey(), UUID.randomUUID().toString(),
-                AutomationCompositionState.UNINITIALISED, new ArrayList<>());
+                AutomationCompositionState.UNINITIALISED, new ArrayList<>(), DeployState.UNDEPLOYED, LockState.LOCKED);
     }
 
     /**
@@ -117,12 +127,15 @@ public class JpaAutomationComposition extends Validated
      */
     public JpaAutomationComposition(@NonNull final String instanceId, @NonNull final PfConceptKey key,
             @NonNull final String compositionId, @NonNull final AutomationCompositionState state,
-            @NonNull final List<JpaAutomationCompositionElement> elements) {
+            @NonNull final List<JpaAutomationCompositionElement> elements,
+                                    @NonNull final DeployState deployState, @NonNull final LockState lockState) {
         this.instanceId = instanceId;
         this.name = key.getName();
         this.version = key.getVersion();
         this.compositionId = compositionId;
         this.state = state;
+        this.deployState = deployState;
+        this.lockState = lockState;
         this.elements = elements;
     }
 
@@ -138,6 +151,8 @@ public class JpaAutomationComposition extends Validated
         this.compositionId = copyConcept.compositionId;
         this.state = copyConcept.state;
         this.orderedState = copyConcept.orderedState;
+        this.deployState = copyConcept.deployState;
+        this.lockState = copyConcept.lockState;
         this.description = copyConcept.description;
         this.elements = PfUtils.mapList(copyConcept.elements, JpaAutomationCompositionElement::new);
         this.primed = copyConcept.primed;
@@ -162,6 +177,8 @@ public class JpaAutomationComposition extends Validated
         automationComposition.setCompositionId(UUID.fromString(compositionId));
         automationComposition.setState(state);
         automationComposition.setOrderedState(orderedState != null ? orderedState : state.asOrderedState());
+        automationComposition.setDeployState(deployState);
+        automationComposition.setLockState(lockState);
         automationComposition.setDescription(description);
         automationComposition.setPrimed(primed);
         automationComposition.setElements(new LinkedHashMap<>(this.elements.size()));
@@ -180,6 +197,8 @@ public class JpaAutomationComposition extends Validated
         this.compositionId = automationComposition.getCompositionId().toString();
         this.state = automationComposition.getState();
         this.orderedState = automationComposition.getOrderedState();
+        this.deployState = automationComposition.getDeployState();
+        this.lockState = automationComposition.getLockState();
         this.description = automationComposition.getDescription();
         this.primed = automationComposition.getPrimed();
 
@@ -227,6 +246,16 @@ public class JpaAutomationComposition extends Validated
         }
 
         result = ObjectUtils.compare(orderedState, other.orderedState);
+        if (result != 0) {
+            return result;
+        }
+
+        result = ObjectUtils.compare(deployState, other.deployState);
+        if (result != 0) {
+            return result;
+        }
+
+        result = ObjectUtils.compare(lockState, other.lockState);
         if (result != 0) {
             return result;
         }
