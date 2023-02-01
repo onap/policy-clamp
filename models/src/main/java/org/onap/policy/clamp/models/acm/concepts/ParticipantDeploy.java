@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021 Nordix Foundation.
+ * Copyright (C) 2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,27 +30,31 @@ import lombok.ToString;
 import org.onap.policy.models.base.PfUtils;
 
 /**
- * Class to represent a participant definition update instance.
+ * Class to represent a participant definition instance for Deploy.
  */
 @Getter
 @NoArgsConstructor
 @Data
 @ToString
-public class ParticipantUpdates {
+public class ParticipantDeploy {
 
     private UUID participantId;
 
     // List of AutomationCompositionElement values for a particular participant
     private List<AutomationCompositionElement> automationCompositionElementList = new ArrayList<>();
 
+    // List of Automation Composition Element Deploy for a particular participant
+    private List<AcElementDeploy> acElementList = new ArrayList<>();
+
     /**
      * Copy constructor, does a deep copy but as all fields here are immutable, it's just a regular copy.
      *
-     * @param participantUpdates the participant with updates to copy from
+     * @param copyConstructor the participant with updates to copy from
      */
-    public ParticipantUpdates(final ParticipantUpdates participantUpdates) {
-        this.participantId = participantUpdates.participantId;
+    public ParticipantDeploy(final ParticipantDeploy copyConstructor) {
+        this.participantId = copyConstructor.participantId;
         this.automationCompositionElementList = PfUtils.mapList(
-            participantUpdates.automationCompositionElementList, AutomationCompositionElement::new);
+            copyConstructor.automationCompositionElementList, AutomationCompositionElement::new);
+        this.acElementList = PfUtils.mapList(copyConstructor.acElementList, AcElementDeploy::new);
     }
 }

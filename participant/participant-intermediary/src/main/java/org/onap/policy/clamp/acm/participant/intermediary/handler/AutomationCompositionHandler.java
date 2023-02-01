@@ -32,17 +32,17 @@ import lombok.Getter;
 import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.acm.participant.intermediary.parameters.ParticipantParameters;
+import org.onap.policy.clamp.models.acm.concepts.AcElementDeployAck;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementAck;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantUpdates;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionAck;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeploy;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeployAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionStateChange;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionUpdate;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -121,13 +121,13 @@ public class AutomationCompositionHandler {
         var acElement = elementsOnThisParticipant.get(id);
         if (acElement != null) {
             var automationCompositionStateChangeAck =
-                    new AutomationCompositionAck(ParticipantMessageType.AUTOMATION_COMPOSITION_STATECHANGE_ACK);
+                    new AutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_STATECHANGE_ACK);
             automationCompositionStateChangeAck.setParticipantId(participantId);
             automationCompositionStateChangeAck.setAutomationCompositionId(automationCompositionId);
             acElement.setOrderedState(orderedState);
             acElement.setState(newState);
             automationCompositionStateChangeAck.getAutomationCompositionResultMap().put(acElement.getId(),
-                    new AutomationCompositionElementAck(newState, true,
+                    new AcElementDeployAck(newState, null, true,
                             "Automation composition element {} state changed to {}\", id, newState)"));
             LOGGER.debug("Automation composition element {} state changed to {}", id, newState);
             automationCompositionStateChangeAck
@@ -155,7 +155,7 @@ public class AutomationCompositionHandler {
 
         if (automationComposition == null) {
             var automationCompositionAck =
-                    new AutomationCompositionAck(ParticipantMessageType.AUTOMATION_COMPOSITION_STATECHANGE_ACK);
+                    new AutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_STATECHANGE_ACK);
             automationCompositionAck.setParticipantId(participantId);
             automationCompositionAck.setMessage("Automation composition " + stateChangeMsg.getAutomationCompositionId()
                     + " does not use this participant " + participantId);
@@ -200,12 +200,12 @@ public class AutomationCompositionHandler {
     }
 
     /**
-     * Handle a automation composition update message.
+     * Handle a automation composition Deploy message.
      *
-     * @param updateMsg the update message
+     * @param updateMsg the Deploy message
      * @param acElementDefinitions the list of AutomationCompositionElementDefinition
      */
-    public void handleAutomationCompositionUpdate(AutomationCompositionUpdate updateMsg,
+    public void handleAutomationCompositionDeploy(AutomationCompositionDeploy updateMsg,
             List<AutomationCompositionElementDefinition> acElementDefinitions) {
 
         if (!updateMsg.appliesTo(participantId)) {
@@ -219,7 +219,7 @@ public class AutomationCompositionHandler {
         }
     }
 
-    private void handleAcUpdatePhase0(AutomationCompositionUpdate updateMsg,
+    private void handleAcUpdatePhase0(AutomationCompositionDeploy updateMsg,
             List<AutomationCompositionElementDefinition> acElementDefinitions) {
         var automationComposition = automationCompositionMap.get(updateMsg.getAutomationCompositionId());
 
@@ -228,7 +228,7 @@ public class AutomationCompositionHandler {
         // elements to existing AutomationComposition has to be supported).
         if (automationComposition != null) {
             var automationCompositionUpdateAck =
-                    new AutomationCompositionAck(ParticipantMessageType.AUTOMATION_COMPOSITION_UPDATE_ACK);
+                    new AutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_DEPLOY_ACK);
             automationCompositionUpdateAck.setParticipantId(participantId);
 
             automationCompositionUpdateAck.setMessage("Automation composition " + updateMsg.getAutomationCompositionId()
@@ -257,7 +257,7 @@ public class AutomationCompositionHandler {
                 updateMsg.getAutomationCompositionId());
     }
 
-    private void handleAcUpdatePhaseN(AutomationCompositionUpdate updateMsg,
+    private void handleAcUpdatePhaseN(AutomationCompositionDeploy updateMsg,
             List<AutomationCompositionElementDefinition> acElementDefinitions) {
 
         var acElementList = updateMsg.getParticipantUpdatesList().stream()
@@ -303,7 +303,7 @@ public class AutomationCompositionHandler {
     }
 
     private List<AutomationCompositionElement> storeElementsOnThisParticipant(
-            List<ParticipantUpdates> participantUpdates) {
+            List<ParticipantDeploy> participantUpdates) {
         var acElementList = participantUpdates.stream()
                 .flatMap(participantUpdate -> participantUpdate.getAutomationCompositionElementList().stream())
                 .filter(element -> participantId.equals(element.getParticipantId())).collect(Collectors.toList());
@@ -386,7 +386,7 @@ public class AutomationCompositionHandler {
 
         if (orderedState.equals(automationComposition.getOrderedState())) {
             var automationCompositionAck =
-                    new AutomationCompositionAck(ParticipantMessageType.AUTOMATION_COMPOSITION_STATECHANGE_ACK);
+                    new AutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_STATECHANGE_ACK);
             automationCompositionAck.setParticipantId(participantId);
             automationCompositionAck.setMessage("Automation composition is already in state " + orderedState);
             automationCompositionAck.setResult(false);

@@ -97,7 +97,7 @@ class ParticipantHandlerTest {
     void checkAppliesTo() {
         var participantHandler = commonTestData.getMockParticipantHandler();
         var participantAckMsg =
-                new ParticipantAckMessage(ParticipantMessageType.AUTOMATION_COMPOSITION_UPDATE);
+                new ParticipantAckMessage(ParticipantMessageType.AUTOMATION_COMPOSITION_DEPLOY);
         assertTrue(participantHandler.appliesTo(participantAckMsg));
 
         var participantMsg =

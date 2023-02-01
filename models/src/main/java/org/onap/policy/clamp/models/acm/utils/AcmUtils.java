@@ -41,7 +41,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantUpdates;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.common.parameters.ObjectValidationResult;
 import org.onap.policy.common.parameters.ValidationResult;
@@ -71,14 +71,14 @@ public final class AcmUtils {
      * @param participantUpdates list of participantUpdates
      */
     public static void prepareParticipantUpdate(AutomationCompositionElement acElement,
-            List<ParticipantUpdates> participantUpdates) {
+            List<ParticipantDeploy> participantUpdates) {
         if (participantUpdates.isEmpty()) {
             participantUpdates.add(getAutomationCompositionElementList(acElement));
             return;
         }
 
         var participantExists = false;
-        for (ParticipantUpdates participantUpdate : participantUpdates) {
+        for (ParticipantDeploy participantUpdate : participantUpdates) {
             if (participantUpdate.getParticipantId().equals(acElement.getParticipantId())) {
                 participantUpdate.getAutomationCompositionElementList().add(acElement);
                 participantExists = true;
@@ -89,8 +89,8 @@ public final class AcmUtils {
         }
     }
 
-    private static ParticipantUpdates getAutomationCompositionElementList(AutomationCompositionElement acElement) {
-        var participantUpdate = new ParticipantUpdates();
+    private static ParticipantDeploy getAutomationCompositionElementList(AutomationCompositionElement acElement) {
+        var participantUpdate = new ParticipantDeploy();
         participantUpdate.setParticipantId(acElement.getParticipantId());
         participantUpdate.getAutomationCompositionElementList().add(acElement);
         return participantUpdate;

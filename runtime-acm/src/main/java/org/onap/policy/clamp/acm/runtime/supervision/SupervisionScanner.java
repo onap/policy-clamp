@@ -26,8 +26,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
+import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionDeployPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionStateChangePublisher;
-import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionUpdatePublisher;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
@@ -56,7 +56,7 @@ public class SupervisionScanner {
     private final AutomationCompositionProvider automationCompositionProvider;
     private final AcDefinitionProvider acDefinitionProvider;
     private final AutomationCompositionStateChangePublisher automationCompositionStateChangePublisher;
-    private final AutomationCompositionUpdatePublisher automationCompositionUpdatePublisher;
+    private final AutomationCompositionDeployPublisher automationCompositionDeployPublisher;
     private final ParticipantProvider participantProvider;
 
     /**
@@ -65,20 +65,20 @@ public class SupervisionScanner {
      * @param automationCompositionProvider the provider to use to read automation compositions from the database
      * @param acDefinitionProvider the Policy Models Provider
      * @param automationCompositionStateChangePublisher the AutomationComposition StateChange Publisher
-     * @param automationCompositionUpdatePublisher the AutomationCompositionUpdate Publisher
+     * @param automationCompositionDeployPublisher the AutomationCompositionUpdate Publisher
      * @param participantProvider the Participant Provider
      * @param acRuntimeParameterGroup the parameters for the automation composition runtime
      */
     public SupervisionScanner(final AutomationCompositionProvider automationCompositionProvider,
                               AcDefinitionProvider acDefinitionProvider,
                               final AutomationCompositionStateChangePublisher automationCompositionStateChangePublisher,
-                              AutomationCompositionUpdatePublisher automationCompositionUpdatePublisher,
+                              AutomationCompositionDeployPublisher automationCompositionDeployPublisher,
                               ParticipantProvider participantProvider,
                               final AcRuntimeParameterGroup acRuntimeParameterGroup) {
         this.automationCompositionProvider = automationCompositionProvider;
         this.acDefinitionProvider = acDefinitionProvider;
         this.automationCompositionStateChangePublisher = automationCompositionStateChangePublisher;
-        this.automationCompositionUpdatePublisher = automationCompositionUpdatePublisher;
+        this.automationCompositionDeployPublisher = automationCompositionDeployPublisher;
         this.participantProvider = participantProvider;
 
         automationCompositionCounter.setMaxRetryCount(
@@ -229,7 +229,7 @@ public class SupervisionScanner {
     private void sendAutomationCompositionMsg(AutomationComposition automationComposition, int startPhase) {
         if (AutomationCompositionState.UNINITIALISED2PASSIVE.equals(automationComposition.getState())) {
             LOGGER.debug("retry message AutomationCompositionUpdate");
-            automationCompositionUpdatePublisher.send(automationComposition, startPhase);
+            automationCompositionDeployPublisher.send(automationComposition, startPhase);
         } else {
             LOGGER.debug("retry message AutomationCompositionStateChange");
             automationCompositionStateChangePublisher.send(automationComposition, startPhase);

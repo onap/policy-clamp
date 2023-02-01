@@ -29,8 +29,8 @@ import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantUpdates;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionUpdate;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeploy;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.slf4j.Logger;
@@ -38,52 +38,52 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
- * This class is used to send AutomationCompositionUpdate messages to participants on DMaaP.
+ * This class is used to send AutomationCompositionDeploy messages to participants on DMaaP.
  */
 @Component
 @AllArgsConstructor
-public class AutomationCompositionUpdatePublisher extends AbstractParticipantPublisher<AutomationCompositionUpdate> {
+public class AutomationCompositionDeployPublisher extends AbstractParticipantPublisher<AutomationCompositionDeploy> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AutomationCompositionUpdatePublisher.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AutomationCompositionDeployPublisher.class);
     private final AcDefinitionProvider acDefinitionProvider;
 
     /**
-     * Send AutomationCompositionUpdate to Participant.
+     * Send AutomationCompositionDeploy to Participant.
      *
      * @param automationComposition the AutomationComposition
      */
-    @Timed(value = "publisher.automation_composition_update",
-            description = "AUTOMATION_COMPOSITION_UPDATE messages published")
+    @Timed(value = "publisher.automation_composition_deploy",
+            description = "AUTOMATION_COMPOSITION_DEPLOY messages published")
     public void send(AutomationComposition automationComposition) {
         send(automationComposition, 0);
     }
 
     /**
-     * Send AutomationCompositionUpdate to Participant.
+     * Send AutomationCompositionDeploy to Participant.
      *
      * @param automationComposition the AutomationComposition
      * @param startPhase the Start Phase
      */
-    @Timed(value = "publisher.automation_composition_update",
-            description = "AUTOMATION_COMPOSITION_UPDATE messages published")
+    @Timed(value = "publisher.automation_composition_deploy",
+            description = "AUTOMATION_COMPOSITION_DEPLOY messages published")
     public void send(AutomationComposition automationComposition, int startPhase) {
-        var automationCompositionUpdateMsg = new AutomationCompositionUpdate();
-        automationCompositionUpdateMsg.setCompositionId(automationComposition.getCompositionId());
-        automationCompositionUpdateMsg.setStartPhase(startPhase);
-        automationCompositionUpdateMsg.setAutomationCompositionId(automationComposition.getInstanceId());
-        automationCompositionUpdateMsg.setMessageId(UUID.randomUUID());
-        automationCompositionUpdateMsg.setTimestamp(Instant.now());
+        var acDeployMsg = new AutomationCompositionDeploy();
+        acDeployMsg.setCompositionId(automationComposition.getCompositionId());
+        acDeployMsg.setStartPhase(startPhase);
+        acDeployMsg.setAutomationCompositionId(automationComposition.getInstanceId());
+        acDeployMsg.setMessageId(UUID.randomUUID());
+        acDeployMsg.setTimestamp(Instant.now());
         var toscaServiceTemplate =
                 acDefinitionProvider.getAcDefinition(automationComposition.getCompositionId()).getServiceTemplate();
 
-        List<ParticipantUpdates> participantUpdates = new ArrayList<>();
+        List<ParticipantDeploy> participantDeploys = new ArrayList<>();
         for (var element : automationComposition.getElements().values()) {
             AcmUtils.setAcPolicyInfo(element, toscaServiceTemplate);
-            AcmUtils.prepareParticipantUpdate(element, participantUpdates);
+            AcmUtils.prepareParticipantUpdate(element, participantDeploys);
         }
-        automationCompositionUpdateMsg.setParticipantUpdatesList(participantUpdates);
+        acDeployMsg.setParticipantUpdatesList(participantDeploys);
 
-        LOGGER.debug("AutomationCompositionUpdate message sent {}", automationCompositionUpdateMsg);
-        super.send(automationCompositionUpdateMsg);
+        LOGGER.debug("AutomationCompositionDeploy message sent {}", acDeployMsg);
+        super.send(acDeployMsg);
     }
 }

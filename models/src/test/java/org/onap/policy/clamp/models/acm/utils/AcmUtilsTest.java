@@ -39,7 +39,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantUpdates;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplate;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -60,7 +60,7 @@ class AcmUtilsTest {
     @Test
     void testCommonUtilsParticipantUpdate() {
         var acElement = new AutomationCompositionElement();
-        List<ParticipantUpdates> participantUpdates = new ArrayList<>();
+        List<ParticipantDeploy> participantUpdates = new ArrayList<>();
         assertThat(participantUpdates).isEmpty();
 
         AcmUtils.prepareParticipantUpdate(acElement, participantUpdates);

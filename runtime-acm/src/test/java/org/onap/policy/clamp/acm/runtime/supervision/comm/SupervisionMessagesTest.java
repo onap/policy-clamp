@@ -42,7 +42,7 @@ import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionAck;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeployAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDeregister;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDeregisterAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
@@ -224,7 +224,7 @@ class SupervisionMessagesTest {
     @Test
     void testAutomationCompositionUpdateAckListener() {
         final var automationCompositionAck =
-                new AutomationCompositionAck(ParticipantMessageType.AUTOMATION_COMPOSITION_UPDATE);
+                new AutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_DEPLOY);
         var supervisionHandler = mock(SupervisionHandler.class);
         var acUpdateAckListener = new AutomationCompositionUpdateAckListener(supervisionHandler);
         acUpdateAckListener.onTopicEvent(INFRA, TOPIC, null, automationCompositionAck);
@@ -234,7 +234,7 @@ class SupervisionMessagesTest {
     @Test
     void testAutomationCompositionStateChangeAckListener() {
         final var automationCompositionAck =
-                new AutomationCompositionAck(ParticipantMessageType.AUTOMATION_COMPOSITION_STATE_CHANGE);
+                new AutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_STATE_CHANGE);
         var supervisionHandler = mock(SupervisionHandler.class);
         var acStateChangeAckListener = new AutomationCompositionStateChangeAckListener(supervisionHandler);
         acStateChangeAckListener.onTopicEvent(INFRA, TOPIC, null, automationCompositionAck);

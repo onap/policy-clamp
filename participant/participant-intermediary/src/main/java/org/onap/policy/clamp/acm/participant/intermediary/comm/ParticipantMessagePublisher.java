@@ -26,7 +26,7 @@ import java.util.List;
 import javax.ws.rs.core.Response.Status;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.Publisher;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionAck;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeployAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDeregister;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegister;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatus;
@@ -118,7 +118,7 @@ public class ParticipantMessagePublisher implements Publisher {
      */
     @Timed(value = "publisher.automation_composition_update_ack",
             description = "AUTOMATION_COMPOSITION_UPDATE_ACK/AUTOMATION_COMPOSITION_STATECHANGE_ACK messages published")
-    public void sendAutomationCompositionAck(final AutomationCompositionAck automationCompositionAck) {
+    public void sendAutomationCompositionAck(final AutomationCompositionDeployAck automationCompositionAck) {
         validate();
         topicSinkClient.send(automationCompositionAck);
         LOGGER.debug("Sent AutomationComposition Update/StateChange Ack to runtime - {}", automationCompositionAck);
