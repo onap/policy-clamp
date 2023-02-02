@@ -8,10 +8,6 @@
   "participantState": "ON_LINE",
   "description": "A dummy PMSH participant1",
   "participantId": "82fd8ef9-1d1e-4343-9b28-7f9564ee3de6",
-  "participantType":{
-    "name": "org.onap.domain.pmsh.PolicyAutomationCompositionDefinition",
-    "version": "1.0.0"
-  },
   "participantSupportedElementTypes": {
     "68fe8c61-7629-4be7-99d8-18bc6a92d178": {
       "id": "68fe8c61-7629-4be7-99d8-18bc6a92d178",

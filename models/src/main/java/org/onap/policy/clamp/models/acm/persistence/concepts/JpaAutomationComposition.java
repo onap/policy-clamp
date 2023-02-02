@@ -100,9 +100,6 @@ public class JpaAutomationComposition extends Validated
     @Column
     private String description;
 
-    @Column(columnDefinition = "TINYINT DEFAULT 1")
-    private Boolean primed;
-
     @NotNull
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "instanceId", foreignKey = @ForeignKey(name = "ac_element_fk"))
@@ -155,7 +152,6 @@ public class JpaAutomationComposition extends Validated
         this.lockState = copyConcept.lockState;
         this.description = copyConcept.description;
         this.elements = PfUtils.mapList(copyConcept.elements, JpaAutomationCompositionElement::new);
-        this.primed = copyConcept.primed;
     }
 
     /**
@@ -180,7 +176,6 @@ public class JpaAutomationComposition extends Validated
         automationComposition.setDeployState(deployState);
         automationComposition.setLockState(lockState);
         automationComposition.setDescription(description);
-        automationComposition.setPrimed(primed);
         automationComposition.setElements(new LinkedHashMap<>(this.elements.size()));
         for (var element : this.elements) {
             automationComposition.getElements().put(UUID.fromString(element.getElementId()), element.toAuthorative());
@@ -200,7 +195,6 @@ public class JpaAutomationComposition extends Validated
         this.deployState = automationComposition.getDeployState();
         this.lockState = automationComposition.getLockState();
         this.description = automationComposition.getDescription();
-        this.primed = automationComposition.getPrimed();
 
         this.elements = new ArrayList<>(automationComposition.getElements().size());
         for (var elementEntry : automationComposition.getElements().entrySet()) {
@@ -261,11 +255,6 @@ public class JpaAutomationComposition extends Validated
         }
 
         result = ObjectUtils.compare(description, other.description);
-        if (result != 0) {
-            return result;
-        }
-
-        result = ObjectUtils.compare(primed, other.primed);
         if (result != 0) {
             return result;
         }

@@ -3,8 +3,8 @@
         {
             "compositionId": "709c62b3-8918-41b9-a747-e21eb79c6c40",
             "instanceId": "809c62b3-8918-41b9-a748-e21eb79c6c89",
-            "state": "UNINITIALISED",
-            "orderedState": "UNINITIALISED",
+            "deployState": "UNDEPLOYED",
+            "lockState": "NONE",
             "elements": {
                 "709c62b3-8918-41b9-a747-e21eb79c6c20": {
                     "id": "709c62b3-8918-41b9-a747-e21eb79c6c20",
@@ -12,12 +12,8 @@
                         "name": "org.onap.domain.pmsh.PMSH_DCAEMicroservice",
                         "version": "1.2.3"
                     },
-                    "participantType": {
-                        "name": "org.onap.dcae.acm.DCAEMicroserviceAutomationCompositionParticipant",
-                        "version": "2.3.4"
-                    },
-                    "state": "UNINITIALISED",
-                    "orderedState": "UNINITIALISED",
+                    "deployState": "UNDEPLOYED",
+                    "lockState": "NONE",
                     "description": "DCAE automation composition element for the PMSH instance 0 automation composition"
                 },
                 "709c62b3-8918-41b9-a747-e21eb79c6c21": {
@@ -26,12 +22,8 @@
                         "name": "org.onap.domain.pmsh.PMSH_MonitoringPolicyAutomationCompositionElement",
                         "version": "1.2.3"
                     },
-                    "participantType": {
-                        "name": "org.onap.policy.acm.PolicyAutomationCompositionParticipant",
-                        "version": "2.3.1"
-                    },
-                    "state": "UNINITIALISED",
-                    "orderedState": "UNINITIALISED",
+                    "deployState": "UNDEPLOYED",
+                    "lockState": "NONE",
                     "description": "Monitoring Policy element for the PMSH instance 0 automation composition"
                 },
                 "709c62b3-8918-41b9-a747-e21eb79c6c22": {
@@ -40,12 +32,8 @@
                         "name": "org.onap.domain.pmsh.PMSH_OperationalPolicyAutomationCompositionElement",
                         "version": "1.2.3"
                     },
-                    "participantType": {
-                        "name": "org.onap.policy.acm.PolicyAutomationCompositionParticipant",
-                        "version": "2.3.1"
-                    },
-                    "state": "UNINITIALISED",
-                    "orderedState": "UNINITIALISED",
+                    "deployState": "UNDEPLOYED",
+                    "lockState": "NONE",
                     "description": "Operational Policy element for the PMSH instance 0 automation composition"
                 },
                 "709c62b3-8918-41b9-a747-e21eb79c6c23": {
@@ -54,12 +42,8 @@
                         "name": "org.onap.domain.pmsh.PMSH_CDS_AutomationCompositionElement",
                         "version": "1.2.3"
                     },
-                    "participantType": {
-                        "name": "org.onap.ccsdk.cds.acm.CdsAutomationCompositionParticipant",
-                        "version": "2.2.1"
-                    },
-                    "state": "UNINITIALISED",
-                    "orderedState": "UNINITIALISED",
+                    "deployState": "UNDEPLOYED",
+                    "lockState": "NONE",
                     "description": "CDS automation composition element for the PMSH instance 0 automation composition"
                 }
             },
@@ -70,8 +54,8 @@
         {
             "compositionId": "709c62b3-8918-41b9-a747-e21eb79c6c40",
             "instanceId": "809c62b3-8918-41b9-a748-e21eb79c6c90",
-            "state": "UNINITIALISED",
-            "orderedState": "UNINITIALISED",
+            "deployState": "UNDEPLOYED",
+            "lockState": "NONE",
             "elements": {
                 "709c62b3-8918-41b9-a747-e21eb79c6c24": {
                     "id": "709c62b3-8918-41b9-a747-e21eb79c6c24",
@@ -79,12 +63,8 @@
                         "name": "org.onap.domain.pmsh.PMSH_DCAEMicroservice",
                         "version": "1.2.3"
                     },
-                    "participantType": {
-                        "name": "org.onap.dcae.acm.DCAEMicroserviceAutomationCompositionParticipant",
-                        "version": "2.3.4"
-                    },
-                    "state": "UNINITIALISED",
-                    "orderedState": "UNINITIALISED",
+                    "deployState": "UNDEPLOYED",
+                    "lockState": "NONE",
                     "description": "DCAE automation composition element for the PMSH instance 1 automation composition"
                 },
                 "709c62b3-8918-41b9-a747-e21eb79c6c25": {
@@ -93,12 +73,8 @@
                         "name": "org.onap.domain.pmsh.PMSH_MonitoringPolicyAutomationCompositionElement",
                         "version": "1.2.3"
                     },
-                    "participantType": {
-                        "name": "org.onap.policy.acm.PolicyAutomationCompositionParticipant",
-                        "version": "2.3.1"
-                    },
-                    "state": "UNINITIALISED",
-                    "orderedState": "UNINITIALISED",
+                    "deployState": "UNDEPLOYED",
+                    "lockState": "NONE",
                     "description": "Monitoring Policy element for the PMSH instance 1 automation composition"
                 },
                 "709c62b3-8918-41b9-a747-e21eb79c6c26": {
@@ -107,12 +83,8 @@
                         "name": "org.onap.domain.pmsh.PMSH_OperationalPolicyAutomationCompositionElement",
                         "version": "1.2.3"
                     },
-                    "participantType": {
-                        "name": "org.onap.policy.acm.PolicyAutomationCompositionParticipant",
-                        "version": "2.3.1"
-                    },
-                    "state": "UNINITIALISED",
-                    "orderedState": "UNINITIALISED",
+                    "deployState": "UNDEPLOYED",
+                    "lockState": "NONE",
                     "description": "Operational Policy element for the PMSH instance 1 automation composition"
                 },
                 "709c62b3-8918-41b9-a747-e21eb79c6c27": {
@@ -121,12 +93,8 @@
                         "name": "org.onap.domain.pmsh.PMSH_CDS_AutomationCompositionElement",
                         "version": "1.2.3"
                     },
-                    "participantType": {
-                        "name": "org.onap.ccsdk.cds.acm.CdsAutomationCompositionParticipant",
-                        "version": "2.2.1"
-                    },
-                    "state": "UNINITIALISED",
-                    "orderedState": "UNINITIALISED",
+                    "deployState": "UNDEPLOYED",
+                    "lockState": "NONE",
                     "description": "CDS element for the PMSH instance 1 automation composition"
                 }
             },

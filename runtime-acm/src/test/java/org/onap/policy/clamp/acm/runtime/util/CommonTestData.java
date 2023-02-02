@@ -114,6 +114,11 @@ public class CommonTestData {
         acDefinition.setServiceTemplate(serviceTemplate);
         var acElements = AcmUtils.extractAcElementsFromServiceTemplate(serviceTemplate);
         acDefinition.setElementStateMap(AcmUtils.createElementStateMap(acElements, state));
+        if (AcTypeState.PRIMED.equals(state)) {
+            for (var element : acDefinition.getElementStateMap().values()) {
+                element.setParticipantId(getParticipantId());
+            }
+        }
         return acDefinition;
     }
 

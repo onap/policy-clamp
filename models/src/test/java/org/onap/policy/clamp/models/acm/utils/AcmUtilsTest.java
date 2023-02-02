@@ -39,6 +39,8 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplate;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -56,6 +58,15 @@ class AcmUtilsTest {
             "org.onap.policy.clamp.acm.PolicyAutomationCompositionElement";
     private static final String PARTICIPANT_AUTOMATION_COMPOSITION_ELEMENT = "org.onap.policy.clamp.acm.Participant";
     private static final String TOSCA_TEMPLATE_YAML = "clamp/acm/pmsh/funtional-pmsh-usecase.yaml";
+
+    @Test
+    void testIsInTransitionalState() {
+        assertThat(AcmUtils.isInTransitionalState(DeployState.DEPLOYED, LockState.LOCKED)).isFalse();
+        assertThat(AcmUtils.isInTransitionalState(DeployState.DEPLOYING, LockState.NONE)).isTrue();
+        assertThat(AcmUtils.isInTransitionalState(DeployState.UNDEPLOYING, LockState.NONE)).isTrue();
+        assertThat(AcmUtils.isInTransitionalState(DeployState.DEPLOYED, LockState.LOCKING)).isTrue();
+        assertThat(AcmUtils.isInTransitionalState(DeployState.DEPLOYED, LockState.UNLOCKING)).isTrue();
+    }
 
     @Test
     void testCommonUtilsParticipantUpdate() {
@@ -111,10 +122,9 @@ class AcmUtilsTest {
 
     @Test
     void testCommonUtilsServiceTemplate() {
-        var acElement = new AutomationCompositionElement();
         var toscaServiceTemplate = getDummyToscaServiceTemplate();
-        AcmUtils.setAcPolicyInfo(acElement, toscaServiceTemplate);
-        assertEquals(getDummyToscaDataTypeMap(), acElement.getToscaServiceTemplateFragment().getDataTypes());
+        var toscaServiceTemplateFragment = AcmUtils.getToscaServiceTemplateFragment(toscaServiceTemplate);
+        assertEquals(getDummyToscaDataTypeMap(), toscaServiceTemplateFragment.getDataTypes());
     }
 
     @Test
@@ -122,9 +132,10 @@ class AcmUtilsTest {
         var toscaServiceTemplate = getDummyToscaServiceTemplate();
         toscaServiceTemplate.setPolicyTypes(null);
         toscaServiceTemplate.getToscaTopologyTemplate().setPolicies(null);
-        AutomationCompositionElement acElement = new AutomationCompositionElement();
-        AcmUtils.setAcPolicyInfo(new AutomationCompositionElement(), toscaServiceTemplate);
-        assertNull(acElement.getToscaServiceTemplateFragment());
+        var toscaServiceTemplateFragment = AcmUtils.getToscaServiceTemplateFragment(toscaServiceTemplate);
+        assertNull(toscaServiceTemplateFragment.getPolicyTypes());
+        assertNull(toscaServiceTemplateFragment.getToscaTopologyTemplate());
+        assertNull(toscaServiceTemplateFragment.getDataTypes());
     }
 
     @Test

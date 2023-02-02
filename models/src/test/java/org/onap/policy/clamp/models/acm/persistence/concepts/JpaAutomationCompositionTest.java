@@ -60,6 +60,10 @@ class JpaAutomationCompositionTest {
         }).hasMessageMatching("copyConcept is marked .*ull but is null");
 
         assertThatThrownBy(() -> {
+            new JpaAutomationComposition((AutomationComposition) null);
+        }).hasMessageMatching("authorativeConcept is marked .*ull but is null");
+
+        assertThatThrownBy(() -> {
             new JpaAutomationComposition(null, null, null, null, null, null, null);
         }).hasMessageMatching(NULL_INSTANCE_ID_ERROR);
 
@@ -209,11 +213,6 @@ class JpaAutomationCompositionTest {
         testJpaAutomationComposition.setDescription("A description");
         assertNotEquals(0, testJpaAutomationComposition.compareTo(otherJpaAutomationComposition));
         testJpaAutomationComposition.setDescription(null);
-        assertEquals(0, testJpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-
-        testJpaAutomationComposition.setPrimed(true);
-        assertNotEquals(0, testJpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-        testJpaAutomationComposition.setPrimed(false);
         assertEquals(0, testJpaAutomationComposition.compareTo(otherJpaAutomationComposition));
 
         assertEquals(testJpaAutomationComposition, new JpaAutomationComposition(testJpaAutomationComposition));

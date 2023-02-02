@@ -141,7 +141,6 @@ public class SupervisionHandler {
             if (automationComposition.isPresent()) {
                 var updated = updateState(automationComposition.get(),
                     automationCompositionAckMessage.getAutomationCompositionResultMap().entrySet());
-                updated |= setPrimed(automationComposition.get());
                 if (updated) {
                     automationCompositionProvider.updateAutomationComposition(automationComposition.get());
                 }
@@ -163,24 +162,6 @@ public class SupervisionHandler {
             }
         }
         return updated;
-    }
-
-    private boolean setPrimed(AutomationComposition automationComposition) {
-        var acElements = automationComposition.getElements().values();
-        if (acElements != null) {
-            Boolean primedFlag = true;
-            var checkOpt = automationComposition.getElements().values().stream()
-                .filter(acElement -> (!acElement.getState().equals(AutomationCompositionState.PASSIVE)
-                    || !acElement.getState().equals(AutomationCompositionState.RUNNING)))
-                .findAny();
-            if (checkOpt.isEmpty()) {
-                primedFlag = false;
-            }
-            automationComposition.setPrimed(primedFlag);
-            return true;
-        }
-
-        return false;
     }
 
     /**
