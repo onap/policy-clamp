@@ -53,12 +53,9 @@ public class AutomationComposition extends ToscaEntity implements Comparable<Aut
     private DeployState deployState = DeployState.UNDEPLOYED;
 
     @NonNull
-    private LockState lockState = LockState.LOCKED;
+    private LockState lockState = LockState.NONE;
 
     private Map<UUID, AutomationCompositionElement> elements;
-
-    @NonNull
-    private Boolean primed = false;
 
     /**
      * Copy contructor, does a deep copy.
@@ -74,7 +71,6 @@ public class AutomationComposition extends ToscaEntity implements Comparable<Aut
         this.deployState = otherAutomationComposition.deployState;
         this.lockState = otherAutomationComposition.lockState;
         this.elements = PfUtils.mapMap(otherAutomationComposition.elements, AutomationCompositionElement::new);
-        this.primed = otherAutomationComposition.primed;
     }
 
     @Override

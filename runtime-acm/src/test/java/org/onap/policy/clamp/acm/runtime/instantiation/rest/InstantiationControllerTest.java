@@ -30,10 +30,8 @@ import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVIC
 import java.util.UUID;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.onap.policy.clamp.acm.runtime.instantiation.AutomationCompositionInstantiationProvider;
@@ -41,14 +39,13 @@ import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
 import org.onap.policy.clamp.acm.runtime.main.rest.InstantiationController;
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
 import org.onap.policy.clamp.acm.runtime.util.rest.CommonRestController;
+import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.AcInstanceStateUpdate;
+import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
-import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
-import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionRepository;
-import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -74,19 +71,12 @@ class InstantiationControllerTest extends CommonRestController {
     private static final String INSTANTIATION_ENDPOINT = "compositions/%s/instances";
 
     private static ToscaServiceTemplate serviceTemplate = new ToscaServiceTemplate();
-    private UUID compositionId = UUID.randomUUID();
-
-    @Autowired
-    private AutomationCompositionRepository automationCompositionRepository;
 
     @Autowired
     private AcDefinitionProvider acDefinitionProvider;
 
     @Autowired
     private AutomationCompositionInstantiationProvider instantiationProvider;
-
-    @Autowired
-    private ParticipantProvider participantProvider;
 
     @LocalServerPort
     private int randomServerPort;
@@ -97,25 +87,15 @@ class InstantiationControllerTest extends CommonRestController {
     }
 
     @BeforeEach
-    public void populateDb() {
-        createEntryInDB();
-    }
-
-    @BeforeEach
     public void setUpPort() {
         super.setHttpPrefix(randomServerPort);
     }
 
-    @AfterEach
-    public void cleanDatabase() {
-        deleteEntryInDB();
-    }
-
-    private String getInstanceEndPoint() {
+    private String getInstanceEndPoint(UUID compositionId) {
         return String.format(INSTANTIATION_ENDPOINT, compositionId.toString());
     }
 
-    private String getInstanceEndPoint(UUID instanceId) {
+    private String getInstanceEndPoint(UUID compositionId, UUID instanceId) {
         return String.format(INSTANTIATION_ENDPOINT, compositionId.toString()) + "/" + instanceId;
     }
 
@@ -129,12 +109,12 @@ class InstantiationControllerTest extends CommonRestController {
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Unauthorized");
 
-        assertUnauthorizedPost(getInstanceEndPoint(), Entity.json(automationComposition));
+        assertUnauthorizedPost(getInstanceEndPoint(UUID.randomUUID()), Entity.json(automationComposition));
     }
 
     @Test
     void testQuery_Unauthorized() {
-        assertUnauthorizedGet(getInstanceEndPoint());
+        assertUnauthorizedGet(getInstanceEndPoint(UUID.randomUUID()));
     }
 
     @Test
@@ -142,42 +122,45 @@ class InstantiationControllerTest extends CommonRestController {
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_UPDATE_JSON, "Unauthorized");
 
-        assertUnauthorizedPut(getInstanceEndPoint(), Entity.json(automationComposition));
+        assertUnauthorizedPut(getInstanceEndPoint(UUID.randomUUID()), Entity.json(automationComposition));
     }
 
     @Test
     void testDelete_Unauthorized() {
-        assertUnauthorizedDelete(getInstanceEndPoint());
+        assertUnauthorizedDelete(getInstanceEndPoint(UUID.randomUUID()));
     }
 
     @Test
     void testCreate() {
+        var compositionId = createAcDefinitionInDB("Create");
         var automationCompositionFromRsc =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Create");
         automationCompositionFromRsc.setCompositionId(compositionId);
 
-        var invocationBuilder = super.sendRequest(getInstanceEndPoint());
+        var invocationBuilder = super.sendRequest(getInstanceEndPoint(compositionId));
         var resp = invocationBuilder.post(Entity.json(automationCompositionFromRsc));
         assertEquals(Response.Status.CREATED.getStatusCode(), resp.getStatus());
         var instResponse = resp.readEntity(InstantiationResponse.class);
         InstantiationUtils.assertInstantiationResponse(instResponse, automationCompositionFromRsc);
         automationCompositionFromRsc.setInstanceId(instResponse.getInstanceId());
+        automationCompositionFromRsc.getElements().values()
+                .forEach(element -> element.setParticipantId(CommonTestData.getParticipantId()));
 
         var automationCompositionFromDb =
                 instantiationProvider.getAutomationComposition(compositionId, instResponse.getInstanceId());
 
         assertNotNull(automationCompositionFromDb);
         assertEquals(automationCompositionFromRsc, automationCompositionFromDb);
-
     }
 
     @Test
     void testCreateBadRequest() {
+        var compositionId = createAcDefinitionInDB("CreateBadRequest");
         var automationCompositionFromRsc = InstantiationUtils
                 .getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "CreateBadRequest");
         automationCompositionFromRsc.setCompositionId(compositionId);
 
-        var invocationBuilder = super.sendRequest(getInstanceEndPoint());
+        var invocationBuilder = super.sendRequest(getInstanceEndPoint(compositionId));
         var resp = invocationBuilder.post(Entity.json(automationCompositionFromRsc));
         assertEquals(Response.Status.CREATED.getStatusCode(), resp.getStatus());
 
@@ -191,7 +174,8 @@ class InstantiationControllerTest extends CommonRestController {
 
     @Test
     void testQuery_NoResultWithThisName() {
-        var invocationBuilder = super.sendRequest(getInstanceEndPoint() + "?name=noResultWithThisName");
+        var invocationBuilder =
+                super.sendRequest(getInstanceEndPoint(UUID.randomUUID()) + "?name=noResultWithThisName");
         var rawresp = invocationBuilder.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
         var resp = rawresp.readEntity(AutomationCompositions.class);
@@ -200,14 +184,15 @@ class InstantiationControllerTest extends CommonRestController {
 
     @Test
     void testQuery() {
+        var compositionId = createAcDefinitionInDB("Query");
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Query");
         automationComposition.setCompositionId(compositionId);
 
         instantiationProvider.createAutomationComposition(compositionId, automationComposition);
 
-        var invocationBuilder =
-                super.sendRequest(getInstanceEndPoint() + "?name=" + automationComposition.getKey().getName());
+        var invocationBuilder = super.sendRequest(
+                getInstanceEndPoint(compositionId) + "?name=" + automationComposition.getKey().getName());
         var rawresp = invocationBuilder.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
         var automationCompositionsQuery = rawresp.readEntity(AutomationCompositions.class);
@@ -217,7 +202,26 @@ class InstantiationControllerTest extends CommonRestController {
     }
 
     @Test
+    void testGet() {
+        var compositionId = createAcDefinitionInDB("Get");
+        var automationComposition =
+                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Get");
+        automationComposition.setCompositionId(compositionId);
+
+        instantiationProvider.createAutomationComposition(compositionId, automationComposition);
+
+        var invocationBuilder = super.sendRequest(
+                getInstanceEndPoint(compositionId, automationComposition.getInstanceId()));
+        var rawresp = invocationBuilder.buildGet().invoke();
+        assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
+        var automationCompositionGet = rawresp.readEntity(AutomationComposition.class);
+        assertNotNull(automationCompositionGet);
+        assertEquals(automationComposition, automationCompositionGet);
+    }
+
+    @Test
     void testUpdate() {
+        var compositionId = createAcDefinitionInDB("Update");
         var automationCompositionCreate =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Update");
         automationCompositionCreate.setCompositionId(compositionId);
@@ -228,7 +232,10 @@ class InstantiationControllerTest extends CommonRestController {
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_UPDATE_JSON, "Update");
         automationComposition.setCompositionId(compositionId);
         automationComposition.setInstanceId(response.getInstanceId());
-        var invocationBuilder = super.sendRequest(getInstanceEndPoint());
+        automationComposition.getElements().values()
+                .forEach(element -> element.setParticipantId(CommonTestData.getParticipantId()));
+
+        var invocationBuilder = super.sendRequest(getInstanceEndPoint(compositionId));
         var resp = invocationBuilder.post(Entity.json(automationComposition));
         assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
 
@@ -245,6 +252,7 @@ class InstantiationControllerTest extends CommonRestController {
 
     @Test
     void testDelete() {
+        var compositionId = createAcDefinitionInDB("Delete");
         var automationCompositionFromRsc =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Delete");
         automationCompositionFromRsc.setCompositionId(compositionId);
@@ -252,7 +260,7 @@ class InstantiationControllerTest extends CommonRestController {
         var instResponse =
                 instantiationProvider.createAutomationComposition(compositionId, automationCompositionFromRsc);
 
-        var invocationBuilder = super.sendRequest(getInstanceEndPoint(instResponse.getInstanceId()));
+        var invocationBuilder = super.sendRequest(getInstanceEndPoint(compositionId, instResponse.getInstanceId()));
         var resp = invocationBuilder.delete();
         assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
         instResponse = resp.readEntity(InstantiationResponse.class);
@@ -265,30 +273,31 @@ class InstantiationControllerTest extends CommonRestController {
 
     @Test
     void testDeleteNotFound() {
+        var compositionId = createAcDefinitionInDB("DeleteNotFound");
         var automationCompositionFromRsc =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "DelNotFound");
         automationCompositionFromRsc.setCompositionId(compositionId);
 
         instantiationProvider.createAutomationComposition(compositionId, automationCompositionFromRsc);
 
-        var invocationBuilder = super.sendRequest(getInstanceEndPoint(UUID.randomUUID()));
+        var invocationBuilder = super.sendRequest(getInstanceEndPoint(compositionId, UUID.randomUUID()));
         var resp = invocationBuilder.delete();
         assertEquals(Response.Status.NOT_FOUND.getStatusCode(), resp.getStatus());
     }
 
-    @Disabled
     @Test
-    void testCommand_NotFound1() {
-        var invocationBuilder = super.sendRequest(getInstanceEndPoint(UUID.randomUUID()));
-        var resp = invocationBuilder.post(Entity.json(new AutomationComposition()));
+    void testDeploy_NotFound() {
+        var compositionId = createAcDefinitionInDB("Deploy_NotFound");
+        var invocationBuilder = super.sendRequest(getInstanceEndPoint(compositionId, UUID.randomUUID()));
+        var resp = invocationBuilder.put(Entity.json(new AcInstanceStateUpdate()));
         assertEquals(Response.Status.NOT_FOUND.getStatusCode(), resp.getStatus());
     }
 
-    @Disabled
     @Test
-    void testCommand_NotFound2() {
+    void testDeploy_BadRequest() {
+        var compositionId = createAcDefinitionInDB("Deploy_BadRequest");
         var acFromRsc =
-                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "DelNotFound");
+                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "BadRequest");
         acFromRsc.setCompositionId(compositionId);
 
         var instResponse = instantiationProvider.createAutomationComposition(compositionId, acFromRsc);
@@ -297,50 +306,33 @@ class InstantiationControllerTest extends CommonRestController {
         command.setDeployOrder(null);
         command.setLockOrder(null);
 
-        var invocationBuilder = super.sendRequest(getInstanceEndPoint(instResponse.getInstanceId()));
+        var invocationBuilder = super.sendRequest(getInstanceEndPoint(compositionId, instResponse.getInstanceId()));
         var resp = invocationBuilder.put(Entity.json(command));
         assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), resp.getStatus());
     }
 
-    @Disabled
     @Test
-    void testCommand() throws PfModelException {
+    void testDeploy() {
+        var compositionId = createAcDefinitionInDB("Deploy");
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Command");
         automationComposition.setCompositionId(compositionId);
         var instResponse = instantiationProvider.createAutomationComposition(compositionId, automationComposition);
 
-        var participants = CommonTestData.createParticipants();
-        for (var participant : participants) {
-            participantProvider.saveParticipant(participant);
-        }
-
         var instantiationUpdate = new AcInstanceStateUpdate();
+        instantiationUpdate.setDeployOrder(DeployOrder.DEPLOY);
+        instantiationUpdate.setLockOrder(null);
 
-        var invocationBuilder = super.sendRequest(getInstanceEndPoint(instResponse.getInstanceId()));
+        var invocationBuilder = super.sendRequest(getInstanceEndPoint(compositionId, instResponse.getInstanceId()));
         var resp = invocationBuilder.put(Entity.json(instantiationUpdate));
-        assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
-        instResponse = resp.readEntity(InstantiationResponse.class);
-        InstantiationUtils.assertInstantiationResponse(instResponse, automationComposition);
-
-        // check passive state on DB
-        var toscaConceptIdentifier = instResponse.getAffectedAutomationComposition();
-        var automationCompositionsGet = instantiationProvider.getAutomationCompositions(compositionId,
-                toscaConceptIdentifier.getName(), toscaConceptIdentifier.getVersion());
-        assertThat(automationCompositionsGet.getAutomationCompositionList()).hasSize(1);
+        assertEquals(Response.Status.ACCEPTED.getStatusCode(), resp.getStatus());
     }
 
-    private synchronized void deleteEntryInDB() {
-        automationCompositionRepository.deleteAll();
-        var list = acDefinitionProvider.findAcDefinition(compositionId);
-        if (!list.isEmpty()) {
-            acDefinitionProvider.deleteAcDefintion(compositionId);
-        }
-    }
-
-    private synchronized void createEntryInDB() {
-        deleteEntryInDB();
-        var acmDefinition = acDefinitionProvider.createAutomationCompositionDefinition(serviceTemplate);
-        compositionId = acmDefinition.getCompositionId();
+    private UUID createAcDefinitionInDB(String name) {
+        var serviceTemplateCreate = new ToscaServiceTemplate(serviceTemplate);
+        serviceTemplateCreate.setName(name);
+        var acmDefinition = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
+        acDefinitionProvider.updateAcDefinition(acmDefinition);
+        return acmDefinition.getCompositionId();
     }
 }

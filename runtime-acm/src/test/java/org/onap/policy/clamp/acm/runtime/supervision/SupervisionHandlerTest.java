@@ -40,11 +40,13 @@ import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionD
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionStateChangePublisher;
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionException;
+import org.onap.policy.clamp.models.acm.concepts.AcElementDeployAck;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeployAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
@@ -214,7 +216,10 @@ class SupervisionHandlerTest {
                 AutomationCompositionOrderedState.PASSIVE, AutomationCompositionState.UNINITIALISED);
         var automationCompositionAckMessage =
                 new AutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_STATECHANGE_ACK);
-        automationCompositionAckMessage.setAutomationCompositionResultMap(Map.of());
+        var acElementDeployAck =
+                new AcElementDeployAck(AutomationCompositionState.PASSIVE, DeployState.DEPLOYED, true, "");
+        automationCompositionAckMessage.setAutomationCompositionResultMap(
+                Map.of(UUID.fromString("709c62b3-8918-41b9-a747-d21eb79c6c20"), acElementDeployAck));
         automationCompositionAckMessage.setAutomationCompositionId(IDENTIFIER);
 
         handler.handleAutomationCompositionStateChangeAckMessage(automationCompositionAckMessage);
@@ -227,7 +232,10 @@ class SupervisionHandlerTest {
         var automationCompositionAckMessage =
                 new AutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_DEPLOY_ACK);
         automationCompositionAckMessage.setParticipantId(CommonTestData.getParticipantId());
-        automationCompositionAckMessage.setAutomationCompositionResultMap(Map.of());
+        var acElementDeployAck =
+                new AcElementDeployAck(AutomationCompositionState.PASSIVE, DeployState.DEPLOYED, true, "");
+        automationCompositionAckMessage.setAutomationCompositionResultMap(
+                Map.of(UUID.fromString("709c62b3-8918-41b9-a747-d21eb79c6c20"), acElementDeployAck));
         automationCompositionAckMessage.setAutomationCompositionId(IDENTIFIER);
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         var handler = createSupervisionHandler(automationCompositionProvider,

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2022 Nordix Foundation.
+ * Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -30,8 +30,11 @@ import javax.ws.rs.core.Response.Status;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationComposition;
 import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionRepository;
+import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.springframework.data.domain.Example;
@@ -97,6 +100,7 @@ public class AutomationCompositionProvider {
      */
     public AutomationComposition createAutomationComposition(final AutomationComposition automationComposition) {
         automationComposition.setInstanceId(UUID.randomUUID());
+        AcmUtils.setCascadedState(automationComposition, DeployState.UNDEPLOYED, LockState.NONE);
         var result = automationCompositionRepository.save(ProviderUtils.getJpaAndValidate(automationComposition,
                 JpaAutomationComposition::new, "automation composition"));
 
@@ -110,7 +114,9 @@ public class AutomationCompositionProvider {
      * @param automationComposition the automation composition to update
      * @return the updated automation composition
      */
-    public AutomationComposition updateAutomationComposition(final AutomationComposition automationComposition) {
+    public AutomationComposition updateAutomationComposition(
+            @NonNull final AutomationComposition automationComposition) {
+        AcmUtils.setCascadedState(automationComposition, DeployState.UNDEPLOYED, LockState.NONE);
         var result = automationCompositionRepository.save(ProviderUtils.getJpaAndValidate(automationComposition,
                 JpaAutomationComposition::new, "automation composition"));
 
@@ -154,6 +160,8 @@ public class AutomationCompositionProvider {
         example.setInstanceId(null);
         example.setElements(null);
         example.setState(null);
+        example.setDeployState(null);
+        example.setLockState(null);
 
         return Example.of(example);
     }

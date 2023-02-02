@@ -21,25 +21,20 @@
 
 package org.onap.policy.clamp.acm.runtime.instantiation;
 
-import java.util.List;
 import java.util.UUID;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import javax.validation.Valid;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import lombok.AllArgsConstructor;
-import org.onap.policy.clamp.acm.runtime.supervision.SupervisionHandler;
-import org.onap.policy.clamp.common.acm.exception.AutomationCompositionException;
-import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
+import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
-import org.onap.policy.clamp.models.acm.concepts.Participant;
-import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationCommand;
+import org.onap.policy.clamp.models.acm.messages.rest.instantiation.AcInstanceStateUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
+import org.onap.policy.clamp.models.acm.persistence.provider.AcInstanceStateResolver;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
-import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.common.parameters.ObjectValidationResult;
@@ -55,14 +50,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @AllArgsConstructor
 public class AutomationCompositionInstantiationProvider {
-    private static final String AUTOMATION_COMPOSITION_NODE_ELEMENT_TYPE = "AutomationCompositionElement";
     private static final String DO_NOT_MATCH = " do not match with ";
 
     private final AutomationCompositionProvider automationCompositionProvider;
-    private final SupervisionHandler supervisionHandler;
-    private final ParticipantProvider participantProvider;
     private final AcDefinitionProvider acDefinitionProvider;
-    private static final String ENTRY = "entry ";
+    private final AcInstanceStateResolver acInstanceStateResolver;
 
     /**
      * Create automation composition.
@@ -142,10 +134,24 @@ public class AutomationCompositionInstantiationProvider {
         if (acDefinitionOpt.isEmpty()) {
             result.addResult(new ObjectValidationResult("ServiceTemplate", "", ValidationStatus.INVALID,
                     "Commissioned automation composition definition not found"));
-        } else {
-            result.addResult(AcmUtils.validateAutomationComposition(automationComposition,
-                    acDefinitionOpt.get().getServiceTemplate()));
+            return result;
         }
+        if (!AcTypeState.PRIMED.equals(acDefinitionOpt.get().getState())) {
+            result.addResult(new ObjectValidationResult("ServiceTemplate", "", ValidationStatus.INVALID,
+                    "Commissioned automation composition definition not primed"));
+            return result;
+        }
+        result.addResult(AcmUtils.validateAutomationComposition(automationComposition,
+                acDefinitionOpt.get().getServiceTemplate()));
+
+        if (result.isValid()) {
+            for (var element : automationComposition.getElements().values()) {
+                var name = element.getDefinition().getName();
+                var participantId = acDefinitionOpt.get().getElementStateMap().get(name).getParticipantId();
+                element.setParticipantId(participantId);
+            }
+        }
+
         return result;
     }
 
@@ -208,61 +214,42 @@ public class AutomationCompositionInstantiationProvider {
     }
 
     /**
-     * Issue a command to automation compositions, setting their ordered state.
+     * Handle Composition Instance State.
      *
-     * @param automationComposition the AutomationComposition
-     * @param command the command to issue to automation compositions
+     * @param compositionId the compositionId
+     * @param instanceId the instanceId
+     * @param acInstanceStateUpdate the AcInstanceStateUpdate
      */
-    public void issueAutomationCompositionCommand(AutomationComposition automationComposition,
-            InstantiationCommand command) {
-
-        if (command.getOrderedState() == null) {
-            throw new AutomationCompositionRuntimeException(Status.BAD_REQUEST,
-                    "ordered state invalid or not specified on command");
+    public void compositionInstanceState(UUID compositionId, UUID instanceId,
+            @Valid AcInstanceStateUpdate acInstanceStateUpdate) {
+        var automationComposition = automationCompositionProvider.getAutomationComposition(instanceId);
+        if (!compositionId.equals(automationComposition.getCompositionId())) {
+            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
+                    automationComposition.getCompositionId() + DO_NOT_MATCH + compositionId);
         }
+        var acDefinition = acDefinitionProvider.getAcDefinition(automationComposition.getCompositionId());
+        var result = acInstanceStateResolver.resolve(acInstanceStateUpdate.getDeployOrder(),
+                acInstanceStateUpdate.getLockOrder(), automationComposition.getDeployState(),
+                automationComposition.getLockState());
+        switch (result) {
+            case "DEPLOY":
+                //
+                break;
 
-        var participants = participantProvider.getParticipants();
-        if (participants.isEmpty()) {
-            throw new AutomationCompositionRuntimeException(Status.BAD_REQUEST, "No participants registered");
+            case "UNDEPLOY":
+                //
+                break;
+
+            case "LOCK":
+                //
+                break;
+
+            case "UNLOCK":
+                //
+                break;
+
+            default:
+                throw new PfModelRuntimeException(Status.BAD_REQUEST, "Not valid " + acInstanceStateUpdate);
         }
-        var validationResult = validateIssueAutomationComposition(automationComposition, participants);
-        if (!validationResult.isValid()) {
-            throw new AutomationCompositionRuntimeException(Response.Status.BAD_REQUEST, validationResult.getResult());
-        }
-
-        automationComposition.setCascadedOrderedState(command.getOrderedState());
-        try {
-            supervisionHandler.triggerAutomationCompositionSupervision(automationComposition);
-        } catch (AutomationCompositionException e) {
-            throw new AutomationCompositionRuntimeException(Response.Status.BAD_REQUEST, e.getMessage());
-        }
-        automationCompositionProvider.updateAutomationComposition(automationComposition);
-    }
-
-    private BeanValidationResult validateIssueAutomationComposition(AutomationComposition automationComposition,
-            List<Participant> participants) {
-        var result = new BeanValidationResult("AutomationComposition", automationComposition);
-
-        var participantMap = participants.stream()
-                .collect(Collectors.toMap(participant -> participant.getParticipantId(), Function.identity()));
-
-        for (var element : automationComposition.getElements().values()) {
-
-            var subResult = new BeanValidationResult(ENTRY + element.getDefinition().getName(), element);
-            var p = participantMap.get(element.getParticipantId());
-            if (p == null) {
-                subResult.addResult(new ObjectValidationResult(AUTOMATION_COMPOSITION_NODE_ELEMENT_TYPE,
-                        element.getDefinition().getName(), ValidationStatus.INVALID,
-                        "Participant with ID " + element.getParticipantId() + " is not registered"));
-            } else if (!p.getParticipantId().equals(element.getParticipantId())) {
-                subResult.addResult(new ObjectValidationResult(AUTOMATION_COMPOSITION_NODE_ELEMENT_TYPE,
-                        element.getDefinition().getName(), ValidationStatus.INVALID,
-                        "Participant with ID " + " - " + element.getParticipantId()
-                                + " is not registered"));
-            }
-            result.addResult(subResult);
-        }
-
-        return result;
     }
 }

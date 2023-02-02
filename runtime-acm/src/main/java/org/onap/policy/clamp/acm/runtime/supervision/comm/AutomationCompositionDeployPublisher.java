@@ -78,7 +78,7 @@ public class AutomationCompositionDeployPublisher extends AbstractParticipantPub
 
         List<ParticipantDeploy> participantDeploys = new ArrayList<>();
         for (var element : automationComposition.getElements().values()) {
-            AcmUtils.setAcPolicyInfo(element, toscaServiceTemplate);
+            element.setToscaServiceTemplateFragment(AcmUtils.getToscaServiceTemplateFragment(toscaServiceTemplate));
             AcmUtils.prepareParticipantUpdate(element, participantDeploys);
         }
         acDeployMsg.setParticipantUpdatesList(participantDeploys);

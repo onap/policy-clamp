@@ -39,6 +39,8 @@ import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
@@ -99,23 +101,21 @@ public final class AcmUtils {
     /**
      * Set the Policy information in the service template for the automation composition element.
      *
-     * @param acElement automation composition element
      * @param toscaServiceTemplate ToscaServiceTemplate
      */
-    public static void setAcPolicyInfo(AutomationCompositionElement acElement,
-            ToscaServiceTemplate toscaServiceTemplate) {
+    public static ToscaServiceTemplate getToscaServiceTemplateFragment(ToscaServiceTemplate toscaServiceTemplate) {
         // Pass respective PolicyTypes or Policies as part of toscaServiceTemplateFragment
         if (toscaServiceTemplate.getPolicyTypes() == null
                 && toscaServiceTemplate.getToscaTopologyTemplate().getPolicies() == null) {
-            return;
+            return new ToscaServiceTemplate();
         }
-        ToscaServiceTemplate toscaServiceTemplateFragment = new ToscaServiceTemplate();
+        var toscaServiceTemplateFragment = new ToscaServiceTemplate();
         toscaServiceTemplateFragment.setPolicyTypes(toscaServiceTemplate.getPolicyTypes());
-        ToscaTopologyTemplate toscaTopologyTemplate = new ToscaTopologyTemplate();
+        var toscaTopologyTemplate = new ToscaTopologyTemplate();
         toscaTopologyTemplate.setPolicies(toscaServiceTemplate.getToscaTopologyTemplate().getPolicies());
         toscaServiceTemplateFragment.setToscaTopologyTemplate(toscaTopologyTemplate);
         toscaServiceTemplateFragment.setDataTypes(toscaServiceTemplate.getDataTypes());
-        acElement.setToscaServiceTemplateFragment(toscaServiceTemplateFragment);
+        return toscaServiceTemplateFragment;
     }
 
     /**
@@ -196,7 +196,7 @@ public final class AcmUtils {
     public static List<Entry<String, ToscaNodeTemplate>> extractAcElementsFromServiceTemplate(
             ToscaServiceTemplate serviceTemplate) {
         return serviceTemplate.getToscaTopologyTemplate().getNodeTemplates().entrySet().stream().filter(
-                nodeTemplateEntry -> checkIfNodeTemplateIsAutomationCompositionElement(nodeTemplateEntry.getValue(),
+            nodeTemplateEntry -> checkIfNodeTemplateIsAutomationCompositionElement(nodeTemplateEntry.getValue(),
                         serviceTemplate))
                 .collect(Collectors.toList());
     }
@@ -307,5 +307,37 @@ public final class AcmUtils {
                     map.get(new ToscaConceptIdentifier(elementMap.get("name"), elementMap.get("version"))))
                 .collect(Collectors.toList());
         // @formatter:on
+    }
+
+
+    /**
+     * Return true if DeployState and LockState are in a Transitional State.
+     *
+     * @return true if DeployState and LockState are in a Transitional State
+     */
+    public static boolean isInTransitionalState(DeployState deployState, LockState lockState) {
+        return DeployState.DEPLOYING.equals(deployState) || DeployState.UNDEPLOYING.equals(deployState)
+                || LockState.LOCKING.equals(lockState) || LockState.UNLOCKING.equals(lockState);
+    }
+
+    /**
+     * Set the states on the automation composition and on all its automation composition elements.
+     *
+     * @param deployState the DeployState we want the automation composition to transition to
+     * @param lockState the LockState we want the automation composition to transition to
+     */
+    public static void setCascadedState(final AutomationComposition automationComposition,
+            final DeployState deployState, final LockState lockState) {
+        automationComposition.setDeployState(deployState);
+        automationComposition.setLockState(lockState);
+
+        if (MapUtils.isEmpty(automationComposition.getElements())) {
+            return;
+        }
+
+        for (var element : automationComposition.getElements().values()) {
+            element.setDeployState(deployState);
+            element.setLockState(lockState);
+        }
     }
 }
