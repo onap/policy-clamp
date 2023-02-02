@@ -27,17 +27,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantStatusReqListener;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
-import org.onap.policy.clamp.acm.participant.intermediary.parameters.ParticipantParameters;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatusReq;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -51,26 +48,25 @@ class IntermediaryActivatorTest {
     private static final String TOPIC_FIRST = "TOPIC1";
     private static final String TOPIC_SECOND = "TOPIC2";
 
-    @Disabled
     @Test
     void testStartAndStop() throws Exception {
-        ParticipantParameters parameters = CommonTestData.getParticipantParameters();
+        var parameters = CommonTestData.getParticipantParameters();
 
-        var publisherFirst = spy(mock(Publisher.class));
-        var publisherSecond = spy(mock(Publisher.class));
+        var publisherFirst = mock(Publisher.class);
+        var publisherSecond = mock(Publisher.class);
         var publishers = List.of(publisherFirst, publisherSecond);
 
-        var listenerFirst = spy(mock(ParticipantStatusReqListener.class));
+        var listenerFirst = mock(ParticipantStatusReqListener.class);
         when(listenerFirst.getType()).thenReturn(TOPIC_FIRST);
         when(listenerFirst.getScoListener()).thenReturn(listenerFirst);
 
-        var listenerSecond = spy(mock(ParticipantStatusReqListener.class));
+        var listenerSecond = mock(ParticipantStatusReqListener.class);
         when(listenerSecond.getType()).thenReturn(TOPIC_SECOND);
         when(listenerSecond.getScoListener()).thenReturn(listenerSecond);
 
         List<Listener<ParticipantStatusReq>> listeners = List.of(listenerFirst, listenerSecond);
 
-        ParticipantHandler handler = mock(ParticipantHandler.class);
+        var handler = mock(ParticipantHandler.class);
         try (var activator = new IntermediaryActivator(parameters, handler, publishers, listeners)) {
 
             assertFalse(activator.isAlive());
@@ -83,7 +79,7 @@ class IntermediaryActivatorTest {
             verify(publisherFirst, times(1)).active(anyList());
             verify(publisherSecond, times(1)).active(anyList());
 
-            StandardCoderObject sco = CODER.decode("{messageType:" + TOPIC_FIRST + "}", StandardCoderObject.class);
+            var sco = CODER.decode("{messageType:" + TOPIC_FIRST + "}", StandardCoderObject.class);
             activator.getMsgDispatcher().onTopicEvent(null, "msg", sco);
             verify(listenerFirst, times(1)).onTopicEvent(any(), any(), any());
 
