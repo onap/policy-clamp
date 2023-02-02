@@ -10,22 +10,22 @@
         <collectionProp name="Arguments.arguments">
           <elementProp name="RUNTIME_HOST" elementType="Argument">
             <stringProp name="Argument.name">RUNTIME_HOST</stringProp>
-            <stringProp name="Argument.value">192.168.32.9</stringProp>
+            <stringProp name="Argument.value">localhost</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="RUNTIME_PORT" elementType="Argument">
             <stringProp name="Argument.name">RUNTIME_PORT</stringProp>
-            <stringProp name="Argument.value">6969</stringProp>
+            <stringProp name="Argument.value">30007</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="POLICY_PARTICIPANT_HOST" elementType="Argument">
             <stringProp name="Argument.name">POLICY_PARTICIPANT_HOST</stringProp>
-            <stringProp name="Argument.value">192.168.32.8</stringProp>
+            <stringProp name="Argument.value">localhost</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="POLICY_PARTICIPANT_PORT" elementType="Argument">
             <stringProp name="Argument.name">POLICY_PARTICIPANT_PORT</stringProp>
-            <stringProp name="Argument.value">6970</stringProp>
+            <stringProp name="Argument.value">30008</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="HOME_PATH" elementType="Argument">
