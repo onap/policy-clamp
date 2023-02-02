@@ -40,12 +40,12 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 /**
  * Test the copy constructor.
  */
-class ParticipantUpdateTest {
+class ParticipantPrimeTest {
     @Test
     void testCopyConstructor() throws CoderException {
-        assertThatThrownBy(() -> new ParticipantUpdate(null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> new ParticipantPrime(null)).isInstanceOf(NullPointerException.class);
 
-        var orig = new ParticipantUpdate();
+        var orig = new ParticipantPrime();
         // verify with all values
         orig.setAutomationCompositionId(UUID.randomUUID());
         orig.setParticipantId(CommonTestData.getParticipantId());
@@ -70,11 +70,11 @@ class ParticipantUpdateTest {
         participantDefinitionUpdate.setAutomationCompositionElementDefinitionList(List.of(acDefinition));
         orig.setParticipantDefinitionUpdates(List.of(participantDefinitionUpdate));
 
-        var other = new ParticipantUpdate(orig);
+        var other = new ParticipantPrime(orig);
 
         assertEquals(removeVariableFields(orig.toString()), removeVariableFields(other.toString()));
 
-        assertSerializable(orig, ParticipantUpdate.class);
+        assertSerializable(orig, ParticipantPrime.class);
     }
 
     private AutomationCompositionElementDefinition getAcElementDefinition(ToscaConceptIdentifier id) {

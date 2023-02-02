@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021,2023 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -36,7 +36,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeployAck;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUpdateAck;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantPrimeAck;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.slf4j.Logger;
@@ -85,29 +85,29 @@ public class SupervisionHandler {
     }
 
     /**
-     * Handle a ParticipantUpdateAck message from a participant.
+     * Handle a ParticipantPrimeAck message from a participant.
      *
-     * @param participantUpdateAckMessage the ParticipantUpdateAck message received from a participant
+     * @param participantPrimeAckMessage the ParticipantPrimeAck message received from a participant
      */
-    @Timed(value = "listener.participant_update_ack", description = "PARTICIPANT_UPDATE_ACK messages received")
-    public void handleParticipantMessage(ParticipantUpdateAck participantUpdateAckMessage) {
-        LOGGER.debug("Participant Update Ack message received {}", participantUpdateAckMessage);
-        var acDefinitionOpt = acDefinitionProvider.findAcDefinition(participantUpdateAckMessage.getCompositionId());
+    @Timed(value = "listener.participant_prime_ack", description = "PARTICIPANT_PRIME_ACK messages received")
+    public void handleParticipantMessage(ParticipantPrimeAck participantPrimeAckMessage) {
+        LOGGER.debug("Participant Prime Ack message received {}", participantPrimeAckMessage);
+        var acDefinitionOpt = acDefinitionProvider.findAcDefinition(participantPrimeAckMessage.getCompositionId());
         if (acDefinitionOpt.isEmpty()) {
-            LOGGER.warn("AC Definition not found in database {}", participantUpdateAckMessage.getCompositionId());
+            LOGGER.warn("AC Definition not found in database {}", participantPrimeAckMessage.getCompositionId());
             return;
         }
         var acDefinition = acDefinitionOpt.get();
         if (!AcTypeState.PRIMING.equals(acDefinition.getState())
                 && !AcTypeState.DEPRIMING.equals(acDefinition.getState())) {
             LOGGER.warn("AC Definition {} already primed/deprimed with participant {}",
-                    participantUpdateAckMessage.getCompositionId(), participantUpdateAckMessage.getParticipantId());
+                    participantPrimeAckMessage.getCompositionId(), participantPrimeAckMessage.getParticipantId());
             return;
         }
         var state = AcTypeState.PRIMING.equals(acDefinition.getState()) ? AcTypeState.PRIMED : AcTypeState.COMMISSIONED;
         boolean completed = true;
         for (var element : acDefinition.getElementStateMap().values()) {
-            if (participantUpdateAckMessage.getParticipantId().equals(element.getParticipantId())) {
+            if (participantPrimeAckMessage.getParticipantId().equals(element.getParticipantId())) {
                 element.setState(state);
             } else if (!state.equals(element.getState())) {
                 completed = false;

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,26 +22,26 @@ package org.onap.policy.clamp.acm.participant.intermediary.comm;
 
 import org.onap.policy.clamp.acm.participant.intermediary.handler.ParticipantHandler;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUpdate;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantPrime;
 import org.springframework.stereotype.Component;
 
 /**
- * Listener for Participant Update messages sent by runtime.
+ * Listener for Participant Prime messages sent by runtime.
  */
 @Component
-public class ParticipantUpdateListener extends ParticipantListener<ParticipantUpdate> {
+public class ParticipantPrimeListener extends ParticipantListener<ParticipantPrime> {
 
     /**
      * Constructs the object.
      *
      * @param participantHandler the handler for managing the state of the participant
      */
-    public ParticipantUpdateListener(final ParticipantHandler participantHandler) {
-        super(ParticipantUpdate.class, participantHandler, participantHandler::handleParticipantUpdate);
+    public ParticipantPrimeListener(final ParticipantHandler participantHandler) {
+        super(ParticipantPrime.class, participantHandler, participantHandler::handleParticipantPrime);
     }
 
     @Override
     public String getType() {
-        return ParticipantMessageType.PARTICIPANT_UPDATE.name();
+        return ParticipantMessageType.PARTICIPANT_PRIME.name();
     }
 }

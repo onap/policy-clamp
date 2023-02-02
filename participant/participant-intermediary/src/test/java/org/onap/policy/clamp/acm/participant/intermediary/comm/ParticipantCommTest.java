@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,8 +56,8 @@ class ParticipantCommTest {
         assertEquals(ParticipantMessageType.PARTICIPANT_DEREGISTER_ACK.name(),
             participantDeregisterAckListener.getType());
 
-        var participantUpdateListener = new ParticipantUpdateListener(participantHandler);
-        assertEquals(ParticipantMessageType.PARTICIPANT_UPDATE.name(), participantUpdateListener.getType());
+        var participantPrimeListener = new ParticipantPrimeListener(participantHandler);
+        assertEquals(ParticipantMessageType.PARTICIPANT_PRIME.name(), participantPrimeListener.getType());
 
         var automationCompositionUpdateListener = new AutomationCompositionDeployListener(participantHandler);
         assertEquals(ParticipantMessageType.AUTOMATION_COMPOSITION_DEPLOY.name(),
