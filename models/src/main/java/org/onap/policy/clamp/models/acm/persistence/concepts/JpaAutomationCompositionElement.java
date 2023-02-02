@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.UnaryOperator;
 import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -64,7 +65,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class JpaAutomationCompositionElement extends Validated
-        implements PfAuthorative<AutomationCompositionElement>, Comparable<JpaAutomationCompositionElement> {
+    implements PfAuthorative<AutomationCompositionElement>, Comparable<JpaAutomationCompositionElement> {
 
     @Id
     @NotNull
@@ -77,8 +78,10 @@ public class JpaAutomationCompositionElement extends Validated
     // @formatter:off
     @VerifyKey
     @NotNull
-    @AttributeOverride(name = "name",    column = @Column(name = "definition_name"))
-    @AttributeOverride(name = "version", column = @Column(name = "definition_version"))
+    @AttributeOverrides({
+        @AttributeOverride(name = "name",    column = @Column(name = "definition_name")),
+        @AttributeOverride(name = "version", column = @Column(name = "definition_version"))
+    })
     private PfConceptKey definition;
 
     @NotNull
