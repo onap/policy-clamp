@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021 Nordix Foundation.
+ * Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -27,19 +27,19 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * Class to represent the PARTICIPANT_UPDATE_ACK message that registered participant sends to the ACM runtime.
+ * Class to represent the PARTICIPANT_PRIME_ACK message that registered participant sends to the ACM runtime.
  */
 @Getter
 @Setter
 @ToString(callSuper = true)
-public class ParticipantUpdateAck extends ParticipantAckMessage {
+public class ParticipantPrimeAck extends ParticipantAckMessage {
 
     /**
-     * Constructor for instantiating ParticipantUpdateAck class with message name.
+     * Constructor for instantiating ParticipantPrimeAck class with message name.
      *
      */
-    public ParticipantUpdateAck() {
-        super(ParticipantMessageType.PARTICIPANT_UPDATE_ACK);
+    public ParticipantPrimeAck() {
+        super(ParticipantMessageType.PARTICIPANT_PRIME_ACK);
     }
 
     /**
@@ -47,7 +47,7 @@ public class ParticipantUpdateAck extends ParticipantAckMessage {
      *
      * @param source source from which to copy
      */
-    public ParticipantUpdateAck(final ParticipantUpdateAck source) {
+    public ParticipantPrimeAck(final ParticipantPrimeAck source) {
         super(source);
     }
 }

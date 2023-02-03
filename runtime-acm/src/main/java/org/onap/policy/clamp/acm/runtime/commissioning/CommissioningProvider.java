@@ -25,7 +25,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.Response.Status;
 import lombok.RequiredArgsConstructor;
-import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantUpdatePublisher;
+import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantPrimePublisher;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.AcTypeStateUpdate;
@@ -53,7 +53,7 @@ public class CommissioningProvider {
     private final AcDefinitionProvider acDefinitionProvider;
     private final AutomationCompositionProvider acProvider;
     private final AcTypeStateResolver acTypeStateResolver;
-    private final ParticipantUpdatePublisher participantUpdatePublisher;
+    private final ParticipantPrimePublisher participantPrimePublisher;
 
     private CommissioningResponse createCommissioningResponse(UUID compositionId,
             ToscaServiceTemplate serviceTemplate) {
@@ -191,9 +191,9 @@ public class CommissioningProvider {
     }
 
     private void prime(AutomationCompositionDefinition acmDefinition) {
-        var prearation = participantUpdatePublisher.prepareParticipantPriming(acmDefinition);
+        var prearation = participantPrimePublisher.prepareParticipantPriming(acmDefinition);
         acDefinitionProvider.updateAcDefinition(acmDefinition);
-        participantUpdatePublisher.sendPriming(prearation, acmDefinition.getCompositionId(), null);
+        participantPrimePublisher.sendPriming(prearation, acmDefinition.getCompositionId(), null);
     }
 
     private void deprime(AutomationCompositionDefinition acmDefinition) {
@@ -204,7 +204,7 @@ public class CommissioningProvider {
             acmDefinition.setState(AcTypeState.DEPRIMING);
             acDefinitionProvider.updateAcDefinition(acmDefinition);
         }
-        participantUpdatePublisher.sendDepriming(acmDefinition.getCompositionId());
+        participantPrimePublisher.sendDepriming(acmDefinition.getCompositionId());
     }
 
 }

@@ -32,18 +32,18 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantDeregisterAckListener;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
+import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantPrimeListener;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantRegisterAckListener;
-import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantUpdateListener;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.ParticipantHandler;
 import org.onap.policy.clamp.acm.participant.policy.main.parameters.CommonTestData;
 import org.onap.policy.clamp.acm.participant.policy.main.utils.TestListenerUtils;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDeregister;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDeregisterAck;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantPrime;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantPrimeAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegister;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegisterAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatus;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUpdate;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUpdateAck;
 import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,11 +126,11 @@ class ParticipantMessagesTest {
 
     @Test
     void testReceiveParticipantUpdateMessage() {
-        ParticipantUpdate participantUpdateMsg = TestListenerUtils.createParticipantUpdateMsg();
+        ParticipantPrime participantPrimeMsg = TestListenerUtils.createParticipantPrimeMsg();
 
         synchronized (lockit) {
-            ParticipantUpdateListener participantUpdateListener = new ParticipantUpdateListener(participantHandler);
-            participantUpdateListener.onTopicEvent(INFRA, TOPIC, null, participantUpdateMsg);
+            ParticipantPrimeListener participantPrimeListener = new ParticipantPrimeListener(participantHandler);
+            participantPrimeListener.onTopicEvent(INFRA, TOPIC, null, participantPrimeMsg);
         }
 
         // Verify the result of GET participants with what is stored
@@ -138,16 +138,16 @@ class ParticipantMessagesTest {
     }
 
     @Test
-    void testSendParticipantUpdateAckMessage() {
-        final ParticipantUpdateAck participantUpdateAckMsg = new ParticipantUpdateAck();
-        participantUpdateAckMsg.setMessage("ParticipantUpdateAck message");
-        participantUpdateAckMsg.setResponseTo(UUID.randomUUID());
-        participantUpdateAckMsg.setResult(true);
+    void testSendParticipantPrimeAckMessage() {
+        final ParticipantPrimeAck participantPrimeAckMsg = new ParticipantPrimeAck();
+        participantPrimeAckMsg.setMessage("ParticipantPrimeAck message");
+        participantPrimeAckMsg.setResponseTo(UUID.randomUUID());
+        participantPrimeAckMsg.setResult(true);
 
         synchronized (lockit) {
             ParticipantMessagePublisher participantMessagePublisher = new ParticipantMessagePublisher();
             participantMessagePublisher.active(Collections.singletonList(Mockito.mock(TopicSink.class)));
-            assertThatCode(() -> participantMessagePublisher.sendParticipantUpdateAck(participantUpdateAckMsg))
+            assertThatCode(() -> participantMessagePublisher.sendParticipantPrimeAck(participantPrimeAckMsg))
                 .doesNotThrowAnyException();
         }
     }

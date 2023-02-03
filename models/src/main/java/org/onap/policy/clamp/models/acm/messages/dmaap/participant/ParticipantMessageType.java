@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021 Nordix Foundation.
+ * Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -77,13 +77,13 @@ public enum ParticipantMessageType {
     /**
      * Used by automation composition runtime to send ToscaServiceTemplate to participant.
      */
-    PARTICIPANT_UPDATE,
+    PARTICIPANT_PRIME,
 
     /**
      * Used by participant to acknowledge the receipt of PARTICIPANT_UPDATE message
      * from automation composition runtime.
      */
-    PARTICIPANT_UPDATE_ACK,
+    PARTICIPANT_PRIME_ACK,
 
     /**
      * Used by participant to acknowledge the receipt of AUTOMATION_COMPOSITION_DEPLOY message

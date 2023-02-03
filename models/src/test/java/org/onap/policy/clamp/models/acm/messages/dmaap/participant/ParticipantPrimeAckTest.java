@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2022 Nordix Foundation.
+ * Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,30 +30,30 @@ import org.junit.jupiter.api.Test;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
-class ParticipantUpdateAckTest {
+class ParticipantPrimeAckTest {
 
     @Test
     void testCopyConstructor() throws CoderException {
-        assertThatThrownBy(() -> new ParticipantUpdateAck(null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> new ParticipantPrimeAck(null)).isInstanceOf(NullPointerException.class);
 
-        final ParticipantUpdateAck orig = new ParticipantUpdateAck();
+        final ParticipantPrimeAck orig = new ParticipantPrimeAck();
 
         // verify with null values
         assertEquals(removeVariableFields(orig.toString()),
-                removeVariableFields(new ParticipantUpdateAck(orig).toString()));
+                removeVariableFields(new ParticipantPrimeAck(orig).toString()));
 
         // verify with all values
         ToscaConceptIdentifier id = new ToscaConceptIdentifier();
         id.setName("id");
         id.setVersion("1.2.3");
         orig.setResponseTo(UUID.randomUUID());
-        orig.setMessageType(ParticipantMessageType.PARTICIPANT_UPDATE_ACK);
+        orig.setMessageType(ParticipantMessageType.PARTICIPANT_PRIME_ACK);
         orig.setResult(true);
         orig.setMessage("Successfully processed message");
 
         assertEquals(removeVariableFields(orig.toString()),
-                removeVariableFields(new ParticipantUpdateAck(orig).toString()));
+                removeVariableFields(new ParticipantPrimeAck(orig).toString()));
 
-        assertSerializable(orig, ParticipantUpdateAck.class);
+        assertSerializable(orig, ParticipantPrimeAck.class);
     }
 }

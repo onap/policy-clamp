@@ -39,8 +39,8 @@ import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantAckMessage;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessage;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantPrime;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegisterAck;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUpdate;
 import org.onap.policy.common.utils.coder.CoderException;
 
 class ParticipantHandlerTest {
@@ -54,43 +54,43 @@ class ParticipantHandlerTest {
         var publisher = new ParticipantMessagePublisher();
         var emptyParticipantHandler =
                 new ParticipantHandler(parameters, publisher, automationCompositionHander);
-        var participantUpdateMsg = new ParticipantUpdate();
+        var participantPrimeMsg = new ParticipantPrime();
 
         assertThatThrownBy(() ->
-                emptyParticipantHandler.handleParticipantUpdate(participantUpdateMsg))
+                emptyParticipantHandler.handleParticipantPrime(participantPrimeMsg))
                 .isInstanceOf(RuntimeException.class);
 
         var participantHandler = commonTestData.getMockParticipantHandler();
 
         var participantId = CommonTestData.getParticipantId();
-        participantUpdateMsg.setAutomationCompositionId(CommonTestData.AC_ID_1);
-        participantUpdateMsg.setCompositionId(CommonTestData.AC_ID_1);
-        participantUpdateMsg.setParticipantId(participantId);
-        participantUpdateMsg.setMessageId(UUID.randomUUID());
-        participantUpdateMsg.setTimestamp(Instant.ofEpochMilli(3000));
+        participantPrimeMsg.setAutomationCompositionId(CommonTestData.AC_ID_1);
+        participantPrimeMsg.setCompositionId(CommonTestData.AC_ID_1);
+        participantPrimeMsg.setParticipantId(participantId);
+        participantPrimeMsg.setMessageId(UUID.randomUUID());
+        participantPrimeMsg.setTimestamp(Instant.ofEpochMilli(3000));
 
         var heartbeatF = participantHandler.makeHeartbeat(false);
         assertEquals(participantId, heartbeatF.getParticipantId());
         assertThat(heartbeatF.getAutomationCompositionInfoList()).isEmpty();
 
-        participantHandler.handleParticipantUpdate(participantUpdateMsg);
+        participantHandler.handleParticipantPrime(participantPrimeMsg);
 
         var heartbeatT = participantHandler.makeHeartbeat(true);
         assertEquals(participantId, heartbeatT.getParticipantId());
         assertThat(heartbeatT.getParticipantDefinitionUpdates()).isNotEmpty();
         assertEquals(participantId, heartbeatT.getParticipantDefinitionUpdates().get(0).getParticipantId());
 
-        var pum = setListParticipantDefinition(participantUpdateMsg);
-        participantHandler.handleParticipantUpdate(pum);
+        var pum = setListParticipantDefinition(participantPrimeMsg);
+        participantHandler.handleParticipantPrime(pum);
         var heartbeatTAfterUpdate = participantHandler.makeHeartbeat(true);
         assertEquals(participantId, heartbeatTAfterUpdate.getParticipantId());
     }
 
-    private ParticipantUpdate setListParticipantDefinition(ParticipantUpdate participantUpdateMsg) {
+    private ParticipantPrime setListParticipantDefinition(ParticipantPrime participantPrimeMsg) {
         var def = new ParticipantDefinition();
         def.setParticipantId(CommonTestData.getParticipantId());
-        participantUpdateMsg.setParticipantDefinitionUpdates(List.of(def));
-        return participantUpdateMsg;
+        participantPrimeMsg.setParticipantDefinitionUpdates(List.of(def));
+        return participantPrimeMsg;
     }
 
     @Test

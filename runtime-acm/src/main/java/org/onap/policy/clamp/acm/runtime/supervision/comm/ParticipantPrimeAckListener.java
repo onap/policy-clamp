@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021 Nordix Foundation.
+ * Copyright (C) 2021-2023 Nordix Foundation.
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,7 +24,7 @@ package org.onap.policy.clamp.acm.runtime.supervision.comm;
 import org.onap.policy.clamp.acm.runtime.config.messaging.Listener;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionHandler;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUpdateAck;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantPrimeAck;
 import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
 import org.onap.policy.common.endpoints.listeners.ScoListener;
 import org.onap.policy.common.utils.coder.StandardCoderObject;
@@ -33,37 +33,37 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
- * Listener for ParticipantUpdateAck messages sent by participants.
+ * Listener for ParticipantPrimeAck messages sent by participants.
  */
 @Component
-public class ParticipantUpdateAckListener extends ScoListener<ParticipantUpdateAck>
-                implements Listener<ParticipantUpdateAck> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantUpdateAckListener.class);
+public class ParticipantPrimeAckListener extends ScoListener<ParticipantPrimeAck>
+                implements Listener<ParticipantPrimeAck> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantPrimeAckListener.class);
 
     private final SupervisionHandler supervisionHandler;
 
     /**
      * Constructs the object.
      */
-    public ParticipantUpdateAckListener(SupervisionHandler supervisionHandler) {
-        super(ParticipantUpdateAck.class);
+    public ParticipantPrimeAckListener(SupervisionHandler supervisionHandler) {
+        super(ParticipantPrimeAck.class);
         this.supervisionHandler = supervisionHandler;
     }
 
     @Override
     public void onTopicEvent(final CommInfrastructure infra, final String topic, final StandardCoderObject sco,
-            final ParticipantUpdateAck participantUpdateAckMessage) {
-        LOGGER.debug("ParticipantUpdateAck message received from participant - {}", participantUpdateAckMessage);
-        supervisionHandler.handleParticipantMessage(participantUpdateAckMessage);
+            final ParticipantPrimeAck participantPrimeAckMessage) {
+        LOGGER.debug("ParticipantPrimeAck message received from participant - {}", participantPrimeAckMessage);
+        supervisionHandler.handleParticipantMessage(participantPrimeAckMessage);
     }
 
     @Override
     public String getType() {
-        return ParticipantMessageType.PARTICIPANT_UPDATE_ACK.name();
+        return ParticipantMessageType.PARTICIPANT_PRIME_ACK.name();
     }
 
     @Override
-    public ScoListener<ParticipantUpdateAck> getScoListener() {
+    public ScoListener<ParticipantPrimeAck> getScoListener() {
         return this;
     }
 }

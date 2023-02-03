@@ -42,12 +42,12 @@ import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantAc
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDeregister;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDeregisterAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessage;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantPrime;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantPrimeAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegister;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegisterAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatus;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatusReq;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUpdate;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUpdateAck;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -186,44 +186,44 @@ public class ParticipantHandler {
     }
 
     /**
-     * Handle a ParticipantUpdate message.
+     * Handle a ParticipantPrime message.
      *
-     * @param participantUpdateMsg the ParticipantUpdate message
+     * @param participantPrimeMsg the ParticipantPrime message
      */
-    @Timed(value = "listener.participant_update", description = "PARTICIPANT_UPDATE messages received")
-    public void handleParticipantUpdate(ParticipantUpdate participantUpdateMsg) {
-        LOGGER.debug("ParticipantUpdate message received for participantId {}",
-                participantUpdateMsg.getParticipantId());
+    @Timed(value = "listener.participant_prime", description = "PARTICIPANT_PRIME messages received")
+    public void handleParticipantPrime(ParticipantPrime participantPrimeMsg) {
+        LOGGER.debug("ParticipantPrime message received for participantId {}",
+                participantPrimeMsg.getParticipantId());
 
-        acElementDefsMap.putIfAbsent(participantUpdateMsg.getCompositionId(), new ArrayList<>());
-        if (!participantUpdateMsg.getParticipantDefinitionUpdates().isEmpty()) {
+        acElementDefsMap.putIfAbsent(participantPrimeMsg.getCompositionId(), new ArrayList<>());
+        if (!participantPrimeMsg.getParticipantDefinitionUpdates().isEmpty()) {
             // This message is to commission the automation composition
-            for (var participantDefinition : participantUpdateMsg.getParticipantDefinitionUpdates()) {
+            for (var participantDefinition : participantPrimeMsg.getParticipantDefinitionUpdates()) {
                 if (participantDefinition.getParticipantId().equals(participantId)) {
-                    acElementDefsMap.get(participantUpdateMsg.getCompositionId())
+                    acElementDefsMap.get(participantPrimeMsg.getCompositionId())
                             .addAll(participantDefinition.getAutomationCompositionElementDefinitionList());
                     break;
                 }
             }
         } else {
             // This message is to decommission the automation composition
-            acElementDefsMap.get(participantUpdateMsg.getCompositionId()).clear();
+            acElementDefsMap.get(participantPrimeMsg.getCompositionId()).clear();
         }
-        sendParticipantUpdateAck(participantUpdateMsg.getMessageId(), participantUpdateMsg.getCompositionId());
+        sendParticipantPrimeAck(participantPrimeMsg.getMessageId(), participantPrimeMsg.getCompositionId());
     }
 
     /**
-     * Method to send ParticipantUpdateAck message to automation composition runtime.
+     * Method to send ParticipantPrimeAck message to automation composition runtime.
      */
-    public void sendParticipantUpdateAck(UUID messageId, UUID compositionId) {
-        var participantUpdateAck = new ParticipantUpdateAck();
-        participantUpdateAck.setResponseTo(messageId);
-        participantUpdateAck.setCompositionId(compositionId);
-        participantUpdateAck.setMessage("Participant Update Ack message");
-        participantUpdateAck.setResult(true);
-        participantUpdateAck.setParticipantId(participantId);
-        participantUpdateAck.setState(ParticipantState.ON_LINE);
-        publisher.sendParticipantUpdateAck(participantUpdateAck);
+    public void sendParticipantPrimeAck(UUID messageId, UUID compositionId) {
+        var participantPrimeAck = new ParticipantPrimeAck();
+        participantPrimeAck.setResponseTo(messageId);
+        participantPrimeAck.setCompositionId(compositionId);
+        participantPrimeAck.setMessage("Participant Prime Ack message");
+        participantPrimeAck.setResult(true);
+        participantPrimeAck.setParticipantId(participantId);
+        participantPrimeAck.setState(ParticipantState.ON_LINE);
+        publisher.sendParticipantPrimeAck(participantPrimeAck);
     }
 
     /**

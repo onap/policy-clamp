@@ -46,10 +46,10 @@ import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCom
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDeregister;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDeregisterAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantPrimeAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegister;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegisterAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatus;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUpdateAck;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
@@ -105,12 +105,12 @@ class SupervisionMessagesTest {
     }
 
     @Test
-    void testReceiveParticipantUpdateAckMessage() {
-        final var participantUpdateAckMsg = new ParticipantUpdateAck();
+    void testReceiveParticipantPrimeAckMessage() {
+        final var participantPrimeAckMsg = new ParticipantPrimeAck();
         var supervisionHandler = mock(SupervisionHandler.class);
-        var participantUpdateAckListener = new ParticipantUpdateAckListener(supervisionHandler);
-        participantUpdateAckListener.onTopicEvent(INFRA, TOPIC, null, participantUpdateAckMsg);
-        verify(supervisionHandler).handleParticipantMessage(participantUpdateAckMsg);
+        var participantPrimeAckListener = new ParticipantPrimeAckListener(supervisionHandler);
+        participantPrimeAckListener.onTopicEvent(INFRA, TOPIC, null, participantPrimeAckMsg);
+        verify(supervisionHandler).handleParticipantMessage(participantPrimeAckMsg);
     }
 
     @Test
@@ -138,8 +138,8 @@ class SupervisionMessagesTest {
     }
 
     @Test
-    void testParticipantUpdatePublisherDecomisioning() {
-        var publisher = new ParticipantUpdatePublisher(mock(ParticipantProvider.class));
+    void testParticipantPrimePublisherDecommissioning() {
+        var publisher = new ParticipantPrimePublisher(mock(ParticipantProvider.class));
         var topicSink = mock(TopicSink.class);
         publisher.active(List.of(topicSink));
         publisher.sendDepriming(UUID.randomUUID());
@@ -147,7 +147,7 @@ class SupervisionMessagesTest {
     }
 
     @Test
-    void testParticipantUpdatePublisherPriming() {
+    void testParticipantPrimePublisherPriming() {
         var participantId = UUID.randomUUID();
         Map<ToscaConceptIdentifier, UUID> supportedElementMap = new HashMap<>();
         supportedElementMap.put(
@@ -160,7 +160,7 @@ class SupervisionMessagesTest {
                 participantId);
         var participantProvider = mock(ParticipantProvider.class);
         when(participantProvider.getSupportedElementMap()).thenReturn(supportedElementMap);
-        var publisher = new ParticipantUpdatePublisher(participantProvider);
+        var publisher = new ParticipantPrimePublisher(participantProvider);
         var topicSink = mock(TopicSink.class);
         publisher.active(List.of(topicSink));
         var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);

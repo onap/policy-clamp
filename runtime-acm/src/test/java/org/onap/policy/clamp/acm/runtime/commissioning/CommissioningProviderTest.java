@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
-import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantUpdatePublisher;
+import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantPrimePublisher;
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
@@ -154,15 +154,15 @@ class CommissioningProviderTest {
         var compositionId = acmDefinition.getCompositionId();
         when(acDefinitionProvider.getAcDefinition(compositionId)).thenReturn(acmDefinition);
 
-        var participantUpdatePublisher = mock(ParticipantUpdatePublisher.class);
+        var participantPrimePublisher = mock(ParticipantPrimePublisher.class);
         var provider = new CommissioningProvider(acDefinitionProvider, mock(AutomationCompositionProvider.class),
-                new AcTypeStateResolver(), participantUpdatePublisher);
+                new AcTypeStateResolver(), participantPrimePublisher);
 
         var acTypeStateUpdate = new AcTypeStateUpdate();
         acTypeStateUpdate.setPrimeOrder(PrimeOrder.PRIME);
         provider.compositionDefinitionPriming(compositionId, acTypeStateUpdate);
         verify(acDefinitionProvider).updateAcDefinition(acmDefinition);
-        verify(participantUpdatePublisher).sendPriming(any(), any(), any());
+        verify(participantPrimePublisher).sendPriming(any(), any(), any());
     }
 
     @Test
@@ -173,13 +173,13 @@ class CommissioningProviderTest {
         var compositionId = acmDefinition.getCompositionId();
         when(acDefinitionProvider.getAcDefinition(compositionId)).thenReturn(acmDefinition);
 
-        var participantUpdatePublisher = mock(ParticipantUpdatePublisher.class);
+        var participantPrimePublisher = mock(ParticipantPrimePublisher.class);
         var provider = new CommissioningProvider(acDefinitionProvider, mock(AutomationCompositionProvider.class),
-                new AcTypeStateResolver(), participantUpdatePublisher);
+                new AcTypeStateResolver(), participantPrimePublisher);
 
         var acTypeStateUpdate = new AcTypeStateUpdate();
         acTypeStateUpdate.setPrimeOrder(PrimeOrder.DEPRIME);
         provider.compositionDefinitionPriming(compositionId, acTypeStateUpdate);
-        verify(participantUpdatePublisher).sendDepriming(compositionId);
+        verify(participantPrimePublisher).sendDepriming(compositionId);
     }
 }

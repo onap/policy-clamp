@@ -29,7 +29,7 @@ import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.onap.policy.clamp.acm.participant.policy.main.parameters.CommonTestData;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUpdate;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantPrime;
 import org.onap.policy.common.utils.coder.YamlJsonTranslator;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
@@ -45,23 +45,23 @@ public final class TestListenerUtils {
     /**
      * Method to create participantUpdateMsg.
      *
-     * @return ParticipantUpdate message
+     * @return ParticipantPrime message
      */
-    public static ParticipantUpdate createParticipantUpdateMsg() {
-        final var participantUpdateMsg = new ParticipantUpdate();
+    public static ParticipantPrime createParticipantPrimeMsg() {
+        final var participantPrimeMsg = new ParticipantPrime();
         var participantId = CommonTestData.getParticipantId();
 
-        participantUpdateMsg.setParticipantId(participantId);
-        participantUpdateMsg.setTimestamp(Instant.now());
-        participantUpdateMsg.setTimestamp(Instant.ofEpochMilli(3000));
-        participantUpdateMsg.setMessageId(UUID.randomUUID());
+        participantPrimeMsg.setParticipantId(participantId);
+        participantPrimeMsg.setTimestamp(Instant.now());
+        participantPrimeMsg.setTimestamp(Instant.ofEpochMilli(3000));
+        participantPrimeMsg.setMessageId(UUID.randomUUID());
 
         var toscaServiceTemplate = testAutomationCompositionRead();
         // Add policies to the toscaServiceTemplate
         TestListenerUtils.addPoliciesToToscaServiceTemplate(toscaServiceTemplate);
 
-        participantUpdateMsg.setParticipantDefinitionUpdates(new ArrayList<>());
-        return participantUpdateMsg;
+        participantPrimeMsg.setParticipantDefinitionUpdates(new ArrayList<>());
+        return participantPrimeMsg;
     }
 
     private static ToscaServiceTemplate testAutomationCompositionRead() {

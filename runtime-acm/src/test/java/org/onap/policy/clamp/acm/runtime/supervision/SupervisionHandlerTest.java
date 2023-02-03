@@ -48,7 +48,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeployAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUpdateAck;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantPrimeAck;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 
@@ -240,28 +240,28 @@ class SupervisionHandlerTest {
     }
 
     @Test
-    void testParticipantUpdateAckNotFound() {
-        var participantUpdateAckMessage = new ParticipantUpdateAck();
-        participantUpdateAckMessage.setParticipantId(CommonTestData.getParticipantId());
-        participantUpdateAckMessage.setState(ParticipantState.ON_LINE);
+    void testParticipantPrimeAckNotFound() {
+        var participantPrimeAckMessage = new ParticipantPrimeAck();
+        participantPrimeAckMessage.setParticipantId(CommonTestData.getParticipantId());
+        participantPrimeAckMessage.setState(ParticipantState.ON_LINE);
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
         var handler = new SupervisionHandler(mock(AutomationCompositionProvider.class), acDefinitionProvider,
                 mock(AutomationCompositionDeployPublisher.class),
                 mock(AutomationCompositionStateChangePublisher.class));
 
-        handler.handleParticipantMessage(participantUpdateAckMessage);
+        handler.handleParticipantMessage(participantPrimeAckMessage);
         verify(acDefinitionProvider).findAcDefinition(any());
     }
 
     @Test
-    void testParticipantUpdateAckPrimed() {
-        var participantUpdateAckMessage = new ParticipantUpdateAck();
-        participantUpdateAckMessage.setParticipantId(CommonTestData.getParticipantId());
-        participantUpdateAckMessage.setState(ParticipantState.ON_LINE);
+    void testParticipantPrimeAckPrimed() {
+        var participantPrimeAckMessage = new ParticipantPrimeAck();
+        participantPrimeAckMessage.setParticipantId(CommonTestData.getParticipantId());
+        participantPrimeAckMessage.setState(ParticipantState.ON_LINE);
 
         var acDefinition = CommonTestData.createAcDefinition(
                 InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML), AcTypeState.PRIMED);
-        participantUpdateAckMessage.setCompositionId(acDefinition.getCompositionId());
+        participantPrimeAckMessage.setCompositionId(acDefinition.getCompositionId());
 
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
         when(acDefinitionProvider.findAcDefinition(acDefinition.getCompositionId()))
@@ -271,19 +271,19 @@ class SupervisionHandlerTest {
                 mock(AutomationCompositionDeployPublisher.class),
                 mock(AutomationCompositionStateChangePublisher.class));
 
-        handler.handleParticipantMessage(participantUpdateAckMessage);
+        handler.handleParticipantMessage(participantPrimeAckMessage);
         verify(acDefinitionProvider).findAcDefinition(any());
     }
 
     @Test
-    void testParticipantUpdateAck() {
-        var participantUpdateAckMessage = new ParticipantUpdateAck();
-        participantUpdateAckMessage.setParticipantId(CommonTestData.getParticipantId());
-        participantUpdateAckMessage.setState(ParticipantState.ON_LINE);
+    void testParticipantPrimeAck() {
+        var participantPrimeAckMessage = new ParticipantPrimeAck();
+        participantPrimeAckMessage.setParticipantId(CommonTestData.getParticipantId());
+        participantPrimeAckMessage.setState(ParticipantState.ON_LINE);
 
         var acDefinition = CommonTestData.createAcDefinition(
                 InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML), AcTypeState.PRIMING);
-        participantUpdateAckMessage.setCompositionId(acDefinition.getCompositionId());
+        participantPrimeAckMessage.setCompositionId(acDefinition.getCompositionId());
 
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
         when(acDefinitionProvider.findAcDefinition(acDefinition.getCompositionId()))
@@ -293,7 +293,7 @@ class SupervisionHandlerTest {
                 mock(AutomationCompositionDeployPublisher.class),
                 mock(AutomationCompositionStateChangePublisher.class));
 
-        handler.handleParticipantMessage(participantUpdateAckMessage);
+        handler.handleParticipantMessage(participantPrimeAckMessage);
         verify(acDefinitionProvider).findAcDefinition(any());
         verify(acDefinitionProvider).updateAcDefinition(any());
     }

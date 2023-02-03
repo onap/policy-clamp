@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021 Nordix Foundation.
+ * Copyright (C) 2021-2023 Nordix Foundation.
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,23 +30,23 @@ import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.models.base.PfUtils;
 
 /**
- * Class to represent the PARTICIPANT_UPDATE message that the ACM runtime sends to a participant.
+ * Class to represent the PARTICIPANT_PRIME message that the ACM runtime sends to a participant.
  * the ACM Runtime sends automation composition element Definitions and Common Parameter Values to Participants.
  */
 @Getter
 @Setter
 @ToString(callSuper = true)
-public class ParticipantUpdate extends ParticipantMessage {
+public class ParticipantPrime extends ParticipantMessage {
 
     // A list of updates to ParticipantDefinitions
     private List<ParticipantDefinition> participantDefinitionUpdates = new ArrayList<>();
 
     /**
-     * Constructor for instantiating ParticipantUpdate class with message name.
+     * Constructor for instantiating ParticipantPrime class with message name.
      *
      */
-    public ParticipantUpdate() {
-        super(ParticipantMessageType.PARTICIPANT_UPDATE);
+    public ParticipantPrime() {
+        super(ParticipantMessageType.PARTICIPANT_PRIME);
     }
 
     /**
@@ -54,7 +54,7 @@ public class ParticipantUpdate extends ParticipantMessage {
      *
      * @param source source from which to copy
      */
-    public ParticipantUpdate(ParticipantUpdate source) {
+    public ParticipantPrime(ParticipantPrime source) {
         super(source);
 
         this.participantDefinitionUpdates = PfUtils.mapList(source.participantDefinitionUpdates,

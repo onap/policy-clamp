@@ -28,9 +28,9 @@ import org.onap.policy.clamp.acm.participant.intermediary.handler.Publisher;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeployAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDeregister;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantPrimeAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegister;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatus;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUpdateAck;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
 import org.slf4j.Logger;
@@ -100,15 +100,15 @@ public class ParticipantMessagePublisher implements Publisher {
     }
 
     /**
-     * Method to send Participant Update Ack message to runtime.
+     * Method to send Participant Prime Ack message to runtime.
      *
-     * @param participantUpdateAck the Participant Update Ack
+     * @param participantPrimeAck the Participant Prime Ack
      */
-    @Timed(value = "publisher.participant_update_ack", description = "PARTICIPANT_UPDATE_ACK messages published")
-    public void sendParticipantUpdateAck(final ParticipantUpdateAck participantUpdateAck) {
+    @Timed(value = "publisher.participant_prime_ack", description = "PARTICIPANT_PRIME_ACK messages published")
+    public void sendParticipantPrimeAck(final ParticipantPrimeAck participantPrimeAck) {
         validate();
-        topicSinkClient.send(participantUpdateAck);
-        LOGGER.debug("Sent Participant Update Ack message to CLAMP - {}", participantUpdateAck);
+        topicSinkClient.send(participantPrimeAck);
+        LOGGER.debug("Sent Participant Prime Ack message to CLAMP - {}", participantPrimeAck);
     }
 
     /**

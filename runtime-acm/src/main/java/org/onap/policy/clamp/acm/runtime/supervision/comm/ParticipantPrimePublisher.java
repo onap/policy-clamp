@@ -32,7 +32,7 @@ import lombok.AllArgsConstructor;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantUpdate;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantPrime;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -41,18 +41,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
- * This class is used to send ParticipantUpdate messages to participants on DMaaP.
+ * This class is used to send ParticipantPrime messages to participants on DMaaP.
  */
 @Component
 @AllArgsConstructor
-public class ParticipantUpdatePublisher extends AbstractParticipantPublisher<ParticipantUpdate> {
+public class ParticipantPrimePublisher extends AbstractParticipantPublisher<ParticipantPrime> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantUpdatePublisher.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantPrimePublisher.class);
 
     private final ParticipantProvider participantProvider;
 
     /**
-     * Send ParticipantUpdate to Participant
+     * Send ParticipantPrime to Participant
      * if participantId is null then message is broadcast.
      *
      * @param participantDefinitions the list of ParticipantDefinition to send
@@ -62,7 +62,7 @@ public class ParticipantUpdatePublisher extends AbstractParticipantPublisher<Par
     @Timed(value = "publisher.participant_update", description = "PARTICIPANT_UPDATE messages published")
     public void sendPriming(List<ParticipantDefinition> participantDefinitions, UUID compositionId,
             UUID participantId) {
-        var message = new ParticipantUpdate();
+        var message = new ParticipantPrime();
         message.setCompositionId(compositionId);
         message.setParticipantId(participantId);
         message.setTimestamp(Instant.now());
@@ -106,11 +106,11 @@ public class ParticipantUpdatePublisher extends AbstractParticipantPublisher<Par
     }
 
     /**
-     * Send ParticipantUpdate to Participant after that commissioning has been removed.
+     * Send ParticipantPrime to Participant after that commissioning has been removed.
      */
     @Timed(value = "publisher.participant_update", description = "PARTICIPANT_UPDATE messages published")
     public void sendDepriming(UUID compositionId) {
-        var message = new ParticipantUpdate();
+        var message = new ParticipantPrime();
         message.setCompositionId(compositionId);
         message.setTimestamp(Instant.now());
         // DeCommission the automation composition but deleting participantdefinitions on participants
