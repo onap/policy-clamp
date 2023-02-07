@@ -42,6 +42,7 @@ public class AutomationCompositionDeploy extends ParticipantMessage {
     // A list of ParticipantUpdates instances which carries details of an updated participant.
     private List<ParticipantDeploy> participantUpdatesList = new ArrayList<>();
     private Integer startPhase = 0;
+    private boolean firstStartPhase = true;
 
     /**
      * Constructor for instantiating class with message name.
@@ -59,6 +60,7 @@ public class AutomationCompositionDeploy extends ParticipantMessage {
     public AutomationCompositionDeploy(AutomationCompositionDeploy source) {
         super(source);
         this.startPhase = source.startPhase;
+        this.firstStartPhase = source.firstStartPhase;
         this.participantUpdatesList = PfUtils.mapList(source.participantUpdatesList, ParticipantDeploy::new);
     }
 }

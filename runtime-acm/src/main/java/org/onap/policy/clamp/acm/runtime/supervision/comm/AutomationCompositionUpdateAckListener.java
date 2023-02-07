@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021 Nordix Foundation.
+ * Copyright (C) 2021,2023 Nordix Foundation.
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,7 +22,7 @@
 package org.onap.policy.clamp.acm.runtime.supervision.comm;
 
 import org.onap.policy.clamp.acm.runtime.config.messaging.Listener;
-import org.onap.policy.clamp.acm.runtime.supervision.SupervisionHandler;
+import org.onap.policy.clamp.acm.runtime.supervision.SupervisionAcHandler;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeployAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
 import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
@@ -40,12 +40,12 @@ public class AutomationCompositionUpdateAckListener extends ScoListener<Automati
     implements Listener<AutomationCompositionDeployAck> {
     private static final Logger LOGGER = LoggerFactory.getLogger(AutomationCompositionUpdateAckListener.class);
 
-    private final SupervisionHandler supervisionHandler;
+    private final SupervisionAcHandler supervisionHandler;
 
     /**
      * Constructs the object.
      */
-    public AutomationCompositionUpdateAckListener(SupervisionHandler supervisionHandler) {
+    public AutomationCompositionUpdateAckListener(SupervisionAcHandler supervisionHandler) {
         super(AutomationCompositionDeployAck.class);
         this.supervisionHandler = supervisionHandler;
     }

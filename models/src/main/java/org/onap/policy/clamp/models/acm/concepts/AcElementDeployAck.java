@@ -37,6 +37,9 @@ public class AcElementDeployAck {
     // State of the AutomationCompositionElement
     private DeployState deployState;
 
+    // State of the AutomationCompositionElement
+    private LockState lockState;
+
     // Result: Success/Fail.
     private Boolean result;
 

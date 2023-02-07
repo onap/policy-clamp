@@ -23,7 +23,6 @@ package org.onap.policy.clamp.models.acm.concepts;
 import java.util.Map;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -43,15 +42,15 @@ public final class ParticipantUtils {
         var minStartPhase = 1000;
         var maxStartPhase = 0;
         for (var element : automationComposition.getElements().values()) {
-            ToscaNodeTemplate toscaNodeTemplate = toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates()
+            var toscaNodeTemplate = toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates()
                 .get(element.getDefinition().getName());
             int startPhase = ParticipantUtils.findStartPhase(toscaNodeTemplate.getProperties());
             minStartPhase = Math.min(minStartPhase, startPhase);
             maxStartPhase = Math.max(maxStartPhase, startPhase);
         }
 
-        return AutomationCompositionState.UNINITIALISED2PASSIVE.equals(automationComposition.getState())
-            || AutomationCompositionState.PASSIVE2RUNNING.equals(automationComposition.getState()) ? minStartPhase
+        return DeployState.DEPLOYING.equals(automationComposition.getDeployState())
+            || LockState.UNLOCKING.equals(automationComposition.getLockState()) ? minStartPhase
                 : maxStartPhase;
     }
 

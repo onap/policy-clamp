@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
-import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationCommand;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
@@ -58,21 +57,6 @@ public class InstantiationUtils {
             // add suffix to name
             automationComposition.setName(automationComposition.getName() + suffix);
             return automationComposition;
-        } catch (CoderException e) {
-            fail("Cannot read or decode " + path);
-            return null;
-        }
-    }
-
-    /**
-     * Gets InstantiationCommand from Resource.
-     *
-     * @param path path of the resource
-     * @return the InstantiationCommand
-     */
-    public static InstantiationCommand getInstantiationCommandFromResource(final String path) {
-        try {
-            return CODER.decode(new File(path), InstantiationCommand.class);
         } catch (CoderException e) {
             fail("Cannot read or decode " + path);
             return null;

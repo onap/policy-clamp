@@ -127,7 +127,7 @@ public class AutomationCompositionHandler {
             acElement.setOrderedState(orderedState);
             acElement.setState(newState);
             automationCompositionStateChangeAck.getAutomationCompositionResultMap().put(acElement.getId(),
-                    new AcElementDeployAck(newState, null, true,
+                    new AcElementDeployAck(newState, null, null, true,
                             "Automation composition element {} state changed to {}\", id, newState)"));
             LOGGER.debug("Automation composition element {} state changed to {}", id, newState);
             automationCompositionStateChangeAck

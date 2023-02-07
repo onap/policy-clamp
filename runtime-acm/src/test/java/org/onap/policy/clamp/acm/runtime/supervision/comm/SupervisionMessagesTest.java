@@ -35,6 +35,7 @@ import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
+import org.onap.policy.clamp.acm.runtime.supervision.SupervisionAcHandler;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionHandler;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionParticipantHandler;
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
@@ -225,7 +226,7 @@ class SupervisionMessagesTest {
     void testAutomationCompositionUpdateAckListener() {
         final var automationCompositionAck =
                 new AutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_DEPLOY);
-        var supervisionHandler = mock(SupervisionHandler.class);
+        var supervisionHandler = mock(SupervisionAcHandler.class);
         var acUpdateAckListener = new AutomationCompositionUpdateAckListener(supervisionHandler);
         acUpdateAckListener.onTopicEvent(INFRA, TOPIC, null, automationCompositionAck);
         verify(supervisionHandler).handleAutomationCompositionUpdateAckMessage(automationCompositionAck);
@@ -235,7 +236,7 @@ class SupervisionMessagesTest {
     void testAutomationCompositionStateChangeAckListener() {
         final var automationCompositionAck =
                 new AutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_STATE_CHANGE);
-        var supervisionHandler = mock(SupervisionHandler.class);
+        var supervisionHandler = mock(SupervisionAcHandler.class);
         var acStateChangeAckListener = new AutomationCompositionStateChangeAckListener(supervisionHandler);
         acStateChangeAckListener.onTopicEvent(INFRA, TOPIC, null, automationCompositionAck);
         verify(supervisionHandler).handleAutomationCompositionStateChangeAckMessage(automationCompositionAck);

@@ -22,6 +22,7 @@ package org.onap.policy.clamp.models.acm.concepts;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.UnaryOperator;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -42,6 +43,9 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 public class AcElementDeploy {
 
     @NonNull
+    private UUID id = UUID.randomUUID();
+
+    @NonNull
     private ToscaConceptIdentifier definition = new ToscaConceptIdentifier(PfConceptKey.getNullKey());
 
     @NonNull
@@ -59,6 +63,7 @@ public class AcElementDeploy {
      * @param otherElement the other element to copy from
      */
     public AcElementDeploy(final AcElementDeploy otherElement) {
+        this.id = otherElement.id;
         this.definition = new ToscaConceptIdentifier(otherElement.definition);
         this.orderedState = otherElement.orderedState;
         this.toscaServiceTemplateFragment = otherElement.toscaServiceTemplateFragment;

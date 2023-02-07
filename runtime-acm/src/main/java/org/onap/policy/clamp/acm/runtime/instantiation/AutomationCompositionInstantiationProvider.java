@@ -26,6 +26,7 @@ import javax.validation.Valid;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import lombok.AllArgsConstructor;
+import org.onap.policy.clamp.acm.runtime.supervision.SupervisionAcHandler;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
@@ -55,6 +56,7 @@ public class AutomationCompositionInstantiationProvider {
     private final AutomationCompositionProvider automationCompositionProvider;
     private final AcDefinitionProvider acDefinitionProvider;
     private final AcInstanceStateResolver acInstanceStateResolver;
+    private final SupervisionAcHandler supervisionAcHandler;
 
     /**
      * Create automation composition.
@@ -233,19 +235,19 @@ public class AutomationCompositionInstantiationProvider {
                 automationComposition.getLockState());
         switch (result) {
             case "DEPLOY":
-                //
+                supervisionAcHandler.deploy(automationComposition, acDefinition);
                 break;
 
             case "UNDEPLOY":
-                //
+                supervisionAcHandler.undeploy(automationComposition, acDefinition);
                 break;
 
             case "LOCK":
-                //
+                supervisionAcHandler.lock(automationComposition, acDefinition);
                 break;
 
             case "UNLOCK":
-                //
+                supervisionAcHandler.unlock(automationComposition, acDefinition);
                 break;
 
             default:

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021 Nordix Foundation.
+ * Copyright (C) 2021,2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,8 @@ import lombok.Setter;
 import lombok.ToString;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
+import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
+import org.onap.policy.clamp.models.acm.messages.rest.instantiation.LockOrder;
 
 /**
  * Class to represent the AUTOMATION_COMPOSITION_STATE_CHANGE message that the automation composition runtime will send
@@ -36,7 +38,10 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 public class AutomationCompositionStateChange extends ParticipantMessage {
     private AutomationCompositionOrderedState orderedState;
     private AutomationCompositionState currentState;
+    private DeployOrder deployOrderedState = DeployOrder.NONE;
+    private LockOrder lockOrderedState = LockOrder.NONE;
     private Integer startPhase;
+    private Boolean firstStartPhase = true;
 
     /**
      * Constructor for instantiating class with message name.
@@ -56,5 +61,8 @@ public class AutomationCompositionStateChange extends ParticipantMessage {
 
         this.orderedState = source.orderedState;
         this.currentState = source.currentState;
+        this.deployOrderedState = source.deployOrderedState;
+        this.lockOrderedState = source.lockOrderedState;
+        this.startPhase = source.startPhase;
     }
 }

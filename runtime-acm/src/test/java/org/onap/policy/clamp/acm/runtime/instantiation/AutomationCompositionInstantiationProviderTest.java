@@ -88,7 +88,7 @@ class AutomationCompositionInstantiationProviderTest {
         when(acDefinitionProvider.findAcDefinition(compositionId)).thenReturn(Optional.of(acDefinition));
         var acProvider = mock(AutomationCompositionProvider.class);
         var instantiationProvider =
-                new AutomationCompositionInstantiationProvider(acProvider, acDefinitionProvider, null);
+                new AutomationCompositionInstantiationProvider(acProvider, acDefinitionProvider, null, null);
         var automationCompositionCreate =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Crud");
         automationCompositionCreate.setCompositionId(compositionId);
@@ -140,7 +140,7 @@ class AutomationCompositionInstantiationProviderTest {
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
 
         var instantiationProvider = new AutomationCompositionInstantiationProvider(acProvider,
-                acDefinitionProvider, null);
+                acDefinitionProvider, null, null);
 
         when(acProvider.getAutomationComposition(automationComposition.getInstanceId()))
                 .thenReturn(automationComposition);
@@ -169,7 +169,7 @@ class AutomationCompositionInstantiationProviderTest {
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
 
         var instantiationProvider = new AutomationCompositionInstantiationProvider(acProvider,
-                acDefinitionProvider, null);
+                acDefinitionProvider, null, null);
 
         when(acProvider.getAutomationComposition(automationComposition.getInstanceId()))
                 .thenReturn(automationComposition);
@@ -197,7 +197,7 @@ class AutomationCompositionInstantiationProviderTest {
                 .thenReturn(automationCompositionCreate);
 
         var instantiationProvider = new AutomationCompositionInstantiationProvider(acProvider,
-                acDefinitionProvider, null);
+                acDefinitionProvider, null, null);
 
         var instantiationResponse = instantiationProvider.createAutomationComposition(
                 automationCompositionCreate.getCompositionId(), automationCompositionCreate);
@@ -223,7 +223,7 @@ class AutomationCompositionInstantiationProviderTest {
 
         var acProvider = mock(AutomationCompositionProvider.class);
         var provider = new AutomationCompositionInstantiationProvider(acProvider,
-                acDefinitionProvider, null);
+                acDefinitionProvider, null, null);
 
         assertThatThrownBy(() -> provider.createAutomationComposition(compositionId, automationComposition))
                 .hasMessageMatching(AC_ELEMENT_NAME_NOT_FOUND);
@@ -245,7 +245,7 @@ class AutomationCompositionInstantiationProviderTest {
                 .thenReturn(automationComposition);
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
         var provider = new AutomationCompositionInstantiationProvider(acProvider,
-                acDefinitionProvider, null);
+                acDefinitionProvider, null, null);
 
         var compositionId = automationComposition.getCompositionId();
         assertThatThrownBy(() -> provider.createAutomationComposition(compositionId, automationComposition))

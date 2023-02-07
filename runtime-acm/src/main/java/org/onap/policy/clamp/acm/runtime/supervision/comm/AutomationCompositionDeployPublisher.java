@@ -25,14 +25,22 @@ package org.onap.policy.clamp.acm.runtime.supervision.comm;
 import io.micrometer.core.annotation.Timed;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.UnaryOperator;
 import lombok.AllArgsConstructor;
+import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeploy;
+import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
+import org.onap.policy.models.base.PfUtils;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -81,6 +89,50 @@ public class AutomationCompositionDeployPublisher extends AbstractParticipantPub
             element.setToscaServiceTemplateFragment(AcmUtils.getToscaServiceTemplateFragment(toscaServiceTemplate));
             AcmUtils.prepareParticipantUpdate(element, participantDeploys);
         }
+        acDeployMsg.setParticipantUpdatesList(participantDeploys);
+
+        LOGGER.debug("AutomationCompositionDeploy message sent {}", acDeployMsg);
+        super.send(acDeployMsg);
+    }
+
+    /**
+     * Send AutomationCompositionDeploy to Participant.
+     *
+     * @param automationComposition the AutomationComposition
+     * @param startPhase the Start Phase
+     */
+    @Timed(value = "publisher.automation_composition_deploy",
+            description = "AUTOMATION_COMPOSITION_DEPLOY messages published")
+    public void send(AutomationComposition automationComposition, ToscaServiceTemplate toscaServiceTemplate,
+            int startPhase, boolean firstStartPhase) {
+        var toscaServiceTemplateFragment = AcmUtils.getToscaServiceTemplateFragment(toscaServiceTemplate);
+        Map<UUID, List<AcElementDeploy>> map = new HashMap<>();
+        for (var element : automationComposition.getElements().values()) {
+            var acElementDeploy = new AcElementDeploy();
+            acElementDeploy.setId(element.getId());
+            acElementDeploy.setDefinition(new ToscaConceptIdentifier(element.getDefinition()));
+            acElementDeploy.setOrderedState(DeployOrder.DEPLOY);
+            acElementDeploy.setProperties(PfUtils.mapMap(element.getProperties(), UnaryOperator.identity()));
+            acElementDeploy.setToscaServiceTemplateFragment(toscaServiceTemplateFragment);
+
+            map.putIfAbsent(element.getParticipantId(), new ArrayList<>());
+            map.get(element.getParticipantId()).add(acElementDeploy);
+        }
+        List<ParticipantDeploy> participantDeploys = new ArrayList<>();
+        for (var entry : map.entrySet()) {
+            var participantDeploy = new ParticipantDeploy();
+            participantDeploy.setParticipantId(entry.getKey());
+            participantDeploy.setAcElementList(entry.getValue());
+            participantDeploys.add(participantDeploy);
+        }
+
+        var acDeployMsg = new AutomationCompositionDeploy();
+        acDeployMsg.setCompositionId(automationComposition.getCompositionId());
+        acDeployMsg.setStartPhase(startPhase);
+        acDeployMsg.setFirstStartPhase(firstStartPhase);
+        acDeployMsg.setAutomationCompositionId(automationComposition.getInstanceId());
+        acDeployMsg.setMessageId(UUID.randomUUID());
+        acDeployMsg.setTimestamp(Instant.now());
         acDeployMsg.setParticipantUpdatesList(participantDeploys);
 
         LOGGER.debug("AutomationCompositionDeploy message sent {}", acDeployMsg);
