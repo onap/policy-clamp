@@ -22,6 +22,7 @@ package org.onap.policy.clamp.models.acm.persistence.concepts;
 
 import java.util.UUID;
 import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -59,8 +60,10 @@ public class JpaNodeTemplateState extends Validated implements PfAuthorative<Nod
 
     @VerifyKey
     @NotNull
-    @AttributeOverride(name = "name",    column = @Column(name = "nodeTemplate_name"))
-    @AttributeOverride(name = "version", column = @Column(name = "nodeTemplate_version"))
+    @AttributeOverrides({
+        @AttributeOverride(name = "name",    column = @Column(name = "nodeTemplate_name")),
+        @AttributeOverride(name = "version", column = @Column(name = "nodeTemplate_version"))
+    })
     private PfConceptKey nodeTemplateId;
 
     @Column
