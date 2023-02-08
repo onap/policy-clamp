@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.acm.runtime.commissioning.rest.stub;
+package org.onap.policy.clamp.acm.runtime.contract;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -28,7 +28,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.onap.policy.clamp.acm.runtime.util.rest.CommonRestController;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
+import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.messages.rest.instantiation.AcInstanceStateUpdate;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -38,11 +39,12 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ActiveProfiles({ "test", "stub" })
-class CommissioningControllerStubTest extends CommonRestController {
+class InstantiationControllerStubTest extends CommonRestController {
 
     private static final String COMMISSIONING_ENDPOINT = "compositions";
+    private static final String INSTANTIATION_ENDPOINT = "instances";
     private static final String COMPOSITION_ID = "1aeed185-a98b-45b6-af22-8d5d20485ea3";
-    private static ToscaServiceTemplate serviceTemplate = new ToscaServiceTemplate();
+    private static final String INSTANCE_ID = "709c62b3-8918-41b9-a747-d21eb79c6c23";
 
     @LocalServerPort
     private int randomServerPort;
@@ -54,35 +56,48 @@ class CommissioningControllerStubTest extends CommonRestController {
 
     @Test
     void testQuery() {
-        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT);
+        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT
+                + "/" + COMPOSITION_ID
+                + "/" + INSTANTIATION_ENDPOINT);
         var respPost = invocationBuilder.get();
         assertThat(Response.Status.OK.getStatusCode()).isEqualTo(respPost.getStatus());
     }
 
     @Test
     void testGet() {
-        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT + "/" + COMPOSITION_ID);
+        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT
+                + "/" + COMPOSITION_ID
+                + "/" + INSTANTIATION_ENDPOINT
+                + "/" + INSTANCE_ID);
         var respPost = invocationBuilder.get();
         assertThat(Response.Status.OK.getStatusCode()).isEqualTo(respPost.getStatus());
     }
 
     @Test
     void testPut() {
-        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT + "/" + COMPOSITION_ID);
-        var respPost = invocationBuilder.put(Entity.json(serviceTemplate));
+        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT
+                + "/" + COMPOSITION_ID
+                + "/" + INSTANTIATION_ENDPOINT
+                + "/" + INSTANCE_ID);
+        var respPost = invocationBuilder.put(Entity.json(new AcInstanceStateUpdate()));
         assertThat(Response.Status.OK.getStatusCode()).isEqualTo(respPost.getStatus());
     }
 
     @Test
     void testPost() {
-        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT);
-        var respPost = invocationBuilder.post(Entity.json(serviceTemplate));
+        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT
+                + "/" + COMPOSITION_ID
+                + "/" + INSTANTIATION_ENDPOINT);
+        var respPost = invocationBuilder.post(Entity.json(new AutomationComposition()));
         assertThat(Response.Status.OK.getStatusCode()).isEqualTo(respPost.getStatus());
     }
 
     @Test
     void testDelete() {
-        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT + "/" + COMPOSITION_ID);
+        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT
+                + "/" + COMPOSITION_ID
+                + "/" + INSTANTIATION_ENDPOINT
+                + "/" + INSTANCE_ID);
         var respPost = invocationBuilder.delete();
         assertThat(Response.Status.OK.getStatusCode()).isEqualTo(respPost.getStatus());
     }
