@@ -32,9 +32,6 @@ import lombok.ToString;
 public class AcElementDeployAck {
 
     // State of the AutomationCompositionElement
-    private AutomationCompositionState state;
-
-    // State of the AutomationCompositionElement
     private DeployState deployState;
 
     // State of the AutomationCompositionElement

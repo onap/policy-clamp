@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022 Nordix Foundation.
+ *  Copyright (C) 2022-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,8 +39,6 @@ import org.onap.policy.clamp.acm.participant.a1pms.utils.CommonTestData;
 import org.onap.policy.clamp.acm.participant.a1pms.utils.ToscaUtils;
 import org.onap.policy.clamp.acm.participant.a1pms.webclient.AcA1PmsClient;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -79,27 +77,17 @@ class AcElementHandlerTest {
         var automationCompositionElementId = element.getId();
 
         var nodeTemplatesMap = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
-        automationCompositionElementHandler
-                .automationCompositionElementUpdate(commonTestData.getAutomationCompositionId(), element,
-                        nodeTemplatesMap.get(A1_AUTOMATION_COMPOSITION_ELEMENT).getProperties());
+        automationCompositionElementHandler.deploy(
+                commonTestData.getAutomationCompositionId(), element,
+                nodeTemplatesMap.get(A1_AUTOMATION_COMPOSITION_ELEMENT).getProperties());
 
-        assertDoesNotThrow(() -> automationCompositionElementHandler.automationCompositionElementStateChange(
-                automationCompositionId, automationCompositionElementId, AutomationCompositionState.PASSIVE,
-                AutomationCompositionOrderedState.PASSIVE));
-
-        assertDoesNotThrow(() -> automationCompositionElementHandler.automationCompositionElementStateChange(
-                automationCompositionId, automationCompositionElementId, AutomationCompositionState.PASSIVE,
-                AutomationCompositionOrderedState.UNINITIALISED));
-
-        assertDoesNotThrow(() -> automationCompositionElementHandler.automationCompositionElementStateChange(
-                automationCompositionId, automationCompositionElementId, AutomationCompositionState.PASSIVE,
-                AutomationCompositionOrderedState.RUNNING));
+        assertDoesNotThrow(() -> automationCompositionElementHandler.undeploy(
+                automationCompositionId, automationCompositionElementId));
 
         when(acA1PmsClient.isPmsHealthy()).thenReturn(Boolean.FALSE);
         assertThrows(A1PolicyServiceException.class,
-                () -> automationCompositionElementHandler.automationCompositionElementStateChange(
-                        automationCompositionId, automationCompositionElementId, AutomationCompositionState.PASSIVE,
-                        AutomationCompositionOrderedState.UNINITIALISED));
+                () -> automationCompositionElementHandler.undeploy(
+                        automationCompositionId, automationCompositionElementId));
     }
 
     @Test
@@ -107,9 +95,9 @@ class AcElementHandlerTest {
         var element = commonTestData.getAutomationCompositionElement();
 
         var nodeTemplatesMap = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
-        assertDoesNotThrow(() -> automationCompositionElementHandler
-                .automationCompositionElementUpdate(commonTestData.getAutomationCompositionId(), element,
-                        nodeTemplatesMap.get(A1_AUTOMATION_COMPOSITION_ELEMENT).getProperties()));
+        assertDoesNotThrow(() -> automationCompositionElementHandler.deploy(
+                commonTestData.getAutomationCompositionId(), element,
+                nodeTemplatesMap.get(A1_AUTOMATION_COMPOSITION_ELEMENT).getProperties()));
     }
 
     @Test
@@ -118,8 +106,9 @@ class AcElementHandlerTest {
         when(acA1PmsClient.isPmsHealthy()).thenReturn(Boolean.FALSE);
 
         var nodeTemplatesMap = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
-        assertThrows(A1PolicyServiceException.class, () -> automationCompositionElementHandler
-                .automationCompositionElementUpdate(commonTestData.getAutomationCompositionId(), element,
+        assertThrows(A1PolicyServiceException.class,
+                () -> automationCompositionElementHandler.deploy(
+                        commonTestData.getAutomationCompositionId(), element,
                         nodeTemplatesMap.get(A1_AUTOMATION_COMPOSITION_ELEMENT).getProperties()));
     }
 
@@ -127,7 +116,6 @@ class AcElementHandlerTest {
     void test_AutomationCompositionElementUpdateWithInvalidConfiguration() {
         var element = commonTestData.getAutomationCompositionElement();
         assertThrows(A1PolicyServiceException.class, () -> automationCompositionElementHandler
-                .automationCompositionElementUpdate(commonTestData.getAutomationCompositionId(), element,
-                        Map.of()));
+                .deploy(commonTestData.getAutomationCompositionId(), element, Map.of()));
     }
 }

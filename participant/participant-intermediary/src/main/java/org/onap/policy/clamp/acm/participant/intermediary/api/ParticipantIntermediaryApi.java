@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,10 +22,8 @@
 package org.onap.policy.clamp.acm.participant.intermediary.api;
 
 import java.util.UUID;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
 
 /**
  * This interface is used by participant implementations to use the participant intermediary.
@@ -38,17 +36,14 @@ public interface ParticipantIntermediaryApi {
      * @param automationCompositionElementListener The automation composition element listener to register
      */
     void registerAutomationCompositionElementListener(
-        AutomationCompositionElementListener automationCompositionElementListener);
+            AutomationCompositionElementListener automationCompositionElementListener);
 
     /**
      * Update the state of a automation composition element.
      *
      * @param id the ID of the automation composition element to update the state on
-     * @param currentState the state of the automation composition element
      * @param newState the state of the automation composition element
-     * @return AutomationCompositionElement updated automation composition element
      */
-    AutomationCompositionElement updateAutomationCompositionElementState(UUID automationCompositionId,
-        UUID id, AutomationCompositionOrderedState currentState, AutomationCompositionState newState,
-        ParticipantMessageType messageType);
+    void updateAutomationCompositionElementState(UUID automationCompositionId, UUID id, DeployState newState,
+            LockState lockState);
 }

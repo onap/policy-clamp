@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,9 +27,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.common.utils.coder.CoderException;
 
 class ParticipantIntermediaryApiImplTest {
@@ -47,11 +46,10 @@ class ParticipantIntermediaryApiImplTest {
         var acElementListener = Mockito.mock(AutomationCompositionElementListener.class);
         apiImpl.registerAutomationCompositionElementListener(acElementListener);
 
-        var acElement = apiImpl.updateAutomationCompositionElementState(UUID.randomUUID(), uuid,
-                AutomationCompositionOrderedState.UNINITIALISED, AutomationCompositionState.PASSIVE,
-                ParticipantMessageType.AUTOMATION_COMPOSITION_STATECHANGE_ACK);
-        assertEquals(AutomationCompositionOrderedState.UNINITIALISED, acElement.getOrderedState());
+        apiImpl.updateAutomationCompositionElementState(UUID.randomUUID(), uuid, DeployState.UNDEPLOYED,
+                LockState.NONE);
+        var acElement = automationComposiitonHandler.getElementsOnThisParticipant().get(uuid);
+        assertEquals(DeployState.UNDEPLOYED, acElement.getDeployState());
         assertEquals(uuid, acElement.getId());
-
     }
 }
