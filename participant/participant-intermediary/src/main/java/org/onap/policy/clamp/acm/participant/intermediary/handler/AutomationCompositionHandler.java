@@ -27,23 +27,26 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import lombok.Getter;
 import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.acm.participant.intermediary.parameters.ParticipantParameters;
+import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeployAck;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeploy;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeployAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionStateChange;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
+import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
+import org.onap.policy.clamp.models.acm.messages.rest.instantiation.LockOrder;
+import org.onap.policy.clamp.models.acm.persistence.provider.AcInstanceStateResolver;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
@@ -60,6 +63,7 @@ public class AutomationCompositionHandler {
 
     private final UUID participantId;
     private final ParticipantMessagePublisher publisher;
+    private final AcInstanceStateResolver acInstanceStateResolver;
 
     @Getter
     private final Map<UUID, AutomationComposition> automationCompositionMap = new LinkedHashMap<>();
@@ -68,7 +72,7 @@ public class AutomationCompositionHandler {
     private final Map<UUID, AutomationCompositionElement> elementsOnThisParticipant = new LinkedHashMap<>();
 
     @Getter
-    private List<AutomationCompositionElementListener> listeners = new ArrayList<>();
+    private final List<AutomationCompositionElementListener> listeners = new ArrayList<>();
 
     /**
      * Constructor, set the participant ID and messageSender.
@@ -79,6 +83,7 @@ public class AutomationCompositionHandler {
     public AutomationCompositionHandler(ParticipantParameters parameters, ParticipantMessagePublisher publisher) {
         this.participantId = parameters.getIntermediaryParameters().getParticipantId();
         this.publisher = publisher;
+        this.acInstanceStateResolver = new AcInstanceStateResolver();
     }
 
     public void registerAutomationCompositionElementListener(AutomationCompositionElementListener listener) {
@@ -90,30 +95,32 @@ public class AutomationCompositionHandler {
      *
      * @param automationCompositionId the automationComposition Id
      * @param id the automationComposition UUID
-     * @param orderedState the current state
-     * @param newState the ordered state
-     * @return automationCompositionElement the updated automation composition element
+     * @param deployState the DeployState state
      */
-    public AutomationCompositionElement updateAutomationCompositionElementState(UUID automationCompositionId, UUID id,
-            AutomationCompositionOrderedState orderedState, AutomationCompositionState newState) {
+    public void updateAutomationCompositionElementState(UUID automationCompositionId, UUID id, DeployState deployState,
+            LockState lockState) {
 
         if (id == null) {
             LOGGER.warn("Cannot update Automation composition element state, id is null");
-            return null;
+            return;
         }
 
         // Update states of AutomationCompositionElement in automationCompositionMap
         for (var automationComposition : automationCompositionMap.values()) {
             var element = automationComposition.getElements().get(id);
             if (element != null) {
-                element.setOrderedState(orderedState);
-                element.setState(newState);
+                element.setDeployState(deployState);
+                element.setLockState(lockState);
             }
             var checkOpt = automationComposition.getElements().values().stream()
-                    .filter(acElement -> !newState.equals(acElement.getState())).findAny();
+                    .filter(acElement -> !deployState.equals(acElement.getDeployState())).findAny();
             if (checkOpt.isEmpty()) {
-                automationComposition.setState(newState);
-                automationComposition.setOrderedState(orderedState);
+                automationComposition.setDeployState(deployState);
+            }
+            checkOpt = automationComposition.getElements().values().stream()
+                    .filter(acElement -> !lockState.equals(acElement.getLockState())).findAny();
+            if (checkOpt.isEmpty()) {
+                automationComposition.setLockState(lockState);
             }
         }
 
@@ -124,19 +131,17 @@ public class AutomationCompositionHandler {
                     new AutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_STATECHANGE_ACK);
             automationCompositionStateChangeAck.setParticipantId(participantId);
             automationCompositionStateChangeAck.setAutomationCompositionId(automationCompositionId);
-            acElement.setOrderedState(orderedState);
-            acElement.setState(newState);
+            acElement.setDeployState(deployState);
+            acElement.setLockState(lockState);
             automationCompositionStateChangeAck.getAutomationCompositionResultMap().put(acElement.getId(),
-                    new AcElementDeployAck(newState, null, null, true,
+                    new AcElementDeployAck(deployState, lockState, true,
                             "Automation composition element {} state changed to {}\", id, newState)"));
-            LOGGER.debug("Automation composition element {} state changed to {}", id, newState);
+            LOGGER.debug("Automation composition element {} state changed to {}", id, deployState);
             automationCompositionStateChangeAck
-                    .setMessage("AutomationCompositionElement state changed to {} " + newState);
+                    .setMessage("AutomationCompositionElement state changed to {} " + deployState);
             automationCompositionStateChangeAck.setResult(true);
             publisher.sendAutomationCompositionAck(automationCompositionStateChangeAck);
-            return acElement;
         }
-        return null;
     }
 
     /**
@@ -168,8 +173,32 @@ public class AutomationCompositionHandler {
             return;
         }
 
-        handleState(automationComposition, stateChangeMsg.getOrderedState(), stateChangeMsg.getStartPhase(),
-                acElementDefinitions);
+        if (!chechConsistantOrderState(automationComposition, stateChangeMsg.getDeployOrderedState(),
+                stateChangeMsg.getLockOrderedState())) {
+            var automationCompositionAck =
+                    new AutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_STATECHANGE_ACK);
+            automationCompositionAck.setParticipantId(participantId);
+            automationCompositionAck.setMessage("Automation composition is already in state "
+                    + stateChangeMsg.getDeployOrderedState() + " and " + stateChangeMsg.getLockOrderedState());
+            automationCompositionAck.setResult(false);
+            automationCompositionAck.setAutomationCompositionId(automationComposition.getInstanceId());
+            publisher.sendAutomationCompositionAck(automationCompositionAck);
+            return;
+        }
+
+        if (DeployOrder.NONE.equals(stateChangeMsg.getDeployOrderedState())) {
+            handleLockOrderState(automationComposition, stateChangeMsg.getLockOrderedState(),
+                    stateChangeMsg.getStartPhase(), acElementDefinitions);
+        } else {
+            handleDeployOrderState(automationComposition, stateChangeMsg.getDeployOrderedState(),
+                    stateChangeMsg.getStartPhase(), acElementDefinitions);
+        }
+    }
+
+    private boolean chechConsistantOrderState(AutomationComposition automationComposition, DeployOrder deployOrder,
+            LockOrder lockOrder) {
+        return acInstanceStateResolver.resolve(deployOrder, lockOrder, automationComposition.getDeployState(),
+                automationComposition.getLockState()) != null;
     }
 
     /**
@@ -180,18 +209,33 @@ public class AutomationCompositionHandler {
      * @param startPhaseMsg startPhase from message
      * @param acElementDefinitions the list of AutomationCompositionElementDefinition
      */
-    private void handleState(final AutomationComposition automationComposition,
-            AutomationCompositionOrderedState orderedState, Integer startPhaseMsg,
-            List<AutomationCompositionElementDefinition> acElementDefinitions) {
+    private void handleDeployOrderState(final AutomationComposition automationComposition, DeployOrder orderedState,
+            Integer startPhaseMsg, List<AutomationCompositionElementDefinition> acElementDefinitions) {
+
+        if (DeployOrder.UNDEPLOY.equals(orderedState)) {
+            handleUndeployState(automationComposition, startPhaseMsg, acElementDefinitions);
+        } else {
+            LOGGER.debug("StateChange message has no state, state is null {}", automationComposition.getKey());
+        }
+    }
+
+    /**
+     * Method to handle state changes.
+     *
+     * @param automationComposition participant response
+     * @param orderedState automation composition ordered state
+     * @param startPhaseMsg startPhase from message
+     * @param acElementDefinitions the list of AutomationCompositionElementDefinition
+     */
+    private void handleLockOrderState(final AutomationComposition automationComposition, LockOrder orderedState,
+            Integer startPhaseMsg, List<AutomationCompositionElementDefinition> acElementDefinitions) {
+
         switch (orderedState) {
-            case UNINITIALISED:
-                handleUninitialisedState(automationComposition, orderedState, startPhaseMsg, acElementDefinitions);
+            case LOCK:
+                handleLockState(automationComposition, startPhaseMsg, acElementDefinitions);
                 break;
-            case PASSIVE:
-                handlePassiveState(automationComposition, orderedState, startPhaseMsg, acElementDefinitions);
-                break;
-            case RUNNING:
-                handleRunningState(automationComposition, orderedState, startPhaseMsg, acElementDefinitions);
+            case UNLOCK:
+                handleUnlockState(automationComposition, startPhaseMsg, acElementDefinitions);
                 break;
             default:
                 LOGGER.debug("StateChange message has no state, state is null {}", automationComposition.getKey());
@@ -208,67 +252,49 @@ public class AutomationCompositionHandler {
     public void handleAutomationCompositionDeploy(AutomationCompositionDeploy updateMsg,
             List<AutomationCompositionElementDefinition> acElementDefinitions) {
 
-        if (!updateMsg.appliesTo(participantId)) {
-            return;
-        }
-
-        if (0 == updateMsg.getStartPhase()) {
-            handleAcUpdatePhase0(updateMsg, acElementDefinitions);
-        } else {
-            handleAcUpdatePhaseN(updateMsg, acElementDefinitions);
-        }
-    }
-
-    private void handleAcUpdatePhase0(AutomationCompositionDeploy updateMsg,
-            List<AutomationCompositionElementDefinition> acElementDefinitions) {
-        var automationComposition = automationCompositionMap.get(updateMsg.getAutomationCompositionId());
-
-        // TODO: Updates to existing AutomationCompositions are not supported yet (Addition/Removal of
-        // AutomationComposition
-        // elements to existing AutomationComposition has to be supported).
-        if (automationComposition != null) {
-            var automationCompositionUpdateAck =
-                    new AutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_DEPLOY_ACK);
-            automationCompositionUpdateAck.setParticipantId(participantId);
-
-            automationCompositionUpdateAck.setMessage("Automation composition " + updateMsg.getAutomationCompositionId()
-                    + " already defined on participant " + participantId);
-            automationCompositionUpdateAck.setResult(false);
-            automationCompositionUpdateAck.setResponseTo(updateMsg.getMessageId());
-            automationCompositionUpdateAck.setAutomationCompositionId(updateMsg.getAutomationCompositionId());
-            publisher.sendAutomationCompositionAck(automationCompositionUpdateAck);
-            return;
-        }
-
         if (updateMsg.getParticipantUpdatesList().isEmpty()) {
             LOGGER.warn("No AutomationCompositionElement updates in message {}",
                     updateMsg.getAutomationCompositionId());
             return;
         }
 
+        for (var participantDeploy : updateMsg.getParticipantUpdatesList()) {
+            if (participantId.equals(participantDeploy.getParticipantId())) {
+                if (updateMsg.isFirstStartPhase()) {
+                    initializeDeploy(updateMsg.getMessageId(), updateMsg.getAutomationCompositionId(),
+                            participantDeploy);
+                }
+                callParticipanDeploy(participantDeploy.getAcElementList(), acElementDefinitions,
+                        updateMsg.getStartPhase(), updateMsg.getAutomationCompositionId());
+            }
+        }
+    }
+
+    private void initializeDeploy(UUID messageId, UUID instanceId, ParticipantDeploy participantDeploy) {
+        var automationComposition = automationCompositionMap.get(instanceId);
+
+        if (automationComposition != null) {
+            var automationCompositionUpdateAck =
+                    new AutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_DEPLOY_ACK);
+            automationCompositionUpdateAck.setParticipantId(participantId);
+
+            automationCompositionUpdateAck.setMessage(
+                    "Automation composition " + instanceId + " already defined on participant " + participantId);
+            automationCompositionUpdateAck.setResult(false);
+            automationCompositionUpdateAck.setResponseTo(messageId);
+            automationCompositionUpdateAck.setAutomationCompositionId(instanceId);
+            publisher.sendAutomationCompositionAck(automationCompositionUpdateAck);
+            return;
+        }
+
         automationComposition = new AutomationComposition();
-        automationComposition.setInstanceId(updateMsg.getAutomationCompositionId());
-        var acElements = storeElementsOnThisParticipant(updateMsg.getParticipantUpdatesList());
-        var acElementMap = prepareAcElementMap(acElements);
-        automationComposition.setElements(acElementMap);
-        automationCompositionMap.put(updateMsg.getAutomationCompositionId(), automationComposition);
-
-        handleAutomationCompositionElementUpdate(acElements, acElementDefinitions, updateMsg.getStartPhase(),
-                updateMsg.getAutomationCompositionId());
+        automationComposition.setInstanceId(instanceId);
+        var acElements = storeElementsOnThisParticipant(participantDeploy);
+        automationComposition.setElements(prepareAcElementMap(acElements));
+        automationCompositionMap.put(instanceId, automationComposition);
     }
 
-    private void handleAcUpdatePhaseN(AutomationCompositionDeploy updateMsg,
-            List<AutomationCompositionElementDefinition> acElementDefinitions) {
-
-        var acElementList = updateMsg.getParticipantUpdatesList().stream()
-                .flatMap(participantUpdate -> participantUpdate.getAutomationCompositionElementList().stream())
-                .filter(element -> participantId.equals(element.getParticipantId())).collect(Collectors.toList());
-
-        handleAutomationCompositionElementUpdate(acElementList, acElementDefinitions, updateMsg.getStartPhase(),
-                updateMsg.getAutomationCompositionId());
-    }
-
-    private void handleAutomationCompositionElementUpdate(List<AutomationCompositionElement> acElements,
+    private void callParticipanDeploy(List<AcElementDeploy> acElements,
             List<AutomationCompositionElementDefinition> acElementDefinitions, Integer startPhaseMsg,
             UUID automationCompositionId) {
         try {
@@ -280,7 +306,7 @@ public class AutomationCompositionHandler {
                         for (var acElementListener : listeners) {
                             var map = new HashMap<>(acElementNodeTemplate.getProperties());
                             map.putAll(element.getProperties());
-                            acElementListener.automationCompositionElementUpdate(automationCompositionId, element, map);
+                            acElementListener.deploy(automationCompositionId, element, map);
                         }
                     }
                 }
@@ -302,14 +328,16 @@ public class AutomationCompositionHandler {
         return null;
     }
 
-    private List<AutomationCompositionElement> storeElementsOnThisParticipant(
-            List<ParticipantDeploy> participantUpdates) {
-        var acElementList = participantUpdates.stream()
-                .flatMap(participantUpdate -> participantUpdate.getAutomationCompositionElementList().stream())
-                .filter(element -> participantId.equals(element.getParticipantId())).collect(Collectors.toList());
-
-        for (var element : acElementList) {
-            elementsOnThisParticipant.put(element.getId(), element);
+    private List<AutomationCompositionElement> storeElementsOnThisParticipant(ParticipantDeploy participantDeploy) {
+        List<AutomationCompositionElement> acElementList = new ArrayList<>();
+        for (var element : participantDeploy.getAcElementList()) {
+            var acElement = new AutomationCompositionElement();
+            acElement.setId(element.getId());
+            acElement.setDefinition(element.getDefinition());
+            acElement.setDeployState(DeployState.DEPLOYING);
+            acElement.setLockState(LockState.NONE);
+            elementsOnThisParticipant.put(element.getId(), acElement);
+            acElementList.add(acElement);
         }
         return acElementList;
     }
@@ -326,17 +354,18 @@ public class AutomationCompositionHandler {
      * Method to handle when the new state from participant is UNINITIALISED state.
      *
      * @param automationComposition participant response
-     * @param orderedState orderedState
      * @param startPhaseMsg startPhase from message
      * @param acElementDefinitions the list of AutomationCompositionElementDefinition
      */
-    private void handleUninitialisedState(final AutomationComposition automationComposition,
-            final AutomationCompositionOrderedState orderedState, Integer startPhaseMsg,
+    private void handleUndeployState(final AutomationComposition automationComposition, Integer startPhaseMsg,
             List<AutomationCompositionElementDefinition> acElementDefinitions) {
-        handleStateChange(automationComposition, orderedState, startPhaseMsg, acElementDefinitions);
+
+        automationComposition.getElements().values().stream()
+                .forEach(acElement -> automationCompositionElementUndeploy(automationComposition.getInstanceId(),
+                        acElement, startPhaseMsg, acElementDefinitions));
+
         boolean isAllUninitialised = automationComposition.getElements().values().stream()
-                .filter(element -> !AutomationCompositionState.UNINITIALISED.equals(element.getState())).findAny()
-                .isEmpty();
+                .filter(element -> !DeployState.UNDEPLOYED.equals(element.getDeployState())).findAny().isEmpty();
         if (isAllUninitialised) {
             automationCompositionMap.remove(automationComposition.getInstanceId());
             automationComposition.getElements().values()
@@ -348,60 +377,55 @@ public class AutomationCompositionHandler {
      * Method to handle when the new state from participant is PASSIVE state.
      *
      * @param automationComposition participant response
-     * @param orderedState orderedState
      * @param startPhaseMsg startPhase from message
      * @param acElementDefinitions the list of AutomationCompositionElementDefinition
      */
-    private void handlePassiveState(final AutomationComposition automationComposition,
-            final AutomationCompositionOrderedState orderedState, Integer startPhaseMsg,
+    private void handleLockState(final AutomationComposition automationComposition, Integer startPhaseMsg,
             List<AutomationCompositionElementDefinition> acElementDefinitions) {
-        handleStateChange(automationComposition, orderedState, startPhaseMsg, acElementDefinitions);
+        automationComposition.getElements().values().stream()
+                .forEach(acElement -> automationCompositionElementLock(automationComposition.getInstanceId(), acElement,
+                        startPhaseMsg, acElementDefinitions));
     }
 
     /**
      * Method to handle when the new state from participant is RUNNING state.
      *
      * @param automationComposition participant response
-     * @param orderedState orderedState
      * @param startPhaseMsg startPhase from message
      * @param acElementDefinitions the list of AutomationCompositionElementDefinition
      */
-    private void handleRunningState(final AutomationComposition automationComposition,
-            final AutomationCompositionOrderedState orderedState, Integer startPhaseMsg,
+    private void handleUnlockState(final AutomationComposition automationComposition, Integer startPhaseMsg,
             List<AutomationCompositionElementDefinition> acElementDefinitions) {
-        handleStateChange(automationComposition, orderedState, startPhaseMsg, acElementDefinitions);
-    }
-
-    /**
-     * Method to update the state of automation composition elements.
-     *
-     * @param automationComposition participant status in memory
-     * @param orderedState orderedState the new ordered state the participant should have
-     * @param startPhaseMsg startPhase from message
-     * @param acElementDefinitions the list of AutomationCompositionElementDefinition
-     */
-    private void handleStateChange(AutomationComposition automationComposition,
-            final AutomationCompositionOrderedState orderedState, Integer startPhaseMsg,
-            List<AutomationCompositionElementDefinition> acElementDefinitions) {
-
-        if (orderedState.equals(automationComposition.getOrderedState())) {
-            var automationCompositionAck =
-                    new AutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_STATECHANGE_ACK);
-            automationCompositionAck.setParticipantId(participantId);
-            automationCompositionAck.setMessage("Automation composition is already in state " + orderedState);
-            automationCompositionAck.setResult(false);
-            automationCompositionAck.setAutomationCompositionId(automationComposition.getInstanceId());
-            publisher.sendAutomationCompositionAck(automationCompositionAck);
-            return;
-        }
-
         automationComposition.getElements().values().stream()
-                .forEach(acElement -> automationCompositionElementStateChange(automationComposition, orderedState,
+                .forEach(acElement -> automationCompositionElementUnlock(automationComposition.getInstanceId(),
                         acElement, startPhaseMsg, acElementDefinitions));
     }
 
-    private void automationCompositionElementStateChange(AutomationComposition automationComposition,
-            AutomationCompositionOrderedState orderedState, AutomationCompositionElement acElement,
+    private void automationCompositionElementLock(UUID instanceId, AutomationCompositionElement acElement,
+            Integer startPhaseMsg, List<AutomationCompositionElementDefinition> acElementDefinitions) {
+        var acElementNodeTemplate = getAcElementNodeTemplate(acElementDefinitions, acElement.getDefinition());
+        if (acElementNodeTemplate != null) {
+            int startPhase = ParticipantUtils.findStartPhase(acElementNodeTemplate.getProperties());
+            if (startPhaseMsg.equals(startPhase)) {
+                updateAutomationCompositionElementState(instanceId, acElement.getId(), DeployState.DEPLOYED,
+                        LockState.LOCKED);
+            }
+        }
+    }
+
+    private void automationCompositionElementUnlock(UUID instanceId, AutomationCompositionElement acElement,
+            Integer startPhaseMsg, List<AutomationCompositionElementDefinition> acElementDefinitions) {
+        var acElementNodeTemplate = getAcElementNodeTemplate(acElementDefinitions, acElement.getDefinition());
+        if (acElementNodeTemplate != null) {
+            int startPhase = ParticipantUtils.findStartPhase(acElementNodeTemplate.getProperties());
+            if (startPhaseMsg.equals(startPhase)) {
+                updateAutomationCompositionElementState(instanceId, acElement.getId(), DeployState.DEPLOYED,
+                        LockState.UNLOCKED);
+            }
+        }
+    }
+
+    private void automationCompositionElementUndeploy(UUID instanceId, AutomationCompositionElement acElement,
             Integer startPhaseMsg, List<AutomationCompositionElementDefinition> acElementDefinitions) {
         var acElementNodeTemplate = getAcElementNodeTemplate(acElementDefinitions, acElement.getDefinition());
         if (acElementNodeTemplate != null) {
@@ -409,11 +433,9 @@ public class AutomationCompositionHandler {
             if (startPhaseMsg.equals(startPhase)) {
                 for (var acElementListener : listeners) {
                     try {
-                        acElementListener.automationCompositionElementStateChange(automationComposition.getInstanceId(),
-                                acElement.getId(), acElement.getState(), orderedState);
+                        acElementListener.undeploy(instanceId, acElement.getId());
                     } catch (PfModelException e) {
-                        LOGGER.debug("Automation composition element update failed {}",
-                                automationComposition.getInstanceId());
+                        LOGGER.debug("Automation composition element update failed {}", instanceId);
                     }
                 }
             }

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +22,7 @@ package org.onap.policy.clamp.acm.participant.intermediary.api;
 
 import java.util.Map;
 import java.util.UUID;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
+import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.models.base.PfModelException;
 
 /**
@@ -35,13 +33,9 @@ public interface AutomationCompositionElementListener {
      * Handle a automation composition element state change.
      *
      * @param automationCompositionElementId the ID of the automation composition element
-     * @param currentState the current state of the automation composition element
-     * @param newState the state to which the automation composition element is changing to
      * @throws PfModelException in case of a model exception
      */
-    public void automationCompositionElementStateChange(UUID automationCompositionId,
-        UUID automationCompositionElementId, AutomationCompositionState currentState,
-        AutomationCompositionOrderedState newState) throws PfModelException;
+    public void undeploy(UUID automationCompositionId, UUID automationCompositionElementId) throws PfModelException;
 
     /**
      * Handle an update on a automation composition element.
@@ -51,6 +45,6 @@ public interface AutomationCompositionElementListener {
      * @param properties properties Map
      * @throws PfModelException from Policy framework
      */
-    public void automationCompositionElementUpdate(UUID automationCompositionId,
-        AutomationCompositionElement element, Map<String, Object> properties) throws PfModelException;
+    public void deploy(UUID automationCompositionId, AcElementDeploy element, Map<String, Object> properties)
+            throws PfModelException;
 }

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022 Nordix Foundation.
+ *  Copyright (C) 2022-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,10 +36,9 @@ import org.onap.policy.clamp.acm.participant.a1pms.models.ConfigurationEntity;
 import org.onap.policy.clamp.acm.participant.a1pms.webclient.AcA1PmsClient;
 import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
+import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -73,42 +72,20 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
      *
      * @param automationCompositionId the ID of the automation composition
      * @param automationCompositionElementId the ID of the automation composition element
-     * @param currentState                   the current state of the automation composition element
-     * @param newState                       the state to which the automation composition element is changing to
      * @throws PfModelException in case of a model exception
      */
     @Override
-    public void automationCompositionElementStateChange(UUID automationCompositionId,
-            UUID automationCompositionElementId, AutomationCompositionState currentState,
-            AutomationCompositionOrderedState newState) throws A1PolicyServiceException {
-        switch (newState) {
-            case UNINITIALISED:
-                var configurationEntity = configRequestMap.get(automationCompositionElementId);
-                if (configurationEntity != null && acA1PmsClient.isPmsHealthy()) {
-                    acA1PmsClient.deleteService(configurationEntity.getPolicyServiceEntities());
-                    configRequestMap.remove(automationCompositionElementId);
-                    intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
-                            automationCompositionElementId, newState, AutomationCompositionState.UNINITIALISED,
-                            ParticipantMessageType.AUTOMATION_COMPOSITION_STATE_CHANGE);
-                } else {
-                    LOGGER.warn("Failed to connect with A1PMS. Service configuration is: {}", configurationEntity);
-                    throw new A1PolicyServiceException(HttpStatus.SC_SERVICE_UNAVAILABLE,
-                            "Unable to connect with A1PMS");
-                }
-                break;
-            case PASSIVE:
-                intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
-                        automationCompositionElementId, newState, AutomationCompositionState.PASSIVE,
-                        ParticipantMessageType.AUTOMATION_COMPOSITION_STATE_CHANGE);
-                break;
-            case RUNNING:
-                intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
-                        automationCompositionElementId, newState, AutomationCompositionState.RUNNING,
-                        ParticipantMessageType.AUTOMATION_COMPOSITION_STATE_CHANGE);
-                break;
-            default:
-                LOGGER.warn("Cannot transition from state {} to state {}", currentState, newState);
-                break;
+    public void undeploy(UUID automationCompositionId, UUID automationCompositionElementId)
+            throws A1PolicyServiceException {
+        var configurationEntity = configRequestMap.get(automationCompositionElementId);
+        if (configurationEntity != null && acA1PmsClient.isPmsHealthy()) {
+            acA1PmsClient.deleteService(configurationEntity.getPolicyServiceEntities());
+            configRequestMap.remove(automationCompositionElementId);
+            intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
+                    automationCompositionElementId, DeployState.UNDEPLOYED, LockState.NONE);
+        } else {
+            LOGGER.warn("Failed to connect with A1PMS. Service configuration is: {}", configurationEntity);
+            throw new A1PolicyServiceException(HttpStatus.SC_SERVICE_UNAVAILABLE, "Unable to connect with A1PMS");
         }
     }
 
@@ -116,24 +93,22 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
      * Callback method to handle an update on an automation composition element.
      *
      * @param automationCompositionId the ID of the automation composition
-     * @param element      the information on the automation composition element
+     * @param element the information on the automation composition element
      * @param properties properties Map
      */
     @Override
-    public void automationCompositionElementUpdate(UUID automationCompositionId,
-            AutomationCompositionElement element, Map<String, Object> properties) throws A1PolicyServiceException {
+    public void deploy(UUID automationCompositionId, AcElementDeploy element, Map<String, Object> properties)
+            throws A1PolicyServiceException {
         try {
             var configurationEntity = CODER.convert(properties, ConfigurationEntity.class);
-            var violations =
-                    Validation.buildDefaultValidatorFactory().getValidator().validate(configurationEntity);
+            var violations = Validation.buildDefaultValidatorFactory().getValidator().validate(configurationEntity);
             if (violations.isEmpty()) {
                 if (acA1PmsClient.isPmsHealthy()) {
                     acA1PmsClient.createService(configurationEntity.getPolicyServiceEntities());
                     configRequestMap.put(element.getId(), configurationEntity);
 
                     intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
-                            AutomationCompositionOrderedState.PASSIVE, AutomationCompositionState.PASSIVE,
-                            ParticipantMessageType.AUTOMATION_COMPOSITION_STATE_CHANGE);
+                            DeployState.DEPLOYED, LockState.LOCKED);
                 } else {
                     LOGGER.error("Failed to connect with A1PMS");
                     throw new A1PolicyServiceException(HttpStatus.SC_SERVICE_UNAVAILABLE,

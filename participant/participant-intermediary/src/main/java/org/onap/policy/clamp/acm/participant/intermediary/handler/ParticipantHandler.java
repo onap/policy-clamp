@@ -261,7 +261,8 @@ public class ParticipantHandler {
         for (var entry : automationCompositionHandler.getAutomationCompositionMap().entrySet()) {
             var acInfo = new AutomationCompositionInfo();
             acInfo.setAutomationCompositionId(entry.getKey());
-            acInfo.setState(entry.getValue().getState());
+            acInfo.setDeployState(entry.getValue().getDeployState());
+            acInfo.setLockState(entry.getValue().getLockState());
             automationCompositionInfoList.add(acInfo);
         }
         return automationCompositionInfoList;

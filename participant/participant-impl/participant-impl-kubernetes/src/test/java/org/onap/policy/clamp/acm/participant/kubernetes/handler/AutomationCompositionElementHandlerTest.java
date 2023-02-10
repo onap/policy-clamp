@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -50,9 +50,9 @@ import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartList;
 import org.onap.policy.clamp.acm.participant.kubernetes.parameters.CommonTestData;
 import org.onap.policy.clamp.acm.participant.kubernetes.service.ChartService;
 import org.onap.policy.clamp.acm.participant.kubernetes.utils.TestUtils;
+import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
+import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -106,24 +106,13 @@ class AutomationCompositionElementHandlerTest {
 
         doNothing().when(chartService).uninstallChart(charts.get(0));
 
-        automationCompositionElementHandler.automationCompositionElementStateChange(
-            commonTestData.getAutomationCompositionId(), automationCompositionElementId1,
-            AutomationCompositionState.PASSIVE, AutomationCompositionOrderedState.UNINITIALISED);
+        automationCompositionElementHandler.undeploy(
+            commonTestData.getAutomationCompositionId(), automationCompositionElementId1);
 
         doThrow(new ServiceException("Error uninstalling the chart")).when(chartService).uninstallChart(charts.get(0));
 
-        assertDoesNotThrow(() -> automationCompositionElementHandler.automationCompositionElementStateChange(
-            commonTestData.getAutomationCompositionId(), automationCompositionElementId1,
-            AutomationCompositionState.PASSIVE, AutomationCompositionOrderedState.PASSIVE));
-
-        assertDoesNotThrow(() -> automationCompositionElementHandler.automationCompositionElementStateChange(
-            commonTestData.getAutomationCompositionId(), automationCompositionElementId1,
-            AutomationCompositionState.PASSIVE, AutomationCompositionOrderedState.UNINITIALISED));
-
-        assertDoesNotThrow(() -> automationCompositionElementHandler.automationCompositionElementStateChange(
-            commonTestData.getAutomationCompositionId(), automationCompositionElementId1,
-            AutomationCompositionState.PASSIVE, AutomationCompositionOrderedState.RUNNING));
-
+        assertDoesNotThrow(() -> automationCompositionElementHandler.undeploy(
+            commonTestData.getAutomationCompositionId(), automationCompositionElementId1));
     }
 
     @Test
@@ -132,14 +121,14 @@ class AutomationCompositionElementHandlerTest {
         doReturn(true).when(chartService).installChart(any());
         doNothing().when(automationCompositionElementHandler).checkPodStatus(any(), any(), any(), anyInt(), anyInt());
         var elementId1 = UUID.randomUUID();
-        var element = new AutomationCompositionElement();
+        var element = new AcElementDeploy();
         element.setId(elementId1);
         element.setDefinition(new ToscaConceptIdentifier(KEY_NAME, "1.0.1"));
-        element.setOrderedState(AutomationCompositionOrderedState.PASSIVE);
+        element.setOrderedState(DeployOrder.DEPLOY);
 
         var nodeTemplatesMap =
             toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates();
-        automationCompositionElementHandler.automationCompositionElementUpdate(
+        automationCompositionElementHandler.deploy(
             commonTestData.getAutomationCompositionId(), element,
             nodeTemplatesMap.get(K8S_AUTOMATION_COMPOSITION_ELEMENT).getProperties());
 
@@ -149,7 +138,7 @@ class AutomationCompositionElementHandlerTest {
 
         var elementId2 = UUID.randomUUID();
         element.setId(elementId2);
-        automationCompositionElementHandler.automationCompositionElementUpdate(
+        automationCompositionElementHandler.deploy(
             commonTestData.getAutomationCompositionId(), element,
             nodeTemplatesMap.get(K8S_AUTOMATION_COMPOSITION_ELEMENT).getProperties());
 

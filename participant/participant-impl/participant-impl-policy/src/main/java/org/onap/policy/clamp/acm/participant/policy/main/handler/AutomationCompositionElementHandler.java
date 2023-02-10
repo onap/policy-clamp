@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021,2022 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -31,10 +31,9 @@ import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationComposit
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.acm.participant.policy.client.PolicyApiHttpClient;
 import org.onap.policy.clamp.acm.participant.policy.client.PolicyPapHttpClient;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
+import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.pdp.concepts.DeploymentSubGroup;
@@ -73,50 +72,22 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
     /**
      * Callback method to handle a automation composition element state change.
      *
-     * @param automationCompositionId        the ID of the automation composition
+     * @param automationCompositionId the ID of the automation composition
      * @param automationCompositionElementId the ID of the automation composition element
-     * @param currentState                   the current state of the automation composition element
-     * @param orderedState                   the state to which the automation composition element is changing to
      */
     @Override
-    public void automationCompositionElementStateChange(UUID automationCompositionId,
-                                                        UUID automationCompositionElementId,
-                                                        AutomationCompositionState currentState,
-                                                        AutomationCompositionOrderedState orderedState) {
-        switch (orderedState) {
-            case UNINITIALISED:
-                try {
-                    undeployPolicies(automationCompositionElementId);
-                    deletePolicyData(automationCompositionId, automationCompositionElementId, orderedState);
-                    intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
-                        automationCompositionElementId, orderedState, AutomationCompositionState.UNINITIALISED,
-                        ParticipantMessageType.AUTOMATION_COMPOSITION_STATE_CHANGE);
-                } catch (PfModelRuntimeException e) {
-                    LOGGER.error("Undeploying/Deleting policy failed {}", automationCompositionElementId, e);
-                }
-                break;
-            case PASSIVE:
-                try {
-                    undeployPolicies(automationCompositionElementId);
-                } catch (PfModelRuntimeException e) {
-                    LOGGER.error("Undeploying policies failed - no policies to undeploy {}",
-                        automationCompositionElementId);
-                }
-                intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
-                    automationCompositionElementId, orderedState, AutomationCompositionState.PASSIVE,
-                    ParticipantMessageType.AUTOMATION_COMPOSITION_STATE_CHANGE);
-                break;
-            case RUNNING:
-                LOGGER.info("Running state is not supported");
-                break;
-            default:
-                LOGGER.debug("Unknown orderedstate {}", orderedState);
-                break;
+    public void undeploy(UUID automationCompositionId, UUID automationCompositionElementId) {
+        try {
+            undeployPolicies(automationCompositionElementId);
+            deletePolicyData(automationCompositionId, automationCompositionElementId);
+            intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
+                    automationCompositionElementId, DeployState.UNDEPLOYED, LockState.NONE);
+        } catch (PfModelRuntimeException e) {
+            LOGGER.error("Undeploying/Deleting policy failed {}", automationCompositionElementId, e);
         }
     }
 
-    private void deletePolicyData(UUID automationCompositionId,
-                                  UUID automationCompositionElementId, AutomationCompositionOrderedState newState) {
+    private void deletePolicyData(UUID automationCompositionId, UUID automationCompositionElementId) {
         // Delete all policies of this automationComposition from policy framework
         for (var policy : policyMap.entrySet()) {
             apiHttpClient.deletePolicy(policy.getKey(), policy.getValue());
@@ -129,8 +100,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
         policyTypeMap.clear();
     }
 
-    private void deployPolicies(UUID automationCompositionId, UUID automationCompositionElementId,
-                                AutomationCompositionOrderedState newState) {
+    private void deployPolicies(UUID automationCompositionId, UUID automationCompositionElementId) {
         var deployFailure = false;
         // Deploy all policies of this automationComposition from Policy Framework
         if (!policyMap.entrySet().isEmpty()) {
@@ -145,11 +115,10 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
         } else {
             LOGGER.debug("No policies to deploy to {}", automationCompositionElementId);
         }
-        if (! deployFailure) {
+        if (!deployFailure) {
             // Update the AC element state
             intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
-                    automationCompositionElementId, newState, AutomationCompositionState.PASSIVE,
-                    ParticipantMessageType.AUTOMATION_COMPOSITION_STATE_CHANGE);
+                    automationCompositionElementId, DeployState.DEPLOYED, LockState.LOCKED);
         }
     }
 
@@ -158,7 +127,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
         if (!policyMap.entrySet().isEmpty()) {
             for (var policy : policyMap.entrySet()) {
                 papHttpClient.handlePolicyDeployOrUndeploy(policy.getKey(), policy.getValue(),
-                    DeploymentSubGroup.Action.DELETE);
+                        DeploymentSubGroup.Action.DELETE);
             }
             LOGGER.debug("Undeployed policies from {} successfully", automationCompositionElementId);
         } else {
@@ -175,8 +144,8 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
      * @throws PfModelException in case of an exception
      */
     @Override
-    public void automationCompositionElementUpdate(UUID automationCompositionId,
-            AutomationCompositionElement element, Map<String, Object> properties) throws PfModelException {
+    public void deploy(UUID automationCompositionId, AcElementDeploy element, Map<String, Object> properties)
+            throws PfModelException {
         var createPolicyTypeResp = HttpStatus.SC_OK;
         var createPolicyResp = HttpStatus.SC_OK;
 
@@ -187,7 +156,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
                     policyTypeMap.put(policyType.getName(), policyType.getVersion());
                 }
                 LOGGER.info("Found Policy Types in automation composition definition: {} , Creating Policy Types",
-                    automationCompositionDefinition.getName());
+                        automationCompositionDefinition.getName());
                 createPolicyTypeResp = apiHttpClient.createPolicyType(automationCompositionDefinition).getStatus();
             }
             if (automationCompositionDefinition.getToscaTopologyTemplate().getPolicies() != null) {
@@ -197,13 +166,13 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
                     }
                 }
                 LOGGER.info("Found Policies in automation composition definition: {} , Creating Policies",
-                    automationCompositionDefinition.getName());
+                        automationCompositionDefinition.getName());
                 createPolicyResp = apiHttpClient.createPolicy(automationCompositionDefinition).getStatus();
             }
             if (createPolicyTypeResp == HttpStatus.SC_OK && createPolicyResp == HttpStatus.SC_OK) {
                 LOGGER.info("PolicyTypes/Policies for the automation composition element : {} are created "
                         + "successfully", element.getId());
-                deployPolicies(automationCompositionId, element.getId(), element.getOrderedState());
+                deployPolicies(automationCompositionId, element.getId());
             } else {
                 LOGGER.error("Creation of PolicyTypes/Policies failed. Policies will not be deployed.");
             }

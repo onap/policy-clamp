@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,10 +33,8 @@ import org.mockito.Mockito;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.acm.participant.policy.client.PolicyApiHttpClient;
 import org.onap.policy.clamp.acm.participant.policy.client.PolicyPapHttpClient;
-import org.onap.policy.clamp.acm.participant.policy.main.parameters.CommonTestData;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
+import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
+import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
@@ -59,14 +57,7 @@ class AutomationCompositionElementHandlerTest {
     void testHandlerDoesNotThrowExceptions() {
         var handler = getTestingHandler();
 
-        assertDoesNotThrow(() -> handler.automationCompositionElementStateChange(AC_ID, automationCompositionElementId,
-                AutomationCompositionState.UNINITIALISED, AutomationCompositionOrderedState.PASSIVE));
-
-        assertDoesNotThrow(() -> handler.automationCompositionElementStateChange(AC_ID, automationCompositionElementId,
-                AutomationCompositionState.RUNNING, AutomationCompositionOrderedState.UNINITIALISED));
-
-        assertDoesNotThrow(() -> handler.automationCompositionElementStateChange(AC_ID, automationCompositionElementId,
-                AutomationCompositionState.PASSIVE, AutomationCompositionOrderedState.RUNNING));
+        assertDoesNotThrow(() -> handler.undeploy(AC_ID, automationCompositionElementId));
     }
 
     private AutomationCompositionElementHandler getTestingHandler() {
@@ -76,14 +67,11 @@ class AutomationCompositionElementHandlerTest {
         return handler;
     }
 
-    private AutomationCompositionElement getTestingAcElement() {
-        var element = new AutomationCompositionElement();
+    private AcElementDeploy getTestingAcElement() {
+        var element = new AcElementDeploy();
         element.setDefinition(DEFINITION);
-        element.setDescription("Description");
         element.setId(automationCompositionElementId);
-        element.setOrderedState(AutomationCompositionOrderedState.UNINITIALISED);
-        element.setParticipantId(CommonTestData.getParticipantId());
-        element.setState(AutomationCompositionState.UNINITIALISED);
+        element.setOrderedState(DeployOrder.DEPLOY);
         var template = new ToscaServiceTemplate();
         template.setToscaTopologyTemplate(new ToscaTopologyTemplate());
         template.getToscaTopologyTemplate().setPolicies(List.of(Map.of("DummyPolicy", new ToscaPolicy())));
@@ -102,17 +90,16 @@ class AutomationCompositionElementHandlerTest {
         var handler = getTestingHandler();
         var element = getTestingAcElement();
 
-        assertDoesNotThrow(() -> handler.automationCompositionElementUpdate(AC_ID, element, Map.of()));
+        assertDoesNotThrow(() -> handler.deploy(AC_ID, element, Map.of()));
 
-        assertDoesNotThrow(() -> handler.automationCompositionElementStateChange(AC_ID, automationCompositionElementId,
-                AutomationCompositionState.PASSIVE, AutomationCompositionOrderedState.UNINITIALISED));
+        assertDoesNotThrow(() -> handler.undeploy(AC_ID, automationCompositionElementId));
 
         // Mock failure in policy deployment
         doReturn(Response.serverError().build()).when(pap).handlePolicyDeployOrUndeploy(any(), any(), any());
-        assertDoesNotThrow(() -> handler.automationCompositionElementUpdate(AC_ID, element, Map.of()));
+        assertDoesNotThrow(() -> handler.deploy(AC_ID, element, Map.of()));
 
         // Mock failure in policy type creation
         doReturn(Response.serverError().build()).when(api).createPolicyType(any());
-        assertDoesNotThrow(() -> handler.automationCompositionElementUpdate(AC_ID, element, Map.of()));
+        assertDoesNotThrow(() -> handler.deploy(AC_ID, element, Map.of()));
     }
 }
