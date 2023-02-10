@@ -25,22 +25,16 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.File;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.utils.CommonTestData;
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
@@ -78,38 +72,33 @@ class JpaAutomationCompositionElementTest {
         }).hasMessageMatching(NULL_ELEMENT_ID_ERROR);
 
         assertThatThrownBy(() -> {
-            new JpaAutomationCompositionElement(null, null, null, null, null, null);
+            new JpaAutomationCompositionElement(null, null, null, null, null);
         }).hasMessageMatching(NULL_ELEMENT_ID_ERROR);
 
         assertThatThrownBy(() -> {
             new JpaAutomationCompositionElement("key", null, null,
-                AutomationCompositionState.UNINITIALISED, DeployState.UNDEPLOYED, LockState.LOCKED);
+                DeployState.UNDEPLOYED, LockState.LOCKED);
         }).hasMessageMatching(NULL_INSTANCE_ID_ERROR);
 
         assertThatThrownBy(() -> {
             new JpaAutomationCompositionElement("key", "key", null,
-                AutomationCompositionState.UNINITIALISED, DeployState.UNDEPLOYED, LockState.LOCKED);
+                DeployState.UNDEPLOYED, LockState.LOCKED);
         }).hasMessageMatching("definition" + NULL_ERROR);
 
         assertThatThrownBy(() -> {
-            new JpaAutomationCompositionElement("key", "key", new PfConceptKey(), null,
-                DeployState.UNDEPLOYED, LockState.LOCKED);
-        }).hasMessageMatching("state" + NULL_ERROR);
-
-        assertThatThrownBy(() -> {
             new JpaAutomationCompositionElement("key", "key", new PfConceptKey(),
-                AutomationCompositionState.UNINITIALISED, null, LockState.LOCKED);
+                null, LockState.LOCKED);
         }).hasMessageMatching("deployState" + NULL_ERROR);
 
         assertThatThrownBy(() -> {
             new JpaAutomationCompositionElement("key", "key", new PfConceptKey(),
-                AutomationCompositionState.UNINITIALISED, DeployState.UNDEPLOYED, null);
+                DeployState.UNDEPLOYED, null);
         }).hasMessageMatching("lockState" + NULL_ERROR);
 
         assertNotNull(new JpaAutomationCompositionElement());
         assertNotNull(new JpaAutomationCompositionElement("key", "key"));
         assertNotNull(new JpaAutomationCompositionElement("key", "key",
-            new PfConceptKey(), AutomationCompositionState.UNINITIALISED, DeployState.UNDEPLOYED, LockState.LOCKED));
+            new PfConceptKey(), DeployState.UNDEPLOYED, LockState.LOCKED));
     }
 
     @Test
@@ -135,29 +124,6 @@ class JpaAutomationCompositionElementTest {
 
         var testJpaAutomationCompositionElement2 = new JpaAutomationCompositionElement(testJpaAcElement);
         assertEquals(testJpaAcElement, testJpaAutomationCompositionElement2);
-    }
-
-    @Test
-    void testJpaAutomationCompositionElementOrderedState() throws CoderException {
-        var testAutomationCompositionElement = createAutomationCompositionElementInstance();
-        var testJpaAutomationCompositionElement = createJpaAutomationCompositionElementInstance();
-
-        testJpaAutomationCompositionElement.setOrderedState(null);
-        assertEquals(testAutomationCompositionElement, testJpaAutomationCompositionElement.toAuthorative());
-        testJpaAutomationCompositionElement.setOrderedState(AutomationCompositionOrderedState.UNINITIALISED);
-
-        var noOrderedStateAce = new StandardCoder().decode(
-                new File("src/test/resources/json/AutomationCompositionElementNoOrderedState.json"),
-                AutomationCompositionElement.class);
-
-        var noOrderedStateJpaAce = new JpaAutomationCompositionElement(noOrderedStateAce);
-        assertNull(noOrderedStateJpaAce.getOrderedState());
-        noOrderedStateAce.setOrderedState(AutomationCompositionOrderedState.UNINITIALISED);
-        noOrderedStateJpaAce = new JpaAutomationCompositionElement(noOrderedStateAce);
-        noOrderedStateJpaAce.setInstanceId(testJpaAutomationCompositionElement.getInstanceId());
-        noOrderedStateJpaAce.setElementId(testJpaAutomationCompositionElement.getElementId());
-        noOrderedStateJpaAce.setParticipantId(testJpaAutomationCompositionElement.getParticipantId());
-        assertEquals(testJpaAutomationCompositionElement, noOrderedStateJpaAce);
     }
 
     @Test
@@ -202,16 +168,6 @@ class JpaAutomationCompositionElementTest {
         testJpaAutomationCompositionElement.setDescription(null);
         assertEquals(0, testJpaAutomationCompositionElement.compareTo(otherJpaAutomationCompositionElement));
 
-        testJpaAutomationCompositionElement.setOrderedState(AutomationCompositionOrderedState.PASSIVE);
-        assertNotEquals(0, testJpaAutomationCompositionElement.compareTo(otherJpaAutomationCompositionElement));
-        testJpaAutomationCompositionElement.setOrderedState(AutomationCompositionOrderedState.UNINITIALISED);
-        assertEquals(0, testJpaAutomationCompositionElement.compareTo(otherJpaAutomationCompositionElement));
-
-        testJpaAutomationCompositionElement.setState(AutomationCompositionState.PASSIVE);
-        assertNotEquals(0, testJpaAutomationCompositionElement.compareTo(otherJpaAutomationCompositionElement));
-        testJpaAutomationCompositionElement.setState(AutomationCompositionState.UNINITIALISED);
-        assertEquals(0, testJpaAutomationCompositionElement.compareTo(otherJpaAutomationCompositionElement));
-
         testJpaAutomationCompositionElement.setDeployState(DeployState.DEPLOYED);
         assertNotEquals(0, testJpaAutomationCompositionElement.compareTo(otherJpaAutomationCompositionElement));
         testJpaAutomationCompositionElement.setDeployState(DeployState.UNDEPLOYED);
@@ -244,8 +200,6 @@ class JpaAutomationCompositionElementTest {
 
         ace1.setDefinition(new PfConceptKey("defName", "0.0.1"));
         ace1.setDescription("Description");
-        ace1.setOrderedState(AutomationCompositionOrderedState.UNINITIALISED);
-        ace1.setState(AutomationCompositionState.UNINITIALISED);
         ace1.setParticipantId(CommonTestData.getJpaParticipantId());
 
         assertThat(ace1.toString()).contains("AutomationCompositionElement(");
