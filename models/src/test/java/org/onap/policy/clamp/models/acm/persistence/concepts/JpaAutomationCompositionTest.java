@@ -22,25 +22,18 @@ package org.onap.policy.clamp.models.acm.persistence.concepts;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.base.PfConceptKey;
 
 /**
@@ -64,43 +57,37 @@ class JpaAutomationCompositionTest {
         }).hasMessageMatching("authorativeConcept is marked .*ull but is null");
 
         assertThatThrownBy(() -> {
-            new JpaAutomationComposition(null, null, null, null, null, null, null);
+            new JpaAutomationComposition(null, null, null, null, null, null);
         }).hasMessageMatching(NULL_INSTANCE_ID_ERROR);
 
         assertThatThrownBy(() -> {
-            new JpaAutomationComposition(INSTANCE_ID, null, null, null, new ArrayList<>(),
+            new JpaAutomationComposition(INSTANCE_ID, null, null, new ArrayList<>(),
                 DeployState.UNDEPLOYED, LockState.LOCKED);
         }).hasMessageMatching("key" + NULL_TEXT_ERROR);
 
         assertThatThrownBy(() -> {
             new JpaAutomationComposition(INSTANCE_ID, new PfConceptKey(), null,
-                    AutomationCompositionState.UNINITIALISED, new ArrayList<>(),
-                DeployState.UNDEPLOYED, LockState.LOCKED);
+                    new ArrayList<>(), DeployState.UNDEPLOYED, LockState.LOCKED);
         }).hasMessageMatching("compositionId" + NULL_TEXT_ERROR);
 
         assertThatThrownBy(() -> {
-            new JpaAutomationComposition(INSTANCE_ID, new PfConceptKey(), COMPOSITION_ID.toString(), null,
-                new ArrayList<>(), DeployState.UNDEPLOYED, LockState.LOCKED);
-        }).hasMessageMatching("state" + NULL_TEXT_ERROR);
-
-        assertThatThrownBy(() -> {
             new JpaAutomationComposition(INSTANCE_ID, new PfConceptKey(), COMPOSITION_ID.toString(),
-                    AutomationCompositionState.UNINITIALISED, null, DeployState.UNDEPLOYED, LockState.LOCKED);
+                    null, DeployState.UNDEPLOYED, LockState.LOCKED);
         }).hasMessageMatching("elements" + NULL_TEXT_ERROR);
 
         assertThatThrownBy(() -> {
             new JpaAutomationComposition(INSTANCE_ID, new PfConceptKey(), COMPOSITION_ID.toString(),
-                AutomationCompositionState.UNINITIALISED, new ArrayList<>(), null, LockState.LOCKED);
+                new ArrayList<>(), null, LockState.LOCKED);
         }).hasMessageMatching("deployState" + NULL_TEXT_ERROR);
 
         assertThatThrownBy(() -> {
             new JpaAutomationComposition(INSTANCE_ID, new PfConceptKey(), COMPOSITION_ID.toString(),
-                AutomationCompositionState.UNINITIALISED, new ArrayList<>(), DeployState.UNDEPLOYED, null);
+                new ArrayList<>(), DeployState.UNDEPLOYED, null);
         }).hasMessageMatching("lockState" + NULL_TEXT_ERROR);
 
         assertNotNull(new JpaAutomationComposition());
         assertNotNull(new JpaAutomationComposition(INSTANCE_ID, new PfConceptKey(), COMPOSITION_ID.toString(),
-                AutomationCompositionState.UNINITIALISED, new ArrayList<>(), DeployState.UNDEPLOYED, LockState.LOCKED));
+                new ArrayList<>(), DeployState.UNDEPLOYED, LockState.LOCKED));
     }
 
     @Test
@@ -128,36 +115,6 @@ class JpaAutomationCompositionTest {
 
         var testJpaAutomationComposition2 = new JpaAutomationComposition(testJpaAutomationComposition);
         assertEquals(testJpaAutomationComposition, testJpaAutomationComposition2);
-    }
-
-    @Test
-    void testJpaAutomationCompositionElementOrderedState() throws CoderException {
-        var testAutomationComposition = createAutomationCompositionInstance();
-        var testJpaAutomationComposition = createJpaAutomationCompositionInstance();
-
-        testJpaAutomationComposition.setOrderedState(null);
-        assertEquals(testAutomationComposition, testJpaAutomationComposition.toAuthorative());
-        testJpaAutomationComposition.setOrderedState(AutomationCompositionOrderedState.UNINITIALISED);
-
-        var noOrderedStateAc =
-                new StandardCoder().decode(new File("src/test/resources/json/AutomationCompositionNoOrderedState.json"),
-                        AutomationComposition.class);
-
-        noOrderedStateAc.setInstanceId(UUID.fromString(INSTANCE_ID));
-        var noOrderedStateJpaAc = new JpaAutomationComposition(noOrderedStateAc);
-        assertNull(noOrderedStateJpaAc.getOrderedState());
-        noOrderedStateAc.setOrderedState(AutomationCompositionOrderedState.UNINITIALISED);
-        noOrderedStateJpaAc = new JpaAutomationComposition(noOrderedStateAc);
-        assertEquals(testJpaAutomationComposition, noOrderedStateJpaAc);
-
-        var acWithElements =
-                new StandardCoder().decode(new File("src/test/resources/providers/TestAutomationCompositions.json"),
-                        AutomationCompositions.class).getAutomationCompositionList().get(0);
-
-        acWithElements.setInstanceId(UUID.fromString(INSTANCE_ID));
-        var jpaAutomationCompositionWithElements = new JpaAutomationComposition(acWithElements);
-        assertEquals(4, jpaAutomationCompositionWithElements.getElements().size());
-        assertEquals(acWithElements, jpaAutomationCompositionWithElements.toAuthorative());
     }
 
     @Test
@@ -200,14 +157,14 @@ class JpaAutomationCompositionTest {
         testJpaAutomationComposition.setVersion("0.0.1");
         assertEquals(0, testJpaAutomationComposition.compareTo(otherJpaAutomationComposition));
 
-        testJpaAutomationComposition.setState(AutomationCompositionState.PASSIVE);
+        testJpaAutomationComposition.setDeployState(DeployState.DEPLOYED);
         assertNotEquals(0, testJpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-        testJpaAutomationComposition.setState(AutomationCompositionState.UNINITIALISED);
+        testJpaAutomationComposition.setDeployState(DeployState.UNDEPLOYED);
         assertEquals(0, testJpaAutomationComposition.compareTo(otherJpaAutomationComposition));
 
-        testJpaAutomationComposition.setOrderedState(AutomationCompositionOrderedState.PASSIVE);
+        testJpaAutomationComposition.setLockState(LockState.UNLOCKED);
         assertNotEquals(0, testJpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-        testJpaAutomationComposition.setOrderedState(AutomationCompositionOrderedState.UNINITIALISED);
+        testJpaAutomationComposition.setLockState(LockState.NONE);
         assertEquals(0, testJpaAutomationComposition.compareTo(otherJpaAutomationComposition));
 
         testJpaAutomationComposition.setDescription("A description");
@@ -235,7 +192,6 @@ class JpaAutomationCompositionTest {
         ac1.setDescription("Description");
         ac1.setElements(new ArrayList<>());
         ac1.setInstanceId(INSTANCE_ID);
-        ac1.setState(AutomationCompositionState.UNINITIALISED);
 
         assertThat(ac1.toString()).contains("AutomationComposition(");
         assertNotEquals(0, ac1.hashCode());

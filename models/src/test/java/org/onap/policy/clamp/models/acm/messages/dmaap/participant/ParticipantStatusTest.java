@@ -31,7 +31,8 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionInfo;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.utils.CommonTestData;
@@ -77,7 +78,8 @@ class ParticipantStatusTest {
 
     private AutomationCompositionInfo getAutomationCompositionInfo(UUID id) {
         var acInfo = new AutomationCompositionInfo();
-        acInfo.setState(AutomationCompositionState.PASSIVE2RUNNING);
+        acInfo.setDeployState(DeployState.DEPLOYED);
+        acInfo.setLockState(LockState.LOCKED);
         acInfo.setAutomationCompositionId(id);
 
         return acInfo;

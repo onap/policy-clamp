@@ -64,5 +64,6 @@ public class AutomationCompositionStateChange extends ParticipantMessage {
         this.deployOrderedState = source.deployOrderedState;
         this.lockOrderedState = source.lockOrderedState;
         this.startPhase = source.startPhase;
+        this.firstStartPhase = source.firstStartPhase;
     }
 }

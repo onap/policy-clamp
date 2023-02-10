@@ -116,7 +116,6 @@ public class AutomationCompositionProvider {
      */
     public AutomationComposition updateAutomationComposition(
             @NonNull final AutomationComposition automationComposition) {
-        AcmUtils.setCascadedState(automationComposition, DeployState.UNDEPLOYED, LockState.NONE);
         var result = automationCompositionRepository.save(ProviderUtils.getJpaAndValidate(automationComposition,
                 JpaAutomationComposition::new, "automation composition"));
 
@@ -159,7 +158,6 @@ public class AutomationCompositionProvider {
         example.setVersion(version);
         example.setInstanceId(null);
         example.setElements(null);
-        example.setState(null);
         example.setDeployState(null);
         example.setLockState(null);
 

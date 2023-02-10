@@ -29,8 +29,8 @@ import lombok.AllArgsConstructor;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionAcHandler;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.AcInstanceStateUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
@@ -106,6 +106,10 @@ public class AutomationCompositionInstantiationProvider {
             throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
                     automationComposition.getCompositionId() + DO_NOT_MATCH + compositionId);
         }
+        if (!DeployState.UNDEPLOYED.equals(acToUpdate.getDeployState())) {
+            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
+                    "Not allow to update for state in " + acToUpdate.getDeployState());
+        }
         acToUpdate.setElements(automationComposition.getElements());
         acToUpdate.setName(automationComposition.getName());
         acToUpdate.setVersion(automationComposition.getVersion());
@@ -139,8 +143,8 @@ public class AutomationCompositionInstantiationProvider {
             return result;
         }
         if (!AcTypeState.PRIMED.equals(acDefinitionOpt.get().getState())) {
-            result.addResult(new ObjectValidationResult("ServiceTemplate", "", ValidationStatus.INVALID,
-                    "Commissioned automation composition definition not primed"));
+            result.addResult(new ObjectValidationResult("ServiceTemplate", acDefinitionOpt.get().getState(),
+                    ValidationStatus.INVALID, "Commissioned automation composition definition not primed"));
             return result;
         }
         result.addResult(AcmUtils.validateAutomationComposition(automationComposition,
@@ -169,7 +173,7 @@ public class AutomationCompositionInstantiationProvider {
         var automationComposition = automationCompositionProvider.getAutomationComposition(instanceId);
         if (!automationComposition.getCompositionId().equals(compositionId)) {
             throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
-                    "Composition Id " + compositionId + DO_NOT_MATCH + automationComposition.getCompositionId());
+                    automationComposition.getCompositionId() + DO_NOT_MATCH + compositionId);
         }
         return automationComposition;
     }
@@ -187,9 +191,9 @@ public class AutomationCompositionInstantiationProvider {
             throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
                     automationComposition.getCompositionId() + DO_NOT_MATCH + compositionId);
         }
-        if (!AutomationCompositionState.UNINITIALISED.equals(automationComposition.getState())) {
+        if (!DeployState.UNDEPLOYED.equals(automationComposition.getDeployState())) {
             throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
-                    "Automation composition state is still " + automationComposition.getState());
+                    "Automation composition state is still " + automationComposition.getDeployState());
         }
         var response = new InstantiationResponse();
         automationComposition =

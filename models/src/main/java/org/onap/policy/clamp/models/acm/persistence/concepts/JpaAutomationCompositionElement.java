@@ -41,8 +41,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import org.apache.commons.lang3.ObjectUtils;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.common.parameters.annotations.NotNull;
@@ -75,7 +73,6 @@ public class JpaAutomationCompositionElement extends Validated
     @NotNull
     private String instanceId;
 
-    // @formatter:off
     @VerifyKey
     @NotNull
     @AttributeOverrides({
@@ -86,14 +83,6 @@ public class JpaAutomationCompositionElement extends Validated
 
     @NotNull
     private String participantId;
-
-    @Column
-    @NotNull
-    private AutomationCompositionState state;
-
-    @Column
-    @NotNull
-    private AutomationCompositionOrderedState orderedState;
 
     @Column
     @NotNull
@@ -127,7 +116,7 @@ public class JpaAutomationCompositionElement extends Validated
      */
     public JpaAutomationCompositionElement(@NonNull final String elementId, @NonNull final String instanceId) {
         this(elementId, instanceId, new PfConceptKey(),
-            AutomationCompositionState.UNINITIALISED, DeployState.UNDEPLOYED, LockState.LOCKED);
+            DeployState.UNDEPLOYED, LockState.LOCKED);
     }
 
     /**
@@ -136,16 +125,15 @@ public class JpaAutomationCompositionElement extends Validated
      * @param elementId The id of the automation composition instance Element
      * @param instanceId The id of the automation composition instance
      * @param definition the TOSCA definition of the automation composition element
-     * @param state the state of the automation composition
+     * @param deployState the Deploy State of the automation composition
+     * @param lockState the Lock State of the automation composition
      */
     public JpaAutomationCompositionElement(@NonNull final String elementId, @NonNull final String instanceId,
             @NonNull final PfConceptKey definition,
-            @NonNull final AutomationCompositionState state,
-                                           @NonNull final DeployState deployState, @NonNull final LockState lockState) {
+            @NonNull final DeployState deployState, @NonNull final LockState lockState) {
         this.elementId = elementId;
         this.instanceId = instanceId;
         this.definition = definition;
-        this.state = state;
         this.deployState = deployState;
         this.lockState = lockState;
     }
@@ -160,8 +148,6 @@ public class JpaAutomationCompositionElement extends Validated
         this.instanceId = copyConcept.instanceId;
         this.definition = new PfConceptKey(copyConcept.definition);
         this.participantId = copyConcept.participantId;
-        this.state = copyConcept.state;
-        this.orderedState = copyConcept.orderedState;
         this.description = copyConcept.description;
         this.properties = (copyConcept.properties != null ? new LinkedHashMap<>(copyConcept.properties) : null);
         this.deployState = copyConcept.deployState;
@@ -184,8 +170,6 @@ public class JpaAutomationCompositionElement extends Validated
         element.setId(UUID.fromString(elementId));
         element.setDefinition(new ToscaConceptIdentifier(definition));
         element.setParticipantId(UUID.fromString(participantId));
-        element.setState(state);
-        element.setOrderedState(orderedState != null ? orderedState : state.asOrderedState());
         element.setDescription(description);
         element.setProperties(PfUtils.mapMap(properties, UnaryOperator.identity()));
         element.setDeployState(deployState);
@@ -198,10 +182,8 @@ public class JpaAutomationCompositionElement extends Validated
     public void fromAuthorative(@NonNull final AutomationCompositionElement element) {
         this.definition = element.getDefinition().asConceptKey();
         this.participantId = element.getParticipantId().toString();
-        this.state = element.getState();
-        this.orderedState = element.getOrderedState();
         this.description = element.getDescription();
-        properties = PfUtils.mapMap(element.getProperties(), UnaryOperator.identity());
+        this.properties = PfUtils.mapMap(element.getProperties(), UnaryOperator.identity());
         this.deployState = element.getDeployState();
         this.lockState = element.getLockState();
     }
@@ -231,16 +213,6 @@ public class JpaAutomationCompositionElement extends Validated
         }
 
         result = participantId.compareTo(other.participantId);
-        if (result != 0) {
-            return result;
-        }
-
-        result = ObjectUtils.compare(state, other.state);
-        if (result != 0) {
-            return result;
-        }
-
-        result = ObjectUtils.compare(orderedState, other.orderedState);
         if (result != 0) {
             return result;
         }

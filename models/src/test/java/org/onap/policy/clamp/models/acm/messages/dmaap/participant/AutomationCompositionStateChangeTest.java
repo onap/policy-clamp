@@ -28,8 +28,8 @@ import static org.onap.policy.clamp.models.acm.messages.dmaap.participant.Partic
 import java.time.Instant;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
+import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
+import org.onap.policy.clamp.models.acm.messages.rest.instantiation.LockOrder;
 import org.onap.policy.clamp.models.acm.utils.CommonTestData;
 import org.onap.policy.common.utils.coder.CoderException;
 
@@ -52,8 +52,8 @@ class AutomationCompositionStateChangeTest {
         orig.setAutomationCompositionId(UUID.randomUUID());
         orig.setParticipantId(CommonTestData.getParticipantId());
         orig.setMessageId(UUID.randomUUID());
-        orig.setOrderedState(AutomationCompositionOrderedState.RUNNING);
-        orig.setCurrentState(AutomationCompositionState.PASSIVE);
+        orig.setDeployOrderedState(DeployOrder.DEPLOY);
+        orig.setLockOrderedState(LockOrder.NONE);
         orig.setTimestamp(Instant.ofEpochMilli(3000));
 
         assertEquals(removeVariableFields(orig.toString()),
