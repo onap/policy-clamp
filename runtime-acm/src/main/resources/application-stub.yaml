@@ -8,6 +8,8 @@ stub:
     getAllCompositionInstancesResponse: "/openapi/examples/getAllCompositionInstancesResponse.json"
     getCompositionInstancesResponse: "/openapi/examples/getCompositionInstancesResponse.json"
     getSingleCompositionDefinition: "/openapi/examples/getSingleCompositionDefinition.json"
+    getSingleParticipantResponse: "/openapi/examples/getSingleParticipantResponse.json"
+    getMultipleParticipantResponse: "/openapi/examples/getMultipleParticipantResponse.json"
     postCommissionResponse: "/openapi/examples/postCommissionCompositionDefinitionsResponse.json"
     postCompositionDefinitions: "/openapi/examples/postCompositionDefinitions.json"
     postCompositionInstance: "/openapi/examples/postCompositionInstance.json"
@@ -16,6 +18,6 @@ stub:
     putCompositionDefinitionUpdateResponse: "/openapi/examples/putCompositionDefinitionUpdateResponse.json"
     putCompositionInstanceUpdate: "/openapi/examples/putCompositionInstanceUpdate.json"
     putCompositionInstanceUpdateResponse: " /openapi/examples/putCompositionInstanceUpdateResponse.json"
-    
 
-   
+
+
