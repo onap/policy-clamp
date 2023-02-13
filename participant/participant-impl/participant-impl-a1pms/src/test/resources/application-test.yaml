@@ -21,6 +21,3 @@ participant:
       -
         typeName: org.onap.policy.clamp.acm.A1PMSAutomationCompositionElement
         typeVersion: 1.0.1
-      -
-        typeName: org.onap.policy.clamp.acm.AutomationCompositionElement
-        typeVersion: 1.0.0

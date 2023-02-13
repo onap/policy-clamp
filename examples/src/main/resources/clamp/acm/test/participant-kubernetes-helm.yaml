@@ -65,7 +65,7 @@ node_types:
         entry_schema:
           type: onap.datatypes.ToscaConceptIdentifier
   org.onap.policy.clamp.acm.K8SMicroserviceAutomationCompositionElement:
-    version: 1.0.1
+    version: 1.0.0
     derived_from: org.onap.policy.clamp.acm.AutomationCompositionElement
     properties:
       chart:
@@ -98,7 +98,7 @@ topology_template:
       # Chart from any chart repository configured on helm client.
       version: 1.2.3
       type: org.onap.policy.clamp.acm.K8SMicroserviceAutomationCompositionElement
-      type_version: 1.0.1
+      type_version: 1.0.0
       description: Automation composition element for the K8S microservice for Hello World
       properties:
         provider: ONAP
@@ -117,7 +117,7 @@ topology_template:
       # Chart from local file system
       version: 1.2.3
       type: org.onap.policy.clamp.acm.K8SMicroserviceAutomationCompositionElement
-      type_version: 1.0.1
+      type_version: 1.0.0
       description: Automation composition element for the K8S microservice for PMSH
       properties:
         provider: ONAP
@@ -137,7 +137,7 @@ topology_template:
       # Chart installation without passing repository name
       version: 1.2.3
       type: org.onap.policy.clamp.acm.K8SMicroserviceAutomationCompositionElement
-      type_version: 1.0.1
+      type_version: 1.0.0
       description: Automation composition element for the K8S microservice for local chart
       properties:
         provider: ONAP

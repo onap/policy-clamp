@@ -112,7 +112,7 @@ node_types:
         entry_schema:
           type: onap.datatypes.ToscaConceptIdentifier
   org.onap.policy.clamp.acm.HttpAutomationCompositionElement:
-    version: 1.0.1
+    version: 1.0.0
     derived_from: org.onap.policy.clamp.acm.AutomationCompositionElement
     properties:
       baseUrl:
@@ -146,7 +146,7 @@ topology_template:
       # Http config for PMSH.
       version: 1.2.3
       type: org.onap.policy.clamp.acm.HttpAutomationCompositionElement
-      type_version: 1.0.1
+      type_version: 1.0.0
       description: Automation composition element for the http requests of PMSH microservice
       properties:
         provider: ONAP
