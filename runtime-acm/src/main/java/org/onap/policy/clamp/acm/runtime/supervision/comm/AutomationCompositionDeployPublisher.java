@@ -36,7 +36,6 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeploy;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
-import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -53,53 +52,13 @@ import org.springframework.stereotype.Component;
 public class AutomationCompositionDeployPublisher extends AbstractParticipantPublisher<AutomationCompositionDeploy> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AutomationCompositionDeployPublisher.class);
-    private final AcDefinitionProvider acDefinitionProvider;
-
-    /**
-     * Send AutomationCompositionDeploy to Participant.
-     *
-     * @param automationComposition the AutomationComposition
-     */
-    @Timed(value = "publisher.automation_composition_deploy",
-            description = "AUTOMATION_COMPOSITION_DEPLOY messages published")
-    public void send(AutomationComposition automationComposition) {
-        send(automationComposition, 0);
-    }
 
     /**
      * Send AutomationCompositionDeploy to Participant.
      *
      * @param automationComposition the AutomationComposition
      * @param startPhase the Start Phase
-     */
-    @Timed(value = "publisher.automation_composition_deploy",
-            description = "AUTOMATION_COMPOSITION_DEPLOY messages published")
-    public void send(AutomationComposition automationComposition, int startPhase) {
-        var acDeployMsg = new AutomationCompositionDeploy();
-        acDeployMsg.setCompositionId(automationComposition.getCompositionId());
-        acDeployMsg.setStartPhase(startPhase);
-        acDeployMsg.setAutomationCompositionId(automationComposition.getInstanceId());
-        acDeployMsg.setMessageId(UUID.randomUUID());
-        acDeployMsg.setTimestamp(Instant.now());
-        var toscaServiceTemplate =
-                acDefinitionProvider.getAcDefinition(automationComposition.getCompositionId()).getServiceTemplate();
-
-        List<ParticipantDeploy> participantDeploys = new ArrayList<>();
-        for (var element : automationComposition.getElements().values()) {
-            element.setToscaServiceTemplateFragment(AcmUtils.getToscaServiceTemplateFragment(toscaServiceTemplate));
-            AcmUtils.prepareParticipantUpdate(element, participantDeploys);
-        }
-        acDeployMsg.setParticipantUpdatesList(participantDeploys);
-
-        LOGGER.debug("AutomationCompositionDeploy message sent {}", acDeployMsg);
-        super.send(acDeployMsg);
-    }
-
-    /**
-     * Send AutomationCompositionDeploy to Participant.
-     *
-     * @param automationComposition the AutomationComposition
-     * @param startPhase the Start Phase
+     * @param firstStartPhase true if the first StartPhase
      */
     @Timed(value = "publisher.automation_composition_deploy",
             description = "AUTOMATION_COMPOSITION_DEPLOY messages published")

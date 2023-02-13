@@ -34,16 +34,19 @@ class SupervisionAspectTest {
     @Test
     void testSchedule() throws Exception {
         var supervisionScanner = mock(SupervisionScanner.class);
-        try (var supervisionAspect = new SupervisionAspect(supervisionScanner)) {
+        var partecipantScanner = mock(SupervisionPartecipantScanner.class);
+        try (var supervisionAspect = new SupervisionAspect(supervisionScanner, partecipantScanner)) {
             supervisionAspect.schedule();
             verify(supervisionScanner, timeout(500)).run(true);
+            verify(partecipantScanner, timeout(500)).run();
         }
     }
 
     @Test
     void testDoCheck() throws Exception {
         var supervisionScanner = mock(SupervisionScanner.class);
-        try (var supervisionAspect = new SupervisionAspect(supervisionScanner)) {
+        var partecipantScanner = mock(SupervisionPartecipantScanner.class);
+        try (var supervisionAspect = new SupervisionAspect(supervisionScanner, partecipantScanner)) {
             supervisionAspect.doCheck();
             supervisionAspect.doCheck();
             verify(supervisionScanner, timeout(500).times(2)).run(false);
@@ -56,9 +59,10 @@ class SupervisionAspectTest {
         participantStatusMessage.setParticipantId(CommonTestData.getParticipantId());
 
         var supervisionScanner = mock(SupervisionScanner.class);
-        try (var supervisionAspect = new SupervisionAspect(supervisionScanner)) {
+        var partecipantScanner = mock(SupervisionPartecipantScanner.class);
+        try (var supervisionAspect = new SupervisionAspect(supervisionScanner, partecipantScanner)) {
             supervisionAspect.handleParticipantStatus(participantStatusMessage);
-            verify(supervisionScanner, timeout(500)).handleParticipantStatus(CommonTestData.getParticipantId());
+            verify(partecipantScanner, timeout(500)).handleParticipantStatus(CommonTestData.getParticipantId());
         }
     }
 }

@@ -42,7 +42,8 @@ import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeployAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDeregister;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDeregisterAck;
@@ -117,14 +118,15 @@ class SupervisionMessagesTest {
     @Test
     void testSendAutomationCompositionStateChangePublisherNotActive() {
         var publisher = new AutomationCompositionStateChangePublisher();
-        assertThatThrownBy(() -> publisher.send(getAutomationComposition(), 0)).hasMessage(NOT_ACTIVE);
+        assertThatThrownBy(() -> publisher.send(getAutomationComposition(), 0, true)).hasMessage(NOT_ACTIVE);
     }
 
     private AutomationComposition getAutomationComposition() {
         var automationComposition = new AutomationComposition();
         automationComposition.setName("NAME");
         automationComposition.setVersion("0.0.1");
-        automationComposition.setState(AutomationCompositionState.UNINITIALISED);
+        automationComposition.setDeployState(DeployState.DEPLOYED);
+        automationComposition.setLockState(LockState.UNLOCKING);
         return automationComposition;
     }
 
@@ -133,7 +135,7 @@ class SupervisionMessagesTest {
         var publisher = new AutomationCompositionStateChangePublisher();
         var topicSink = mock(TopicSink.class);
         publisher.active(List.of(topicSink));
-        publisher.send(getAutomationComposition(), 0);
+        publisher.send(getAutomationComposition(), 0, true);
         verify(topicSink).send(anyString());
         publisher.stop();
     }
@@ -152,12 +154,12 @@ class SupervisionMessagesTest {
         var participantId = UUID.randomUUID();
         Map<ToscaConceptIdentifier, UUID> supportedElementMap = new HashMap<>();
         supportedElementMap.put(
-                new ToscaConceptIdentifier("org.onap.policy.clamp.acm.PolicyAutomationCompositionElement", "1.0.1"),
+                new ToscaConceptIdentifier("org.onap.policy.clamp.acm.PolicyAutomationCompositionElement", "1.0.0"),
                 participantId);
         supportedElementMap.put(new ToscaConceptIdentifier(
-                "org.onap.policy.clamp.acm.K8SMicroserviceAutomationCompositionElement", "1.0.1"), participantId);
+                "org.onap.policy.clamp.acm.K8SMicroserviceAutomationCompositionElement", "1.0.0"), participantId);
         supportedElementMap.put(
-                new ToscaConceptIdentifier("org.onap.policy.clamp.acm.HttpAutomationCompositionElement", "1.0.1"),
+                new ToscaConceptIdentifier("org.onap.policy.clamp.acm.HttpAutomationCompositionElement", "1.0.0"),
                 participantId);
         var participantProvider = mock(ParticipantProvider.class);
         when(participantProvider.getSupportedElementMap()).thenReturn(supportedElementMap);

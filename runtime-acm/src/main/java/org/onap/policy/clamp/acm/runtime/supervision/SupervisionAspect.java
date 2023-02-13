@@ -43,6 +43,7 @@ public class SupervisionAspect implements Closeable {
     private static final Logger LOGGER = LoggerFactory.getLogger(SupervisionAspect.class);
 
     private final SupervisionScanner supervisionScanner;
+    private final SupervisionPartecipantScanner partecipantScanner;
 
     private ThreadPoolExecutor executor =
             new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
@@ -52,7 +53,12 @@ public class SupervisionAspect implements Closeable {
             initialDelayString = "${runtime.participantParameters.heartBeatMs}")
     public void schedule() {
         LOGGER.info("Add scheduled scanning");
-        executor.execute(() -> supervisionScanner.run(true));
+        executor.execute(this::executeScan);
+    }
+
+    private void executeScan() {
+        supervisionScanner.run(true);
+        partecipantScanner.run();
     }
 
     /**
@@ -68,7 +74,7 @@ public class SupervisionAspect implements Closeable {
 
     @Before("@annotation(MessageIntercept) && args(participantStatusMessage,..)")
     public void handleParticipantStatus(ParticipantStatus participantStatusMessage) {
-        executor.execute(() -> supervisionScanner.handleParticipantStatus(participantStatusMessage.getParticipantId()));
+        executor.execute(() -> partecipantScanner.handleParticipantStatus(participantStatusMessage.getParticipantId()));
     }
 
     @Override

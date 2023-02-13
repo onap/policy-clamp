@@ -37,13 +37,13 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
+import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
+import org.onap.policy.clamp.models.acm.messages.rest.instantiation.LockOrder;
 import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.common.parameters.ObjectValidationResult;
 import org.onap.policy.common.parameters.ValidationResult;
@@ -65,38 +65,6 @@ public final class AcmUtils {
             "org.onap.policy.clamp.acm.AutomationCompositionElement";
     public static final String AUTOMATION_COMPOSITION_NODE_TYPE = "org.onap.policy.clamp.acm.AutomationComposition";
     public static final String ENTRY = "entry ";
-
-    /**
-     * Prepare participant updates map.
-     *
-     * @param acElement automation composition element
-     * @param participantUpdates list of participantUpdates
-     */
-    public static void prepareParticipantUpdate(AutomationCompositionElement acElement,
-            List<ParticipantDeploy> participantUpdates) {
-        if (participantUpdates.isEmpty()) {
-            participantUpdates.add(getAutomationCompositionElementList(acElement));
-            return;
-        }
-
-        var participantExists = false;
-        for (ParticipantDeploy participantUpdate : participantUpdates) {
-            if (participantUpdate.getParticipantId().equals(acElement.getParticipantId())) {
-                participantUpdate.getAutomationCompositionElementList().add(acElement);
-                participantExists = true;
-            }
-        }
-        if (!participantExists) {
-            participantUpdates.add(getAutomationCompositionElementList(acElement));
-        }
-    }
-
-    private static ParticipantDeploy getAutomationCompositionElementList(AutomationCompositionElement acElement) {
-        var participantUpdate = new ParticipantDeploy();
-        participantUpdate.setParticipantId(acElement.getParticipantId());
-        participantUpdate.getAutomationCompositionElementList().add(acElement);
-        return participantUpdate;
-    }
 
     /**
      * Get the Policy information in the service template for the deploy message to participants.
@@ -196,7 +164,7 @@ public final class AcmUtils {
     public static List<Entry<String, ToscaNodeTemplate>> extractAcElementsFromServiceTemplate(
             ToscaServiceTemplate serviceTemplate) {
         return serviceTemplate.getToscaTopologyTemplate().getNodeTemplates().entrySet().stream().filter(
-            nodeTemplateEntry -> checkIfNodeTemplateIsAutomationCompositionElement(nodeTemplateEntry.getValue(),
+                nodeTemplateEntry -> checkIfNodeTemplateIsAutomationCompositionElement(nodeTemplateEntry.getValue(),
                         serviceTemplate))
                 .collect(Collectors.toList());
     }
@@ -309,7 +277,6 @@ public final class AcmUtils {
         // @formatter:on
     }
 
-
     /**
      * Return true if DeployState and LockState are in a Transitional State.
      *
@@ -318,6 +285,79 @@ public final class AcmUtils {
     public static boolean isInTransitionalState(DeployState deployState, LockState lockState) {
         return DeployState.DEPLOYING.equals(deployState) || DeployState.UNDEPLOYING.equals(deployState)
                 || LockState.LOCKING.equals(lockState) || LockState.UNLOCKING.equals(lockState);
+    }
+
+    /**
+     * Get DeployOrder from transitional DeployState.
+     *
+     * @param deployState the Deploy State
+     * @return the DeployOrder
+     */
+    public static DeployOrder stateDeployToOrder(DeployState deployState) {
+        if (DeployState.DEPLOYING.equals(deployState)) {
+            return DeployOrder.DEPLOY;
+        } else if (DeployState.UNDEPLOYING.equals(deployState)) {
+            return DeployOrder.UNDEPLOY;
+        }
+        return DeployOrder.NONE;
+    }
+
+    /**
+     * Get LockOrder from transitional LockState.
+     *
+     * @param lockState the Lock State
+     * @return the LockOrder
+     */
+    public static LockOrder stateLockToOrder(LockState lockState) {
+        if (LockState.LOCKING.equals(lockState)) {
+            return LockOrder.LOCK;
+        } else if (LockState.UNLOCKING.equals(lockState)) {
+            return LockOrder.UNLOCK;
+        }
+        return LockOrder.NONE;
+    }
+
+    /**
+     * Get final DeployState from transitional DeployState.
+     *
+     * @param deployState the DeployState
+     * @return the DeployState
+     */
+    public static DeployState deployCompleted(DeployState deployState) {
+        if (DeployState.DEPLOYING.equals(deployState)) {
+            return DeployState.DEPLOYED;
+        } else if (DeployState.UNDEPLOYING.equals(deployState)) {
+            return DeployState.UNDEPLOYED;
+        }
+        return deployState;
+    }
+
+    /**
+     * Get final LockState from transitional LockState.
+     *
+     * @param lockState the LockState
+     * @return the LockState
+     */
+    public static LockState lockCompleted(DeployState deployState, LockState lockState) {
+        if (LockState.LOCKING.equals(lockState) || DeployState.DEPLOYING.equals(deployState)) {
+            return LockState.LOCKED;
+        } else if (LockState.UNLOCKING.equals(lockState)) {
+            return LockState.UNLOCKED;
+        } else if (DeployState.UNDEPLOYING.equals(deployState)) {
+            return LockState.NONE;
+        }
+        return lockState;
+    }
+
+    /**
+     * Return true if transition states is Forward.
+     *
+     * @param deployState the DeployState
+     * @param lockState the LockState
+     * @return true if transition if Forward
+     */
+    public static boolean isForward(DeployState deployState, LockState lockState) {
+        return DeployState.DEPLOYING.equals(deployState) || LockState.UNLOCKING.equals(lockState);
     }
 
     /**

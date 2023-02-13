@@ -21,9 +21,12 @@
 package org.onap.policy.clamp.acm.runtime.supervision;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVICE_TEMPLATE_YAML;
 
 import java.util.Map;
 import java.util.Optional;
@@ -34,6 +37,7 @@ import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionD
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionStateChangePublisher;
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeployAck;
+import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
@@ -96,5 +100,56 @@ class SupervisionAcHandlerTest {
         handler.handleAutomationCompositionUpdateAckMessage(automationCompositionAckMessage);
 
         verify(automationCompositionProvider).updateAutomationComposition(any(AutomationComposition.class));
+    }
+
+    @Test
+    void testUndeploy() {
+        var automationCompositionProvider = mock(AutomationCompositionProvider.class);
+        var acStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
+        var handler = new SupervisionAcHandler(automationCompositionProvider,
+                mock(AutomationCompositionDeployPublisher.class),
+                acStateChangePublisher);
+        var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
+        var acDefinition = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
+        var automationComposition =
+                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Undeploy");
+        handler.undeploy(automationComposition, acDefinition);
+
+        verify(automationCompositionProvider).updateAutomationComposition(any(AutomationComposition.class));
+        verify(acStateChangePublisher).send(any(AutomationComposition.class), anyInt(), anyBoolean());
+    }
+
+    @Test
+    void testUnlock() {
+        var automationCompositionProvider = mock(AutomationCompositionProvider.class);
+        var acStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
+        var handler = new SupervisionAcHandler(automationCompositionProvider,
+                mock(AutomationCompositionDeployPublisher.class),
+                acStateChangePublisher);
+        var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
+        var acDefinition = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
+        var automationComposition =
+                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "UnLock");
+        handler.unlock(automationComposition, acDefinition);
+
+        verify(automationCompositionProvider).updateAutomationComposition(any(AutomationComposition.class));
+        verify(acStateChangePublisher).send(any(AutomationComposition.class), anyInt(), anyBoolean());
+    }
+
+    @Test
+    void testLock() {
+        var automationCompositionProvider = mock(AutomationCompositionProvider.class);
+        var acStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
+        var handler = new SupervisionAcHandler(automationCompositionProvider,
+                mock(AutomationCompositionDeployPublisher.class),
+                acStateChangePublisher);
+        var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
+        var acDefinition = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
+        var automationComposition =
+                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Lock");
+        handler.lock(automationComposition, acDefinition);
+
+        verify(automationCompositionProvider).updateAutomationComposition(any(AutomationComposition.class));
+        verify(acStateChangePublisher).send(any(AutomationComposition.class), anyInt(), anyBoolean());
     }
 }
