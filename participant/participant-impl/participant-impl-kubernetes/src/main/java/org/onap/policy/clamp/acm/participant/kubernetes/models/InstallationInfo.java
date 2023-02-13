@@ -19,10 +19,8 @@
 package org.onap.policy.clamp.acm.participant.kubernetes.models;
 
 import lombok.Getter;
-import org.immutables.gson.Gson;
 
 @Getter
-@Gson.TypeAdapters
 public class InstallationInfo {
     private String name;
     private String version;
