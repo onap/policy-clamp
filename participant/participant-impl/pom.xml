@@ -41,6 +41,7 @@
         <module>participant-impl-kubernetes</module>
         <module>participant-impl-http</module>
         <module>participant-impl-a1pms</module>
+        <module>participant-impl-kserve</module>
     </modules>
 
     <dependencies>
