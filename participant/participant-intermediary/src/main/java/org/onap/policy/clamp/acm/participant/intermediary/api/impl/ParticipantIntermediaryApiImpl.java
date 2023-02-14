@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,10 +25,8 @@ import java.util.UUID;
 import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.AutomationCompositionHandler;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.springframework.stereotype.Component;
 
 /**
@@ -56,10 +54,9 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
     }
 
     @Override
-    public AutomationCompositionElement updateAutomationCompositionElementState(UUID automationCompositionId, UUID id,
-            AutomationCompositionOrderedState currentState, AutomationCompositionState newState,
-            ParticipantMessageType messageType) {
-        return automationCompositionHandler.updateAutomationCompositionElementState(automationCompositionId, id,
-                currentState, newState);
+    public void updateAutomationCompositionElementState(UUID automationCompositionId, UUID id, DeployState newState,
+            LockState lockState) {
+        automationCompositionHandler.updateAutomationCompositionElementState(automationCompositionId, id, newState,
+                lockState);
     }
 }

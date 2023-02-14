@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,10 +38,9 @@ import org.onap.policy.clamp.acm.participant.kubernetes.exception.ServiceExcepti
 import org.onap.policy.clamp.acm.participant.kubernetes.helm.PodStatusValidator;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartInfo;
 import org.onap.policy.clamp.acm.participant.kubernetes.service.ChartService;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
+import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -85,43 +84,21 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
      * Callback method to handle a automation composition element state change.
      *
      * @param automationCompositionElementId the ID of the automation composition element
-     * @param currentState the current state of the automation composition element
-     * @param newState the state to which the automation composition element is changing to
      */
     @Override
-    public synchronized void automationCompositionElementStateChange(UUID automationCompositionId,
-        UUID automationCompositionElementId, AutomationCompositionState currentState,
-        AutomationCompositionOrderedState newState) {
-        switch (newState) {
-            case UNINITIALISED:
-                var chart = chartMap.get(automationCompositionElementId);
-                if (chart != null) {
-                    LOGGER.info("Helm deployment to be deleted {} ", chart.getReleaseName());
-                    try {
-                        chartService.uninstallChart(chart);
-                        intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
-                            automationCompositionElementId, newState, AutomationCompositionState.UNINITIALISED,
-                            ParticipantMessageType.AUTOMATION_COMPOSITION_STATE_CHANGE);
-                        chartMap.remove(automationCompositionElementId);
-                        podStatusMap.remove(chart.getReleaseName());
-                    } catch (ServiceException se) {
-                        LOGGER.warn("Deletion of Helm deployment failed", se);
-                    }
-                }
-                break;
-            case PASSIVE:
+    public synchronized void undeploy(UUID automationCompositionId, UUID automationCompositionElementId) {
+        var chart = chartMap.get(automationCompositionElementId);
+        if (chart != null) {
+            LOGGER.info("Helm deployment to be deleted {} ", chart.getReleaseName());
+            try {
+                chartService.uninstallChart(chart);
                 intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
-                    automationCompositionElementId, newState, AutomationCompositionState.PASSIVE,
-                    ParticipantMessageType.AUTOMATION_COMPOSITION_STATE_CHANGE);
-                break;
-            case RUNNING:
-                intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
-                    automationCompositionElementId, newState, AutomationCompositionState.RUNNING,
-                    ParticipantMessageType.AUTOMATION_COMPOSITION_STATE_CHANGE);
-                break;
-            default:
-                LOGGER.warn("Cannot transition from state {} to state {}", currentState, newState);
-                break;
+                        automationCompositionElementId, DeployState.UNDEPLOYED, LockState.NONE);
+                chartMap.remove(automationCompositionElementId);
+                podStatusMap.remove(chart.getReleaseName());
+            } catch (ServiceException se) {
+                LOGGER.warn("Deletion of Helm deployment failed", se);
+            }
         }
     }
 
@@ -134,8 +111,8 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
      * @throws PfModelException in case of an exception
      */
     @Override
-    public synchronized void automationCompositionElementUpdate(UUID automationCompositionId,
-        AutomationCompositionElement element, Map<String, Object> properties) throws PfModelException {
+    public synchronized void deploy(UUID automationCompositionId, AcElementDeploy element,
+            Map<String, Object> properties) throws PfModelException {
         @SuppressWarnings("unchecked")
         var chartData = (Map<String, Object>) properties.get("chart");
 
@@ -149,8 +126,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
                 checkPodStatus(automationCompositionId, element.getId(), chartInfo,
                         config.uninitializedToPassiveTimeout, config.podStatusCheckInterval);
             }
-        } catch (ServiceException | CoderException | IOException | ExecutionException
-                | InterruptedException e) {
+        } catch (ServiceException | CoderException | IOException | ExecutionException | InterruptedException e) {
             LOGGER.warn("Installation of Helm chart failed", e);
         }
     }
@@ -160,16 +136,14 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
      *
      * @param chart ChartInfo
      */
-    public void checkPodStatus(UUID automationCompositionId, UUID elementId,
-            ChartInfo chart, int timeout, int podStatusCheckInterval) throws ExecutionException, InterruptedException {
+    public void checkPodStatus(UUID automationCompositionId, UUID elementId, ChartInfo chart, int timeout,
+            int podStatusCheckInterval) throws ExecutionException, InterruptedException {
         // Invoke runnable thread to check pod status
-        var result = executor.submit(new PodStatusValidator(chart, timeout,
-                podStatusCheckInterval), "Done");
+        var result = executor.submit(new PodStatusValidator(chart, timeout, podStatusCheckInterval), "Done");
         if (!result.get().isEmpty()) {
             LOGGER.info("Pod Status Validator Completed: {}", result.isDone());
             intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, elementId,
-                AutomationCompositionOrderedState.PASSIVE, AutomationCompositionState.PASSIVE,
-                ParticipantMessageType.AUTOMATION_COMPOSITION_STATE_CHANGE);
+                    DeployState.DEPLOYED, LockState.LOCKED);
         }
     }
 }

@@ -37,11 +37,12 @@ import org.onap.policy.clamp.acm.participant.intermediary.handler.ParticipantHan
 import org.onap.policy.clamp.acm.participant.intermediary.parameters.ParticipantIntermediaryParameters;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionStateChange;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDeregisterAck;
+import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
+import org.onap.policy.clamp.models.acm.messages.rest.instantiation.LockOrder;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
 import org.onap.policy.common.endpoints.parameters.TopicParameters;
 import org.onap.policy.common.utils.coder.Coder;
@@ -272,7 +273,7 @@ public class CommonTestData {
         acElement.setId(uuid);
         acElement.setParticipantId(participantId);
         acElement.setDefinition(definition);
-        acElement.setOrderedState(AutomationCompositionOrderedState.UNINITIALISED);
+        acElement.setDeployState(DeployState.UNDEPLOYED);
 
         Map<UUID, AutomationCompositionElement> elementsOnThisParticipant = new LinkedHashMap<>();
         elementsOnThisParticipant.put(uuid, acElement);
@@ -289,14 +290,8 @@ public class CommonTestData {
     public AutomationCompositionHandler setTestAutomationCompositionHandler(ToscaConceptIdentifier definition,
             UUID uuid, UUID participantId) {
         var ach = getMockAutomationCompositionHandler();
-
-        var key = getTestAutomationCompositionMap().keySet().iterator().next();
-        var value = getTestAutomationCompositionMap().get(key);
-        ach.getAutomationCompositionMap().put(key, value);
-
-        var keyElem = setAutomationCompositionElementTest(uuid, definition, participantId).keySet().iterator().next();
-        var valueElem = setAutomationCompositionElementTest(uuid, definition, participantId).get(keyElem);
-        ach.getElementsOnThisParticipant().put(keyElem, valueElem);
+        ach.getAutomationCompositionMap().putAll(getTestAutomationCompositionMap());
+        ach.getElementsOnThisParticipant().putAll(setAutomationCompositionElementTest(uuid, definition, participantId));
 
         return ach;
     }
@@ -306,17 +301,18 @@ public class CommonTestData {
      *
      * @param participantId the participantId
      * @param  uuid UUID
-     * @param state a AutomationCompositionOrderedState
+     * @param deployOrder a DeployOrder
+     * @param lockOrder a LockOrder
      * @return a AutomationCompositionStateChange
      */
     public AutomationCompositionStateChange getStateChange(UUID participantId, UUID uuid,
-            AutomationCompositionOrderedState state) {
+            DeployOrder deployOrder, LockOrder lockOrder) {
         var stateChange = new AutomationCompositionStateChange();
         stateChange.setAutomationCompositionId(UUID.randomUUID());
         stateChange.setParticipantId(participantId);
         stateChange.setMessageId(uuid);
-        stateChange.setOrderedState(state);
-        stateChange.setCurrentState(AutomationCompositionState.UNINITIALISED);
+        stateChange.setDeployOrderedState(deployOrder);
+        stateChange.setLockOrderedState(lockOrder);
         stateChange.setTimestamp(Instant.ofEpochMilli(3000));
         return stateChange;
     }

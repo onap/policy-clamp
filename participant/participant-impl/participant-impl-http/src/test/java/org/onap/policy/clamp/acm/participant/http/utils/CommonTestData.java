@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,8 +26,8 @@ import java.util.Map;
 import java.util.UUID;
 import org.onap.policy.clamp.acm.participant.http.main.models.ConfigurationEntity;
 import org.onap.policy.clamp.acm.participant.http.main.models.RestParams;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
+import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
+import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 public class CommonTestData {
@@ -41,11 +41,11 @@ public class CommonTestData {
      *
      * @return automationCompositionElement object
      */
-    public AutomationCompositionElement getAutomationCompositionElement() {
-        AutomationCompositionElement element = new AutomationCompositionElement();
+    public AcElementDeploy getAutomationCompositionElement() {
+        var element = new AcElementDeploy();
         element.setId(UUID.randomUUID());
         element.setDefinition(new ToscaConceptIdentifier(TEST_KEY_NAME, "1.0.1"));
-        element.setOrderedState(AutomationCompositionOrderedState.PASSIVE);
+        element.setOrderedState(DeployOrder.DEPLOY);
         return element;
     }
 

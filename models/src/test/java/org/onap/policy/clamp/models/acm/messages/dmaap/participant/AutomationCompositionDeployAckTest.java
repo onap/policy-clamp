@@ -29,7 +29,8 @@ import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeployAck;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.utils.CommonTestData;
 import org.onap.policy.common.utils.coder.CoderException;
 
@@ -49,7 +50,7 @@ class AutomationCompositionDeployAckTest {
         // verify with all values
         orig.setAutomationCompositionId(UUID.randomUUID());
         orig.setParticipantId(CommonTestData.getParticipantId());
-        var acElementResult = new AcElementDeployAck(AutomationCompositionState.UNINITIALISED, null, null,
+        var acElementResult = new AcElementDeployAck(DeployState.DEPLOYED, LockState.LOCKED,
             true, "AutomationCompositionElement result");
         final var automationCompositionResultMap = Map.of(UUID.randomUUID(), acElementResult);
         orig.setAutomationCompositionResultMap(automationCompositionResultMap);

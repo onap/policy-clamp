@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,10 +38,9 @@ import org.onap.policy.clamp.acm.participant.http.main.models.ConfigRequest;
 import org.onap.policy.clamp.acm.participant.http.main.webclient.AcHttpClient;
 import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
+import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -73,34 +72,13 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
      * Handle a automation composition element state change.
      *
      * @param automationCompositionElementId the ID of the automation composition element
-     * @param currentState the current state of the automation composition element
-     * @param newState the state to which the automation composition element is changing to
      * @throws PfModelException in case of a model exception
      */
     @Override
-    public void automationCompositionElementStateChange(UUID automationCompositionId,
-        UUID automationCompositionElementId, AutomationCompositionState currentState,
-        AutomationCompositionOrderedState newState) {
-        switch (newState) {
-            case UNINITIALISED:
-                intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
-                    automationCompositionElementId, newState, AutomationCompositionState.UNINITIALISED,
-                    ParticipantMessageType.AUTOMATION_COMPOSITION_STATE_CHANGE);
-                break;
-            case PASSIVE:
-                intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
-                    automationCompositionElementId, newState, AutomationCompositionState.PASSIVE,
-                    ParticipantMessageType.AUTOMATION_COMPOSITION_STATE_CHANGE);
-                break;
-            case RUNNING:
-                intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
-                    automationCompositionElementId, newState, AutomationCompositionState.RUNNING,
-                    ParticipantMessageType.AUTOMATION_COMPOSITION_STATE_CHANGE);
-                break;
-            default:
-                LOGGER.warn("Cannot transition from state {} to state {}", currentState, newState);
-                break;
-        }
+    public void undeploy(UUID automationCompositionId,
+        UUID automationCompositionElementId) {
+        intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
+                automationCompositionElementId, DeployState.UNDEPLOYED, LockState.NONE);
     }
 
     /**
@@ -111,8 +89,8 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
      * @param properties properties Map
      */
     @Override
-    public void automationCompositionElementUpdate(UUID automationCompositionId,
-        AutomationCompositionElement element, Map<String, Object> properties) {
+    public void deploy(UUID automationCompositionId,
+            AcElementDeploy element, Map<String, Object> properties) {
         try {
             var configRequest = CODER.convert(properties, ConfigRequest.class);
             var violations =
@@ -124,8 +102,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
                         .is2xxSuccessful()).collect(Collectors.toList());
                 if (failedResponseStatus.isEmpty()) {
                     intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
-                            AutomationCompositionOrderedState.PASSIVE, AutomationCompositionState.PASSIVE,
-                            ParticipantMessageType.AUTOMATION_COMPOSITION_STATE_CHANGE);
+                            DeployState.DEPLOYED, LockState.LOCKED);
                 } else {
                     LOGGER.error("Error on Invoking the http request: {}", failedResponseStatus);
                 }

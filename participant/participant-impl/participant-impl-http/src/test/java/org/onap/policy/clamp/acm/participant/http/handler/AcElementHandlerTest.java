@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,8 +38,6 @@ import org.onap.policy.clamp.acm.participant.http.main.models.ConfigRequest;
 import org.onap.policy.clamp.acm.participant.http.utils.CommonTestData;
 import org.onap.policy.clamp.acm.participant.http.utils.ToscaUtils;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -49,13 +47,13 @@ class AcElementHandlerTest {
     @InjectMocks
     @Spy
     private AutomationCompositionElementHandler automationCompositionElementHandler =
-        new AutomationCompositionElementHandler();
+            new AutomationCompositionElementHandler();
 
     private final CommonTestData commonTestData = new CommonTestData();
 
     private static ToscaServiceTemplate serviceTemplate;
     private static final String HTTP_AUTOMATION_COMPOSITION_ELEMENT =
-        "org.onap.domain.database.Http_PMSHMicroserviceAutomationCompositionElement";
+            "org.onap.domain.database.Http_PMSHMicroserviceAutomationCompositionElement";
 
     @BeforeAll
     static void init() {
@@ -76,17 +74,8 @@ class AcElementHandlerTest {
         var config = Mockito.mock(ConfigRequest.class);
         assertDoesNotThrow(() -> automationCompositionElementHandler.invokeHttpClient(config));
 
-        assertDoesNotThrow(() -> automationCompositionElementHandler.automationCompositionElementStateChange(
-            automationCompositionId, automationCompositionElementId, AutomationCompositionState.PASSIVE,
-            AutomationCompositionOrderedState.PASSIVE));
-
-        assertDoesNotThrow(() -> automationCompositionElementHandler.automationCompositionElementStateChange(
-            automationCompositionId, automationCompositionElementId, AutomationCompositionState.PASSIVE,
-            AutomationCompositionOrderedState.UNINITIALISED));
-
-        assertDoesNotThrow(() -> automationCompositionElementHandler.automationCompositionElementStateChange(
-            automationCompositionId, automationCompositionElementId, AutomationCompositionState.PASSIVE,
-            AutomationCompositionOrderedState.RUNNING));
+        assertDoesNotThrow(() -> automationCompositionElementHandler.undeploy(
+                automationCompositionId, automationCompositionElementId));
 
         automationCompositionElementHandler.close();
     }
@@ -100,7 +89,7 @@ class AcElementHandlerTest {
         var map = new HashMap<>(nodeTemplatesMap.get(HTTP_AUTOMATION_COMPOSITION_ELEMENT).getProperties());
         map.putAll(element.getProperties());
 
-        assertDoesNotThrow(() -> automationCompositionElementHandler.automationCompositionElementUpdate(
-            commonTestData.getAutomationCompositionId(), element, map));
+        assertDoesNotThrow(() -> automationCompositionElementHandler
+                .deploy(commonTestData.getAutomationCompositionId(), element, map));
     }
 }
