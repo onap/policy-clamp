@@ -59,6 +59,10 @@ public class AcmParticipantProvider {
         participants.forEach(participant -> {
             ParticipantInformation participantInformation = new ParticipantInformation();
             participantInformation.setParticipant(participant);
+            participantInformation.setAcElementInstanceMap(getAutomationCompositionElementsForParticipant(participant
+                .getParticipantId()));
+            participantInformation.setAcNodeTemplateStateDefinitionMap(getNodeTemplateStatesForParticipant(participant
+                .getParticipantId()));
             participantInformationList.add(participantInformation);
         });
         return participantInformationList;
