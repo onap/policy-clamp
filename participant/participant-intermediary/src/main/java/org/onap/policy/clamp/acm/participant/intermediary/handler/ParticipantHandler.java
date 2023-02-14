@@ -31,6 +31,7 @@ import java.util.UUID;
 import lombok.Getter;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.acm.participant.intermediary.parameters.ParticipantParameters;
+import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionInfo;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
@@ -48,6 +49,7 @@ import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRe
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegisterAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatus;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatusReq;
+import org.onap.policy.models.base.PfModelException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -171,7 +173,33 @@ public class ParticipantHandler {
         var participantDeregister = new ParticipantDeregister();
         participantDeregister.setParticipantId(participantId);
 
+        undeployInstancesOnParticipant();
         publisher.sendParticipantDeregister(participantDeregister);
+    }
+
+    private void undeployInstancesOnParticipant() {
+        automationCompositionHandler.getAutomationCompositionMap().values().forEach(ac ->
+            undeployInstanceOnParticipant(ac)
+        );
+    }
+
+    private void undeployInstanceOnParticipant(AutomationComposition automationComposition) {
+        automationComposition.getElements().values().forEach(element -> {
+            if (element.getParticipantId().equals(participantId)) {
+                undeployInstanceElementsOnParticipant(automationComposition.getInstanceId(), element.getId());
+            }
+        });
+    }
+
+    private void undeployInstanceElementsOnParticipant(UUID instanceId, UUID elementId) {
+        var acElementListeners = automationCompositionHandler.getListeners();
+        for (var acElementListener : acElementListeners) {
+            try {
+                acElementListener.undeploy(instanceId, elementId);
+            } catch (PfModelException e) {
+                LOGGER.debug("Automation composition element update failed {}", instanceId);
+            }
+        }
     }
 
     /**

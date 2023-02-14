@@ -28,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.time.Instant;
 import java.util.List;
@@ -37,11 +38,13 @@ import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessag
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantAckMessage;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDeregister;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessage;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantPrime;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegisterAck;
 import org.onap.policy.common.utils.coder.CoderException;
+import org.onap.policy.models.base.PfModelException;
 
 class ParticipantHandlerTest {
 
@@ -130,5 +133,26 @@ class ParticipantHandlerTest {
 
         participantHandler.handleParticipantRegisterAck(new ParticipantRegisterAck());
         verify(publisher).sendParticipantStatus(any());
+    }
+
+    @Test
+    void testSendParticipantDeregister() throws PfModelException {
+        var commonTestData = new CommonTestData();
+        var automationCompositionMap = commonTestData.getTestAutomationCompositionMap();
+        var automationCompositionHandler = mock(AutomationCompositionHandler.class);
+        var listener = mock(DummyAcElementListener.class);
+
+        when(automationCompositionHandler.getListeners()).thenReturn(List.of(listener));
+        automationCompositionMap.values().iterator().next().getElements().values().iterator().next()
+            .setParticipantId(CommonTestData.getParticipantId());
+        when(automationCompositionHandler.getAutomationCompositionMap()).thenReturn(automationCompositionMap);
+
+        var publisher = mock(ParticipantMessagePublisher.class);
+        var parameters = CommonTestData.getParticipantParameters();
+        var participantHandler = new ParticipantHandler(parameters, publisher, automationCompositionHandler);
+
+        participantHandler.sendParticipantDeregister();
+        verify(publisher).sendParticipantDeregister(any(ParticipantDeregister.class));
+        verify(listener).undeploy(any(), any());
     }
 }
