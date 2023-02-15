@@ -23,8 +23,6 @@ package org.onap.policy.clamp.models.acm.messages.dmaap.participant;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.LockOrder;
 
@@ -36,8 +34,6 @@ import org.onap.policy.clamp.models.acm.messages.rest.instantiation.LockOrder;
 @Setter
 @ToString(callSuper = true)
 public class AutomationCompositionStateChange extends ParticipantMessage {
-    private AutomationCompositionOrderedState orderedState;
-    private AutomationCompositionState currentState;
     private DeployOrder deployOrderedState = DeployOrder.NONE;
     private LockOrder lockOrderedState = LockOrder.NONE;
     private Integer startPhase;
@@ -58,9 +54,6 @@ public class AutomationCompositionStateChange extends ParticipantMessage {
      */
     public AutomationCompositionStateChange(AutomationCompositionStateChange source) {
         super(source);
-
-        this.orderedState = source.orderedState;
-        this.currentState = source.currentState;
         this.deployOrderedState = source.deployOrderedState;
         this.lockOrderedState = source.lockOrderedState;
         this.startPhase = source.startPhase;

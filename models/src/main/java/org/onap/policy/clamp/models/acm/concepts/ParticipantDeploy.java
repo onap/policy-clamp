@@ -40,9 +40,6 @@ public class ParticipantDeploy {
 
     private UUID participantId;
 
-    // List of AutomationCompositionElement values for a particular participant
-    private List<AutomationCompositionElement> automationCompositionElementList = new ArrayList<>();
-
     // List of Automation Composition Element Deploy for a particular participant
     private List<AcElementDeploy> acElementList = new ArrayList<>();
 
@@ -53,8 +50,6 @@ public class ParticipantDeploy {
      */
     public ParticipantDeploy(final ParticipantDeploy copyConstructor) {
         this.participantId = copyConstructor.participantId;
-        this.automationCompositionElementList = PfUtils.mapList(
-            copyConstructor.automationCompositionElementList, AutomationCompositionElement::new);
         this.acElementList = PfUtils.mapList(copyConstructor.acElementList, AcElementDeploy::new);
     }
 }

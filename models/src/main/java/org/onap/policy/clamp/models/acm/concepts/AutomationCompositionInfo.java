@@ -35,8 +35,6 @@ public class AutomationCompositionInfo {
 
     private UUID automationCompositionId;
 
-    private AutomationCompositionState state = AutomationCompositionState.UNINITIALISED;
-
     private DeployState deployState = DeployState.UNDEPLOYED;
 
     private LockState lockState = LockState.LOCKED;
@@ -48,7 +46,6 @@ public class AutomationCompositionInfo {
      */
     public AutomationCompositionInfo(final AutomationCompositionInfo otherElement) {
         this.automationCompositionId = otherElement.automationCompositionId;
-        this.state = otherElement.state;
         this.deployState = otherElement.deployState;
         this.lockState = otherElement.lockState;
     }
