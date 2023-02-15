@@ -20,5 +20,3 @@ participant:
       participantSupportedElementTypes:
         - typeName: org.onap.policy.clamp.acm.HttpAutomationCompositionElement
           typeVersion: 1.0.0
-        - typeName: org.onap.policy.clamp.acm.AutomationCompositionElement
-          typeVersion: 1.0.0

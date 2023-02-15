@@ -356,7 +356,7 @@ node_types:
         entry_schema:
           type: org.onap.datatypes.policy.clamp.acm.DCAEMicroserviceAutomationCompositionElementConsulInfo
   org.onap.policy.clamp.acm.PolicyAutomationCompositionElement:
-    version: 1.0.1
+    version: 1.0.0
     derived_from: org.onap.policy.clamp.acm.AutomationCompositionElement
     properties:
       policy_type_id:
@@ -632,7 +632,7 @@ topology_template:
     org.onap.domain.pmsh.PMSH_MonitoringPolicyAutomationCompositionElement:
       version: 1.2.3
       type: org.onap.policy.clamp.acm.PolicyAutomationCompositionElement
-      type_version: 1.0.1
+      type_version: 1.0.0
       description: Automation composition element for the monitoring policy for Performance Management Subscription Handling
       properties:
         provider: Ericsson
@@ -644,7 +644,7 @@ topology_template:
     org.onap.domain.pmsh.PMSH_OperationalPolicyAutomationCompositionElement:
       version: 1.2.3
       type: org.onap.policy.clamp.acm.PolicyAutomationCompositionElement
-      type_version: 1.0.1
+      type_version: 1.0.0
       description: Automation composition element for the operational policy for Performance Management Subscription Handling
       properties:
         provider: Ericsson

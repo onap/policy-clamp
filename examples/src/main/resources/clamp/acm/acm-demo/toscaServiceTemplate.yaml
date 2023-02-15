@@ -355,7 +355,7 @@ node_types:
           type: onap.datatypes.ToscaConceptIdentifier
         description: Specifies a list of automation composition element definitions that make up this automation composition definition
   org.onap.policy.clamp.acm.PolicyAutomationCompositionElement:
-    version: 1.0.1
+    version: 1.0.0
     derived_from: org.onap.policy.clamp.acm.AutomationCompositionElement
     properties:
       policy_type_id:
@@ -365,7 +365,7 @@ node_types:
         type: onap.datatypes.ToscaConceptIdentifier
         required: false
   org.onap.policy.clamp.acm.K8SMicroserviceAutomationCompositionElement:
-    version: 1.0.1
+    version: 1.0.0
     derived_from: org.onap.policy.clamp.acm.AutomationCompositionElement
     properties:
       chart:
@@ -385,7 +385,7 @@ node_types:
         type: string
         required: true
   org.onap.policy.clamp.acm.HttpAutomationCompositionElement:
-    version: 1.0.1
+    version: 1.0.0
     derived_from: org.onap.policy.clamp.acm.AutomationCompositionElement
     properties:
       baseUrl:
@@ -445,7 +445,7 @@ topology_template:
       # Chart from any chart repository configured on helm client.
       version: 1.2.3
       type: org.onap.policy.clamp.acm.K8SMicroserviceAutomationCompositionElement
-      type_version: 1.0.1
+      type_version: 1.0.0
       description: Automation composition element for the K8S microservice for AC Element Starter
       properties:
         provider: ONAP
@@ -469,7 +469,7 @@ topology_template:
       # Chart from any chart repository configured on helm client.
       version: 1.2.3
       type: org.onap.policy.clamp.acm.K8SMicroserviceAutomationCompositionElement
-      type_version: 1.0.1
+      type_version: 1.0.0
       description: Automation composition element for the K8S microservice for AC Element Bridge
       properties:
         provider: ONAP
@@ -493,7 +493,7 @@ topology_template:
       # Chart from any chart repository configured on helm client.
       version: 1.2.3
       type: org.onap.policy.clamp.acm.K8SMicroserviceAutomationCompositionElement
-      type_version: 1.0.1
+      type_version: 1.0.0
       description: Automation composition element for the K8S microservice for AC Element Sink
       properties:
         provider: ONAP
@@ -524,7 +524,7 @@ topology_template:
       # Http config for AC Element Starter.
       version: 1.2.3
       type: org.onap.policy.clamp.acm.HttpAutomationCompositionElement
-      type_version: 1.0.1
+      type_version: 1.0.0
       description: Automation composition element for the http requests of AC Element Starter microservice
       properties:
         provider: ONAP
@@ -550,7 +550,7 @@ topology_template:
       # Http config for AC Element Bridge.
       version: 1.2.3
       type: org.onap.policy.clamp.acm.HttpAutomationCompositionElement
-      type_version: 1.0.1
+      type_version: 1.0.0
       description: Automation composition element for the http requests of AC Element Bridge microservice
       properties:
         provider: ONAP
@@ -576,7 +576,7 @@ topology_template:
       # Http config for AC Element Sink.
       version: 1.2.3
       type: org.onap.policy.clamp.acm.HttpAutomationCompositionElement
-      type_version: 1.0.1
+      type_version: 1.0.0
       description: Automation composition element for the http requests of AC Element Sink microservice
       properties:
         provider: ONAP

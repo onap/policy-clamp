@@ -64,7 +64,7 @@ data_types:
         description: A sequence of REST commands to send to the REST endpoint
 node_types:
   org.onap.policy.clamp.acm.HttpAutomationCompositionElement:
-    version: 1.0.1
+    version: 1.0.0
     derived_from: org.onap.policy.clamp.acm.AutomationCompositionElement
     properties:
       baseUrl:
