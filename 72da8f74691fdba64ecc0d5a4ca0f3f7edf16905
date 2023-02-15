@@ -22,6 +22,30 @@
       "revId": "72da8f74691fdba64ecc0d5a4ca0f3f7edf16905",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "619412c2_3acd6b4a",
+        "filename": "participant/participant-impl/participant-impl-kserve/src/main/java/org/onap/policy/clamp/acm/participant/kserve/handler/AutomationCompositionElementHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 8109
+      },
+      "writtenOn": "2023-02-15T16:59:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f49e4ad3_ea094d1a",
+      "range": {
+        "startLine": 144,
+        "startChar": 22,
+        "endLine": 144,
+        "endChar": 38
+      },
+      "revId": "72da8f74691fdba64ecc0d5a4ca0f3f7edf16905",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
