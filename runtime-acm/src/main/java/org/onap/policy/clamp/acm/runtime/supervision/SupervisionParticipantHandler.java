@@ -83,6 +83,7 @@ public class SupervisionParticipantHandler {
             var participant = participantOpt.get();
             participant.setParticipantState(ParticipantState.OFF_LINE);
             participantProvider.updateParticipant(participant);
+            participantProvider.resetParticipantAcElementState(participant.getParticipantId());
         }
 
         participantDeregisterAckPublisher.send(participantDeregisterMsg.getMessageId());

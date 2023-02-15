@@ -29,6 +29,8 @@ import javax.ws.rs.core.Response.Status;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaParticipant;
@@ -179,5 +181,20 @@ public class ParticipantProvider {
     public List<NodeTemplateState> getAcNodeTemplateStates(@NonNull final UUID participantId) {
         return ProviderUtils.asEntityList(nodeTemplateStateRepository
             .findByParticipantId(participantId.toString()));
+    }
+
+    /**
+     * Reset the Deploy and Lock states of all the ac elements associated with a participant.
+     *
+     * @param participantId the participant id associated with the automation composition elements
+     */
+    public void resetParticipantAcElementState(@NonNull final UUID participantId) {
+        var participantAcElementList = automationCompositionElementRepository
+            .findByParticipantId(participantId.toString());
+        participantAcElementList.forEach(e -> {
+            e.setDeployState(DeployState.UNDEPLOYED);
+            e.setLockState(LockState.NONE);
+        });
+        automationCompositionElementRepository.saveAll(participantAcElementList);
     }
 }
