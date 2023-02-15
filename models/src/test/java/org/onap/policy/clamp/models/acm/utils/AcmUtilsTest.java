@@ -24,13 +24,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -41,8 +40,9 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplate;
+import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
+import org.onap.policy.clamp.models.acm.messages.rest.instantiation.LockOrder;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaDataType;
@@ -69,25 +69,6 @@ class AcmUtilsTest {
     }
 
     @Test
-    void testCommonUtilsParticipantUpdate() {
-        var acElement = new AutomationCompositionElement();
-        List<ParticipantDeploy> participantUpdates = new ArrayList<>();
-        assertThat(participantUpdates).isEmpty();
-
-        AcmUtils.prepareParticipantUpdate(acElement, participantUpdates);
-        assertThat(participantUpdates).isNotEmpty();
-        assertEquals(acElement, participantUpdates.get(0).getAutomationCompositionElementList().get(0));
-
-        AcmUtils.prepareParticipantUpdate(acElement, participantUpdates);
-        var participantId = CommonTestData.getParticipantId();
-        assertNotEquals(participantId, participantUpdates.get(0).getParticipantId());
-
-        acElement.setParticipantId(participantId);
-        AcmUtils.prepareParticipantUpdate(acElement, participantUpdates);
-        assertEquals(participantId, participantUpdates.get(1).getParticipantId());
-    }
-
-    @Test
     void testCheckIfNodeTemplateIsAutomationCompositionElement() {
         var serviceTemplate = CommonTestData.getToscaServiceTemplate(TOSCA_TEMPLATE_YAML);
         var nodeTemplate = new ToscaNodeTemplate();
@@ -109,12 +90,12 @@ class AcmUtilsTest {
         Map<ToscaConceptIdentifier, UUID> map = new HashMap<>();
         var participantId = UUID.randomUUID();
         assertThatThrownBy(() -> AcmUtils.prepareParticipantPriming(acElements, map)).hasMessageMatching(
-                "Element Type org.onap.policy.clamp.acm.PolicyAutomationCompositionElement 1.0.1 not supported");
-        map.put(new ToscaConceptIdentifier("org.onap.policy.clamp.acm.PolicyAutomationCompositionElement", "1.0.1"),
+                "Element Type org.onap.policy.clamp.acm.PolicyAutomationCompositionElement 1.0.0 not supported");
+        map.put(new ToscaConceptIdentifier("org.onap.policy.clamp.acm.PolicyAutomationCompositionElement", "1.0.0"),
                 participantId);
         map.put(new ToscaConceptIdentifier("org.onap.policy.clamp.acm.K8SMicroserviceAutomationCompositionElement",
-                "1.0.1"), participantId);
-        map.put(new ToscaConceptIdentifier("org.onap.policy.clamp.acm.HttpAutomationCompositionElement", "1.0.1"),
+                "1.0.0"), participantId);
+        map.put(new ToscaConceptIdentifier("org.onap.policy.clamp.acm.HttpAutomationCompositionElement", "1.0.0"),
                 participantId);
         var result = AcmUtils.prepareParticipantPriming(acElements, map);
         assertThat(result).isNotEmpty().hasSize(1);
@@ -157,6 +138,47 @@ class AcmUtilsTest {
         var doc = new DocToscaServiceTemplate(CommonTestData.getToscaServiceTemplate(TOSCA_TEMPLATE_YAML));
         result = AcmUtils.validateAutomationComposition(automationComposition, doc.toAuthorative());
         assertFalse(result.isValid());
+    }
+
+    @Test
+    void testStateDeployToOrder() {
+        // from transitional state to order state
+        assertEquals(DeployOrder.DEPLOY, AcmUtils.stateDeployToOrder(DeployState.DEPLOYING));
+        assertEquals(DeployOrder.UNDEPLOY, AcmUtils.stateDeployToOrder(DeployState.UNDEPLOYING));
+        assertEquals(DeployOrder.NONE, AcmUtils.stateDeployToOrder(DeployState.DEPLOYED));
+    }
+
+    @Test
+    void testStateLockToOrder() {
+        // from transitional state to order state
+        assertEquals(LockOrder.LOCK, AcmUtils.stateLockToOrder(LockState.LOCKING));
+        assertEquals(LockOrder.UNLOCK, AcmUtils.stateLockToOrder(LockState.UNLOCKING));
+        assertEquals(LockOrder.NONE, AcmUtils.stateLockToOrder(LockState.NONE));
+    }
+
+    @Test
+    void testDeployCompleted() {
+        // from transitional state to final state
+        assertEquals(DeployState.DEPLOYED, AcmUtils.deployCompleted(DeployState.DEPLOYING));
+        assertEquals(DeployState.UNDEPLOYED, AcmUtils.deployCompleted(DeployState.UNDEPLOYING));
+        assertEquals(DeployState.DEPLOYED, AcmUtils.deployCompleted(DeployState.DEPLOYED));
+    }
+
+    @Test
+    void testLockCompleted() {
+        // from transitional state to final state
+        assertEquals(LockState.LOCKED, AcmUtils.lockCompleted(DeployState.DEPLOYING, LockState.NONE));
+        assertEquals(LockState.LOCKED, AcmUtils.lockCompleted(DeployState.DEPLOYED, LockState.LOCKING));
+        assertEquals(LockState.UNLOCKED, AcmUtils.lockCompleted(DeployState.DEPLOYED, LockState.UNLOCKING));
+        assertEquals(LockState.NONE, AcmUtils.lockCompleted(DeployState.UNDEPLOYING, LockState.LOCKED));
+    }
+
+    @Test
+    void testIsForward() {
+        assertTrue(AcmUtils.isForward(DeployState.DEPLOYING, LockState.NONE));
+        assertTrue(AcmUtils.isForward(DeployState.DEPLOYED, LockState.UNLOCKING));
+        assertFalse(AcmUtils.isForward(DeployState.DEPLOYED, LockState.LOCKING));
+        assertFalse(AcmUtils.isForward(DeployState.UNDEPLOYING, LockState.LOCKED));
     }
 
     private AutomationComposition getDummyAutomationComposition() {

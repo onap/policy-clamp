@@ -25,7 +25,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -43,25 +42,10 @@ class AutomationCompositionElementTest {
         ace1.setDefinition(new ToscaConceptIdentifier("defName", "0.0.1"));
         ace1.setDescription("Description");
         ace1.setId(UUID.randomUUID());
-        ace1.setOrderedState(AutomationCompositionOrderedState.UNINITIALISED);
         ace1.setParticipantId(CommonTestData.getParticipantId());
-        ace1.setState(AutomationCompositionState.UNINITIALISED);
 
         var ace2 = new AutomationCompositionElement(ace1);
         assertEquals(ace1, ace2);
-    }
-
-    @Test
-    void testAutomationCompositionState() {
-        var ace0 = new AutomationCompositionElement();
-
-        assertTrue(
-                ace0.getOrderedState()
-                .equalsAutomationCompositionState(AutomationCompositionState.UNINITIALISED));
-
-        assertTrue(
-                ace0.getOrderedState().asState()
-                .equalsAutomationCompositionOrderedState(AutomationCompositionOrderedState.UNINITIALISED));
     }
 
     @Test
@@ -78,9 +62,7 @@ class AutomationCompositionElementTest {
         ace1.setDefinition(new ToscaConceptIdentifier("defName", "0.0.1"));
         ace1.setDescription("Description");
         ace1.setId(UUID.randomUUID());
-        ace1.setOrderedState(AutomationCompositionOrderedState.UNINITIALISED);
         ace1.setParticipantId(CommonTestData.getParticipantId());
-        ace1.setState(AutomationCompositionState.UNINITIALISED);
 
         assertThat(ace1.toString()).contains("AutomationCompositionElement(");
         assertNotEquals(0, ace1.hashCode());
@@ -94,9 +76,7 @@ class AutomationCompositionElementTest {
         // @formatter:off
         assertThatThrownBy(() -> ace2.setDefinition(null)).   isInstanceOf(NullPointerException.class);
         assertThatThrownBy(() -> ace2.setId(null)).           isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> ace2.setOrderedState(null)). isInstanceOf(NullPointerException.class);
         assertThatThrownBy(() -> ace2.setParticipantId(null)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> ace2.setState(null)).        isInstanceOf(NullPointerException.class);
         // @formatter:on
 
         assertNotEquals(ace2, ace0);

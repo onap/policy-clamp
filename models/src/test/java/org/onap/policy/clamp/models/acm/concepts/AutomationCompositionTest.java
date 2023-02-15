@@ -60,8 +60,6 @@ class AutomationCompositionTest {
         ac1.setDescription("Description");
         ac1.setElements(new LinkedHashMap<>());
         ac1.setName("Name");
-        ac1.setOrderedState(AutomationCompositionOrderedState.UNINITIALISED);
-        ac1.setState(AutomationCompositionState.UNINITIALISED);
         ac1.setVersion("0.0.1");
 
         assertThat(ac1.toString()).contains("AutomationComposition(");
@@ -76,20 +74,11 @@ class AutomationCompositionTest {
 
         // @formatter:off
         assertThatThrownBy(() -> ac2.setCompositionId(null)).  isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> ac2.setOrderedState(null)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> ac2.setState(null)).       isInstanceOf(NullPointerException.class);
         // @formatter:on
 
         assertEquals(ac2, ac0);
 
-        ac1.setCascadedOrderedState(AutomationCompositionOrderedState.PASSIVE);
-        assertEquals(AutomationCompositionOrderedState.PASSIVE, ac1.getOrderedState());
-
         ac1.getElements().put(UUID.randomUUID(), new AutomationCompositionElement());
-        ac1.setCascadedOrderedState(AutomationCompositionOrderedState.RUNNING);
-        assertEquals(AutomationCompositionOrderedState.RUNNING, ac1.getOrderedState());
-        assertEquals(AutomationCompositionOrderedState.RUNNING,
-            ac1.getElements().values().iterator().next().getOrderedState());
 
         assertNull(ac0.getElements().get(UUID.randomUUID()));
         assertNull(ac1.getElements().get(UUID.randomUUID()));

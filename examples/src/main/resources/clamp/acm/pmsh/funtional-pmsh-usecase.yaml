@@ -342,7 +342,7 @@ node_types:
           type: onap.datatypes.ToscaConceptIdentifier
         description: Specifies a list of automation composition element definitions that make up this automation composition definition
   org.onap.policy.clamp.acm.PolicyAutomationCompositionElement:
-    version: 1.0.1
+    version: 1.0.0
     derived_from: org.onap.policy.clamp.acm.AutomationCompositionElement
     properties:
       policy_type_id:
@@ -359,7 +359,7 @@ node_types:
         type: onap.datatypes.ToscaConceptIdentifier
         required: true
   org.onap.policy.clamp.acm.K8SMicroserviceAutomationCompositionElement:
-    version: 1.0.1
+    version: 1.0.0
     derived_from: org.onap.policy.clamp.acm.AutomationCompositionElement
     properties:
       chart:
@@ -379,7 +379,7 @@ node_types:
         type: string
         required: true
   org.onap.policy.clamp.acm.HttpAutomationCompositionElement:
-    version: 1.0.1
+    version: 1.0.0
     derived_from: org.onap.policy.clamp.acm.AutomationCompositionElement
     properties:
       baseUrl:
@@ -419,7 +419,7 @@ topology_template:
     org.onap.domain.pmsh.PMSH_OperationalPolicyAutomationCompositionElement:
       version: 1.2.3
       type: org.onap.policy.clamp.acm.PolicyAutomationCompositionElement
-      type_version: 1.0.1
+      type_version: 1.0.0
       description: Automation composition element for the operational policy for Performance Management Subscription Handling
       properties:
         provider: Ericsson
@@ -441,7 +441,7 @@ topology_template:
       # Chart from new repository
       version: 1.2.3
       type: org.onap.policy.clamp.acm.K8SMicroserviceAutomationCompositionElement
-      type_version: 1.0.1
+      type_version: 1.0.0
       description: Automation composition element for the K8S microservice for PMSH
       properties:
         provider: ONAP
@@ -470,7 +470,7 @@ topology_template:
       # Http config for PMSH.
       version: 1.2.3
       type: org.onap.policy.clamp.acm.HttpAutomationCompositionElement
-      type_version: 1.0.1
+      type_version: 1.0.0
       description: Automation composition element for the http requests of PMSH microservice
       properties:
         provider: ONAP

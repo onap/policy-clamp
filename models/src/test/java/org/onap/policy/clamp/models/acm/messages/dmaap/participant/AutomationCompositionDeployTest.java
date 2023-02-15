@@ -30,9 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
+import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.utils.CommonTestData;
 import org.onap.policy.common.utils.coder.CoderException;
@@ -55,16 +53,10 @@ class AutomationCompositionDeployTest {
         orig.setMessageId(UUID.randomUUID());
         orig.setTimestamp(Instant.ofEpochMilli(3000));
 
-        var acElement = new AutomationCompositionElement();
+        var acElement = new AcElementDeploy();
         acElement.setId(UUID.randomUUID());
         var id = new ToscaConceptIdentifier("id", "1.2.3");
         acElement.setDefinition(id);
-        acElement.setDescription("Description");
-        acElement.setOrderedState(AutomationCompositionOrderedState.PASSIVE);
-        acElement.setState(AutomationCompositionState.PASSIVE);
-
-        var participantId = CommonTestData.getParticipantId();
-        acElement.setParticipantId(participantId);
 
         var property = new ToscaProperty();
         property.setName("test");
@@ -75,8 +67,8 @@ class AutomationCompositionDeployTest {
         acElement.setProperties(propertiesMap);
 
         var participantDeploy = new ParticipantDeploy();
-        participantDeploy.setParticipantId(participantId);
-        participantDeploy.setAutomationCompositionElementList(List.of(acElement));
+        participantDeploy.setParticipantId(CommonTestData.getParticipantId());
+        participantDeploy.setAcElementList(List.of(acElement));
         orig.setParticipantUpdatesList(List.of(participantDeploy));
 
         var other = new AutomationCompositionDeploy(orig);

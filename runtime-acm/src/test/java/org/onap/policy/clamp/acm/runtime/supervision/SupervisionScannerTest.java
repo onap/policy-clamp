@@ -21,6 +21,7 @@
 package org.onap.policy.clamp.acm.runtime.supervision;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -39,13 +40,11 @@ import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionS
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionState;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
-import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
-import org.onap.policy.models.base.PfModelException;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 class SupervisionScannerTest {
 
@@ -70,16 +69,15 @@ class SupervisionScannerTest {
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
         var automationCompositionDeployPublisher = mock(AutomationCompositionDeployPublisher.class);
-        var participantProvider = mock(ParticipantProvider.class);
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
 
         var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
         when(automationCompositionProvider.getAcInstancesByCompositionId(compositionId))
-            .thenReturn(List.of(automationComposition));
+                .thenReturn(List.of(automationComposition));
 
         var supervisionScanner = new SupervisionScanner(automationCompositionProvider, acDefinitionProvider,
-            automationCompositionStateChangePublisher, automationCompositionDeployPublisher, participantProvider,
-            acRuntimeParameterGroup);
+                automationCompositionStateChangePublisher, automationCompositionDeployPublisher,
+                acRuntimeParameterGroup);
         supervisionScanner.run(false);
 
         verify(automationCompositionProvider, times(0)).updateAutomationComposition(any(AutomationComposition.class));
@@ -88,20 +86,19 @@ class SupervisionScannerTest {
     @Test
     void testScannerOrderedStateDifferentToState() {
         var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
-        automationComposition.setState(AutomationCompositionState.UNINITIALISED2PASSIVE);
-        automationComposition.setOrderedState(AutomationCompositionOrderedState.UNINITIALISED);
+        automationComposition.setDeployState(DeployState.UNDEPLOYING);
+        automationComposition.setLockState(LockState.NONE);
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         when(automationCompositionProvider.getAcInstancesByCompositionId(compositionId))
-            .thenReturn(List.of(automationComposition));
+                .thenReturn(List.of(automationComposition));
 
         var automationCompositionDeployPublisher = mock(AutomationCompositionDeployPublisher.class);
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
-        var participantProvider = mock(ParticipantProvider.class);
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
 
         var supervisionScanner = new SupervisionScanner(automationCompositionProvider, acDefinitionProvider,
-            automationCompositionStateChangePublisher, automationCompositionDeployPublisher, participantProvider,
-            acRuntimeParameterGroup);
+                automationCompositionStateChangePublisher, automationCompositionDeployPublisher,
+                acRuntimeParameterGroup);
         supervisionScanner.run(false);
 
         verify(automationCompositionProvider, times(1)).updateAutomationComposition(any(AutomationComposition.class));
@@ -112,21 +109,16 @@ class SupervisionScannerTest {
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         var automationComposition = new AutomationComposition();
         when(automationCompositionProvider.getAcInstancesByCompositionId(compositionId))
-            .thenReturn(List.of(automationComposition));
-
-        var participantProvider = mock(ParticipantProvider.class);
-        var participant = CommonTestData.createParticipant(CommonTestData.getParticipantId());
-        when(participantProvider.getParticipants()).thenReturn(List.of(participant));
+                .thenReturn(List.of(automationComposition));
 
         var automationCompositionDeployPublisher = mock(AutomationCompositionDeployPublisher.class);
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
 
         var supervisionScanner = new SupervisionScanner(automationCompositionProvider, acDefinitionProvider,
-            automationCompositionStateChangePublisher, automationCompositionDeployPublisher, participantProvider,
-            acRuntimeParameterGroup);
+                automationCompositionStateChangePublisher, automationCompositionDeployPublisher,
+                acRuntimeParameterGroup);
 
-        supervisionScanner.handleParticipantStatus(participant.getParticipantId());
         supervisionScanner.run(true);
         verify(automationCompositionProvider, times(0)).updateAutomationComposition(any(AutomationComposition.class));
     }
@@ -134,65 +126,68 @@ class SupervisionScannerTest {
     @Test
     void testSendAutomationCompositionMsgUpdate() {
         var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
-        automationComposition.setState(AutomationCompositionState.UNINITIALISED2PASSIVE);
-        automationComposition.setOrderedState(AutomationCompositionOrderedState.PASSIVE);
+        automationComposition.setDeployState(DeployState.DEPLOYING);
+        automationComposition.setLockState(LockState.NONE);
         for (var element : automationComposition.getElements().values()) {
             if ("org.onap.domain.database.Http_PMSHMicroserviceAutomationCompositionElement"
-                .equals(element.getDefinition().getName())) {
-                element.setOrderedState(AutomationCompositionOrderedState.PASSIVE);
-                element.setState(AutomationCompositionState.UNINITIALISED);
+                    .equals(element.getDefinition().getName())) {
+                element.setDeployState(DeployState.DEPLOYING);
+                element.setLockState(LockState.NONE);
             } else {
-                element.setOrderedState(AutomationCompositionOrderedState.PASSIVE);
-                element.setState(AutomationCompositionState.PASSIVE);
+                element.setDeployState(DeployState.DEPLOYED);
+                element.setLockState(LockState.LOCKED);
             }
         }
 
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         when(automationCompositionProvider.getAcInstancesByCompositionId(compositionId))
-            .thenReturn(List.of(automationComposition));
+                .thenReturn(List.of(automationComposition));
 
-        var participantProvider = mock(ParticipantProvider.class);
         var automationCompositionDeployPublisher = mock(AutomationCompositionDeployPublisher.class);
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
 
         var supervisionScanner = new SupervisionScanner(automationCompositionProvider, acDefinitionProvider,
-            automationCompositionStateChangePublisher, automationCompositionDeployPublisher, participantProvider,
-            acRuntimeParameterGroup);
+                automationCompositionStateChangePublisher, automationCompositionDeployPublisher,
+                acRuntimeParameterGroup);
 
         supervisionScanner.run(false);
 
-        verify(automationCompositionDeployPublisher).send(any(AutomationComposition.class), anyInt());
+        verify(automationCompositionDeployPublisher).send(any(AutomationComposition.class),
+                any(ToscaServiceTemplate.class), anyInt(), anyBoolean());
     }
 
     @Test
-    void testScanParticipant() throws PfModelException {
+    void testSendAutomationCompositionMsgUnlocking() {
+        var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
+        automationComposition.setDeployState(DeployState.DEPLOYED);
+        automationComposition.setLockState(LockState.UNLOCKING);
+        for (var element : automationComposition.getElements().values()) {
+            if ("org.onap.domain.database.Http_PMSHMicroserviceAutomationCompositionElement"
+                    .equals(element.getDefinition().getName())) {
+                element.setDeployState(DeployState.DEPLOYED);
+                element.setLockState(LockState.UNLOCKING);
+            } else {
+                element.setDeployState(DeployState.DEPLOYED);
+                element.setLockState(LockState.UNLOCKED);
+            }
+        }
+
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
-        var automationComposition = new AutomationComposition();
         when(automationCompositionProvider.getAcInstancesByCompositionId(compositionId))
-            .thenReturn(List.of(automationComposition));
-
-        var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanParticipant");
-        acRuntimeParameterGroup.getParticipantParameters().getUpdateParameters().setMaxWaitMs(-1);
-        acRuntimeParameterGroup.getParticipantParameters().setMaxStatusWaitMs(-1);
-
-        var participant = CommonTestData.createParticipant(CommonTestData.getParticipantId());
-        participant.setParticipantState(ParticipantState.OFF_LINE);
-        var participantProvider = mock(ParticipantProvider.class);
-        when(participantProvider.getParticipants()).thenReturn(List.of(participant));
+                .thenReturn(List.of(automationComposition));
 
         var automationCompositionDeployPublisher = mock(AutomationCompositionDeployPublisher.class);
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
+        var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
 
         var supervisionScanner = new SupervisionScanner(automationCompositionProvider, acDefinitionProvider,
-            automationCompositionStateChangePublisher, automationCompositionDeployPublisher, participantProvider,
-            acRuntimeParameterGroup);
+                automationCompositionStateChangePublisher, automationCompositionDeployPublisher,
+                acRuntimeParameterGroup);
 
-        supervisionScanner.handleParticipantStatus(participant.getParticipantId());
-        supervisionScanner.run(true);
-        verify(participantProvider, times(0)).saveParticipant(any());
+        supervisionScanner.run(false);
 
-        supervisionScanner.run(true);
-        verify(participantProvider, times(1)).updateParticipant(any());
+        verify(automationCompositionStateChangePublisher).send(any(AutomationComposition.class), anyInt(),
+                anyBoolean());
     }
 }
