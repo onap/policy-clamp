@@ -20,76 +20,78 @@
 
 package org.onap.policy.clamp.acm.participant.http.handler;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.ArgumentMatchers.anyMap;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 import java.io.IOException;
 import java.util.HashMap;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mockito;
-import org.mockito.Spy;
 import org.onap.policy.clamp.acm.participant.http.main.handler.AutomationCompositionElementHandler;
 import org.onap.policy.clamp.acm.participant.http.main.models.ConfigRequest;
+import org.onap.policy.clamp.acm.participant.http.main.webclient.AcHttpClient;
 import org.onap.policy.clamp.acm.participant.http.utils.CommonTestData;
 import org.onap.policy.clamp.acm.participant.http.utils.ToscaUtils;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
 
-@ExtendWith(SpringExtension.class)
 class AcElementHandlerTest {
 
-    @InjectMocks
-    @Spy
-    private AutomationCompositionElementHandler automationCompositionElementHandler =
-            new AutomationCompositionElementHandler();
-
     private final CommonTestData commonTestData = new CommonTestData();
-
-    private static ToscaServiceTemplate serviceTemplate;
     private static final String HTTP_AUTOMATION_COMPOSITION_ELEMENT =
             "org.onap.domain.database.Http_PMSHMicroserviceAutomationCompositionElement";
 
-    @BeforeAll
-    static void init() {
-        serviceTemplate = ToscaUtils.readAutomationCompositionFromTosca();
-    }
+    @Test
+    void testUndeploy() throws IOException {
+        var instanceId = commonTestData.getAutomationCompositionId();
+        var element = commonTestData.getAutomationCompositionElement();
+        var acElementId = element.getId();
 
-    @BeforeEach
-    void startMocks() {
-        automationCompositionElementHandler.setIntermediaryApi(Mockito.mock(ParticipantIntermediaryApi.class));
+        try (var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(mock(AcHttpClient.class))) {
+            var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
+            automationCompositionElementHandler.setIntermediaryApi(participantIntermediaryApi);
+            automationCompositionElementHandler.undeploy(instanceId, acElementId);
+            verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, acElementId,
+                    DeployState.UNDEPLOYED, LockState.NONE);
+        }
     }
 
     @Test
-    void test_automationCompositionElementStateChange() throws IOException {
-        var automationCompositionId = commonTestData.getAutomationCompositionId();
+    void testDeployError() throws IOException {
+        var instanceId = commonTestData.getAutomationCompositionId();
         var element = commonTestData.getAutomationCompositionElement();
-        var automationCompositionElementId = element.getId();
 
-        var config = Mockito.mock(ConfigRequest.class);
-        assertDoesNotThrow(() -> automationCompositionElementHandler.invokeHttpClient(config));
-
-        assertDoesNotThrow(() -> automationCompositionElementHandler.undeploy(
-                automationCompositionId, automationCompositionElementId));
-
-        automationCompositionElementHandler.close();
+        try (var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(mock(AcHttpClient.class))) {
+            automationCompositionElementHandler.setIntermediaryApi(mock(ParticipantIntermediaryApi.class));
+            Map<String, Object> map = new HashMap<>();
+            assertThatThrownBy(() -> automationCompositionElementHandler.deploy(instanceId, element, map))
+                    .hasMessage("Constraint violations in the config request");
+        }
     }
 
     @Test
-    void test_AutomationCompositionElementUpdate() throws Exception {
-        doNothing().when(automationCompositionElementHandler).invokeHttpClient(any());
-        var element = commonTestData.getAutomationCompositionElement();
-
+    void testDeploy() throws Exception {
+        var serviceTemplate = ToscaUtils.readAutomationCompositionFromTosca();
         var nodeTemplatesMap = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
         var map = new HashMap<>(nodeTemplatesMap.get(HTTP_AUTOMATION_COMPOSITION_ELEMENT).getProperties());
+        var element = commonTestData.getAutomationCompositionElement();
         map.putAll(element.getProperties());
+        var instanceId = commonTestData.getAutomationCompositionId();
+        var acHttpClient = mock(AcHttpClient.class);
+        try (var automationCompositionElementHandler = new AutomationCompositionElementHandler(acHttpClient)) {
+            var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
+            automationCompositionElementHandler.setIntermediaryApi(participantIntermediaryApi);
+            automationCompositionElementHandler.deploy(instanceId, element, map);
+            verify(acHttpClient).run(any(ConfigRequest.class), anyMap());
+            verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
+                    DeployState.DEPLOYED, LockState.LOCKED);
+        }
 
-        assertDoesNotThrow(() -> automationCompositionElementHandler
-                .deploy(commonTestData.getAutomationCompositionId(), element, map));
     }
 }

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021,2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,83 +35,69 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
 
-public class AcHttpClient implements Runnable {
+@Component
+public class AcHttpClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
-    private final ConfigRequest configRequest;
-
-    private Map<ToscaConceptIdentifier, Pair<Integer, String>> responseMap;
-
-    /**
-     * Constructor.
-     */
-    public AcHttpClient(ConfigRequest configRequest, Map<ToscaConceptIdentifier, Pair<Integer, String>> responseMap) {
-        this.configRequest = configRequest;
-        this.responseMap = responseMap;
-    }
 
     /**
      * Runnable to execute http requests.
      */
-    @Override
-    public void run() {
+    public void run(ConfigRequest configRequest, Map<ToscaConceptIdentifier, Pair<Integer, String>> responseMap) {
 
-        var webClient = WebClient.builder()
-            .baseUrl(configRequest.getBaseUrl())
-            .defaultHeaders(httpHeaders -> httpHeaders.addAll(createHeaders(configRequest)))
-            .build();
+        var webClient = WebClient.builder().baseUrl(configRequest.getBaseUrl())
+                .defaultHeaders(httpHeaders -> httpHeaders.addAll(createHeaders(configRequest))).build();
 
-        for (ConfigurationEntity configurationEntity : configRequest.getConfigurationEntities()) {
+        for (var configurationEntity : configRequest.getConfigurationEntities()) {
             LOGGER.info("Executing http requests for the config entity {}",
-                configurationEntity.getConfigurationEntityId());
+                    configurationEntity.getConfigurationEntityId());
 
-            executeRequest(webClient, configurationEntity);
+            executeRequest(webClient, configRequest, configurationEntity, responseMap);
         }
     }
 
-    private void executeRequest(WebClient client, ConfigurationEntity configurationEntity)  {
+    private void executeRequest(WebClient client, ConfigRequest configRequest, ConfigurationEntity configurationEntity,
+            Map<ToscaConceptIdentifier, Pair<Integer, String>> responseMap) {
 
         // Iterate the sequence of http requests
-        for (RestParams request: configurationEntity.getRestSequence()) {
-            String response = null;
+        for (var request : configurationEntity.getRestSequence()) {
             try {
                 var httpMethod = Objects.requireNonNull(HttpMethod.resolve(request.getHttpMethod()));
                 var uri = createUriString(request);
                 LOGGER.info("Executing HTTP request: {} for the Rest request id: {}", httpMethod,
                         request.getRestRequestId());
 
-                response = client.method(httpMethod)
-                    .uri(uri)
-                    .body(request.getBody() == null ? BodyInserters.empty()
-                        : BodyInserters.fromValue(request.getBody()))
-                    .exchangeToMono(clientResponse ->
-                        clientResponse.statusCode().value() == request.getExpectedResponse()
-                            ? clientResponse.bodyToMono(String.class)
-                            : Mono.error(new HttpWebClientException(clientResponse.statusCode().value(),
-                                clientResponse.bodyToMono(String.class).toString())))
-                    .block(Duration.ofMillis(configRequest.getUninitializedToPassiveTimeout() * 1000L));
+                var response = client.method(httpMethod).uri(uri)
+                        .body(request.getBody() == null ? BodyInserters.empty()
+                                : BodyInserters.fromValue(request.getBody()))
+                        .exchangeToMono(
+                                clientResponse -> clientResponse.statusCode().value() == request.getExpectedResponse()
+                                        ? clientResponse.bodyToMono(String.class)
+                                        : Mono.error(new HttpWebClientException(clientResponse.statusCode().value(),
+                                                clientResponse.bodyToMono(String.class).toString())))
+                        .block(Duration.ofMillis(configRequest.getUninitializedToPassiveTimeout() * 1000L));
 
                 LOGGER.info("HTTP response for the {} request : {}", httpMethod, response);
-                responseMap.put(request.getRestRequestId(), new ImmutablePair<>(request.getExpectedResponse(),
-                    response));
+                responseMap.put(request.getRestRequestId(),
+                        new ImmutablePair<>(request.getExpectedResponse(), response));
 
             } catch (HttpWebClientException ex) {
                 LOGGER.error("Error occurred on the HTTP request ", ex);
-                responseMap.put(request.getRestRequestId(), new ImmutablePair<>(ex.getStatusCode().value(),
-                     ex.getResponseBodyAsString()));
+                responseMap.put(request.getRestRequestId(),
+                        new ImmutablePair<>(ex.getStatusCode().value(), ex.getResponseBodyAsString()));
             }
         }
     }
 
     private HttpHeaders createHeaders(ConfigRequest request) {
         var headers = new HttpHeaders();
-        for (Map.Entry<String, String> entry: request.getHttpHeaders().entrySet()) {
+        for (var entry : request.getHttpHeaders().entrySet()) {
             headers.add(entry.getKey(), entry.getValue());
         }
         return headers;
@@ -125,7 +111,7 @@ public class AcHttpClient implements Runnable {
         }
         // Add query params if present
         if (restParams.getQueryParams() != null) {
-            for (Map.Entry<String, String> entry : restParams.getQueryParams().entrySet()) {
+            for (var entry : restParams.getQueryParams().entrySet()) {
                 uriComponentsBuilder.queryParam(entry.getKey(), entry.getValue());
             }
         }
