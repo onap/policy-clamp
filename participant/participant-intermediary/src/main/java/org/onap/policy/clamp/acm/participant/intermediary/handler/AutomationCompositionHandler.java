@@ -333,6 +333,7 @@ public class AutomationCompositionHandler {
         for (var element : participantDeploy.getAcElementList()) {
             var acElement = new AutomationCompositionElement();
             acElement.setId(element.getId());
+            acElement.setParticipantId(participantDeploy.getParticipantId());
             acElement.setDefinition(element.getDefinition());
             acElement.setDeployState(DeployState.DEPLOYING);
             acElement.setLockState(LockState.NONE);
