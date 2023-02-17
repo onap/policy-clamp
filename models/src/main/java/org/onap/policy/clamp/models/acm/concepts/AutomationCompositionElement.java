@@ -31,7 +31,6 @@ import lombok.ToString;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 /**
  * Class to represent a automation composition instance.
@@ -50,18 +49,10 @@ public class AutomationCompositionElement {
     private UUID participantId = UUID.randomUUID();
 
     @NonNull
-    private AutomationCompositionState state = AutomationCompositionState.UNINITIALISED;
-
-    @NonNull
     private DeployState deployState = DeployState.UNDEPLOYED;
 
     @NonNull
     private LockState lockState = LockState.LOCKED;
-
-    @NonNull
-    private AutomationCompositionOrderedState orderedState = AutomationCompositionOrderedState.UNINITIALISED;
-
-    private ToscaServiceTemplate toscaServiceTemplateFragment;
 
     private String description;
 
@@ -78,9 +69,6 @@ public class AutomationCompositionElement {
         this.id = otherElement.id;
         this.definition = new ToscaConceptIdentifier(otherElement.definition);
         this.participantId = otherElement.participantId;
-        this.state = otherElement.state;
-        this.orderedState = otherElement.orderedState;
-        this.toscaServiceTemplateFragment = otherElement.toscaServiceTemplateFragment;
         this.description = otherElement.description;
         this.properties = PfUtils.mapMap(otherElement.properties, UnaryOperator.identity());
         this.deployState = otherElement.deployState;

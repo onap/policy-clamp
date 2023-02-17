@@ -26,7 +26,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import org.apache.commons.collections4.MapUtils;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaEntity;
 
@@ -42,12 +41,6 @@ public class AutomationComposition extends ToscaEntity implements Comparable<Aut
 
     @NonNull
     private UUID compositionId;
-
-    @NonNull
-    private AutomationCompositionState state = AutomationCompositionState.UNINITIALISED;
-
-    @NonNull
-    private AutomationCompositionOrderedState orderedState = AutomationCompositionOrderedState.UNINITIALISED;
 
     @NonNull
     private DeployState deployState = DeployState.UNDEPLOYED;
@@ -66,8 +59,6 @@ public class AutomationComposition extends ToscaEntity implements Comparable<Aut
         super(otherAutomationComposition);
         this.instanceId = otherAutomationComposition.instanceId;
         this.compositionId = otherAutomationComposition.compositionId;
-        this.state = otherAutomationComposition.state;
-        this.orderedState = otherAutomationComposition.orderedState;
         this.deployState = otherAutomationComposition.deployState;
         this.lockState = otherAutomationComposition.lockState;
         this.elements = PfUtils.mapMap(otherAutomationComposition.elements, AutomationCompositionElement::new);
@@ -76,20 +67,5 @@ public class AutomationComposition extends ToscaEntity implements Comparable<Aut
     @Override
     public int compareTo(final AutomationComposition other) {
         return compareNameVersion(this, other);
-    }
-
-    /**
-     * Set the ordered state on the automation composition and on all its automation composition elements.
-     *
-     * @param orderedState the state we want the automation composition to transition to
-     */
-    public void setCascadedOrderedState(final AutomationCompositionOrderedState orderedState) {
-        this.orderedState = orderedState;
-
-        if (MapUtils.isEmpty(elements)) {
-            return;
-        }
-
-        elements.values().forEach(element -> element.setOrderedState(orderedState));
     }
 }
