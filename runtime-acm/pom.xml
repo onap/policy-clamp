@@ -55,7 +55,6 @@
             <plugin>
                 <groupId>io.swagger.codegen.v3</groupId>
                 <artifactId>swagger-codegen-maven-plugin</artifactId>
-                <version>3.0.27</version>
                 <executions>
                     <execution>
                         <id>code-gen</id>
@@ -97,7 +96,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-remote-resources-plugin</artifactId>
-                <version>1.7.0</version>
                 <configuration>
                     <resourceBundles>
                         <resourceBundle>org.onap.policy.clamp:policy-clamp-examples:${project.version}</resourceBundle>

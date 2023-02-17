@@ -46,7 +46,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-remote-resources-plugin</artifactId>
-                <version>1.7.0</version>
                 <configuration>
                     <resourceBundles>
                         <resourceBundle>org.onap.policy.clamp:policy-clamp-examples:${project.version}</resourceBundle>
