@@ -20,20 +20,23 @@
 
 package org.onap.policy.clamp.acm.participant.policy.main.handler;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import javax.ws.rs.core.Response;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.acm.participant.policy.client.PolicyApiHttpClient;
 import org.onap.policy.clamp.acm.participant.policy.client.PolicyPapHttpClient;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -50,21 +53,16 @@ class AutomationCompositionElementHandlerTest {
     public static final UUID AC_ID = UUID.randomUUID();
     private static final ToscaConceptIdentifier DEFINITION = new ToscaConceptIdentifier(ID_NAME, ID_VERSION);
 
-    private PolicyApiHttpClient api = Mockito.mock(PolicyApiHttpClient.class);
-    private PolicyPapHttpClient pap = Mockito.mock(PolicyPapHttpClient.class);
-
     @Test
-    void testHandlerDoesNotThrowExceptions() {
-        var handler = getTestingHandler();
-
-        assertDoesNotThrow(() -> handler.undeploy(AC_ID, automationCompositionElementId));
-    }
-
-    private AutomationCompositionElementHandler getTestingHandler() {
-        var handler = new AutomationCompositionElementHandler(api, pap);
-        var intermediaryApi = Mockito.mock(ParticipantIntermediaryApi.class);
+    void testHandlerUndeploy() throws PfModelException {
+        var handler = new AutomationCompositionElementHandler(mock(PolicyApiHttpClient.class),
+                mock(PolicyPapHttpClient.class));
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
         handler.setIntermediaryApi(intermediaryApi);
-        return handler;
+
+        handler.undeploy(AC_ID, automationCompositionElementId);
+        verify(intermediaryApi).updateAutomationCompositionElementState(AC_ID, automationCompositionElementId,
+                DeployState.UNDEPLOYED, LockState.NONE);
     }
 
     private AcElementDeploy getTestingAcElement() {
@@ -81,25 +79,58 @@ class AutomationCompositionElementHandlerTest {
     }
 
     @Test
-    void testAcElementUpdate() throws PfModelException {
+    void testDeploy() throws PfModelException {
         // Mock success scenario for policy creation and deployment
+        var api = mock(PolicyApiHttpClient.class);
         doReturn(Response.ok().build()).when(api).createPolicyType(any());
         doReturn(Response.ok().build()).when(api).createPolicy(any());
+
+        var pap = mock(PolicyPapHttpClient.class);
         doReturn(Response.accepted().build()).when(pap).handlePolicyDeployOrUndeploy(any(), any(), any());
 
-        var handler = getTestingHandler();
+        var handler = new AutomationCompositionElementHandler(api, pap);
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        handler.setIntermediaryApi(intermediaryApi);
+
+        handler.deploy(AC_ID, getTestingAcElement(), Map.of());
+        handler.undeploy(AC_ID, automationCompositionElementId);
+        verify(intermediaryApi).updateAutomationCompositionElementState(AC_ID, automationCompositionElementId,
+                DeployState.UNDEPLOYED, LockState.NONE);
+    }
+
+    @Test
+    void testApiException() throws PfModelException {
+        var api = mock(PolicyApiHttpClient.class);
+        doReturn(Response.serverError().build()).when(api).createPolicyType(any());
+        doReturn(Response.ok().build()).when(api).createPolicy(any());
+
+        var pap = mock(PolicyPapHttpClient.class);
+        doReturn(Response.accepted().build()).when(pap).handlePolicyDeployOrUndeploy(any(), any(), any());
+
+        var handler = new AutomationCompositionElementHandler(api, pap);
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        handler.setIntermediaryApi(intermediaryApi);
         var element = getTestingAcElement();
 
-        assertDoesNotThrow(() -> handler.deploy(AC_ID, element, Map.of()));
-
-        assertDoesNotThrow(() -> handler.undeploy(AC_ID, automationCompositionElementId));
-
-        // Mock failure in policy deployment
-        doReturn(Response.serverError().build()).when(pap).handlePolicyDeployOrUndeploy(any(), any(), any());
-        assertDoesNotThrow(() -> handler.deploy(AC_ID, element, Map.of()));
-
         // Mock failure in policy type creation
-        doReturn(Response.serverError().build()).when(api).createPolicyType(any());
-        assertDoesNotThrow(() -> handler.deploy(AC_ID, element, Map.of()));
+        assertThatThrownBy(() -> handler.deploy(AC_ID, element, Map.of()))
+                .hasMessageMatching("Creation of PolicyTypes/Policies failed. Policies will not be deployed.");
+    }
+
+    @Test
+    void testDeployPapException() throws PfModelException {
+        var api = mock(PolicyApiHttpClient.class);
+        doReturn(Response.ok().build()).when(api).createPolicyType(any());
+        doReturn(Response.ok().build()).when(api).createPolicy(any());
+
+        var pap = mock(PolicyPapHttpClient.class);
+        doReturn(Response.serverError().build()).when(pap).handlePolicyDeployOrUndeploy(any(), any(), any());
+
+        var handler = new AutomationCompositionElementHandler(api, pap);
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        handler.setIntermediaryApi(intermediaryApi);
+        var element = getTestingAcElement();
+        assertThatThrownBy(() -> handler.deploy(AC_ID, element, Map.of()))
+                .hasMessageMatching("Deploy of Policy failed.");
     }
 }

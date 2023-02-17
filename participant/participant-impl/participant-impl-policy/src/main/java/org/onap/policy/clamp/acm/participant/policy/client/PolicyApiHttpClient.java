@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021,2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.onap.policy.clamp.acm.participant.policy.main.parameters.ParticipantPolicyParameters;
-import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.stereotype.Component;
 
@@ -47,9 +46,8 @@ public class PolicyApiHttpClient extends AbstractHttpClient {
      *
      * @param toscaServiceTemplate the whole ToscaServiceTemplate
      * @return Response
-     * @throws PfModelException on errors creating the policy type
      */
-    public Response createPolicyType(ToscaServiceTemplate toscaServiceTemplate) throws PfModelException {
+    public Response createPolicyType(ToscaServiceTemplate toscaServiceTemplate) {
         return executePost(POLICY_URI + "policytypes", Entity.entity(toscaServiceTemplate, MediaType.APPLICATION_JSON));
     }
 
