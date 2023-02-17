@@ -31,7 +31,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import javax.validation.Validation;
-import javax.validation.ValidationException;
+import javax.ws.rs.core.Response.Status;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.tuple.Pair;
 import org.onap.policy.clamp.acm.participant.http.main.models.ConfigRequest;
@@ -55,6 +56,7 @@ import org.springframework.stereotype.Component;
  * This class handles implementation of automationCompositionElement updates.
  */
 @Component
+@RequiredArgsConstructor
 public class AutomationCompositionElementHandler implements AutomationCompositionElementListener, Closeable {
 
     private static final Coder CODER = new StandardCoder();
@@ -63,22 +65,20 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
 
     private final ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
-    private final Map<ToscaConceptIdentifier, Pair<Integer, String>> restResponseMap = new ConcurrentHashMap<>();
-
     @Setter
     private ParticipantIntermediaryApi intermediaryApi;
+
+    private final AcHttpClient acHttpClient;
 
     /**
      * Handle a automation composition element state change.
      *
      * @param automationCompositionElementId the ID of the automation composition element
-     * @throws PfModelException in case of a model exception
      */
     @Override
-    public void undeploy(UUID automationCompositionId,
-        UUID automationCompositionElementId) {
-        intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
-                automationCompositionElementId, DeployState.UNDEPLOYED, LockState.NONE);
+    public void undeploy(UUID automationCompositionId, UUID automationCompositionElementId) {
+        intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, automationCompositionElementId,
+                DeployState.UNDEPLOYED, LockState.NONE);
     }
 
     /**
@@ -87,31 +87,36 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
      * @param automationCompositionId the automationComposition Id
      * @param element the information on the automation composition element
      * @param properties properties Map
+     * @throws PfModelException in case of a exception
      */
     @Override
-    public void deploy(UUID automationCompositionId,
-            AcElementDeploy element, Map<String, Object> properties) {
+    public void deploy(UUID automationCompositionId, AcElementDeploy element, Map<String, Object> properties)
+            throws PfModelException {
+        var configRequest = getConfigRequest(properties);
+        var restResponseMap = invokeHttpClient(configRequest);
+        var failedResponseStatus = restResponseMap.values().stream()
+                .filter(response -> !HttpStatus.valueOf(response.getKey()).is2xxSuccessful())
+                .collect(Collectors.toList());
+        if (failedResponseStatus.isEmpty()) {
+            intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
+                    DeployState.DEPLOYED, LockState.LOCKED);
+        } else {
+            throw new PfModelException(Status.BAD_REQUEST, "Error on Invoking the http request: {}",
+                    failedResponseStatus);
+        }
+    }
+
+    private ConfigRequest getConfigRequest(Map<String, Object> properties) throws PfModelException {
         try {
             var configRequest = CODER.convert(properties, ConfigRequest.class);
-            var violations =
-                Validation.buildDefaultValidatorFactory().getValidator().validate(configRequest);
-            if (violations.isEmpty()) {
-                invokeHttpClient(configRequest);
-                var failedResponseStatus = restResponseMap.values().stream()
-                        .filter(response -> !HttpStatus.valueOf(response.getKey())
-                        .is2xxSuccessful()).collect(Collectors.toList());
-                if (failedResponseStatus.isEmpty()) {
-                    intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
-                            DeployState.DEPLOYED, LockState.LOCKED);
-                } else {
-                    LOGGER.error("Error on Invoking the http request: {}", failedResponseStatus);
-                }
-            } else {
+            var violations = Validation.buildDefaultValidatorFactory().getValidator().validate(configRequest);
+            if (!violations.isEmpty()) {
                 LOGGER.error("Violations found in the config request parameters: {}", violations);
-                throw new ValidationException("Constraint violations in the config request");
+                throw new PfModelException(Status.BAD_REQUEST, "Constraint violations in the config request");
             }
-        } catch (CoderException | ValidationException | InterruptedException | ExecutionException e) {
-            LOGGER.error("Error invoking the http request for the config ", e);
+            return configRequest;
+        } catch (CoderException e) {
+            throw new PfModelException(Status.BAD_REQUEST, "Error extracting ConfigRequest ", e);
         }
     }
 
@@ -120,11 +125,21 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
      *
      * @param configRequest ConfigRequest
      */
-    public void invokeHttpClient(ConfigRequest configRequest) throws ExecutionException, InterruptedException {
-        // Invoke runnable thread to execute https requests of all config entities
-        var result = executor.submit(new AcHttpClient(configRequest, restResponseMap), restResponseMap);
-        if (!result.get().isEmpty()) {
-            LOGGER.debug("Http Request Completed: {}", result.isDone());
+    private Map<ToscaConceptIdentifier, Pair<Integer, String>> invokeHttpClient(ConfigRequest configRequest)
+            throws PfModelException {
+        try {
+            Map<ToscaConceptIdentifier, Pair<Integer, String>> restResponseMap = new ConcurrentHashMap<>();
+            // Invoke runnable thread to execute https requests of all config entities
+            var result = executor.submit(() -> acHttpClient.run(configRequest, restResponseMap), restResponseMap);
+            if (!result.get().isEmpty()) {
+                LOGGER.debug("Http Request Completed: {}", result.isDone());
+            }
+            return restResponseMap;
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new PfModelException(Status.BAD_REQUEST, "Error invoking ExecutorService ", e);
+        } catch (ExecutionException e) {
+            throw new PfModelException(Status.BAD_REQUEST, "Error invoking the http request for the config ", e);
         }
     }
 

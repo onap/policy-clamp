@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -78,8 +78,8 @@ class AcHttpClientTest {
         var configRequest =
                 new ConfigRequest(testMockUrl + ":" + mockServerPort, headers, List.of(configurationEntity), 10);
 
-        var client = new AcHttpClient(configRequest, responseMap);
-        assertDoesNotThrow(client::run);
+        var client = new AcHttpClient();
+        assertDoesNotThrow(() -> client.run(configRequest, responseMap));
         assertThat(responseMap).hasSize(2).containsKey(commonTestData.restParamsWithGet().getRestRequestId());
 
         var restResponseMap = responseMap.get(commonTestData.restParamsWithGet().getRestRequestId());
@@ -96,8 +96,8 @@ class AcHttpClientTest {
         var configRequest =
                 new ConfigRequest(testMockUrl + ":" + mockServerPort, headers, List.of(configurationEntity), 10);
 
-        var client = new AcHttpClient(configRequest, responseMap);
-        assertDoesNotThrow(client::run);
+        var client = new AcHttpClient();
+        assertDoesNotThrow(() -> client.run(configRequest, responseMap));
         assertThat(responseMap).hasSize(2).containsKey(commonTestData.restParamsWithGet().getRestRequestId());
         var response = responseMap.get(commonTestData.restParamsWithInvalidPost().getRestRequestId());
         assertThat(response.getKey()).isEqualTo(404);
