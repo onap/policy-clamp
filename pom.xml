@@ -15,24 +15,23 @@
   limitations under the License.
   ============LICENSE_END=========================================================
   -->
-
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project
+        xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                            http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <parent>
         <groupId>org.onap.policy.parent</groupId>
         <artifactId>integration</artifactId>
         <version>3.7.1-SNAPSHOT</version>
         <relativePath />
     </parent>
-
     <groupId>org.onap.policy.clamp</groupId>
     <artifactId>policy-clamp</artifactId>
     <version>6.4.1-SNAPSHOT</version>
     <name>${project.artifactId}</name>
-
     <packaging>pom</packaging>
-
     <description>
         This is the root Maven module for the policy-clamp project.
 
@@ -50,12 +49,10 @@
             o policy-clamp-participant-impl-http: A standard participant for http configurations
             o policy-clamp-participant-impl-a1pms: A standard participant for accessing A1-Policy Management Service
     </description>
-
     <properties>
         <policy.common.version>1.12.1-SNAPSHOT</policy.common.version>
         <policy.models.version>2.8.1-SNAPSHOT</policy.models.version>
     </properties>
-
     <modules>
         <module>common</module>
         <module>examples</module>
@@ -64,7 +61,6 @@
         <module>runtime-acm</module>
         <module>participant</module>
     </modules>
-
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
@@ -74,7 +70,7 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.7.1</version>
+            <version>${version.junit.jupiter}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
