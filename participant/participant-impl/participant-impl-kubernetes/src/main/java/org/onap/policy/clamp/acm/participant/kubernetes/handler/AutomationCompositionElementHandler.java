@@ -29,9 +29,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import javax.ws.rs.core.Response;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import net.bytebuddy.implementation.bytecode.Throw;
 import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.acm.participant.kubernetes.exception.ServiceException;
@@ -126,8 +128,13 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
                 checkPodStatus(automationCompositionId, element.getId(), chartInfo,
                         config.uninitializedToPassiveTimeout, config.podStatusCheckInterval);
             }
-        } catch (ServiceException | CoderException | IOException | ExecutionException | InterruptedException e) {
+        } catch (ServiceException | CoderException | IOException e) {
             LOGGER.warn("Installation of Helm chart failed", e);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new PfModelException(Response.Status.BAD_REQUEST, "Error invoking ExecutorService ", e);
+        } catch (ExecutionException e) {
+            throw new PfModelException(Response.Status.BAD_REQUEST, "Error retrieving pod status result ", e);
         }
     }
 
