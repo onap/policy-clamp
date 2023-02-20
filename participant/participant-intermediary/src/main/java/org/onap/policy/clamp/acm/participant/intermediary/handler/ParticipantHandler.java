@@ -172,9 +172,8 @@ public class ParticipantHandler {
     public void sendParticipantDeregister() {
         var participantDeregister = new ParticipantDeregister();
         participantDeregister.setParticipantId(participantId);
-
-        undeployInstancesOnParticipant();
         publisher.sendParticipantDeregister(participantDeregister);
+        undeployInstancesOnParticipant();
     }
 
     private void undeployInstancesOnParticipant() {
