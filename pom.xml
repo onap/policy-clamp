@@ -48,6 +48,7 @@
             o policy-clamp-acm-element-impl: ACM element implementation for integration testing
             o policy-clamp-participant-impl-http: A standard participant for http configurations
             o policy-clamp-participant-impl-a1pms: A standard participant for accessing A1-Policy Management Service
+            o policy-clamp-participant-impl-kserve: A standard participant for Kserve
     </description>
     <properties>
         <policy.common.version>1.12.1-SNAPSHOT</policy.common.version>

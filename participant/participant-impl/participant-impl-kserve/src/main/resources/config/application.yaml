@@ -1,0 +1,65 @@
+spring:
+  cloud:
+    kubernetes:
+      enabled: false
+    discovery:
+      enabled: false
+  security:
+    user:
+      name: participantUser
+      password: zb!XztG34
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration
+      - io.kubernetes.client.spring.extended.manifests.config.KubernetesManifestsAutoConfiguration
+      - io.kubernetes.client.spring.extended.network.config.KubernetesLoadBalancerAutoConfiguration
+
+security:
+  enable-csrf: false
+
+participant:
+  intermediaryParameters:
+    reportingTimeIntervalMs: 120000
+    description: Participant Description
+    participantId: 101c62b3-8918-41b9-a747-d21eb79c6c04
+    clampAutomationCompositionTopics:
+      topicSources:
+        - topic: POLICY-ACRUNTIME-PARTICIPANT
+          servers:
+            - ${topicServer:localhost}
+          topicCommInfrastructure: dmaap
+          fetchTimeout: 15000
+      topicSinks:
+        - topic: POLICY-ACRUNTIME-PARTICIPANT
+          servers:
+            - ${topicServer:localhost}
+          topicCommInfrastructure: dmaap
+    participantSupportedElementTypes:
+      -
+        typeName: org.onap.policy.clamp.acm.KserveAutomationCompositionElement
+        typeVersion: 1.0.1
+      -
+        typeName: org.onap.policy.clamp.acm.AutomationCompositionElement
+        typeVersion: 1.0.0
+
+customresourcedefinition:
+  group: serving.kserve.io
+  version: v1beta1
+  plural: inferenceservices
+  grace-period: 10
+
+management:
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include: health, metrics, prometheus
+server:
+  port: 8087
+  servlet:
+    context-path: /onap/policy/clamp/acm/kserveparticipant
+
+
