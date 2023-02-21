@@ -1,0 +1,9 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Liam Fallon <liam.fallon@est.tech>
+Code-Review+1: Francesco Fiora <francesco.fiora@est.tech>
+Code-Review+2: Ramesh Murugan Iyer <ramesh.murugan.iyer@est.tech>
+Submitted-by: Ramesh Murugan Iyer <ramesh.murugan.iyer@est.tech>
+Submitted-at: Tue, 21 Feb 2023 10:10:06 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/policy/clamp/+/133354
+Project: policy/clamp
+Branch: refs/heads/master
