@@ -43,9 +43,7 @@ import org.onap.policy.clamp.acm.participant.kserve.exception.KserveException;
 import org.onap.policy.clamp.acm.participant.kserve.k8s.KserveClient;
 import org.onap.policy.clamp.acm.participant.kserve.utils.CommonTestData;
 import org.onap.policy.clamp.acm.participant.kserve.utils.ToscaUtils;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -116,8 +114,6 @@ class AcElementHandlerTest {
         doReturn(result).when(executor).submit(any(Runnable.class), any());
         doReturn("Done").when(result).get();
         doReturn(true).when(result).isDone();
-        ToscaConceptIdentifier automationCompositionId = new ToscaConceptIdentifier();
-        AutomationCompositionElement element = new AutomationCompositionElement();
         assertDoesNotThrow(
                 () -> automationCompositionElementHandler.checkInferenceServiceStatus("sklearn-iris", "kserve-test", 1,
                         1));

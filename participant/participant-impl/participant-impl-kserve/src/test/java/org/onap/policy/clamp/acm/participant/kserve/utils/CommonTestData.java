@@ -24,8 +24,6 @@ package org.onap.policy.clamp.acm.participant.kserve.utils;
 import java.util.List;
 import java.util.UUID;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionOrderedState;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 

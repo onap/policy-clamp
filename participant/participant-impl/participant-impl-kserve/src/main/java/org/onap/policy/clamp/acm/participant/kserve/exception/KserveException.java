@@ -24,6 +24,7 @@ import javax.ws.rs.core.Response;
 import org.onap.policy.models.base.PfModelException;
 
 public class KserveException extends PfModelException {
+    private static final long serialVersionUID = 7126834020527531225L;
 
     public KserveException(String message) {
         super(Response.Status.BAD_GATEWAY, message);
