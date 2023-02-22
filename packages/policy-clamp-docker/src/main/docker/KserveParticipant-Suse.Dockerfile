@@ -52,7 +52,7 @@ RUN zypper -n -q install --no-recommends gzip java-11-openjdk-headless netcat-op
 COPY --chown=policy:policy --from=tarball /extracted $POLICY_HOME
 
 WORKDIR $POLICY_HOME
-COPY --chown=policy:policy kubernetes-participant.sh bin/
+COPY --chown=policy:policy kserve-participant.sh bin/
 COPY --chown=policy:policy /maven/policy-clamp-participant-impl-kserve.jar /app/app.jar
 
 RUN chmod 755 bin/*.sh
