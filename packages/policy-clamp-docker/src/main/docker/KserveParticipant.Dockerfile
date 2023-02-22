@@ -23,7 +23,7 @@ RUN mkdir /packages /extracted
 COPY /maven/lib/kserve-participant.tar.gz /packages/
 RUN tar xvzf /packages/kserve-participant.tar.gz --directory /extracted/
 
-FROM onap/policy-jre-alpine:2.5.2-SNAPSHOT
+FROM onap/policy-jre-alpine:2.6.1-SNAPSHOT
 
 LABEL maintainer="Policy Team"
 LABEL org.opencontainers.image.title="Policy CLAMP ACM KSERVE Participant"
@@ -40,6 +40,7 @@ ARG POLICY_LOGS=/var/log/onap/policy/kserve-participant
 ENV POLICY_LOGS=$POLICY_LOGS
 ENV POLICY_HOME=$POLICY_HOME/clamp
 
+USER root
 RUN mkdir -p $POLICY_HOME $POLICY_LOGS && \
     chown -R policy:policy $POLICY_HOME $POLICY_LOGS
 
