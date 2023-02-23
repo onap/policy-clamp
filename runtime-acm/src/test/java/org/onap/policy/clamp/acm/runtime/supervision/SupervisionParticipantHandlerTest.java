@@ -25,14 +25,16 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantDeregisterAckPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantRegisterAckPublisher;
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionInfo;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDeregister;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegister;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatus;
@@ -66,12 +68,15 @@ class SupervisionParticipantHandlerTest {
         var participantRegisterMessage = new ParticipantRegister();
         participantRegisterMessage.setMessageId(UUID.randomUUID());
         participantRegisterMessage.setParticipantId(CommonTestData.getParticipantId());
+        var supportedElementType = new ParticipantSupportedElementType();
+        supportedElementType.setTypeName("Type");
+        supportedElementType.setTypeVersion("1.0.0");
+        participantRegisterMessage.setParticipantSupportedElementType(List.of(supportedElementType));
+
         var participantProvider = mock(ParticipantProvider.class);
         var participantRegisterAckPublisher = mock(ParticipantRegisterAckPublisher.class);
         var handler = new SupervisionParticipantHandler(participantProvider, participantRegisterAckPublisher,
-            mock(ParticipantDeregisterAckPublisher.class));
-        participantRegisterMessage.setParticipantSupportedElementType(new ArrayList<>());
-
+                mock(ParticipantDeregisterAckPublisher.class));
         handler.handleParticipantMessage(participantRegisterMessage);
 
         verify(participantProvider).saveParticipant(any());
@@ -84,7 +89,11 @@ class SupervisionParticipantHandlerTest {
         var participantStatusMessage = new ParticipantStatus();
         participantStatusMessage.setParticipantId(CommonTestData.getParticipantId());
         participantStatusMessage.setState(ParticipantState.ON_LINE);
-        participantStatusMessage.setParticipantSupportedElementType(new ArrayList<>());
+        var supportedElementType = new ParticipantSupportedElementType();
+        supportedElementType.setTypeName("Type");
+        supportedElementType.setTypeVersion("1.0.0");
+        participantStatusMessage.setParticipantSupportedElementType(List.of(supportedElementType));
+        participantStatusMessage.setAutomationCompositionInfoList(List.of(new AutomationCompositionInfo()));
 
         var participantProvider = mock(ParticipantProvider.class);
         var handler = new SupervisionParticipantHandler(participantProvider,
