@@ -62,7 +62,8 @@ public class SupervisionParticipantHandler {
     @Timed(value = "listener.participant_register", description = "PARTICIPANT_REGISTER messages received")
     public void handleParticipantMessage(ParticipantRegister participantRegisterMsg) {
         LOGGER.debug("Participant Register received {}", participantRegisterMsg);
-        saveParticipantStatus(participantRegisterMsg);
+        saveParticipantStatus(participantRegisterMsg,
+            listToMap(participantRegisterMsg.getParticipantSupportedElementType()));
 
         participantRegisterAckPublisher.send(participantRegisterMsg.getMessageId(),
             participantRegisterMsg.getParticipantId());
@@ -98,18 +99,18 @@ public class SupervisionParticipantHandler {
     @Timed(value = "listener.participant_status", description = "PARTICIPANT_STATUS messages received")
     public void handleParticipantMessage(ParticipantStatus participantStatusMsg) {
         LOGGER.debug("Participant Status received {}", participantStatusMsg);
-        saveParticipantStatus(participantStatusMsg);
+        saveParticipantStatus(participantStatusMsg,
+            listToMap(participantStatusMsg.getParticipantSupportedElementType()));
     }
 
-    private void saveParticipantStatus(ParticipantMessage participantMessage) {
+    private void saveParticipantStatus(ParticipantMessage participantMessage,
+            Map<UUID, ParticipantSupportedElementType> participantSupportedElementType) {
         var participantOpt = participantProvider.findParticipant(participantMessage.getParticipantId());
 
         if (participantOpt.isEmpty()) {
-            ParticipantRegister registerMessage = (ParticipantRegister) participantMessage;
             var participant = new Participant();
             participant.setParticipantId(participantMessage.getParticipantId());
-            participant.setParticipantSupportedElementTypes(listToMap(registerMessage
-                .getParticipantSupportedElementType()));
+            participant.setParticipantSupportedElementTypes(participantSupportedElementType);
             participant.setParticipantState(ParticipantState.ON_LINE);
 
             participantProvider.saveParticipant(participant);

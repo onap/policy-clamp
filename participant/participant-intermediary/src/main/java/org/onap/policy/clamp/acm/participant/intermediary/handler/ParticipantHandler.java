@@ -93,7 +93,6 @@ public class ParticipantHandler {
     @Timed(value = "listener.participant_status_req", description = "PARTICIPANT_STATUS_REQ messages received")
     public void handleParticipantStatusReq(final ParticipantStatusReq participantStatusReqMsg) {
         var participantStatus = makeHeartbeat(true);
-        participantStatus.setParticipantSupportedElementType(this.supportedAcElementTypes);
         publisher.sendParticipantStatus(participantStatus);
     }
 
@@ -268,6 +267,7 @@ public class ParticipantHandler {
         heartbeat.setParticipantId(participantId);
         heartbeat.setState(ParticipantState.ON_LINE);
         heartbeat.setAutomationCompositionInfoList(getAutomationCompositionInfoList());
+        heartbeat.setParticipantSupportedElementType(new ArrayList<>(this.supportedAcElementTypes));
 
         if (responseToParticipantStatusReq) {
             List<ParticipantDefinition> participantDefinitionList = new ArrayList<>(acElementDefsMap.size());
