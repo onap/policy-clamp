@@ -138,10 +138,13 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
                 LOGGER.error("Violations found in the config request parameters: {}", violations);
                 throw new ValidationException("Constraint violations in the config request");
             }
-        } catch (ValidationException | ExecutionException | InterruptedException | CoderException e) {
-            throw new KserveException(HttpStatus.SC_BAD_REQUEST, "Invalid Configuration", e);
-        } catch (IOException | ApiException e) {
-            throw new KserveException(HttpStatus.SC_BAD_REQUEST, "Failed to configure the inference service", e);
+        } catch (CoderException e) {
+            throw new KserveException(HttpStatus.SC_BAD_REQUEST, "Invalid inference service configuration", e);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new KserveException("Interrupt in configuring the inference service", e);
+        } catch (IOException | ExecutionException | ApiException e) {
+            throw new KserveException("Failed to configure the inference service", e);
         }
     }
 
