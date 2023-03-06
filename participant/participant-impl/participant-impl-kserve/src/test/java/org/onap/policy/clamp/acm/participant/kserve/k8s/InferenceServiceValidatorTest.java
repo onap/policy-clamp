@@ -62,7 +62,7 @@ class InferenceServiceValidatorTest {
                 new InferenceServiceValidator("", namespace, TIMEOUT, STATUS_CHECK_INTERVAL,
                         kserveClient);
         assertThatThrownBy(inferenceServiceValidator::run).isInstanceOf(KserveException.class)
-                .hasMessage("Error verifying the status of the inference service. Exiting");
+                .cause().hasMessage("Kserve setup is unavailable for inference service to be deployed");
     }
 
     @Test
