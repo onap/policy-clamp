@@ -32,6 +32,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import javax.validation.Validation;
 import javax.validation.ValidationException;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -72,8 +73,8 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
 
     private final KserveClient kserveClient;
 
-    @Getter
-    private static final Map<UUID, ConfigurationEntity> configRequestMap = new HashMap<>();
+    @Getter(AccessLevel.PACKAGE)
+    private final Map<UUID, ConfigurationEntity> configRequestMap = new HashMap<>();
 
 
     private static class ThreadConfig {

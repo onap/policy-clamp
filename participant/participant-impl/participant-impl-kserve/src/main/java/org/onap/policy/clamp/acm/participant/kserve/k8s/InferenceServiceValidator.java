@@ -81,11 +81,12 @@ public class InferenceServiceValidator implements Runnable {
     private void verifyInferenceServiceStatus()
             throws KserveException, IOException, InterruptedException, ApiException {
         var isVerified = false;
+        String isvcStatus = null;
         long endTime = System.currentTimeMillis() + (timeout * 1000L);
 
         while (!isVerified && System.currentTimeMillis() < endTime) {
-            var output = kserveClient.getInferenceServiceStatus(namespace, inferenceServiceName);
-            isVerified = output.equalsIgnoreCase(Boolean.TRUE.toString());
+            isvcStatus = kserveClient.getInferenceServiceStatus(namespace, inferenceServiceName);
+            isVerified = isvcStatus.equalsIgnoreCase(Boolean.TRUE.toString());
             if (!isVerified) {
                 logger.info("Waiting for the inference service {} to be active ", inferenceServiceName);
                 // Recheck status of pods in specific intervals.
@@ -95,7 +96,11 @@ public class InferenceServiceValidator implements Runnable {
             }
         }
         if (!isVerified) {
-            throw new KserveException("Time out Exception verifying the status of the inference service");
+            if (isvcStatus != null && isvcStatus.isEmpty()) {
+                throw new KserveException("Kserve setup is unavailable for inference service to be deployed");
+            } else {
+                throw new KserveException("Time out Exception verifying the status of the inference service");
+            }
         }
     }
 }

@@ -20,14 +20,18 @@
 
 package org.onap.policy.clamp.acm.participant.kserve.handler;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 
 import io.kubernetes.client.openapi.ApiException;
 import java.io.IOException;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
@@ -77,7 +81,7 @@ class AcElementHandlerTest {
     }
 
     @BeforeEach
-    void startMocks() throws KserveException, ExecutionException, InterruptedException, IOException, ApiException {
+    void startMocks() throws ExecutionException, InterruptedException, IOException, ApiException {
         doReturn(true).when(kserveClient).deployInferenceService(any(), any());
         doReturn(true).when(automationCompositionElementHandler)
                 .checkInferenceServiceStatus(any(), any(), anyInt(), anyInt());
@@ -100,13 +104,26 @@ class AcElementHandlerTest {
     }
 
     @Test
-    void test_AutomationCompositionElementUpdate() {
+    void test_AutomationCompositionElementUpdate() throws IOException, ApiException {
         var element = commonTestData.getAutomationCompositionElement();
 
         var nodeTemplatesMap = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
         assertDoesNotThrow(
                 () -> automationCompositionElementHandler.deploy(commonTestData.getAutomationCompositionId(), element,
                         nodeTemplatesMap.get(KSERVE_AUTOMATION_COMPOSITION_ELEMENT).getProperties()));
+        assertThat(automationCompositionElementHandler.getConfigRequestMap()).hasSize(1)
+                .containsKey(element.getId());
+
+        doThrow(new ApiException("Error installing the inference service")).when(kserveClient)
+                .deployInferenceService(any(), any());
+
+        var elementId2 = UUID.randomUUID();
+        element.setId(elementId2);
+        assertThrows(KserveException.class,
+                () -> automationCompositionElementHandler.deploy(commonTestData.getAutomationCompositionId(), element,
+                        nodeTemplatesMap.get(KSERVE_AUTOMATION_COMPOSITION_ELEMENT).getProperties()));
+
+        assertThat(automationCompositionElementHandler.getConfigRequestMap().containsKey(elementId2)).isFalse();
     }
 
     @Test
