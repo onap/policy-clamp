@@ -28,6 +28,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Profile;
 
 /**
  * Starter.
@@ -54,6 +55,7 @@ public class Application {
      * @return ApiClient
      * @throws IOException exception
      */
+    @Profile("kubernetes")
     @Bean
     public ApiClient defaultApiClient() throws IOException {
         return Config.fromCluster();
