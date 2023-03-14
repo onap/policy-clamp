@@ -25,6 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVICE_TEMPLATE_YAML;
@@ -162,7 +163,7 @@ class CommissioningProviderTest {
         acTypeStateUpdate.setPrimeOrder(PrimeOrder.PRIME);
         provider.compositionDefinitionPriming(compositionId, acTypeStateUpdate);
         verify(acDefinitionProvider).updateAcDefinition(acmDefinition);
-        verify(participantPrimePublisher).sendPriming(any(), any(), any());
+        verify(participantPrimePublisher, timeout(1000).times(1)).sendPriming(any(), any(), any());
     }
 
     @Test
@@ -180,6 +181,6 @@ class CommissioningProviderTest {
         var acTypeStateUpdate = new AcTypeStateUpdate();
         acTypeStateUpdate.setPrimeOrder(PrimeOrder.DEPRIME);
         provider.compositionDefinitionPriming(compositionId, acTypeStateUpdate);
-        verify(participantPrimePublisher).sendDepriming(compositionId);
+        verify(participantPrimePublisher, timeout(1000).times(1)).sendDepriming(compositionId);
     }
 }

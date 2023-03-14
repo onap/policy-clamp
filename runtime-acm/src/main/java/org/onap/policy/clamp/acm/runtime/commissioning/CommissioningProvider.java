@@ -22,6 +22,8 @@
 package org.onap.policy.clamp.acm.runtime.commissioning;
 
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.Response.Status;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +56,8 @@ public class CommissioningProvider {
     private final AutomationCompositionProvider acProvider;
     private final AcTypeStateResolver acTypeStateResolver;
     private final ParticipantPrimePublisher participantPrimePublisher;
+
+    private final ExecutorService executor = Executors.newFixedThreadPool(1);
 
     private CommissioningResponse createCommissioningResponse(UUID compositionId,
             ToscaServiceTemplate serviceTemplate) {
@@ -193,7 +197,9 @@ public class CommissioningProvider {
     private void prime(AutomationCompositionDefinition acmDefinition) {
         var prearation = participantPrimePublisher.prepareParticipantPriming(acmDefinition);
         acDefinitionProvider.updateAcDefinition(acmDefinition);
-        participantPrimePublisher.sendPriming(prearation, acmDefinition.getCompositionId(), null);
+
+        executor.execute(
+                () -> participantPrimePublisher.sendPriming(prearation, acmDefinition.getCompositionId(), null));
     }
 
     private void deprime(AutomationCompositionDefinition acmDefinition) {
@@ -204,7 +210,7 @@ public class CommissioningProvider {
             acmDefinition.setState(AcTypeState.DEPRIMING);
             acDefinitionProvider.updateAcDefinition(acmDefinition);
         }
-        participantPrimePublisher.sendDepriming(acmDefinition.getCompositionId());
+        executor.execute(() -> participantPrimePublisher.sendDepriming(acmDefinition.getCompositionId()));
     }
 
 }
