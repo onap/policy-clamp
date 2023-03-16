@@ -26,7 +26,7 @@ image:
   repository: nexus3.onap.org:10001
   name: onap/policy-clamp-acm-element-impl
   pullPolicy: IfNotPresent
-  tag: "6.3.0-SNAPSHOT"
+  tag: "6.4-SNAPSHOT-latest"
 
 nameOverride: "ac-element-impl"
 
