@@ -22,6 +22,30 @@
       "revId": "4f15b44c04a6f328f1a3357b859482c147fba0cd",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c833f281_780f20ba",
+        "filename": "examples/src/main/resources/clamp/acm/acm-demo/toscaServiceTemplate.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 515,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2023-03-16T09:16:49Z",
+      "side": 0,
+      "message": "in order to create more the one instance of the same serviceTemplate, all instance properties should not be defined in a service template anymore. All instance properties should be defined in a AutomationComposition like AutomationComposition.yaml added in this example",
+      "parentUuid": "8809d835_456588fa",
+      "range": {
+        "startLine": 503,
+        "startChar": 7,
+        "endLine": 515,
+        "endChar": 35
+      },
+      "revId": "4f15b44c04a6f328f1a3357b859482c147fba0cd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
