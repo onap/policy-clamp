@@ -47,7 +47,6 @@ import org.springframework.transaction.annotation.Transactional;
  * database to the callers.
  */
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class CommissioningProvider {
     public static final String AUTOMATION_COMPOSITION_NODE_TYPE = "org.onap.policy.clamp.acm.AutomationComposition";
@@ -81,6 +80,7 @@ public class CommissioningProvider {
      * @param serviceTemplate the service template
      * @return the result of the commissioning operation
      */
+    @Transactional
     public CommissioningResponse createAutomationCompositionDefinition(ToscaServiceTemplate serviceTemplate) {
 
         var acmDefinition = acDefinitionProvider.createAutomationCompositionDefinition(serviceTemplate);
@@ -95,6 +95,7 @@ public class CommissioningProvider {
      * @param serviceTemplate the service template
      * @return the result of the commissioning operation
      */
+    @Transactional
     public CommissioningResponse updateCompositionDefinition(UUID compositionId, ToscaServiceTemplate serviceTemplate) {
         if (verifyIfInstanceExists(compositionId)) {
             throw new PfModelRuntimeException(Status.BAD_REQUEST,
@@ -116,6 +117,7 @@ public class CommissioningProvider {
      * @param compositionId The UUID of the automation composition definition to delete
      * @return the result of the deletion
      */
+    @Transactional
     public CommissioningResponse deleteAutomationCompositionDefinition(UUID compositionId) {
         if (verifyIfInstanceExists(compositionId)) {
             throw new PfModelRuntimeException(Status.BAD_REQUEST,

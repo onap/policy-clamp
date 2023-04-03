@@ -57,7 +57,7 @@ public class SupervisionHandler {
         var acDefinition = acDefinitionOpt.get();
         if (!AcTypeState.PRIMING.equals(acDefinition.getState())
                 && !AcTypeState.DEPRIMING.equals(acDefinition.getState())) {
-            LOGGER.warn("AC Definition {} already primed/deprimed with participant {}",
+            LOGGER.error("AC Definition {} already primed/deprimed with participant {}",
                     participantPrimeAckMessage.getCompositionId(), participantPrimeAckMessage.getParticipantId());
             return;
         }

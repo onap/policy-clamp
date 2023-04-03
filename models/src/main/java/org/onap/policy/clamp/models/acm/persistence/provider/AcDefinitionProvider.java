@@ -37,6 +37,7 @@ import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -97,6 +98,7 @@ public class AcDefinitionProvider {
         var jpaAcmDefinition = ProviderUtils.getJpaAndValidate(acDefinition, JpaAutomationCompositionDefinition::new,
                 "AutomationCompositionDefinition");
         acmDefinitionRepository.save(jpaAcmDefinition);
+        acmDefinitionRepository.flush();
     }
 
     /**
@@ -141,7 +143,7 @@ public class AcDefinitionProvider {
      * @param compositionId The UUID of the automation composition definition to delete
      * @return the automation composition definition
      */
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.READ_UNCOMMITTED)
     public Optional<AutomationCompositionDefinition> findAcDefinition(UUID compositionId) {
         var jpaGet = acmDefinitionRepository.findById(compositionId.toString());
         return jpaGet.stream().map(JpaAutomationCompositionDefinition::toAuthorative).findFirst();
