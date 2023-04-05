@@ -47,4 +47,26 @@ public interface AutomationCompositionElementListener {
      */
     public void deploy(UUID automationCompositionId, AcElementDeploy element, Map<String, Object> properties)
             throws PfModelException;
+
+    public default void lock(UUID automationCompositionId, UUID automationCompositionElementId)
+            throws PfModelException {
+        // default Lock Operation
+    }
+
+    public default void unlock(UUID automationCompositionId, UUID automationCompositionElementId)
+            throws PfModelException {
+        // default Unlock Operation
+    }
+
+    public default String getUseState(UUID automationCompositionId, UUID automationCompositionElementId)
+            throws PfModelException {
+        // default Use State
+        return "";
+    }
+
+    public default String getOperationalState(UUID automationCompositionId, UUID automationCompositionElementId)
+            throws PfModelException {
+        // default Operational State
+        return "";
+    }
 }

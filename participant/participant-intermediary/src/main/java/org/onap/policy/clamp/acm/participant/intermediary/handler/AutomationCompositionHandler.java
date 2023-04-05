@@ -111,6 +111,8 @@ public class AutomationCompositionHandler {
             if (element != null) {
                 element.setDeployState(deployState);
                 element.setLockState(lockState);
+                element.setUseState(getUseState(automationCompositionId, id));
+                element.setOperationalState(getOperationalState(automationCompositionId, id));
             }
             var checkOpt = automationComposition.getElements().values().stream()
                     .filter(acElement -> !deployState.equals(acElement.getDeployState())).findAny();
@@ -133,8 +135,11 @@ public class AutomationCompositionHandler {
             automationCompositionStateChangeAck.setAutomationCompositionId(automationCompositionId);
             acElement.setDeployState(deployState);
             acElement.setLockState(lockState);
+            acElement.setUseState(getUseState(automationCompositionId, id));
+            acElement.setOperationalState(getOperationalState(automationCompositionId, id));
             automationCompositionStateChangeAck.getAutomationCompositionResultMap().put(acElement.getId(),
-                    new AcElementDeployAck(deployState, lockState, true,
+                    new AcElementDeployAck(deployState, lockState,
+                            acElement.getOperationalState(), acElement.getUseState(), true,
                             "Automation composition element {} state changed to {}\", id, newState)"));
             LOGGER.debug("Automation composition element {} state changed to {}", id, deployState);
             automationCompositionStateChangeAck
@@ -408,8 +413,15 @@ public class AutomationCompositionHandler {
         if (acElementNodeTemplate != null) {
             int startPhase = ParticipantUtils.findStartPhase(acElementNodeTemplate.getProperties());
             if (startPhaseMsg.equals(startPhase)) {
-                updateAutomationCompositionElementState(instanceId, acElement.getId(), DeployState.DEPLOYED,
-                        LockState.LOCKED);
+                for (var acElementListener : listeners) {
+                    try {
+                        acElementListener.lock(instanceId, acElement.getId());
+                        updateAutomationCompositionElementState(instanceId, acElement.getId(), DeployState.DEPLOYED,
+                                LockState.LOCKED);
+                    } catch (PfModelException e) {
+                        LOGGER.error("Automation composition element lock failed {}", instanceId);
+                    }
+                }
             }
         }
     }
@@ -420,8 +432,15 @@ public class AutomationCompositionHandler {
         if (acElementNodeTemplate != null) {
             int startPhase = ParticipantUtils.findStartPhase(acElementNodeTemplate.getProperties());
             if (startPhaseMsg.equals(startPhase)) {
-                updateAutomationCompositionElementState(instanceId, acElement.getId(), DeployState.DEPLOYED,
-                        LockState.UNLOCKED);
+                for (var acElementListener : listeners) {
+                    try {
+                        acElementListener.unlock(instanceId, acElement.getId());
+                        updateAutomationCompositionElementState(instanceId, acElement.getId(), DeployState.DEPLOYED,
+                                LockState.UNLOCKED);
+                    } catch (PfModelException e) {
+                        LOGGER.error("Automation composition element unlock failed {}", instanceId);
+                    }
+                }
             }
         }
     }
@@ -436,10 +455,46 @@ public class AutomationCompositionHandler {
                     try {
                         acElementListener.undeploy(instanceId, acElement.getId());
                     } catch (PfModelException e) {
-                        LOGGER.debug("Automation composition element update failed {}", instanceId);
+                        LOGGER.error("Automation composition element update failed {}", instanceId);
                     }
                 }
             }
         }
+    }
+
+    /**
+     * Get UseState.
+     *
+     * @param instanceId the instance Id
+     * @param acElementId the Automation Composition Element Id
+     * @return the UseState of the Automation Composition Element
+     */
+    public String getUseState(UUID instanceId, UUID acElementId) {
+        for (var acElementListener : listeners) {
+            try {
+                return acElementListener.getUseState(instanceId, acElementId);
+            } catch (PfModelException e) {
+                LOGGER.error("Automation composition element get Use State failed {}", acElementId);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Get OperationalState.
+     *
+     * @param instanceId the instance Id
+     * @param acElementId the Automation Composition Element Id
+     * @return the OperationalState of the Automation Composition Element
+     */
+    public String getOperationalState(UUID instanceId, UUID acElementId) {
+        for (var acElementListener : listeners) {
+            try {
+                return acElementListener.getOperationalState(instanceId, acElementId);
+            } catch (PfModelException e) {
+                LOGGER.error("Automation composition element get Use State failed {}", acElementId);
+            }
+        }
+        return null;
     }
 }

@@ -50,7 +50,7 @@ class AutomationCompositionDeployAckTest {
         // verify with all values
         orig.setAutomationCompositionId(UUID.randomUUID());
         orig.setParticipantId(CommonTestData.getParticipantId());
-        var acElementResult = new AcElementDeployAck(DeployState.DEPLOYED, LockState.LOCKED,
+        var acElementResult = new AcElementDeployAck(DeployState.DEPLOYED, LockState.LOCKED, "", "",
             true, "AutomationCompositionElement result");
         final var automationCompositionResultMap = Map.of(UUID.randomUUID(), acElementResult);
         orig.setAutomationCompositionResultMap(automationCompositionResultMap);

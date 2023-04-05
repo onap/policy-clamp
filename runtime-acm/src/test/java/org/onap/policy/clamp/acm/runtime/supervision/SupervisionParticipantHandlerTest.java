@@ -38,6 +38,7 @@ import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDeregister;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegister;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatus;
+import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
 
 class SupervisionParticipantHandlerTest {
@@ -54,7 +55,8 @@ class SupervisionParticipantHandlerTest {
         participantDeregisterMessage.setParticipantId(CommonTestData.getParticipantId());
         var participantDeregisterAckPublisher = mock(ParticipantDeregisterAckPublisher.class);
         var handler = new SupervisionParticipantHandler(participantProvider,
-            mock(ParticipantRegisterAckPublisher.class), participantDeregisterAckPublisher);
+            mock(ParticipantRegisterAckPublisher.class), participantDeregisterAckPublisher,
+            mock(AutomationCompositionProvider.class));
 
         handler.handleParticipantMessage(participantDeregisterMessage);
 
@@ -76,7 +78,8 @@ class SupervisionParticipantHandlerTest {
         var participantProvider = mock(ParticipantProvider.class);
         var participantRegisterAckPublisher = mock(ParticipantRegisterAckPublisher.class);
         var handler = new SupervisionParticipantHandler(participantProvider, participantRegisterAckPublisher,
-                mock(ParticipantDeregisterAckPublisher.class));
+                mock(ParticipantDeregisterAckPublisher.class),
+                mock(AutomationCompositionProvider.class));
         handler.handleParticipantMessage(participantRegisterMessage);
 
         verify(participantProvider).saveParticipant(any());
@@ -97,7 +100,8 @@ class SupervisionParticipantHandlerTest {
 
         var participantProvider = mock(ParticipantProvider.class);
         var handler = new SupervisionParticipantHandler(participantProvider,
-            mock(ParticipantRegisterAckPublisher.class), mock(ParticipantDeregisterAckPublisher.class));
+            mock(ParticipantRegisterAckPublisher.class), mock(ParticipantDeregisterAckPublisher.class),
+            mock(AutomationCompositionProvider.class));
         var participant = CommonTestData.createParticipant(CommonTestData.getParticipantId());
         when(participantProvider.findParticipant(CommonTestData.getParticipantId()))
                 .thenReturn(Optional.of(participant));

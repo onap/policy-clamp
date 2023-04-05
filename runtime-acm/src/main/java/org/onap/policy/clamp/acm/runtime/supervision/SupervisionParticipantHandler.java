@@ -36,6 +36,7 @@ import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDe
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessage;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegister;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatus;
+import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +53,7 @@ public class SupervisionParticipantHandler {
     private final ParticipantProvider participantProvider;
     private final ParticipantRegisterAckPublisher participantRegisterAckPublisher;
     private final ParticipantDeregisterAckPublisher participantDeregisterAckPublisher;
+    private final AutomationCompositionProvider automationCompositionProvider;
 
     /**
      * Handle a ParticipantRegister message from a participant.
@@ -101,6 +103,9 @@ public class SupervisionParticipantHandler {
         LOGGER.debug("Participant Status received {}", participantStatusMsg);
         saveParticipantStatus(participantStatusMsg,
             listToMap(participantStatusMsg.getParticipantSupportedElementType()));
+        if (!participantStatusMsg.getAutomationCompositionInfoList().isEmpty()) {
+            automationCompositionProvider.upgradeStates(participantStatusMsg.getAutomationCompositionInfoList());
+        }
     }
 
     private void saveParticipantStatus(ParticipantMessage participantMessage,

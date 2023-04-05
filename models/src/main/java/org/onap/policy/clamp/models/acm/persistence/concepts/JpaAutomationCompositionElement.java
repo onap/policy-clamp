@@ -93,6 +93,12 @@ public class JpaAutomationCompositionElement extends Validated
     private LockState lockState;
 
     @Column
+    private String operationalState;
+
+    @Column
+    private String useState;
+
+    @Column
     private String description;
 
     @Lob
@@ -152,6 +158,8 @@ public class JpaAutomationCompositionElement extends Validated
         this.properties = (copyConcept.properties != null ? new LinkedHashMap<>(copyConcept.properties) : null);
         this.deployState = copyConcept.deployState;
         this.lockState = copyConcept.lockState;
+        this.operationalState = copyConcept.operationalState;
+        this.useState = copyConcept.useState;
     }
 
     /**
@@ -174,6 +182,8 @@ public class JpaAutomationCompositionElement extends Validated
         element.setProperties(PfUtils.mapMap(properties, UnaryOperator.identity()));
         element.setDeployState(deployState);
         element.setLockState(lockState);
+        element.setOperationalState(operationalState);
+        element.setUseState(useState);
 
         return element;
     }
@@ -186,6 +196,8 @@ public class JpaAutomationCompositionElement extends Validated
         this.properties = PfUtils.mapMap(element.getProperties(), UnaryOperator.identity());
         this.deployState = element.getDeployState();
         this.lockState = element.getLockState();
+        this.operationalState = element.getOperationalState();
+        this.useState = element.getUseState();
     }
 
     @Override
@@ -223,6 +235,16 @@ public class JpaAutomationCompositionElement extends Validated
         }
 
         result = ObjectUtils.compare(lockState, other.lockState);
+        if (result != 0) {
+            return result;
+        }
+
+        result = ObjectUtils.compare(useState, other.useState);
+        if (result != 0) {
+            return result;
+        }
+
+        result = ObjectUtils.compare(operationalState, other.operationalState);
         if (result != 0) {
             return result;
         }

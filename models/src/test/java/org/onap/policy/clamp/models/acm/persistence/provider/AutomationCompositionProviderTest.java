@@ -35,6 +35,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationComposition;
+import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionElementRepository;
 import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionRepository;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -64,7 +65,8 @@ class AutomationCompositionProviderTest {
     @Test
     void testAutomationCompositionCreate() {
         var automationCompositionRepository = mock(AutomationCompositionRepository.class);
-        var automationCompositionProvider = new AutomationCompositionProvider(automationCompositionRepository);
+        var automationCompositionProvider = new AutomationCompositionProvider(automationCompositionRepository,
+                mock(AutomationCompositionElementRepository.class));
 
         when(automationCompositionRepository.save(any(JpaAutomationComposition.class)))
                 .thenReturn(inputAutomationCompositionsJpa.get(0));
@@ -78,7 +80,8 @@ class AutomationCompositionProviderTest {
     @Test
     void testAutomationCompositionUpdate() {
         var automationCompositionRepository = mock(AutomationCompositionRepository.class);
-        var automationCompositionProvider = new AutomationCompositionProvider(automationCompositionRepository);
+        var automationCompositionProvider = new AutomationCompositionProvider(automationCompositionRepository,
+                mock(AutomationCompositionElementRepository.class));
 
         assertThatThrownBy(() -> automationCompositionProvider.updateAutomationComposition(null))
                 .hasMessageMatching(OBJECT_IS_NULL);
@@ -95,7 +98,8 @@ class AutomationCompositionProviderTest {
     @Test
     void testGetAutomationCompositions() throws Exception {
         var automationCompositionRepository = mock(AutomationCompositionRepository.class);
-        var automationCompositionProvider = new AutomationCompositionProvider(automationCompositionRepository);
+        var automationCompositionProvider = new AutomationCompositionProvider(automationCompositionRepository,
+                mock(AutomationCompositionElementRepository.class));
 
         var automationComposition = inputAutomationCompositions.getAutomationCompositionList().get(0);
         var acList = automationCompositionProvider.getAutomationCompositions(UUID.randomUUID(),
@@ -112,7 +116,8 @@ class AutomationCompositionProviderTest {
     @Test
     void testGetAutomationComposition() {
         var automationCompositionRepository = mock(AutomationCompositionRepository.class);
-        var automationCompositionProvider = new AutomationCompositionProvider(automationCompositionRepository);
+        var automationCompositionProvider = new AutomationCompositionProvider(automationCompositionRepository,
+                mock(AutomationCompositionElementRepository.class));
 
         var automationComposition = inputAutomationCompositions.getAutomationCompositionList().get(0);
         assertThatThrownBy(
@@ -128,7 +133,8 @@ class AutomationCompositionProviderTest {
     @Test
     void testFindAutomationComposition() {
         var automationCompositionRepository = mock(AutomationCompositionRepository.class);
-        var automationCompositionProvider = new AutomationCompositionProvider(automationCompositionRepository);
+        var automationCompositionProvider = new AutomationCompositionProvider(automationCompositionRepository,
+                mock(AutomationCompositionElementRepository.class));
 
         var automationComposition = inputAutomationCompositions.getAutomationCompositionList().get(0);
         var acOpt = automationCompositionProvider.findAutomationComposition(automationComposition.getInstanceId());
@@ -151,7 +157,8 @@ class AutomationCompositionProviderTest {
     @Test
     void testGetAcInstancesByCompositionId() {
         var automationCompositionRepository = mock(AutomationCompositionRepository.class);
-        var automationCompositionProvider = new AutomationCompositionProvider(automationCompositionRepository);
+        var automationCompositionProvider = new AutomationCompositionProvider(automationCompositionRepository,
+                mock(AutomationCompositionElementRepository.class));
 
         var automationComposition = inputAutomationCompositions.getAutomationCompositionList().get(0);
         when(automationCompositionRepository.findByCompositionId(automationComposition.getCompositionId().toString()))
@@ -164,7 +171,8 @@ class AutomationCompositionProviderTest {
     @Test
     void testDeleteAutomationComposition() {
         var automationCompositionRepository = mock(AutomationCompositionRepository.class);
-        var automationCompositionProvider = new AutomationCompositionProvider(automationCompositionRepository);
+        var automationCompositionProvider = new AutomationCompositionProvider(automationCompositionRepository,
+                mock(AutomationCompositionElementRepository.class));
 
         assertThatThrownBy(() -> automationCompositionProvider.deleteAutomationComposition(UUID.randomUUID()))
                 .hasMessageMatching(".*.failed, automation composition does not exist");

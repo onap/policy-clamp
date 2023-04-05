@@ -54,6 +54,10 @@ public class AutomationCompositionElement {
     @NonNull
     private LockState lockState = LockState.LOCKED;
 
+    private String operationalState;
+
+    private String useState;
+
     private String description;
 
     // A map indexed by the property name. Each map entry is the serialized value of the property,
@@ -73,5 +77,7 @@ public class AutomationCompositionElement {
         this.properties = PfUtils.mapMap(otherElement.properties, UnaryOperator.identity());
         this.deployState = otherElement.deployState;
         this.lockState = otherElement.lockState;
+        this.operationalState = otherElement.operationalState;
+        this.useState = otherElement.useState;
     }
 }

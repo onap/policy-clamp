@@ -20,30 +20,39 @@
 
 package org.onap.policy.clamp.models.acm.concepts;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import java.util.UUID;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@Getter
-@Setter
-@AllArgsConstructor
+/**
+ * Class to represent a automation composition element info instance.
+ */
+@NoArgsConstructor
+@Data
 @ToString
-public class AcElementDeployAck {
+public class AutomationCompositionElementInfo {
 
-    // State of the AutomationCompositionElement
-    private DeployState deployState;
+    private UUID automationCompositionElementId;
 
-    // State of the AutomationCompositionElement
-    private LockState lockState;
+    private DeployState deployState = DeployState.UNDEPLOYED;
+
+    private LockState lockState = LockState.LOCKED;
 
     private String operationalState;
 
     private String useState;
 
-    // Result: Success/Fail.
-    private Boolean result;
-
-    // Message indicating reason for failure
-    private String message;
+    /**
+     * Copy constructor, does a deep copy but as all fields here are immutable, it's just a regular copy.
+     *
+     * @param otherElement the other element to copy from
+     */
+    public AutomationCompositionElementInfo(AutomationCompositionElementInfo otherElement) {
+        this.automationCompositionElementId = otherElement.automationCompositionElementId;
+        this.deployState = otherElement.deployState;
+        this.lockState = otherElement.lockState;
+        this.operationalState = otherElement.operationalState;
+        this.useState = otherElement.useState;
+    }
 }

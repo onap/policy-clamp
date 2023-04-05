@@ -201,4 +201,16 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
 
         return policyList;
     }
+
+    @Override
+    public String getUseState(UUID automationCompositionId, UUID automationCompositionElementId)
+            throws PfModelException {
+        return "IDLE";
+    }
+
+    @Override
+    public String getOperationalState(UUID automationCompositionId, UUID automationCompositionElementId)
+            throws PfModelException {
+        return "ENABLED";
+    }
 }

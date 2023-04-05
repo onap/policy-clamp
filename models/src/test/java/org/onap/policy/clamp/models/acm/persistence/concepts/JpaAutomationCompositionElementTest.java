@@ -122,8 +122,13 @@ class JpaAutomationCompositionElementTest {
 
         assertEquals(ELEMENT_ID, testJpaAcElement.getElementId());
 
-        var testJpaAutomationCompositionElement2 = new JpaAutomationCompositionElement(testJpaAcElement);
-        assertEquals(testJpaAcElement, testJpaAutomationCompositionElement2);
+        var testJpaAcElement2 = new JpaAutomationCompositionElement(testJpaAcElement);
+        assertEquals(testJpaAcElement, testJpaAcElement2);
+
+        testJpaAcElement2 = new JpaAutomationCompositionElement(testJpaAcElement.toAuthorative());
+        testJpaAcElement2.setElementId(ELEMENT_ID);
+        testJpaAcElement2.setInstanceId(INSTANCE_ID);
+        assertEquals(testJpaAcElement, testJpaAcElement2);
     }
 
     @Test
@@ -138,52 +143,60 @@ class JpaAutomationCompositionElementTest {
 
     @Test
     void testJpaAutomationCompositionElementCompareTo() {
-        var testJpaAutomationCompositionElement = createJpaAutomationCompositionElementInstance();
+        var testJpaAcElement = createJpaAutomationCompositionElementInstance();
 
-        var otherJpaAutomationCompositionElement =
-                new JpaAutomationCompositionElement(testJpaAutomationCompositionElement);
-        assertEquals(0, testJpaAutomationCompositionElement.compareTo(otherJpaAutomationCompositionElement));
-        assertEquals(-1, testJpaAutomationCompositionElement.compareTo(null));
-        assertEquals(0, testJpaAutomationCompositionElement.compareTo(testJpaAutomationCompositionElement));
+        var otherJpaAcElement =
+                new JpaAutomationCompositionElement(testJpaAcElement);
+        assertEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
+        assertEquals(-1, testJpaAcElement.compareTo(null));
+        assertEquals(0, testJpaAcElement.compareTo(testJpaAcElement));
         assertNotEquals(0,
-                testJpaAutomationCompositionElement.compareTo(new DummyJpaAutomationCompositionElementChild()));
+                testJpaAcElement.compareTo(new DummyJpaAutomationCompositionElementChild()));
 
-        testJpaAutomationCompositionElement.setElementId("BadValue");
-        assertNotEquals(0, testJpaAutomationCompositionElement.compareTo(otherJpaAutomationCompositionElement));
-        testJpaAutomationCompositionElement.setElementId(ELEMENT_ID);
-        assertEquals(0, testJpaAutomationCompositionElement.compareTo(otherJpaAutomationCompositionElement));
+        testJpaAcElement.setElementId("BadValue");
+        assertNotEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
+        testJpaAcElement.setElementId(ELEMENT_ID);
+        assertEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
 
-        testJpaAutomationCompositionElement.setInstanceId("BadValue");
-        assertNotEquals(0, testJpaAutomationCompositionElement.compareTo(otherJpaAutomationCompositionElement));
-        testJpaAutomationCompositionElement.setInstanceId(INSTANCE_ID);
-        assertEquals(0, testJpaAutomationCompositionElement.compareTo(otherJpaAutomationCompositionElement));
+        testJpaAcElement.setInstanceId("BadValue");
+        assertNotEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
+        testJpaAcElement.setInstanceId(INSTANCE_ID);
+        assertEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
 
-        testJpaAutomationCompositionElement.setDefinition(new PfConceptKey("BadValue", "0.0.1"));
-        assertNotEquals(0, testJpaAutomationCompositionElement.compareTo(otherJpaAutomationCompositionElement));
-        testJpaAutomationCompositionElement.setDefinition(new PfConceptKey("aceDef", "0.0.1"));
-        assertEquals(0, testJpaAutomationCompositionElement.compareTo(otherJpaAutomationCompositionElement));
+        testJpaAcElement.setDefinition(new PfConceptKey("BadValue", "0.0.1"));
+        assertNotEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
+        testJpaAcElement.setDefinition(new PfConceptKey("aceDef", "0.0.1"));
+        assertEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
 
-        testJpaAutomationCompositionElement.setDescription("Description");
-        assertNotEquals(0, testJpaAutomationCompositionElement.compareTo(otherJpaAutomationCompositionElement));
-        testJpaAutomationCompositionElement.setDescription(null);
-        assertEquals(0, testJpaAutomationCompositionElement.compareTo(otherJpaAutomationCompositionElement));
+        testJpaAcElement.setDescription("Description");
+        assertNotEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
+        testJpaAcElement.setDescription(null);
+        assertEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
 
-        testJpaAutomationCompositionElement.setDeployState(DeployState.DEPLOYED);
-        assertNotEquals(0, testJpaAutomationCompositionElement.compareTo(otherJpaAutomationCompositionElement));
-        testJpaAutomationCompositionElement.setDeployState(DeployState.UNDEPLOYED);
-        assertEquals(0, testJpaAutomationCompositionElement.compareTo(otherJpaAutomationCompositionElement));
+        testJpaAcElement.setDeployState(DeployState.DEPLOYED);
+        assertNotEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
+        testJpaAcElement.setDeployState(DeployState.UNDEPLOYED);
+        assertEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
 
-        testJpaAutomationCompositionElement.setLockState(LockState.UNLOCKED);
-        assertNotEquals(0, testJpaAutomationCompositionElement.compareTo(otherJpaAutomationCompositionElement));
-        testJpaAutomationCompositionElement.setLockState(LockState.LOCKED);
-        assertEquals(0, testJpaAutomationCompositionElement.compareTo(otherJpaAutomationCompositionElement));
+        testJpaAcElement.setLockState(LockState.UNLOCKED);
+        assertNotEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
+        testJpaAcElement.setLockState(LockState.LOCKED);
+        assertEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
 
-        assertEquals(0, testJpaAutomationCompositionElement.compareTo(otherJpaAutomationCompositionElement));
-        testJpaAutomationCompositionElement.setParticipantId(UUID.randomUUID().toString());
-        assertNotEquals(0, testJpaAutomationCompositionElement.compareTo(otherJpaAutomationCompositionElement));
+        testJpaAcElement.setUseState("BadValue");
+        assertNotEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
+        testJpaAcElement.setUseState("IDLE");
+        assertEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
 
-        assertEquals(testJpaAutomationCompositionElement,
-                new JpaAutomationCompositionElement(testJpaAutomationCompositionElement));
+        testJpaAcElement.setOperationalState("BadValue");
+        assertNotEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
+        testJpaAcElement.setOperationalState("DEFAULT");
+        assertEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
+
+        testJpaAcElement.setParticipantId(UUID.randomUUID().toString());
+        assertNotEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
+
+        assertEquals(testJpaAcElement, new JpaAutomationCompositionElement(testJpaAcElement));
     }
 
     @Test
@@ -229,6 +242,8 @@ class JpaAutomationCompositionElementTest {
         automationCompositionElement.setDefinition(new ToscaConceptIdentifier("aceDef", "0.0.1"));
         automationCompositionElement.setParticipantId(CommonTestData.getParticipantId());
         automationCompositionElement.setProperties(Map.of("key", "{}"));
+        automationCompositionElement.setUseState("IDLE");
+        automationCompositionElement.setOperationalState("DEFAULT");
 
         return automationCompositionElement;
     }

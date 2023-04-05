@@ -33,6 +33,7 @@ import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessag
 import org.onap.policy.clamp.acm.participant.intermediary.parameters.ParticipantParameters;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementInfo;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionInfo;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
@@ -290,6 +291,16 @@ public class ParticipantHandler {
             acInfo.setAutomationCompositionId(entry.getKey());
             acInfo.setDeployState(entry.getValue().getDeployState());
             acInfo.setLockState(entry.getValue().getLockState());
+            for (var element : entry.getValue().getElements().values()) {
+                var elementInfo = new AutomationCompositionElementInfo();
+                elementInfo.setAutomationCompositionElementId(element.getId());
+                elementInfo.setDeployState(element.getDeployState());
+                elementInfo.setLockState(element.getLockState());
+                elementInfo.setOperationalState(
+                        automationCompositionHandler.getOperationalState(entry.getKey(), element.getId()));
+                elementInfo.setUseState(automationCompositionHandler.getUseState(entry.getKey(), element.getId()));
+                acInfo.getElements().add(elementInfo);
+            }
             automationCompositionInfoList.add(acInfo);
         }
         return automationCompositionInfoList;

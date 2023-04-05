@@ -20,10 +20,13 @@
 
 package org.onap.policy.clamp.models.acm.concepts;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.onap.policy.models.base.PfUtils;
 
 /**
  * Class to represent a automation composition info instance.
@@ -39,6 +42,8 @@ public class AutomationCompositionInfo {
 
     private LockState lockState = LockState.LOCKED;
 
+    private List<AutomationCompositionElementInfo> elements = new ArrayList<>();
+
     /**
      * Copy constructor, does a deep copy but as all fields here are immutable, it's just a regular copy.
      *
@@ -48,5 +53,6 @@ public class AutomationCompositionInfo {
         this.automationCompositionId = otherElement.automationCompositionId;
         this.deployState = otherElement.deployState;
         this.lockState = otherElement.lockState;
+        this.elements = PfUtils.mapList(otherElement.elements, AutomationCompositionElementInfo::new);
     }
 }

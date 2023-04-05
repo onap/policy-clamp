@@ -163,7 +163,7 @@ public class CommonTestData {
     }
 
     public static ToscaConceptIdentifier getDefinition() {
-        return new ToscaConceptIdentifier("org.onap.PM_CDS_Blueprint", "1.0.1");
+        return new ToscaConceptIdentifier("org.onap.domain.pmsh.PMSH_DCAEMicroservice", "1.2.3");
     }
 
     /**
@@ -308,6 +308,7 @@ public class CommonTestData {
     public AutomationCompositionStateChange getStateChange(UUID participantId, UUID uuid,
             DeployOrder deployOrder, LockOrder lockOrder) {
         var stateChange = new AutomationCompositionStateChange();
+        stateChange.setStartPhase(0);
         stateChange.setAutomationCompositionId(UUID.randomUUID());
         stateChange.setParticipantId(participantId);
         stateChange.setMessageId(uuid);

@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementInfo;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionInfo;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
@@ -54,6 +55,7 @@ class ParticipantStatusTest {
 
         // verify with all values
         var automationCompositionId = UUID.randomUUID();
+        var acElementId = UUID.randomUUID();
         orig.setAutomationCompositionId(automationCompositionId);
         var participantId = CommonTestData.getParticipantId();
         orig.setParticipantId(participantId);
@@ -61,7 +63,7 @@ class ParticipantStatusTest {
         orig.setState(ParticipantState.ON_LINE);
         orig.setTimestamp(Instant.ofEpochMilli(3000));
 
-        var acInfo = getAutomationCompositionInfo(automationCompositionId);
+        var acInfo = getAutomationCompositionInfo(automationCompositionId, acElementId);
         orig.setAutomationCompositionInfoList(List.of(acInfo));
 
         var participantDefinitionUpdate = new ParticipantDefinition();
@@ -76,12 +78,19 @@ class ParticipantStatusTest {
         assertSerializable(orig, ParticipantStatus.class);
     }
 
-    private AutomationCompositionInfo getAutomationCompositionInfo(UUID id) {
+    private AutomationCompositionInfo getAutomationCompositionInfo(UUID id, UUID acElementId) {
         var acInfo = new AutomationCompositionInfo();
         acInfo.setDeployState(DeployState.DEPLOYED);
         acInfo.setLockState(LockState.LOCKED);
         acInfo.setAutomationCompositionId(id);
 
+        var acInfoElement = new AutomationCompositionElementInfo();
+        acInfoElement.setAutomationCompositionElementId(acElementId);
+        acInfoElement.setDeployState(DeployState.DEPLOYED);
+        acInfoElement.setLockState(LockState.LOCKED);
+        acInfoElement.setOperationalState("DEFAULT");
+        acInfoElement.setUseState("IDLE");
+        acInfo.getElements().add(acInfoElement);
         return acInfo;
     }
 

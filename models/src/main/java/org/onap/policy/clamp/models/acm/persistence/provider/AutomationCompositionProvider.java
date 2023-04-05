@@ -22,6 +22,7 @@
 
 package org.onap.policy.clamp.models.acm.persistence.provider;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -30,9 +31,12 @@ import javax.ws.rs.core.Response.Status;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionInfo;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationComposition;
+import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationCompositionElement;
+import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionElementRepository;
 import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionRepository;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.models.base.PfModelRuntimeException;
@@ -50,6 +54,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AutomationCompositionProvider {
 
     private final AutomationCompositionRepository automationCompositionRepository;
+    private final AutomationCompositionElementRepository acElementRepository;
 
     /**
      * Get automation composition.
@@ -181,5 +186,26 @@ public class AutomationCompositionProvider {
         automationCompositionRepository.deleteById(instanceId.toString());
 
         return jpaDeleteAutomationComposition.get().toAuthorative();
+    }
+
+    /**
+     * Upgrade States.
+     *
+     * @param automationCompositionInfoList list of AutomationCompositionInfo
+     */
+    public void upgradeStates(@NonNull final List<AutomationCompositionInfo> automationCompositionInfoList) {
+        if (automationCompositionInfoList.isEmpty()) {
+            return;
+        }
+        List<JpaAutomationCompositionElement> jpaList = new ArrayList<>();
+        for (var acInstance : automationCompositionInfoList) {
+            for (var element : acInstance.getElements()) {
+                var jpa = acElementRepository.getReferenceById(element.getAutomationCompositionElementId().toString());
+                jpa.setUseState(element.getUseState());
+                jpa.setOperationalState(element.getOperationalState());
+                jpaList.add(jpa);
+            }
+        }
+        acElementRepository.saveAll(jpaList);
     }
 }

@@ -163,6 +163,13 @@ public class SupervisionAcHandler {
             if (element != null) {
                 element.setDeployState(acElementAck.getValue().getDeployState());
                 element.setLockState(acElementAck.getValue().getLockState());
+                if (DeployState.DEPLOYED.equals(element.getDeployState())) {
+                    element.setOperationalState(acElementAck.getValue().getOperationalState());
+                    element.setUseState(acElementAck.getValue().getUseState());
+                } else {
+                    element.setOperationalState(null);
+                    element.setUseState(null);
+                }
                 updated = true;
             }
         }
