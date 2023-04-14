@@ -71,7 +71,7 @@ paths:
       responses:
         200:
           description: OK, serialised array of instances of
-            [ParticipantInformation](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/ParticipantInformation.java)
+            [ParticipantInformation](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/concepts/ParticipantInformation.java)
             that contains information on participants with their information and status. Each participant entry contains
             a list of AC Element types on the participant. Each AC Element type entry contains a list of AC Element
             instances on the Participant.
@@ -96,14 +96,14 @@ paths:
                 items:
                   $ref: '#/components/schemas/ParticipantInformation'
               example:
-                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getParticipantInformation.json'
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getMultiParticipantResponse.json'
             application/yaml:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/ParticipantInformation'
               example:
-                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getParticipantInformation.yaml'
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getMultiParticipantResponse.yaml'
         401:
           description: Authentication Error, returns an instance of
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
@@ -235,7 +235,7 @@ paths:
       responses:
         200:
           description: Serialised instance of
-            [ParticipantInformation](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/ParticipantInformation.java)
+            [ParticipantInformation](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/concepts/ParticipantInformation.java)
             that information on the participant with its information and status. The participant entry contains
             a list of AC Element types on the participant. Each AC Element type entry contains a list of AC Element
             instances on the Participant.
@@ -258,12 +258,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ParticipantInformation'
               example:
-                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getSingleParticipantInformation.json'
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getSingleParticipantResponse.json'
             application/yaml:
               schema:
                 $ref: '#/components/schemas/ToscaServiceTemplate'
               example:
-                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getParticipantInformation.yaml'
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getParticipantResponse.yaml'
         401:
           description: Authentication Error, returns an instance of
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)

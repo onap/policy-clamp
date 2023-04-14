@@ -1,0 +1,32 @@
+participant:
+  participantId: 101c62b3-8918-41b9-a747-d21eb79c6c03
+  participantState: ON_LINE
+  participantSupportedElementTypes:
+    3012010d-e59e-4dde-bab1-3ee544e49b6d:
+      id: 3012010d-e59e-4dde-bab1-3ee544e49b6d
+      typeName: org.onap.policy.clamp.acm.AutomationCompositionElement
+      typeVersion: 1.0.1
+    8d9e947e-c444-471c-9420-29f1c6584f8c:
+      id: 8d9e947e-c444-471c-9420-29f1c6584f8c
+      typeName: org.onap.policy.clamp.acm.PolicyAutomationCompositionElement
+      typeVersion: 1.0.1
+acNodeTemplateStateDefinitionMap:
+  8cf8b401-dfd7-4ffe-90ff-c6543da10789:
+    nodeTemplateStateId: 8cf8b401-dfd7-4ffe-90ff-c6543da10789
+    participantId: 101c62b3-8918-41b9-a747-d21eb79c6c03
+    nodeTemplateId:
+      name: org.onap.domain.pmsh.PMSH_OperationalPolicyAutomationCompositionElement
+      version: 1.2.3
+    state: PRIMED
+acElementInstanceMap:
+  709c62b3-8918-41b9-a747-d21eb79c6c22:
+    id: 709c62b3-8918-41b9-a747-d21eb79c6c22
+    definition:
+      name: org.onap.domain.pmsh.PMSH_OperationalPolicyAutomationCompositionElement
+      version: 1.2.3
+    participantId: 101c62b3-8918-41b9-a747-d21eb79c6c03
+    deployState: DEPLOYED
+    lockState: UNLOCKED
+    description: Automation composition element for the operational policy for Performance
+      Management Subscription Handling
+    properties: {}
