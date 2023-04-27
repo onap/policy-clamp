@@ -64,7 +64,8 @@ class SupervisionAcHandlerTest {
         var automationCompositionAckMessage =
                 new AutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_STATECHANGE_ACK);
         for (var elementEntry : automationComposition.getElements().entrySet()) {
-            var acElementDeployAck = new AcElementDeployAck(DeployState.DEPLOYED, LockState.UNLOCKED, "", "", true, "");
+            var acElementDeployAck =
+                    new AcElementDeployAck(DeployState.DEPLOYED, LockState.UNLOCKED, "", "", Map.of(), true, "");
             automationCompositionAckMessage.getAutomationCompositionResultMap().put(elementEntry.getKey(),
                     acElementDeployAck);
         }
@@ -86,7 +87,8 @@ class SupervisionAcHandlerTest {
         var automationCompositionAckMessage =
                 new AutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_DEPLOY_ACK);
         for (var elementEntry : automationComposition.getElements().entrySet()) {
-            var acElementDeployAck = new AcElementDeployAck(DeployState.DEPLOYED, LockState.LOCKED, "", "", true, "");
+            var acElementDeployAck =
+                    new AcElementDeployAck(DeployState.DEPLOYED, LockState.LOCKED, "", "", Map.of(), true, "");
             automationCompositionAckMessage
                     .setAutomationCompositionResultMap(Map.of(elementEntry.getKey(), acElementDeployAck));
         }

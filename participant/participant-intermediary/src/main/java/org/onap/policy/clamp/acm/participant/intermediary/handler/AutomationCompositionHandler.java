@@ -21,6 +21,7 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.handler;
 
+import com.att.aft.dme2.internal.apache.commons.lang.StringUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -96,6 +97,7 @@ public class AutomationCompositionHandler {
      * @param automationCompositionId the automationComposition Id
      * @param id the automationComposition UUID
      * @param deployState the DeployState state
+     * @param lockState the LockState state
      */
     public void updateAutomationCompositionElementState(UUID automationCompositionId, UUID id, DeployState deployState,
             LockState lockState) {
@@ -113,6 +115,7 @@ public class AutomationCompositionHandler {
                 element.setLockState(lockState);
                 element.setUseState(getUseState(automationCompositionId, id));
                 element.setOperationalState(getOperationalState(automationCompositionId, id));
+                element.setStatusProperties(getStatusProperties(automationCompositionId, id));
             }
             var checkOpt = automationComposition.getElements().values().stream()
                     .filter(acElement -> !deployState.equals(acElement.getDeployState())).findAny();
@@ -137,9 +140,10 @@ public class AutomationCompositionHandler {
             acElement.setLockState(lockState);
             acElement.setUseState(getUseState(automationCompositionId, id));
             acElement.setOperationalState(getOperationalState(automationCompositionId, id));
+            acElement.setStatusProperties(getStatusProperties(automationCompositionId, id));
             automationCompositionStateChangeAck.getAutomationCompositionResultMap().put(acElement.getId(),
-                    new AcElementDeployAck(deployState, lockState,
-                            acElement.getOperationalState(), acElement.getUseState(), true,
+                    new AcElementDeployAck(deployState, lockState, acElement.getOperationalState(),
+                            acElement.getUseState(), acElement.getStatusProperties(), true,
                             "Automation composition element {} state changed to {}\", id, newState)"));
             LOGGER.debug("Automation composition element {} state changed to {}", id, deployState);
             automationCompositionStateChangeAck
@@ -470,14 +474,18 @@ public class AutomationCompositionHandler {
      * @return the UseState of the Automation Composition Element
      */
     public String getUseState(UUID instanceId, UUID acElementId) {
+        var result = new StringBuilder();
         for (var acElementListener : listeners) {
             try {
-                return acElementListener.getUseState(instanceId, acElementId);
+                var state = acElementListener.getUseState(instanceId, acElementId);
+                if (!StringUtils.isBlank(state)) {
+                    result.append(state);
+                }
             } catch (PfModelException e) {
                 LOGGER.error("Automation composition element get Use State failed {}", acElementId);
             }
         }
-        return null;
+        return result.toString();
     }
 
     /**
@@ -488,13 +496,36 @@ public class AutomationCompositionHandler {
      * @return the OperationalState of the Automation Composition Element
      */
     public String getOperationalState(UUID instanceId, UUID acElementId) {
+        var result = new StringBuilder();
         for (var acElementListener : listeners) {
             try {
-                return acElementListener.getOperationalState(instanceId, acElementId);
+                var state = acElementListener.getOperationalState(instanceId, acElementId);
+                if (!StringUtils.isBlank(state)) {
+                    result.append(state);
+                }
             } catch (PfModelException e) {
                 LOGGER.error("Automation composition element get Use State failed {}", acElementId);
             }
         }
-        return null;
+        return result.toString();
+    }
+
+    /**
+     * Get StatusProperties.
+     *
+     * @param instanceId the instance Id
+     * @param acElementId the Automation Composition Element Id
+     * @return the Status Properties Map
+     */
+    public Map<String, Object> getStatusProperties(UUID instanceId, UUID acElementId) {
+        Map<String, Object> result = new HashMap<>();
+        for (var acElementListener : listeners) {
+            try {
+                result.putAll(acElementListener.getStatusProperties(instanceId, acElementId));
+            } catch (PfModelException e) {
+                LOGGER.error("Automation composition element get Status Properties failed {}", acElementId);
+            }
+        }
+        return result;
     }
 }
