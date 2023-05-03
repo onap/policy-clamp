@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d5613fbb_d26b15bf",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/handler/AutomationCompositionHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 514,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2023-05-03T14:28:23Z",
+      "side": 1,
+      "message": "So this just returns the first one?",
+      "revId": "e96f49655e1272996fb1326342b782be631e9df0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
