@@ -69,4 +69,10 @@ public interface AutomationCompositionElementListener {
         // default Operational State
         return "";
     }
+
+    public default Map<String, Object> getStatusProperties(UUID automationCompositionId,
+            UUID automationCompositionElementId) throws PfModelException {
+        // default StatusProperties
+        return Map.of();
+    }
 }

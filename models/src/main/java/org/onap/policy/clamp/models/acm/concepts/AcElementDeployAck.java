@@ -20,6 +20,8 @@
 
 package org.onap.policy.clamp.models.acm.concepts;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -40,6 +42,8 @@ public class AcElementDeployAck {
     private String operationalState;
 
     private String useState;
+
+    private Map<String, Object> statusProperties = new LinkedHashMap<>();
 
     // Result: Success/Fail.
     private Boolean result;

@@ -64,6 +64,8 @@ public class AutomationCompositionElement {
     // which can be deserialized into an instance of the type of the property.
     private Map<String, Object> properties = new LinkedHashMap<>();
 
+    private Map<String, Object> statusProperties = new LinkedHashMap<>();
+
     /**
      * Copy constructor, does a deep copy but as all fields here are immutable, it's just a regular copy.
      *
@@ -75,6 +77,7 @@ public class AutomationCompositionElement {
         this.participantId = otherElement.participantId;
         this.description = otherElement.description;
         this.properties = PfUtils.mapMap(otherElement.properties, UnaryOperator.identity());
+        this.statusProperties = PfUtils.mapMap(otherElement.statusProperties, UnaryOperator.identity());
         this.deployState = otherElement.deployState;
         this.lockState = otherElement.lockState;
         this.operationalState = otherElement.operationalState;
