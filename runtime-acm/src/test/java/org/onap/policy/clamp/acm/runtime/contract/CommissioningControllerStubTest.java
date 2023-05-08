@@ -70,7 +70,7 @@ class CommissioningControllerStubTest extends CommonRestController {
     void testPut() {
         var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT + "/" + COMPOSITION_ID);
         var respPost = invocationBuilder.put(Entity.json(serviceTemplate));
-        assertThat(Response.Status.OK.getStatusCode()).isEqualTo(respPost.getStatus());
+        assertThat(Response.Status.ACCEPTED.getStatusCode()).isEqualTo(respPost.getStatus());
     }
 
     @Test

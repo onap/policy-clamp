@@ -80,7 +80,7 @@ class InstantiationControllerStubTest extends CommonRestController {
                 + "/" + INSTANTIATION_ENDPOINT
                 + "/" + INSTANCE_ID);
         var respPost = invocationBuilder.put(Entity.json(new AcInstanceStateUpdate()));
-        assertThat(Response.Status.OK.getStatusCode()).isEqualTo(respPost.getStatus());
+        assertThat(Response.Status.ACCEPTED.getStatusCode()).isEqualTo(respPost.getStatus());
     }
 
     @Test
