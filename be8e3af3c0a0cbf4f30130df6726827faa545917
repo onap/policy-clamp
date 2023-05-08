@@ -22,6 +22,30 @@
       "revId": "be8e3af3c0a0cbf4f30130df6726827faa545917",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3f566b20_00ff9bc3",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/main/rest/stub/InstantiationControllerStub.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7629
+      },
+      "writtenOn": "2023-05-08T10:29:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b0e60a8b_445ac111",
+      "range": {
+        "startLine": 3,
+        "startChar": 18,
+        "endLine": 3,
+        "endChar": 41
+      },
+      "revId": "be8e3af3c0a0cbf4f30130df6726827faa545917",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
