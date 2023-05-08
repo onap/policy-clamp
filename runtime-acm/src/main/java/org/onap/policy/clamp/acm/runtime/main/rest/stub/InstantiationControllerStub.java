@@ -31,6 +31,7 @@ import org.onap.policy.clamp.models.acm.messages.rest.instantiation.AcInstanceSt
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -45,13 +46,13 @@ public class InstantiationControllerStub extends AbstractRestController implemen
     private String pathToResponseFile;
 
     @Value("${stub.getCompositionInstancesResponse}")
-    private String pathToSingleIntance;
+    private String pathToSingleInstance;
 
     @Value("${stub.getAllCompositionInstancesResponse}")
-    private String pathToAllIntances;
+    private String pathToAllInstances;
 
     @Value("${stub.postInstanceResponse}")
-    private String pathPostIntance;
+    private String pathPostInstance;
 
     @Value("${stub.putCompositionInstanceUpdateResponse}")
     private String pathToPutUpdate;
@@ -60,7 +61,7 @@ public class InstantiationControllerStub extends AbstractRestController implemen
     public ResponseEntity<InstantiationResponse> createCompositionInstance(UUID compositionId,
             AutomationComposition body, UUID xonaprequestid) {
         if (body.getInstanceId() == null) {
-            return stubUtils.getResponse(pathPostIntance, InstantiationResponse.class);
+            return stubUtils.getResponse(pathPostInstance, InstantiationResponse.class);
         } else {
             return stubUtils.getResponse(pathToResponseFile, InstantiationResponse.class);
         }
@@ -75,19 +76,18 @@ public class InstantiationControllerStub extends AbstractRestController implemen
     @Override
     public ResponseEntity<AutomationComposition> getCompositionInstance(UUID compositionId, UUID instanceId,
             UUID xonaprequestid) {
-        return stubUtils.getResponse(pathToSingleIntance, AutomationComposition.class);
+        return stubUtils.getResponse(pathToSingleInstance, AutomationComposition.class);
     }
 
     @Override
     public ResponseEntity<AutomationCompositions> queryCompositionInstances(UUID compositionId, String name,
             String version, UUID xonaprequestid) {
-        return stubUtils.getResponse(pathToAllIntances, AutomationCompositions.class);
+        return stubUtils.getResponse(pathToAllInstances, AutomationCompositions.class);
     }
 
     @Override
     public ResponseEntity<Void> compositionInstanceState(UUID compositionId, UUID instanceId,
             @Valid AcInstanceStateUpdate body, UUID requestId) {
-        // TODO Auto-generated method stub
-        return null;
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 }
