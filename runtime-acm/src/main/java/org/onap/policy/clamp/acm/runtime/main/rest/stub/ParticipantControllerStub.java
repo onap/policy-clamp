@@ -52,12 +52,12 @@ public class ParticipantControllerStub extends AbstractRestController implements
 
     @Override
     public ResponseEntity<Void> orderAllParticipantsReport(UUID xonaprequestid) {
-        return new ResponseEntity(HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
     @Override
     public ResponseEntity<Void> orderParticipantReport(UUID participantId, UUID xonaprequestid) {
-        return new ResponseEntity(HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
     @Override
