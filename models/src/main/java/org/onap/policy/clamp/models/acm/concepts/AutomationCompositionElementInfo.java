@@ -20,10 +20,14 @@
 
 package org.onap.policy.clamp.models.acm.concepts;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.UnaryOperator;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.onap.policy.models.base.PfUtils;
 
 /**
  * Class to represent a automation composition element info instance.
@@ -43,6 +47,8 @@ public class AutomationCompositionElementInfo {
 
     private String useState;
 
+    private Map<String, Object> statusProperties = new LinkedHashMap<>();
+
     /**
      * Copy constructor, does a deep copy but as all fields here are immutable, it's just a regular copy.
      *
@@ -54,5 +60,6 @@ public class AutomationCompositionElementInfo {
         this.lockState = otherElement.lockState;
         this.operationalState = otherElement.operationalState;
         this.useState = otherElement.useState;
+        this.statusProperties = PfUtils.mapMap(otherElement.statusProperties, UnaryOperator.identity());
     }
 }

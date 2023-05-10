@@ -37,7 +37,6 @@ import org.onap.policy.clamp.acm.participant.policy.client.PolicyApiHttpClient;
 import org.onap.policy.clamp.acm.participant.policy.client.PolicyPapHttpClient;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
-import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.pdp.concepts.DeploymentSubGroup;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -75,7 +74,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
         if (automationCompositionDefinition == null) {
             LOGGER.debug("No policies to undeploy to {}", automationCompositionElementId);
             intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
-                    automationCompositionElementId, DeployState.UNDEPLOYED, LockState.NONE);
+                    automationCompositionElementId, DeployState.UNDEPLOYED, null, "Undeployed");
             return;
         }
         var policyList = getPolicyList(automationCompositionDefinition);
@@ -84,7 +83,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
         deletePolicyData(policyTypeList, policyList);
         serviceTemplateMap.remove(automationCompositionElementId);
         intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
-                automationCompositionElementId, DeployState.UNDEPLOYED, LockState.NONE);
+                automationCompositionElementId, DeployState.UNDEPLOYED, null, "Undeployed");
     }
 
     private void deletePolicyData(List<ToscaConceptIdentifier> policyTypeList,
@@ -117,8 +116,10 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
         }
         if (!deployFailure) {
             // Update the AC element state
+            intermediaryApi.sendAcElementInfo(automationCompositionId, automationCompositionElementId, "IDLE",
+                    "ENABLED", Map.of());
             intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
-                    automationCompositionElementId, DeployState.DEPLOYED, LockState.LOCKED);
+                    automationCompositionElementId, DeployState.DEPLOYED, null, "Deployed");
         } else {
             throw new PfModelException(Status.BAD_REQUEST, "Deploy of Policy failed.");
         }
@@ -200,17 +201,5 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
         }
 
         return policyList;
-    }
-
-    @Override
-    public String getUseState(UUID automationCompositionId, UUID automationCompositionElementId)
-            throws PfModelException {
-        return "IDLE";
-    }
-
-    @Override
-    public String getOperationalState(UUID automationCompositionId, UUID automationCompositionElementId)
-            throws PfModelException {
-        return "ENABLED";
     }
 }

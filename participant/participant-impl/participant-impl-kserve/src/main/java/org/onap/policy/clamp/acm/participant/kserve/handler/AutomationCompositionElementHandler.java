@@ -46,7 +46,6 @@ import org.onap.policy.clamp.acm.participant.kserve.models.ConfigurationEntity;
 import org.onap.policy.clamp.acm.participant.kserve.models.KserveInferenceEntity;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
-import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -94,7 +93,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
                 }
                 configRequestMap.remove(automationCompositionElementId);
                 intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
-                        automationCompositionElementId, DeployState.UNDEPLOYED, LockState.NONE);
+                        automationCompositionElementId, DeployState.UNDEPLOYED, null, "Undeployed");
             } catch (IOException | ApiException exception) {
                 LOGGER.warn("Deletion of Inference service failed", exception);
             }
@@ -131,7 +130,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
                 if (isAllInferenceSvcDeployed) {
                     configRequestMap.put(element.getId(), configurationEntity);
                     intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
-                            DeployState.DEPLOYED, LockState.LOCKED);
+                            DeployState.DEPLOYED, null, "Deployed");
                 } else {
                     LOGGER.error("Inference Service deployment failed");
                 }

@@ -29,13 +29,14 @@ import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
+import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
@@ -61,11 +62,6 @@ class AutomationCompositionHandlerTest {
     void automationCompositionHandlerTest() {
         var ach = commonTestData.getMockAutomationCompositionHandler();
         assertNotNull(ach.getAutomationCompositionMap());
-        assertNotNull(ach.getElementsOnThisParticipant());
-
-        var listener = mock(AutomationCompositionElementListener.class);
-        ach.registerAutomationCompositionElementListener(listener);
-        assertThat(ach.getListeners()).contains(listener);
     }
 
     @Test
@@ -73,11 +69,11 @@ class AutomationCompositionHandlerTest {
         var id = UUID.randomUUID();
 
         var ach = commonTestData.getMockAutomationCompositionHandler();
-        assertDoesNotThrow(
-                () -> ach.updateAutomationCompositionElementState(null, null, DeployState.UNDEPLOYED, LockState.NONE));
+        assertDoesNotThrow(() -> ach.updateAutomationCompositionElementState(null, null, DeployState.UNDEPLOYED, null,
+                "Undeployed"));
 
         assertDoesNotThrow(
-                () -> ach.updateAutomationCompositionElementState(null, id, DeployState.UNDEPLOYED, LockState.NONE));
+                () -> ach.updateAutomationCompositionElementState(null, id, DeployState.UNDEPLOYED, null, null));
     }
 
     @Test
@@ -87,23 +83,23 @@ class AutomationCompositionHandlerTest {
         var definition = CommonTestData.getDefinition();
 
         var ach = commonTestData.setTestAutomationCompositionHandler(definition, uuid, partecipantId);
-        var key = ach.getElementsOnThisParticipant().keySet().iterator().next();
-        var value = ach.getElementsOnThisParticipant().get(key);
-        assertEquals(DeployState.UNDEPLOYED, value.getDeployState());
-        assertEquals(LockState.LOCKED, value.getLockState());
-        ach.updateAutomationCompositionElementState(CommonTestData.AC_ID_1, uuid, DeployState.DEPLOYED,
-                LockState.UNLOCKED);
+        var acKey = ach.getAutomationCompositionMap().keySet().iterator().next();
+        var key = ach.getAutomationCompositionMap().get(acKey).getElements().keySet().iterator().next();
+        var value = ach.getAutomationCompositionMap().get(acKey).getElements().get(key);
+        value.setDeployState(DeployState.DEPLOYING);
+        value.setLockState(LockState.NONE);
+        ach.updateAutomationCompositionElementState(CommonTestData.AC_ID_1, uuid, DeployState.DEPLOYED, null,
+                "Deployed");
         assertEquals(DeployState.DEPLOYED, value.getDeployState());
 
         ach.getAutomationCompositionMap().values().iterator().next().getElements().putIfAbsent(key, value);
-        ach.updateAutomationCompositionElementState(CommonTestData.AC_ID_1, key, DeployState.DEPLOYED,
-                LockState.UNLOCKED);
+        ach.updateAutomationCompositionElementState(CommonTestData.AC_ID_1, key, DeployState.DEPLOYED, null,
+                "Deployed");
         assertEquals(DeployState.DEPLOYED, value.getDeployState());
 
-        ach.getElementsOnThisParticipant().remove(key, value);
         ach.getAutomationCompositionMap().values().iterator().next().getElements().clear();
-        assertDoesNotThrow(() -> ach.updateAutomationCompositionElementState(CommonTestData.AC_ID_1, key,
-                DeployState.DEPLOYED, LockState.UNLOCKED));
+        assertDoesNotThrow(() -> ach.updateAutomationCompositionElementState(CommonTestData.AC_ID_1, key, null,
+                LockState.UNLOCKED, null));
     }
 
     @Test
@@ -246,27 +242,39 @@ class AutomationCompositionHandlerTest {
         verify(listener, times(1)).unlock(any(), any());
     }
 
+
     @Test
-    void testGetUseState() throws PfModelException {
+    void testgetAutomationCompositionInfoList() {
         var uuid = UUID.randomUUID();
         var partecipantId = CommonTestData.getParticipantId();
         var definition = CommonTestData.getDefinition();
         var ach = commonTestData.setTestAutomationCompositionHandler(definition, uuid, partecipantId);
-        var listener = mock(AutomationCompositionElementListener.class);
-        when(listener.getUseState(uuid, uuid)).thenReturn(STATE_VALUE);
-        ach.registerAutomationCompositionElementListener(listener);
-        assertEquals(STATE_VALUE, ach.getUseState(uuid, uuid));
+        var result = ach.getAutomationCompositionInfoList();
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0).getElements()).hasSize(1);
     }
 
     @Test
-    void testGetOperationalState() throws PfModelException {
+    void testsendAcElementInfo() {
+        var participantMessagePublisher = mock(ParticipantMessagePublisher.class);
+        var ach = new AutomationCompositionHandler(CommonTestData.getParticipantParameters(),
+                participantMessagePublisher);
+        ach.getAutomationCompositionMap().putAll(commonTestData.getTestAutomationCompositionMap());
+        var key = ach.getAutomationCompositionMap().keySet().iterator().next();
+        var keyElement = ach.getAutomationCompositionMap().get(key).getElements().keySet().iterator().next();
+        ach.sendAcElementInfo(key, keyElement, "useState", "operationalState", Map.of("key", 1));
+        verify(participantMessagePublisher).sendParticipantStatus(any());
+    }
+
+    @Test
+    void testUndeployInstances() throws PfModelException {
         var uuid = UUID.randomUUID();
         var partecipantId = CommonTestData.getParticipantId();
         var definition = CommonTestData.getDefinition();
         var ach = commonTestData.setTestAutomationCompositionHandler(definition, uuid, partecipantId);
         var listener = mock(AutomationCompositionElementListener.class);
-        when(listener.getOperationalState(uuid, uuid)).thenReturn(STATE_VALUE);
         ach.registerAutomationCompositionElementListener(listener);
-        assertEquals(STATE_VALUE, ach.getOperationalState(uuid, uuid));
+        ach.undeployInstances();
+        verify(listener).undeploy(any(), any());
     }
 }

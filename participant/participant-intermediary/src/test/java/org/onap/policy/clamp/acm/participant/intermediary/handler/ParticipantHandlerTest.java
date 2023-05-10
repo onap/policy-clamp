@@ -26,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.clearInvocations;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -66,7 +67,6 @@ class ParticipantHandlerTest {
         var participantHandler = commonTestData.getMockParticipantHandler();
 
         var participantId = CommonTestData.getParticipantId();
-        participantPrimeMsg.setAutomationCompositionId(CommonTestData.AC_ID_1);
         participantPrimeMsg.setCompositionId(CommonTestData.AC_ID_1);
         participantPrimeMsg.setParticipantId(participantId);
         participantPrimeMsg.setMessageId(UUID.randomUUID());
@@ -115,13 +115,12 @@ class ParticipantHandlerTest {
 
     @Test
     void getAutomationCompositionInfoListTest() throws CoderException {
-        var participantHandler = commonTestData.getParticipantHandlerAutomationCompositions();
+        var automationCompositionHandler = mock(AutomationCompositionHandler.class);
+        var participantHandler =
+                commonTestData.getParticipantHandlerAutomationCompositions(automationCompositionHandler);
+        clearInvocations(automationCompositionHandler);
         participantHandler.sendHeartbeat();
-        assertEquals(CommonTestData.AC_ID_1, participantHandler.makeHeartbeat(false)
-                .getAutomationCompositionInfoList()
-                .get(0)
-                .getAutomationCompositionId());
-
+        verify(automationCompositionHandler).getAutomationCompositionInfoList();
     }
 
     @Test
@@ -140,9 +139,7 @@ class ParticipantHandlerTest {
         var commonTestData = new CommonTestData();
         var automationCompositionMap = commonTestData.getTestAutomationCompositionMap();
         var automationCompositionHandler = mock(AutomationCompositionHandler.class);
-        var listener = mock(DummyAcElementListener.class);
 
-        when(automationCompositionHandler.getListeners()).thenReturn(List.of(listener));
         automationCompositionMap.values().iterator().next().getElements().values().iterator().next()
             .setParticipantId(CommonTestData.getParticipantId());
         when(automationCompositionHandler.getAutomationCompositionMap()).thenReturn(automationCompositionMap);
@@ -153,6 +150,6 @@ class ParticipantHandlerTest {
 
         participantHandler.sendParticipantDeregister();
         verify(publisher).sendParticipantDeregister(any(ParticipantDeregister.class));
-        verify(listener).undeploy(any(), any());
+        verify(automationCompositionHandler).undeployInstances();
     }
 }

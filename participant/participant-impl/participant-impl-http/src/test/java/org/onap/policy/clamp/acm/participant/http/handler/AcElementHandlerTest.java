@@ -37,7 +37,6 @@ import org.onap.policy.clamp.acm.participant.http.utils.CommonTestData;
 import org.onap.policy.clamp.acm.participant.http.utils.ToscaUtils;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
-import org.onap.policy.clamp.models.acm.concepts.LockState;
 
 class AcElementHandlerTest {
 
@@ -57,7 +56,7 @@ class AcElementHandlerTest {
             automationCompositionElementHandler.setIntermediaryApi(participantIntermediaryApi);
             automationCompositionElementHandler.undeploy(instanceId, acElementId);
             verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, acElementId,
-                    DeployState.UNDEPLOYED, LockState.NONE);
+                    DeployState.UNDEPLOYED, null, "");
         }
     }
 
@@ -90,7 +89,7 @@ class AcElementHandlerTest {
             automationCompositionElementHandler.deploy(instanceId, element, map);
             verify(acHttpClient).run(any(ConfigRequest.class), anyMap());
             verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
-                    DeployState.DEPLOYED, LockState.LOCKED);
+                    DeployState.DEPLOYED, null, "Deployed");
         }
 
     }

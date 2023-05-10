@@ -38,7 +38,6 @@ import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationComposit
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
-import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -82,7 +81,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
             acA1PmsClient.deleteService(configurationEntity.getPolicyServiceEntities());
             configRequestMap.remove(automationCompositionElementId);
             intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
-                    automationCompositionElementId, DeployState.UNDEPLOYED, LockState.NONE);
+                    automationCompositionElementId, DeployState.UNDEPLOYED, null, "Undeployed");
         } else {
             LOGGER.warn("Failed to connect with A1PMS. Service configuration is: {}", configurationEntity);
             throw new A1PolicyServiceException(HttpStatus.SC_SERVICE_UNAVAILABLE, "Unable to connect with A1PMS");
@@ -108,7 +107,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
                     configRequestMap.put(element.getId(), configurationEntity);
 
                     intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
-                            DeployState.DEPLOYED, LockState.LOCKED);
+                            DeployState.DEPLOYED, null, "Deployed");
                 } else {
                     LOGGER.error("Failed to connect with A1PMS");
                     throw new A1PolicyServiceException(HttpStatus.SC_SERVICE_UNAVAILABLE,

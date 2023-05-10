@@ -41,7 +41,6 @@ import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationComposit
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
-import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -78,7 +77,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
     @Override
     public void undeploy(UUID automationCompositionId, UUID automationCompositionElementId) {
         intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, automationCompositionElementId,
-                DeployState.UNDEPLOYED, LockState.NONE);
+                DeployState.UNDEPLOYED, null, "");
     }
 
     /**
@@ -99,7 +98,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
                 .collect(Collectors.toList());
         if (failedResponseStatus.isEmpty()) {
             intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
-                    DeployState.DEPLOYED, LockState.LOCKED);
+                    DeployState.DEPLOYED, null, "Deployed");
         } else {
             throw new PfModelException(Status.BAD_REQUEST, "Error on Invoking the http request: {}",
                     failedResponseStatus);

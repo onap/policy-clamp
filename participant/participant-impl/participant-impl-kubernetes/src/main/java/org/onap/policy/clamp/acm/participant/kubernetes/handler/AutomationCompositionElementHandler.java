@@ -33,7 +33,6 @@ import javax.ws.rs.core.Response;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import net.bytebuddy.implementation.bytecode.Throw;
 import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.acm.participant.kubernetes.exception.ServiceException;
@@ -42,7 +41,6 @@ import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartInfo;
 import org.onap.policy.clamp.acm.participant.kubernetes.service.ChartService;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
-import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -95,7 +93,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
             try {
                 chartService.uninstallChart(chart);
                 intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
-                        automationCompositionElementId, DeployState.UNDEPLOYED, LockState.NONE);
+                        automationCompositionElementId, DeployState.UNDEPLOYED, null, "Undeployed");
                 chartMap.remove(automationCompositionElementId);
                 podStatusMap.remove(chart.getReleaseName());
             } catch (ServiceException se) {
@@ -150,7 +148,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
         if (!result.get().isEmpty()) {
             LOGGER.info("Pod Status Validator Completed: {}", result.isDone());
             intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, elementId,
-                    DeployState.DEPLOYED, LockState.LOCKED);
+                    DeployState.DEPLOYED, null, "Deployed");
         }
     }
 }

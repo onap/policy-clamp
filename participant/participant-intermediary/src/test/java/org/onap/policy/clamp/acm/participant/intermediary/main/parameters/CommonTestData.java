@@ -201,6 +201,11 @@ public class CommonTestData {
         return new ParticipantHandler(parameters, publisher, automationCompositionHandler);
     }
 
+    public ParticipantHandler getParticipantHandlerAutomationCompositions() {
+        var automationCompositionHandler = Mockito.mock(AutomationCompositionHandler.class);
+        return getParticipantHandlerAutomationCompositions(automationCompositionHandler);
+    }
+
     /**
      * Returns a mocked ParticipantHandler for test cases.
      *
@@ -208,8 +213,8 @@ public class CommonTestData {
      *
      * @throws CoderException if there is an error with .json file.
      */
-    public ParticipantHandler getParticipantHandlerAutomationCompositions() throws CoderException {
-        var automationCompositionHandler = Mockito.mock(AutomationCompositionHandler.class);
+    public ParticipantHandler getParticipantHandlerAutomationCompositions(
+            AutomationCompositionHandler automationCompositionHandler) {
         Mockito.doReturn(getTestAutomationCompositionMap()).when(automationCompositionHandler)
                 .getAutomationCompositionMap();
         var publisher = new ParticipantMessagePublisher();
@@ -291,7 +296,9 @@ public class CommonTestData {
             UUID uuid, UUID participantId) {
         var ach = getMockAutomationCompositionHandler();
         ach.getAutomationCompositionMap().putAll(getTestAutomationCompositionMap());
-        ach.getElementsOnThisParticipant().putAll(setAutomationCompositionElementTest(uuid, definition, participantId));
+        var acKey = ach.getAutomationCompositionMap().keySet().iterator().next();
+        ach.getAutomationCompositionMap().get(acKey)
+                .setElements(setAutomationCompositionElementTest(uuid, definition, participantId));
 
         return ach;
     }

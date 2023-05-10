@@ -21,7 +21,6 @@
 package org.onap.policy.clamp.acm.participant.policy.main.handler;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -37,7 +36,6 @@ import org.onap.policy.clamp.acm.participant.policy.client.PolicyApiHttpClient;
 import org.onap.policy.clamp.acm.participant.policy.client.PolicyPapHttpClient;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
-import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -63,7 +61,7 @@ class AutomationCompositionElementHandlerTest {
 
         handler.undeploy(AC_ID, automationCompositionElementId);
         verify(intermediaryApi).updateAutomationCompositionElementState(AC_ID, automationCompositionElementId,
-                DeployState.UNDEPLOYED, LockState.NONE);
+                DeployState.UNDEPLOYED, null, "Undeployed");
     }
 
     private AcElementDeploy getTestingAcElement() {
@@ -94,9 +92,8 @@ class AutomationCompositionElementHandlerTest {
         handler.setIntermediaryApi(intermediaryApi);
 
         handler.deploy(AC_ID, getTestingAcElement(), Map.of());
-        handler.undeploy(AC_ID, automationCompositionElementId);
         verify(intermediaryApi).updateAutomationCompositionElementState(AC_ID, automationCompositionElementId,
-                DeployState.UNDEPLOYED, LockState.NONE);
+                DeployState.DEPLOYED, null, "Deployed");
     }
 
     @Test
@@ -133,23 +130,5 @@ class AutomationCompositionElementHandlerTest {
         var element = getTestingAcElement();
         assertThatThrownBy(() -> handler.deploy(AC_ID, element, Map.of()))
                 .hasMessageMatching("Deploy of Policy failed.");
-    }
-
-    @Test
-    void testGetOperationalState() throws PfModelException {
-        var api = mock(PolicyApiHttpClient.class);
-        var pap = mock(PolicyPapHttpClient.class);
-        var handler = new AutomationCompositionElementHandler(api, pap);
-
-        assertEquals("ENABLED", handler.getOperationalState(UUID.randomUUID(), UUID.randomUUID()));
-    }
-
-    @Test
-    void testGetUseState() throws PfModelException {
-        var api = mock(PolicyApiHttpClient.class);
-        var pap = mock(PolicyPapHttpClient.class);
-        var handler = new AutomationCompositionElementHandler(api, pap);
-
-        assertEquals("IDLE", handler.getUseState(UUID.randomUUID(), UUID.randomUUID()));
     }
 }
