@@ -21,6 +21,7 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.api;
 
+import java.util.Map;
 import java.util.UUID;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
@@ -41,9 +42,23 @@ public interface ParticipantIntermediaryApi {
     /**
      * Update the state of a automation composition element.
      *
+     * @param automationCompositionId the ID of the automation composition to update the state on
      * @param id the ID of the automation composition element to update the state on
-     * @param newState the state of the automation composition element
+     * @param deployState the Deploy State of the automation composition element
+     * @param lockState the Lock State of the automation composition element
      */
-    void updateAutomationCompositionElementState(UUID automationCompositionId, UUID id, DeployState newState,
+    void updateAutomationCompositionElementState(UUID automationCompositionId, UUID id, DeployState deployState,
             LockState lockState);
+
+    /**
+     * Send Automation Composition Element update Info to AC-runtime.
+     *
+     * @param automationCompositionId the ID of the automation composition to update the states
+     * @param id the ID of the automation composition element to update the states
+     * @param useState the use State
+     * @param operationalState the operational State
+     * @param statusProperties the status Properties Map
+     */
+    void sendAcElementInfo(UUID automationCompositionId, UUID id, String useState, String operationalState,
+            Map<String, Object> statusProperties);
 }

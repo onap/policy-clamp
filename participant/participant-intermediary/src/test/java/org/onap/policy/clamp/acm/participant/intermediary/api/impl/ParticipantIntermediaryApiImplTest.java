@@ -20,36 +20,42 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.api.impl;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
+import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
-import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
+import org.onap.policy.clamp.acm.participant.intermediary.handler.AutomationCompositionHandler;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.common.utils.coder.CoderException;
 
 class ParticipantIntermediaryApiImplTest {
 
-    private final CommonTestData commonTestData = new CommonTestData();
+    private static final String USE_STATE = "useState";
+    private static final String OPERATIONAL_STATE = "operationState";
+    private static final Map<String, Object> MAP = Map.of("key", 1);
 
     @Test
     void mockParticipantIntermediaryApiImplTest() throws CoderException {
-        var uuid = UUID.randomUUID();
-        var definition = CommonTestData.getDefinition();
-        var participantId = CommonTestData.getParticipantId();
-        var automationComposiitonHandler =
-                commonTestData.setTestAutomationCompositionHandler(definition, uuid, participantId);
+        var automationComposiitonHandler = mock(AutomationCompositionHandler.class);
         var apiImpl = new ParticipantIntermediaryApiImpl(automationComposiitonHandler);
-        var acElementListener = Mockito.mock(AutomationCompositionElementListener.class);
-        apiImpl.registerAutomationCompositionElementListener(acElementListener);
 
-        apiImpl.updateAutomationCompositionElementState(UUID.randomUUID(), uuid, DeployState.UNDEPLOYED,
+        var acElementListener = mock(AutomationCompositionElementListener.class);
+        apiImpl.registerAutomationCompositionElementListener(acElementListener);
+        verify(automationComposiitonHandler).registerAutomationCompositionElementListener(acElementListener);
+
+        var uuid = UUID.randomUUID();
+        var automationCompositionId = UUID.randomUUID();
+        apiImpl.updateAutomationCompositionElementState(automationCompositionId, uuid, DeployState.UNDEPLOYED,
                 LockState.NONE);
-        var acElement = automationComposiitonHandler.getElementsOnThisParticipant().get(uuid);
-        assertEquals(DeployState.UNDEPLOYED, acElement.getDeployState());
-        assertEquals(uuid, acElement.getId());
+        verify(automationComposiitonHandler).updateAutomationCompositionElementState(automationCompositionId, uuid,
+                DeployState.UNDEPLOYED, LockState.NONE);
+
+        apiImpl.sendAcElementInfo(automationCompositionId, uuid, USE_STATE, OPERATIONAL_STATE, MAP);
+        verify(automationComposiitonHandler).sendAcElementInfo(automationCompositionId, uuid, USE_STATE,
+                OPERATIONAL_STATE, MAP);
     }
 }

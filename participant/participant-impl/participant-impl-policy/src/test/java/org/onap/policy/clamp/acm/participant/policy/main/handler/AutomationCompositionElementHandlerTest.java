@@ -21,7 +21,6 @@
 package org.onap.policy.clamp.acm.participant.policy.main.handler;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -133,23 +132,5 @@ class AutomationCompositionElementHandlerTest {
         var element = getTestingAcElement();
         assertThatThrownBy(() -> handler.deploy(AC_ID, element, Map.of()))
                 .hasMessageMatching("Deploy of Policy failed.");
-    }
-
-    @Test
-    void testGetOperationalState() throws PfModelException {
-        var api = mock(PolicyApiHttpClient.class);
-        var pap = mock(PolicyPapHttpClient.class);
-        var handler = new AutomationCompositionElementHandler(api, pap);
-
-        assertEquals("ENABLED", handler.getOperationalState(UUID.randomUUID(), UUID.randomUUID()));
-    }
-
-    @Test
-    void testGetUseState() throws PfModelException {
-        var api = mock(PolicyApiHttpClient.class);
-        var pap = mock(PolicyPapHttpClient.class);
-        var handler = new AutomationCompositionElementHandler(api, pap);
-
-        assertEquals("IDLE", handler.getUseState(UUID.randomUUID(), UUID.randomUUID()));
     }
 }

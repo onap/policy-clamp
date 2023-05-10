@@ -117,6 +117,8 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
         }
         if (!deployFailure) {
             // Update the AC element state
+            intermediaryApi.sendAcElementInfo(automationCompositionId, automationCompositionElementId, "IDLE",
+                    "ENABLED", Map.of());
             intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
                     automationCompositionElementId, DeployState.DEPLOYED, LockState.LOCKED);
         } else {
@@ -200,17 +202,5 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
         }
 
         return policyList;
-    }
-
-    @Override
-    public String getUseState(UUID automationCompositionId, UUID automationCompositionElementId)
-            throws PfModelException {
-        return "IDLE";
-    }
-
-    @Override
-    public String getOperationalState(UUID automationCompositionId, UUID automationCompositionElementId)
-            throws PfModelException {
-        return "ENABLED";
     }
 }

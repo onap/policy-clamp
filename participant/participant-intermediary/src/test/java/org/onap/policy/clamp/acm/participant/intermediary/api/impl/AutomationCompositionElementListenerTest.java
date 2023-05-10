@@ -20,7 +20,6 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.api.impl;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 import java.util.UUID;
@@ -33,9 +32,6 @@ class AutomationCompositionElementListenerTest {
     @Test
     void defaultTest() throws PfModelException {
         var listener = new DummyAcElementListener();
-        assertThat(listener.getStatusProperties(UUID.randomUUID(), UUID.randomUUID())).isNotNull().isEmpty();
-        assertThat(listener.getOperationalState(UUID.randomUUID(), UUID.randomUUID())).isNotNull().isEmpty();
-        assertThat(listener.getUseState(UUID.randomUUID(), UUID.randomUUID())).isNotNull().isEmpty();
         assertThatCode(() -> listener.lock(UUID.randomUUID(), UUID.randomUUID())).doesNotThrowAnyException();
         assertThatCode(() -> listener.unlock(UUID.randomUUID(), UUID.randomUUID())).doesNotThrowAnyException();
     }

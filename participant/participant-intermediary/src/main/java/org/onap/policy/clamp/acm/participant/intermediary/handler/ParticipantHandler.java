@@ -31,10 +31,7 @@ import java.util.UUID;
 import lombok.Getter;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.acm.participant.intermediary.parameters.ParticipantParameters;
-import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementInfo;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionInfo;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
@@ -50,7 +47,6 @@ import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRe
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegisterAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatus;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatusReq;
-import org.onap.policy.models.base.PfModelException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -77,6 +73,7 @@ public class ParticipantHandler {
      *
      * @param parameters the parameters of the participant
      * @param publisher the publisher for sending responses to messages
+     * @param automationCompositionHandler the publisher for sending responses to messages
      */
     public ParticipantHandler(ParticipantParameters parameters, ParticipantMessagePublisher publisher,
             AutomationCompositionHandler automationCompositionHandler) {
@@ -173,32 +170,7 @@ public class ParticipantHandler {
         var participantDeregister = new ParticipantDeregister();
         participantDeregister.setParticipantId(participantId);
         publisher.sendParticipantDeregister(participantDeregister);
-        undeployInstancesOnParticipant();
-    }
-
-    private void undeployInstancesOnParticipant() {
-        automationCompositionHandler.getAutomationCompositionMap().values().forEach(ac ->
-            undeployInstanceOnParticipant(ac)
-        );
-    }
-
-    private void undeployInstanceOnParticipant(AutomationComposition automationComposition) {
-        automationComposition.getElements().values().forEach(element -> {
-            if (element.getParticipantId().equals(participantId)) {
-                undeployInstanceElementsOnParticipant(automationComposition.getInstanceId(), element.getId());
-            }
-        });
-    }
-
-    private void undeployInstanceElementsOnParticipant(UUID instanceId, UUID elementId) {
-        var acElementListeners = automationCompositionHandler.getListeners();
-        for (var acElementListener : acElementListeners) {
-            try {
-                acElementListener.undeploy(instanceId, elementId);
-            } catch (PfModelException e) {
-                LOGGER.debug("Automation composition element update failed {}", instanceId);
-            }
-        }
+        automationCompositionHandler.undeployInstances();
     }
 
     /**
@@ -242,7 +214,7 @@ public class ParticipantHandler {
     /**
      * Method to send ParticipantPrimeAck message to automation composition runtime.
      */
-    public void sendParticipantPrimeAck(UUID messageId, UUID compositionId) {
+    private void sendParticipantPrimeAck(UUID messageId, UUID compositionId) {
         var participantPrimeAck = new ParticipantPrimeAck();
         participantPrimeAck.setResponseTo(messageId);
         participantPrimeAck.setCompositionId(compositionId);
@@ -267,7 +239,7 @@ public class ParticipantHandler {
         var heartbeat = new ParticipantStatus();
         heartbeat.setParticipantId(participantId);
         heartbeat.setState(ParticipantState.ON_LINE);
-        heartbeat.setAutomationCompositionInfoList(getAutomationCompositionInfoList());
+        heartbeat.setAutomationCompositionInfoList(automationCompositionHandler.getAutomationCompositionInfoList());
         heartbeat.setParticipantSupportedElementType(new ArrayList<>(this.supportedAcElementTypes));
 
         if (responseToParticipantStatusReq) {
@@ -282,27 +254,5 @@ public class ParticipantHandler {
         }
 
         return heartbeat;
-    }
-
-    private List<AutomationCompositionInfo> getAutomationCompositionInfoList() {
-        List<AutomationCompositionInfo> automationCompositionInfoList = new ArrayList<>();
-        for (var entry : automationCompositionHandler.getAutomationCompositionMap().entrySet()) {
-            var acInfo = new AutomationCompositionInfo();
-            acInfo.setAutomationCompositionId(entry.getKey());
-            acInfo.setDeployState(entry.getValue().getDeployState());
-            acInfo.setLockState(entry.getValue().getLockState());
-            for (var element : entry.getValue().getElements().values()) {
-                var elementInfo = new AutomationCompositionElementInfo();
-                elementInfo.setAutomationCompositionElementId(element.getId());
-                elementInfo.setDeployState(element.getDeployState());
-                elementInfo.setLockState(element.getLockState());
-                elementInfo.setOperationalState(
-                        automationCompositionHandler.getOperationalState(entry.getKey(), element.getId()));
-                elementInfo.setUseState(automationCompositionHandler.getUseState(entry.getKey(), element.getId()));
-                acInfo.getElements().add(elementInfo);
-            }
-            automationCompositionInfoList.add(acInfo);
-        }
-        return automationCompositionInfoList;
     }
 }

@@ -57,22 +57,4 @@ public interface AutomationCompositionElementListener {
             throws PfModelException {
         // default Unlock Operation
     }
-
-    public default String getUseState(UUID automationCompositionId, UUID automationCompositionElementId)
-            throws PfModelException {
-        // default Use State
-        return "";
-    }
-
-    public default String getOperationalState(UUID automationCompositionId, UUID automationCompositionElementId)
-            throws PfModelException {
-        // default Operational State
-        return "";
-    }
-
-    public default Map<String, Object> getStatusProperties(UUID automationCompositionId,
-            UUID automationCompositionElementId) throws PfModelException {
-        // default StatusProperties
-        return Map.of();
-    }
 }

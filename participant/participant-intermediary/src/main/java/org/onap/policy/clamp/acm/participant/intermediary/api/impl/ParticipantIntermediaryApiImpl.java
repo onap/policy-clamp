@@ -21,6 +21,7 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.api.impl;
 
+import java.util.Map;
 import java.util.UUID;
 import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
@@ -58,5 +59,12 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
             LockState lockState) {
         automationCompositionHandler.updateAutomationCompositionElementState(automationCompositionId, id, newState,
                 lockState);
+    }
+
+    @Override
+    public void sendAcElementInfo(UUID automationCompositionId, UUID elementId, String useState,
+            String operationalState, Map<String, Object> statusProperties) {
+        automationCompositionHandler.sendAcElementInfo(automationCompositionId, elementId, useState, operationalState,
+                statusProperties);
     }
 }
