@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d5f5848d_21addefb",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/api/ParticipantIntermediaryApi.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2023-05-12T11:32:59Z",
+      "side": 1,
+      "message": "void updateAutomationCompositionElementState(UUID automationCompositionId, UUID id, DeployState deployState,LockState lockState, String statusMessage);\n\n\nsuccess:\nupdateAutomationCompositionElementState(1234, DEPLOYED, null, \"Pod is up\")\n\nFail:\nupdateAutomationCompositionElementState(1234, UNDEPLOYED, null, \"Pod failed, error 123\")",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 4
+      },
+      "revId": "85f6be70676d5d5b2d15f2020c013516008e7cc7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
