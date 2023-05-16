@@ -196,8 +196,8 @@ public class AutomationCompositionInstantiationProvider {
                     "Automation composition state is still " + automationComposition.getDeployState());
         }
         var response = new InstantiationResponse();
-        automationComposition =
-                automationCompositionProvider.deleteAutomationComposition(automationComposition.getInstanceId());
+        var acDefinition = acDefinitionProvider.getAcDefinition(automationComposition.getCompositionId());
+        supervisionAcHandler.delete(automationComposition, acDefinition);
         response.setInstanceId(automationComposition.getInstanceId());
         response.setAffectedAutomationComposition(automationComposition.getKey().asIdentifier());
         return response;

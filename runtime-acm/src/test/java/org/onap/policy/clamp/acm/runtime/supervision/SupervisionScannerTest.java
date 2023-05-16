@@ -101,7 +101,28 @@ class SupervisionScannerTest {
                 acRuntimeParameterGroup);
         supervisionScanner.run(false);
 
-        verify(automationCompositionProvider, times(1)).updateAutomationComposition(any(AutomationComposition.class));
+        verify(automationCompositionProvider).updateAutomationComposition(any(AutomationComposition.class));
+    }
+
+    @Test
+    void testScannerDelete() {
+        var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
+        automationComposition.setDeployState(DeployState.DELETING);
+        automationComposition.setLockState(LockState.NONE);
+        var automationCompositionProvider = mock(AutomationCompositionProvider.class);
+        when(automationCompositionProvider.getAcInstancesByCompositionId(compositionId))
+                .thenReturn(List.of(automationComposition));
+
+        var automationCompositionDeployPublisher = mock(AutomationCompositionDeployPublisher.class);
+        var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
+        var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
+
+        var supervisionScanner = new SupervisionScanner(automationCompositionProvider, acDefinitionProvider,
+                automationCompositionStateChangePublisher, automationCompositionDeployPublisher,
+                acRuntimeParameterGroup);
+        supervisionScanner.run(false);
+
+        verify(automationCompositionProvider).deleteAutomationComposition(automationComposition.getInstanceId());
     }
 
     @Test

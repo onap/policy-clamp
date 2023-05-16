@@ -24,5 +24,7 @@ public enum DeployState {
     DEPLOYED,
     DEPLOYING,
     UNDEPLOYED,
-    UNDEPLOYING
+    UNDEPLOYING,
+    DELETING,
+    DELETED
 }

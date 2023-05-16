@@ -145,6 +145,7 @@ class AcmUtilsTest {
         // from transitional state to order state
         assertEquals(DeployOrder.DEPLOY, AcmUtils.stateDeployToOrder(DeployState.DEPLOYING));
         assertEquals(DeployOrder.UNDEPLOY, AcmUtils.stateDeployToOrder(DeployState.UNDEPLOYING));
+        assertEquals(DeployOrder.DELETE, AcmUtils.stateDeployToOrder(DeployState.DELETING));
         assertEquals(DeployOrder.NONE, AcmUtils.stateDeployToOrder(DeployState.DEPLOYED));
     }
 
@@ -162,6 +163,7 @@ class AcmUtilsTest {
         assertEquals(DeployState.DEPLOYED, AcmUtils.deployCompleted(DeployState.DEPLOYING));
         assertEquals(DeployState.UNDEPLOYED, AcmUtils.deployCompleted(DeployState.UNDEPLOYING));
         assertEquals(DeployState.DEPLOYED, AcmUtils.deployCompleted(DeployState.DEPLOYED));
+        assertEquals(DeployState.DELETED, AcmUtils.deployCompleted(DeployState.DELETING));
     }
 
     @Test

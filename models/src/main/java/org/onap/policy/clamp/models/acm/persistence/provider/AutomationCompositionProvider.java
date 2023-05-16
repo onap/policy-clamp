@@ -203,7 +203,7 @@ public class AutomationCompositionProvider {
                 var jpa = acElementRepository.getReferenceById(element.getAutomationCompositionElementId().toString());
                 jpa.setUseState(element.getUseState());
                 jpa.setOperationalState(element.getOperationalState());
-                jpa.setProperties(element.getStatusProperties());
+                jpa.setStatusProperties(element.getStatusProperties());
                 jpaList.add(jpa);
             }
         }

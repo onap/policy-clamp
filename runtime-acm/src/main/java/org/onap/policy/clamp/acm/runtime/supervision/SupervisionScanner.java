@@ -133,14 +133,7 @@ public class SupervisionScanner {
             LOGGER.debug("automation composition scan: transition state {} {} ", automationComposition.getDeployState(),
                     automationComposition.getLockState());
 
-            var deployState = automationComposition.getDeployState();
-            automationComposition.setDeployState(AcmUtils.deployCompleted(deployState));
-            automationComposition
-                    .setLockState(AcmUtils.lockCompleted(deployState, automationComposition.getLockState()));
-            automationCompositionProvider.updateAutomationComposition(automationComposition);
-
-            // Clear missed report counter on automation composition
-            clearFaultAndCounter(automationComposition);
+            complete(automationComposition);
         } else {
             LOGGER.debug("automation composition scan: transition from state {} to {} not completed",
                     automationComposition.getDeployState(), automationComposition.getLockState());
@@ -161,6 +154,21 @@ public class SupervisionScanner {
                         firstStartPhase == nextSpNotCompleted);
             }
         }
+    }
+
+    private void complete(final AutomationComposition automationComposition) {
+        var deployState = automationComposition.getDeployState();
+        automationComposition.setDeployState(AcmUtils.deployCompleted(deployState));
+        automationComposition
+                .setLockState(AcmUtils.lockCompleted(deployState, automationComposition.getLockState()));
+        if (DeployState.DELETED.equals(automationComposition.getDeployState())) {
+            automationCompositionProvider.deleteAutomationComposition(automationComposition.getInstanceId());
+        } else {
+            automationCompositionProvider.updateAutomationComposition(automationComposition);
+        }
+
+        // Clear missed report counter on automation composition
+        clearFaultAndCounter(automationComposition);
     }
 
     private void clearFaultAndCounter(AutomationComposition automationComposition) {

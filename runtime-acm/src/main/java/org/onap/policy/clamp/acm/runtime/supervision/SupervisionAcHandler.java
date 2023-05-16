@@ -109,6 +109,19 @@ public class SupervisionAcHandler {
     }
 
     /**
+     * Handle Delete an AutomationComposition instance.
+     *
+     * @param automationComposition the AutomationComposition
+     * @param acDefinition the AutomationCompositionDefinition
+     */
+    public void delete(AutomationComposition automationComposition, AutomationCompositionDefinition acDefinition) {
+        AcmUtils.setCascadedState(automationComposition, DeployState.DELETING, LockState.NONE);
+        automationCompositionProvider.updateAutomationComposition(automationComposition);
+        var startPhase = ParticipantUtils.getFirstStartPhase(automationComposition, acDefinition.getServiceTemplate());
+        automationCompositionStateChangePublisher.send(automationComposition, startPhase, true);
+    }
+
+    /**
      * Handle a AutomationComposition deploy acknowledge message from a participant.
      *
      * @param automationCompositionAckMessage the AutomationCompositionAck message received from a participant
@@ -139,19 +152,33 @@ public class SupervisionAcHandler {
     }
 
     private void setAcElementStateInDb(AutomationCompositionDeployAck automationCompositionAckMessage) {
-        if (automationCompositionAckMessage.getAutomationCompositionResultMap() != null) {
-            var automationComposition = automationCompositionProvider
-                    .findAutomationComposition(automationCompositionAckMessage.getAutomationCompositionId());
-            if (automationComposition.isPresent()) {
-                var updated = updateState(automationComposition.get(),
-                        automationCompositionAckMessage.getAutomationCompositionResultMap().entrySet());
-                if (updated) {
-                    automationCompositionProvider.updateAutomationComposition(automationComposition.get());
-                }
+        var automationComposition = automationCompositionProvider
+                .findAutomationComposition(automationCompositionAckMessage.getAutomationCompositionId());
+        if (automationComposition.isEmpty()) {
+            LOGGER.warn("AutomationComposition not found in database {}",
+                    automationCompositionAckMessage.getAutomationCompositionId());
+            return;
+        }
+
+        if (automationCompositionAckMessage.getAutomationCompositionResultMap() == null
+                || automationCompositionAckMessage.getAutomationCompositionResultMap().isEmpty()) {
+            if (DeployState.DELETING.equals(automationComposition.get().getDeployState())) {
+                // scenario when Automation Composition instance has never been deployed
+                automationComposition.get().getElements().values()
+                        .forEach(element -> element.setDeployState(DeployState.DELETED));
+                automationCompositionProvider.updateAutomationComposition(automationComposition.get());
             } else {
-                LOGGER.warn("AutomationComposition not found in database {}",
-                        automationCompositionAckMessage.getAutomationCompositionId());
+                LOGGER.warn("Empty AutomationCompositionResultMap  {} {}",
+                        automationCompositionAckMessage.getAutomationCompositionId(),
+                        automationCompositionAckMessage.getMessage());
             }
+            return;
+        }
+
+        var updated = updateState(automationComposition.get(),
+                automationCompositionAckMessage.getAutomationCompositionResultMap().entrySet());
+        if (updated) {
+            automationCompositionProvider.updateAutomationComposition(automationComposition.get());
         }
     }
 
@@ -163,15 +190,9 @@ public class SupervisionAcHandler {
             if (element != null) {
                 element.setDeployState(acElementAck.getValue().getDeployState());
                 element.setLockState(acElementAck.getValue().getLockState());
-                if (DeployState.DEPLOYED.equals(element.getDeployState())) {
-                    element.setOperationalState(acElementAck.getValue().getOperationalState());
-                    element.setUseState(acElementAck.getValue().getUseState());
-                    element.setStatusProperties(acElementAck.getValue().getStatusProperties());
-                } else {
-                    element.setOperationalState(null);
-                    element.setUseState(null);
-                    element.setStatusProperties(Map.of());
-                }
+                element.setOperationalState(acElementAck.getValue().getOperationalState());
+                element.setUseState(acElementAck.getValue().getUseState());
+                element.setStatusProperties(acElementAck.getValue().getStatusProperties());
                 updated = true;
             }
         }

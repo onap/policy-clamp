@@ -284,7 +284,8 @@ public final class AcmUtils {
      */
     public static boolean isInTransitionalState(DeployState deployState, LockState lockState) {
         return DeployState.DEPLOYING.equals(deployState) || DeployState.UNDEPLOYING.equals(deployState)
-                || LockState.LOCKING.equals(lockState) || LockState.UNLOCKING.equals(lockState);
+                || LockState.LOCKING.equals(lockState) || LockState.UNLOCKING.equals(lockState)
+                || DeployState.DELETING.equals(deployState);
     }
 
     /**
@@ -294,12 +295,24 @@ public final class AcmUtils {
      * @return the DeployOrder
      */
     public static DeployOrder stateDeployToOrder(DeployState deployState) {
-        if (DeployState.DEPLOYING.equals(deployState)) {
-            return DeployOrder.DEPLOY;
-        } else if (DeployState.UNDEPLOYING.equals(deployState)) {
-            return DeployOrder.UNDEPLOY;
+        DeployOrder result = null;
+        switch (deployState) {
+            case DEPLOYING:
+                result = DeployOrder.DEPLOY;
+                break;
+
+            case UNDEPLOYING:
+                result = DeployOrder.UNDEPLOY;
+                break;
+
+            case DELETING:
+                result = DeployOrder.DELETE;
+                break;
+
+            default:
+                result = DeployOrder.NONE;
         }
-        return DeployOrder.NONE;
+        return result;
     }
 
     /**
@@ -324,12 +337,24 @@ public final class AcmUtils {
      * @return the DeployState
      */
     public static DeployState deployCompleted(DeployState deployState) {
-        if (DeployState.DEPLOYING.equals(deployState)) {
-            return DeployState.DEPLOYED;
-        } else if (DeployState.UNDEPLOYING.equals(deployState)) {
-            return DeployState.UNDEPLOYED;
+        DeployState result = null;
+        switch (deployState) {
+            case DEPLOYING:
+                result = DeployState.DEPLOYED;
+                break;
+
+            case UNDEPLOYING:
+                result = DeployState.UNDEPLOYED;
+                break;
+
+            case DELETING:
+                result = DeployState.DELETED;
+                break;
+
+            default:
+                return deployState;
         }
-        return deployState;
+        return result;
     }
 
     /**

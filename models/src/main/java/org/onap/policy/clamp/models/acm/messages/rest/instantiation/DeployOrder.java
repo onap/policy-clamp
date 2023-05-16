@@ -23,5 +23,6 @@ package org.onap.policy.clamp.models.acm.messages.rest.instantiation;
 public enum DeployOrder {
     NONE,
     UNDEPLOY,
-    DEPLOY
+    DEPLOY,
+    DELETE
 }

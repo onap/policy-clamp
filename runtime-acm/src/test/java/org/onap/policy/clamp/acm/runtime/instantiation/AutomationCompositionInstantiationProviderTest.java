@@ -95,8 +95,9 @@ class AutomationCompositionInstantiationProviderTest {
         var compositionId = acDefinition.getCompositionId();
         when(acDefinitionProvider.findAcDefinition(compositionId)).thenReturn(Optional.of(acDefinition));
         var acProvider = mock(AutomationCompositionProvider.class);
-        var instantiationProvider =
-                new AutomationCompositionInstantiationProvider(acProvider, acDefinitionProvider, null, null);
+        var supervisionAcHandler = mock(SupervisionAcHandler.class);
+        var instantiationProvider = new AutomationCompositionInstantiationProvider(acProvider, acDefinitionProvider,
+                null, supervisionAcHandler);
         var automationCompositionCreate =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Crud");
         automationCompositionCreate.setCompositionId(compositionId);
@@ -136,7 +137,7 @@ class AutomationCompositionInstantiationProviderTest {
         instantiationProvider.deleteAutomationComposition(automationCompositionCreate.getCompositionId(),
                 automationCompositionCreate.getInstanceId());
 
-        verify(acProvider).deleteAutomationComposition(automationCompositionCreate.getInstanceId());
+        verify(supervisionAcHandler).delete(any(), any());
     }
 
     @Test
@@ -146,9 +147,10 @@ class AutomationCompositionInstantiationProviderTest {
 
         var acProvider = mock(AutomationCompositionProvider.class);
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
+        var supervisionAcHandler = mock(SupervisionAcHandler.class);
 
         var instantiationProvider = new AutomationCompositionInstantiationProvider(acProvider,
-                acDefinitionProvider, null, null);
+                acDefinitionProvider, null, supervisionAcHandler);
 
         when(acProvider.getAutomationComposition(automationComposition.getInstanceId()))
                 .thenReturn(automationComposition);
@@ -168,6 +170,7 @@ class AutomationCompositionInstantiationProviderTest {
         when(acProvider.deleteAutomationComposition(instanceId)).thenReturn(automationComposition);
 
         instantiationProvider.deleteAutomationComposition(compositionId, instanceId);
+        verify(supervisionAcHandler).delete(any(), any());
     }
 
     private void assertThatDeleteThrownBy(AutomationComposition automationComposition,

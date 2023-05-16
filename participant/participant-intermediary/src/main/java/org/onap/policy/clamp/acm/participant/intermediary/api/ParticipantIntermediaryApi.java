@@ -23,6 +23,7 @@ package org.onap.policy.clamp.acm.participant.intermediary.api;
 
 import java.util.Map;
 import java.util.UUID;
+import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 
@@ -50,6 +51,13 @@ public interface ParticipantIntermediaryApi {
      */
     void updateAutomationCompositionElementState(UUID automationCompositionId, UUID id, DeployState deployState,
             LockState lockState, String message);
+
+    /**
+     * Get AutomationCompositions.
+     *
+     * @return get all AutomationCompositions
+     */
+    Map<UUID, AutomationComposition> getAutomationCompositions();
 
     /**
      * Send Automation Composition Element update Info to AC-runtime.

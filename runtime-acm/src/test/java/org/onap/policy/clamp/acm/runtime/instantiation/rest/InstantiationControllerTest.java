@@ -42,6 +42,7 @@ import org.onap.policy.clamp.acm.runtime.util.rest.CommonRestController;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.AcInstanceStateUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse;
@@ -268,7 +269,8 @@ class InstantiationControllerTest extends CommonRestController {
 
         var automationCompositionsFromDb = instantiationProvider.getAutomationCompositions(compositionId,
                 automationCompositionFromRsc.getKey().getName(), automationCompositionFromRsc.getKey().getVersion());
-        assertThat(automationCompositionsFromDb.getAutomationCompositionList()).isEmpty();
+        assertEquals(DeployState.DELETING,
+                automationCompositionsFromDb.getAutomationCompositionList().get(0).getDeployState());
     }
 
     @Test

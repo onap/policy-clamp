@@ -57,4 +57,9 @@ public interface AutomationCompositionElementListener {
             throws PfModelException {
         // default Unlock Operation
     }
+
+    public default void delete(UUID automationCompositionId, UUID automationCompositionElementId)
+            throws PfModelException {
+        // default Delete Operation
+    }
 }

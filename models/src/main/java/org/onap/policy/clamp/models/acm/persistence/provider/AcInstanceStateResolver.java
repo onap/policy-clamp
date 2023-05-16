@@ -44,6 +44,7 @@ public class AcInstanceStateResolver {
     // list of results
     public static final String DEPLOY = DeployOrder.DEPLOY.name();
     public static final String UNDEPLOY = DeployOrder.UNDEPLOY.name();
+    public static final String DELETE = DeployOrder.DELETE.name();
     public static final String LOCK = LockOrder.LOCK.name();
     public static final String UNLOCK = LockOrder.UNLOCK.name();
     public static final String NONE = "NONE";
@@ -56,6 +57,7 @@ public class AcInstanceStateResolver {
 
         this.graph.put(new String[] {DEPLOY, LOCK_NONE, UNDEPLOYED, STATE_LOCKED_NONE}, DEPLOY);
         this.graph.put(new String[] {UNDEPLOY, LOCK_NONE, DEPLOYED, LOCKED}, UNDEPLOY);
+        this.graph.put(new String[] {DELETE, LOCK_NONE, UNDEPLOYED, LOCK_NONE}, DELETE);
         this.graph.put(new String[] {DEPLOY_NONE, UNLOCK, DEPLOYED, LOCKED}, UNLOCK);
         this.graph.put(new String[] {DEPLOY_NONE, LOCK, DEPLOYED, UNLOCKED}, LOCK);
     }
