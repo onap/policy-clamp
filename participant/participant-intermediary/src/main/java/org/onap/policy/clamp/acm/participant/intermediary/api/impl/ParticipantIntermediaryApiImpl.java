@@ -65,9 +65,9 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
 
     @Override
     public void sendAcElementInfo(UUID automationCompositionId, UUID elementId, String useState,
-            String operationalState, Map<String, Object> statusProperties) {
+            String operationalState, Map<String, Object> outProperties) {
         automationCompositionHandler.sendAcElementInfo(automationCompositionId, elementId, useState, operationalState,
-                statusProperties);
+                outProperties);
     }
 
     @Override

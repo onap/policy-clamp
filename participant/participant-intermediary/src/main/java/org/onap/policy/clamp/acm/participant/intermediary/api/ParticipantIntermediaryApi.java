@@ -66,8 +66,8 @@ public interface ParticipantIntermediaryApi {
      * @param id the ID of the automation composition element to update the states
      * @param useState the use State
      * @param operationalState the operational State
-     * @param statusProperties the status Properties Map
+     * @param outProperties the output Properties Map
      */
     void sendAcElementInfo(UUID automationCompositionId, UUID id, String useState, String operationalState,
-            Map<String, Object> statusProperties);
+            Map<String, Object> outProperties);
 }

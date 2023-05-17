@@ -154,7 +154,7 @@ public class AutomationCompositionHandler {
         automationCompositionStateChangeAck.setAutomationCompositionId(automationCompositionId);
         automationCompositionStateChangeAck.getAutomationCompositionResultMap().put(element.getId(),
                 new AcElementDeployAck(element.getDeployState(), element.getLockState(), element.getOperationalState(),
-                        element.getUseState(), element.getStatusProperties(), true,
+                        element.getUseState(), element.getOutProperties(), true,
                         "Automation composition element {} state changed to {}\", id, newState)"));
         LOGGER.debug("Automation composition element {} state changed to {}", id, deployState);
         automationCompositionStateChangeAck.setResult(true);
@@ -509,10 +509,10 @@ public class AutomationCompositionHandler {
      * @param elementId the automationComposition Element id
      * @param useState the use State
      * @param operationalState the operational State
-     * @param statusProperties the status Properties Map
+     * @param outProperties the output Properties Map
      */
     public void sendAcElementInfo(UUID automationCompositionId, UUID elementId, String useState,
-            String operationalState, Map<String, Object> statusProperties) {
+            String operationalState, Map<String, Object> outProperties) {
 
         if (automationCompositionId == null || elementId == null) {
             LOGGER.error("Cannot update Automation composition element state, id is null");
@@ -534,7 +534,7 @@ public class AutomationCompositionHandler {
         }
         element.setOperationalState(operationalState);
         element.setUseState(useState);
-        element.setStatusProperties(statusProperties);
+        element.setOutProperties(outProperties);
 
         var statusMsg = new ParticipantStatus();
         statusMsg.setParticipantId(participantId);
@@ -576,7 +576,7 @@ public class AutomationCompositionHandler {
         elementInfo.setLockState(element.getLockState());
         elementInfo.setOperationalState(element.getOperationalState());
         elementInfo.setUseState(element.getUseState());
-        elementInfo.setStatusProperties(element.getStatusProperties());
+        elementInfo.setOutProperties(element.getOutProperties());
         return elementInfo;
     }
 }

@@ -192,7 +192,7 @@ public class SupervisionAcHandler {
                 element.setLockState(acElementAck.getValue().getLockState());
                 element.setOperationalState(acElementAck.getValue().getOperationalState());
                 element.setUseState(acElementAck.getValue().getUseState());
-                element.setStatusProperties(acElementAck.getValue().getStatusProperties());
+                element.setOutProperties(acElementAck.getValue().getOutProperties());
                 updated = true;
             }
         }
