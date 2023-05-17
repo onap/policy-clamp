@@ -47,7 +47,7 @@ public class AutomationCompositionElementInfo {
 
     private String useState;
 
-    private Map<String, Object> statusProperties = new LinkedHashMap<>();
+    private Map<String, Object> outProperties = new LinkedHashMap<>();
 
     /**
      * Copy constructor, does a deep copy but as all fields here are immutable, it's just a regular copy.
@@ -60,6 +60,6 @@ public class AutomationCompositionElementInfo {
         this.lockState = otherElement.lockState;
         this.operationalState = otherElement.operationalState;
         this.useState = otherElement.useState;
-        this.statusProperties = PfUtils.mapMap(otherElement.statusProperties, UnaryOperator.identity());
+        this.outProperties = PfUtils.mapMap(otherElement.outProperties, UnaryOperator.identity());
     }
 }

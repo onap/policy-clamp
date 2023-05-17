@@ -43,7 +43,7 @@ public class AcElementDeployAck {
 
     private String useState;
 
-    private Map<String, Object> statusProperties = new LinkedHashMap<>();
+    private Map<String, Object> outProperties = new LinkedHashMap<>();
 
     // Result: Success/Fail.
     private Boolean result;

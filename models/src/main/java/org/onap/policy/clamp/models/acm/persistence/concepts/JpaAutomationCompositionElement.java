@@ -111,7 +111,7 @@ public class JpaAutomationCompositionElement extends Validated
     @NotNull
     @Valid
     @Convert(converter = StringToMapConverter.class)
-    private Map<String, Object> statusProperties;
+    private Map<String, Object> outProperties;
 
     /**
      * The Default Constructor creates a {@link JpaAutomationCompositionElement} object with a null key.
@@ -162,8 +162,8 @@ public class JpaAutomationCompositionElement extends Validated
         this.participantId = copyConcept.participantId;
         this.description = copyConcept.description;
         this.properties = (copyConcept.properties != null ? new LinkedHashMap<>(copyConcept.properties) : null);
-        this.statusProperties =
-                (copyConcept.statusProperties != null ? new LinkedHashMap<>(copyConcept.statusProperties)
+        this.outProperties =
+                (copyConcept.outProperties != null ? new LinkedHashMap<>(copyConcept.outProperties)
                         : null);
         this.deployState = copyConcept.deployState;
         this.lockState = copyConcept.lockState;
@@ -189,7 +189,7 @@ public class JpaAutomationCompositionElement extends Validated
         element.setParticipantId(UUID.fromString(participantId));
         element.setDescription(description);
         element.setProperties(PfUtils.mapMap(properties, UnaryOperator.identity()));
-        element.setStatusProperties(PfUtils.mapMap(statusProperties, UnaryOperator.identity()));
+        element.setOutProperties(PfUtils.mapMap(outProperties, UnaryOperator.identity()));
         element.setDeployState(deployState);
         element.setLockState(lockState);
         element.setOperationalState(operationalState);
@@ -204,7 +204,7 @@ public class JpaAutomationCompositionElement extends Validated
         this.participantId = element.getParticipantId().toString();
         this.description = element.getDescription();
         this.properties = PfUtils.mapMap(element.getProperties(), UnaryOperator.identity());
-        this.statusProperties = PfUtils.mapMap(element.getStatusProperties(), UnaryOperator.identity());
+        this.outProperties = PfUtils.mapMap(element.getOutProperties(), UnaryOperator.identity());
         this.deployState = element.getDeployState();
         this.lockState = element.getLockState();
         this.operationalState = element.getOperationalState();

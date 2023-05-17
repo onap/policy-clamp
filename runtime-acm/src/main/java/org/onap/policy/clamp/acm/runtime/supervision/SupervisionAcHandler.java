@@ -163,15 +163,9 @@ public class SupervisionAcHandler {
             if (element != null) {
                 element.setDeployState(acElementAck.getValue().getDeployState());
                 element.setLockState(acElementAck.getValue().getLockState());
-                if (DeployState.DEPLOYED.equals(element.getDeployState())) {
-                    element.setOperationalState(acElementAck.getValue().getOperationalState());
-                    element.setUseState(acElementAck.getValue().getUseState());
-                    element.setStatusProperties(acElementAck.getValue().getStatusProperties());
-                } else {
-                    element.setOperationalState(null);
-                    element.setUseState(null);
-                    element.setStatusProperties(Map.of());
-                }
+                element.setOperationalState(acElementAck.getValue().getOperationalState());
+                element.setUseState(acElementAck.getValue().getUseState());
+                element.setOutProperties(acElementAck.getValue().getOutProperties());
                 updated = true;
             }
         }
