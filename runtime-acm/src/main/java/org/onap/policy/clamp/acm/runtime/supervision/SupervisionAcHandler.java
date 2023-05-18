@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
+import org.onap.policy.clamp.acm.runtime.supervision.comm.AcElementPropertiesPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionDeployPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionStateChangePublisher;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeployAck;
@@ -54,6 +55,8 @@ public class SupervisionAcHandler {
     // Publishers for participant communication
     private final AutomationCompositionDeployPublisher automationCompositionDeployPublisher;
     private final AutomationCompositionStateChangePublisher automationCompositionStateChangePublisher;
+
+    private final AcElementPropertiesPublisher acElementPropertiesPublisher;
 
     /**
      * Handle Deploy an AutomationComposition instance.
@@ -106,6 +109,15 @@ public class SupervisionAcHandler {
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         var startPhase = ParticipantUtils.getFirstStartPhase(automationComposition, acDefinition.getServiceTemplate());
         automationCompositionStateChangePublisher.send(automationComposition, startPhase, true);
+    }
+
+    /**
+     * Handle Element property update on a deployed instance.
+     * @param automationComposition the AutomationComposition
+     */
+    public void update(AutomationComposition automationComposition) {
+        AcmUtils.setCascadedState(automationComposition, DeployState.UPDATING, LockState.NONE);
+        acElementPropertiesPublisher.send(automationComposition);
     }
 
     /**

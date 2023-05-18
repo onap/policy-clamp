@@ -62,4 +62,9 @@ public interface AutomationCompositionElementListener {
             throws PfModelException {
         // default Delete Operation
     }
+
+    public default void update(UUID automationCompositionId, AcElementDeploy element, Map<String, Object> properties)
+            throws PfModelException {
+        // default update Operation
+    }
 }
