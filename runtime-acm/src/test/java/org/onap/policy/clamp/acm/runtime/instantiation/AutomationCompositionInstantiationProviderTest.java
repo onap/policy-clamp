@@ -313,22 +313,6 @@ class AutomationCompositionInstantiationProviderTest {
     }
 
     @Test
-    void testUpdateBadRequest() {
-        var automationComposition = InstantiationUtils
-                .getAutomationCompositionFromResource(AC_INSTANTIATION_AC_DEFINITION_NOT_FOUND_JSON, "AcNotFound");
-
-        var acProvider = mock(AutomationCompositionProvider.class);
-        automationComposition.setDeployState(DeployState.DEPLOYED);
-        when(acProvider.getAutomationComposition(automationComposition.getInstanceId()))
-                .thenReturn(automationComposition);
-        var provider = new AutomationCompositionInstantiationProvider(acProvider,
-                mock(AcDefinitionProvider.class), null, null);
-
-        assertThatThrownBy(() -> provider.updateAutomationComposition(automationComposition.getCompositionId(),
-                automationComposition)).hasMessageMatching("Not allow to update for state in DEPLOYED");
-    }
-
-    @Test
     void testCompositionInstanceState() {
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
         var acDefinition = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.COMMISSIONED);

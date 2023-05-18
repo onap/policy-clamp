@@ -47,6 +47,7 @@ import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRe
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegisterAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatus;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatusReq;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.PropertiesUpdate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -118,6 +119,19 @@ public class ParticipantHandler {
     public void handleAutomationCompositionStateChange(AutomationCompositionStateChange stateChangeMsg) {
         automationCompositionHandler.handleAutomationCompositionStateChange(stateChangeMsg,
                 acElementDefsMap.get(stateChangeMsg.getCompositionId()));
+    }
+
+    /**
+     * Handle a automation composition property update message.
+     *
+     * @param propertyUpdateMsg the property update message
+     */
+    @Timed(
+            value = "listener.properties_update",
+            description = "PROPERTIES_UPDATE message received")
+    public void handleAcPropertyUpdate(PropertiesUpdate propertyUpdateMsg) {
+        automationCompositionHandler.handleAcPropertyUpdate(propertyUpdateMsg,
+                acElementDefsMap.get(propertyUpdateMsg.getCompositionId()));
     }
 
     /**
