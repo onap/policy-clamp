@@ -154,7 +154,9 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
 
         var automationCompositionDefinition = element.getToscaServiceTemplateFragment();
         if (automationCompositionDefinition.getToscaTopologyTemplate() == null) {
-            throw new PfModelException(Status.BAD_REQUEST, "ToscaTopologyTemplate not defined");
+            intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
+                    DeployState.UNDEPLOYED, null, "ToscaTopologyTemplate not defined");
+            return;
         }
         serviceTemplateMap.put(element.getId(), automationCompositionDefinition);
         if (automationCompositionDefinition.getPolicyTypes() != null) {
@@ -174,7 +176,8 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
             var policyList = getPolicyList(automationCompositionDefinition);
             deployPolicies(policyList, automationCompositionId, element.getId());
         } else {
-            throw new PfModelException(Status.BAD_REQUEST,
+            intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
+                    DeployState.UNDEPLOYED, null,
                     "Creation of PolicyTypes/Policies failed. Policies will not be deployed.");
         }
     }
