@@ -38,6 +38,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientRequestException;
 import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
 
@@ -88,9 +89,12 @@ public class AcHttpClient {
                         new ImmutablePair<>(request.getExpectedResponse(), response));
 
             } catch (HttpWebClientException ex) {
-                LOGGER.error("Error occurred on the HTTP request ", ex);
+                LOGGER.error("Error occurred on the HTTP response ", ex);
                 responseMap.put(request.getRestRequestId(),
                         new ImmutablePair<>(ex.getStatusCode().value(), ex.getResponseBodyAsString()));
+            } catch (WebClientRequestException ex) {
+                LOGGER.error("Error occurred on the HTTP request ", ex);
+                responseMap.put(request.getRestRequestId(), new ImmutablePair<>(404, ex.getMessage()));
             }
         }
     }
