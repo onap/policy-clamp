@@ -53,7 +53,7 @@ class AutomationCompositionElementHandlerTest {
     private static final ToscaConceptIdentifier DEFINITION = new ToscaConceptIdentifier(ID_NAME, ID_VERSION);
 
     @Test
-    void testHandlerUndeploy() throws PfModelException {
+    void testHandlerUndeployNoPolicy() throws PfModelException {
         var handler = new AutomationCompositionElementHandler(mock(PolicyApiHttpClient.class),
                 mock(PolicyPapHttpClient.class));
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
@@ -94,6 +94,24 @@ class AutomationCompositionElementHandlerTest {
         handler.deploy(AC_ID, getTestingAcElement(), Map.of());
         verify(intermediaryApi).updateAutomationCompositionElementState(AC_ID, automationCompositionElementId,
                 DeployState.DEPLOYED, null, "Deployed");
+
+        handler.undeploy(AC_ID, automationCompositionElementId);
+        verify(intermediaryApi).updateAutomationCompositionElementState(AC_ID, automationCompositionElementId,
+                DeployState.UNDEPLOYED, null, "Undeployed");
+    }
+
+    @Test
+    void testDeployNoPolicy() throws PfModelException {
+        var handler = new AutomationCompositionElementHandler(mock(PolicyApiHttpClient.class),
+                mock(PolicyPapHttpClient.class));
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        handler.setIntermediaryApi(intermediaryApi);
+
+        var acElement = getTestingAcElement();
+        acElement.getToscaServiceTemplateFragment().setToscaTopologyTemplate(null);
+        handler.deploy(AC_ID, acElement, Map.of());
+        verify(intermediaryApi).updateAutomationCompositionElementState(AC_ID, automationCompositionElementId,
+                DeployState.UNDEPLOYED, null, "ToscaTopologyTemplate not defined");
     }
 
     @Test
@@ -111,8 +129,10 @@ class AutomationCompositionElementHandlerTest {
         var element = getTestingAcElement();
 
         // Mock failure in policy type creation
-        assertThatThrownBy(() -> handler.deploy(AC_ID, element, Map.of()))
-                .hasMessageMatching("Creation of PolicyTypes/Policies failed. Policies will not be deployed.");
+        handler.deploy(AC_ID, element, Map.of());
+        verify(intermediaryApi).updateAutomationCompositionElementState(AC_ID, automationCompositionElementId,
+                DeployState.UNDEPLOYED, null,
+                "Creation of PolicyTypes/Policies failed. Policies will not be deployed.");
     }
 
     @Test

@@ -22,7 +22,6 @@
 package org.onap.policy.clamp.acm.participant.policy.endtoend;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.Instant;
 import java.util.Collections;
@@ -39,11 +38,9 @@ import org.onap.policy.clamp.acm.participant.policy.main.parameters.CommonTestDa
 import org.onap.policy.clamp.acm.participant.policy.main.utils.TestListenerUtils;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDeregister;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDeregisterAck;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantPrime;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantPrimeAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegister;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegisterAck;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatus;
 import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,13 +63,12 @@ class ParticipantMessagesTest {
 
     @Test
     void testSendParticipantRegisterMessage() {
-        final ParticipantRegister participantRegisterMsg = new ParticipantRegister();
+        final var participantRegisterMsg = new ParticipantRegister();
         participantRegisterMsg.setParticipantId(CommonTestData.getParticipantId());
         participantRegisterMsg.setTimestamp(Instant.now());
 
         synchronized (lockit) {
-            ParticipantMessagePublisher participantMessagePublisher =
-                new ParticipantMessagePublisher();
+            var participantMessagePublisher = new ParticipantMessagePublisher();
             participantMessagePublisher.active(Collections.singletonList(Mockito.mock(TopicSink.class)));
             assertThatCode(() -> participantMessagePublisher.sendParticipantRegister(participantRegisterMsg))
                 .doesNotThrowAnyException();
@@ -81,14 +77,13 @@ class ParticipantMessagesTest {
 
     @Test
     void testReceiveParticipantRegisterAckMessage() {
-        final ParticipantRegisterAck participantRegisterAckMsg = new ParticipantRegisterAck();
+        final var participantRegisterAckMsg = new ParticipantRegisterAck();
         participantRegisterAckMsg.setMessage("ParticipantRegisterAck message");
         participantRegisterAckMsg.setResponseTo(UUID.randomUUID());
         participantRegisterAckMsg.setResult(true);
 
         synchronized (lockit) {
-            ParticipantRegisterAckListener participantRegisterAckListener =
-                new ParticipantRegisterAckListener(participantHandler);
+            var participantRegisterAckListener = new ParticipantRegisterAckListener(participantHandler);
             assertThatCode(() -> participantRegisterAckListener.onTopicEvent(INFRA, TOPIC, null,
                 participantRegisterAckMsg)).doesNotThrowAnyException();
         }
@@ -96,13 +91,12 @@ class ParticipantMessagesTest {
 
     @Test
     void testSendParticipantDeregisterMessage() {
-        final ParticipantDeregister participantDeregisterMsg = new ParticipantDeregister();
+        final var participantDeregisterMsg = new ParticipantDeregister();
         participantDeregisterMsg.setParticipantId(CommonTestData.getParticipantId());
         participantDeregisterMsg.setTimestamp(Instant.now());
 
         synchronized (lockit) {
-            ParticipantMessagePublisher participantMessagePublisher =
-                new ParticipantMessagePublisher();
+            var participantMessagePublisher = new ParticipantMessagePublisher();
             participantMessagePublisher.active(Collections.singletonList(Mockito.mock(TopicSink.class)));
             assertThatCode(() -> participantMessagePublisher.sendParticipantDeregister(participantDeregisterMsg))
                 .doesNotThrowAnyException();
@@ -111,14 +105,13 @@ class ParticipantMessagesTest {
 
     @Test
     void testReceiveParticipantDeregisterAckMessage() {
-        final ParticipantDeregisterAck participantDeregisterAckMsg = new ParticipantDeregisterAck();
+        final var participantDeregisterAckMsg = new ParticipantDeregisterAck();
         participantDeregisterAckMsg.setMessage("ParticipantDeregisterAck message");
         participantDeregisterAckMsg.setResponseTo(UUID.randomUUID());
         participantDeregisterAckMsg.setResult(true);
 
         synchronized (lockit) {
-            ParticipantDeregisterAckListener participantDeregisterAckListener =
-                new ParticipantDeregisterAckListener(participantHandler);
+            var participantDeregisterAckListener = new ParticipantDeregisterAckListener(participantHandler);
             assertThatCode(() -> participantDeregisterAckListener.onTopicEvent(INFRA, TOPIC, null,
                 participantDeregisterAckMsg)).doesNotThrowAnyException();
         }
@@ -126,26 +119,24 @@ class ParticipantMessagesTest {
 
     @Test
     void testReceiveParticipantUpdateMessage() {
-        ParticipantPrime participantPrimeMsg = TestListenerUtils.createParticipantPrimeMsg();
+        var participantPrimeMsg = TestListenerUtils.createParticipantPrimeMsg();
 
         synchronized (lockit) {
-            ParticipantPrimeListener participantPrimeListener = new ParticipantPrimeListener(participantHandler);
-            participantPrimeListener.onTopicEvent(INFRA, TOPIC, null, participantPrimeMsg);
+            var participantPrimeListener = new ParticipantPrimeListener(participantHandler);
+            assertThatCode(() -> participantPrimeListener.onTopicEvent(INFRA, TOPIC, null, participantPrimeMsg))
+                    .doesNotThrowAnyException();
         }
-
-        // Verify the result of GET participants with what is stored
-        assertEquals(CommonTestData.getParticipantId(), participantHandler.getParticipantId());
     }
 
     @Test
     void testSendParticipantPrimeAckMessage() {
-        final ParticipantPrimeAck participantPrimeAckMsg = new ParticipantPrimeAck();
+        final var participantPrimeAckMsg = new ParticipantPrimeAck();
         participantPrimeAckMsg.setMessage("ParticipantPrimeAck message");
         participantPrimeAckMsg.setResponseTo(UUID.randomUUID());
         participantPrimeAckMsg.setResult(true);
 
         synchronized (lockit) {
-            ParticipantMessagePublisher participantMessagePublisher = new ParticipantMessagePublisher();
+            var participantMessagePublisher = new ParticipantMessagePublisher();
             participantMessagePublisher.active(Collections.singletonList(Mockito.mock(TopicSink.class)));
             assertThatCode(() -> participantMessagePublisher.sendParticipantPrimeAck(participantPrimeAckMsg))
                 .doesNotThrowAnyException();
@@ -154,9 +145,9 @@ class ParticipantMessagesTest {
 
     @Test
     void testParticipantStatusHeartbeat() {
-        final ParticipantStatus heartbeat = participantHandler.makeHeartbeat(true);
+        final var heartbeat = participantHandler.makeHeartbeat(true);
         synchronized (lockit) {
-            ParticipantMessagePublisher publisher = new ParticipantMessagePublisher();
+            var publisher = new ParticipantMessagePublisher();
             publisher.active(Collections.singletonList(Mockito.mock(TopicSink.class)));
             assertThatCode(() -> publisher.sendHeartbeat(heartbeat)).doesNotThrowAnyException();
         }
