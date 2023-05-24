@@ -100,5 +100,16 @@ public enum ParticipantMessageType {
     /**
      * Used by automation composition runtime to request for PARTICIPANT_STATUS message immediately.
      */
-    PARTICIPANT_STATUS_REQ
+    PARTICIPANT_STATUS_REQ,
+
+    /**
+     * Used by automation composition runtime to send the element properties update to participant.
+     */
+    PROPERTIES_UPDATE,
+
+    /**
+     * Used by participant to acknowledge the receipt of PROPERTIES_UPDATE message
+     * from automation composition runtime.
+     */
+    PROPERTIES_UPDATE_ACK
 }

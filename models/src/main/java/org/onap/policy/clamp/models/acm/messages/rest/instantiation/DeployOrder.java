@@ -24,5 +24,6 @@ public enum DeployOrder {
     NONE,
     UNDEPLOY,
     DEPLOY,
-    DELETE
+    DELETE,
+    UPDATE
 }
