@@ -47,7 +47,8 @@ class AcHttpClientTest {
 
     private static int mockServerPort;
 
-    private final String testMockUrl = "http://localhost";
+    private static final String MOCK_URL = "http://localhost";
+    private static final String WRONG_URL = "http://wrong-url";
 
     private static MockServerRest mockServer;
 
@@ -76,7 +77,7 @@ class AcHttpClientTest {
 
         var headers = commonTestData.getHeaders();
         var configRequest =
-                new ConfigRequest(testMockUrl + ":" + mockServerPort, headers, List.of(configurationEntity), 10);
+                new ConfigRequest(MOCK_URL + ":" + mockServerPort, headers, List.of(configurationEntity), 10);
 
         var client = new AcHttpClient();
         assertDoesNotThrow(() -> client.run(configRequest, responseMap));
@@ -94,7 +95,24 @@ class AcHttpClientTest {
 
         var headers = commonTestData.getHeaders();
         var configRequest =
-                new ConfigRequest(testMockUrl + ":" + mockServerPort, headers, List.of(configurationEntity), 10);
+                new ConfigRequest(MOCK_URL + ":" + mockServerPort, headers, List.of(configurationEntity), 10);
+
+        var client = new AcHttpClient();
+        assertDoesNotThrow(() -> client.run(configRequest, responseMap));
+        assertThat(responseMap).hasSize(2).containsKey(commonTestData.restParamsWithGet().getRestRequestId());
+        var response = responseMap.get(commonTestData.restParamsWithInvalidPost().getRestRequestId());
+        assertThat(response.getKey()).isEqualTo(404);
+    }
+
+    @Test
+    void test_WrongUrl() {
+        // Add rest requests Invalid URL
+        var configurationEntity = commonTestData.getInvalidConfigurationEntity();
+        Map<ToscaConceptIdentifier, Pair<Integer, String>> responseMap = new HashMap<>();
+
+        var headers = commonTestData.getHeaders();
+        var configRequest =
+                new ConfigRequest(WRONG_URL + ":" + mockServerPort, headers, List.of(configurationEntity), 10);
 
         var client = new AcHttpClient();
         assertDoesNotThrow(() -> client.run(configRequest, responseMap));

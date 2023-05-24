@@ -20,7 +20,6 @@
 
 package org.onap.policy.clamp.acm.participant.http.handler;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.Mockito.mock;
@@ -37,6 +36,7 @@ import org.onap.policy.clamp.acm.participant.http.utils.CommonTestData;
 import org.onap.policy.clamp.acm.participant.http.utils.ToscaUtils;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.models.base.PfModelException;
 
 class AcElementHandlerTest {
 
@@ -61,16 +61,35 @@ class AcElementHandlerTest {
     }
 
     @Test
-    void testDeployError() throws IOException {
+    void testDeployConstraintViolations() throws IOException, PfModelException {
         var instanceId = commonTestData.getAutomationCompositionId();
         var element = commonTestData.getAutomationCompositionElement();
+        var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
 
         try (var automationCompositionElementHandler =
                 new AutomationCompositionElementHandler(mock(AcHttpClient.class))) {
-            automationCompositionElementHandler.setIntermediaryApi(mock(ParticipantIntermediaryApi.class));
+            automationCompositionElementHandler.setIntermediaryApi(participantIntermediaryApi);
             Map<String, Object> map = new HashMap<>();
-            assertThatThrownBy(() -> automationCompositionElementHandler.deploy(instanceId, element, map))
-                    .hasMessage("Constraint violations in the config request");
+            automationCompositionElementHandler.deploy(instanceId, element, map);
+            verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
+                    DeployState.UNDEPLOYED, null, "Constraint violations in the config request");
+        }
+    }
+
+    @Test
+    void testDeployError() throws IOException, PfModelException {
+        var instanceId = commonTestData.getAutomationCompositionId();
+        var element = commonTestData.getAutomationCompositionElement();
+        var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
+
+        try (var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(mock(AcHttpClient.class))) {
+            automationCompositionElementHandler.setIntermediaryApi(participantIntermediaryApi);
+            Map<String, Object> map = new HashMap<>();
+            map.put("httpHeaders", 1);
+            automationCompositionElementHandler.deploy(instanceId, element, map);
+            verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
+                    DeployState.UNDEPLOYED, null, "Error extracting ConfigRequest ");
         }
     }
 
@@ -91,6 +110,5 @@ class AcElementHandlerTest {
             verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
                     DeployState.DEPLOYED, null, "Deployed");
         }
-
     }
 }

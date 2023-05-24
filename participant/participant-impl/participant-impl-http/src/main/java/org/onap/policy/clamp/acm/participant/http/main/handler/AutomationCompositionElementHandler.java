@@ -39,6 +39,7 @@ import org.onap.policy.clamp.acm.participant.http.main.models.ConfigRequest;
 import org.onap.policy.clamp.acm.participant.http.main.webclient.AcHttpClient;
 import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
+import org.onap.policy.clamp.common.acm.exception.AutomationCompositionException;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.common.utils.coder.Coder;
@@ -91,31 +92,37 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
     @Override
     public void deploy(UUID automationCompositionId, AcElementDeploy element, Map<String, Object> properties)
             throws PfModelException {
-        var configRequest = getConfigRequest(properties);
-        var restResponseMap = invokeHttpClient(configRequest);
-        var failedResponseStatus = restResponseMap.values().stream()
-                .filter(response -> !HttpStatus.valueOf(response.getKey()).is2xxSuccessful())
-                .collect(Collectors.toList());
-        if (failedResponseStatus.isEmpty()) {
+        try {
+            var configRequest = getConfigRequest(properties);
+            var restResponseMap = invokeHttpClient(configRequest);
+            var failedResponseStatus = restResponseMap.values().stream()
+                    .filter(response -> !HttpStatus.valueOf(response.getKey()).is2xxSuccessful())
+                    .collect(Collectors.toList());
+            if (failedResponseStatus.isEmpty()) {
+                intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
+                        DeployState.DEPLOYED, null, "Deployed");
+            } else {
+                intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
+                        DeployState.UNDEPLOYED, null, "Error on Invoking the http request: " + failedResponseStatus);
+            }
+        } catch (AutomationCompositionException e) {
             intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
-                    DeployState.DEPLOYED, null, "Deployed");
-        } else {
-            throw new PfModelException(Status.BAD_REQUEST, "Error on Invoking the http request: {}",
-                    failedResponseStatus);
+                    DeployState.UNDEPLOYED, null, e.getMessage());
         }
     }
 
-    private ConfigRequest getConfigRequest(Map<String, Object> properties) throws PfModelException {
+    private ConfigRequest getConfigRequest(Map<String, Object> properties) throws AutomationCompositionException {
         try {
             var configRequest = CODER.convert(properties, ConfigRequest.class);
             var violations = Validation.buildDefaultValidatorFactory().getValidator().validate(configRequest);
             if (!violations.isEmpty()) {
                 LOGGER.error("Violations found in the config request parameters: {}", violations);
-                throw new PfModelException(Status.BAD_REQUEST, "Constraint violations in the config request");
+                throw new AutomationCompositionException(Status.BAD_REQUEST,
+                        "Constraint violations in the config request");
             }
             return configRequest;
         } catch (CoderException e) {
-            throw new PfModelException(Status.BAD_REQUEST, "Error extracting ConfigRequest ", e);
+            throw new AutomationCompositionException(Status.BAD_REQUEST, "Error extracting ConfigRequest ", e);
         }
     }
 
