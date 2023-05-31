@@ -21,8 +21,6 @@
 
 package org.onap.policy.clamp.acm.runtime.instantiation;
 
-
-import java.util.Map;
 import java.util.UUID;
 import javax.validation.Valid;
 import javax.ws.rs.core.Response;
@@ -31,7 +29,6 @@ import lombok.AllArgsConstructor;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionAcHandler;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
@@ -126,12 +123,13 @@ public class AutomationCompositionInstantiationProvider {
             response.setAffectedAutomationComposition(automationComposition.getKey().asIdentifier());
             return response;
 
-        } else if (DeployState.DEPLOYED.equals(acToUpdate.getDeployState())
+        } else if ((DeployState.DEPLOYED.equals(acToUpdate.getDeployState())
+                || DeployState.UPDATING.equals(acToUpdate.getDeployState()))
                 && LockState.LOCKED.equals(acToUpdate.getLockState())) {
             return updateDeployedAutomationComposition(compositionId, automationComposition, acToUpdate);
         }
         throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
-                    "Not allowed to update in the state " + acToUpdate.getDeployState());
+                "Not allowed to update in the state " + acToUpdate.getDeployState());
     }
 
     /**
@@ -143,24 +141,24 @@ public class AutomationCompositionInstantiationProvider {
      * @return the result of the update
      */
     public InstantiationResponse updateDeployedAutomationComposition(UUID compositionId,
-                                                                     AutomationComposition automationComposition,
-                                                                     AutomationComposition acToBeUpdated) {
+            AutomationComposition automationComposition, AutomationComposition acToBeUpdated) {
 
         // Iterate and update the element property values
-        for (Map.Entry<UUID, AutomationCompositionElement> dbAcElement : acToBeUpdated.getElements().entrySet()) {
+        for (var dbAcElement : acToBeUpdated.getElements().entrySet()) {
             var elementId = dbAcElement.getKey();
             if (automationComposition.getElements().containsKey(elementId)) {
-                dbAcElement.getValue().getProperties().putAll(automationComposition.getElements().get(elementId)
-                        .getProperties());
+                dbAcElement.getValue().getProperties()
+                        .putAll(automationComposition.getElements().get(elementId).getProperties());
             }
         }
-        // Publish property update event to the participants
-        supervisionAcHandler.update(acToBeUpdated);
-
         var validationResult = validateAutomationComposition(acToBeUpdated);
         if (!validationResult.isValid()) {
             throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, validationResult.getResult());
         }
+
+        // Publish property update event to the participants
+        supervisionAcHandler.update(acToBeUpdated);
+
         automationComposition = automationCompositionProvider.updateAutomationComposition(acToBeUpdated);
         var response = new InstantiationResponse();
         var instanceId = automationComposition.getInstanceId();
@@ -168,7 +166,6 @@ public class AutomationCompositionInstantiationProvider {
         response.setAffectedAutomationComposition(automationComposition.getKey().asIdentifier());
         return response;
     }
-
 
     /**
      * Validate AutomationComposition.
@@ -234,7 +231,8 @@ public class AutomationCompositionInstantiationProvider {
             throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
                     automationComposition.getCompositionId() + DO_NOT_MATCH + compositionId);
         }
-        if (!DeployState.UNDEPLOYED.equals(automationComposition.getDeployState())) {
+        if (!DeployState.UNDEPLOYED.equals(automationComposition.getDeployState())
+                && !DeployState.DELETING.equals(automationComposition.getDeployState())) {
             throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
                     "Automation composition state is still " + automationComposition.getDeployState());
         }
@@ -279,7 +277,7 @@ public class AutomationCompositionInstantiationProvider {
         var acDefinition = acDefinitionProvider.getAcDefinition(automationComposition.getCompositionId());
         var result = acInstanceStateResolver.resolve(acInstanceStateUpdate.getDeployOrder(),
                 acInstanceStateUpdate.getLockOrder(), automationComposition.getDeployState(),
-                automationComposition.getLockState());
+                automationComposition.getLockState(), automationComposition.getStateChangeResult());
         switch (result) {
             case "DEPLOY":
                 supervisionAcHandler.deploy(automationComposition, acDefinition);

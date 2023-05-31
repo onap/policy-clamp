@@ -34,6 +34,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
+import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeployAck;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
@@ -55,7 +56,6 @@ public class SupervisionAcHandler {
     // Publishers for participant communication
     private final AutomationCompositionDeployPublisher automationCompositionDeployPublisher;
     private final AutomationCompositionStateChangePublisher automationCompositionStateChangePublisher;
-
     private final AcElementPropertiesPublisher acElementPropertiesPublisher;
 
     /**
@@ -65,7 +65,17 @@ public class SupervisionAcHandler {
      * @param acDefinition the AutomationCompositionDefinition
      */
     public void deploy(AutomationComposition automationComposition, AutomationCompositionDefinition acDefinition) {
-        AcmUtils.setCascadedState(automationComposition, DeployState.DEPLOYING, LockState.NONE);
+        if (StateChangeResult.FAILED.equals(automationComposition.getStateChangeResult())) {
+            automationComposition.setDeployState(DeployState.DEPLOYING);
+            for (var element : automationComposition.getElements().values()) {
+                if (!DeployState.DEPLOYED.equals(element.getDeployState())) {
+                    element.setDeployState(DeployState.DEPLOYING);
+                }
+            }
+        } else {
+            AcmUtils.setCascadedState(automationComposition, DeployState.DEPLOYING, LockState.NONE);
+        }
+        automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         var startPhase = ParticipantUtils.getFirstStartPhase(automationComposition, acDefinition.getServiceTemplate());
         automationCompositionDeployPublisher.send(automationComposition, acDefinition.getServiceTemplate(), startPhase,
@@ -79,7 +89,17 @@ public class SupervisionAcHandler {
      * @param acDefinition the AutomationCompositionDefinition
      */
     public void undeploy(AutomationComposition automationComposition, AutomationCompositionDefinition acDefinition) {
-        AcmUtils.setCascadedState(automationComposition, DeployState.UNDEPLOYING, LockState.NONE);
+        if (StateChangeResult.FAILED.equals(automationComposition.getStateChangeResult())) {
+            automationComposition.setDeployState(DeployState.UNDEPLOYING);
+            for (var element : automationComposition.getElements().values()) {
+                if (!DeployState.UNDEPLOYED.equals(element.getDeployState())) {
+                    element.setDeployState(DeployState.UNDEPLOYING);
+                }
+            }
+        } else {
+            AcmUtils.setCascadedState(automationComposition, DeployState.UNDEPLOYING, LockState.NONE);
+        }
+        automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         var startPhase = ParticipantUtils.getFirstStartPhase(automationComposition, acDefinition.getServiceTemplate());
         automationCompositionStateChangePublisher.send(automationComposition, startPhase, true);
@@ -92,7 +112,17 @@ public class SupervisionAcHandler {
      * @param acDefinition the AutomationCompositionDefinition
      */
     public void unlock(AutomationComposition automationComposition, AutomationCompositionDefinition acDefinition) {
-        AcmUtils.setCascadedState(automationComposition, DeployState.DEPLOYED, LockState.UNLOCKING);
+        if (StateChangeResult.FAILED.equals(automationComposition.getStateChangeResult())) {
+            automationComposition.setLockState(LockState.UNLOCKING);
+            for (var element : automationComposition.getElements().values()) {
+                if (!LockState.UNLOCKED.equals(element.getLockState())) {
+                    element.setLockState(LockState.UNLOCKING);
+                }
+            }
+        } else {
+            AcmUtils.setCascadedState(automationComposition, DeployState.DEPLOYED, LockState.UNLOCKING);
+        }
+        automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         var startPhase = ParticipantUtils.getFirstStartPhase(automationComposition, acDefinition.getServiceTemplate());
         automationCompositionStateChangePublisher.send(automationComposition, startPhase, true);
@@ -105,7 +135,17 @@ public class SupervisionAcHandler {
      * @param acDefinition the AutomationCompositionDefinition
      */
     public void lock(AutomationComposition automationComposition, AutomationCompositionDefinition acDefinition) {
-        AcmUtils.setCascadedState(automationComposition, DeployState.DEPLOYED, LockState.LOCKING);
+        if (StateChangeResult.FAILED.equals(automationComposition.getStateChangeResult())) {
+            automationComposition.setLockState(LockState.LOCKING);
+            for (var element : automationComposition.getElements().values()) {
+                if (!LockState.LOCKED.equals(element.getLockState())) {
+                    element.setLockState(LockState.LOCKING);
+                }
+            }
+        } else {
+            AcmUtils.setCascadedState(automationComposition, DeployState.DEPLOYED, LockState.LOCKING);
+        }
+        automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         var startPhase = ParticipantUtils.getFirstStartPhase(automationComposition, acDefinition.getServiceTemplate());
         automationCompositionStateChangePublisher.send(automationComposition, startPhase, true);
@@ -113,10 +153,12 @@ public class SupervisionAcHandler {
 
     /**
      * Handle Element property update on a deployed instance.
+     *
      * @param automationComposition the AutomationComposition
      */
     public void update(AutomationComposition automationComposition) {
-        AcmUtils.setCascadedState(automationComposition, DeployState.UPDATING, LockState.NONE);
+        AcmUtils.setCascadedState(automationComposition, DeployState.UPDATING, automationComposition.getLockState());
+        automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
         acElementPropertiesPublisher.send(automationComposition);
     }
 
@@ -128,6 +170,7 @@ public class SupervisionAcHandler {
      */
     public void delete(AutomationComposition automationComposition, AutomationCompositionDefinition acDefinition) {
         AcmUtils.setCascadedState(automationComposition, DeployState.DELETING, LockState.NONE);
+        automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         var startPhase = ParticipantUtils.getFirstStartPhase(automationComposition, acDefinition.getServiceTemplate());
         automationCompositionStateChangePublisher.send(automationComposition, startPhase, true);
@@ -176,8 +219,11 @@ public class SupervisionAcHandler {
                 || automationCompositionAckMessage.getAutomationCompositionResultMap().isEmpty()) {
             if (DeployState.DELETING.equals(automationComposition.get().getDeployState())) {
                 // scenario when Automation Composition instance has never been deployed
-                automationComposition.get().getElements().values()
-                        .forEach(element -> element.setDeployState(DeployState.DELETED));
+                for (var element : automationComposition.get().getElements().values()) {
+                    if (element.getParticipantId().equals(automationCompositionAckMessage.getParticipantId())) {
+                        element.setDeployState(DeployState.DELETED);
+                    }
+                }
                 automationCompositionProvider.updateAutomationComposition(automationComposition.get());
             } else {
                 LOGGER.warn("Empty AutomationCompositionResultMap  {} {}",
@@ -188,25 +234,36 @@ public class SupervisionAcHandler {
         }
 
         var updated = updateState(automationComposition.get(),
-                automationCompositionAckMessage.getAutomationCompositionResultMap().entrySet());
+                automationCompositionAckMessage.getAutomationCompositionResultMap().entrySet(),
+                automationCompositionAckMessage.getStateChangeResult());
         if (updated) {
             automationCompositionProvider.updateAutomationComposition(automationComposition.get());
         }
     }
 
     private boolean updateState(AutomationComposition automationComposition,
-            Set<Map.Entry<UUID, AcElementDeployAck>> automationCompositionResultSet) {
+            Set<Map.Entry<UUID, AcElementDeployAck>> automationCompositionResultSet,
+            StateChangeResult stateChangeResult) {
         var updated = false;
+        var elementInErrors = StateChangeResult.FAILED.equals(stateChangeResult);
+        boolean inProgress = StateChangeResult.NO_ERROR.equals(automationComposition.getStateChangeResult());
+
         for (var acElementAck : automationCompositionResultSet) {
             var element = automationComposition.getElements().get(acElementAck.getKey());
             if (element != null) {
-                element.setDeployState(acElementAck.getValue().getDeployState());
-                element.setLockState(acElementAck.getValue().getLockState());
+                element.setMessage(acElementAck.getValue().getMessage());
+                element.setOutProperties(acElementAck.getValue().getOutProperties());
                 element.setOperationalState(acElementAck.getValue().getOperationalState());
                 element.setUseState(acElementAck.getValue().getUseState());
-                element.setOutProperties(acElementAck.getValue().getOutProperties());
                 updated = true;
+                if (!elementInErrors || inProgress) {
+                    element.setDeployState(acElementAck.getValue().getDeployState());
+                    element.setLockState(acElementAck.getValue().getLockState());
+                }
             }
+        }
+        if (elementInErrors && inProgress) {
+            automationComposition.setStateChangeResult(stateChangeResult.FAILED);
         }
         return updated;
     }
