@@ -209,8 +209,11 @@ public class AutomationCompositionHandler {
 
     private boolean checkConsistantOrderState(AutomationComposition automationComposition, DeployOrder deployOrder,
             LockOrder lockOrder) {
+        if (DeployOrder.UPDATE.equals(deployOrder)) {
+            return true;
+        }
         return acInstanceStateResolver.resolve(deployOrder, lockOrder, automationComposition.getDeployState(),
-                automationComposition.getLockState()) != null;
+                automationComposition.getLockState(), automationComposition.getErrorStatus()) != null;
     }
 
     /**

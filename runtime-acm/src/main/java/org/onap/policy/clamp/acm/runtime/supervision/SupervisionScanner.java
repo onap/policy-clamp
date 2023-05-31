@@ -138,6 +138,11 @@ public class SupervisionScanner {
             LOGGER.debug("automation composition scan: transition from state {} to {} not completed",
                     automationComposition.getDeployState(), automationComposition.getLockState());
 
+            if (DeployState.UPDATING.equals(automationComposition.getDeployState())) {
+                // UPDATING do not need phases
+                return;
+            }
+
             var isForward =
                     AcmUtils.isForward(automationComposition.getDeployState(), automationComposition.getLockState());
 

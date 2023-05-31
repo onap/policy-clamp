@@ -25,6 +25,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
+import org.onap.policy.clamp.models.acm.concepts.ErrorStatus;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 
 /**
@@ -38,8 +39,11 @@ public class ParticipantAckMessage {
     // The responseTo field should match the original request id in the request.
     private UUID responseTo;
 
-    // Result: Success/Fail.
+    // Intermediary result: Success/Fail.
     private Boolean result;
+
+    // Indicating participant failure
+    private ErrorStatus errorStatus;
 
     // Message indicating reason for failure
     private String message;

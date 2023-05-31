@@ -42,6 +42,7 @@ import lombok.NonNull;
 import org.apache.commons.lang3.ObjectUtils;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.ErrorStatus;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.common.parameters.annotations.NotNull;
 import org.onap.policy.common.parameters.annotations.Valid;
@@ -88,6 +89,9 @@ public class JpaAutomationComposition extends Validated
     private LockState lockState;
 
     @Column
+    private ErrorStatus errorStatus;
+
+    @Column
     private String description;
 
     @NotNull
@@ -100,7 +104,7 @@ public class JpaAutomationComposition extends Validated
      */
     public JpaAutomationComposition() {
         this(UUID.randomUUID().toString(), new PfConceptKey(), UUID.randomUUID().toString(),
-                new ArrayList<>(), DeployState.UNDEPLOYED, LockState.LOCKED);
+                new ArrayList<>(), DeployState.UNDEPLOYED, LockState.NONE);
     }
 
     /**
@@ -139,6 +143,7 @@ public class JpaAutomationComposition extends Validated
         this.deployState = copyConcept.deployState;
         this.lockState = copyConcept.lockState;
         this.description = copyConcept.description;
+        this.errorStatus = copyConcept.errorStatus;
         this.elements = PfUtils.mapList(copyConcept.elements, JpaAutomationCompositionElement::new);
     }
 
@@ -162,6 +167,7 @@ public class JpaAutomationComposition extends Validated
         automationComposition.setDeployState(deployState);
         automationComposition.setLockState(lockState);
         automationComposition.setDescription(description);
+        automationComposition.setErrorStatus(errorStatus);
         automationComposition.setElements(new LinkedHashMap<>(this.elements.size()));
         for (var element : this.elements) {
             automationComposition.getElements().put(UUID.fromString(element.getElementId()), element.toAuthorative());
@@ -179,7 +185,7 @@ public class JpaAutomationComposition extends Validated
         this.deployState = automationComposition.getDeployState();
         this.lockState = automationComposition.getLockState();
         this.description = automationComposition.getDescription();
-
+        this.errorStatus = automationComposition.getErrorStatus();
         this.elements = new ArrayList<>(automationComposition.getElements().size());
         for (var elementEntry : automationComposition.getElements().entrySet()) {
             var jpaAutomationCompositionElement =
@@ -229,6 +235,11 @@ public class JpaAutomationComposition extends Validated
         }
 
         result = ObjectUtils.compare(description, other.description);
+        if (result != 0) {
+            return result;
+        }
+
+        result = ObjectUtils.compare(errorStatus, other.errorStatus);
         if (result != 0) {
             return result;
         }
