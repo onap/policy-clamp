@@ -101,6 +101,9 @@ public class JpaAutomationCompositionElement extends Validated
     @Column
     private String description;
 
+    @Column
+    private String message;
+
     @Lob
     @NotNull
     @Valid
@@ -169,6 +172,7 @@ public class JpaAutomationCompositionElement extends Validated
         this.lockState = copyConcept.lockState;
         this.operationalState = copyConcept.operationalState;
         this.useState = copyConcept.useState;
+        this.message = copyConcept.message;
     }
 
     /**
@@ -194,6 +198,7 @@ public class JpaAutomationCompositionElement extends Validated
         element.setLockState(lockState);
         element.setOperationalState(operationalState);
         element.setUseState(useState);
+        element.setMessage(message);
 
         return element;
     }
@@ -209,6 +214,7 @@ public class JpaAutomationCompositionElement extends Validated
         this.lockState = element.getLockState();
         this.operationalState = element.getOperationalState();
         this.useState = element.getUseState();
+        this.message = element.getMessage();
     }
 
     @Override
@@ -260,6 +266,10 @@ public class JpaAutomationCompositionElement extends Validated
             return result;
         }
 
+        result = ObjectUtils.compare(message, other.message);
+        if (result != 0) {
+            return result;
+        }
         return ObjectUtils.compare(description, other.description);
     }
 }

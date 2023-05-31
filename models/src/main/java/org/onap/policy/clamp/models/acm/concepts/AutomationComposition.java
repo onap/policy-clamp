@@ -50,6 +50,8 @@ public class AutomationComposition extends ToscaEntity implements Comparable<Aut
 
     private Map<UUID, AutomationCompositionElement> elements;
 
+    private StateChangeResult stateChangeResult;
+
     /**
      * Copy contructor, does a deep copy.
      *
@@ -62,6 +64,7 @@ public class AutomationComposition extends ToscaEntity implements Comparable<Aut
         this.deployState = otherAutomationComposition.deployState;
         this.lockState = otherAutomationComposition.lockState;
         this.elements = PfUtils.mapMap(otherAutomationComposition.elements, AutomationCompositionElement::new);
+        this.stateChangeResult = otherAutomationComposition.stateChangeResult;
     }
 
     @Override

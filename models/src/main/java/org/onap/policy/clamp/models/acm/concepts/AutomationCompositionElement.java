@@ -55,10 +55,9 @@ public class AutomationCompositionElement {
     private LockState lockState = LockState.LOCKED;
 
     private String operationalState;
-
     private String useState;
-
     private String description;
+    private String message;
 
     // A map indexed by the property name. Each map entry is the serialized value of the property,
     // which can be deserialized into an instance of the type of the property.
@@ -82,5 +81,6 @@ public class AutomationCompositionElement {
         this.lockState = otherElement.lockState;
         this.operationalState = otherElement.operationalState;
         this.useState = otherElement.useState;
+        this.message = otherElement.message;
     }
 }

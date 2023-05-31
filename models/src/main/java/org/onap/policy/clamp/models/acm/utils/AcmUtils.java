@@ -285,7 +285,7 @@ public final class AcmUtils {
     public static boolean isInTransitionalState(DeployState deployState, LockState lockState) {
         return DeployState.DEPLOYING.equals(deployState) || DeployState.UNDEPLOYING.equals(deployState)
                 || LockState.LOCKING.equals(lockState) || LockState.UNLOCKING.equals(lockState)
-                || DeployState.DELETING.equals(deployState);
+                || DeployState.DELETING.equals(deployState) || DeployState.UPDATING.equals(deployState);
     }
 
     /**
@@ -339,6 +339,7 @@ public final class AcmUtils {
     public static DeployState deployCompleted(DeployState deployState) {
         DeployState result = null;
         switch (deployState) {
+            case UPDATING:
             case DEPLOYING:
                 result = DeployState.DEPLOYED;
                 break;
