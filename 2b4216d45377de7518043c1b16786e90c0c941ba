@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e781cbaf_f45793d1",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/concepts/ErrorStatus.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2023-06-01T13:00:57Z",
+      "side": 1,
+      "message": "if this is being used for participants states only, maybe consider renaming to something like ParticipantStatus. ErrorStatus having a NO_ERROR seems misleading.",
+      "range": {
+        "startLine": 23,
+        "startChar": 12,
+        "endLine": 23,
+        "endChar": 23
+      },
+      "revId": "2b4216d45377de7518043c1b16786e90c0c941ba",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
