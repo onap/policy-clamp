@@ -22,6 +22,30 @@
       "revId": "2b4216d45377de7518043c1b16786e90c0c941ba",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ce76c9a3_864f2b75",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/concepts/ErrorStatus.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2023-06-01T13:15:06Z",
+      "side": 1,
+      "message": "is not the status of the participant, is a result of the \"change state\" (will be used for prime, deprime, deploy, undeploy, lock, unlock, update and delete), what about ChangeStateResult?",
+      "parentUuid": "e781cbaf_f45793d1",
+      "range": {
+        "startLine": 23,
+        "startChar": 12,
+        "endLine": 23,
+        "endChar": 23
+      },
+      "revId": "2b4216d45377de7518043c1b16786e90c0c941ba",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
