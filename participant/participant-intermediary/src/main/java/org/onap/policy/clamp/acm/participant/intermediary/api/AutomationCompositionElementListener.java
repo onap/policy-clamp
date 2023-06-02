@@ -20,9 +20,11 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.api;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.models.base.PfModelException;
 
 /**
@@ -48,23 +50,17 @@ public interface AutomationCompositionElementListener {
     public void deploy(UUID automationCompositionId, AcElementDeploy element, Map<String, Object> properties)
             throws PfModelException;
 
-    public default void lock(UUID automationCompositionId, UUID automationCompositionElementId)
-            throws PfModelException {
-        // default Lock Operation
-    }
+    public void lock(UUID automationCompositionId, UUID automationCompositionElementId) throws PfModelException;
 
-    public default void unlock(UUID automationCompositionId, UUID automationCompositionElementId)
-            throws PfModelException {
-        // default Unlock Operation
-    }
+    public void unlock(UUID automationCompositionId, UUID automationCompositionElementId) throws PfModelException;
 
-    public default void delete(UUID automationCompositionId, UUID automationCompositionElementId)
-            throws PfModelException {
-        // default Delete Operation
-    }
+    public void delete(UUID automationCompositionId, UUID automationCompositionElementId) throws PfModelException;
 
-    public default void update(UUID automationCompositionId, AcElementDeploy element, Map<String, Object> properties)
-            throws PfModelException {
-        // default update Operation
-    }
+    public void update(UUID automationCompositionId, AcElementDeploy element, Map<String, Object> properties)
+            throws PfModelException;
+
+    public void prime(UUID compositionId, List<AutomationCompositionElementDefinition> elementDefinitionList)
+            throws PfModelException;
+
+    public void deprime(UUID compositionId) throws PfModelException;
 }

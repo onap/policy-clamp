@@ -23,6 +23,7 @@ package org.onap.policy.clamp.acm.participant.kubernetes.handler;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -40,7 +41,11 @@ import org.onap.policy.clamp.acm.participant.kubernetes.helm.PodStatusValidator;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartInfo;
 import org.onap.policy.clamp.acm.participant.kubernetes.service.ChartService;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
+import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -93,7 +98,8 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
             try {
                 chartService.uninstallChart(chart);
                 intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
-                        automationCompositionElementId, DeployState.UNDEPLOYED, null, "Undeployed");
+                        automationCompositionElementId, DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR,
+                        "Undeployed");
                 chartMap.remove(automationCompositionElementId);
                 podStatusMap.remove(chart.getReleaseName());
             } catch (ServiceException se) {
@@ -148,7 +154,44 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
         if (!result.get().isEmpty()) {
             LOGGER.info("Pod Status Validator Completed: {}", result.isDone());
             intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, elementId,
-                    DeployState.DEPLOYED, null, "Deployed");
+                    DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Deployed");
         }
+    }
+
+    @Override
+    public void lock(UUID instanceId, UUID elementId) throws PfModelException {
+        intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId, null, LockState.LOCKED,
+                StateChangeResult.NO_ERROR, "Locked");
+    }
+
+    @Override
+    public void unlock(UUID instanceId, UUID elementId) throws PfModelException {
+        intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId, null, LockState.UNLOCKED,
+                StateChangeResult.NO_ERROR, "Unlocked");
+    }
+
+    @Override
+    public void delete(UUID instanceId, UUID elementId) throws PfModelException {
+        intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId, DeployState.DELETED, null,
+                StateChangeResult.NO_ERROR, "Deleted");
+    }
+
+    @Override
+    public void update(UUID instanceId, AcElementDeploy element, Map<String, Object> properties)
+            throws PfModelException {
+        intermediaryApi.updateAutomationCompositionElementState(instanceId, element.getId(), DeployState.DEPLOYED, null,
+                StateChangeResult.NO_ERROR, "Update not supported");
+    }
+
+    @Override
+    public void prime(UUID compositionId, List<AutomationCompositionElementDefinition> elementDefinitionList)
+            throws PfModelException {
+        intermediaryApi.updateCompositionState(compositionId, AcTypeState.PRIMED, StateChangeResult.NO_ERROR, "Primed");
+    }
+
+    @Override
+    public void deprime(UUID compositionId) throws PfModelException {
+        intermediaryApi.updateCompositionState(compositionId, AcTypeState.COMMISSIONED, StateChangeResult.NO_ERROR,
+                "Deprimed");
     }
 }

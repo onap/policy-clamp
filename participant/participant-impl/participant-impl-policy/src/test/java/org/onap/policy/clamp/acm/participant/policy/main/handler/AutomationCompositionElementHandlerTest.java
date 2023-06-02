@@ -35,7 +35,10 @@ import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantInterme
 import org.onap.policy.clamp.acm.participant.policy.client.PolicyApiHttpClient;
 import org.onap.policy.clamp.acm.participant.policy.client.PolicyPapHttpClient;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
+import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -61,7 +64,7 @@ class AutomationCompositionElementHandlerTest {
 
         handler.undeploy(AC_ID, automationCompositionElementId);
         verify(intermediaryApi).updateAutomationCompositionElementState(AC_ID, automationCompositionElementId,
-                DeployState.UNDEPLOYED, null, "Undeployed");
+                DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR, "Undeployed");
     }
 
     private AcElementDeploy getTestingAcElement() {
@@ -93,11 +96,11 @@ class AutomationCompositionElementHandlerTest {
 
         handler.deploy(AC_ID, getTestingAcElement(), Map.of());
         verify(intermediaryApi).updateAutomationCompositionElementState(AC_ID, automationCompositionElementId,
-                DeployState.DEPLOYED, null, "Deployed");
+                DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Deployed");
 
         handler.undeploy(AC_ID, automationCompositionElementId);
         verify(intermediaryApi).updateAutomationCompositionElementState(AC_ID, automationCompositionElementId,
-                DeployState.UNDEPLOYED, null, "Undeployed");
+                DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR, "Undeployed");
     }
 
     @Test
@@ -111,7 +114,7 @@ class AutomationCompositionElementHandlerTest {
         acElement.getToscaServiceTemplateFragment().setToscaTopologyTemplate(null);
         handler.deploy(AC_ID, acElement, Map.of());
         verify(intermediaryApi).updateAutomationCompositionElementState(AC_ID, automationCompositionElementId,
-                DeployState.UNDEPLOYED, null, "ToscaTopologyTemplate not defined");
+                DeployState.UNDEPLOYED, null, StateChangeResult.FAILED, "ToscaTopologyTemplate not defined");
     }
 
     @Test
@@ -131,7 +134,7 @@ class AutomationCompositionElementHandlerTest {
         // Mock failure in policy type creation
         handler.deploy(AC_ID, element, Map.of());
         verify(intermediaryApi).updateAutomationCompositionElementState(AC_ID, automationCompositionElementId,
-                DeployState.UNDEPLOYED, null,
+                DeployState.UNDEPLOYED, null, StateChangeResult.FAILED,
                 "Creation of PolicyTypes/Policies failed. Policies will not be deployed.");
     }
 
@@ -150,5 +153,78 @@ class AutomationCompositionElementHandlerTest {
         var element = getTestingAcElement();
         assertThatThrownBy(() -> handler.deploy(AC_ID, element, Map.of()))
                 .hasMessageMatching("Deploy of Policy failed.");
+    }
+
+    @Test
+    void testUpdate() throws Exception {
+        var handler = new AutomationCompositionElementHandler(mock(PolicyApiHttpClient.class),
+                mock(PolicyPapHttpClient.class));
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        handler.setIntermediaryApi(intermediaryApi);
+
+        var acElement = getTestingAcElement();
+        acElement.getToscaServiceTemplateFragment().setToscaTopologyTemplate(null);
+        handler.update(AC_ID, acElement, Map.of());
+        verify(intermediaryApi).updateAutomationCompositionElementState(AC_ID, automationCompositionElementId,
+                DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Update not supported");
+    }
+
+    @Test
+    void testLock() throws Exception {
+        var handler = new AutomationCompositionElementHandler(mock(PolicyApiHttpClient.class),
+                mock(PolicyPapHttpClient.class));
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        handler.setIntermediaryApi(intermediaryApi);
+
+        handler.lock(AC_ID, automationCompositionElementId);
+        verify(intermediaryApi).updateAutomationCompositionElementState(AC_ID, automationCompositionElementId, null,
+                LockState.LOCKED, StateChangeResult.NO_ERROR, "Locked");
+    }
+
+    @Test
+    void testUnlock() throws Exception {
+        var handler = new AutomationCompositionElementHandler(mock(PolicyApiHttpClient.class),
+                mock(PolicyPapHttpClient.class));
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        handler.setIntermediaryApi(intermediaryApi);
+
+        handler.unlock(AC_ID, automationCompositionElementId);
+        verify(intermediaryApi).updateAutomationCompositionElementState(AC_ID, automationCompositionElementId, null,
+                LockState.UNLOCKED, StateChangeResult.NO_ERROR, "Unlocked");
+    }
+
+    @Test
+    void testDelete() throws Exception {
+        var handler = new AutomationCompositionElementHandler(mock(PolicyApiHttpClient.class),
+                mock(PolicyPapHttpClient.class));
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        handler.setIntermediaryApi(intermediaryApi);
+
+        handler.delete(AC_ID, automationCompositionElementId);
+        verify(intermediaryApi).updateAutomationCompositionElementState(AC_ID, automationCompositionElementId,
+                DeployState.DELETED, null, StateChangeResult.NO_ERROR, "Deleted");
+    }
+
+    @Test
+    void testPrime() throws Exception {
+        var handler = new AutomationCompositionElementHandler(mock(PolicyApiHttpClient.class),
+                mock(PolicyPapHttpClient.class));
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        handler.setIntermediaryApi(intermediaryApi);
+
+        handler.prime(AC_ID, List.of());
+        verify(intermediaryApi).updateCompositionState(AC_ID, AcTypeState.PRIMED, StateChangeResult.NO_ERROR, "Primed");
+    }
+
+    @Test
+    void testDeprime() throws Exception {
+        var handler = new AutomationCompositionElementHandler(mock(PolicyApiHttpClient.class),
+                mock(PolicyPapHttpClient.class));
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        handler.setIntermediaryApi(intermediaryApi);
+
+        handler.deprime(AC_ID);
+        verify(intermediaryApi).updateCompositionState(AC_ID, AcTypeState.COMMISSIONED, StateChangeResult.NO_ERROR,
+                "Deprimed");
     }
 }

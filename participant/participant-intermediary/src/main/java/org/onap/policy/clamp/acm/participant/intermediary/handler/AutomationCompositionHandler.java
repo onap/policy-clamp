@@ -137,6 +137,10 @@ public class AutomationCompositionHandler {
             if (checkOpt.isEmpty()) {
                 automationComposition.setDeployState(deployState);
                 automationComposition.setLockState(element.getLockState());
+
+                if (DeployState.DELETED.equals(deployState)) {
+                    automationCompositionMap.remove(automationComposition.getInstanceId());
+                }
             }
         }
         if (lockState != null) {
@@ -272,7 +276,7 @@ public class AutomationCompositionHandler {
      * @param acElementDefinitions the list of AutomationCompositionElementDefinition
      */
     public void handleAcPropertyUpdate(PropertiesUpdate updateMsg,
-                                       List<AutomationCompositionElementDefinition> acElementDefinitions) {
+            List<AutomationCompositionElementDefinition> acElementDefinitions) {
 
         if (updateMsg.getParticipantUpdatesList().isEmpty()) {
             LOGGER.warn("No AutomationCompositionElement updates in message {}",
@@ -283,8 +287,8 @@ public class AutomationCompositionHandler {
         for (var participantDeploy : updateMsg.getParticipantUpdatesList()) {
             if (participantId.equals(participantDeploy.getParticipantId())) {
 
-                initializeDeploy(updateMsg.getMessageId(), updateMsg.getAutomationCompositionId(),
-                            participantDeploy, DeployState.UPDATING);
+                initializeDeploy(updateMsg.getMessageId(), updateMsg.getAutomationCompositionId(), participantDeploy,
+                        DeployState.UPDATING);
 
                 callParticipantUpdateProperty(participantDeploy.getAcElementList(), acElementDefinitions,
                         updateMsg.getAutomationCompositionId());
@@ -320,7 +324,7 @@ public class AutomationCompositionHandler {
     }
 
     private void initializeDeploy(UUID messageId, UUID instanceId, ParticipantDeploy participantDeploy,
-                                  DeployState deployState) {
+            DeployState deployState) {
         if (automationCompositionMap.containsKey(instanceId)) {
             updateExistingElementsOnThisParticipant(instanceId, participantDeploy, deployState);
         } else {
@@ -333,12 +337,11 @@ public class AutomationCompositionHandler {
     }
 
     private void callParticipantDeploy(List<AcElementDeploy> acElements,
-                                       List<AutomationCompositionElementDefinition> acElementDefinitions,
-                                       Integer startPhaseMsg, UUID automationCompositionId) {
+            List<AutomationCompositionElementDefinition> acElementDefinitions, Integer startPhaseMsg,
+            UUID automationCompositionId) {
         try {
             for (var element : acElements) {
-                var acElementNodeTemplate = getAcElementNodeTemplate(acElementDefinitions,
-                        element.getDefinition());
+                var acElementNodeTemplate = getAcElementNodeTemplate(acElementDefinitions, element.getDefinition());
                 if (acElementNodeTemplate != null) {
                     int startPhase = ParticipantUtils.findStartPhase(acElementNodeTemplate.getProperties());
                     if (startPhaseMsg.equals(startPhase)) {
@@ -357,12 +360,10 @@ public class AutomationCompositionHandler {
     }
 
     private void callParticipantUpdateProperty(List<AcElementDeploy> acElements,
-                                       List<AutomationCompositionElementDefinition> acElementDefinitions,
-                                       UUID automationCompositionId) {
+            List<AutomationCompositionElementDefinition> acElementDefinitions, UUID automationCompositionId) {
         try {
             for (var element : acElements) {
-                var acElementNodeTemplate = getAcElementNodeTemplate(acElementDefinitions,
-                        element.getDefinition());
+                var acElementNodeTemplate = getAcElementNodeTemplate(acElementDefinitions, element.getDefinition());
                 if (acElementNodeTemplate != null) {
                     for (var acElementListener : listeners) {
                         var map = new HashMap<>(acElementNodeTemplate.getProperties());
@@ -389,7 +390,7 @@ public class AutomationCompositionHandler {
     }
 
     private List<AutomationCompositionElement> storeElementsOnThisParticipant(ParticipantDeploy participantDeploy,
-                                                                              DeployState deployState) {
+            DeployState deployState) {
         List<AutomationCompositionElement> acElementList = new ArrayList<>();
         for (var element : participantDeploy.getAcElementList()) {
             var acElement = new AutomationCompositionElement();
@@ -403,8 +404,8 @@ public class AutomationCompositionHandler {
         return acElementList;
     }
 
-    private void updateExistingElementsOnThisParticipant(
-            UUID instanceId, ParticipantDeploy participantDeploy, DeployState deployState) {
+    private void updateExistingElementsOnThisParticipant(UUID instanceId, ParticipantDeploy participantDeploy,
+            DeployState deployState) {
 
         Map<UUID, AutomationCompositionElement> elementList = automationCompositionMap.get(instanceId).getElements();
         for (var element : participantDeploy.getAcElementList()) {
@@ -443,12 +444,6 @@ public class AutomationCompositionHandler {
         automationComposition.getElements().values().stream()
                 .forEach(acElement -> automationCompositionElementDelete(automationComposition.getInstanceId(),
                         acElement, startPhaseMsg, acElementDefinitions));
-
-        boolean isAllUninitialised = automationComposition.getElements().values().stream()
-                .filter(element -> !DeployState.DELETED.equals(element.getDeployState())).findAny().isEmpty();
-        if (isAllUninitialised) {
-            automationCompositionMap.remove(automationComposition.getInstanceId());
-        }
     }
 
     /**
@@ -488,8 +483,6 @@ public class AutomationCompositionHandler {
                 for (var acElementListener : listeners) {
                     try {
                         acElementListener.lock(instanceId, acElement.getId());
-                        updateAutomationCompositionElementState(instanceId, acElement.getId(), null, LockState.LOCKED,
-                                "Locked");
                     } catch (PfModelException e) {
                         LOGGER.error("Automation composition element lock failed {}", instanceId);
                     }
@@ -507,8 +500,6 @@ public class AutomationCompositionHandler {
                 for (var acElementListener : listeners) {
                     try {
                         acElementListener.unlock(instanceId, acElement.getId());
-                        updateAutomationCompositionElementState(instanceId, acElement.getId(), null, LockState.UNLOCKED,
-                                "Unlocked");
                     } catch (PfModelException e) {
                         LOGGER.error("Automation composition element unlock failed {}", instanceId);
                     }
@@ -537,8 +528,6 @@ public class AutomationCompositionHandler {
                 for (var acElementListener : listeners) {
                     try {
                         acElementListener.delete(instanceId, acElement.getId());
-                        updateAutomationCompositionElementState(instanceId, acElement.getId(), DeployState.DELETED,
-                                null, "Deleted");
                     } catch (PfModelException e) {
                         LOGGER.error("Automation composition element unlock failed {}", instanceId);
                     }

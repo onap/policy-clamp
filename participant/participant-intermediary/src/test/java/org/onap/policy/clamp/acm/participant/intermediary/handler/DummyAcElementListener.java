@@ -20,10 +20,12 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.handler;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.models.base.PfModelException;
 
 public class DummyAcElementListener implements AutomationCompositionElementListener {
@@ -36,5 +38,31 @@ public class DummyAcElementListener implements AutomationCompositionElementListe
     public void deploy(UUID automationCompositionId, AcElementDeploy element, Map<String, Object> properties)
         throws PfModelException {
 
+    }
+
+    @Override
+    public void lock(UUID automationCompositionId, UUID automationCompositionElementId) throws PfModelException {
+    }
+
+    @Override
+    public void unlock(UUID automationCompositionId, UUID automationCompositionElementId) throws PfModelException {
+    }
+
+    @Override
+    public void delete(UUID automationCompositionId, UUID automationCompositionElementId) throws PfModelException {
+    }
+
+    @Override
+    public void update(UUID automationCompositionId, AcElementDeploy element, Map<String, Object> properties)
+            throws PfModelException {
+    }
+
+    @Override
+    public void prime(UUID compositionId, List<AutomationCompositionElementDefinition> elementDefinitionList)
+            throws PfModelException {
+    }
+
+    @Override
+    public void deprime(UUID compositionId) throws PfModelException {
     }
 }

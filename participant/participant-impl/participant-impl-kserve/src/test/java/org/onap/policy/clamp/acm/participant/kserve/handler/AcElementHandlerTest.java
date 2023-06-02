@@ -31,6 +31,8 @@ import static org.mockito.Mockito.mock;
 
 import io.kubernetes.client.openapi.ApiException;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -83,8 +85,8 @@ class AcElementHandlerTest {
     @BeforeEach
     void startMocks() throws ExecutionException, InterruptedException, IOException, ApiException {
         doReturn(true).when(kserveClient).deployInferenceService(any(), any());
-        doReturn(true).when(automationCompositionElementHandler)
-                .checkInferenceServiceStatus(any(), any(), anyInt(), anyInt());
+        doReturn(true).when(automationCompositionElementHandler).checkInferenceServiceStatus(any(), any(), anyInt(),
+                anyInt());
     }
 
     @Test
@@ -92,7 +94,6 @@ class AcElementHandlerTest {
         var automationCompositionId = commonTestData.getAutomationCompositionId();
         var element = commonTestData.getAutomationCompositionElement();
         var automationCompositionElementId = element.getId();
-
 
         var nodeTemplatesMap = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
         automationCompositionElementHandler.deploy(commonTestData.getAutomationCompositionId(), element,
@@ -108,11 +109,9 @@ class AcElementHandlerTest {
         var element = commonTestData.getAutomationCompositionElement();
 
         var nodeTemplatesMap = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
-        assertDoesNotThrow(
-                () -> automationCompositionElementHandler.deploy(commonTestData.getAutomationCompositionId(), element,
-                        nodeTemplatesMap.get(KSERVE_AUTOMATION_COMPOSITION_ELEMENT).getProperties()));
-        assertThat(automationCompositionElementHandler.getConfigRequestMap()).hasSize(1)
-                .containsKey(element.getId());
+        assertDoesNotThrow(() -> automationCompositionElementHandler.deploy(commonTestData.getAutomationCompositionId(),
+                element, nodeTemplatesMap.get(KSERVE_AUTOMATION_COMPOSITION_ELEMENT).getProperties()));
+        assertThat(automationCompositionElementHandler.getConfigRequestMap()).hasSize(1).containsKey(element.getId());
 
         doThrow(new ApiException("Error installing the inference service")).when(kserveClient)
                 .deployInferenceService(any(), any());
@@ -131,8 +130,40 @@ class AcElementHandlerTest {
         doReturn(result).when(executor).submit(any(Runnable.class), any());
         doReturn("Done").when(result).get();
         doReturn(true).when(result).isDone();
+        assertDoesNotThrow(() -> automationCompositionElementHandler.checkInferenceServiceStatus("sklearn-iris",
+                "kserve-test", 1, 1));
+    }
+
+    @Test
+    void testUpdate() throws PfModelException {
+        var automationCompositionId = commonTestData.getAutomationCompositionId();
+        var element = commonTestData.getAutomationCompositionElement();
         assertDoesNotThrow(
-                () -> automationCompositionElementHandler.checkInferenceServiceStatus("sklearn-iris", "kserve-test", 1,
-                        1));
+                () -> automationCompositionElementHandler.update(automationCompositionId, element, Map.of()));
+    }
+
+    @Test
+    void testLock() throws PfModelException {
+        assertDoesNotThrow(() -> automationCompositionElementHandler.lock(UUID.randomUUID(), UUID.randomUUID()));
+    }
+
+    @Test
+    void testUnlock() throws PfModelException {
+        assertDoesNotThrow(() -> automationCompositionElementHandler.unlock(UUID.randomUUID(), UUID.randomUUID()));
+    }
+
+    @Test
+    void testDelete() throws PfModelException {
+        assertDoesNotThrow(() -> automationCompositionElementHandler.delete(UUID.randomUUID(), UUID.randomUUID()));
+    }
+
+    @Test
+    void testPrime() throws PfModelException {
+        assertDoesNotThrow(() -> automationCompositionElementHandler.prime(UUID.randomUUID(), List.of()));
+    }
+
+    @Test
+    void testDeprime() throws PfModelException {
+        assertDoesNotThrow(() -> automationCompositionElementHandler.deprime(UUID.randomUUID()));
     }
 }
