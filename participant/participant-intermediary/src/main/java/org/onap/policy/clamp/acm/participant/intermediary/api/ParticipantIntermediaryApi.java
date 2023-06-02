@@ -23,9 +23,11 @@ package org.onap.policy.clamp.acm.participant.intermediary.api;
 
 import java.util.Map;
 import java.util.UUID;
+import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 
 /**
  * This interface is used by participant implementations to use the participant intermediary.
@@ -47,10 +49,11 @@ public interface ParticipantIntermediaryApi {
      * @param id the ID of the automation composition element to update the state on
      * @param deployState the Deploy State of the automation composition element
      * @param lockState the Lock State of the automation composition element
+     * @param stateChangeResult the indicator if error occurs
      * @param message the message
      */
     void updateAutomationCompositionElementState(UUID automationCompositionId, UUID id, DeployState deployState,
-            LockState lockState, String message);
+            LockState lockState, StateChangeResult stateChangeResult, String message);
 
     /**
      * Get AutomationCompositions.
@@ -70,4 +73,7 @@ public interface ParticipantIntermediaryApi {
      */
     void sendAcElementInfo(UUID automationCompositionId, UUID id, String useState, String operationalState,
             Map<String, Object> outProperties);
+
+    void updateCompositionState(UUID compositionId, AcTypeState state, StateChangeResult stateChangeResult,
+            String message);
 }

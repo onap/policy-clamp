@@ -27,7 +27,9 @@ import static org.mockito.Mockito.verify;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.http.main.handler.AutomationCompositionElementHandler;
 import org.onap.policy.clamp.acm.participant.http.main.models.ConfigRequest;
@@ -35,7 +37,10 @@ import org.onap.policy.clamp.acm.participant.http.main.webclient.AcHttpClient;
 import org.onap.policy.clamp.acm.participant.http.utils.CommonTestData;
 import org.onap.policy.clamp.acm.participant.http.utils.ToscaUtils;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
+import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.models.base.PfModelException;
 
 class AcElementHandlerTest {
@@ -56,7 +61,7 @@ class AcElementHandlerTest {
             automationCompositionElementHandler.setIntermediaryApi(participantIntermediaryApi);
             automationCompositionElementHandler.undeploy(instanceId, acElementId);
             verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, acElementId,
-                    DeployState.UNDEPLOYED, null, "");
+                    DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR, "");
         }
     }
 
@@ -72,7 +77,8 @@ class AcElementHandlerTest {
             Map<String, Object> map = new HashMap<>();
             automationCompositionElementHandler.deploy(instanceId, element, map);
             verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
-                    DeployState.UNDEPLOYED, null, "Constraint violations in the config request");
+                    DeployState.UNDEPLOYED, null, StateChangeResult.FAILED,
+                    "Constraint violations in the config request");
         }
     }
 
@@ -89,7 +95,7 @@ class AcElementHandlerTest {
             map.put("httpHeaders", 1);
             automationCompositionElementHandler.deploy(instanceId, element, map);
             verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
-                    DeployState.UNDEPLOYED, null, "Error extracting ConfigRequest ");
+                    DeployState.UNDEPLOYED, null, StateChangeResult.FAILED, "Error extracting ConfigRequest ");
         }
     }
 
@@ -108,7 +114,98 @@ class AcElementHandlerTest {
             automationCompositionElementHandler.deploy(instanceId, element, map);
             verify(acHttpClient).run(any(ConfigRequest.class), anyMap());
             verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
-                    DeployState.DEPLOYED, null, "Deployed");
+                    DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Deployed");
+        }
+    }
+
+    @Test
+    void testUpdate() throws Exception {
+        var instanceId = commonTestData.getAutomationCompositionId();
+        var element = commonTestData.getAutomationCompositionElement();
+        var acElementId = element.getId();
+
+        try (var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(mock(AcHttpClient.class))) {
+            var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
+            automationCompositionElementHandler.setIntermediaryApi(participantIntermediaryApi);
+            automationCompositionElementHandler.update(instanceId, element, Map.of());
+            verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, acElementId,
+                    DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Update not supported");
+        }
+    }
+
+    @Test
+    void testLock() throws Exception {
+        var instanceId = commonTestData.getAutomationCompositionId();
+        var acElementId = UUID.randomUUID();
+
+        try (var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(mock(AcHttpClient.class))) {
+            var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
+            automationCompositionElementHandler.setIntermediaryApi(participantIntermediaryApi);
+            automationCompositionElementHandler.lock(instanceId, acElementId);
+            verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, acElementId, null,
+                    LockState.LOCKED, StateChangeResult.NO_ERROR, "Locked");
+        }
+    }
+
+    @Test
+    void testUnlock() throws Exception {
+        var instanceId = commonTestData.getAutomationCompositionId();
+        var acElementId = UUID.randomUUID();
+
+        try (var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(mock(AcHttpClient.class))) {
+            var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
+            automationCompositionElementHandler.setIntermediaryApi(participantIntermediaryApi);
+            automationCompositionElementHandler.unlock(instanceId, acElementId);
+            verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, acElementId, null,
+                    LockState.UNLOCKED, StateChangeResult.NO_ERROR, "Unlocked");
+        }
+    }
+
+    @Test
+    void testDelete() throws Exception {
+        var instanceId = commonTestData.getAutomationCompositionId();
+        var acElementId = UUID.randomUUID();
+
+        try (var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(mock(AcHttpClient.class))) {
+            var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
+            automationCompositionElementHandler.setIntermediaryApi(participantIntermediaryApi);
+            automationCompositionElementHandler.delete(instanceId, acElementId);
+            verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, acElementId,
+                    DeployState.DELETED, null, StateChangeResult.NO_ERROR, "Deleted");
+        }
+    }
+
+    @Test
+    void testPrime() throws Exception {
+        var compositionId = UUID.randomUUID();
+
+        try (var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(mock(AcHttpClient.class))) {
+            var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
+            automationCompositionElementHandler.setIntermediaryApi(participantIntermediaryApi);
+
+            automationCompositionElementHandler.prime(compositionId, List.of());
+            verify(participantIntermediaryApi).updateCompositionState(compositionId, AcTypeState.PRIMED,
+                    StateChangeResult.NO_ERROR, "Primed");
+        }
+    }
+
+    @Test
+    void testDeprime() throws Exception {
+        var compositionId = UUID.randomUUID();
+
+        try (var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(mock(AcHttpClient.class))) {
+            var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
+            automationCompositionElementHandler.setIntermediaryApi(participantIntermediaryApi);
+
+            automationCompositionElementHandler.deprime(compositionId);
+            verify(participantIntermediaryApi).updateCompositionState(compositionId, AcTypeState.COMMISSIONED,
+                    StateChangeResult.NO_ERROR, "Deprimed");
         }
     }
 }

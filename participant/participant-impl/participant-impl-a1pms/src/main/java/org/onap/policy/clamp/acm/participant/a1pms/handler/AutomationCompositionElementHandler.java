@@ -22,6 +22,7 @@ package org.onap.policy.clamp.acm.participant.a1pms.handler;
 
 import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import javax.validation.Validation;
@@ -37,7 +38,11 @@ import org.onap.policy.clamp.acm.participant.a1pms.webclient.AcA1PmsClient;
 import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
+import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -81,7 +86,8 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
             acA1PmsClient.deleteService(configurationEntity.getPolicyServiceEntities());
             configRequestMap.remove(automationCompositionElementId);
             intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
-                    automationCompositionElementId, DeployState.UNDEPLOYED, null, "Undeployed");
+                    automationCompositionElementId, DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR,
+                    "Undeployed");
         } else {
             LOGGER.warn("Failed to connect with A1PMS. Service configuration is: {}", configurationEntity);
             throw new A1PolicyServiceException(HttpStatus.SC_SERVICE_UNAVAILABLE, "Unable to connect with A1PMS");
@@ -107,7 +113,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
                     configRequestMap.put(element.getId(), configurationEntity);
 
                     intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
-                            DeployState.DEPLOYED, null, "Deployed");
+                            DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Deployed");
                 } else {
                     LOGGER.error("Failed to connect with A1PMS");
                     throw new A1PolicyServiceException(HttpStatus.SC_SERVICE_UNAVAILABLE,
@@ -120,5 +126,42 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
         } catch (ValidationException | CoderException | A1PolicyServiceException e) {
             throw new A1PolicyServiceException(HttpStatus.SC_BAD_REQUEST, "Invalid Configuration", e);
         }
+    }
+
+    @Override
+    public void lock(UUID instanceId, UUID elementId) throws PfModelException {
+        intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId, null, LockState.LOCKED,
+                StateChangeResult.NO_ERROR, "Locked");
+    }
+
+    @Override
+    public void unlock(UUID instanceId, UUID elementId) throws PfModelException {
+        intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId, null, LockState.UNLOCKED,
+                StateChangeResult.NO_ERROR, "Unlocked");
+    }
+
+    @Override
+    public void delete(UUID instanceId, UUID elementId) throws PfModelException {
+        intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId, DeployState.DELETED, null,
+                StateChangeResult.NO_ERROR, "Deleted");
+    }
+
+    @Override
+    public void update(UUID instanceId, AcElementDeploy element, Map<String, Object> properties)
+            throws PfModelException {
+        intermediaryApi.updateAutomationCompositionElementState(instanceId, element.getId(), DeployState.DEPLOYED, null,
+                StateChangeResult.NO_ERROR, "Update not supported");
+    }
+
+    @Override
+    public void prime(UUID compositionId, List<AutomationCompositionElementDefinition> elementDefinitionList)
+            throws PfModelException {
+        intermediaryApi.updateCompositionState(compositionId, AcTypeState.PRIMED, StateChangeResult.NO_ERROR, "Primed");
+    }
+
+    @Override
+    public void deprime(UUID compositionId) throws PfModelException {
+        intermediaryApi.updateCompositionState(compositionId, AcTypeState.COMMISSIONED, StateChangeResult.NO_ERROR,
+                "Deprimed");
     }
 }

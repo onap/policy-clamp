@@ -23,10 +23,10 @@
 package org.onap.policy.clamp.acm.participant.policy.main.handler;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.ws.rs.core.Response.Status;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -36,7 +36,11 @@ import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantInterme
 import org.onap.policy.clamp.acm.participant.policy.client.PolicyApiHttpClient;
 import org.onap.policy.clamp.acm.participant.policy.client.PolicyPapHttpClient;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
+import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.pdp.concepts.DeploymentSubGroup;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -54,7 +58,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AutomationCompositionElementHandler.class);
 
-    private final Map<UUID, ToscaServiceTemplate> serviceTemplateMap = new LinkedHashMap<>();
+    private final Map<UUID, ToscaServiceTemplate> serviceTemplateMap = new ConcurrentHashMap<>();
 
     private final PolicyApiHttpClient apiHttpClient;
     private final PolicyPapHttpClient papHttpClient;
@@ -74,7 +78,8 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
         if (automationCompositionDefinition == null) {
             LOGGER.debug("No policies to undeploy to {}", automationCompositionElementId);
             intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
-                    automationCompositionElementId, DeployState.UNDEPLOYED, null, "Undeployed");
+                    automationCompositionElementId, DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR,
+                    "Undeployed");
             return;
         }
         var policyList = getPolicyList(automationCompositionDefinition);
@@ -82,8 +87,8 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
         var policyTypeList = getPolicyTypeList(automationCompositionDefinition);
         deletePolicyData(policyTypeList, policyList);
         serviceTemplateMap.remove(automationCompositionElementId);
-        intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
-                automationCompositionElementId, DeployState.UNDEPLOYED, null, "Undeployed");
+        intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, automationCompositionElementId,
+                DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR, "Undeployed");
     }
 
     private void deletePolicyData(List<ToscaConceptIdentifier> policyTypeList,
@@ -119,7 +124,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
             intermediaryApi.sendAcElementInfo(automationCompositionId, automationCompositionElementId, "IDLE",
                     "ENABLED", Map.of());
             intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
-                    automationCompositionElementId, DeployState.DEPLOYED, null, "Deployed");
+                    automationCompositionElementId, DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Deployed");
         } else {
             throw new PfModelException(Status.BAD_REQUEST, "Deploy of Policy failed.");
         }
@@ -155,7 +160,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
         var automationCompositionDefinition = element.getToscaServiceTemplateFragment();
         if (automationCompositionDefinition.getToscaTopologyTemplate() == null) {
             intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
-                    DeployState.UNDEPLOYED, null, "ToscaTopologyTemplate not defined");
+                    DeployState.UNDEPLOYED, null, StateChangeResult.FAILED, "ToscaTopologyTemplate not defined");
             return;
         }
         serviceTemplateMap.put(element.getId(), automationCompositionDefinition);
@@ -177,7 +182,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
             deployPolicies(policyList, automationCompositionId, element.getId());
         } else {
             intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
-                    DeployState.UNDEPLOYED, null,
+                    DeployState.UNDEPLOYED, null, StateChangeResult.FAILED,
                     "Creation of PolicyTypes/Policies failed. Policies will not be deployed.");
         }
     }
@@ -204,5 +209,42 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
         }
 
         return policyList;
+    }
+
+    @Override
+    public void lock(UUID instanceId, UUID elementId) throws PfModelException {
+        intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId, null, LockState.LOCKED,
+                StateChangeResult.NO_ERROR, "Locked");
+    }
+
+    @Override
+    public void unlock(UUID instanceId, UUID elementId) throws PfModelException {
+        intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId, null, LockState.UNLOCKED,
+                StateChangeResult.NO_ERROR, "Unlocked");
+    }
+
+    @Override
+    public void delete(UUID instanceId, UUID elementId) throws PfModelException {
+        intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId, DeployState.DELETED, null,
+                StateChangeResult.NO_ERROR, "Deleted");
+    }
+
+    @Override
+    public void update(UUID instanceId, AcElementDeploy element, Map<String, Object> properties)
+            throws PfModelException {
+        intermediaryApi.updateAutomationCompositionElementState(instanceId, element.getId(), DeployState.DEPLOYED, null,
+                StateChangeResult.NO_ERROR, "Update not supported");
+    }
+
+    @Override
+    public void prime(UUID compositionId, List<AutomationCompositionElementDefinition> elementDefinitionList)
+            throws PfModelException {
+        intermediaryApi.updateCompositionState(compositionId, AcTypeState.PRIMED, StateChangeResult.NO_ERROR, "Primed");
+    }
+
+    @Override
+    public void deprime(UUID compositionId) throws PfModelException {
+        intermediaryApi.updateCompositionState(compositionId, AcTypeState.COMMISSIONED, StateChangeResult.NO_ERROR,
+                "Deprimed");
     }
 }

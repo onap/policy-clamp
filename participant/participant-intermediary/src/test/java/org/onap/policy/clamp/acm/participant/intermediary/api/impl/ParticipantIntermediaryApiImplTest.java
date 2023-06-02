@@ -30,6 +30,7 @@ import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationComposit
 import org.onap.policy.clamp.acm.participant.intermediary.handler.AutomationCompositionHandler;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.common.utils.coder.CoderException;
 
 class ParticipantIntermediaryApiImplTest {
@@ -50,7 +51,7 @@ class ParticipantIntermediaryApiImplTest {
         var uuid = UUID.randomUUID();
         var automationCompositionId = UUID.randomUUID();
         apiImpl.updateAutomationCompositionElementState(automationCompositionId, uuid, DeployState.UNDEPLOYED,
-                LockState.NONE, null);
+                LockState.NONE, StateChangeResult.NO_ERROR, null);
         verify(automationComposiitonHandler).updateAutomationCompositionElementState(automationCompositionId, uuid,
                 DeployState.UNDEPLOYED, LockState.NONE, null);
 

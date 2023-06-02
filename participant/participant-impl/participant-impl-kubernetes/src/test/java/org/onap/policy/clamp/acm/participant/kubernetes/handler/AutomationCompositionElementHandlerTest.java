@@ -32,6 +32,7 @@ import static org.mockito.Mockito.doThrow;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -156,5 +157,42 @@ class AutomationCompositionElementHandlerTest {
         assertDoesNotThrow(
             () -> automationCompositionElementHandler.checkPodStatus(automationCompositionId,
                     element.getId(), chartInfo, 1, 1));
+    }
+
+    @Test
+    void testUpdate() throws PfModelException {
+        var elementId1 = UUID.randomUUID();
+        var element = new AcElementDeploy();
+        element.setId(elementId1);
+        element.setDefinition(new ToscaConceptIdentifier(KEY_NAME, "1.0.1"));
+        element.setOrderedState(DeployOrder.DEPLOY);
+        var automationCompositionId = commonTestData.getAutomationCompositionId();
+        assertDoesNotThrow(
+                () -> automationCompositionElementHandler.update(automationCompositionId, element, Map.of()));
+    }
+
+    @Test
+    void testLock() throws PfModelException {
+        assertDoesNotThrow(() -> automationCompositionElementHandler.lock(UUID.randomUUID(), UUID.randomUUID()));
+    }
+
+    @Test
+    void testUnlock() throws PfModelException {
+        assertDoesNotThrow(() -> automationCompositionElementHandler.unlock(UUID.randomUUID(), UUID.randomUUID()));
+    }
+
+    @Test
+    void testDelete() throws PfModelException {
+        assertDoesNotThrow(() -> automationCompositionElementHandler.delete(UUID.randomUUID(), UUID.randomUUID()));
+    }
+
+    @Test
+    void testPrime() throws PfModelException {
+        assertDoesNotThrow(() -> automationCompositionElementHandler.prime(UUID.randomUUID(), List.of()));
+    }
+
+    @Test
+    void testDeprime() throws PfModelException {
+        assertDoesNotThrow(() -> automationCompositionElementHandler.deprime(UUID.randomUUID()));
     }
 }

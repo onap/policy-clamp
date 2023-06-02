@@ -26,9 +26,11 @@ import java.util.UUID;
 import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.AutomationCompositionHandler;
+import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.models.base.PfUtils;
 import org.springframework.stereotype.Component;
 
@@ -57,9 +59,9 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
     }
 
     @Override
-    public void updateAutomationCompositionElementState(UUID automationCompositionId, UUID id, DeployState newState,
-            LockState lockState, String message) {
-        automationCompositionHandler.updateAutomationCompositionElementState(automationCompositionId, id, newState,
+    public void updateAutomationCompositionElementState(UUID automationCompositionId, UUID id, DeployState deployState,
+            LockState lockState, StateChangeResult stateChangeResult, String message) {
+        automationCompositionHandler.updateAutomationCompositionElementState(automationCompositionId, id, deployState,
                 lockState, message);
     }
 
@@ -73,5 +75,11 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
     @Override
     public Map<UUID, AutomationComposition> getAutomationCompositions() {
         return PfUtils.mapMap(automationCompositionHandler.getAutomationCompositionMap(), AutomationComposition::new);
+    }
+
+    @Override
+    public void updateCompositionState(UUID compositionId, AcTypeState state, StateChangeResult stateChangeResult,
+            String message) {
+        // Auto-generated method stub
     }
 }

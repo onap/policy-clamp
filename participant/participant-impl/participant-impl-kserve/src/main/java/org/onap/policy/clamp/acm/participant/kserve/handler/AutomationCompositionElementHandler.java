@@ -24,6 +24,7 @@ import io.kubernetes.client.openapi.ApiException;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
@@ -45,7 +46,11 @@ import org.onap.policy.clamp.acm.participant.kserve.k8s.KserveClient;
 import org.onap.policy.clamp.acm.participant.kserve.models.ConfigurationEntity;
 import org.onap.policy.clamp.acm.participant.kserve.models.KserveInferenceEntity;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
+import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -75,7 +80,6 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
     @Getter(AccessLevel.PACKAGE)
     private final Map<UUID, ConfigurationEntity> configRequestMap = new HashMap<>();
 
-
     private static class ThreadConfig {
 
         private int uninitializedToPassiveTimeout = 60;
@@ -93,7 +97,8 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
                 }
                 configRequestMap.remove(automationCompositionElementId);
                 intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
-                        automationCompositionElementId, DeployState.UNDEPLOYED, null, "Undeployed");
+                        automationCompositionElementId, DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR,
+                        "Undeployed");
             } catch (IOException | ApiException exception) {
                 LOGGER.warn("Deletion of Inference service failed", exception);
             }
@@ -130,7 +135,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
                 if (isAllInferenceSvcDeployed) {
                     configRequestMap.put(element.getId(), configurationEntity);
                     intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
-                            DeployState.DEPLOYED, null, "Deployed");
+                            DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Deployed");
                 } else {
                     LOGGER.error("Inference Service deployment failed");
                 }
@@ -152,19 +157,55 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
      * Check the status of Inference Service.
      *
      * @param inferenceServiceName name of the inference service
-     * @param namespace            kubernetes namespace
-     * @param timeout              Inference service time check
-     * @param statusCheckInterval  Status check time interval
+     * @param namespace kubernetes namespace
+     * @param timeout Inference service time check
+     * @param statusCheckInterval Status check time interval
      * @return status of the inference service
-     * @throws ExecutionException   Exception on execution
+     * @throws ExecutionException Exception on execution
      * @throws InterruptedException Exception on inference service status check
      */
     public boolean checkInferenceServiceStatus(String inferenceServiceName, String namespace, int timeout,
             int statusCheckInterval) throws ExecutionException, InterruptedException {
         // Invoke runnable thread to check pod status
-        Future<String> result = executor.submit(
-                new InferenceServiceValidator(inferenceServiceName, namespace, timeout, statusCheckInterval,
-                        kserveClient), "Done");
+        Future<String> result = executor.submit(new InferenceServiceValidator(inferenceServiceName, namespace, timeout,
+                statusCheckInterval, kserveClient), "Done");
         return (!result.get().isEmpty()) && result.isDone();
+    }
+
+    @Override
+    public void lock(UUID instanceId, UUID elementId) throws PfModelException {
+        intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId, null, LockState.LOCKED,
+                StateChangeResult.NO_ERROR, "Locked");
+    }
+
+    @Override
+    public void unlock(UUID instanceId, UUID elementId) throws PfModelException {
+        intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId, null, LockState.UNLOCKED,
+                StateChangeResult.NO_ERROR, "Unlocked");
+    }
+
+    @Override
+    public void delete(UUID instanceId, UUID elementId) throws PfModelException {
+        intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId, DeployState.DELETED, null,
+                StateChangeResult.NO_ERROR, "Deleted");
+    }
+
+    @Override
+    public void update(UUID instanceId, AcElementDeploy element, Map<String, Object> properties)
+            throws PfModelException {
+        intermediaryApi.updateAutomationCompositionElementState(instanceId, element.getId(), DeployState.DEPLOYED, null,
+                StateChangeResult.NO_ERROR, "Update not supported");
+    }
+
+    @Override
+    public void prime(UUID compositionId, List<AutomationCompositionElementDefinition> elementDefinitionList)
+            throws PfModelException {
+        intermediaryApi.updateCompositionState(compositionId, AcTypeState.PRIMED, StateChangeResult.NO_ERROR, "Primed");
+    }
+
+    @Override
+    public void deprime(UUID compositionId) throws PfModelException {
+        intermediaryApi.updateCompositionState(compositionId, AcTypeState.COMMISSIONED, StateChangeResult.NO_ERROR,
+                "Deprimed");
     }
 }
