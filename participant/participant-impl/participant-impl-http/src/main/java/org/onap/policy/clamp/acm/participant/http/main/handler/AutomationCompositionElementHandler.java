@@ -34,7 +34,6 @@ import java.util.stream.Collectors;
 import javax.validation.Validation;
 import javax.ws.rs.core.Response.Status;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.apache.commons.lang3.tuple.Pair;
 import org.onap.policy.clamp.acm.participant.http.main.models.ConfigRequest;
 import org.onap.policy.clamp.acm.participant.http.main.webclient.AcHttpClient;
@@ -70,8 +69,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
 
     private final ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
-    @Setter
-    private ParticipantIntermediaryApi intermediaryApi;
+    private final ParticipantIntermediaryApi intermediaryApi;
 
     private final AcHttpClient acHttpClient;
 

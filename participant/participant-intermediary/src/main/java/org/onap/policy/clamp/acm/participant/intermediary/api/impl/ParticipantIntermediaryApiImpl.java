@@ -23,9 +23,10 @@ package org.onap.policy.clamp.acm.participant.intermediary.api.impl;
 
 import java.util.Map;
 import java.util.UUID;
-import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
+import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
-import org.onap.policy.clamp.acm.participant.intermediary.handler.AutomationCompositionHandler;
+import org.onap.policy.clamp.acm.participant.intermediary.handler.AutomationCompositionOutHandler;
+import org.onap.policy.clamp.acm.participant.intermediary.handler.CacheProvider;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
@@ -38,31 +39,19 @@ import org.springframework.stereotype.Component;
  * This class is api implementation used by participant intermediary.
  */
 @Component
+@RequiredArgsConstructor
 public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryApi {
 
     // The handler for the automationComposition intermediary
-    private final AutomationCompositionHandler automationCompositionHandler;
+    private final AutomationCompositionOutHandler automationCompositionHandler;
+    private final CacheProvider cacheProvider;
 
-    /**
-     * Constructor.
-     *
-     * @param automationCompositionHandler AutomationCompositionHandler
-     */
-    public ParticipantIntermediaryApiImpl(AutomationCompositionHandler automationCompositionHandler) {
-        this.automationCompositionHandler = automationCompositionHandler;
-    }
 
     @Override
-    public void registerAutomationCompositionElementListener(
-            AutomationCompositionElementListener automationCompositionElementListener) {
-        automationCompositionHandler.registerAutomationCompositionElementListener(automationCompositionElementListener);
-    }
-
-    @Override
-    public void updateAutomationCompositionElementState(UUID automationCompositionId, UUID id, DeployState deployState,
+    public void updateAutomationCompositionElementState(UUID automationCompositionId, UUID id, DeployState newState,
             LockState lockState, StateChangeResult stateChangeResult, String message) {
-        automationCompositionHandler.updateAutomationCompositionElementState(automationCompositionId, id, deployState,
-                lockState, message);
+        automationCompositionHandler.updateAutomationCompositionElementState(automationCompositionId, id, newState,
+                lockState, stateChangeResult, message);
     }
 
     @Override
@@ -74,12 +63,12 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
 
     @Override
     public Map<UUID, AutomationComposition> getAutomationCompositions() {
-        return PfUtils.mapMap(automationCompositionHandler.getAutomationCompositionMap(), AutomationComposition::new);
+        return PfUtils.mapMap(cacheProvider.getAutomationCompositions(), AutomationComposition::new);
     }
 
     @Override
     public void updateCompositionState(UUID compositionId, AcTypeState state, StateChangeResult stateChangeResult,
             String message) {
-        // Auto-generated method stub
+        // TODO Auto-generated method stub
     }
 }

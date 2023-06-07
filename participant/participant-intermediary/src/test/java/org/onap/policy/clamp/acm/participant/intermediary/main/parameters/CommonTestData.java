@@ -22,28 +22,19 @@ package org.onap.policy.clamp.acm.participant.intermediary.main.parameters;
 
 import java.io.File;
 import java.time.Instant;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
-import org.mockito.Mockito;
-import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
-import org.onap.policy.clamp.acm.participant.intermediary.handler.AutomationCompositionHandler;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.DummyParticipantParameters;
-import org.onap.policy.clamp.acm.participant.intermediary.handler.ParticipantHandler;
 import org.onap.policy.clamp.acm.participant.intermediary.parameters.ParticipantIntermediaryParameters;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
-import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionStateChange;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDeregisterAck;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.LockOrder;
-import org.onap.policy.common.endpoints.event.comm.TopicSink;
 import org.onap.policy.common.endpoints.parameters.TopicParameters;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
@@ -59,7 +50,6 @@ public class CommonTestData {
     public static final long TIME_INTERVAL = 2000;
     public static final List<TopicParameters> TOPIC_PARAMS = List.of(getTopicParams());
     public static final Coder CODER = new StandardCoder();
-    private static final Object lockit = new Object();
     public static final UUID AC_ID_0 = UUID.randomUUID();
     public static final UUID AC_ID_1 = UUID.randomUUID();
     public static final UUID PARTCICIPANT_ID = UUID.randomUUID();
@@ -69,7 +59,7 @@ public class CommonTestData {
      *
      * @return ParticipantIntermediaryParameters
      */
-    public ParticipantIntermediaryParameters getParticipantIntermediaryParameters() {
+    public static ParticipantIntermediaryParameters getParticipantIntermediaryParameters() {
         try {
             return CODER.convert(getIntermediaryParametersMap(PARTICIPANT_GROUP_NAME),
                     ParticipantIntermediaryParameters.class);
@@ -170,70 +160,6 @@ public class CommonTestData {
     }
 
     /**
-     * Returns a participantMessagePublisher for MessageSender.
-     *
-     * @return participant Message Publisher
-     */
-    private ParticipantMessagePublisher getParticipantMessagePublisher() {
-        synchronized (lockit) {
-            var participantMessagePublisher = new ParticipantMessagePublisher();
-            participantMessagePublisher.active(Collections.singletonList(Mockito.mock(TopicSink.class)));
-            return participantMessagePublisher;
-        }
-    }
-
-    /**
-     * Returns a mocked AutomationCompositionHandler for test cases.
-     *
-     * @return AutomationCompositionHandler
-     */
-    public AutomationCompositionHandler getMockAutomationCompositionHandler() {
-        return new AutomationCompositionHandler(getParticipantParameters(), getParticipantMessagePublisher());
-    }
-
-    /**
-     * Returns a mocked ParticipantHandler for test cases.
-     *
-     * @return participant Handler
-     */
-    public ParticipantHandler getMockParticipantHandler() {
-        var parameters = getParticipantParameters();
-        var automationCompositionHandler = getMockAutomationCompositionHandler();
-        var publisher = new ParticipantMessagePublisher();
-        publisher.active(Collections.singletonList(Mockito.mock(TopicSink.class)));
-        return new ParticipantHandler(parameters, publisher, automationCompositionHandler);
-    }
-
-    public ParticipantHandler getParticipantHandlerAutomationCompositions() {
-        var automationCompositionHandler = Mockito.mock(AutomationCompositionHandler.class);
-        return getParticipantHandlerAutomationCompositions(automationCompositionHandler);
-    }
-
-    /**
-     * Returns a mocked ParticipantHandler for test cases.
-     *
-     * @return participant Handler
-     *
-     * @throws CoderException if there is an error with .json file.
-     */
-    public ParticipantHandler getParticipantHandlerAutomationCompositions(
-            AutomationCompositionHandler automationCompositionHandler) {
-        Mockito.doReturn(getTestAutomationCompositionMap()).when(automationCompositionHandler)
-                .getAutomationCompositionMap();
-        var publisher = new ParticipantMessagePublisher();
-        publisher.active(Collections.singletonList(Mockito.mock(TopicSink.class)));
-        var parameters = getParticipantParameters();
-        var participantHandler = new ParticipantHandler(parameters, publisher, automationCompositionHandler);
-        participantHandler.sendParticipantRegister();
-        participantHandler.handleParticipantStatusReq(null);
-        participantHandler.sendParticipantDeregister();
-        var participantDeregisterAckMsg = new ParticipantDeregisterAck();
-        participantDeregisterAckMsg.setResponseTo(UUID.randomUUID());
-        participantHandler.handleParticipantDeregisterAck(participantDeregisterAckMsg);
-        return participantHandler;
-    }
-
-    /**
      * Returns a Map of ToscaConceptIdentifier and AutomationComposition for test cases.
      *
      * @return automationCompositionMap
@@ -269,59 +195,21 @@ public class CommonTestData {
     }
 
     /**
-     * Returns a map for a elementsOnThisParticipant for test cases.
-     *
-     * @param uuid UUID
-     * @param definition ToscaConceptIdentifier
-     * @return a map suitable for elementsOnThisParticipant
-     */
-    public Map<UUID, AutomationCompositionElement> setAutomationCompositionElementTest(UUID uuid,
-            ToscaConceptIdentifier definition, UUID participantId) {
-        var acElement = new AutomationCompositionElement();
-        acElement.setId(uuid);
-        acElement.setParticipantId(participantId);
-        acElement.setDefinition(definition);
-        acElement.setDeployState(DeployState.UNDEPLOYED);
-
-        Map<UUID, AutomationCompositionElement> elementsOnThisParticipant = new LinkedHashMap<>();
-        elementsOnThisParticipant.put(uuid, acElement);
-        return elementsOnThisParticipant;
-    }
-
-    /**
-     * Returns a AutomationCompositionHandler with elements on the definition,uuid.
-     *
-     * @param definition ToscaConceptIdentifier
-     * @param  uuid UUID
-     * @return a AutomationCompositionHander with elements
-     */
-    public AutomationCompositionHandler setTestAutomationCompositionHandler(ToscaConceptIdentifier definition,
-            UUID uuid, UUID participantId) {
-        var ach = getMockAutomationCompositionHandler();
-        ach.getAutomationCompositionMap().putAll(getTestAutomationCompositionMap());
-        var acKey = ach.getAutomationCompositionMap().keySet().iterator().next();
-        ach.getAutomationCompositionMap().get(acKey)
-                .setElements(setAutomationCompositionElementTest(uuid, definition, participantId));
-
-        return ach;
-    }
-
-    /**
      * Return a AutomationCompositionStateChange.
      *
      * @param participantId the participantId
-     * @param  uuid UUID
+     * @param instanceId th AutomationComposition Id
      * @param deployOrder a DeployOrder
      * @param lockOrder a LockOrder
      * @return a AutomationCompositionStateChange
      */
-    public AutomationCompositionStateChange getStateChange(UUID participantId, UUID uuid,
+    public static AutomationCompositionStateChange getStateChange(UUID participantId, UUID instanceId,
             DeployOrder deployOrder, LockOrder lockOrder) {
         var stateChange = new AutomationCompositionStateChange();
         stateChange.setStartPhase(0);
-        stateChange.setAutomationCompositionId(UUID.randomUUID());
+        stateChange.setAutomationCompositionId(instanceId);
         stateChange.setParticipantId(participantId);
-        stateChange.setMessageId(uuid);
+        stateChange.setMessageId(UUID.randomUUID());
         stateChange.setDeployOrderedState(deployOrder);
         stateChange.setLockOrderedState(lockOrder);
         stateChange.setTimestamp(Instant.ofEpochMilli(3000));
