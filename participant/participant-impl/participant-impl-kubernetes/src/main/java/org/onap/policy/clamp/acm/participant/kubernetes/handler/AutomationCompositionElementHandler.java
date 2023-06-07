@@ -33,7 +33,6 @@ import java.util.concurrent.Executors;
 import javax.ws.rs.core.Response;
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
 import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.acm.participant.kubernetes.exception.ServiceException;
@@ -72,7 +71,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
     @Autowired
     private ChartService chartService;
 
-    @Setter
+    @Autowired
     private ParticipantIntermediaryApi intermediaryApi;
 
     // Map of acElement Id and installed Helm charts

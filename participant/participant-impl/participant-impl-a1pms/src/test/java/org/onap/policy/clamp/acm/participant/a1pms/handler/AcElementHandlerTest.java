@@ -68,9 +68,9 @@ class AcElementHandlerTest {
 
     @Test
     void test_automationCompositionElementStateChange() throws A1PolicyServiceException {
-        var automationCompositionElementHandler = new AutomationCompositionElementHandler(acA1PmsClient);
         var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
-        automationCompositionElementHandler.setIntermediaryApi(participantIntermediaryApi);
+        var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(participantIntermediaryApi, acA1PmsClient);
 
         var automationCompositionId = commonTestData.getAutomationCompositionId();
         var element = commonTestData.getAutomationCompositionElement();
@@ -93,11 +93,11 @@ class AcElementHandlerTest {
 
     @Test
     void test_AutomationCompositionElementUpdate() throws A1PolicyServiceException {
-        var automationCompositionElementHandler = new AutomationCompositionElementHandler(acA1PmsClient);
         var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
-        automationCompositionElementHandler.setIntermediaryApi(participantIntermediaryApi);
-        var element = commonTestData.getAutomationCompositionElement();
+        var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(participantIntermediaryApi, acA1PmsClient);
 
+        var element = commonTestData.getAutomationCompositionElement();
         var nodeTemplatesMap = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
         automationCompositionElementHandler.deploy(commonTestData.getAutomationCompositionId(), element,
                 nodeTemplatesMap.get(A1_AUTOMATION_COMPOSITION_ELEMENT).getProperties());
@@ -108,8 +108,10 @@ class AcElementHandlerTest {
 
     @Test
     void test_AutomationCompositionElementUpdateWithUnhealthyA1pms() {
-        var automationCompositionElementHandler = new AutomationCompositionElementHandler(acA1PmsClient);
-        automationCompositionElementHandler.setIntermediaryApi(mock(ParticipantIntermediaryApi.class));
+        var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(participantIntermediaryApi, acA1PmsClient);
+
         var element = commonTestData.getAutomationCompositionElement();
         when(acA1PmsClient.isPmsHealthy()).thenReturn(Boolean.FALSE);
 
@@ -121,8 +123,10 @@ class AcElementHandlerTest {
 
     @Test
     void test_AutomationCompositionElementUpdateWithInvalidConfiguration() {
-        var automationCompositionElementHandler = new AutomationCompositionElementHandler(acA1PmsClient);
-        automationCompositionElementHandler.setIntermediaryApi(mock(ParticipantIntermediaryApi.class));
+        var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(participantIntermediaryApi, acA1PmsClient);
+
         var element = commonTestData.getAutomationCompositionElement();
         assertThrows(A1PolicyServiceException.class, () -> automationCompositionElementHandler
                 .deploy(commonTestData.getAutomationCompositionId(), element, Map.of()));
@@ -130,9 +134,10 @@ class AcElementHandlerTest {
 
     @Test
     void testLock() throws PfModelException {
-        var automationCompositionElementHandler = new AutomationCompositionElementHandler(acA1PmsClient);
         var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
-        automationCompositionElementHandler.setIntermediaryApi(participantIntermediaryApi);
+        var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(participantIntermediaryApi, acA1PmsClient);
+
         var automationCompositionId = UUID.randomUUID();
         var elementId = UUID.randomUUID();
         automationCompositionElementHandler.lock(automationCompositionId, elementId);
@@ -143,9 +148,10 @@ class AcElementHandlerTest {
 
     @Test
     void testUnlock() throws PfModelException {
-        var automationCompositionElementHandler = new AutomationCompositionElementHandler(acA1PmsClient);
         var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
-        automationCompositionElementHandler.setIntermediaryApi(participantIntermediaryApi);
+        var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(participantIntermediaryApi, acA1PmsClient);
+
         var automationCompositionId = UUID.randomUUID();
         var elementId = UUID.randomUUID();
         automationCompositionElementHandler.unlock(automationCompositionId, elementId);
@@ -156,9 +162,10 @@ class AcElementHandlerTest {
 
     @Test
     void testUpdate() throws PfModelException {
-        var automationCompositionElementHandler = new AutomationCompositionElementHandler(acA1PmsClient);
         var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
-        automationCompositionElementHandler.setIntermediaryApi(participantIntermediaryApi);
+        var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(participantIntermediaryApi, acA1PmsClient);
+
         var automationCompositionId = UUID.randomUUID();
         var element = commonTestData.getAutomationCompositionElement();
         automationCompositionElementHandler.update(automationCompositionId, element, Map.of());
@@ -169,9 +176,10 @@ class AcElementHandlerTest {
 
     @Test
     void testDelete() throws PfModelException {
-        var automationCompositionElementHandler = new AutomationCompositionElementHandler(acA1PmsClient);
         var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
-        automationCompositionElementHandler.setIntermediaryApi(participantIntermediaryApi);
+        var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(participantIntermediaryApi, acA1PmsClient);
+
         var automationCompositionId = UUID.randomUUID();
         var elementId = UUID.randomUUID();
         automationCompositionElementHandler.delete(automationCompositionId, elementId);
@@ -182,9 +190,10 @@ class AcElementHandlerTest {
 
     @Test
     void testPrime() throws PfModelException {
-        var automationCompositionElementHandler = new AutomationCompositionElementHandler(acA1PmsClient);
         var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
-        automationCompositionElementHandler.setIntermediaryApi(participantIntermediaryApi);
+        var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(participantIntermediaryApi, acA1PmsClient);
+
         var compositionId = UUID.randomUUID();
         automationCompositionElementHandler.prime(compositionId, List.of());
 
@@ -194,9 +203,10 @@ class AcElementHandlerTest {
 
     @Test
     void testDeprime() throws PfModelException {
-        var automationCompositionElementHandler = new AutomationCompositionElementHandler(acA1PmsClient);
         var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
-        automationCompositionElementHandler.setIntermediaryApi(participantIntermediaryApi);
+        var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(participantIntermediaryApi, acA1PmsClient);
+
         var compositionId = UUID.randomUUID();
         automationCompositionElementHandler.deprime(compositionId);
 

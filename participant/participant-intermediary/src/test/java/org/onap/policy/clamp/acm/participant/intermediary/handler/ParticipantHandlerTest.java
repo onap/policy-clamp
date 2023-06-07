@@ -20,136 +20,187 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.handler;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.clearInvocations;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeploy;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionStateChange;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantAckMessage;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDeregister;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDeregisterAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessage;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantPrime;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantPrimeAck;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegister;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegisterAck;
-import org.onap.policy.common.utils.coder.CoderException;
-import org.onap.policy.models.base.PfModelException;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatus;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatusReq;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.PropertiesUpdate;
 
 class ParticipantHandlerTest {
 
-    private final CommonTestData commonTestData = new CommonTestData();
-
     @Test
-    void handleUpdateTest() {
-        var parameters = CommonTestData.getParticipantParameters();
-        var automationCompositionHander = commonTestData.getMockAutomationCompositionHandler();
-        var publisher = new ParticipantMessagePublisher();
-        var emptyParticipantHandler =
-                new ParticipantHandler(parameters, publisher, automationCompositionHander);
-        var participantPrimeMsg = new ParticipantPrime();
-
-        assertThatThrownBy(() ->
-                emptyParticipantHandler.handleParticipantPrime(participantPrimeMsg))
-                .isInstanceOf(RuntimeException.class);
-
-        var participantHandler = commonTestData.getMockParticipantHandler();
-
-        var participantId = CommonTestData.getParticipantId();
-        participantPrimeMsg.setCompositionId(CommonTestData.AC_ID_1);
-        participantPrimeMsg.setParticipantId(participantId);
-        participantPrimeMsg.setMessageId(UUID.randomUUID());
-        participantPrimeMsg.setTimestamp(Instant.ofEpochMilli(3000));
-
-        var heartbeatF = participantHandler.makeHeartbeat(false);
-        assertEquals(participantId, heartbeatF.getParticipantId());
-        assertThat(heartbeatF.getAutomationCompositionInfoList()).isEmpty();
-
-        participantHandler.handleParticipantPrime(participantPrimeMsg);
-
-        var heartbeatT = participantHandler.makeHeartbeat(true);
-        assertEquals(participantId, heartbeatT.getParticipantId());
-        assertThat(heartbeatT.getParticipantDefinitionUpdates()).isNotEmpty();
-        assertEquals(participantId, heartbeatT.getParticipantDefinitionUpdates().get(0).getParticipantId());
-
-        var pum = setListParticipantDefinition(participantPrimeMsg);
-        participantHandler.handleParticipantPrime(pum);
-        var heartbeatTAfterUpdate = participantHandler.makeHeartbeat(true);
-        assertEquals(participantId, heartbeatTAfterUpdate.getParticipantId());
-    }
-
-    private ParticipantPrime setListParticipantDefinition(ParticipantPrime participantPrimeMsg) {
-        var def = new ParticipantDefinition();
-        def.setParticipantId(CommonTestData.getParticipantId());
-        participantPrimeMsg.setParticipantDefinitionUpdates(List.of(def));
-        return participantPrimeMsg;
+    void handleParticipantStatusReqTest() {
+        var publisher = mock(ParticipantMessagePublisher.class);
+        var cacheProvider = mock(CacheProvider.class);
+        var participantHandler = new ParticipantHandler(mock(AutomationCompositionHandler.class),
+                mock(AutomationCompositionOutHandler.class), publisher, cacheProvider);
+        participantHandler.handleParticipantStatusReq(new ParticipantStatusReq());
+        verify(publisher).sendParticipantStatus(any(ParticipantStatus.class));
     }
 
     @Test
-    void checkAppliesTo() {
-        var participantHandler = commonTestData.getMockParticipantHandler();
-        var participantAckMsg =
-                new ParticipantAckMessage(ParticipantMessageType.AUTOMATION_COMPOSITION_DEPLOY);
+    void handleAutomationCompositionDeployTest() {
+        var acHandler = mock(AutomationCompositionHandler.class);
+        var participantHandler = new ParticipantHandler(acHandler, mock(AutomationCompositionOutHandler.class),
+                mock(ParticipantMessagePublisher.class), mock(CacheProvider.class));
+        var automationCompositionDeploy = new AutomationCompositionDeploy();
+        participantHandler.handleAutomationCompositionDeploy(automationCompositionDeploy);
+        verify(acHandler).handleAutomationCompositionDeploy(automationCompositionDeploy);
+    }
+
+    @Test
+    void handleAutomationCompositionStateChangeTest() {
+        var acHandler = mock(AutomationCompositionHandler.class);
+        var participantHandler = new ParticipantHandler(acHandler, mock(AutomationCompositionOutHandler.class),
+                mock(ParticipantMessagePublisher.class), mock(CacheProvider.class));
+        var acStateChange = new AutomationCompositionStateChange();
+        participantHandler.handleAutomationCompositionStateChange(acStateChange);
+        verify(acHandler).handleAutomationCompositionStateChange(acStateChange);
+    }
+
+    @Test
+    void handleAcPropertyUpdateTest() {
+        var acHandler = mock(AutomationCompositionHandler.class);
+        var participantHandler = new ParticipantHandler(acHandler, mock(AutomationCompositionOutHandler.class),
+                mock(ParticipantMessagePublisher.class), mock(CacheProvider.class));
+        var propertyUpdateMsg = new PropertiesUpdate();
+        participantHandler.handleAcPropertyUpdate(propertyUpdateMsg);
+        verify(acHandler).handleAcPropertyUpdate(propertyUpdateMsg);
+    }
+
+    @Test
+    void appliesToTest() {
+        var cacheProvider = mock(CacheProvider.class);
+        when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
+        var participantHandler = new ParticipantHandler(mock(AutomationCompositionHandler.class),
+                mock(AutomationCompositionOutHandler.class), mock(ParticipantMessagePublisher.class), cacheProvider);
+
+        var participantAckMsg = new ParticipantAckMessage(ParticipantMessageType.AUTOMATION_COMPOSITION_DEPLOY);
         assertTrue(participantHandler.appliesTo(participantAckMsg));
 
-        var participantMsg =
-                new ParticipantMessage(ParticipantMessageType.PARTICIPANT_STATUS);
+        var participantMsg = new ParticipantMessage(ParticipantMessageType.PARTICIPANT_STATUS);
         assertTrue(participantHandler.appliesTo(participantMsg));
 
-        var randomId = UUID.randomUUID();
-        participantMsg.setParticipantId(randomId);
+        participantMsg.setParticipantId(UUID.randomUUID());
         assertFalse(participantHandler.appliesTo(participantMsg));
-
     }
 
     @Test
-    void getAutomationCompositionInfoListTest() throws CoderException {
-        var automationCompositionHandler = mock(AutomationCompositionHandler.class);
-        var participantHandler =
-                commonTestData.getParticipantHandlerAutomationCompositions(automationCompositionHandler);
-        clearInvocations(automationCompositionHandler);
-        participantHandler.sendHeartbeat();
-        verify(automationCompositionHandler).getAutomationCompositionInfoList();
-    }
-
-    @Test
-    void testHandleParticipantRegisterAck() {
-        var parameters = CommonTestData.getParticipantParameters();
-        var automationCompositionHandler = commonTestData.getMockAutomationCompositionHandler();
+    void sendParticipantRegister() {
         var publisher = mock(ParticipantMessagePublisher.class);
-        var participantHandler = new ParticipantHandler(parameters, publisher, automationCompositionHandler);
+        var cacheProvider = mock(CacheProvider.class);
+        when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
+        when(cacheProvider.getSupportedAcElementTypes()).thenReturn(List.of(new ParticipantSupportedElementType()));
+        var participantHandler = new ParticipantHandler(mock(AutomationCompositionHandler.class),
+                mock(AutomationCompositionOutHandler.class), publisher, cacheProvider);
+
+        participantHandler.sendParticipantRegister();
+        verify(publisher).sendParticipantRegister(any(ParticipantRegister.class));
+    }
+
+    @Test
+    void handleParticipantRegisterAckTest() {
+        var publisher = mock(ParticipantMessagePublisher.class);
+        var cacheProvider = mock(CacheProvider.class);
+        when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
+        var participantHandler = new ParticipantHandler(mock(AutomationCompositionHandler.class),
+                mock(AutomationCompositionOutHandler.class), publisher, cacheProvider);
 
         participantHandler.handleParticipantRegisterAck(new ParticipantRegisterAck());
-        verify(publisher).sendParticipantStatus(any());
+        verify(publisher).sendParticipantStatus(any(ParticipantStatus.class));
     }
 
     @Test
-    void testSendParticipantDeregister() throws PfModelException {
-        var commonTestData = new CommonTestData();
-        var automationCompositionMap = commonTestData.getTestAutomationCompositionMap();
-        var automationCompositionHandler = mock(AutomationCompositionHandler.class);
-
-        automationCompositionMap.values().iterator().next().getElements().values().iterator().next()
-            .setParticipantId(CommonTestData.getParticipantId());
-        when(automationCompositionHandler.getAutomationCompositionMap()).thenReturn(automationCompositionMap);
-
+    void sendParticipantDeregisterTest() {
         var publisher = mock(ParticipantMessagePublisher.class);
-        var parameters = CommonTestData.getParticipantParameters();
-        var participantHandler = new ParticipantHandler(parameters, publisher, automationCompositionHandler);
+        var cacheProvider = mock(CacheProvider.class);
+        when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
+        var participantHandler = new ParticipantHandler(mock(AutomationCompositionHandler.class),
+                mock(AutomationCompositionOutHandler.class), publisher, cacheProvider);
 
         participantHandler.sendParticipantDeregister();
         verify(publisher).sendParticipantDeregister(any(ParticipantDeregister.class));
-        verify(automationCompositionHandler).undeployInstances();
+    }
+
+    @Test
+    void handleParticipantDeregisterAckTest() {
+        var participantHandler = new ParticipantHandler(mock(AutomationCompositionHandler.class),
+                mock(AutomationCompositionOutHandler.class), mock(ParticipantMessagePublisher.class),
+                mock(CacheProvider.class));
+        var participantDeregisterAck = new ParticipantDeregisterAck();
+        assertDoesNotThrow(() -> participantHandler.handleParticipantDeregisterAck(participantDeregisterAck));
+    }
+
+    @Test
+    void handleParticipantPrimeTest() {
+        var cacheProvider = mock(CacheProvider.class);
+        when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
+        var publisher = mock(ParticipantMessagePublisher.class);
+        var participantHandler = new ParticipantHandler(mock(AutomationCompositionHandler.class),
+                mock(AutomationCompositionOutHandler.class), publisher, cacheProvider);
+
+        var participantPrime = new ParticipantPrime();
+        participantPrime.setCompositionId(UUID.randomUUID());
+        participantPrime.setParticipantDefinitionUpdates(List.of(createParticipantDefinition()));
+        participantHandler.handleParticipantPrime(participantPrime);
+        verify(cacheProvider).addElementDefinition(any(), any());
+        verify(publisher).sendParticipantPrimeAck(any(ParticipantPrimeAck.class));
+    }
+
+    @Test
+    void handleParticipantDeprimeTest() {
+        var cacheProvider = mock(CacheProvider.class);
+        when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
+        var publisher = mock(ParticipantMessagePublisher.class);
+        var participantHandler = new ParticipantHandler(mock(AutomationCompositionHandler.class),
+                mock(AutomationCompositionOutHandler.class), publisher, cacheProvider);
+        var participantPrime = new ParticipantPrime();
+        var compositionId = UUID.randomUUID();
+        participantPrime.setCompositionId(compositionId);
+        participantHandler.handleParticipantPrime(participantPrime);
+        verify(cacheProvider).removeElementDefinition(compositionId);
+        verify(publisher).sendParticipantPrimeAck(any(ParticipantPrimeAck.class));
+    }
+
+    @Test
+    void sendHeartbeatTest() {
+        var cacheProvider = mock(CacheProvider.class);
+        when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
+        when(cacheProvider.getAutomationCompositions()).thenReturn(CommonTestData.getTestAutomationCompositionMap());
+        var publisher = mock(ParticipantMessagePublisher.class);
+        var participantHandler = new ParticipantHandler(mock(AutomationCompositionHandler.class),
+                mock(AutomationCompositionOutHandler.class), publisher, cacheProvider);
+        participantHandler.sendHeartbeat();
+        verify(publisher).sendHeartbeat(any(ParticipantStatus.class));
+    }
+
+    private ParticipantDefinition createParticipantDefinition() {
+        var def = new ParticipantDefinition();
+        def.setParticipantId(CommonTestData.getParticipantId());
+        return def;
     }
 }
