@@ -36,7 +36,6 @@ import javax.validation.ValidationException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.apache.http.HttpStatus;
 import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
@@ -72,8 +71,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
 
     private ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
-    @Setter
-    private ParticipantIntermediaryApi intermediaryApi;
+    private final ParticipantIntermediaryApi intermediaryApi;
 
     private final KserveClient kserveClient;
 

@@ -35,14 +35,6 @@ import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 public interface ParticipantIntermediaryApi {
 
     /**
-     * Register a listener for automation composition elements that are mediated by the intermediary.
-     *
-     * @param automationCompositionElementListener The automation composition element listener to register
-     */
-    void registerAutomationCompositionElementListener(
-            AutomationCompositionElementListener automationCompositionElementListener);
-
-    /**
      * Update the state of a automation composition element.
      *
      * @param automationCompositionId the ID of the automation composition to update the state on
