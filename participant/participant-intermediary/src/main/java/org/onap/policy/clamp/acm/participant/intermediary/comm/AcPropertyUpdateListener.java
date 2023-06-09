@@ -21,7 +21,6 @@
 package org.onap.policy.clamp.acm.participant.intermediary.comm;
 
 import org.onap.policy.clamp.acm.participant.intermediary.handler.ParticipantHandler;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeploy;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.PropertiesUpdate;
 import org.springframework.stereotype.Component;

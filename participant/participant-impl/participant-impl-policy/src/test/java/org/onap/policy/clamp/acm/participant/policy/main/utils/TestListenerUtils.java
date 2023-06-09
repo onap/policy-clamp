@@ -52,6 +52,7 @@ public final class TestListenerUtils {
         var participantId = CommonTestData.getParticipantId();
 
         participantPrimeMsg.setParticipantId(participantId);
+        participantPrimeMsg.setCompositionId(UUID.randomUUID());
         participantPrimeMsg.setTimestamp(Instant.now());
         participantPrimeMsg.setTimestamp(Instant.ofEpochMilli(3000));
         participantPrimeMsg.setMessageId(UUID.randomUUID());

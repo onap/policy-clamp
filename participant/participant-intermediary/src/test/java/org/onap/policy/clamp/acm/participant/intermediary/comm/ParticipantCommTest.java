@@ -20,19 +20,23 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.comm;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
 
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.onap.policy.clamp.acm.participant.intermediary.handler.ParticipantHandler;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeployAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDeregister;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantPrimeAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegister;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatus;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
@@ -40,11 +44,9 @@ import org.onap.policy.common.utils.coder.CoderException;
 
 class ParticipantCommTest {
 
-    private final CommonTestData commonTestData = new CommonTestData();
-
     @Test
     void participantReqTest() throws CoderException {
-        var participantHandler = commonTestData.getParticipantHandlerAutomationCompositions();
+        var participantHandler = mock(ParticipantHandler.class);
 
         var participantRegisterAckListener = new ParticipantRegisterAckListener(participantHandler);
         assertEquals(ParticipantMessageType.PARTICIPANT_REGISTER_ACK.name(), participantRegisterAckListener.getType());
@@ -54,51 +56,75 @@ class ParticipantCommTest {
 
         var participantDeregisterAckListener = new ParticipantDeregisterAckListener(participantHandler);
         assertEquals(ParticipantMessageType.PARTICIPANT_DEREGISTER_ACK.name(),
-            participantDeregisterAckListener.getType());
+                participantDeregisterAckListener.getType());
 
         var participantPrimeListener = new ParticipantPrimeListener(participantHandler);
         assertEquals(ParticipantMessageType.PARTICIPANT_PRIME.name(), participantPrimeListener.getType());
 
+        var acPropertyUpdateListener = new AcPropertyUpdateListener(participantHandler);
+        assertEquals(ParticipantMessageType.PROPERTIES_UPDATE.name(), acPropertyUpdateListener.getType());
+
         var automationCompositionUpdateListener = new AutomationCompositionDeployListener(participantHandler);
         assertEquals(ParticipantMessageType.AUTOMATION_COMPOSITION_DEPLOY.name(),
-            automationCompositionUpdateListener.getType());
+                automationCompositionUpdateListener.getType());
 
         var automationCompositionStateChangeListener = new AutomationCompositionStateChangeListener(participantHandler);
         assertEquals(ParticipantMessageType.AUTOMATION_COMPOSITION_STATE_CHANGE.name(),
-            automationCompositionStateChangeListener.getType());
+                automationCompositionStateChangeListener.getType());
+    }
+
+    @Test
+    void participantMessagePublisherTest() {
+        var publisher = new ParticipantMessagePublisher();
+        publisher.active(Collections.singletonList(Mockito.mock(TopicSink.class)));
+        var participantStatus = new ParticipantStatus();
+        assertDoesNotThrow(() -> publisher.sendParticipantStatus(participantStatus));
+
+        assertDoesNotThrow(() -> publisher.sendHeartbeat(participantStatus));
+
+        var participantRegister = new ParticipantRegister();
+        assertDoesNotThrow(() -> publisher.sendParticipantRegister(participantRegister));
+
+        var participantDeregister = new ParticipantDeregister();
+        assertDoesNotThrow(() -> publisher.sendParticipantDeregister(participantDeregister));
+
+        var participantPrimeAck = new ParticipantPrimeAck();
+        assertDoesNotThrow(() -> publisher.sendParticipantPrimeAck(participantPrimeAck));
+
+        var automationCompositionAck = mock(AutomationCompositionDeployAck.class);
+        assertDoesNotThrow(() -> publisher.sendAutomationCompositionAck(automationCompositionAck));
     }
 
     @Test
     void participantMessagePublisherExceptionsTest() {
-        var participantMessagePublisher = new ParticipantMessagePublisher();
+        var publisher = new ParticipantMessagePublisher();
 
-        var participantStatus = Mockito.mock(ParticipantStatus.class);
+        var participantStatus = new ParticipantStatus();
         assertThrows(AutomationCompositionRuntimeException.class,
-            () -> participantMessagePublisher.sendParticipantStatus(participantStatus));
-        assertThrows(AutomationCompositionRuntimeException.class,
-            () -> participantMessagePublisher.sendHeartbeat(participantStatus));
+                () -> publisher.sendParticipantStatus(participantStatus));
+        assertThrows(AutomationCompositionRuntimeException.class, () -> publisher.sendHeartbeat(participantStatus));
 
-        var participantRegister = Mockito.mock(ParticipantRegister.class);
+        var participantRegister = new ParticipantRegister();
         assertThrows(AutomationCompositionRuntimeException.class,
-            () -> participantMessagePublisher.sendParticipantRegister(participantRegister));
+                () -> publisher.sendParticipantRegister(participantRegister));
 
-        var participantDeregister = Mockito.mock(ParticipantDeregister.class);
+        var participantDeregister = new ParticipantDeregister();
         assertThrows(AutomationCompositionRuntimeException.class,
-            () -> participantMessagePublisher.sendParticipantDeregister(participantDeregister));
+                () -> publisher.sendParticipantDeregister(participantDeregister));
 
-        var automationCompositionAck = Mockito.mock(AutomationCompositionDeployAck.class);
+        var automationCompositionAck = mock(AutomationCompositionDeployAck.class);
         assertThrows(AutomationCompositionRuntimeException.class,
-            () -> participantMessagePublisher.sendAutomationCompositionAck(automationCompositionAck));
+                () -> publisher.sendAutomationCompositionAck(automationCompositionAck));
 
         List<TopicSink> emptyList = Collections.emptyList();
-        assertThrows(IllegalArgumentException.class, () -> participantMessagePublisher.active(emptyList));
+        assertThrows(IllegalArgumentException.class, () -> publisher.active(emptyList));
 
-        participantMessagePublisher.stop();
+        publisher.stop();
     }
 
     @Test
     void messageSenderTest() throws CoderException {
-        var participantHandler = commonTestData.getParticipantHandlerAutomationCompositions();
+        var participantHandler = mock(ParticipantHandler.class);
         var participantParameters = CommonTestData.getParticipantParameters();
         var messageSender = new MessageSender(participantHandler, participantParameters);
         messageSender.run();
