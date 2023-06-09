@@ -22,7 +22,6 @@ package org.onap.policy.clamp.acm.participant.intermediary.main.parameters;
 
 import java.io.File;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -39,6 +38,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionStateChange;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDeregisterAck;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
@@ -116,7 +116,10 @@ public class CommonTestData {
         map.put("description", DESCRIPTION);
         map.put("reportingTimeIntervalMs", TIME_INTERVAL);
         map.put("clampAutomationCompositionTopics", getTopicParametersMap(false));
-        map.put("participantSupportedElementTypes", new ArrayList<>());
+        var supportedElementType = new ParticipantSupportedElementType();
+        supportedElementType.setTypeName("org.onap.policy.clamp.acm.HttpAutomationCompositionElement");
+        supportedElementType.setTypeVersion("1.0.0");
+        map.put("participantSupportedElementTypes", List.of(supportedElementType));
 
         return map;
     }
@@ -237,7 +240,7 @@ public class CommonTestData {
      *
      * @throws CoderException if there is an error with .json file.
      */
-    public Map<UUID, AutomationComposition> getTestAutomationCompositionMap() {
+    public static Map<UUID, AutomationComposition> getTestAutomationCompositionMap() {
         var automationCompositions = getTestAutomationCompositions();
         var automationComposition = automationCompositions.getAutomationCompositionList().get(1);
         Map<UUID, AutomationComposition> automationCompositionMap = new LinkedHashMap<>();
@@ -252,7 +255,7 @@ public class CommonTestData {
      *
      * @throws CoderException if there is an error with .json file.
      */
-    public AutomationCompositions getTestAutomationCompositions() {
+    public static AutomationCompositions getTestAutomationCompositions() {
         try {
             var automationCompositions =
                     new StandardCoder().decode(new File("src/test/resources/providers/TestAutomationCompositions.json"),

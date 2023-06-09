@@ -92,7 +92,7 @@ public class AcHttpClient {
                 LOGGER.error("Error occurred on the HTTP response ", ex);
                 responseMap.put(request.getRestRequestId(),
                         new ImmutablePair<>(ex.getStatusCode().value(), ex.getResponseBodyAsString()));
-            } catch (WebClientRequestException ex) {
+            } catch (WebClientRequestException | IllegalStateException ex) {
                 LOGGER.error("Error occurred on the HTTP request ", ex);
                 responseMap.put(request.getRestRequestId(), new ImmutablePair<>(404, ex.getMessage()));
             }
