@@ -263,7 +263,7 @@ class InstantiationControllerTest extends CommonRestController {
 
         var invocationBuilder = super.sendRequest(getInstanceEndPoint(compositionId, instResponse.getInstanceId()));
         var resp = invocationBuilder.delete();
-        assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
+        assertEquals(Response.Status.ACCEPTED.getStatusCode(), resp.getStatus());
         instResponse = resp.readEntity(InstantiationResponse.class);
         InstantiationUtils.assertInstantiationResponse(instResponse, automationCompositionFromRsc);
 
