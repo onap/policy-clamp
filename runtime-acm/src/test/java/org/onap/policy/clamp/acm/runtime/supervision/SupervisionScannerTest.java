@@ -30,6 +30,7 @@ import static org.mockito.Mockito.when;
 import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVICE_TEMPLATE_YAML;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeAll;
@@ -40,6 +41,7 @@ import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionS
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
@@ -104,6 +106,7 @@ class SupervisionScannerTest {
         verify(automationCompositionProvider).updateAutomationComposition(any(AutomationComposition.class));
     }
 
+
     @Test
     void testScannerDelete() {
         var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
@@ -142,6 +145,42 @@ class SupervisionScannerTest {
 
         supervisionScanner.run(true);
         verify(automationCompositionProvider, times(0)).updateAutomationComposition(any(AutomationComposition.class));
+    }
+
+    @Test
+    void testScannerForCounterHandling() {
+        var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
+        automationComposition.setDeployState(DeployState.DEPLOYING);
+        automationComposition.setLockState(LockState.NONE);
+        for (Map.Entry<UUID, AutomationCompositionElement> entry : automationComposition.getElements().entrySet()) {
+            entry.getValue().setDeployState(DeployState.DEPLOYING);
+        }
+        var automationCompositionProvider = mock(AutomationCompositionProvider.class);
+        when(automationCompositionProvider.getAcInstancesByCompositionId(compositionId))
+                .thenReturn(List.of(automationComposition));
+
+        var automationCompositionDeployPublisher = mock(AutomationCompositionDeployPublisher.class);
+        var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
+        var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
+        acRuntimeParameterGroup.getParticipantParameters().setMaxStatusWaitMs(-1);
+
+        //verify retry scenario
+        var scannerObj1 = new SupervisionScanner(automationCompositionProvider, acDefinitionProvider,
+                automationCompositionStateChangePublisher, automationCompositionDeployPublisher,
+                acRuntimeParameterGroup);
+
+        scannerObj1.run(true);
+        verify(automationCompositionProvider, times(0)).updateAutomationComposition(any(AutomationComposition.class));
+
+        //verify timeout scenario
+        acRuntimeParameterGroup.getParticipantParameters().getUpdateParameters().setMaxRetryCount(0);
+        var scannerObj2 = new SupervisionScanner(automationCompositionProvider, acDefinitionProvider,
+                automationCompositionStateChangePublisher, automationCompositionDeployPublisher,
+                acRuntimeParameterGroup);
+
+        scannerObj2.run(true);
+        verify(automationCompositionProvider, times(1)).updateAutomationComposition(any(AutomationComposition.class));
+
     }
 
     @Test
