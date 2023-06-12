@@ -110,7 +110,7 @@ public class InstantiationController extends AbstractRestController implements A
     public ResponseEntity<InstantiationResponse> deleteCompositionInstance(UUID compositionId, UUID instanceId,
             UUID requestId) {
 
-        return ResponseEntity.ok().body(provider.deleteAutomationComposition(compositionId, instanceId));
+        return ResponseEntity.accepted().body(provider.deleteAutomationComposition(compositionId, instanceId));
     }
 
     @Override
