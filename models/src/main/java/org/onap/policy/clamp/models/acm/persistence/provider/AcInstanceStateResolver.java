@@ -50,6 +50,7 @@ public class AcInstanceStateResolver {
 
     private static final String NO_ERROR = StateChangeResult.NO_ERROR.name();
     private static final String FAILED = StateChangeResult.FAILED.name();
+    private static final String TIMEOUT = StateChangeResult.TIMEOUT.name();
 
     // list of results
     public static final String DEPLOY = DeployOrder.DEPLOY.name();
@@ -87,6 +88,22 @@ public class AcInstanceStateResolver {
 
         this.graph.put(new String[] {DEPLOY_NONE, LOCK, DEPLOYED, UNLOCKING, FAILED}, LOCK);
         this.graph.put(new String[] {DEPLOY_NONE, UNLOCK, DEPLOYED, UNLOCKING, FAILED}, UNLOCK);
+
+        // timeout
+        this.graph.put(new String[] {DEPLOY, LOCK_NONE, UNDEPLOYING, STATE_LOCKED_NONE, TIMEOUT}, DEPLOY);
+        this.graph.put(new String[] {UNDEPLOY, LOCK_NONE, UNDEPLOYING, STATE_LOCKED_NONE, TIMEOUT}, UNDEPLOY);
+        this.graph.put(new String[] {UNDEPLOY, LOCK_NONE, UPDATING, STATE_LOCKED_NONE, TIMEOUT}, UNDEPLOY);
+
+        this.graph.put(new String[] {DEPLOY, LOCK_NONE, DEPLOYING, STATE_LOCKED_NONE, TIMEOUT}, DEPLOY);
+        this.graph.put(new String[] {UNDEPLOY, LOCK_NONE, DEPLOYING, STATE_LOCKED_NONE, TIMEOUT}, UNDEPLOY);
+
+        this.graph.put(new String[] {DELETE, LOCK_NONE, DELETING, LOCK_NONE, TIMEOUT}, DELETE);
+
+        this.graph.put(new String[] {DEPLOY_NONE, UNLOCK, DEPLOYED, LOCKING, TIMEOUT}, UNLOCK);
+        this.graph.put(new String[] {DEPLOY_NONE, LOCK, DEPLOYED, LOCKING, TIMEOUT}, LOCK);
+
+        this.graph.put(new String[] {DEPLOY_NONE, LOCK, DEPLOYED, UNLOCKING, TIMEOUT}, LOCK);
+        this.graph.put(new String[] {DEPLOY_NONE, UNLOCK, DEPLOYED, UNLOCKING, TIMEOUT}, UNLOCK);
     }
 
     /**

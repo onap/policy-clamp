@@ -22,5 +22,6 @@ package org.onap.policy.clamp.models.acm.concepts;
 
 public enum StateChangeResult {
     NO_ERROR,
-    FAILED
+    FAILED,
+    TIMEOUT
 }

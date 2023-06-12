@@ -31,6 +31,7 @@ import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionS
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
+import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
@@ -109,6 +110,13 @@ public class SupervisionScanner {
             // Clear missed report counter on automation composition
             clearFaultAndCounter(automationComposition);
             return;
+        }
+
+        if (automationCompositionCounter.isFault(automationComposition.getInstanceId())
+                && StateChangeResult.NO_ERROR.equals(automationComposition.getStateChangeResult())) {
+            // retry by the user
+            LOGGER.debug("clearing fault for the ac instance");
+            clearFaultAndCounter(automationComposition);
         }
 
         var completed = true;
@@ -196,6 +204,9 @@ public class SupervisionScanner {
             } else {
                 LOGGER.debug("report AutomationComposition fault");
                 automationCompositionCounter.setFault(instanceId);
+                LOGGER.debug("report timeout for the ac instance");
+                automationComposition.setStateChangeResult(StateChangeResult.TIMEOUT);
+                automationCompositionProvider.updateAutomationComposition(automationComposition);
             }
         }
     }
