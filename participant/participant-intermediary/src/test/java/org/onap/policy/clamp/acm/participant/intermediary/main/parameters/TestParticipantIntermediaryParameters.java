@@ -32,20 +32,19 @@ import org.onap.policy.clamp.acm.participant.intermediary.parameters.Participant
  * {@link org.onap.policy.clamp.acm.participant.intermediary.parameters.ParticipantParameters}.
  */
 class TestParticipantIntermediaryParameters {
-    private final CommonTestData commonTestData = new CommonTestData();
     private final ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
 
     @Test
     void testParticipantIntermediaryParameterGroup() {
         final ParticipantIntermediaryParameters participantParameters =
-                commonTestData.getParticipantIntermediaryParameters();
+                CommonTestData.getParticipantIntermediaryParameters();
         assertThat(validatorFactory.getValidator().validate(participantParameters)).isEmpty();
     }
 
     @Test
     void testParticipantIntermediaryParameterGroup_EmptyParameter() {
         final ParticipantIntermediaryParameters participantParameters =
-                commonTestData.getParticipantIntermediaryParameters();
+                CommonTestData.getParticipantIntermediaryParameters();
         participantParameters.setClampAutomationCompositionTopics(null);
         assertThat(validatorFactory.getValidator().validate(participantParameters)).isNotEmpty();
     }
@@ -53,7 +52,7 @@ class TestParticipantIntermediaryParameters {
     @Test
     void testParticipantIntermediaryParameters_NullTopicSinks() {
         final ParticipantIntermediaryParameters participantParameters =
-                commonTestData.getParticipantIntermediaryParameters();
+                CommonTestData.getParticipantIntermediaryParameters();
         participantParameters.getClampAutomationCompositionTopics().setTopicSinks(null);
         assertThat(validatorFactory.getValidator().validate(participantParameters)).isNotEmpty();
     }
@@ -61,7 +60,7 @@ class TestParticipantIntermediaryParameters {
     @Test
     void testParticipantIntermediaryParameters_NullTopicSources() {
         final ParticipantIntermediaryParameters participantParameters =
-                commonTestData.getParticipantIntermediaryParameters();
+                CommonTestData.getParticipantIntermediaryParameters();
         participantParameters.getClampAutomationCompositionTopics().setTopicSources(null);
         assertThat(validatorFactory.getValidator().validate(participantParameters)).isNotEmpty();
     }

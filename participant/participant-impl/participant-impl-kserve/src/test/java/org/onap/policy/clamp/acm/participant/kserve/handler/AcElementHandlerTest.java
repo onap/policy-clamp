@@ -58,13 +58,12 @@ class AcElementHandlerTest {
 
     private final KserveClient kserveClient = mock(KserveClient.class);
 
+    private ParticipantIntermediaryApi participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
+
     @InjectMocks
     @Spy
     private AutomationCompositionElementHandler automationCompositionElementHandler =
-            new AutomationCompositionElementHandler(kserveClient);
-
-    @Mock
-    private ParticipantIntermediaryApi participantIntermediaryApi;
+            new AutomationCompositionElementHandler(participantIntermediaryApi, kserveClient);
 
     @Mock
     private ExecutorService executor;

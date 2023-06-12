@@ -30,7 +30,6 @@ import javax.validation.ValidationException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.apache.http.HttpStatus;
 import org.onap.policy.clamp.acm.participant.a1pms.exception.A1PolicyServiceException;
 import org.onap.policy.clamp.acm.participant.a1pms.models.ConfigurationEntity;
@@ -62,8 +61,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    @Setter
-    private ParticipantIntermediaryApi intermediaryApi;
+    private final ParticipantIntermediaryApi intermediaryApi;
 
     private final AcA1PmsClient acA1PmsClient;
 

@@ -20,17 +20,13 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.handler;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -39,242 +35,165 @@ import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationComposit
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
-import org.onap.policy.clamp.models.acm.concepts.DeployState;
-import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeploy;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeployAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionStateChange;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.PropertiesUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.LockOrder;
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 class AutomationCompositionHandlerTest {
 
-    private final CommonTestData commonTestData = new CommonTestData();
-
-    private static final String STATE_VALUE = "STATE_VALUE";
-
     @Test
-    void automationCompositionHandlerTest() {
-        var ach = commonTestData.getMockAutomationCompositionHandler();
-        assertNotNull(ach.getAutomationCompositionMap());
+    void handleAutomationCompositionStateChangeNullTest() {
+        var participantMessagePublisher = mock(ParticipantMessagePublisher.class);
+        var cacheProvider = mock(CacheProvider.class);
+        var ach = new AutomationCompositionHandler(cacheProvider, participantMessagePublisher,
+                mock(AutomationCompositionElementListener.class));
+
+        var automationCompositionStateChange = new AutomationCompositionStateChange();
+        assertDoesNotThrow(() -> ach.handleAutomationCompositionStateChange(automationCompositionStateChange));
+
+        automationCompositionStateChange.setAutomationCompositionId(UUID.randomUUID());
+        assertDoesNotThrow(() -> ach.handleAutomationCompositionStateChange(automationCompositionStateChange));
+        verify(participantMessagePublisher).sendAutomationCompositionAck(any(AutomationCompositionDeployAck.class));
+
+        var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
+        automationCompositionStateChange.setAutomationCompositionId(automationComposition.getInstanceId());
+        when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
+                .thenReturn(automationComposition);
+        automationCompositionStateChange.setDeployOrderedState(DeployOrder.UPDATE);
+        assertDoesNotThrow(() -> ach.handleAutomationCompositionStateChange(automationCompositionStateChange));
     }
 
     @Test
-    void updateNullAutomationCompositionHandlerTest() {
-        var id = UUID.randomUUID();
+    void handleAutomationCompositionStateChangeUndeployTest() throws PfModelException {
+        var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
+        var automationCompositionStateChange = CommonTestData.getStateChange(CommonTestData.getParticipantId(),
+                automationComposition.getInstanceId(), DeployOrder.UNDEPLOY, LockOrder.NONE);
+        var cacheProvider = mock(CacheProvider.class);
+        when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
+                .thenReturn(automationComposition);
+        when(cacheProvider.getCommonProperties(any(UUID.class), any(UUID.class))).thenReturn(Map.of());
 
-        var ach = commonTestData.getMockAutomationCompositionHandler();
-        assertDoesNotThrow(() -> ach.updateAutomationCompositionElementState(null, null, DeployState.UNDEPLOYED, null,
-                "Undeployed"));
-
-        assertDoesNotThrow(
-                () -> ach.updateAutomationCompositionElementState(null, id, DeployState.UNDEPLOYED, null, null));
+        var participantMessagePublisher = mock(ParticipantMessagePublisher.class);
+        var listener = mock(AutomationCompositionElementListener.class);
+        var ach = new AutomationCompositionHandler(cacheProvider, participantMessagePublisher, listener);
+        ach.handleAutomationCompositionStateChange(automationCompositionStateChange);
+        verify(listener, times(automationComposition.getElements().size())).undeploy(any(), any());
     }
 
     @Test
-    void updateAutomationCompositionHandlerTest() {
-        var uuid = UUID.randomUUID();
-        var partecipantId = CommonTestData.getParticipantId();
-        var definition = CommonTestData.getDefinition();
+    void handleAutomationCompositionStateChangeLockTest() throws PfModelException {
+        var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
+        var automationCompositionStateChange = CommonTestData.getStateChange(CommonTestData.getParticipantId(),
+                automationComposition.getInstanceId(), DeployOrder.NONE, LockOrder.LOCK);
+        var cacheProvider = mock(CacheProvider.class);
+        when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
+                .thenReturn(automationComposition);
+        when(cacheProvider.getCommonProperties(any(UUID.class), any(UUID.class))).thenReturn(Map.of());
 
-        var ach = commonTestData.setTestAutomationCompositionHandler(definition, uuid, partecipantId);
-        var acKey = ach.getAutomationCompositionMap().keySet().iterator().next();
-        var key = ach.getAutomationCompositionMap().get(acKey).getElements().keySet().iterator().next();
-        var value = ach.getAutomationCompositionMap().get(acKey).getElements().get(key);
-        value.setDeployState(DeployState.DEPLOYING);
-        value.setLockState(LockState.NONE);
-        ach.updateAutomationCompositionElementState(CommonTestData.AC_ID_1, uuid, DeployState.DEPLOYED, null,
-                "Deployed");
-        assertEquals(DeployState.DEPLOYED, value.getDeployState());
-
-        ach.getAutomationCompositionMap().values().iterator().next().getElements().putIfAbsent(key, value);
-        ach.updateAutomationCompositionElementState(CommonTestData.AC_ID_1, key, DeployState.DEPLOYED, null,
-                "Deployed");
-        assertEquals(DeployState.DEPLOYED, value.getDeployState());
-
-        ach.getAutomationCompositionMap().values().iterator().next().getElements().clear();
-        assertDoesNotThrow(() -> ach.updateAutomationCompositionElementState(CommonTestData.AC_ID_1, key, null,
-                LockState.UNLOCKED, null));
+        var participantMessagePublisher = mock(ParticipantMessagePublisher.class);
+        var listener = mock(AutomationCompositionElementListener.class);
+        var ach = new AutomationCompositionHandler(cacheProvider, participantMessagePublisher, listener);
+        ach.handleAutomationCompositionStateChange(automationCompositionStateChange);
+        verify(listener, times(automationComposition.getElements().size())).lock(any(), any());
     }
 
     @Test
-    void handleAutomationCompositionStateChangeTest() {
-        var uuid = UUID.randomUUID();
-        var partecipantId = CommonTestData.getParticipantId();
-        var definition = CommonTestData.getDefinition();
-        var stateChange = commonTestData.getStateChange(partecipantId, uuid, DeployOrder.NONE, LockOrder.UNLOCK);
-        var ach = commonTestData.setTestAutomationCompositionHandler(definition, uuid, partecipantId);
-        assertDoesNotThrow(() -> ach
-                .handleAutomationCompositionStateChange(mock(AutomationCompositionStateChange.class), List.of()));
+    void handleAutomationCompositionStateChangeUnlockTest() throws PfModelException {
+        var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
+        var automationCompositionStateChange = CommonTestData.getStateChange(CommonTestData.getParticipantId(),
+                automationComposition.getInstanceId(), DeployOrder.NONE, LockOrder.UNLOCK);
+        var cacheProvider = mock(CacheProvider.class);
+        when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
+                .thenReturn(automationComposition);
+        when(cacheProvider.getCommonProperties(any(UUID.class), any(UUID.class))).thenReturn(Map.of());
 
-        ach.handleAutomationCompositionStateChange(stateChange, List.of());
-        var newPartecipantId = CommonTestData.getRndParticipantId();
-        stateChange.setAutomationCompositionId(UUID.randomUUID());
-        stateChange.setParticipantId(newPartecipantId);
-        assertDoesNotThrow(() -> ach.handleAutomationCompositionStateChange(stateChange, List.of()));
+        var participantMessagePublisher = mock(ParticipantMessagePublisher.class);
+        var listener = mock(AutomationCompositionElementListener.class);
+        var ach = new AutomationCompositionHandler(cacheProvider, participantMessagePublisher, listener);
+        ach.handleAutomationCompositionStateChange(automationCompositionStateChange);
+        verify(listener, times(automationComposition.getElements().size())).unlock(any(), any());
+    }
+
+    @Test
+    void handleAutomationCompositionStateChangeDeleteTest() throws PfModelException {
+        var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
+        var automationCompositionStateChange = CommonTestData.getStateChange(CommonTestData.getParticipantId(),
+                automationComposition.getInstanceId(), DeployOrder.DELETE, LockOrder.NONE);
+        var cacheProvider = mock(CacheProvider.class);
+        when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
+                .thenReturn(automationComposition);
+        when(cacheProvider.getCommonProperties(any(UUID.class), any(UUID.class))).thenReturn(Map.of());
+
+        var participantMessagePublisher = mock(ParticipantMessagePublisher.class);
+        var listener = mock(AutomationCompositionElementListener.class);
+        var ach = new AutomationCompositionHandler(cacheProvider, participantMessagePublisher, listener);
+        ach.handleAutomationCompositionStateChange(automationCompositionStateChange);
+        verify(listener, times(automationComposition.getElements().size())).delete(any(), any());
+    }
+
+    @Test
+    void handleAcPropertyUpdateTest() throws PfModelException {
+        var cacheProvider = mock(CacheProvider.class);
+        var listener = mock(AutomationCompositionElementListener.class);
+        var participantMessagePublisher = mock(ParticipantMessagePublisher.class);
+        var ach = new AutomationCompositionHandler(cacheProvider, participantMessagePublisher, listener);
+
+        var updateMsg = new PropertiesUpdate();
+        assertDoesNotThrow(() -> ach.handleAcPropertyUpdate(updateMsg));
+
+        updateMsg.setParticipantId(CommonTestData.getParticipantId());
+        when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
+        var participantDeploy = new ParticipantDeploy();
+        participantDeploy.setParticipantId(CommonTestData.getParticipantId());
+        updateMsg.getParticipantUpdatesList().add(participantDeploy);
+
+        var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
+        updateMsg.setAutomationCompositionId(automationComposition.getInstanceId());
+        when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
+                .thenReturn(automationComposition);
+        var acElementDeploy = new AcElementDeploy();
+        acElementDeploy.setProperties(Map.of());
+        acElementDeploy.setId(automationComposition.getElements().values().iterator().next().getId());
+        participantDeploy.getAcElementList().add(acElementDeploy);
+
+        ach.handleAcPropertyUpdate(updateMsg);
+        verify(listener).update(any(), any(), any());
     }
 
     @Test
     void handleAutomationCompositionDeployTest() throws PfModelException {
-        var acd = new AutomationCompositionElementDefinition();
-        var definition = CommonTestData.getDefinition();
-        acd.setAcElementDefinitionId(definition);
-        acd.setAutomationCompositionElementToscaNodeTemplate(mock(ToscaNodeTemplate.class));
-        var updateMsg = new AutomationCompositionDeploy();
-        updateMsg.setAutomationCompositionId(UUID.randomUUID());
-        var uuid = UUID.randomUUID();
-        updateMsg.setMessageId(uuid);
-        var partecipantId = CommonTestData.getParticipantId();
-        updateMsg.setParticipantId(partecipantId);
-        updateMsg.setFirstStartPhase(true);
-        updateMsg.setStartPhase(0);
-        var acElementDefinitions = List.of(acd);
-        var ach = commonTestData.setTestAutomationCompositionHandler(definition, uuid, partecipantId);
+        var cacheProvider = mock(CacheProvider.class);
         var listener = mock(AutomationCompositionElementListener.class);
-        ach.registerAutomationCompositionElementListener(listener);
-        ach.handleAutomationCompositionDeploy(updateMsg, acElementDefinitions);
-        verify(listener, times(0)).deploy(any(), any(), anyMap());
-        updateMsg.setFirstStartPhase(false);
-        updateMsg.setStartPhase(1);
-        ach.handleAutomationCompositionDeploy(updateMsg, acElementDefinitions);
-        verify(listener, times(0)).deploy(any(), any(), anyMap());
-
-        ach.getAutomationCompositionMap().clear();
-        updateMsg.setFirstStartPhase(true);
-        updateMsg.setStartPhase(0);
-        ach.handleAutomationCompositionDeploy(updateMsg, acElementDefinitions);
-        verify(listener, times(0)).deploy(any(), any(), anyMap());
-
-        updateMsg.setAutomationCompositionId(UUID.randomUUID());
-        updateMsg.setParticipantUpdatesList(List.of(mock(ParticipantDeploy.class)));
-        ach.handleAutomationCompositionDeploy(updateMsg, acElementDefinitions);
-        verify(listener, times(0)).deploy(any(), any(), anyMap());
-
-        updateMsg.setStartPhase(1);
-        var participantDeploy = new ParticipantDeploy();
-        participantDeploy.setParticipantId(partecipantId);
-        var element = new AcElementDeploy();
-        element.setDefinition(definition);
-        participantDeploy.setAcElementList(List.of(element));
-        updateMsg.setParticipantUpdatesList(List.of(participantDeploy));
-
-        updateMsg.setStartPhase(0);
-        ach.handleAutomationCompositionDeploy(updateMsg, acElementDefinitions);
-        verify(listener, times(1)).deploy(any(), any(), anyMap());
-    }
-
-    @Test
-    void acUndeployTest() throws PfModelException {
-        var uuid = UUID.randomUUID();
-        var partecipantId = CommonTestData.getParticipantId();
-        var definition = CommonTestData.getDefinition();
-
-        var stateChangeUndeploy =
-                commonTestData.getStateChange(partecipantId, uuid, DeployOrder.UNDEPLOY, LockOrder.NONE);
-
-        var ach = commonTestData.setTestAutomationCompositionHandler(definition, uuid, partecipantId);
-        stateChangeUndeploy
-                .setAutomationCompositionId(ach.getAutomationCompositionMap().entrySet().iterator().next().getKey());
-        var listener = mock(AutomationCompositionElementListener.class);
-        ach.registerAutomationCompositionElementListener(listener);
-
-        var acd = new AutomationCompositionElementDefinition();
-        acd.setAcElementDefinitionId(definition);
-        acd.setAutomationCompositionElementToscaNodeTemplate(mock(ToscaNodeTemplate.class));
-        ach.handleAutomationCompositionStateChange(stateChangeUndeploy, List.of(acd));
-        verify(listener, times(1)).undeploy(any(), any());
-
-        stateChangeUndeploy.setAutomationCompositionId(UUID.randomUUID());
-        stateChangeUndeploy.setParticipantId(CommonTestData.getRndParticipantId());
-        assertDoesNotThrow(() -> ach.handleAutomationCompositionStateChange(stateChangeUndeploy, List.of()));
-    }
-
-    @Test
-    void automationCompositionStateLock() throws PfModelException {
-        var uuid = UUID.randomUUID();
-        var partecipantId = CommonTestData.getParticipantId();
-        var definition = CommonTestData.getDefinition();
-
-        var stateChangeLock =
-                commonTestData.getStateChange(partecipantId, uuid, DeployOrder.NONE, LockOrder.LOCK);
-
-        var ach = commonTestData.setTestAutomationCompositionHandler(definition, uuid, partecipantId);
-        var listener = mock(AutomationCompositionElementListener.class);
-        ach.registerAutomationCompositionElementListener(listener);
-        stateChangeLock
-                .setAutomationCompositionId(ach.getAutomationCompositionMap().entrySet().iterator().next().getKey());
-        var acd = new AutomationCompositionElementDefinition();
-        acd.setAcElementDefinitionId(definition);
-        acd.setAutomationCompositionElementToscaNodeTemplate(mock(ToscaNodeTemplate.class));
-        ach.handleAutomationCompositionStateChange(stateChangeLock, List.of(acd));
-        stateChangeLock.setAutomationCompositionId(UUID.randomUUID());
-        stateChangeLock.setParticipantId(CommonTestData.getRndParticipantId());
-        ach.handleAutomationCompositionStateChange(stateChangeLock, List.of());
-        verify(listener, times(1)).lock(any(), any());
-    }
-
-    @Test
-    void automationCompositionStateUnlock() throws PfModelException {
-        var uuid = UUID.randomUUID();
-        var partecipantId = CommonTestData.getParticipantId();
-        var definition = CommonTestData.getDefinition();
-
-        var stateChangeUnlock =
-                commonTestData.getStateChange(partecipantId, uuid, DeployOrder.NONE, LockOrder.UNLOCK);
-
-        var ach = commonTestData.setTestAutomationCompositionHandler(definition, uuid, partecipantId);
-        var listener = mock(AutomationCompositionElementListener.class);
-        ach.registerAutomationCompositionElementListener(listener);
-        stateChangeUnlock
-                .setAutomationCompositionId(ach.getAutomationCompositionMap().entrySet().iterator().next().getKey());
-        var acd = new AutomationCompositionElementDefinition();
-        acd.setAcElementDefinitionId(definition);
-        acd.setAutomationCompositionElementToscaNodeTemplate(mock(ToscaNodeTemplate.class));
-        ach.handleAutomationCompositionStateChange(stateChangeUnlock, List.of(acd));
-        stateChangeUnlock.setAutomationCompositionId(UUID.randomUUID());
-        stateChangeUnlock.setParticipantId(CommonTestData.getRndParticipantId());
-        ach.handleAutomationCompositionStateChange(stateChangeUnlock, List.of());
-        verify(listener, times(1)).unlock(any(), any());
-    }
-
-
-    @Test
-    void testgetAutomationCompositionInfoList() {
-        var uuid = UUID.randomUUID();
-        var partecipantId = CommonTestData.getParticipantId();
-        var definition = CommonTestData.getDefinition();
-        var ach = commonTestData.setTestAutomationCompositionHandler(definition, uuid, partecipantId);
-        var result = ach.getAutomationCompositionInfoList();
-        assertThat(result).hasSize(1);
-        assertThat(result.get(0).getElements()).hasSize(1);
-    }
-
-    @Test
-    void testsendAcElementInfo() {
         var participantMessagePublisher = mock(ParticipantMessagePublisher.class);
-        var ach = new AutomationCompositionHandler(CommonTestData.getParticipantParameters(),
-                participantMessagePublisher);
-        ach.getAutomationCompositionMap().putAll(commonTestData.getTestAutomationCompositionMap());
-        var key = ach.getAutomationCompositionMap().keySet().iterator().next();
-        var keyElement = ach.getAutomationCompositionMap().get(key).getElements().keySet().iterator().next();
-        ach.sendAcElementInfo(key, keyElement, "useState", "operationalState", Map.of("key", 1));
-        verify(participantMessagePublisher).sendParticipantStatus(any());
-    }
+        var ach = new AutomationCompositionHandler(cacheProvider, participantMessagePublisher, listener);
 
-    @Test
-    void testUndeployInstances() throws PfModelException {
-        var uuid = UUID.randomUUID();
-        var partecipantId = CommonTestData.getParticipantId();
-        var definition = CommonTestData.getDefinition();
-        var ach = commonTestData.setTestAutomationCompositionHandler(definition, uuid, partecipantId);
-        var listener = mock(AutomationCompositionElementListener.class);
-        ach.registerAutomationCompositionElementListener(listener);
-        ach.undeployInstances();
-        verify(listener).undeploy(any(), any());
+        var deployMsg = new AutomationCompositionDeploy();
+        assertDoesNotThrow(() -> ach.handleAutomationCompositionDeploy(deployMsg));
+
+        deployMsg.setParticipantId(CommonTestData.getParticipantId());
+        when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
+        var participantDeploy = new ParticipantDeploy();
+        participantDeploy.setParticipantId(CommonTestData.getParticipantId());
+        deployMsg.getParticipantUpdatesList().add(participantDeploy);
+
+        var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
+        deployMsg.setAutomationCompositionId(automationComposition.getInstanceId());
+        when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
+                .thenReturn(automationComposition);
+        for (var element : automationComposition.getElements().values()) {
+            var acElementDeploy = new AcElementDeploy();
+            acElementDeploy.setProperties(Map.of());
+            acElementDeploy.setId(element.getId());
+            participantDeploy.getAcElementList().add(acElementDeploy);
+        }
+        ach.handleAutomationCompositionDeploy(deployMsg);
+        verify(listener, times(automationComposition.getElements().size())).deploy(any(), any(), any());
     }
 }

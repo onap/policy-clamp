@@ -57,10 +57,9 @@ class AutomationCompositionElementHandlerTest {
 
     @Test
     void testHandlerUndeployNoPolicy() throws PfModelException {
-        var handler = new AutomationCompositionElementHandler(mock(PolicyApiHttpClient.class),
-                mock(PolicyPapHttpClient.class));
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        handler.setIntermediaryApi(intermediaryApi);
+        var handler = new AutomationCompositionElementHandler(mock(PolicyApiHttpClient.class),
+                mock(PolicyPapHttpClient.class), intermediaryApi);
 
         handler.undeploy(AC_ID, automationCompositionElementId);
         verify(intermediaryApi).updateAutomationCompositionElementState(AC_ID, automationCompositionElementId,
@@ -90,9 +89,8 @@ class AutomationCompositionElementHandlerTest {
         var pap = mock(PolicyPapHttpClient.class);
         doReturn(Response.accepted().build()).when(pap).handlePolicyDeployOrUndeploy(any(), any(), any());
 
-        var handler = new AutomationCompositionElementHandler(api, pap);
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        handler.setIntermediaryApi(intermediaryApi);
+        var handler = new AutomationCompositionElementHandler(api, pap, intermediaryApi);
 
         handler.deploy(AC_ID, getTestingAcElement(), Map.of());
         verify(intermediaryApi).updateAutomationCompositionElementState(AC_ID, automationCompositionElementId,
@@ -105,10 +103,9 @@ class AutomationCompositionElementHandlerTest {
 
     @Test
     void testDeployNoPolicy() throws PfModelException {
-        var handler = new AutomationCompositionElementHandler(mock(PolicyApiHttpClient.class),
-                mock(PolicyPapHttpClient.class));
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        handler.setIntermediaryApi(intermediaryApi);
+        var handler = new AutomationCompositionElementHandler(mock(PolicyApiHttpClient.class),
+                mock(PolicyPapHttpClient.class), intermediaryApi);
 
         var acElement = getTestingAcElement();
         acElement.getToscaServiceTemplateFragment().setToscaTopologyTemplate(null);
@@ -126,9 +123,9 @@ class AutomationCompositionElementHandlerTest {
         var pap = mock(PolicyPapHttpClient.class);
         doReturn(Response.accepted().build()).when(pap).handlePolicyDeployOrUndeploy(any(), any(), any());
 
-        var handler = new AutomationCompositionElementHandler(api, pap);
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        handler.setIntermediaryApi(intermediaryApi);
+        var handler = new AutomationCompositionElementHandler(api, pap, intermediaryApi);
+
         var element = getTestingAcElement();
 
         // Mock failure in policy type creation
@@ -147,9 +144,9 @@ class AutomationCompositionElementHandlerTest {
         var pap = mock(PolicyPapHttpClient.class);
         doReturn(Response.serverError().build()).when(pap).handlePolicyDeployOrUndeploy(any(), any(), any());
 
-        var handler = new AutomationCompositionElementHandler(api, pap);
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        handler.setIntermediaryApi(intermediaryApi);
+        var handler = new AutomationCompositionElementHandler(api, pap, intermediaryApi);
+
         var element = getTestingAcElement();
         assertThatThrownBy(() -> handler.deploy(AC_ID, element, Map.of()))
                 .hasMessageMatching("Deploy of Policy failed.");
@@ -157,10 +154,9 @@ class AutomationCompositionElementHandlerTest {
 
     @Test
     void testUpdate() throws Exception {
-        var handler = new AutomationCompositionElementHandler(mock(PolicyApiHttpClient.class),
-                mock(PolicyPapHttpClient.class));
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        handler.setIntermediaryApi(intermediaryApi);
+        var handler = new AutomationCompositionElementHandler(mock(PolicyApiHttpClient.class),
+                mock(PolicyPapHttpClient.class), intermediaryApi);
 
         var acElement = getTestingAcElement();
         acElement.getToscaServiceTemplateFragment().setToscaTopologyTemplate(null);
@@ -171,10 +167,9 @@ class AutomationCompositionElementHandlerTest {
 
     @Test
     void testLock() throws Exception {
-        var handler = new AutomationCompositionElementHandler(mock(PolicyApiHttpClient.class),
-                mock(PolicyPapHttpClient.class));
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        handler.setIntermediaryApi(intermediaryApi);
+        var handler = new AutomationCompositionElementHandler(mock(PolicyApiHttpClient.class),
+                mock(PolicyPapHttpClient.class), intermediaryApi);
 
         handler.lock(AC_ID, automationCompositionElementId);
         verify(intermediaryApi).updateAutomationCompositionElementState(AC_ID, automationCompositionElementId, null,
@@ -183,10 +178,9 @@ class AutomationCompositionElementHandlerTest {
 
     @Test
     void testUnlock() throws Exception {
-        var handler = new AutomationCompositionElementHandler(mock(PolicyApiHttpClient.class),
-                mock(PolicyPapHttpClient.class));
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        handler.setIntermediaryApi(intermediaryApi);
+        var handler = new AutomationCompositionElementHandler(mock(PolicyApiHttpClient.class),
+                mock(PolicyPapHttpClient.class), intermediaryApi);
 
         handler.unlock(AC_ID, automationCompositionElementId);
         verify(intermediaryApi).updateAutomationCompositionElementState(AC_ID, automationCompositionElementId, null,
@@ -195,10 +189,9 @@ class AutomationCompositionElementHandlerTest {
 
     @Test
     void testDelete() throws Exception {
-        var handler = new AutomationCompositionElementHandler(mock(PolicyApiHttpClient.class),
-                mock(PolicyPapHttpClient.class));
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        handler.setIntermediaryApi(intermediaryApi);
+        var handler = new AutomationCompositionElementHandler(mock(PolicyApiHttpClient.class),
+                mock(PolicyPapHttpClient.class), intermediaryApi);
 
         handler.delete(AC_ID, automationCompositionElementId);
         verify(intermediaryApi).updateAutomationCompositionElementState(AC_ID, automationCompositionElementId,
@@ -207,10 +200,9 @@ class AutomationCompositionElementHandlerTest {
 
     @Test
     void testPrime() throws Exception {
-        var handler = new AutomationCompositionElementHandler(mock(PolicyApiHttpClient.class),
-                mock(PolicyPapHttpClient.class));
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        handler.setIntermediaryApi(intermediaryApi);
+        var handler = new AutomationCompositionElementHandler(mock(PolicyApiHttpClient.class),
+                mock(PolicyPapHttpClient.class), intermediaryApi);
 
         handler.prime(AC_ID, List.of());
         verify(intermediaryApi).updateCompositionState(AC_ID, AcTypeState.PRIMED, StateChangeResult.NO_ERROR, "Primed");
@@ -218,10 +210,9 @@ class AutomationCompositionElementHandlerTest {
 
     @Test
     void testDeprime() throws Exception {
-        var handler = new AutomationCompositionElementHandler(mock(PolicyApiHttpClient.class),
-                mock(PolicyPapHttpClient.class));
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        handler.setIntermediaryApi(intermediaryApi);
+        var handler = new AutomationCompositionElementHandler(mock(PolicyApiHttpClient.class),
+                mock(PolicyPapHttpClient.class), intermediaryApi);
 
         handler.deprime(AC_ID);
         verify(intermediaryApi).updateCompositionState(AC_ID, AcTypeState.COMMISSIONED, StateChangeResult.NO_ERROR,

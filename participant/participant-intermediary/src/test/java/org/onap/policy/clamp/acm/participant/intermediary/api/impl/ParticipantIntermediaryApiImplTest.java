@@ -26,8 +26,7 @@ import static org.mockito.Mockito.verify;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
-import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
-import org.onap.policy.clamp.acm.participant.intermediary.handler.AutomationCompositionHandler;
+import org.onap.policy.clamp.acm.participant.intermediary.handler.AutomationCompositionOutHandler;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
@@ -41,22 +40,23 @@ class ParticipantIntermediaryApiImplTest {
 
     @Test
     void mockParticipantIntermediaryApiImplTest() throws CoderException {
-        var automationComposiitonHandler = mock(AutomationCompositionHandler.class);
-        var apiImpl = new ParticipantIntermediaryApiImpl(automationComposiitonHandler);
-
-        var acElementListener = mock(AutomationCompositionElementListener.class);
-        apiImpl.registerAutomationCompositionElementListener(acElementListener);
-        verify(automationComposiitonHandler).registerAutomationCompositionElementListener(acElementListener);
+        var automationComposiitonHandler = mock(AutomationCompositionOutHandler.class);
+        var apiImpl = new ParticipantIntermediaryApiImpl(automationComposiitonHandler, null);
 
         var uuid = UUID.randomUUID();
         var automationCompositionId = UUID.randomUUID();
         apiImpl.updateAutomationCompositionElementState(automationCompositionId, uuid, DeployState.UNDEPLOYED,
                 LockState.NONE, StateChangeResult.NO_ERROR, null);
         verify(automationComposiitonHandler).updateAutomationCompositionElementState(automationCompositionId, uuid,
-                DeployState.UNDEPLOYED, LockState.NONE, null);
+                DeployState.UNDEPLOYED, LockState.NONE, StateChangeResult.NO_ERROR, null);
 
         apiImpl.sendAcElementInfo(automationCompositionId, uuid, USE_STATE, OPERATIONAL_STATE, MAP);
         verify(automationComposiitonHandler).sendAcElementInfo(automationCompositionId, uuid, USE_STATE,
                 OPERATIONAL_STATE, MAP);
+
+        apiImpl.updateAutomationCompositionElementState(automationCompositionId, uuid, DeployState.DEPLOYED, null,
+                StateChangeResult.NO_ERROR, "");
+        verify(automationComposiitonHandler).updateAutomationCompositionElementState(automationCompositionId, uuid,
+                DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "");
     }
 }

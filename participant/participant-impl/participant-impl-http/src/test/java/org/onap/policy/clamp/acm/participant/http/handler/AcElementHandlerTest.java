@@ -54,11 +54,10 @@ class AcElementHandlerTest {
         var instanceId = commonTestData.getAutomationCompositionId();
         var element = commonTestData.getAutomationCompositionElement();
         var acElementId = element.getId();
+        var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
 
         try (var automationCompositionElementHandler =
-                new AutomationCompositionElementHandler(mock(AcHttpClient.class))) {
-            var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
-            automationCompositionElementHandler.setIntermediaryApi(participantIntermediaryApi);
+                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class))) {
             automationCompositionElementHandler.undeploy(instanceId, acElementId);
             verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, acElementId,
                     DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR, "");
@@ -72,8 +71,8 @@ class AcElementHandlerTest {
         var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
 
         try (var automationCompositionElementHandler =
-                new AutomationCompositionElementHandler(mock(AcHttpClient.class))) {
-            automationCompositionElementHandler.setIntermediaryApi(participantIntermediaryApi);
+                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class))) {
+
             Map<String, Object> map = new HashMap<>();
             automationCompositionElementHandler.deploy(instanceId, element, map);
             verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
@@ -89,8 +88,8 @@ class AcElementHandlerTest {
         var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
 
         try (var automationCompositionElementHandler =
-                new AutomationCompositionElementHandler(mock(AcHttpClient.class))) {
-            automationCompositionElementHandler.setIntermediaryApi(participantIntermediaryApi);
+                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class))) {
+
             Map<String, Object> map = new HashMap<>();
             map.put("httpHeaders", 1);
             automationCompositionElementHandler.deploy(instanceId, element, map);
@@ -108,9 +107,11 @@ class AcElementHandlerTest {
         map.putAll(element.getProperties());
         var instanceId = commonTestData.getAutomationCompositionId();
         var acHttpClient = mock(AcHttpClient.class);
-        try (var automationCompositionElementHandler = new AutomationCompositionElementHandler(acHttpClient)) {
-            var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
-            automationCompositionElementHandler.setIntermediaryApi(participantIntermediaryApi);
+        var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
+
+        try (var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(participantIntermediaryApi, acHttpClient)) {
+
             automationCompositionElementHandler.deploy(instanceId, element, map);
             verify(acHttpClient).run(any(ConfigRequest.class), anyMap());
             verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
@@ -123,11 +124,11 @@ class AcElementHandlerTest {
         var instanceId = commonTestData.getAutomationCompositionId();
         var element = commonTestData.getAutomationCompositionElement();
         var acElementId = element.getId();
+        var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
 
         try (var automationCompositionElementHandler =
-                new AutomationCompositionElementHandler(mock(AcHttpClient.class))) {
-            var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
-            automationCompositionElementHandler.setIntermediaryApi(participantIntermediaryApi);
+                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class))) {
+
             automationCompositionElementHandler.update(instanceId, element, Map.of());
             verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, acElementId,
                     DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Update not supported");
@@ -138,11 +139,11 @@ class AcElementHandlerTest {
     void testLock() throws Exception {
         var instanceId = commonTestData.getAutomationCompositionId();
         var acElementId = UUID.randomUUID();
+        var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
 
         try (var automationCompositionElementHandler =
-                new AutomationCompositionElementHandler(mock(AcHttpClient.class))) {
-            var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
-            automationCompositionElementHandler.setIntermediaryApi(participantIntermediaryApi);
+                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class))) {
+
             automationCompositionElementHandler.lock(instanceId, acElementId);
             verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, acElementId, null,
                     LockState.LOCKED, StateChangeResult.NO_ERROR, "Locked");
@@ -153,11 +154,11 @@ class AcElementHandlerTest {
     void testUnlock() throws Exception {
         var instanceId = commonTestData.getAutomationCompositionId();
         var acElementId = UUID.randomUUID();
+        var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
 
         try (var automationCompositionElementHandler =
-                new AutomationCompositionElementHandler(mock(AcHttpClient.class))) {
-            var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
-            automationCompositionElementHandler.setIntermediaryApi(participantIntermediaryApi);
+                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class))) {
+
             automationCompositionElementHandler.unlock(instanceId, acElementId);
             verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, acElementId, null,
                     LockState.UNLOCKED, StateChangeResult.NO_ERROR, "Unlocked");
@@ -168,11 +169,11 @@ class AcElementHandlerTest {
     void testDelete() throws Exception {
         var instanceId = commonTestData.getAutomationCompositionId();
         var acElementId = UUID.randomUUID();
+        var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
 
         try (var automationCompositionElementHandler =
-                new AutomationCompositionElementHandler(mock(AcHttpClient.class))) {
-            var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
-            automationCompositionElementHandler.setIntermediaryApi(participantIntermediaryApi);
+                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class))) {
+
             automationCompositionElementHandler.delete(instanceId, acElementId);
             verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, acElementId,
                     DeployState.DELETED, null, StateChangeResult.NO_ERROR, "Deleted");
@@ -182,11 +183,10 @@ class AcElementHandlerTest {
     @Test
     void testPrime() throws Exception {
         var compositionId = UUID.randomUUID();
+        var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
 
         try (var automationCompositionElementHandler =
-                new AutomationCompositionElementHandler(mock(AcHttpClient.class))) {
-            var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
-            automationCompositionElementHandler.setIntermediaryApi(participantIntermediaryApi);
+                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class))) {
 
             automationCompositionElementHandler.prime(compositionId, List.of());
             verify(participantIntermediaryApi).updateCompositionState(compositionId, AcTypeState.PRIMED,
@@ -197,11 +197,10 @@ class AcElementHandlerTest {
     @Test
     void testDeprime() throws Exception {
         var compositionId = UUID.randomUUID();
+        var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
 
         try (var automationCompositionElementHandler =
-                new AutomationCompositionElementHandler(mock(AcHttpClient.class))) {
-            var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
-            automationCompositionElementHandler.setIntermediaryApi(participantIntermediaryApi);
+                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class))) {
 
             automationCompositionElementHandler.deprime(compositionId);
             verify(participantIntermediaryApi).updateCompositionState(compositionId, AcTypeState.COMMISSIONED,
