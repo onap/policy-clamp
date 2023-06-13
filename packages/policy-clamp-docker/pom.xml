@@ -56,6 +56,11 @@
         </dependency>
         <dependency>
             <groupId>org.onap.policy.clamp.participant</groupId>
+            <artifactId>policy-clamp-participant-impl-simulator</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.onap.policy.clamp.participant</groupId>
             <artifactId>policy-clamp-participant-impl-policy</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -345,6 +350,39 @@
                                                     <include>org.onap.policy.clamp.participant:policy-clamp-acm-element-impl</include>
                                                 </includes>
                                                 <outputFileNameMapping>policy-clamp-acm-element-impl.jar</outputFileNameMapping>
+                                            </dependencySet>
+                                        </dependencySets>
+                                    </inline>
+                                </assembly>
+                            </build>
+                        </image>
+                        <image>
+                            <name>onap/policy-clamp-ac-sim-ppnt</name>
+                            <alias>onap-policy-clamp-ac-sim-ppnt</alias>
+                            <build>
+                                <cleanup>try</cleanup>
+                                <dockerFile>${docker.clamp-ac-sim-ppnt.dockerFile}</dockerFile>
+                                <contextDir>${docker.clamp-ac-sim-ppnt.contextDir}</contextDir>
+                                <tags>
+                                    <tag>${project.version}</tag>
+                                    <tag>${project.version}-${maven.build.timestamp}</tag>
+                                    <tag>${project.docker.latest.minmax.tag.version}</tag>
+                                </tags>
+                                <assembly>
+                                    <inline>
+                                        <dependencySets>
+                                            <dependencySet>
+                                                <includes>
+                                                    <include>org.onap.policy.clamp:policy-clamp-tarball</include>
+                                                </includes>
+                                                <outputDirectory>/lib</outputDirectory>
+                                                <outputFileNameMapping>sim-participant.tar.gz</outputFileNameMapping>
+                                            </dependencySet>
+                                            <dependencySet>
+                                                <includes>
+                                                    <include>org.onap.policy.clamp.participant:policy-clamp-participant-impl-simulator</include>
+                                                </includes>
+                                                <outputFileNameMapping>policy-clamp-participant-impl-sim.jar</outputFileNameMapping>
                                             </dependencySet>
                                         </dependencySets>
                                     </inline>
