@@ -1,0 +1,48 @@
+spring:
+  security:
+    user:
+      name: participantUser
+      password: zb!XztG34
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration
+
+security:
+  enable-csrf: false
+participant:
+  intermediaryParameters:
+    reportingTimeIntervalMs: 120000
+    description: Participant Description
+    participantId: ${participantId:101c62b3-8918-41b9-a747-d21eb79c6c90}
+    clampAutomationCompositionTopics:
+      topicSources:
+        - topic: POLICY-ACRUNTIME-PARTICIPANT
+          servers:
+            - ${topicServer:message-router}
+          topicCommInfrastructure: dmaap
+          fetchTimeout: 15000
+          useHttps: ${useHttps:true}
+      topicSinks:
+        - topic: POLICY-ACRUNTIME-PARTICIPANT
+          servers:
+            - ${topicServer:message-router}
+          topicCommInfrastructure: dmaap
+          useHttps: ${useHttps:true}
+    participantSupportedElementTypes:
+      -
+        typeName: ${supportedElementTypeName:org.onap.policy.clamp.acm.SimAutomationCompositionElement}
+        typeVersion: ${supportedElementTypeVersion:1.0.0}
+
+management:
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include: health, metrics, prometheus
+server:
+  port: 8087
+  servlet:
+    context-path: /onap/policy/clamp/acm/simparticipant
