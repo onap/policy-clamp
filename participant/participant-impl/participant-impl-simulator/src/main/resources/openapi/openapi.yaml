@@ -1,0 +1,339 @@
+openapi: 3.0.3
+info:
+  title: ACM Simulator Participant
+  description: CLAMP Automation Composition Management Simulator Participant API
+  contact:
+    name: ONAP Support
+    url: https://lists.onap.org/g/onap-discuss
+    email: onap-discuss@lists.onap.org
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0
+  version: '1.0'
+externalDocs:
+  description: CLAMP Automation Composition Management Documentation
+  url: https://docs.onap.org/projects/onap-policy-parent/en/latest/clamp/clamp.html
+tags:
+  - name: Simulator-participant-controller
+    description: Automation Composition Element Test Participant controller
+servers:
+  - url: http:{port}/{server}
+    variables:
+      port:
+        default: "8084"
+        description: This value is assigned by the service provider
+      server:
+        default: /onap/policy/clamp/acm/simparticipant
+        description: This value is assigned by the service provider
+paths:
+  /parameters:
+    get:
+      tags:
+        - Simulator-participant-controller
+      summary: Return all Parameters
+      description: Return all the parameters configured in the Simulator Participant
+      operationId: getConfig
+      parameters:
+      - name: X-onap-RequestId
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: OK, reutrns a serialised instance of
+            [SimConfig](https://github.com/onap/policy-clamp/blob/master/participant/participant-impl/policy-clamp-participant-impl-simulator/src/main/java/org/onap/policy/clamp/acm/participant/sim/model/SimConfig.java)
+          headers:
+            api-version:
+              schema:
+                type: string
+            X-LatestVersion:
+              schema:
+                type: string
+                description: Used only to communicate an API's latest version
+            X-PatchVersion:
+              schema:
+                type: string
+                description:
+                  Used only to communicate a PATCH version in a response for troubleshooting purposes only,
+                  and will not be provided by the client on request
+            X-MinorVersion:
+              schema:
+                type: string
+                description:
+                  Used to request or communicate a MINOR version back from the client
+                  to the server, and from the server back to the client
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+                description: Used to track REST transactions for logging purposes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimConfig'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/SimConfig'
+        401:
+          description: Authorization Error
+        500:
+          description: Internal Server Error
+      security:
+        - basicAuth: []
+    put:
+      tags:
+        - Simulator-participant-controller
+      summary: change the parameters
+      description: >-
+        Change the parameters the behaviour of the Simulator Participant
+      operationId: setConfig
+      parameters:
+        - name: X-ONAP-RequestID
+          in: header
+          description: RequestID for http transaction
+          required: false
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: The information for the behaviour in a serialised instance of
+            [SimConfig](https://github.com/onap/policy-clamp/blob/master/participant/participant-impl/policy-clamp-participant-impl-simulator/src/main/java/org/onap/policy/clamp/acm/participant/sim/model/SimConfig.java)
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SimConfig'
+          application/yaml:
+            schema:
+              $ref: '#/components/schemas/SimConfig'
+      responses:
+        200:
+          description: OK, the parameters has been saved
+          headers:
+            api-version:
+              schema:
+                type: string
+            X-LatestVersion:
+              schema:
+                type: string
+                description: Used only to communicate an API's latest version
+            X-PatchVersion:
+              schema:
+                type: string
+                description:
+                  Used only to communicate a PATCH version in a response for troubleshooting purposes only,
+                  and will not be provided by the client on request
+            X-MinorVersion:
+              schema:
+                type: string
+                description:
+                  Used to request or communicate a MINOR version back from the client
+                  to the server, and from the server back to the client
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+                description: Used to track REST transactions for logging purposes
+        400:
+          description: Bad Request
+        401:
+          description: Authorization Error
+        500:
+          description: Internal Server Error
+      security:
+        - basicAuth: []
+  /instances:
+    get:
+      tags:
+        - Simulator-participant-controller
+      summary: Query details of the requested automation composition instances
+      description: Query details of the requested automation composition instances for the given automation composition definition ID, returning
+        details of all its automation composition instances
+      operationId: getAutomationCompositions
+      parameters:
+      - name: X-onap-RequestId
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: Serialised instance of
+            [AutomationCompositions](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationCompositions.java)
+            containing a list of automation composition instances found
+          headers:
+            api-version:
+              schema:
+                type: string
+            X-LatestVersion:
+              schema:
+                type: string
+                description: Used only to communicate an API's latest version
+            X-PatchVersion:
+              schema:
+                type: string
+                description:
+                  Used only to communicate a PATCH version in a response for troubleshooting purposes only,
+                  and will not be provided by the client on request
+            X-MinorVersion:
+              schema:
+                type: string
+                description:
+                  Used to request or communicate a MINOR version back from the client
+                  to the server, and from the server back to the client
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+                description: Used to track REST transactions for logging purposes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AutomationCompositions'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/AutomationCompositions'
+        401:
+          description: Authorization Error
+        500:
+          description: Internal Server Error
+      security:
+        - basicAuth: []
+  /datas:
+    get:
+      tags:
+        - Simulator-participant-controller
+      summary: Query details of the requested internal datas
+      description: Query details of the requested internal datas
+      operationId: getDatas
+      parameters:
+      - name: X-onap-RequestId
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: Serialised instance of
+            [InternalDatas](https://github.com/onap/policy-clamp/blob/master/participant/participant-impl/policy-clamp-participant-impl-simulator/src/main/java/org/onap/policy/clamp/acm/participant/sim/model/InternalDatas.java)
+          headers:
+            api-version:
+              schema:
+                type: string
+            X-LatestVersion:
+              schema:
+                type: string
+                description: Used only to communicate an API's latest version
+            X-PatchVersion:
+              schema:
+                type: string
+                description:
+                  Used only to communicate a PATCH version in a response for troubleshooting purposes only,
+                  and will not be provided by the client on request
+            X-MinorVersion:
+              schema:
+                type: string
+                description:
+                  Used to request or communicate a MINOR version back from the client
+                  to the server, and from the server back to the client
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+                description: Used to track REST transactions for logging purposes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalDatas'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/InternalDatas'
+        401:
+          description: Authorization Error
+        500:
+          description: Internal Server Error
+      security:
+        - basicAuth: []
+    put:
+      tags:
+        - Simulator-participant-controller
+      summary: change the parameters
+      description: >-
+        Change the data of the Simulator Participant
+      operationId: setData
+      parameters:
+        - name: X-ONAP-RequestID
+          in: header
+          description: RequestID for http transaction
+          required: false
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: The data in a serialised instance of
+            [InternalData](https://github.com/onap/policy-clamp/blob/master/participant/participant-impl/policy-clamp-participant-impl-simulator/src/main/java/org/onap/policy/clamp/acm/participant/sim/model/InternalData.java)
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InternalData'
+          application/yaml:
+            schema:
+              $ref: '#/components/schemas/InternalData'
+      responses:
+        200:
+          description: OK, the data has been saved
+          headers:
+            api-version:
+              schema:
+                type: string
+            X-LatestVersion:
+              schema:
+                type: string
+                description: Used only to communicate an API's latest version
+            X-PatchVersion:
+              schema:
+                type: string
+                description:
+                  Used only to communicate a PATCH version in a response for troubleshooting purposes only,
+                  and will not be provided by the client on request
+            X-MinorVersion:
+              schema:
+                type: string
+                description:
+                  Used to request or communicate a MINOR version back from the client
+                  to the server, and from the server back to the client
+            X-onap-RequestId:
+              schema:
+                type: string
+                format: uuid
+                description: Used to track REST transactions for logging purposes
+        400:
+          description: Bad Request
+        401:
+          description: Authorization Error
+        500:
+          description: Internal Server Error
+      security:
+        - basicAuth: []
+
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+  schemas:
+    SimConfig:
+      title: SimConfig
+      type: object
+    AutomationCompositions:
+      title: AutomationCompositions
+      type: object
+    InternalDatas:
+      title: InternalDatas
+      type: object
+    InternalData:
+      title: InternalData
+      type: object
