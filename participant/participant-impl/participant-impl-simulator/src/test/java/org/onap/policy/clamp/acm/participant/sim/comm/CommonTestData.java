@@ -26,6 +26,8 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
 import org.onap.policy.clamp.acm.participant.sim.parameters.ParticipantSimParameters;
+import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.common.endpoints.parameters.TopicParameters;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
@@ -111,5 +113,33 @@ public class CommonTestData {
      */
     public static UUID getParticipantId() {
         return UUID.fromString("101c62b3-8918-41b9-a747-d21eb79c6c01");
+    }
+
+    /**
+     * Returns a Map of ToscaConceptIdentifier and AutomationComposition for test cases.
+     *
+     * @return automationCompositionMap
+     *
+     * @throws CoderException if there is an error with .json file.
+     */
+    public static Map<UUID, AutomationComposition> getTestAutomationCompositionMap() {
+        var automationComposition = getTestAutomationComposition();
+        return Map.of(automationComposition.getInstanceId(), automationComposition);
+    }
+
+    /**
+     * Returns List of AutomationComposition for test cases.
+     *
+     * @return AutomationCompositions
+     *
+     * @throws CoderException if there is an error with .json file.
+     */
+    public static AutomationComposition getTestAutomationComposition() {
+        var automationComposition = new AutomationComposition();
+        automationComposition.setInstanceId(UUID.randomUUID());
+        var element = new AutomationCompositionElement();
+        element.setId(UUID.randomUUID());
+        automationComposition.setElements(Map.of(element.getId(), element));
+        return automationComposition;
     }
 }

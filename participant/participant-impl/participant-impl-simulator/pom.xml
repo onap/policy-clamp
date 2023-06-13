@@ -34,6 +34,38 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>io.swagger.codegen.v3</groupId>
+                <artifactId>swagger-codegen-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>code-gen</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/openapi/openapi.yaml</inputSpec>
+                            <invokerPackage>org.onap.policy.clamp.acm.participant.sim.controller</invokerPackage>
+                            <apiPackage>org.onap.policy.clamp.acm.participant.sim.controller.genapi</apiPackage>
+                            <language>spring</language>
+                            <generateModels>false</generateModels>
+                            <generateSupportingFiles>false</generateSupportingFiles>
+                            <importMappings>
+                                AutomationCompositions=org.onap.policy.clamp.models.acm.concepts.AutomationCompositions,
+                                InternalDatas=org.onap.policy.clamp.acm.participant.sim.model.InternalDatas,
+                                InternalData=org.onap.policy.clamp.acm.participant.sim.model.InternalData,
+                                SimConfig=org.onap.policy.clamp.acm.participant.sim.model.SimConfig
+                            </importMappings>
+                            <configOptions>
+                                <sourceFolder>src/gen/java</sourceFolder>
+                                <dateLibrary>java11</dateLibrary>
+                                <interfaceOnly>true</interfaceOnly>
+                                <useTags>true</useTags>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <executions>
