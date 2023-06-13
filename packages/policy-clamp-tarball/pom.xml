@@ -67,6 +67,11 @@
             <artifactId>policy-clamp-acm-element-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.onap.policy.clamp.participant</groupId>
+            <artifactId>policy-clamp-participant-impl-simulator</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
