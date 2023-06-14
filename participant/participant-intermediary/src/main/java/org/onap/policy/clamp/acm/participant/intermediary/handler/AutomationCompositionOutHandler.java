@@ -26,6 +26,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeployAck;
+import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementInfo;
@@ -36,6 +37,7 @@ import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeployAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantPrimeAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -195,5 +197,26 @@ public class AutomationCompositionOutHandler {
         elementInfo.setUseState(element.getUseState());
         elementInfo.setOutProperties(element.getOutProperties());
         return elementInfo;
+    }
+
+    /**
+     * Update Composition State for prime and deprime.
+     *
+     * @param compositionId the composition id
+     * @param state the Composition State
+     * @param stateChangeResult the indicator if error occurs
+     * @param message the message
+     */
+    public void updateCompositionState(UUID compositionId, AcTypeState state, StateChangeResult stateChangeResult,
+            String message) {
+        var participantPrimeAck = new ParticipantPrimeAck();
+        participantPrimeAck.setCompositionId(compositionId);
+        participantPrimeAck.setMessage(message);
+        participantPrimeAck.setResult(true);
+        participantPrimeAck.setCompositionState(state);
+        participantPrimeAck.setStateChangeResult(stateChangeResult);
+        participantPrimeAck.setParticipantId(cacheProvider.getParticipantId());
+        participantPrimeAck.setState(ParticipantState.ON_LINE);
+        publisher.sendParticipantPrimeAck(participantPrimeAck);
     }
 }

@@ -28,6 +28,7 @@ import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationComposit
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeploy;
@@ -201,8 +202,7 @@ public class AutomationCompositionHandler {
     public void handleAutomationCompositionDeploy(AutomationCompositionDeploy deployMsg) {
 
         if (deployMsg.getParticipantUpdatesList().isEmpty()) {
-            LOGGER.warn("No AutomationCompositionElement deploy in message {}",
-                    deployMsg.getAutomationCompositionId());
+            LOGGER.warn("No AutomationCompositionElement deploy in message {}", deployMsg.getAutomationCompositionId());
             return;
         }
 
@@ -323,6 +323,33 @@ public class AutomationCompositionHandler {
             }
         } catch (PfModelException e) {
             LOGGER.debug("Automation composition element Unlock failed {}", automationComposition.getInstanceId());
+        }
+    }
+
+    /**
+     * Handles prime a Composition Definition.
+     *
+     * @param compositionId the compositionId
+     * @param list the list of AutomationCompositionElementDefinition
+     */
+    public void prime(UUID compositionId, List<AutomationCompositionElementDefinition> list) {
+        try {
+            listener.prime(compositionId, list);
+        } catch (PfModelException e) {
+            LOGGER.debug("Composition prime failed {}", compositionId);
+        }
+    }
+
+    /**
+     * Handles deprime a Composition Definition.
+     *
+     * @param compositionId the compositionId
+     */
+    public void deprime(UUID compositionId) {
+        try {
+            listener.deprime(compositionId);
+        } catch (PfModelException e) {
+            LOGGER.debug("Composition deprime failed {}", compositionId);
         }
     }
 }

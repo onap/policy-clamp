@@ -43,7 +43,6 @@ import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDe
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessage;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantPrime;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantPrimeAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegister;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegisterAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatus;
@@ -160,15 +159,16 @@ class ParticipantHandlerTest {
         var cacheProvider = mock(CacheProvider.class);
         when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
         var publisher = mock(ParticipantMessagePublisher.class);
-        var participantHandler = new ParticipantHandler(mock(AutomationCompositionHandler.class),
-                mock(AutomationCompositionOutHandler.class), publisher, cacheProvider);
+        var acHandler = mock(AutomationCompositionHandler.class);
+        var participantHandler = new ParticipantHandler(acHandler, mock(AutomationCompositionOutHandler.class),
+                publisher, cacheProvider);
 
         var participantPrime = new ParticipantPrime();
         participantPrime.setCompositionId(UUID.randomUUID());
         participantPrime.setParticipantDefinitionUpdates(List.of(createParticipantDefinition()));
         participantHandler.handleParticipantPrime(participantPrime);
         verify(cacheProvider).addElementDefinition(any(), any());
-        verify(publisher).sendParticipantPrimeAck(any(ParticipantPrimeAck.class));
+        verify(acHandler).prime(any(), any());
     }
 
     @Test
@@ -176,14 +176,15 @@ class ParticipantHandlerTest {
         var cacheProvider = mock(CacheProvider.class);
         when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
         var publisher = mock(ParticipantMessagePublisher.class);
-        var participantHandler = new ParticipantHandler(mock(AutomationCompositionHandler.class),
-                mock(AutomationCompositionOutHandler.class), publisher, cacheProvider);
+        var acHandler = mock(AutomationCompositionHandler.class);
+        var participantHandler = new ParticipantHandler(acHandler, mock(AutomationCompositionOutHandler.class),
+                publisher, cacheProvider);
         var participantPrime = new ParticipantPrime();
         var compositionId = UUID.randomUUID();
         participantPrime.setCompositionId(compositionId);
         participantHandler.handleParticipantPrime(participantPrime);
         verify(cacheProvider).removeElementDefinition(compositionId);
-        verify(publisher).sendParticipantPrimeAck(any(ParticipantPrimeAck.class));
+        verify(acHandler).deprime(compositionId);
     }
 
     @Test

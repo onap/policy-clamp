@@ -25,7 +25,6 @@ package org.onap.policy.clamp.acm.participant.intermediary.handler;
 import io.micrometer.core.annotation.Timed;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
@@ -39,7 +38,6 @@ import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDe
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDeregisterAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessage;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantPrime;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantPrimeAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegister;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegisterAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatus;
@@ -188,25 +186,12 @@ public class ParticipantHandler {
                 }
             }
             cacheProvider.addElementDefinition(participantPrimeMsg.getCompositionId(), list);
+            automationCompositionHandler.prime(participantPrimeMsg.getCompositionId(), list);
         } else {
             // deprime
             cacheProvider.removeElementDefinition(participantPrimeMsg.getCompositionId());
+            automationCompositionHandler.deprime(participantPrimeMsg.getCompositionId());
         }
-        sendParticipantPrimeAck(participantPrimeMsg.getMessageId(), participantPrimeMsg.getCompositionId());
-    }
-
-    /**
-     * Method to send ParticipantPrimeAck message to automation composition runtime.
-     */
-    private void sendParticipantPrimeAck(UUID messageId, UUID compositionId) {
-        var participantPrimeAck = new ParticipantPrimeAck();
-        participantPrimeAck.setResponseTo(messageId);
-        participantPrimeAck.setCompositionId(compositionId);
-        participantPrimeAck.setMessage("Participant Prime Ack message");
-        participantPrimeAck.setResult(true);
-        participantPrimeAck.setParticipantId(cacheProvider.getParticipantId());
-        participantPrimeAck.setState(ParticipantState.ON_LINE);
-        publisher.sendParticipantPrimeAck(participantPrimeAck);
     }
 
     /**

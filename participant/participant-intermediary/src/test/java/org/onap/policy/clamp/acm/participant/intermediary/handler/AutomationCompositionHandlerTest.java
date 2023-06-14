@@ -27,6 +27,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -35,6 +36,7 @@ import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationComposit
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeploy;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeployAck;
@@ -195,5 +197,26 @@ class AutomationCompositionHandlerTest {
         }
         ach.handleAutomationCompositionDeploy(deployMsg);
         verify(listener, times(automationComposition.getElements().size())).deploy(any(), any(), any());
+    }
+
+    @Test
+    void handleComposiotPrimeTest() throws PfModelException {
+        var listener = mock(AutomationCompositionElementListener.class);
+        var ach = new AutomationCompositionHandler(mock(CacheProvider.class), mock(ParticipantMessagePublisher.class),
+                listener);
+        var compositionId = UUID.randomUUID();
+        var list = List.of(new AutomationCompositionElementDefinition());
+        ach.prime(compositionId, list);
+        verify(listener).prime(compositionId, list);
+    }
+
+    @Test
+    void handleComposiotDeprimeTest() throws PfModelException {
+        var listener = mock(AutomationCompositionElementListener.class);
+        var ach = new AutomationCompositionHandler(mock(CacheProvider.class), mock(ParticipantMessagePublisher.class),
+                listener);
+        var compositionId = UUID.randomUUID();
+        ach.deprime(compositionId);
+        verify(listener).deprime(compositionId);
     }
 }
