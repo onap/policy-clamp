@@ -25,6 +25,7 @@ package org.onap.policy.clamp.models.acm.messages.dmaap.participant;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 
 /**
  * Class to represent the PARTICIPANT_PRIME_ACK message that registered participant sends to the ACM runtime.
@@ -33,6 +34,8 @@ import lombok.ToString;
 @Setter
 @ToString(callSuper = true)
 public class ParticipantPrimeAck extends ParticipantAckMessage {
+
+    private AcTypeState compositionState;
 
     /**
      * Constructor for instantiating ParticipantPrimeAck class with message name.

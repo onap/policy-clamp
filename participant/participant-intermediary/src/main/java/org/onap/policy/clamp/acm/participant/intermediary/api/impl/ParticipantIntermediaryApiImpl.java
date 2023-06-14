@@ -46,7 +46,6 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
     private final AutomationCompositionOutHandler automationCompositionHandler;
     private final CacheProvider cacheProvider;
 
-
     @Override
     public void updateAutomationCompositionElementState(UUID automationCompositionId, UUID id, DeployState newState,
             LockState lockState, StateChangeResult stateChangeResult, String message) {
@@ -69,6 +68,6 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
     @Override
     public void updateCompositionState(UUID compositionId, AcTypeState state, StateChangeResult stateChangeResult,
             String message) {
-        // TODO Auto-generated method stub
+        automationCompositionHandler.updateCompositionState(compositionId, state, stateChangeResult, message);
     }
 }
