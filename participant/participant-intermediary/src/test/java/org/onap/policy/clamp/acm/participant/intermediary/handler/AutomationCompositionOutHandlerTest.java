@@ -32,10 +32,12 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
+import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeployAck;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantPrimeAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatus;
 
 class AutomationCompositionOutHandlerTest {
@@ -135,8 +137,18 @@ class AutomationCompositionOutHandlerTest {
         when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
                 .thenReturn(automationComposition);
         var elementId = automationComposition.getElements().values().iterator().next().getId();
-        acOutHandler.sendAcElementInfo(automationComposition.getInstanceId(),
-                elementId, "", "", Map.of());
+        acOutHandler.sendAcElementInfo(automationComposition.getInstanceId(), elementId, "", "", Map.of());
         verify(publisher).sendParticipantStatus(any(ParticipantStatus.class));
+    }
+
+    @Test
+    void updateCompositionStateTest() {
+        var cacheProvider = mock(CacheProvider.class);
+        when(cacheProvider.getParticipantId()).thenReturn(UUID.randomUUID());
+        var publisher = mock(ParticipantMessagePublisher.class);
+        var acOutHandler = new AutomationCompositionOutHandler(publisher, cacheProvider);
+        acOutHandler.updateCompositionState(UUID.randomUUID(), AcTypeState.PRIMED, StateChangeResult.NO_ERROR,
+                "Primed");
+        verify(publisher).sendParticipantPrimeAck(any(ParticipantPrimeAck.class));
     }
 }
