@@ -32,6 +32,7 @@ import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
+import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantPrimeAck;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 
@@ -78,6 +79,32 @@ class SupervisionHandlerTest {
         var acDefinition = CommonTestData.createAcDefinition(
                 InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML), AcTypeState.PRIMING);
         participantPrimeAckMessage.setCompositionId(acDefinition.getCompositionId());
+        acDefinition.getElementStateMap().values().iterator().next()
+                .setParticipantId(CommonTestData.getParticipantId());
+
+        var acDefinitionProvider = mock(AcDefinitionProvider.class);
+        when(acDefinitionProvider.findAcDefinition(acDefinition.getCompositionId()))
+                .thenReturn(Optional.of(acDefinition));
+
+        var handler = new SupervisionHandler(acDefinitionProvider);
+
+        handler.handleParticipantMessage(participantPrimeAckMessage);
+        verify(acDefinitionProvider).findAcDefinition(any());
+        verify(acDefinitionProvider).updateAcDefinition(any());
+    }
+
+    @Test
+    void testParticipantPrimeAckFailed() {
+        var participantPrimeAckMessage = new ParticipantPrimeAck();
+        participantPrimeAckMessage.setParticipantId(CommonTestData.getParticipantId());
+        participantPrimeAckMessage.setState(ParticipantState.ON_LINE);
+        participantPrimeAckMessage.setStateChangeResult(StateChangeResult.FAILED);
+
+        var acDefinition = CommonTestData.createAcDefinition(
+                InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML), AcTypeState.PRIMING);
+        participantPrimeAckMessage.setCompositionId(acDefinition.getCompositionId());
+        acDefinition.getElementStateMap().values().iterator().next()
+                .setParticipantId(CommonTestData.getParticipantId());
 
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
         when(acDefinitionProvider.findAcDefinition(acDefinition.getCompositionId()))

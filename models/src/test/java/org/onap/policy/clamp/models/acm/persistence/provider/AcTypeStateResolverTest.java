@@ -24,6 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
+import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.PrimeOrder;
 
 class AcTypeStateResolverTest {
@@ -31,25 +32,26 @@ class AcTypeStateResolverTest {
     @Test
     void testAcTypeState() {
         var acTypeStateResolver = new AcTypeStateResolver();
-        var result = acTypeStateResolver.resolve(PrimeOrder.PRIME, AcTypeState.COMMISSIONED);
+        var result =
+                acTypeStateResolver.resolve(PrimeOrder.PRIME, AcTypeState.COMMISSIONED, StateChangeResult.NO_ERROR);
         assertThat(result).isEqualTo(PrimeOrder.PRIME);
-        result = acTypeStateResolver.resolve(PrimeOrder.PRIME, AcTypeState.PRIMED);
+        result = acTypeStateResolver.resolve(PrimeOrder.PRIME, AcTypeState.PRIMED, StateChangeResult.NO_ERROR);
         assertThat(result).isEqualTo(PrimeOrder.PRIME);
-        result = acTypeStateResolver.resolve(PrimeOrder.PRIME, AcTypeState.PRIMING);
+        result = acTypeStateResolver.resolve(PrimeOrder.PRIME, AcTypeState.PRIMING, StateChangeResult.NO_ERROR);
         assertThat(result).isEqualTo(PrimeOrder.NONE);
-        result = acTypeStateResolver.resolve(PrimeOrder.PRIME, AcTypeState.DEPRIMING);
+        result = acTypeStateResolver.resolve(PrimeOrder.PRIME, AcTypeState.DEPRIMING, StateChangeResult.NO_ERROR);
         assertThat(result).isEqualTo(PrimeOrder.NONE);
 
-        result = acTypeStateResolver.resolve(PrimeOrder.DEPRIME, AcTypeState.COMMISSIONED);
+        result = acTypeStateResolver.resolve(PrimeOrder.DEPRIME, AcTypeState.COMMISSIONED, StateChangeResult.NO_ERROR);
         assertThat(result).isEqualTo(PrimeOrder.DEPRIME);
-        result = acTypeStateResolver.resolve(PrimeOrder.DEPRIME, AcTypeState.PRIMED);
+        result = acTypeStateResolver.resolve(PrimeOrder.DEPRIME, AcTypeState.PRIMED, StateChangeResult.NO_ERROR);
         assertThat(result).isEqualTo(PrimeOrder.DEPRIME);
-        result = acTypeStateResolver.resolve(PrimeOrder.DEPRIME, AcTypeState.PRIMING);
+        result = acTypeStateResolver.resolve(PrimeOrder.DEPRIME, AcTypeState.PRIMING, StateChangeResult.NO_ERROR);
         assertThat(result).isEqualTo(PrimeOrder.NONE);
-        result = acTypeStateResolver.resolve(PrimeOrder.DEPRIME, AcTypeState.DEPRIMING);
+        result = acTypeStateResolver.resolve(PrimeOrder.DEPRIME, AcTypeState.DEPRIMING, StateChangeResult.NO_ERROR);
         assertThat(result).isEqualTo(PrimeOrder.NONE);
 
-        result = acTypeStateResolver.resolve(null, null);
+        result = acTypeStateResolver.resolve(null, null, null);
         assertThat(result).isEqualTo(PrimeOrder.NONE);
     }
 }

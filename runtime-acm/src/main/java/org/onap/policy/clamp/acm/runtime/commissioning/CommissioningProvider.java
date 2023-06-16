@@ -30,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantPrimePublisher;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
+import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.AcTypeStateUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.CommissioningResponse;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
@@ -180,7 +181,8 @@ public class CommissioningProvider {
             throw new PfModelRuntimeException(Status.BAD_REQUEST, "There are instances, Priming/Depriming not allowed");
         }
         var acmDefinition = acDefinitionProvider.getAcDefinition(compositionId);
-        var stateOrdered = acTypeStateResolver.resolve(acTypeStateUpdate.getPrimeOrder(), acmDefinition.getState());
+        var stateOrdered = acTypeStateResolver.resolve(acTypeStateUpdate.getPrimeOrder(), acmDefinition.getState(),
+                acmDefinition.getStateChangeResult());
         switch (stateOrdered) {
             case PRIME:
                 prime(acmDefinition);
@@ -197,21 +199,24 @@ public class CommissioningProvider {
     }
 
     private void prime(AutomationCompositionDefinition acmDefinition) {
-        var prearation = participantPrimePublisher.prepareParticipantPriming(acmDefinition);
+        acmDefinition.setStateChangeResult(StateChangeResult.NO_ERROR);
+        var preparation = participantPrimePublisher.prepareParticipantPriming(acmDefinition);
         acDefinitionProvider.updateAcDefinition(acmDefinition);
 
         executor.execute(
-                () -> participantPrimePublisher.sendPriming(prearation, acmDefinition.getCompositionId(), null));
+                () -> participantPrimePublisher.sendPriming(preparation, acmDefinition.getCompositionId(), null));
     }
 
     private void deprime(AutomationCompositionDefinition acmDefinition) {
-        if (!AcTypeState.COMMISSIONED.equals(acmDefinition.getState())) {
-            for (var elementState : acmDefinition.getElementStateMap().values()) {
+        acmDefinition.setStateChangeResult(StateChangeResult.NO_ERROR);
+        for (var elementState : acmDefinition.getElementStateMap().values()) {
+            if (elementState.getParticipantId() != null) {
                 elementState.setState(AcTypeState.DEPRIMING);
             }
-            acmDefinition.setState(AcTypeState.DEPRIMING);
-            acDefinitionProvider.updateAcDefinition(acmDefinition);
         }
+        acmDefinition.setState(AcTypeState.DEPRIMING);
+        acDefinitionProvider.updateAcDefinition(acmDefinition);
+
         executor.execute(() -> participantPrimePublisher.sendDepriming(acmDefinition.getCompositionId()));
     }
 

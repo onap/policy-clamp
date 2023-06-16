@@ -40,6 +40,8 @@ public class NodeTemplateState {
 
     private AcTypeState state;
 
+    private String message;
+
     /**
      * Copy constructor, does a deep copy but as all fields here are immutable, it's just a regular copy.
      *
@@ -50,5 +52,6 @@ public class NodeTemplateState {
         this.participantId = copyConstructor.participantId;
         this.nodeTemplateId = new ToscaConceptIdentifier(copyConstructor.nodeTemplateId);
         this.state = copyConstructor.state;
+        this.message = copyConstructor.message;
     }
 }

@@ -24,6 +24,8 @@ package org.onap.policy.clamp.acm.runtime.supervision;
 import io.micrometer.core.annotation.Timed;
 import lombok.AllArgsConstructor;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
+import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantPrimeAck;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.slf4j.Logger;
@@ -61,18 +63,34 @@ public class SupervisionHandler {
                     participantPrimeAckMessage.getCompositionId(), participantPrimeAckMessage.getParticipantId());
             return;
         }
-        var state = AcTypeState.PRIMING.equals(acDefinition.getState()) ? AcTypeState.PRIMED : AcTypeState.COMMISSIONED;
+        handleParticipantPrimeAck(participantPrimeAckMessage, acDefinition);
+    }
+
+    private void handleParticipantPrimeAck(ParticipantPrimeAck participantPrimeAckMessage,
+            AutomationCompositionDefinition acDefinition) {
+        var finalState =
+                AcTypeState.PRIMING.equals(acDefinition.getState()) ? AcTypeState.PRIMED : AcTypeState.COMMISSIONED;
+        var msgInErrors = StateChangeResult.FAILED.equals(participantPrimeAckMessage.getStateChangeResult());
+        boolean inProgress = !StateChangeResult.FAILED.equals(acDefinition.getStateChangeResult());
+        if (inProgress && msgInErrors) {
+            acDefinition.setStateChangeResult(StateChangeResult.FAILED);
+        }
+
         boolean completed = true;
         for (var element : acDefinition.getElementStateMap().values()) {
             if (participantPrimeAckMessage.getParticipantId().equals(element.getParticipantId())) {
-                element.setState(state);
-            } else if (!state.equals(element.getState())) {
+                element.setMessage(participantPrimeAckMessage.getMessage());
+                element.setState(participantPrimeAckMessage.getCompositionState());
+            }
+            if (!finalState.equals(element.getState())) {
                 completed = false;
             }
         }
-        if (completed) {
-            acDefinition.setState(state);
+
+        if (inProgress && !msgInErrors && completed) {
+            acDefinition.setState(finalState);
         }
         acDefinitionProvider.updateAcDefinition(acDefinition);
     }
+
 }
