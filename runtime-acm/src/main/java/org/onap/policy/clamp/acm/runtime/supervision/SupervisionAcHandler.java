@@ -78,8 +78,8 @@ public class SupervisionAcHandler {
         automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         var startPhase = ParticipantUtils.getFirstStartPhase(automationComposition, acDefinition.getServiceTemplate());
-        automationCompositionDeployPublisher.send(automationComposition, acDefinition.getServiceTemplate(), startPhase,
-                true);
+        automationCompositionDeployPublisher.send(automationComposition, acDefinition.getServiceTemplate(),
+                startPhase, true);
     }
 
     /**
@@ -207,24 +207,25 @@ public class SupervisionAcHandler {
     }
 
     private void setAcElementStateInDb(AutomationCompositionDeployAck automationCompositionAckMessage) {
-        var automationComposition = automationCompositionProvider
+        var automationCompositionOpt = automationCompositionProvider
                 .findAutomationComposition(automationCompositionAckMessage.getAutomationCompositionId());
-        if (automationComposition.isEmpty()) {
+        if (automationCompositionOpt.isEmpty()) {
             LOGGER.warn("AutomationComposition not found in database {}",
                     automationCompositionAckMessage.getAutomationCompositionId());
             return;
         }
+        var automationComposition = automationCompositionOpt.get();
 
         if (automationCompositionAckMessage.getAutomationCompositionResultMap() == null
                 || automationCompositionAckMessage.getAutomationCompositionResultMap().isEmpty()) {
-            if (DeployState.DELETING.equals(automationComposition.get().getDeployState())) {
+            if (DeployState.DELETING.equals(automationComposition.getDeployState())) {
                 // scenario when Automation Composition instance has never been deployed
-                for (var element : automationComposition.get().getElements().values()) {
+                for (var element : automationComposition.getElements().values()) {
                     if (element.getParticipantId().equals(automationCompositionAckMessage.getParticipantId())) {
                         element.setDeployState(DeployState.DELETED);
                     }
                 }
-                automationCompositionProvider.updateAutomationComposition(automationComposition.get());
+                automationCompositionProvider.updateAutomationComposition(automationComposition);
             } else {
                 LOGGER.warn("Empty AutomationCompositionResultMap  {} {}",
                         automationCompositionAckMessage.getAutomationCompositionId(),
@@ -233,11 +234,11 @@ public class SupervisionAcHandler {
             return;
         }
 
-        var updated = updateState(automationComposition.get(),
+        var updated = updateState(automationComposition,
                 automationCompositionAckMessage.getAutomationCompositionResultMap().entrySet(),
                 automationCompositionAckMessage.getStateChangeResult());
         if (updated) {
-            automationCompositionProvider.updateAutomationComposition(automationComposition.get());
+            automationCompositionProvider.updateAutomationComposition(automationComposition);
         }
     }
 
@@ -246,7 +247,10 @@ public class SupervisionAcHandler {
             StateChangeResult stateChangeResult) {
         var updated = false;
         var elementInErrors = StateChangeResult.FAILED.equals(stateChangeResult);
-        boolean inProgress = StateChangeResult.NO_ERROR.equals(automationComposition.getStateChangeResult());
+        boolean inProgress = !StateChangeResult.FAILED.equals(automationComposition.getStateChangeResult());
+        if (elementInErrors && inProgress) {
+            automationComposition.setStateChangeResult(StateChangeResult.FAILED);
+        }
 
         for (var acElementAck : automationCompositionResultSet) {
             var element = automationComposition.getElements().get(acElementAck.getKey());
@@ -255,15 +259,10 @@ public class SupervisionAcHandler {
                 element.setOutProperties(acElementAck.getValue().getOutProperties());
                 element.setOperationalState(acElementAck.getValue().getOperationalState());
                 element.setUseState(acElementAck.getValue().getUseState());
+                element.setDeployState(acElementAck.getValue().getDeployState());
+                element.setLockState(acElementAck.getValue().getLockState());
                 updated = true;
-                if (!elementInErrors || inProgress) {
-                    element.setDeployState(acElementAck.getValue().getDeployState());
-                    element.setLockState(acElementAck.getValue().getLockState());
-                }
             }
-        }
-        if (elementInErrors && inProgress) {
-            automationComposition.setStateChangeResult(stateChangeResult.FAILED);
         }
         return updated;
     }

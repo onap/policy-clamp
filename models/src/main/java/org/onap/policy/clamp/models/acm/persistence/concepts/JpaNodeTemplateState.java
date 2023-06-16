@@ -70,6 +70,9 @@ public class JpaNodeTemplateState extends Validated implements PfAuthorative<Nod
     @NotNull
     private AcTypeState state;
 
+    @Column
+    private String message;
+
     /**
      * The Default Constructor.
      */
@@ -96,6 +99,7 @@ public class JpaNodeTemplateState extends Validated implements PfAuthorative<Nod
         }
         this.nodeTemplateId = copyConcept.getNodeTemplateId().asConceptKey();
         this.state = copyConcept.getState();
+        this.message = copyConcept.getMessage();
     }
 
     @Override
@@ -107,6 +111,7 @@ public class JpaNodeTemplateState extends Validated implements PfAuthorative<Nod
         }
         nodeTemplateState.setNodeTemplateId(new ToscaConceptIdentifier(this.nodeTemplateId));
         nodeTemplateState.setState(this.state);
+        nodeTemplateState.setMessage(this.message);
         return nodeTemplateState;
     }
 }

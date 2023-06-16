@@ -44,6 +44,8 @@ public class AutomationCompositionDefinition {
     @NonNull
     private AcTypeState state;
 
+    private StateChangeResult stateChangeResult;
+
     @NonNull
     // Map used to store prime state with key as NodeTemplate Name and value as NodeTemplateState
     private Map<String, NodeTemplateState> elementStateMap = new HashMap<>();
@@ -58,5 +60,6 @@ public class AutomationCompositionDefinition {
         this.serviceTemplate = new ToscaServiceTemplate(otherAcmDefinition.serviceTemplate);
         this.state = otherAcmDefinition.state;
         this.elementStateMap = PfUtils.mapMap(otherAcmDefinition.elementStateMap, NodeTemplateState::new);
+        this.stateChangeResult = otherAcmDefinition.stateChangeResult;
     }
 }

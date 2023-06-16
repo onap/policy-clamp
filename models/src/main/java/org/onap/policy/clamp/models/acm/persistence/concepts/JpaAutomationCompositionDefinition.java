@@ -41,6 +41,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
+import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.document.base.ToscaServiceTemplateValidation;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplate;
 import org.onap.policy.common.parameters.BeanValidationResult;
@@ -76,6 +77,9 @@ public class JpaAutomationCompositionDefinition extends Validated
     @NotNull
     private AcTypeState state;
 
+    @Column
+    private StateChangeResult stateChangeResult;
+
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "compositionId", foreignKey = @ForeignKey(name = "dt_element_fk"))
     private Set<JpaNodeTemplateState> elements = new HashSet<>();
@@ -91,6 +95,7 @@ public class JpaAutomationCompositionDefinition extends Validated
         var acmDefinition = new AutomationCompositionDefinition();
         acmDefinition.setCompositionId(UUID.fromString(this.compositionId));
         acmDefinition.setState(this.state);
+        acmDefinition.setStateChangeResult(this.stateChangeResult);
         acmDefinition.setServiceTemplate(this.serviceTemplate.toAuthorative());
         for (var element : this.elements) {
             var key = element.getNodeTemplateId().getName();
@@ -103,6 +108,7 @@ public class JpaAutomationCompositionDefinition extends Validated
     public void fromAuthorative(final AutomationCompositionDefinition copyConcept) {
         this.compositionId = copyConcept.getCompositionId().toString();
         this.state = copyConcept.getState();
+        this.stateChangeResult = copyConcept.getStateChangeResult();
         this.serviceTemplate = new DocToscaServiceTemplate(copyConcept.getServiceTemplate());
         setName(this.serviceTemplate.getName());
         setVersion(this.serviceTemplate.getVersion());
