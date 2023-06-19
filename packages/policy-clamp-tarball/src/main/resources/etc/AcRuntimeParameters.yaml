@@ -41,9 +41,6 @@ runtime:
   participantParameters:
     heartBeatMs: 20000
     maxStatusWaitMs: 100000
-    updateParameters:
-      maxRetryCount: 3
-      maxWaitMs: 20000
   topicParameterGroup:
     topicSources:
       -

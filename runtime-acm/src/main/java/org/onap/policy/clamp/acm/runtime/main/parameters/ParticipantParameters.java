@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021,2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,7 @@
 
 package org.onap.policy.clamp.acm.runtime.main.parameters;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.validation.annotation.Validated;
@@ -38,8 +36,4 @@ public class ParticipantParameters {
 
     @Min(100)
     private long maxStatusWaitMs;
-
-    @Valid
-    @NotNull
-    private ParticipantUpdateParameters updateParameters;
 }
