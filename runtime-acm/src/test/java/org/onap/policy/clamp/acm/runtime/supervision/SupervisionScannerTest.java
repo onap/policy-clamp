@@ -80,7 +80,7 @@ class SupervisionScannerTest {
         var supervisionScanner = new SupervisionScanner(automationCompositionProvider, acDefinitionProvider,
                 automationCompositionStateChangePublisher, automationCompositionDeployPublisher,
                 acRuntimeParameterGroup);
-        supervisionScanner.run(false);
+        supervisionScanner.run();
 
         verify(automationCompositionProvider, times(0)).updateAutomationComposition(any(AutomationComposition.class));
     }
@@ -101,7 +101,7 @@ class SupervisionScannerTest {
         var supervisionScanner = new SupervisionScanner(automationCompositionProvider, acDefinitionProvider,
                 automationCompositionStateChangePublisher, automationCompositionDeployPublisher,
                 acRuntimeParameterGroup);
-        supervisionScanner.run(false);
+        supervisionScanner.run();
 
         verify(automationCompositionProvider).updateAutomationComposition(any(AutomationComposition.class));
     }
@@ -123,7 +123,7 @@ class SupervisionScannerTest {
         var supervisionScanner = new SupervisionScanner(automationCompositionProvider, acDefinitionProvider,
                 automationCompositionStateChangePublisher, automationCompositionDeployPublisher,
                 acRuntimeParameterGroup);
-        supervisionScanner.run(false);
+        supervisionScanner.run();
 
         verify(automationCompositionProvider).deleteAutomationComposition(automationComposition.getInstanceId());
     }
@@ -143,12 +143,12 @@ class SupervisionScannerTest {
                 automationCompositionStateChangePublisher, automationCompositionDeployPublisher,
                 acRuntimeParameterGroup);
 
-        supervisionScanner.run(true);
+        supervisionScanner.run();
         verify(automationCompositionProvider, times(0)).updateAutomationComposition(any(AutomationComposition.class));
     }
 
     @Test
-    void testScannerForCounterHandling() {
+    void testScannerForTimeout() {
         var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
         automationComposition.setDeployState(DeployState.DEPLOYING);
         automationComposition.setLockState(LockState.NONE);
@@ -164,21 +164,12 @@ class SupervisionScannerTest {
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
         acRuntimeParameterGroup.getParticipantParameters().setMaxStatusWaitMs(-1);
 
-        //verify retry scenario
-        var scannerObj1 = new SupervisionScanner(automationCompositionProvider, acDefinitionProvider,
-                automationCompositionStateChangePublisher, automationCompositionDeployPublisher,
-                acRuntimeParameterGroup);
-
-        scannerObj1.run(true);
-        verify(automationCompositionProvider, times(0)).updateAutomationComposition(any(AutomationComposition.class));
-
         //verify timeout scenario
-        acRuntimeParameterGroup.getParticipantParameters().getUpdateParameters().setMaxRetryCount(0);
         var scannerObj2 = new SupervisionScanner(automationCompositionProvider, acDefinitionProvider,
                 automationCompositionStateChangePublisher, automationCompositionDeployPublisher,
                 acRuntimeParameterGroup);
 
-        scannerObj2.run(true);
+        scannerObj2.run();
         verify(automationCompositionProvider, times(1)).updateAutomationComposition(any(AutomationComposition.class));
 
     }
@@ -211,7 +202,7 @@ class SupervisionScannerTest {
                 automationCompositionStateChangePublisher, automationCompositionDeployPublisher,
                 acRuntimeParameterGroup);
 
-        supervisionScanner.run(false);
+        supervisionScanner.run();
 
         verify(automationCompositionDeployPublisher).send(any(AutomationComposition.class),
                 any(ToscaServiceTemplate.class), anyInt(), anyBoolean());
@@ -245,7 +236,7 @@ class SupervisionScannerTest {
                 automationCompositionStateChangePublisher, automationCompositionDeployPublisher,
                 acRuntimeParameterGroup);
 
-        supervisionScanner.run(false);
+        supervisionScanner.run();
 
         verify(automationCompositionStateChangePublisher).send(any(AutomationComposition.class), anyInt(),
                 anyBoolean());
