@@ -55,6 +55,9 @@ public class CacheProvider {
     private final Map<UUID, Map<ToscaConceptIdentifier, AutomationCompositionElementDefinition>> acElementsDefinitions =
             new ConcurrentHashMap<>();
 
+    @Getter
+    private final Map<UUID, UUID> msgIdentification = new ConcurrentHashMap<>();
+
     /**
      * Constructor.
      *

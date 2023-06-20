@@ -24,13 +24,13 @@ package org.onap.policy.clamp.acm.participant.intermediary.handler;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
+import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeploy;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeployAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionStateChange;
@@ -39,7 +39,6 @@ import org.onap.policy.clamp.models.acm.messages.dmaap.participant.PropertiesUpd
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.LockOrder;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcInstanceStateResolver;
-import org.onap.policy.models.base.PfModelException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -53,7 +52,7 @@ public class AutomationCompositionHandler {
 
     private final CacheProvider cacheProvider;
     private final ParticipantMessagePublisher publisher;
-    private final AutomationCompositionElementListener listener;
+    private final ThreadHandler listener;
     private final AcInstanceStateResolver acInstanceStateResolver;
 
     /**
@@ -64,7 +63,7 @@ public class AutomationCompositionHandler {
      * @param listener the ThreadHandler Listener
      */
     public AutomationCompositionHandler(CacheProvider cacheProvider, ParticipantMessagePublisher publisher,
-            AutomationCompositionElementListener listener) {
+            ThreadHandler listener) {
         this.cacheProvider = cacheProvider;
         this.publisher = publisher;
         this.listener = listener;
@@ -84,17 +83,20 @@ public class AutomationCompositionHandler {
         var automationComposition = cacheProvider.getAutomationComposition(stateChangeMsg.getAutomationCompositionId());
 
         if (automationComposition == null) {
-            var automationCompositionAck =
-                    new AutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_STATECHANGE_ACK);
-            automationCompositionAck.setParticipantId(cacheProvider.getParticipantId());
-            automationCompositionAck.setMessage("Automation composition " + stateChangeMsg.getAutomationCompositionId()
-                    + " does not use this participant " + cacheProvider.getParticipantId());
-            automationCompositionAck.setResult(false);
-            automationCompositionAck.setResponseTo(stateChangeMsg.getMessageId());
-            automationCompositionAck.setAutomationCompositionId(stateChangeMsg.getAutomationCompositionId());
-            publisher.sendAutomationCompositionAck(automationCompositionAck);
-            LOGGER.debug("Automation composition {} does not use this participant",
-                    stateChangeMsg.getAutomationCompositionId());
+            if (DeployOrder.DELETE.equals(stateChangeMsg.getDeployOrderedState())) {
+                var automationCompositionAck = new AutomationCompositionDeployAck(
+                        ParticipantMessageType.AUTOMATION_COMPOSITION_STATECHANGE_ACK);
+                automationCompositionAck.setParticipantId(cacheProvider.getParticipantId());
+                automationCompositionAck.setMessage("Already deleted or never used");
+                automationCompositionAck.setResult(true);
+                automationCompositionAck.setStateChangeResult(StateChangeResult.NO_ERROR);
+                automationCompositionAck.setResponseTo(stateChangeMsg.getMessageId());
+                automationCompositionAck.setAutomationCompositionId(stateChangeMsg.getAutomationCompositionId());
+                publisher.sendAutomationCompositionAck(automationCompositionAck);
+            } else {
+                LOGGER.debug("Automation composition {} does not use this participant",
+                        stateChangeMsg.getAutomationCompositionId());
+            }
             return;
         }
 
@@ -106,18 +108,18 @@ public class AutomationCompositionHandler {
         }
 
         if (DeployOrder.NONE.equals(stateChangeMsg.getDeployOrderedState())) {
-            handleLockOrderState(automationComposition, stateChangeMsg.getLockOrderedState(),
-                    stateChangeMsg.getStartPhase());
+            handleLockOrderState(stateChangeMsg.getMessageId(), automationComposition,
+                    stateChangeMsg.getLockOrderedState(), stateChangeMsg.getStartPhase());
         } else {
-            handleDeployOrderState(automationComposition, stateChangeMsg.getDeployOrderedState(),
-                    stateChangeMsg.getStartPhase());
+            handleDeployOrderState(stateChangeMsg.getMessageId(), automationComposition,
+                    stateChangeMsg.getDeployOrderedState(), stateChangeMsg.getStartPhase());
         }
     }
 
     private boolean checkConsistantOrderState(AutomationComposition automationComposition, DeployOrder deployOrder,
             LockOrder lockOrder) {
         if (DeployOrder.UPDATE.equals(deployOrder)) {
-            return false;
+            return true;
         }
         return acInstanceStateResolver.resolve(deployOrder, lockOrder, automationComposition.getDeployState(),
                 automationComposition.getLockState(), automationComposition.getStateChangeResult()) != null;
@@ -126,19 +128,20 @@ public class AutomationCompositionHandler {
     /**
      * Method to handle state changes.
      *
+     * @param messageId the messageId
      * @param automationComposition participant response
      * @param orderedState automation composition ordered state
      * @param startPhaseMsg startPhase from message
      */
-    private void handleDeployOrderState(final AutomationComposition automationComposition, DeployOrder orderedState,
-            Integer startPhaseMsg) {
+    private void handleDeployOrderState(UUID messageId, final AutomationComposition automationComposition,
+            DeployOrder orderedState, Integer startPhaseMsg) {
 
         switch (orderedState) {
             case UNDEPLOY:
-                handleUndeployState(automationComposition, startPhaseMsg);
+                handleUndeployState(messageId, automationComposition, startPhaseMsg);
                 break;
             case DELETE:
-                handleDeleteState(automationComposition, startPhaseMsg);
+                handleDeleteState(messageId, automationComposition, startPhaseMsg);
                 break;
 
             default:
@@ -150,19 +153,20 @@ public class AutomationCompositionHandler {
     /**
      * Method to handle state changes.
      *
+     * @param messageId the messageId
      * @param automationComposition participant response
      * @param orderedState automation composition ordered state
      * @param startPhaseMsg startPhase from message
      */
-    private void handleLockOrderState(final AutomationComposition automationComposition, LockOrder orderedState,
-            Integer startPhaseMsg) {
+    private void handleLockOrderState(UUID messageId, final AutomationComposition automationComposition,
+            LockOrder orderedState, Integer startPhaseMsg) {
 
         switch (orderedState) {
             case LOCK:
-                handleLockState(automationComposition, startPhaseMsg);
+                handleLockState(messageId, automationComposition, startPhaseMsg);
                 break;
             case UNLOCK:
-                handleUnlockState(automationComposition, startPhaseMsg);
+                handleUnlockState(messageId, automationComposition, startPhaseMsg);
                 break;
             default:
                 LOGGER.error("StateChange message has no state, state is null {}", automationComposition.getKey());
@@ -188,7 +192,7 @@ public class AutomationCompositionHandler {
 
                 updateExistingElementsOnThisParticipant(updateMsg.getAutomationCompositionId(), participantDeploy);
 
-                callParticipantUpdateProperty(participantDeploy.getAcElementList(),
+                callParticipantUpdateProperty(updateMsg.getMessageId(), participantDeploy.getAcElementList(),
                         updateMsg.getAutomationCompositionId());
             }
         }
@@ -212,35 +216,28 @@ public class AutomationCompositionHandler {
                     cacheProvider.initializeAutomationComposition(deployMsg.getCompositionId(),
                             deployMsg.getAutomationCompositionId(), participantDeploy);
                 }
-                callParticipanDeploy(participantDeploy.getAcElementList(), deployMsg.getStartPhase(),
-                        deployMsg.getAutomationCompositionId());
+                callParticipanDeploy(deployMsg.getMessageId(), participantDeploy.getAcElementList(),
+                        deployMsg.getStartPhase(), deployMsg.getAutomationCompositionId());
             }
         }
     }
 
-    private void callParticipanDeploy(List<AcElementDeploy> acElements, Integer startPhaseMsg, UUID instanceId) {
-        try {
-            for (var element : acElements) {
-                var commonProperties = cacheProvider.getCommonProperties(instanceId, element.getId());
-                int startPhase = ParticipantUtils.findStartPhase(commonProperties);
-                if (startPhaseMsg.equals(startPhase)) {
-                    var map = new HashMap<>(commonProperties);
-                    map.putAll(element.getProperties());
-                    listener.deploy(instanceId, element, map);
-                }
+    private void callParticipanDeploy(UUID messageId, List<AcElementDeploy> acElements, Integer startPhaseMsg,
+            UUID instanceId) {
+        for (var element : acElements) {
+            var commonProperties = cacheProvider.getCommonProperties(instanceId, element.getId());
+            int startPhase = ParticipantUtils.findStartPhase(commonProperties);
+            if (startPhaseMsg.equals(startPhase)) {
+                var map = new HashMap<>(commonProperties);
+                map.putAll(element.getProperties());
+                listener.deploy(messageId, instanceId, element, map);
             }
-        } catch (PfModelException e) {
-            LOGGER.debug("Automation composition element Deploy failed {}", instanceId);
         }
     }
 
-    private void callParticipantUpdateProperty(List<AcElementDeploy> acElements, UUID instanceId) {
-        try {
-            for (var element : acElements) {
-                listener.update(instanceId, element, element.getProperties());
-            }
-        } catch (PfModelException e) {
-            LOGGER.debug("Automation composition element update failed {}", instanceId);
+    private void callParticipantUpdateProperty(UUID messageId, List<AcElementDeploy> acElements, UUID instanceId) {
+        for (var element : acElements) {
+            listener.update(messageId, instanceId, element, element.getProperties());
         }
     }
 
@@ -255,101 +252,86 @@ public class AutomationCompositionHandler {
     /**
      * Method to handle when the new state from participant is UNINITIALISED state.
      *
+     * @param messageId the messageId
      * @param automationComposition participant response
      * @param startPhaseMsg startPhase from message
      */
-    private void handleUndeployState(final AutomationComposition automationComposition, Integer startPhaseMsg) {
-        try {
-            for (var acElement : automationComposition.getElements().values()) {
-                int startPhase = ParticipantUtils.findStartPhase(
-                        cacheProvider.getCommonProperties(automationComposition.getInstanceId(), acElement.getId()));
-                if (startPhaseMsg.equals(startPhase)) {
-                    listener.undeploy(automationComposition.getInstanceId(), acElement.getId());
-                }
+    private void handleUndeployState(UUID messageId, final AutomationComposition automationComposition,
+            Integer startPhaseMsg) {
+        for (var acElement : automationComposition.getElements().values()) {
+            int startPhase = ParticipantUtils.findStartPhase(
+                    cacheProvider.getCommonProperties(automationComposition.getInstanceId(), acElement.getId()));
+            if (startPhaseMsg.equals(startPhase)) {
+                listener.undeploy(messageId, automationComposition.getInstanceId(), acElement.getId());
             }
-        } catch (PfModelException e) {
-            LOGGER.debug("Automation composition element Undeploy failed {}", automationComposition.getInstanceId());
         }
     }
 
-    private void handleDeleteState(final AutomationComposition automationComposition, Integer startPhaseMsg) {
-        try {
-            for (var acElement : automationComposition.getElements().values()) {
-                int startPhase = ParticipantUtils.findStartPhase(
-                        cacheProvider.getCommonProperties(automationComposition.getInstanceId(), acElement.getId()));
-                if (startPhaseMsg.equals(startPhase)) {
-                    listener.delete(automationComposition.getInstanceId(), acElement.getId());
-                }
+    private void handleDeleteState(UUID messageId, final AutomationComposition automationComposition,
+            Integer startPhaseMsg) {
+        for (var acElement : automationComposition.getElements().values()) {
+            int startPhase = ParticipantUtils.findStartPhase(
+                    cacheProvider.getCommonProperties(automationComposition.getInstanceId(), acElement.getId()));
+            if (startPhaseMsg.equals(startPhase)) {
+                listener.delete(messageId, automationComposition.getInstanceId(), acElement.getId());
             }
-        } catch (PfModelException e) {
-            LOGGER.debug("Automation composition element Delete failed {}", automationComposition.getInstanceId());
         }
     }
 
     /**
      * Method to handle when the new state from participant is PASSIVE state.
      *
+     * @param messageId the messageId
      * @param automationComposition participant response
      * @param startPhaseMsg startPhase from message
      */
-    private void handleLockState(final AutomationComposition automationComposition, Integer startPhaseMsg) {
-        try {
-            for (var acElement : automationComposition.getElements().values()) {
-                int startPhase = ParticipantUtils.findStartPhase(
-                        cacheProvider.getCommonProperties(automationComposition.getInstanceId(), acElement.getId()));
-                if (startPhaseMsg.equals(startPhase)) {
-                    listener.lock(automationComposition.getInstanceId(), acElement.getId());
-                }
+    private void handleLockState(UUID messageId, final AutomationComposition automationComposition,
+            Integer startPhaseMsg) {
+        for (var acElement : automationComposition.getElements().values()) {
+            int startPhase = ParticipantUtils.findStartPhase(
+                    cacheProvider.getCommonProperties(automationComposition.getInstanceId(), acElement.getId()));
+            if (startPhaseMsg.equals(startPhase)) {
+                listener.lock(messageId, automationComposition.getInstanceId(), acElement.getId());
             }
-        } catch (PfModelException e) {
-            LOGGER.debug("Automation composition element Lock failed {}", automationComposition.getInstanceId());
         }
     }
 
     /**
      * Method to handle when the new state from participant is RUNNING state.
      *
+     * @param messageId the messageId
      * @param automationComposition participant response
      * @param startPhaseMsg startPhase from message
      */
-    private void handleUnlockState(final AutomationComposition automationComposition, Integer startPhaseMsg) {
-        try {
-            for (var acElement : automationComposition.getElements().values()) {
-                int startPhase = ParticipantUtils.findStartPhase(
-                        cacheProvider.getCommonProperties(automationComposition.getInstanceId(), acElement.getId()));
-                if (startPhaseMsg.equals(startPhase)) {
-                    listener.unlock(automationComposition.getInstanceId(), acElement.getId());
-                }
+    private void handleUnlockState(UUID messageId, final AutomationComposition automationComposition,
+            Integer startPhaseMsg) {
+        for (var acElement : automationComposition.getElements().values()) {
+            int startPhase = ParticipantUtils.findStartPhase(
+                    cacheProvider.getCommonProperties(automationComposition.getInstanceId(), acElement.getId()));
+            if (startPhaseMsg.equals(startPhase)) {
+                listener.unlock(messageId, automationComposition.getInstanceId(), acElement.getId());
             }
-        } catch (PfModelException e) {
-            LOGGER.debug("Automation composition element Unlock failed {}", automationComposition.getInstanceId());
         }
     }
 
     /**
      * Handles prime a Composition Definition.
      *
+     * @param messageId the messageId
      * @param compositionId the compositionId
      * @param list the list of AutomationCompositionElementDefinition
      */
-    public void prime(UUID compositionId, List<AutomationCompositionElementDefinition> list) {
-        try {
-            listener.prime(compositionId, list);
-        } catch (PfModelException e) {
-            LOGGER.debug("Composition prime failed {}", compositionId);
-        }
+    public void prime(UUID messageId, UUID compositionId, List<AutomationCompositionElementDefinition> list) {
+        listener.prime(messageId, compositionId, list);
     }
 
     /**
      * Handles deprime a Composition Definition.
      *
+     * @param messageId the messageId
      * @param compositionId the compositionId
      */
-    public void deprime(UUID compositionId) {
-        try {
-            listener.deprime(compositionId);
-        } catch (PfModelException e) {
-            LOGGER.debug("Composition deprime failed {}", compositionId);
-        }
+    public void deprime(UUID messageId, UUID compositionId) {
+        listener.deprime(messageId, compositionId);
     }
 }

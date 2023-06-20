@@ -37,7 +37,7 @@ public interface AutomationCompositionElementListener {
      * @param automationCompositionElementId the ID of the automation composition element
      * @throws PfModelException in case of a model exception
      */
-    public void undeploy(UUID automationCompositionId, UUID automationCompositionElementId) throws PfModelException;
+    void undeploy(UUID automationCompositionId, UUID automationCompositionElementId) throws PfModelException;
 
     /**
      * Handle an update on a automation composition element.
@@ -47,20 +47,20 @@ public interface AutomationCompositionElementListener {
      * @param properties properties Map
      * @throws PfModelException from Policy framework
      */
-    public void deploy(UUID automationCompositionId, AcElementDeploy element, Map<String, Object> properties)
+    void deploy(UUID automationCompositionId, AcElementDeploy element, Map<String, Object> properties)
             throws PfModelException;
 
-    public void lock(UUID automationCompositionId, UUID automationCompositionElementId) throws PfModelException;
+    void lock(UUID automationCompositionId, UUID automationCompositionElementId) throws PfModelException;
 
-    public void unlock(UUID automationCompositionId, UUID automationCompositionElementId) throws PfModelException;
+    void unlock(UUID automationCompositionId, UUID automationCompositionElementId) throws PfModelException;
 
-    public void delete(UUID automationCompositionId, UUID automationCompositionElementId) throws PfModelException;
+    void delete(UUID automationCompositionId, UUID automationCompositionElementId) throws PfModelException;
 
-    public void update(UUID automationCompositionId, AcElementDeploy element, Map<String, Object> properties)
+    void update(UUID automationCompositionId, AcElementDeploy element, Map<String, Object> properties)
             throws PfModelException;
 
-    public void prime(UUID compositionId, List<AutomationCompositionElementDefinition> elementDefinitionList)
+    void prime(UUID compositionId, List<AutomationCompositionElementDefinition> elementDefinitionList)
             throws PfModelException;
 
-    public void deprime(UUID compositionId) throws PfModelException;
+    void deprime(UUID compositionId) throws PfModelException;
 }

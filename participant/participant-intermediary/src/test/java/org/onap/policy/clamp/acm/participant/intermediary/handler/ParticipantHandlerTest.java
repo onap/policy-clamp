@@ -158,17 +158,20 @@ class ParticipantHandlerTest {
     void handleParticipantPrimeTest() {
         var cacheProvider = mock(CacheProvider.class);
         when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
+
+        var participantPrime = new ParticipantPrime();
+        participantPrime.setCompositionId(UUID.randomUUID());
+        participantPrime.setMessageId(UUID.randomUUID());
+        participantPrime.setParticipantDefinitionUpdates(List.of(createParticipantDefinition()));
+
         var publisher = mock(ParticipantMessagePublisher.class);
         var acHandler = mock(AutomationCompositionHandler.class);
         var participantHandler = new ParticipantHandler(acHandler, mock(AutomationCompositionOutHandler.class),
                 publisher, cacheProvider);
 
-        var participantPrime = new ParticipantPrime();
-        participantPrime.setCompositionId(UUID.randomUUID());
-        participantPrime.setParticipantDefinitionUpdates(List.of(createParticipantDefinition()));
         participantHandler.handleParticipantPrime(participantPrime);
         verify(cacheProvider).addElementDefinition(any(), any());
-        verify(acHandler).prime(any(), any());
+        verify(acHandler).prime(any(), any(), any());
     }
 
     @Test
@@ -182,9 +185,11 @@ class ParticipantHandlerTest {
         var participantPrime = new ParticipantPrime();
         var compositionId = UUID.randomUUID();
         participantPrime.setCompositionId(compositionId);
+        var messageId = UUID.randomUUID();
+        participantPrime.setMessageId(messageId);
         participantHandler.handleParticipantPrime(participantPrime);
         verify(cacheProvider).removeElementDefinition(compositionId);
-        verify(acHandler).deprime(compositionId);
+        verify(acHandler).deprime(messageId, compositionId);
     }
 
     @Test
