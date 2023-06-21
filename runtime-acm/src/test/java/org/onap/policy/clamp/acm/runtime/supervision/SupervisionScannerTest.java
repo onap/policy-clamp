@@ -33,17 +33,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionDeployPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionStateChangePublisher;
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
+import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
@@ -52,18 +53,52 @@ class SupervisionScannerTest {
 
     private static final String AC_JSON = "src/test/resources/rest/acm/AutomationCompositionSmoke.json";
 
-    private static final AcDefinitionProvider acDefinitionProvider = mock(AcDefinitionProvider.class);
+    private static final UUID compositionId = UUID.randomUUID();
 
-    private static UUID compositionId;
-
-    @BeforeAll
-    public static void setUpBeforeAll() {
+    private AcDefinitionProvider createAcDefinitionProvider(AcTypeState acTypeState,
+            StateChangeResult stateChangeResult) {
         var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
         var acDefinition = new AutomationCompositionDefinition();
-        compositionId = UUID.randomUUID();
+        acDefinition.setState(acTypeState);
+        acDefinition.setStateChangeResult(stateChangeResult);
         acDefinition.setCompositionId(compositionId);
         acDefinition.setServiceTemplate(serviceTemplate);
+        var acDefinitionProvider = mock(AcDefinitionProvider.class);
         when(acDefinitionProvider.getAllAcDefinitions()).thenReturn(List.of(Objects.requireNonNull(acDefinition)));
+        return acDefinitionProvider;
+    }
+
+    private AcDefinitionProvider createAcDefinitionProvider() {
+        return createAcDefinitionProvider(AcTypeState.PRIMED, StateChangeResult.NO_ERROR);
+    }
+
+    @Test
+    void testScannerOrderedFailed() {
+        var acDefinitionProvider = createAcDefinitionProvider(AcTypeState.PRIMING, StateChangeResult.FAILED);
+        var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
+        var supervisionScanner = new SupervisionScanner(mock(AutomationCompositionProvider.class), acDefinitionProvider,
+                mock(AutomationCompositionStateChangePublisher.class), mock(AutomationCompositionDeployPublisher.class),
+                acRuntimeParameterGroup);
+        supervisionScanner.run();
+        verify(acDefinitionProvider, times(0)).updateAcDefinition(any(AutomationCompositionDefinition.class));
+    }
+
+    @Test
+    void testScannerOrderedPriming() {
+        var acDefinitionProvider = createAcDefinitionProvider(AcTypeState.PRIMING, StateChangeResult.NO_ERROR);
+        var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
+        var supervisionScanner = new SupervisionScanner(mock(AutomationCompositionProvider.class), acDefinitionProvider,
+                mock(AutomationCompositionStateChangePublisher.class), mock(AutomationCompositionDeployPublisher.class),
+                acRuntimeParameterGroup);
+        supervisionScanner.run();
+        verify(acDefinitionProvider, times(0)).updateAcDefinition(any(AutomationCompositionDefinition.class));
+
+        acRuntimeParameterGroup.getParticipantParameters().setMaxStatusWaitMs(-1);
+        supervisionScanner = new SupervisionScanner(mock(AutomationCompositionProvider.class), acDefinitionProvider,
+                mock(AutomationCompositionStateChangePublisher.class), mock(AutomationCompositionDeployPublisher.class),
+                acRuntimeParameterGroup);
+        supervisionScanner.run();
+        verify(acDefinitionProvider).updateAcDefinition(any(AutomationCompositionDefinition.class));
     }
 
     @Test
@@ -77,7 +112,7 @@ class SupervisionScannerTest {
         when(automationCompositionProvider.getAcInstancesByCompositionId(compositionId))
                 .thenReturn(List.of(automationComposition));
 
-        var supervisionScanner = new SupervisionScanner(automationCompositionProvider, acDefinitionProvider,
+        var supervisionScanner = new SupervisionScanner(automationCompositionProvider, createAcDefinitionProvider(),
                 automationCompositionStateChangePublisher, automationCompositionDeployPublisher,
                 acRuntimeParameterGroup);
         supervisionScanner.run();
@@ -98,14 +133,13 @@ class SupervisionScannerTest {
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
 
-        var supervisionScanner = new SupervisionScanner(automationCompositionProvider, acDefinitionProvider,
+        var supervisionScanner = new SupervisionScanner(automationCompositionProvider, createAcDefinitionProvider(),
                 automationCompositionStateChangePublisher, automationCompositionDeployPublisher,
                 acRuntimeParameterGroup);
         supervisionScanner.run();
 
         verify(automationCompositionProvider).updateAutomationComposition(any(AutomationComposition.class));
     }
-
 
     @Test
     void testScannerDelete() {
@@ -120,7 +154,7 @@ class SupervisionScannerTest {
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
 
-        var supervisionScanner = new SupervisionScanner(automationCompositionProvider, acDefinitionProvider,
+        var supervisionScanner = new SupervisionScanner(automationCompositionProvider, createAcDefinitionProvider(),
                 automationCompositionStateChangePublisher, automationCompositionDeployPublisher,
                 acRuntimeParameterGroup);
         supervisionScanner.run();
@@ -139,7 +173,7 @@ class SupervisionScannerTest {
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
 
-        var supervisionScanner = new SupervisionScanner(automationCompositionProvider, acDefinitionProvider,
+        var supervisionScanner = new SupervisionScanner(automationCompositionProvider, createAcDefinitionProvider(),
                 automationCompositionStateChangePublisher, automationCompositionDeployPublisher,
                 acRuntimeParameterGroup);
 
@@ -164,8 +198,8 @@ class SupervisionScannerTest {
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
         acRuntimeParameterGroup.getParticipantParameters().setMaxStatusWaitMs(-1);
 
-        //verify timeout scenario
-        var scannerObj2 = new SupervisionScanner(automationCompositionProvider, acDefinitionProvider,
+        // verify timeout scenario
+        var scannerObj2 = new SupervisionScanner(automationCompositionProvider, createAcDefinitionProvider(),
                 automationCompositionStateChangePublisher, automationCompositionDeployPublisher,
                 acRuntimeParameterGroup);
 
@@ -198,7 +232,7 @@ class SupervisionScannerTest {
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
 
-        var supervisionScanner = new SupervisionScanner(automationCompositionProvider, acDefinitionProvider,
+        var supervisionScanner = new SupervisionScanner(automationCompositionProvider, createAcDefinitionProvider(),
                 automationCompositionStateChangePublisher, automationCompositionDeployPublisher,
                 acRuntimeParameterGroup);
 
@@ -232,7 +266,7 @@ class SupervisionScannerTest {
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
 
-        var supervisionScanner = new SupervisionScanner(automationCompositionProvider, acDefinitionProvider,
+        var supervisionScanner = new SupervisionScanner(automationCompositionProvider, createAcDefinitionProvider(),
                 automationCompositionStateChangePublisher, automationCompositionDeployPublisher,
                 acRuntimeParameterGroup);
 

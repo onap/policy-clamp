@@ -39,6 +39,7 @@ public class AcTypeStateResolver {
     private static final String DEPRIMING = AcTypeState.DEPRIMING.toString();
     private static final String NO_ERROR = StateChangeResult.NO_ERROR.name();
     private static final String FAILED = StateChangeResult.FAILED.name();
+    private static final String TIMEOUT = StateChangeResult.TIMEOUT.name();
 
     /**
      * Construct.
@@ -57,6 +58,12 @@ public class AcTypeStateResolver {
         this.graph.put(new String[] {DEPRIME, PRIMING, FAILED}, PrimeOrder.DEPRIME);
         this.graph.put(new String[] {DEPRIME, DEPRIMING, FAILED}, PrimeOrder.DEPRIME);
         this.graph.put(new String[] {PRIME, DEPRIMING, FAILED}, PrimeOrder.PRIME);
+
+        // timeout
+        this.graph.put(new String[] {PRIME, PRIMING, TIMEOUT}, PrimeOrder.PRIME);
+        this.graph.put(new String[] {DEPRIME, PRIMING, TIMEOUT}, PrimeOrder.DEPRIME);
+        this.graph.put(new String[] {DEPRIME, DEPRIMING, TIMEOUT}, PrimeOrder.DEPRIME);
+        this.graph.put(new String[] {PRIME, DEPRIMING, TIMEOUT}, PrimeOrder.PRIME);
     }
 
     /**
