@@ -21,11 +21,9 @@
 package org.onap.policy.clamp.acm.participant.http.handler;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,52 +48,50 @@ class AcElementHandlerTest {
             "org.onap.domain.database.Http_PMSHMicroserviceAutomationCompositionElement";
 
     @Test
-    void testUndeploy() throws IOException {
+    void testUndeploy() {
         var instanceId = commonTestData.getAutomationCompositionId();
         var element = commonTestData.getAutomationCompositionElement();
         var acElementId = element.getId();
         var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
 
-        try (var automationCompositionElementHandler =
-                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class))) {
-            automationCompositionElementHandler.undeploy(instanceId, acElementId);
-            verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, acElementId,
-                    DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR, "");
-        }
+        var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class));
+        automationCompositionElementHandler.undeploy(instanceId, acElementId);
+        verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, acElementId,
+                DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR, "");
+
     }
 
     @Test
-    void testDeployConstraintViolations() throws IOException, PfModelException {
+    void testDeployConstraintViolations() throws PfModelException {
         var instanceId = commonTestData.getAutomationCompositionId();
         var element = commonTestData.getAutomationCompositionElement();
         var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
 
-        try (var automationCompositionElementHandler =
-                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class))) {
+        var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class));
 
-            Map<String, Object> map = new HashMap<>();
-            automationCompositionElementHandler.deploy(instanceId, element, map);
-            verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
-                    DeployState.UNDEPLOYED, null, StateChangeResult.FAILED,
-                    "Constraint violations in the config request");
-        }
+        Map<String, Object> map = new HashMap<>();
+        automationCompositionElementHandler.deploy(instanceId, element, map);
+        verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
+                DeployState.UNDEPLOYED, null, StateChangeResult.FAILED, "Constraint violations in the config request");
     }
 
     @Test
-    void testDeployError() throws IOException, PfModelException {
+    void testDeployError() throws PfModelException {
         var instanceId = commonTestData.getAutomationCompositionId();
         var element = commonTestData.getAutomationCompositionElement();
         var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
 
-        try (var automationCompositionElementHandler =
-                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class))) {
+        var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class));
 
-            Map<String, Object> map = new HashMap<>();
-            map.put("httpHeaders", 1);
-            automationCompositionElementHandler.deploy(instanceId, element, map);
-            verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
-                    DeployState.UNDEPLOYED, null, StateChangeResult.FAILED, "Error extracting ConfigRequest ");
-        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("httpHeaders", 1);
+        automationCompositionElementHandler.deploy(instanceId, element, map);
+        verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
+                DeployState.UNDEPLOYED, null, StateChangeResult.FAILED, "Error extracting ConfigRequest ");
+
     }
 
     @Test
@@ -109,102 +105,95 @@ class AcElementHandlerTest {
         var acHttpClient = mock(AcHttpClient.class);
         var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
 
-        try (var automationCompositionElementHandler =
-                new AutomationCompositionElementHandler(participantIntermediaryApi, acHttpClient)) {
+        var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(participantIntermediaryApi, acHttpClient);
 
-            automationCompositionElementHandler.deploy(instanceId, element, map);
-            verify(acHttpClient).run(any(ConfigRequest.class), anyMap());
-            verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
-                    DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Deployed");
-        }
+        automationCompositionElementHandler.deploy(instanceId, element, map);
+        verify(acHttpClient).run(any(ConfigRequest.class));
+        verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
+                DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Deployed");
     }
 
     @Test
-    void testUpdate() throws Exception {
+    void testUpdate() throws PfModelException {
         var instanceId = commonTestData.getAutomationCompositionId();
         var element = commonTestData.getAutomationCompositionElement();
         var acElementId = element.getId();
         var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
 
-        try (var automationCompositionElementHandler =
-                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class))) {
+        var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class));
 
-            automationCompositionElementHandler.update(instanceId, element, Map.of());
-            verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, acElementId,
-                    DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Update not supported");
-        }
+        automationCompositionElementHandler.update(instanceId, element, Map.of());
+        verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, acElementId,
+                DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Update not supported");
     }
 
     @Test
-    void testLock() throws Exception {
+    void testLock() throws PfModelException {
         var instanceId = commonTestData.getAutomationCompositionId();
         var acElementId = UUID.randomUUID();
         var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
 
-        try (var automationCompositionElementHandler =
-                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class))) {
+        var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class));
 
-            automationCompositionElementHandler.lock(instanceId, acElementId);
-            verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, acElementId, null,
-                    LockState.LOCKED, StateChangeResult.NO_ERROR, "Locked");
-        }
+        automationCompositionElementHandler.lock(instanceId, acElementId);
+        verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, acElementId, null,
+                LockState.LOCKED, StateChangeResult.NO_ERROR, "Locked");
     }
 
     @Test
-    void testUnlock() throws Exception {
+    void testUnlock() throws PfModelException {
         var instanceId = commonTestData.getAutomationCompositionId();
         var acElementId = UUID.randomUUID();
         var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
 
-        try (var automationCompositionElementHandler =
-                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class))) {
+        var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class));
 
-            automationCompositionElementHandler.unlock(instanceId, acElementId);
-            verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, acElementId, null,
-                    LockState.UNLOCKED, StateChangeResult.NO_ERROR, "Unlocked");
-        }
+        automationCompositionElementHandler.unlock(instanceId, acElementId);
+        verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, acElementId, null,
+                LockState.UNLOCKED, StateChangeResult.NO_ERROR, "Unlocked");
     }
 
     @Test
-    void testDelete() throws Exception {
+    void testDelete() throws PfModelException {
         var instanceId = commonTestData.getAutomationCompositionId();
         var acElementId = UUID.randomUUID();
         var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
 
-        try (var automationCompositionElementHandler =
-                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class))) {
+        var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class));
 
-            automationCompositionElementHandler.delete(instanceId, acElementId);
-            verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, acElementId,
-                    DeployState.DELETED, null, StateChangeResult.NO_ERROR, "Deleted");
-        }
+        automationCompositionElementHandler.delete(instanceId, acElementId);
+        verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, acElementId,
+                DeployState.DELETED, null, StateChangeResult.NO_ERROR, "Deleted");
     }
 
     @Test
-    void testPrime() throws Exception {
+    void testPrime() throws PfModelException {
         var compositionId = UUID.randomUUID();
         var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
 
-        try (var automationCompositionElementHandler =
-                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class))) {
+        var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class));
 
-            automationCompositionElementHandler.prime(compositionId, List.of());
-            verify(participantIntermediaryApi).updateCompositionState(compositionId, AcTypeState.PRIMED,
-                    StateChangeResult.NO_ERROR, "Primed");
-        }
+        automationCompositionElementHandler.prime(compositionId, List.of());
+        verify(participantIntermediaryApi).updateCompositionState(compositionId, AcTypeState.PRIMED,
+                StateChangeResult.NO_ERROR, "Primed");
     }
 
     @Test
-    void testDeprime() throws Exception {
+    void testDeprime() throws PfModelException {
         var compositionId = UUID.randomUUID();
         var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
 
-        try (var automationCompositionElementHandler =
-                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class))) {
+        var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class));
 
-            automationCompositionElementHandler.deprime(compositionId);
-            verify(participantIntermediaryApi).updateCompositionState(compositionId, AcTypeState.COMMISSIONED,
-                    StateChangeResult.NO_ERROR, "Deprimed");
-        }
+        automationCompositionElementHandler.deprime(compositionId);
+        verify(participantIntermediaryApi).updateCompositionState(compositionId, AcTypeState.COMMISSIONED,
+                StateChangeResult.NO_ERROR, "Deprimed");
     }
 }

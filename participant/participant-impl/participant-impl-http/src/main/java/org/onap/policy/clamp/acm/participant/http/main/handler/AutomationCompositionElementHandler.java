@@ -20,21 +20,14 @@
 
 package org.onap.policy.clamp.acm.participant.http.main.handler;
 
-import java.io.Closeable;
-import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import javax.validation.Validation;
 import javax.ws.rs.core.Response.Status;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.tuple.Pair;
 import org.onap.policy.clamp.acm.participant.http.main.models.ConfigRequest;
 import org.onap.policy.clamp.acm.participant.http.main.webclient.AcHttpClient;
 import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
@@ -50,7 +43,6 @@ import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -61,13 +53,11 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-public class AutomationCompositionElementHandler implements AutomationCompositionElementListener, Closeable {
+public class AutomationCompositionElementHandler implements AutomationCompositionElementListener {
 
     private static final Coder CODER = new StandardCoder();
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
-    private final ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
     private final ParticipantIntermediaryApi intermediaryApi;
 
@@ -97,7 +87,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
             throws PfModelException {
         try {
             var configRequest = getConfigRequest(properties);
-            var restResponseMap = invokeHttpClient(configRequest);
+            var restResponseMap = acHttpClient.run(configRequest);
             var failedResponseStatus = restResponseMap.values().stream()
                     .filter(response -> !HttpStatus.valueOf(response.getKey()).is2xxSuccessful())
                     .collect(Collectors.toList());
@@ -127,29 +117,6 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
             return configRequest;
         } catch (CoderException e) {
             throw new AutomationCompositionException(Status.BAD_REQUEST, "Error extracting ConfigRequest ", e);
-        }
-    }
-
-    /**
-     * Invoke a runnable thread to execute http requests.
-     *
-     * @param configRequest ConfigRequest
-     */
-    private Map<ToscaConceptIdentifier, Pair<Integer, String>> invokeHttpClient(ConfigRequest configRequest)
-            throws PfModelException {
-        try {
-            Map<ToscaConceptIdentifier, Pair<Integer, String>> restResponseMap = new ConcurrentHashMap<>();
-            // Invoke runnable thread to execute https requests of all config entities
-            var result = executor.submit(() -> acHttpClient.run(configRequest, restResponseMap), restResponseMap);
-            if (!result.get().isEmpty()) {
-                LOGGER.debug("Http Request Completed: {}", result.isDone());
-            }
-            return restResponseMap;
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new PfModelException(Status.BAD_REQUEST, "Error invoking ExecutorService ", e);
-        } catch (ExecutionException e) {
-            throw new PfModelException(Status.BAD_REQUEST, "Error invoking the http request for the config ", e);
         }
     }
 
@@ -188,17 +155,5 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
     public void deprime(UUID compositionId) throws PfModelException {
         intermediaryApi.updateCompositionState(compositionId, AcTypeState.COMMISSIONED, StateChangeResult.NO_ERROR,
                 "Deprimed");
-    }
-
-    /**
-     * Closes this stream and releases any system resources associated
-     * with it. If the stream is already closed then invoking this
-     * method has no effect.
-     *
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    public void close() throws IOException {
-        executor.shutdown();
     }
 }

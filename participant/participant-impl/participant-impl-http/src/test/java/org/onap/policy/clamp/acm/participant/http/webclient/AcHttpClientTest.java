@@ -21,13 +21,9 @@
 package org.onap.policy.clamp.acm.participant.http.webclient;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -37,7 +33,6 @@ import org.onap.policy.clamp.acm.participant.http.main.webclient.AcHttpClient;
 import org.onap.policy.clamp.acm.participant.http.utils.CommonTestData;
 import org.onap.policy.clamp.acm.participant.http.utils.MockServerRest;
 import org.onap.policy.common.utils.network.NetworkUtil;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
@@ -73,14 +68,13 @@ class AcHttpClientTest {
     void test_validRequest() {
         // Add valid rest requests POST, GET
         var configurationEntity = commonTestData.getConfigurationEntity();
-        Map<ToscaConceptIdentifier, Pair<Integer, String>> responseMap = new HashMap<>();
 
         var headers = commonTestData.getHeaders();
         var configRequest =
                 new ConfigRequest(MOCK_URL + ":" + mockServerPort, headers, List.of(configurationEntity), 10);
 
         var client = new AcHttpClient();
-        assertDoesNotThrow(() -> client.run(configRequest, responseMap));
+        var responseMap = client.run(configRequest);
         assertThat(responseMap).hasSize(2).containsKey(commonTestData.restParamsWithGet().getRestRequestId());
 
         var restResponseMap = responseMap.get(commonTestData.restParamsWithGet().getRestRequestId());
@@ -91,14 +85,13 @@ class AcHttpClientTest {
     void test_invalidRequest() {
         // Add rest requests Invalid POST, Valid GET
         var configurationEntity = commonTestData.getInvalidConfigurationEntity();
-        Map<ToscaConceptIdentifier, Pair<Integer, String>> responseMap = new HashMap<>();
 
         var headers = commonTestData.getHeaders();
         var configRequest =
                 new ConfigRequest(MOCK_URL + ":" + mockServerPort, headers, List.of(configurationEntity), 10);
 
         var client = new AcHttpClient();
-        assertDoesNotThrow(() -> client.run(configRequest, responseMap));
+        var responseMap = client.run(configRequest);
         assertThat(responseMap).hasSize(2).containsKey(commonTestData.restParamsWithGet().getRestRequestId());
         var response = responseMap.get(commonTestData.restParamsWithInvalidPost().getRestRequestId());
         assertThat(response.getKey()).isEqualTo(404);
@@ -108,14 +101,13 @@ class AcHttpClientTest {
     void test_WrongUrl() {
         // Add rest requests Invalid URL
         var configurationEntity = commonTestData.getInvalidConfigurationEntity();
-        Map<ToscaConceptIdentifier, Pair<Integer, String>> responseMap = new HashMap<>();
 
         var headers = commonTestData.getHeaders();
         var configRequest =
                 new ConfigRequest(WRONG_URL + ":" + mockServerPort, headers, List.of(configurationEntity), 10);
 
         var client = new AcHttpClient();
-        assertDoesNotThrow(() -> client.run(configRequest, responseMap));
+        var responseMap = client.run(configRequest);
         assertThat(responseMap).hasSize(2).containsKey(commonTestData.restParamsWithGet().getRestRequestId());
         var response = responseMap.get(commonTestData.restParamsWithInvalidPost().getRestRequestId());
         assertThat(response.getKey()).isEqualTo(404);

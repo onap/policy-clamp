@@ -22,6 +22,7 @@ package org.onap.policy.clamp.acm.participant.http.main.webclient;
 
 import java.lang.invoke.MethodHandles;
 import java.time.Duration;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -50,22 +51,25 @@ public class AcHttpClient {
     /**
      * Runnable to execute http requests.
      */
-    public void run(ConfigRequest configRequest, Map<ToscaConceptIdentifier, Pair<Integer, String>> responseMap) {
+    public Map<ToscaConceptIdentifier, Pair<Integer, String>> run(ConfigRequest configRequest) {
 
         var webClient = WebClient.builder().baseUrl(configRequest.getBaseUrl())
                 .defaultHeaders(httpHeaders -> httpHeaders.addAll(createHeaders(configRequest))).build();
 
+        Map<ToscaConceptIdentifier, Pair<Integer, String>> responseMap = new HashMap<>();
         for (var configurationEntity : configRequest.getConfigurationEntities()) {
             LOGGER.info("Executing http requests for the config entity {}",
                     configurationEntity.getConfigurationEntityId());
 
-            executeRequest(webClient, configRequest, configurationEntity, responseMap);
+            responseMap.putAll(executeRequest(webClient, configRequest, configurationEntity));
         }
+        return responseMap;
     }
 
-    private void executeRequest(WebClient client, ConfigRequest configRequest, ConfigurationEntity configurationEntity,
-            Map<ToscaConceptIdentifier, Pair<Integer, String>> responseMap) {
+    private Map<ToscaConceptIdentifier, Pair<Integer, String>> executeRequest(WebClient client,
+            ConfigRequest configRequest, ConfigurationEntity configurationEntity) {
 
+        Map<ToscaConceptIdentifier, Pair<Integer, String>> responseMap = new HashMap<>();
         // Iterate the sequence of http requests
         for (var request : configurationEntity.getRestSequence()) {
             try {
@@ -97,6 +101,7 @@ public class AcHttpClient {
                 responseMap.put(request.getRestRequestId(), new ImmutablePair<>(404, ex.getMessage()));
             }
         }
+        return responseMap;
     }
 
     private HttpHeaders createHeaders(ConfigRequest request) {
