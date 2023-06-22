@@ -25,7 +25,6 @@ import java.lang.invoke.MethodHandles;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
-import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.onap.policy.clamp.acm.participant.kubernetes.exception.ServiceException;
@@ -35,7 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class PodStatusValidator implements Runnable {
+public class PodStatusValidator {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -50,6 +49,7 @@ public class PodStatusValidator implements Runnable {
 
     /**
      * Constructor for PodStatusValidator.
+     *
      * @param chart chartInfo
      * @param timeout timeout for the thread to exit
      * @param statusCheckInterval Interval to check pod status
@@ -60,15 +60,18 @@ public class PodStatusValidator implements Runnable {
         this.statusCheckInterval = statusCheckInterval;
     }
 
-
-    @SneakyThrows
-    @Override
-    public void run() {
+    /**
+     * Run the execution.
+     *
+     * @throws InterruptedException in case of an exception
+     * @throws ServiceException in case of an exception
+     */
+    public void run() throws InterruptedException, ServiceException {
         logger.info("Polling the status of deployed pods for the chart {}", chart.getChartId().getName());
 
         try {
             verifyPodStatus();
-        } catch (ServiceException | IOException e) {
+        } catch (IOException e) {
             throw new ServiceException("Error verifying the status of the pod. Exiting", e);
         }
     }
