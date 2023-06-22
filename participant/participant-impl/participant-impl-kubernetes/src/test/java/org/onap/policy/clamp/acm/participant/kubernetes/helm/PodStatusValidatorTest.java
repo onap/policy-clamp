@@ -22,8 +22,8 @@
 package org.onap.policy.clamp.acm.participant.kubernetes.helm;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 
@@ -92,8 +92,7 @@ class PodStatusValidatorTest {
     void test_InvalidPodState() throws ServiceException {
         String invalidPod = "NAME\tREADY\tSTATUS\tRESTARTS\tAGE\nhellofromdocker-54777df9f8-qpzqr\t1/1\tInit\t0\t9h";
         doReturn(invalidPod).when(client).executeCommand(any());
-        assertThatThrownBy(() -> podStatusValidator.run())
-            .isInstanceOf(ServiceException.class).hasMessage("Error verifying the status of the pod. Exiting");
+        assertThrows(ServiceException.class, () -> podStatusValidator.run());
         assertThat(AutomationCompositionElementHandler.getPodStatusMap()).isEmpty();
     }
 

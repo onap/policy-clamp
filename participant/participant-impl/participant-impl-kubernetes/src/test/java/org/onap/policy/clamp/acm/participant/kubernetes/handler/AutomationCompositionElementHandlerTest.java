@@ -23,6 +23,7 @@ package org.onap.policy.clamp.acm.participant.kubernetes.handler;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doNothing;
@@ -68,17 +69,17 @@ class AutomationCompositionElementHandlerTest {
     private static final Coder CODER = new StandardCoder();
     private static final String CHART_INFO_YAML = "src/test/resources/ChartList.json";
     private static final String KEY_NAME =
-        "org.onap.domain.database.HelloWorld_K8SMicroserviceAutomationCompositionElement";
+            "org.onap.domain.database.HelloWorld_K8SMicroserviceAutomationCompositionElement";
     private static List<ChartInfo> charts;
     private static ToscaServiceTemplate toscaServiceTemplate;
     private static final String K8S_AUTOMATION_COMPOSITION_ELEMENT =
-        "org.onap.domain.database.PMSH_K8SMicroserviceAutomationCompositionElement";
+            "org.onap.domain.database.PMSH_K8SMicroserviceAutomationCompositionElement";
     private final CommonTestData commonTestData = new CommonTestData();
 
     @InjectMocks
     @Spy
     private AutomationCompositionElementHandler automationCompositionElementHandler =
-        new AutomationCompositionElementHandler();
+            new AutomationCompositionElementHandler();
 
     @Mock
     private ChartService chartService;
@@ -107,19 +108,18 @@ class AutomationCompositionElementHandlerTest {
 
         doNothing().when(chartService).uninstallChart(charts.get(0));
 
-        automationCompositionElementHandler.undeploy(
-            commonTestData.getAutomationCompositionId(), automationCompositionElementId1);
+        automationCompositionElementHandler.undeploy(commonTestData.getAutomationCompositionId(),
+                automationCompositionElementId1);
 
         doThrow(new ServiceException("Error uninstalling the chart")).when(chartService).uninstallChart(charts.get(0));
 
-        assertDoesNotThrow(() -> automationCompositionElementHandler.undeploy(
-            commonTestData.getAutomationCompositionId(), automationCompositionElementId1));
+        assertDoesNotThrow(() -> automationCompositionElementHandler
+                .undeploy(commonTestData.getAutomationCompositionId(), automationCompositionElementId1));
     }
 
     @Test
-    void test_AutomationCompositionElementUpdate() throws PfModelException, IOException, ServiceException,
-        ExecutionException, InterruptedException {
-        doReturn(true).when(chartService).installChart(any());
+    void test_AutomationCompositionElementUpdate()
+            throws PfModelException, IOException, ServiceException, ExecutionException, InterruptedException {
         doNothing().when(automationCompositionElementHandler).checkPodStatus(any(), any(), any(), anyInt(), anyInt());
         var elementId1 = UUID.randomUUID();
         var element = new AcElementDeploy();
@@ -127,11 +127,15 @@ class AutomationCompositionElementHandlerTest {
         element.setDefinition(new ToscaConceptIdentifier(KEY_NAME, "1.0.1"));
         element.setOrderedState(DeployOrder.DEPLOY);
 
-        var nodeTemplatesMap =
-            toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates();
-        automationCompositionElementHandler.deploy(
-            commonTestData.getAutomationCompositionId(), element,
-            nodeTemplatesMap.get(K8S_AUTOMATION_COMPOSITION_ELEMENT).getProperties());
+        var nodeTemplatesMap = toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates();
+
+        doReturn(false).when(chartService).installChart(any());
+        assertDoesNotThrow(() -> automationCompositionElementHandler.deploy(commonTestData.getAutomationCompositionId(),
+                element, nodeTemplatesMap.get(K8S_AUTOMATION_COMPOSITION_ELEMENT).getProperties()));
+
+        doReturn(true).when(chartService).installChart(any());
+        automationCompositionElementHandler.deploy(commonTestData.getAutomationCompositionId(), element,
+                nodeTemplatesMap.get(K8S_AUTOMATION_COMPOSITION_ELEMENT).getProperties());
 
         assertThat(automationCompositionElementHandler.getChartMap()).hasSize(1).containsKey(elementId1);
 
@@ -139,24 +143,20 @@ class AutomationCompositionElementHandlerTest {
 
         var elementId2 = UUID.randomUUID();
         element.setId(elementId2);
-        automationCompositionElementHandler.deploy(
-            commonTestData.getAutomationCompositionId(), element,
-            nodeTemplatesMap.get(K8S_AUTOMATION_COMPOSITION_ELEMENT).getProperties());
+        assertThrows(PfModelException.class,
+                () -> automationCompositionElementHandler.deploy(commonTestData.getAutomationCompositionId(), element,
+                        nodeTemplatesMap.get(K8S_AUTOMATION_COMPOSITION_ELEMENT).getProperties()));
 
         assertThat(automationCompositionElementHandler.getChartMap().containsKey(elementId2)).isFalse();
     }
 
     @Test
     void test_checkPodStatus() throws ExecutionException, InterruptedException {
-        doReturn(result).when(executor).submit(any(Runnable.class), any());
-        doReturn("Done").when(result).get();
-        doReturn(true).when(result).isDone();
         var chartInfo = charts.get(0);
         var automationCompositionId = UUID.randomUUID();
         var element = new AutomationCompositionElement();
-        assertDoesNotThrow(
-            () -> automationCompositionElementHandler.checkPodStatus(automationCompositionId,
-                    element.getId(), chartInfo, 1, 1));
+        assertThrows(ServiceException.class, () -> automationCompositionElementHandler
+                .checkPodStatus(automationCompositionId, element.getId(), chartInfo, 1, 1));
     }
 
     @Test

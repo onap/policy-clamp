@@ -27,10 +27,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
@@ -39,6 +37,7 @@ import org.onap.policy.clamp.acm.participant.kubernetes.exception.ServiceExcepti
 import org.onap.policy.clamp.acm.participant.kubernetes.helm.PodStatusValidator;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartInfo;
 import org.onap.policy.clamp.acm.participant.kubernetes.service.ChartService;
+import org.onap.policy.clamp.common.acm.exception.AutomationCompositionException;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
@@ -60,8 +59,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class AutomationCompositionElementHandler implements AutomationCompositionElementListener {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
-    private ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
     // Map of helm installation and the status of corresponding pods
     @Getter
@@ -118,26 +115,47 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
     @Override
     public synchronized void deploy(UUID automationCompositionId, AcElementDeploy element,
             Map<String, Object> properties) throws PfModelException {
+
+        try {
+            var chartInfo = getChartInfo(properties);
+            if (chartService.installChart(chartInfo)) {
+                chartMap.put(element.getId(), chartInfo);
+
+                var config = getThreadConfig(properties);
+                checkPodStatus(automationCompositionId, element.getId(), chartInfo,
+                        config.uninitializedToPassiveTimeout, config.podStatusCheckInterval);
+            } else {
+                intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
+                        DeployState.UNDEPLOYED, null, StateChangeResult.FAILED, "Chart not installed");
+            }
+        } catch (ServiceException | IOException e) {
+            throw new PfModelException(Response.Status.BAD_REQUEST, "Installation of Helm chart failed ", e);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new PfModelException(Response.Status.BAD_REQUEST, "Error invoking ExecutorService ", e);
+        } catch (AutomationCompositionException e) {
+            intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
+                    DeployState.UNDEPLOYED, null, StateChangeResult.FAILED, e.getMessage());
+        }
+    }
+
+    private ThreadConfig getThreadConfig(Map<String, Object> properties) throws AutomationCompositionException {
+        try {
+            return CODER.convert(properties, ThreadConfig.class);
+        } catch (CoderException e) {
+            throw new AutomationCompositionException(Status.BAD_REQUEST, "Error extracting ThreadConfig ", e);
+        }
+    }
+
+    private ChartInfo getChartInfo(Map<String, Object> properties) throws AutomationCompositionException {
         @SuppressWarnings("unchecked")
         var chartData = (Map<String, Object>) properties.get("chart");
 
         LOGGER.info("Installation request received for the Helm Chart {} ", chartData);
         try {
-            var chartInfo = CODER.convert(chartData, ChartInfo.class);
-            if (chartService.installChart(chartInfo)) {
-                chartMap.put(element.getId(), chartInfo);
-
-                var config = CODER.convert(properties, ThreadConfig.class);
-                checkPodStatus(automationCompositionId, element.getId(), chartInfo,
-                        config.uninitializedToPassiveTimeout, config.podStatusCheckInterval);
-            }
-        } catch (ServiceException | CoderException | IOException e) {
-            LOGGER.warn("Installation of Helm chart failed", e);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new PfModelException(Response.Status.BAD_REQUEST, "Error invoking ExecutorService ", e);
-        } catch (ExecutionException e) {
-            throw new PfModelException(Response.Status.BAD_REQUEST, "Error retrieving pod status result ", e);
+            return CODER.convert(chartData, ChartInfo.class);
+        } catch (CoderException e) {
+            throw new AutomationCompositionException(Status.BAD_REQUEST, "Error extracting ChartInfo ", e);
         }
     }
 
@@ -145,16 +163,17 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
      * Invoke a new thread to check the status of deployed pods.
      *
      * @param chart ChartInfo
+     * @throws ServiceException in case of an exception
      */
     public void checkPodStatus(UUID automationCompositionId, UUID elementId, ChartInfo chart, int timeout,
-            int podStatusCheckInterval) throws ExecutionException, InterruptedException {
-        // Invoke runnable thread to check pod status
-        var result = executor.submit(new PodStatusValidator(chart, timeout, podStatusCheckInterval), "Done");
-        if (!result.get().isEmpty()) {
-            LOGGER.info("Pod Status Validator Completed: {}", result.isDone());
-            intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, elementId,
-                    DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Deployed");
-        }
+            int podStatusCheckInterval) throws InterruptedException, ServiceException {
+
+        var result = new PodStatusValidator(chart, timeout, podStatusCheckInterval);
+        result.run();
+        LOGGER.info("Pod Status Validator Completed");
+        intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, elementId,
+                DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Deployed");
+
     }
 
     @Override
