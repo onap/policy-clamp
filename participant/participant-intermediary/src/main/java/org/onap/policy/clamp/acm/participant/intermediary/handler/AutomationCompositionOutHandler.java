@@ -99,6 +99,7 @@ public class AutomationCompositionOutHandler {
                 new AutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_STATECHANGE_ACK);
         automationCompositionStateChangeAck.setParticipantId(cacheProvider.getParticipantId());
         automationCompositionStateChangeAck.setMessage(message);
+        automationCompositionStateChangeAck.setResponseTo(cacheProvider.getMsgIdentification().get(element.getId()));
         automationCompositionStateChangeAck.setStateChangeResult(stateChangeResult);
         automationCompositionStateChangeAck.setAutomationCompositionId(automationCompositionId);
         automationCompositionStateChangeAck.getAutomationCompositionResultMap().put(element.getId(),
@@ -107,6 +108,7 @@ public class AutomationCompositionOutHandler {
         LOGGER.debug("Automation composition element {} state changed to {}", elementId, deployState);
         automationCompositionStateChangeAck.setResult(true);
         publisher.sendAutomationCompositionAck(automationCompositionStateChangeAck);
+        cacheProvider.getMsgIdentification().remove(element.getId());
     }
 
     private void handleDeployState(AutomationComposition automationComposition, AutomationCompositionElement element,
@@ -213,10 +215,12 @@ public class AutomationCompositionOutHandler {
         participantPrimeAck.setCompositionId(compositionId);
         participantPrimeAck.setMessage(message);
         participantPrimeAck.setResult(true);
+        participantPrimeAck.setResponseTo(cacheProvider.getMsgIdentification().get(compositionId));
         participantPrimeAck.setCompositionState(state);
         participantPrimeAck.setStateChangeResult(stateChangeResult);
         participantPrimeAck.setParticipantId(cacheProvider.getParticipantId());
         participantPrimeAck.setState(ParticipantState.ON_LINE);
         publisher.sendParticipantPrimeAck(participantPrimeAck);
+        cacheProvider.getMsgIdentification().remove(compositionId);
     }
 }
