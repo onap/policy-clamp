@@ -36,7 +36,7 @@ import org.springframework.stereotype.Component;
 public class SupervisionPartecipantScanner {
     private static final Logger LOGGER = LoggerFactory.getLogger(SupervisionPartecipantScanner.class);
 
-    private final HandleCounter<UUID> participantStatusCounter = new HandleCounter<>();
+    private final TimeoutHandler<UUID> participantStatusTimeout = new TimeoutHandler<>();
 
     private final ParticipantProvider participantProvider;
 
@@ -51,9 +51,7 @@ public class SupervisionPartecipantScanner {
                               final AcRuntimeParameterGroup acRuntimeParameterGroup) {
         this.participantProvider = participantProvider;
 
-        participantStatusCounter.setMaxRetryCount(
-            acRuntimeParameterGroup.getParticipantParameters().getUpdateParameters().getMaxRetryCount());
-        participantStatusCounter.setMaxWaitMs(acRuntimeParameterGroup.getParticipantParameters().getMaxStatusWaitMs());
+        participantStatusTimeout.setMaxWaitMs(acRuntimeParameterGroup.getParticipantParameters().getMaxStatusWaitMs());
     }
 
     /**
@@ -71,14 +69,13 @@ public class SupervisionPartecipantScanner {
 
     private void scanParticipantStatus(Participant participant) {
         var id = participant.getParticipantId();
-        if (participantStatusCounter.isFault(id)) {
+        if (participantStatusTimeout.isTimeout(id)) {
             LOGGER.debug("report Participant fault");
             return;
         }
-        if (participantStatusCounter.getDuration(id) > participantStatusCounter.getMaxWaitMs()
-            && !participantStatusCounter.count(id)) {
+        if (participantStatusTimeout.getDuration(id) > participantStatusTimeout.getMaxWaitMs()) {
             LOGGER.debug("report Participant fault");
-            participantStatusCounter.setFault(id);
+            participantStatusTimeout.setTimeout(id);
             participant.setParticipantState(ParticipantState.OFF_LINE);
             participantProvider.updateParticipant(participant);
         }
@@ -88,6 +85,6 @@ public class SupervisionPartecipantScanner {
      * handle participant Status message.
      */
     public void handleParticipantStatus(UUID id) {
-        participantStatusCounter.clear(id);
+        participantStatusTimeout.clear(id);
     }
 }

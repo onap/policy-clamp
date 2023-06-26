@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,38 +24,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
-class HandleCounterTest {
+class TimeoutHandlerTest {
 
     private static final int ID = 1;
 
     @Test
-    void testCount() {
-        var handleCounter = new HandleCounter<Integer>();
-        handleCounter.setMaxRetryCount(2);
-        assertThat(handleCounter.count(ID)).isTrue();
-        assertThat(handleCounter.getCounter(ID)).isEqualTo(1);
-        assertThat(handleCounter.count(ID)).isTrue();
-        assertThat(handleCounter.getCounter(ID)).isEqualTo(2);
-        assertThat(handleCounter.count(ID)).isFalse();
-        assertThat(handleCounter.getCounter(ID)).isEqualTo(2);
-
-        handleCounter.clear(ID);
-        assertThat(handleCounter.count(ID)).isTrue();
-        assertThat(handleCounter.getCounter(ID)).isEqualTo(1);
-    }
-
-    @Test
     void testFault() {
-        var handleCounter = new HandleCounter<Integer>();
-        handleCounter.setFault(ID);
-        assertThat(handleCounter.isFault(ID)).isTrue();
-        handleCounter.clear(ID);
-        assertThat(handleCounter.isFault(ID)).isFalse();
+        var timeoutHandler = new TimeoutHandler<Integer>();
+        timeoutHandler.setTimeout(ID);
+        assertThat(timeoutHandler.isTimeout(ID)).isTrue();
+        timeoutHandler.clear(ID);
+        assertThat(timeoutHandler.isTimeout(ID)).isFalse();
     }
 
     @Test
     void testDuration() {
-        var handleCounter = new HandleCounter<Integer>() {
+        var timeoutHandler = new TimeoutHandler<Integer>() {
             long epochMilli = 0;
 
             @Override
@@ -63,21 +47,21 @@ class HandleCounterTest {
                 return epochMilli;
             }
         };
-        handleCounter.epochMilli = 100;
-        var result = handleCounter.getDuration(ID);
+        timeoutHandler.epochMilli = 100;
+        var result = timeoutHandler.getDuration(ID);
         assertThat(result).isZero();
 
-        handleCounter.epochMilli += 100;
-        result = handleCounter.getDuration(ID);
+        timeoutHandler.epochMilli += 100;
+        result = timeoutHandler.getDuration(ID);
         assertThat(result).isEqualTo(100);
 
-        handleCounter.epochMilli += 100;
-        result = handleCounter.getDuration(ID);
+        timeoutHandler.epochMilli += 100;
+        result = timeoutHandler.getDuration(ID);
         assertThat(result).isEqualTo(200);
 
-        handleCounter.epochMilli += 100;
-        handleCounter.clear(ID);
-        result = handleCounter.getDuration(ID);
+        timeoutHandler.epochMilli += 100;
+        timeoutHandler.clear(ID);
+        result = timeoutHandler.getDuration(ID);
         assertThat(result).isZero();
     }
 }

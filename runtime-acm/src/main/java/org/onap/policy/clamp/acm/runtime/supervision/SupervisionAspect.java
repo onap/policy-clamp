@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,7 +57,7 @@ public class SupervisionAspect implements Closeable {
     }
 
     private void executeScan() {
-        supervisionScanner.run(true);
+        supervisionScanner.run();
         partecipantScanner.run();
     }
 
@@ -68,7 +68,7 @@ public class SupervisionAspect implements Closeable {
     public void doCheck() {
         if (executor.getQueue().size() < 2) {
             LOGGER.debug("Add scanning Message");
-            executor.execute(() -> supervisionScanner.run(false));
+            executor.execute(() -> supervisionScanner.run());
         }
     }
 

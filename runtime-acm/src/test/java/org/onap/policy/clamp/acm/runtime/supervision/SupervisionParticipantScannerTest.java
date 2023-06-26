@@ -38,7 +38,6 @@ class SupervisionParticipantScannerTest {
     @Test
     void testScanParticipant() throws PfModelException {
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanParticipant");
-        acRuntimeParameterGroup.getParticipantParameters().getUpdateParameters().setMaxWaitMs(-1);
         acRuntimeParameterGroup.getParticipantParameters().setMaxStatusWaitMs(-1);
 
         var participant = CommonTestData.createParticipant(CommonTestData.getParticipantId());
