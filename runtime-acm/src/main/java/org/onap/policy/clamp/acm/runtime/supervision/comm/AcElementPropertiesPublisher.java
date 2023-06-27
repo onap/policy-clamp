@@ -27,15 +27,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.UnaryOperator;
 import lombok.AllArgsConstructor;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.PropertiesUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
-import org.onap.policy.models.base.PfUtils;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -47,7 +45,7 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class AcElementPropertiesPublisher extends AbstractParticipantPublisher<PropertiesUpdate> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AutomationCompositionDeployPublisher.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AcElementPropertiesPublisher.class);
 
     /**
      * Send ACElementPropertiesUpdate to Participant.
@@ -59,12 +57,7 @@ public class AcElementPropertiesPublisher extends AbstractParticipantPublisher<P
     public void send(AutomationComposition automationComposition) {
         Map<UUID, List<AcElementDeploy>> map = new HashMap<>();
         for (var element : automationComposition.getElements().values()) {
-            var acElementDeploy = new AcElementDeploy();
-            acElementDeploy.setId(element.getId());
-            acElementDeploy.setDefinition(new ToscaConceptIdentifier(element.getDefinition()));
-            acElementDeploy.setOrderedState(DeployOrder.UPDATE);
-            acElementDeploy.setProperties(PfUtils.mapMap(element.getProperties(), UnaryOperator.identity()));
-
+            var acElementDeploy = AcmUtils.createAcElementDeploy(element, DeployOrder.UPDATE);
             map.putIfAbsent(element.getParticipantId(), new ArrayList<>());
             map.get(element.getParticipantId()).add(acElementDeploy);
         }

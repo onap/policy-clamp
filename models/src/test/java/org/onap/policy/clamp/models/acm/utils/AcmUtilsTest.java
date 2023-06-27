@@ -183,6 +183,15 @@ class AcmUtilsTest {
         assertFalse(AcmUtils.isForward(DeployState.UNDEPLOYING, LockState.LOCKED));
     }
 
+    @Test
+    void testCreateAcElementDeploy() {
+        var element = getDummyAutomationComposition().getElements().values().iterator().next();
+        var result = AcmUtils.createAcElementDeploy(element, DeployOrder.DEPLOY);
+        assertEquals(DeployOrder.DEPLOY, result.getOrderedState());
+        assertEquals(element.getId(), result.getId());
+        assertEquals(element.getDefinition(), result.getDefinition());
+    }
+
     private AutomationComposition getDummyAutomationComposition() {
         var automationComposition = new AutomationComposition();
         automationComposition.setCompositionId(UUID.randomUUID());

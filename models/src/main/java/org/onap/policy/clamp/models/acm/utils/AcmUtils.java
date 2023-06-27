@@ -35,8 +35,10 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
+import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
@@ -49,6 +51,7 @@ import org.onap.policy.common.parameters.ObjectValidationResult;
 import org.onap.policy.common.parameters.ValidationResult;
 import org.onap.policy.common.parameters.ValidationStatus;
 import org.onap.policy.models.base.PfModelRuntimeException;
+import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
@@ -406,4 +409,21 @@ public final class AcmUtils {
             element.setLockState(lockState);
         }
     }
+
+    /**
+     * Create a new AcElementDeploy from an AutomationCompositionElement.
+     *
+     * @param element the AutomationCompositionElement
+     * @param deployOrder the DeployOrder
+     * @return the AcElementDeploy
+     */
+    public static AcElementDeploy createAcElementDeploy(AutomationCompositionElement element, DeployOrder deployOrder) {
+        var acElementDeploy = new AcElementDeploy();
+        acElementDeploy.setId(element.getId());
+        acElementDeploy.setDefinition(new ToscaConceptIdentifier(element.getDefinition()));
+        acElementDeploy.setOrderedState(deployOrder);
+        acElementDeploy.setProperties(PfUtils.mapMap(element.getProperties(), UnaryOperator.identity()));
+        return acElementDeploy;
+    }
+
 }

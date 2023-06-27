@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2023 Nordix Foundation.
+ *  Copyright (C) 2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,25 +29,30 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantRestartAc;
 import org.onap.policy.clamp.models.acm.utils.CommonTestData;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
-/**
- * Test the copy constructor.
- */
-class ParticipantPrimeTest {
+class ParticipantRestartTest {
+
     @Test
     void testCopyConstructor() throws CoderException {
-        assertThatThrownBy(() -> new ParticipantPrime(null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> new ParticipantRestart(null)).isInstanceOf(NullPointerException.class);
 
-        var orig = new ParticipantPrime();
-        // verify with all values
-        orig.setAutomationCompositionId(UUID.randomUUID());
-        orig.setParticipantId(CommonTestData.getParticipantId());
+        final var orig = new ParticipantRestart();
+        // verify with null values
+        assertEquals(removeVariableFields(orig.toString()),
+                removeVariableFields(new ParticipantRestart(orig).toString()));
+
         orig.setMessageId(UUID.randomUUID());
+        orig.setCompositionId(UUID.randomUUID());
         orig.setTimestamp(Instant.ofEpochMilli(3000));
+        orig.setParticipantId(CommonTestData.getParticipantId());
 
         var participantDefinitionUpdate = new ParticipantDefinition();
         var type = new ToscaConceptIdentifier("id", "1.2.3");
@@ -55,10 +60,22 @@ class ParticipantPrimeTest {
         participantDefinitionUpdate.setAutomationCompositionElementDefinitionList(List.of(acDefinition));
         orig.setParticipantDefinitionUpdates(List.of(participantDefinitionUpdate));
 
-        var other = new ParticipantPrime(orig);
+        var acElement = new AcElementDeploy();
+        acElement.setId(UUID.randomUUID());
+        var id = new ToscaConceptIdentifier("id", "1.2.3");
+        acElement.setDefinition(id);
 
-        assertEquals(removeVariableFields(orig.toString()), removeVariableFields(other.toString()));
+        var acRestart = new ParticipantRestartAc();
+        acRestart.setAcElementList(List.of(acElement));
+        acRestart.setAutomationCompositionId(UUID.randomUUID());
+        acRestart.setDeployState(DeployState.DEPLOYED);
+        acRestart.setLockState(LockState.LOCKED);
 
-        assertSerializable(orig, ParticipantPrime.class);
+        orig.setAutocompositionList(List.of(acRestart));
+
+        assertEquals(removeVariableFields(orig.toString()),
+                removeVariableFields(new ParticipantRestart(orig).toString()));
+
+        assertSerializable(orig, ParticipantRestart.class);
     }
 }
