@@ -89,6 +89,10 @@ public class SupervisionHandler {
 
         if (inProgress && !msgInErrors && completed) {
             acDefinition.setState(finalState);
+            if (StateChangeResult.TIMEOUT.equals(acDefinition.getStateChangeResult())) {
+                acDefinition.setStateChangeResult(StateChangeResult.NO_ERROR);
+            }
+
         }
         acDefinitionProvider.updateAcDefinition(acDefinition);
     }
