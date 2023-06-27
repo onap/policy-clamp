@@ -60,6 +60,8 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class SupervisionMessagesTest {
 
+    private static final String AC_INSTANTIATION_UPDATE_JSON =
+            "src/test/resources/rest/acm/AutomationCompositionUpdate.json";
     private static final String NOT_ACTIVE = "Not Active!";
     private static final CommInfrastructure INFRA = CommInfrastructure.NOOP;
     private static final String TOPIC = "my-topic";
@@ -203,6 +205,17 @@ class SupervisionMessagesTest {
         var topicSink = mock(TopicSink.class);
         publisher.active(List.of(topicSink));
         publisher.send(UUID.randomUUID());
+        verify(topicSink).send(anyString());
+    }
+
+    @Test
+    void testAcElementPropertiesPublisher() {
+        var publisher = new AcElementPropertiesPublisher();
+        var topicSink = mock(TopicSink.class);
+        publisher.active(List.of(topicSink));
+        var automationComposition =
+                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_UPDATE_JSON, "Crud");
+        publisher.send(automationComposition);
         verify(topicSink).send(anyString());
     }
 

@@ -79,6 +79,7 @@ public class ParticipantAckMessage {
     public ParticipantAckMessage(ParticipantAckMessage source) {
         this.responseTo = source.responseTo;
         this.result = source.result;
+        this.stateChangeResult = source.stateChangeResult;
         this.message = source.message;
         this.messageType = source.messageType;
         this.participantId = source.participantId;
