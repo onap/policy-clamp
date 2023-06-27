@@ -182,19 +182,4 @@ public class ParticipantProvider {
         return ProviderUtils.asEntityList(nodeTemplateStateRepository
             .findByParticipantId(participantId.toString()));
     }
-
-    /**
-     * Reset the Deploy and Lock states of all the ac elements associated with a participant.
-     *
-     * @param participantId the participant id associated with the automation composition elements
-     */
-    public void resetParticipantAcElementState(@NonNull final UUID participantId) {
-        var participantAcElementList = automationCompositionElementRepository
-            .findByParticipantId(participantId.toString());
-        participantAcElementList.forEach(e -> {
-            e.setDeployState(DeployState.UNDEPLOYED);
-            e.setLockState(LockState.NONE);
-        });
-        automationCompositionElementRepository.saveAll(participantAcElementList);
-    }
 }

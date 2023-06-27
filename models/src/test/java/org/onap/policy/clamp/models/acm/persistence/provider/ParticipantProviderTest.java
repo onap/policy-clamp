@@ -252,7 +252,6 @@ class ParticipantProviderTest {
         assertThrows(NullPointerException.class, () -> participantProvider.deleteParticipant(null));
         assertThrows(NullPointerException.class, () -> participantProvider.getAutomationCompositionElements(null));
         assertThrows(NullPointerException.class, () -> participantProvider.getAcNodeTemplateStates(null));
-        assertThrows(NullPointerException.class, () -> participantProvider.resetParticipantAcElementState(null));
     }
 
     @Test
@@ -286,8 +285,6 @@ class ParticipantProviderTest {
             assertThat(e.getDeployState().equals(DeployState.DEPLOYED));
             assertThat(e.getLockState().equals(LockState.LOCKED));
         });
-
-        participantProvider.resetParticipantAcElementState(UUID.randomUUID());
 
         acElementList.get(0).stream().forEach(e -> {
             assertThat(e.getDeployState().equals(DeployState.UNDEPLOYED));
