@@ -49,12 +49,6 @@ public enum ParticipantMessageType {
     AUTOMATION_COMPOSITION_STATE_CHANGE,
 
     /**
-     * Used by the automation composition runtime to order a health check on participants, triggers a
-     * PARTICIPANT_STATUS message with the result of the PARTICIPANT_HEALTH_CHECK operation.
-     */
-    PARTICIPANT_HEALTH_CHECK,
-
-    /**
      * Used by participant to register itself with automation composition runtime.
      */
     PARTICIPANT_REGISTER,
@@ -108,8 +102,7 @@ public enum ParticipantMessageType {
     PROPERTIES_UPDATE,
 
     /**
-     * Used by participant to acknowledge the receipt of PROPERTIES_UPDATE message
-     * from automation composition runtime.
+     * Used by runtime to send composition and instances to a restarted participant.
      */
-    PROPERTIES_UPDATE_ACK
+    PARTICIPANT_RESTART
 }

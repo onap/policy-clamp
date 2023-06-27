@@ -23,9 +23,12 @@ package org.onap.policy.clamp.models.acm.utils;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.UUID;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardYamlCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 /**
@@ -77,5 +80,24 @@ public class CommonTestData {
             fail("Cannot read or decode " + path);
             return null;
         }
+    }
+
+    /**
+     * Get new AutomationCompositionElementDefinition.
+     *
+     * @param id the ToscaConceptIdentifier
+     * @return a new AutomationCompositionElementDefinition
+     */
+    public static AutomationCompositionElementDefinition getAcElementDefinition(ToscaConceptIdentifier id) {
+        var toscaNodeTemplate = new ToscaNodeTemplate();
+        toscaNodeTemplate.setName("nodeTemplate");
+        toscaNodeTemplate.setDerivedFrom("parentNodeTemplate");
+        toscaNodeTemplate.setDescription("Description of nodeTemplate");
+        toscaNodeTemplate.setVersion("1.2.3");
+
+        var acDefinition = new AutomationCompositionElementDefinition();
+        acDefinition.setAcElementDefinitionId(id);
+        acDefinition.setAutomationCompositionElementToscaNodeTemplate(toscaNodeTemplate);
+        return acDefinition;
     }
 }

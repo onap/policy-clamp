@@ -29,7 +29,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.UnaryOperator;
 import lombok.AllArgsConstructor;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
@@ -37,8 +36,6 @@ import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeploy;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
-import org.onap.policy.models.base.PfUtils;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,11 +64,7 @@ public class AutomationCompositionDeployPublisher extends AbstractParticipantPub
         var toscaServiceTemplateFragment = AcmUtils.getToscaServiceTemplateFragment(toscaServiceTemplate);
         Map<UUID, List<AcElementDeploy>> map = new HashMap<>();
         for (var element : automationComposition.getElements().values()) {
-            var acElementDeploy = new AcElementDeploy();
-            acElementDeploy.setId(element.getId());
-            acElementDeploy.setDefinition(new ToscaConceptIdentifier(element.getDefinition()));
-            acElementDeploy.setOrderedState(DeployOrder.DEPLOY);
-            acElementDeploy.setProperties(PfUtils.mapMap(element.getProperties(), UnaryOperator.identity()));
+            var acElementDeploy = AcmUtils.createAcElementDeploy(element, DeployOrder.DEPLOY);
             acElementDeploy.setToscaServiceTemplateFragment(toscaServiceTemplateFragment);
 
             map.putIfAbsent(element.getParticipantId(), new ArrayList<>());
