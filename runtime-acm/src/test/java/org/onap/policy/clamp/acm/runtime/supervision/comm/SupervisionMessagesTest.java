@@ -35,6 +35,7 @@ import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
+import org.onap.policy.clamp.acm.runtime.participants.AcmParticipantProvider;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionAcHandler;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionHandler;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionParticipantHandler;
@@ -144,7 +145,8 @@ class SupervisionMessagesTest {
 
     @Test
     void testParticipantPrimePublisherDecommissioning() {
-        var publisher = new ParticipantPrimePublisher(mock(ParticipantProvider.class));
+        var publisher = new ParticipantPrimePublisher(mock(ParticipantProvider.class),
+                mock(AcmParticipantProvider.class));
         var topicSink = mock(TopicSink.class);
         publisher.active(List.of(topicSink));
         publisher.sendDepriming(UUID.randomUUID());
@@ -165,7 +167,7 @@ class SupervisionMessagesTest {
                 participantId);
         var participantProvider = mock(ParticipantProvider.class);
         when(participantProvider.getSupportedElementMap()).thenReturn(supportedElementMap);
-        var publisher = new ParticipantPrimePublisher(participantProvider);
+        var publisher = new ParticipantPrimePublisher(participantProvider, mock(AcmParticipantProvider.class));
         var topicSink = mock(TopicSink.class);
         publisher.active(List.of(topicSink));
         var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);

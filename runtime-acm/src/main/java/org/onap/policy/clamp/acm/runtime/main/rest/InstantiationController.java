@@ -99,7 +99,7 @@ public class InstantiationController extends AbstractRestController implements A
     }
 
     /**
-     * Deletes a automation composition definition.
+     * Deletes an automation composition.
      *
      * @param compositionId The UUID of the automation composition definition
      * @param instanceId The UUID of the automation composition instance
