@@ -35,7 +35,7 @@ public class AutomationCompositionStateChangePublisher
         extends AbstractParticipantPublisher<AutomationCompositionStateChange> {
 
     /**
-     * Send AutomationCompositionStateChange message to to Participant.
+     * Send AutomationCompositionStateChange message to Participant.
      *
      * @param automationComposition the AutomationComposition
      * @param startPhase the startPhase

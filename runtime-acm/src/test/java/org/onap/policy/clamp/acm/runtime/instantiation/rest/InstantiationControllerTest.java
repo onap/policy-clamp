@@ -47,6 +47,7 @@ import org.onap.policy.clamp.models.acm.messages.rest.instantiation.AcInstanceSt
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
+import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -75,6 +76,9 @@ class InstantiationControllerTest extends CommonRestController {
 
     @Autowired
     private AcDefinitionProvider acDefinitionProvider;
+
+    @Autowired
+    private ParticipantProvider participantProvider;
 
     @Autowired
     private AutomationCompositionInstantiationProvider instantiationProvider;
@@ -335,6 +339,11 @@ class InstantiationControllerTest extends CommonRestController {
         serviceTemplateCreate.setName(name);
         var acmDefinition = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
         acDefinitionProvider.updateAcDefinition(acmDefinition);
+        saveDummyParticipantInDb();
         return acmDefinition.getCompositionId();
+    }
+
+    private void saveDummyParticipantInDb() {
+        participantProvider.saveParticipant(CommonTestData.createParticipant(CommonTestData.getParticipantId()));
     }
 }

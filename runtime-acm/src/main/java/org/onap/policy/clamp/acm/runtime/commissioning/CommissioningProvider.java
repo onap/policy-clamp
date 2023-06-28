@@ -21,12 +21,14 @@
 
 package org.onap.policy.clamp.acm.runtime.commissioning;
 
+import java.util.HashSet;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.Response.Status;
 import lombok.RequiredArgsConstructor;
+import org.onap.policy.clamp.acm.runtime.participants.AcmParticipantProvider;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantPrimePublisher;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
@@ -54,6 +56,7 @@ public class CommissioningProvider {
 
     private final AcDefinitionProvider acDefinitionProvider;
     private final AutomationCompositionProvider acProvider;
+    private final AcmParticipantProvider acmParticipantProvider;
     private final AcTypeStateResolver acTypeStateResolver;
     private final ParticipantPrimePublisher participantPrimePublisher;
 
@@ -209,10 +212,16 @@ public class CommissioningProvider {
 
     private void deprime(AutomationCompositionDefinition acmDefinition) {
         acmDefinition.setStateChangeResult(StateChangeResult.NO_ERROR);
+        var participantIds = new HashSet<UUID>();
         for (var elementState : acmDefinition.getElementStateMap().values()) {
-            if (elementState.getParticipantId() != null) {
+            var participantId = elementState.getParticipantId();
+            if (participantId != null) {
                 elementState.setState(AcTypeState.DEPRIMING);
+                participantIds.add(participantId);
             }
+        }
+        if (! participantIds.isEmpty()) {
+            acmParticipantProvider.verifyParticipantState(participantIds);
         }
         acmDefinition.setState(AcTypeState.DEPRIMING);
         acDefinitionProvider.updateAcDefinition(acmDefinition);

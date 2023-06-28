@@ -22,16 +22,19 @@
 package org.onap.policy.clamp.acm.runtime.instantiation;
 
 import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import lombok.AllArgsConstructor;
+import org.onap.policy.clamp.acm.runtime.participants.AcmParticipantProvider;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionAcHandler;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.AcInstanceStateUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
@@ -58,6 +61,7 @@ public class AutomationCompositionInstantiationProvider {
     private final AcDefinitionProvider acDefinitionProvider;
     private final AcInstanceStateResolver acInstanceStateResolver;
     private final SupervisionAcHandler supervisionAcHandler;
+    private final AcmParticipantProvider acmParticipantProvider;
 
     /**
      * Create automation composition.
@@ -187,6 +191,11 @@ public class AutomationCompositionInstantiationProvider {
                     ValidationStatus.INVALID, "Commissioned automation composition definition not primed"));
             return result;
         }
+        var participantIds = acDefinitionOpt.get().getElementStateMap().values().stream()
+                .map(NodeTemplateState::getParticipantId).collect(Collectors.toSet());
+
+        acmParticipantProvider.verifyParticipantState(participantIds);
+
         result.addResult(AcmUtils.validateAutomationComposition(automationComposition,
                 acDefinitionOpt.get().getServiceTemplate()));
 
@@ -236,9 +245,15 @@ public class AutomationCompositionInstantiationProvider {
             throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
                     "Automation composition state is still " + automationComposition.getDeployState());
         }
-        var response = new InstantiationResponse();
-        var acDefinition = acDefinitionProvider.getAcDefinition(automationComposition.getCompositionId());
+        var acDefinition = acDefinitionProvider
+                .getAcDefinition(automationComposition.getCompositionId());
+        if (acDefinition != null) {
+            var participantIds = acDefinition.getElementStateMap().values().stream()
+                    .map(NodeTemplateState::getParticipantId).collect(Collectors.toSet());
+            acmParticipantProvider.verifyParticipantState(participantIds);
+        }
         supervisionAcHandler.delete(automationComposition, acDefinition);
+        var response = new InstantiationResponse();
         response.setInstanceId(automationComposition.getInstanceId());
         response.setAffectedAutomationComposition(automationComposition.getKey().asIdentifier());
         return response;
@@ -275,6 +290,11 @@ public class AutomationCompositionInstantiationProvider {
                     automationComposition.getCompositionId() + DO_NOT_MATCH + compositionId);
         }
         var acDefinition = acDefinitionProvider.getAcDefinition(automationComposition.getCompositionId());
+
+        var participantIds = acDefinition.getElementStateMap().values().stream()
+                .map(NodeTemplateState::getParticipantId).collect(Collectors.toSet());
+
+        acmParticipantProvider.verifyParticipantState(participantIds);
         var result = acInstanceStateResolver.resolve(acInstanceStateUpdate.getDeployOrder(),
                 acInstanceStateUpdate.getLockOrder(), automationComposition.getDeployState(),
                 automationComposition.getLockState(), automationComposition.getStateChangeResult());

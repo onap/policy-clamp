@@ -25,10 +25,12 @@ package org.onap.policy.clamp.acm.runtime.supervision.comm;
 import io.micrometer.core.annotation.Timed;
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
+import org.onap.policy.clamp.acm.runtime.participants.AcmParticipantProvider;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
@@ -50,6 +52,7 @@ public class ParticipantPrimePublisher extends AbstractParticipantPublisher<Part
     private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantPrimePublisher.class);
 
     private final ParticipantProvider participantProvider;
+    private final AcmParticipantProvider acmParticipantProvider;
 
     /**
      * Send ParticipantPrime to Participant
@@ -72,7 +75,7 @@ public class ParticipantPrimePublisher extends AbstractParticipantPublisher<Part
     }
 
     /**
-     * Pepare the Priming message creating the list of ParticipantDefinition to send
+     * Prepare the Priming message creating the list of ParticipantDefinition to send
      * and fill the ElementState map of the AC Definition.
      *
      * @param acmDefinition the AutomationComposition Definition
@@ -82,11 +85,13 @@ public class ParticipantPrimePublisher extends AbstractParticipantPublisher<Part
         acmDefinition.setState(AcTypeState.PRIMING);
         var acElements = AcmUtils.extractAcElementsFromServiceTemplate(acmDefinition.getServiceTemplate());
         Map<ToscaConceptIdentifier, UUID> supportedElementMap = new HashMap<>();
+        var participantIds = new HashSet<UUID>();
         if (AcTypeState.PRIMED.equals(acmDefinition.getState())) {
             // scenario Prime again, participants already assigned
             for (var elementEntry : acElements) {
                 var elementState = acmDefinition.getElementStateMap().get(elementEntry.getKey());
                 elementState.setState(AcTypeState.PRIMING);
+                participantIds.add(elementState.getParticipantId());
                 var type = new ToscaConceptIdentifier(elementEntry.getValue().getType(),
                         elementEntry.getValue().getTypeVersion());
                 supportedElementMap.put(type, elementState.getParticipantId());
@@ -99,9 +104,14 @@ public class ParticipantPrimePublisher extends AbstractParticipantPublisher<Part
                 elementState.setState(AcTypeState.PRIMING);
                 var type = new ToscaConceptIdentifier(elementEntry.getValue().getType(),
                         elementEntry.getValue().getTypeVersion());
-                elementState.setParticipantId(supportedElementMap.get(type));
+                var participantId = supportedElementMap.get(type);
+                if (participantId != null) {
+                    elementState.setParticipantId(participantId);
+                    participantIds.add(participantId);
+                }
             }
         }
+        acmParticipantProvider.verifyParticipantState(participantIds);
         return AcmUtils.prepareParticipantPriming(acElements, supportedElementMap);
     }
 
