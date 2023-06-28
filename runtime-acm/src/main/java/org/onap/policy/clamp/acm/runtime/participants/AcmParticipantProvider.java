@@ -24,7 +24,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
+import javax.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.MapUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantStatusReqPublisher;
@@ -33,6 +35,7 @@ import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantInformation;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
+import org.onap.policy.models.base.PfModelRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -105,6 +108,22 @@ public class AcmParticipantProvider {
      */
     public void sendAllParticipantStatusRequest() {
         this.participantStatusReqPublisher.send((UUID) null);
+    }
+
+    /**
+     * Verify Participant state.
+     *
+     * @param participantIds The list of UUIDs of the participants to get
+     * @throws  PfModelRuntimeException in case the participant is offline
+     */
+    public void verifyParticipantState(Set<UUID> participantIds) {
+        for (UUID participantId : participantIds) {
+            var participant = this.participantProvider.getParticipantById(participantId);
+            if (! participant.getParticipantState().equals(ParticipantState.ON_LINE)) {
+                throw new PfModelRuntimeException(Response.Status.CONFLICT,
+                        "Participant: " + participantId + " is OFFLINE");
+            }
+        }
     }
 
     private Map<UUID, AutomationCompositionElement> getAutomationCompositionElementsForParticipant(UUID participantId) {

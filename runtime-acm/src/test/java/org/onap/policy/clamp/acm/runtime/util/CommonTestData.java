@@ -28,6 +28,7 @@ import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeEx
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
@@ -92,6 +93,7 @@ public class CommonTestData {
     public static Participant createParticipant(UUID participantId) {
         var participant = new Participant();
         participant.setParticipantId(participantId);
+        participant.setParticipantState(ParticipantState.ON_LINE);
         return participant;
     }
 
