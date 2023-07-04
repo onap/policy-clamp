@@ -20,6 +20,11 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.api.impl;
 
+<<<<<<< HEAD   (358a9a Fix OFF_LINE issue when Status message upcoming)
+=======
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+>>>>>>> CHANGE (ef0a60 Add restart support inside participants)
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -27,6 +32,13 @@ import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.AutomationCompositionOutHandler;
+<<<<<<< HEAD   (358a9a Fix OFF_LINE issue when Status message upcoming)
+=======
+import org.onap.policy.clamp.acm.participant.intermediary.handler.CacheProvider;
+import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
+import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
+>>>>>>> CHANGE (ef0a60 Add restart support inside participants)
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
@@ -58,5 +70,30 @@ class ParticipantIntermediaryApiImplTest {
                 StateChangeResult.NO_ERROR, "");
         verify(automationComposiitonHandler).updateAutomationCompositionElementState(automationCompositionId, uuid,
                 DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "");
+<<<<<<< HEAD   (358a9a Fix OFF_LINE issue when Status message upcoming)
+=======
+
+        var map = Map.of(automationCompositionId, new AutomationComposition());
+        when(cacheProvider.getAutomationCompositions()).thenReturn(map);
+        var acElement = new AutomationCompositionElement();
+        acElement.setId(uuid);
+        map.get(automationCompositionId).setElements(Map.of(uuid, acElement));
+
+        var result = apiImpl.getAutomationCompositions();
+        assertEquals(map, result);
+
+        var element = apiImpl.getAutomationCompositionElement(UUID.randomUUID(), UUID.randomUUID());
+        assertThat(element).isNull();
+
+        element = apiImpl.getAutomationCompositionElement(automationCompositionId, UUID.randomUUID());
+        assertThat(element).isNull();
+
+        element = apiImpl.getAutomationCompositionElement(automationCompositionId, uuid);
+        assertEquals(acElement, element);
+
+        apiImpl.updateCompositionState(uuid, AcTypeState.PRIMED, StateChangeResult.NO_ERROR, "");
+        verify(automationComposiitonHandler).updateCompositionState(uuid, AcTypeState.PRIMED,
+                StateChangeResult.NO_ERROR, "");
+>>>>>>> CHANGE (ef0a60 Add restart support inside participants)
     }
 }

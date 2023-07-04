@@ -40,6 +40,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
+import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.models.base.PfModelException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -188,7 +189,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
     @Override
     public void update(UUID automationCompositionId, AcElementDeploy element, Map<String, Object> properties)
             throws PfModelException {
-        LOGGER.debug("updat call");
+        LOGGER.debug("update call");
 
         if (!execution(config.getUpdateTimerMs(), "Current Thread update is Interrupted during execution {}",
                 element.getId())) {
@@ -233,6 +234,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
     @Override
     public void prime(UUID compositionId, List<AutomationCompositionElementDefinition> elementDefinitionList)
             throws PfModelException {
+        LOGGER.debug("prime call");
 
         if (!execution(config.getPrimeTimerMs(), "Current Thread prime is Interrupted during execution {}",
                 compositionId)) {
@@ -250,6 +252,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
 
     @Override
     public void deprime(UUID compositionId) throws PfModelException {
+        LOGGER.debug("deprime call");
 
         if (!execution(config.getDeprimeTimerMs(), "Current Thread deprime is Interrupted during execution {}",
                 compositionId)) {
@@ -286,5 +289,58 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
             }
         }
         return result;
+    }
+
+    @Override
+    public void handleRestartComposition(UUID compositionId,
+            List<AutomationCompositionElementDefinition> elementDefinitionList, AcTypeState state)
+            throws PfModelException {
+        LOGGER.debug("restart composition definition call");
+        switch (state) {
+            case PRIMING:
+                prime(compositionId, elementDefinitionList);
+                break;
+
+            case DEPRIMING:
+                deprime(compositionId);
+                break;
+
+            default:
+                intermediaryApi.updateCompositionState(compositionId, state, StateChangeResult.NO_ERROR, "Restarted");
+        }
+    }
+
+    @Override
+    public void handleRestartInstance(UUID automationCompositionId, AcElementDeploy element,
+            Map<String, Object> properties, DeployState deployState, LockState lockState) throws PfModelException {
+        LOGGER.debug("restart instance call");
+        if (!AcmUtils.isInTransitionalState(deployState, lockState)) {
+            intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
+                    deployState, lockState, StateChangeResult.NO_ERROR, "Restarted");
+            return;
+        }
+        if (DeployState.DEPLOYING.equals(deployState)) {
+            deploy(automationCompositionId, element, properties);
+            return;
+        }
+        if (DeployState.UNDEPLOYING.equals(deployState)) {
+            undeploy(automationCompositionId, element.getId());
+            return;
+        }
+        if (DeployState.UPDATING.equals(deployState)) {
+            update(automationCompositionId, element, properties);
+            return;
+        }
+        if (DeployState.DELETING.equals(deployState)) {
+            delete(automationCompositionId, element.getId());
+            return;
+        }
+        if (LockState.LOCKING.equals(lockState)) {
+            lock(automationCompositionId, element.getId());
+            return;
+        }
+        if (LockState.UNLOCKING.equals(lockState)) {
+            unlock(automationCompositionId, element.getId());
+        }
     }
 }

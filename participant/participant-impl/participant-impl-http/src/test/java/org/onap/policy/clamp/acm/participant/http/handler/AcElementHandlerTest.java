@@ -196,4 +196,48 @@ class AcElementHandlerTest {
         verify(participantIntermediaryApi).updateCompositionState(compositionId, AcTypeState.COMMISSIONED,
                 StateChangeResult.NO_ERROR, "Deprimed");
     }
+
+    @Test
+    void testHandleRestartComposition() throws PfModelException {
+        var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class));
+
+        var compositionId = UUID.randomUUID();
+        automationCompositionElementHandler.handleRestartComposition(compositionId, List.of(), AcTypeState.PRIMED);
+        verify(participantIntermediaryApi).updateCompositionState(compositionId, AcTypeState.PRIMED,
+                StateChangeResult.NO_ERROR, "Restarted");
+    }
+
+    @Test
+    void testHandleRestartInstanceDeploying() throws PfModelException {
+        var serviceTemplate = ToscaUtils.readAutomationCompositionFromTosca();
+        var nodeTemplatesMap = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
+        var map = new HashMap<>(nodeTemplatesMap.get(HTTP_AUTOMATION_COMPOSITION_ELEMENT).getProperties());
+        var element = commonTestData.getAutomationCompositionElement();
+        map.putAll(element.getProperties());
+        var instanceId = commonTestData.getAutomationCompositionId();
+        var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class));
+
+        automationCompositionElementHandler.handleRestartInstance(instanceId, element, map, DeployState.DEPLOYING,
+                LockState.NONE);
+        verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
+                DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Deployed");
+    }
+
+    @Test
+    void testHandleRestartInstanceDeployed() throws PfModelException {
+        var element = commonTestData.getAutomationCompositionElement();
+        var instanceId = commonTestData.getAutomationCompositionId();
+        var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class));
+
+        automationCompositionElementHandler.handleRestartInstance(instanceId, element, element.getProperties(),
+                DeployState.DEPLOYED, LockState.LOCKED);
+        verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
+                DeployState.DEPLOYED, LockState.LOCKED, StateChangeResult.NO_ERROR, "Restarted");
+    }
 }

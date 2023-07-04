@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.UUID;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
@@ -38,21 +39,30 @@ public interface ParticipantIntermediaryApi {
      * Update the state of a automation composition element.
      *
      * @param automationCompositionId the ID of the automation composition to update the state on
-     * @param id the ID of the automation composition element to update the state on
+     * @param elementId the ID of the automation composition element to update the state on
      * @param deployState the Deploy State of the automation composition element
      * @param lockState the Lock State of the automation composition element
      * @param stateChangeResult the indicator if error occurs
      * @param message the message
      */
-    void updateAutomationCompositionElementState(UUID automationCompositionId, UUID id, DeployState deployState,
+    void updateAutomationCompositionElementState(UUID automationCompositionId, UUID elementId, DeployState deployState,
             LockState lockState, StateChangeResult stateChangeResult, String message);
 
     /**
-     * Get AutomationCompositions.
+     * Get a copy of all AutomationCompositions.
      *
      * @return get all AutomationCompositions
      */
     Map<UUID, AutomationComposition> getAutomationCompositions();
+
+    /**
+     * Get a copy of the AutomationCompositionElement by automationCompositionId and elementId.
+     *
+     * @param automationCompositionId the ID of the automation composition to update the state on
+     * @param elementId the ID of the automation composition element to update the state on
+     * @return get the AutomationCompositionElement
+     */
+    AutomationCompositionElement getAutomationCompositionElement(UUID automationCompositionId, UUID elementId);
 
     /**
      * Send Automation Composition Element update Info to AC-runtime.
