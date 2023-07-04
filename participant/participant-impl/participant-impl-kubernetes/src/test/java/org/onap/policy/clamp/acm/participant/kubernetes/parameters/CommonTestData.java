@@ -26,10 +26,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
+import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
+import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.common.endpoints.parameters.TopicParameters;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 public class CommonTestData {
 
@@ -39,6 +42,8 @@ public class CommonTestData {
     public static final List<TopicParameters> TOPIC_PARAMS = List.of(getTopicParams());
     public static final Coder CODER = new StandardCoder();
     private static final UUID AC_ID = UUID.randomUUID();
+    private static final String KEY_NAME =
+            "org.onap.domain.database.HelloWorld_K8SMicroserviceAutomationCompositionElement";
 
     /**
      * Get ParticipantK8sParameters.
@@ -153,5 +158,18 @@ public class CommonTestData {
      */
     public UUID getAutomationCompositionId() {
         return AC_ID;
+    }
+
+    /**
+     * Create an AcElementDeploy.
+     *
+     * @return an AcElementDeploy
+     */
+    public static AcElementDeploy createAcElementDeploy() {
+        var element = new AcElementDeploy();
+        element.setId(UUID.randomUUID());
+        element.setDefinition(new ToscaConceptIdentifier(KEY_NAME, "1.0.1"));
+        element.setOrderedState(DeployOrder.DEPLOY);
+        return element;
     }
 }

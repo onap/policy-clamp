@@ -192,9 +192,9 @@ class AutomationCompositionElementHandlerTest {
         when(intermediaryApi.getAutomationCompositions()).thenReturn(map);
         var result = acElementHandler.getDataList();
         var data = result.getList().get(0);
-        var autocomposition = map.values().iterator().next();
-        assertEquals(autocomposition.getInstanceId(), data.getAutomationCompositionId());
-        var element = autocomposition.getElements().values().iterator().next();
+        var automationcomposition = map.values().iterator().next();
+        assertEquals(automationcomposition.getInstanceId(), data.getAutomationCompositionId());
+        var element = automationcomposition.getElements().values().iterator().next();
         assertEquals(element.getId(), data.getAutomationCompositionElementId());
     }
 
@@ -232,5 +232,67 @@ class AutomationCompositionElementHandlerTest {
         acElementHandler.deprime(compositionId);
         verify(intermediaryApi).updateCompositionState(compositionId, AcTypeState.PRIMED, StateChangeResult.FAILED,
                 "Deprime failed!");
+    }
+
+    @Test
+    void testHandleRestartComposition() throws PfModelException {
+        var config = new SimConfig();
+        config.setPrimeTimerMs(1);
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var acElementHandler = new AutomationCompositionElementHandler(intermediaryApi);
+        acElementHandler.setConfig(config);
+        var compositionId = UUID.randomUUID();
+        acElementHandler.handleRestartComposition(compositionId, List.of(), AcTypeState.PRIMING);
+        verify(intermediaryApi).updateCompositionState(compositionId, AcTypeState.PRIMED, StateChangeResult.NO_ERROR,
+                "Primed");
+
+        acElementHandler.handleRestartComposition(compositionId, List.of(), AcTypeState.PRIMED);
+        verify(intermediaryApi).updateCompositionState(compositionId, AcTypeState.PRIMED, StateChangeResult.NO_ERROR,
+                "Restarted");
+
+        acElementHandler.handleRestartComposition(compositionId, List.of(), AcTypeState.DEPRIMING);
+        verify(intermediaryApi).updateCompositionState(compositionId, AcTypeState.COMMISSIONED,
+                StateChangeResult.NO_ERROR, "Deprimed");
+    }
+
+    @Test
+    void testHandleRestartInstance() throws PfModelException {
+        var config = new SimConfig();
+        config.setDeployTimerMs(1);
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var acElementHandler = new AutomationCompositionElementHandler(intermediaryApi);
+        acElementHandler.setConfig(config);
+        var instanceId = UUID.randomUUID();
+        var element = new AcElementDeploy();
+        element.setId(UUID.randomUUID());
+        acElementHandler.handleRestartInstance(instanceId, element, Map.of(), DeployState.DEPLOYING, LockState.NONE);
+        verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
+                DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Deployed");
+
+        acElementHandler.handleRestartInstance(instanceId, element, Map.of(), DeployState.DEPLOYED, LockState.LOCKED);
+        verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
+                DeployState.DEPLOYED, LockState.LOCKED, StateChangeResult.NO_ERROR, "Restarted");
+
+        acElementHandler.handleRestartInstance(instanceId, element, Map.of(), DeployState.UPDATING, LockState.LOCKED);
+        verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
+                DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Updated");
+
+        acElementHandler.handleRestartInstance(instanceId, element, Map.of(), DeployState.UNDEPLOYING,
+                LockState.LOCKED);
+        verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
+                DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR, "Undeployed");
+
+        acElementHandler.handleRestartInstance(instanceId, element, Map.of(), DeployState.DELETING, LockState.NONE);
+        verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
+                DeployState.DELETED, null, StateChangeResult.NO_ERROR, "Deleted");
+
+        acElementHandler.handleRestartInstance(instanceId, element, Map.of(), DeployState.DEPLOYED, LockState.LOCKING);
+        verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(), null,
+                LockState.LOCKED, StateChangeResult.NO_ERROR, "Locked");
+
+        acElementHandler.handleRestartInstance(instanceId, element, Map.of(), DeployState.DEPLOYED,
+                LockState.UNLOCKING);
+        verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(), null,
+                LockState.UNLOCKED, StateChangeResult.NO_ERROR, "Unlocked");
     }
 }
