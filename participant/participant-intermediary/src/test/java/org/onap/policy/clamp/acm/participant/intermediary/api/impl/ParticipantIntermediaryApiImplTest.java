@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.api.impl;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -32,6 +33,7 @@ import org.onap.policy.clamp.acm.participant.intermediary.handler.AutomationComp
 import org.onap.policy.clamp.acm.participant.intermediary.handler.CacheProvider;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
@@ -65,10 +67,23 @@ class ParticipantIntermediaryApiImplTest {
         verify(automationComposiitonHandler).updateAutomationCompositionElementState(automationCompositionId, uuid,
                 DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "");
 
-        var map = Map.of(uuid, new AutomationComposition());
+        var map = Map.of(automationCompositionId, new AutomationComposition());
         when(cacheProvider.getAutomationCompositions()).thenReturn(map);
+        var acElement = new AutomationCompositionElement();
+        acElement.setId(uuid);
+        map.get(automationCompositionId).setElements(Map.of(uuid, acElement));
+
         var result = apiImpl.getAutomationCompositions();
         assertEquals(map, result);
+
+        var element = apiImpl.getAutomationCompositionElement(UUID.randomUUID(), UUID.randomUUID());
+        assertThat(element).isNull();
+
+        element = apiImpl.getAutomationCompositionElement(automationCompositionId, UUID.randomUUID());
+        assertThat(element).isNull();
+
+        element = apiImpl.getAutomationCompositionElement(automationCompositionId, uuid);
+        assertEquals(acElement, element);
 
         apiImpl.updateCompositionState(uuid, AcTypeState.PRIMED, StateChangeResult.NO_ERROR, "");
         verify(automationComposiitonHandler).updateCompositionState(uuid, AcTypeState.PRIMED,

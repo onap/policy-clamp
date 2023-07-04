@@ -29,6 +29,7 @@ import org.onap.policy.clamp.acm.participant.intermediary.handler.AutomationComp
 import org.onap.policy.clamp.acm.participant.intermediary.handler.CacheProvider;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
@@ -69,5 +70,15 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
     public void updateCompositionState(UUID compositionId, AcTypeState state, StateChangeResult stateChangeResult,
             String message) {
         automationCompositionHandler.updateCompositionState(compositionId, state, stateChangeResult, message);
+    }
+
+    @Override
+    public AutomationCompositionElement getAutomationCompositionElement(UUID automationCompositionId, UUID elementId) {
+        var automationComposition = cacheProvider.getAutomationCompositions().get(automationCompositionId);
+        if (automationComposition == null) {
+            return null;
+        }
+        var element = automationComposition.getElements().get(elementId);
+        return element != null ? new AutomationCompositionElement(element) : null;
     }
 }

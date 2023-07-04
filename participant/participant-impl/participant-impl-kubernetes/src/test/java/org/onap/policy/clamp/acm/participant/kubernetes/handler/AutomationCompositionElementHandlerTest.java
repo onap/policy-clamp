@@ -52,14 +52,13 @@ import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartList;
 import org.onap.policy.clamp.acm.participant.kubernetes.parameters.CommonTestData;
 import org.onap.policy.clamp.acm.participant.kubernetes.service.ChartService;
 import org.onap.policy.clamp.acm.participant.kubernetes.utils.TestUtils;
-import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
-import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
+import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.base.PfModelException;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -121,12 +120,7 @@ class AutomationCompositionElementHandlerTest {
     void test_AutomationCompositionElementUpdate()
             throws PfModelException, IOException, ServiceException, ExecutionException, InterruptedException {
         doNothing().when(automationCompositionElementHandler).checkPodStatus(any(), any(), any(), anyInt(), anyInt());
-        var elementId1 = UUID.randomUUID();
-        var element = new AcElementDeploy();
-        element.setId(elementId1);
-        element.setDefinition(new ToscaConceptIdentifier(KEY_NAME, "1.0.1"));
-        element.setOrderedState(DeployOrder.DEPLOY);
-
+        var element = CommonTestData.createAcElementDeploy();
         var nodeTemplatesMap = toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates();
 
         doReturn(false).when(chartService).installChart(any());
@@ -137,7 +131,7 @@ class AutomationCompositionElementHandlerTest {
         automationCompositionElementHandler.deploy(commonTestData.getAutomationCompositionId(), element,
                 nodeTemplatesMap.get(K8S_AUTOMATION_COMPOSITION_ELEMENT).getProperties());
 
-        assertThat(automationCompositionElementHandler.getChartMap()).hasSize(1).containsKey(elementId1);
+        assertThat(automationCompositionElementHandler.getChartMap()).hasSize(1).containsKey(element.getId());
 
         doThrow(new ServiceException("Error installing the chart")).when(chartService).installChart(Mockito.any());
 
@@ -154,18 +148,13 @@ class AutomationCompositionElementHandlerTest {
     void test_checkPodStatus() throws ExecutionException, InterruptedException {
         var chartInfo = charts.get(0);
         var automationCompositionId = UUID.randomUUID();
-        var element = new AutomationCompositionElement();
         assertThrows(ServiceException.class, () -> automationCompositionElementHandler
-                .checkPodStatus(automationCompositionId, element.getId(), chartInfo, 1, 1));
+                .checkPodStatus(automationCompositionId, UUID.randomUUID(), chartInfo, 1, 1));
     }
 
     @Test
     void testUpdate() throws PfModelException {
-        var elementId1 = UUID.randomUUID();
-        var element = new AcElementDeploy();
-        element.setId(elementId1);
-        element.setDefinition(new ToscaConceptIdentifier(KEY_NAME, "1.0.1"));
-        element.setOrderedState(DeployOrder.DEPLOY);
+        var element = CommonTestData.createAcElementDeploy();
         var automationCompositionId = commonTestData.getAutomationCompositionId();
         assertDoesNotThrow(
                 () -> automationCompositionElementHandler.update(automationCompositionId, element, Map.of()));
@@ -194,5 +183,55 @@ class AutomationCompositionElementHandlerTest {
     @Test
     void testDeprime() throws PfModelException {
         assertDoesNotThrow(() -> automationCompositionElementHandler.deprime(UUID.randomUUID()));
+    }
+
+    @Test
+    void testHandleRestartComposition() throws PfModelException {
+        assertDoesNotThrow(() -> automationCompositionElementHandler.handleRestartComposition(UUID.randomUUID(),
+                List.of(), AcTypeState.PRIMED));
+    }
+
+    @Test
+    void testHandleRestartInstanceDeploying()
+            throws PfModelException, InterruptedException, ServiceException, IOException {
+        doNothing().when(automationCompositionElementHandler).checkPodStatus(any(), any(), any(), anyInt(), anyInt());
+        var element = CommonTestData.createAcElementDeploy();
+        var nodeTemplatesMap = toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates();
+
+        doReturn(true).when(chartService).installChart(any());
+        assertDoesNotThrow(() -> automationCompositionElementHandler.handleRestartInstance(
+                commonTestData.getAutomationCompositionId(), element,
+                nodeTemplatesMap.get(K8S_AUTOMATION_COMPOSITION_ELEMENT).getProperties(), DeployState.DEPLOYING,
+                LockState.NONE));
+
+        assertThat(automationCompositionElementHandler.getChartMap()).containsKey(element.getId());
+    }
+
+    @Test
+    void testHandleRestartInstanceDeployed()
+            throws PfModelException, InterruptedException, ServiceException, IOException {
+        doNothing().when(automationCompositionElementHandler).checkPodStatus(any(), any(), any(), anyInt(), anyInt());
+        var element = CommonTestData.createAcElementDeploy();
+        var nodeTemplatesMap = toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates();
+
+        assertDoesNotThrow(() -> automationCompositionElementHandler.handleRestartInstance(
+                commonTestData.getAutomationCompositionId(), element,
+                nodeTemplatesMap.get(K8S_AUTOMATION_COMPOSITION_ELEMENT).getProperties(), DeployState.DEPLOYED,
+                LockState.LOCKED));
+
+        assertThat(automationCompositionElementHandler.getChartMap()).containsKey(element.getId());
+    }
+
+    @Test
+    void testHandleRestartInstanceUndeploying()
+            throws PfModelException, InterruptedException, ServiceException, IOException {
+        doNothing().when(automationCompositionElementHandler).checkPodStatus(any(), any(), any(), anyInt(), anyInt());
+        var element = CommonTestData.createAcElementDeploy();
+        var nodeTemplatesMap = toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates();
+
+        assertDoesNotThrow(() -> automationCompositionElementHandler.handleRestartInstance(
+                commonTestData.getAutomationCompositionId(), element,
+                nodeTemplatesMap.get(K8S_AUTOMATION_COMPOSITION_ELEMENT).getProperties(), DeployState.UNDEPLOYING,
+                LockState.LOCKED));
     }
 }
