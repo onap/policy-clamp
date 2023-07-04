@@ -49,6 +49,9 @@ import org.onap.policy.clamp.acm.participant.kserve.exception.KserveException;
 import org.onap.policy.clamp.acm.participant.kserve.k8s.KserveClient;
 import org.onap.policy.clamp.acm.participant.kserve.utils.CommonTestData;
 import org.onap.policy.clamp.acm.participant.kserve.utils.ToscaUtils;
+import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -164,5 +167,46 @@ class AcElementHandlerTest {
     @Test
     void testDeprime() throws PfModelException {
         assertDoesNotThrow(() -> automationCompositionElementHandler.deprime(UUID.randomUUID()));
+    }
+
+    @Test
+    void testHandleRestartComposition() throws PfModelException {
+        assertDoesNotThrow(() -> automationCompositionElementHandler.handleRestartComposition(UUID.randomUUID(),
+                List.of(), AcTypeState.PRIMED));
+    }
+
+    @Test
+    void testHandleRestartInstanceDeploying() throws PfModelException {
+        var element = commonTestData.getAutomationCompositionElement();
+
+        var nodeTemplatesMap = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
+        assertDoesNotThrow(() -> automationCompositionElementHandler.handleRestartInstance(
+                commonTestData.getAutomationCompositionId(), element,
+                nodeTemplatesMap.get(KSERVE_AUTOMATION_COMPOSITION_ELEMENT).getProperties(), DeployState.DEPLOYING,
+                LockState.NONE));
+        assertThat(automationCompositionElementHandler.getConfigRequestMap()).containsKey(element.getId());
+    }
+
+    @Test
+    void testHandleRestartInstanceDeployed() throws PfModelException {
+        var element = commonTestData.getAutomationCompositionElement();
+
+        var nodeTemplatesMap = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
+        assertDoesNotThrow(() -> automationCompositionElementHandler.handleRestartInstance(
+                commonTestData.getAutomationCompositionId(), element,
+                nodeTemplatesMap.get(KSERVE_AUTOMATION_COMPOSITION_ELEMENT).getProperties(), DeployState.DEPLOYED,
+                LockState.LOCKED));
+        assertThat(automationCompositionElementHandler.getConfigRequestMap()).containsKey(element.getId());
+    }
+
+    @Test
+    void testHandleRestartInstanceUndeployed() throws PfModelException {
+        var element = commonTestData.getAutomationCompositionElement();
+
+        var nodeTemplatesMap = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
+        assertDoesNotThrow(() -> automationCompositionElementHandler.handleRestartInstance(
+                commonTestData.getAutomationCompositionId(), element,
+                nodeTemplatesMap.get(KSERVE_AUTOMATION_COMPOSITION_ELEMENT).getProperties(), DeployState.UNDEPLOYING,
+                LockState.LOCKED));
     }
 }

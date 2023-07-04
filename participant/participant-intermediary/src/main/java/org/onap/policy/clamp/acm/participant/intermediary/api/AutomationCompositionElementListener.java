@@ -24,7 +24,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
+import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.models.base.PfModelException;
 
 /**
@@ -63,4 +66,11 @@ public interface AutomationCompositionElementListener {
             throws PfModelException;
 
     void deprime(UUID compositionId) throws PfModelException;
+
+    void handleRestartComposition(UUID compositionId,
+            List<AutomationCompositionElementDefinition> elementDefinitionList, AcTypeState state)
+            throws PfModelException;
+
+    void handleRestartInstance(UUID automationCompositionId, AcElementDeploy element, Map<String, Object> properties,
+            DeployState deployState, LockState lockState) throws PfModelException;
 }

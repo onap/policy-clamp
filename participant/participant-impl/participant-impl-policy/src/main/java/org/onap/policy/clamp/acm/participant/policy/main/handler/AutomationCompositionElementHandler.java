@@ -40,6 +40,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDef
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
+import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.pdp.concepts.DeploymentSubGroup;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -243,5 +244,36 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
     public void deprime(UUID compositionId) throws PfModelException {
         intermediaryApi.updateCompositionState(compositionId, AcTypeState.COMMISSIONED, StateChangeResult.NO_ERROR,
                 "Deprimed");
+    }
+
+    @Override
+    public void handleRestartComposition(UUID compositionId,
+            List<AutomationCompositionElementDefinition> elementDefinitionList, AcTypeState state)
+            throws PfModelException {
+        var finalState = AcTypeState.PRIMED.equals(state) || AcTypeState.PRIMING.equals(state) ? AcTypeState.PRIMED
+                : AcTypeState.COMMISSIONED;
+        intermediaryApi.updateCompositionState(compositionId, finalState, StateChangeResult.NO_ERROR, "Restarted");
+    }
+
+    @Override
+    public void handleRestartInstance(UUID automationCompositionId, AcElementDeploy element,
+            Map<String, Object> properties, DeployState deployState, LockState lockState) throws PfModelException {
+        if (DeployState.DEPLOYING.equals(deployState)) {
+            deploy(automationCompositionId, element, properties);
+            return;
+        }
+        if (DeployState.UNDEPLOYING.equals(deployState) || DeployState.DEPLOYED.equals(deployState)
+                || DeployState.UPDATING.equals(deployState)) {
+            var automationCompositionDefinition = element.getToscaServiceTemplateFragment();
+            serviceTemplateMap.put(element.getId(), automationCompositionDefinition);
+        }
+        if (DeployState.UNDEPLOYING.equals(deployState)) {
+            undeploy(automationCompositionId, element.getId());
+            return;
+        }
+        deployState = AcmUtils.deployCompleted(deployState);
+        lockState = AcmUtils.lockCompleted(deployState, lockState);
+        intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(), deployState,
+                lockState, StateChangeResult.NO_ERROR, "Restarted");
     }
 }

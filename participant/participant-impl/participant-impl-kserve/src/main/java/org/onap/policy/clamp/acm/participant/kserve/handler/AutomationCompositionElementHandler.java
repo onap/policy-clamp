@@ -23,10 +23,10 @@ package org.onap.policy.clamp.acm.participant.kserve.handler;
 import io.kubernetes.client.openapi.ApiException;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -50,6 +50,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDef
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
+import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -76,7 +77,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
     private final KserveClient kserveClient;
 
     @Getter(AccessLevel.PACKAGE)
-    private final Map<UUID, ConfigurationEntity> configRequestMap = new HashMap<>();
+    private final Map<UUID, ConfigurationEntity> configRequestMap = new ConcurrentHashMap<>();
 
     private static class ThreadConfig {
 
@@ -205,5 +206,40 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
     public void deprime(UUID compositionId) throws PfModelException {
         intermediaryApi.updateCompositionState(compositionId, AcTypeState.COMMISSIONED, StateChangeResult.NO_ERROR,
                 "Deprimed");
+    }
+
+    @Override
+    public void handleRestartComposition(UUID compositionId,
+            List<AutomationCompositionElementDefinition> elementDefinitionList, AcTypeState state)
+            throws PfModelException {
+        var finalState = AcTypeState.PRIMED.equals(state) || AcTypeState.PRIMING.equals(state) ? AcTypeState.PRIMED
+                : AcTypeState.COMMISSIONED;
+        intermediaryApi.updateCompositionState(compositionId, finalState, StateChangeResult.NO_ERROR, "Restarted");
+    }
+
+    @Override
+    public void handleRestartInstance(UUID automationCompositionId, AcElementDeploy element,
+            Map<String, Object> properties, DeployState deployState, LockState lockState) throws PfModelException {
+        if (DeployState.DEPLOYING.equals(deployState)) {
+            deploy(automationCompositionId, element, properties);
+            return;
+        }
+        if (DeployState.UNDEPLOYING.equals(deployState) || DeployState.DEPLOYED.equals(deployState)
+                || DeployState.UPDATING.equals(deployState)) {
+            try {
+                var configurationEntity = CODER.convert(properties, ConfigurationEntity.class);
+                configRequestMap.put(element.getId(), configurationEntity);
+            } catch (CoderException e) {
+                throw new KserveException(HttpStatus.SC_BAD_REQUEST, "Invalid inference service configuration", e);
+            }
+        }
+        if (DeployState.UNDEPLOYING.equals(deployState)) {
+            undeploy(automationCompositionId, element.getId());
+            return;
+        }
+        deployState = AcmUtils.deployCompleted(deployState);
+        lockState = AcmUtils.lockCompleted(deployState, lockState);
+        intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(), deployState,
+                lockState, StateChangeResult.NO_ERROR, "Restarted");
     }
 }

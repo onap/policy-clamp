@@ -213,4 +213,67 @@ class AcElementHandlerTest {
         verify(participantIntermediaryApi).updateCompositionState(compositionId, AcTypeState.COMMISSIONED,
                 StateChangeResult.NO_ERROR, "Deprimed");
     }
+
+    @Test
+    void testHandleRestartComposition() throws PfModelException {
+        var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(participantIntermediaryApi, acA1PmsClient);
+
+        var compositionId = UUID.randomUUID();
+        automationCompositionElementHandler.handleRestartComposition(compositionId, List.of(), AcTypeState.PRIMED);
+
+        verify(participantIntermediaryApi).updateCompositionState(compositionId, AcTypeState.PRIMED,
+                StateChangeResult.NO_ERROR, "Restarted");
+    }
+
+    @Test
+    void testHandleRestartInstanceDeploying() throws PfModelException {
+        var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(participantIntermediaryApi, acA1PmsClient);
+
+        var automationCompositionId = UUID.randomUUID();
+        var element = commonTestData.getAutomationCompositionElement();
+        var automationCompositionElementId = element.getId();
+        var nodeTemplatesMap = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
+        automationCompositionElementHandler.handleRestartInstance(automationCompositionId, element,
+                nodeTemplatesMap.get(A1_AUTOMATION_COMPOSITION_ELEMENT).getProperties(), DeployState.DEPLOYING,
+                LockState.NONE);
+        verify(participantIntermediaryApi).updateAutomationCompositionElementState(automationCompositionId,
+                automationCompositionElementId, DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Deployed");
+    }
+
+    @Test
+    void testHandleRestartInstanceDeployed() throws PfModelException {
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(intermediaryApi, acA1PmsClient);
+
+        var automationCompositionId = UUID.randomUUID();
+        var element = commonTestData.getAutomationCompositionElement();
+        var nodeTemplatesMap = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
+        automationCompositionElementHandler.handleRestartInstance(automationCompositionId, element,
+                nodeTemplatesMap.get(A1_AUTOMATION_COMPOSITION_ELEMENT).getProperties(), DeployState.DEPLOYED,
+                LockState.LOCKED);
+        verify(intermediaryApi).updateAutomationCompositionElementState(automationCompositionId, element.getId(),
+                DeployState.DEPLOYED, LockState.LOCKED, StateChangeResult.NO_ERROR, "Restarted");
+    }
+
+    @Test
+    void testHandleRestartInstanceUndeployed() throws PfModelException {
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(intermediaryApi, acA1PmsClient);
+
+        var automationCompositionId = UUID.randomUUID();
+        var element = commonTestData.getAutomationCompositionElement();
+        var automationCompositionElementId = element.getId();
+        var nodeTemplatesMap = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
+        automationCompositionElementHandler.handleRestartInstance(automationCompositionId, element,
+                nodeTemplatesMap.get(A1_AUTOMATION_COMPOSITION_ELEMENT).getProperties(), DeployState.UNDEPLOYING,
+                LockState.LOCKED);
+        verify(intermediaryApi).updateAutomationCompositionElementState(automationCompositionId,
+                automationCompositionElementId, DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR, "Undeployed");
+    }
 }
