@@ -41,6 +41,8 @@ public class AutomationCompositionDefinition {
     @NonNull
     private ToscaServiceTemplate serviceTemplate;
 
+    private Boolean restarting;
+
     @NonNull
     private AcTypeState state;
 
@@ -58,6 +60,7 @@ public class AutomationCompositionDefinition {
     public AutomationCompositionDefinition(final AutomationCompositionDefinition otherAcmDefinition) {
         this.compositionId = otherAcmDefinition.compositionId;
         this.serviceTemplate = new ToscaServiceTemplate(otherAcmDefinition.serviceTemplate);
+        this.restarting = otherAcmDefinition.restarting;
         this.state = otherAcmDefinition.state;
         this.elementStateMap = PfUtils.mapMap(otherAcmDefinition.elementStateMap, NodeTemplateState::new);
         this.stateChangeResult = otherAcmDefinition.stateChangeResult;
