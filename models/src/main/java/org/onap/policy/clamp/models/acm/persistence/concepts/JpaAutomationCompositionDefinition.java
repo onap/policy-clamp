@@ -74,6 +74,9 @@ public class JpaAutomationCompositionDefinition extends Validated
     private String version;
 
     @Column
+    private Boolean restarting;
+
+    @Column
     @NotNull
     private AcTypeState state;
 
@@ -94,6 +97,7 @@ public class JpaAutomationCompositionDefinition extends Validated
     public AutomationCompositionDefinition toAuthorative() {
         var acmDefinition = new AutomationCompositionDefinition();
         acmDefinition.setCompositionId(UUID.fromString(this.compositionId));
+        acmDefinition.setRestarting(this.restarting);
         acmDefinition.setState(this.state);
         acmDefinition.setStateChangeResult(this.stateChangeResult);
         acmDefinition.setServiceTemplate(this.serviceTemplate.toAuthorative());
@@ -107,6 +111,7 @@ public class JpaAutomationCompositionDefinition extends Validated
     @Override
     public void fromAuthorative(final AutomationCompositionDefinition copyConcept) {
         this.compositionId = copyConcept.getCompositionId().toString();
+        this.restarting = copyConcept.getRestarting();
         this.state = copyConcept.getState();
         this.stateChangeResult = copyConcept.getStateChangeResult();
         this.serviceTemplate = new DocToscaServiceTemplate(copyConcept.getServiceTemplate());

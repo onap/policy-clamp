@@ -38,6 +38,8 @@ public class NodeTemplateState {
 
     private ToscaConceptIdentifier nodeTemplateId;
 
+    private Boolean restarting;
+
     private AcTypeState state;
 
     private String message;
@@ -51,6 +53,7 @@ public class NodeTemplateState {
         this.nodeTemplateStateId = copyConstructor.nodeTemplateStateId;
         this.participantId = copyConstructor.participantId;
         this.nodeTemplateId = new ToscaConceptIdentifier(copyConstructor.nodeTemplateId);
+        this.restarting = copyConstructor.restarting;
         this.state = copyConstructor.state;
         this.message = copyConstructor.message;
     }

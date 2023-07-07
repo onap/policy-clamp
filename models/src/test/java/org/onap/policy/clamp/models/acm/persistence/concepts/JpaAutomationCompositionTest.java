@@ -34,6 +34,7 @@ import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.models.base.PfConceptKey;
 
 /**
@@ -170,6 +171,16 @@ class JpaAutomationCompositionTest {
         testJpaAutomationComposition.setDescription("A description");
         assertNotEquals(0, testJpaAutomationComposition.compareTo(otherJpaAutomationComposition));
         testJpaAutomationComposition.setDescription(null);
+        assertEquals(0, testJpaAutomationComposition.compareTo(otherJpaAutomationComposition));
+
+        testJpaAutomationComposition.setRestarting(true);
+        assertNotEquals(0, testJpaAutomationComposition.compareTo(otherJpaAutomationComposition));
+        testJpaAutomationComposition.setRestarting(null);
+        assertEquals(0, testJpaAutomationComposition.compareTo(otherJpaAutomationComposition));
+
+        testJpaAutomationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
+        assertNotEquals(0, testJpaAutomationComposition.compareTo(otherJpaAutomationComposition));
+        testJpaAutomationComposition.setStateChangeResult(null);
         assertEquals(0, testJpaAutomationComposition.compareTo(otherJpaAutomationComposition));
 
         assertEquals(testJpaAutomationComposition, new JpaAutomationComposition(testJpaAutomationComposition));
