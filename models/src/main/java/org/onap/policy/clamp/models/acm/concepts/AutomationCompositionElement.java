@@ -48,6 +48,8 @@ public class AutomationCompositionElement {
     @NonNull
     private UUID participantId = UUID.randomUUID();
 
+    private Boolean restarting;
+
     @NonNull
     private DeployState deployState = DeployState.UNDEPLOYED;
 
@@ -77,6 +79,7 @@ public class AutomationCompositionElement {
         this.description = otherElement.description;
         this.properties = PfUtils.mapMap(otherElement.properties, UnaryOperator.identity());
         this.outProperties = PfUtils.mapMap(otherElement.outProperties, UnaryOperator.identity());
+        this.restarting = otherElement.restarting;
         this.deployState = otherElement.deployState;
         this.lockState = otherElement.lockState;
         this.operationalState = otherElement.operationalState;

@@ -24,13 +24,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.ws.rs.core.Response.Status;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
-import org.onap.policy.clamp.models.acm.concepts.DeployState;
-import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaParticipant;
@@ -181,5 +181,16 @@ public class ParticipantProvider {
     public List<NodeTemplateState> getAcNodeTemplateStates(@NonNull final UUID participantId) {
         return ProviderUtils.asEntityList(nodeTemplateStateRepository
             .findByParticipantId(participantId.toString()));
+    }
+
+    /**
+     * Get a list of compositionId associated with a participantId from ac definitions.
+     * @param participantId the participant id associated with the automation composition elements
+     * @return the list of compositionId
+     */
+    public Set<UUID> getCompositionIds(@NonNull final UUID participantId) {
+        return nodeTemplateStateRepository.findByParticipantId(participantId.toString()).stream()
+                .map(nodeTemplateState -> UUID.fromString(nodeTemplateState.getCompositionId()))
+                .collect(Collectors.toSet());
     }
 }

@@ -193,6 +193,16 @@ class JpaAutomationCompositionElementTest {
         testJpaAcElement.setOperationalState("DEFAULT");
         assertEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
 
+        testJpaAcElement.setMessage("Message");
+        assertNotEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
+        testJpaAcElement.setMessage(null);
+        assertEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
+
+        testJpaAcElement.setRestarting(true);
+        assertNotEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
+        testJpaAcElement.setRestarting(null);
+        assertEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
+
         testJpaAcElement.setParticipantId(UUID.randomUUID().toString());
         assertNotEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
 

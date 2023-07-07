@@ -81,6 +81,9 @@ public class JpaAutomationComposition extends Validated
     private String compositionId;
 
     @Column
+    private Boolean restarting;
+
+    @Column
     @NotNull
     private DeployState deployState;
 
@@ -140,6 +143,7 @@ public class JpaAutomationComposition extends Validated
         this.name = copyConcept.name;
         this.version = copyConcept.version;
         this.compositionId = copyConcept.compositionId;
+        this.restarting = copyConcept.restarting;
         this.deployState = copyConcept.deployState;
         this.lockState = copyConcept.lockState;
         this.description = copyConcept.description;
@@ -164,6 +168,7 @@ public class JpaAutomationComposition extends Validated
         automationComposition.setName(name);
         automationComposition.setVersion(version);
         automationComposition.setCompositionId(UUID.fromString(compositionId));
+        automationComposition.setRestarting(restarting);
         automationComposition.setDeployState(deployState);
         automationComposition.setLockState(lockState);
         automationComposition.setDescription(description);
@@ -182,6 +187,7 @@ public class JpaAutomationComposition extends Validated
         this.name = automationComposition.getName();
         this.version = automationComposition.getVersion();
         this.compositionId = automationComposition.getCompositionId().toString();
+        this.restarting = automationComposition.getRestarting();
         this.deployState = automationComposition.getDeployState();
         this.lockState = automationComposition.getLockState();
         this.description = automationComposition.getDescription();
@@ -220,6 +226,11 @@ public class JpaAutomationComposition extends Validated
         }
 
         result = ObjectUtils.compare(compositionId, other.compositionId);
+        if (result != 0) {
+            return result;
+        }
+
+        result = ObjectUtils.compare(restarting, other.restarting);
         if (result != 0) {
             return result;
         }

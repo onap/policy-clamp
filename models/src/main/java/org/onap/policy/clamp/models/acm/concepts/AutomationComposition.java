@@ -42,6 +42,8 @@ public class AutomationComposition extends ToscaEntity implements Comparable<Aut
     @NonNull
     private UUID compositionId;
 
+    private Boolean restarting;
+
     @NonNull
     private DeployState deployState = DeployState.UNDEPLOYED;
 
@@ -61,6 +63,7 @@ public class AutomationComposition extends ToscaEntity implements Comparable<Aut
         super(otherAutomationComposition);
         this.instanceId = otherAutomationComposition.instanceId;
         this.compositionId = otherAutomationComposition.compositionId;
+        this.restarting = otherAutomationComposition.restarting;
         this.deployState = otherAutomationComposition.deployState;
         this.lockState = otherAutomationComposition.lockState;
         this.elements = PfUtils.mapMap(otherAutomationComposition.elements, AutomationCompositionElement::new);
