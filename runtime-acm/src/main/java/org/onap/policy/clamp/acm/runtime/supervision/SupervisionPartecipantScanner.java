@@ -46,9 +46,8 @@ public class SupervisionPartecipantScanner {
      * @param participantProvider the Participant Provider
      * @param acRuntimeParameterGroup the parameters for the automation composition runtime
      */
-    public SupervisionPartecipantScanner(
-                              final ParticipantProvider participantProvider,
-                              final AcRuntimeParameterGroup acRuntimeParameterGroup) {
+    public SupervisionPartecipantScanner(final ParticipantProvider participantProvider,
+            final AcRuntimeParameterGroup acRuntimeParameterGroup) {
         this.participantProvider = participantProvider;
 
         participantStatusTimeout.setMaxWaitMs(acRuntimeParameterGroup.getParticipantParameters().getMaxStatusWaitMs());
@@ -70,11 +69,17 @@ public class SupervisionPartecipantScanner {
     private void scanParticipantStatus(Participant participant) {
         var id = participant.getParticipantId();
         if (participantStatusTimeout.isTimeout(id)) {
-            LOGGER.debug("report Participant fault");
-            return;
+            if (ParticipantState.ON_LINE.equals(participant.getParticipantState())) {
+                // restart scenario
+                LOGGER.debug("Participant is back ON_LINE {}", id);
+                participantStatusTimeout.clear(id);
+            } else {
+                LOGGER.debug("report Participant is still OFF_LINE {}", id);
+                return;
+            }
         }
         if (participantStatusTimeout.getDuration(id) > participantStatusTimeout.getMaxWaitMs()) {
-            LOGGER.debug("report Participant fault");
+            LOGGER.debug("report Participant OFF_LINE {}", id);
             participantStatusTimeout.setTimeout(id);
             participant.setParticipantState(ParticipantState.OFF_LINE);
             participantProvider.updateParticipant(participant);
@@ -85,6 +90,7 @@ public class SupervisionPartecipantScanner {
      * handle participant Status message.
      */
     public void handleParticipantStatus(UUID id) {
+        LOGGER.debug("Participant is ON_LINE {}", id);
         participantStatusTimeout.clear(id);
     }
 }

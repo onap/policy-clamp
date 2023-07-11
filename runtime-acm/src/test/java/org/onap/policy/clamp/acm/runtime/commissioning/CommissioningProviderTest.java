@@ -188,4 +188,57 @@ class CommissioningProviderTest {
         provider.compositionDefinitionPriming(compositionId, acTypeStateUpdate);
         verify(participantPrimePublisher, timeout(1000).times(1)).sendDepriming(compositionId);
     }
+
+    @Test
+    void testBadRequest() {
+        var acProvider = mock(AutomationCompositionProvider.class);
+        var provider = new CommissioningProvider(mock(AcDefinitionProvider.class), acProvider,
+                mock(AcmParticipantProvider.class), new AcTypeStateResolver(), mock(ParticipantPrimePublisher.class));
+
+        var compositionId = UUID.randomUUID();
+        when(acProvider.getAcInstancesByCompositionId(compositionId)).thenReturn(List.of(new AutomationComposition()));
+
+        var toscaServiceTemplate = new ToscaServiceTemplate();
+        assertThatThrownBy(() -> provider.updateCompositionDefinition(compositionId, toscaServiceTemplate))
+                .hasMessageMatching("There are ACM instances, Update of ACM Definition not allowed");
+
+        var acTypeStateUpdate = new AcTypeStateUpdate();
+        assertThatThrownBy(() -> provider.compositionDefinitionPriming(compositionId, acTypeStateUpdate))
+                .hasMessageMatching("There are instances, Priming/Depriming not allowed");
+    }
+
+    @Test
+    void testPrimedBadRequest() {
+        var acDefinitionProvider = mock(AcDefinitionProvider.class);
+        var toscaServiceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
+        var acmDefinition = CommonTestData.createAcDefinition(toscaServiceTemplate, AcTypeState.PRIMED);
+        var compositionId = acmDefinition.getCompositionId();
+        when(acDefinitionProvider.getAcDefinition(compositionId)).thenReturn(acmDefinition);
+
+        var provider = new CommissioningProvider(acDefinitionProvider, mock(AutomationCompositionProvider.class),
+                mock(AcmParticipantProvider.class), new AcTypeStateResolver(), mock(ParticipantPrimePublisher.class));
+
+        assertThatThrownBy(() -> provider.updateCompositionDefinition(compositionId, toscaServiceTemplate))
+                .hasMessageMatching("ACM not in COMMISSIONED state, Update of ACM Definition not allowed");
+
+        assertThatThrownBy(() -> provider.deleteAutomationCompositionDefinition(compositionId))
+                .hasMessageMatching("ACM not in COMMISSIONED state, Delete of ACM Definition not allowed");
+    }
+
+    @Test
+    void testPrimingBadRequest() {
+        var acDefinitionProvider = mock(AcDefinitionProvider.class);
+        var toscaServiceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
+        var acmDefinition = CommonTestData.createAcDefinition(toscaServiceTemplate, AcTypeState.PRIMED);
+        acmDefinition.setRestarting(true);
+        var compositionId = acmDefinition.getCompositionId();
+        when(acDefinitionProvider.getAcDefinition(compositionId)).thenReturn(acmDefinition);
+
+        var provider = new CommissioningProvider(acDefinitionProvider, mock(AutomationCompositionProvider.class),
+                mock(AcmParticipantProvider.class), new AcTypeStateResolver(), mock(ParticipantPrimePublisher.class));
+
+        var acTypeStateUpdate = new AcTypeStateUpdate();
+        assertThatThrownBy(() -> provider.compositionDefinitionPriming(compositionId, acTypeStateUpdate))
+                .hasMessageMatching("There is a restarting process, Priming/Depriming not allowed");
+    }
 }

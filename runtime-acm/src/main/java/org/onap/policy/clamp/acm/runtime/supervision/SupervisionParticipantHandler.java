@@ -21,6 +21,7 @@
 package org.onap.policy.clamp.acm.runtime.supervision;
 
 import io.micrometer.core.annotation.Timed;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,13 +30,18 @@ import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.MapUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantDeregisterAckPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantRegisterAckPublisher;
+import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantRestartPublisher;
+import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
+import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
+import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDeregister;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessage;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegister;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatus;
+import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
 import org.slf4j.Logger;
@@ -54,6 +60,8 @@ public class SupervisionParticipantHandler {
     private final ParticipantRegisterAckPublisher participantRegisterAckPublisher;
     private final ParticipantDeregisterAckPublisher participantDeregisterAckPublisher;
     private final AutomationCompositionProvider automationCompositionProvider;
+    private final AcDefinitionProvider acDefinitionProvider;
+    private final ParticipantRestartPublisher participantRestartPublisher;
 
     /**
      * Handle a ParticipantRegister message from a participant.
@@ -64,11 +72,24 @@ public class SupervisionParticipantHandler {
     @Timed(value = "listener.participant_register", description = "PARTICIPANT_REGISTER messages received")
     public void handleParticipantMessage(ParticipantRegister participantRegisterMsg) {
         LOGGER.debug("Participant Register received {}", participantRegisterMsg);
-        saveParticipantStatus(participantRegisterMsg,
-            listToMap(participantRegisterMsg.getParticipantSupportedElementType()));
+        var participantOpt = participantProvider.findParticipant(participantRegisterMsg.getParticipantId());
+
+        if (participantOpt.isPresent()) {
+            var participant = participantOpt.get();
+            if (ParticipantState.OFF_LINE.equals(participant.getParticipantState())) {
+                participant.setParticipantState(ParticipantState.ON_LINE);
+                participantProvider.saveParticipant(participant);
+            }
+            handleRestart(participant.getParticipantId());
+        } else {
+            var participant = createParticipant(participantRegisterMsg.getParticipantId(),
+                    listToMap(participantRegisterMsg.getParticipantSupportedElementType()));
+            participantProvider.saveParticipant(participant);
+
+        }
 
         participantRegisterAckPublisher.send(participantRegisterMsg.getMessageId(),
-            participantRegisterMsg.getParticipantId());
+                participantRegisterMsg.getParticipantId());
     }
 
     /**
@@ -100,30 +121,81 @@ public class SupervisionParticipantHandler {
     @Timed(value = "listener.participant_status", description = "PARTICIPANT_STATUS messages received")
     public void handleParticipantMessage(ParticipantStatus participantStatusMsg) {
         LOGGER.debug("Participant Status received {}", participantStatusMsg);
-        saveParticipantStatus(participantStatusMsg,
-            listToMap(participantStatusMsg.getParticipantSupportedElementType()));
+
+        var participantOpt = participantProvider.findParticipant(participantStatusMsg.getParticipantId());
+        if (participantOpt.isEmpty()) {
+            var participant = createParticipant(participantStatusMsg.getParticipantId(),
+                    listToMap(participantStatusMsg.getParticipantSupportedElementType()));
+            participantProvider.saveParticipant(participant);
+        }
         if (!participantStatusMsg.getAutomationCompositionInfoList().isEmpty()) {
             automationCompositionProvider.upgradeStates(participantStatusMsg.getAutomationCompositionInfoList());
         }
     }
 
-    private void saveParticipantStatus(ParticipantMessage participantMessage,
-            Map<UUID, ParticipantSupportedElementType> participantSupportedElementType) {
-        var participantOpt = participantProvider.findParticipant(participantMessage.getParticipantId());
-
-        if (participantOpt.isEmpty()) {
-            var participant = new Participant();
-            participant.setParticipantId(participantMessage.getParticipantId());
-            participant.setParticipantSupportedElementTypes(participantSupportedElementType);
-            participant.setParticipantState(ParticipantState.ON_LINE);
-
-            participantProvider.saveParticipant(participant);
-        } else {
-            var participant = participantOpt.get();
-            participant.setParticipantState(ParticipantState.ON_LINE);
-
-            participantProvider.updateParticipant(participant);
+    private void handleRestart(UUID participantId) {
+        var compositionIds = participantProvider.getCompositionIds(participantId);
+        for (var compositionId : compositionIds) {
+            var acDefinition = acDefinitionProvider.getAcDefinition(compositionId);
+            LOGGER.debug("Scan Composition {} for restart", acDefinition.getCompositionId());
+            handleRestart(participantId, acDefinition);
         }
+    }
+
+    private void handleRestart(UUID participantId, AutomationCompositionDefinition acDefinition) {
+        if (AcTypeState.COMMISSIONED.equals(acDefinition.getState())) {
+            LOGGER.debug("Composition {} COMMISSIONED", acDefinition.getCompositionId());
+            return;
+        }
+        LOGGER.debug("Composition to be send in Restart message {}", acDefinition.getCompositionId());
+        for (var elementState : acDefinition.getElementStateMap().values()) {
+            if (participantId.equals(elementState.getParticipantId())) {
+                elementState.setRestarting(true);
+            }
+        }
+        var automationCompositionList =
+                automationCompositionProvider.getAcInstancesByCompositionId(acDefinition.getCompositionId());
+        List<AutomationComposition> automationCompositions = new ArrayList<>();
+        for (var automationComposition : automationCompositionList) {
+            if (isAcToBeRestarted(participantId, automationComposition)) {
+                automationCompositions.add(automationComposition);
+            }
+        }
+        // expected final state
+        if (StateChangeResult.TIMEOUT.equals(acDefinition.getStateChangeResult())) {
+            acDefinition.setStateChangeResult(StateChangeResult.NO_ERROR);
+        }
+        acDefinition.setRestarting(true);
+        acDefinitionProvider.updateAcDefinition(acDefinition);
+        participantRestartPublisher.send(participantId, acDefinition, automationCompositions);
+    }
+
+    private boolean isAcToBeRestarted(UUID participantId, AutomationComposition automationComposition) {
+        boolean toAdd = false;
+        for (var element : automationComposition.getElements().values()) {
+            if (participantId.equals(element.getParticipantId())) {
+                element.setRestarting(true);
+                toAdd = true;
+            }
+        }
+        if (toAdd) {
+            automationComposition.setRestarting(true);
+            // expected final state
+            if (StateChangeResult.TIMEOUT.equals(automationComposition.getStateChangeResult())) {
+                automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
+            }
+            automationCompositionProvider.updateAutomationComposition(automationComposition);
+        }
+        return toAdd;
+    }
+
+    private Participant createParticipant(UUID participantId,
+            Map<UUID, ParticipantSupportedElementType> participantSupportedElementType) {
+        var participant = new Participant();
+        participant.setParticipantId(participantId);
+        participant.setParticipantSupportedElementTypes(participantSupportedElementType);
+        participant.setParticipantState(ParticipantState.ON_LINE);
+        return participant;
     }
 
     private Map<UUID, ParticipantSupportedElementType> listToMap(List<ParticipantSupportedElementType> elementList) {

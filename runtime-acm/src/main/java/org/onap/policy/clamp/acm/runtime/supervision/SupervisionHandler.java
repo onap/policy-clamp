@@ -58,7 +58,7 @@ public class SupervisionHandler {
         }
         var acDefinition = acDefinitionOpt.get();
         if (!AcTypeState.PRIMING.equals(acDefinition.getState())
-                && !AcTypeState.DEPRIMING.equals(acDefinition.getState())) {
+                && !AcTypeState.DEPRIMING.equals(acDefinition.getState()) && acDefinition.getRestarting() == null) {
             LOGGER.error("AC Definition {} already primed/deprimed with participant {}",
                     participantPrimeAckMessage.getCompositionId(), participantPrimeAckMessage.getParticipantId());
             return;
@@ -68,8 +68,8 @@ public class SupervisionHandler {
 
     private void handleParticipantPrimeAck(ParticipantPrimeAck participantPrimeAckMessage,
             AutomationCompositionDefinition acDefinition) {
-        var finalState =
-                AcTypeState.PRIMING.equals(acDefinition.getState()) ? AcTypeState.PRIMED : AcTypeState.COMMISSIONED;
+        var finalState = AcTypeState.PRIMING.equals(acDefinition.getState())
+                || AcTypeState.PRIMED.equals(acDefinition.getState()) ? AcTypeState.PRIMED : AcTypeState.COMMISSIONED;
         var msgInErrors = StateChangeResult.FAILED.equals(participantPrimeAckMessage.getStateChangeResult());
         boolean inProgress = !StateChangeResult.FAILED.equals(acDefinition.getStateChangeResult());
         if (inProgress && msgInErrors) {
@@ -77,13 +77,18 @@ public class SupervisionHandler {
         }
 
         boolean completed = true;
+        boolean restarting = false;
         for (var element : acDefinition.getElementStateMap().values()) {
             if (participantPrimeAckMessage.getParticipantId().equals(element.getParticipantId())) {
                 element.setMessage(participantPrimeAckMessage.getMessage());
                 element.setState(participantPrimeAckMessage.getCompositionState());
+                element.setRestarting(null);
             }
             if (!finalState.equals(element.getState())) {
                 completed = false;
+            }
+            if (element.getRestarting() != null) {
+                restarting = true;
             }
         }
 
@@ -92,7 +97,9 @@ public class SupervisionHandler {
             if (StateChangeResult.TIMEOUT.equals(acDefinition.getStateChangeResult())) {
                 acDefinition.setStateChangeResult(StateChangeResult.NO_ERROR);
             }
-
+        }
+        if (!restarting) {
+            acDefinition.setRestarting(null);
         }
         acDefinitionProvider.updateAcDefinition(acDefinition);
     }
