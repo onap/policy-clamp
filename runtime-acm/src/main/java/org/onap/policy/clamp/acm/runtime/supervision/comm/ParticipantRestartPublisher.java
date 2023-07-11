@@ -34,7 +34,6 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantRestartAc;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRestart;
-import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
@@ -51,6 +50,9 @@ public class ParticipantRestartPublisher extends AbstractParticipantPublisher<Pa
     /**
      * Send Restart to Participant.
      *
+     * @param participantId the ParticipantId
+     * @param acmDefinition the AutomationComposition Definition
+     * @param automationCompositions the list of automationCompositions
      */
     @Timed(value = "publisher.participant_restart", description = "Participant Restart published")
     public void send(UUID participantId, AutomationCompositionDefinition acmDefinition,
@@ -61,21 +63,21 @@ public class ParticipantRestartPublisher extends AbstractParticipantPublisher<Pa
         message.setCompositionId(acmDefinition.getCompositionId());
         message.setMessageId(UUID.randomUUID());
         message.setTimestamp(Instant.now());
+        message.setState(acmDefinition.getState());
         message.setParticipantDefinitionUpdates(prepareParticipantRestarting(participantId, acmDefinition));
+        var toscaServiceTemplateFragment = AcmUtils.getToscaServiceTemplateFragment(acmDefinition.getServiceTemplate());
 
         for (var automationComposition : automationCompositions) {
             var restartAc = new ParticipantRestartAc();
             restartAc.setAutomationCompositionId(automationComposition.getInstanceId());
-            restartAc.setDeployState(automationComposition.getDeployState());
-            restartAc.setLockState(automationComposition.getLockState());
             for (var element : automationComposition.getElements().values()) {
                 if (participantId.equals(element.getParticipantId())) {
-                    var acElementDeploy = AcmUtils.createAcElementDeploy(element, DeployOrder.RESTARTING);
-                    acElementDeploy.setToscaServiceTemplateFragment(acmDefinition.getServiceTemplate());
-                    restartAc.getAcElementList().add(acElementDeploy);
+                    var acElementRestart = AcmUtils.createAcElementRestart(element);
+                    acElementRestart.setToscaServiceTemplateFragment(toscaServiceTemplateFragment);
+                    restartAc.getAcElementList().add(acElementRestart);
                 }
             }
-            message.getAutocompositionList().add(restartAc);
+            message.getAutomationcompositionList().add(restartAc);
         }
 
         LOGGER.debug("Participant Restart sent {}", message);

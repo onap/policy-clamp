@@ -222,6 +222,31 @@ class SupervisionMessagesTest {
     }
 
     @Test
+    void testParticipantRestartPublisher() {
+        var publisher = new ParticipantRestartPublisher();
+        var topicSink = mock(TopicSink.class);
+        publisher.active(List.of(topicSink));
+
+        var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
+        // serviceTemplate.setName("Name");
+        // serviceTemplate.setVersion("1.0.0");
+        var acmDefinition = new AutomationCompositionDefinition();
+        acmDefinition.setCompositionId(UUID.randomUUID());
+        acmDefinition.setServiceTemplate(serviceTemplate);
+        var acElements = AcmUtils.extractAcElementsFromServiceTemplate(serviceTemplate);
+        acmDefinition.setElementStateMap(AcmUtils.createElementStateMap(acElements, AcTypeState.PRIMED));
+
+        var automationComposition =
+                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_UPDATE_JSON, "Crud");
+
+        var participantId = automationComposition.getElements().values().iterator().next().getParticipantId();
+        acmDefinition.getElementStateMap().values().iterator().next().setParticipantId(participantId);
+
+        publisher.send(participantId, acmDefinition, List.of(automationComposition));
+        verify(topicSink).send(anyString());
+    }
+
+    @Test
     void testParticipantRegisterListener() {
         final var participantRegister = new ParticipantRegister();
         var supervisionHandler = mock(SupervisionParticipantHandler.class);

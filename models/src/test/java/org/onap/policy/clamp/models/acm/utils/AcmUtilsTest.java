@@ -66,6 +66,8 @@ class AcmUtilsTest {
         assertThat(AcmUtils.isInTransitionalState(DeployState.UNDEPLOYING, LockState.NONE)).isTrue();
         assertThat(AcmUtils.isInTransitionalState(DeployState.DEPLOYED, LockState.LOCKING)).isTrue();
         assertThat(AcmUtils.isInTransitionalState(DeployState.DEPLOYED, LockState.UNLOCKING)).isTrue();
+        assertThat(AcmUtils.isInTransitionalState(DeployState.DELETING, LockState.NONE)).isTrue();
+        assertThat(AcmUtils.isInTransitionalState(DeployState.UPDATING, LockState.LOCKED)).isTrue();
     }
 
     @Test
@@ -190,6 +192,16 @@ class AcmUtilsTest {
         assertEquals(DeployOrder.DEPLOY, result.getOrderedState());
         assertEquals(element.getId(), result.getId());
         assertEquals(element.getDefinition(), result.getDefinition());
+    }
+
+    @Test
+    void testCreateAcElementRestart() {
+        var element = getDummyAutomationComposition().getElements().values().iterator().next();
+        var result = AcmUtils.createAcElementRestart(element);
+        assertEquals(element.getId(), result.getId());
+        assertEquals(element.getDefinition(), result.getDefinition());
+        assertEquals(element.getDeployState(), result.getDeployState());
+        assertEquals(element.getLockState(), result.getLockState());
     }
 
     private AutomationComposition getDummyAutomationComposition() {

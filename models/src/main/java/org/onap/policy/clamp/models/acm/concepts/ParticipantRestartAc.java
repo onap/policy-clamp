@@ -37,11 +37,7 @@ public class ParticipantRestartAc {
 
     private UUID automationCompositionId;
 
-    // current state of auto composition
-    private DeployState deployState;
-    private LockState lockState;
-
-    private List<AcElementDeploy> acElementList = new ArrayList<>();
+    private List<AcElementRestart> acElementList = new ArrayList<>();
 
     /**
      * Copy constructor.
@@ -50,8 +46,6 @@ public class ParticipantRestartAc {
      */
     public ParticipantRestartAc(ParticipantRestartAc copyConstructor) {
         this.automationCompositionId = copyConstructor.automationCompositionId;
-        this.deployState = copyConstructor.deployState;
-        this.lockState = copyConstructor.lockState;
-        this.acElementList = PfUtils.mapList(copyConstructor.acElementList, AcElementDeploy::new);
+        this.acElementList = PfUtils.mapList(copyConstructor.acElementList, AcElementRestart::new);
     }
 }

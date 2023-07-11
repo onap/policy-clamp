@@ -25,6 +25,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantRestartAc;
 import org.onap.policy.models.base.PfUtils;
@@ -34,11 +35,14 @@ import org.onap.policy.models.base.PfUtils;
 @ToString(callSuper = true)
 public class ParticipantRestart extends ParticipantMessage {
 
-    // priming
+    // composition state
+    AcTypeState state;
+
+    // element definition
     private List<ParticipantDefinition> participantDefinitionUpdates = new ArrayList<>();
 
-    // autocomposition list
-    private List<ParticipantRestartAc> autocompositionList = new ArrayList<>();
+    // automationcomposition instances list
+    private List<ParticipantRestartAc> automationcompositionList = new ArrayList<>();
 
     /**
      * Constructor.
@@ -56,6 +60,6 @@ public class ParticipantRestart extends ParticipantMessage {
         super(source);
         this.participantDefinitionUpdates =
                 PfUtils.mapList(source.participantDefinitionUpdates, ParticipantDefinition::new);
-        this.autocompositionList = PfUtils.mapList(source.autocompositionList, ParticipantRestartAc::new);
+        this.automationcompositionList = PfUtils.mapList(source.automationcompositionList, ParticipantRestartAc::new);
     }
 }

@@ -25,6 +25,5 @@ public enum AcTypeState {
     COMMISSIONED,
     PRIMING,
     PRIMED,
-    DEPRIMING,
-    RESTARTING
+    DEPRIMING
 }

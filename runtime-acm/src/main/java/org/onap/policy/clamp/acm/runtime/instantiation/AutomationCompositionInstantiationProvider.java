@@ -155,6 +155,9 @@ public class AutomationCompositionInstantiationProvider {
                         .putAll(automationComposition.getElements().get(elementId).getProperties());
             }
         }
+        if (automationComposition.getRestarting() != null) {
+            throw new PfModelRuntimeException(Status.BAD_REQUEST, "There is a restarting process, Update not allowed");
+        }
         var validationResult = validateAutomationComposition(acToBeUpdated);
         if (!validationResult.isValid()) {
             throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, validationResult.getResult());
@@ -187,8 +190,14 @@ public class AutomationCompositionInstantiationProvider {
             return result;
         }
         if (!AcTypeState.PRIMED.equals(acDefinitionOpt.get().getState())) {
-            result.addResult(new ObjectValidationResult("ServiceTemplate", acDefinitionOpt.get().getState(),
+            result.addResult(new ObjectValidationResult("ServiceTemplate.state", acDefinitionOpt.get().getState(),
                     ValidationStatus.INVALID, "Commissioned automation composition definition not primed"));
+            return result;
+        }
+        if (acDefinitionOpt.get().getRestarting() != null) {
+            result.addResult(
+                    new ObjectValidationResult("ServiceTemplate.restarting", acDefinitionOpt.get().getRestarting(),
+                            ValidationStatus.INVALID, "There is a restarting process in composition"));
             return result;
         }
         var participantIds = acDefinitionOpt.get().getElementStateMap().values().stream()
@@ -245,8 +254,10 @@ public class AutomationCompositionInstantiationProvider {
             throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
                     "Automation composition state is still " + automationComposition.getDeployState());
         }
-        var acDefinition = acDefinitionProvider
-                .getAcDefinition(automationComposition.getCompositionId());
+        if (automationComposition.getRestarting() != null) {
+            throw new PfModelRuntimeException(Status.BAD_REQUEST, "There is a restarting process, Delete not allowed");
+        }
+        var acDefinition = acDefinitionProvider.getAcDefinition(automationComposition.getCompositionId());
         if (acDefinition != null) {
             var participantIds = acDefinition.getElementStateMap().values().stream()
                     .map(NodeTemplateState::getParticipantId).collect(Collectors.toSet());

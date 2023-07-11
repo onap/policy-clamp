@@ -130,7 +130,7 @@ public class CommissioningProvider {
         var acDefinition = acDefinitionProvider.getAcDefinition(compositionId);
         if (!AcTypeState.COMMISSIONED.equals(acDefinition.getState())) {
             throw new PfModelRuntimeException(Status.BAD_REQUEST,
-                    "ACM not in COMMISSIONED state, Update of ACM Definition not allowed");
+                    "ACM not in COMMISSIONED state, Delete of ACM Definition not allowed");
         }
         var serviceTemplate = acDefinitionProvider.deleteAcDefintion(compositionId);
         return createCommissioningResponse(compositionId, serviceTemplate);
@@ -184,6 +184,10 @@ public class CommissioningProvider {
             throw new PfModelRuntimeException(Status.BAD_REQUEST, "There are instances, Priming/Depriming not allowed");
         }
         var acmDefinition = acDefinitionProvider.getAcDefinition(compositionId);
+        if (acmDefinition.getRestarting() != null) {
+            throw new PfModelRuntimeException(Status.BAD_REQUEST,
+                    "There is a restarting process, Priming/Depriming not allowed");
+        }
         var stateOrdered = acTypeStateResolver.resolve(acTypeStateUpdate.getPrimeOrder(), acmDefinition.getState(),
                 acmDefinition.getStateChangeResult());
         switch (stateOrdered) {
@@ -220,7 +224,7 @@ public class CommissioningProvider {
                 participantIds.add(participantId);
             }
         }
-        if (! participantIds.isEmpty()) {
+        if (!participantIds.isEmpty()) {
             acmParticipantProvider.verifyParticipantState(participantIds);
         }
         acmDefinition.setState(AcTypeState.DEPRIMING);
