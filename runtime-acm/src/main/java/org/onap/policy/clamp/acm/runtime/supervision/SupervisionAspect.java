@@ -68,13 +68,13 @@ public class SupervisionAspect implements Closeable {
     public void doCheck() {
         if (executor.getQueue().size() < 2) {
             LOGGER.debug("Add scanning Message");
-            executor.execute(() -> supervisionScanner.run());
+            executor.execute(supervisionScanner::run);
         }
     }
 
-    @Before("@annotation(MessageIntercept) && args(participantStatusMessage,..)")
-    public void handleParticipantStatus(ParticipantStatus participantStatusMessage) {
-        executor.execute(() -> partecipantScanner.handleParticipantStatus(participantStatusMessage.getParticipantId()));
+    @Before("@annotation(MessageIntercept) && args(participantStatusMsg,..)")
+    public void handleParticipantStatus(ParticipantStatus participantStatusMsg) {
+        executor.execute(() -> partecipantScanner.handleParticipantStatus(participantStatusMsg.getParticipantId()));
     }
 
     @Override

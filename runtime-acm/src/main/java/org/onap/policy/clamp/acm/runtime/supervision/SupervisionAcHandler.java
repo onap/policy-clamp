@@ -22,6 +22,7 @@ package org.onap.policy.clamp.acm.runtime.supervision;
 
 import io.micrometer.core.annotation.Timed;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -31,6 +32,7 @@ import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionS
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeployAck;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
@@ -78,8 +80,8 @@ public class SupervisionAcHandler {
         automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         var startPhase = ParticipantUtils.getFirstStartPhase(automationComposition, acDefinition.getServiceTemplate());
-        automationCompositionDeployPublisher.send(automationComposition, acDefinition.getServiceTemplate(),
-                startPhase, true);
+        automationCompositionDeployPublisher.send(automationComposition, acDefinition.getServiceTemplate(), startPhase,
+                true);
     }
 
     /**
@@ -261,9 +263,19 @@ public class SupervisionAcHandler {
                 element.setUseState(acElementAck.getValue().getUseState());
                 element.setDeployState(acElementAck.getValue().getDeployState());
                 element.setLockState(acElementAck.getValue().getLockState());
+                element.setRestarting(null);
                 updated = true;
             }
         }
+
+        if (automationComposition.getRestarting() != null) {
+            var restarting = automationComposition.getElements().values().stream()
+                    .map(AutomationCompositionElement::getRestarting).filter(Objects::nonNull).findAny();
+            if (restarting.isEmpty()) {
+                automationComposition.setRestarting(null);
+            }
+        }
+
         return updated;
     }
 }

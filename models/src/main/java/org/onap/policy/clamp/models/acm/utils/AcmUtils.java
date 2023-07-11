@@ -36,6 +36,7 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
+import org.onap.policy.clamp.models.acm.concepts.AcElementRestart;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
@@ -426,4 +427,19 @@ public final class AcmUtils {
         return acElementDeploy;
     }
 
+    /**
+     * Create a new AcElementRestart from an AutomationCompositionElement.
+     *
+     * @param element the AutomationCompositionElement
+     * @return the AcElementRestart
+     */
+    public static AcElementRestart createAcElementRestart(AutomationCompositionElement element) {
+        var acElementRestart = new AcElementRestart();
+        acElementRestart.setId(element.getId());
+        acElementRestart.setDefinition(new ToscaConceptIdentifier(element.getDefinition()));
+        acElementRestart.setDeployState(element.getDeployState());
+        acElementRestart.setLockState(element.getLockState());
+        acElementRestart.setProperties(PfUtils.mapMap(element.getProperties(), UnaryOperator.identity()));
+        return acElementRestart;
+    }
 }

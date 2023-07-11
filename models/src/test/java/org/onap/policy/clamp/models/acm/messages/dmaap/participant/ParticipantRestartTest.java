@@ -29,9 +29,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
-import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
-import org.onap.policy.clamp.models.acm.concepts.DeployState;
-import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.AcElementRestart;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantRestartAc;
 import org.onap.policy.clamp.models.acm.utils.CommonTestData;
@@ -60,7 +58,7 @@ class ParticipantRestartTest {
         participantDefinitionUpdate.setAutomationCompositionElementDefinitionList(List.of(acDefinition));
         orig.setParticipantDefinitionUpdates(List.of(participantDefinitionUpdate));
 
-        var acElement = new AcElementDeploy();
+        var acElement = new AcElementRestart();
         acElement.setId(UUID.randomUUID());
         var id = new ToscaConceptIdentifier("id", "1.2.3");
         acElement.setDefinition(id);
@@ -68,10 +66,8 @@ class ParticipantRestartTest {
         var acRestart = new ParticipantRestartAc();
         acRestart.setAcElementList(List.of(acElement));
         acRestart.setAutomationCompositionId(UUID.randomUUID());
-        acRestart.setDeployState(DeployState.DEPLOYED);
-        acRestart.setLockState(LockState.LOCKED);
 
-        orig.setAutocompositionList(List.of(acRestart));
+        orig.setAutomationcompositionList(List.of(acRestart));
 
         assertEquals(removeVariableFields(orig.toString()),
                 removeVariableFields(new ParticipantRestart(orig).toString()));
