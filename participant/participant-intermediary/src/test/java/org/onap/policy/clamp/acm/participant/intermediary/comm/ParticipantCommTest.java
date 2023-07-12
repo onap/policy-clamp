@@ -38,21 +38,27 @@ import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDe
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantPrimeAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegister;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegisterAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatus;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatusReq;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
 import org.onap.policy.common.utils.coder.CoderException;
 
 class ParticipantCommTest {
 
     @Test
-    void participantReqTest() throws CoderException {
+    void participantListenerTest() throws CoderException {
         var participantHandler = mock(ParticipantHandler.class);
 
         var participantRegisterAckListener = new ParticipantRegisterAckListener(participantHandler);
+        participantRegisterAckListener.onTopicEvent(null, null, null, new ParticipantRegisterAck());
         assertEquals(ParticipantMessageType.PARTICIPANT_REGISTER_ACK.name(), participantRegisterAckListener.getType());
+        assertEquals(participantRegisterAckListener, participantRegisterAckListener.getScoListener());
 
         var participantStatusReqListener = new ParticipantStatusReqListener(participantHandler);
+        participantStatusReqListener.onTopicEvent(null, null, null, new ParticipantStatusReq());
         assertEquals(ParticipantMessageType.PARTICIPANT_STATUS_REQ.name(), participantStatusReqListener.getType());
+        assertEquals(participantStatusReqListener, participantStatusReqListener.getScoListener());
 
         var participantDeregisterAckListener = new ParticipantDeregisterAckListener(participantHandler);
         assertEquals(ParticipantMessageType.PARTICIPANT_DEREGISTER_ACK.name(),
@@ -71,6 +77,10 @@ class ParticipantCommTest {
         var automationCompositionStateChangeListener = new AutomationCompositionStateChangeListener(participantHandler);
         assertEquals(ParticipantMessageType.AUTOMATION_COMPOSITION_STATE_CHANGE.name(),
                 automationCompositionStateChangeListener.getType());
+
+        var participantRestartListener = new ParticipantRestartListener(participantHandler);
+        assertEquals(ParticipantMessageType.PARTICIPANT_RESTART.name(),
+                participantRestartListener.getType());
     }
 
     @Test

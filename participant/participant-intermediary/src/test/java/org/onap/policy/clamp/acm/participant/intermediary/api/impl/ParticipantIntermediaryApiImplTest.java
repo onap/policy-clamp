@@ -20,13 +20,18 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.api.impl;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.AutomationCompositionOutHandler;
+import org.onap.policy.clamp.acm.participant.intermediary.handler.CacheProvider;
+import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
+import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
@@ -41,7 +46,8 @@ class ParticipantIntermediaryApiImplTest {
     @Test
     void mockParticipantIntermediaryApiImplTest() throws CoderException {
         var automationComposiitonHandler = mock(AutomationCompositionOutHandler.class);
-        var apiImpl = new ParticipantIntermediaryApiImpl(automationComposiitonHandler, null);
+        var cacheProvider = mock(CacheProvider.class);
+        var apiImpl = new ParticipantIntermediaryApiImpl(automationComposiitonHandler, cacheProvider);
 
         var uuid = UUID.randomUUID();
         var automationCompositionId = UUID.randomUUID();
@@ -58,5 +64,14 @@ class ParticipantIntermediaryApiImplTest {
                 StateChangeResult.NO_ERROR, "");
         verify(automationComposiitonHandler).updateAutomationCompositionElementState(automationCompositionId, uuid,
                 DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "");
+
+        var map = Map.of(uuid, new AutomationComposition());
+        when(cacheProvider.getAutomationCompositions()).thenReturn(map);
+        var result = apiImpl.getAutomationCompositions();
+        assertEquals(map, result);
+
+        apiImpl.updateCompositionState(uuid, AcTypeState.PRIMED, StateChangeResult.NO_ERROR, "");
+        verify(automationComposiitonHandler).updateCompositionState(uuid, AcTypeState.PRIMED,
+                StateChangeResult.NO_ERROR, "");
     }
 }

@@ -26,9 +26,11 @@ import java.util.List;
 import java.util.UUID;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
+import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantRestartAc;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeploy;
@@ -333,5 +335,23 @@ public class AutomationCompositionHandler {
      */
     public void deprime(UUID messageId, UUID compositionId) {
         listener.deprime(messageId, compositionId);
+    }
+
+    /**
+     * Handles restarted scenario.
+     *
+     * @param messageId the messageId
+     * @param compositionId the compositionId
+     * @param list the list of AutomationCompositionElementDefinition
+     * @param state the state of the composition
+     * @param automationCompositionList list of ParticipantRestartAc
+     */
+    public void restarted(UUID messageId, UUID compositionId, List<AutomationCompositionElementDefinition> list,
+            AcTypeState state, List<ParticipantRestartAc> automationCompositionList) {
+
+        for (var automationcomposition : automationCompositionList) {
+            cacheProvider.initializeAutomationComposition(compositionId, automationcomposition);
+        }
+        listener.restarted(messageId, compositionId, list, state, automationCompositionList);
     }
 }
