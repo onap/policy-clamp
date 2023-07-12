@@ -69,11 +69,6 @@ public class AutomationCompositionOutHandler {
             return;
         }
 
-        if ((deployState != null && lockState != null) || (deployState == null && lockState == null)) {
-            LOGGER.error("state error {} and {} cannot be handled", deployState, lockState);
-            return;
-        }
-
         var automationComposition = cacheProvider.getAutomationComposition(automationCompositionId);
         if (automationComposition == null) {
             LOGGER.error("Cannot update Automation composition element state, Automation composition id {} not present",
@@ -87,6 +82,13 @@ public class AutomationCompositionOutHandler {
             LOGGER.error(msg, elementId);
             return;
         }
+
+        if ((element.getRestarting() != null)
+                && ((deployState != null && lockState != null) || (deployState == null && lockState == null))) {
+            LOGGER.error("state error {} and {} cannot be handled", deployState, lockState);
+            return;
+        }
+        element.setRestarting(null);
 
         if (deployState != null) {
             handleDeployState(automationComposition, element, deployState);

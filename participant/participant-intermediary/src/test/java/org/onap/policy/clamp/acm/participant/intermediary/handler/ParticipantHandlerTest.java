@@ -33,6 +33,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
+import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeploy;
@@ -45,6 +46,7 @@ import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMe
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantPrime;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegister;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegisterAck;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRestart;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatus;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatusReq;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.PropertiesUpdate;
@@ -172,6 +174,24 @@ class ParticipantHandlerTest {
         participantHandler.handleParticipantPrime(participantPrime);
         verify(cacheProvider).addElementDefinition(any(), any());
         verify(acHandler).prime(any(), any(), any());
+    }
+
+    @Test
+    void handleParticipantRestartTest() {
+        var participantRestartMsg = new ParticipantRestart();
+        participantRestartMsg.setState(AcTypeState.PRIMED);
+        participantRestartMsg.setCompositionId(UUID.randomUUID());
+        participantRestartMsg.getParticipantDefinitionUpdates().add(new ParticipantDefinition());
+
+        var cacheProvider = mock(CacheProvider.class);
+        var publisher = mock(ParticipantMessagePublisher.class);
+        var acHandler = mock(AutomationCompositionHandler.class);
+        var participantHandler = new ParticipantHandler(acHandler, mock(AutomationCompositionOutHandler.class),
+                publisher, cacheProvider);
+
+        participantHandler.handleParticipantRestart(participantRestartMsg);
+        verify(cacheProvider).addElementDefinition(any(), any());
+        verify(acHandler).restarted(any(), any(), any(), any(), any());
     }
 
     @Test

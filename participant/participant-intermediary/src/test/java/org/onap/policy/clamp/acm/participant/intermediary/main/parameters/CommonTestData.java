@@ -29,8 +29,12 @@ import java.util.TreeMap;
 import java.util.UUID;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.DummyParticipantParameters;
 import org.onap.policy.clamp.acm.participant.intermediary.parameters.ParticipantIntermediaryParameters;
+import org.onap.policy.clamp.models.acm.concepts.AcElementRestart;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantRestartAc;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionStateChange;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
@@ -214,5 +218,22 @@ public class CommonTestData {
         stateChange.setLockOrderedState(lockOrder);
         stateChange.setTimestamp(Instant.ofEpochMilli(3000));
         return stateChange;
+    }
+
+    /**
+     * Create a ParticipantRestartAc.
+     *
+     * @return a ParticipantRestartAc
+     */
+    public static ParticipantRestartAc createParticipantRestartAc() {
+        var participantRestartAc = new ParticipantRestartAc();
+        participantRestartAc.setAutomationCompositionId(AC_ID_0);
+        var acElementRestart = new AcElementRestart();
+        acElementRestart.setDefinition(getDefinition());
+        acElementRestart.setDeployState(DeployState.DEPLOYED);
+        acElementRestart.setLockState(LockState.LOCKED);
+        acElementRestart.setId(UUID.randomUUID());
+        participantRestartAc.getAcElementList().add(acElementRestart);
+        return participantRestartAc;
     }
 }
