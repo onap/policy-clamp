@@ -35,6 +35,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDef
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantRestartAc;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -147,6 +148,34 @@ public class CacheProvider {
         var automationComposition = new AutomationComposition();
         automationComposition.setCompositionId(compositionId);
         automationComposition.setInstanceId(instanceId);
+        automationComposition.setElements(acElementMap);
+        automationCompositions.put(automationComposition.getInstanceId(), automationComposition);
+    }
+
+    /**
+     * Initialize an AutomationComposition from a ParticipantRestartAc.
+     *
+     * @param compositionId the composition Id
+     * @param participantRestartAc the ParticipantRestartAc
+     */
+    public void initializeAutomationComposition(@NonNull UUID compositionId,
+            ParticipantRestartAc participantRestartAc) {
+        Map<UUID, AutomationCompositionElement> acElementMap = new LinkedHashMap<>();
+        for (var element : participantRestartAc.getAcElementList()) {
+            var acElement = new AutomationCompositionElement();
+            acElement.setId(element.getId());
+            acElement.setParticipantId(getParticipantId());
+            acElement.setDefinition(element.getDefinition());
+            acElement.setDeployState(element.getDeployState());
+            acElement.setLockState(element.getLockState());
+            acElement.setProperties(element.getProperties());
+            acElement.setRestarting(true);
+            acElementMap.put(element.getId(), acElement);
+        }
+
+        var automationComposition = new AutomationComposition();
+        automationComposition.setCompositionId(compositionId);
+        automationComposition.setInstanceId(participantRestartAc.getAutomationCompositionId());
         automationComposition.setElements(acElementMap);
         automationCompositions.put(automationComposition.getInstanceId(), automationComposition);
     }

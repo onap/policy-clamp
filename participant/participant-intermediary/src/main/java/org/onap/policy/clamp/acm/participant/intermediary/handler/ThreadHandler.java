@@ -37,6 +37,7 @@ import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantRestartAc;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.models.base.PfModelException;
 import org.slf4j.Logger;
@@ -260,6 +261,19 @@ public class ThreadHandler implements Closeable {
         }
     }
 
+    /**
+     * Handles restarted scenario.
+     *
+     * @param messageId the messageId
+     * @param compositionId the compositionId
+     * @param list the list of AutomationCompositionElementDefinition
+     * @param state the state of the composition
+     * @param automationCompositionList list of ParticipantRestartAc
+     */
+    public void restarted(UUID messageId, UUID compositionId, List<AutomationCompositionElementDefinition> list,
+            AcTypeState state, List<ParticipantRestartAc> automationCompositionList) {
+        // TODO
+    }
 
     /**
      * Closes this stream and releases any system resources associated

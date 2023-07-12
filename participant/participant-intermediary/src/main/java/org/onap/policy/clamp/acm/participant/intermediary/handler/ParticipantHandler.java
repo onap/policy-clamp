@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
+import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionInfo;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
@@ -40,6 +41,7 @@ import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMe
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantPrime;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegister;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegisterAck;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRestart;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatus;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatusReq;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.PropertiesUpdate;
@@ -194,6 +196,27 @@ public class ParticipantHandler {
             automationCompositionHandler.deprime(participantPrimeMsg.getMessageId(),
                     participantPrimeMsg.getCompositionId());
         }
+    }
+
+    /**
+     * Handle a ParticipantRestart message.
+     *
+     * @param participantRestartMsg the participantRestart message
+     */
+    @Timed(value = "listener.participant_restart", description = "PARTICIPANT_RESTART messages received")
+    public void handleParticipantRestart(ParticipantRestart participantRestartMsg) {
+        LOGGER.debug("ParticipantRestart message received for participantId {}",
+                participantRestartMsg.getParticipantId());
+        List<AutomationCompositionElementDefinition> list = new ArrayList<>();
+        for (var participantDefinition : participantRestartMsg.getParticipantDefinitionUpdates()) {
+            list.addAll(participantDefinition.getAutomationCompositionElementDefinitionList());
+        }
+        if (!AcTypeState.COMMISSIONED.equals(participantRestartMsg.getState())) {
+            cacheProvider.addElementDefinition(participantRestartMsg.getCompositionId(), list);
+        }
+        automationCompositionHandler.restarted(participantRestartMsg.getMessageId(),
+                participantRestartMsg.getCompositionId(), list, participantRestartMsg.getState(),
+                participantRestartMsg.getAutomationcompositionList());
     }
 
     /**

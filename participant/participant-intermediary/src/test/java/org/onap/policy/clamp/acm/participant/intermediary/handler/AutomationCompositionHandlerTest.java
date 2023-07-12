@@ -35,6 +35,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
+import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeploy;
@@ -219,5 +220,23 @@ class AutomationCompositionHandlerTest {
         var messageId = UUID.randomUUID();
         ach.deprime(messageId, compositionId);
         verify(listener).deprime(messageId, compositionId);
+    }
+
+    @Test
+    void restartedTest() {
+        var listener = mock(ThreadHandler.class);
+        var cacheProvider = mock(CacheProvider.class);
+        var ach = new AutomationCompositionHandler(cacheProvider, mock(ParticipantMessagePublisher.class),
+                listener);
+
+        var compositionId = UUID.randomUUID();
+        var messageId = UUID.randomUUID();
+        var list = List.of(new AutomationCompositionElementDefinition());
+        var state = AcTypeState.PRIMED;
+        var participantRestartAc = CommonTestData.createParticipantRestartAc();
+        var automationCompositionList = List.of(participantRestartAc);
+        ach.restarted(messageId, compositionId, list, state, automationCompositionList);
+        verify(cacheProvider).initializeAutomationComposition(compositionId, participantRestartAc);
+        verify(listener).restarted(messageId, compositionId, list, state, automationCompositionList);
     }
 }

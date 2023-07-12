@@ -75,6 +75,9 @@ class CacheProviderTest {
                 .isInstanceOf(NullPointerException.class);
 
         assertThatThrownBy(() -> cacheProvider.removeElementDefinition(null)).isInstanceOf(NullPointerException.class);
+
+        assertThatThrownBy(() -> cacheProvider.initializeAutomationComposition(null, null))
+                .isInstanceOf(NullPointerException.class);
     }
 
     @Test
@@ -124,5 +127,18 @@ class CacheProviderTest {
 
         cacheProvider.removeElementDefinition(compositionId);
         assertThat(cacheProvider.getAcElementsDefinitions()).isEmpty();
+    }
+
+    @Test
+    void testInitializeAutomationComposition() {
+        var parameter = CommonTestData.getParticipantParameters();
+        var cacheProvider = new CacheProvider(parameter);
+
+        var participantRestartAc = CommonTestData.createParticipantRestartAc();
+        var compositionId = UUID.randomUUID();
+        cacheProvider.initializeAutomationComposition(compositionId, participantRestartAc);
+        var result = cacheProvider.getAutomationComposition(participantRestartAc.getAutomationCompositionId());
+        assertEquals(compositionId, result.getCompositionId());
+        assertEquals(participantRestartAc.getAutomationCompositionId(), result.getInstanceId());
     }
 }
