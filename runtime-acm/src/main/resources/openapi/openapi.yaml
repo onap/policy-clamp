@@ -77,18 +77,13 @@ paths:
             instances on the Participant.
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -109,18 +104,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -130,18 +120,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -171,35 +156,25 @@ paths:
           description: Accepted, the request has been accepted and forwarded to participants
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
         400:
           description: Bad Request, returns an instance of
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -209,18 +184,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -230,18 +200,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -283,18 +248,13 @@ paths:
             instances on the Participant.
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -311,18 +271,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -332,18 +287,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -353,18 +303,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -401,35 +346,25 @@ paths:
           description: Accepted, the request has been accepted and forwarded to participants
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
         400:
           description: Bad Request, returns an instance of
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -439,18 +374,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -460,18 +390,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -481,18 +406,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -540,18 +460,13 @@ paths:
             that contains the automation composition definitions that match the requested filters.
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -568,18 +483,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -589,18 +499,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -647,18 +552,13 @@ paths:
             containing the UUIDs of automation composition definitions created by this request
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -675,18 +575,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -696,18 +591,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -717,18 +607,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -770,18 +655,13 @@ paths:
             containing the requested automation composition definition.
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -798,18 +678,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -819,18 +694,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -840,18 +710,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -902,35 +767,25 @@ paths:
           description: Accepted, the request has been accepted and forwarded to participants
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
         400:
           description: Bad Request, returns an instance of
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -940,18 +795,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -961,18 +811,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -982,18 +827,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -1031,18 +871,13 @@ paths:
             containing the UUID of the automation composition deleted by this request
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -1059,18 +894,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -1080,18 +910,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -1101,18 +926,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -1122,18 +942,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -1184,18 +999,13 @@ paths:
             containing a list of automation composition instances found
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -1212,18 +1022,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -1233,18 +1038,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -1254,18 +1054,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -1319,18 +1114,13 @@ paths:
             containing the UUID of the created automation composition instance
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -1347,18 +1137,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -1368,18 +1153,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -1389,18 +1169,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -1410,18 +1185,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -1467,18 +1237,13 @@ paths:
             containing the automation composition instance
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -1495,18 +1260,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -1516,18 +1276,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -1537,18 +1292,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -1608,35 +1358,25 @@ paths:
           description: Accepted, the request has been accepted and forwarded to participants
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
         400:
           description: Bad Request, returns an instance of
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -1646,18 +1386,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -1667,18 +1402,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -1688,18 +1418,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -1744,18 +1469,13 @@ paths:
             containing the UUID of the deleted automation composition instance
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -1772,18 +1492,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -1793,18 +1508,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -1814,18 +1524,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -1835,18 +1540,13 @@ paths:
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
           headers:
             X-LatestVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -1896,3 +1596,17 @@ components:
     InstantiationResponse:
       title: InstantiationResponse
       type: object
+  headers:
+    X-LatestVersion:
+      schema:
+        type: string
+    X-PatchVersion:
+      schema:
+        type: string
+    X-MinorVersion:
+      schema:
+        type: string
+    X-onap-RequestId:
+      schema:
+        type: string
+        format: uuid
