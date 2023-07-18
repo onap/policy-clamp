@@ -82,9 +82,7 @@ class SupervisionParticipantHandlerTest {
         var participantRegisterMessage = new ParticipantRegister();
         participantRegisterMessage.setMessageId(UUID.randomUUID());
         participantRegisterMessage.setParticipantId(CommonTestData.getParticipantId());
-        var supportedElementType = new ParticipantSupportedElementType();
-        supportedElementType.setTypeName("Type");
-        supportedElementType.setTypeVersion("1.0.0");
+        var supportedElementType = CommonTestData.createParticipantSupportedElementType();
         participantRegisterMessage.setParticipantSupportedElementType(List.of(supportedElementType));
 
         var participantProvider = mock(ParticipantProvider.class);
@@ -105,9 +103,7 @@ class SupervisionParticipantHandlerTest {
         participantRegisterMessage.setMessageId(UUID.randomUUID());
         var participantId = CommonTestData.getParticipantId();
         participantRegisterMessage.setParticipantId(participantId);
-        var supportedElementType = new ParticipantSupportedElementType();
-        supportedElementType.setTypeName("Type");
-        supportedElementType.setTypeVersion("1.0.0");
+        var supportedElementType = CommonTestData.createParticipantSupportedElementType();
         participantRegisterMessage.setParticipantSupportedElementType(List.of(supportedElementType));
 
         var participant = new Participant();
@@ -156,9 +152,7 @@ class SupervisionParticipantHandlerTest {
         var participantStatusMessage = new ParticipantStatus();
         participantStatusMessage.setParticipantId(CommonTestData.getParticipantId());
         participantStatusMessage.setState(ParticipantState.ON_LINE);
-        var supportedElementType = new ParticipantSupportedElementType();
-        supportedElementType.setTypeName("Type");
-        supportedElementType.setTypeVersion("1.0.0");
+        var supportedElementType = CommonTestData.createParticipantSupportedElementType();
         participantStatusMessage.setParticipantSupportedElementType(List.of(supportedElementType));
         participantStatusMessage.setAutomationCompositionInfoList(List.of(new AutomationCompositionInfo()));
 
@@ -173,6 +167,52 @@ class SupervisionParticipantHandlerTest {
                 .thenReturn(Optional.of(participant));
         handler.handleParticipantMessage(participantStatusMessage);
 
+        verify(automationCompositionProvider).upgradeStates(any());
+    }
+
+    @Test
+    void testHandleParticipantStatusNotRegisterd() {
+        var participantStatusMessage = new ParticipantStatus();
+        participantStatusMessage.setParticipantId(CommonTestData.getParticipantId());
+        participantStatusMessage.setState(ParticipantState.ON_LINE);
+        var supportedElementType = CommonTestData.createParticipantSupportedElementType();
+        participantStatusMessage.setParticipantSupportedElementType(List.of(supportedElementType));
+        participantStatusMessage.setAutomationCompositionInfoList(List.of(new AutomationCompositionInfo()));
+
+        var participantProvider = mock(ParticipantProvider.class);
+        var automationCompositionProvider = mock(AutomationCompositionProvider.class);
+        var handler =
+                new SupervisionParticipantHandler(participantProvider, mock(ParticipantRegisterAckPublisher.class),
+                        mock(ParticipantDeregisterAckPublisher.class), automationCompositionProvider,
+                        mock(AcDefinitionProvider.class), mock(ParticipantRestartPublisher.class));
+        handler.handleParticipantMessage(participantStatusMessage);
+
+        verify(participantProvider).saveParticipant(any());
+        verify(automationCompositionProvider).upgradeStates(any());
+    }
+
+    @Test
+    void testHandleParticipantStatusCheckOnline() {
+        var participantStatusMessage = new ParticipantStatus();
+        participantStatusMessage.setParticipantId(CommonTestData.getParticipantId());
+        participantStatusMessage.setState(ParticipantState.ON_LINE);
+        var supportedElementType = CommonTestData.createParticipantSupportedElementType();
+        participantStatusMessage.setParticipantSupportedElementType(List.of(supportedElementType));
+        participantStatusMessage.setAutomationCompositionInfoList(List.of(new AutomationCompositionInfo()));
+
+        var participantProvider = mock(ParticipantProvider.class);
+        var automationCompositionProvider = mock(AutomationCompositionProvider.class);
+        var handler =
+                new SupervisionParticipantHandler(participantProvider, mock(ParticipantRegisterAckPublisher.class),
+                        mock(ParticipantDeregisterAckPublisher.class), automationCompositionProvider,
+                        mock(AcDefinitionProvider.class), mock(ParticipantRestartPublisher.class));
+        var participant = CommonTestData.createParticipant(CommonTestData.getParticipantId());
+        participant.setParticipantState(ParticipantState.OFF_LINE);
+        when(participantProvider.findParticipant(CommonTestData.getParticipantId()))
+                .thenReturn(Optional.of(participant));
+        handler.handleParticipantMessage(participantStatusMessage);
+
+        verify(participantProvider).saveParticipant(any());
         verify(automationCompositionProvider).upgradeStates(any());
     }
 }
