@@ -248,10 +248,9 @@ public class SupervisionAcHandler {
             Set<Map.Entry<UUID, AcElementDeployAck>> automationCompositionResultSet,
             StateChangeResult stateChangeResult) {
         var updated = false;
-        var elementInErrors = StateChangeResult.FAILED.equals(stateChangeResult);
         boolean inProgress = !StateChangeResult.FAILED.equals(automationComposition.getStateChangeResult());
-        if (elementInErrors && inProgress) {
-            automationComposition.setStateChangeResult(StateChangeResult.FAILED);
+        if (inProgress) {
+            automationComposition.setStateChangeResult(stateChangeResult);
         }
 
         for (var acElementAck : automationCompositionResultSet) {
