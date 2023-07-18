@@ -40,7 +40,7 @@ server:
 runtime:
   participantParameters:
     heartBeatMs: 20000
-    maxStatusWaitMs: 100000
+    maxStatusWaitMs: 200000
   topicParameterGroup:
     topicSources:
       -
