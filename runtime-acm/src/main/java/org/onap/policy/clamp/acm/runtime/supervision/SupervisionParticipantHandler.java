@@ -76,10 +76,7 @@ public class SupervisionParticipantHandler {
 
         if (participantOpt.isPresent()) {
             var participant = participantOpt.get();
-            if (ParticipantState.OFF_LINE.equals(participant.getParticipantState())) {
-                participant.setParticipantState(ParticipantState.ON_LINE);
-                participantProvider.saveParticipant(participant);
-            }
+            checkOnline(participant);
             handleRestart(participant.getParticipantId());
         } else {
             var participant = createParticipant(participantRegisterMsg.getParticipantId(),
@@ -127,9 +124,18 @@ public class SupervisionParticipantHandler {
             var participant = createParticipant(participantStatusMsg.getParticipantId(),
                     listToMap(participantStatusMsg.getParticipantSupportedElementType()));
             participantProvider.saveParticipant(participant);
+        } else {
+            checkOnline(participantOpt.get());
         }
         if (!participantStatusMsg.getAutomationCompositionInfoList().isEmpty()) {
             automationCompositionProvider.upgradeStates(participantStatusMsg.getAutomationCompositionInfoList());
+        }
+    }
+
+    private void checkOnline(Participant participant) {
+        if (ParticipantState.OFF_LINE.equals(participant.getParticipantState())) {
+            participant.setParticipantState(ParticipantState.ON_LINE);
+            participantProvider.saveParticipant(participant);
         }
     }
 

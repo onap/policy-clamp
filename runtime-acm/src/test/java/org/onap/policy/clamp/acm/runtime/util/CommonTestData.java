@@ -29,6 +29,7 @@ import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
@@ -95,6 +96,18 @@ public class CommonTestData {
         participant.setParticipantId(participantId);
         participant.setParticipantState(ParticipantState.ON_LINE);
         return participant;
+    }
+
+    /**
+     * Create a new ParticipantSupportedElementType.
+     *
+     * @return a new ParticipantSupportedElementType
+     */
+    public static ParticipantSupportedElementType createParticipantSupportedElementType() {
+        var supportedElementType = new ParticipantSupportedElementType();
+        supportedElementType.setTypeName("Type");
+        supportedElementType.setTypeVersion("1.0.0");
+        return supportedElementType;
     }
 
     public static UUID getParticipantId() {
