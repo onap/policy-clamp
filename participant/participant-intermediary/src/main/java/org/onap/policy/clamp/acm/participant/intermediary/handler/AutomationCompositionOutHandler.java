@@ -88,6 +88,16 @@ public class AutomationCompositionOutHandler {
             return;
         }
 
+<<<<<<< HEAD   (358a9a Fix OFF_LINE issue when Status message upcoming)
+=======
+        if ((element.getRestarting() == null)
+                && ((deployState != null && lockState != null) || (deployState == null && lockState == null))) {
+            LOGGER.error("state error {} and {} cannot be handled", deployState, lockState);
+            return;
+        }
+        element.setRestarting(null);
+
+>>>>>>> CHANGE (a50ba1 Fix restart flag in ACM)
         if (deployState != null) {
             handleDeployState(automationComposition, element, deployState);
         }
