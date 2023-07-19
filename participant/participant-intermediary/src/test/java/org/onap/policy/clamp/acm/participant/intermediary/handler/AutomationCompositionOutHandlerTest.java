@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.handler;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -49,8 +50,10 @@ class AutomationCompositionOutHandlerTest {
 
         assertDoesNotThrow(
                 () -> acOutHandler.updateAutomationCompositionElementState(null, null, null, null, null, null));
+
         assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementState(UUID.randomUUID(),
                 UUID.randomUUID(), null, null, null, null));
+
         assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementState(UUID.randomUUID(),
                 UUID.randomUUID(), DeployState.DEPLOYED, null, null, null));
 
@@ -59,6 +62,10 @@ class AutomationCompositionOutHandlerTest {
                 .thenReturn(automationComposition);
         assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementState(
                 automationComposition.getInstanceId(), UUID.randomUUID(), DeployState.DEPLOYED, null, null, null));
+
+        var elementId = automationComposition.getElements().values().iterator().next().getId();
+        assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementState(
+                automationComposition.getInstanceId(), elementId, null, null, null, null));
     }
 
     @Test
@@ -89,6 +96,23 @@ class AutomationCompositionOutHandlerTest {
         acOutHandler.updateAutomationCompositionElementState(automationComposition.getInstanceId(), elementId, null,
                 LockState.LOCKED, StateChangeResult.NO_ERROR, "Locked");
         verify(publisher).sendAutomationCompositionAck(any(AutomationCompositionDeployAck.class));
+    }
+
+    @Test
+    void updateAutomationCompositionElementStateRestartedTest() {
+        var publisher = mock(ParticipantMessagePublisher.class);
+        var cacheProvider = mock(CacheProvider.class);
+        var acOutHandler = new AutomationCompositionOutHandler(publisher, cacheProvider);
+
+        var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
+        when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
+                .thenReturn(automationComposition);
+        var element = automationComposition.getElements().values().iterator().next();
+        element.setRestarting(true);
+        acOutHandler.updateAutomationCompositionElementState(automationComposition.getInstanceId(), element.getId(),
+                DeployState.DEPLOYED, LockState.LOCKED, StateChangeResult.NO_ERROR, "Restarted");
+        verify(publisher).sendAutomationCompositionAck(any(AutomationCompositionDeployAck.class));
+        assertThat(element.getRestarting()).isNull();
     }
 
     @Test

@@ -83,7 +83,7 @@ public class AutomationCompositionOutHandler {
             return;
         }
 
-        if ((element.getRestarting() != null)
+        if ((element.getRestarting() == null)
                 && ((deployState != null && lockState != null) || (deployState == null && lockState == null))) {
             LOGGER.error("state error {} and {} cannot be handled", deployState, lockState);
             return;
