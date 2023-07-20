@@ -1,0 +1,7 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+2: Adheli Tavares <adheli.tavares@est.tech>
+Submitted-by: Adheli Tavares <adheli.tavares@est.tech>
+Submitted-at: Thu, 20 Jul 2023 15:26:47 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/policy/clamp/+/135459
+Project: policy/clamp
+Branch: refs/heads/java-17
