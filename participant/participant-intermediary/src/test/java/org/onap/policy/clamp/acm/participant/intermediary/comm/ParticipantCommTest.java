@@ -137,9 +137,9 @@ class ParticipantCommTest {
         var participantHandler = mock(ParticipantHandler.class);
         var participantParameters = CommonTestData.getParticipantParameters();
         var messageSender = new MessageSender(participantHandler, participantParameters);
+        messageSender.handleContextRefreshEvent(null);
         messageSender.run();
         assertFalse(messageSender.makeTimerPool().isTerminated());
         messageSender.close();
     }
-
 }

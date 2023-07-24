@@ -35,6 +35,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
+import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.AcInstanceStateUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
@@ -251,6 +252,11 @@ public class AutomationCompositionInstantiationProvider {
         }
         if (!DeployState.UNDEPLOYED.equals(automationComposition.getDeployState())
                 && !DeployState.DELETING.equals(automationComposition.getDeployState())) {
+            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
+                    "Automation composition state is still " + automationComposition.getDeployState());
+        }
+        if (DeployState.DELETING.equals(automationComposition.getDeployState())
+                && StateChangeResult.NO_ERROR.equals(automationComposition.getStateChangeResult())) {
             throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
                     "Automation composition state is still " + automationComposition.getDeployState());
         }

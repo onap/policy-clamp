@@ -218,6 +218,7 @@ class ParticipantHandlerTest {
         when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
         when(cacheProvider.getAutomationCompositions()).thenReturn(CommonTestData.getTestAutomationCompositionMap());
         var publisher = mock(ParticipantMessagePublisher.class);
+        when(publisher.isActive()).thenReturn(true);
         var participantHandler = new ParticipantHandler(mock(AutomationCompositionHandler.class),
                 mock(AutomationCompositionOutHandler.class), publisher, cacheProvider);
         participantHandler.sendHeartbeat();
