@@ -222,7 +222,9 @@ public class ParticipantHandler {
      * Dispatch a heartbeat for this participant.
      */
     public void sendHeartbeat() {
-        publisher.sendHeartbeat(makeHeartbeat(false));
+        if (publisher.isActive()) {
+            publisher.sendHeartbeat(makeHeartbeat(false));
+        }
     }
 
     /**

@@ -44,6 +44,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.AcInstanceStateUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.LockOrder;
@@ -257,7 +258,7 @@ class AutomationCompositionInstantiationProviderTest {
     void testInstantiationDelete() {
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Delete");
-
+        automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
         var acProvider = mock(AutomationCompositionProvider.class);
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
         var supervisionAcHandler = mock(SupervisionAcHandler.class);
@@ -278,6 +279,7 @@ class AutomationCompositionInstantiationProviderTest {
         assertThatDeleteThrownBy(automationComposition, DeployState.DEPLOYED, LockState.LOCKED);
         assertThatDeleteThrownBy(automationComposition, DeployState.DEPLOYING, LockState.NONE);
         assertThatDeleteThrownBy(automationComposition, DeployState.UNDEPLOYING, LockState.LOCKED);
+        assertThatDeleteThrownBy(automationComposition, DeployState.DELETING, LockState.NONE);
 
         automationComposition.setDeployState(DeployState.UNDEPLOYED);
         automationComposition.setLockState(LockState.NONE);

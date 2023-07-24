@@ -24,6 +24,7 @@ package org.onap.policy.clamp.acm.participant.intermediary.comm;
 import io.micrometer.core.annotation.Timed;
 import java.util.List;
 import javax.ws.rs.core.Response.Status;
+import lombok.Getter;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.Publisher;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeployAck;
@@ -46,6 +47,7 @@ public class ParticipantMessagePublisher implements Publisher {
     private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantMessagePublisher.class);
     private static final String NOT_ACTIVE_TEXT = "Not Active!";
 
+    @Getter
     private boolean active = false;
     private TopicSinkClient topicSinkClient;
 

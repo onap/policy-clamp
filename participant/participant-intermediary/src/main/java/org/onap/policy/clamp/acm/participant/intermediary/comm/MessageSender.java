@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021,2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,8 @@ import org.onap.policy.clamp.acm.participant.intermediary.handler.ParticipantHan
 import org.onap.policy.clamp.acm.participant.intermediary.parameters.ParticipantParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
@@ -39,7 +41,8 @@ public class MessageSender extends TimerTask implements Closeable {
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageSender.class);
 
     private final ParticipantHandler participantHandler;
-    private ScheduledExecutorService timerPool;
+    private final ScheduledExecutorService timerPool;
+    private final long interval;
 
     /**
      * Constructor, set the publisher.
@@ -52,7 +55,11 @@ public class MessageSender extends TimerTask implements Closeable {
 
         // Kick off the timer
         timerPool = makeTimerPool();
-        var interval = parameters.getIntermediaryParameters().getReportingTimeIntervalMs();
+        interval = parameters.getIntermediaryParameters().getReportingTimeIntervalMs();
+    }
+
+    @EventListener
+    public void handleContextRefreshEvent(ContextRefreshedEvent ctxRefreshedEvent) {
         timerPool.scheduleAtFixedRate(this, interval, interval, TimeUnit.MILLISECONDS);
     }
 
