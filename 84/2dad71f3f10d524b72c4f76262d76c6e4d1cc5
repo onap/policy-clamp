@@ -1,0 +1,13 @@
+Verified+1: ONAP Required GHA <releng+onap.required.gha@linuxfoundation.org>
+Code-Review+2: Adheli Tavares <adheli.tavares@est.tech>
+Code-Review+2: Matthew Watkins <mwatkins@linuxfoundation.org>
+Code-Review+1: Wayne Dunican <wayne.dunican@est.tech>
+Code-Review+1: Saul Gill <saul.gill@est.tech>
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Verified+1: Adheli Tavares <adheli.tavares@est.tech>
+Code-Review+1: Francesco Davide Lapenta <francesco.lapenta@est.tech>
+Submitted-by: Matthew Watkins <mwatkins@linuxfoundation.org>
+Submitted-at: Mon, 24 Jul 2023 10:42:25 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/policy/clamp/+/135465
+Project: policy/clamp
+Branch: refs/heads/java-17
