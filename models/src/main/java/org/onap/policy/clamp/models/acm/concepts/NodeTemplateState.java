@@ -20,10 +20,14 @@
 
 package org.onap.policy.clamp.models.acm.concepts;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.UnaryOperator;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 @NoArgsConstructor
@@ -44,6 +48,8 @@ public class NodeTemplateState {
 
     private String message;
 
+    private Map<String, Object> outProperties = new LinkedHashMap<>();
+
     /**
      * Copy constructor, does a deep copy but as all fields here are immutable, it's just a regular copy.
      *
@@ -56,5 +62,6 @@ public class NodeTemplateState {
         this.restarting = copyConstructor.restarting;
         this.state = copyConstructor.state;
         this.message = copyConstructor.message;
+        this.outProperties = PfUtils.mapMap(copyConstructor.outProperties, UnaryOperator.identity());
     }
 }
