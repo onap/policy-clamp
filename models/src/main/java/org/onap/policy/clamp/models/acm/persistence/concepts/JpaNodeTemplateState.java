@@ -20,22 +20,28 @@
 
 package org.onap.policy.clamp.models.acm.persistence.concepts;
 
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.UnaryOperator;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
 import org.onap.policy.common.parameters.annotations.NotNull;
+import org.onap.policy.common.parameters.annotations.Valid;
 import org.onap.policy.models.base.PfAuthorative;
 import org.onap.policy.models.base.PfConceptKey;
+import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.base.Validated;
 import org.onap.policy.models.base.validation.annotations.VerifyKey;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -76,6 +82,12 @@ public class JpaNodeTemplateState extends Validated implements PfAuthorative<Nod
     @Column
     private String message;
 
+    @Lob
+    @NotNull
+    @Valid
+    @Convert(converter = StringToMapConverter.class)
+    private Map<String, Object> outProperties;
+
     /**
      * The Default Constructor.
      */
@@ -104,6 +116,7 @@ public class JpaNodeTemplateState extends Validated implements PfAuthorative<Nod
         this.restarting = copyConcept.getRestarting();
         this.state = copyConcept.getState();
         this.message = copyConcept.getMessage();
+        this.outProperties = PfUtils.mapMap(copyConcept.getOutProperties(), UnaryOperator.identity());
     }
 
     @Override
@@ -117,6 +130,7 @@ public class JpaNodeTemplateState extends Validated implements PfAuthorative<Nod
         nodeTemplateState.setRestarting(this.restarting);
         nodeTemplateState.setState(this.state);
         nodeTemplateState.setMessage(this.message);
+        nodeTemplateState.setOutProperties(PfUtils.mapMap(outProperties, UnaryOperator.identity()));
         return nodeTemplateState;
     }
 }
