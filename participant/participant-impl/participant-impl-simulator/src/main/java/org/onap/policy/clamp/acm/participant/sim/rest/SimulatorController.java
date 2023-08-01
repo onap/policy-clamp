@@ -65,7 +65,7 @@ public class SimulatorController implements SimulatorParticipantControllerApi {
     }
 
     /**
-     * Set Data.
+     * Set instance Data.
      *
      * @param body the Data
      * @return Void
@@ -75,6 +75,18 @@ public class SimulatorController implements SimulatorParticipantControllerApi {
         automationCompositionElementHandler.setOutProperties(body.getAutomationCompositionId(),
                 body.getAutomationCompositionElementId(), body.getUseState(), body.getOperationalState(),
                 body.getOutProperties());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<InternalDatas> getCompositionDatas(UUID xonapRequestId) {
+        return new ResponseEntity<>(automationCompositionElementHandler.getCompositionDataList(), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Void> setCompositionData(UUID xonapRequestId, @Valid InternalData body) {
+        automationCompositionElementHandler.setCompositionOutProperties(body.getCompositionId(),
+                body.getCompositionDefinitionElementId(), body.getOutProperties());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

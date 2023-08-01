@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.acm.participant.sim.main.handler;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -34,10 +35,13 @@ import org.onap.policy.clamp.acm.participant.sim.comm.CommonTestData;
 import org.onap.policy.clamp.acm.participant.sim.model.SimConfig;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.models.base.PfModelException;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 
 class AutomationCompositionElementHandlerTest {
 
@@ -294,5 +298,40 @@ class AutomationCompositionElementHandlerTest {
                 LockState.UNLOCKING);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(), null,
                 LockState.UNLOCKED, StateChangeResult.NO_ERROR, "Unlocked");
+    }
+
+    @Test
+    void testGetCompositionDataList() {
+        var acElementDefinition = new AutomationCompositionElementDefinition();
+        var toscaConceptIdentifier = new ToscaConceptIdentifier("code", "1.0.0");
+        acElementDefinition.setAcElementDefinitionId(toscaConceptIdentifier);
+        acElementDefinition.setAutomationCompositionElementToscaNodeTemplate(new ToscaNodeTemplate());
+        Map<String, Object> outProperties = Map.of("code", "value");
+        Map<String, Object> inProperties = Map.of("key", "value");
+        acElementDefinition.getAutomationCompositionElementToscaNodeTemplate().setProperties(inProperties);
+        acElementDefinition.setOutProperties(outProperties);
+        var elementsDefinitions = Map.of(toscaConceptIdentifier, acElementDefinition);
+        var compositionId = UUID.randomUUID();
+        var map = Map.of(compositionId, elementsDefinitions);
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        when(intermediaryApi.getAcElementsDefinitions()).thenReturn(map);
+        var acElementHandler = new AutomationCompositionElementHandler(intermediaryApi);
+
+        var result = acElementHandler.getCompositionDataList();
+        assertThat(result.getList()).hasSize(1);
+        assertEquals(result.getList().get(0).getCompositionId(), compositionId);
+        assertEquals(result.getList().get(0).getCompositionDefinitionElementId(), toscaConceptIdentifier);
+        assertEquals(result.getList().get(0).getOutProperties(), outProperties);
+        assertEquals(result.getList().get(0).getIntProperties(), inProperties);
+    }
+
+    @Test
+    void testSetCompositionData() {
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var acElementHandler = new AutomationCompositionElementHandler(intermediaryApi);
+
+        var compositionId = UUID.randomUUID();
+        acElementHandler.setCompositionOutProperties(compositionId, null, Map.of());
+        verify(intermediaryApi).sendAcDefinitionInfo(compositionId, null, Map.of());
     }
 }

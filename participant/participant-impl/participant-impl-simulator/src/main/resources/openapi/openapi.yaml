@@ -1,3 +1,20 @@
+#  ============LICENSE_START=======================================================
+#  Copyright (C) 2023 Nordix Foundation
+#  ================================================================================
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#        http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+#
+#  SPDX-License-Identifier: Apache-2.0
+#  ============LICENSE_END=========================================================
 openapi: 3.0.3
 info:
   title: ACM Simulator Participant
@@ -45,30 +62,14 @@ paths:
           description: OK, reutrns a serialised instance of
             [SimConfig](https://github.com/onap/policy-clamp/blob/master/participant/participant-impl/policy-clamp-participant-impl-simulator/src/main/java/org/onap/policy/clamp/acm/participant/sim/model/SimConfig.java)
           headers:
-            api-version:
-              schema:
-                type: string
             X-LatestVersion:
-              schema:
-                type: string
-                description: Used only to communicate an API's latest version
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
-                description:
-                  Used only to communicate a PATCH version in a response for troubleshooting purposes only,
-                  and will not be provided by the client on request
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
-                description:
-                  Used to request or communicate a MINOR version back from the client
-                  to the server, and from the server back to the client
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
-                description: Used to track REST transactions for logging purposes
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -111,30 +112,14 @@ paths:
         200:
           description: OK, the parameters has been saved
           headers:
-            api-version:
-              schema:
-                type: string
             X-LatestVersion:
-              schema:
-                type: string
-                description: Used only to communicate an API's latest version
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
-                description:
-                  Used only to communicate a PATCH version in a response for troubleshooting purposes only,
-                  and will not be provided by the client on request
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
-                description:
-                  Used to request or communicate a MINOR version back from the client
-                  to the server, and from the server back to the client
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
-                description: Used to track REST transactions for logging purposes
+              $ref: '#/components/headers/X-onap-RequestId'
         400:
           description: Bad Request
         401:
@@ -164,30 +149,14 @@ paths:
             [AutomationCompositions](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationCompositions.java)
             containing a list of automation composition instances found
           headers:
-            api-version:
-              schema:
-                type: string
             X-LatestVersion:
-              schema:
-                type: string
-                description: Used only to communicate an API's latest version
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
-                description:
-                  Used only to communicate a PATCH version in a response for troubleshooting purposes only,
-                  and will not be provided by the client on request
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
-                description:
-                  Used to request or communicate a MINOR version back from the client
-                  to the server, and from the server back to the client
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
-                description: Used to track REST transactions for logging purposes
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -220,30 +189,14 @@ paths:
           description: Serialised instance of
             [InternalDatas](https://github.com/onap/policy-clamp/blob/master/participant/participant-impl/policy-clamp-participant-impl-simulator/src/main/java/org/onap/policy/clamp/acm/participant/sim/model/InternalDatas.java)
           headers:
-            api-version:
-              schema:
-                type: string
             X-LatestVersion:
-              schema:
-                type: string
-                description: Used only to communicate an API's latest version
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
-                description:
-                  Used only to communicate a PATCH version in a response for troubleshooting purposes only,
-                  and will not be provided by the client on request
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
-                description:
-                  Used to request or communicate a MINOR version back from the client
-                  to the server, and from the server back to the client
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
-              schema:
-                type: string
-                format: uuid
-                description: Used to track REST transactions for logging purposes
+              $ref: '#/components/headers/X-onap-RequestId'
           content:
             application/json:
               schema:
@@ -286,30 +239,99 @@ paths:
         200:
           description: OK, the data has been saved
           headers:
-            api-version:
-              schema:
-                type: string
             X-LatestVersion:
-              schema:
-                type: string
-                description: Used only to communicate an API's latest version
+              $ref: '#/components/headers/X-LatestVersion'
             X-PatchVersion:
-              schema:
-                type: string
-                description:
-                  Used only to communicate a PATCH version in a response for troubleshooting purposes only,
-                  and will not be provided by the client on request
+              $ref: '#/components/headers/X-PatchVersion'
             X-MinorVersion:
-              schema:
-                type: string
-                description:
-                  Used to request or communicate a MINOR version back from the client
-                  to the server, and from the server back to the client
+              $ref: '#/components/headers/X-MinorVersion'
             X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+        400:
+          description: Bad Request
+        401:
+          description: Authorization Error
+        500:
+          description: Internal Server Error
+      security:
+        - basicAuth: []
+  /compositiondatas:
+    get:
+      tags:
+        - Simulator-participant-controller
+      summary: Query details of the requested internal composition datas
+      description: Query details of the requested internal composition datas
+      operationId: getCompositionDatas
+      parameters:
+      - name: X-onap-RequestId
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: Serialised instance of
+            [InternalDatas](https://github.com/onap/policy-clamp/blob/master/participant/participant-impl/policy-clamp-participant-impl-simulator/src/main/java/org/onap/policy/clamp/acm/participant/sim/model/InternalDatas.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
               schema:
-                type: string
-                format: uuid
-                description: Used to track REST transactions for logging purposes
+                $ref: '#/components/schemas/InternalDatas'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/InternalDatas'
+        401:
+          description: Authorization Error
+        500:
+          description: Internal Server Error
+      security:
+        - basicAuth: []
+    put:
+      tags:
+        - Simulator-participant-controller
+      summary: change the parameters
+      description: >-
+        Change the data of the Simulator Participant
+      operationId: setCompositionData
+      parameters:
+        - name: X-ONAP-RequestID
+          in: header
+          description: RequestID for http transaction
+          required: false
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: The data in a serialised instance of
+            [InternalData](https://github.com/onap/policy-clamp/blob/master/participant/participant-impl/policy-clamp-participant-impl-simulator/src/main/java/org/onap/policy/clamp/acm/participant/sim/model/InternalData.java)
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InternalData'
+          application/yaml:
+            schema:
+              $ref: '#/components/schemas/InternalData'
+      responses:
+        200:
+          description: OK, the data has been saved
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
         400:
           description: Bad Request
         401:
@@ -337,3 +359,17 @@ components:
     InternalData:
       title: InternalData
       type: object
+  headers:
+    X-LatestVersion:
+      schema:
+        type: string
+    X-PatchVersion:
+      schema:
+        type: string
+    X-MinorVersion:
+      schema:
+        type: string
+    X-onap-RequestId:
+      schema:
+        type: string
+        format: uuid

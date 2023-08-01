@@ -42,6 +42,7 @@ import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.models.base.PfModelException;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -269,7 +270,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
     }
 
     /**
-     * Get Data List.
+     * Get Instance Data List.
      *
      * @return the InternalDatas
      */
@@ -342,5 +343,33 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
         if (LockState.UNLOCKING.equals(lockState)) {
             unlock(automationCompositionId, element.getId());
         }
+    }
+
+    /**
+     * Get Composition Data List.
+     *
+     * @return the InternalDatas
+     */
+    public InternalDatas getCompositionDataList() {
+        var acElementsDefinitions = intermediaryApi.getAcElementsDefinitions();
+        var internalDatas = new InternalDatas();
+        for (var entry : acElementsDefinitions.entrySet()) {
+            for (var acElementsDefinition : entry.getValue().values()) {
+                var internalData = new InternalData();
+                internalData.setCompositionId(entry.getKey());
+                internalData.setCompositionDefinitionElementId(acElementsDefinition.getAcElementDefinitionId());
+                internalData.setIntProperties(
+                        acElementsDefinition.getAutomationCompositionElementToscaNodeTemplate().getProperties());
+                internalData.setOutProperties(acElementsDefinition.getOutProperties());
+                internalDatas.getList().add(internalData);
+            }
+        }
+        return internalDatas;
+    }
+
+    public void setCompositionOutProperties(UUID compositionId, ToscaConceptIdentifier compositionDefinitionElementId,
+            Map<String, Object> outProperties) {
+        intermediaryApi.sendAcDefinitionInfo(compositionId, compositionDefinitionElementId, outProperties);
+
     }
 }
