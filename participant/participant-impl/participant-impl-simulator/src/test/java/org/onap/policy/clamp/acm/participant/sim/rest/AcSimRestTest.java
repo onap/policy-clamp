@@ -64,6 +64,7 @@ class AcSimRestTest {
     private static final String CONFIG_URL = "/v2/parameters";
     private static final String INSTANCE_URL = "/v2/instances";
     private static final String DATAS_URL = "/v2/datas";
+    private static final String COMPOSITION_DATAS_URL = "/v2/compositiondatas";
 
     @Autowired
     private MockMvc mockMvc;
@@ -136,6 +137,31 @@ class AcSimRestTest {
     @Test
     void testsetDatas() throws Exception {
         var requestBuilder = MockMvcRequestBuilders.put(DATAS_URL).accept(MediaType.APPLICATION_JSON_VALUE)
+                .content(CODER.encode(new InternalData())).contentType(MediaType.APPLICATION_JSON_VALUE);
+
+        mockMvc.perform(requestBuilder).andExpect(status().isOk());
+    }
+
+    @Test
+    void testgetCompositionDatas() throws Exception {
+        var internalDatas = new InternalDatas();
+        var internalData = new InternalData();
+        internalData.setCompositionId(UUID.randomUUID());
+        internalDatas.getList().add(internalData);
+
+        doReturn(internalDatas).when(automationCompositionElementHandler).getCompositionDataList();
+
+        var requestBuilder = MockMvcRequestBuilders.get(COMPOSITION_DATAS_URL).accept(MediaType.APPLICATION_JSON_VALUE);
+        var result = mockMvc.perform(requestBuilder).andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON)).andReturn();
+        var body = result.getResponse().getContentAsString();
+        var acsResult = CODER.decode(body, InternalDatas.class);
+        assertEquals(internalData.getCompositionId(), acsResult.getList().get(0).getCompositionId());
+    }
+
+    @Test
+    void testsetCompositionDatas() throws Exception {
+        var requestBuilder = MockMvcRequestBuilders.put(COMPOSITION_DATAS_URL).accept(MediaType.APPLICATION_JSON_VALUE)
                 .content(CODER.encode(new InternalData())).contentType(MediaType.APPLICATION_JSON_VALUE);
 
         mockMvc.perform(requestBuilder).andExpect(status().isOk());
