@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2022 Nordix Foundation.
+ * Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +20,14 @@
 
 package org.onap.policy.clamp.models.acm.concepts;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.function.UnaryOperator;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 
@@ -41,6 +45,8 @@ public class AutomationCompositionElementDefinition {
     // The definition of the Automation Composition Element in TOSCA
     private ToscaNodeTemplate automationCompositionElementToscaNodeTemplate;
 
+    private Map<String, Object> outProperties = new LinkedHashMap<>();
+
     /**
      * Copy constructor, does a deep copy but as all fields here are immutable, it's just a regular copy.
      *
@@ -50,5 +56,6 @@ public class AutomationCompositionElementDefinition {
         this.acElementDefinitionId = acElementDefinition.acElementDefinitionId;
         this.automationCompositionElementToscaNodeTemplate =
                 new ToscaNodeTemplate(acElementDefinition.automationCompositionElementToscaNodeTemplate);
+        this.outProperties = PfUtils.mapMap(acElementDefinition.outProperties, UnaryOperator.identity());
     }
 }
