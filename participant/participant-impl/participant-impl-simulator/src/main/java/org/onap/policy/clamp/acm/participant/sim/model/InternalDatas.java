@@ -27,5 +27,5 @@ import lombok.Data;
 @Data
 public class InternalDatas {
 
-    List<InternalData> list = new ArrayList<>();
+    private List<InternalData> list = new ArrayList<>();
 }

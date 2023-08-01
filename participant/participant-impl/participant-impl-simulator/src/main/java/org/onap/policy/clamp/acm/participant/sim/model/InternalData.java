@@ -24,13 +24,16 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 import lombok.Data;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 @Data
 public class InternalData {
-    Map<String, Object> intProperties = new LinkedHashMap<>();
-    Map<String, Object> outProperties = new LinkedHashMap<>();
-    UUID automationCompositionId;
-    UUID automationCompositionElementId;
-    String useState;
-    String operationalState;
+    private Map<String, Object> intProperties = new LinkedHashMap<>();
+    private Map<String, Object> outProperties = new LinkedHashMap<>();
+    private UUID compositionId;
+    private ToscaConceptIdentifier compositionDefinitionElementId;
+    private UUID automationCompositionId;
+    private UUID automationCompositionElementId;
+    private String useState;
+    private String operationalState;
 }
