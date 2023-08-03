@@ -26,9 +26,11 @@ import java.util.UUID;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
  * This interface is used by participant implementations to use the participant intermediary.
@@ -56,6 +58,14 @@ public interface ParticipantIntermediaryApi {
     Map<UUID, AutomationComposition> getAutomationCompositions();
 
     /**
+     * Get a copy of the AutomationComposition by automationCompositionId.
+     *
+     * @param automationCompositionId the ID of the automation composition to update the state on
+     * @return get the AutomationComposition
+     */
+    AutomationComposition getAutomationComposition(UUID automationCompositionId);
+
+    /**
      * Get a copy of the AutomationCompositionElement by automationCompositionId and elementId.
      *
      * @param automationCompositionId the ID of the automation composition to update the state on
@@ -63,6 +73,13 @@ public interface ParticipantIntermediaryApi {
      * @return get the AutomationCompositionElement
      */
     AutomationCompositionElement getAutomationCompositionElement(UUID automationCompositionId, UUID elementId);
+
+    Map<UUID, Map<ToscaConceptIdentifier, AutomationCompositionElementDefinition>> getAcElementsDefinitions();
+
+    Map<ToscaConceptIdentifier, AutomationCompositionElementDefinition> getAcElementsDefinitions(UUID compositionId);
+
+    AutomationCompositionElementDefinition getAcElementDefinition(UUID compositionId,
+            ToscaConceptIdentifier elementId);
 
     /**
      * Send Automation Composition Element update Info to AC-runtime.
@@ -75,6 +92,8 @@ public interface ParticipantIntermediaryApi {
      */
     void sendAcElementInfo(UUID automationCompositionId, UUID id, String useState, String operationalState,
             Map<String, Object> outProperties);
+
+    void sendAcDefinitionInfo(UUID compositionId, ToscaConceptIdentifier elementId, Map<String, Object> outProperties);
 
     void updateCompositionState(UUID compositionId, AcTypeState state, StateChangeResult stateChangeResult,
             String message);

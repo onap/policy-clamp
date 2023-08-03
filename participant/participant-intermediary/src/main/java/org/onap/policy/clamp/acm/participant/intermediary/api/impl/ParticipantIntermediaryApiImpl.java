@@ -30,10 +30,12 @@ import org.onap.policy.clamp.acm.participant.intermediary.handler.CacheProvider;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.models.base.PfUtils;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.springframework.stereotype.Component;
 
 /**
@@ -80,5 +82,44 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
         }
         var element = automationComposition.getElements().get(elementId);
         return element != null ? new AutomationCompositionElement(element) : null;
+    }
+
+    @Override
+    public void sendAcDefinitionInfo(UUID compositionId, ToscaConceptIdentifier elementId,
+            Map<String, Object> outProperties) {
+        automationCompositionHandler.sendAcDefinitionInfo(compositionId, elementId, outProperties);
+    }
+
+    @Override
+    public AutomationComposition getAutomationComposition(UUID automationCompositionId) {
+        var automationComposition = cacheProvider.getAutomationCompositions().get(automationCompositionId);
+        return automationComposition != null ? new AutomationComposition(automationComposition) : null;
+    }
+
+    @Override
+    public Map<UUID, Map<ToscaConceptIdentifier, AutomationCompositionElementDefinition>> getAcElementsDefinitions() {
+        return PfUtils.mapMap(cacheProvider.getAcElementsDefinitions(),
+                map -> PfUtils.mapMap(map, AutomationCompositionElementDefinition::new));
+    }
+
+    @Override
+    public Map<ToscaConceptIdentifier, AutomationCompositionElementDefinition> getAcElementsDefinitions(
+            UUID compositionId) {
+        var acElementDefinitions = cacheProvider.getAcElementsDefinitions().get(compositionId);
+        if (acElementDefinitions == null) {
+            return null;
+        }
+        return PfUtils.mapMap(acElementDefinitions, AutomationCompositionElementDefinition::new);
+    }
+
+    @Override
+    public AutomationCompositionElementDefinition getAcElementDefinition(UUID compositionId,
+            ToscaConceptIdentifier elementId) {
+        var acElementDefinitions = cacheProvider.getAcElementsDefinitions().get(compositionId);
+        if (acElementDefinitions == null) {
+            return null;
+        }
+        var acElementDefinition = acElementDefinitions.get(elementId);
+        return acElementDefinition != null ? new AutomationCompositionElementDefinition(acElementDefinition) : null;
     }
 }

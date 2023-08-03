@@ -30,7 +30,6 @@ import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessag
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionInfo;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeploy;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionStateChange;
@@ -69,8 +68,7 @@ public class ParticipantHandler {
      */
     @Timed(value = "listener.participant_status_req", description = "PARTICIPANT_STATUS_REQ messages received")
     public void handleParticipantStatusReq(final ParticipantStatusReq participantStatusReqMsg) {
-        var participantStatus = makeHeartbeat(true);
-        publisher.sendParticipantStatus(participantStatus);
+        publisher.sendParticipantStatus(makeHeartbeat());
     }
 
     /**
@@ -147,7 +145,7 @@ public class ParticipantHandler {
     public void handleParticipantRegisterAck(ParticipantRegisterAck participantRegisterAckMsg) {
         LOGGER.debug("ParticipantRegisterAck message received as responseTo {}",
                 participantRegisterAckMsg.getResponseTo());
-        publisher.sendParticipantStatus(makeHeartbeat(false));
+        publisher.sendParticipantStatus(makeHeartbeat());
     }
 
     /**
@@ -223,32 +221,18 @@ public class ParticipantHandler {
      */
     public void sendHeartbeat() {
         if (publisher.isActive()) {
-            publisher.sendHeartbeat(makeHeartbeat(false));
+            publisher.sendHeartbeat(makeHeartbeat());
         }
     }
 
     /**
      * Method to send heartbeat to automation composition runtime.
      */
-    public ParticipantStatus makeHeartbeat(boolean responseToParticipantStatusReq) {
+    private ParticipantStatus makeHeartbeat() {
         var heartbeat = new ParticipantStatus();
         heartbeat.setParticipantId(cacheProvider.getParticipantId());
         heartbeat.setState(ParticipantState.ON_LINE);
-        heartbeat.setAutomationCompositionInfoList(getAutomationCompositionInfoList());
         heartbeat.setParticipantSupportedElementType(cacheProvider.getSupportedAcElementTypes());
-
-        if (responseToParticipantStatusReq) {
-            var acElementDefsMap = cacheProvider.getAcElementsDefinitions();
-            List<ParticipantDefinition> participantDefinitionList = new ArrayList<>(acElementDefsMap.size());
-            for (var acElementDefs : acElementDefsMap.values()) {
-                var participantDefinition = new ParticipantDefinition();
-                participantDefinition.setParticipantId(cacheProvider.getParticipantId());
-                participantDefinition
-                        .setAutomationCompositionElementDefinitionList(new ArrayList<>(acElementDefs.values()));
-                participantDefinitionList.add(participantDefinition);
-            }
-            heartbeat.setParticipantDefinitionUpdates(participantDefinitionList);
-        }
 
         return heartbeat;
     }

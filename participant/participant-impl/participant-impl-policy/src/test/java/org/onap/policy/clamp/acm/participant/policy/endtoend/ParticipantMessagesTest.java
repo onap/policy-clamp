@@ -142,14 +142,4 @@ class ParticipantMessagesTest {
                 .doesNotThrowAnyException();
         }
     }
-
-    @Test
-    void testParticipantStatusHeartbeat() {
-        final var heartbeat = participantHandler.makeHeartbeat(true);
-        synchronized (lockit) {
-            var publisher = new ParticipantMessagePublisher();
-            publisher.active(Collections.singletonList(Mockito.mock(TopicSink.class)));
-            assertThatCode(() -> publisher.sendHeartbeat(heartbeat)).doesNotThrowAnyException();
-        }
-    }
 }
