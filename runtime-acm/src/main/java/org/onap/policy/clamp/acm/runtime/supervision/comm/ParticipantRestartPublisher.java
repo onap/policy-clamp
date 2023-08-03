@@ -100,6 +100,15 @@ public class ParticipantRestartPublisher extends AbstractParticipantPublisher<Pa
                 elementList.add(elementEntry);
             }
         }
-        return AcmUtils.prepareParticipantPriming(elementList, supportedElementMap);
+        var list = AcmUtils.prepareParticipantPriming(elementList, supportedElementMap);
+        for (var participantDefinition : list) {
+            for (var elementDe : participantDefinition.getAutomationCompositionElementDefinitionList()) {
+                var state = acmDefinition.getElementStateMap().get(elementDe.getAcElementDefinitionId().getName());
+                if (state != null) {
+                    elementDe.setOutProperties(state.getOutProperties());
+                }
+            }
+        }
+        return list;
     }
 }
