@@ -34,12 +34,14 @@ import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeployAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantPrimeAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatus;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class AutomationCompositionOutHandlerTest {
 
@@ -174,5 +176,30 @@ class AutomationCompositionOutHandlerTest {
         acOutHandler.updateCompositionState(UUID.randomUUID(), AcTypeState.PRIMED, StateChangeResult.NO_ERROR,
                 "Primed");
         verify(publisher).sendParticipantPrimeAck(any(ParticipantPrimeAck.class));
+    }
+
+    @Test
+    void sendAcDefinitionInfoTest() {
+        var cacheProvider = mock(CacheProvider.class);
+        when(cacheProvider.getParticipantId()).thenReturn(UUID.randomUUID());
+        var compositionId = UUID.randomUUID();
+        var elementId = new ToscaConceptIdentifier("code", "1.0.0");
+        var mapAcElementsDefinitions =
+                Map.of(compositionId, Map.of(elementId, new AutomationCompositionElementDefinition()));
+        when(cacheProvider.getAcElementsDefinitions()).thenReturn(mapAcElementsDefinitions);
+        var publisher = mock(ParticipantMessagePublisher.class);
+        var acOutHandler = new AutomationCompositionOutHandler(publisher, cacheProvider);
+
+        acOutHandler.sendAcDefinitionInfo(null, null, Map.of());
+        verify(publisher, times(0)).sendHeartbeat(any(ParticipantStatus.class));
+
+        acOutHandler.sendAcDefinitionInfo(UUID.randomUUID(), null, Map.of());
+        verify(publisher, times(0)).sendHeartbeat(any(ParticipantStatus.class));
+
+        acOutHandler.sendAcDefinitionInfo(compositionId, new ToscaConceptIdentifier("wrong", "1.0.0"), Map.of());
+        verify(publisher, times(0)).sendHeartbeat(any(ParticipantStatus.class));
+
+        acOutHandler.sendAcDefinitionInfo(compositionId, elementId, Map.of());
+        verify(publisher).sendHeartbeat(any(ParticipantStatus.class));
     }
 }

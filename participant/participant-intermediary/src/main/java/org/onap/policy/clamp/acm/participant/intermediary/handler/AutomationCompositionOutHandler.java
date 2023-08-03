@@ -29,16 +29,19 @@ import org.onap.policy.clamp.models.acm.concepts.AcElementDeployAck;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementInfo;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionInfo;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeployAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantPrimeAck;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatus;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -159,29 +162,27 @@ public class AutomationCompositionOutHandler {
         var automationComposition = cacheProvider.getAutomationComposition(automationCompositionId);
         if (automationComposition == null) {
             LOGGER.error("Cannot update Automation composition element state, Automation composition id {} not present",
-                    automationComposition);
+                    automationCompositionId);
             return;
         }
 
         var element = automationComposition.getElements().get(elementId);
         if (element == null) {
             var msg = "Cannot update Automation composition element state, AC Element id {} not present";
-            LOGGER.error(msg, automationComposition);
+            LOGGER.error(msg, elementId);
             return;
         }
         element.setOperationalState(operationalState);
         element.setUseState(useState);
         element.setOutProperties(outProperties);
 
-        var statusMsg = new ParticipantStatus();
-        statusMsg.setParticipantId(cacheProvider.getParticipantId());
-        statusMsg.setState(ParticipantState.ON_LINE);
-        statusMsg.setParticipantSupportedElementType(cacheProvider.getSupportedAcElementTypes());
         var acInfo = new AutomationCompositionInfo();
         acInfo.setAutomationCompositionId(automationCompositionId);
         acInfo.setDeployState(automationComposition.getDeployState());
         acInfo.setLockState(automationComposition.getLockState());
         acInfo.setElements(List.of(getAutomationCompositionElementInfo(element)));
+        var statusMsg = createParticipantStatus();
+        statusMsg.setCompositionId(automationComposition.getCompositionId());
         statusMsg.setAutomationCompositionInfoList(List.of(acInfo));
         publisher.sendParticipantStatus(statusMsg);
     }
@@ -224,5 +225,60 @@ public class AutomationCompositionOutHandler {
         participantPrimeAck.setState(ParticipantState.ON_LINE);
         publisher.sendParticipantPrimeAck(participantPrimeAck);
         cacheProvider.getMsgIdentification().remove(compositionId);
+    }
+
+    /**
+     * Send Composition Definition Info.
+     *
+     * @param compositionId the composition id
+     * @param elementId the Composition Definition Element id
+     * @param outProperties the output Properties Map
+     */
+    public void sendAcDefinitionInfo(UUID compositionId, ToscaConceptIdentifier elementId,
+            Map<String, Object> outProperties) {
+        if (compositionId == null) {
+            LOGGER.error("Cannot send Composition outProperties, id is null");
+            return;
+        }
+        var statusMsg = createParticipantStatus();
+        statusMsg.setCompositionId(compositionId);
+        var acElementDefsMap = cacheProvider.getAcElementsDefinitions();
+        var acElementsDefinitions = acElementDefsMap.get(compositionId);
+        if (acElementsDefinitions == null) {
+            LOGGER.error("Cannot send Composition outProperties, id {} is null", compositionId);
+            return;
+        }
+        var acElementDefinition = getAutomationCompositionElementDefinition(acElementsDefinitions, elementId);
+        if (acElementDefinition == null) {
+            LOGGER.error("Cannot send Composition outProperties, elementId {} not present", elementId);
+            return;
+        }
+        acElementDefinition.setOutProperties(outProperties);
+        var participantDefinition = new ParticipantDefinition();
+        participantDefinition.setParticipantId(cacheProvider.getParticipantId());
+        participantDefinition.setAutomationCompositionElementDefinitionList(List.of(acElementDefinition));
+        statusMsg.setParticipantDefinitionUpdates(List.of(participantDefinition));
+        publisher.sendHeartbeat(statusMsg);
+    }
+
+    private AutomationCompositionElementDefinition getAutomationCompositionElementDefinition(
+            Map<ToscaConceptIdentifier, AutomationCompositionElementDefinition> acElementsDefinition,
+            ToscaConceptIdentifier elementId) {
+
+        if (elementId == null) {
+            if (acElementsDefinition.size() == 1) {
+                return acElementsDefinition.values().iterator().next();
+            }
+            return null;
+        }
+        return acElementsDefinition.get(elementId);
+    }
+
+    private ParticipantStatus createParticipantStatus() {
+        var statusMsg = new ParticipantStatus();
+        statusMsg.setParticipantId(cacheProvider.getParticipantId());
+        statusMsg.setState(ParticipantState.ON_LINE);
+        statusMsg.setParticipantSupportedElementType(cacheProvider.getSupportedAcElementTypes());
+        return statusMsg;
     }
 }
