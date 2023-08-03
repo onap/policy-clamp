@@ -35,6 +35,7 @@ import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
@@ -130,6 +131,29 @@ public class SupervisionParticipantHandler {
         if (!participantStatusMsg.getAutomationCompositionInfoList().isEmpty()) {
             automationCompositionProvider.upgradeStates(participantStatusMsg.getAutomationCompositionInfoList());
         }
+        if (!participantStatusMsg.getParticipantDefinitionUpdates().isEmpty()
+                && participantStatusMsg.getCompositionId() != null) {
+            updateAcDefinitionOutProperties(participantStatusMsg.getCompositionId(),
+                    participantStatusMsg.getParticipantDefinitionUpdates());
+        }
+    }
+
+    private void updateAcDefinitionOutProperties(UUID composotionId, List<ParticipantDefinition> list) {
+        var acDefinitionOpt = acDefinitionProvider.findAcDefinition(composotionId);
+        if (acDefinitionOpt.isEmpty()) {
+            LOGGER.error("Ac Definition with id {} not found", composotionId);
+            return;
+        }
+        var acDefinition = acDefinitionOpt.get();
+        for (var acElements : list) {
+            for (var element : acElements.getAutomationCompositionElementDefinitionList()) {
+                var state = acDefinition.getElementStateMap().get(element.getAcElementDefinitionId().getName());
+                if (state != null) {
+                    state.setOutProperties(element.getOutProperties());
+                }
+            }
+        }
+        acDefinitionProvider.updateAcDefinition(acDefinition);
     }
 
     private void checkOnline(Participant participant) {
