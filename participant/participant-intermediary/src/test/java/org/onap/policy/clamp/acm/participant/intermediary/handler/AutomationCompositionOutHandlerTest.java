@@ -166,13 +166,28 @@ class AutomationCompositionOutHandlerTest {
     }
 
     @Test
-    void updateCompositionStateTest() {
+    void updateCompositionStatePrimedTest() {
         var cacheProvider = mock(CacheProvider.class);
         when(cacheProvider.getParticipantId()).thenReturn(UUID.randomUUID());
         var publisher = mock(ParticipantMessagePublisher.class);
         var acOutHandler = new AutomationCompositionOutHandler(publisher, cacheProvider);
-        acOutHandler.updateCompositionState(UUID.randomUUID(), AcTypeState.PRIMED, StateChangeResult.NO_ERROR,
+        var compositionId = UUID.randomUUID();
+        acOutHandler.updateCompositionState(compositionId, AcTypeState.PRIMED, StateChangeResult.NO_ERROR,
                 "Primed");
         verify(publisher).sendParticipantPrimeAck(any(ParticipantPrimeAck.class));
+        verify(cacheProvider, times(0)).removeElementDefinition(compositionId);
+    }
+
+    @Test
+    void updateCompositionStateDeprimingTest() {
+        var cacheProvider = mock(CacheProvider.class);
+        when(cacheProvider.getParticipantId()).thenReturn(UUID.randomUUID());
+        var publisher = mock(ParticipantMessagePublisher.class);
+        var acOutHandler = new AutomationCompositionOutHandler(publisher, cacheProvider);
+        var compositionId = UUID.randomUUID();
+        acOutHandler.updateCompositionState(compositionId, AcTypeState.COMMISSIONED, StateChangeResult.NO_ERROR,
+                "Deprimed");
+        verify(publisher).sendParticipantPrimeAck(any(ParticipantPrimeAck.class));
+        verify(cacheProvider).removeElementDefinition(compositionId);
     }
 }
