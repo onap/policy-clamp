@@ -225,6 +225,9 @@ public class AutomationCompositionOutHandler {
         participantPrimeAck.setState(ParticipantState.ON_LINE);
         publisher.sendParticipantPrimeAck(participantPrimeAck);
         cacheProvider.getMsgIdentification().remove(compositionId);
+        if (AcTypeState.COMMISSIONED.equals(state) && StateChangeResult.NO_ERROR.equals(stateChangeResult)) {
+            cacheProvider.removeElementDefinition(compositionId);
+        }
     }
 
     /**
