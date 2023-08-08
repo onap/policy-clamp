@@ -1,0 +1,11 @@
+Verified+1: ONAP GitHub Actions <ecomp-jobbuilder@jenkins.openecomp.org>
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Jorge Hernandez <jorge.hernandez-herrero@att.com>
+Code-Review+1: Saul Gill <saul.gill@est.tech>
+Verified+1: ONAP Required GHA <releng+onap.required.gha@linuxfoundation.org>
+Code-Review+2: Adheli Tavares <adheli.tavares@est.tech>
+Submitted-by: Adheli Tavares <adheli.tavares@est.tech>
+Submitted-at: Tue, 08 Aug 2023 09:50:17 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/policy/clamp/+/135654
+Project: policy/clamp
+Branch: refs/heads/master
