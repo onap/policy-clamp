@@ -208,7 +208,6 @@ class ParticipantHandlerTest {
         var messageId = UUID.randomUUID();
         participantPrime.setMessageId(messageId);
         participantHandler.handleParticipantPrime(participantPrime);
-        verify(cacheProvider).removeElementDefinition(compositionId);
         verify(acHandler).deprime(messageId, compositionId);
     }
 

@@ -190,7 +190,6 @@ public class ParticipantHandler {
                     participantPrimeMsg.getCompositionId(), list);
         } else {
             // deprime
-            cacheProvider.removeElementDefinition(participantPrimeMsg.getCompositionId());
             automationCompositionHandler.deprime(participantPrimeMsg.getMessageId(),
                     participantPrimeMsg.getCompositionId());
         }
