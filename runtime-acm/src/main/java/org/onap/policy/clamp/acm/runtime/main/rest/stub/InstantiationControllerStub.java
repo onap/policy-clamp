@@ -20,8 +20,8 @@
 
 package org.onap.policy.clamp.acm.runtime.main.rest.stub;
 
+import jakarta.validation.Valid;
 import java.util.UUID;
-import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.runtime.main.rest.gen.AutomationCompositionInstanceApi;
 import org.onap.policy.clamp.acm.runtime.main.web.AbstractRestController;

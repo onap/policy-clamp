@@ -20,10 +20,13 @@
 
 package org.onap.policy.clamp.acm.participant.a1pms.exception;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
+import java.io.Serial;
 import org.onap.policy.models.base.PfModelException;
 
 public class A1PolicyServiceException extends PfModelException {
+
+    @Serial
     private static final long serialVersionUID = 6438746904567105054L;
 
     public A1PolicyServiceException(int statusCode, String message) {

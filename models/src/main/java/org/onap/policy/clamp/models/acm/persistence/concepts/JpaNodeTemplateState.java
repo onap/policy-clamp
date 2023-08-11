@@ -20,19 +20,18 @@
 
 package org.onap.policy.clamp.models.acm.persistence.concepts;
 
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.Lob;
+import jakarta.persistence.Table;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.UnaryOperator;
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.Lob;
-import javax.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
@@ -66,10 +65,8 @@ public class JpaNodeTemplateState extends Validated implements PfAuthorative<Nod
 
     @VerifyKey
     @NotNull
-    @AttributeOverrides({
-        @AttributeOverride(name = "name",    column = @Column(name = "nodeTemplate_name")),
-        @AttributeOverride(name = "version", column = @Column(name = "nodeTemplate_version"))
-    })
+    @AttributeOverride(name = "name",    column = @Column(name = "nodeTemplate_name"))
+    @AttributeOverride(name = "version", column = @Column(name = "nodeTemplate_version"))
     private PfConceptKey nodeTemplateId;
 
     @Column
@@ -86,6 +83,7 @@ public class JpaNodeTemplateState extends Validated implements PfAuthorative<Nod
     @NotNull
     @Valid
     @Convert(converter = StringToMapConverter.class)
+    @Column(length = 100000)
     private Map<String, Object> outProperties;
 
     /**

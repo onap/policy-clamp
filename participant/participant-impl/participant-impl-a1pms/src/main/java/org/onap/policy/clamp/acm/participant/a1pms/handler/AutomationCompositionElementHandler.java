@@ -20,13 +20,13 @@
 
 package org.onap.policy.clamp.acm.participant.a1pms.handler;
 
+import jakarta.validation.Validation;
+import jakarta.validation.ValidationException;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import javax.validation.Validation;
-import javax.validation.ValidationException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -75,7 +75,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
      *
      * @param automationCompositionId the ID of the automation composition
      * @param automationCompositionElementId the ID of the automation composition element
-     * @throws PfModelException in case of a model exception
+     * @throws A1PolicyServiceException in case of a model exception
      */
     @Override
     public void undeploy(UUID automationCompositionId, UUID automationCompositionElementId)

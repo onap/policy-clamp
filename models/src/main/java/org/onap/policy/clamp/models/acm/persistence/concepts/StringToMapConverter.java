@@ -20,11 +20,11 @@
 
 package org.onap.policy.clamp.models.acm.persistence.concepts;
 
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
+import jakarta.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.Map;
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
-import javax.ws.rs.core.Response;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;

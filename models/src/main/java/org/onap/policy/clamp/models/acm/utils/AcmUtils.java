@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.models.acm.utils;
 
+import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -30,7 +31,6 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
-import javax.ws.rs.core.Response;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
@@ -170,7 +170,7 @@ public final class AcmUtils {
         return serviceTemplate.getToscaTopologyTemplate().getNodeTemplates().entrySet().stream().filter(
                 nodeTemplateEntry -> checkIfNodeTemplateIsAutomationCompositionElement(nodeTemplateEntry.getValue(),
                         serviceTemplate))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
@@ -277,7 +277,7 @@ public final class AcmUtils {
                 .stream()
                 .map(elementMap ->
                     map.get(new ToscaConceptIdentifier(elementMap.get("name"), elementMap.get("version"))))
-                .collect(Collectors.toList());
+            .toList();
         // @formatter:on
     }
 
@@ -343,8 +343,7 @@ public final class AcmUtils {
     public static DeployState deployCompleted(DeployState deployState) {
         DeployState result = null;
         switch (deployState) {
-            case UPDATING:
-            case DEPLOYING:
+            case UPDATING, DEPLOYING:
                 result = DeployState.DEPLOYED;
                 break;
 

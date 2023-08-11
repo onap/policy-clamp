@@ -20,11 +20,11 @@
 
 package org.onap.policy.clamp.models.acm.persistence.provider;
 
+import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import javax.ws.rs.core.Response;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.onap.policy.common.parameters.BeanValidationResult;
@@ -95,6 +95,6 @@ public final class ProviderUtils {
      * @return the authorative list
      */
     public static <T, J extends PfAuthorative<T>> List<T> asEntityList(List<J> jpaEntityList) {
-        return jpaEntityList.stream().map(J::toAuthorative).collect(Collectors.toList());
+        return jpaEntityList.stream().map(J::toAuthorative).toList();
     }
 }

@@ -20,8 +20,8 @@
 
 package org.onap.policy.clamp.acm.runtime.main.parameters;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.onap.policy.common.endpoints.parameters.TopicParameterGroup;

@@ -20,9 +20,9 @@
 
 package org.onap.policy.clamp.acm.runtime.util;
 
+import jakarta.ws.rs.core.Response.Status;
 import java.util.List;
 import java.util.UUID;
-import javax.ws.rs.core.Response.Status;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;

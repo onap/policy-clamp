@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.models.acm.document.concepts;
 
+import java.io.Serial;
 import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -34,6 +35,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaDataType;
 @NoArgsConstructor
 public class DocToscaDataType extends DocToscaWithToscaProperties<ToscaDataType> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private List<@NotNull @Valid DocToscaConstraint> constraints;

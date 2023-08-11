@@ -20,7 +20,8 @@
 
 package org.onap.policy.clamp.common.acm.exception;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
+import java.io.Serial;
 import lombok.Getter;
 import lombok.ToString;
 import org.onap.policy.models.errors.concepts.ErrorResponse;
@@ -34,6 +35,8 @@ import org.onap.policy.models.errors.concepts.ErrorResponseUtils;
 @Getter
 @ToString
 public class AutomationCompositionRuntimeException extends RuntimeException implements ErrorResponseInfo {
+
+    @Serial
     private static final long serialVersionUID = -8507246953751956974L;
 
     // The error response of the exception

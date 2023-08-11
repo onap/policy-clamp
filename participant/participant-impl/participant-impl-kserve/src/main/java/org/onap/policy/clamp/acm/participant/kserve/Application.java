@@ -20,15 +20,10 @@
 
 package org.onap.policy.clamp.acm.participant.kserve;
 
-import io.kubernetes.client.openapi.ApiClient;
-import io.kubernetes.client.util.Config;
-import java.io.IOException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Profile;
 
 /**
  * Starter.
@@ -47,17 +42,5 @@ public class Application {
      */
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
-    }
-
-    /**
-     * Default Api Client bean creation.
-     *
-     * @return ApiClient
-     * @throws IOException exception
-     */
-    @Profile("kubernetes")
-    @Bean
-    public ApiClient defaultApiClient() throws IOException {
-        return Config.fromCluster();
     }
 }

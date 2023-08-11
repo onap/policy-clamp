@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.models.acm.document.concepts;
 
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
@@ -35,6 +36,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaRequirement;
 @ToString(callSuper = true)
 public class DocToscaRequirement extends DocToscaWithTypeAndStringProperties<ToscaRequirement> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private String capability;

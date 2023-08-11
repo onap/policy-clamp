@@ -34,7 +34,6 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 class AutomationCompositionElementTest {
     @Test
     void testAutomationCompositionElement() {
-        assertNotNull(new AutomationCompositionElement());
         var ace0 = new AutomationCompositionElement();
         var ace1 = new AutomationCompositionElement(ace0);
         assertEquals(ace0, ace1);
@@ -54,7 +53,7 @@ class AutomationCompositionElementTest {
 
         assertThat(ace0.toString()).contains("AutomationCompositionElement(");
         assertThat(ace0.hashCode()).isNotZero();
-        assertEquals(ace0, ace0);
+        assertThat(ace0).isEqualTo(ace0);
         assertNotEquals(null, ace0);
 
         var ace1 = new AutomationCompositionElement();

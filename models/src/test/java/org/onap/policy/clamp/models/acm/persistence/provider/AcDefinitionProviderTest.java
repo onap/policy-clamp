@@ -90,11 +90,12 @@ class AcDefinitionProviderTest {
         var result = acDefinitionProvider.createAutomationCompositionDefinition(inputServiceTemplate);
 
         assertThat(result.getServiceTemplate()).isEqualTo(docServiceTemplate.toAuthorative());
-        assertThat(result.getServiceTemplate().getMetadata() != null);
+        assertThat(result.getServiceTemplate().getMetadata()).isNotNull();
     }
 
     @Test
     void testCreateServiceTemplateWithMetadata() {
+        inputServiceTemplate.setMetadata(new HashMap<>());
         var docServiceTemplate = new DocToscaServiceTemplate(inputServiceTemplate);
         var acmDefinition = getAcDefinition(docServiceTemplate);
 
@@ -103,11 +104,10 @@ class AcDefinitionProviderTest {
             .thenReturn(new JpaAutomationCompositionDefinition(acmDefinition));
 
         var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository);
-        inputServiceTemplate.setMetadata(new HashMap<>());
         var result = acDefinitionProvider.createAutomationCompositionDefinition(inputServiceTemplate);
 
         assertThat(result.getServiceTemplate()).isEqualTo(docServiceTemplate.toAuthorative());
-        assertThat(result.getServiceTemplate().getMetadata() != null);
+        assertThat(result.getServiceTemplate().getMetadata()).isNotNull();
     }
 
     @Test
@@ -234,8 +234,7 @@ class AcDefinitionProviderTest {
         result = acDefinitionProvider.getServiceTemplateList(null,
             null);
 
-        assertThat(result).hasSize(0);
-        assertThat(result.isEmpty());
+        assertThat(result).isEmpty();
     }
 
     private AutomationCompositionDefinition getAcDefinition(DocToscaServiceTemplate docServiceTemplate) {

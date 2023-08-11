@@ -22,8 +22,8 @@ package org.onap.policy.clamp.acm.participant.policy.main.parameters;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import javax.validation.Validation;
-import javax.validation.ValidatorFactory;
+import jakarta.validation.Validation;
+import jakarta.validation.ValidatorFactory;
 import org.junit.jupiter.api.Test;
 
 class ParticipantPolicyParametersTest {

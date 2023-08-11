@@ -20,11 +20,10 @@
 
 package org.onap.policy.clamp.acm.participant.policy.client;
 
-import java.util.LinkedList;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import java.util.List;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import org.onap.policy.clamp.acm.participant.policy.main.parameters.ParticipantPolicyParameters;
 import org.onap.policy.models.pdp.concepts.DeploymentGroup;
 import org.onap.policy.models.pdp.concepts.DeploymentGroups;
@@ -61,24 +60,19 @@ public class PolicyPapHttpClient extends AbstractHttpClient {
     public Response handlePolicyDeployOrUndeploy(final String policyName, final String policyVersion,
                                                  final DeploymentSubGroup.Action action) {
 
-        List<ToscaConceptIdentifier> policies = new LinkedList<ToscaConceptIdentifier>();
-        policies.add(new ToscaConceptIdentifier(policyName, policyVersion));
+        var policies = List.of(new ToscaConceptIdentifier(policyName, policyVersion));
 
-        DeploymentSubGroup subGroup = new DeploymentSubGroup();
+        var subGroup = new DeploymentSubGroup();
         subGroup.setPolicies(policies);
         subGroup.setPdpType(pdpType);
         subGroup.setAction(action);
 
-        DeploymentGroup group = new DeploymentGroup();
-        List<DeploymentSubGroup> subGroups = new LinkedList<DeploymentSubGroup>();
-        subGroups.add(subGroup);
-        group.setDeploymentSubgroups(subGroups);
+        var group = new DeploymentGroup();
+        group.setDeploymentSubgroups(List.of(subGroup));
         group.setName(pdpGroup);
 
-        DeploymentGroups groups = new DeploymentGroups();
-        List<DeploymentGroup> groupsArr = new LinkedList<DeploymentGroup>();
-        groupsArr.add(group);
-        groups.setGroups(groupsArr);
+        var groups = new DeploymentGroups();
+        groups.setGroups(List.of(group));
 
         return executePost(PAP_URI + "pdps/deployments/batch", Entity.entity(groups, MediaType.APPLICATION_JSON));
     }

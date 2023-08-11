@@ -21,8 +21,8 @@
 package org.onap.policy.clamp.acm.element.handler;
 
 import io.micrometer.core.annotation.Timed;
+import jakarta.ws.rs.core.Response;
 import java.util.List;
-import javax.ws.rs.core.Response;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
 import org.onap.policy.clamp.models.acm.messages.dmaap.element.ElementMessage;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;

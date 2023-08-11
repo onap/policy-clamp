@@ -21,6 +21,7 @@
 package org.onap.policy.clamp.models.acm.document.concepts;
 
 import com.google.gson.annotations.SerializedName;
+import java.io.Serial;
 import java.io.Serializable;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -34,6 +35,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaParameter;
 @NoArgsConstructor
 public class DocToscaParameter implements PfAuthorative<ToscaParameter>, Serializable, Comparable<DocToscaParameter> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @NotNull

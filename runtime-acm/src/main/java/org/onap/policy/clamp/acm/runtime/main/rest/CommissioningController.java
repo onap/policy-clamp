@@ -20,8 +20,8 @@
 
 package org.onap.policy.clamp.acm.runtime.main.rest;
 
+import jakarta.validation.Valid;
 import java.util.UUID;
-import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.runtime.commissioning.CommissioningProvider;
 import org.onap.policy.clamp.acm.runtime.main.rest.gen.AutomationCompositionDefinitionApi;

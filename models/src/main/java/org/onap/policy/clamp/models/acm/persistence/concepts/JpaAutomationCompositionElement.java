@@ -22,20 +22,19 @@
 
 package org.onap.policy.clamp.models.acm.persistence.concepts;
 
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.Lob;
+import jakarta.persistence.Table;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.UnaryOperator;
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.Lob;
-import javax.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
@@ -75,10 +74,8 @@ public class JpaAutomationCompositionElement extends Validated
 
     @VerifyKey
     @NotNull
-    @AttributeOverrides({
-        @AttributeOverride(name = "name",    column = @Column(name = "definition_name")),
-        @AttributeOverride(name = "version", column = @Column(name = "definition_version"))
-    })
+    @AttributeOverride(name = "name",    column = @Column(name = "definition_name"))
+    @AttributeOverride(name = "version", column = @Column(name = "definition_version"))
     private PfConceptKey definition;
 
     @Column
@@ -112,12 +109,14 @@ public class JpaAutomationCompositionElement extends Validated
     @NotNull
     @Valid
     @Convert(converter = StringToMapConverter.class)
+    @Column(length = 100000)
     private Map<String, Object> properties;
 
     @Lob
     @NotNull
     @Valid
     @Convert(converter = StringToMapConverter.class)
+    @Column(length = 100000)
     private Map<String, Object> outProperties;
 
     /**

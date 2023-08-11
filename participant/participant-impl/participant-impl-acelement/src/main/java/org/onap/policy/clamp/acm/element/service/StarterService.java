@@ -20,10 +20,10 @@
 
 package org.onap.policy.clamp.acm.element.service;
 
+import jakarta.ws.rs.core.Response;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import javax.ws.rs.core.Response;
 import org.onap.policy.clamp.acm.element.handler.MessagePublisher;
 import org.onap.policy.clamp.acm.element.main.parameters.AcElement;
 import org.onap.policy.clamp.models.acm.messages.dmaap.element.ElementStatus;

@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.models.acm.document.concepts;
 
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -38,6 +39,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaCapabilityAssignme
 @ToString(callSuper = true)
 public class DocToscaCapabilityAssignment extends DocToscaWithTypeAndStringProperties<ToscaCapabilityAssignment> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private Map<@NotNull String, @NotNull Object> attributes;

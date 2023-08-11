@@ -36,6 +36,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
 @Component
@@ -79,10 +80,6 @@ public class AcA1PmsClient {
                 a1PolicyServiceEntity -> getPmsClient().method(HttpMethod.PUT)
                                            .uri(a1PmsParameters.getEndpoints().getServices())
                                            .bodyValue(a1PolicyServiceEntity).retrieve()
-                                           .onStatus(HttpStatus::isError,
-                                                   clientResponse -> Mono.error(new A1PolicyServiceException(
-                                                                   clientResponse.statusCode().value(),
-                                                                   "Error in creating policy service")))
                                            .onStatus(Predicate.isEqual(HttpStatus.OK),
                                                    clientResponse -> {
                                                        LOGGER.warn("Client {} already exists and the configuration "
@@ -91,6 +88,10 @@ public class AcA1PmsClient {
                                                        return Mono.empty();
                                                    })
                                            .toBodilessEntity()
+                                           .onErrorResume(WebClientResponseException.class,
+                                                   clientResponse -> Mono.error(new A1PolicyServiceException(
+                                                               clientResponse.getStatusCode().value(),
+                                                               "Error in creating policy service")))
                                            .block());
     }
 
@@ -105,12 +106,11 @@ public class AcA1PmsClient {
                                              .uri(a1PmsParameters.getEndpoints().getService(),
                                                      a1PolicyServiceEntity.getClientId())
                                              .bodyValue(a1PolicyServiceEntity).retrieve()
-                                             .onStatus(HttpStatus::isError,
-                                                     clientResponse -> Mono.error(
-                                                             new A1PolicyServiceException(
-                                                                     clientResponse.statusCode().value(),
-                                                                     "Error in deleting policy service")))
                                              .toBodilessEntity()
+                                            .onErrorResume(WebClientResponseException.class,
+                                                    clientResponse -> Mono.error(new A1PolicyServiceException(
+                                                            clientResponse.getStatusCode().value(),
+                                                            "Error in deleting policy service")))
                                              .block());
     }
 

@@ -45,10 +45,10 @@ public class IntermediaryActivator extends ServiceManagerContainer implements Cl
     private static final String[] MSG_TYPE_NAMES = {"messageType"};
 
     // Topics from which the participant receives and to which the participant sends messages
-    private List<TopicSink> topicSinks;
-    private List<TopicSource> topicSources;
+    private final List<TopicSink> topicSinks;
+    private final List<TopicSource> topicSources;
 
-    private ParticipantHandler participantHandler;
+    private final ParticipantHandler participantHandler;
 
     @Getter
     private final MessageTypeDispatcher msgDispatcher;

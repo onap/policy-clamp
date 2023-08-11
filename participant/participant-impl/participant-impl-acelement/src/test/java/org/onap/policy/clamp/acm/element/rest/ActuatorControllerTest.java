@@ -22,29 +22,28 @@ package org.onap.policy.clamp.acm.element.rest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import javax.ws.rs.client.Invocation;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.onap.policy.clamp.acm.element.utils.CommonActuatorController;
-import org.springframework.boot.test.autoconfigure.actuate.metrics.AutoConfigureMetrics;
+import org.springframework.boot.test.autoconfigure.actuate.observability.AutoConfigureObservability;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@AutoConfigureMetrics
+@AutoConfigureObservability(tracing = false)
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
+@ActiveProfiles({ "test", "default" })
 class ActuatorControllerTest extends CommonActuatorController {
 
-    private static final String HEALTH_ENDPOINT = "onap/policy/clamp/acelement/v2/health/";
-    private static final String METRICS_ENDPOINT = "onap/policy/clamp/acelement/v2/metrics/";
-    private static final String PROMETHEUS_ENDPOINT = "onap/policy/clamp/acelement/v2/prometheus/";
-    private static final String SWAGGER_ENDPOINT = "onap/policy/clamp/acelement/v2/v3/api-docs/";
+    private static final String HEALTH_ENDPOINT = "onap/policy/clamp/acelement/v2/health";
+    private static final String METRICS_ENDPOINT = "onap/policy/clamp/acelement/v2/metrics";
+    private static final String PROMETHEUS_ENDPOINT = "onap/policy/clamp/acelement/v2/prometheus";
+    private static final String SWAGGER_ENDPOINT = "onap/policy/clamp/acelement/v2/v3/api-docs";
 
     @LocalServerPort
     private int randomServerPort;
@@ -55,50 +54,50 @@ class ActuatorControllerTest extends CommonActuatorController {
     }
 
     @Test
-    void testGetHealth_Unauthorized() throws Exception {
+    void testGetHealth_Unauthorized() {
         assertUnauthorizedActGet(HEALTH_ENDPOINT);
     }
 
     @Test
-    void testGetMetrics_Unauthorized() throws Exception {
+    void testGetMetrics_Unauthorized() {
         assertUnauthorizedActGet(METRICS_ENDPOINT);
     }
 
     @Test
-    void testGetPrometheus_Unauthorized() throws Exception {
+    void testGetPrometheus_Unauthorized() {
         assertUnauthorizedActGet(PROMETHEUS_ENDPOINT);
     }
 
     @Test
-    void testGetSwagger_Unauthorized() throws Exception {
+    void testGetSwagger_Unauthorized() {
         assertUnauthorizedActGet(SWAGGER_ENDPOINT);
     }
 
     @Test
-    void testGetHealth() throws Exception {
-        Invocation.Builder invocationBuilder = super.sendActRequest(HEALTH_ENDPOINT);
-        Response rawresp = invocationBuilder.buildGet().invoke();
+    void testGetHealth() {
+        var invocationBuilder = super.sendActRequest(HEALTH_ENDPOINT);
+        var rawresp = invocationBuilder.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
     }
 
     @Test
-    void testGetMetrics() throws Exception {
-        Invocation.Builder invocationBuilder = super.sendActRequest(METRICS_ENDPOINT);
-        Response rawresp = invocationBuilder.buildGet().invoke();
+    void testGetMetrics() {
+        var invocationBuilder = super.sendActRequest(METRICS_ENDPOINT);
+        var rawresp = invocationBuilder.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
     }
 
     @Test
-    void testGetPrometheus() throws Exception {
-        Invocation.Builder invocationBuilder = super.sendActRequest(PROMETHEUS_ENDPOINT);
-        Response rawresp = invocationBuilder.buildGet().invoke();
+    void testGetPrometheus() {
+        var invocationBuilder = super.sendActRequest(PROMETHEUS_ENDPOINT);
+        var rawresp = invocationBuilder.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
     }
 
     @Test
-    void testGetSwagger() throws Exception {
-        Invocation.Builder invocationBuilder = super.sendActRequest(SWAGGER_ENDPOINT);
-        Response rawresp = invocationBuilder.buildGet().invoke();
+    void testGetSwagger() {
+        var invocationBuilder = super.sendActRequest(SWAGGER_ENDPOINT);
+        var rawresp = invocationBuilder.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
     }
 }

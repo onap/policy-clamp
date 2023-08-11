@@ -24,11 +24,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 import java.io.IOException;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import org.junit.jupiter.api.Test;
-import org.onap.policy.models.errors.concepts.ErrorResponse;
 
 class ExceptionsTest {
 
@@ -43,9 +42,9 @@ class ExceptionsTest {
         assertNotNull(new AutomationCompositionException(Response.Status.OK, MESSAGE, new IOException(), STRING_TEXT));
 
         String key = "A String";
-        AutomationCompositionException ae = new AutomationCompositionException(Response.Status.OK, MESSAGE,
+        var ae = new AutomationCompositionException(Response.Status.OK, MESSAGE,
             new IOException("IO exception message"), key);
-        ErrorResponse errorResponse = ae.getErrorResponse();
+        var errorResponse = ae.getErrorResponse();
         assertEquals("Message\nIO exception message", String.join("\n", errorResponse.getErrorDetails()));
         assertEquals(key, ae.getObject());
 
@@ -56,14 +55,14 @@ class ExceptionsTest {
             new AutomationCompositionRuntimeException(Response.Status.OK, MESSAGE, new IOException(), STRING_TEXT));
 
         String rkey = "A String";
-        AutomationCompositionRuntimeException re = new AutomationCompositionRuntimeException(Response.Status.OK,
+        var re = new AutomationCompositionRuntimeException(Response.Status.OK,
             "Runtime Message", new IOException("IO runtime exception message"), rkey);
         errorResponse = re.getErrorResponse();
         assertEquals("Runtime Message\nIO runtime exception message",
             String.join("\n", errorResponse.getErrorDetails()));
         assertEquals(key, re.getObject());
 
-        AutomationCompositionRuntimeException acre = new AutomationCompositionRuntimeException(ae);
+        var acre = new AutomationCompositionRuntimeException(ae);
         assertEquals(ae.getErrorResponse().getResponseCode(), acre.getErrorResponse().getResponseCode());
         assertEquals(ae.getMessage(), acre.getMessage());
 
