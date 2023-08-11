@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.models.acm.document.base;
 
+import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,7 +30,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.Function;
-import javax.ws.rs.core.Response;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
@@ -244,8 +244,7 @@ public final class DocUtil {
         } else {
             var list = name.split(":");
             switch (list.length) {
-                case 0:
-                case 1:
+                case 0, 1:
                     key.setName(name);
                     key.setVersion(PfKey.NULL_KEY_VERSION);
                     break;

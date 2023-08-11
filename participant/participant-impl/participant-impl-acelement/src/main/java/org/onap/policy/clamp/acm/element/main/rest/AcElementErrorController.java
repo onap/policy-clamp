@@ -22,9 +22,9 @@
 
 package org.onap.policy.clamp.acm.element.main.rest;
 
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Map;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.http.HttpServletRequest;
 import org.onap.policy.clamp.models.acm.messages.rest.SimpleResponse;
 import org.onap.policy.clamp.models.acm.messages.rest.TypedSimpleResponse;
 import org.springframework.beans.factory.annotation.Value;

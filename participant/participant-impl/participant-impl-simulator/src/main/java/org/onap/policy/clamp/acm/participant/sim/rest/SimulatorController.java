@@ -20,9 +20,9 @@
 
 package org.onap.policy.clamp.acm.participant.sim.rest;
 
+import jakarta.validation.Valid;
+import jakarta.ws.rs.core.MediaType;
 import java.util.UUID;
-import javax.validation.Valid;
-import javax.ws.rs.core.MediaType;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.participant.sim.controller.genapi.SimulatorParticipantControllerApi;
 import org.onap.policy.clamp.acm.participant.sim.main.handler.AutomationCompositionElementHandler;

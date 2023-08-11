@@ -21,6 +21,8 @@
 package org.onap.policy.clamp.acm.participant.kserve.handler;
 
 import io.kubernetes.client.openapi.ApiException;
+import jakarta.validation.Validation;
+import jakarta.validation.ValidationException;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
@@ -31,8 +33,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import javax.validation.Validation;
-import javax.validation.ValidationException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

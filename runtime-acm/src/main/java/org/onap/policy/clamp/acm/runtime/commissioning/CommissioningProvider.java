@@ -21,12 +21,12 @@
 
 package org.onap.policy.clamp.acm.runtime.commissioning;
 
+import jakarta.ws.rs.core.Response.Status;
 import java.util.HashSet;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
-import javax.ws.rs.core.Response.Status;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.runtime.participants.AcmParticipantProvider;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantPrimePublisher;
@@ -72,7 +72,7 @@ public class CommissioningProvider {
                 .values()
                 .stream()
                 .map(template -> template.getKey().asIdentifier())
-                .collect(Collectors.toList()));
+                .toList());
         // @formatter:on
 
         return response;

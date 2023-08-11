@@ -20,9 +20,9 @@
 
 package org.onap.policy.clamp.models.acm.persistence.concepts;
 
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
-import javax.ws.rs.core.Response;
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
+import jakarta.ws.rs.core.Response;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplate;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;

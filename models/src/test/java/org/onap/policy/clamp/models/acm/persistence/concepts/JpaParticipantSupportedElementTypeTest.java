@@ -32,7 +32,7 @@ import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType
 /**
  * Test the {@link JpaParticipantSupportedElementType} class.
  */
-public class JpaParticipantSupportedElementTypeTest {
+class JpaParticipantSupportedElementTypeTest {
 
     private static final String NULL_PARTICIPANT_ID_ERROR = "participantId is marked .*ull but is null";
     private static final String NULL_ID_ERROR = "id is marked .*ull but is null";

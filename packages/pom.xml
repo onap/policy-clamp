@@ -17,12 +17,13 @@
   SPDX-License-Identifier: Apache-2.0
   ============LICENSE_END=========================================================
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.onap.policy.clamp</groupId>
         <artifactId>policy-clamp</artifactId>
-        <version>7.0.0-SNAPSHOT</version>
+        <version>7.0.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>clamp-packages</artifactId>
@@ -32,7 +33,7 @@
     <description>[${project.parent.artifactId}] packaging</description>
 
     <properties>
-        <!-- There is no code in this sub-module, only holds interfaces. So skip sonar. -->
+        <!-- There is no code in this submodule, only holds interfaces. So skip sonar. -->
         <sonar.skip>true</sonar.skip>
     </properties>
 
@@ -56,11 +57,15 @@
                 <docker.skip.push>false</docker.skip.push>
                 <docker.clamp-runtime-acm.dockerFile>AcmRuntime.Dockerfile</docker.clamp-runtime-acm.dockerFile>
                 <docker.clamp-ac-pf-ppnt.dockerFile>PolicyParticipant.Dockerfile</docker.clamp-ac-pf-ppnt.dockerFile>
-                <docker.clamp-ac-k8s-ppnt.dockerFile>KubernetesParticipant.Dockerfile</docker.clamp-ac-k8s-ppnt.dockerFile>
+                <docker.clamp-ac-k8s-ppnt.dockerFile>KubernetesParticipant.Dockerfile
+                </docker.clamp-ac-k8s-ppnt.dockerFile>
                 <docker.clamp-ac-http-ppnt.dockerFile>HttpParticipant.Dockerfile</docker.clamp-ac-http-ppnt.dockerFile>
-                <docker.clamp-ac-a1pms-ppnt.dockerFile>A1pmsParticipant.Dockerfile</docker.clamp-ac-a1pms-ppnt.dockerFile>
-                <docker.clamp-ac-kserve-ppnt.dockerFile>KserveParticipant.Dockerfile</docker.clamp-ac-kserve-ppnt.dockerFile>
-                <docker.clamp-acm-element-impl.dockerFile>ElementParticipant.Dockerfile</docker.clamp-acm-element-impl.dockerFile>
+                <docker.clamp-ac-a1pms-ppnt.dockerFile>A1pmsParticipant.Dockerfile
+                </docker.clamp-ac-a1pms-ppnt.dockerFile>
+                <docker.clamp-ac-kserve-ppnt.dockerFile>KserveParticipant.Dockerfile
+                </docker.clamp-ac-kserve-ppnt.dockerFile>
+                <docker.clamp-acm-element-impl.dockerFile>ElementParticipant.Dockerfile
+                </docker.clamp-acm-element-impl.dockerFile>
                 <docker.clamp-ac-sim-ppnt.dockerFile>SimParticipant.Dockerfile</docker.clamp-ac-sim-ppnt.dockerFile>
             </properties>
         </profile>
@@ -73,13 +78,20 @@
             <properties>
                 <docker.skip.push>false</docker.skip.push>
                 <docker.clamp-runtime-acm.dockerFile>AcmRuntime-Suse.Dockerfile</docker.clamp-runtime-acm.dockerFile>
-                <docker.clamp-ac-pf-ppnt.dockerFile>PolicyParticipant-Suse.Dockerfile</docker.clamp-ac-pf-ppnt.dockerFile>
-                <docker.clamp-ac-k8s-ppnt.dockerFile>KubernetesParticipant-Suse.Dockerfile</docker.clamp-ac-k8s-ppnt.dockerFile>
-                <docker.clamp-ac-http-ppnt.dockerFile>HttpParticipant-Suse.Dockerfile</docker.clamp-ac-http-ppnt.dockerFile>
-                <docker.clamp-ac-a1pms-ppnt.dockerFile>A1pmsParticipant-Suse.Dockerfile</docker.clamp-ac-a1pms-ppnt.dockerFile>
-                <docker.clamp-ac-kserve-ppnt.dockerFile>KserveParticipant-Suse.Dockerfile</docker.clamp-ac-kserve-ppnt.dockerFile>
-                <docker.clamp-acm-element-impl.dockerFile>ElementParticipant-Suse.Dockerfile</docker.clamp-acm-element-impl.dockerFile>
-                <docker.clamp-ac-sim-ppnt.dockerFile>SimParticipant-Suse.Dockerfile</docker.clamp-ac-sim-ppnt.dockerFile>
+                <docker.clamp-ac-pf-ppnt.dockerFile>PolicyParticipant-Suse.Dockerfile
+                </docker.clamp-ac-pf-ppnt.dockerFile>
+                <docker.clamp-ac-k8s-ppnt.dockerFile>KubernetesParticipant-Suse.Dockerfile
+                </docker.clamp-ac-k8s-ppnt.dockerFile>
+                <docker.clamp-ac-http-ppnt.dockerFile>HttpParticipant-Suse.Dockerfile
+                </docker.clamp-ac-http-ppnt.dockerFile>
+                <docker.clamp-ac-a1pms-ppnt.dockerFile>A1pmsParticipant-Suse.Dockerfile
+                </docker.clamp-ac-a1pms-ppnt.dockerFile>
+                <docker.clamp-ac-kserve-ppnt.dockerFile>KserveParticipant-Suse.Dockerfile
+                </docker.clamp-ac-kserve-ppnt.dockerFile>
+                <docker.clamp-acm-element-impl.dockerFile>ElementParticipant-Suse.Dockerfile
+                </docker.clamp-acm-element-impl.dockerFile>
+                <docker.clamp-ac-sim-ppnt.dockerFile>SimParticipant-Suse.Dockerfile
+                </docker.clamp-ac-sim-ppnt.dockerFile>
             </properties>
         </profile>
     </profiles>

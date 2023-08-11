@@ -23,7 +23,7 @@ package org.onap.policy.clamp.acm.participant.kserve.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;

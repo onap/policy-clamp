@@ -20,12 +20,12 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.parameters;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import java.util.List;
 import java.util.UUID;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.Setter;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;

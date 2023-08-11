@@ -20,12 +20,11 @@
 
 package org.onap.policy.clamp.models.acm.persistence.provider;
 
+import jakarta.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import javax.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
@@ -181,6 +180,6 @@ public class AcDefinitionProvider {
         }
 
         return jpaList.stream().map(JpaAutomationCompositionDefinition::getServiceTemplate)
-                .map(DocToscaServiceTemplate::toAuthorative).collect(Collectors.toList());
+                .map(DocToscaServiceTemplate::toAuthorative).toList();
     }
 }

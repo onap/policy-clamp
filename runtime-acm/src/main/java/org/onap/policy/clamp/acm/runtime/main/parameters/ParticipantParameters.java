@@ -18,7 +18,7 @@
 
 package org.onap.policy.clamp.acm.runtime.main.parameters;
 
-import javax.validation.constraints.Min;
+import jakarta.validation.constraints.Min;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.validation.annotation.Validated;

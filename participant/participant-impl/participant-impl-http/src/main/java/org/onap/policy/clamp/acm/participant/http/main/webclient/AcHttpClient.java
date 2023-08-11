@@ -73,7 +73,7 @@ public class AcHttpClient {
         // Iterate the sequence of http requests
         for (var request : configurationEntity.getRestSequence()) {
             try {
-                var httpMethod = Objects.requireNonNull(HttpMethod.resolve(request.getHttpMethod()));
+                var httpMethod = Objects.requireNonNull(HttpMethod.valueOf(request.getHttpMethod()));
                 var uri = createUriString(request);
                 LOGGER.info("Executing HTTP request: {} for the Rest request id: {}", httpMethod,
                         request.getRestRequestId());

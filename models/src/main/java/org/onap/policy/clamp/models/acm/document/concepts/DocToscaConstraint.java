@@ -21,6 +21,7 @@
 package org.onap.policy.clamp.models.acm.document.concepts;
 
 import com.google.gson.annotations.SerializedName;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConstraint;
 @NoArgsConstructor
 public class DocToscaConstraint implements PfAuthorative<ToscaConstraint>, Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @SerializedName("valid_values")

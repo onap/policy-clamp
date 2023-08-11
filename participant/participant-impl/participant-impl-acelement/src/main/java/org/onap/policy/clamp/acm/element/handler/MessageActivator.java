@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.util.List;
 import org.onap.policy.clamp.models.acm.messages.dmaap.element.ElementMessageType;
 import org.onap.policy.common.endpoints.event.comm.TopicEndpointManager;
-import org.onap.policy.common.endpoints.event.comm.TopicSink;
 import org.onap.policy.common.endpoints.event.comm.TopicSource;
 import org.onap.policy.common.endpoints.listeners.MessageTypeDispatcher;
 import org.onap.policy.common.endpoints.parameters.TopicParameterGroup;
@@ -46,13 +45,12 @@ public class MessageActivator extends ServiceManagerContainer implements AutoClo
     private static final String[] MSG_TYPE_NAMES = { "messageType" };
 
     // Topics from which the AC element receives and sends messages
-    private List<TopicSink> topicSinks;
     private List<TopicSource> topicSources;
 
     private final MessageListener listener;
     private final MessagePublisher publisher;
 
-    private MessageTypeDispatcher msgDispatcher;
+    private final MessageTypeDispatcher msgDispatcher;
 
     /**
      * Constructor.
@@ -73,7 +71,7 @@ public class MessageActivator extends ServiceManagerContainer implements AutoClo
      * @param parameters TopicParameterGroup
      */
     public void activate(final TopicParameterGroup parameters) {
-        topicSinks = TopicEndpointManager.getManager().addTopicSinks(parameters.getTopicSinks());
+        var topicSinks = TopicEndpointManager.getManager().addTopicSinks(parameters.getTopicSinks());
         topicSources = TopicEndpointManager.getManager().addTopicSources(parameters.getTopicSources());
 
         // @formatter:off

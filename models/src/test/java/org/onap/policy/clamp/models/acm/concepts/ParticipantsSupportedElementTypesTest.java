@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
-public class ParticipantsSupportedElementTypesTest {
+class ParticipantsSupportedElementTypesTest {
 
     private static final String ID = "a95757ba-b34a-4049-a2a8-46773abcbe5e";
 

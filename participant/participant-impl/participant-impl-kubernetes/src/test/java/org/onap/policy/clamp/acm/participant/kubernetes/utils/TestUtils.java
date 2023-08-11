@@ -38,7 +38,7 @@ public final class TestUtils {
     }
 
     private static ToscaServiceTemplate testAutomationCompositionYamlSerialization() {
-        String automationCompositionString = ResourceUtils.getResourceAsString(TestUtils.TOSCA_TEMPLATE_YAML);
+        var automationCompositionString = ResourceUtils.getResourceAsString(TestUtils.TOSCA_TEMPLATE_YAML);
         return yamlTranslator.fromYaml(automationCompositionString, ToscaServiceTemplate.class);
     }
 }

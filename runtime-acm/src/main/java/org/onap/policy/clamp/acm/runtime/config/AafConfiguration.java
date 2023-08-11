@@ -20,7 +20,7 @@
 
 package org.onap.policy.clamp.acm.runtime.config;
 
-import javax.servlet.Filter;
+import jakarta.servlet.Filter;
 import org.onap.policy.clamp.acm.runtime.main.web.AutomationConfiguraitonAafFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

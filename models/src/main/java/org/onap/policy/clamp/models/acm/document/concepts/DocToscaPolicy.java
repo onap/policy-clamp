@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.models.acm.document.concepts;
 
+import java.io.Serial;
 import java.util.LinkedHashMap;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -35,6 +36,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
 @ToString(callSuper = true)
 public class DocToscaPolicy extends DocToscaWithTypeAndStringProperties<ToscaPolicy> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     // Tags for metadata

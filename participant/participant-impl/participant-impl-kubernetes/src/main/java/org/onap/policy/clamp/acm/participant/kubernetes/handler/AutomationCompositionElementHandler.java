@@ -20,6 +20,8 @@
 
 package org.onap.policy.clamp.acm.participant.kubernetes.handler;
 
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
@@ -27,8 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;

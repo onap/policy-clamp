@@ -23,10 +23,10 @@ package org.onap.policy.clamp.acm.participant.kubernetes.parameters;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.ValidatorFactory;
 import java.util.Set;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.ValidatorFactory;
 import org.junit.jupiter.api.Test;
 
 class ParticipantK8sParametersTest {
@@ -60,7 +60,7 @@ class ParticipantK8sParametersTest {
         participantParameters.setLocalChartDirectory(" ");
         Set<ConstraintViolation<ParticipantK8sParameters>> violations = validatorFactory.getValidator()
             .validate(participantParameters);
-        assertThat(violations.size()).isEqualTo(1);
+        assertThat(violations).hasSize(1);
     }
 
     @Test
@@ -69,7 +69,7 @@ class ParticipantK8sParametersTest {
         participantParameters.setInfoFileName("");
         Set<ConstraintViolation<ParticipantK8sParameters>> violations = validatorFactory.getValidator()
             .validate(participantParameters);
-        assertThat(violations.size()).isEqualTo(1);
+        assertThat(violations).hasSize(1);
     }
 
     @Test

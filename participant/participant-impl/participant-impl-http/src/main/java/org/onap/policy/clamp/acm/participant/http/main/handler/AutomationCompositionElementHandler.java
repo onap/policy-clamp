@@ -20,13 +20,12 @@
 
 package org.onap.policy.clamp.acm.participant.http.main.handler;
 
+import jakarta.validation.Validation;
+import jakarta.ws.rs.core.Response.Status;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import javax.validation.Validation;
-import javax.ws.rs.core.Response.Status;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.participant.http.main.models.ConfigRequest;
 import org.onap.policy.clamp.acm.participant.http.main.webclient.AcHttpClient;
@@ -91,7 +90,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
             var restResponseMap = acHttpClient.run(configRequest);
             var failedResponseStatus = restResponseMap.values().stream()
                     .filter(response -> !HttpStatus.valueOf(response.getKey()).is2xxSuccessful())
-                    .collect(Collectors.toList());
+                    .toList();
             if (failedResponseStatus.isEmpty()) {
                 intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
                         DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Deployed");

@@ -21,9 +21,10 @@
 package org.onap.policy.clamp.models.acm.document.concepts;
 
 import com.google.gson.annotations.SerializedName;
+import jakarta.ws.rs.core.Response;
+import java.io.Serial;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import javax.ws.rs.core.Response;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -41,6 +42,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaWithTypeAndObjectP
 @ToString
 public class DocToscaWithTypeAndStringProperties<T extends ToscaWithTypeAndObjectProperties> extends DocToscaEntity<T> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private String type;

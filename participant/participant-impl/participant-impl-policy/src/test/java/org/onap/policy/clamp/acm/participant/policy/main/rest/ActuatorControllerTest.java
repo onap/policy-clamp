@@ -22,20 +22,20 @@ package org.onap.policy.clamp.acm.participant.policy.main.rest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import javax.ws.rs.client.Invocation;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.client.Invocation;
+import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.onap.policy.clamp.acm.participant.policy.main.utils.CommonActuatorController;
-import org.springframework.boot.test.autoconfigure.actuate.metrics.AutoConfigureMetrics;
+import org.springframework.boot.test.autoconfigure.actuate.observability.AutoConfigureObservability;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@AutoConfigureMetrics
+@AutoConfigureObservability(tracing = false)
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -70,23 +70,22 @@ class ActuatorControllerTest extends CommonActuatorController {
 
     @Test
     void testGetHealth() {
-        Invocation.Builder invocationBuilder = super.sendActRequest(HEALTH_ENDPOINT);
-        Response rawresp = invocationBuilder.buildGet().invoke();
+        var invocationBuilder = super.sendActRequest(HEALTH_ENDPOINT);
+        var rawresp = invocationBuilder.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
     }
 
     @Test
     void testGetMetrics() {
-        Invocation.Builder invocationBuilder = super.sendActRequest(METRICS_ENDPOINT);
-        Response rawresp = invocationBuilder.buildGet().invoke();
+        var invocationBuilder = super.sendActRequest(METRICS_ENDPOINT);
+        var rawresp = invocationBuilder.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
     }
 
     @Test
     void testGePrometheus() {
-        Invocation.Builder invocationBuilder = super.sendActRequest(PROMETHEUS_ENDPOINT);
-        Response rawresp = invocationBuilder.buildGet().invoke();
+        var invocationBuilder = super.sendActRequest(PROMETHEUS_ENDPOINT);
+        var rawresp = invocationBuilder.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
     }
-
 }

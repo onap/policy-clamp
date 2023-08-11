@@ -23,7 +23,9 @@ package org.onap.policy.clamp.acm.runtime.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
 /**
@@ -31,35 +33,29 @@ import org.springframework.security.web.SecurityFilterChain;
  */
 @Configuration
 public class SecurityConfig {
+
     @Value("${metrics.security.disabled}")
     private boolean disableMetricsSecurity;
+
     /**
      * Return the configuration of how access to this module's REST end points is secured.
      *
      * @param http the HTTP security settings
      * @return the HTTP security settings
      */
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        if (disableMetricsSecurity) {
-            http
-                    .httpBasic()
-                    .and()
-                    .authorizeHttpRequests(request ->
-                        request
-                                .antMatchers("/prometheus").permitAll()
-                                .anyRequest().authenticated())
-                    .csrf().disable();
-        } else {
-            http
-                    .httpBasic()
-                    .and()
-                    .authorizeHttpRequests().anyRequest().authenticated()
-                    .and()
-                    .csrf().disable();
-        }
-
+        http
+            .httpBasic(Customizer.withDefaults())
+            .authorizeHttpRequests(authorize -> {
+                if (disableMetricsSecurity) {
+                    authorize.requestMatchers("/prometheus").permitAll()
+                        .anyRequest().authenticated();
+                } else {
+                    authorize.anyRequest().authenticated();
+                }
+            })
+            .csrf(AbstractHttpConfigurer::disable);
         return http.build();
     }
 }
