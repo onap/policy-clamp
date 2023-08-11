@@ -21,7 +21,7 @@
 package org.onap.policy.clamp.acm.runtime.config;
 
 import java.util.List;
-import org.onap.policy.clamp.common.acm.rest.CoderHttpMesageConverter;
+import org.onap.policy.common.spring.utils.YamlHttpMessageConverter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -33,10 +33,11 @@ public class ConverterConfiguration implements WebMvcConfigurer {
 
     @Override
     public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
-        converters.add(new CoderHttpMesageConverter<>("yaml"));
-        converters.add(new CoderHttpMesageConverter<>("json"));
+        var yamlConverter = new YamlHttpMessageConverter();
+        yamlConverter.setSupportedMediaTypes(List.of(MediaType.parseMediaType("application/yaml")));
+        converters.add(yamlConverter);
 
-        StringHttpMessageConverter converter = new StringHttpMessageConverter();
+        var converter = new StringHttpMessageConverter();
         converter.setSupportedMediaTypes(List.of(MediaType.TEXT_PLAIN));
         converters.add(converter);
     }

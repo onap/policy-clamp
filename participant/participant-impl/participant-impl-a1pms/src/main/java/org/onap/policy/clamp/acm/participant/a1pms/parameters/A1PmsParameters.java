@@ -20,8 +20,8 @@
 
 package org.onap.policy.clamp.acm.participant.a1pms.parameters;
 
+import jakarta.validation.constraints.NotNull;
 import java.util.Map;
-import javax.validation.constraints.NotNull;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;

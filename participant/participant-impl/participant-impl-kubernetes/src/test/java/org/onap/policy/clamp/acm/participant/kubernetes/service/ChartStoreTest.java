@@ -137,7 +137,7 @@ class ChartStoreTest {
         }
         List<ChartInfo> retrievedChartList = chartStore.getAllCharts();
         assertThat(retrievedChartList).isNotEmpty();
-        assertThat(retrievedChartList.size()).isEqualTo(charts.size());
+        assertThat(retrievedChartList).hasSameSizeAs(charts);
     }
 
     @Test

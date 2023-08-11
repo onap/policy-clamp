@@ -20,8 +20,8 @@
 
 package org.onap.policy.clamp.acm.runtime.supervision.comm;
 
+import jakarta.ws.rs.core.Response.Status;
 import java.util.List;
-import javax.ws.rs.core.Response.Status;
 import org.onap.policy.clamp.acm.runtime.config.messaging.Publisher;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantAckMessage;

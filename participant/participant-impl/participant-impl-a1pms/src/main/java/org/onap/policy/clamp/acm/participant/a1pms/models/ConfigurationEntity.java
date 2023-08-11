@@ -20,9 +20,9 @@
 
 package org.onap.policy.clamp.acm.participant.a1pms.models;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

@@ -20,7 +20,7 @@
 
 package org.onap.policy.clamp.acm.participant.kserve.exception;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 import org.onap.policy.models.base.PfModelException;
 
 public class KserveException extends PfModelException {

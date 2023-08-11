@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.models.acm.document.base;
 
+import java.io.Serial;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
@@ -34,6 +35,7 @@ import org.onap.policy.models.base.PfKeyImpl;
 @ToString
 public class DocConceptKey extends PfKeyImpl {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Pattern(regexp = NAME_REGEXP)

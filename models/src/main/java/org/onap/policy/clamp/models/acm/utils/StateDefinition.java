@@ -20,9 +20,9 @@
 
 package org.onap.policy.clamp.models.acm.utils;
 
+import jakarta.ws.rs.core.Response.Status;
 import java.util.HashMap;
 import java.util.Map;
-import javax.ws.rs.core.Response.Status;
 import lombok.NonNull;
 import org.onap.policy.models.base.PfModelRuntimeException;
 

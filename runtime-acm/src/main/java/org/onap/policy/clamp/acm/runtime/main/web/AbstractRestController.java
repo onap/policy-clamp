@@ -20,10 +20,10 @@
 
 package org.onap.policy.clamp.acm.runtime.main.web;
 
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import java.net.URI;
 import java.net.URISyntaxException;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
 import org.springframework.web.bind.annotation.RequestMapping;
 

@@ -14,8 +14,8 @@ spring:
       - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
       - org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration
       - org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration
-      - io.kubernetes.client.spring.extended.manifests.config.KubernetesManifestsAutoConfiguration
-      - io.kubernetes.client.spring.extended.network.config.KubernetesLoadBalancerAutoConfiguration
+#      - io.kubernetes.client.spring.extended.manifests.config.KubernetesManifestsAutoConfiguration
+#      - io.kubernetes.client.spring.extended.network.config.KubernetesLoadBalancerAutoConfiguration
 
 security:
   enable-csrf: false

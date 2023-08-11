@@ -24,10 +24,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import java.io.IOException;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.policy.main.parameters.ParticipantPolicyParameters;
@@ -41,7 +41,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 /**
  * Tests for api and pap http clients.
  */
-public class HttpClientTest {
+class HttpClientTest {
 
     private static int mockServerPort;
 
@@ -111,8 +111,9 @@ public class HttpClientTest {
 
     @Test
     void testInvalidClientParameter() {
+        var parameters = new ParticipantPolicyParameters();
         assertThrows(AutomationCompositionRuntimeException.class,
-               () -> new PolicyApiHttpClient(new ParticipantPolicyParameters()));
+               () -> new PolicyApiHttpClient(parameters));
     }
 
 

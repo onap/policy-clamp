@@ -9,9 +9,15 @@ spring:
       - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
       - org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration
       - org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration
+  servlet:
+    multipart:
+      max-file-size: 128KB
+      max-request-size: 128KB
+      enabled: true
 
 security:
   enable-csrf: false
+
 
 participant:
   localChartDirectory: /home/policy/local-charts

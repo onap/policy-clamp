@@ -23,9 +23,9 @@
 package org.onap.policy.clamp.acm.runtime.main.web;
 
 import io.swagger.v3.oas.annotations.Hidden;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Map;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.http.HttpServletRequest;
 import org.onap.policy.clamp.models.acm.messages.rest.SimpleResponse;
 import org.onap.policy.clamp.models.acm.messages.rest.TypedSimpleResponse;
 import org.slf4j.Logger;

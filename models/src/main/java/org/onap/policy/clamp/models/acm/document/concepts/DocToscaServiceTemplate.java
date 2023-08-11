@@ -21,6 +21,7 @@
 package org.onap.policy.clamp.models.acm.document.concepts;
 
 import com.google.gson.annotations.SerializedName;
+import java.io.Serial;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import lombok.Data;
@@ -38,6 +39,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 @EqualsAndHashCode(callSuper = true)
 public class DocToscaServiceTemplate extends DocToscaEntity<ToscaServiceTemplate> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     public static final String DEFAULT_TOSCA_DEFINTIONS_VERISON = "tosca_simple_yaml_1_1_0";

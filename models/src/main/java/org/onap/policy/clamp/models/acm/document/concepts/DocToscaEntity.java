@@ -21,6 +21,7 @@
 package org.onap.policy.clamp.models.acm.document.concepts;
 
 import com.google.gson.annotations.SerializedName;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -46,6 +47,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaEntityKey;
 public class DocToscaEntity<T extends ToscaEntity> extends Validated
         implements PfNameVersion, PfAuthorative<T>, Serializable, Comparable<DocToscaEntity<T>> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @NotNull

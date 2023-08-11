@@ -38,6 +38,7 @@
             <plugin>
                 <groupId>io.swagger.codegen.v3</groupId>
                 <artifactId>swagger-codegen-maven-plugin</artifactId>
+                <version>3.0.46</version>
                 <executions>
                     <execution>
                         <id>code-gen</id>
@@ -59,6 +60,7 @@
                                 <dateLibrary>java11</dateLibrary>
                                 <interfaceOnly>true</interfaceOnly>
                                 <useTags>true</useTags>
+                                <jakarta>true</jakarta>
                             </configOptions>
                         </configuration>
                     </execution>
@@ -67,6 +69,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${version.springboot}</version>
                 <executions>
                     <execution>
                         <goals>

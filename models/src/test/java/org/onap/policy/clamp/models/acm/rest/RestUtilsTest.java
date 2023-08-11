@@ -22,7 +22,7 @@ package org.onap.policy.clamp.models.acm.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import javax.ws.rs.core.Response.Status;
+import jakarta.ws.rs.core.Response.Status;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.models.errors.concepts.ErrorResponse;
 import org.onap.policy.models.errors.concepts.ErrorResponseInfo;

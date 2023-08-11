@@ -20,8 +20,8 @@
 
 package org.onap.policy.clamp.acm.element.service;
 
+import jakarta.ws.rs.core.Response;
 import java.util.List;
-import javax.ws.rs.core.Response;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.element.handler.MessageActivator;

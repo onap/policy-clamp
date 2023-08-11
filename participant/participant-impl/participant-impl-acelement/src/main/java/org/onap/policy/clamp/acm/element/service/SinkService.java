@@ -36,7 +36,7 @@ public class SinkService extends AbstractElementService {
 
     @Override
     public void handleMessage(ElementMessage message) {
-        LOGGER.info("Cycle completed in sink service with the full message: " + message);
+        LOGGER.info("Cycle completed in sink service with the full message: {}", message);
     }
 
     @Override

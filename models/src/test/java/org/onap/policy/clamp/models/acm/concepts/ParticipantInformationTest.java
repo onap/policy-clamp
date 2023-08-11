@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
-public class ParticipantInformationTest {
+class ParticipantInformationTest {
 
     @Test
     void testCopyConstructor() {

@@ -22,12 +22,10 @@ package org.onap.policy.clamp.acm.participant.kubernetes.utils;
 
 import static org.junit.Assert.assertEquals;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Invocation;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Invocation;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.onap.policy.common.gson.GsonMessageBodyHandler;
@@ -72,7 +70,7 @@ public class CommonActuatorController {
      * @return a request builder
      */
     protected Invocation.Builder sendFqeRequest(final String fullyQualifiedEndpoint, boolean includeAuth) {
-        final Client client = ClientBuilder.newBuilder().build();
+        final var client = ClientBuilder.newBuilder().build();
 
         client.property(ClientProperties.METAINF_SERVICES_LOOKUP_DISABLE, "true");
         client.register(GsonMessageBodyHandler.class);
@@ -81,7 +79,7 @@ public class CommonActuatorController {
             client.register(HttpAuthenticationFeature.basic("participantUser", "zb!XztG34"));
         }
 
-        final WebTarget webTarget = client.target(fullyQualifiedEndpoint);
+        final var webTarget = client.target(fullyQualifiedEndpoint);
 
         return webTarget.request(MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN);
     }
@@ -92,7 +90,7 @@ public class CommonActuatorController {
      * @param endPoint the endpoint
      */
     protected void assertUnauthorizedActGet(final String endPoint) {
-        Response rawresp = sendNoAuthActRequest(endPoint).buildGet().invoke();
+        var rawresp = sendNoAuthActRequest(endPoint).buildGet().invoke();
         assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), rawresp.getStatus());
     }
 

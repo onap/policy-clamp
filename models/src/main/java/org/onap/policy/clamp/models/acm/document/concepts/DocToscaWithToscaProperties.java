@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.models.acm.document.concepts;
 
+import java.io.Serial;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -45,6 +46,7 @@ import org.onap.policy.models.tosca.utils.ToscaUtils;
 @NoArgsConstructor
 public class DocToscaWithToscaProperties<T extends ToscaWithToscaProperties> extends DocToscaEntity<T> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private Map<@NotNull @NotBlank String, @NotNull @Valid DocToscaProperty> properties;

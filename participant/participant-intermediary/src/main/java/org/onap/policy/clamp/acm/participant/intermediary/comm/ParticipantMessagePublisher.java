@@ -22,8 +22,8 @@
 package org.onap.policy.clamp.acm.participant.intermediary.comm;
 
 import io.micrometer.core.annotation.Timed;
+import jakarta.ws.rs.core.Response.Status;
 import java.util.List;
-import javax.ws.rs.core.Response.Status;
 import lombok.Getter;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.Publisher;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;

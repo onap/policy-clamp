@@ -21,10 +21,10 @@
 package org.onap.policy.clamp.acm.element.handler;
 
 import io.micrometer.core.annotation.Timed;
-import java.util.HashMap;
+import jakarta.ws.rs.core.Response;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-import javax.ws.rs.core.Response;
 import lombok.NonNull;
 import org.onap.policy.clamp.acm.element.main.parameters.AcElement;
 import org.onap.policy.clamp.acm.element.service.ElementService;
@@ -39,9 +39,9 @@ import org.springframework.stereotype.Component;
 public class MessageHandler {
 
     private ElementType elementType;
-    private ToscaConceptIdentifier elementId;
+    private final ToscaConceptIdentifier elementId;
 
-    private Map<ElementType, ElementService> map = new HashMap<>();
+    private final Map<ElementType, ElementService> map = new EnumMap<>(ElementType.class);
 
     /**
      * Constructor.
@@ -51,7 +51,7 @@ public class MessageHandler {
      */
     public MessageHandler(AcElement acElement, List<ElementService> elementServices) {
         elementId = acElement.getElementId();
-        elementServices.stream().forEach(elementService -> map.put(elementService.getType(), elementService));
+        elementServices.forEach(elementService -> map.put(elementService.getType(), elementService));
     }
 
     /**

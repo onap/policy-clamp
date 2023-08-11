@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.models.acm.document.concepts;
 
+import java.io.Serial;
 import java.util.List;
 import java.util.Map;
 import lombok.Data;
@@ -35,6 +36,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeType;
 @NoArgsConstructor
 public class DocToscaNodeType extends DocToscaWithToscaProperties<ToscaNodeType> {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private List<Map<String, @Valid DocToscaRequirement>> requirements;

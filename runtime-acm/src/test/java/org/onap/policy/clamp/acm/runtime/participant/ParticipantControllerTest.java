@@ -24,13 +24,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -128,7 +128,7 @@ class ParticipantControllerTest extends CommonRestController {
         var response = invocationBuilder.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
         List<ParticipantInformation> entityList = response.readEntity(new GenericType<>() {});
-        assertThat(entityList.size() == inputParticipants.size());
+        assertThat(entityList).hasSameSizeAs(inputParticipants);
     }
 
     @Test
