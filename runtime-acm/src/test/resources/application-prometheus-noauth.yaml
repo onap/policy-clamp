@@ -14,7 +14,7 @@ spring:
 
 metrics:
   security:
-    disabled: false
+    disabled: true
 
 server:
   servlet:
