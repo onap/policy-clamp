@@ -1,4 +1,5 @@
 {
+    "instanceId": "caf50cde-11a2-4915-a49c-609762714a6f",
     "affectedAutomationComposition": {
         "name": "InstanceHttp",
         "version": "1.0.1"

@@ -54,7 +54,7 @@ public class InstantiationControllerStub extends AbstractRestController implemen
     @Value("${stub.postInstanceResponse}")
     private String pathPostInstance;
 
-    @Value("${stub.putCompositionInstanceUpdateResponse}")
+    @Value("${stub.postCompositionInstanceUpdateResponse}")
     private String pathToPutUpdate;
 
     @Override
