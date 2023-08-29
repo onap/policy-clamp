@@ -1073,14 +1073,14 @@ paths:
     post:
       tags:
       - Automation Composition Instance
-      summary: Create automation composition instance
-      description: Creates automation composition instance that use the sepcified automation composition definition. The ID of the created
-        automation composition instance is returned.
+      summary: Create or Update automation composition instance
+      description: Creates or updates an automation composition instance that uses the specified automation composition definition. The ID of the created
+        automation composition instance is returned. In the case of an update, the instanceId should be included in the request body.
       operationId: createCompositionInstance
       parameters:
       - name : compositionId
         in: path
-        description: The UUID of the automation composition definition on which to create instance
+        description: The UUID of the automation composition definition on which to create/update instance
         required: true
         schema:
           type: string
@@ -1094,24 +1094,34 @@ paths:
       requestBody:
         description: Serialised instance of
           [AutomationComposition](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationComposition.java)
-          containing a automation composition instance to create
+          containing a automation composition instance to create/update
         content:
           application/json:
             schema:
                 $ref: '#/components/schemas/AutomationComposition'
-            example:
-              externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/postCompositionInstance.json'
+            examples:
+              createValue:
+                name: create
+                value: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/postCompositionInstance.json'
+              updateValue:
+                name: update
+                value: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/postCompositionInstanceUpdate.json'
           application/yaml:
             schema:
                 $ref: '#/components/schemas/AutomationComposition'
-            example:
-              externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/postCompositionInstance.yaml'
+            examples:
+              createValue:
+                name: create
+                value: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/postCompositionInstance.yaml'
+              updateValue:
+                name: update
+                value: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/postCompositionInstanceUpdate.yaml'
         required: true
       responses:
         201:
           description: Serialised instance of
             [InstantiationResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/instantiation/InstantiationResponse.java)
-            containing the UUID of the created automation composition instance
+            containing the UUID of the created/updated automation composition instance
           headers:
             X-LatestVersion:
               $ref: '#/components/headers/X-LatestVersion'

@@ -1,6 +1,7 @@
 name: InstanceHttp
 version: 1.0.1
 compositionId: 562ed027-2689-481a-b3a5-e284b1fbc33f
+instanceId: caf50cde-11a2-4915-a49c-609762714a6f
 description: Demo automation composition instance Http
 elements:
   709c62b3-8918-41b9-a747-d21eb79c6c24:

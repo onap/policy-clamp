@@ -13,11 +13,11 @@ stub:
     postCommissionResponse: "/openapi/examples/postCommissionCompositionDefinitionsResponse.json"
     postCompositionDefinitions: "/openapi/examples/postCompositionDefinitions.json"
     postCompositionInstance: "/openapi/examples/postCompositionInstance.json"
-    postInstanceResponse: "/openapi/examples/postCompositionInstancesResponse.json"
+    postInstanceResponse: "/openapi/examples/postCompositionInstanceResponse.json"
     putCompositionDefinitionUpdate: "/openapi/examples/putCompositionDefinitionUpdate.json"
     putCompositionDefinitionUpdateResponse: "/openapi/examples/putCompositionDefinitionUpdateResponse.json"
-    putCompositionInstanceUpdate: "/openapi/examples/putCompositionInstanceUpdate.json"
-    putCompositionInstanceUpdateResponse: " /openapi/examples/putCompositionInstanceUpdateResponse.json"
+    postCompositionInstanceUpdate: "/openapi/examples/postCompositionInstanceUpdate.json"
+    postCompositionInstanceUpdateResponse: " /openapi/examples/postCompositionInstanceUpdateResponse.json"
 
 
 
