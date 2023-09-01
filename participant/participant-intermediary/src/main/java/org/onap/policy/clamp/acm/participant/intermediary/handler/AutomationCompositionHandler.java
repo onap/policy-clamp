@@ -29,6 +29,8 @@ import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantRestartAc;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
@@ -264,6 +266,7 @@ public class AutomationCompositionHandler {
             int startPhase = ParticipantUtils.findStartPhase(
                     cacheProvider.getCommonProperties(automationComposition.getInstanceId(), acElement.getId()));
             if (startPhaseMsg.equals(startPhase)) {
+                acElement.setDeployState(DeployState.UNDEPLOYING);
                 listener.undeploy(messageId, automationComposition.getInstanceId(), acElement.getId());
             }
         }
@@ -275,6 +278,7 @@ public class AutomationCompositionHandler {
             int startPhase = ParticipantUtils.findStartPhase(
                     cacheProvider.getCommonProperties(automationComposition.getInstanceId(), acElement.getId()));
             if (startPhaseMsg.equals(startPhase)) {
+                acElement.setDeployState(DeployState.DELETING);
                 listener.delete(messageId, automationComposition.getInstanceId(), acElement.getId());
             }
         }
@@ -293,6 +297,7 @@ public class AutomationCompositionHandler {
             int startPhase = ParticipantUtils.findStartPhase(
                     cacheProvider.getCommonProperties(automationComposition.getInstanceId(), acElement.getId()));
             if (startPhaseMsg.equals(startPhase)) {
+                acElement.setLockState(LockState.LOCKING);
                 listener.lock(messageId, automationComposition.getInstanceId(), acElement.getId());
             }
         }
@@ -311,6 +316,7 @@ public class AutomationCompositionHandler {
             int startPhase = ParticipantUtils.findStartPhase(
                     cacheProvider.getCommonProperties(automationComposition.getInstanceId(), acElement.getId()));
             if (startPhaseMsg.equals(startPhase)) {
+                acElement.setLockState(LockState.UNLOCKING);
                 listener.unlock(messageId, automationComposition.getInstanceId(), acElement.getId());
             }
         }

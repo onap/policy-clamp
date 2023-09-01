@@ -21,6 +21,7 @@
 package org.onap.policy.clamp.acm.participant.intermediary.handler;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -37,6 +38,8 @@ import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.Common
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeploy;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeployAck;
@@ -87,6 +90,9 @@ class AutomationCompositionHandlerTest {
         var ach = new AutomationCompositionHandler(cacheProvider, participantMessagePublisher, listener);
         ach.handleAutomationCompositionStateChange(automationCompositionStateChange);
         verify(listener, times(automationComposition.getElements().size())).undeploy(any(), any(), any());
+        for (var element: automationComposition.getElements().values()) {
+            assertEquals(DeployState.UNDEPLOYING, element.getDeployState());
+        }
     }
 
     @Test
@@ -104,6 +110,9 @@ class AutomationCompositionHandlerTest {
         var ach = new AutomationCompositionHandler(cacheProvider, participantMessagePublisher, listener);
         ach.handleAutomationCompositionStateChange(automationCompositionStateChange);
         verify(listener, times(automationComposition.getElements().size())).lock(any(), any(), any());
+        for (var element: automationComposition.getElements().values()) {
+            assertEquals(LockState.LOCKING, element.getLockState());
+        }
     }
 
     @Test
@@ -121,6 +130,9 @@ class AutomationCompositionHandlerTest {
         var ach = new AutomationCompositionHandler(cacheProvider, participantMessagePublisher, listener);
         ach.handleAutomationCompositionStateChange(automationCompositionStateChange);
         verify(listener, times(automationComposition.getElements().size())).unlock(any(), any(), any());
+        for (var element: automationComposition.getElements().values()) {
+            assertEquals(LockState.UNLOCKING, element.getLockState());
+        }
     }
 
     @Test
@@ -138,6 +150,9 @@ class AutomationCompositionHandlerTest {
         var ach = new AutomationCompositionHandler(cacheProvider, participantMessagePublisher, listener);
         ach.handleAutomationCompositionStateChange(automationCompositionStateChange);
         verify(listener, times(automationComposition.getElements().size())).delete(any(), any(), any());
+        for (var element: automationComposition.getElements().values()) {
+            assertEquals(DeployState.DELETING, element.getDeployState());
+        }
     }
 
     @Test
