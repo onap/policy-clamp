@@ -29,7 +29,6 @@ import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionInfo;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeploy;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionStateChange;
@@ -235,25 +234,5 @@ public class ParticipantHandler {
         heartbeat.setParticipantSupportedElementType(cacheProvider.getSupportedAcElementTypes());
 
         return heartbeat;
-    }
-
-    /**
-     * get AutomationComposition Info List.
-     *
-     * @return list of AutomationCompositionInfo
-     */
-    private List<AutomationCompositionInfo> getAutomationCompositionInfoList() {
-        List<AutomationCompositionInfo> automationCompositionInfoList = new ArrayList<>();
-        for (var entry : cacheProvider.getAutomationCompositions().entrySet()) {
-            var acInfo = new AutomationCompositionInfo();
-            acInfo.setAutomationCompositionId(entry.getKey());
-            acInfo.setDeployState(entry.getValue().getDeployState());
-            acInfo.setLockState(entry.getValue().getLockState());
-            for (var element : entry.getValue().getElements().values()) {
-                acInfo.getElements().add(automationCompositionOutHandler.getAutomationCompositionElementInfo(element));
-            }
-            automationCompositionInfoList.add(acInfo);
-        }
-        return automationCompositionInfoList;
     }
 }
