@@ -75,6 +75,11 @@ class ThreadHandlerTest {
             verify(listener, timeout(TIMEOUT)).update(instanceId, element, properties);
 
             clearInvocations(listener);
+            var compositionTargetId = UUID.randomUUID();
+            threadHandler.migrate(messageId, instanceId, element, compositionTargetId, properties);
+            verify(listener, timeout(TIMEOUT)).migrate(instanceId, element, compositionTargetId, properties);
+
+            clearInvocations(listener);
             threadHandler.lock(messageId, instanceId, elementId);
             verify(listener, timeout(TIMEOUT)).lock(instanceId, elementId);
 

@@ -22,6 +22,7 @@ package org.onap.policy.clamp.acm.participant.intermediary.handler;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -174,8 +175,7 @@ class AutomationCompositionOutHandlerTest {
         var publisher = mock(ParticipantMessagePublisher.class);
         var acOutHandler = new AutomationCompositionOutHandler(publisher, cacheProvider);
         var compositionId = UUID.randomUUID();
-        acOutHandler.updateCompositionState(compositionId, AcTypeState.PRIMED, StateChangeResult.NO_ERROR,
-                "Primed");
+        acOutHandler.updateCompositionState(compositionId, AcTypeState.PRIMED, StateChangeResult.NO_ERROR, "Primed");
         verify(publisher).sendParticipantPrimeAck(any(ParticipantPrimeAck.class));
         verify(cacheProvider, times(0)).removeElementDefinition(compositionId);
     }
@@ -216,5 +216,30 @@ class AutomationCompositionOutHandlerTest {
 
         acOutHandler.sendAcDefinitionInfo(compositionId, elementId, Map.of());
         verify(publisher).sendHeartbeat(any(ParticipantStatus.class));
+    }
+
+    @Test
+    void updateMigrationStatusTest() {
+        var cacheProvider = mock(CacheProvider.class);
+        when(cacheProvider.getParticipantId()).thenReturn(UUID.randomUUID());
+        var publisher = mock(ParticipantMessagePublisher.class);
+        var acOutHandler = new AutomationCompositionOutHandler(publisher, cacheProvider);
+
+        var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
+        when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
+                .thenReturn(automationComposition);
+
+        var compositionTarget = UUID.randomUUID();
+        automationComposition.setCompositionTargetId(compositionTarget);
+        automationComposition.setDeployState(DeployState.MIGRATING);
+        when(cacheProvider.getAcElementsDefinitions()).thenReturn(Map.of(compositionTarget, Map.of()));
+
+        for (var element : automationComposition.getElements().values()) {
+            acOutHandler.updateAutomationCompositionElementState(automationComposition.getInstanceId(), element.getId(),
+                    DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "");
+        }
+        verify(publisher, times(automationComposition.getElements().size()))
+                .sendAutomationCompositionAck(any(AutomationCompositionDeployAck.class));
+        assertEquals(compositionTarget, automationComposition.getCompositionId());
     }
 }

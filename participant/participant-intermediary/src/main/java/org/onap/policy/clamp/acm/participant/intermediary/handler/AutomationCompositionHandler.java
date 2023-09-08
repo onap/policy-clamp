@@ -24,6 +24,7 @@ package org.onap.policy.clamp.acm.participant.intermediary.handler;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import lombok.NonNull;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
@@ -37,6 +38,7 @@ import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeploy;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeployAck;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionMigration;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionStateChange;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.PropertiesUpdate;
@@ -194,7 +196,8 @@ public class AutomationCompositionHandler {
         for (var participantDeploy : updateMsg.getParticipantUpdatesList()) {
             if (cacheProvider.getParticipantId().equals(participantDeploy.getParticipantId())) {
 
-                updateExistingElementsOnThisParticipant(updateMsg.getAutomationCompositionId(), participantDeploy);
+                updateExistingElementsOnThisParticipant(updateMsg.getAutomationCompositionId(), participantDeploy,
+                        DeployState.UPDATING);
 
                 callParticipantUpdateProperty(updateMsg.getMessageId(), participantDeploy.getAcElementList(),
                         updateMsg.getAutomationCompositionId());
@@ -245,11 +248,13 @@ public class AutomationCompositionHandler {
         }
     }
 
-    private void updateExistingElementsOnThisParticipant(UUID instanceId, ParticipantDeploy participantDeploy) {
+    private void updateExistingElementsOnThisParticipant(UUID instanceId, ParticipantDeploy participantDeploy,
+            DeployState deployState) {
         var acElementList = cacheProvider.getAutomationComposition(instanceId).getElements();
         for (var element : participantDeploy.getAcElementList()) {
             var acElement = acElementList.get(element.getId());
             acElement.getProperties().putAll(element.getProperties());
+            acElement.setDeployState(deployState);
         }
     }
 
@@ -359,5 +364,41 @@ public class AutomationCompositionHandler {
             cacheProvider.initializeAutomationComposition(compositionId, automationcomposition);
         }
         listener.restarted(messageId, compositionId, list, state, automationCompositionList);
+    }
+
+    /**
+     * Handles AutomationComposition Migration.
+     *
+     * @param migrationMsg the AutomationCompositionMigration
+     */
+    public void handleAutomationCompositionMigration(AutomationCompositionMigration migrationMsg) {
+        if (migrationMsg.getAutomationCompositionId() == null || migrationMsg.getCompositionTargetId() == null) {
+            return;
+        }
+
+        var automationComposition = cacheProvider.getAutomationComposition(migrationMsg.getAutomationCompositionId());
+        if (automationComposition == null) {
+            LOGGER.debug("Automation composition {} does not use this participant",
+                    migrationMsg.getAutomationCompositionId());
+            return;
+        }
+        automationComposition.setCompositionTargetId(migrationMsg.getCompositionTargetId());
+        for (var participantDeploy : migrationMsg.getParticipantUpdatesList()) {
+            if (cacheProvider.getParticipantId().equals(participantDeploy.getParticipantId())) {
+
+                updateExistingElementsOnThisParticipant(migrationMsg.getAutomationCompositionId(), participantDeploy,
+                        DeployState.MIGRATING);
+
+                callParticipantMigrate(migrationMsg.getMessageId(), participantDeploy.getAcElementList(),
+                        migrationMsg.getAutomationCompositionId(), migrationMsg.getCompositionTargetId());
+            }
+        }
+    }
+
+    private void callParticipantMigrate(UUID messageId, List<AcElementDeploy> acElements, UUID instanceId,
+            UUID compositionTargetId) {
+        for (var element : acElements) {
+            listener.migrate(messageId, instanceId, element, compositionTargetId, element.getProperties());
+        }
     }
 }

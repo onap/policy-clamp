@@ -74,27 +74,59 @@ public interface ParticipantIntermediaryApi {
      */
     AutomationCompositionElement getAutomationCompositionElement(UUID automationCompositionId, UUID elementId);
 
+    /**
+     * Get a copy of all AutomationCompositionElementDefinition from all primed compositions.
+     *
+     * @return a Map by compositionId of Maps of AutomationCompositionElement
+     */
     Map<UUID, Map<ToscaConceptIdentifier, AutomationCompositionElementDefinition>> getAcElementsDefinitions();
 
+    /**
+     * Get a copy of AutomationCompositionElementDefinitions of a composition.
+     *
+     * @param compositionId the composition id
+     * @return a Map by element definition Id of AutomationCompositionElementDefinitions
+     */
     Map<ToscaConceptIdentifier, AutomationCompositionElementDefinition> getAcElementsDefinitions(UUID compositionId);
 
-    AutomationCompositionElementDefinition getAcElementDefinition(UUID compositionId,
-            ToscaConceptIdentifier elementId);
+    /**
+     * Get a copy of the AutomationCompositionElementDefinition by compositionId and element definition Id.
+     *
+     * @param compositionId the composition id
+     * @param elementId the element definition Id
+     * @return the AutomationCompositionElementDefinition
+     */
+    AutomationCompositionElementDefinition getAcElementDefinition(UUID compositionId, ToscaConceptIdentifier elementId);
 
     /**
      * Send Automation Composition Element update Info to AC-runtime.
      *
      * @param automationCompositionId the ID of the automation composition to update the states
-     * @param id the ID of the automation composition element to update the states
+     * @param elementId the ID of the automation composition element to update the states
      * @param useState the use State
      * @param operationalState the operational State
      * @param outProperties the output Properties Map
      */
-    void sendAcElementInfo(UUID automationCompositionId, UUID id, String useState, String operationalState,
+    void sendAcElementInfo(UUID automationCompositionId, UUID elementId, String useState, String operationalState,
             Map<String, Object> outProperties);
 
+    /**
+     * Send Automation Composition Definition update Info to AC-runtime.
+     *
+     * @param compositionId the composition id
+     * @param elementId the element definition Id
+     * @param outProperties the output Properties Map
+     */
     void sendAcDefinitionInfo(UUID compositionId, ToscaConceptIdentifier elementId, Map<String, Object> outProperties);
 
+    /**
+     * Update the state of a Automation Composition Definition.
+     *
+     * @param compositionId the composition id
+     * @param state the state of Automation Composition Definition
+     * @param stateChangeResult the indicator if error occurs
+     * @param message the message
+     */
     void updateCompositionState(UUID compositionId, AcTypeState state, StateChangeResult stateChangeResult,
             String message);
 }

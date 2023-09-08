@@ -81,6 +81,9 @@ class ParticipantCommTest {
         var participantRestartListener = new ParticipantRestartListener(participantHandler);
         assertEquals(ParticipantMessageType.PARTICIPANT_RESTART.name(),
                 participantRestartListener.getType());
+
+        var acMigrationListener = new AutomationCompositionMigrationListener(participantHandler);
+        assertEquals(ParticipantMessageType.AUTOMATION_COMPOSITION_MIGRATION.name(), acMigrationListener.getType());
     }
 
     @Test

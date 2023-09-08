@@ -23,6 +23,7 @@ package org.onap.policy.clamp.acm.participant.intermediary.handler;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -43,6 +44,7 @@ import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeploy;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeployAck;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionMigration;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionStateChange;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.PropertiesUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
@@ -90,7 +92,7 @@ class AutomationCompositionHandlerTest {
         var ach = new AutomationCompositionHandler(cacheProvider, participantMessagePublisher, listener);
         ach.handleAutomationCompositionStateChange(automationCompositionStateChange);
         verify(listener, times(automationComposition.getElements().size())).undeploy(any(), any(), any());
-        for (var element: automationComposition.getElements().values()) {
+        for (var element : automationComposition.getElements().values()) {
             assertEquals(DeployState.UNDEPLOYING, element.getDeployState());
         }
     }
@@ -110,7 +112,7 @@ class AutomationCompositionHandlerTest {
         var ach = new AutomationCompositionHandler(cacheProvider, participantMessagePublisher, listener);
         ach.handleAutomationCompositionStateChange(automationCompositionStateChange);
         verify(listener, times(automationComposition.getElements().size())).lock(any(), any(), any());
-        for (var element: automationComposition.getElements().values()) {
+        for (var element : automationComposition.getElements().values()) {
             assertEquals(LockState.LOCKING, element.getLockState());
         }
     }
@@ -130,7 +132,7 @@ class AutomationCompositionHandlerTest {
         var ach = new AutomationCompositionHandler(cacheProvider, participantMessagePublisher, listener);
         ach.handleAutomationCompositionStateChange(automationCompositionStateChange);
         verify(listener, times(automationComposition.getElements().size())).unlock(any(), any(), any());
-        for (var element: automationComposition.getElements().values()) {
+        for (var element : automationComposition.getElements().values()) {
             assertEquals(LockState.UNLOCKING, element.getLockState());
         }
     }
@@ -150,7 +152,7 @@ class AutomationCompositionHandlerTest {
         var ach = new AutomationCompositionHandler(cacheProvider, participantMessagePublisher, listener);
         ach.handleAutomationCompositionStateChange(automationCompositionStateChange);
         verify(listener, times(automationComposition.getElements().size())).delete(any(), any(), any());
-        for (var element: automationComposition.getElements().values()) {
+        for (var element : automationComposition.getElements().values()) {
             assertEquals(DeployState.DELETING, element.getDeployState());
         }
     }
@@ -241,8 +243,7 @@ class AutomationCompositionHandlerTest {
     void restartedTest() {
         var listener = mock(ThreadHandler.class);
         var cacheProvider = mock(CacheProvider.class);
-        var ach = new AutomationCompositionHandler(cacheProvider, mock(ParticipantMessagePublisher.class),
-                listener);
+        var ach = new AutomationCompositionHandler(cacheProvider, mock(ParticipantMessagePublisher.class), listener);
 
         var compositionId = UUID.randomUUID();
         var messageId = UUID.randomUUID();
@@ -253,5 +254,33 @@ class AutomationCompositionHandlerTest {
         ach.restarted(messageId, compositionId, list, state, automationCompositionList);
         verify(cacheProvider).initializeAutomationComposition(compositionId, participantRestartAc);
         verify(listener).restarted(messageId, compositionId, list, state, automationCompositionList);
+    }
+
+    @Test
+    void handleAutomationCompositionMigrationTest() {
+        var listener = mock(ThreadHandler.class);
+        var cacheProvider = mock(CacheProvider.class);
+        var ach = new AutomationCompositionHandler(cacheProvider, mock(ParticipantMessagePublisher.class), listener);
+        var migrationMsg = new AutomationCompositionMigration();
+        assertDoesNotThrow(() -> ach.handleAutomationCompositionMigration(migrationMsg));
+        var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
+        migrationMsg.setCompositionTargetId(UUID.randomUUID());
+        migrationMsg.setAutomationCompositionId(automationComposition.getInstanceId());
+        assertDoesNotThrow(() -> ach.handleAutomationCompositionMigration(migrationMsg));
+        when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
+                .thenReturn(automationComposition);
+        var participantDeploy = new ParticipantDeploy();
+        participantDeploy.setParticipantId(CommonTestData.getParticipantId());
+        when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
+        migrationMsg.getParticipantUpdatesList().add(participantDeploy);
+        for (var element : automationComposition.getElements().values()) {
+            var acElementDeploy = new AcElementDeploy();
+            acElementDeploy.setProperties(Map.of());
+            acElementDeploy.setId(element.getId());
+            participantDeploy.getAcElementList().add(acElementDeploy);
+        }
+
+        ach.handleAutomationCompositionMigration(migrationMsg);
+        verify(listener, times(automationComposition.getElements().size())).migrate(any(), any(), any(), any(), any());
     }
 }

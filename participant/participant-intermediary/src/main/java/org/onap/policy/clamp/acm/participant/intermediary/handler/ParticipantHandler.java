@@ -31,6 +31,7 @@ import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeploy;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionMigration;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionStateChange;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantAckMessage;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDeregister;
@@ -56,7 +57,6 @@ public class ParticipantHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantHandler.class);
 
     private final AutomationCompositionHandler automationCompositionHandler;
-    private final AutomationCompositionOutHandler automationCompositionOutHandler;
     private final ParticipantMessagePublisher publisher;
     private final CacheProvider cacheProvider;
 
@@ -92,6 +92,18 @@ public class ParticipantHandler {
             description = "AUTOMATION_COMPOSITION_STATE_CHANGE messages received")
     public void handleAutomationCompositionStateChange(AutomationCompositionStateChange stateChangeMsg) {
         automationCompositionHandler.handleAutomationCompositionStateChange(stateChangeMsg);
+    }
+
+    /**
+     * Handle a automation composition migration message.
+     *
+     * @param migrationMsg the migration message
+     */
+    @Timed(
+            value = "listener.automation_composition_migration",
+            description = "AUTOMATION_COMPOSITION_MIGRATION messages received")
+    public void handleAutomationCompositionMigration(AutomationCompositionMigration migrationMsg) {
+        automationCompositionHandler.handleAutomationCompositionMigration(migrationMsg);
     }
 
     /**

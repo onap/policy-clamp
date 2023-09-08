@@ -328,4 +328,31 @@ public class ThreadHandler implements Closeable {
     public void close() throws IOException {
         executor.shutdown();
     }
+
+    /**
+     * Handles AutomationComposition Migration.
+     *
+     * @param messageId the messageId
+     * @param instanceId the automationComposition Id
+     * @param element the information on the automation composition element
+     * @param compositionTargetId the composition to migrate
+     */
+    public void migrate(UUID messageId, UUID instanceId, AcElementDeploy element, UUID compositionTargetId,
+            Map<String, Object> properties) {
+        cleanExecution(element.getId(), messageId);
+        var result = executor.submit(() -> this.migrateProcess(instanceId, element, compositionTargetId, properties));
+        executionMap.put(element.getId(), result);
+    }
+
+    private void migrateProcess(UUID instanceId, AcElementDeploy element, UUID compositionTargetId,
+            Map<String, Object> properties) {
+        try {
+            listener.migrate(instanceId, element, compositionTargetId, properties);
+        } catch (PfModelException e) {
+            LOGGER.error("Automation composition element migrate failed {} {}", instanceId, e.getMessage());
+            intermediaryApi.updateAutomationCompositionElementState(instanceId, element.getId(), DeployState.DEPLOYED,
+                    null, StateChangeResult.FAILED, "Automation composition element migrate failed");
+        }
+        executionMap.remove(element.getId());
+    }
 }
