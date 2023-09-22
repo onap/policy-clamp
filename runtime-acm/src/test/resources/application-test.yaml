@@ -38,3 +38,6 @@ runtime:
         servers:
           - localhost
         topic: POLICY-ACRUNTIME-PARTICIPANT
+  acmParameters:
+    acElementName: org.onap.policy.clamp.acm.AutomationCompositionElement
+    acNodeType: org.onap.policy.clamp.acm.AutomationComposition

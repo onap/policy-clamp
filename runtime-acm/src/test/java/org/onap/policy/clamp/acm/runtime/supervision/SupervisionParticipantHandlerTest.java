@@ -21,6 +21,7 @@
 package org.onap.policy.clamp.acm.runtime.supervision;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -32,6 +33,7 @@ import java.util.Set;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
+import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantDeregisterAckPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantRegisterAckPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantRestartPublisher;
@@ -71,7 +73,8 @@ class SupervisionParticipantHandlerTest {
         var handler =
                 new SupervisionParticipantHandler(participantProvider, mock(ParticipantRegisterAckPublisher.class),
                         participantDeregisterAckPublisher, mock(AutomationCompositionProvider.class),
-                        mock(AcDefinitionProvider.class), mock(ParticipantRestartPublisher.class));
+                        mock(AcDefinitionProvider.class), mock(ParticipantRestartPublisher.class),
+                        mock(AcRuntimeParameterGroup.class));
 
         handler.handleParticipantMessage(participantDeregisterMessage);
 
@@ -91,7 +94,8 @@ class SupervisionParticipantHandlerTest {
         var participantRegisterAckPublisher = mock(ParticipantRegisterAckPublisher.class);
         var handler = new SupervisionParticipantHandler(participantProvider, participantRegisterAckPublisher,
                 mock(ParticipantDeregisterAckPublisher.class), mock(AutomationCompositionProvider.class),
-                mock(AcDefinitionProvider.class), mock(ParticipantRestartPublisher.class));
+                mock(AcDefinitionProvider.class), mock(ParticipantRestartPublisher.class),
+                mock(AcRuntimeParameterGroup.class));
         handler.handleParticipantMessage(participantRegisterMessage);
 
         verify(participantProvider).saveParticipant(any());
@@ -141,11 +145,12 @@ class SupervisionParticipantHandlerTest {
         var participantRestartPublisher = mock(ParticipantRestartPublisher.class);
         var handler = new SupervisionParticipantHandler(participantProvider, participantRegisterAckPublisher,
                 mock(ParticipantDeregisterAckPublisher.class), automationCompositionProvider, acDefinitionProvider,
-                participantRestartPublisher);
+                participantRestartPublisher, CommonTestData.getTestParamaterGroup());
         handler.handleParticipantMessage(participantRegisterMessage);
 
         verify(participantRegisterAckPublisher).send(participantRegisterMessage.getMessageId(), participantId);
-        verify(acDefinitionProvider).updateAcDefinition(any(AutomationCompositionDefinition.class));
+        verify(acDefinitionProvider).updateAcDefinition(any(AutomationCompositionDefinition.class),
+                eq(CommonTestData.TOSCA_COMP_NAME));
         verify(participantRestartPublisher).send(any(), any(AutomationCompositionDefinition.class), any());
     }
 
@@ -159,7 +164,8 @@ class SupervisionParticipantHandlerTest {
         var handler =
                 new SupervisionParticipantHandler(participantProvider, mock(ParticipantRegisterAckPublisher.class),
                         mock(ParticipantDeregisterAckPublisher.class), automationCompositionProvider,
-                        mock(AcDefinitionProvider.class), mock(ParticipantRestartPublisher.class));
+                        mock(AcDefinitionProvider.class), mock(ParticipantRestartPublisher.class),
+                        mock(AcRuntimeParameterGroup.class));
         var participant = CommonTestData.createParticipant(CommonTestData.getParticipantId());
         when(participantProvider.findParticipant(CommonTestData.getParticipantId()))
                 .thenReturn(Optional.of(participant));
@@ -194,10 +200,11 @@ class SupervisionParticipantHandlerTest {
         var handler =
                 new SupervisionParticipantHandler(participantProvider, mock(ParticipantRegisterAckPublisher.class),
                         mock(ParticipantDeregisterAckPublisher.class), mock(AutomationCompositionProvider.class),
-                        acDefinitionProvider, mock(ParticipantRestartPublisher.class));
+                        acDefinitionProvider, mock(ParticipantRestartPublisher.class),
+                       CommonTestData.getTestParamaterGroup());
         handler.handleParticipantMessage(participantStatusMessage);
 
-        verify(acDefinitionProvider).updateAcDefinition(acDefinition);
+        verify(acDefinitionProvider).updateAcDefinition(acDefinition, CommonTestData.TOSCA_COMP_NAME);
     }
 
     @Test
@@ -210,7 +217,8 @@ class SupervisionParticipantHandlerTest {
         var handler =
                 new SupervisionParticipantHandler(participantProvider, mock(ParticipantRegisterAckPublisher.class),
                         mock(ParticipantDeregisterAckPublisher.class), automationCompositionProvider,
-                        mock(AcDefinitionProvider.class), mock(ParticipantRestartPublisher.class));
+                        mock(AcDefinitionProvider.class), mock(ParticipantRestartPublisher.class),
+                        mock(AcRuntimeParameterGroup.class));
         handler.handleParticipantMessage(participantStatusMessage);
 
         verify(participantProvider).saveParticipant(any());
@@ -227,7 +235,8 @@ class SupervisionParticipantHandlerTest {
         var handler =
                 new SupervisionParticipantHandler(participantProvider, mock(ParticipantRegisterAckPublisher.class),
                         mock(ParticipantDeregisterAckPublisher.class), automationCompositionProvider,
-                        mock(AcDefinitionProvider.class), mock(ParticipantRestartPublisher.class));
+                        mock(AcDefinitionProvider.class), mock(ParticipantRestartPublisher.class),
+                        mock(AcRuntimeParameterGroup.class));
         var participant = CommonTestData.createParticipant(CommonTestData.getParticipantId());
         participant.setParticipantState(ParticipantState.OFF_LINE);
         when(participantProvider.findParticipant(CommonTestData.getParticipantId()))

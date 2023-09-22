@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021,2023 Nordix Foundation.
+ *  Copyright (C) 2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,41 +13,26 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
- * SPDX-License-Identifier: Apache-2.0
  * ============LICENSE_END=========================================================
  */
 
 package org.onap.policy.clamp.acm.runtime.main.parameters;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.onap.policy.common.endpoints.parameters.TopicParameterGroup;
-import org.onap.policy.common.parameters.validation.ParameterGroupConstraint;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
 /**
- * Class to hold all parameters needed for the ACM runtime component.
- *
+ * Parameters for ac element name and  ac node type.
  */
-@Validated
 @Getter
 @Setter
-@ConfigurationProperties(prefix = "runtime")
-public class AcRuntimeParameterGroup {
+@Validated
+public class AcmParameters {
 
-    @Valid
-    @NotNull
-    private ParticipantParameters participantParameters;
+    // Default values for the element name and composition name
+    private String toscaElementName = "org.onap.policy.clamp.acm.AutomationCompositionElement";
 
-    @NotNull
-    @ParameterGroupConstraint
-    private TopicParameterGroup topicParameterGroup;
+    private String toscaCompositionName = "org.onap.policy.clamp.acm.AutomationComposition";
 
-    @Valid
-    @NotNull
-    private AcmParameters acmParameters = new AcmParameters();
 }

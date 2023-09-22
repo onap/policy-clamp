@@ -138,8 +138,6 @@ public class JpaAutomationCompositionDefinition extends Validated
     @Override
     public BeanValidationResult validate(@NonNull String fieldName) {
         var result = super.validate(fieldName);
-        ToscaServiceTemplateValidation.validate(result, serviceTemplate);
-
         if (!result.isValid()) {
             return result;
         }

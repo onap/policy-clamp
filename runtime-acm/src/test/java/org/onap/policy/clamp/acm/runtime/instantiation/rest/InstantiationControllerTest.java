@@ -74,6 +74,8 @@ class InstantiationControllerTest extends CommonRestController {
 
     private static ToscaServiceTemplate serviceTemplate = new ToscaServiceTemplate();
 
+    private static final String NODE_TYPE = "org.onap.policy.clamp.acm.AutomationComposition";
+
     @Autowired
     private AcDefinitionProvider acDefinitionProvider;
 
@@ -338,7 +340,7 @@ class InstantiationControllerTest extends CommonRestController {
         var serviceTemplateCreate = new ToscaServiceTemplate(serviceTemplate);
         serviceTemplateCreate.setName(name);
         var acmDefinition = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
-        acDefinitionProvider.updateAcDefinition(acmDefinition);
+        acDefinitionProvider.updateAcDefinition(acmDefinition, NODE_TYPE);
         saveDummyParticipantInDb();
         return acmDefinition.getCompositionId();
     }
