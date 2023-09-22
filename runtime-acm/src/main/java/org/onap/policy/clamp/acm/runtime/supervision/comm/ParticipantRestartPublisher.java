@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
+import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
@@ -46,6 +47,7 @@ import org.springframework.stereotype.Component;
 public class ParticipantRestartPublisher extends AbstractParticipantPublisher<ParticipantRestart> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantRestartPublisher.class);
+    private final AcRuntimeParameterGroup acRuntimeParameterGroup;
 
     /**
      * Send Restart to Participant.
@@ -86,7 +88,8 @@ public class ParticipantRestartPublisher extends AbstractParticipantPublisher<Pa
 
     private List<ParticipantDefinition> prepareParticipantRestarting(UUID participantId,
             AutomationCompositionDefinition acmDefinition) {
-        var acElements = AcmUtils.extractAcElementsFromServiceTemplate(acmDefinition.getServiceTemplate());
+        var acElements = AcmUtils.extractAcElementsFromServiceTemplate(acmDefinition.getServiceTemplate(),
+                acRuntimeParameterGroup.getAcmParameters().getToscaElementName());
 
         // list of entry entry filtered by participantId
         List<Entry<String, ToscaNodeTemplate>> elementList = new ArrayList<>();

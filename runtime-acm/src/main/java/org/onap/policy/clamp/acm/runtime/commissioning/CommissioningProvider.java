@@ -26,8 +26,8 @@ import java.util.HashSet;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
 import org.onap.policy.clamp.acm.runtime.participants.AcmParticipantProvider;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantPrimePublisher;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
@@ -52,13 +52,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class CommissioningProvider {
-    public static final String AUTOMATION_COMPOSITION_NODE_TYPE = "org.onap.policy.clamp.acm.AutomationComposition";
 
     private final AcDefinitionProvider acDefinitionProvider;
     private final AutomationCompositionProvider acProvider;
     private final AcmParticipantProvider acmParticipantProvider;
     private final AcTypeStateResolver acTypeStateResolver;
     private final ParticipantPrimePublisher participantPrimePublisher;
+    private final AcRuntimeParameterGroup acRuntimeParameterGroup;
 
     private final ExecutorService executor = Executors.newFixedThreadPool(1);
 
@@ -87,7 +87,9 @@ public class CommissioningProvider {
     @Transactional
     public CommissioningResponse createAutomationCompositionDefinition(ToscaServiceTemplate serviceTemplate) {
 
-        var acmDefinition = acDefinitionProvider.createAutomationCompositionDefinition(serviceTemplate);
+        var acmDefinition = acDefinitionProvider.createAutomationCompositionDefinition(serviceTemplate,
+                acRuntimeParameterGroup.getAcmParameters().getToscaElementName(),
+                acRuntimeParameterGroup.getAcmParameters().getToscaCompositionName());
         serviceTemplate = acmDefinition.getServiceTemplate();
         return createCommissioningResponse(acmDefinition.getCompositionId(), serviceTemplate);
     }
@@ -110,7 +112,9 @@ public class CommissioningProvider {
             throw new PfModelRuntimeException(Status.BAD_REQUEST,
                     "ACM not in COMMISSIONED state, Update of ACM Definition not allowed");
         }
-        acDefinitionProvider.updateServiceTemplate(compositionId, serviceTemplate);
+        acDefinitionProvider.updateServiceTemplate(compositionId, serviceTemplate,
+                acRuntimeParameterGroup.getAcmParameters().getToscaElementName(),
+                acRuntimeParameterGroup.getAcmParameters().getToscaCompositionName());
 
         return createCommissioningResponse(compositionId, serviceTemplate);
     }
@@ -208,7 +212,8 @@ public class CommissioningProvider {
     private void prime(AutomationCompositionDefinition acmDefinition) {
         acmDefinition.setStateChangeResult(StateChangeResult.NO_ERROR);
         var preparation = participantPrimePublisher.prepareParticipantPriming(acmDefinition);
-        acDefinitionProvider.updateAcDefinition(acmDefinition);
+        acDefinitionProvider.updateAcDefinition(acmDefinition,
+                acRuntimeParameterGroup.getAcmParameters().getToscaCompositionName());
 
         executor.execute(
                 () -> participantPrimePublisher.sendPriming(preparation, acmDefinition.getCompositionId(), null));
@@ -228,7 +233,8 @@ public class CommissioningProvider {
             acmParticipantProvider.verifyParticipantState(participantIds);
         }
         acmDefinition.setState(AcTypeState.DEPRIMING);
-        acDefinitionProvider.updateAcDefinition(acmDefinition);
+        acDefinitionProvider.updateAcDefinition(acmDefinition,
+                acRuntimeParameterGroup.getAcmParameters().getToscaCompositionName());
 
         executor.execute(() -> participantPrimePublisher.sendDepriming(acmDefinition.getCompositionId()));
     }

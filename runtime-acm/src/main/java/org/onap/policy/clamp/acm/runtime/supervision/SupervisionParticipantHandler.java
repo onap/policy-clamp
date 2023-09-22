@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.MapUtils;
+import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantDeregisterAckPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantRegisterAckPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantRestartPublisher;
@@ -63,6 +64,7 @@ public class SupervisionParticipantHandler {
     private final AutomationCompositionProvider automationCompositionProvider;
     private final AcDefinitionProvider acDefinitionProvider;
     private final ParticipantRestartPublisher participantRestartPublisher;
+    private final AcRuntimeParameterGroup acRuntimeParameterGroup;
 
     /**
      * Handle a ParticipantRegister message from a participant.
@@ -153,7 +155,8 @@ public class SupervisionParticipantHandler {
                 }
             }
         }
-        acDefinitionProvider.updateAcDefinition(acDefinition);
+        acDefinitionProvider.updateAcDefinition(acDefinition,
+                acRuntimeParameterGroup.getAcmParameters().getToscaCompositionName());
     }
 
     private void checkOnline(Participant participant) {
@@ -196,7 +199,8 @@ public class SupervisionParticipantHandler {
             acDefinition.setStateChangeResult(StateChangeResult.NO_ERROR);
         }
         acDefinition.setRestarting(true);
-        acDefinitionProvider.updateAcDefinition(acDefinition);
+        acDefinitionProvider.updateAcDefinition(acDefinition,
+                acRuntimeParameterGroup.getAcmParameters().getToscaCompositionName());
         participantRestartPublisher.send(participantId, acDefinition, automationCompositions);
     }
 

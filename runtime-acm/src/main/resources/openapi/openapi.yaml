@@ -1011,12 +1011,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/AutomationCompositions'
               example:
-                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getCompositionInstancesResponse.json'
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getAllCompositionInstancesResponse.json'
             application/yaml:
               schema:
                 $ref: '#/components/schemas/AutomationCompositions'
               example:
-                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getCompositionInstancesResponse.yaml'
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getAllCompositionInstancesResponse.yaml'
         401:
           description: Authentication Error, returns an instance of
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)

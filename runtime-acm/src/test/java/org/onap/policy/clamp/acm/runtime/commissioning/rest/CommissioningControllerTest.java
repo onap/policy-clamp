@@ -38,18 +38,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
+import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
 import org.onap.policy.clamp.acm.runtime.util.rest.CommonRestController;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
-import org.onap.policy.clamp.models.acm.concepts.Participant;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.AcTypeStateUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.CommissioningResponse;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.PrimeOrder;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
-import org.onap.policy.clamp.models.acm.utils.AcmUtils;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaDataType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaProperty;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
@@ -230,7 +226,9 @@ class CommissioningControllerTest extends CommonRestController {
     private UUID createEntryInDB(String name) {
         var serviceTemplateCreate = new ToscaServiceTemplate(serviceTemplate);
         serviceTemplateCreate.setName(name);
-        var acmDefinition = acDefinitionProvider.createAutomationCompositionDefinition(serviceTemplateCreate);
+        var acmDefinition = acDefinitionProvider
+                .createAutomationCompositionDefinition(serviceTemplateCreate, CommonTestData.TOSCA_ELEMENT_NAME,
+                        CommonTestData.TOSCA_COMP_NAME);
 
         return acmDefinition.getCompositionId();
     }

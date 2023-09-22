@@ -27,6 +27,7 @@ import jakarta.ws.rs.core.Response.Status;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
+import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
 import org.onap.policy.clamp.acm.runtime.participants.AcmParticipantProvider;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionAcHandler;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
@@ -63,6 +64,7 @@ public class AutomationCompositionInstantiationProvider {
     private final AcInstanceStateResolver acInstanceStateResolver;
     private final SupervisionAcHandler supervisionAcHandler;
     private final AcmParticipantProvider acmParticipantProvider;
+    private final AcRuntimeParameterGroup acRuntimeParameterGroup;
 
     /**
      * Create automation composition.
@@ -207,7 +209,8 @@ public class AutomationCompositionInstantiationProvider {
         acmParticipantProvider.verifyParticipantState(participantIds);
 
         result.addResult(AcmUtils.validateAutomationComposition(automationComposition,
-                acDefinitionOpt.get().getServiceTemplate()));
+                acDefinitionOpt.get().getServiceTemplate(),
+                acRuntimeParameterGroup.getAcmParameters().getToscaCompositionName()));
 
         if (result.isValid()) {
             for (var element : automationComposition.getElements().values()) {

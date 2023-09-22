@@ -28,10 +28,12 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
+import org.onap.policy.clamp.models.acm.document.base.ToscaServiceTemplateValidation;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplate;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionDefinitionRepository;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
+import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.data.domain.Example;
@@ -53,7 +55,7 @@ public class AcDefinitionProvider {
      * @return the created ACM Definition
      */
     public AutomationCompositionDefinition createAutomationCompositionDefinition(
-            final ToscaServiceTemplate serviceTemplate) {
+            final ToscaServiceTemplate serviceTemplate, final String toscaElementName, String toscaCompositionName) {
         var acmDefinition = new AutomationCompositionDefinition();
         var compositionId = UUID.randomUUID();
         acmDefinition.setCompositionId(compositionId);
@@ -63,10 +65,16 @@ public class AcDefinitionProvider {
         }
         serviceTemplate.getMetadata().put("compositionId", compositionId);
         acmDefinition.setServiceTemplate(serviceTemplate);
-        var acElements = AcmUtils.extractAcElementsFromServiceTemplate(serviceTemplate);
+        var acElements = AcmUtils.extractAcElementsFromServiceTemplate(serviceTemplate, toscaElementName);
         acmDefinition.setElementStateMap(AcmUtils.createElementStateMap(acElements, AcTypeState.COMMISSIONED));
         var jpaAcmDefinition = ProviderUtils.getJpaAndValidate(acmDefinition, JpaAutomationCompositionDefinition::new,
                 "AutomationCompositionDefinition");
+        var validationResult = new BeanValidationResult("AutomationCompositionDefinition", acmDefinition);
+        ToscaServiceTemplateValidation.validate(validationResult, jpaAcmDefinition.getServiceTemplate(),
+                toscaCompositionName);
+        if (! validationResult.isValid()) {
+            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, validationResult.getResult());
+        }
         var result = acmDefinitionRepository.save(jpaAcmDefinition);
 
         return result.toAuthorative();
@@ -78,14 +86,16 @@ public class AcDefinitionProvider {
      * @param compositionId The UUID of the automation composition definition to delete
      * @param serviceTemplate the service template to be created
      */
-    public void updateServiceTemplate(UUID compositionId, ToscaServiceTemplate serviceTemplate) {
+    public void updateServiceTemplate(UUID compositionId, ToscaServiceTemplate serviceTemplate, String toscaElementName,
+                                      String toscaCompositionName) {
         var acmDefinition = new AutomationCompositionDefinition();
         acmDefinition.setCompositionId(compositionId);
         acmDefinition.setState(AcTypeState.COMMISSIONED);
         acmDefinition.setServiceTemplate(serviceTemplate);
-        var acElements = AcmUtils.extractAcElementsFromServiceTemplate(serviceTemplate);
+        var acElements =
+                AcmUtils.extractAcElementsFromServiceTemplate(serviceTemplate, toscaElementName);
         acmDefinition.setElementStateMap(AcmUtils.createElementStateMap(acElements, AcTypeState.COMMISSIONED));
-        updateAcDefinition(acmDefinition);
+        updateAcDefinition(acmDefinition, toscaCompositionName);
     }
 
     /**
@@ -93,9 +103,15 @@ public class AcDefinitionProvider {
      *
      * @param acDefinition the AutomationCompositionDefinition to be updated
      */
-    public void updateAcDefinition(AutomationCompositionDefinition acDefinition) {
+    public void updateAcDefinition(AutomationCompositionDefinition acDefinition, String toscaCompositionName) {
         var jpaAcmDefinition = ProviderUtils.getJpaAndValidate(acDefinition, JpaAutomationCompositionDefinition::new,
                 "AutomationCompositionDefinition");
+        var validationResult = new BeanValidationResult("AutomationCompositionDefinition", acDefinition);
+        ToscaServiceTemplateValidation.validate(validationResult, jpaAcmDefinition.getServiceTemplate(),
+                toscaCompositionName);
+        if (! validationResult.isValid()) {
+            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, validationResult.getResult());
+        }
         acmDefinitionRepository.save(jpaAcmDefinition);
         acmDefinitionRepository.flush();
     }
