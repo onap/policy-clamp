@@ -56,6 +56,7 @@ public class SupervisionScanner {
     private final AcDefinitionProvider acDefinitionProvider;
     private final AutomationCompositionStateChangePublisher automationCompositionStateChangePublisher;
     private final AutomationCompositionDeployPublisher automationCompositionDeployPublisher;
+    private final AcRuntimeParameterGroup acRuntimeParameterGroup;
 
     /**
      * Constructor for instantiating SupervisionScanner.
@@ -75,6 +76,7 @@ public class SupervisionScanner {
         this.acDefinitionProvider = acDefinitionProvider;
         this.automationCompositionStateChangePublisher = automationCompositionStateChangePublisher;
         this.automationCompositionDeployPublisher = automationCompositionDeployPublisher;
+        this.acRuntimeParameterGroup = acRuntimeParameterGroup;
 
         acTimeout.setMaxWaitMs(acRuntimeParameterGroup.getParticipantParameters().getMaxStatusWaitMs());
     }
@@ -227,7 +229,8 @@ public class SupervisionScanner {
             LOGGER.debug("Report timeout for the ac definition {}", acDefinition.getCompositionId());
             acTimeout.setTimeout(compositionId);
             acDefinition.setStateChangeResult(StateChangeResult.TIMEOUT);
-            acDefinitionProvider.updateAcDefinition(acDefinition);
+            acDefinitionProvider.updateAcDefinition(acDefinition,
+                    acRuntimeParameterGroup.getAcmParameters().getToscaCompositionName());
         }
     }
 

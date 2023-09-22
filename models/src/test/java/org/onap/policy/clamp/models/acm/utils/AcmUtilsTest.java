@@ -59,6 +59,10 @@ class AcmUtilsTest {
     private static final String PARTICIPANT_AUTOMATION_COMPOSITION_ELEMENT = "org.onap.policy.clamp.acm.Participant";
     private static final String TOSCA_TEMPLATE_YAML = "clamp/acm/pmsh/funtional-pmsh-usecase.yaml";
 
+    public static final String AUTOMATION_COMPOSITION_ELEMENT =
+            "org.onap.policy.clamp.acm.AutomationCompositionElement";
+    public static final String AUTOMATION_COMPOSITION_NODE_TYPE = "org.onap.policy.clamp.acm.AutomationComposition";
+
     @Test
     void testIsInTransitionalState() {
         assertThat(AcmUtils.isInTransitionalState(DeployState.DEPLOYED, LockState.LOCKED)).isFalse();
@@ -75,21 +79,25 @@ class AcmUtilsTest {
     void testCheckIfNodeTemplateIsAutomationCompositionElement() {
         var serviceTemplate = CommonTestData.getToscaServiceTemplate(TOSCA_TEMPLATE_YAML);
         var nodeTemplate = new ToscaNodeTemplate();
-        nodeTemplate.setType(AcmUtils.AUTOMATION_COMPOSITION_ELEMENT);
-        assertThat(AcmUtils.checkIfNodeTemplateIsAutomationCompositionElement(nodeTemplate, serviceTemplate)).isTrue();
+        nodeTemplate.setType(AUTOMATION_COMPOSITION_ELEMENT);
+        assertThat(AcmUtils.checkIfNodeTemplateIsAutomationCompositionElement(nodeTemplate, serviceTemplate,
+                AUTOMATION_COMPOSITION_ELEMENT)).isTrue();
 
         nodeTemplate.setType(POLICY_AUTOMATION_COMPOSITION_ELEMENT);
-        assertThat(AcmUtils.checkIfNodeTemplateIsAutomationCompositionElement(nodeTemplate, serviceTemplate)).isTrue();
+        assertThat(AcmUtils.checkIfNodeTemplateIsAutomationCompositionElement(nodeTemplate, serviceTemplate,
+                AUTOMATION_COMPOSITION_ELEMENT)).isTrue();
 
         nodeTemplate.setType(PARTICIPANT_AUTOMATION_COMPOSITION_ELEMENT);
-        assertThat(AcmUtils.checkIfNodeTemplateIsAutomationCompositionElement(nodeTemplate, serviceTemplate)).isFalse();
+        assertThat(AcmUtils.checkIfNodeTemplateIsAutomationCompositionElement(nodeTemplate, serviceTemplate,
+                AUTOMATION_COMPOSITION_ELEMENT)).isFalse();
     }
 
     @Test
     void testPrepareParticipantPriming() {
         var serviceTemplate = CommonTestData.getToscaServiceTemplate(TOSCA_TEMPLATE_YAML);
 
-        var acElements = AcmUtils.extractAcElementsFromServiceTemplate(serviceTemplate);
+        var acElements =
+                AcmUtils.extractAcElementsFromServiceTemplate(serviceTemplate, AUTOMATION_COMPOSITION_ELEMENT);
         Map<ToscaConceptIdentifier, UUID> map = new HashMap<>();
         var participantId = UUID.randomUUID();
         assertThatThrownBy(() -> AcmUtils.prepareParticipantPriming(acElements, map)).hasMessageMatching(
@@ -126,7 +134,8 @@ class AcmUtilsTest {
     void testValidateAutomationComposition() {
         var automationComposition = getDummyAutomationComposition();
         var toscaServiceTemplate = getDummyToscaServiceTemplate();
-        var result = AcmUtils.validateAutomationComposition(automationComposition, toscaServiceTemplate);
+        var result = AcmUtils.validateAutomationComposition(automationComposition,
+                toscaServiceTemplate, AUTOMATION_COMPOSITION_NODE_TYPE);
         assertNotNull(result);
         assertFalse(result.isValid());
 
@@ -135,11 +144,13 @@ class AcmUtilsTest {
         nodeTemplate.setType("org.onap.policy.clamp.acm.AutomationComposition");
         nodeTemplates.put("org.onap.dcae.acm.DCAEMicroserviceAutomationCompositionParticipant", nodeTemplate);
         toscaServiceTemplate.getToscaTopologyTemplate().setNodeTemplates(nodeTemplates);
-        result = AcmUtils.validateAutomationComposition(automationComposition, toscaServiceTemplate);
+        result = AcmUtils.validateAutomationComposition(automationComposition, toscaServiceTemplate,
+                AUTOMATION_COMPOSITION_NODE_TYPE);
         assertFalse(result.isValid());
 
         var doc = new DocToscaServiceTemplate(CommonTestData.getToscaServiceTemplate(TOSCA_TEMPLATE_YAML));
-        result = AcmUtils.validateAutomationComposition(automationComposition, doc.toAuthorative());
+        result = AcmUtils.validateAutomationComposition(automationComposition, doc.toAuthorative(),
+                AUTOMATION_COMPOSITION_NODE_TYPE);
         assertFalse(result.isValid());
     }
 

@@ -23,6 +23,7 @@ package org.onap.policy.clamp.acm.runtime.supervision;
 
 import io.micrometer.core.annotation.Timed;
 import lombok.AllArgsConstructor;
+import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
@@ -42,6 +43,7 @@ public class SupervisionHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(SupervisionHandler.class);
 
     private final AcDefinitionProvider acDefinitionProvider;
+    private final AcRuntimeParameterGroup acRuntimeParameterGroup;
 
     /**
      * Handle a ParticipantPrimeAck message from a participant.
@@ -101,7 +103,8 @@ public class SupervisionHandler {
         if (!restarting) {
             acDefinition.setRestarting(null);
         }
-        acDefinitionProvider.updateAcDefinition(acDefinition);
+        acDefinitionProvider.updateAcDefinition(acDefinition,
+                acRuntimeParameterGroup.getAcmParameters().getToscaCompositionName());
     }
 
 }

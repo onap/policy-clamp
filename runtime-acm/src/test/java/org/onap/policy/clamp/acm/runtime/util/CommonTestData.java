@@ -24,6 +24,7 @@ import jakarta.ws.rs.core.Response.Status;
 import java.util.List;
 import java.util.UUID;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
+import org.onap.policy.clamp.acm.runtime.main.parameters.AcmParameters;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
@@ -44,6 +45,9 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 public class CommonTestData {
     private static final Coder CODER = new StandardCoder();
     public static final String TOSCA_SERVICE_TEMPLATE_YAML = "clamp/acm/pmsh/funtional-pmsh-usecase.yaml";
+
+    public static final String TOSCA_COMP_NAME = "org.onap.policy.clamp.acm.AutomationComposition";
+    public static final String TOSCA_ELEMENT_NAME = "org.onap.policy.clamp.acm.AutomationCompositionElement";
 
     /**
      * Gets the standard automation composition parameters.
@@ -127,7 +131,8 @@ public class CommonTestData {
         acDefinition.setCompositionId(UUID.randomUUID());
         acDefinition.setState(state);
         acDefinition.setServiceTemplate(serviceTemplate);
-        var acElements = AcmUtils.extractAcElementsFromServiceTemplate(serviceTemplate);
+        var acElements = AcmUtils
+                .extractAcElementsFromServiceTemplate(serviceTemplate, TOSCA_ELEMENT_NAME);
         acDefinition.setElementStateMap(AcmUtils.createElementStateMap(acElements, state));
         if (AcTypeState.PRIMED.equals(state)) {
             for (var element : acDefinition.getElementStateMap().values()) {
@@ -135,6 +140,20 @@ public class CommonTestData {
             }
         }
         return acDefinition;
+    }
+
+    /**
+     * Create a new Test parameter group.
+     *
+     * @return a new AutomationCompositionDefinition
+     */
+    public static AcRuntimeParameterGroup getTestParamaterGroup() {
+        var acRuntimeParameterGroup = new AcRuntimeParameterGroup();
+        AcmParameters acmParameters = new AcmParameters();
+        acmParameters.setToscaCompositionName(TOSCA_COMP_NAME);
+        acmParameters.setToscaElementName(TOSCA_ELEMENT_NAME);
+        acRuntimeParameterGroup.setAcmParameters(acmParameters);
+        return acRuntimeParameterGroup;
     }
 
 }

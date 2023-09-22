@@ -40,5 +40,10 @@
                 "topicCommInfrastructure": "dmaap"
             }
         ]
+    },
+    "acmParameters": {
+        "toscaElementName": "org.onap.policy.clamp.acm.AutomationCompositionElement",
+        "toscaCompositionName": "org.onap.policy.clamp.acm.AutomationComposition"
     }
+
 }

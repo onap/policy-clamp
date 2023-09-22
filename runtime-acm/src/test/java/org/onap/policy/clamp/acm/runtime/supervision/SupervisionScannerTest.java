@@ -23,6 +23,7 @@ package org.onap.policy.clamp.acm.runtime.supervision;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -80,7 +81,8 @@ class SupervisionScannerTest {
                 mock(AutomationCompositionStateChangePublisher.class), mock(AutomationCompositionDeployPublisher.class),
                 acRuntimeParameterGroup);
         supervisionScanner.run();
-        verify(acDefinitionProvider, times(0)).updateAcDefinition(any(AutomationCompositionDefinition.class));
+        verify(acDefinitionProvider, times(0)).updateAcDefinition(any(AutomationCompositionDefinition.class),
+                eq(CommonTestData.TOSCA_COMP_NAME));
     }
 
     @Test
@@ -91,14 +93,16 @@ class SupervisionScannerTest {
                 mock(AutomationCompositionStateChangePublisher.class), mock(AutomationCompositionDeployPublisher.class),
                 acRuntimeParameterGroup);
         supervisionScanner.run();
-        verify(acDefinitionProvider, times(0)).updateAcDefinition(any(AutomationCompositionDefinition.class));
+        verify(acDefinitionProvider, times(0)).updateAcDefinition(any(AutomationCompositionDefinition.class),
+                eq(CommonTestData.TOSCA_COMP_NAME));
 
         acRuntimeParameterGroup.getParticipantParameters().setMaxStatusWaitMs(-1);
         supervisionScanner = new SupervisionScanner(mock(AutomationCompositionProvider.class), acDefinitionProvider,
                 mock(AutomationCompositionStateChangePublisher.class), mock(AutomationCompositionDeployPublisher.class),
                 acRuntimeParameterGroup);
         supervisionScanner.run();
-        verify(acDefinitionProvider).updateAcDefinition(any(AutomationCompositionDefinition.class));
+        verify(acDefinitionProvider).updateAcDefinition(any(AutomationCompositionDefinition.class),
+                eq(CommonTestData.TOSCA_COMP_NAME));
     }
 
     @Test

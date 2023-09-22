@@ -35,6 +35,7 @@ import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
+import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
 import org.onap.policy.clamp.acm.runtime.participants.AcmParticipantProvider;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionAcHandler;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionHandler;
@@ -66,6 +67,8 @@ class SupervisionMessagesTest {
     private static final String NOT_ACTIVE = "Not Active!";
     private static final CommInfrastructure INFRA = CommInfrastructure.NOOP;
     private static final String TOPIC = "my-topic";
+
+    private static final String TOSCA_ELEMENT_NAME = "org.onap.policy.clamp.acm.AutomationCompositionElement";
 
     @Test
     void testSendParticipantRegisterAck() {
@@ -146,7 +149,7 @@ class SupervisionMessagesTest {
     @Test
     void testParticipantPrimePublisherDecommissioning() {
         var publisher = new ParticipantPrimePublisher(mock(ParticipantProvider.class),
-                mock(AcmParticipantProvider.class));
+                mock(AcmParticipantProvider.class), mock(AcRuntimeParameterGroup.class));
         var topicSink = mock(TopicSink.class);
         publisher.active(List.of(topicSink));
         publisher.sendDepriming(UUID.randomUUID());
@@ -167,7 +170,8 @@ class SupervisionMessagesTest {
                 participantId);
         var participantProvider = mock(ParticipantProvider.class);
         when(participantProvider.getSupportedElementMap()).thenReturn(supportedElementMap);
-        var publisher = new ParticipantPrimePublisher(participantProvider, mock(AcmParticipantProvider.class));
+        var publisher = new ParticipantPrimePublisher(participantProvider, mock(AcmParticipantProvider.class),
+                CommonTestData.getTestParamaterGroup());
         var topicSink = mock(TopicSink.class);
         publisher.active(List.of(topicSink));
         var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
@@ -176,7 +180,8 @@ class SupervisionMessagesTest {
         var acmDefinition = new AutomationCompositionDefinition();
         acmDefinition.setCompositionId(UUID.randomUUID());
         acmDefinition.setServiceTemplate(serviceTemplate);
-        var acElements = AcmUtils.extractAcElementsFromServiceTemplate(serviceTemplate);
+        var acElements = AcmUtils
+                .extractAcElementsFromServiceTemplate(serviceTemplate, TOSCA_ELEMENT_NAME);
         acmDefinition.setElementStateMap(AcmUtils.createElementStateMap(acElements, AcTypeState.COMMISSIONED));
         var preparation = publisher.prepareParticipantPriming(acmDefinition);
         publisher.sendPriming(preparation, acmDefinition.getCompositionId(), null);
@@ -223,7 +228,7 @@ class SupervisionMessagesTest {
 
     @Test
     void testParticipantRestartPublisher() {
-        var publisher = new ParticipantRestartPublisher();
+        var publisher = new ParticipantRestartPublisher(CommonTestData.getTestParamaterGroup());
         var topicSink = mock(TopicSink.class);
         publisher.active(List.of(topicSink));
 
@@ -233,7 +238,8 @@ class SupervisionMessagesTest {
         var acmDefinition = new AutomationCompositionDefinition();
         acmDefinition.setCompositionId(UUID.randomUUID());
         acmDefinition.setServiceTemplate(serviceTemplate);
-        var acElements = AcmUtils.extractAcElementsFromServiceTemplate(serviceTemplate);
+        var acElements = AcmUtils
+                .extractAcElementsFromServiceTemplate(serviceTemplate, "");
         acmDefinition.setElementStateMap(AcmUtils.createElementStateMap(acElements, AcTypeState.PRIMED));
 
         var automationComposition =

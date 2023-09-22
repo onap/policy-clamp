@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
+import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
 import org.onap.policy.clamp.acm.runtime.participants.AcmParticipantProvider;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
@@ -53,6 +54,7 @@ public class ParticipantPrimePublisher extends AbstractParticipantPublisher<Part
 
     private final ParticipantProvider participantProvider;
     private final AcmParticipantProvider acmParticipantProvider;
+    private final AcRuntimeParameterGroup acRuntimeParameterGroup;
 
     /**
      * Send ParticipantPrime to Participant
@@ -83,7 +85,8 @@ public class ParticipantPrimePublisher extends AbstractParticipantPublisher<Part
      */
     public List<ParticipantDefinition> prepareParticipantPriming(AutomationCompositionDefinition acmDefinition) {
         acmDefinition.setState(AcTypeState.PRIMING);
-        var acElements = AcmUtils.extractAcElementsFromServiceTemplate(acmDefinition.getServiceTemplate());
+        var acElements = AcmUtils.extractAcElementsFromServiceTemplate(acmDefinition.getServiceTemplate(),
+                acRuntimeParameterGroup.getAcmParameters().getToscaElementName());
         Map<ToscaConceptIdentifier, UUID> supportedElementMap = new HashMap<>();
         var participantIds = new HashSet<UUID>();
         if (AcTypeState.PRIMED.equals(acmDefinition.getState())) {

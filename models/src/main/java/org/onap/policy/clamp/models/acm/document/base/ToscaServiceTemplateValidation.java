@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022 Nordix Foundation.
+ *  Copyright (C) 2022-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,6 @@ import lombok.NonNull;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaEntity;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplate;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaTopologyTemplate;
-import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.common.parameters.ValidationStatus;
 import org.onap.policy.models.base.Validated;
@@ -39,8 +38,6 @@ import org.onap.policy.models.base.Validated;
 public final class ToscaServiceTemplateValidation {
 
     private static final String ROOT_KEY_NAME_SUFFIX = ".Root";
-    private static final String AC_NODE_TYPE_NOT_PRESENT =
-            "NodeTemplate with type " + AcmUtils.AUTOMATION_COMPOSITION_NODE_TYPE + " must exist!";
 
     /**
      * validate a serviceTemplate.
@@ -48,7 +45,8 @@ public final class ToscaServiceTemplateValidation {
      * @param result the result
      * @param serviceTemplate the serviceTemplate to validate
      */
-    public static void validate(final BeanValidationResult result, DocToscaServiceTemplate serviceTemplate) {
+    public static void validate(final BeanValidationResult result, DocToscaServiceTemplate serviceTemplate,
+                                String toscaCompositionName) {
 
         var references = DocUtil.getToscaReferences(serviceTemplate);
 
@@ -66,7 +64,7 @@ public final class ToscaServiceTemplateValidation {
             }
         }
 
-        validateToscaTopologyTemplate(result, serviceTemplate.getToscaTopologyTemplate());
+        validateToscaTopologyTemplate(result, serviceTemplate.getToscaTopologyTemplate(), toscaCompositionName);
 
         if (serviceTemplate.getToscaTopologyTemplate() != null) {
             validEntityTypeAncestors(serviceTemplate.getToscaTopologyTemplate().getNodeTemplates(),
@@ -98,21 +96,24 @@ public final class ToscaServiceTemplateValidation {
      * @param topologyTemplate the ToscaServiceTemplate
      */
     public static void validateToscaTopologyTemplate(BeanValidationResult result,
-            DocToscaTopologyTemplate topologyTemplate) {
+            DocToscaTopologyTemplate topologyTemplate, String toscaCompositionName) {
+        String acNodeTypeNotPresent =
+                "NodeTemplate with type " + toscaCompositionName + " must exist!";
+
         if (topologyTemplate != null && topologyTemplate.getNodeTemplates() != null) {
             var nodeTemplates = topologyTemplate.getNodeTemplates();
             var acNumber = nodeTemplates.values().stream().filter(
-                    nodeTemplate -> AcmUtils.AUTOMATION_COMPOSITION_NODE_TYPE.equals(nodeTemplate.getType()))
+                    nodeTemplate -> toscaCompositionName.equals(nodeTemplate.getType()))
                     .count();
             if (acNumber == 0) {
-                result.addResult("TopologyTemplate", nodeTemplates, ValidationStatus.INVALID, AC_NODE_TYPE_NOT_PRESENT);
+                result.addResult("TopologyTemplate", nodeTemplates, ValidationStatus.INVALID, acNodeTypeNotPresent);
             }
             if (acNumber > 1) {
                 result.addResult("TopologyTemplate", nodeTemplates, ValidationStatus.INVALID, "NodeTemplate with type "
-                        + AcmUtils.AUTOMATION_COMPOSITION_NODE_TYPE + " not allowed to be more than one!");
+                        + toscaCompositionName + " not allowed to be more than one!");
             }
         } else {
-            result.addResult("TopologyTemplate", topologyTemplate, ValidationStatus.INVALID, AC_NODE_TYPE_NOT_PRESENT);
+            result.addResult("TopologyTemplate", topologyTemplate, ValidationStatus.INVALID, acNodeTypeNotPresent);
         }
     }
 

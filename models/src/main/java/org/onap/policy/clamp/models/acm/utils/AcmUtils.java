@@ -65,10 +65,6 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class AcmUtils {
-
-    public static final String AUTOMATION_COMPOSITION_ELEMENT =
-            "org.onap.policy.clamp.acm.AutomationCompositionElement";
-    public static final String AUTOMATION_COMPOSITION_NODE_TYPE = "org.onap.policy.clamp.acm.AutomationComposition";
     public static final String ENTRY = "entry ";
 
     /**
@@ -99,15 +95,15 @@ public final class AcmUtils {
      * @return true if the NodeTemplate is an AutomationCompositionElement
      */
     public static boolean checkIfNodeTemplateIsAutomationCompositionElement(ToscaNodeTemplate nodeTemplate,
-            ToscaServiceTemplate toscaServiceTemplate) {
-        if (nodeTemplate.getType().contains(AUTOMATION_COMPOSITION_ELEMENT)) {
+            ToscaServiceTemplate toscaServiceTemplate, String toscaElementName) {
+        if (nodeTemplate.getType().contains(toscaElementName)) {
             return true;
         } else {
             var nodeType = toscaServiceTemplate.getNodeTypes().get(nodeTemplate.getType());
             if (nodeType != null) {
                 var derivedFrom = nodeType.getDerivedFrom();
                 if (derivedFrom != null) {
-                    return derivedFrom.contains(AUTOMATION_COMPOSITION_ELEMENT);
+                    return derivedFrom.contains(toscaElementName);
                 }
             }
         }
@@ -167,10 +163,10 @@ public final class AcmUtils {
      * @return the list of Entry of AutomationCompositionElement
      */
     public static List<Entry<String, ToscaNodeTemplate>> extractAcElementsFromServiceTemplate(
-            ToscaServiceTemplate serviceTemplate) {
+            ToscaServiceTemplate serviceTemplate, String toscaElementName) {
         return serviceTemplate.getToscaTopologyTemplate().getNodeTemplates().entrySet().stream().filter(
                 nodeTemplateEntry -> checkIfNodeTemplateIsAutomationCompositionElement(nodeTemplateEntry.getValue(),
-                        serviceTemplate))
+                        serviceTemplate, toscaElementName))
                 .toList();
     }
 
@@ -203,13 +199,13 @@ public final class AcmUtils {
      * @return the result of validation
      */
     public static BeanValidationResult validateAutomationComposition(AutomationComposition automationComposition,
-            ToscaServiceTemplate serviceTemplate) {
+            ToscaServiceTemplate serviceTemplate, String toscaCompositionName) {
         var result = new BeanValidationResult(ENTRY + automationComposition.getName(), automationComposition);
 
         var map = getMapToscaNodeTemplates(serviceTemplate);
 
         var nodeTemplateGet = map.values().stream()
-                .filter(nodeTemplate -> AUTOMATION_COMPOSITION_NODE_TYPE.equals(nodeTemplate.getType())).findFirst();
+                .filter(nodeTemplate -> toscaCompositionName.equals(nodeTemplate.getType())).findFirst();
 
         if (nodeTemplateGet.isEmpty()) {
             result.addResult(new ObjectValidationResult("ToscaServiceTemplate", serviceTemplate.getName(),
