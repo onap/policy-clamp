@@ -1,5 +1,8 @@
 {
   "tosca_definitions_version": "tosca_simple_yaml_1_3",
+  "metadata": {
+    "compositionId": "562ed027-2689-481a-b3a5-e284b1fbc33f"
+  },
   "data_types": {
     "onap.datatypes.ToscaConceptIdentifier": {
       "derived_from": "tosca.datatypes.Root",

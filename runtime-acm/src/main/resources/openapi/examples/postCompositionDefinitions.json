@@ -99,21 +99,6 @@
           },
           "description": "Specifies the organization that provides the automation composition element"
         },
-        "participant_id": {
-          "type": "onap.datatypes.ToscaConceptIdentifier",
-          "required": true,
-          "metadata": {
-            "common": true
-          }
-        },
-        "participantType": {
-          "type": "onap.datatypes.ToscaConceptIdentifier",
-          "required": true,
-          "metadata": {
-            "common": true
-          },
-          "description": "The identity of the participant type that hosts this type of Automation Composition Element"
-        },
         "startPhase": {
           "type": "integer",
           "required": false,
@@ -140,48 +125,6 @@
             "common": true
           },
           "description": "The maximum time in seconds to wait for a state chage from uninitialized to passive"
-        },
-        "passiveToRunningTimeout": {
-          "type": "integer",
-          "required": false,
-          "constraints": [
-            {
-              "greater_or_equal": 0
-            }
-          ],
-          "default": 60,
-          "metadata": {
-            "common": true
-          },
-          "description": "The maximum time in seconds to wait for a state chage from passive to running"
-        },
-        "runningToPassiveTimeout": {
-          "type": "integer",
-          "required": false,
-          "constraints": [
-            {
-              "greater_or_equal": 0
-            }
-          ],
-          "default": 60,
-          "metadata": {
-            "common": true
-          },
-          "description": "The maximum time in seconds to wait for a state chage from running to passive"
-        },
-        "passiveToUninitializedTimeout": {
-          "type": "integer",
-          "required": false,
-          "constraints": [
-            {
-              "greater_or_equal": 0
-            }
-          ],
-          "default": 60,
-          "metadata": {
-            "common": true
-          },
-          "description": "The maximum time in seconds to wait for a state chage from passive to uninitialized"
         }
       }
     },
@@ -211,7 +154,7 @@
       }
     },
     "org.onap.policy.clamp.acm.HttpAutomationCompositionElement": {
-      "version": "1.0.1",
+      "version": "1.0.0",
       "derived_from": "org.onap.policy.clamp.acm.AutomationCompositionElement",
       "properties": {
         "baseUrl": {
@@ -253,18 +196,10 @@
       "onap.policy.clamp.ac.element.Http_StarterAutomationCompositionElement": {
         "version": "1.2.3",
         "type": "org.onap.policy.clamp.acm.HttpAutomationCompositionElement",
-        "type_version": "1.0.1",
+        "type_version": "1.0.0",
         "description": "Automation composition element for the http requests of AC Element Starter microservice",
         "properties": {
           "provider": "ONAP",
-          "participant_id": {
-            "name": "HttpParticipant0",
-            "version": "1.0.0"
-          },
-          "participantType": {
-            "name": "org.onap.policy.clamp.acm.HttpParticipant",
-            "version": "2.3.4"
-          },
           "uninitializedToPassiveTimeout": 180,
           "startPhase": 0,
           "baseUrl": "http://acelement-starter:8084",
@@ -297,18 +232,10 @@
       "onap.policy.clamp.ac.element.Http_BridgeAutomationCompositionElement": {
         "version": "1.2.3",
         "type": "org.onap.policy.clamp.acm.HttpAutomationCompositionElement",
-        "type_version": "1.0.1",
+        "type_version": "1.0.0",
         "description": "Automation composition element for the http requests of AC Element Bridge microservice",
         "properties": {
           "provider": "ONAP",
-          "participant_id": {
-            "name": "HttpParticipant0",
-            "version": "1.0.0"
-          },
-          "participantType": {
-            "name": "org.onap.policy.clamp.acm.HttpParticipant",
-            "version": "2.3.4"
-          },
           "uninitializedToPassiveTimeout": 180,
           "startPhase": 0,
           "baseUrl": "http://acelement-bridge:8084",
@@ -341,18 +268,10 @@
       "onap.policy.clamp.ac.element.Http_SinkAutomationCompositionElement": {
         "version": "1.2.3",
         "type": "org.onap.policy.clamp.acm.HttpAutomationCompositionElement",
-        "type_version": "1.0.1",
+        "type_version": "1.0.0",
         "description": "Automation composition element for the http requests of AC Element Sink microservice",
         "properties": {
           "provider": "ONAP",
-          "participant_id": {
-            "name": "HttpParticipant0",
-            "version": "1.0.0"
-          },
-          "participantType": {
-            "name": "org.onap.policy.clamp.acm.HttpParticipant",
-            "version": "2.3.4"
-          },
           "uninitializedToPassiveTimeout": 180,
           "startPhase": 0,
           "baseUrl": "http://acelement-sink:8084",

@@ -10,14 +10,6 @@
                 "name": "onap.policy.clamp.ac.element.Http_StarterAutomationCompositionElement",
                 "version": "1.2.3"
             },
-            "participantId": {
-                "name": "HttpParticipant0",
-                "version": "1.0.0"
-            },
-            "participantType": {
-                "name": "org.onap.policy.clamp.acm.HttpParticipant",
-                "version": "2.3.4"
-            },
             "description": "Starter Automation Composition Element for the Demo",
             "properties": {
                 "baseUrl": "http://10.101.0.249:30800",
@@ -53,14 +45,6 @@
                 "name": "onap.policy.clamp.ac.element.Http_BridgeAutomationCompositionElement",
                 "version": "1.2.3"
             },
-            "participantId": {
-                "name": "HttpParticipant0",
-                "version": "1.0.0"
-            },
-            "participantType": {
-                "name": "org.onap.policy.clamp.acm.HttpParticipant",
-                "version": "2.3.4"
-            },
             "description": "Bridge Automation Composition Element for the Demo",
             "properties": {
                 "baseUrl": "http://10.101.0.249:30801",
@@ -95,14 +79,6 @@
             "definition": {
                 "name": "onap.policy.clamp.ac.element.Http_SinkAutomationCompositionElement",
                 "version": "1.2.3"
-            },
-            "participantId": {
-                "name": "HttpParticipant0",
-                "version": "1.0.0"
-            },
-            "participantType": {
-                "name": "org.onap.policy.clamp.acm.HttpParticipant",
-                "version": "2.3.4"
             },
             "description": "Sink Automation Composition Element for the Demo",
             "properties": {

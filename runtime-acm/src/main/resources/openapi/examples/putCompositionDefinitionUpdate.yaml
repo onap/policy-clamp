@@ -1,5 +1,5 @@
 # ============LICENSE_START=======================================================
-# Copyright (C) 2022 Nordix Foundation.
+# Copyright (C) 2022-2023 Nordix Foundation.
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@
 # SPDX-License-Identifier: Apache-2.0
 # ============LICENSE_END=========================================================
 tosca_definitions_version: tosca_simple_yaml_1_3
+metadata:
+  compositionId: 562ed027-2689-481a-b3a5-e284b1fbc33f
 data_types:
   onap.datatypes.ToscaConceptIdentifier:
     derived_from: tosca.datatypes.Root
@@ -92,17 +94,6 @@ node_types:
         metadata:
           common: true
         description: Specifies the organization that provides the automation composition element
-      participant_id:
-        type: onap.datatypes.ToscaConceptIdentifier
-        required: true
-        metadata:
-          common: true
-      participantType:
-        type: onap.datatypes.ToscaConceptIdentifier
-        required: true
-        metadata:
-          common: true
-        description: The identity of the participant type that hosts this type of Automation Composition Element
       startPhase:
         type: integer
         required: false
@@ -123,33 +114,6 @@ node_types:
         metadata:
           common: true
         description: The maximum time in seconds to wait for a state chage from uninitialized to passive
-      passiveToRunningTimeout:
-        type: integer
-        required: false
-        constraints:
-          - greater_or_equal: 0
-        default: 60
-        metadata:
-          common: true
-        description: The maximum time in seconds to wait for a state chage from passive to running
-      runningToPassiveTimeout:
-        type: integer
-        required: false
-        constraints:
-          - greater_or_equal: 0
-        default: 60
-        metadata:
-          common: true
-        description: The maximum time in seconds to wait for a state chage from running to passive
-      passiveToUninitializedTimeout:
-        type: integer
-        required: false
-        constraints:
-          - greater_or_equal: 0
-        default: 60
-        metadata:
-          common: true
-        description: The maximum time in seconds to wait for a state chage from passive to uninitialized
   org.onap.policy.clamp.acm.AutomationComposition:
     version: 1.0.2
     derived_from: tosca.nodetypes.Root
@@ -207,12 +171,6 @@ topology_template:
       description: Automation composition element for the http requests of AC Element Starter microservice
       properties:
         provider: ONAP
-        participant_id:
-          name: HttpParticipant0
-          version: 1.0.0
-        participantType:
-          name: org.onap.policy.clamp.acm.HttpParticipant
-          version: 2.3.4
         uninitializedToPassiveTimeout: 180
         startPhase: 0
         baseUrl: http://acelement-starter:8084
@@ -239,12 +197,6 @@ topology_template:
       description: Automation composition element for the http requests of AC Element Bridge microservice
       properties:
         provider: ONAP
-        participant_id:
-          name: HttpParticipant0
-          version: 1.0.0
-        participantType:
-          name: org.onap.policy.clamp.acm.HttpParticipant
-          version: 2.3.4
         uninitializedToPassiveTimeout: 180
         startPhase: 0
         baseUrl: http://acelement-bridge:8084
@@ -271,12 +223,6 @@ topology_template:
       description: Automation composition element for the http requests of AC Element Sink microservice
       properties:
         provider: ONAP
-        participant_id:
-          name: HttpParticipant0
-          version: 1.0.0
-        participantType:
-          name: org.onap.policy.clamp.acm.HttpParticipant
-          version: 2.3.4
         uninitializedToPassiveTimeout: 180
         startPhase: 0
         baseUrl: http://acelement-sink:8084

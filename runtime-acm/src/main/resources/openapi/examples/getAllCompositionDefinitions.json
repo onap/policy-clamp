@@ -131,25 +131,6 @@
                                 "common": "true"
                             }
                         },
-                        "participant_id": {
-                            "name": "participant_id",
-                            "type": "onap.datatypes.ToscaConceptIdentifier",
-                            "type_version": "0.0.0",
-                            "required": true,
-                            "metadata": {
-                                "common": "true"
-                            }
-                        },
-                        "participantType": {
-                            "name": "participantType",
-                            "type": "onap.datatypes.ToscaConceptIdentifier",
-                            "type_version": "0.0.0",
-                            "description": "The identity of the participant type that hosts this type of Automation Composition Element",
-                            "required": true,
-                            "metadata": {
-                                "common": "true"
-                            }
-                        },
                         "startPhase": {
                             "name": "startPhase",
                             "type": "integer",
@@ -170,54 +151,6 @@
                             "type": "integer",
                             "type_version": "0.0.0",
                             "description": "The maximum time in seconds to wait for a state chage from uninitialized to passive",
-                            "default": 60.0,
-                            "required": false,
-                            "constraints": [
-                                {
-                                    "greater_or_equal": "0"
-                                }
-                            ],
-                            "metadata": {
-                                "common": "true"
-                            }
-                        },
-                        "passiveToRunningTimeout": {
-                            "name": "passiveToRunningTimeout",
-                            "type": "integer",
-                            "type_version": "0.0.0",
-                            "description": "The maximum time in seconds to wait for a state chage from passive to running",
-                            "default": 60.0,
-                            "required": false,
-                            "constraints": [
-                                {
-                                    "greater_or_equal": "0"
-                                }
-                            ],
-                            "metadata": {
-                                "common": "true"
-                            }
-                        },
-                        "runningToPassiveTimeout": {
-                            "name": "runningToPassiveTimeout",
-                            "type": "integer",
-                            "type_version": "0.0.0",
-                            "description": "The maximum time in seconds to wait for a state chage from running to passive",
-                            "default": 60.0,
-                            "required": false,
-                            "constraints": [
-                                {
-                                    "greater_or_equal": "0"
-                                }
-                            ],
-                            "metadata": {
-                                "common": "true"
-                            }
-                        },
-                        "passiveToUninitializedTimeout": {
-                            "name": "passiveToUninitializedTimeout",
-                            "type": "integer",
-                            "type_version": "0.0.0",
-                            "description": "The maximum time in seconds to wait for a state chage from passive to uninitialized",
                             "default": 60.0,
                             "required": false,
                             "constraints": [
@@ -300,7 +233,7 @@
                         }
                     },
                     "name": "org.onap.policy.clamp.acm.HttpAutomationCompositionElement",
-                    "version": "1.0.1",
+                    "version": "1.0.0",
                     "derived_from": "org.onap.policy.clamp.acm.AutomationCompositionElement",
                     "metadata": {}
                 }
@@ -320,17 +253,9 @@
                     },
                     "onap.policy.clamp.ac.element.Http_StarterAutomationCompositionElement": {
                         "type": "org.onap.policy.clamp.acm.HttpAutomationCompositionElement",
-                        "type_version": "1.0.1",
+                        "type_version": "1.0.0",
                         "properties": {
                             "provider": "ONAP",
-                            "participant_id": {
-                                "name": "HttpParticipant0",
-                                "version": "1.0.0"
-                            },
-                            "participantType": {
-                                "name": "org.onap.policy.clamp.acm.HttpParticipant",
-                                "version": "2.3.4"
-                            },
                             "uninitializedToPassiveTimeout": 180,
                             "startPhase": 0,
                             "baseUrl": "http://acelement-starter:8084",
@@ -366,17 +291,9 @@
                     },
                     "onap.policy.clamp.ac.element.Http_BridgeAutomationCompositionElement": {
                         "type": "org.onap.policy.clamp.acm.HttpAutomationCompositionElement",
-                        "type_version": "1.0.1",
+                        "type_version": "1.0.0",
                         "properties": {
                             "provider": "ONAP",
-                            "participant_id": {
-                                "name": "HttpParticipant0",
-                                "version": "1.0.0"
-                            },
-                            "participantType": {
-                                "name": "org.onap.policy.clamp.acm.HttpParticipant",
-                                "version": "2.3.4"
-                            },
                             "uninitializedToPassiveTimeout": 180,
                             "startPhase": 0,
                             "baseUrl": "http://acelement-bridge:8084",
@@ -412,17 +329,9 @@
                     },
                     "onap.policy.clamp.ac.element.Http_SinkAutomationCompositionElement": {
                         "type": "org.onap.policy.clamp.acm.HttpAutomationCompositionElement",
-                        "type_version": "1.0.1",
+                        "type_version": "1.0.0",
                         "properties": {
                             "provider": "ONAP",
-                            "participant_id": {
-                                "name": "HttpParticipant0",
-                                "version": "1.0.0"
-                            },
-                            "participantType": {
-                                "name": "org.onap.policy.clamp.acm.HttpParticipant",
-                                "version": "2.3.4"
-                            },
                             "uninitializedToPassiveTimeout": 180,
                             "startPhase": 0,
                             "baseUrl": "http://acelement-sink:8084",
@@ -481,11 +390,14 @@
                         "metadata": {},
                         "description": "Automation composition for Demp"
                     }
-                }
+                },
+                "policies": []
             },
             "name": "tosca",
             "version": "1.0.0",
-            "metadata": {}
+            "metadata": {
+                "compositionId": "562ed027-2689-481a-b3a5-e284b1fbc33f"
+            }
         }
     ]
 }

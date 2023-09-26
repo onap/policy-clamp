@@ -1,88 +1,202 @@
 [
-  {
-    "participant": {
-      "participantId": "101c62b3-8918-41b9-a747-d21eb79c6c03",
-      "participantState": "ON_LINE",
-      "participantSupportedElementTypes": {
-        "3012010d-e59e-4dde-bab1-3ee544e49b6d": {
-          "id": "3012010d-e59e-4dde-bab1-3ee544e49b6d",
-          "typeName": "org.onap.policy.clamp.acm.AutomationCompositionElement",
-          "typeVersion": "1.0.1"
+    {
+        "participant": {
+            "participantId": "101c62b3-8918-41b9-a747-d21eb79c6c91",
+            "participantState": "ON_LINE",
+            "participantSupportedElementTypes": {
+                "14c6d6d0-0fa2-4a7f-927a-afdab75e92c4": {
+                    "id": "14c6d6d0-0fa2-4a7f-927a-afdab75e92c4",
+                    "typeName": "org.onap.policy.clamp.acm.HttpAutomationCompositionElement",
+                    "typeVersion": "1.0.0"
+                }
+            }
         },
-        "8d9e947e-c444-471c-9420-29f1c6584f8c": {
-          "id": "8d9e947e-c444-471c-9420-29f1c6584f8c",
-          "typeName": "org.onap.policy.clamp.acm.PolicyAutomationCompositionElement",
-          "typeVersion": "1.0.1"
+        "acNodeTemplateStateDefinitionMap": {
+            "d514b576-c091-4a2c-b797-99204e6dc620": {
+                "nodeTemplateStateId": "d514b576-c091-4a2c-b797-99204e6dc620",
+                "participantId": "101c62b3-8918-41b9-a747-d21eb79c6c91",
+                "nodeTemplateId": {
+                    "name": "onap.policy.clamp.ac.element.Http_BridgeAutomationCompositionElement",
+                    "version": "1.2.3"
+                },
+                "state": "PRIMED",
+                "message": "Primed",
+                "outProperties": {}
+            },
+            "05773b12-9005-4166-bd03-caec308207e7": {
+                "nodeTemplateStateId": "05773b12-9005-4166-bd03-caec308207e7",
+                "participantId": "101c62b3-8918-41b9-a747-d21eb79c6c91",
+                "nodeTemplateId": {
+                    "name": "onap.policy.clamp.ac.element.Http_StarterAutomationCompositionElement",
+                    "version": "1.2.3"
+                },
+                "state": "PRIMED",
+                "message": "Primed",
+                "outProperties": {}
+            },
+            "363832a4-0281-4a69-8d37-99b4d48c5685": {
+                "nodeTemplateStateId": "363832a4-0281-4a69-8d37-99b4d48c5685",
+                "participantId": "101c62b3-8918-41b9-a747-d21eb79c6c91",
+                "nodeTemplateId": {
+                    "name": "onap.policy.clamp.ac.element.Http_SinkAutomationCompositionElement",
+                    "version": "1.2.3"
+                },
+                "state": "PRIMED",
+                "message": "Primed",
+                "outProperties": {}
+            }
+        },
+        "acElementInstanceMap": {
+            "709c62b3-8918-41b9-a747-d21eb79c6c23": {
+                "id": "709c62b3-8918-41b9-a747-d21eb79c6c23",
+                "definition": {
+                    "name": "onap.policy.clamp.ac.element.Http_SinkAutomationCompositionElement",
+                    "version": "1.2.3"
+                },
+                "participantId": "101c62b3-8918-41b9-a747-d21eb79c6c91",
+                "deployState": "DEPLOYED",
+                "lockState": "LOCKED",
+                "description": "Sink Automation Composition Element for the Demo",
+                "message": "Deployed",
+                "properties": {
+                    "baseUrl": "http://10.101.0.249:30802",
+                    "httpHeaders": {
+                        "Content-Type": "application/json",
+                        "Authorization": "Basic YWNtVXNlcjp6YiFYenRHMzQ="
+                    },
+                    "configurationEntities": [
+                        {
+                            "configurationEntityId": {
+                                "name": "onap.policy.clamp.ac.sink",
+                                "version": "1.0.0"
+                            },
+                            "restSequence": [
+                                {
+                                    "restRequestId": {
+                                        "name": "request3",
+                                        "version": "1.0.1"
+                                    },
+                                    "httpMethod": "POST",
+                                    "path": "/activate",
+                                    "body": "{ \"receiverId\": { \"name\": \"onap.policy.clamp.ac.sink\", \"version\": \"1.0.0\" }, \"timerMs\": 20000, \"elementType\": \"SINK\", \"topicParameterGroup\": { \"server\": \"message-router\", \"listenerTopic\": \"POLICY_UPDATE_MSG\", \"publisherTopic\": \"AC_ELEMENT_MSG\", \"fetchTimeout\": 15000, \"topicCommInfrastructure\": \"dmaap\" } }",
+                                    "expectedResponse": 201
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "outProperties": {}
+            },
+            "709c62b3-8918-41b9-a747-d21eb79c6c25": {
+                "id": "709c62b3-8918-41b9-a747-d21eb79c6c25",
+                "definition": {
+                    "name": "onap.policy.clamp.ac.element.Http_BridgeAutomationCompositionElement",
+                    "version": "1.2.3"
+                },
+                "participantId": "101c62b3-8918-41b9-a747-d21eb79c6c91",
+                "deployState": "DEPLOYED",
+                "lockState": "LOCKED",
+                "description": "Bridge Automation Composition Element for the Demo",
+                "message": "Deployed",
+                "properties": {
+                    "baseUrl": "http://10.101.0.249:30801",
+                    "httpHeaders": {
+                        "Content-Type": "application/json",
+                        "Authorization": "Basic YWNtVXNlcjp6YiFYenRHMzQ="
+                    },
+                    "configurationEntities": [
+                        {
+                            "configurationEntityId": {
+                                "name": "onap.policy.clamp.ac.bridge",
+                                "version": "1.0.0"
+                            },
+                            "restSequence": [
+                                {
+                                    "restRequestId": {
+                                        "name": "request2",
+                                        "version": "1.0.1"
+                                    },
+                                    "httpMethod": "POST",
+                                    "path": "/activate",
+                                    "body": "{ \"receiverId\": { \"name\": \"onap.policy.clamp.ac.bridgetosink\", \"version\": \"1.0.0\" }, \"timerMs\": 20000, \"elementType\": \"BRIDGE\", \"topicParameterGroup\": { \"server\": \"message-router:3904\", \"listenerTopic\": \"POLICY_UPDATE_MSG\", \"publisherTopic\": \"AC_ELEMENT_MSG\", \"fetchTimeout\": 15000, \"topicCommInfrastructure\": \"dmaap\" } }",
+                                    "expectedResponse": 201
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "outProperties": {}
+            },
+            "709c62b3-8918-41b9-a747-d21eb79c6c24": {
+                "id": "709c62b3-8918-41b9-a747-d21eb79c6c24",
+                "definition": {
+                    "name": "onap.policy.clamp.ac.element.Http_StarterAutomationCompositionElement",
+                    "version": "1.2.3"
+                },
+                "participantId": "101c62b3-8918-41b9-a747-d21eb79c6c91",
+                "deployState": "DEPLOYED",
+                "lockState": "LOCKED",
+                "description": "Starter Automation Composition Element for the Demo",
+                "message": "Deployed",
+                "properties": {
+                    "baseUrl": "http://10.101.0.249:30800",
+                    "httpHeaders": {
+                        "Content-Type": "application/json",
+                        "Authorization": "Basic YWNtVXNlcjp6YiFYenRHMzQ="
+                    },
+                    "configurationEntities": [
+                        {
+                            "configurationEntityId": {
+                                "name": "onap.policy.clamp.ac.starter",
+                                "version": "1.0.0"
+                            },
+                            "restSequence": [
+                                {
+                                    "restRequestId": {
+                                        "name": "request1",
+                                        "version": "1.0.1"
+                                    },
+                                    "httpMethod": "POST",
+                                    "path": "/activate",
+                                    "body": "{ \"receiverId\": { \"name\": \"onap.policy.clamp.ac.startertobridge\", \"version\": \"1.0.0\" }, \"timerMs\": 20000, \"elementType\": \"STARTER\", \"topicParameterGroup\": { \"server\": \"message-router:3904\", \"listenerTopic\": \"POLICY_UPDATE_MSG\", \"publisherTopic\": \"AC_ELEMENT_MSG\", \"fetchTimeout\": 15000, \"topicCommInfrastructure\": \"dmaap\" } }",
+                                    "expectedResponse": 201
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "outProperties": {}
+            }
         }
-      }
     },
-    "acNodeTemplateStateDefinitionMap": {
-      "8cf8b401-dfd7-4ffe-90ff-c6543da10789": {
-        "nodeTemplateStateId": "8cf8b401-dfd7-4ffe-90ff-c6543da10789",
-        "participantId": "101c62b3-8918-41b9-a747-d21eb79c6c03",
-        "nodeTemplateId": {
-          "name": "org.onap.domain.pmsh.PMSH_OperationalPolicyAutomationCompositionElement",
-          "version": "1.2.3"
+    {
+        "participant": {
+            "participantId": "101c62b3-8918-41b9-a747-d21eb79c6c92",
+            "participantState": "ON_LINE",
+            "participantSupportedElementTypes": {
+                "110a2081-724a-4a15-b701-ff3c5cf741fa": {
+                    "id": "110a2081-724a-4a15-b701-ff3c5cf741fa",
+                    "typeName": "org.onap.policy.clamp.acm.PolicyAutomationCompositionElement",
+                    "typeVersion": "1.0.0"
+                }
+            }
         },
-        "state": "PRIMED"
-      }
+        "acNodeTemplateStateDefinitionMap": {},
+        "acElementInstanceMap": {}
     },
-    "acElementInstanceMap": {
-      "709c62b3-8918-41b9-a747-d21eb79c6c22": {
-        "id": "709c62b3-8918-41b9-a747-d21eb79c6c22",
-        "definition": {
-          "name": "org.onap.domain.pmsh.PMSH_OperationalPolicyAutomationCompositionElement",
-          "version": "1.2.3"
+    {
+        "participant": {
+            "participantId": "101c62b3-8918-41b9-a747-d21eb79c6c93",
+            "participantState": "ON_LINE",
+            "participantSupportedElementTypes": {
+                "e7eb37db-af7a-4840-a626-d82845c4786f": {
+                    "id": "e7eb37db-af7a-4840-a626-d82845c4786f",
+                    "typeName": "org.onap.policy.clamp.acm.K8SMicroserviceAutomationCompositionElement",
+                    "typeVersion": "1.0.0"
+                }
+            }
         },
-        "participantId": "101c62b3-8918-41b9-a747-d21eb79c6c03",
-        "deployState": "DEPLOYED",
-        "lockState": "UNLOCKED",
-        "description": "Automation composition element for the operational policy for Performance Management Subscription Handling",
-        "properties": {}
-      }
+        "acNodeTemplateStateDefinitionMap": {},
+        "acElementInstanceMap": {}
     }
-  },
-  {
-    "participant": {
-      "participantId": "985d73aa-abba-11ed-afa1-0242ac120002",
-      "participantState": "ON_LINE",
-      "participantSupportedElementTypes": {
-        "cded8a5a-abba-11ed-afa1-0242ac120002": {
-          "id": "cded8a5a-abba-11ed-afa1-0242ac120002",
-          "typeName": "org.onap.policy.clamp.acm.K8SMicroserviceAutomationCompositionElement",
-          "typeVersion": "1.0.1"
-        },
-        "25ac7864-abbb-11ed-afa1-0242ac120002": {
-          "id": "25ac7864-abbb-11ed-afa1-0242ac120002",
-          "typeName": "org.onap.policy.clamp.acm.AutomationCompositionElement",
-          "typeVersion": "1.0.1"
-        }
-      }
-    },
-    "acNodeTemplateStateDefinitionMap": {
-      "34b4d248-abbb-11ed-afa1-0242ac120002": {
-        "nodeTemplateStateId": "34b4d248-abbb-11ed-afa1-0242ac120002",
-        "participantId": "985d73aa-abba-11ed-afa1-0242ac120002",
-        "nodeTemplateId": {
-          "name": "org.onap.domain.pmsh.PMSH_OperationalPolicyAutomationCompositionElement",
-          "version": "1.2.3"
-        },
-        "state": "PRIMED"
-      }
-    },
-    "acElementInstanceMap": {
-      "3dd7a936-abbb-11ed-afa1-0242ac120002": {
-        "id": "3dd7a936-abbb-11ed-afa1-0242ac120002",
-        "definition": {
-          "name": "org.onap.domain.pmsh.PMSH_OperationalPolicyAutomationCompositionElement",
-          "version": "1.2.3"
-        },
-        "participantId": "985d73aa-abba-11ed-afa1-0242ac120002",
-        "deployState": "DEPLOYED",
-        "lockState": "UNLOCKED",
-        "description": "Automation composition element for the operational policy for Performance Management Subscription Handling",
-        "properties": {}
-      }
-    }
-  }
 ]
