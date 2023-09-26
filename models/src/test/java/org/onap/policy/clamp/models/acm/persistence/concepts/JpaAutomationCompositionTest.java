@@ -62,28 +62,28 @@ class JpaAutomationCompositionTest {
         }).hasMessageMatching(NULL_INSTANCE_ID_ERROR);
 
         assertThatThrownBy(() -> {
-            new JpaAutomationComposition(INSTANCE_ID, null, null, new ArrayList<>(),
-                DeployState.UNDEPLOYED, LockState.LOCKED);
+            new JpaAutomationComposition(INSTANCE_ID, null, null, new ArrayList<>(), DeployState.UNDEPLOYED,
+                    LockState.LOCKED);
         }).hasMessageMatching("key" + NULL_TEXT_ERROR);
 
         assertThatThrownBy(() -> {
-            new JpaAutomationComposition(INSTANCE_ID, new PfConceptKey(), null,
-                    new ArrayList<>(), DeployState.UNDEPLOYED, LockState.LOCKED);
+            new JpaAutomationComposition(INSTANCE_ID, new PfConceptKey(), null, new ArrayList<>(),
+                    DeployState.UNDEPLOYED, LockState.LOCKED);
         }).hasMessageMatching("compositionId" + NULL_TEXT_ERROR);
 
         assertThatThrownBy(() -> {
-            new JpaAutomationComposition(INSTANCE_ID, new PfConceptKey(), COMPOSITION_ID.toString(),
-                    null, DeployState.UNDEPLOYED, LockState.LOCKED);
+            new JpaAutomationComposition(INSTANCE_ID, new PfConceptKey(), COMPOSITION_ID.toString(), null,
+                    DeployState.UNDEPLOYED, LockState.LOCKED);
         }).hasMessageMatching("elements" + NULL_TEXT_ERROR);
 
         assertThatThrownBy(() -> {
-            new JpaAutomationComposition(INSTANCE_ID, new PfConceptKey(), COMPOSITION_ID.toString(),
-                new ArrayList<>(), null, LockState.LOCKED);
+            new JpaAutomationComposition(INSTANCE_ID, new PfConceptKey(), COMPOSITION_ID.toString(), new ArrayList<>(),
+                    null, LockState.LOCKED);
         }).hasMessageMatching("deployState" + NULL_TEXT_ERROR);
 
         assertThatThrownBy(() -> {
-            new JpaAutomationComposition(INSTANCE_ID, new PfConceptKey(), COMPOSITION_ID.toString(),
-                new ArrayList<>(), DeployState.UNDEPLOYED, null);
+            new JpaAutomationComposition(INSTANCE_ID, new PfConceptKey(), COMPOSITION_ID.toString(), new ArrayList<>(),
+                    DeployState.UNDEPLOYED, null);
         }).hasMessageMatching("lockState" + NULL_TEXT_ERROR);
 
         assertNotNull(new JpaAutomationComposition());
@@ -93,29 +93,34 @@ class JpaAutomationCompositionTest {
 
     @Test
     void testJpaAutomationComposition() {
-        var testJpaAutomationComposition = createJpaAutomationCompositionInstance();
+        var jpaAutomationComposition = createJpaAutomationCompositionInstance();
 
-        var participant = createAutomationCompositionInstance();
-        assertEquals(participant, testJpaAutomationComposition.toAuthorative());
+        var automationComposition = createAutomationCompositionInstance();
+        assertEquals(automationComposition, jpaAutomationComposition.toAuthorative());
+
+        var target = UUID.randomUUID();
+        jpaAutomationComposition.setCompositionTargetId(target.toString());
+        automationComposition.setCompositionTargetId(target);
+        assertEquals(automationComposition, jpaAutomationComposition.toAuthorative());
 
         assertThatThrownBy(() -> {
-            testJpaAutomationComposition.fromAuthorative(null);
+            jpaAutomationComposition.fromAuthorative(null);
         }).hasMessageMatching("automationComposition is marked .*ull but is null");
 
         assertThatThrownBy(() -> new JpaAutomationComposition((JpaAutomationComposition) null))
                 .isInstanceOf(NullPointerException.class);
 
-        var testJpaAutomationCompositionFa = new JpaAutomationComposition();
-        testJpaAutomationCompositionFa.setInstanceId(null);
-        testJpaAutomationCompositionFa.fromAuthorative(participant);
-        assertEquals(testJpaAutomationComposition, testJpaAutomationCompositionFa);
+        var jpaAutomationCompositionFa = new JpaAutomationComposition();
+        jpaAutomationCompositionFa.setInstanceId(null);
+        jpaAutomationCompositionFa.fromAuthorative(automationComposition);
+        assertEquals(jpaAutomationComposition, jpaAutomationCompositionFa);
 
-        assertEquals("automation-composition", testJpaAutomationComposition.getName());
+        assertEquals("automation-composition", jpaAutomationComposition.getName());
         assertEquals("automation-composition",
                 new JpaAutomationComposition(createAutomationCompositionInstance()).getName());
 
-        var testJpaAutomationComposition2 = new JpaAutomationComposition(testJpaAutomationComposition);
-        assertEquals(testJpaAutomationComposition, testJpaAutomationComposition2);
+        var jpaAutomationComposition2 = new JpaAutomationComposition(jpaAutomationComposition);
+        assertEquals(jpaAutomationComposition, jpaAutomationComposition2);
     }
 
     @Test
@@ -130,60 +135,65 @@ class JpaAutomationCompositionTest {
 
     @Test
     void testJpaAutomationCompositionCompareTo() {
-        var testJpaAutomationComposition = createJpaAutomationCompositionInstance();
+        var jpaAutomationComposition = createJpaAutomationCompositionInstance();
 
-        var otherJpaAutomationComposition = new JpaAutomationComposition(testJpaAutomationComposition);
-        assertEquals(0, testJpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-        assertEquals(-1, testJpaAutomationComposition.compareTo(null));
-        assertEquals(0, testJpaAutomationComposition.compareTo(testJpaAutomationComposition));
-        assertNotEquals(0, testJpaAutomationComposition.compareTo(new DummyJpaAutomationCompositionChild()));
+        var otherJpaAutomationComposition = new JpaAutomationComposition(jpaAutomationComposition);
+        assertEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
+        assertEquals(-1, jpaAutomationComposition.compareTo(null));
+        assertEquals(0, jpaAutomationComposition.compareTo(jpaAutomationComposition));
+        assertNotEquals(0, jpaAutomationComposition.compareTo(new DummyJpaAutomationCompositionChild()));
 
-        testJpaAutomationComposition.setInstanceId("BadValue");
-        assertNotEquals(0, testJpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-        testJpaAutomationComposition.setInstanceId(INSTANCE_ID);
-        assertEquals(0, testJpaAutomationComposition.compareTo(otherJpaAutomationComposition));
+        jpaAutomationComposition.setInstanceId("BadValue");
+        assertNotEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
+        jpaAutomationComposition.setInstanceId(INSTANCE_ID);
+        assertEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
 
-        testJpaAutomationComposition.setCompositionId(UUID.randomUUID().toString());
-        assertNotEquals(0, testJpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-        testJpaAutomationComposition.setCompositionId(COMPOSITION_ID);
-        assertEquals(0, testJpaAutomationComposition.compareTo(otherJpaAutomationComposition));
+        jpaAutomationComposition.setCompositionId(UUID.randomUUID().toString());
+        assertNotEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
+        jpaAutomationComposition.setCompositionId(COMPOSITION_ID);
+        assertEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
 
-        testJpaAutomationComposition.setName("BadValue");
-        assertNotEquals(0, testJpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-        testJpaAutomationComposition.setName("automation-composition");
-        assertEquals(0, testJpaAutomationComposition.compareTo(otherJpaAutomationComposition));
+        jpaAutomationComposition.setCompositionTargetId(UUID.randomUUID().toString());
+        assertNotEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
+        jpaAutomationComposition.setCompositionTargetId(null);
+        assertEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
 
-        testJpaAutomationComposition.setVersion("0.0.0");
-        assertNotEquals(0, testJpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-        testJpaAutomationComposition.setVersion("0.0.1");
-        assertEquals(0, testJpaAutomationComposition.compareTo(otherJpaAutomationComposition));
+        jpaAutomationComposition.setName("BadValue");
+        assertNotEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
+        jpaAutomationComposition.setName("automation-composition");
+        assertEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
 
-        testJpaAutomationComposition.setDeployState(DeployState.DEPLOYED);
-        assertNotEquals(0, testJpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-        testJpaAutomationComposition.setDeployState(DeployState.UNDEPLOYED);
-        assertEquals(0, testJpaAutomationComposition.compareTo(otherJpaAutomationComposition));
+        jpaAutomationComposition.setVersion("0.0.0");
+        assertNotEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
+        jpaAutomationComposition.setVersion("0.0.1");
+        assertEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
 
-        testJpaAutomationComposition.setLockState(LockState.UNLOCKED);
-        assertNotEquals(0, testJpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-        testJpaAutomationComposition.setLockState(LockState.NONE);
-        assertEquals(0, testJpaAutomationComposition.compareTo(otherJpaAutomationComposition));
+        jpaAutomationComposition.setDeployState(DeployState.DEPLOYED);
+        assertNotEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
+        jpaAutomationComposition.setDeployState(DeployState.UNDEPLOYED);
+        assertEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
 
-        testJpaAutomationComposition.setDescription("A description");
-        assertNotEquals(0, testJpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-        testJpaAutomationComposition.setDescription(null);
-        assertEquals(0, testJpaAutomationComposition.compareTo(otherJpaAutomationComposition));
+        jpaAutomationComposition.setLockState(LockState.UNLOCKED);
+        assertNotEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
+        jpaAutomationComposition.setLockState(LockState.NONE);
+        assertEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
 
-        testJpaAutomationComposition.setRestarting(true);
-        assertNotEquals(0, testJpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-        testJpaAutomationComposition.setRestarting(null);
-        assertEquals(0, testJpaAutomationComposition.compareTo(otherJpaAutomationComposition));
+        jpaAutomationComposition.setDescription("A description");
+        assertNotEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
+        jpaAutomationComposition.setDescription(null);
+        assertEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
 
-        testJpaAutomationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
-        assertNotEquals(0, testJpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-        testJpaAutomationComposition.setStateChangeResult(null);
-        assertEquals(0, testJpaAutomationComposition.compareTo(otherJpaAutomationComposition));
+        jpaAutomationComposition.setRestarting(true);
+        assertNotEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
+        jpaAutomationComposition.setRestarting(null);
+        assertEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
 
-        assertEquals(testJpaAutomationComposition, new JpaAutomationComposition(testJpaAutomationComposition));
+        jpaAutomationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
+        assertNotEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
+        jpaAutomationComposition.setStateChangeResult(null);
+        assertEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
+
+        assertEquals(jpaAutomationComposition, new JpaAutomationComposition(jpaAutomationComposition));
     }
 
     @Test

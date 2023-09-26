@@ -104,5 +104,11 @@ public enum ParticipantMessageType {
     /**
      * Used by runtime to send composition and instances to a restarted participant.
      */
-    PARTICIPANT_RESTART
+    PARTICIPANT_RESTART,
+
+    /**
+     * Used by acm runtime to migrate from a composition to another one in participants, triggers a
+     * AUTOMATION_COMPOSITION_MIGRATION message with result of AUTOMATION_COMPOSITION_STATE_CHANGE operation.
+     */
+    AUTOMATION_COMPOSITION_MIGRATION
 }

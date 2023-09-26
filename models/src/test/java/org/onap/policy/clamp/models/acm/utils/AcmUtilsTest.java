@@ -68,6 +68,7 @@ class AcmUtilsTest {
         assertThat(AcmUtils.isInTransitionalState(DeployState.DEPLOYED, LockState.UNLOCKING)).isTrue();
         assertThat(AcmUtils.isInTransitionalState(DeployState.DELETING, LockState.NONE)).isTrue();
         assertThat(AcmUtils.isInTransitionalState(DeployState.UPDATING, LockState.LOCKED)).isTrue();
+        assertThat(AcmUtils.isInTransitionalState(DeployState.MIGRATING, LockState.LOCKED)).isTrue();
     }
 
     @Test
@@ -195,6 +196,18 @@ class AcmUtilsTest {
     }
 
     @Test
+    void testCreateAcElementDeployList() {
+        var automationComposition = getDummyAutomationComposition();
+        var result = AcmUtils.createParticipantDeployList(automationComposition, DeployOrder.DEPLOY);
+        assertThat(result).hasSameSizeAs(automationComposition.getElements().values());
+        for (var participantDeploy : result) {
+            for (var element : participantDeploy.getAcElementList()) {
+                assertEquals(DeployOrder.DEPLOY, element.getOrderedState());
+            }
+        }
+    }
+
+    @Test
     void testCreateAcElementRestart() {
         var element = getDummyAutomationComposition().getElements().values().iterator().next();
         var result = AcmUtils.createAcElementRestart(element);
@@ -210,8 +223,8 @@ class AcmUtilsTest {
         Map<UUID, AutomationCompositionElement> map = new LinkedHashMap<>();
         try {
             var element = new StandardCoder().decode(
-                new File("src/test/resources/json/AutomationCompositionElementNoOrderedState.json"),
-                AutomationCompositionElement.class);
+                    new File("src/test/resources/json/AutomationCompositionElementNoOrderedState.json"),
+                    AutomationCompositionElement.class);
             map.put(UUID.randomUUID(), element);
         } catch (Exception e) {
             fail("Cannot read or decode " + e.getMessage());
