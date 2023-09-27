@@ -38,6 +38,7 @@ public class AcInstanceStateResolver {
     private static final String UNDEPLOYING = DeployState.UNDEPLOYING.name();
     private static final String UPDATING = DeployState.UPDATING.name();
     private static final String DELETING = DeployState.DELETING.name();
+    private static final String MIGRATING = DeployState.MIGRATING.name();
 
     private static final String LOCKED = LockState.LOCKED.name();
     private static final String LOCKING = LockState.LOCKING.name();
@@ -58,6 +59,7 @@ public class AcInstanceStateResolver {
     public static final String DELETE = DeployOrder.DELETE.name();
     public static final String LOCK = LockOrder.LOCK.name();
     public static final String UNLOCK = LockOrder.UNLOCK.name();
+    public static final String MIGRATE = DeployOrder.MIGRATE.name();
     public static final String NONE = "NONE";
 
     /**
@@ -72,22 +74,24 @@ public class AcInstanceStateResolver {
         this.graph.put(new String[] {DELETE, LOCK_NONE, UNDEPLOYED, LOCK_NONE, NO_ERROR}, DELETE);
         this.graph.put(new String[] {DEPLOY_NONE, UNLOCK, DEPLOYED, LOCKED, NO_ERROR}, UNLOCK);
         this.graph.put(new String[] {DEPLOY_NONE, LOCK, DEPLOYED, UNLOCKED, NO_ERROR}, LOCK);
+        this.graph.put(new String[] {MIGRATE, LOCK_NONE, DEPLOYED, LOCKED, NO_ERROR}, MIGRATE);
 
         // failed
         this.graph.put(new String[] {DEPLOY, LOCK_NONE, UNDEPLOYING, STATE_LOCKED_NONE, FAILED}, DEPLOY);
-        this.graph.put(new String[] {UNDEPLOY, LOCK_NONE, UNDEPLOYING, STATE_LOCKED_NONE, FAILED}, UNDEPLOY);
-        this.graph.put(new String[] {UNDEPLOY, LOCK_NONE, UPDATING, STATE_LOCKED_NONE, FAILED}, UNDEPLOY);
-
         this.graph.put(new String[] {DEPLOY, LOCK_NONE, DEPLOYING, STATE_LOCKED_NONE, FAILED}, DEPLOY);
+
+        this.graph.put(new String[] {UNDEPLOY, LOCK_NONE, UNDEPLOYING, STATE_LOCKED_NONE, FAILED}, UNDEPLOY);
+        this.graph.put(new String[] {UNDEPLOY, LOCK_NONE, UPDATING, LOCKED, FAILED}, UNDEPLOY);
+        this.graph.put(new String[] {UNDEPLOY, LOCK_NONE, MIGRATING, LOCKED, FAILED}, UNDEPLOY);
         this.graph.put(new String[] {UNDEPLOY, LOCK_NONE, DEPLOYING, STATE_LOCKED_NONE, FAILED}, UNDEPLOY);
 
         this.graph.put(new String[] {DELETE, LOCK_NONE, DELETING, LOCK_NONE, FAILED}, DELETE);
 
         this.graph.put(new String[] {DEPLOY_NONE, UNLOCK, DEPLOYED, LOCKING, FAILED}, UNLOCK);
-        this.graph.put(new String[] {DEPLOY_NONE, LOCK, DEPLOYED, LOCKING, FAILED}, LOCK);
-
-        this.graph.put(new String[] {DEPLOY_NONE, LOCK, DEPLOYED, UNLOCKING, FAILED}, LOCK);
         this.graph.put(new String[] {DEPLOY_NONE, UNLOCK, DEPLOYED, UNLOCKING, FAILED}, UNLOCK);
+
+        this.graph.put(new String[] {DEPLOY_NONE, LOCK, DEPLOYED, LOCKING, FAILED}, LOCK);
+        this.graph.put(new String[] {DEPLOY_NONE, LOCK, DEPLOYED, UNLOCKING, FAILED}, LOCK);
 
         // timeout
         this.graph.put(new String[] {DEPLOY, LOCK_NONE, UNDEPLOYING, STATE_LOCKED_NONE, TIMEOUT}, DEPLOY);

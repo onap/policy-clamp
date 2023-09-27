@@ -45,6 +45,7 @@ import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.LockOrder;
 import org.onap.policy.common.parameters.BeanValidationResult;
@@ -289,7 +290,8 @@ public final class AcmUtils {
     public static boolean isInTransitionalState(DeployState deployState, LockState lockState) {
         return DeployState.DEPLOYING.equals(deployState) || DeployState.UNDEPLOYING.equals(deployState)
                 || LockState.LOCKING.equals(lockState) || LockState.UNLOCKING.equals(lockState)
-                || DeployState.DELETING.equals(deployState) || DeployState.UPDATING.equals(deployState);
+                || DeployState.DELETING.equals(deployState) || DeployState.UPDATING.equals(deployState)
+                || DeployState.MIGRATING.equals(deployState);
     }
 
     /**
@@ -299,24 +301,12 @@ public final class AcmUtils {
      * @return the DeployOrder
      */
     public static DeployOrder stateDeployToOrder(DeployState deployState) {
-        DeployOrder result = null;
-        switch (deployState) {
-            case DEPLOYING:
-                result = DeployOrder.DEPLOY;
-                break;
-
-            case UNDEPLOYING:
-                result = DeployOrder.UNDEPLOY;
-                break;
-
-            case DELETING:
-                result = DeployOrder.DELETE;
-                break;
-
-            default:
-                result = DeployOrder.NONE;
-        }
-        return result;
+        return switch (deployState) {
+            case DEPLOYING -> DeployOrder.DEPLOY;
+            case UNDEPLOYING -> DeployOrder.UNDEPLOY;
+            case DELETING -> DeployOrder.DELETE;
+            default -> DeployOrder.NONE;
+        };
     }
 
     /**
@@ -341,24 +331,12 @@ public final class AcmUtils {
      * @return the DeployState
      */
     public static DeployState deployCompleted(DeployState deployState) {
-        DeployState result = null;
-        switch (deployState) {
-            case UPDATING, DEPLOYING:
-                result = DeployState.DEPLOYED;
-                break;
-
-            case UNDEPLOYING:
-                result = DeployState.UNDEPLOYED;
-                break;
-
-            case DELETING:
-                result = DeployState.DELETED;
-                break;
-
-            default:
-                return deployState;
-        }
-        return result;
+        return switch (deployState) {
+            case MIGRATING, UPDATING, DEPLOYING -> DeployState.DEPLOYED;
+            case UNDEPLOYING -> DeployState.UNDEPLOYED;
+            case DELETING -> DeployState.DELETED;
+            default -> deployState;
+        };
     }
 
     /**
@@ -424,6 +402,30 @@ public final class AcmUtils {
         acElementDeploy.setOrderedState(deployOrder);
         acElementDeploy.setProperties(PfUtils.mapMap(element.getProperties(), UnaryOperator.identity()));
         return acElementDeploy;
+    }
+
+    /**
+     * Create a list of AcElementDeploy for update/migrate message.
+     *
+     * @param automationComposition the AutomationComposition
+     * @param deployOrder the DeployOrder
+     */
+    public static List<ParticipantDeploy> createParticipantDeployList(AutomationComposition automationComposition,
+            DeployOrder deployOrder) {
+        Map<UUID, List<AcElementDeploy>> map = new HashMap<>();
+        for (var element : automationComposition.getElements().values()) {
+            var acElementDeploy = createAcElementDeploy(element, deployOrder);
+            map.putIfAbsent(element.getParticipantId(), new ArrayList<>());
+            map.get(element.getParticipantId()).add(acElementDeploy);
+        }
+        List<ParticipantDeploy> participantDeploys = new ArrayList<>();
+        for (var entry : map.entrySet()) {
+            var participantDeploy = new ParticipantDeploy();
+            participantDeploy.setParticipantId(entry.getKey());
+            participantDeploy.setAcElementList(entry.getValue());
+            participantDeploys.add(participantDeploy);
+        }
+        return participantDeploys;
     }
 
     /**

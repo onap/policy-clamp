@@ -81,6 +81,9 @@ public class JpaAutomationComposition extends Validated
     private String compositionId;
 
     @Column
+    private String compositionTargetId;
+
+    @Column
     private Boolean restarting;
 
     @Column
@@ -106,8 +109,8 @@ public class JpaAutomationComposition extends Validated
      * The Default Constructor creates a {@link JpaAutomationComposition} object with a null key.
      */
     public JpaAutomationComposition() {
-        this(UUID.randomUUID().toString(), new PfConceptKey(), UUID.randomUUID().toString(),
-                new ArrayList<>(), DeployState.UNDEPLOYED, LockState.NONE);
+        this(UUID.randomUUID().toString(), new PfConceptKey(), UUID.randomUUID().toString(), new ArrayList<>(),
+                DeployState.UNDEPLOYED, LockState.NONE);
     }
 
     /**
@@ -121,8 +124,7 @@ public class JpaAutomationComposition extends Validated
      * @param lockState the Lock State
      */
     public JpaAutomationComposition(@NonNull final String instanceId, @NonNull final PfConceptKey key,
-            @NonNull final String compositionId,
-            @NonNull final List<JpaAutomationCompositionElement> elements,
+            @NonNull final String compositionId, @NonNull final List<JpaAutomationCompositionElement> elements,
             @NonNull final DeployState deployState, @NonNull final LockState lockState) {
         this.instanceId = instanceId;
         this.name = key.getName();
@@ -143,6 +145,7 @@ public class JpaAutomationComposition extends Validated
         this.name = copyConcept.name;
         this.version = copyConcept.version;
         this.compositionId = copyConcept.compositionId;
+        this.compositionTargetId = copyConcept.compositionTargetId;
         this.restarting = copyConcept.restarting;
         this.deployState = copyConcept.deployState;
         this.lockState = copyConcept.lockState;
@@ -168,6 +171,9 @@ public class JpaAutomationComposition extends Validated
         automationComposition.setName(name);
         automationComposition.setVersion(version);
         automationComposition.setCompositionId(UUID.fromString(compositionId));
+        if (compositionTargetId != null) {
+            automationComposition.setCompositionTargetId(UUID.fromString(compositionTargetId));
+        }
         automationComposition.setRestarting(restarting);
         automationComposition.setDeployState(deployState);
         automationComposition.setLockState(lockState);
@@ -187,6 +193,9 @@ public class JpaAutomationComposition extends Validated
         this.name = automationComposition.getName();
         this.version = automationComposition.getVersion();
         this.compositionId = automationComposition.getCompositionId().toString();
+        if (automationComposition.getCompositionTargetId() != null) {
+            this.compositionTargetId = automationComposition.getCompositionTargetId().toString();
+        }
         this.restarting = automationComposition.getRestarting();
         this.deployState = automationComposition.getDeployState();
         this.lockState = automationComposition.getLockState();
@@ -226,6 +235,11 @@ public class JpaAutomationComposition extends Validated
         }
 
         result = ObjectUtils.compare(compositionId, other.compositionId);
+        if (result != 0) {
+            return result;
+        }
+
+        result = ObjectUtils.compare(compositionTargetId, other.compositionTargetId);
         if (result != 0) {
             return result;
         }
