@@ -276,4 +276,11 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
         intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(), deployState,
                 lockState, StateChangeResult.NO_ERROR, "Restarted");
     }
+
+    @Override
+    public void migrate(UUID automationCompositionId, AcElementDeploy element, UUID compositionTargetId,
+            Map<String, Object> properties) throws PfModelException {
+        intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
+                DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Migrated");
+    }
 }

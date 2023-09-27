@@ -372,4 +372,11 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
         intermediaryApi.sendAcDefinitionInfo(compositionId, compositionDefinitionElementId, outProperties);
 
     }
+
+    @Override
+    public void migrate(UUID automationCompositionId, AcElementDeploy element, UUID compositionTargetId,
+                        Map<String, Object> properties) throws PfModelException {
+        intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
+            DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Migrated");
+    }
 }

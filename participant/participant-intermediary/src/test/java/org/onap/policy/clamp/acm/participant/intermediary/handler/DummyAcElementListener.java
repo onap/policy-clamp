@@ -79,4 +79,9 @@ public class DummyAcElementListener implements AutomationCompositionElementListe
     public void handleRestartInstance(UUID automationCompositionId, AcElementDeploy element,
             Map<String, Object> properties, DeployState deployState, LockState lockState) throws PfModelException {
     }
+
+    @Override
+    public void migrate(UUID instanceId, AcElementDeploy element, UUID compositionTargetId,
+            Map<String, Object> properties) throws PfModelException {
+    }
 }

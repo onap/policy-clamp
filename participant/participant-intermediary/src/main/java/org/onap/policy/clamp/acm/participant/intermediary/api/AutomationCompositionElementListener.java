@@ -73,4 +73,7 @@ public interface AutomationCompositionElementListener {
 
     void handleRestartInstance(UUID automationCompositionId, AcElementDeploy element, Map<String, Object> properties,
             DeployState deployState, LockState lockState) throws PfModelException;
+
+    void migrate(UUID instanceId, AcElementDeploy element, UUID compositionTargetId, Map<String, Object> properties)
+            throws PfModelException;
 }
