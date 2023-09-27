@@ -49,6 +49,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e700a1e5_778f2657",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/persistence/provider/ProviderUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2023-09-27T13:37:23Z",
+      "side": 1,
+      "message": "these Objects are not used in this file",
+      "range": {
+        "startLine": 30,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 82
+      },
+      "revId": "ae028bdf7636add41caeaca9a87adf01824bc24f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c5c820b3_f9145fd4",
         "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/main/parameters/AcRuntimeParameterGroup.java",
         "patchSetId": 1
