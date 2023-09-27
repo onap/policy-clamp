@@ -52,8 +52,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class CommissioningProvider {
-    public static final String AUTOMATION_COMPOSITION_NODE_TYPE = "org.onap.policy.clamp.acm.AutomationComposition";
-
     private final AcDefinitionProvider acDefinitionProvider;
     private final AutomationCompositionProvider acProvider;
     private final AcmParticipantProvider acmParticipantProvider;

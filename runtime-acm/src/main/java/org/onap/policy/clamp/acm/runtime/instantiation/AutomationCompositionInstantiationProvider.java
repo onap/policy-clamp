@@ -27,6 +27,7 @@ import jakarta.ws.rs.core.Response.Status;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import org.onap.policy.clamp.acm.runtime.participants.AcmParticipantProvider;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionAcHandler;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
@@ -148,6 +149,12 @@ public class AutomationCompositionInstantiationProvider {
     public InstantiationResponse updateDeployedAutomationComposition(UUID compositionId,
             AutomationComposition automationComposition, AutomationComposition acToBeUpdated) {
 
+        if (automationComposition.getCompositionTargetId() != null
+                && !DeployState.DEPLOYED.equals(acToBeUpdated.getDeployState())) {
+            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
+                    "Not allowed to migrate in the state " + acToBeUpdated.getDeployState());
+        }
+
         // Iterate and update the element property values
         for (var dbAcElement : acToBeUpdated.getElements().entrySet()) {
             var elementId = dbAcElement.getKey();
@@ -159,13 +166,25 @@ public class AutomationCompositionInstantiationProvider {
         if (automationComposition.getRestarting() != null) {
             throw new PfModelRuntimeException(Status.BAD_REQUEST, "There is a restarting process, Update not allowed");
         }
-        var validationResult = validateAutomationComposition(acToBeUpdated);
-        if (!validationResult.isValid()) {
-            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, validationResult.getResult());
-        }
 
-        // Publish property update event to the participants
-        supervisionAcHandler.update(acToBeUpdated);
+        if (automationComposition.getCompositionTargetId() != null) {
+            var validationResult =
+                    validateAutomationComposition(acToBeUpdated, automationComposition.getCompositionTargetId());
+            if (!validationResult.isValid()) {
+                throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, validationResult.getResult());
+            }
+            acToBeUpdated.setCompositionTargetId(automationComposition.getCompositionTargetId());
+
+            // Publish migrate event to the participants
+            supervisionAcHandler.migrate(acToBeUpdated, automationComposition.getCompositionTargetId());
+        } else {
+            var validationResult = validateAutomationComposition(acToBeUpdated);
+            if (!validationResult.isValid()) {
+                throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, validationResult.getResult());
+            }
+            // Publish property update event to the participants
+            supervisionAcHandler.update(acToBeUpdated);
+        }
 
         automationComposition = automationCompositionProvider.updateAutomationComposition(acToBeUpdated);
         var response = new InstantiationResponse();
@@ -175,18 +194,24 @@ public class AutomationCompositionInstantiationProvider {
         return response;
     }
 
+    private BeanValidationResult validateAutomationComposition(AutomationComposition automationComposition) {
+        return validateAutomationComposition(automationComposition, automationComposition.getCompositionId());
+    }
+
     /**
      * Validate AutomationComposition.
      *
      * @param automationComposition AutomationComposition to validate
+     * @param compositionId the composition id
      * @return the result of validation
      */
-    private BeanValidationResult validateAutomationComposition(AutomationComposition automationComposition) {
+    private BeanValidationResult validateAutomationComposition(AutomationComposition automationComposition,
+            UUID compositionId) {
 
         var result = new BeanValidationResult("AutomationComposition", automationComposition);
-        var acDefinitionOpt = acDefinitionProvider.findAcDefinition(automationComposition.getCompositionId());
+        var acDefinitionOpt = acDefinitionProvider.findAcDefinition(compositionId);
         if (acDefinitionOpt.isEmpty()) {
-            result.addResult(new ObjectValidationResult("ServiceTemplate", "", ValidationStatus.INVALID,
+            result.addResult(new ObjectValidationResult("ServiceTemplate", compositionId, ValidationStatus.INVALID,
                     "Commissioned automation composition definition not found"));
             return result;
         }
@@ -228,9 +253,10 @@ public class AutomationCompositionInstantiationProvider {
      * @return the Automation Composition
      */
     @Transactional(readOnly = true)
-    public AutomationComposition getAutomationComposition(UUID compositionId, UUID instanceId) {
+    public AutomationComposition getAutomationComposition(@NonNull UUID compositionId, UUID instanceId) {
         var automationComposition = automationCompositionProvider.getAutomationComposition(instanceId);
-        if (!automationComposition.getCompositionId().equals(compositionId)) {
+        if (!compositionId.equals(automationComposition.getCompositionId())
+                        && !compositionId.equals(automationComposition.getCompositionTargetId())) {
             throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
                     automationComposition.getCompositionId() + DO_NOT_MATCH + compositionId);
         }
@@ -264,11 +290,9 @@ public class AutomationCompositionInstantiationProvider {
             throw new PfModelRuntimeException(Status.BAD_REQUEST, "There is a restarting process, Delete not allowed");
         }
         var acDefinition = acDefinitionProvider.getAcDefinition(automationComposition.getCompositionId());
-        if (acDefinition != null) {
-            var participantIds = acDefinition.getElementStateMap().values().stream()
-                    .map(NodeTemplateState::getParticipantId).collect(Collectors.toSet());
-            acmParticipantProvider.verifyParticipantState(participantIds);
-        }
+        var participantIds = acDefinition.getElementStateMap().values().stream()
+            .map(NodeTemplateState::getParticipantId).collect(Collectors.toSet());
+        acmParticipantProvider.verifyParticipantState(participantIds);
         supervisionAcHandler.delete(automationComposition, acDefinition);
         var response = new InstantiationResponse();
         response.setInstanceId(automationComposition.getInstanceId());
