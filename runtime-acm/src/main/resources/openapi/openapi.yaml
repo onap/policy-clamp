@@ -91,14 +91,14 @@ paths:
                 items:
                   $ref: '#/components/schemas/ParticipantInformation'
               example:
-                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getMultiParticipantResponse.json'
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getMultipleParticipantResponse.json'
             application/yaml:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/ParticipantInformation'
               example:
-                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getMultiParticipantResponse.yaml'
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getMultipleParticipantResponse.yaml'
         401:
           description: Authentication Error, returns an instance of
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
@@ -265,7 +265,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ToscaServiceTemplate'
               example:
-                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getParticipantResponse.yaml'
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/getSingleParticipantResponse.yaml'
         401:
           description: Authentication Error, returns an instance of
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
@@ -1136,12 +1136,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/InstantiationResponse'
               example:
-                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/postCompositionInstancesResponse.json'
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/postCompositionInstanceResponse.json'
             application/yaml:
               schema:
                 $ref: '#/components/schemas/InstantiationResponse'
               example:
-                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/postCompositionInstancesResponse.yaml'
+                externalValue: 'https://raw.githubusercontent.com/onap/policy-clamp/master/runtime-acm/src/main/resources/openapi/examples/postCompositionInstanceResponse.yaml'
         401:
           description: Authentication Error, returns an instance of
             [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)

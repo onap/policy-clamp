@@ -6,7 +6,7 @@ stub:
     deleteCompositionInstanceResponse: "/openapi/examples/deleteCompositionInstanceResponse.json"
     getAllCompositionDefinitions: "/openapi/examples/getAllCompositionDefinitions.json"
     getAllCompositionInstancesResponse: "/openapi/examples/getAllCompositionInstancesResponse.json"
-    getCompositionInstancesResponse: "/openapi/examples/getCompositionInstancesResponse.json"
+    getCompositionInstancesResponse: "/openapi/examples/getCompositionInstanceResponse.json"
     getSingleCompositionDefinition: "/openapi/examples/getSingleCompositionDefinition.json"
     getSingleParticipantResponse: "/openapi/examples/getSingleParticipantResponse.json"
     getMultipleParticipantResponse: "/openapi/examples/getMultipleParticipantResponse.json"
