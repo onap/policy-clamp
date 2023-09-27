@@ -28,6 +28,7 @@ import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AcElementPropertiesPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionDeployPublisher;
+import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionMigrationPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionStateChangePublisher;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeployAck;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
@@ -59,6 +60,7 @@ public class SupervisionAcHandler {
     private final AutomationCompositionDeployPublisher automationCompositionDeployPublisher;
     private final AutomationCompositionStateChangePublisher automationCompositionStateChangePublisher;
     private final AcElementPropertiesPublisher acElementPropertiesPublisher;
+    private final AutomationCompositionMigrationPublisher acCompositionMigrationPublisher;
 
     /**
      * Handle Deploy an AutomationComposition instance.
@@ -276,5 +278,17 @@ public class SupervisionAcHandler {
         }
 
         return updated;
+    }
+
+    /**
+     * Handle Migration of an AutomationComposition instance to other ACM Definition.
+     *
+     * @param automationComposition the AutomationComposition
+     * @param compositionTargetId the ACM Definition Id
+     */
+    public void migrate(AutomationComposition automationComposition, UUID compositionTargetId) {
+        AcmUtils.setCascadedState(automationComposition, DeployState.MIGRATING, LockState.LOCKED);
+        automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
+        acCompositionMigrationPublisher.send(automationComposition, compositionTargetId);
     }
 }

@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.acm.runtime.supervision;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -207,13 +208,20 @@ class SupervisionScannerTest {
                 automationCompositionStateChangePublisher, automationCompositionDeployPublisher,
                 acRuntimeParameterGroup);
 
+        automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
         scannerObj2.run();
         verify(automationCompositionProvider, times(1)).updateAutomationComposition(any(AutomationComposition.class));
+        assertEquals(StateChangeResult.TIMEOUT, automationComposition.getStateChangeResult());
 
+        for (Map.Entry<UUID, AutomationCompositionElement> entry : automationComposition.getElements().entrySet()) {
+            entry.getValue().setDeployState(DeployState.DEPLOYED);
+        }
+        scannerObj2.run();
+        assertEquals(StateChangeResult.NO_ERROR, automationComposition.getStateChangeResult());
     }
 
     @Test
-    void testSendAutomationCompositionMsgUpdate() {
+    void testSendAutomationCompositionMsgStartPhase() {
         var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
         automationComposition.setDeployState(DeployState.DEPLOYING);
         automationComposition.setLockState(LockState.NONE);
@@ -244,6 +252,36 @@ class SupervisionScannerTest {
 
         verify(automationCompositionDeployPublisher).send(any(AutomationComposition.class),
                 any(ToscaServiceTemplate.class), anyInt(), anyBoolean());
+    }
+
+    @Test
+    void testSendAutomationCompositionMigrate() {
+        var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
+        automationComposition.setDeployState(DeployState.MIGRATING);
+        var compositionTargetId = UUID.randomUUID();
+        automationComposition.setCompositionTargetId(compositionTargetId);
+        automationComposition.setLockState(LockState.LOCKED);
+        for (var element : automationComposition.getElements().values()) {
+            element.setDeployState(DeployState.DEPLOYED);
+            element.setLockState(LockState.LOCKED);
+        }
+
+        var automationCompositionProvider = mock(AutomationCompositionProvider.class);
+        when(automationCompositionProvider.getAcInstancesByCompositionId(compositionId))
+                .thenReturn(List.of(automationComposition));
+
+        var automationCompositionDeployPublisher = mock(AutomationCompositionDeployPublisher.class);
+        var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
+        var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
+
+        var supervisionScanner = new SupervisionScanner(automationCompositionProvider, createAcDefinitionProvider(),
+                automationCompositionStateChangePublisher, automationCompositionDeployPublisher,
+                acRuntimeParameterGroup);
+
+        supervisionScanner.run();
+        verify(automationCompositionProvider, times(1)).updateAutomationComposition(any(AutomationComposition.class));
+        assertEquals(DeployState.DEPLOYED, automationComposition.getDeployState());
+        assertEquals(compositionTargetId, automationComposition.getCompositionId());
     }
 
     @Test

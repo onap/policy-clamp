@@ -172,7 +172,8 @@ public class SupervisionScanner {
             LOGGER.debug("automation composition scan: transition from state {} to {} not completed",
                     automationComposition.getDeployState(), automationComposition.getLockState());
 
-            if (DeployState.UPDATING.equals(automationComposition.getDeployState())) {
+            if (DeployState.UPDATING.equals(automationComposition.getDeployState())
+                    || DeployState.MIGRATING.equals(automationComposition.getDeployState())) {
                 // UPDATING do not need phases
                 handleTimeout(automationComposition);
                 return;
@@ -196,6 +197,11 @@ public class SupervisionScanner {
 
     private void complete(final AutomationComposition automationComposition) {
         var deployState = automationComposition.getDeployState();
+        if (DeployState.MIGRATING.equals(automationComposition.getDeployState())) {
+            // migration scenario
+            automationComposition.setCompositionId(automationComposition.getCompositionTargetId());
+            automationComposition.setCompositionTargetId(null);
+        }
         automationComposition.setDeployState(AcmUtils.deployCompleted(deployState));
         automationComposition.setLockState(AcmUtils.lockCompleted(deployState, automationComposition.getLockState()));
         if (StateChangeResult.TIMEOUT.equals(automationComposition.getStateChangeResult())) {

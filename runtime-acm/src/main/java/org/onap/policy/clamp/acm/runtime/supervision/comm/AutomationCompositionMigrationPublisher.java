@@ -21,42 +21,35 @@
 package org.onap.policy.clamp.acm.runtime.supervision.comm;
 
 import io.micrometer.core.annotation.Timed;
-import java.time.Instant;
 import java.util.UUID;
-import lombok.AllArgsConstructor;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.PropertiesUpdate;
+import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionMigration;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-/**
- * This class is used to send PropertiesUpdate messages to participants.
- */
 @Component
-@AllArgsConstructor
-public class AcElementPropertiesPublisher extends AbstractParticipantPublisher<PropertiesUpdate> {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(AcElementPropertiesPublisher.class);
+public class AutomationCompositionMigrationPublisher
+        extends AbstractParticipantPublisher<AutomationCompositionMigration> {
 
     /**
-     * Send ACElementPropertiesUpdate to Participant.
+     * Send AutomationCompositionMigration message to Participant.
      *
      * @param automationComposition the AutomationComposition
+     * @param compositionTargetId the Composition Definition Target
      */
-    @Timed(value = "publisher.properties_update", description = "AC Element Properties Update published")
-    public void send(AutomationComposition automationComposition) {
-        var propertiesUpdate = new PropertiesUpdate();
-        propertiesUpdate.setCompositionId(automationComposition.getCompositionId());
-        propertiesUpdate.setAutomationCompositionId(automationComposition.getInstanceId());
-        propertiesUpdate.setMessageId(UUID.randomUUID());
-        propertiesUpdate.setTimestamp(Instant.now());
-        propertiesUpdate.setParticipantUpdatesList(
-                AcmUtils.createParticipantDeployList(automationComposition, DeployOrder.UPDATE));
+    @Timed(
+            value = "publisher.automation_composition_migration",
+            description = "AUTOMATION_COMPOSITION_MIGRATION messages published")
+    public void send(AutomationComposition automationComposition, UUID compositionTargetId) {
+        var acsc = new AutomationCompositionMigration();
+        acsc.setCompositionId(automationComposition.getCompositionId());
+        acsc.setAutomationCompositionId(automationComposition.getInstanceId());
+        acsc.setMessageId(UUID.randomUUID());
+        acsc.setCompositionTargetId(compositionTargetId);
+        acsc.setParticipantUpdatesList(
+                AcmUtils.createParticipantDeployList(automationComposition, DeployOrder.MIGRATE));
 
-        LOGGER.debug("AC Element properties update sent {}", propertiesUpdate);
-        super.send(propertiesUpdate);
+        super.send(acsc);
     }
 }

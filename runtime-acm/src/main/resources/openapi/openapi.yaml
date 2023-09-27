@@ -1073,9 +1073,10 @@ paths:
     post:
       tags:
       - Automation Composition Instance
-      summary: Create or Update automation composition instance
-      description: Creates or updates an automation composition instance that uses the specified automation composition definition. The ID of the created
+      summary: Create, Update or Migrate an automation composition instance
+      description: Create, Update or Migrate an automation composition instance that uses the specified automation composition definition. The ID of the created
         automation composition instance is returned. In the case of an update, the instanceId should be included in the request body.
+         In the case of a migrate, the instanceId and the compositionTargetId should be included in the request body.
       operationId: createCompositionInstance
       parameters:
       - name : compositionId

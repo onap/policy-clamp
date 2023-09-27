@@ -227,6 +227,17 @@ class SupervisionMessagesTest {
     }
 
     @Test
+    void testAutomationCompositionMigrationPublisher() {
+        var publisher = new AutomationCompositionMigrationPublisher();
+        var topicSink = mock(TopicSink.class);
+        publisher.active(List.of(topicSink));
+        var automationComposition =
+                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_UPDATE_JSON, "Crud");
+        publisher.send(automationComposition, UUID.randomUUID());
+        verify(topicSink).send(anyString());
+    }
+
+    @Test
     void testParticipantRestartPublisher() {
         var publisher = new ParticipantRestartPublisher(CommonTestData.getTestParamaterGroup());
         var topicSink = mock(TopicSink.class);
@@ -289,5 +300,4 @@ class SupervisionMessagesTest {
         acStateChangeAckListener.onTopicEvent(INFRA, TOPIC, null, automationCompositionAck);
         verify(supervisionHandler).handleAutomationCompositionStateChangeAckMessage(automationCompositionAck);
     }
-
 }
