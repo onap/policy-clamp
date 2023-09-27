@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7c1c50c8_ae2f42fd",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/document/base/ToscaServiceTemplateValidation.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2023-09-27T12:43:38Z",
+      "side": 1,
+      "message": "license update",
+      "range": {
+        "startLine": 3,
+        "startChar": 18,
+        "endLine": 3,
+        "endChar": 22
+      },
+      "revId": "ae028bdf7636add41caeaca9a87adf01824bc24f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a06416d9_e634326f",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/persistence/provider/ProviderUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2023-09-27T12:43:38Z",
+      "side": 1,
+      "message": "license update",
+      "range": {
+        "startLine": 3,
+        "startChar": 18,
+        "endLine": 3,
+        "endChar": 27
+      },
+      "revId": "ae028bdf7636add41caeaca9a87adf01824bc24f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c5c820b3_f9145fd4",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/main/parameters/AcRuntimeParameterGroup.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2023-09-27T12:43:38Z",
+      "side": 1,
+      "message": "license update",
+      "range": {
+        "startLine": 3,
+        "startChar": 18,
+        "endLine": 3,
+        "endChar": 22
+      },
+      "revId": "ae028bdf7636add41caeaca9a87adf01824bc24f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
