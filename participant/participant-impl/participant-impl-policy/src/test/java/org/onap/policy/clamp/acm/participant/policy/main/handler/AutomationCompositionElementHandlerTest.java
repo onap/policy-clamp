@@ -267,4 +267,17 @@ class AutomationCompositionElementHandlerTest {
         verify(intermediaryApi).updateAutomationCompositionElementState(AC_ID, automationCompositionElementId,
                 DeployState.DEPLOYED, LockState.LOCKED, StateChangeResult.NO_ERROR, "Restarted");
     }
+
+    @Test
+    void testMigrate() throws Exception {
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var handler = new AutomationCompositionElementHandler(mock(PolicyApiHttpClient.class),
+                mock(PolicyPapHttpClient.class), intermediaryApi);
+
+        var acElement = getTestingAcElement();
+        acElement.getToscaServiceTemplateFragment().setToscaTopologyTemplate(null);
+        handler.migrate(AC_ID, acElement, UUID.randomUUID(), Map.of());
+        verify(intermediaryApi).updateAutomationCompositionElementState(AC_ID, automationCompositionElementId,
+                DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Migrated");
+    }
 }

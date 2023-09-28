@@ -276,4 +276,18 @@ class AcElementHandlerTest {
         verify(intermediaryApi).updateAutomationCompositionElementState(automationCompositionId,
                 automationCompositionElementId, DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR, "Undeployed");
     }
+
+    @Test
+    void testMigrate() throws PfModelException {
+        var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(participantIntermediaryApi, acA1PmsClient);
+
+        var automationCompositionId = UUID.randomUUID();
+        var element = commonTestData.getAutomationCompositionElement();
+        automationCompositionElementHandler.migrate(automationCompositionId, element, UUID.randomUUID(), Map.of());
+
+        verify(participantIntermediaryApi).updateAutomationCompositionElementState(automationCompositionId,
+                element.getId(), DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Migrated");
+    }
 }

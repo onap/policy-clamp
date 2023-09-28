@@ -234,4 +234,12 @@ class AutomationCompositionElementHandlerTest {
                 nodeTemplatesMap.get(K8S_AUTOMATION_COMPOSITION_ELEMENT).getProperties(), DeployState.UNDEPLOYING,
                 LockState.LOCKED));
     }
+
+    @Test
+    void testMigrate() throws PfModelException {
+        var element = CommonTestData.createAcElementDeploy();
+        var automationCompositionId = commonTestData.getAutomationCompositionId();
+        assertDoesNotThrow(() -> automationCompositionElementHandler.migrate(automationCompositionId, element,
+                UUID.randomUUID(), Map.of()));
+    }
 }
