@@ -1,0 +1,10 @@
+Code-Review+2: Liam Fallon <liam.fallon@est.tech>
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Saul Gill <saul.gill@est.tech>
+Verified+1: ONAP Required GHA <releng+onap.required.gha@linuxfoundation.org>
+Code-Review+1: Francesco Fiora <francesco.fiora@est.tech>
+Submitted-by: Liam Fallon <liam.fallon@est.tech>
+Submitted-at: Thu, 28 Sep 2023 13:23:12 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/policy/clamp/+/136050
+Project: policy/clamp
+Branch: refs/heads/master
