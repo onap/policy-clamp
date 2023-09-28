@@ -24,6 +24,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "16a1cf1e_b73ab5f9",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/document/base/ToscaServiceTemplateValidation.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2023-09-28T08:21:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7c1c50c8_ae2f42fd",
+      "range": {
+        "startLine": 3,
+        "startChar": 18,
+        "endLine": 3,
+        "endChar": 22
+      },
+      "revId": "ae028bdf7636add41caeaca9a87adf01824bc24f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a06416d9_e634326f",
@@ -37,6 +61,30 @@
       "writtenOn": "2023-09-27T12:43:38Z",
       "side": 1,
       "message": "license update",
+      "range": {
+        "startLine": 3,
+        "startChar": 18,
+        "endLine": 3,
+        "endChar": 27
+      },
+      "revId": "ae028bdf7636add41caeaca9a87adf01824bc24f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d35991d0_44791bcc",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/persistence/provider/ProviderUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2023-09-28T08:21:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a06416d9_e634326f",
       "range": {
         "startLine": 3,
         "startChar": 18,
@@ -107,6 +155,30 @@
       "writtenOn": "2023-09-27T12:43:38Z",
       "side": 1,
       "message": "license update",
+      "range": {
+        "startLine": 3,
+        "startChar": 18,
+        "endLine": 3,
+        "endChar": 22
+      },
+      "revId": "ae028bdf7636add41caeaca9a87adf01824bc24f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4e79bfdb_020bd9f1",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/main/parameters/AcRuntimeParameterGroup.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2023-09-28T08:21:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c5c820b3_f9145fd4",
       "range": {
         "startLine": 3,
         "startChar": 18,
