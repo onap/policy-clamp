@@ -36,6 +36,8 @@ public class SimConfig {
 
     private boolean updateSuccess = true;
 
+    private boolean migrateSuccess = true;
+
     private boolean primeSuccess = true;
 
     private boolean deprimeSuccess = true;
@@ -49,6 +51,8 @@ public class SimConfig {
     private int unlockTimerMs = 100;
 
     private int updateTimerMs = 100;
+
+    private int migrateTimerMs = 100;
 
     private int deleteTimerMs = 100;
 

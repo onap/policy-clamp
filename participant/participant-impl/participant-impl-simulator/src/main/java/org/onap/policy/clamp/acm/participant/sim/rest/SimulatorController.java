@@ -29,6 +29,7 @@ import org.onap.policy.clamp.acm.participant.sim.main.handler.AutomationComposit
 import org.onap.policy.clamp.acm.participant.sim.model.InternalData;
 import org.onap.policy.clamp.acm.participant.sim.model.InternalDatas;
 import org.onap.policy.clamp.acm.participant.sim.model.SimConfig;
+import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -57,6 +58,12 @@ public class SimulatorController implements SimulatorParticipantControllerApi {
     @Override
     public ResponseEntity<AutomationCompositions> getAutomationCompositions(UUID xonapRequestId) {
         return new ResponseEntity<>(automationCompositionElementHandler.getAutomationCompositions(), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<AutomationComposition> getAutomationComposition(UUID instanceId, UUID xonapRequestId) {
+        return new ResponseEntity<>(automationCompositionElementHandler.getAutomationComposition(instanceId),
+                HttpStatus.OK);
     }
 
     @Override

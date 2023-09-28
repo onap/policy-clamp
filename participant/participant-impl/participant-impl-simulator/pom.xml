@@ -51,6 +51,7 @@
                             <generateSupportingFiles>false</generateSupportingFiles>
                             <importMappings>
                                 AutomationCompositions=org.onap.policy.clamp.models.acm.concepts.AutomationCompositions,
+                                AutomationComposition=org.onap.policy.clamp.models.acm.concepts.AutomationComposition,
                                 InternalDatas=org.onap.policy.clamp.acm.participant.sim.model.InternalDatas,
                                 InternalData=org.onap.policy.clamp.acm.participant.sim.model.InternalData,
                                 SimConfig=org.onap.policy.clamp.acm.participant.sim.model.SimConfig
