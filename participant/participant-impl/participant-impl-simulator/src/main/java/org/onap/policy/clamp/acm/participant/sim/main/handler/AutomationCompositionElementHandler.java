@@ -35,6 +35,7 @@ import org.onap.policy.clamp.acm.participant.sim.model.InternalDatas;
 import org.onap.policy.clamp.acm.participant.sim.model.SimConfig;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
+import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
@@ -217,6 +218,10 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
         return result;
     }
 
+    public AutomationComposition getAutomationComposition(UUID instanceId) {
+        return intermediaryApi.getAutomationComposition(instanceId);
+    }
+
     /**
      * Set OutProperties.
      *
@@ -280,6 +285,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
         for (var instance : map.values()) {
             for (var element : instance.getElements().values()) {
                 var data = new InternalData();
+                data.setCompositionId(instance.getCompositionId());
                 data.setAutomationCompositionId(instance.getInstanceId());
                 data.setAutomationCompositionElementId(element.getId());
                 data.setIntProperties(element.getProperties());
@@ -375,8 +381,20 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
 
     @Override
     public void migrate(UUID automationCompositionId, AcElementDeploy element, UUID compositionTargetId,
-                        Map<String, Object> properties) throws PfModelException {
-        intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
-            DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Migrated");
+            Map<String, Object> properties) throws PfModelException {
+        LOGGER.debug("migrate call");
+
+        if (!execution(config.getMigrateTimerMs(), "Current Thread migrate is Interrupted during execution {}",
+                element.getId())) {
+            return;
+        }
+
+        if (config.isMigrateSuccess()) {
+            intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
+                    DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Migrated");
+        } else {
+            intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
+                    DeployState.DEPLOYED, null, StateChangeResult.FAILED, "Migrate failed!");
+        }
     }
 }

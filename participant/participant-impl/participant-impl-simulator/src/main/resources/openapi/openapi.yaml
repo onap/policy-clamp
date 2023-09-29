@@ -170,6 +170,54 @@ paths:
           description: Internal Server Error
       security:
         - basicAuth: []
+  /instances/{instanceId}:
+    get:
+      tags:
+        - Simulator-participant-controller
+      summary: Get automation composition instance details.
+      description: Get details of the requested automation composition instance.
+      operationId: getAutomationComposition
+      parameters:
+      - name : instanceId
+        in: path
+        description: The UUID of the automation composition instance to get
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: X-onap-RequestId
+        in: header
+        description: RequestID for http transaction
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: Serialised instance of
+            [AutomationComposition](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationComposition.java)
+            containing the automation composition instance
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AutomationComposition'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/AutomationComposition'
+        401:
+          description: Authorization Error
+        500:
+          description: Internal Server Error
+      security:
+        - basicAuth: []
   /datas:
     get:
       tags:
@@ -352,6 +400,9 @@ components:
       type: object
     AutomationCompositions:
       title: AutomationCompositions
+      type: object
+    AutomationComposition:
+      title: AutomationComposition
       type: object
     InternalDatas:
       title: InternalDatas

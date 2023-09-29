@@ -162,7 +162,7 @@ class AutomationCompositionElementHandlerTest {
     }
 
     @Test
-    void testgetAutomationComposition() throws PfModelException {
+    void testgetAutomationCompositions() throws PfModelException {
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
         var acElementHandler = new AutomationCompositionElementHandler(intermediaryApi);
 
@@ -170,6 +170,17 @@ class AutomationCompositionElementHandlerTest {
         when(intermediaryApi.getAutomationCompositions()).thenReturn(map);
         var result = acElementHandler.getAutomationCompositions();
         assertEquals(map.values().iterator().next(), result.getAutomationCompositionList().get(0));
+    }
+
+    @Test
+    void testgetAutomationComposition() throws PfModelException {
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var acElementHandler = new AutomationCompositionElementHandler(intermediaryApi);
+
+        var instance = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
+        when(intermediaryApi.getAutomationComposition(instance.getInstanceId())).thenReturn(instance);
+        var result = acElementHandler.getAutomationComposition(instance.getInstanceId());
+        assertEquals(instance, result);
     }
 
     @Test
@@ -333,5 +344,25 @@ class AutomationCompositionElementHandlerTest {
         var compositionId = UUID.randomUUID();
         acElementHandler.setCompositionOutProperties(compositionId, null, Map.of());
         verify(intermediaryApi).sendAcDefinitionInfo(compositionId, null, Map.of());
+    }
+
+    @Test
+    void testMigrate() throws PfModelException {
+        var config = new SimConfig();
+        config.setUpdateTimerMs(1);
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var acElementHandler = new AutomationCompositionElementHandler(intermediaryApi);
+        acElementHandler.setConfig(config);
+        var instanceId = UUID.randomUUID();
+        var element = new AcElementDeploy();
+        element.setId(UUID.randomUUID());
+        acElementHandler.migrate(instanceId, element, UUID.randomUUID(), Map.of());
+        verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
+                DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Migrated");
+
+        config.setMigrateSuccess(false);
+        acElementHandler.migrate(instanceId, element, UUID.randomUUID(), Map.of());
+        verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
+                DeployState.DEPLOYED, null, StateChangeResult.FAILED, "Migrate failed!");
     }
 }
