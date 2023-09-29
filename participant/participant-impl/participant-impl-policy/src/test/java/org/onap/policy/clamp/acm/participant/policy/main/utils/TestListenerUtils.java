@@ -20,7 +20,7 @@
 
 package org.onap.policy.clamp.acm.participant.policy.main.utils;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.FileNotFoundException;
 import java.time.Instant;

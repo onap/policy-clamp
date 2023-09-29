@@ -22,9 +22,9 @@ package org.onap.policy.clamp.models.acm.persistence.concepts;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Map;
@@ -33,7 +33,6 @@ import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
-import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.utils.CommonTestData;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -95,9 +94,9 @@ class JpaAutomationCompositionElementTest {
                 DeployState.UNDEPLOYED, null);
         }).hasMessageMatching("lockState" + NULL_ERROR);
 
-        assertNotNull(new JpaAutomationCompositionElement());
-        assertNotNull(new JpaAutomationCompositionElement("key", "key"));
-        assertNotNull(new JpaAutomationCompositionElement("key", "key",
+        assertDoesNotThrow(() -> new JpaAutomationCompositionElement());
+        assertDoesNotThrow(() -> new JpaAutomationCompositionElement("key", "key"));
+        assertDoesNotThrow(() -> new JpaAutomationCompositionElement("key", "key",
             new PfConceptKey(), DeployState.UNDEPLOYED, LockState.LOCKED));
     }
 
@@ -211,12 +210,10 @@ class JpaAutomationCompositionElementTest {
 
     @Test
     void testJpaAutomationCompositionElementLombok() {
-        assertNotNull(new Participant());
         var ace0 = new JpaAutomationCompositionElement();
 
         assertThat(ace0.toString()).contains("JpaAutomationCompositionElement(");
         assertThat(ace0.hashCode()).isNotZero();
-        assertEquals(ace0, ace0);
         assertNotEquals(null, ace0);
 
         var ace1 = new JpaAutomationCompositionElement(ace0.getElementId(), ace0.getInstanceId());

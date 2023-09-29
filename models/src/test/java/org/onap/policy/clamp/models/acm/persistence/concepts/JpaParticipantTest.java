@@ -22,9 +22,9 @@ package org.onap.policy.clamp.models.acm.persistence.concepts;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -57,9 +57,9 @@ class JpaParticipantTest {
         assertThatThrownBy(() -> new JpaParticipant(UUID.randomUUID().toString(), ParticipantState.ON_LINE, null))
             .hasMessageMatching("supportedElements is marked .*ull but is null");
 
-        assertNotNull(new JpaParticipant());
-        assertNotNull(new JpaParticipant(UUID.randomUUID().toString(), ParticipantState.ON_LINE, new ArrayList<>()));
-
+        assertDoesNotThrow(() -> new JpaParticipant());
+        assertDoesNotThrow(() -> new JpaParticipant(UUID.randomUUID().toString(),
+            ParticipantState.ON_LINE, new ArrayList<>()));
     }
 
     @Test
@@ -121,12 +121,10 @@ class JpaParticipantTest {
 
     @Test
     void testJpaParticipantLombok() {
-        assertNotNull(new Participant());
         var p0 = new JpaParticipant();
 
         assertThat(p0.toString()).contains("JpaParticipant(");
         assertThat(p0.hashCode()).isNotZero();
-        assertEquals(p0, p0);
         assertNotEquals(null, p0);
 
 

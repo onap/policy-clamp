@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -53,7 +52,6 @@ class AutomationCompositionElementTest {
 
         assertThat(ace0.toString()).contains("AutomationCompositionElement(");
         assertThat(ace0.hashCode()).isNotZero();
-        assertThat(ace0).isEqualTo(ace0);
         assertNotEquals(null, ace0);
 
         var ace1 = new AutomationCompositionElement();

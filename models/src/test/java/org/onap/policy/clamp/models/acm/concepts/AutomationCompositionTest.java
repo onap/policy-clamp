@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +22,9 @@ package org.onap.policy.clamp.models.acm.concepts;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.LinkedHashMap;
@@ -45,13 +45,12 @@ class AutomationCompositionTest {
 
     @Test
     void testAutomationCompositionLombok() {
-        assertNotNull(new AutomationComposition());
+        assertDoesNotThrow(() -> new AutomationComposition());
         var ac0 = new AutomationComposition();
         ac0.setElements(new LinkedHashMap<>());
 
         assertThat(ac0.toString()).contains("AutomationComposition(");
         assertThat(ac0.hashCode()).isNotZero();
-        assertEquals(ac0, ac0);
         assertNotEquals(null, ac0);
 
         var ac1 = new AutomationComposition();
