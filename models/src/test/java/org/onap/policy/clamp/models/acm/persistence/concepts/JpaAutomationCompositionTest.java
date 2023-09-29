@@ -22,9 +22,9 @@ package org.onap.policy.clamp.models.acm.persistence.concepts;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -72,22 +72,22 @@ class JpaAutomationCompositionTest {
         }).hasMessageMatching("compositionId" + NULL_TEXT_ERROR);
 
         assertThatThrownBy(() -> {
-            new JpaAutomationComposition(INSTANCE_ID, new PfConceptKey(), COMPOSITION_ID.toString(), null,
+            new JpaAutomationComposition(INSTANCE_ID, new PfConceptKey(), COMPOSITION_ID, null,
                     DeployState.UNDEPLOYED, LockState.LOCKED);
         }).hasMessageMatching("elements" + NULL_TEXT_ERROR);
 
         assertThatThrownBy(() -> {
-            new JpaAutomationComposition(INSTANCE_ID, new PfConceptKey(), COMPOSITION_ID.toString(), new ArrayList<>(),
+            new JpaAutomationComposition(INSTANCE_ID, new PfConceptKey(), COMPOSITION_ID, new ArrayList<>(),
                     null, LockState.LOCKED);
         }).hasMessageMatching("deployState" + NULL_TEXT_ERROR);
 
         assertThatThrownBy(() -> {
-            new JpaAutomationComposition(INSTANCE_ID, new PfConceptKey(), COMPOSITION_ID.toString(), new ArrayList<>(),
+            new JpaAutomationComposition(INSTANCE_ID, new PfConceptKey(), COMPOSITION_ID, new ArrayList<>(),
                     DeployState.UNDEPLOYED, null);
         }).hasMessageMatching("lockState" + NULL_TEXT_ERROR);
 
-        assertNotNull(new JpaAutomationComposition());
-        assertNotNull(new JpaAutomationComposition(INSTANCE_ID, new PfConceptKey(), COMPOSITION_ID.toString(),
+        assertDoesNotThrow(() -> new JpaAutomationComposition());
+        assertDoesNotThrow(() -> new JpaAutomationComposition(INSTANCE_ID, new PfConceptKey(), COMPOSITION_ID,
                 new ArrayList<>(), DeployState.UNDEPLOYED, LockState.LOCKED));
     }
 
@@ -198,13 +198,11 @@ class JpaAutomationCompositionTest {
 
     @Test
     void testJpaAutomationCompositionLombok() {
-        assertNotNull(new AutomationComposition());
         var ac0 = new JpaAutomationComposition();
         ac0.setCompositionId(COMPOSITION_ID);
 
         assertThat(ac0.toString()).contains("JpaAutomationComposition(");
         assertThat(ac0.hashCode()).isNotZero();
-        assertEquals(ac0, ac0);
         assertNotEquals(null, ac0);
 
         var ac1 = new JpaAutomationComposition();

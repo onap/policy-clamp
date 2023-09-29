@@ -21,9 +21,9 @@
 package org.onap.policy.clamp.models.acm.persistence.concepts;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -74,9 +74,9 @@ class JpaParticipantSupportedElementTypeTest {
             new JpaParticipantSupportedElementType("key", "key", "name", null);
         }).hasMessageMatching("typeVersion" + NULL_ERROR);
 
-        assertNotNull(new JpaParticipantSupportedElementType());
-        assertNotNull(new JpaParticipantSupportedElementType("key", "key"));
-        assertNotNull(new JpaParticipantSupportedElementType("key", "key", "name",
+        assertDoesNotThrow(() -> new JpaParticipantSupportedElementType());
+        assertDoesNotThrow(() -> new JpaParticipantSupportedElementType("key", "key"));
+        assertDoesNotThrow(() -> new JpaParticipantSupportedElementType("key", "key", "name",
             "1.0.0"));
     }
 

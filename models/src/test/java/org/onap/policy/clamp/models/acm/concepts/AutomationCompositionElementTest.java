@@ -53,7 +53,6 @@ class AutomationCompositionElementTest {
 
         assertThat(ace0.toString()).contains("AutomationCompositionElement(");
         assertThat(ace0.hashCode()).isNotZero();
-        assertThat(ace0).isEqualTo(ace0);
         assertNotEquals(null, ace0);
 
         var ace1 = new AutomationCompositionElement();

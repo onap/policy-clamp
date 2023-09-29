@@ -22,9 +22,9 @@ package org.onap.policy.clamp.models.acm.concepts;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.Map;
 import java.util.UUID;
@@ -35,12 +35,11 @@ class ParticipantTest {
 
     @Test
     void testParticipantLombok() {
-        assertNotNull(new Participant());
+        assertDoesNotThrow(() -> new Participant());
         var p0 = new Participant();
 
         assertThat(p0.toString()).contains("Participant(");
         assertThat(p0.hashCode()).isNotZero();
-        assertEquals(p0, p0);
         assertNotEquals(null, p0);
 
 

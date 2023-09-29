@@ -27,7 +27,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.Map;
 import org.onap.policy.clamp.models.acm.messages.rest.SimpleResponse;
 import org.onap.policy.clamp.models.acm.messages.rest.TypedSimpleResponse;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.boot.web.servlet.error.ErrorController;
@@ -43,9 +42,6 @@ public class AcElementErrorController implements ErrorController {
 
     private final ErrorAttributes errorAttributes;
 
-    @Value("${server.error.path}")
-    private String path;
-
     /**
      * Constructor.
      *
@@ -56,7 +52,7 @@ public class AcElementErrorController implements ErrorController {
     }
 
     protected HttpStatus getStatus(HttpServletRequest request) {
-        Integer statusCode = (Integer) request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
+        var statusCode = (Integer) request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
         if (statusCode == null) {
             return HttpStatus.INTERNAL_SERVER_ERROR;
         }
@@ -73,19 +69,20 @@ public class AcElementErrorController implements ErrorController {
      * @param request HttpServletRequest
      * @return ResponseEntity
      */
+    @SuppressWarnings("squid:S3752")
     @RequestMapping(value = "${server.error.path}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TypedSimpleResponse<SimpleResponse>> handleError(HttpServletRequest request) {
         Map<String, Object> map = this.errorAttributes.getErrorAttributes(new ServletWebRequest(request),
                 ErrorAttributeOptions.defaults());
 
         var sb = new StringBuilder();
-        final Object error = map.get("error");
+        final var error = map.get("error");
         if (error != null) {
-            sb.append(error.toString() + " ");
+            sb.append(error).append(" ");
         }
-        final Object message = map.get("message");
+        final var message = map.get("message");
         if (message != null) {
-            sb.append(message.toString());
+            sb.append(message);
         }
 
         TypedSimpleResponse<SimpleResponse> resp = new TypedSimpleResponse<>();

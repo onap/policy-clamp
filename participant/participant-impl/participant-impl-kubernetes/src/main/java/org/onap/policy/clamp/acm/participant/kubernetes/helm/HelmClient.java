@@ -49,6 +49,9 @@ public class HelmClient {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final String PATH_DELIMITER = "/";
+    public static final String COMMAND_SH = "/bin/sh";
+    private static final String COMMAND_HELM = "/usr/local/bin/helm";
+    public static final String COMMAND_KUBECTL = "/usr/local/bin/kubectl";
 
     /**
      * Install a chart.
@@ -193,7 +196,7 @@ public class HelmClient {
         // @formatter:off
         List<String> helmArguments = new ArrayList<>(
                 List.of(
-                        "helm",
+                    COMMAND_HELM,
                         "repo",
                         "add", repo.getRepoName(), repo.getAddress()
                 ));
@@ -206,7 +209,7 @@ public class HelmClient {
     private boolean verifyHelmRepoAlreadyExist(HelmRepository repo) {
         try {
             logger.debug("Verify the repo already exist in helm repositories");
-            List<String> helmArguments = List.of("sh", "-c", "helm repo list | grep " + repo.getRepoName());
+            var helmArguments = List.of(COMMAND_SH, "-c", COMMAND_HELM + " repo list | grep " + repo.getRepoName());
             String response = executeCommand(new ProcessBuilder().command(helmArguments));
             if (StringUtils.isEmpty(response)) {
                 return false;
@@ -219,7 +222,7 @@ public class HelmClient {
     }
 
     private ProcessBuilder prepareVerifyNamespaceCommand(String namespace) {
-        List<String> helmArguments = List.of("sh", "-c", "kubectl get ns | grep " + namespace);
+        var helmArguments = List.of(COMMAND_SH, "-c", COMMAND_KUBECTL + " get ns | grep " + namespace);
         return new ProcessBuilder().command(helmArguments);
     }
 
@@ -228,7 +231,7 @@ public class HelmClient {
         // @formatter:off
         List<String> helmArguments = new ArrayList<>(
             List.of(
-                "helm",
+                COMMAND_HELM,
                 "install", chart.getReleaseName(), chart.getRepository().getRepoName() + "/"
                             + chart.getChartId().getName(),
                 "--version", chart.getChartId().getVersion(),
@@ -245,7 +248,7 @@ public class HelmClient {
         }
 
         if (chart.getOverrideParams() != null) {
-            for (Map.Entry<String, String> entry : chart.getOverrideParams().entrySet()) {
+            for (var entry : chart.getOverrideParams().entrySet()) {
                 helmArguments.addAll(List.of("--set", entry.getKey() + "=" + entry.getValue()));
             }
         }
@@ -253,23 +256,23 @@ public class HelmClient {
     }
 
     private ProcessBuilder prepareUnInstallCommand(ChartInfo chart) {
-        return new ProcessBuilder("helm", "delete", chart.getReleaseName(), "--namespace",
+        return new ProcessBuilder(COMMAND_HELM, "delete", chart.getReleaseName(), "--namespace",
             chart.getNamespace());
     }
 
     private ProcessBuilder prepareCreateNamespaceCommand(String namespace) {
-        return new ProcessBuilder().command("kubectl", "create", "namespace", namespace);
+        return new ProcessBuilder().command(COMMAND_KUBECTL, "create", "namespace", namespace);
     }
 
     private ProcessBuilder helmRepoVerifyCommand(String chartName) {
-        return new ProcessBuilder().command("sh", "-c", "helm search repo | grep " + chartName);
+        return new ProcessBuilder().command(COMMAND_SH, "-c", COMMAND_HELM + " search repo | grep " + chartName);
     }
 
 
     private boolean updateHelmRepo() {
         try {
             logger.info("Updating local helm repositories before verifying the chart");
-            executeCommand(new ProcessBuilder().command("helm", "repo", "update"));
+            executeCommand(new ProcessBuilder().command(COMMAND_HELM, "repo", "update"));
             logger.debug("Helm repositories updated successfully");
         } catch (ServiceException e) {
             logger.error("Failed to update the helm repo: ", e);

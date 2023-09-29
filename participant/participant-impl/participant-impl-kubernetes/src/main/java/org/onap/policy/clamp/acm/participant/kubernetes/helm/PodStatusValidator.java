@@ -101,8 +101,9 @@ public class PodStatusValidator {
     }
 
     private ProcessBuilder verifyPodStatusCommand(ChartInfo chart) {
-        String cmd = "kubectl get pods --namespace " + chart.getNamespace() + " | grep " + getPodName();
-        return new ProcessBuilder("sh", "-c", cmd);
+        String cmd = HelmClient.COMMAND_KUBECTL
+            + " get pods --namespace " + chart.getNamespace() + " | grep " + getPodName();
+        return new ProcessBuilder(HelmClient.COMMAND_SH, "-c", cmd);
     }
 
     private String getPodName() {

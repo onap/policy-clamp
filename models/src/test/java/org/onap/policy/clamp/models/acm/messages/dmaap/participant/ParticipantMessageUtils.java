@@ -20,7 +20,7 @@
 
 package org.onap.policy.clamp.models.acm.messages.dmaap.participant;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;

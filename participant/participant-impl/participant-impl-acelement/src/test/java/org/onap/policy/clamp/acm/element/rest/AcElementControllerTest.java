@@ -21,7 +21,7 @@
 package org.onap.policy.clamp.acm.element.rest;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
@@ -165,5 +165,4 @@ class AcElementControllerTest {
     private String getElementConfigJson() throws IOException {
         return FileUtils.readFileToString(new File(ELEMENT_CONFIG_YAML), StandardCharsets.UTF_8);
     }
-
 }
