@@ -66,6 +66,10 @@ public class AcDefinitionProvider {
         serviceTemplate.getMetadata().put("compositionId", compositionId);
         acmDefinition.setServiceTemplate(serviceTemplate);
         var acElements = AcmUtils.extractAcElementsFromServiceTemplate(serviceTemplate, toscaElementName);
+        if (acElements.isEmpty()) {
+            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
+                    "NodeTemplate with element type " + toscaElementName + " must exist!");
+        }
         acmDefinition.setElementStateMap(AcmUtils.createElementStateMap(acElements, AcTypeState.COMMISSIONED));
         var jpaAcmDefinition = ProviderUtils.getJpaAndValidate(acmDefinition, JpaAutomationCompositionDefinition::new,
                 "AutomationCompositionDefinition");
@@ -94,6 +98,10 @@ public class AcDefinitionProvider {
         acmDefinition.setServiceTemplate(serviceTemplate);
         var acElements =
                 AcmUtils.extractAcElementsFromServiceTemplate(serviceTemplate, toscaElementName);
+        if (acElements.isEmpty()) {
+            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
+                    "NodeTemplate with element type " + toscaElementName + " must exist!");
+        }
         acmDefinition.setElementStateMap(AcmUtils.createElementStateMap(acElements, AcTypeState.COMMISSIONED));
         updateAcDefinition(acmDefinition, toscaCompositionName);
     }
