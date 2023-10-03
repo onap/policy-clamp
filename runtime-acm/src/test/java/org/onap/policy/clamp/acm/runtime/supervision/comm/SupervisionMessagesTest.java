@@ -244,8 +244,6 @@ class SupervisionMessagesTest {
         publisher.active(List.of(topicSink));
 
         var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
-        // serviceTemplate.setName("Name");
-        // serviceTemplate.setVersion("1.0.0");
         var acmDefinition = new AutomationCompositionDefinition();
         acmDefinition.setCompositionId(UUID.randomUUID());
         acmDefinition.setServiceTemplate(serviceTemplate);
