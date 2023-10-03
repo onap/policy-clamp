@@ -53,7 +53,9 @@ class AcDefinitionProviderTest {
             "clamp/acm/test/tosca-template-additional-properties.yaml";
 
     private static final String ELEMENT_NAME = "org.onap.policy.clamp.acm.AutomationCompositionElement";
+    private static final String INVALID_ELEMENT_NAME = "dummyElement";
     private static final String NODE_TYPE = "org.onap.policy.clamp.acm.AutomationComposition";
+    private static final String INVALID_NODE_TYPE = "dummyNodeTypeName";
 
     private static ToscaServiceTemplate inputServiceTemplate;
 
@@ -95,6 +97,32 @@ class AcDefinitionProviderTest {
 
         assertThat(result.getServiceTemplate()).isEqualTo(docServiceTemplate.toAuthorative());
         assertThat(result.getServiceTemplate().getMetadata()).isNotNull();
+    }
+
+    @Test
+    void testToscaWithInvalidElement() {
+        var docServiceTemplate = new DocToscaServiceTemplate(inputServiceTemplate);
+        var acmDefinition = getAcDefinition(docServiceTemplate);
+        var acmDefinitionRepository = mock(AutomationCompositionDefinitionRepository.class);
+
+        var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository);
+
+        assertThatThrownBy(() -> acDefinitionProvider
+                .createAutomationCompositionDefinition(inputServiceTemplate, INVALID_ELEMENT_NAME, NODE_TYPE))
+                .hasMessage("NodeTemplate with element type " + INVALID_ELEMENT_NAME + " must exist!");
+    }
+
+    @Test
+    void testToscaWithInvalidNodeType() {
+        var docServiceTemplate = new DocToscaServiceTemplate(inputServiceTemplate);
+        var acmDefinition = getAcDefinition(docServiceTemplate);
+        var acmDefinitionRepository = mock(AutomationCompositionDefinitionRepository.class);
+
+        var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository);
+
+        assertThatThrownBy(() -> acDefinitionProvider
+                .createAutomationCompositionDefinition(inputServiceTemplate, ELEMENT_NAME, INVALID_NODE_TYPE))
+                .hasMessageContaining("NodeTemplate with type " + INVALID_NODE_TYPE + " must exist!");
     }
 
     @Test
