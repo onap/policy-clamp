@@ -72,8 +72,8 @@ public class AcDefinitionProvider {
         }
         acmDefinition.setElementStateMap(AcmUtils.createElementStateMap(acElements, AcTypeState.COMMISSIONED));
         var jpaAcmDefinition = ProviderUtils.getJpaAndValidate(acmDefinition, JpaAutomationCompositionDefinition::new,
-                "AutomationCompositionDefinition");
-        var validationResult = new BeanValidationResult("AutomationCompositionDefinition", acmDefinition);
+            acmDefinition.getClass().getSimpleName());
+        var validationResult = new BeanValidationResult(acmDefinition.getClass().getSimpleName(), acmDefinition);
         ToscaServiceTemplateValidation.validate(validationResult, jpaAcmDefinition.getServiceTemplate(),
                 toscaCompositionName);
         if (! validationResult.isValid()) {

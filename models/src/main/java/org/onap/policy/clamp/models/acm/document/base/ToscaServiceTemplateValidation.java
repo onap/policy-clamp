@@ -38,6 +38,7 @@ import org.onap.policy.models.base.Validated;
 public final class ToscaServiceTemplateValidation {
 
     private static final String ROOT_KEY_NAME_SUFFIX = ".Root";
+    private static final String TOPOLOGY_TEMPLATE = "TopologyTemplate";
 
     /**
      * validate a serviceTemplate.
@@ -91,9 +92,9 @@ public final class ToscaServiceTemplateValidation {
     /**
      * Validate ToscaTopologyTemplate.
      *
-     * @param result
-     *
+     * @param result the BeanValidationResult
      * @param topologyTemplate the ToscaServiceTemplate
+     * @param toscaCompositionName the name of the ToscaComposition
      */
     public static void validateToscaTopologyTemplate(BeanValidationResult result,
             DocToscaTopologyTemplate topologyTemplate, String toscaCompositionName) {
@@ -106,14 +107,14 @@ public final class ToscaServiceTemplateValidation {
                     nodeTemplate -> toscaCompositionName.equals(nodeTemplate.getType()))
                     .count();
             if (acNumber == 0) {
-                result.addResult("TopologyTemplate", nodeTemplates, ValidationStatus.INVALID, acNodeTypeNotPresent);
+                result.addResult(TOPOLOGY_TEMPLATE, nodeTemplates, ValidationStatus.INVALID, acNodeTypeNotPresent);
             }
             if (acNumber > 1) {
-                result.addResult("TopologyTemplate", nodeTemplates, ValidationStatus.INVALID, "NodeTemplate with type "
+                result.addResult(TOPOLOGY_TEMPLATE, nodeTemplates, ValidationStatus.INVALID, "NodeTemplate with type "
                         + toscaCompositionName + " not allowed to be more than one!");
             }
         } else {
-            result.addResult("TopologyTemplate", topologyTemplate, ValidationStatus.INVALID, acNodeTypeNotPresent);
+            result.addResult(TOPOLOGY_TEMPLATE, topologyTemplate, ValidationStatus.INVALID, acNodeTypeNotPresent);
         }
     }
 

@@ -37,7 +37,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles({ "test", "stub" })
-public class ParticipantControllerStubTest extends CommonRestController {
+class ParticipantControllerStubTest extends CommonRestController {
     private static final String PARTICIPANT_ENDPOINT = "participants";
     private static final String PARTICIPANT_ID = "101c62b3-8918-41b9-a747-d21eb79c6c03";
 

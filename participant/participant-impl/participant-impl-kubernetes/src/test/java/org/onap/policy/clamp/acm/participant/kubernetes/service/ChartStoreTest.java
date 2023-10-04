@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2023 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -88,25 +88,25 @@ class ChartStoreTest {
 
     @Test
     void test_getHelmChartFile() {
-        File file = chartStore.getHelmChartFile(charts.get(0));
+        var file = chartStore.getHelmChartFile(charts.get(0));
         assertNotNull(file);
         assertThat(file.getPath()).endsWith(charts.get(0).getChartId().getName());
     }
 
     @Test
     void test_getOverrideFile() {
-        File file = chartStore.getOverrideFile(charts.get(0));
+        var file = chartStore.getOverrideFile(charts.get(0));
         assertNotNull(file);
         assertThat(file.getPath()).endsWith("values.yaml");
     }
 
     @Test
     void test_saveChart() throws IOException, ServiceException {
-        MockMultipartFile mockChartFile = new MockMultipartFile("chart", "dummy".getBytes());
-        MockMultipartFile mockOverrideFile = new MockMultipartFile("override", "dummy".getBytes());
-        ChartInfo testChart = charts.get(0);
+        var mockChartFile = new MockMultipartFile("chart", "dummy".getBytes());
+        var mockOverrideFile = new MockMultipartFile("override", "dummy".getBytes());
+        var testChart = charts.get(0);
         testChart.setChartId(new ToscaConceptIdentifier("testChart", "1.0.0"));
-        ChartInfo result = chartStore.saveChart(charts.get(0), mockChartFile, mockOverrideFile);
+        var result = chartStore.saveChart(charts.get(0), mockChartFile, mockOverrideFile);
 
         assertThat(result.getChartId().getName()).isEqualTo("testChart");
         assertThat(chartStore.getLocalChartMap()).hasSize(1);
@@ -121,7 +121,7 @@ class ChartStoreTest {
         assertNull(chartStore.getChart(charts.get(0).getChartId().getName(), charts.get(0).getChartId().getVersion()));
         chartStore.getLocalChartMap().put(charts.get(0).getChartId().getName() + "_" + charts.get(0).getChartId()
                 .getVersion(), charts.get(0));
-        ChartInfo chart = chartStore.getChart(charts.get(0).getChartId().getName(),
+        var chart = chartStore.getChart(charts.get(0).getChartId().getName(),
             charts.get(0).getChartId().getVersion());
         assertThat(chart.getChartId().getName()).isEqualTo(charts.get(0).getChartId().getName());
     }
@@ -131,13 +131,13 @@ class ChartStoreTest {
         // When the chart store is empty before adding any charts
         assertThat(chartStore.getAllCharts()).isEmpty();
 
-        for (ChartInfo chart : charts) {
+        for (var chart : charts) {
             chartStore.getLocalChartMap().put(chart.getChartId().getName() + "_" + chart.getChartId().getVersion(),
                 chart);
         }
-        List<ChartInfo> retrievedChartList = chartStore.getAllCharts();
-        assertThat(retrievedChartList).isNotEmpty();
-        assertThat(retrievedChartList).hasSameSizeAs(charts);
+        var retrievedChartList = chartStore.getAllCharts();
+        assertThat(retrievedChartList).isNotEmpty()
+            .hasSameSizeAs(charts);
     }
 
     @Test
@@ -151,7 +151,7 @@ class ChartStoreTest {
 
     @Test
     void test_getAppPath() {
-        Path path = chartStore.getAppPath(charts.get(0).getChartId());
+        var path = chartStore.getAppPath(charts.get(0).getChartId());
         assertNotNull(path);
         assertThat(path.toString()).endsWith(charts.get(0).getChartId().getVersion());
         assertThat(path.toString()).startsWith("target");
@@ -159,16 +159,16 @@ class ChartStoreTest {
 
     @Test
     void test_chartSoreInstantiationWithExistingChartFiles() throws IOException, ServiceException {
-        MockMultipartFile mockChartFile = new MockMultipartFile("HelmChartFile", "dummyData".getBytes());
-        MockMultipartFile mockOverrideFile = new MockMultipartFile("overrideFile.yaml", "dummyData".getBytes());
-        ChartInfo testChart = charts.get(0);
+        var mockChartFile = new MockMultipartFile("HelmChartFile", "dummyData".getBytes());
+        var mockOverrideFile = new MockMultipartFile("overrideFile.yaml", "dummyData".getBytes());
+        var testChart = charts.get(0);
         testChart.setChartId(new ToscaConceptIdentifier("dummyChart", "1.0.0"));
 
         //Creating a dummy chart in local dir.
         chartStore.saveChart(charts.get(0), mockChartFile, mockOverrideFile);
 
         //Instantiating a new chartStore object with pre available chart in local.
-        ChartStore chartStore2 = new ChartStore(parameters);
+        var chartStore2 = new ChartStore(parameters);
         assertThat(chartStore2.getLocalChartMap()).hasSize(1).containsKey("dummyChart_" + charts.get(0).getChartId()
             .getVersion());
     }

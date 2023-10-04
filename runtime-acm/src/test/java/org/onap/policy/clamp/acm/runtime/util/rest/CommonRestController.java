@@ -20,13 +20,12 @@
 
 package org.onap.policy.clamp.acm.runtime.util.rest;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.Invocation;
-import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.client.ClientProperties;
@@ -53,10 +52,10 @@ public class CommonRestController {
      * @param endpoint the endpoint of interest
      */
     protected void testSwagger(final String endpoint) {
-        // final Invocation.Builder invocationBuilder = sendActRequest("v3/api-docs");
-        // final String resp = invocationBuilder.get(String.class);
+        final var invocationBuilder = sendActRequest("v3/api-docs");
+        final var resp = invocationBuilder.get(String.class);
 
-        // assertThat(resp).contains(endpoint);
+        assertThat(resp).contains(endpoint);
     }
 
     /**
@@ -107,7 +106,7 @@ public class CommonRestController {
      * @return a request builder
      */
     protected Invocation.Builder sendFqeRequest(final String fullyQualifiedEndpoint, boolean includeAuth) {
-        final Client client = ClientBuilder.newBuilder().build();
+        final var client = ClientBuilder.newBuilder().build();
 
         client.property(ClientProperties.METAINF_SERVICES_LOOKUP_DISABLE, "true");
         client.register(GsonMessageBodyHandler.class);
@@ -116,7 +115,7 @@ public class CommonRestController {
             client.register(HttpAuthenticationFeature.basic("runtimeUser", "zb!XztG34"));
         }
 
-        final WebTarget webTarget = client.target(fullyQualifiedEndpoint);
+        final var webTarget = client.target(fullyQualifiedEndpoint);
 
         return webTarget.request(MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN);
     }
@@ -128,7 +127,7 @@ public class CommonRestController {
      * @param entity the entity ofthe body
      */
     protected void assertUnauthorizedPost(final String endPoint, final Entity<?> entity) {
-        Response rawresp = sendNoAuthRequest(endPoint).post(entity);
+        var rawresp = sendNoAuthRequest(endPoint).post(entity);
         assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), rawresp.getStatus());
     }
 
@@ -139,7 +138,7 @@ public class CommonRestController {
      * @param entity the entity ofthe body
      */
     protected void assertUnauthorizedPut(final String endPoint, final Entity<?> entity) {
-        Response rawresp = sendNoAuthRequest(endPoint).put(entity);
+        var rawresp = sendNoAuthRequest(endPoint).put(entity);
         assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), rawresp.getStatus());
     }
 
@@ -149,7 +148,7 @@ public class CommonRestController {
      * @param endPoint the endpoint
      */
     protected void assertUnauthorizedGet(final String endPoint) {
-        Response rawresp = sendNoAuthRequest(endPoint).buildGet().invoke();
+        var rawresp = sendNoAuthRequest(endPoint).buildGet().invoke();
         assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), rawresp.getStatus());
     }
 
@@ -159,7 +158,7 @@ public class CommonRestController {
      * @param endPoint the endpoint
      */
     protected void assertUnauthorizedActGet(final String endPoint) {
-        Response rawresp = sendNoAuthActRequest(endPoint).buildGet().invoke();
+        var rawresp = sendNoAuthActRequest(endPoint).buildGet().invoke();
         assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), rawresp.getStatus());
     }
 
@@ -169,7 +168,7 @@ public class CommonRestController {
      * @param endPoint the endpoint
      */
     protected void assertUnauthorizedDelete(final String endPoint) {
-        Response rawresp = sendNoAuthRequest(endPoint).delete();
+        var rawresp = sendNoAuthRequest(endPoint).delete();
         assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), rawresp.getStatus());
     }
 
