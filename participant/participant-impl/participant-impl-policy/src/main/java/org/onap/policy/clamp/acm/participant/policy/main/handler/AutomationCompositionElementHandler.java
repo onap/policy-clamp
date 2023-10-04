@@ -165,12 +165,16 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
         if (automationCompositionDefinition.getPolicyTypes() != null) {
             LOGGER.info("Found Policy Types in automation composition definition: {} , Creating Policy Types",
                     automationCompositionDefinition.getName());
-            createPolicyTypeResp = apiHttpClient.createPolicyType(automationCompositionDefinition).getStatus();
+            try (var response = apiHttpClient.createPolicyType(automationCompositionDefinition)) {
+                createPolicyTypeResp = response.getStatus();
+            }
         }
         if (automationCompositionDefinition.getToscaTopologyTemplate().getPolicies() != null) {
             LOGGER.info("Found Policies in automation composition definition: {} , Creating Policies",
                     automationCompositionDefinition.getName());
-            createPolicyResp = apiHttpClient.createPolicy(automationCompositionDefinition).getStatus();
+            try (var response = apiHttpClient.createPolicy(automationCompositionDefinition)) {
+                createPolicyResp = response.getStatus();
+            }
         }
         if (createPolicyTypeResp == HttpStatus.SC_OK && createPolicyResp == HttpStatus.SC_OK) {
             LOGGER.info(
