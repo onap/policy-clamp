@@ -33,9 +33,6 @@ metrics:
   security:
     disabled: false
 
-security:
-  enable-csrf: false
-
 server:
   port: 6969
   servlet:
