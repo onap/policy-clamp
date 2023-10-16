@@ -267,6 +267,7 @@ public class AutomationCompositionHandler {
      */
     private void handleUndeployState(UUID messageId, final AutomationComposition automationComposition,
             Integer startPhaseMsg) {
+        automationComposition.setCompositionTargetId(null);
         for (var acElement : automationComposition.getElements().values()) {
             int startPhase = ParticipantUtils.findStartPhase(
                     cacheProvider.getCommonProperties(automationComposition.getInstanceId(), acElement.getId()));

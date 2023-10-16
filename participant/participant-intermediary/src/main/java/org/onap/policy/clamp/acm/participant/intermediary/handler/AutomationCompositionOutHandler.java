@@ -123,7 +123,8 @@ public class AutomationCompositionOutHandler {
         var checkOpt = automationComposition.getElements().values().stream()
                 .filter(acElement -> !deployState.equals(acElement.getDeployState())).findAny();
         if (checkOpt.isEmpty()) {
-            if (DeployState.MIGRATING.equals(automationComposition.getDeployState())) {
+            if (DeployState.DEPLOYED.equals(automationComposition.getDeployState())
+                    && automationComposition.getCompositionTargetId() != null) {
                 // migration scenario
                 automationComposition.setCompositionId(automationComposition.getCompositionTargetId());
                 automationComposition.setCompositionTargetId(null);

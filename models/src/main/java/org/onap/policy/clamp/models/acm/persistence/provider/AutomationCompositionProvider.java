@@ -31,6 +31,7 @@ import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionInfo;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
@@ -43,6 +44,7 @@ import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -77,7 +79,7 @@ public class AutomationCompositionProvider {
      * @param instanceId the ID of the automation composition to get
      * @return the automation composition found
      */
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.READ_UNCOMMITTED)
     public Optional<AutomationComposition> findAutomationComposition(final UUID instanceId) {
         var result = automationCompositionRepository.findById(instanceId.toString());
         return result.stream().map(JpaAutomationComposition::toAuthorative).findFirst();
@@ -208,5 +210,19 @@ public class AutomationCompositionProvider {
             }
         }
         acElementRepository.saveAll(jpaList);
+    }
+
+    /**
+     * Update AutomationCompositionElement.
+     *
+     * @param element the AutomationCompositionElement
+     * @param instanceId the instance Id
+     */
+    public void updateAutomationCompositionElement(@NonNull final AutomationCompositionElement element,
+                @NonNull final UUID instanceId) {
+        var jpaAcElement = new JpaAutomationCompositionElement(element.getId().toString(), instanceId.toString());
+        jpaAcElement.fromAuthorative(element);
+        ProviderUtils.validate(element, jpaAcElement, "AutomationCompositionElement");
+        acElementRepository.save(jpaAcElement);
     }
 }

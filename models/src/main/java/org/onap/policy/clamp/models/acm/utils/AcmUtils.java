@@ -381,6 +381,7 @@ public final class AcmUtils {
         for (var element : automationComposition.getElements().values()) {
             element.setDeployState(deployState);
             element.setLockState(lockState);
+            element.setMessage(null);
         }
     }
 

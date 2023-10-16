@@ -25,6 +25,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import lombok.AllArgsConstructor;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AcElementPropertiesPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionDeployPublisher;
@@ -62,6 +64,8 @@ public class SupervisionAcHandler {
     private final AcElementPropertiesPublisher acElementPropertiesPublisher;
     private final AutomationCompositionMigrationPublisher acCompositionMigrationPublisher;
 
+    private final ExecutorService executor = Executors.newFixedThreadPool(1);
+
     /**
      * Handle Deploy an AutomationComposition instance.
      *
@@ -74,6 +78,7 @@ public class SupervisionAcHandler {
             for (var element : automationComposition.getElements().values()) {
                 if (!DeployState.DEPLOYED.equals(element.getDeployState())) {
                     element.setDeployState(DeployState.DEPLOYING);
+                    element.setMessage(null);
                 }
             }
         } else {
@@ -82,8 +87,9 @@ public class SupervisionAcHandler {
         automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         var startPhase = ParticipantUtils.getFirstStartPhase(automationComposition, acDefinition.getServiceTemplate());
-        automationCompositionDeployPublisher.send(automationComposition, acDefinition.getServiceTemplate(), startPhase,
-                true);
+        executor.execute(
+            () -> automationCompositionDeployPublisher.send(automationComposition, acDefinition.getServiceTemplate(),
+                startPhase, true));
     }
 
     /**
@@ -104,9 +110,11 @@ public class SupervisionAcHandler {
             AcmUtils.setCascadedState(automationComposition, DeployState.UNDEPLOYING, LockState.NONE);
         }
         automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
+        automationComposition.setCompositionTargetId(null);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         var startPhase = ParticipantUtils.getFirstStartPhase(automationComposition, acDefinition.getServiceTemplate());
-        automationCompositionStateChangePublisher.send(automationComposition, startPhase, true);
+        executor.execute(
+            () -> automationCompositionStateChangePublisher.send(automationComposition, startPhase, true));
     }
 
     /**
@@ -129,7 +137,8 @@ public class SupervisionAcHandler {
         automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         var startPhase = ParticipantUtils.getFirstStartPhase(automationComposition, acDefinition.getServiceTemplate());
-        automationCompositionStateChangePublisher.send(automationComposition, startPhase, true);
+        executor.execute(
+            () -> automationCompositionStateChangePublisher.send(automationComposition, startPhase, true));
     }
 
     /**
@@ -152,7 +161,8 @@ public class SupervisionAcHandler {
         automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         var startPhase = ParticipantUtils.getFirstStartPhase(automationComposition, acDefinition.getServiceTemplate());
-        automationCompositionStateChangePublisher.send(automationComposition, startPhase, true);
+        executor.execute(
+            () -> automationCompositionStateChangePublisher.send(automationComposition, startPhase, true));
     }
 
     /**
@@ -163,7 +173,8 @@ public class SupervisionAcHandler {
     public void update(AutomationComposition automationComposition) {
         AcmUtils.setCascadedState(automationComposition, DeployState.UPDATING, automationComposition.getLockState());
         automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
-        acElementPropertiesPublisher.send(automationComposition);
+        executor.execute(
+            () -> acElementPropertiesPublisher.send(automationComposition));
     }
 
     /**
@@ -177,7 +188,8 @@ public class SupervisionAcHandler {
         automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         var startPhase = ParticipantUtils.getFirstStartPhase(automationComposition, acDefinition.getServiceTemplate());
-        automationCompositionStateChangePublisher.send(automationComposition, startPhase, true);
+        executor.execute(
+            () -> automationCompositionStateChangePublisher.send(automationComposition, startPhase, true));
     }
 
     /**
@@ -227,9 +239,10 @@ public class SupervisionAcHandler {
                 for (var element : automationComposition.getElements().values()) {
                     if (element.getParticipantId().equals(automationCompositionAckMessage.getParticipantId())) {
                         element.setDeployState(DeployState.DELETED);
+                        automationCompositionProvider.updateAutomationCompositionElement(element,
+                            automationComposition.getInstanceId());
                     }
                 }
-                automationCompositionProvider.updateAutomationComposition(automationComposition);
             } else {
                 LOGGER.warn("Empty AutomationCompositionResultMap  {} {}",
                         automationCompositionAckMessage.getAutomationCompositionId(),
@@ -251,8 +264,9 @@ public class SupervisionAcHandler {
             StateChangeResult stateChangeResult) {
         var updated = false;
         boolean inProgress = !StateChangeResult.FAILED.equals(automationComposition.getStateChangeResult());
-        if (inProgress) {
+        if (inProgress && !stateChangeResult.equals(automationComposition.getStateChangeResult())) {
             automationComposition.setStateChangeResult(stateChangeResult);
+            updated = true;
         }
 
         for (var acElementAck : automationCompositionResultSet) {
@@ -265,7 +279,8 @@ public class SupervisionAcHandler {
                 element.setDeployState(acElementAck.getValue().getDeployState());
                 element.setLockState(acElementAck.getValue().getLockState());
                 element.setRestarting(null);
-                updated = true;
+                automationCompositionProvider.updateAutomationCompositionElement(element,
+                    automationComposition.getInstanceId());
             }
         }
 
@@ -274,6 +289,7 @@ public class SupervisionAcHandler {
                     .map(AutomationCompositionElement::getRestarting).filter(Objects::nonNull).findAny();
             if (restarting.isEmpty()) {
                 automationComposition.setRestarting(null);
+                updated = true;
             }
         }
 
@@ -289,6 +305,7 @@ public class SupervisionAcHandler {
     public void migrate(AutomationComposition automationComposition, UUID compositionTargetId) {
         AcmUtils.setCascadedState(automationComposition, DeployState.MIGRATING, LockState.LOCKED);
         automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
-        acCompositionMigrationPublisher.send(automationComposition, compositionTargetId);
+        executor.execute(
+            () -> acCompositionMigrationPublisher.send(automationComposition, compositionTargetId));
     }
 }

@@ -72,17 +72,28 @@ public final class ProviderUtils {
      */
     public static <A, J extends Validated & PfAuthorative<A>> J getJpaAndValidate(A authorativeConcept,
             Supplier<J> jpaSupplier, String conceptDescription) {
-        var validationResult = new BeanValidationResult(conceptDescription, authorativeConcept);
-
         var jpaConcept = jpaSupplier.get();
         jpaConcept.fromAuthorative(authorativeConcept);
+        validate(authorativeConcept, jpaConcept, conceptDescription);
+        return jpaConcept;
+    }
+
+    /**
+     * Validate a Jpa object.
+     *
+     * @param authorativeConcept the concept
+     * @param jpaConcept  the Jpa of the concept
+     * @param conceptDescription the description used for validation result
+     */
+    public static <A, J extends Validated & PfAuthorative<A>> void validate(A authorativeConcept,
+            J jpaConcept, String conceptDescription) {
+        var validationResult = new BeanValidationResult(conceptDescription, authorativeConcept);
 
         validationResult.addResult(jpaConcept.validate(conceptDescription));
 
         if (!validationResult.isValid()) {
             throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, validationResult.getResult());
         }
-        return jpaConcept;
     }
 
     /**

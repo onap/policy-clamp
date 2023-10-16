@@ -25,6 +25,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -44,7 +45,8 @@ import org.springframework.data.domain.Example;
 
 class AutomationCompositionProviderTest {
 
-    private static final String OBJECT_IS_NULL = "automationComposition is marked non-null but is null";
+    private static final String AC_IS_NULL = "automationComposition is marked non-null but is null";
+    private static final String ACELEMENT_IS_NULL = "element is marked non-null but is null";
 
     private static final Coder CODER = new StandardCoder();
     private static final String AUTOMATION_COMPOSITION_JSON =
@@ -84,7 +86,7 @@ class AutomationCompositionProviderTest {
                 mock(AutomationCompositionElementRepository.class));
 
         assertThatThrownBy(() -> automationCompositionProvider.updateAutomationComposition(null))
-                .hasMessageMatching(OBJECT_IS_NULL);
+                .hasMessageMatching(AC_IS_NULL);
 
         when(automationCompositionRepository.save(inputAutomationCompositionsJpa.get(0)))
                 .thenReturn(inputAutomationCompositionsJpa.get(0));
@@ -184,5 +186,20 @@ class AutomationCompositionProviderTest {
         var deletedAc =
                 automationCompositionProvider.deleteAutomationComposition(automationComposition.getInstanceId());
         assertEquals(automationComposition, deletedAc);
+    }
+
+    @Test
+    void testAutomationCompositionElementUpdate() {
+        var acElementRepository = mock(AutomationCompositionElementRepository.class);
+        var automationCompositionProvider = new AutomationCompositionProvider(
+            mock(AutomationCompositionRepository.class), acElementRepository);
+
+        assertThatThrownBy(() -> automationCompositionProvider.updateAutomationCompositionElement(null, null))
+            .hasMessageMatching(ACELEMENT_IS_NULL);
+
+        var acElement = inputAutomationCompositions.getAutomationCompositionList().get(0).getElements().values()
+            .iterator().next();
+        automationCompositionProvider.updateAutomationCompositionElement(acElement, UUID.randomUUID());
+        verify(acElementRepository).save(any());
     }
 }

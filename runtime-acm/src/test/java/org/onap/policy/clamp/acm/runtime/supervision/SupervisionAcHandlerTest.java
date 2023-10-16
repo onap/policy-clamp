@@ -24,6 +24,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.timeout;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVICE_TEMPLATE_YAML;
@@ -41,6 +43,7 @@ import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeployAck;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
@@ -70,7 +73,8 @@ class SupervisionAcHandlerTest {
                         automationComposition, DeployState.DEPLOYED, LockState.UNLOCKED);
         handler.handleAutomationCompositionStateChangeAckMessage(automationCompositionAckMessage);
 
-        verify(automationCompositionProvider).updateAutomationComposition(any(AutomationComposition.class));
+        verify(automationCompositionProvider, times(3))
+            .updateAutomationCompositionElement(any(AutomationCompositionElement.class), any());
     }
 
     private AutomationCompositionDeployAck getAutomationCompositionDeployAck(ParticipantMessageType messageType,
@@ -83,6 +87,7 @@ class SupervisionAcHandlerTest {
         }
         automationCompositionAckMessage.setAutomationCompositionId(automationComposition.getInstanceId());
         automationCompositionAckMessage.setParticipantId(CommonTestData.getParticipantId());
+        automationCompositionAckMessage.setStateChangeResult(StateChangeResult.NO_ERROR);
         return automationCompositionAckMessage;
     }
 
@@ -121,6 +126,7 @@ class SupervisionAcHandlerTest {
 
         var automationCompositionAckMessage =
                 new AutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_DEPLOY_ACK);
+        automationCompositionAckMessage.setStateChangeResult(StateChangeResult.NO_ERROR);
         for (var element : automationComposition.getElements().values()) {
             element.setDeployState(DeployState.DEPLOYED);
         }
@@ -142,7 +148,8 @@ class SupervisionAcHandlerTest {
 
         handler.handleAutomationCompositionUpdateAckMessage(automationCompositionAckMessage);
 
-        verify(automationCompositionProvider).updateAutomationComposition(any(AutomationComposition.class));
+        verify(automationCompositionProvider)
+            .updateAutomationCompositionElement(any(AutomationCompositionElement.class), any());
     }
 
     @Test
@@ -159,8 +166,8 @@ class SupervisionAcHandlerTest {
         automationComposition.setStateChangeResult(StateChangeResult.FAILED);
         handler.deploy(automationComposition, acDefinition);
         verify(automationCompositionProvider).updateAutomationComposition(automationComposition);
-        verify(automationCompositionDeployPublisher).send(automationComposition, acDefinition.getServiceTemplate(), 0,
-                true);
+        verify(automationCompositionDeployPublisher, timeout(1000))
+            .send(automationComposition, acDefinition.getServiceTemplate(), 0, true);
     }
 
     @Test
@@ -177,7 +184,7 @@ class SupervisionAcHandlerTest {
         handler.undeploy(automationComposition, acDefinition);
 
         verify(automationCompositionProvider).updateAutomationComposition(any(AutomationComposition.class));
-        verify(acStateChangePublisher).send(any(AutomationComposition.class), anyInt(), anyBoolean());
+        verify(acStateChangePublisher, timeout(1000)).send(any(AutomationComposition.class), anyInt(), anyBoolean());
     }
 
     @Test
@@ -197,7 +204,7 @@ class SupervisionAcHandlerTest {
                 .forEach(element -> element.setDeployState(DeployState.UNDEPLOYING));
         handler.undeploy(automationComposition, acDefinition);
         verify(automationCompositionProvider).updateAutomationComposition(automationComposition);
-        verify(acStateChangePublisher).send(any(AutomationComposition.class), anyInt(), anyBoolean());
+        verify(acStateChangePublisher, timeout(1000)).send(any(AutomationComposition.class), anyInt(), anyBoolean());
     }
 
     @Test
@@ -214,7 +221,7 @@ class SupervisionAcHandlerTest {
         handler.unlock(automationComposition, acDefinition);
 
         verify(automationCompositionProvider).updateAutomationComposition(any(AutomationComposition.class));
-        verify(acStateChangePublisher).send(any(AutomationComposition.class), anyInt(), anyBoolean());
+        verify(acStateChangePublisher, timeout(1000)).send(any(AutomationComposition.class), anyInt(), anyBoolean());
     }
 
     @Test
@@ -233,7 +240,7 @@ class SupervisionAcHandlerTest {
         handler.unlock(automationComposition, acDefinition);
 
         verify(automationCompositionProvider).updateAutomationComposition(any(AutomationComposition.class));
-        verify(acStateChangePublisher).send(any(AutomationComposition.class), anyInt(), anyBoolean());
+        verify(acStateChangePublisher, timeout(1000)).send(any(AutomationComposition.class), anyInt(), anyBoolean());
     }
 
     @Test
@@ -250,7 +257,7 @@ class SupervisionAcHandlerTest {
         handler.lock(automationComposition, acDefinition);
 
         verify(automationCompositionProvider).updateAutomationComposition(any(AutomationComposition.class));
-        verify(acStateChangePublisher).send(any(AutomationComposition.class), anyInt(), anyBoolean());
+        verify(acStateChangePublisher, timeout(1000)).send(any(AutomationComposition.class), anyInt(), anyBoolean());
     }
 
     @Test
@@ -269,7 +276,7 @@ class SupervisionAcHandlerTest {
         handler.lock(automationComposition, acDefinition);
 
         verify(automationCompositionProvider).updateAutomationComposition(any(AutomationComposition.class));
-        verify(acStateChangePublisher).send(any(AutomationComposition.class), anyInt(), anyBoolean());
+        verify(acStateChangePublisher, timeout(1000)).send(any(AutomationComposition.class), anyInt(), anyBoolean());
     }
 
     @Test
@@ -293,7 +300,8 @@ class SupervisionAcHandlerTest {
 
         handler.handleAutomationCompositionUpdateAckMessage(automationCompositionAckMessage);
 
-        verify(automationCompositionProvider).updateAutomationComposition(any(AutomationComposition.class));
+        verify(automationCompositionProvider)
+            .updateAutomationCompositionElement(any(AutomationCompositionElement.class), any());
     }
 
     @Test
@@ -305,7 +313,7 @@ class SupervisionAcHandlerTest {
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Lock");
         handler.update(automationComposition);
-        verify(acElementPropertiesPublisher).send(any(AutomationComposition.class));
+        verify(acElementPropertiesPublisher, timeout(1000)).send(any(AutomationComposition.class));
     }
 
     @Test
@@ -317,6 +325,6 @@ class SupervisionAcHandlerTest {
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Migrate");
         handler.migrate(automationComposition, UUID.randomUUID());
-        verify(acCompositionMigrationPublisher).send(any(AutomationComposition.class), any());
+        verify(acCompositionMigrationPublisher, timeout(1000)).send(any(AutomationComposition.class), any());
     }
 }

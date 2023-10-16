@@ -231,7 +231,7 @@ class AutomationCompositionOutHandlerTest {
 
         var compositionTarget = UUID.randomUUID();
         automationComposition.setCompositionTargetId(compositionTarget);
-        automationComposition.setDeployState(DeployState.MIGRATING);
+        automationComposition.setDeployState(DeployState.DEPLOYED);
         when(cacheProvider.getAcElementsDefinitions()).thenReturn(Map.of(compositionTarget, Map.of()));
 
         for (var element : automationComposition.getElements().values()) {

@@ -95,10 +95,11 @@ public class AcInstanceStateResolver {
 
         // timeout
         this.graph.put(new String[] {DEPLOY, LOCK_NONE, UNDEPLOYING, STATE_LOCKED_NONE, TIMEOUT}, DEPLOY);
-        this.graph.put(new String[] {UNDEPLOY, LOCK_NONE, UNDEPLOYING, STATE_LOCKED_NONE, TIMEOUT}, UNDEPLOY);
-        this.graph.put(new String[] {UNDEPLOY, LOCK_NONE, UPDATING, STATE_LOCKED_NONE, TIMEOUT}, UNDEPLOY);
-
         this.graph.put(new String[] {DEPLOY, LOCK_NONE, DEPLOYING, STATE_LOCKED_NONE, TIMEOUT}, DEPLOY);
+
+        this.graph.put(new String[] {UNDEPLOY, LOCK_NONE, UNDEPLOYING, STATE_LOCKED_NONE, TIMEOUT}, UNDEPLOY);
+        this.graph.put(new String[] {UNDEPLOY, LOCK_NONE, UPDATING, LOCKED, TIMEOUT}, UNDEPLOY);
+        this.graph.put(new String[] {UNDEPLOY, LOCK_NONE, MIGRATING, LOCKED, TIMEOUT}, UNDEPLOY);
         this.graph.put(new String[] {UNDEPLOY, LOCK_NONE, DEPLOYING, STATE_LOCKED_NONE, TIMEOUT}, UNDEPLOY);
 
         this.graph.put(new String[] {DELETE, LOCK_NONE, DELETING, LOCK_NONE, TIMEOUT}, DELETE);
