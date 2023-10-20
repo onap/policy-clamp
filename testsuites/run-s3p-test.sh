@@ -35,10 +35,10 @@ then
 
   if [ $2 == "performance" ]
   then
-    bash start-s3p-tests.sh run $ACM_PERF_TEST_FILE clamp;
+    bash start-s3p-tests.sh run $ACM_PERF_TEST_FILE;
   elif [ $2 == "stability" ]
   then
-    bash start-s3p-tests.sh run $ACM_STAB_TEST_FILE clamp;
+    bash start-s3p-tests.sh run $ACM_STAB_TEST_FILE;
   else
     echo "echo Invalid arguments provided. Usage: $0 [option..] {performance | stability}"
   fi
