@@ -31,6 +31,7 @@ import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -128,7 +129,12 @@ class ParticipantControllerTest extends CommonRestController {
         var response = invocationBuilder.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
         List<ParticipantInformation> entityList = response.readEntity(new GenericType<>() {});
-        assertThat(entityList).hasSameSizeAs(inputParticipants);
+        assertThat(entityList).isNotEmpty();
+        var participantIds = entityList.stream().map(ParticipantInformation::getParticipant)
+                .map(Participant::getParticipantId).collect(Collectors.toSet());
+        inputParticipants.forEach(p -> {
+            assertThat(participantIds).contains(p.getParticipantId());
+        });
     }
 
     @Test
