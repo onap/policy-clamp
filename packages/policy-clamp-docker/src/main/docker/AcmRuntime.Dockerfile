@@ -23,7 +23,7 @@ RUN mkdir /packages /extracted
 COPY /maven/lib/policy-clamp-runtime-acm.tar.gz /packages/
 RUN tar xvzf /packages/policy-clamp-runtime-acm.tar.gz --directory /extracted/
 
-FROM onap/policy-jre-alpine:3.0.2
+FROM onap/policy-jre-alpine:3.0.3-SNAPSHOT
 
 LABEL maintainer="Policy Team"
 LABEL org.opencontainers.image.title="Policy CLAMP ACM runtime"
