@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.onap.policy.parent</groupId>
         <artifactId>integration</artifactId>
-        <version>4.0.3-SNAPSHOT</version>
+        <version>4.1.0-SNAPSHOT</version>
         <relativePath />
     </parent>
     <groupId>org.onap.policy.clamp</groupId>
@@ -50,8 +50,8 @@
         o policy-clamp-participant-impl-kserve: A standard participant for Kserve
     </description>
     <properties>
-        <policy.common.version>2.0.3-SNAPSHOT</policy.common.version>
-        <policy.models.version>3.0.3-SNAPSHOT</policy.models.version>
+        <policy.common.version>2.1.0-SNAPSHOT</policy.common.version>
+        <policy.models.version>3.1.0-SNAPSHOT</policy.models.version>
     </properties>
     <modules>
         <module>common</module>
