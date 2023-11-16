@@ -25,7 +25,7 @@
           </elementProp>
           <elementProp name="POLICY_PARTICIPANT_HOST_PORT" elementType="Argument">
             <stringProp name="Argument.name">POLICY_PARTICIPANT_HOST_PORT</stringProp>
-            <stringProp name="Argument.value">20008</stringProp>
+            <stringProp name="Argument.value">30008</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
@@ -35,8 +35,15 @@
       <AuthManager guiclass="AuthPanel" testclass="AuthManager" testname="HTTP Authorization Manager" enabled="true">
         <collectionProp name="AuthManager.auth_list">
           <elementProp name="" elementType="Authorization">
-            <stringProp name="Authorization.url">http://${RUNTIME_HOST}:${RUNTIME_PORT}/onap/policy/clamp/acm/v2</stringProp>
+            <stringProp name="Authorization.url">http://${RUNTIME_HOST}:${RUNTIME_PORT}/onap/policy/clamp/acm</stringProp>
             <stringProp name="Authorization.username">runtimeUser</stringProp>
+            <stringProp name="Authorization.password">zb!XztG34</stringProp>
+            <stringProp name="Authorization.domain"></stringProp>
+            <stringProp name="Authorization.realm"></stringProp>
+          </elementProp>
+          <elementProp name="" elementType="Authorization">
+            <stringProp name="Authorization.url">http://${POLICY_PARTICIPANT_HOST}:${POLICY_PARTICIPANT_HOST_PORT}/onap/policyparticipant</stringProp>
+            <stringProp name="Authorization.username">participantUser</stringProp>
             <stringProp name="Authorization.password">zb!XztG34</stringProp>
             <stringProp name="Authorization.domain"></stringProp>
             <stringProp name="Authorization.realm"></stringProp>
@@ -1684,17 +1691,9 @@
         </WhileController>
         <hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Verify Priming" enabled="true">
-            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-              <collectionProp name="Arguments.arguments">
-                <elementProp name="" elementType="HTTPArgument">
-                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">{&#xd;
-    &quot;primeOrder&quot;: &quot;PRIME&quot;&#xd;
-}</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                </elementProp>
-              </collectionProp>
+            <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+              <collectionProp name="Arguments.arguments"/>
             </elementProp>
             <stringProp name="HTTPSampler.domain">${RUNTIME_HOST}</stringProp>
             <stringProp name="HTTPSampler.port">${RUNTIME_PORT}</stringProp>
@@ -2021,6 +2020,150 @@ vars.put(&quot;deployState&quot;, deployState);
             <hashTree/>
           </hashTree>
         </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Get Metrics acm" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">${RUNTIME_HOST}</stringProp>
+          <stringProp name="HTTPSampler.port">${RUNTIME_PORT}</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
+          <stringProp name="HTTPSampler.path">/onap/policy/clamp/acm/prometheus</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <boolProp name="HTTPSampler.BROWSER_COMPATIBLE_MULTIPART">false</boolProp>
+          <boolProp name="HTTPSampler.image_parser">false</boolProp>
+          <boolProp name="HTTPSampler.concurrentDwn">false</boolProp>
+          <stringProp name="HTTPSampler.concurrentPool">6</stringProp>
+          <boolProp name="HTTPSampler.md5">false</boolProp>
+          <intProp name="HTTPSampler.ipSourceType">0</intProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49586">200</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">true</boolProp>
+            <intProp name="Assertion.test_type">33</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion" enabled="true">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="script">def res = [];
+if (prev.getResponseCode() == &apos;200&apos;) {
+    res = prev.getResponseDataAsString();
+
+    assert res.contains(&quot;http_server_requests_seconds_sum&quot;)
+    assert res.contains(&quot;http_server_requests_seconds_max&quot;)
+    assert res.contains(&quot;spring_data_repository_invocations_seconds_count&quot;)
+    assert res.contains(&quot;spring_data_repository_invocations_seconds_sum&quot;)
+    assert res.contains(&quot;spring_data_repository_invocations_seconds_max&quot;)
+    assert res.contains(&quot;jvm_threads_live_threads&quot;)
+
+    assert res.contains(&quot;http_server_requests_seconds_count{error=\&quot;none\&quot;,exception=\&quot;none\&quot;,method=\&quot;POST\&quot;,outcome=\&quot;SUCCESS\&quot;,status=\&quot;201\&quot;,uri=\&quot;/v2/compositions\&quot;,}&quot;)
+    assert res.contains(&quot;http_server_requests_seconds_count{error=\&quot;none\&quot;,exception=\&quot;none\&quot;,method=\&quot;PUT\&quot;,outcome=\&quot;SUCCESS\&quot;,status=\&quot;202\&quot;,uri=\&quot;/v2/compositions/{compositionId}\&quot;,}&quot;)
+    assert res.contains(&quot;http_server_requests_seconds_count{error=\&quot;none\&quot;,exception=\&quot;none\&quot;,method=\&quot;GET\&quot;,outcome=\&quot;SUCCESS\&quot;,status=\&quot;200\&quot;,uri=\&quot;/v2/compositions/{compositionId}\&quot;,}&quot;)
+
+    assert res.contains(&quot;http_server_requests_seconds_count{error=\&quot;none\&quot;,exception=\&quot;none\&quot;,method=\&quot;POST\&quot;,outcome=\&quot;SUCCESS\&quot;,status=\&quot;201\&quot;,uri=\&quot;/v2/compositions/{compositionId}/instances\&quot;,}&quot;)
+    assert res.contains(&quot;http_server_requests_seconds_count{error=\&quot;none\&quot;,exception=\&quot;none\&quot;,method=\&quot;PUT\&quot;,outcome=\&quot;SUCCESS\&quot;,status=\&quot;202\&quot;,uri=\&quot;/v2/compositions/{compositionId}/instances/{instanceId}\&quot;,}&quot;)
+    assert res.contains(&quot;http_server_requests_seconds_count{error=\&quot;none\&quot;,exception=\&quot;none\&quot;,method=\&quot;GET\&quot;,outcome=\&quot;SUCCESS\&quot;,status=\&quot;200\&quot;,uri=\&quot;/v2/compositions/{compositionId}/instances/{instanceId}\&quot;,}&quot;)
+
+    assert res.contains(&quot;publisher_automation_composition_state_change_seconds_count&quot;)
+    assert res.contains(&quot;publisher_participant_update_seconds_count&quot;)
+    assert res.contains(&quot;publisher_participant_status_req_seconds_count&quot;)
+    assert res.contains(&quot;publisher_automation_composition_deploy_seconds_count&quot;)
+
+    assert res.contains(&quot;listener_participant_prime_ack_seconds_count&quot;)
+    assert res.contains(&quot;listener_automation_composition_statechange_ack_seconds_count&quot;)
+    assert res.contains(&quot;listener_participant_status_seconds_count&quot;)
+}</stringProp>
+          </JSR223Assertion>
+          <hashTree/>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="" elementType="Header">
+                <stringProp name="Header.name">Accept</stringProp>
+                <stringProp name="Header.value">text/plain</stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Get Metrics participant" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">${POLICY_PARTICIPANT_HOST}</stringProp>
+          <stringProp name="HTTPSampler.port">${POLICY_PARTICIPANT_HOST_PORT}</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
+          <stringProp name="HTTPSampler.path">/onap/policyparticipant/prometheus</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <boolProp name="HTTPSampler.BROWSER_COMPATIBLE_MULTIPART">false</boolProp>
+          <boolProp name="HTTPSampler.image_parser">false</boolProp>
+          <boolProp name="HTTPSampler.concurrentDwn">false</boolProp>
+          <stringProp name="HTTPSampler.concurrentPool">6</stringProp>
+          <boolProp name="HTTPSampler.md5">false</boolProp>
+          <intProp name="HTTPSampler.ipSourceType">0</intProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49586">200</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">true</boolProp>
+            <intProp name="Assertion.test_type">33</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion" enabled="true">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="script">def res = [];
+if (prev.getResponseCode() == &apos;200&apos;) {
+    res = prev.getResponseDataAsString();
+
+    assert res.contains(&quot;http_server_requests_seconds_sum&quot;)
+    assert res.contains(&quot;http_server_requests_seconds_max&quot;)
+    assert res.contains(&quot;jvm_threads_live_threads&quot;)
+
+    assert res.contains(&quot;publisher_participant_register_seconds_count&quot;)
+    assert res.contains(&quot;publisher_participant_prime_ack_seconds_count&quot;)
+    assert res.contains(&quot;publisher_participant_status_seconds_count&quot;)
+    assert res.contains(&quot;publisher_automation_composition_update_ack_seconds_count&quot;)
+
+    assert res.contains(&quot;listener_participant_status_req_seconds_count&quot;)
+    assert res.contains(&quot;listener_participant_prime_seconds_count&quot;)
+    assert res.contains(&quot;listener_automation_composition_state_change_seconds_count&quot;)
+    assert res.contains(&quot;listener_automation_composition_update_seconds_count&quot;)
+}</stringProp>
+          </JSR223Assertion>
+          <hashTree/>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="" elementType="Header">
+                <stringProp name="Header.name">Accept</stringProp>
+                <stringProp name="Header.value">text/plain</stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+        </hashTree>
       </hashTree>
       <PostThreadGroup guiclass="PostThreadGroupGui" testclass="PostThreadGroup" testname="tearDown Thread Group" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">stoptest</stringProp>
@@ -2178,6 +2321,10 @@ vars.put(&quot;deployState&quot;, deployState);</stringProp>
             <intProp name="Assertion.test_type">1</intProp>
           </ResponseAssertion>
           <hashTree/>
+          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="true">
+            <stringProp name="ConstantTimer.delay">6000</stringProp>
+          </ConstantTimer>
+          <hashTree/>
         </hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Deprime AC definition" enabled="true">
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
@@ -2218,6 +2365,10 @@ vars.put(&quot;deployState&quot;, deployState);</stringProp>
             <boolProp name="Assertion.assume_success">false</boolProp>
             <intProp name="Assertion.test_type">1</intProp>
           </ResponseAssertion>
+          <hashTree/>
+          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="true">
+            <stringProp name="ConstantTimer.delay">6000</stringProp>
+          </ConstantTimer>
           <hashTree/>
         </hashTree>
         <WhileController guiclass="WhileControllerGui" testclass="WhileController" testname="While Controller" enabled="true">
@@ -2342,7 +2493,7 @@ vars.put(&quot;deployState&quot;, deployState);</stringProp>
             <connectTime>true</connectTime>
           </value>
         </objProp>
-        <stringProp name="filename">/home/ramesh/run-test/testsummary.jtl</stringProp>
+        <stringProp name="filename">/tmp/testsummary.jtl</stringProp>
       </ResultCollector>
       <hashTree/>
       <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
@@ -2379,7 +2530,7 @@ vars.put(&quot;deployState&quot;, deployState);</stringProp>
             <connectTime>true</connectTime>
           </value>
         </objProp>
-        <stringProp name="filename">/home/ramesh/acm_stability/testsummary.jtl</stringProp>
+        <stringProp name="filename">/tmp/testsummary.jtl</stringProp>
       </ResultCollector>
       <hashTree/>
       <ResultCollector guiclass="TableVisualizer" testclass="ResultCollector" testname="View Results in Table" enabled="true">
@@ -2416,7 +2567,7 @@ vars.put(&quot;deployState&quot;, deployState);</stringProp>
             <connectTime>true</connectTime>
           </value>
         </objProp>
-        <stringProp name="filename">/home/ramesh/./acm_stability/testsummary.jtl</stringProp>
+        <stringProp name="filename">/tmp/testsummary.jtl</stringProp>
       </ResultCollector>
       <hashTree/>
     </hashTree>
