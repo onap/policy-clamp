@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021,2023 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import org.onap.policy.clamp.models.acm.messages.rest.SimpleResponse;
 import org.onap.policy.clamp.models.acm.rest.RestUtils;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
+import org.onap.policy.models.errors.concepts.ErrorResponseInfo;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -33,35 +34,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalControllerExceptionHandler {
 
     /**
-     * Handle AutomationCompositionRuntimeException.
+     * Handle AutomationCompositionRuntimeException, PfModelRuntimeException and PfModelException.
      *
-     * @param ex AutomationCompositionRuntimeException
+     * @param ex Exception
      * @return ResponseEntity
      */
-    @ExceptionHandler(AutomationCompositionRuntimeException.class)
-    public ResponseEntity<SimpleResponse> handleBadRequest(AutomationCompositionRuntimeException ex) {
-        return RestUtils.toSimpleResponse(ex);
-    }
-
-    /**
-     * Handle PfModelRuntimeException.
-     *
-     * @param ex PfModelRuntimeException
-     * @return ResponseEntity
-     */
-    @ExceptionHandler(PfModelRuntimeException.class)
-    public ResponseEntity<SimpleResponse> handleBadRequest(PfModelRuntimeException ex) {
-        return RestUtils.toSimpleResponse(ex);
-    }
-
-    /**
-     * Handle PfModelException.
-     *
-     * @param ex PfModelException
-     * @return ResponseEntity
-     */
-    @ExceptionHandler(PfModelException.class)
-    public ResponseEntity<SimpleResponse> handleBadRequest(PfModelException ex) {
+    @ExceptionHandler({AutomationCompositionRuntimeException.class, PfModelRuntimeException.class,
+        PfModelException.class})
+    public ResponseEntity<SimpleResponse> handleBadRequest(ErrorResponseInfo ex) {
         return RestUtils.toSimpleResponse(ex);
     }
 }
