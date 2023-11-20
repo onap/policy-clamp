@@ -47,6 +47,7 @@ import org.onap.policy.clamp.models.acm.messages.rest.commissioning.PrimeOrder;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaDataType;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaProperty;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,7 +113,29 @@ class CommissioningControllerTest extends CommonRestController {
 
         assertThat(Response.Status.BAD_REQUEST.getStatusCode()).isEqualTo(resp.getStatus());
         var commissioningResponse = resp.readEntity(CommissioningResponse.class);
-        assertThat(commissioningResponse.getErrorDetails()).isNotNull();
+        assertThat(commissioningResponse.getErrorDetails())
+            .isEqualTo("org.springframework.http.converter.HttpMessageNotReadableException "
+                + "Bad Request Could not read JSON: java.lang.IllegalStateException: "
+                + "Expected BEGIN_OBJECT but was STRING at line 1 column 1 path $");
+        assertThat(commissioningResponse.getAffectedAutomationCompositionDefinitions()).isNull();
+    }
+
+    @Test
+    void testCreateBadVersion() {
+        var serviceTemplateCreate = new ToscaServiceTemplate(serviceTemplate);
+        var x = new ToscaNodeTemplate(serviceTemplateCreate
+            .getToscaTopologyTemplate().getNodeTemplates().values().iterator().next());
+        x.setVersion("1.0.wrong");
+        serviceTemplateCreate.getToscaTopologyTemplate().getNodeTemplates().put(x.getName(), x);
+
+        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT);
+        var resp = invocationBuilder.post(Entity.json(serviceTemplateCreate));
+
+        assertThat(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).isEqualTo(resp.getStatus());
+        var commissioningResponse = resp.readEntity(CommissioningResponse.class);
+        assertThat(commissioningResponse.getErrorDetails())
+            .isEqualTo("java.lang.IllegalArgumentException Internal Server Error parameter "
+                + "\"version\": value \"1.0.wrong\", does not match regular expression \"^(\\d+.){2}\\d+$\"");
         assertThat(commissioningResponse.getAffectedAutomationCompositionDefinitions()).isNull();
     }
 

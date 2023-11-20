@@ -22,10 +22,11 @@
 
 package org.onap.policy.clamp.acm.runtime.main.web;
 
+import static org.springframework.boot.web.error.ErrorAttributeOptions.Include;
+
 import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.Map;
 import org.onap.policy.clamp.models.acm.messages.rest.SimpleResponse;
 import org.onap.policy.clamp.models.acm.messages.rest.TypedSimpleResponse;
 import org.slf4j.Logger;
@@ -79,10 +80,14 @@ public class RuntimeErrorController implements ErrorController {
     @SuppressWarnings("squid:S3752")
     @RequestMapping(value = "${server.error.path}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TypedSimpleResponse<SimpleResponse>> handleError(HttpServletRequest request) {
-        Map<String, Object> map = this.errorAttributes.getErrorAttributes(new ServletWebRequest(request),
-                ErrorAttributeOptions.defaults());
+        var map = this.errorAttributes.getErrorAttributes(new ServletWebRequest(request),
+                ErrorAttributeOptions.of(Include.MESSAGE, Include.EXCEPTION, Include.BINDING_ERRORS));
 
         var sb = new StringBuilder();
+        final var exception = map.get("exception");
+        if (exception != null) {
+            sb.append(exception).append(" ");
+        }
         final var error = map.get("error");
         if (error != null) {
             sb.append(error).append(" ");
