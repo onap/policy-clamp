@@ -46,6 +46,8 @@ public class CommonTestData {
     private static final Coder CODER = new StandardCoder();
     public static final String TOSCA_SERVICE_TEMPLATE_YAML = "clamp/acm/pmsh/funtional-pmsh-usecase.yaml";
 
+    public static final String TOSCA_VERSIONING = "clamp/acm/test/tosca-versioning.yaml";
+
     public static final String TOSCA_COMP_NAME = "org.onap.policy.clamp.acm.AutomationComposition";
     public static final String TOSCA_ELEMENT_NAME = "org.onap.policy.clamp.acm.AutomationCompositionElement";
 

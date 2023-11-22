@@ -64,6 +64,26 @@ public class InstantiationUtils {
     }
 
     /**
+     * Gets the AutomationComposition from Resource in yaml format.
+     *
+     * @param path path of the resource
+     * @param suffix suffix to add to all names in AutomationCompositions
+     * @return the AutomationComposition from Resource
+     */
+    public static AutomationComposition getAutomationCompositionFromYaml(final String path, final String suffix) {
+        try {
+            var automationComposition = YAML_TRANSLATOR.decode(new File(path), AutomationComposition.class);
+
+            // add suffix to name
+            automationComposition.setName(automationComposition.getName() + suffix);
+            return automationComposition;
+        } catch (CoderException e) {
+            fail("Cannot read or decode " + path);
+            return null;
+        }
+    }
+
+    /**
      * Assert that Instantiation Response contains proper AutomationCompositions.
      *
      * @param response InstantiationResponse

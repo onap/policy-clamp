@@ -26,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVICE_TEMPLATE_YAML;
+import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_VERSIONING;
 
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.Response;
@@ -66,6 +67,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 class InstantiationControllerTest extends CommonRestController {
 
     private static final String AC_INSTANTIATION_CREATE_JSON = "src/test/resources/rest/acm/AutomationComposition.json";
+    private static final String AC_VERSIONING_YAML = "src/test/resources/rest/acm/AutomationCompositionVersioning.yaml";
 
     private static final String AC_INSTANTIATION_UPDATE_JSON =
             "src/test/resources/rest/acm/AutomationCompositionUpdate.json";
@@ -144,10 +146,8 @@ class InstantiationControllerTest extends CommonRestController {
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Create");
         automationCompositionFromRsc.setCompositionId(compositionId);
 
-        var invocationBuilder = super.sendRequest(getInstanceEndPoint(compositionId));
-        var resp = invocationBuilder.post(Entity.json(automationCompositionFromRsc));
-        assertEquals(Response.Status.CREATED.getStatusCode(), resp.getStatus());
-        var instResponse = resp.readEntity(InstantiationResponse.class);
+        var instResponse = createAutomationComposition(compositionId, automationCompositionFromRsc,
+            Response.Status.CREATED);
         InstantiationUtils.assertInstantiationResponse(instResponse, automationCompositionFromRsc);
         automationCompositionFromRsc.setInstanceId(instResponse.getInstanceId());
         automationCompositionFromRsc.getElements().values()
@@ -160,6 +160,15 @@ class InstantiationControllerTest extends CommonRestController {
         assertEquals(automationCompositionFromRsc, automationCompositionFromDb);
     }
 
+    private InstantiationResponse createAutomationComposition(UUID compositionId,
+        AutomationComposition automationComposition, Response.Status statusExpected) {
+        var invocationBuilder = super.sendRequest(getInstanceEndPoint(compositionId));
+        try (var resp = invocationBuilder.post(Entity.json(automationComposition))) {
+            assertEquals(statusExpected.getStatusCode(), resp.getStatus());
+            return resp.readEntity(InstantiationResponse.class);
+        }
+    }
+
     @Test
     void testCreateBadRequest() {
         var compositionId = createAcDefinitionInDB("CreateBadRequest");
@@ -167,16 +176,25 @@ class InstantiationControllerTest extends CommonRestController {
                 .getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "CreateBadRequest");
         automationCompositionFromRsc.setCompositionId(compositionId);
 
-        var invocationBuilder = super.sendRequest(getInstanceEndPoint(compositionId));
-        var resp = invocationBuilder.post(Entity.json(automationCompositionFromRsc));
-        assertEquals(Response.Status.CREATED.getStatusCode(), resp.getStatus());
+        createAutomationComposition(compositionId, automationCompositionFromRsc, Response.Status.CREATED);
 
         // testing Bad Request: AC already defined
-        resp = invocationBuilder.post(Entity.json(automationCompositionFromRsc));
-        assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), resp.getStatus());
-        var instResponse = resp.readEntity(InstantiationResponse.class);
+        var instResponse = createAutomationComposition(compositionId, automationCompositionFromRsc,
+            Response.Status.BAD_REQUEST);
         assertNotNull(instResponse.getErrorDetails());
         assertNull(instResponse.getAffectedAutomationComposition());
+    }
+
+    @Test
+    void testVersioning() {
+        var serviceTemplateVer = InstantiationUtils.getToscaServiceTemplate(TOSCA_VERSIONING);
+        var compositionId = createAcDefinitionInDB(serviceTemplateVer);
+        var automationCompositionFromRsc = InstantiationUtils
+            .getAutomationCompositionFromYaml(AC_VERSIONING_YAML, "Versioning");
+        automationCompositionFromRsc.setCompositionId(compositionId);
+        var instResponse =
+            createAutomationComposition(compositionId, automationCompositionFromRsc, Response.Status.CREATED);
+        InstantiationUtils.assertInstantiationResponse(instResponse, automationCompositionFromRsc);
     }
 
     @Test
@@ -339,7 +357,11 @@ class InstantiationControllerTest extends CommonRestController {
     private UUID createAcDefinitionInDB(String name) {
         var serviceTemplateCreate = new ToscaServiceTemplate(serviceTemplate);
         serviceTemplateCreate.setName(name);
-        var acmDefinition = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
+        return createAcDefinitionInDB(serviceTemplateCreate);
+    }
+
+    private UUID createAcDefinitionInDB(ToscaServiceTemplate serviceTemplateCreate) {
+        var acmDefinition = CommonTestData.createAcDefinition(serviceTemplateCreate, AcTypeState.PRIMED);
         acDefinitionProvider.updateAcDefinition(acmDefinition, NODE_TYPE);
         saveDummyParticipantInDb();
         return acmDefinition.getCompositionId();

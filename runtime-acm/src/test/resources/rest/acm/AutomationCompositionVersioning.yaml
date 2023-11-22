@@ -1,0 +1,170 @@
+# ============LICENSE_START=======================================================
+# Copyright (C) 2023 Nordix Foundation.
+# ================================================================================
+# Licensed under the Apache License, Version 2.0 (the License);
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an AS IS BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# SPDX-License-Identifier: Apache-2.0
+# ============LICENSE_END=========================================================
+name: DemoInstance0
+version: 1.0.1+1
+compositionId: 709c62b3-8918-41b9-a747-d21eb79c6c40
+description: Demo automation composition instance 0
+elements:
+
+  709c62b3-8918-41b9-a747-d21eb79c6c20:
+    id: 709c62b3-8918-41b9-a747-d21eb79c6c20
+    definition:
+      name: onap.policy.clamp.ac.element.Policy_AutomationCompositionElement
+      version: 1.2.3+build1
+    description: Starter Automation Composition Element for the Demo
+    properties:
+      policy_type_id:
+        name: onap.policies.operational.pm-subscription-handler
+        version: 1.0.0
+      policy_id:
+        get_input: acm_element_policy
+
+  709c62b3-8918-41b9-a747-d21eb79c6c21:
+    id: 709c62b3-8918-41b9-a747-d21eb79c6c21
+    definition:
+      name: onap.policy.clamp.ac.element.K8S_StarterAutomationCompositionElement
+      version: 1.2.3+build1
+    description: Starter Automation Composition Element for the Demo
+    properties:
+      chart:
+        chartId:
+          name: acelement
+          version: 0.1.0
+        namespace: default
+        releaseName: acm-starter
+        podName: acm-starter
+        repository:
+          repoName: chartmuseum
+          address: 'http://cluster-ip:8080'
+        overrideParams:
+          acelement.elementId.name: onap.policy.clamp.ac.starter
+          service.nodeport: 30800
+
+  709c62b3-8918-41b9-a747-d21eb79c6c22:
+    id: 709c62b3-8918-41b9-a747-d21eb79c6c22
+    definition:
+      name: onap.policy.clamp.ac.element.K8S_BridgeAutomationCompositionElement
+      version: 1.2.3+build1
+    description: Bridge Automation Composition Element for the Demo
+    properties:
+      chart:
+        chartId:
+          name: acelement
+          version: 0.1.0
+        namespace: default
+        releaseName: acm-bridge
+        podName: acm-bridge
+        repository:
+          repoName: chartmuseum
+          address: 'http://cluster-ip:8080'
+        overrideParams:
+          acelement.elementId.name: onap.policy.clamp.ac.bridge
+          service.nodeport: 30801
+
+  709c62b3-8918-41b9-a747-d21eb79c6c23:
+    id: 709c62b3-8918-41b9-a747-d21eb79c6c23
+    definition:
+      name: onap.policy.clamp.ac.element.K8S_SinkAutomationCompositionElement
+      version: 1.2.3+build1
+    description: Sink Automation Composition Element for the Demo
+    properties:
+      chart:
+        chartId:
+          name: acelement
+          version: 0.1.0
+        namespace: default
+        releaseName: acm-sink
+        podName: acm-sink
+        repository:
+          repoName: chartmuseum
+          address: 'http://cluster-ip:8080'
+        overrideParams:
+          acelement.elementId.name: onap.policy.clamp.ac.sink
+          service.nodeport: 30802
+
+  709c62b3-8918-41b9-a747-d21eb79c6c24:
+    id: 709c62b3-8918-41b9-a747-d21eb79c6c24
+    definition:
+      name: onap.policy.clamp.ac.element.Http_StarterAutomationCompositionElement
+      version: 1.2.3+build1
+    description: Starter Automation Composition Element for the Demo
+    properties:
+      baseUrl: http://cluster-ip:30800
+      httpHeaders:
+        Content-Type: application/json
+        Authorization: Basic YWNtVXNlcjp6YiFYenRHMzQ=
+      configurationEntities:
+        - configurationEntityId:
+            name: onap.policy.clamp.ac.starter
+            version: 1.0.0
+          restSequence:
+            - restRequestId:
+                name: request1
+                version: 1.0.1
+              httpMethod: POST
+              path: /onap/policy/clamp/acelement/v2/activate
+              body: '{ "receiverId": { "name": "onap.policy.clamp.ac.startertobridge", "version": "1.0.0" }, "timerMs": 20000, "elementType": "STARTER", "topicParameterGroup": { "server": "message-router:3904", "listenerTopic": "POLICY_UPDATE_MSG", "publisherTopic": "AC_ELEMENT_MSG", "fetchTimeout": 15000, "topicCommInfrastructure": "dmaap" } }'
+              expectedResponse: 201
+
+  709c62b3-8918-41b9-a747-d21eb79c6c25:
+    id: 709c62b3-8918-41b9-a747-d21eb79c6c25
+    definition:
+      name: onap.policy.clamp.ac.element.Http_BridgeAutomationCompositionElement
+      version: 1.2.3+build1
+    description: Bridge Automation Composition Element for the Demo
+    properties:
+      baseUrl: http://cluster-ip:30801
+      httpHeaders:
+        Content-Type: application/json
+        Authorization: Basic YWNtVXNlcjp6YiFYenRHMzQ=
+      configurationEntities:
+        - configurationEntityId:
+            name: onap.policy.clamp.ac.bridge
+            version: 1.0.0
+          restSequence:
+            - restRequestId:
+                name: request2
+                version: 1.0.1
+              httpMethod: POST
+              path: /onap/policy/clamp/acelement/v2/activate
+              body: '{ "receiverId": { "name": "onap.policy.clamp.ac.bridgetosink", "version": "1.0.0" }, "timerMs": 20000, "elementType": "BRIDGE", "topicParameterGroup": { "server": "message-router:3904", "listenerTopic": "POLICY_UPDATE_MSG", "publisherTopic": "AC_ELEMENT_MSG", "fetchTimeout": 15000, "topicCommInfrastructure": "dmaap" } }'
+              expectedResponse: 201
+
+  709c62b3-8918-41b9-a747-d21eb79c6c26:
+    id: 709c62b3-8918-41b9-a747-d21eb79c6c26
+    definition:
+      name: onap.policy.clamp.ac.element.Http_SinkAutomationCompositionElement
+      version: 1.2.3+build1
+    description: Sink Automation Composition Element for the Demo
+    properties:
+      baseUrl: http://cluster-ip:30802
+      httpHeaders:
+        Content-Type: application/json
+        Authorization: Basic YWNtVXNlcjp6YiFYenRHMzQ=
+      configurationEntities:
+        - configurationEntityId:
+            name: onap.policy.clamp.ac.sink
+            version: 1.0.0
+          restSequence:
+            - restRequestId:
+                name: request3
+                version: 1.0.1
+              httpMethod: POST
+              path: /onap/policy/clamp/acelement/v2/activate
+              body: '{ "receiverId": { "name": "onap.policy.clamp.ac.sink", "version": "1.0.0" }, "timerMs": 20000, "elementType": "SINK", "topicParameterGroup": { "server": "message-router", "listenerTopic": "POLICY_UPDATE_MSG", "publisherTopic": "AC_ELEMENT_MSG", "fetchTimeout": 15000, "topicCommInfrastructure": "dmaap" } }'
+              expectedResponse: 201

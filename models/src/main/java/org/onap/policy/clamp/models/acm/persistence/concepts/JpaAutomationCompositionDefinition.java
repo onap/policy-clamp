@@ -46,8 +46,10 @@ import org.onap.policy.clamp.models.acm.document.base.ToscaServiceTemplateValida
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplate;
 import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.common.parameters.annotations.NotNull;
+import org.onap.policy.common.parameters.annotations.Pattern;
 import org.onap.policy.common.parameters.annotations.Valid;
 import org.onap.policy.models.base.PfAuthorative;
+import org.onap.policy.models.base.PfKey;
 import org.onap.policy.models.base.Validated;
 
 /**
@@ -67,10 +69,12 @@ public class JpaAutomationCompositionDefinition extends Validated
 
     @Column
     @NotNull
+    @Pattern(regexp = PfKey.NAME_REGEXP)
     private String name;
 
     @Column
     @NotNull
+    @Pattern(regexp = PfKey.VERSION_REGEXP)
     private String version;
 
     @Column
