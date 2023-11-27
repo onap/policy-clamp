@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eb30606e_f681ea1d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2023-11-27T10:01:41Z",
+      "side": 1,
+      "message": "It needs semantic versioning in models submitted",
+      "revId": "d1f43390b090bbdb480c8da31e9fdae0c8e00be4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
