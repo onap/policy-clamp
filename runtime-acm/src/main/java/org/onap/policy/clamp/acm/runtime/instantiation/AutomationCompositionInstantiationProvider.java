@@ -237,6 +237,8 @@ public class AutomationCompositionInstantiationProvider {
                 acDefinitionOpt.get().getServiceTemplate(),
                 acRuntimeParameterGroup.getAcmParameters().getToscaCompositionName()));
 
+        result.addResult(automationCompositionProvider.validateElementIds(automationComposition));
+
         if (result.isValid()) {
             for (var element : automationComposition.getElements().values()) {
                 var name = element.getDefinition().getName();

@@ -40,6 +40,8 @@ import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationCompos
 import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionElementRepository;
 import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionRepository;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
+import org.onap.policy.common.parameters.BeanValidationResult;
+import org.onap.policy.common.parameters.ValidationStatus;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.springframework.data.domain.Example;
@@ -224,5 +226,36 @@ public class AutomationCompositionProvider {
         jpaAcElement.fromAuthorative(element);
         ProviderUtils.validate(element, jpaAcElement, "AutomationCompositionElement");
         acElementRepository.save(jpaAcElement);
+    }
+
+    /**
+     * Validate ElementIds.
+     *
+     * @param automationComposition the AutomationComposition
+     * @return the BeanValidationResult
+     */
+    public BeanValidationResult validateElementIds(final AutomationComposition automationComposition) {
+        var result = new BeanValidationResult(
+            "UUID elements " + automationComposition.getName(), automationComposition);
+
+        var ids = automationComposition
+            .getElements().values().stream().map(AutomationCompositionElement::getId).toList();
+        var elements = acElementRepository.findAllById(ids.stream().map(UUID::toString).toList());
+        if (automationComposition.getInstanceId() == null) {
+            for (var element : elements) {
+                result.addResult(
+                    element.getDescription(), element.getElementId(), ValidationStatus.INVALID, "UUID already used");
+            }
+        } else {
+            var instanceId = automationComposition.getInstanceId().toString();
+            for (var element : elements) {
+                if (!instanceId.equals(element.getInstanceId())) {
+                    result.addResult(
+                        element.getDescription(), element.getElementId(), ValidationStatus.INVALID,
+                        "UUID already used");
+                }
+            }
+        }
+        return result;
     }
 }
