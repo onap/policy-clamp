@@ -23,7 +23,7 @@ RUN mkdir /packages /extracted
 COPY /maven/lib/sim-participant.tar.gz /packages/
 RUN tar xvzf /packages/sim-participant.tar.gz --directory /extracted/
 
-FROM onap/policy-jre-alpine:3.1.0-SNAPSHOT
+FROM onap/policy-jre-alpine:3.1.0
 
 LABEL maintainer="Policy Team"
 LABEL org.opencontainers.image.title="Policy CLAMP ACM Simulator Participant"
