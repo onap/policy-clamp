@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2025 Nordix Foundation.
+ *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,6 +47,8 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 class AcDefinitionProviderTest {
 
@@ -263,12 +265,13 @@ class AcDefinitionProviderTest {
         var docServiceTemplate = new DocToscaServiceTemplate(inputServiceTemplate);
         var acmDefinition = getAcDefinition(docServiceTemplate);
         var acmDefinitionRepository = mock(AutomationCompositionDefinitionRepository.class);
-        when(acmDefinitionRepository.findAll(Mockito.<Example<JpaAutomationCompositionDefinition>>any()))
-                .thenReturn(List.of(new JpaAutomationCompositionDefinition(acmDefinition)));
+        when(acmDefinitionRepository
+                .findAll(Mockito.<Example<JpaAutomationCompositionDefinition>>any(), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(new JpaAutomationCompositionDefinition(acmDefinition))));
 
         var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository);
         var result = acDefinitionProvider.getServiceTemplateList(inputServiceTemplate.getName(),
-                inputServiceTemplate.getVersion());
+                inputServiceTemplate.getVersion(), Pageable.unpaged());
 
         assertThat(result).hasSize(1);
         assertThat(result.get(0)).isEqualTo(acmDefinition.getServiceTemplate());
@@ -279,26 +282,32 @@ class AcDefinitionProviderTest {
         var docServiceTemplate = new DocToscaServiceTemplate(inputServiceTemplate);
         var acmDefinition = getAcDefinition(docServiceTemplate);
         var acmDefinitionRepository = mock(AutomationCompositionDefinitionRepository.class);
-        when(acmDefinitionRepository.findAll(Mockito.<Example<JpaAutomationCompositionDefinition>>any()))
-            .thenReturn(List.of(new JpaAutomationCompositionDefinition(acmDefinition)));
+        when(acmDefinitionRepository
+                .findAll(Mockito.<Example<JpaAutomationCompositionDefinition>>any(), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(new JpaAutomationCompositionDefinition(acmDefinition))));
+        when(acmDefinitionRepository.findAll(any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(new JpaAutomationCompositionDefinition(acmDefinition))));
 
         var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository);
         var result = acDefinitionProvider.getServiceTemplateList(null,
-            inputServiceTemplate.getVersion());
+            inputServiceTemplate.getVersion(), Pageable.unpaged());
 
         assertThat(result).hasSize(1);
         assertThat(result.get(0)).isEqualTo(acmDefinition.getServiceTemplate());
 
         result = acDefinitionProvider.getServiceTemplateList(inputServiceTemplate.getName(),
-            null);
+            null, Pageable.unpaged());
 
         assertThat(result).hasSize(1);
         assertThat(result.get(0)).isEqualTo(acmDefinition.getServiceTemplate());
 
-        result = acDefinitionProvider.getServiceTemplateList(null,
-            null);
+        result = acDefinitionProvider.getServiceTemplateList(null, null, Pageable.unpaged());
 
-        assertThat(result).isEmpty();
+        assertThat(result).hasSize(1);
+
+        assertThatThrownBy(() ->
+                acDefinitionProvider.getServiceTemplateList(null, null, null))
+                .hasMessage("pageable is marked non-null but is null");
     }
 
     private AutomationCompositionDefinition getAcDefinition(DocToscaServiceTemplate docServiceTemplate) {
@@ -314,5 +323,29 @@ class AcDefinitionProviderTest {
         nodeTemplateState.setParticipantId(UUID.randomUUID());
         acmDefinition.setElementStateMap(Map.of(nodeTemplateState.getNodeTemplateId().getName(), nodeTemplateState));
         return acmDefinition;
+    }
+
+    @Test
+    void testGetServiceTemplateListWithPageable() {
+        var docServiceTemplate = new DocToscaServiceTemplate(inputServiceTemplate);
+        var acmDefinition = getAcDefinition(docServiceTemplate);
+        var acmDefinitionRepository = mock(AutomationCompositionDefinitionRepository.class);
+        when(acmDefinitionRepository
+            .findAll(Mockito.<Example<JpaAutomationCompositionDefinition>>any(), Mockito.any(Pageable.class)))
+            .thenReturn(new PageImpl<>(List.of(new JpaAutomationCompositionDefinition(acmDefinition))));
+        var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository);
+        var pagable = Pageable.ofSize(5);
+        var result = acDefinitionProvider.getServiceTemplateList(null,
+            inputServiceTemplate.getVersion(), pagable);
+
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0)).isEqualTo(acmDefinition.getServiceTemplate());
+
+        when(acmDefinitionRepository.findAll(Mockito.any(Pageable.class)))
+            .thenReturn(new PageImpl<>(List.of(new JpaAutomationCompositionDefinition(acmDefinition))));
+        result = acDefinitionProvider.getServiceTemplateList(null, null, pagable);
+
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0)).isEqualTo(acmDefinition.getServiceTemplate());
     }
 }

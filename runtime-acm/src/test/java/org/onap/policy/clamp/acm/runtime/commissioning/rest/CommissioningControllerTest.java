@@ -43,16 +43,20 @@ import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
 import org.onap.policy.clamp.acm.runtime.util.rest.CommonRestController;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
+import org.onap.policy.clamp.models.acm.concepts.Participant;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.AcTypeStateUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.CommissioningResponse;
 import org.onap.policy.clamp.models.acm.messages.rest.commissioning.PrimeOrder;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
+import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.models.base.PfKey;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaDataType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaProperty;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplates;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -65,6 +69,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ActiveProfiles({"test", "default"})
 class CommissioningControllerTest extends CommonRestController {
 
+    private static final int NUMBER_COMPOSITIONS = 10;
     private static final String COMMISSIONING_ENDPOINT = "compositions";
     private static ToscaServiceTemplate serviceTemplate = new ToscaServiceTemplate();
 
@@ -224,11 +229,11 @@ class CommissioningControllerTest extends CommonRestController {
     @Test
     void testQuery_NoResultWithThisName() {
         var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT + "?name=noResultWithThisName");
-        var rawresp = invocationBuilder.buildGet().invoke();
-        assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
-        var entityList = rawresp.readEntity(ToscaServiceTemplate.class);
-        assertThat(entityList.getNodeTypes()).isNull();
-        rawresp.close();
+        try (var rawresp = invocationBuilder.buildGet().invoke()) {
+            assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
+            var entityList = rawresp.readEntity(ToscaServiceTemplate.class);
+            assertThat(entityList.getNodeTypes()).isNull();
+        }
     }
 
     @Test
@@ -236,11 +241,50 @@ class CommissioningControllerTest extends CommonRestController {
         createEntryInDB("forQuery");
 
         var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT);
-        var rawresp = invocationBuilder.buildGet().invoke();
-        assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
-        var entityList = rawresp.readEntity(ToscaServiceTemplate.class);
-        assertNotNull(entityList);
-        rawresp.close();
+        try (var rawresp = invocationBuilder.buildGet().invoke()) {
+            assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
+            var entityList = rawresp.readEntity(ToscaServiceTemplates.class);
+            assertNotNull(entityList);
+            assertThat(entityList.getServiceTemplates()).isNotEmpty();
+        }
+    }
+
+    @Test
+    void testQueryPageable() {
+        for (var i = 0; i < NUMBER_COMPOSITIONS; i++) {
+            createEntryInDB("queryPageable" + i);
+        }
+        // filter by name with wrong name
+        validateQueryPageable("?name=wrongName", 0);
+
+        // filter by name
+        validateQueryPageable("?name=queryPageable1", 1);
+
+        // page=1 and size=5
+        validateQueryPageable("?page=1&size=5", 5);
+
+        // not pageable
+        validateQueryNotPageable("?size=4");
+        validateQueryNotPageable("?page=2");
+        validateQueryNotPageable("");
+    }
+
+    private void validateQueryNotPageable(String parameters) {
+        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT + parameters);
+        try (var response = invocationBuilder.buildGet().invoke()) {
+            assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+            var entityList = response.readEntity(ToscaServiceTemplates.class);
+            assertThat(entityList.getServiceTemplates()).hasSizeGreaterThanOrEqualTo(NUMBER_COMPOSITIONS);
+        }
+    }
+
+    private void validateQueryPageable(String parameters, int size) {
+        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT + parameters);
+        try (var response = invocationBuilder.buildGet().invoke()) {
+            assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+            var entityList = response.readEntity(ToscaServiceTemplates.class);
+            assertThat(entityList.getServiceTemplates()).hasSize(size);
+        }
     }
 
     @Test
@@ -266,14 +310,51 @@ class CommissioningControllerTest extends CommonRestController {
     }
 
     @Test
+    void testPrime() {
+        var compositionId = createEntryInDB("Prime");
+        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT + "/" + compositionId);
+
+        var acElements = AcmUtils.extractAcElementsFromServiceTemplate(serviceTemplate,
+            "org.onap.policy.clamp.acm.AutomationCompositionElement");
+        for (var elementEntry : acElements) {
+            var participant = CommonTestData.createParticipant(UUID.randomUUID());
+            var supportedElementType = new ParticipantSupportedElementType();
+            supportedElementType.setTypeName(elementEntry.getValue().getType());
+            supportedElementType.setTypeVersion(elementEntry.getValue().getTypeVersion());
+            participant.getParticipantSupportedElementTypes().put(supportedElementType.getId(), supportedElementType);
+            var replica = CommonTestData.createParticipantReplica(UUID.randomUUID());
+            participant.getReplicas().put(replica.getReplicaId(), replica);
+            participantProvider.saveParticipant(participant);
+        }
+
+        var body = new AcTypeStateUpdate();
+        body.setPrimeOrder(PrimeOrder.PRIME);
+        try (var resp = invocationBuilder.put(Entity.json(body))) {
+            assertEquals(Response.Status.ACCEPTED.getStatusCode(), resp.getStatus());
+        }
+    }
+
+    @Test
     void testPrimeBadRequest() {
         var compositionId = createEntryInDB("Prime");
         var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT + "/" + compositionId);
+
+        var acElements = AcmUtils.extractAcElementsFromServiceTemplate(serviceTemplate,
+                "org.onap.policy.clamp.acm.AutomationCompositionElement");
+        for (var elementEntry : acElements) {
+            var participant = CommonTestData.createParticipant(UUID.randomUUID());
+            var supportedElementType = new ParticipantSupportedElementType();
+            supportedElementType.setTypeName(elementEntry.getValue().getType());
+            supportedElementType.setTypeVersion(elementEntry.getValue().getTypeVersion());
+            participant.getParticipantSupportedElementTypes().put(supportedElementType.getId(), supportedElementType);
+            participantProvider.saveParticipant(participant);
+        }
+
         var body = new AcTypeStateUpdate();
         body.setPrimeOrder(PrimeOrder.PRIME);
-        var resp = invocationBuilder.put(Entity.json(body));
-        assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), resp.getStatus());
-        resp.close();
+        try (var resp = invocationBuilder.put(Entity.json(body))) {
+            assertEquals(Response.Status.CONFLICT.getStatusCode(), resp.getStatus());
+        }
     }
 
     private UUID createEntryInDB(String name) {

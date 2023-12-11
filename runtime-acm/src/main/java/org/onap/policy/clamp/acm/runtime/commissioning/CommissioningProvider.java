@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2025 Nordix Foundation.
+ * Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantPrimePublisher;
@@ -43,6 +44,7 @@ import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplates;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -146,13 +148,14 @@ public class CommissioningProvider {
      *
      * @param acName the name of the automation composition, null for all
      * @param acVersion the version of the automation composition, null for all
+     * @param pageable the Pageable
      * @return automation composition definition
      */
     @Transactional(readOnly = true)
-    public ToscaServiceTemplates getAutomationCompositionDefinitions(String acName, String acVersion) {
-
+    public ToscaServiceTemplates getAutomationCompositionDefinitions(String acName, String acVersion,
+            @NonNull Pageable pageable) {
         var result = new ToscaServiceTemplates();
-        result.setServiceTemplates(acDefinitionProvider.getServiceTemplateList(acName, acVersion));
+        result.setServiceTemplates(acDefinitionProvider.getServiceTemplateList(acName, acVersion, pageable));
         return result;
     }
 

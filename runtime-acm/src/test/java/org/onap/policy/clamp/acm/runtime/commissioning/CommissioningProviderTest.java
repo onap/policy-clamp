@@ -49,6 +49,7 @@ import org.onap.policy.clamp.models.acm.persistence.provider.AcTypeStateResolver
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
+import org.springframework.data.domain.Pageable;
 
 class CommissioningProviderTest {
 
@@ -64,12 +65,16 @@ class CommissioningProviderTest {
         var provider = new CommissioningProvider(acDefinitionProvider, acProvider, null, null, null,
             acRuntimeParameterGroup);
 
-        var serviceTemplates = provider.getAutomationCompositionDefinitions(null, null);
+        var serviceTemplates = provider.getAutomationCompositionDefinitions(null, null, Pageable.unpaged());
         assertThat(serviceTemplates.getServiceTemplates()).isEmpty();
 
-        when(acDefinitionProvider.getServiceTemplateList(null, null)).thenReturn(List.of(new ToscaServiceTemplate()));
-        serviceTemplates = provider.getAutomationCompositionDefinitions(null, null);
+        when(acDefinitionProvider.getServiceTemplateList(null, null, Pageable.unpaged()))
+            .thenReturn(List.of(new ToscaServiceTemplate()));
+        serviceTemplates = provider.getAutomationCompositionDefinitions(null, null, Pageable.unpaged());
         assertThat(serviceTemplates.getServiceTemplates()).hasSize(1);
+
+        assertThatThrownBy(() -> provider.getAutomationCompositionDefinitions(null, null, null))
+                .hasMessage("pageable is marked non-null but is null");
     }
 
     /**
@@ -111,9 +116,10 @@ class CommissioningProviderTest {
         var provider = new CommissioningProvider(acDefinitionProvider, acProvider, null, null, null, null);
         var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
         assertNotNull(serviceTemplate);
-        when(acDefinitionProvider.getServiceTemplateList(null, null)).thenReturn(List.of(serviceTemplate));
+        when(acDefinitionProvider
+                .getServiceTemplateList(null, null, Pageable.unpaged())).thenReturn(List.of(serviceTemplate));
 
-        var returnedServiceTemplate = provider.getAutomationCompositionDefinitions(null, null);
+        var returnedServiceTemplate = provider.getAutomationCompositionDefinitions(null, null, Pageable.unpaged());
         assertThat(returnedServiceTemplate).isNotNull();
         assertThat(returnedServiceTemplate.getServiceTemplates()).isNotEmpty();
     }

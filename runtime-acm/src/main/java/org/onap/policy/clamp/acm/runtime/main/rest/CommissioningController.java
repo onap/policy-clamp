@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2023 Nordix Foundation.
+ *  Copyright (C) 2021-2023,2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,8 @@ import org.onap.policy.clamp.models.acm.messages.rest.commissioning.Commissionin
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplates;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -87,8 +89,9 @@ public class CommissioningController extends AbstractRestController implements A
      */
     @Override
     public ResponseEntity<ToscaServiceTemplates> queryCompositionDefinitions(String name, String version,
-        UUID requestId) {
-        return ResponseEntity.ok().body(provider.getAutomationCompositionDefinitions(name, version));
+        Integer page, Integer size, UUID requestId) {
+        var pageable = page != null && size != null ? PageRequest.of(page, size) : Pageable.unpaged();
+        return ResponseEntity.ok().body(provider.getAutomationCompositionDefinitions(name, version, pageable));
     }
 
     @Override
