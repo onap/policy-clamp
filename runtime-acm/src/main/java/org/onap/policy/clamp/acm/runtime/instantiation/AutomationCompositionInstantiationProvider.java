@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2023 Nordix Foundation.
+ * Copyright (C) 2021-2024 Nordix Foundation.
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -134,7 +134,7 @@ public class AutomationCompositionInstantiationProvider {
         } else if ((DeployState.DEPLOYED.equals(acToUpdate.getDeployState())
                 || DeployState.UPDATING.equals(acToUpdate.getDeployState()))
                 && LockState.LOCKED.equals(acToUpdate.getLockState())) {
-            return updateDeployedAutomationComposition(compositionId, automationComposition, acToUpdate);
+            return updateDeployedAutomationComposition(automationComposition, acToUpdate);
         }
         throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
                 "Not allowed to update in the state " + acToUpdate.getDeployState());
@@ -143,12 +143,11 @@ public class AutomationCompositionInstantiationProvider {
     /**
      * Update deployed AC Element properties.
      *
-     * @param compositionId The UUID of the automation composition definition
      * @param automationComposition the automation composition
      * @param acToBeUpdated the composition to be updated
      * @return the result of the update
      */
-    public InstantiationResponse updateDeployedAutomationComposition(UUID compositionId,
+    public InstantiationResponse updateDeployedAutomationComposition(
             AutomationComposition automationComposition, AutomationComposition acToBeUpdated) {
 
         if (automationComposition.getCompositionTargetId() != null
@@ -158,12 +157,13 @@ public class AutomationCompositionInstantiationProvider {
         }
 
         // Iterate and update the element property values
-        for (var dbAcElement : acToBeUpdated.getElements().entrySet()) {
-            var elementId = dbAcElement.getKey();
-            if (automationComposition.getElements().containsKey(elementId)) {
-                dbAcElement.getValue().getProperties()
-                        .putAll(automationComposition.getElements().get(elementId).getProperties());
+        for (var element : automationComposition.getElements().entrySet()) {
+            var elementId = element.getKey();
+            var dbAcElement = acToBeUpdated.getElements().get(elementId);
+            if (dbAcElement == null) {
+                throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, "Element id not present " + elementId);
             }
+            dbAcElement.getProperties().putAll(element.getValue().getProperties());
         }
         if (automationComposition.getRestarting() != null) {
             throw new PfModelRuntimeException(Status.BAD_REQUEST, "There is a restarting process, Update not allowed");

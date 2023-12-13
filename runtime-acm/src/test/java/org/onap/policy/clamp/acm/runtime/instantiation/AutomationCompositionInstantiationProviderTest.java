@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2023 Nordix Foundation.
+ *  Copyright (C) 2021-2024 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,6 +30,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVICE_TEMPLATE_YAML;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -39,7 +40,6 @@ import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup
 import org.onap.policy.clamp.acm.runtime.participants.AcmParticipantProvider;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionAcHandler;
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
-import org.onap.policy.clamp.common.acm.exception.AutomationCompositionException;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
@@ -149,7 +149,7 @@ class AutomationCompositionInstantiationProviderTest {
     }
 
     @Test
-    void testInstantiationUpdate() throws AutomationCompositionException {
+    void testInstantiationUpdate() {
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
         var acDefinition = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
         var compositionId = acDefinition.getCompositionId();
@@ -158,13 +158,13 @@ class AutomationCompositionInstantiationProviderTest {
         var automationCompositionUpdate =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_UPDATE_JSON, "Crud");
         automationCompositionUpdate.setCompositionId(compositionId);
+        automationCompositionUpdate.setInstanceId(UUID.randomUUID());
         automationCompositionUpdate.setDeployState(DeployState.DEPLOYED);
         automationCompositionUpdate.setLockState(LockState.LOCKED);
         var acProvider = mock(AutomationCompositionProvider.class);
-        when(acProvider.getAutomationComposition(automationCompositionUpdate.getInstanceId()))
-                .thenReturn(automationCompositionUpdate);
-        when(acProvider.updateAutomationComposition(automationCompositionUpdate))
-                .thenReturn(automationCompositionUpdate);
+        var acmFromDb = new AutomationComposition(automationCompositionUpdate);
+        when(acProvider.getAutomationComposition(automationCompositionUpdate.getInstanceId())).thenReturn(acmFromDb);
+        when(acProvider.updateAutomationComposition(acmFromDb)).thenReturn(acmFromDb);
 
         var supervisionAcHandler = mock(SupervisionAcHandler.class);
         var acmParticipantProvider = mock(AcmParticipantProvider.class);
@@ -175,12 +175,22 @@ class AutomationCompositionInstantiationProviderTest {
                 automationCompositionUpdate.getCompositionId(), automationCompositionUpdate);
 
         verify(supervisionAcHandler).update(any());
-        verify(acProvider).updateAutomationComposition(automationCompositionUpdate);
+        verify(acProvider).updateAutomationComposition(acmFromDb);
         InstantiationUtils.assertInstantiationResponse(instantiationResponse, automationCompositionUpdate);
+
+        var elements = new ArrayList<>(automationCompositionUpdate.getElements().values());
+        automationCompositionUpdate.getElements().clear();
+        for (var element : elements) {
+            element.setId(UUID.randomUUID());
+            automationCompositionUpdate.getElements().put(element.getId(), element);
+        }
+        assertThatThrownBy(
+            () -> instantiationProvider.updateAutomationComposition(compositionId, automationCompositionUpdate))
+            .hasMessageStartingWith("Element id not present ");
     }
 
     @Test
-    void testUpdateBadRequest() throws AutomationCompositionException {
+    void testUpdateBadRequest() {
         var automationCompositionUpdate =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_UPDATE_JSON, "Crud");
         automationCompositionUpdate.setDeployState(DeployState.DEPLOYING);
@@ -210,7 +220,7 @@ class AutomationCompositionInstantiationProviderTest {
     }
 
     @Test
-    void testUpdateRestartedBadRequest() throws AutomationCompositionException {
+    void testUpdateRestartedBadRequest() {
         var automationCompositionUpdate =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_UPDATE_JSON, "Crud");
         automationCompositionUpdate.setDeployState(DeployState.DEPLOYED);
@@ -239,7 +249,7 @@ class AutomationCompositionInstantiationProviderTest {
     }
 
     @Test
-    void testUpdateCompositionRestartedBadRequest() throws AutomationCompositionException {
+    void testUpdateCompositionRestartedBadRequest() {
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
         var acDefinition = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
         acDefinition.setRestarting(true);
