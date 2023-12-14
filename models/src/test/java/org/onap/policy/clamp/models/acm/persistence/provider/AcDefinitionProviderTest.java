@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2023 Nordix Foundation.
+ *  Copyright (C) 2021-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,9 +38,12 @@ import org.mockito.Mockito;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
+import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplate;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationCompositionDefinition;
+import org.onap.policy.clamp.models.acm.persistence.concepts.JpaNodeTemplateState;
 import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionDefinitionRepository;
+import org.onap.policy.clamp.models.acm.persistence.repository.NodeTemplateStateRepository;
 import org.onap.policy.clamp.models.acm.utils.CommonTestData;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
@@ -91,7 +94,7 @@ class AcDefinitionProviderTest {
         when(acmDefinitionRepository.save(any(JpaAutomationCompositionDefinition.class)))
                 .thenReturn(new JpaAutomationCompositionDefinition(acmDefinition));
 
-        var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository);
+        var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository, null);
         var result = acDefinitionProvider
                 .createAutomationCompositionDefinition(inputServiceTemplate, ELEMENT_NAME, NODE_TYPE);
 
@@ -101,11 +104,9 @@ class AcDefinitionProviderTest {
 
     @Test
     void testToscaWithInvalidElement() {
-        var docServiceTemplate = new DocToscaServiceTemplate(inputServiceTemplate);
-        var acmDefinition = getAcDefinition(docServiceTemplate);
         var acmDefinitionRepository = mock(AutomationCompositionDefinitionRepository.class);
 
-        var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository);
+        var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository, null);
 
         assertThatThrownBy(() -> acDefinitionProvider
                 .createAutomationCompositionDefinition(inputServiceTemplate, INVALID_ELEMENT_NAME, NODE_TYPE))
@@ -114,11 +115,9 @@ class AcDefinitionProviderTest {
 
     @Test
     void testToscaWithInvalidNodeType() {
-        var docServiceTemplate = new DocToscaServiceTemplate(inputServiceTemplate);
-        var acmDefinition = getAcDefinition(docServiceTemplate);
         var acmDefinitionRepository = mock(AutomationCompositionDefinitionRepository.class);
 
-        var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository);
+        var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository, null);
 
         assertThatThrownBy(() -> acDefinitionProvider
                 .createAutomationCompositionDefinition(inputServiceTemplate, ELEMENT_NAME, INVALID_NODE_TYPE))
@@ -135,7 +134,7 @@ class AcDefinitionProviderTest {
         when(acmDefinitionRepository.save(any(JpaAutomationCompositionDefinition.class)))
             .thenReturn(new JpaAutomationCompositionDefinition(acmDefinition));
 
-        var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository);
+        var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository, null);
         inputServiceTemplate.setMetadata(new HashMap<>());
         var result = acDefinitionProvider
                 .createAutomationCompositionDefinition(inputServiceTemplate, ELEMENT_NAME, NODE_TYPE);
@@ -147,7 +146,7 @@ class AcDefinitionProviderTest {
     @Test
     void testUpdateServiceTemplate() {
         var acmDefinitionRepository = mock(AutomationCompositionDefinitionRepository.class);
-        var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository);
+        var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository, null);
         acDefinitionProvider.updateServiceTemplate(UUID.randomUUID(), inputServiceTemplate, ELEMENT_NAME, NODE_TYPE);
         verify(acmDefinitionRepository).save(any(JpaAutomationCompositionDefinition.class));
     }
@@ -155,10 +154,36 @@ class AcDefinitionProviderTest {
     @Test
     void testUpdateAcDefinition() {
         var acmDefinitionRepository = mock(AutomationCompositionDefinitionRepository.class);
-        var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository);
+        var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository, null);
         var acmDefinition = getAcDefinition(new DocToscaServiceTemplate(inputServiceTemplate));
         acDefinitionProvider.updateAcDefinition(acmDefinition, NODE_TYPE);
         verify(acmDefinitionRepository).save(any(JpaAutomationCompositionDefinition.class));
+    }
+
+    @Test
+    void testUpdateAcDefinitionState() {
+        var acmDefinitionRepository = mock(AutomationCompositionDefinitionRepository.class);
+        var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository, null);
+        var acmDefinition = getAcDefinition(new DocToscaServiceTemplate(inputServiceTemplate));
+        acmDefinition.setState(AcTypeState.PRIMING);
+        var jpa = new JpaAutomationCompositionDefinition(acmDefinition);
+        when(acmDefinitionRepository.findById(acmDefinition.getCompositionId().toString()))
+            .thenReturn(Optional.of(jpa));
+        acDefinitionProvider.updateAcDefinitionState(acmDefinition.getCompositionId(), AcTypeState.PRIMED,
+            StateChangeResult.NO_ERROR, false);
+        verify(acmDefinitionRepository).save(jpa);
+    }
+
+    @Test
+    void testUpdateAcDefinitionElement() {
+        var nodeTemplateState = new NodeTemplateState();
+        nodeTemplateState.setNodeTemplateId(new ToscaConceptIdentifier("name", "1.0.0"));
+        nodeTemplateState.setNodeTemplateStateId(UUID.randomUUID());
+        nodeTemplateState.setState(AcTypeState.PRIMED);
+        var nodeTemplateStateRepository = mock(NodeTemplateStateRepository.class);
+        var acDefinitionProvider = new AcDefinitionProvider(null, nodeTemplateStateRepository);
+        acDefinitionProvider.updateAcDefinitionElement(nodeTemplateState, UUID.randomUUID());
+        verify(nodeTemplateStateRepository).save(any(JpaNodeTemplateState.class));
     }
 
     @Test
@@ -167,7 +192,7 @@ class AcDefinitionProviderTest {
         jpa.fromAuthorative(getAcDefinition(new DocToscaServiceTemplate(inputServiceTemplate)));
         var acmDefinitionRepository = mock(AutomationCompositionDefinitionRepository.class);
         when(acmDefinitionRepository.findById(jpa.getCompositionId())).thenReturn(Optional.of(jpa));
-        var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository);
+        var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository, null);
         var result = acDefinitionProvider.getAcDefinition(UUID.fromString(jpa.getCompositionId()));
         assertThat(result).isNotNull();
     }
@@ -175,7 +200,7 @@ class AcDefinitionProviderTest {
     @Test
     void testGetAcDefinitionNotFound() {
         var acmDefinitionRepository = mock(AutomationCompositionDefinitionRepository.class);
-        var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository);
+        var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository, null);
         var compositionId = UUID.randomUUID();
         assertThatThrownBy(() -> acDefinitionProvider.getAcDefinition(compositionId))
                 .hasMessage("Get serviceTemplate \"" + compositionId + "\" failed, serviceTemplate does not exist");
@@ -187,20 +212,24 @@ class AcDefinitionProviderTest {
         jpa.fromAuthorative(getAcDefinition(new DocToscaServiceTemplate(inputServiceTemplate)));
         var acmDefinitionRepository = mock(AutomationCompositionDefinitionRepository.class);
         when(acmDefinitionRepository.findById(jpa.getCompositionId())).thenReturn(Optional.of(jpa));
-        var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository);
-        var result = acDefinitionProvider.findAcDefinition(UUID.fromString(jpa.getCompositionId()));
-        assertThat(result).isNotNull();
+        var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository, null);
+        var compositionId = UUID.fromString(jpa.getCompositionId());
+        var result = acDefinitionProvider.findAcDefinition(compositionId);
+        assertThat(result).isNotEmpty();
     }
 
     @Test
-    void testGetAllAcDefinitions() {
+    void getAllAcDefinitionsInTransition() {
+        var acDefinition = getAcDefinition(new DocToscaServiceTemplate(inputServiceTemplate));
+        acDefinition.setState(AcTypeState.PRIMING);
         var jpa = new JpaAutomationCompositionDefinition();
-        jpa.fromAuthorative(getAcDefinition(new DocToscaServiceTemplate(inputServiceTemplate)));
+        jpa.fromAuthorative(acDefinition);
         var acmDefinitionRepository = mock(AutomationCompositionDefinitionRepository.class);
-        when(acmDefinitionRepository.findAll()).thenReturn(List.of(jpa));
-        var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository);
-        var result = acDefinitionProvider.getAllAcDefinitions();
-        assertThat(result).hasSize(1);
+        when(acmDefinitionRepository.findByStateIn(List.of(AcTypeState.PRIMING, AcTypeState.DEPRIMING)))
+            .thenReturn(List.of(jpa));
+        var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository, null);
+        var result = acDefinitionProvider.getAllAcDefinitionsInTransition();
+        assertThat(result).isNotEmpty();
     }
 
     @Test
@@ -212,7 +241,7 @@ class AcDefinitionProviderTest {
         when(acmDefinitionRepository.findById(acmDefinition.getCompositionId().toString()))
                 .thenReturn(Optional.of(new JpaAutomationCompositionDefinition(acmDefinition)));
 
-        var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository);
+        var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository, null);
         var result = acDefinitionProvider.deleteAcDefintion(acmDefinition.getCompositionId());
 
         assertThat(result).isEqualTo(docServiceTemplate.toAuthorative());
@@ -222,7 +251,7 @@ class AcDefinitionProviderTest {
     void testDeleteServiceTemplateEmpty() {
         var compositionId = UUID.randomUUID();
         var acmDefinitionRepository = mock(AutomationCompositionDefinitionRepository.class);
-        var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository);
+        var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository, null);
         assertThatThrownBy(() -> acDefinitionProvider.deleteAcDefintion(compositionId))
                 .hasMessage("delete of Automation Composition Definition \"" + compositionId
                         + "\" failed, Automation Composition Definition does not exist");
@@ -236,7 +265,7 @@ class AcDefinitionProviderTest {
         when(acmDefinitionRepository.findAll(Mockito.<Example<JpaAutomationCompositionDefinition>>any()))
                 .thenReturn(List.of(new JpaAutomationCompositionDefinition(acmDefinition)));
 
-        var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository);
+        var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository, null);
         var result = acDefinitionProvider.getServiceTemplateList(inputServiceTemplate.getName(),
                 inputServiceTemplate.getVersion());
 
@@ -252,7 +281,7 @@ class AcDefinitionProviderTest {
         when(acmDefinitionRepository.findAll(Mockito.<Example<JpaAutomationCompositionDefinition>>any()))
             .thenReturn(List.of(new JpaAutomationCompositionDefinition(acmDefinition)));
 
-        var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository);
+        var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository, null);
         var result = acDefinitionProvider.getServiceTemplateList(null,
             inputServiceTemplate.getVersion());
 

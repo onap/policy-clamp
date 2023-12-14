@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2023 Nordix Foundation.
+ * Copyright (C) 2021-2024 Nordix Foundation.
  * ================================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -23,8 +23,11 @@
 package org.onap.policy.clamp.acm.runtime.supervision;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionDeployPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionStateChangePublisher;
@@ -56,7 +59,6 @@ public class SupervisionScanner {
     private final AcDefinitionProvider acDefinitionProvider;
     private final AutomationCompositionStateChangePublisher automationCompositionStateChangePublisher;
     private final AutomationCompositionDeployPublisher automationCompositionDeployPublisher;
-    private final AcRuntimeParameterGroup acRuntimeParameterGroup;
 
     /**
      * Constructor for instantiating SupervisionScanner.
@@ -76,7 +78,6 @@ public class SupervisionScanner {
         this.acDefinitionProvider = acDefinitionProvider;
         this.automationCompositionStateChangePublisher = automationCompositionStateChangePublisher;
         this.automationCompositionDeployPublisher = automationCompositionDeployPublisher;
-        this.acRuntimeParameterGroup = acRuntimeParameterGroup;
 
         acTimeout.setMaxWaitMs(acRuntimeParameterGroup.getParticipantParameters().getMaxStatusWaitMs());
     }
@@ -87,20 +88,27 @@ public class SupervisionScanner {
     public void run() {
         LOGGER.debug("Scanning automation compositions in the database . . .");
 
-        var list = acDefinitionProvider.getAllAcDefinitions();
-        for (var acDefinition : list) {
-            if (AcTypeState.PRIMING.equals(acDefinition.getState())
-                    || AcTypeState.DEPRIMING.equals(acDefinition.getState())) {
-                scanAutomationCompositionDefinition(acDefinition);
-            } else {
-                acTimeout.clear(acDefinition.getCompositionId());
-                var acList =
-                        automationCompositionProvider.getAcInstancesByCompositionId(acDefinition.getCompositionId());
-                for (var automationComposition : acList) {
-                    scanAutomationComposition(automationComposition, acDefinition.getServiceTemplate());
-                }
-            }
+        var acDefinitionList = acDefinitionProvider.getAllAcDefinitionsInTransition();
+        for (var acDefinition : acDefinitionList) {
+            scanAutomationCompositionDefinition(acDefinition);
         }
+        Set<UUID> set = new HashSet<>();
+        set.addAll(acDefinitionList
+            .stream().map(AutomationCompositionDefinition::getCompositionId).collect(Collectors.toSet()));
+
+        var acList = automationCompositionProvider.getAcInstancesInTransition();
+        HashMap<UUID, AutomationCompositionDefinition> acDefinitionMap = new HashMap<>();
+        for (var automationComposition : acList) {
+            var acDefinition = acDefinitionMap.get(automationComposition.getCompositionId());
+            if (acDefinition == null) {
+                acDefinition = acDefinitionProvider.getAcDefinition(automationComposition.getCompositionId());
+                acDefinitionMap.put(acDefinition.getCompositionId(), acDefinition);
+            }
+            scanAutomationComposition(automationComposition, acDefinition.getServiceTemplate());
+        }
+        set.addAll(
+            acList.stream().map(AutomationComposition::getInstanceId).collect(Collectors.toSet()));
+        acTimeout.removeIfNotPresent(set);
 
         LOGGER.debug("Automation composition scan complete . . .");
     }
@@ -110,7 +118,7 @@ public class SupervisionScanner {
             LOGGER.debug("automation definition {} scanned, OK", acDefinition.getCompositionId());
 
             // Clear Timeout on ac Definition
-            acTimeout.clear(acDefinition.getCompositionId());
+            acTimeout.remove(acDefinition.getCompositionId());
             return;
         }
 
@@ -121,7 +129,21 @@ public class SupervisionScanner {
             acTimeout.clear(acDefinition.getCompositionId());
         }
 
-        handleTimeout(acDefinition);
+        boolean completed = true;
+        var finalState = AcTypeState.PRIMING.equals(acDefinition.getState())
+            || AcTypeState.PRIMED.equals(acDefinition.getState()) ? AcTypeState.PRIMED : AcTypeState.COMMISSIONED;
+        for (var element : acDefinition.getElementStateMap().values()) {
+            if (!finalState.equals(element.getState())) {
+                completed = false;
+            }
+        }
+        if (completed) {
+            acDefinitionProvider.updateAcDefinitionState(acDefinition.getCompositionId(), finalState,
+                StateChangeResult.NO_ERROR, null);
+            acTimeout.remove(acDefinition.getCompositionId());
+        } else {
+            handleTimeout(acDefinition);
+        }
     }
 
     private void scanAutomationComposition(final AutomationComposition automationComposition,
@@ -134,7 +156,7 @@ public class SupervisionScanner {
             LOGGER.debug("automation composition {} scanned, OK", automationComposition.getInstanceId());
 
             // Clear Timeout on automation composition
-            clearTimeout(automationComposition, true);
+            removeTimeout(automationComposition);
             return;
         }
 
@@ -214,7 +236,7 @@ public class SupervisionScanner {
         }
 
         // Clear timeout on automation composition
-        clearTimeout(automationComposition, true);
+        removeTimeout(automationComposition);
     }
 
     private void clearTimeout(AutomationComposition automationComposition, boolean cleanPhase) {
@@ -222,6 +244,11 @@ public class SupervisionScanner {
         if (cleanPhase) {
             phaseMap.remove(automationComposition.getInstanceId());
         }
+    }
+
+    private void removeTimeout(AutomationComposition automationComposition) {
+        acTimeout.remove(automationComposition.getInstanceId());
+        phaseMap.remove(automationComposition.getInstanceId());
     }
 
     private void handleTimeout(AutomationCompositionDefinition acDefinition) {
@@ -235,8 +262,8 @@ public class SupervisionScanner {
             LOGGER.debug("Report timeout for the ac definition {}", acDefinition.getCompositionId());
             acTimeout.setTimeout(compositionId);
             acDefinition.setStateChangeResult(StateChangeResult.TIMEOUT);
-            acDefinitionProvider.updateAcDefinition(acDefinition,
-                    acRuntimeParameterGroup.getAcmParameters().getToscaCompositionName());
+            acDefinitionProvider.updateAcDefinitionState(acDefinition.getCompositionId(),
+                acDefinition.getState(), acDefinition.getStateChangeResult(), acDefinition.getRestarting());
         }
     }
 

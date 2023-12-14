@@ -204,7 +204,6 @@ public class SupervisionAcHandler {
             description = "AUTOMATION_COMPOSITION_DEPLOY_ACK messages received")
     public void handleAutomationCompositionUpdateAckMessage(
             AutomationCompositionDeployAck automationCompositionAckMessage) {
-        LOGGER.debug("AutomationComposition Update Ack message received {}", automationCompositionAckMessage);
         setAcElementStateInDb(automationCompositionAckMessage);
     }
 
@@ -219,7 +218,6 @@ public class SupervisionAcHandler {
             description = "AUTOMATION_COMPOSITION_STATECHANGE_ACK messages received")
     public void handleAutomationCompositionStateChangeAckMessage(
             AutomationCompositionDeployAck automationCompositionAckMessage) {
-        LOGGER.debug("AutomationComposition StateChange Ack message received {}", automationCompositionAckMessage);
         setAcElementStateInDb(automationCompositionAckMessage);
     }
 

@@ -47,6 +47,7 @@ import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCom
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeployAck;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionMigration;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionStateChange;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrimeAck;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.PropertiesUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.LockOrder;
@@ -273,7 +274,7 @@ class AutomationCompositionHandlerTest {
     }
 
     @Test
-    void handleComposiotDeprimeTest() {
+    void handleCompositionDeprimeTest() {
         var acElementDefinition = new AutomationCompositionElementDefinition();
         acElementDefinition.setAcElementDefinitionId(new ToscaConceptIdentifier("key", "1.0.0"));
         var toscaNodeTemplate = new ToscaNodeTemplate();
@@ -289,6 +290,17 @@ class AutomationCompositionHandlerTest {
         var messageId = UUID.randomUUID();
         ach.deprime(messageId, compositionId);
         verify(listener).deprime(any(UUID.class), any(CompositionDto.class));
+    }
+
+    @Test
+    void handleCompositionAlreadyDeprimedTest() {
+        var messageId = UUID.randomUUID();
+        var compositionId = UUID.randomUUID();
+        var participantMessagePublisher =  mock(ParticipantMessagePublisher.class);
+        var ach = new AutomationCompositionHandler(mock(CacheProvider.class), participantMessagePublisher,
+            mock(ThreadHandler.class));
+        ach.deprime(messageId, compositionId);
+        verify(participantMessagePublisher).sendParticipantPrimeAck(any(ParticipantPrimeAck.class));
     }
 
     @Test

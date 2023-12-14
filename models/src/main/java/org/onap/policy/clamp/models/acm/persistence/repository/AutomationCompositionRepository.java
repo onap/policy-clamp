@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2022,2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,15 +20,20 @@
 
 package org.onap.policy.clamp.models.acm.persistence.repository;
 
+import java.util.Collection;
 import java.util.List;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationComposition;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.query.QueryByExampleExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AutomationCompositionRepository
-        extends JpaRepository<JpaAutomationComposition, String>, QueryByExampleExecutor<JpaAutomationComposition> {
+public interface AutomationCompositionRepository extends JpaRepository<JpaAutomationComposition, String> {
 
     List<JpaAutomationComposition> findByCompositionId(String compositionId);
+
+    List<JpaAutomationComposition> findByDeployStateIn(Collection<DeployState> deployStates);
+
+    List<JpaAutomationComposition> findByLockStateIn(Collection<LockState> lockStates);
 }

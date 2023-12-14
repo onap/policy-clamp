@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023 Nordix Foundation.
+ *  Copyright (C) 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,8 +33,8 @@ public class TimeoutHandler<K> {
     @Setter
     private long maxWaitMs;
 
-    private Set<K> mapTimeout = new HashSet<>();
-    private Map<K, Long> mapTimer = new HashMap<>();
+    private final Set<K> mapTimeout = new HashSet<>();
+    private final Map<K, Long> mapTimer = new HashMap<>();
 
     public long getDuration(K id) {
         mapTimer.putIfAbsent(id, getEpochMilli());
@@ -59,6 +59,18 @@ public class TimeoutHandler<K> {
     public void remove(K id) {
         mapTimeout.remove(id);
         mapTimer.remove(id);
+    }
+
+    /**
+     * Remove elements that are not present in set.
+     *
+     * @param set the elements that should be present
+     */
+    public void removeIfNotPresent(final Set<K> set) {
+        var res = mapTimeout.stream().filter(el -> !set.contains(el)).toList();
+        if (!res.isEmpty()) {
+            res.forEach(this::remove);
+        }
     }
 
     public void setTimeout(K id) {

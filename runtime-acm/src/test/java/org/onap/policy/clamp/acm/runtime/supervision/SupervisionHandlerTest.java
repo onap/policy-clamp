@@ -22,6 +22,7 @@ package org.onap.policy.clamp.acm.runtime.supervision;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVICE_TEMPLATE_YAML;
@@ -77,13 +78,16 @@ class SupervisionHandlerTest {
     void testParticipantPrimeAck() {
         var participantPrimeAckMessage = new ParticipantPrimeAck();
         participantPrimeAckMessage.setParticipantId(CommonTestData.getParticipantId());
+        participantPrimeAckMessage.setCompositionState(AcTypeState.PRIMED);
         participantPrimeAckMessage.setState(ParticipantState.ON_LINE);
 
         var acDefinition = CommonTestData.createAcDefinition(
                 InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML), AcTypeState.PRIMING);
+        acDefinition.setStateChangeResult(StateChangeResult.NO_ERROR);
         participantPrimeAckMessage.setCompositionId(acDefinition.getCompositionId());
-        acDefinition.getElementStateMap().values().iterator().next()
-                .setParticipantId(CommonTestData.getParticipantId());
+        for (var element : acDefinition.getElementStateMap().values()) {
+            element.setParticipantId(CommonTestData.getParticipantId());
+        }
 
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
         when(acDefinitionProvider.findAcDefinition(acDefinition.getCompositionId()))
@@ -93,7 +97,10 @@ class SupervisionHandlerTest {
 
         handler.handleParticipantMessage(participantPrimeAckMessage);
         verify(acDefinitionProvider).findAcDefinition(any());
-        verify(acDefinitionProvider).updateAcDefinition(any(), any());
+        verify(acDefinitionProvider, times(acDefinition.getElementStateMap().size()))
+            .updateAcDefinitionElement(any(), any());
+        verify(acDefinitionProvider).updateAcDefinitionState(acDefinition.getCompositionId(), AcTypeState.PRIMED,
+            StateChangeResult.NO_ERROR, null);
     }
 
     @Test
@@ -117,6 +124,39 @@ class SupervisionHandlerTest {
 
         handler.handleParticipantMessage(participantPrimeAckMessage);
         verify(acDefinitionProvider).findAcDefinition(any());
-        verify(acDefinitionProvider).updateAcDefinition(any(), any());
+        verify(acDefinitionProvider).updateAcDefinitionElement(any(), any());
+        verify(acDefinitionProvider).updateAcDefinitionState(acDefinition.getCompositionId(), AcTypeState.PRIMING,
+            StateChangeResult.FAILED, null);
+    }
+
+    @Test
+    void testParticipantPrimeAckRestarted() {
+        var participantPrimeAckMessage = new ParticipantPrimeAck();
+        participantPrimeAckMessage.setParticipantId(CommonTestData.getParticipantId());
+        participantPrimeAckMessage.setCompositionState(AcTypeState.PRIMED);
+        participantPrimeAckMessage.setState(ParticipantState.ON_LINE);
+
+        var acDefinition = CommonTestData.createAcDefinition(
+            InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML), AcTypeState.PRIMED);
+        acDefinition.setStateChangeResult(StateChangeResult.TIMEOUT);
+        acDefinition.setRestarting(true);
+        participantPrimeAckMessage.setCompositionId(acDefinition.getCompositionId());
+        for (var element : acDefinition.getElementStateMap().values()) {
+            element.setParticipantId(CommonTestData.getParticipantId());
+            element.setRestarting(true);
+        }
+
+        var acDefinitionProvider = mock(AcDefinitionProvider.class);
+        when(acDefinitionProvider.findAcDefinition(acDefinition.getCompositionId()))
+            .thenReturn(Optional.of(acDefinition));
+
+        var handler = new SupervisionHandler(acDefinitionProvider, CommonTestData.getTestParamaterGroup());
+
+        handler.handleParticipantMessage(participantPrimeAckMessage);
+        verify(acDefinitionProvider).findAcDefinition(any());
+        verify(acDefinitionProvider, times(acDefinition.getElementStateMap().size()))
+            .updateAcDefinitionElement(any(), any());
+        verify(acDefinitionProvider).updateAcDefinitionState(acDefinition.getCompositionId(), AcTypeState.PRIMED,
+            StateChangeResult.NO_ERROR, null);
     }
 }

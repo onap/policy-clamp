@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2023 Nordix Foundation.
+ * Copyright (C) 2021-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -40,6 +41,8 @@ import org.mockito.Mockito;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementInfo;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionInfo;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationComposition;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionElementRepository;
@@ -173,6 +176,27 @@ class AutomationCompositionProviderTest {
                 .thenReturn(inputAutomationCompositionsJpa);
         var acList =
                 automationCompositionProvider.getAcInstancesByCompositionId(automationComposition.getCompositionId());
+        assertEquals(inputAutomationCompositions.getAutomationCompositionList(), acList);
+    }
+
+    @Test
+    void testGetAcInstancesInTransition() {
+        inputAutomationCompositions.getAutomationCompositionList().get(0).setDeployState(DeployState.DEPLOYING);
+        inputAutomationCompositions.getAutomationCompositionList().get(1).setLockState(LockState.LOCKING);
+        inputAutomationCompositionsJpa.get(0).setDeployState(DeployState.DEPLOYING);
+        inputAutomationCompositionsJpa.get(1).setLockState(LockState.LOCKING);
+
+        List<JpaAutomationComposition> res1 = new ArrayList<>();
+        res1.add(inputAutomationCompositionsJpa.get(0));
+        var automationCompositionRepository = mock(AutomationCompositionRepository.class);
+        var automationCompositionProvider = new AutomationCompositionProvider(automationCompositionRepository,
+            mock(AutomationCompositionElementRepository.class));
+        when(automationCompositionRepository.findByDeployStateIn(List.of(DeployState.DEPLOYING,
+            DeployState.UNDEPLOYING, DeployState.DELETING, DeployState.UPDATING, DeployState.MIGRATING)))
+            .thenReturn(res1);
+        when(automationCompositionRepository.findByLockStateIn(List.of(LockState.LOCKING, LockState.UNLOCKING)))
+            .thenReturn(List.of(inputAutomationCompositionsJpa.get(1)));
+        var acList = automationCompositionProvider.getAcInstancesInTransition();
         assertEquals(inputAutomationCompositions.getAutomationCompositionList(), acList);
     }
 

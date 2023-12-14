@@ -40,6 +40,7 @@ import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantRestartAc;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeploy;
@@ -47,6 +48,7 @@ import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCom
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionMigration;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionStateChange;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessageType;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrimeAck;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.PropertiesUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.LockOrder;
@@ -428,6 +430,16 @@ public class AutomationCompositionHandler {
         var acElementsDefinitions = cacheProvider.getAcElementsDefinitions().get(compositionId);
         if (acElementsDefinitions == null) {
             // this participant does not handle this composition
+            var participantPrimeAck = new ParticipantPrimeAck();
+            participantPrimeAck.setCompositionId(compositionId);
+            participantPrimeAck.setMessage("Already deprimed or never primed");
+            participantPrimeAck.setResult(true);
+            participantPrimeAck.setResponseTo(messageId);
+            participantPrimeAck.setCompositionState(AcTypeState.COMMISSIONED);
+            participantPrimeAck.setStateChangeResult(StateChangeResult.NO_ERROR);
+            participantPrimeAck.setParticipantId(cacheProvider.getParticipantId());
+            participantPrimeAck.setState(ParticipantState.ON_LINE);
+            publisher.sendParticipantPrimeAck(participantPrimeAck);
             return;
         }
         var list = new ArrayList<>(acElementsDefinitions.values());

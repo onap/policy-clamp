@@ -74,7 +74,6 @@ public class SupervisionParticipantHandler {
     @MessageIntercept
     @Timed(value = "listener.participant_register", description = "PARTICIPANT_REGISTER messages received")
     public void handleParticipantMessage(ParticipantRegister participantRegisterMsg) {
-        LOGGER.debug("Participant Register received {}", participantRegisterMsg);
         var participantOpt = participantProvider.findParticipant(participantRegisterMsg.getParticipantId());
 
         if (participantOpt.isPresent()) {
@@ -100,7 +99,6 @@ public class SupervisionParticipantHandler {
     @MessageIntercept
     @Timed(value = "listener.participant_deregister", description = "PARTICIPANT_DEREGISTER messages received")
     public void handleParticipantMessage(ParticipantDeregister participantDeregisterMsg) {
-        LOGGER.debug("Participant Deregister received {}", participantDeregisterMsg);
         var participantOpt = participantProvider.findParticipant(participantDeregisterMsg.getParticipantId());
 
         if (participantOpt.isPresent()) {
@@ -120,7 +118,6 @@ public class SupervisionParticipantHandler {
     @MessageIntercept
     @Timed(value = "listener.participant_status", description = "PARTICIPANT_STATUS messages received")
     public void handleParticipantMessage(ParticipantStatus participantStatusMsg) {
-        LOGGER.debug("Participant Status received {}", participantStatusMsg);
 
         var participantOpt = participantProvider.findParticipant(participantStatusMsg.getParticipantId());
         if (participantOpt.isEmpty()) {

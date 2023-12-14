@@ -52,7 +52,6 @@ public class SupervisionHandler {
      */
     @Timed(value = "listener.participant_prime_ack", description = "PARTICIPANT_PRIME_ACK messages received")
     public void handleParticipantMessage(ParticipantPrimeAck participantPrimeAckMessage) {
-        LOGGER.debug("Participant Prime Ack message received {}", participantPrimeAckMessage);
         var acDefinitionOpt = acDefinitionProvider.findAcDefinition(participantPrimeAckMessage.getCompositionId());
         if (acDefinitionOpt.isEmpty()) {
             LOGGER.warn("AC Definition not found in database {}", participantPrimeAckMessage.getCompositionId());
@@ -74,8 +73,10 @@ public class SupervisionHandler {
                 || AcTypeState.PRIMED.equals(acDefinition.getState()) ? AcTypeState.PRIMED : AcTypeState.COMMISSIONED;
         var msgInErrors = StateChangeResult.FAILED.equals(participantPrimeAckMessage.getStateChangeResult());
         boolean inProgress = !StateChangeResult.FAILED.equals(acDefinition.getStateChangeResult());
+        boolean toUpdate = false;
         if (inProgress && msgInErrors) {
             acDefinition.setStateChangeResult(StateChangeResult.FAILED);
+            toUpdate = true;
         }
 
         boolean completed = true;
@@ -85,6 +86,7 @@ public class SupervisionHandler {
                 element.setMessage(participantPrimeAckMessage.getMessage());
                 element.setState(participantPrimeAckMessage.getCompositionState());
                 element.setRestarting(null);
+                acDefinitionProvider.updateAcDefinitionElement(element, acDefinition.getCompositionId());
             }
             if (!finalState.equals(element.getState())) {
                 completed = false;
@@ -95,16 +97,19 @@ public class SupervisionHandler {
         }
 
         if (inProgress && !msgInErrors && completed) {
+            toUpdate = true;
             acDefinition.setState(finalState);
             if (StateChangeResult.TIMEOUT.equals(acDefinition.getStateChangeResult())) {
                 acDefinition.setStateChangeResult(StateChangeResult.NO_ERROR);
             }
         }
-        if (!restarting) {
+        if (!restarting && acDefinition.getRestarting() != null) {
+            toUpdate = true;
             acDefinition.setRestarting(null);
         }
-        acDefinitionProvider.updateAcDefinition(acDefinition,
-                acRuntimeParameterGroup.getAcmParameters().getToscaCompositionName());
+        if (toUpdate) {
+            acDefinitionProvider.updateAcDefinitionState(acDefinition.getCompositionId(), acDefinition.getState(),
+                acDefinition.getStateChangeResult(), acDefinition.getRestarting());
+        }
     }
-
 }

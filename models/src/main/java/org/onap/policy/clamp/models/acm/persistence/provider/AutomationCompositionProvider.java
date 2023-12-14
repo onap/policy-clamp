@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2023 Nordix Foundation.
+ * Copyright (C) 2021-2024 Nordix Foundation.
  * ================================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -127,7 +127,7 @@ public class AutomationCompositionProvider {
             @NonNull final AutomationComposition automationComposition) {
         var result = automationCompositionRepository.save(ProviderUtils.getJpaAndValidate(automationComposition,
                 JpaAutomationComposition::new, "automation composition"));
-
+        automationCompositionRepository.flush();
         // Return the saved automation composition
         return result.toAuthorative();
     }
@@ -142,6 +142,20 @@ public class AutomationCompositionProvider {
     public List<AutomationComposition> getAcInstancesByCompositionId(UUID compositionId) {
         return ProviderUtils
                 .asEntityList(automationCompositionRepository.findByCompositionId(compositionId.toString()));
+    }
+
+    /**
+     * Get all automation compositions in transition..
+     *
+     * @return all automation compositions found
+     */
+    @Transactional(readOnly = true)
+    public List<AutomationComposition> getAcInstancesInTransition() {
+        var jpaList = automationCompositionRepository.findByDeployStateIn(List.of(DeployState.DEPLOYING,
+            DeployState.UNDEPLOYING, DeployState.DELETING, DeployState.UPDATING, DeployState.MIGRATING));
+        jpaList.addAll(automationCompositionRepository.findByLockStateIn(
+            List.of(LockState.LOCKING, LockState.UNLOCKING)));
+        return ProviderUtils.asEntityList(jpaList);
     }
 
     /**

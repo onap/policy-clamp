@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2023 Nordix Foundation.
+ *  Copyright (C) 2021-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.clearInvocations;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -46,6 +47,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
@@ -57,17 +59,35 @@ class SupervisionScannerTest {
 
     private static final UUID compositionId = UUID.randomUUID();
 
-    private AcDefinitionProvider createAcDefinitionProvider(AcTypeState acTypeState,
-            StateChangeResult stateChangeResult) {
+    private AutomationCompositionDefinition createAutomationCompositionDefinition(AcTypeState acTypeState,
+                                                                                  StateChangeResult stateChangeResult) {
         var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
         var acDefinition = new AutomationCompositionDefinition();
         acDefinition.setState(acTypeState);
         acDefinition.setStateChangeResult(stateChangeResult);
         acDefinition.setCompositionId(compositionId);
         acDefinition.setServiceTemplate(serviceTemplate);
+        var node = new NodeTemplateState();
+        node.setState(AcTypeState.PRIMING);
+        node.setNodeTemplateStateId(UUID.randomUUID());
+        acDefinition.setElementStateMap(Map.of(node.getNodeTemplateStateId().toString(), node));
+        return acDefinition;
+    }
+
+    private AcDefinitionProvider createAcDefinitionProvider(AutomationCompositionDefinition acDefinition) {
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
-        when(acDefinitionProvider.getAllAcDefinitions()).thenReturn(List.of(Objects.requireNonNull(acDefinition)));
+        var acTypeState = acDefinition.getState();
+        if (AcTypeState.PRIMING.equals(acTypeState) || AcTypeState.DEPRIMING.equals(acTypeState)) {
+            when(acDefinitionProvider.getAllAcDefinitionsInTransition())
+                .thenReturn(List.of(Objects.requireNonNull(acDefinition)));
+        }
+        when(acDefinitionProvider.getAcDefinition(compositionId)).thenReturn(acDefinition);
         return acDefinitionProvider;
+    }
+
+    private AcDefinitionProvider createAcDefinitionProvider(AcTypeState acTypeState,
+        StateChangeResult stateChangeResult) {
+        return createAcDefinitionProvider(createAutomationCompositionDefinition(acTypeState, stateChangeResult));
     }
 
     private AcDefinitionProvider createAcDefinitionProvider() {
@@ -75,64 +95,95 @@ class SupervisionScannerTest {
     }
 
     @Test
-    void testScannerOrderedFailed() {
+    void testAcDefinitionPrimeFailed() {
         var acDefinitionProvider = createAcDefinitionProvider(AcTypeState.PRIMING, StateChangeResult.FAILED);
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
         var supervisionScanner = new SupervisionScanner(mock(AutomationCompositionProvider.class), acDefinitionProvider,
                 mock(AutomationCompositionStateChangePublisher.class), mock(AutomationCompositionDeployPublisher.class),
                 acRuntimeParameterGroup);
         supervisionScanner.run();
-        verify(acDefinitionProvider, times(0)).updateAcDefinition(any(AutomationCompositionDefinition.class),
-                eq(CommonTestData.TOSCA_COMP_NAME));
+        verify(acDefinitionProvider, times(0)).updateAcDefinitionState(any(), any(), any(), any());
     }
 
     @Test
-    void testScannerOrderedPriming() {
-        var acDefinitionProvider = createAcDefinitionProvider(AcTypeState.PRIMING, StateChangeResult.NO_ERROR);
+    void testAcDefinitionPrimeTimeout() {
+        var acDefinition = createAutomationCompositionDefinition(AcTypeState.PRIMING, StateChangeResult.NO_ERROR);
+        var acDefinitionProvider = createAcDefinitionProvider(acDefinition);
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
         var supervisionScanner = new SupervisionScanner(mock(AutomationCompositionProvider.class), acDefinitionProvider,
                 mock(AutomationCompositionStateChangePublisher.class), mock(AutomationCompositionDeployPublisher.class),
                 acRuntimeParameterGroup);
         supervisionScanner.run();
-        verify(acDefinitionProvider, times(0)).updateAcDefinition(any(AutomationCompositionDefinition.class),
-                eq(CommonTestData.TOSCA_COMP_NAME));
+        // Ac Definition in Priming state
+        verify(acDefinitionProvider, times(0)).updateAcDefinitionState(any(), any(), any(), any());
 
         acRuntimeParameterGroup.getParticipantParameters().setMaxStatusWaitMs(-1);
         supervisionScanner = new SupervisionScanner(mock(AutomationCompositionProvider.class), acDefinitionProvider,
                 mock(AutomationCompositionStateChangePublisher.class), mock(AutomationCompositionDeployPublisher.class),
                 acRuntimeParameterGroup);
         supervisionScanner.run();
-        verify(acDefinitionProvider).updateAcDefinition(any(AutomationCompositionDefinition.class),
-                eq(CommonTestData.TOSCA_COMP_NAME));
+        // set Timeout
+        verify(acDefinitionProvider).updateAcDefinitionState(acDefinition.getCompositionId(), acDefinition.getState(),
+            StateChangeResult.TIMEOUT, null);
+
+        clearInvocations(acDefinitionProvider);
+        acDefinition.setStateChangeResult(StateChangeResult.TIMEOUT);
+        supervisionScanner.run();
+        // already in Timeout
+        verify(acDefinitionProvider, times(0)).updateAcDefinitionState(any(), any(), any(), any());
+
+        clearInvocations(acDefinitionProvider);
+        // retry by the user
+        acDefinition.setStateChangeResult(StateChangeResult.NO_ERROR);
+        supervisionScanner.run();
+        // set Timeout
+        verify(acDefinitionProvider).updateAcDefinitionState(acDefinition.getCompositionId(), acDefinition.getState(),
+            StateChangeResult.TIMEOUT, null);
+
+        clearInvocations(acDefinitionProvider);
+        for (var element : acDefinition.getElementStateMap().values()) {
+            element.setState(AcTypeState.PRIMED);
+        }
+        supervisionScanner.run();
+        // completed
+        verify(acDefinitionProvider).updateAcDefinitionState(acDefinition.getCompositionId(), AcTypeState.PRIMED,
+            StateChangeResult.NO_ERROR, null);
     }
 
     @Test
-    void testScannerOrderedStateEqualsToState() {
+    void testAcNotInTransitionOrFailed() {
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
         var automationCompositionDeployPublisher = mock(AutomationCompositionDeployPublisher.class);
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
 
         var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
-        when(automationCompositionProvider.getAcInstancesByCompositionId(compositionId))
-                .thenReturn(List.of(automationComposition));
+        automationComposition.setCompositionId(compositionId);
+        when(automationCompositionProvider.getAcInstancesInTransition()).thenReturn(List.of(automationComposition));
 
         var supervisionScanner = new SupervisionScanner(automationCompositionProvider, createAcDefinitionProvider(),
                 automationCompositionStateChangePublisher, automationCompositionDeployPublisher,
                 acRuntimeParameterGroup);
-        supervisionScanner.run();
 
+        // not in transition
+        supervisionScanner.run();
+        verify(automationCompositionProvider, times(0)).updateAutomationComposition(any(AutomationComposition.class));
+
+        automationComposition.setDeployState(DeployState.DEPLOYING);
+        automationComposition.setStateChangeResult(StateChangeResult.FAILED);
+        supervisionScanner.run();
+        // failed
         verify(automationCompositionProvider, times(0)).updateAutomationComposition(any(AutomationComposition.class));
     }
 
     @Test
-    void testScannerOrderedStateDifferentToState() {
+    void testAcUndeployCompleted() {
         var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
         automationComposition.setDeployState(DeployState.UNDEPLOYING);
         automationComposition.setLockState(LockState.NONE);
+        automationComposition.setCompositionId(compositionId);
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
-        when(automationCompositionProvider.getAcInstancesByCompositionId(compositionId))
-                .thenReturn(List.of(automationComposition));
+        when(automationCompositionProvider.getAcInstancesInTransition()).thenReturn(List.of(automationComposition));
 
         var automationCompositionDeployPublisher = mock(AutomationCompositionDeployPublisher.class);
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
@@ -147,13 +198,13 @@ class SupervisionScannerTest {
     }
 
     @Test
-    void testScannerDelete() {
+    void testAcDeleted() {
         var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
         automationComposition.setDeployState(DeployState.DELETING);
         automationComposition.setLockState(LockState.NONE);
+        automationComposition.setCompositionId(compositionId);
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
-        when(automationCompositionProvider.getAcInstancesByCompositionId(compositionId))
-                .thenReturn(List.of(automationComposition));
+        when(automationCompositionProvider.getAcInstancesInTransition()).thenReturn(List.of(automationComposition));
 
         var automationCompositionDeployPublisher = mock(AutomationCompositionDeployPublisher.class);
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
@@ -171,8 +222,8 @@ class SupervisionScannerTest {
     void testScanner() {
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         var automationComposition = new AutomationComposition();
-        when(automationCompositionProvider.getAcInstancesByCompositionId(compositionId))
-                .thenReturn(List.of(automationComposition));
+        automationComposition.setCompositionId(compositionId);
+        when(automationCompositionProvider.getAcInstancesInTransition()).thenReturn(List.of(automationComposition));
 
         var automationCompositionDeployPublisher = mock(AutomationCompositionDeployPublisher.class);
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
@@ -191,12 +242,12 @@ class SupervisionScannerTest {
         var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
         automationComposition.setDeployState(DeployState.DEPLOYING);
         automationComposition.setLockState(LockState.NONE);
+        automationComposition.setCompositionId(compositionId);
         for (Map.Entry<UUID, AutomationCompositionElement> entry : automationComposition.getElements().entrySet()) {
             entry.getValue().setDeployState(DeployState.DEPLOYING);
         }
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
-        when(automationCompositionProvider.getAcInstancesByCompositionId(compositionId))
-                .thenReturn(List.of(automationComposition));
+        when(automationCompositionProvider.getAcInstancesInTransition()).thenReturn(List.of(automationComposition));
 
         var automationCompositionDeployPublisher = mock(AutomationCompositionDeployPublisher.class);
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
@@ -225,6 +276,7 @@ class SupervisionScannerTest {
         var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
         automationComposition.setDeployState(DeployState.DEPLOYING);
         automationComposition.setLockState(LockState.NONE);
+        automationComposition.setCompositionId(compositionId);
         for (var element : automationComposition.getElements().values()) {
             if ("org.onap.domain.database.Http_PMSHMicroserviceAutomationCompositionElement"
                     .equals(element.getDefinition().getName())) {
@@ -237,8 +289,7 @@ class SupervisionScannerTest {
         }
 
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
-        when(automationCompositionProvider.getAcInstancesByCompositionId(compositionId))
-                .thenReturn(List.of(automationComposition));
+        when(automationCompositionProvider.getAcInstancesInTransition()).thenReturn(List.of(automationComposition));
 
         var automationCompositionDeployPublisher = mock(AutomationCompositionDeployPublisher.class);
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
@@ -258,6 +309,7 @@ class SupervisionScannerTest {
     void testSendAutomationCompositionMigrate() {
         var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
         automationComposition.setDeployState(DeployState.MIGRATING);
+        automationComposition.setCompositionId(compositionId);
         var compositionTargetId = UUID.randomUUID();
         automationComposition.setCompositionTargetId(compositionTargetId);
         automationComposition.setLockState(LockState.LOCKED);
@@ -267,8 +319,7 @@ class SupervisionScannerTest {
         }
 
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
-        when(automationCompositionProvider.getAcInstancesByCompositionId(compositionId))
-                .thenReturn(List.of(automationComposition));
+        when(automationCompositionProvider.getAcInstancesInTransition()).thenReturn(List.of(automationComposition));
 
         var automationCompositionDeployPublisher = mock(AutomationCompositionDeployPublisher.class);
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
@@ -289,6 +340,7 @@ class SupervisionScannerTest {
         var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
         automationComposition.setDeployState(DeployState.DEPLOYED);
         automationComposition.setLockState(LockState.UNLOCKING);
+        automationComposition.setCompositionId(compositionId);
         for (var element : automationComposition.getElements().values()) {
             if ("org.onap.domain.database.Http_PMSHMicroserviceAutomationCompositionElement"
                     .equals(element.getDefinition().getName())) {
@@ -301,8 +353,7 @@ class SupervisionScannerTest {
         }
 
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
-        when(automationCompositionProvider.getAcInstancesByCompositionId(compositionId))
-                .thenReturn(List.of(automationComposition));
+        when(automationCompositionProvider.getAcInstancesInTransition()).thenReturn(List.of(automationComposition));
 
         var automationCompositionDeployPublisher = mock(AutomationCompositionDeployPublisher.class);
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
