@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2023 Nordix Foundation.
+ *  Copyright (C) 2021-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -226,6 +226,10 @@ class AcmUtilsTest {
         assertEquals(element.getDefinition(), result.getDefinition());
         assertEquals(element.getDeployState(), result.getDeployState());
         assertEquals(element.getLockState(), result.getLockState());
+        assertEquals(element.getOperationalState(), result.getOperationalState());
+        assertEquals(element.getUseState(), result.getUseState());
+        assertEquals(element.getProperties(), result.getProperties());
+        assertEquals(element.getOutProperties(), result.getOutProperties());
     }
 
     private AutomationComposition getDummyAutomationComposition() {
