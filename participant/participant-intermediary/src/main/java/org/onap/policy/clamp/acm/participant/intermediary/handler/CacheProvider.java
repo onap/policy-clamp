@@ -174,7 +174,10 @@ public class CacheProvider {
             acElement.setDefinition(element.getDefinition());
             acElement.setDeployState(element.getDeployState());
             acElement.setLockState(element.getLockState());
+            acElement.setOperationalState(element.getOperationalState());
+            acElement.setUseState(element.getUseState());
             acElement.setProperties(element.getProperties());
+            acElement.setOutProperties(element.getOutProperties());
             acElement.setRestarting(true);
             acElementMap.put(element.getId(), acElement);
         }

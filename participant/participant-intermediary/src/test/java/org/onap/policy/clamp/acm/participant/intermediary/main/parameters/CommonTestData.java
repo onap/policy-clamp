@@ -237,6 +237,10 @@ public class CommonTestData {
         acElementRestart.setDefinition(getDefinition());
         acElementRestart.setDeployState(DeployState.DEPLOYED);
         acElementRestart.setLockState(LockState.LOCKED);
+        acElementRestart.setOperationalState("OperationalState");
+        acElementRestart.setUseState("UseState");
+        acElementRestart.setProperties(Map.of("key", "value"));
+        acElementRestart.setOutProperties(Map.of("keyOut", "valueOut"));
         acElementRestart.setId(UUID.randomUUID());
         participantRestartAc.getAcElementList().add(acElementRestart);
         return participantRestartAc;

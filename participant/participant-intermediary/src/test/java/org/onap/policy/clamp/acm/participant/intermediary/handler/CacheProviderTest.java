@@ -153,5 +153,14 @@ class CacheProviderTest {
         var result = cacheProvider.getAutomationComposition(participantRestartAc.getAutomationCompositionId());
         assertEquals(compositionId, result.getCompositionId());
         assertEquals(participantRestartAc.getAutomationCompositionId(), result.getInstanceId());
+        for (var acElementRestart : participantRestartAc.getAcElementList()) {
+            var element = result.getElements().get(acElementRestart.getId());
+            assertEquals(element.getOperationalState(), acElementRestart.getOperationalState());
+            assertEquals(element.getUseState(), acElementRestart.getUseState());
+            assertEquals(element.getLockState(), acElementRestart.getLockState());
+            assertEquals(element.getDeployState(), acElementRestart.getDeployState());
+            assertEquals(element.getProperties(), acElementRestart.getProperties());
+            assertEquals(element.getOutProperties(), acElementRestart.getOutProperties());
+        }
     }
 }
