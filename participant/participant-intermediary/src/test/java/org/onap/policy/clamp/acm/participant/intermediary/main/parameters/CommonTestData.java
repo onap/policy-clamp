@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2023 Nordix Foundation.
+ *  Copyright (C) 2021-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ package org.onap.policy.clamp.acm.participant.intermediary.main.parameters;
 
 import java.io.File;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,11 +30,14 @@ import java.util.TreeMap;
 import java.util.UUID;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.DummyParticipantParameters;
 import org.onap.policy.clamp.acm.participant.intermediary.parameters.ParticipantIntermediaryParameters;
+import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AcElementRestart;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantRestartAc;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
 import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionStateChange;
@@ -44,6 +48,7 @@ import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 
 /**
  * Class to hold/create all parameters for test cases.
@@ -202,7 +207,7 @@ public class CommonTestData {
      * Return a AutomationCompositionStateChange.
      *
      * @param participantId the participantId
-     * @param instanceId th AutomationComposition Id
+     * @param instanceId the AutomationComposition Id
      * @param deployOrder a DeployOrder
      * @param lockOrder a LockOrder
      * @return a AutomationCompositionStateChange
@@ -235,5 +240,46 @@ public class CommonTestData {
         acElementRestart.setId(UUID.randomUUID());
         participantRestartAc.getAcElementList().add(acElementRestart);
         return participantRestartAc;
+    }
+
+    /**
+     * Create a ParticipantDeploy from an AutomationComposition.
+     *
+     * @param participantId the participantId
+     * @param automationComposition the AutomationComposition
+     * @return the ParticipantDeploy
+     */
+    public static ParticipantDeploy createparticipantDeploy(UUID participantId,
+            AutomationComposition automationComposition) {
+        var participantDeploy = new ParticipantDeploy();
+        participantDeploy.setParticipantId(participantId);
+        for (var element : automationComposition.getElements().values()) {
+            var acElement = new AcElementDeploy();
+            acElement.setId(element.getId());
+            acElement.setDefinition(element.getDefinition());
+            acElement.setProperties(element.getProperties());
+            participantDeploy.getAcElementList().add(acElement);
+        }
+        return participantDeploy;
+    }
+
+    /**
+     * create a List of AutomationCompositionElementDefinition from an AutomationComposition.
+     *
+     * @param automationComposition the AutomationComposition
+     * @return the List of AutomationCompositionElementDefinition
+     */
+    public static List<AutomationCompositionElementDefinition>
+            createAutomationCompositionElementDefinitionList(AutomationComposition automationComposition) {
+        List<AutomationCompositionElementDefinition> definitions = new ArrayList<>();
+        for (var element : automationComposition.getElements().values()) {
+            var acElementDefinition = new AutomationCompositionElementDefinition();
+            acElementDefinition.setAcElementDefinitionId(element.getDefinition());
+            var nodeTemplate = new ToscaNodeTemplate();
+            nodeTemplate.setProperties(Map.of("key", "value"));
+            acElementDefinition.setAutomationCompositionElementToscaNodeTemplate(nodeTemplate);
+            definitions.add(acElementDefinition);
+        }
+        return definitions;
     }
 }

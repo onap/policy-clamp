@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023 Nordix Foundation.
+ *  Copyright (C) 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,17 +24,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
-import org.onap.policy.clamp.common.acm.exception.AutomationCompositionException;
-import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 
 class CacheProviderTest {
 
@@ -81,34 +74,19 @@ class CacheProviderTest {
     }
 
     @Test
-    void testinitCommonProperties() throws AutomationCompositionException {
-        var parameter = CommonTestData.getParticipantParameters();
-        var cacheProvider = new CacheProvider(parameter);
-        var participantDeploy = new ParticipantDeploy();
-        participantDeploy.setParticipantId(cacheProvider.getParticipantId());
-
-        var compositionId = UUID.randomUUID();
-
-        List<AutomationCompositionElementDefinition> definitions = new ArrayList<>();
+    void testinitCommonProperties() {
         var automationComposition =
                 CommonTestData.getTestAutomationCompositions().getAutomationCompositionList().get(0);
         automationComposition.setInstanceId(UUID.randomUUID());
+        var compositionId = UUID.randomUUID();
         automationComposition.setCompositionId(compositionId);
-        for (var element : automationComposition.getElements().values()) {
-            var acElementDefinition = new AutomationCompositionElementDefinition();
-            acElementDefinition.setAcElementDefinitionId(element.getDefinition());
-            var nodeTemplate = new ToscaNodeTemplate();
-            nodeTemplate.setProperties(Map.of("key", "value"));
-            acElementDefinition.setAutomationCompositionElementToscaNodeTemplate(nodeTemplate);
-            definitions.add(acElementDefinition);
-
-            var acElement = new AcElementDeploy();
-            acElement.setId(element.getId());
-            acElement.setDefinition(element.getDefinition());
-            participantDeploy.getAcElementList().add(acElement);
-        }
+        var definitions =
+                CommonTestData.createAutomationCompositionElementDefinitionList(automationComposition);
+        var cacheProvider = new CacheProvider(CommonTestData.getParticipantParameters());
         cacheProvider.addElementDefinition(compositionId, definitions);
 
+        var participantDeploy =
+                CommonTestData.createparticipantDeploy(cacheProvider.getParticipantId(), automationComposition);
         cacheProvider.initializeAutomationComposition(compositionId, automationComposition.getInstanceId(),
                 participantDeploy);
 
@@ -127,6 +105,41 @@ class CacheProviderTest {
 
         cacheProvider.removeElementDefinition(compositionId);
         assertThat(cacheProvider.getAcElementsDefinitions()).isEmpty();
+    }
+
+    @Test
+    void testDeply() {
+        var automationComposition =
+                CommonTestData.getTestAutomationCompositions().getAutomationCompositionList().get(0);
+        automationComposition.setInstanceId(UUID.randomUUID());
+        var compositionId = UUID.randomUUID();
+        automationComposition.setCompositionId(compositionId);
+        var parameter = CommonTestData.getParticipantParameters();
+        var cacheProvider = new CacheProvider(parameter);
+
+        var participantDeploy =
+                CommonTestData.createparticipantDeploy(cacheProvider.getParticipantId(), automationComposition);
+        cacheProvider.initializeAutomationComposition(compositionId, automationComposition.getInstanceId(),
+                participantDeploy);
+
+        var ac = cacheProvider.getAutomationComposition(automationComposition.getInstanceId());
+        for (var element : ac.getElements().values()) {
+            element.setOperationalState("OperationalState");
+            element.setUseState("UseState");
+            element.setOutProperties(Map.of("key", "value"));
+        }
+
+        // deploy again
+        cacheProvider.initializeAutomationComposition(compositionId, automationComposition.getInstanceId(),
+                participantDeploy);
+
+        // check UseState, OperationalState and OutProperties have not changed
+        ac = cacheProvider.getAutomationComposition(automationComposition.getInstanceId());
+        for (var element : ac.getElements().values()) {
+            assertEquals("OperationalState", element.getOperationalState());
+            assertEquals("UseState", element.getUseState());
+            assertEquals("value", element.getOutProperties().get("key"));
+        }
     }
 
     @Test

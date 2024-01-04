@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023 Nordix Foundation.
+ *  Copyright (C) 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -133,6 +133,7 @@ public class CacheProvider {
      */
     public void initializeAutomationComposition(@NonNull UUID compositionId, @NonNull UUID instanceId,
             ParticipantDeploy participantDeploy) {
+        var acLast = automationCompositions.get(instanceId);
         Map<UUID, AutomationCompositionElement> acElementMap = new LinkedHashMap<>();
         for (var element : participantDeploy.getAcElementList()) {
             var acElement = new AutomationCompositionElement();
@@ -142,14 +143,19 @@ public class CacheProvider {
             acElement.setDeployState(DeployState.DEPLOYING);
             acElement.setLockState(LockState.NONE);
             acElement.setProperties(element.getProperties());
+            var acElementLast = acLast != null ? acLast.getElements().get(element.getId()) : null;
+            if (acElementLast != null) {
+                acElement.setOutProperties(acElementLast.getOutProperties());
+                acElement.setOperationalState(acElementLast.getOperationalState());
+                acElement.setUseState(acElementLast.getUseState());
+            }
             acElementMap.put(element.getId(), acElement);
         }
-
         var automationComposition = new AutomationComposition();
         automationComposition.setCompositionId(compositionId);
         automationComposition.setInstanceId(instanceId);
         automationComposition.setElements(acElementMap);
-        automationCompositions.put(automationComposition.getInstanceId(), automationComposition);
+        automationCompositions.put(instanceId, automationComposition);
     }
 
     /**
