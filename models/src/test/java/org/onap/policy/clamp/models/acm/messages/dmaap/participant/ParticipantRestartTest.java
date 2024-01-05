@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023 Nordix Foundation.
+ *  Copyright (C) 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,9 +27,12 @@ import static org.onap.policy.clamp.models.acm.messages.dmaap.participant.Partic
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.concepts.AcElementRestart;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantRestartAc;
 import org.onap.policy.clamp.models.acm.utils.CommonTestData;
@@ -62,6 +65,12 @@ class ParticipantRestartTest {
         acElement.setId(UUID.randomUUID());
         var id = new ToscaConceptIdentifier("id", "1.2.3");
         acElement.setDefinition(id);
+        acElement.setDeployState(DeployState.DEPLOYED);
+        acElement.setLockState(LockState.LOCKED);
+        acElement.setOperationalState("OperationalState");
+        acElement.setUseState("UseState");
+        acElement.setProperties(Map.of("key", "value"));
+        acElement.setOutProperties(Map.of("keyOut", "valueOut"));
 
         var acRestart = new ParticipantRestartAc();
         acRestart.setAcElementList(List.of(acElement));

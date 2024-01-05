@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023 Nordix Foundation.
+ *  Copyright (C) 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,11 +50,16 @@ public class AcElementRestart {
     // State of the AutomationCompositionElement
     private LockState lockState;
 
+    private String operationalState;
+    private String useState;
+
     private ToscaServiceTemplate toscaServiceTemplateFragment;
 
     // A map indexed by the property name. Each map entry is the serialized value of the property,
     // which can be deserialized into an instance of the type of the property.
     private Map<String, Object> properties = new LinkedHashMap<>();
+
+    private Map<String, Object> outProperties = new LinkedHashMap<>();
 
     /**
      * Copy constructor, does a deep copy but as all fields here are immutable, it's just a regular copy.
@@ -66,8 +71,11 @@ public class AcElementRestart {
         this.definition = new ToscaConceptIdentifier(otherElement.definition);
         this.deployState = otherElement.deployState;
         this.lockState = otherElement.lockState;
+        this.operationalState = otherElement.operationalState;
+        this.useState = otherElement.useState;
         this.toscaServiceTemplateFragment = otherElement.toscaServiceTemplateFragment;
         this.properties = PfUtils.mapMap(otherElement.properties, UnaryOperator.identity());
+        this.outProperties = PfUtils.mapMap(otherElement.outProperties, UnaryOperator.identity());
     }
 
 }

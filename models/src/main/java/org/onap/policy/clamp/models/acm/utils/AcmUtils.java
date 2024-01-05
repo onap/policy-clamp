@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2023 Nordix Foundation.
+ *  Copyright (C) 2021-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -437,7 +437,10 @@ public final class AcmUtils {
         acElementRestart.setDefinition(new ToscaConceptIdentifier(element.getDefinition()));
         acElementRestart.setDeployState(element.getDeployState());
         acElementRestart.setLockState(element.getLockState());
+        acElementRestart.setOperationalState(element.getOperationalState());
+        acElementRestart.setUseState(element.getUseState());
         acElementRestart.setProperties(PfUtils.mapMap(element.getProperties(), UnaryOperator.identity()));
+        acElementRestart.setOutProperties(PfUtils.mapMap(element.getOutProperties(), UnaryOperator.identity()));
         return acElementRestart;
     }
 }

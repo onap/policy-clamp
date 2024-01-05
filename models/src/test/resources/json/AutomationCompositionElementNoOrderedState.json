@@ -4,11 +4,10 @@
         "name": "aceDef",
         "version": "0.0.1"
     },
-    "participantType": {
-        "name": "participantType",
-        "version": "0.0.1"
-    },
-    "state": "UNINITIALISED",
-    "orderedState": null,
-    "properties":{"key":"{}"}
+    "deployState": "DEPLOYED",
+    "lockState": "LOCKED",
+    "operationalState": "operationalState",
+    "useState": "useState",
+    "properties":{"key":"{}"},
+    "outProperties":{"key":"{}"}
 }
