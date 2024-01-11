@@ -240,6 +240,11 @@ class AutomationCompositionInstantiationProviderTest {
                 () -> instantiationProvider.updateAutomationComposition(compositionId, automationCompositionUpdate))
                         .hasMessageMatching("There is a restarting process, Update not allowed");
 
+        automationCompositionUpdate.setCompositionTargetId(UUID.randomUUID());
+        assertThatThrownBy(
+                () -> instantiationProvider.updateAutomationComposition(compositionId, automationCompositionUpdate))
+                .hasMessageMatching("There is a restarting process, Migrate not allowed");
+
         automationCompositionUpdate.setDeployState(DeployState.UNDEPLOYED);
         automationCompositionUpdate.setLockState(LockState.NONE);
 
@@ -319,6 +324,41 @@ class AutomationCompositionInstantiationProviderTest {
         verify(supervisionAcHandler).migrate(any(), any());
         verify(acProvider).updateAutomationComposition(automationComposition);
         InstantiationUtils.assertInstantiationResponse(instantiationResponse, automationComposition);
+    }
+
+    @Test
+    void testMigrateBadRequest() {
+        var acDefinitionProvider = mock(AcDefinitionProvider.class);
+        var acDefinition = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
+        var compositionId = acDefinition.getCompositionId();
+        when(acDefinitionProvider.findAcDefinition(compositionId)).thenReturn(Optional.of(acDefinition));
+
+        var automationComposition =
+                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_UPDATE_JSON, "Crud");
+        automationComposition.setCompositionId(compositionId);
+        automationComposition.setDeployState(DeployState.DEPLOYED);
+        automationComposition.setLockState(LockState.LOCKED);
+        var acProvider = mock(AutomationCompositionProvider.class);
+        when(acProvider.getAutomationComposition(automationComposition.getInstanceId()))
+                .thenReturn(automationComposition);
+        when(acProvider.updateAutomationComposition(automationComposition)).thenReturn(automationComposition);
+
+        var acDefinitionTarget = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
+        var compositionTargetId = acDefinitionTarget.getCompositionId();
+        when(acDefinitionProvider.findAcDefinition(compositionTargetId)).thenReturn(Optional.of(acDefinitionTarget));
+
+        var acMigrate = new AutomationComposition(automationComposition);
+        acMigrate.setCompositionTargetId(compositionTargetId);
+        automationComposition.getElements().clear();
+
+        var supervisionAcHandler = mock(SupervisionAcHandler.class);
+        var acmParticipantProvider = mock(AcmParticipantProvider.class);
+        var instantiationProvider = new AutomationCompositionInstantiationProvider(acProvider, acDefinitionProvider,
+                null, supervisionAcHandler, acmParticipantProvider, new AcRuntimeParameterGroup());
+
+        assertThatThrownBy(() -> instantiationProvider
+                .updateAutomationComposition(automationComposition.getCompositionId(), acMigrate))
+                .hasMessageStartingWith("Element id not present");
     }
 
     @Test

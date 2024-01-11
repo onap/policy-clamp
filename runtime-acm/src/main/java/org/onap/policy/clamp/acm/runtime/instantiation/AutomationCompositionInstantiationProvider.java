@@ -26,8 +26,8 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
 import org.onap.policy.clamp.acm.runtime.participants.AcmParticipantProvider;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionAcHandler;
@@ -47,7 +47,10 @@ import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.common.parameters.ObjectValidationResult;
 import org.onap.policy.common.parameters.ValidationStatus;
+import org.onap.policy.models.base.PfKey;
 import org.onap.policy.models.base.PfModelRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,9 +59,11 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AutomationCompositionInstantiationProvider {
     private static final String DO_NOT_MATCH = " do not match with ";
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AutomationCompositionInstantiationProvider.class);
 
     private final AutomationCompositionProvider automationCompositionProvider;
     private final AcDefinitionProvider acDefinitionProvider;
@@ -93,10 +98,13 @@ public class AutomationCompositionInstantiationProvider {
         }
         automationComposition = automationCompositionProvider.createAutomationComposition(automationComposition);
 
+        return createInstantiationResponse(automationComposition);
+    }
+
+    private InstantiationResponse createInstantiationResponse(AutomationComposition automationComposition) {
         var response = new InstantiationResponse();
         response.setInstanceId(automationComposition.getInstanceId());
         response.setAffectedAutomationComposition(automationComposition.getKey().asIdentifier());
-
         return response;
     }
 
@@ -109,7 +117,6 @@ public class AutomationCompositionInstantiationProvider {
      */
     public InstantiationResponse updateAutomationComposition(UUID compositionId,
             AutomationComposition automationComposition) {
-        var response = new InstantiationResponse();
         var instanceId = automationComposition.getInstanceId();
         var acToUpdate = automationCompositionProvider.getAutomationComposition(instanceId);
         if (!compositionId.equals(acToUpdate.getCompositionId())) {
@@ -127,14 +134,16 @@ public class AutomationCompositionInstantiationProvider {
                 throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, validationResult.getResult());
             }
             automationComposition = automationCompositionProvider.updateAutomationComposition(acToUpdate);
-            response.setInstanceId(instanceId);
-            response.setAffectedAutomationComposition(automationComposition.getKey().asIdentifier());
-            return response;
+            return createInstantiationResponse(automationComposition);
 
         } else if ((DeployState.DEPLOYED.equals(acToUpdate.getDeployState())
                 || DeployState.UPDATING.equals(acToUpdate.getDeployState()))
                 && LockState.LOCKED.equals(acToUpdate.getLockState())) {
-            return updateDeployedAutomationComposition(automationComposition, acToUpdate);
+            if (automationComposition.getCompositionTargetId() != null) {
+                return  migrateAutomationComposition(automationComposition, acToUpdate);
+            } else {
+                return updateDeployedAutomationComposition(automationComposition, acToUpdate);
+            }
         }
         throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
                 "Not allowed to update in the state " + acToUpdate.getDeployState());
@@ -147,14 +156,8 @@ public class AutomationCompositionInstantiationProvider {
      * @param acToBeUpdated the composition to be updated
      * @return the result of the update
      */
-    public InstantiationResponse updateDeployedAutomationComposition(
+    private InstantiationResponse updateDeployedAutomationComposition(
             AutomationComposition automationComposition, AutomationComposition acToBeUpdated) {
-
-        if (automationComposition.getCompositionTargetId() != null
-                && !DeployState.DEPLOYED.equals(acToBeUpdated.getDeployState())) {
-            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
-                    "Not allowed to migrate in the state " + acToBeUpdated.getDeployState());
-        }
 
         // Iterate and update the element property values
         for (var element : automationComposition.getElements().entrySet()) {
@@ -169,31 +172,62 @@ public class AutomationCompositionInstantiationProvider {
             throw new PfModelRuntimeException(Status.BAD_REQUEST, "There is a restarting process, Update not allowed");
         }
 
-        if (automationComposition.getCompositionTargetId() != null) {
-            var validationResult =
-                    validateAutomationComposition(acToBeUpdated, automationComposition.getCompositionTargetId());
-            if (!validationResult.isValid()) {
-                throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, validationResult.getResult());
-            }
-            acToBeUpdated.setCompositionTargetId(automationComposition.getCompositionTargetId());
-
-            // Publish migrate event to the participants
-            supervisionAcHandler.migrate(acToBeUpdated, automationComposition.getCompositionTargetId());
-        } else {
-            var validationResult = validateAutomationComposition(acToBeUpdated);
-            if (!validationResult.isValid()) {
-                throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, validationResult.getResult());
-            }
-            // Publish property update event to the participants
-            supervisionAcHandler.update(acToBeUpdated);
+        var validationResult = validateAutomationComposition(acToBeUpdated);
+        if (!validationResult.isValid()) {
+            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, validationResult.getResult());
         }
+        // Publish property update event to the participants
+        supervisionAcHandler.update(acToBeUpdated);
 
         automationComposition = automationCompositionProvider.updateAutomationComposition(acToBeUpdated);
-        var response = new InstantiationResponse();
-        var instanceId = automationComposition.getInstanceId();
-        response.setInstanceId(instanceId);
-        response.setAffectedAutomationComposition(automationComposition.getKey().asIdentifier());
-        return response;
+        return createInstantiationResponse(automationComposition);
+    }
+
+    private InstantiationResponse migrateAutomationComposition(
+        AutomationComposition automationComposition, AutomationComposition acToBeUpdated) {
+
+        if (!DeployState.DEPLOYED.equals(acToBeUpdated.getDeployState())) {
+            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
+                "Not allowed to migrate in the state " + acToBeUpdated.getDeployState());
+        }
+        if (automationComposition.getRestarting() != null) {
+            throw new PfModelRuntimeException(Status.BAD_REQUEST, "There is a restarting process, Migrate not allowed");
+        }
+
+        // Iterate and update the element property values
+        for (var element : automationComposition.getElements().entrySet()) {
+            var elementId = element.getKey();
+            var dbAcElement = acToBeUpdated.getElements().get(elementId);
+            if (dbAcElement == null) {
+                throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, "Element id not present " + elementId);
+            }
+            dbAcElement.getProperties().putAll(element.getValue().getProperties());
+            var newDefinition = element.getValue().getDefinition();
+            var compatibility =
+                newDefinition.asConceptKey().getCompatibility(dbAcElement.getDefinition().asConceptKey());
+            if (PfKey.Compatibility.DIFFERENT.equals(compatibility)) {
+                throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
+                    dbAcElement.getDefinition() + " is not compatible with " + newDefinition);
+            }
+            if (PfKey.Compatibility.MAJOR.equals(compatibility) || PfKey.Compatibility.MINOR.equals(compatibility)) {
+                LOGGER.warn("Migrate {}: Version {} has {} compatibility with {} ",
+                    automationComposition.getInstanceId(), newDefinition, compatibility, dbAcElement.getDefinition());
+            }
+            dbAcElement.setDefinition(element.getValue().getDefinition());
+        }
+
+        var validationResult =
+            validateAutomationComposition(acToBeUpdated, automationComposition.getCompositionTargetId());
+        if (!validationResult.isValid()) {
+            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, validationResult.getResult());
+        }
+        acToBeUpdated.setCompositionTargetId(automationComposition.getCompositionTargetId());
+
+        // Publish migrate event to the participants
+        supervisionAcHandler.migrate(acToBeUpdated, automationComposition.getCompositionTargetId());
+
+        automationComposition = automationCompositionProvider.updateAutomationComposition(acToBeUpdated);
+        return createInstantiationResponse(automationComposition);
     }
 
     private BeanValidationResult validateAutomationComposition(AutomationComposition automationComposition) {
