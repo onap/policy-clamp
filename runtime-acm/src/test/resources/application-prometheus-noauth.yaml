@@ -38,3 +38,12 @@ runtime:
         servers:
           - localhost
         topic: POLICY-ACRUNTIME-PARTICIPANT
+
+tracing:
+  enabled: true
+  exporter:
+    endpoint: http://jaeger:4318
+    protocol: http
+  sampler:
+    jaeger-remote:
+      endpoint: http://jaeger:14250

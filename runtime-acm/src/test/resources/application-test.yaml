@@ -41,3 +41,24 @@ runtime:
   acmParameters:
     acElementName: org.onap.policy.clamp.acm.AutomationCompositionElement
     acNodeType: org.onap.policy.clamp.acm.AutomationComposition
+
+management:
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include: health, metrics, prometheus
+  tracing:
+    propagation:
+      produce: b3
+    sampling:
+      probability: 1.0
+
+tracing:
+  enabled: true
+  exporter:
+    endpoint: http://jaeger:4317
+    protocol: grpc
+  sampler:
+    jaeger-remote:
+      endpoint: http://jaeger:14250
