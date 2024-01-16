@@ -21,12 +21,15 @@
 package org.onap.policy.clamp.models.acm.utils;
 
 import jakarta.ws.rs.core.Response;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Queue;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
@@ -35,6 +38,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AcElementRestart;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
@@ -442,5 +446,48 @@ public final class AcmUtils {
         acElementRestart.setProperties(PfUtils.mapMap(element.getProperties(), UnaryOperator.identity()));
         acElementRestart.setOutProperties(PfUtils.mapMap(element.getOutProperties(), UnaryOperator.identity()));
         return acElementRestart;
+    }
+
+    /**
+     * Recursive Merge.
+     *
+     * @param map1 Map where to merge
+     * @param map2 Map
+     */
+    public static void recursiveMerge(Map<String, Object> map1, Map<String, Object> map2) {
+        Deque<Pair<Map<String, Object>, Map<String, Object>>> stack = new ArrayDeque<>();
+        stack.push(Pair.of(map1, map2));
+        while (!stack.isEmpty()) {
+            var pair = stack.pop();
+            var mapLeft = pair.getLeft();
+            var mapRight = pair.getRight();
+            for (var entryRight : mapRight.entrySet()) {
+                var valueLeft = mapLeft.get(entryRight.getKey());
+                var valueRight = entryRight.getValue();
+                if (valueLeft instanceof Map subMapLeft && valueRight instanceof Map subMapRight) {
+                    stack.push(Pair.of(subMapLeft, subMapRight));
+                } else if ((valueLeft instanceof List subListLeft && valueRight instanceof List subListRight)
+                        && (subListLeft.size() == subListRight.size())) {
+                    recursiveMerge(subListLeft, subListRight);
+                } else {
+                    mapLeft.put(entryRight.getKey(), valueRight);
+                }
+            }
+        }
+    }
+
+    private static void recursiveMerge(List<Object> list1, List<Object> list2) {
+        for (var i = 0; i < list1.size(); i++) {
+            var valueLeft = list1.get(i);
+            var valueRight = list2.get(i);
+            if (valueLeft instanceof Map subMapLeft && valueRight instanceof Map subMapRight) {
+                recursiveMerge(subMapLeft, subMapRight);
+            } else if ((valueLeft instanceof List subListLeft && valueRight instanceof List subListRight)
+                    && (subListLeft.size() == subListRight.size())) {
+                recursiveMerge(subListLeft, subListRight);
+            } else {
+                list1.set(i, valueRight);
+            }
+        }
     }
 }

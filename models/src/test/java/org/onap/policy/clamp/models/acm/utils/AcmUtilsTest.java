@@ -293,4 +293,74 @@ class AcmUtilsTest {
         nodeTemplates.put("org.onap.dcae.acm.DCAEMicroserviceAutomationCompositionParticipant", nodeTemplate);
         return nodeTemplates;
     }
+
+    @Test
+    void testRecursiveMergeMap() {
+        var oldProperties = """
+            chart:
+              chartId:
+                name: acelement
+                version: 0.1.0
+              namespace: default
+              releaseName: acm-starter
+              podName: acm-starter
+            """;
+
+        var newProperties = """
+            chart:
+              releaseName: acm-starter-new
+              podName: null
+            """;
+
+        Map<String, Object> map = CommonTestData.getObject(oldProperties, Map.class);
+        Map<String, Object> mapMigrate = CommonTestData.getObject(newProperties, Map.class);
+
+        AcmUtils.recursiveMerge(map, mapMigrate);
+        assertEquals("default", ((Map<String, Object>) map.get("chart")).get("namespace"));
+        assertEquals("acm-starter-new", ((Map<String, Object>) map.get("chart")).get("releaseName"));
+        assertNotNull(((Map<String, Object>) map.get("chart")).get("chartId"));
+        assertNull(((Map<String, Object>) map.get("chart")).get("podName"));
+    }
+
+    @Test
+    void testRecursiveMergeList() {
+        var oldProperties = """
+            baseUrl: http://{{address}}:30800
+            httpHeaders:
+              Content-Type: application/json
+              Authorization: Basic YWNtVXNlcjp6YiFYenRHMzQ=
+            configurationEntities:
+              - configurationEntityId:
+                  name: onap.policy.clamp.ac.starter
+                  version: 1.0.0
+                restSequence:
+                  - restRequestId:
+                      name: request1
+                      version: 1.0.1
+                myParameterToUpdate: 9
+                myParameterToRemove: 8
+            """;
+
+        var newProperties = """
+            configurationEntities:
+              - myParameterToUpdate: "90"
+                myParameterToRemove: null
+                myParameter: "I am new"
+            """;
+
+        Map<String, Object> map = CommonTestData.getObject(oldProperties, Map.class);
+        Map<String, Object> mapMigrate = CommonTestData.getObject(newProperties, Map.class);
+
+        AcmUtils.recursiveMerge(map, mapMigrate);
+        assertEquals("http://{{address}}:30800", map.get("baseUrl"));
+        assertEquals("application/json", ((Map<String, Object>) map.get("httpHeaders")).get("Content-Type"));
+        var configurationEntities = (List<Object>) map.get("configurationEntities");
+        var subMap = (Map<String, Object>) configurationEntities.get(0);
+        assertEquals("onap.policy.clamp.ac.starter",
+                ((Map<String, Object>) subMap.get("configurationEntityId")).get("name"));
+        assertThat((List<Object>) subMap.get("restSequence")).isNotEmpty();
+        assertEquals("90", subMap.get("myParameterToUpdate"));
+        assertNull(subMap.get("myParameterToRemove"));
+        assertEquals("I am new", subMap.get("myParameter"));
+    }
 }

@@ -53,6 +53,7 @@ import org.onap.policy.clamp.models.acm.messages.kafka.participant.PropertiesUpd
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.LockOrder;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcInstanceStateResolver;
+import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -307,7 +308,7 @@ public class AutomationCompositionHandler {
         var acElementList = cacheProvider.getAutomationComposition(instanceId).getElements();
         for (var element : participantDeploy.getAcElementList()) {
             var acElement = acElementList.get(element.getId());
-            acElement.getProperties().putAll(element.getProperties());
+            AcmUtils.recursiveMerge(acElement.getProperties(), element.getProperties());
             acElement.setDeployState(deployState);
             acElement.setDefinition(element.getDefinition());
         }

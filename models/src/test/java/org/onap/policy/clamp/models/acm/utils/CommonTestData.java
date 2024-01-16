@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023 Nordix Foundation.
+ *  Copyright (C) 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -78,6 +78,22 @@ public class CommonTestData {
             return YAML_TRANSLATOR.decode(ResourceUtils.getResourceAsStream(path), ToscaServiceTemplate.class);
         } catch (CoderException e) {
             fail("Cannot read or decode " + path);
+            return null;
+        }
+    }
+
+    /**
+     * Get Object from string in yaml format.
+     *
+     * @param yaml the string in yaml format
+     * @param clazz the Class of the Object
+     * @return the Object
+     */
+    public static <T> T getObject(String yaml, Class<T> clazz) {
+        try {
+            return YAML_TRANSLATOR.decode(yaml, clazz);
+        } catch (CoderException e) {
+            fail("Cannot decode " + yaml);
             return null;
         }
     }
