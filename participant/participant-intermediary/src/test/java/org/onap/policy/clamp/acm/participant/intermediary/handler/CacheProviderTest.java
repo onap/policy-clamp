@@ -186,4 +186,36 @@ class CacheProviderTest {
             assertEquals(element.getDefinition(), result.elementDefinitionId());
         }
     }
+
+    @Test
+    void testGetCompositionElementDtoMap() {
+        var parameter = CommonTestData.getParticipantParameters();
+        var cacheProvider = new CacheProvider(parameter);
+        var compositionId = UUID.randomUUID();
+        var automationComposition =
+                CommonTestData.getTestAutomationCompositions().getAutomationCompositionList().get(0);
+        automationComposition.setCompositionId(compositionId);
+        cacheProvider.addElementDefinition(compositionId,
+                CommonTestData.createAutomationCompositionElementDefinitionList(automationComposition));
+        var result = cacheProvider.getCompositionElementDtoMap(automationComposition);
+        for (var element : automationComposition.getElements().values()) {
+            var compositionElementDto = result.get(element.getId());
+            assertEquals(element.getDefinition(), compositionElementDto.elementDefinitionId());
+        }
+    }
+
+    @Test
+    void testGetInstanceElementDtoMap() {
+        var parameter = CommonTestData.getParticipantParameters();
+        var cacheProvider = new CacheProvider(parameter);
+        var compositionId = UUID.randomUUID();
+        var automationComposition =
+                CommonTestData.getTestAutomationCompositions().getAutomationCompositionList().get(0);
+        automationComposition.setCompositionId(compositionId);
+        var result = cacheProvider.getInstanceElementDtoMap(automationComposition);
+        for (var element : automationComposition.getElements().values()) {
+            var compositionElementDto = result.get(element.getId());
+            assertEquals(element.getId(), compositionElementDto.elementId());
+        }
+    }
 }

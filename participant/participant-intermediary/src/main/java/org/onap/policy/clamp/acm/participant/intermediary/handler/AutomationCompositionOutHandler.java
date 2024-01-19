@@ -37,6 +37,7 @@ import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
+import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeployAck;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessageType;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrimeAck;
@@ -93,7 +94,13 @@ public class AutomationCompositionOutHandler {
         }
         element.setRestarting(null);
 
-        if (deployState != null) {
+        if (deployState != null && !SubState.NONE.equals(element.getSubState())) {
+            handleSubState(automationComposition, element);
+            if (!StateChangeResult.NO_ERROR.equals(stateChangeResult)) {
+                stateChangeResult = StateChangeResult.NO_ERROR;
+                LOGGER.warn("SubState has always NO_ERROR result!");
+            }
+        } else if (deployState != null) {
             handleDeployState(automationComposition, element, deployState);
         }
         if (lockState != null) {
@@ -132,6 +139,7 @@ public class AutomationCompositionOutHandler {
             }
             automationComposition.setDeployState(deployState);
             automationComposition.setLockState(element.getLockState());
+            automationComposition.setSubState(SubState.NONE);
 
             if (DeployState.DELETED.equals(deployState)) {
                 cacheProvider.removeAutomationComposition(automationComposition.getInstanceId());
@@ -146,6 +154,16 @@ public class AutomationCompositionOutHandler {
                 .filter(acElement -> !lockState.equals(acElement.getLockState())).findAny();
         if (checkOpt.isEmpty()) {
             automationComposition.setLockState(lockState);
+            automationComposition.setSubState(SubState.NONE);
+        }
+    }
+
+    private void handleSubState(AutomationComposition automationComposition, AutomationCompositionElement element) {
+        element.setSubState(SubState.NONE);
+        var checkOpt = automationComposition.getElements().values().stream()
+                .filter(acElement -> !SubState.NONE.equals(acElement.getSubState())).findAny();
+        if (checkOpt.isEmpty()) {
+            automationComposition.setSubState(SubState.NONE);
         }
     }
 

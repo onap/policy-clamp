@@ -319,4 +319,93 @@ public class ThreadHandler implements Closeable {
         }
         executionMap.remove(instanceElement.elementId());
     }
+
+    /**
+     * Handles AutomationComposition Migration Precheck.
+     *
+     * @param messageId the messageId
+     * @param compositionElement the information of the Automation Composition Definition Element
+     * @param compositionElementTarget the information of the Automation Composition Definition Element Target
+     * @param instanceElement the information of the Automation Composition Instance Element
+     * @param instanceElementMigrate the information of the Automation Composition Instance Element updated
+     */
+    public void migratePrecheck(UUID messageId, CompositionElementDto compositionElement,
+        CompositionElementDto compositionElementTarget, InstanceElementDto instanceElement,
+        InstanceElementDto instanceElementMigrate) {
+        cleanExecution(instanceElement.elementId(), messageId);
+        var result = executor.submit(() ->
+            this.migratePrecheckProcess(compositionElement, compositionElementTarget, instanceElement,
+                instanceElementMigrate));
+        executionMap.put(instanceElement.elementId(), result);
+    }
+
+    private void migratePrecheckProcess(CompositionElementDto compositionElement,
+        CompositionElementDto compositionElementTarget, InstanceElementDto instanceElement,
+        InstanceElementDto instanceElementMigrate) {
+        try {
+            listener.migratePrecheck(compositionElement, compositionElementTarget, instanceElement,
+                instanceElementMigrate);
+        } catch (PfModelException e) {
+            LOGGER.error("Automation composition element migrate precheck failed {} {}",
+                instanceElement.elementId(), e.getMessage());
+            intermediaryApi.updateAutomationCompositionElementState(
+                instanceElement.instanceId(), instanceElement.elementId(), DeployState.DEPLOYED,
+                null, StateChangeResult.FAILED, "Automation composition element migrate precheck failed");
+        }
+        executionMap.remove(instanceElement.elementId());
+    }
+
+    /**
+     * Handles AutomationComposition Prepare Post Deploy.
+     *
+     * @param messageId the messageId
+     * @param compositionElement the information of the Automation Composition Definition Element
+     * @param instanceElement the information of the Automation Composition Instance Element
+     */
+    public void review(UUID messageId, CompositionElementDto compositionElement,
+        InstanceElementDto instanceElement) {
+        cleanExecution(instanceElement.elementId(), messageId);
+        var result = executor.submit(() -> this.reviewProcess(compositionElement, instanceElement));
+        executionMap.put(instanceElement.elementId(), result);
+    }
+
+    private void reviewProcess(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
+        try {
+            listener.review(compositionElement, instanceElement);
+        } catch (PfModelException e) {
+            LOGGER.error("Automation composition element Review failed {} {}",
+                instanceElement.elementId(), e.getMessage());
+            intermediaryApi.updateAutomationCompositionElementState(
+                instanceElement.instanceId(), instanceElement.elementId(), DeployState.DEPLOYED,
+                null, StateChangeResult.FAILED, "Automation composition element Review failed");
+        }
+        executionMap.remove(instanceElement.elementId());
+    }
+
+    /**
+     * Handles AutomationComposition Prepare Pre Deploy.
+     *
+     * @param messageId the messageId
+     * @param compositionElement the information of the Automation Composition Definition Element
+     * @param instanceElement the information of the Automation Composition Instance Element
+     */
+    public void prepare(UUID messageId, CompositionElementDto compositionElement,
+        InstanceElementDto instanceElement) {
+        cleanExecution(instanceElement.elementId(), messageId);
+        var result = executor.submit(() -> this.prepareProcess(compositionElement, instanceElement));
+        executionMap.put(instanceElement.elementId(), result);
+    }
+
+    private void prepareProcess(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
+        try {
+            listener.prepare(compositionElement, instanceElement);
+        } catch (PfModelException e) {
+            LOGGER.error("Automation composition element prepare Pre Deploy failed {} {}",
+                instanceElement.elementId(), e.getMessage());
+            intermediaryApi.updateAutomationCompositionElementState(
+                instanceElement.instanceId(), instanceElement.elementId(), DeployState.UNDEPLOYED,
+                null, StateChangeResult.FAILED, "Automation composition element prepare Pre Deploy failed");
+        }
+        executionMap.remove(instanceElement.elementId());
+    }
 }

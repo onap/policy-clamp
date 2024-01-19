@@ -21,12 +21,9 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.handler;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
@@ -35,6 +32,7 @@ import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
+import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeploy;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeployAck;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionMigration;
@@ -171,40 +169,12 @@ public class AutomationCompositionHandler {
         }
     }
 
-    private Map<UUID, CompositionElementDto> getCompositionElementDtoMap(AutomationComposition automationComposition,
-        UUID compositionId) {
-        Map<UUID, CompositionElementDto> map = new HashMap<>();
-        for (var element : automationComposition.getElements().values()) {
-            var compositionInProperties = cacheProvider.getCommonProperties(compositionId, element.getDefinition());
-            var compositionElement = cacheProvider
-                    .createCompositionElementDto(compositionId, element, compositionInProperties);
-            map.put(element.getId(), compositionElement);
-        }
-        return map;
-    }
-
-    private Map<UUID, CompositionElementDto> getCompositionElementDtoMap(AutomationComposition automationComposition) {
-        return getCompositionElementDtoMap(automationComposition, automationComposition.getCompositionId());
-    }
-
-    private Map<UUID, InstanceElementDto> getInstanceElementDtoMap(AutomationComposition automationComposition) {
-        Map<UUID, InstanceElementDto> map = new HashMap<>();
-        var serviceTemplateFragment = cacheProvider
-                .getServiceTemplateFragmentMap().get(automationComposition.getCompositionId());
-        for (var element : automationComposition.getElements().values()) {
-            var instanceElement = new InstanceElementDto(automationComposition.getInstanceId(), element.getId(),
-                    serviceTemplateFragment, element.getProperties(), element.getOutProperties());
-            map.put(element.getId(), instanceElement);
-        }
-        return map;
-    }
-
     private void callParticipantUpdateProperty(UUID messageId, List<AcElementDeploy> acElements,
         AutomationComposition acCopy) {
-        var instanceElementDtoMap = getInstanceElementDtoMap(acCopy);
-        var instanceElementDtoMapUpdated = getInstanceElementDtoMap(
+        var instanceElementDtoMap = cacheProvider.getInstanceElementDtoMap(acCopy);
+        var instanceElementDtoMapUpdated = cacheProvider.getInstanceElementDtoMap(
             cacheProvider.getAutomationComposition(acCopy.getInstanceId()));
-        var compositionElementDtoMap = getCompositionElementDtoMap(acCopy);
+        var compositionElementDtoMap = cacheProvider.getCompositionElementDtoMap(acCopy);
         for (var acElement : acElements) {
             listener.update(messageId, compositionElementDtoMap.get(acElement.getId()),
                 instanceElementDtoMap.get(acElement.getId()), instanceElementDtoMapUpdated.get(acElement.getId()));
@@ -218,6 +188,7 @@ public class AutomationCompositionHandler {
             var acElement = acElementList.get(element.getId());
             AcmUtils.recursiveMerge(acElement.getProperties(), element.getProperties());
             acElement.setDeployState(deployState);
+            acElement.setSubState(SubState.NONE);
             acElement.setDefinition(element.getDefinition());
         }
     }
@@ -261,6 +232,7 @@ public class AutomationCompositionHandler {
             int startPhase = ParticipantUtils.findStartPhase(compositionInProperties);
             if (startPhaseMsg.equals(startPhase)) {
                 element.setDeployState(DeployState.DELETING);
+                element.setSubState(SubState.NONE);
                 var compositionElement = cacheProvider.createCompositionElementDto(
                         automationComposition.getCompositionId(), element, compositionInProperties);
                 var instanceElement = new InstanceElementDto(automationComposition.getInstanceId(), element.getId(),
@@ -293,7 +265,7 @@ public class AutomationCompositionHandler {
             if (cacheProvider.getParticipantId().equals(participantDeploy.getParticipantId())) {
 
                 updateExistingElementsOnThisParticipant(migrationMsg.getAutomationCompositionId(), participantDeploy,
-                        DeployState.MIGRATING);
+                    DeployState.MIGRATING);
 
                 callParticipantMigrate(migrationMsg.getMessageId(), participantDeploy.getAcElementList(),
                     acCopy, migrationMsg.getCompositionTargetId());
@@ -303,11 +275,12 @@ public class AutomationCompositionHandler {
 
     private void callParticipantMigrate(UUID messageId, List<AcElementDeploy> acElements,
             AutomationComposition acCopy, UUID compositionTargetId) {
-        var compositionElementMap = getCompositionElementDtoMap(acCopy);
-        var instanceElementMap = getInstanceElementDtoMap(acCopy);
+        var compositionElementMap = cacheProvider.getCompositionElementDtoMap(acCopy);
+        var instanceElementMap = cacheProvider.getInstanceElementDtoMap(acCopy);
         var automationComposition = cacheProvider.getAutomationComposition(acCopy.getInstanceId());
-        var compositionElementTargetMap = getCompositionElementDtoMap(automationComposition, compositionTargetId);
-        var instanceElementMigrateMap = getInstanceElementDtoMap(automationComposition);
+        var compositionElementTargetMap = cacheProvider.getCompositionElementDtoMap(automationComposition,
+            compositionTargetId);
+        var instanceElementMigrateMap = cacheProvider.getInstanceElementDtoMap(automationComposition);
 
         for (var acElement : acElements) {
             listener.migrate(messageId, compositionElementMap.get(acElement.getId()),

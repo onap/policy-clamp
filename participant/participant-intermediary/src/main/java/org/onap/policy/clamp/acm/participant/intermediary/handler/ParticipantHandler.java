@@ -28,6 +28,7 @@ import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessag
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeploy;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionMigration;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionPrepare;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionStateChange;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantAckMessage;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantDeregister;
@@ -55,6 +56,7 @@ public class ParticipantHandler {
 
     private final AutomationCompositionHandler automationCompositionHandler;
     private final AcLockHandler acLockHandler;
+    private final AcSubStateHandler acSubStateHandler;
     private final AcDefinitionHandler acDefinitionHandler;
     private final ParticipantMessagePublisher publisher;
     private final CacheProvider cacheProvider;
@@ -106,7 +108,11 @@ public class ParticipantHandler {
             value = "listener.automation_composition_migration",
             description = "AUTOMATION_COMPOSITION_MIGRATION messages received")
     public void handleAutomationCompositionMigration(AutomationCompositionMigration migrationMsg) {
-        automationCompositionHandler.handleAutomationCompositionMigration(migrationMsg);
+        if (Boolean.TRUE.equals(migrationMsg.getPrecheck())) {
+            acSubStateHandler.handleAcMigrationPrecheck(migrationMsg);
+        } else {
+            automationCompositionHandler.handleAutomationCompositionMigration(migrationMsg);
+        }
     }
 
     /**
@@ -117,6 +123,11 @@ public class ParticipantHandler {
     @Timed(value = "listener.properties_update", description = "PROPERTIES_UPDATE message received")
     public void handleAcPropertyUpdate(PropertiesUpdate propertyUpdateMsg) {
         automationCompositionHandler.handleAcPropertyUpdate(propertyUpdateMsg);
+    }
+
+    @Timed(value = "listener.prepare", description = "AUTOMATION_COMPOSITION_PREPARE message received")
+    public void handleAutomationCompositionPrepare(AutomationCompositionPrepare acPrepareMsg) {
+        acSubStateHandler.handleAcPrepare(acPrepareMsg);
     }
 
     /**
