@@ -49,7 +49,7 @@ class ThreadHandlerTest {
     private static final int TIMEOUT = 400;
 
     @Test
-    void test() throws PfModelException, IOException {
+    void testPrime() throws PfModelException, IOException {
         var listener = mock(AutomationCompositionElementListener.class);
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
         try (var threadHandler = new ThreadHandler(listener, intermediaryApi, mock(CacheProvider.class))) {
@@ -61,11 +61,45 @@ class ThreadHandlerTest {
             verify(listener, timeout(TIMEOUT)).prime(composition);
 
             clearInvocations(listener);
+            threadHandler.deprime(messageId, composition);
+            verify(listener, timeout(TIMEOUT)).deprime(composition);
+        }
+    }
+
+    @Test
+    void testPrimeException() throws PfModelException, IOException {
+        var listener = mock(AutomationCompositionElementListener.class);
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        try (var threadHandler = new ThreadHandler(listener, intermediaryApi, mock(CacheProvider.class))) {
+
+            var compositionId = UUID.randomUUID();
+            var composition = new CompositionDto(compositionId, Map.of(), Map.of());
+            doThrow(new PfModelException(Status.INTERNAL_SERVER_ERROR, "Error")).when(listener).prime(composition);
+            var messageId = UUID.randomUUID();
+            threadHandler.prime(messageId, composition);
+            verify(intermediaryApi, timeout(TIMEOUT)).updateCompositionState(compositionId, AcTypeState.COMMISSIONED,
+                StateChangeResult.FAILED, "Composition Defintion prime failed");
+
+            clearInvocations(listener);
+            doThrow(new PfModelException(Status.INTERNAL_SERVER_ERROR, "Error")).when(listener).deprime(composition);
+            threadHandler.deprime(messageId, composition);
+            verify(intermediaryApi, timeout(TIMEOUT)).updateCompositionState(compositionId, AcTypeState.PRIMED,
+                StateChangeResult.FAILED, "Composition Defintion deprime failed");
+        }
+    }
+
+    @Test
+    void testDeploy() throws PfModelException, IOException {
+        var listener = mock(AutomationCompositionElementListener.class);
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        try (var threadHandler = new ThreadHandler(listener, intermediaryApi, mock(CacheProvider.class))) {
+
             Map<String, Object> properties = Map.of("key", "value");
             var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
                 properties, properties);
             var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(),
-                null, properties, properties);
+                    null, properties, properties);
+            var messageId = UUID.randomUUID();
             threadHandler.deploy(messageId, compositionElement, instanceElement);
             verify(listener, timeout(TIMEOUT)).deploy(compositionElement, instanceElement);
 
@@ -88,43 +122,21 @@ class ThreadHandlerTest {
                 instanceElement, instanceElementUpdated);
 
             clearInvocations(listener);
-            threadHandler.lock(messageId, compositionElement, instanceElement);
-            verify(listener, timeout(TIMEOUT)).lock(compositionElement, instanceElement);
-
-            clearInvocations(listener);
-            threadHandler.unlock(messageId, compositionElement, instanceElement);
-            verify(listener, timeout(TIMEOUT)).unlock(compositionElement, instanceElement);
-
-            clearInvocations(listener);
             threadHandler.undeploy(messageId, compositionElement, instanceElement);
             verify(listener, timeout(TIMEOUT)).undeploy(compositionElement, instanceElement);
 
             clearInvocations(listener);
             threadHandler.delete(messageId, compositionElement, instanceElement);
             verify(listener, timeout(TIMEOUT)).delete(compositionElement, instanceElement);
-
-            clearInvocations(listener);
-            threadHandler.deprime(messageId, composition);
-            verify(listener, timeout(TIMEOUT)).deprime(composition);
         }
     }
 
     @Test
-    void testException() throws PfModelException, IOException {
+    void testDeployException() throws PfModelException, IOException {
         var listener = mock(AutomationCompositionElementListener.class);
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
         try (var threadHandler = new ThreadHandler(listener, intermediaryApi, mock(CacheProvider.class))) {
 
-            var compositionId = UUID.randomUUID();
-            var composition = new CompositionDto(compositionId, Map.of(), Map.of());
-            doThrow(new PfModelException(Status.INTERNAL_SERVER_ERROR, "Error")).when(listener)
-                .prime(composition);
-            var messageId = UUID.randomUUID();
-            threadHandler.prime(messageId, composition);
-            verify(intermediaryApi, timeout(TIMEOUT)).updateCompositionState(compositionId, AcTypeState.COMMISSIONED,
-                    StateChangeResult.FAILED, "Composition Defintion prime failed");
-
-            clearInvocations(intermediaryApi);
             Map<String, Object> properties = Map.of("key", "value");
             var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
                 properties, properties);
@@ -135,9 +147,10 @@ class ThreadHandlerTest {
             element.setId(elementId);
             doThrow(new PfModelException(Status.INTERNAL_SERVER_ERROR, "Error")).when(listener)
                 .deploy(compositionElement, instanceElement);
+            var messageId = UUID.randomUUID();
             threadHandler.deploy(messageId, compositionElement, instanceElement);
             verify(intermediaryApi, timeout(TIMEOUT)).updateAutomationCompositionElementState(instanceId, elementId,
-                    DeployState.UNDEPLOYED, null, StateChangeResult.FAILED,
+                DeployState.UNDEPLOYED, null, StateChangeResult.FAILED,
                     "Automation composition element deploy failed");
 
             clearInvocations(listener);
@@ -147,30 +160,28 @@ class ThreadHandlerTest {
                 .update(compositionElement, instanceElement, instanceElementUpdated);
             threadHandler.update(messageId, compositionElement, instanceElement, instanceElementUpdated);
             verify(intermediaryApi, timeout(TIMEOUT)).updateAutomationCompositionElementState(instanceId, elementId,
-                    DeployState.DEPLOYED, null, StateChangeResult.FAILED,
-                    "Automation composition element update failed");
+                DeployState.DEPLOYED, null, StateChangeResult.FAILED,
+                "Automation composition element update failed");
 
             clearInvocations(listener);
+            var compositionTargetId = UUID.randomUUID();
+            var compositionElementTarget = new CompositionElementDto(compositionTargetId, new ToscaConceptIdentifier(),
+                properties, properties);
             doThrow(new PfModelException(Status.INTERNAL_SERVER_ERROR, "Error")).when(listener)
-                .lock(compositionElement, instanceElement);
-            threadHandler.lock(messageId, compositionElement, instanceElement);
+                .migrate(compositionElement, compositionElementTarget, instanceElement, instanceElementUpdated);
+            threadHandler.migrate(messageId, compositionElement, compositionElementTarget,
+                instanceElement, instanceElementUpdated);
             verify(intermediaryApi, timeout(TIMEOUT)).updateAutomationCompositionElementState(instanceId, elementId,
-                    null, LockState.UNLOCKED, StateChangeResult.FAILED, "Automation composition element lock failed");
-
-            clearInvocations(listener);
-            doThrow(new PfModelException(Status.INTERNAL_SERVER_ERROR, "Error")).when(listener)
-                .unlock(compositionElement, instanceElement);
-            threadHandler.unlock(messageId, compositionElement, instanceElement);
-            verify(intermediaryApi, timeout(TIMEOUT)).updateAutomationCompositionElementState(instanceId, elementId,
-                    null, LockState.LOCKED, StateChangeResult.FAILED, "Automation composition element unlock failed");
+                DeployState.DEPLOYED, null, StateChangeResult.FAILED,
+                "Automation composition element migrate failed");
 
             clearInvocations(listener);
             doThrow(new PfModelException(Status.INTERNAL_SERVER_ERROR, "Error")).when(listener)
                 .undeploy(compositionElement, instanceElement);
             threadHandler.undeploy(messageId, compositionElement, instanceElement);
             verify(intermediaryApi, timeout(TIMEOUT)).updateAutomationCompositionElementState(instanceId, elementId,
-                    DeployState.DEPLOYED, null, StateChangeResult.FAILED,
-                    "Automation composition element undeploy failed");
+                DeployState.DEPLOYED, null, StateChangeResult.FAILED,
+                "Automation composition element undeploy failed");
 
             clearInvocations(listener);
             doThrow(new PfModelException(Status.INTERNAL_SERVER_ERROR, "Error")).when(listener)
@@ -179,12 +190,139 @@ class ThreadHandlerTest {
             verify(intermediaryApi, timeout(TIMEOUT)).updateAutomationCompositionElementState(instanceId, elementId,
                     DeployState.UNDEPLOYED, null, StateChangeResult.FAILED,
                     "Automation composition element delete failed");
+        }
+    }
+
+    @Test
+    void testLock() throws PfModelException, IOException {
+        var listener = mock(AutomationCompositionElementListener.class);
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        try (var threadHandler = new ThreadHandler(listener, intermediaryApi, mock(CacheProvider.class))) {
+
+            Map<String, Object> properties = Map.of("key", "value");
+            var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
+                properties, properties);
+            var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(),
+                null, properties, properties);
+            var messageId = UUID.randomUUID();
+            threadHandler.lock(messageId, compositionElement, instanceElement);
+            verify(listener, timeout(TIMEOUT)).lock(compositionElement, instanceElement);
 
             clearInvocations(listener);
-            doThrow(new PfModelException(Status.INTERNAL_SERVER_ERROR, "Error")).when(listener).deprime(composition);
-            threadHandler.deprime(messageId, composition);
-            verify(intermediaryApi, timeout(TIMEOUT)).updateCompositionState(compositionId, AcTypeState.PRIMED,
-                    StateChangeResult.FAILED, "Composition Defintion deprime failed");
+            threadHandler.unlock(messageId, compositionElement, instanceElement);
+            verify(listener, timeout(TIMEOUT)).unlock(compositionElement, instanceElement);
+
+            clearInvocations(listener);
+            threadHandler.undeploy(messageId, compositionElement, instanceElement);
+            verify(listener, timeout(TIMEOUT)).undeploy(compositionElement, instanceElement);
+        }
+    }
+
+    @Test
+    void testLockException() throws PfModelException, IOException {
+        var listener = mock(AutomationCompositionElementListener.class);
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        try (var threadHandler = new ThreadHandler(listener, intermediaryApi, mock(CacheProvider.class))) {
+
+            Map<String, Object> properties = Map.of("key", "value");
+            var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
+                properties, properties);
+            var instanceId = UUID.randomUUID();
+            var elementId = UUID.randomUUID();
+            var instanceElement = new InstanceElementDto(instanceId, elementId, null, properties, properties);
+            var element = new AcElementDeploy();
+            element.setId(elementId);
+            var messageId = UUID.randomUUID();
+            doThrow(new PfModelException(Status.INTERNAL_SERVER_ERROR, "Error")).when(listener)
+                .lock(compositionElement, instanceElement);
+            threadHandler.lock(messageId, compositionElement, instanceElement);
+            verify(intermediaryApi, timeout(TIMEOUT)).updateAutomationCompositionElementState(instanceId, elementId,
+                null, LockState.UNLOCKED, StateChangeResult.FAILED, "Automation composition element lock failed");
+
+            clearInvocations(listener);
+            doThrow(new PfModelException(Status.INTERNAL_SERVER_ERROR, "Error")).when(listener)
+                .unlock(compositionElement, instanceElement);
+            threadHandler.unlock(messageId, compositionElement, instanceElement);
+            verify(intermediaryApi, timeout(TIMEOUT)).updateAutomationCompositionElementState(instanceId, elementId,
+                null, LockState.LOCKED, StateChangeResult.FAILED, "Automation composition element unlock failed");
+        }
+    }
+
+    @Test
+    void testSubState() throws PfModelException, IOException {
+        var listener = mock(AutomationCompositionElementListener.class);
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        try (var threadHandler = new ThreadHandler(listener, intermediaryApi, mock(CacheProvider.class))) {
+
+            Map<String, Object> properties = Map.of("key", "value");
+            var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
+                properties, properties);
+            var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(),
+                null, properties, properties);
+            var messageId = UUID.randomUUID();
+            threadHandler.prepare(messageId, compositionElement, instanceElement);
+            verify(listener, timeout(TIMEOUT)).prepare(compositionElement, instanceElement);
+
+            clearInvocations(listener);
+            threadHandler.review(messageId, compositionElement, instanceElement);
+            verify(listener, timeout(TIMEOUT)).review(compositionElement, instanceElement);
+
+            clearInvocations(listener);
+            var instanceElementMigrate = new InstanceElementDto(instanceElement.instanceId(),
+                instanceElement.elementId(), null, properties, properties);
+            var compositionTargetId = UUID.randomUUID();
+            var compositionElementTarget = new CompositionElementDto(compositionTargetId, new ToscaConceptIdentifier(),
+                properties, properties);
+            threadHandler.migratePrecheck(messageId, compositionElement, compositionElementTarget,
+                instanceElement, instanceElementMigrate);
+            verify(listener, timeout(TIMEOUT)).migratePrecheck(compositionElement, compositionElementTarget,
+                instanceElement, instanceElementMigrate);
+        }
+    }
+
+    @Test
+    void testSubStateException() throws PfModelException, IOException {
+        var listener = mock(AutomationCompositionElementListener.class);
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        try (var threadHandler = new ThreadHandler(listener, intermediaryApi, mock(CacheProvider.class))) {
+
+            Map<String, Object> properties = Map.of("key", "value");
+            var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
+                properties, properties);
+            var instanceId = UUID.randomUUID();
+            var elementId = UUID.randomUUID();
+            var instanceElement = new InstanceElementDto(instanceId, elementId, null, properties, properties);
+            var element = new AcElementDeploy();
+            element.setId(elementId);
+            doThrow(new PfModelException(Status.INTERNAL_SERVER_ERROR, "Error")).when(listener)
+                .prepare(compositionElement, instanceElement);
+            var messageId = UUID.randomUUID();
+            threadHandler.prepare(messageId, compositionElement, instanceElement);
+            verify(intermediaryApi, timeout(TIMEOUT)).updateAutomationCompositionElementState(instanceId, elementId,
+                DeployState.UNDEPLOYED, null, StateChangeResult.FAILED,
+                "Automation composition element prepare Pre Deploy failed");
+
+            clearInvocations(listener);
+            doThrow(new PfModelException(Status.INTERNAL_SERVER_ERROR, "Error")).when(listener)
+                .review(compositionElement, instanceElement);
+            threadHandler.review(messageId, compositionElement, instanceElement);
+            verify(intermediaryApi, timeout(TIMEOUT)).updateAutomationCompositionElementState(instanceId, elementId,
+                DeployState.DEPLOYED, null, StateChangeResult.FAILED,
+                "Automation composition element Review failed");
+
+            clearInvocations(listener);
+            var compositionTargetId = UUID.randomUUID();
+            var compositionElementTarget = new CompositionElementDto(compositionTargetId, new ToscaConceptIdentifier(),
+                properties, properties);
+            var instanceElementMigrate = new InstanceElementDto(instanceElement.instanceId(),
+                instanceElement.elementId(), null, properties, properties);
+            doThrow(new PfModelException(Status.INTERNAL_SERVER_ERROR, "Error")).when(listener)
+                .migratePrecheck(compositionElement, compositionElementTarget, instanceElement, instanceElementMigrate);
+            threadHandler.migratePrecheck(messageId, compositionElement, compositionElementTarget,
+                instanceElement, instanceElementMigrate);
+            verify(intermediaryApi, timeout(TIMEOUT)).updateAutomationCompositionElementState(instanceId, elementId,
+                DeployState.DEPLOYED, null, StateChangeResult.FAILED,
+                "Automation composition element migrate precheck failed");
         }
     }
 }

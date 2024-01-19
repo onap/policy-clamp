@@ -39,6 +39,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDef
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
+import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeployAck;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrimeAck;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantStatus;
@@ -83,6 +84,23 @@ class AutomationCompositionOutHandlerTest {
         var elementId = automationComposition.getElements().values().iterator().next().getId();
         acOutHandler.updateAutomationCompositionElementState(automationComposition.getInstanceId(), elementId,
                 DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Deployed");
+        verify(publisher).sendAutomationCompositionAck(any(AutomationCompositionDeployAck.class));
+    }
+
+    @Test
+    void updateAutomationCompositionElementStatePrepareTest() {
+        var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
+        automationComposition.setSubState(SubState.PREPARING);
+        var cacheProvider = mock(CacheProvider.class);
+        when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
+                .thenReturn(automationComposition);
+        var element = automationComposition.getElements().values().iterator().next();
+        element.setSubState(SubState.PREPARING);
+        var elementId = element.getId();
+        var publisher = mock(ParticipantMessagePublisher.class);
+        var acOutHandler = new AutomationCompositionOutHandler(publisher, cacheProvider);
+        acOutHandler.updateAutomationCompositionElementState(automationComposition.getInstanceId(), elementId,
+                DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Prepare completed");
         verify(publisher).sendAutomationCompositionAck(any(AutomationCompositionDeployAck.class));
     }
 

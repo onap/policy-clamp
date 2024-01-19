@@ -30,6 +30,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
+import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.parameters.ParticipantParameters;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
@@ -39,6 +40,7 @@ import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantRestartAc;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
+import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
@@ -161,6 +163,21 @@ public class CacheProvider {
      */
     public void initializeAutomationComposition(@NonNull UUID compositionId, @NonNull UUID instanceId,
             ParticipantDeploy participantDeploy) {
+        initializeAutomationComposition(compositionId, instanceId, participantDeploy,
+            DeployState.DEPLOYING, SubState.NONE);
+    }
+
+    /**
+     * Initialize an AutomationComposition from a ParticipantDeploy.
+     *
+     * @param compositionId the composition Id
+     * @param instanceId the Automation Composition Id
+     * @param participantDeploy the ParticipantDeploy
+     * @param deployState the DeployState
+     * @param subState the SubState
+     */
+    public void initializeAutomationComposition(@NonNull UUID compositionId, @NonNull UUID instanceId,
+            ParticipantDeploy participantDeploy, DeployState deployState, SubState subState) {
         var acLast = automationCompositions.get(instanceId);
         Map<UUID, AutomationCompositionElement> acElementMap = new LinkedHashMap<>();
         for (var element : participantDeploy.getAcElementList()) {
@@ -168,8 +185,9 @@ public class CacheProvider {
             acElement.setId(element.getId());
             acElement.setParticipantId(getParticipantId());
             acElement.setDefinition(element.getDefinition());
-            acElement.setDeployState(DeployState.DEPLOYING);
+            acElement.setDeployState(deployState);
             acElement.setLockState(LockState.NONE);
+            acElement.setSubState(subState);
             acElement.setProperties(element.getProperties());
             var acElementLast = acLast != null ? acLast.getElements().get(element.getId()) : null;
             if (acElementLast != null) {
@@ -186,6 +204,8 @@ public class CacheProvider {
         automationComposition.setCompositionId(compositionId);
         automationComposition.setInstanceId(instanceId);
         automationComposition.setElements(acElementMap);
+        automationComposition.setDeployState(deployState);
+        automationComposition.setSubState(subState);
         automationCompositions.put(instanceId, automationComposition);
     }
 
@@ -208,6 +228,7 @@ public class CacheProvider {
             acElement.setDefinition(element.getDefinition());
             acElement.setDeployState(element.getDeployState());
             acElement.setLockState(element.getLockState());
+            acElement.setSubState(SubState.NONE);
             acElement.setOperationalState(element.getOperationalState());
             acElement.setUseState(element.getUseState());
             acElement.setProperties(element.getProperties());
@@ -236,10 +257,49 @@ public class CacheProvider {
      * @return the CompositionElementDto
      */
     public CompositionElementDto createCompositionElementDto(UUID compositionId, AutomationCompositionElement element,
-                                                              Map<String, Object> compositionInProperties) {
+            Map<String, Object> compositionInProperties) {
         var compositionOutProperties = getAcElementsDefinitions()
                 .get(compositionId).get(element.getDefinition()).getOutProperties();
         return new CompositionElementDto(compositionId,
                 element.getDefinition(), compositionInProperties, compositionOutProperties);
+    }
+
+    /**
+     * Get a Map of CompositionElementDto by elementId from the elements of an AutomationComposition.
+     *
+     * @param automationComposition the AutomationComposition
+     * @param compositionId the compositionId
+     * @return the Map of CompositionElementDto
+     */
+    public Map<UUID, CompositionElementDto> getCompositionElementDtoMap(AutomationComposition automationComposition,
+            UUID compositionId) {
+        Map<UUID, CompositionElementDto> map = new HashMap<>();
+        for (var element : automationComposition.getElements().values()) {
+            var compositionInProperties = getCommonProperties(compositionId, element.getDefinition());
+            var compositionElement = createCompositionElementDto(compositionId, element, compositionInProperties);
+            map.put(element.getId(), compositionElement);
+        }
+        return map;
+    }
+
+    public Map<UUID, CompositionElementDto> getCompositionElementDtoMap(AutomationComposition automationComposition) {
+        return getCompositionElementDtoMap(automationComposition, automationComposition.getCompositionId());
+    }
+
+    /**
+     * Get a Map of InstanceElementDto by elementId from the elements of an AutomationComposition.
+     *
+     * @param automationComposition the AutomationComposition
+     * @return the Map of InstanceElementDto
+     */
+    public Map<UUID, InstanceElementDto> getInstanceElementDtoMap(AutomationComposition automationComposition) {
+        Map<UUID, InstanceElementDto> map = new HashMap<>();
+        var serviceTemplateFragment = serviceTemplateFragmentMap.get(automationComposition.getCompositionId());
+        for (var element : automationComposition.getElements().values()) {
+            var instanceElement = new InstanceElementDto(automationComposition.getInstanceId(), element.getId(),
+                    serviceTemplateFragment, element.getProperties(), element.getOutProperties());
+            map.put(element.getId(), instanceElement);
+        }
+        return map;
     }
 }
