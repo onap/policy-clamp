@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2022 Nordix Foundation.
+ * Copyright (C) 2022,2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ class MessageActivatorTest {
             topicParameters.setTopic("topic");
             topicParameters.setServers(List.of("localhost"));
             topicParameters.setFetchTimeout(1000);
-            topicParameters.setTopicCommInfrastructure("dmaap");
+            topicParameters.setTopicCommInfrastructure("NOOP");
 
             var parameters = new TopicParameterGroup();
             parameters.setTopicSinks(List.of(topicParameters));

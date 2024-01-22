@@ -27,7 +27,7 @@
                 "servers": [
                     "localhost"
                 ],
-                "topicCommInfrastructure": "dmaap",
+                "topicCommInfrastructure": "NOOP",
                 "fetchTimeout": 15000
             }
         ],
@@ -37,7 +37,7 @@
                 "servers": [
                     "localhost"
                 ],
-                "topicCommInfrastructure": "dmaap"
+                "topicCommInfrastructure": "NOOP"
             }
         ]
     },

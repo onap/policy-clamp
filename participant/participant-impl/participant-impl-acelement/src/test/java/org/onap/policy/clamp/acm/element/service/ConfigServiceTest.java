@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2022 Nordix Foundation.
+ * Copyright (C) 2022,2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,8 +28,8 @@ import static org.mockito.Mockito.verify;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.element.handler.MessageActivator;
 import org.onap.policy.clamp.acm.element.handler.MessageHandler;
-import org.onap.policy.clamp.models.acm.messages.rest.element.DmaapConfig;
 import org.onap.policy.clamp.models.acm.messages.rest.element.ElementConfig;
+import org.onap.policy.clamp.models.acm.messages.rest.element.KafkaConfig;
 import org.onap.policy.common.endpoints.parameters.TopicParameterGroup;
 
 class ConfigServiceTest {
@@ -37,8 +37,8 @@ class ConfigServiceTest {
     @Test
     void test() {
         var elementConfig = new ElementConfig();
-        elementConfig.setTopicParameterGroup(new DmaapConfig());
-        elementConfig.getTopicParameterGroup().setTopicCommInfrastructure("dmaap");
+        elementConfig.setTopicParameterGroup(new KafkaConfig());
+        elementConfig.getTopicParameterGroup().setTopicCommInfrastructure("NOOP");
         elementConfig.getTopicParameterGroup().setListenerTopic("topic");
         elementConfig.getTopicParameterGroup().setPublisherTopic("topic");
         elementConfig.getTopicParameterGroup().setServer("localhost");

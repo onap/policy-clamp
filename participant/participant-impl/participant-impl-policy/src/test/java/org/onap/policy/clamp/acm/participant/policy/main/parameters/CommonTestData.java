@@ -151,8 +151,8 @@ public class CommonTestData {
      */
     public static TopicParameters getTopicParams() {
         final TopicParameters topicParams = new TopicParameters();
-        topicParams.setTopic("POLICY-ACRUNTIME-PARTICIPANT");
-        topicParams.setTopicCommInfrastructure("dmaap");
+        topicParams.setTopic("policy-acruntime-participant");
+        topicParams.setTopicCommInfrastructure("NOOP");
         topicParams.setServers(List.of("localhost"));
         return topicParams;
     }

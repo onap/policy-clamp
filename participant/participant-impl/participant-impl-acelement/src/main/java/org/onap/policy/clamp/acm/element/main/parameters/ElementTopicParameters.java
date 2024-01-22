@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2022 Nordix Foundation.
+ * Copyright (C) 2022,2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ package org.onap.policy.clamp.acm.element.main.parameters;
 import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.onap.policy.clamp.models.acm.messages.rest.element.DmaapConfig;
+import org.onap.policy.clamp.models.acm.messages.rest.element.KafkaConfig;
 import org.onap.policy.common.endpoints.parameters.TopicParameters;
 
 @Data
@@ -32,9 +32,9 @@ public class ElementTopicParameters extends TopicParameters {
 
     /**
      * Constructor.
-     * @param parameters DmaapConfig
+     * @param parameters KafkaConfig
      */
-    public ElementTopicParameters(DmaapConfig parameters) {
+    public ElementTopicParameters(KafkaConfig parameters) {
         super();
         this.setTopic(parameters.getListenerTopic());
         this.setServers(List.of(parameters.getServer()));

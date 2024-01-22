@@ -47,17 +47,17 @@ runtime:
   topicParameterGroup:
     topicSources:
       -
-        topic: POLICY-ACRUNTIME-PARTICIPANT
+        topic: policy-acruntime-participant
         servers:
-          - ${topicServer:localhost}
-        topicCommInfrastructure: dmaap
+          - ${topicServer:kafka:9092}
+        topicCommInfrastructure: NOOP
         fetchTimeout: 15000
     topicSinks:
       -
-        topic: POLICY-ACRUNTIME-PARTICIPANT
+        topic: policy-acruntime-participant
         servers:
-          - ${topicServer:localhost}
-        topicCommInfrastructure: dmaap
+          - ${topicServer:kafka:9092}
+        topicCommInfrastructure: NOOP
   acmParameters:
     toscaElementName: org.onap.policy.clamp.acm.AutomationCompositionElement
     toscaCompositionName: org.onap.policy.clamp.acm.AutomationComposition

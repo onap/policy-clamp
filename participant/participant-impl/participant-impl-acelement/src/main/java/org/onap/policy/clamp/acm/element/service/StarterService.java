@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2022 Nordix Foundation.
+ * Copyright (C) 2022,2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import org.onap.policy.clamp.acm.element.handler.MessagePublisher;
 import org.onap.policy.clamp.acm.element.main.parameters.AcElement;
-import org.onap.policy.clamp.models.acm.messages.dmaap.element.ElementStatus;
+import org.onap.policy.clamp.models.acm.messages.kafka.element.ElementStatus;
 import org.onap.policy.clamp.models.acm.messages.rest.element.ElementConfig;
 import org.onap.policy.clamp.models.acm.messages.rest.element.ElementType;
 import org.onap.policy.models.base.PfModelRuntimeException;

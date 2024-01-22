@@ -40,7 +40,7 @@ import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantRestartAc;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionStateChange;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionStateChange;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.LockOrder;
 import org.onap.policy.common.endpoints.parameters.TopicParameters;
@@ -145,8 +145,8 @@ public class CommonTestData {
      */
     public static TopicParameters getTopicParams() {
         final var topicParams = new TopicParameters();
-        topicParams.setTopic("POLICY-ACRUNTIME-PARTICIPANT");
-        topicParams.setTopicCommInfrastructure("dmaap");
+        topicParams.setTopic("policy-acruntime-participant");
+        topicParams.setTopicCommInfrastructure("NOOP");
         topicParams.setServers(List.of("localhost"));
         return topicParams;
     }

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023 Nordix Foundation.
+ *  Copyright (C) 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -100,8 +100,8 @@ public class CommonTestData {
      */
     private static TopicParameters getTopicParams() {
         final TopicParameters topicParams = new TopicParameters();
-        topicParams.setTopic("POLICY-ACRUNTIME-PARTICIPANT");
-        topicParams.setTopicCommInfrastructure("dmaap");
+        topicParams.setTopic("policy-acruntime-participant");
+        topicParams.setTopicCommInfrastructure("NOOP");
         topicParams.setServers(List.of("localhost"));
         return topicParams;
     }

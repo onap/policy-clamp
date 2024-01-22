@@ -27,17 +27,17 @@ runtime:
   topicParameterGroup:
     topicSources:
       -
-        topic: POLICY-ACRUNTIME-PARTICIPANT
+        topic: policy-acruntime-participant
         servers:
-          - localhost
-        topicCommInfrastructure: dmaap
+          - kafka:9092
+        topicCommInfrastructure: NOOP
         fetchTimeout: 15000
     topicSinks:
       -
-        topicCommInfrastructure: dmaap
+        topicCommInfrastructure: NOOP
         servers:
-          - localhost
-        topic: POLICY-ACRUNTIME-PARTICIPANT
+          - kafka:9092
+        topic: policy-acruntime-participant
   acmParameters:
     acElementName: org.onap.policy.clamp.acm.AutomationCompositionElement
     acNodeType: org.onap.policy.clamp.acm.AutomationComposition

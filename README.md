@@ -73,7 +73,7 @@ This file is a JSON that must be specified to Spring config, here is an example:
         "activateServerTLSAuth":"false",
         "keyStorePassword":"",
         "keyStorePath":"",
-        "messageBusAddresses":["dmaaphost.com"]
+        "messageBusAddresses":["Kafkahost.com"]
     },
     "sdc-controller2":{
         "user": "clamp",
@@ -87,15 +87,15 @@ This file is a JSON that must be specified to Spring config, here is an example:
         "activateServerTLSAuth":"false",
         "keyStorePassword":"",
         "keyStorePath":"",
-        "messageBusAddresses":["dmaaphost.com"]
+        "messageBusAddresses":["kafkahost.com"]
     }
   }
 }
 ```
 Multiple controllers can be configured so that Clamp is able to receive the notifications from different SDC servers.
 Each Clamp existing in a cluster should have different consumerGroup and consumerId so that they can each consume the SDC notification.
-The environmentName is normally the Dmaap Topic used by SDC. 
-If the sdcAddress is not specified or not available (connection failure) the messageBusAddresses will be used (Dmaap servers) 
+The environmentName is normally the Kafka Topic used by SDC. 
+If the sdcAddress is not specified or not available (connection failure) the messageBusAddresses will be used (Kafka servers) 
 
 ### Docker-compose
 

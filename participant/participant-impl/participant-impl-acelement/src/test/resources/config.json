@@ -6,9 +6,9 @@
   "timerSec":2000,
   "elementType":"STARTER",
   "topicParameterGroup":{
-    "server":"localhost",
-    "topic":"POLICY_UPDATE_MSG",
+    "server":"kafka:9092",
+    "topic":"policy_update_msg",
     "fetchTimeout":15000,
-    "topicCommInfrastructure":"dmaap"
+    "topicCommInfrastructure":"NOOP"
   }
 }
