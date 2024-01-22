@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2023 Nordix Foundation.
+ *  Copyright (C) 2021-2024 Nordix Foundation.
  * ================================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -30,20 +30,20 @@ import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessag
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeploy;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionMigration;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionStateChange;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantAckMessage;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDeregister;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantDeregisterAck;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessage;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantPrime;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegister;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegisterAck;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRestart;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatus;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantStatusReq;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.PropertiesUpdate;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeploy;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionMigration;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionStateChange;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantAckMessage;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantDeregister;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantDeregisterAck;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessage;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrime;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRegister;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRegisterAck;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRestart;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantStatus;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantStatusReq;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.PropertiesUpdate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

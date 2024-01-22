@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021,2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,8 @@
 package org.onap.policy.clamp.acm.participant.intermediary.comm;
 
 import org.onap.policy.clamp.acm.participant.intermediary.handler.ParticipantHandler;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantMessageType;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.ParticipantRegisterAck;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessageType;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRegisterAck;
 import org.springframework.stereotype.Component;
 
 /**

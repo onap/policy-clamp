@@ -36,11 +36,11 @@
 
         It contains the following modules:
         - policy-clamp-common: Common code for all Policy/CLAMP modules
-        - policy-clamp-models: POJOs and other model code for REST and DMaaP messages and for persistence
+        - policy-clamp-models: POJOs and other model code for REST and Kafka messages and for persistence
         - policy-clamp-runtime: The runtime server for CLAMP
         - policy-clamp-runtime-acm: The runtime server for Automation Composition Management
         - policy-clamp-participant: Modules for CLAMP automation composition participants
-        o policy-clamp-participant-intermediary: A common JAR that handles participant state and DMaaP handling
+        o policy-clamp-participant-intermediary: A common JAR that handles participant state and Kafka handling
         o policy-clamp-participant-impl-cds: A standard participant for interworking with CDS
         o policy-clamp-participant-impl-kubernetes: A standard participant for Kubernetes microservices
         o policy-clamp-participant-impl-policy: A standard participant for handling polcies for Policy Framework

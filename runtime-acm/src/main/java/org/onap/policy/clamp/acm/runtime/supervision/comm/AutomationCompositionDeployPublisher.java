@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021,2023 Nordix Foundation.
+ * Copyright (C) 2021,2023-2024 Nordix Foundation.
  * ================================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -33,7 +33,7 @@ import lombok.AllArgsConstructor;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
-import org.onap.policy.clamp.models.acm.messages.dmaap.participant.AutomationCompositionDeploy;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeploy;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
@@ -42,7 +42,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
- * This class is used to send AutomationCompositionDeploy messages to participants on DMaaP.
+ * This class is used to send AutomationCompositionDeploy messages to participants on Kafka.
  */
 @Component
 @AllArgsConstructor

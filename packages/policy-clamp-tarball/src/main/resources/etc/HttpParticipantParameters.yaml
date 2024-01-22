@@ -19,17 +19,17 @@ participant:
     participantId: 101c62b3-8918-41b9-a747-d21eb79c6c01
     clampAutomationCompositionTopics:
       topicSources:
-        - topic: POLICY-ACRUNTIME-PARTICIPANT
+        - topic: policy-acruntime-participant
           servers:
-            - ${topicServer:message-router}
-          topicCommInfrastructure: dmaap
+            - ${topicServer:kafka:9092}
+          topicCommInfrastructure: NOOP
           fetchTimeout: 15000
           useHttps: true
       topicSinks:
-        - topic: POLICY-ACRUNTIME-PARTICIPANT
+        - topic: policy-acruntime-participant
           servers:
-            - ${topicServer:message-router}
-          topicCommInfrastructure: dmaap
+            - ${topicServer:kafka:9092}
+          topicCommInfrastructure: NOOP
           useHttps: true
     participantSupportedElementTypes:
       -

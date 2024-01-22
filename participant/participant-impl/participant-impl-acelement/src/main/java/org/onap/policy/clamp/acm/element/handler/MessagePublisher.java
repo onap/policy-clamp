@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2022 Nordix Foundation.
+ * Copyright (C) 2022,2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import io.micrometer.core.annotation.Timed;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
-import org.onap.policy.clamp.models.acm.messages.dmaap.element.ElementMessage;
+import org.onap.policy.clamp.models.acm.messages.kafka.element.ElementMessage;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
 import org.slf4j.Logger;

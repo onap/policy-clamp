@@ -12,17 +12,17 @@ participant:
     clampAutomationCompositionTopics:
       topicSources:
         -
-          topic: POLICY-ACRUNTIME-PARTICIPANT
+          topic: policy-acruntime-participant
           fetchTimeout: 15000
           servers:
-            - localhost
-          topicCommInfrastructure: dmaap
+            - kafka:9092
+          topicCommInfrastructure: NOOP
       topicSinks:
         -
-          topic: POLICY-ACRUNTIME-PARTICIPANT
+          topic: policy-acruntime-participant
           servers:
-            - localhost
-          topicCommInfrastructure: dmaap
+            - kafka:9092
+          topicCommInfrastructure: NOOP
       name: AutomationComposition Topics
     participantSupportedElementTypes:
       -
