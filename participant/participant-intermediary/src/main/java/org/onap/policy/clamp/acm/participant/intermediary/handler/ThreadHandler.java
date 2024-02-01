@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023 Nordix Foundation.
+ *  Copyright (C) 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.handler;
 
+import io.opentelemetry.context.Context;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.HashMap;
@@ -57,7 +58,8 @@ public class ThreadHandler implements Closeable {
 
     private final Map<UUID, Future> executionMap = new ConcurrentHashMap<>();
 
-    private final ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+    private final ExecutorService executor =
+            Context.taskWrapping(Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()));
 
     /**
      * Handle an update on a automation composition element.

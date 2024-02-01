@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023 Nordix Foundation.
+ *  Copyright (C) 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@
 package org.onap.policy.clamp.acm.participant.kserve.handler;
 
 import io.kubernetes.client.openapi.ApiException;
+import io.opentelemetry.context.Context;
 import jakarta.validation.Validation;
 import jakarta.validation.ValidationException;
 import java.io.IOException;
@@ -70,7 +71,8 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+    private ExecutorService executor = Context.taskWrapping(
+            Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()));
 
     private final ParticipantIntermediaryApi intermediaryApi;
 
