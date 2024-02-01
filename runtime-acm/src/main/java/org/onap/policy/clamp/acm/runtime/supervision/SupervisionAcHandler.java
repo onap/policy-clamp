@@ -21,6 +21,7 @@
 package org.onap.policy.clamp.acm.runtime.supervision;
 
 import io.micrometer.core.annotation.Timed;
+import io.opentelemetry.context.Context;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -64,7 +65,7 @@ public class SupervisionAcHandler {
     private final AcElementPropertiesPublisher acElementPropertiesPublisher;
     private final AutomationCompositionMigrationPublisher acCompositionMigrationPublisher;
 
-    private final ExecutorService executor = Executors.newFixedThreadPool(1);
+    private final ExecutorService executor = Context.taskWrapping(Executors.newFixedThreadPool(1));
 
     /**
      * Handle Deploy an AutomationComposition instance.
