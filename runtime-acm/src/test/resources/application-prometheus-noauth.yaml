@@ -30,11 +30,11 @@ runtime:
         topic: POLICY-ACRUNTIME-PARTICIPANT
         servers:
           - localhost
-        topicCommInfrastructure: dmaap
+        topicCommInfrastructure: noop
         fetchTimeout: 15000
     topicSinks:
       -
-        topicCommInfrastructure: dmaap
+        topicCommInfrastructure: noop
         servers:
           - localhost
         topic: POLICY-ACRUNTIME-PARTICIPANT
