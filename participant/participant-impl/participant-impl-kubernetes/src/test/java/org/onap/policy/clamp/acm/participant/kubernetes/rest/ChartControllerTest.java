@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2022,2024 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -57,6 +57,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.mock.web.MockPart;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
@@ -191,7 +192,8 @@ class ChartControllerTest {
         when(chartService.saveChart(charts.get(0), chartFile, null)).thenReturn(charts.get(0));
 
         requestBuilder = MockMvcRequestBuilders.multipart(ONBOARD_CHART_URL)
-            .file(chartFile).file(overrideFile).param("info", getChartInfoJson());
+            .file("chartFile", chartFile.getBytes()).file("overrideFile", overrideFile.getBytes())
+                .part(new MockPart("info", getChartInfoJson().getBytes()));
 
         mockMvc.perform(requestBuilder).andExpect(status().isOk());
     }
