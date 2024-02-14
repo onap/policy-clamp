@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2023 Nordix Foundation.
+ *  Copyright (C) 2021-2024 Nordix Foundation.
  * ================================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -28,15 +28,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpStatus;
-import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
+import org.onap.policy.clamp.acm.participant.intermediary.api.impl.AcElementListenerV1;
 import org.onap.policy.clamp.acm.participant.policy.client.PolicyApiHttpClient;
 import org.onap.policy.clamp.acm.participant.policy.client.PolicyPapHttpClient;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
-import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
@@ -53,8 +50,7 @@ import org.springframework.stereotype.Component;
  * This class handles implementation of automationCompositionElement updates.
  */
 @Component
-@RequiredArgsConstructor
-public class AutomationCompositionElementHandler implements AutomationCompositionElementListener {
+public class AutomationCompositionElementHandler extends AcElementListenerV1 {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AutomationCompositionElementHandler.class);
 
@@ -62,7 +58,20 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
 
     private final PolicyApiHttpClient apiHttpClient;
     private final PolicyPapHttpClient papHttpClient;
-    private final ParticipantIntermediaryApi intermediaryApi;
+
+    /**
+     * Constructor.
+     *
+     * @param apiHttpClient the PolicyApi Http Client
+     * @param papHttpClient the Policy Pap Http Client
+     * @param intermediaryApi the Participant Intermediary Api
+     */
+    public AutomationCompositionElementHandler(PolicyApiHttpClient apiHttpClient, PolicyPapHttpClient papHttpClient,
+        ParticipantIntermediaryApi intermediaryApi) {
+        super(intermediaryApi);
+        this.apiHttpClient = apiHttpClient;
+        this.papHttpClient = papHttpClient;
+    }
 
     /**
      * Callback method to handle a automation composition element state change.
@@ -214,52 +223,6 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
     }
 
     @Override
-    public void lock(UUID instanceId, UUID elementId) throws PfModelException {
-        intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId, null, LockState.LOCKED,
-                StateChangeResult.NO_ERROR, "Locked");
-    }
-
-    @Override
-    public void unlock(UUID instanceId, UUID elementId) throws PfModelException {
-        intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId, null, LockState.UNLOCKED,
-                StateChangeResult.NO_ERROR, "Unlocked");
-    }
-
-    @Override
-    public void delete(UUID instanceId, UUID elementId) throws PfModelException {
-        intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId, DeployState.DELETED, null,
-                StateChangeResult.NO_ERROR, "Deleted");
-    }
-
-    @Override
-    public void update(UUID instanceId, AcElementDeploy element, Map<String, Object> properties)
-            throws PfModelException {
-        intermediaryApi.updateAutomationCompositionElementState(instanceId, element.getId(), DeployState.DEPLOYED, null,
-                StateChangeResult.NO_ERROR, "Update not supported");
-    }
-
-    @Override
-    public void prime(UUID compositionId, List<AutomationCompositionElementDefinition> elementDefinitionList)
-            throws PfModelException {
-        intermediaryApi.updateCompositionState(compositionId, AcTypeState.PRIMED, StateChangeResult.NO_ERROR, "Primed");
-    }
-
-    @Override
-    public void deprime(UUID compositionId) throws PfModelException {
-        intermediaryApi.updateCompositionState(compositionId, AcTypeState.COMMISSIONED, StateChangeResult.NO_ERROR,
-                "Deprimed");
-    }
-
-    @Override
-    public void handleRestartComposition(UUID compositionId,
-            List<AutomationCompositionElementDefinition> elementDefinitionList, AcTypeState state)
-            throws PfModelException {
-        var finalState = AcTypeState.PRIMED.equals(state) || AcTypeState.PRIMING.equals(state) ? AcTypeState.PRIMED
-                : AcTypeState.COMMISSIONED;
-        intermediaryApi.updateCompositionState(compositionId, finalState, StateChangeResult.NO_ERROR, "Restarted");
-    }
-
-    @Override
     public void handleRestartInstance(UUID automationCompositionId, AcElementDeploy element,
             Map<String, Object> properties, DeployState deployState, LockState lockState) throws PfModelException {
         if (DeployState.DEPLOYING.equals(deployState)) {
@@ -279,12 +242,5 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
         lockState = AcmUtils.lockCompleted(deployState, lockState);
         intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(), deployState,
                 lockState, StateChangeResult.NO_ERROR, "Restarted");
-    }
-
-    @Override
-    public void migrate(UUID automationCompositionId, AcElementDeploy element, UUID compositionTargetId,
-            Map<String, Object> properties) throws PfModelException {
-        intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
-                DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Migrated");
     }
 }

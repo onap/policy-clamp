@@ -34,6 +34,7 @@ import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeploy;
@@ -234,6 +235,7 @@ class ParticipantHandlerTest {
     private ParticipantDefinition createParticipantDefinition() {
         var def = new ParticipantDefinition();
         def.setParticipantId(CommonTestData.getParticipantId());
+        def.setAutomationCompositionElementDefinitionList(List.of(new AutomationCompositionElementDefinition()));
         return def;
     }
 }

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2023 Nordix Foundation.
+ *  Copyright (C) 2021-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,12 +20,7 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.api;
 
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.models.base.PfModelException;
@@ -35,45 +30,79 @@ import org.onap.policy.models.base.PfModelException;
  */
 public interface AutomationCompositionElementListener {
     /**
-     * Handle a automation composition element state change.
+     * Handle a deploy on a automation composition element.
      *
-     * @param automationCompositionElementId the ID of the automation composition element
+     * @param compositionElement the information of the Automation Composition Definition Element
+     * @param instanceElement the information of the Automation Composition Instance Element
+     * @throws PfModelException from Policy framework
+     */
+    void deploy(CompositionElementDto compositionElement, InstanceElementDto instanceElement) throws PfModelException;
+
+    /**
+     * Handle an udeploy on a automation composition element.
+     *
+     * @param compositionElement the information of the Automation Composition Definition Element
+     * @param instanceElement the information of the Automation Composition Instance Element
      * @throws PfModelException in case of a model exception
      */
-    void undeploy(UUID automationCompositionId, UUID automationCompositionElementId) throws PfModelException;
+    void undeploy(CompositionElementDto compositionElement, InstanceElementDto instanceElement) throws PfModelException;
+
+    /**
+     * Handle a lock on a automation composition element.
+     *
+     * @param compositionElement the information of the Automation Composition Definition Element
+     * @param instanceElement the information of the Automation Composition Instance Element
+     * @throws PfModelException in case of a model exception
+     */
+    void lock(CompositionElementDto compositionElement, InstanceElementDto instanceElement) throws PfModelException;
+
+    /**
+     * Handle an unlock on a automation composition element.
+     *
+     * @param compositionElement the information of the Automation Composition Definition Element
+     * @param instanceElement the information of the Automation Composition Instance Element
+     * @throws PfModelException in case of a model exception
+     */
+    void unlock(CompositionElementDto compositionElement, InstanceElementDto instanceElement) throws PfModelException;
+
+    /**
+     * Handle a delete on a automation composition element.
+     *
+     * @param compositionElement the information of the Automation Composition Definition Element
+     * @param instanceElement the information of the Automation Composition Instance Element
+     * @throws PfModelException in case of a model exception
+     */
+    void delete(CompositionElementDto compositionElement, InstanceElementDto instanceElement) throws PfModelException;
 
     /**
      * Handle an update on a automation composition element.
      *
-     * @param automationCompositionId the automationComposition Id
-     * @param element the information on the automation composition element
-     * @param properties properties Map
+     * @param compositionElement the information of the Automation Composition Definition Element
+     * @param instanceElement the information of the Automation Composition Instance Element
+     * @param instanceElementUpdated the information of the Automation Composition Instance Element updated
      * @throws PfModelException from Policy framework
      */
-    void deploy(UUID automationCompositionId, AcElementDeploy element, Map<String, Object> properties)
-            throws PfModelException;
+    void update(CompositionElementDto compositionElement, InstanceElementDto instanceElement,
+            InstanceElementDto instanceElementUpdated) throws PfModelException;
 
-    void lock(UUID automationCompositionId, UUID automationCompositionElementId) throws PfModelException;
+    void prime(CompositionDto composition) throws PfModelException;
 
-    void unlock(UUID automationCompositionId, UUID automationCompositionElementId) throws PfModelException;
+    void deprime(CompositionDto composition) throws PfModelException;
 
-    void delete(UUID automationCompositionId, UUID automationCompositionElementId) throws PfModelException;
+    void handleRestartComposition(CompositionDto composition, AcTypeState state) throws PfModelException;
 
-    void update(UUID automationCompositionId, AcElementDeploy element, Map<String, Object> properties)
-            throws PfModelException;
-
-    void prime(UUID compositionId, List<AutomationCompositionElementDefinition> elementDefinitionList)
-            throws PfModelException;
-
-    void deprime(UUID compositionId) throws PfModelException;
-
-    void handleRestartComposition(UUID compositionId,
-            List<AutomationCompositionElementDefinition> elementDefinitionList, AcTypeState state)
-            throws PfModelException;
-
-    void handleRestartInstance(UUID automationCompositionId, AcElementDeploy element, Map<String, Object> properties,
+    void handleRestartInstance(CompositionElementDto compositionElement, InstanceElementDto instanceElement,
             DeployState deployState, LockState lockState) throws PfModelException;
 
-    void migrate(UUID instanceId, AcElementDeploy element, UUID compositionTargetId, Map<String, Object> properties)
-            throws PfModelException;
+    /**
+     * Handle an update on a automation composition element.
+     *
+     * @param compositionElement the information of the Automation Composition Definition Element
+     * @param compositionElementTarget the information of the Automation Composition Definition Element Target
+     * @param instanceElement the information of the Automation Composition Instance Element
+     * @param instanceElementMigrate the information of the Automation Composition Instance Element updated
+     * @throws PfModelException from Policy framework
+     */
+    void migrate(CompositionElementDto compositionElement, CompositionElementDto compositionElementTarget,
+            InstanceElementDto instanceElement, InstanceElementDto instanceElementMigrate) throws PfModelException;
 }

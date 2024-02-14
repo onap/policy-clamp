@@ -28,11 +28,13 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionDto;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
@@ -48,6 +50,8 @@ import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCom
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.PropertiesUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.LockOrder;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
@@ -79,8 +83,6 @@ class AutomationCompositionHandlerTest {
     @Test
     void handleAutomationCompositionStateChangeUndeployTest() {
         var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
-        var automationCompositionStateChange = CommonTestData.getStateChange(CommonTestData.getParticipantId(),
-                automationComposition.getInstanceId(), DeployOrder.UNDEPLOY, LockOrder.NONE);
         var cacheProvider = mock(CacheProvider.class);
         when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
                 .thenReturn(automationComposition);
@@ -89,6 +91,15 @@ class AutomationCompositionHandlerTest {
         var participantMessagePublisher = mock(ParticipantMessagePublisher.class);
         var listener = mock(ThreadHandler.class);
         var ach = new AutomationCompositionHandler(cacheProvider, participantMessagePublisher, listener);
+        Map<ToscaConceptIdentifier, AutomationCompositionElementDefinition> map = new HashMap<>();
+        for (var element : automationComposition.getElements().values()) {
+            map.put(element.getDefinition(), new AutomationCompositionElementDefinition());
+        }
+        when(cacheProvider.getAcElementsDefinitions())
+            .thenReturn(Map.of(automationComposition.getCompositionId(), map));
+        var automationCompositionStateChange = CommonTestData.getStateChange(CommonTestData.getParticipantId(),
+            automationComposition.getInstanceId(), DeployOrder.UNDEPLOY, LockOrder.NONE);
+
         ach.handleAutomationCompositionStateChange(automationCompositionStateChange);
         verify(listener, times(automationComposition.getElements().size())).undeploy(any(), any(), any());
         for (var element : automationComposition.getElements().values()) {
@@ -99,8 +110,6 @@ class AutomationCompositionHandlerTest {
     @Test
     void handleAutomationCompositionStateChangeLockTest() {
         var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
-        var automationCompositionStateChange = CommonTestData.getStateChange(CommonTestData.getParticipantId(),
-                automationComposition.getInstanceId(), DeployOrder.NONE, LockOrder.LOCK);
         var cacheProvider = mock(CacheProvider.class);
         when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
                 .thenReturn(automationComposition);
@@ -109,6 +118,14 @@ class AutomationCompositionHandlerTest {
         var participantMessagePublisher = mock(ParticipantMessagePublisher.class);
         var listener = mock(ThreadHandler.class);
         var ach = new AutomationCompositionHandler(cacheProvider, participantMessagePublisher, listener);
+        Map<ToscaConceptIdentifier, AutomationCompositionElementDefinition> map = new HashMap<>();
+        for (var element : automationComposition.getElements().values()) {
+            map.put(element.getDefinition(), new AutomationCompositionElementDefinition());
+        }
+        when(cacheProvider.getAcElementsDefinitions())
+            .thenReturn(Map.of(automationComposition.getCompositionId(), map));
+        var automationCompositionStateChange = CommonTestData.getStateChange(CommonTestData.getParticipantId(),
+            automationComposition.getInstanceId(), DeployOrder.NONE, LockOrder.LOCK);
         ach.handleAutomationCompositionStateChange(automationCompositionStateChange);
         verify(listener, times(automationComposition.getElements().size())).lock(any(), any(), any());
         for (var element : automationComposition.getElements().values()) {
@@ -119,8 +136,6 @@ class AutomationCompositionHandlerTest {
     @Test
     void handleAutomationCompositionStateChangeUnlockTest() {
         var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
-        var automationCompositionStateChange = CommonTestData.getStateChange(CommonTestData.getParticipantId(),
-                automationComposition.getInstanceId(), DeployOrder.NONE, LockOrder.UNLOCK);
         var cacheProvider = mock(CacheProvider.class);
         when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
                 .thenReturn(automationComposition);
@@ -129,6 +144,14 @@ class AutomationCompositionHandlerTest {
         var participantMessagePublisher = mock(ParticipantMessagePublisher.class);
         var listener = mock(ThreadHandler.class);
         var ach = new AutomationCompositionHandler(cacheProvider, participantMessagePublisher, listener);
+        Map<ToscaConceptIdentifier, AutomationCompositionElementDefinition> map = new HashMap<>();
+        for (var element : automationComposition.getElements().values()) {
+            map.put(element.getDefinition(), new AutomationCompositionElementDefinition());
+        }
+        when(cacheProvider.getAcElementsDefinitions())
+            .thenReturn(Map.of(automationComposition.getCompositionId(), map));
+        var automationCompositionStateChange = CommonTestData.getStateChange(CommonTestData.getParticipantId(),
+            automationComposition.getInstanceId(), DeployOrder.NONE, LockOrder.UNLOCK);
         ach.handleAutomationCompositionStateChange(automationCompositionStateChange);
         verify(listener, times(automationComposition.getElements().size())).unlock(any(), any(), any());
         for (var element : automationComposition.getElements().values()) {
@@ -139,8 +162,6 @@ class AutomationCompositionHandlerTest {
     @Test
     void handleAutomationCompositionStateChangeDeleteTest() {
         var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
-        var automationCompositionStateChange = CommonTestData.getStateChange(CommonTestData.getParticipantId(),
-                automationComposition.getInstanceId(), DeployOrder.DELETE, LockOrder.NONE);
         var cacheProvider = mock(CacheProvider.class);
         when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
                 .thenReturn(automationComposition);
@@ -149,6 +170,14 @@ class AutomationCompositionHandlerTest {
         var participantMessagePublisher = mock(ParticipantMessagePublisher.class);
         var listener = mock(ThreadHandler.class);
         var ach = new AutomationCompositionHandler(cacheProvider, participantMessagePublisher, listener);
+        Map<ToscaConceptIdentifier, AutomationCompositionElementDefinition> map = new HashMap<>();
+        for (var element : automationComposition.getElements().values()) {
+            map.put(element.getDefinition(), new AutomationCompositionElementDefinition());
+        }
+        when(cacheProvider.getAcElementsDefinitions())
+            .thenReturn(Map.of(automationComposition.getCompositionId(), map));
+        var automationCompositionStateChange = CommonTestData.getStateChange(CommonTestData.getParticipantId(),
+            automationComposition.getInstanceId(), DeployOrder.DELETE, LockOrder.NONE);
         ach.handleAutomationCompositionStateChange(automationCompositionStateChange);
         verify(listener, times(automationComposition.getElements().size())).delete(any(), any(), any());
         for (var element : automationComposition.getElements().values()) {
@@ -181,6 +210,12 @@ class AutomationCompositionHandlerTest {
         acElementDeploy.setId(automationComposition.getElements().values().iterator().next().getId());
         participantDeploy.getAcElementList().add(acElementDeploy);
 
+        Map<ToscaConceptIdentifier, AutomationCompositionElementDefinition> map = new HashMap<>();
+        for (var element : automationComposition.getElements().values()) {
+            map.put(element.getDefinition(), new AutomationCompositionElementDefinition());
+        }
+        when(cacheProvider.getAcElementsDefinitions())
+            .thenReturn(Map.of(automationComposition.getCompositionId(), map));
         ach.handleAcPropertyUpdate(updateMsg);
         verify(listener).update(any(), any(), any(), any());
     }
@@ -205,54 +240,76 @@ class AutomationCompositionHandlerTest {
         deployMsg.setAutomationCompositionId(automationComposition.getInstanceId());
         when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
                 .thenReturn(automationComposition);
+        Map<ToscaConceptIdentifier, AutomationCompositionElementDefinition> map = new HashMap<>();
         for (var element : automationComposition.getElements().values()) {
             var acElementDeploy = new AcElementDeploy();
             acElementDeploy.setProperties(Map.of());
             acElementDeploy.setId(element.getId());
             participantDeploy.getAcElementList().add(acElementDeploy);
+            map.put(element.getDefinition(), new AutomationCompositionElementDefinition());
         }
+        when(cacheProvider.getAcElementsDefinitions())
+            .thenReturn(Map.of(automationComposition.getCompositionId(), map));
+
         ach.handleAutomationCompositionDeploy(deployMsg);
-        verify(listener, times(automationComposition.getElements().size())).deploy(any(), any(), any(), any());
+        verify(listener, times(automationComposition.getElements().size())).deploy(any(), any(), any());
     }
 
     @Test
     void handleComposiotPrimeTest() {
+        var acElementDefinition = new AutomationCompositionElementDefinition();
+        acElementDefinition.setAcElementDefinitionId(new ToscaConceptIdentifier("key", "1.0.0"));
+        var toscaNodeTemplate = new ToscaNodeTemplate();
+        toscaNodeTemplate.setProperties(Map.of());
+        acElementDefinition.setAutomationCompositionElementToscaNodeTemplate(toscaNodeTemplate);
+        var list = List.of(acElementDefinition);
+        var compositionId = UUID.randomUUID();
+        var messageId = UUID.randomUUID();
         var listener = mock(ThreadHandler.class);
         var ach = new AutomationCompositionHandler(mock(CacheProvider.class), mock(ParticipantMessagePublisher.class),
-                listener);
-        var compositionId = UUID.randomUUID();
-        var list = List.of(new AutomationCompositionElementDefinition());
-        var messageId = UUID.randomUUID();
+            listener);
         ach.prime(messageId, compositionId, list);
-        verify(listener).prime(messageId, compositionId, list);
+        verify(listener).prime(any(UUID.class), any(CompositionDto.class));
     }
 
     @Test
     void handleComposiotDeprimeTest() {
-        var listener = mock(ThreadHandler.class);
-        var ach = new AutomationCompositionHandler(mock(CacheProvider.class), mock(ParticipantMessagePublisher.class),
-                listener);
+        var acElementDefinition = new AutomationCompositionElementDefinition();
+        acElementDefinition.setAcElementDefinitionId(new ToscaConceptIdentifier("key", "1.0.0"));
+        var toscaNodeTemplate = new ToscaNodeTemplate();
+        toscaNodeTemplate.setProperties(Map.of());
+        acElementDefinition.setAutomationCompositionElementToscaNodeTemplate(toscaNodeTemplate);
         var compositionId = UUID.randomUUID();
+        var listener = mock(ThreadHandler.class);
+        var cacheProvider = mock(CacheProvider.class);
+        var ach = new AutomationCompositionHandler(cacheProvider, mock(ParticipantMessagePublisher.class),
+            listener);
+        when(cacheProvider.getAcElementsDefinitions())
+            .thenReturn(Map.of(compositionId, Map.of(new ToscaConceptIdentifier(), acElementDefinition)));
         var messageId = UUID.randomUUID();
         ach.deprime(messageId, compositionId);
-        verify(listener).deprime(messageId, compositionId);
+        verify(listener).deprime(any(UUID.class), any(CompositionDto.class));
     }
 
     @Test
     void restartedTest() {
-        var listener = mock(ThreadHandler.class);
-        var cacheProvider = mock(CacheProvider.class);
-        var ach = new AutomationCompositionHandler(cacheProvider, mock(ParticipantMessagePublisher.class), listener);
-
-        var compositionId = UUID.randomUUID();
-        var messageId = UUID.randomUUID();
-        var list = List.of(new AutomationCompositionElementDefinition());
+        var acElementDefinition = new AutomationCompositionElementDefinition();
+        acElementDefinition.setAcElementDefinitionId(new ToscaConceptIdentifier("key", "1.0.0"));
+        var toscaNodeTemplate = new ToscaNodeTemplate();
+        toscaNodeTemplate.setProperties(Map.of());
+        acElementDefinition.setAutomationCompositionElementToscaNodeTemplate(toscaNodeTemplate);
+        var list = List.of(acElementDefinition);
         var state = AcTypeState.PRIMED;
         var participantRestartAc = CommonTestData.createParticipantRestartAc();
         var automationCompositionList = List.of(participantRestartAc);
+        var listener = mock(ThreadHandler.class);
+        var cacheProvider = mock(CacheProvider.class);
+        var ach = new AutomationCompositionHandler(cacheProvider, mock(ParticipantMessagePublisher.class), listener);
+        var compositionId = UUID.randomUUID();
+        var messageId = UUID.randomUUID();
         ach.restarted(messageId, compositionId, list, state, automationCompositionList);
         verify(cacheProvider).initializeAutomationComposition(compositionId, participantRestartAc);
-        verify(listener).restarted(messageId, compositionId, list, state, automationCompositionList);
+        verify(listener).restarted(any(), any(), any(), any());
     }
 
     @Test
@@ -272,12 +329,18 @@ class AutomationCompositionHandlerTest {
         participantDeploy.setParticipantId(CommonTestData.getParticipantId());
         when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
         migrationMsg.getParticipantUpdatesList().add(participantDeploy);
+        Map<ToscaConceptIdentifier, AutomationCompositionElementDefinition> map = new HashMap<>();
         for (var element : automationComposition.getElements().values()) {
             var acElementDeploy = new AcElementDeploy();
             acElementDeploy.setProperties(Map.of());
             acElementDeploy.setId(element.getId());
+            acElementDeploy.setDefinition(element.getDefinition());
             participantDeploy.getAcElementList().add(acElementDeploy);
+            map.put(element.getDefinition(), new AutomationCompositionElementDefinition());
         }
+        when(cacheProvider.getAcElementsDefinitions())
+            .thenReturn(Map.of(automationComposition.getCompositionId(), map,
+                migrationMsg.getCompositionTargetId(), map));
 
         ach.handleAutomationCompositionMigration(migrationMsg);
         verify(listener, times(automationComposition.getElements().size())).migrate(any(), any(), any(), any(), any());

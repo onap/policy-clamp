@@ -21,13 +21,20 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.handler;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionDto;
+import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
+import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
@@ -195,11 +202,12 @@ public class AutomationCompositionHandler {
         for (var participantDeploy : updateMsg.getParticipantUpdatesList()) {
             if (cacheProvider.getParticipantId().equals(participantDeploy.getParticipantId())) {
 
+                var acCopy = new AutomationComposition(cacheProvider.getAutomationComposition(
+                    updateMsg.getAutomationCompositionId()));
                 updateExistingElementsOnThisParticipant(updateMsg.getAutomationCompositionId(), participantDeploy,
                         DeployState.UPDATING);
 
-                callParticipantUpdateProperty(updateMsg.getMessageId(), participantDeploy.getAcElementList(),
-                        updateMsg.getAutomationCompositionId());
+                callParticipantUpdateProperty(updateMsg.getMessageId(), participantDeploy.getAcElementList(), acCopy);
             }
         }
     }
@@ -228,32 +236,78 @@ public class AutomationCompositionHandler {
         }
     }
 
-    private void callParticipanDeploy(UUID messageId, List<AcElementDeploy> acElements, Integer startPhaseMsg,
-            UUID instanceId) {
-        for (var element : acElements) {
-            var commonProperties = cacheProvider.getCommonProperties(instanceId, element.getId());
-            int startPhase = ParticipantUtils.findStartPhase(commonProperties);
+    private void callParticipanDeploy(UUID messageId, List<AcElementDeploy> acElementDeployList,
+            Integer startPhaseMsg, UUID instanceId) {
+        var automationComposition = cacheProvider.getAutomationComposition(instanceId);
+        for (var elementDeploy : acElementDeployList) {
+            var element = automationComposition.getElements().get(elementDeploy.getId());
+            var compositionInProperties = cacheProvider
+                .getCommonProperties(automationComposition.getCompositionId(), element.getDefinition());
+            int startPhase = ParticipantUtils.findStartPhase(compositionInProperties);
             if (startPhaseMsg.equals(startPhase)) {
-                var map = new HashMap<>(commonProperties);
-                map.putAll(element.getProperties());
-                listener.deploy(messageId, instanceId, element, map);
+                var compositionElement = createCompositionElementDto(automationComposition.getCompositionId(),
+                    element, compositionInProperties);
+                var instanceElement = new InstanceElementDto(instanceId, elementDeploy.getId(),
+                    elementDeploy.getToscaServiceTemplateFragment(),
+                    elementDeploy.getProperties(), element.getOutProperties());
+                listener.deploy(messageId, compositionElement, instanceElement);
             }
         }
     }
 
-    private void callParticipantUpdateProperty(UUID messageId, List<AcElementDeploy> acElements, UUID instanceId) {
-        for (var element : acElements) {
-            listener.update(messageId, instanceId, element, element.getProperties());
+    private CompositionElementDto createCompositionElementDto(UUID compositionId, AutomationCompositionElement element,
+        Map<String, Object> compositionInProperties) {
+        var compositionOutProperties = cacheProvider.getAcElementsDefinitions()
+            .get(compositionId).get(element.getDefinition()).getOutProperties();
+        return new CompositionElementDto(compositionId,
+            element.getDefinition(), compositionInProperties, compositionOutProperties);
+    }
+
+    private Map<UUID, CompositionElementDto> getCompositionElementDtoMap(AutomationComposition automationComposition,
+        UUID compositionId) {
+        Map<UUID, CompositionElementDto> map = new HashMap<>();
+        for (var element : automationComposition.getElements().values()) {
+            var compositionInProperties = cacheProvider.getCommonProperties(compositionId, element.getDefinition());
+            var compositionElement = createCompositionElementDto(compositionId, element, compositionInProperties);
+            map.put(element.getId(), compositionElement);
+        }
+        return map;
+    }
+
+    private Map<UUID, CompositionElementDto> getCompositionElementDtoMap(AutomationComposition automationComposition) {
+        return getCompositionElementDtoMap(automationComposition, automationComposition.getCompositionId());
+    }
+
+    private Map<UUID, InstanceElementDto> getInstanceElementDtoMap(AutomationComposition automationComposition) {
+        Map<UUID, InstanceElementDto> map = new HashMap<>();
+        for (var element : automationComposition.getElements().values()) {
+            var instanceElement = new InstanceElementDto(automationComposition.getInstanceId(), element.getId(),
+                null, element.getProperties(), element.getOutProperties());
+            map.put(element.getId(), instanceElement);
+        }
+        return map;
+    }
+
+    private void callParticipantUpdateProperty(UUID messageId, List<AcElementDeploy> acElements,
+        AutomationComposition acCopy) {
+        var instanceElementDtoMap = getInstanceElementDtoMap(acCopy);
+        var instanceElementDtoMapUpdated = getInstanceElementDtoMap(
+            cacheProvider.getAutomationComposition(acCopy.getInstanceId()));
+        var compositionElementDtoMap = getCompositionElementDtoMap(acCopy);
+        for (var acElement : acElements) {
+            listener.update(messageId, compositionElementDtoMap.get(acElement.getId()),
+                instanceElementDtoMap.get(acElement.getId()), instanceElementDtoMapUpdated.get(acElement.getId()));
         }
     }
 
     private void updateExistingElementsOnThisParticipant(UUID instanceId, ParticipantDeploy participantDeploy,
-            DeployState deployState) {
+        DeployState deployState) {
         var acElementList = cacheProvider.getAutomationComposition(instanceId).getElements();
         for (var element : participantDeploy.getAcElementList()) {
             var acElement = acElementList.get(element.getId());
             acElement.getProperties().putAll(element.getProperties());
             acElement.setDeployState(deployState);
+            acElement.setDefinition(element.getDefinition());
         }
     }
 
@@ -267,24 +321,34 @@ public class AutomationCompositionHandler {
     private void handleUndeployState(UUID messageId, final AutomationComposition automationComposition,
             Integer startPhaseMsg) {
         automationComposition.setCompositionTargetId(null);
-        for (var acElement : automationComposition.getElements().values()) {
-            int startPhase = ParticipantUtils.findStartPhase(
-                    cacheProvider.getCommonProperties(automationComposition.getInstanceId(), acElement.getId()));
+        for (var element : automationComposition.getElements().values()) {
+            var compositionInProperties = cacheProvider
+                .getCommonProperties(automationComposition.getCompositionId(), element.getDefinition());
+            int startPhase = ParticipantUtils.findStartPhase(compositionInProperties);
             if (startPhaseMsg.equals(startPhase)) {
-                acElement.setDeployState(DeployState.UNDEPLOYING);
-                listener.undeploy(messageId, automationComposition.getInstanceId(), acElement.getId());
+                element.setDeployState(DeployState.UNDEPLOYING);
+                var compositionElement = createCompositionElementDto(automationComposition.getCompositionId(),
+                    element, compositionInProperties);
+                var instanceElement = new InstanceElementDto(automationComposition.getInstanceId(), element.getId(),
+                    null, element.getProperties(), element.getOutProperties());
+                listener.undeploy(messageId, compositionElement, instanceElement);
             }
         }
     }
 
     private void handleDeleteState(UUID messageId, final AutomationComposition automationComposition,
             Integer startPhaseMsg) {
-        for (var acElement : automationComposition.getElements().values()) {
-            int startPhase = ParticipantUtils.findStartPhase(
-                    cacheProvider.getCommonProperties(automationComposition.getInstanceId(), acElement.getId()));
+        for (var element : automationComposition.getElements().values()) {
+            var compositionInProperties = cacheProvider
+                .getCommonProperties(automationComposition.getCompositionId(), element.getDefinition());
+            int startPhase = ParticipantUtils.findStartPhase(compositionInProperties);
             if (startPhaseMsg.equals(startPhase)) {
-                acElement.setDeployState(DeployState.DELETING);
-                listener.delete(messageId, automationComposition.getInstanceId(), acElement.getId());
+                element.setDeployState(DeployState.DELETING);
+                var compositionElement = createCompositionElementDto(automationComposition.getCompositionId(),
+                    element, compositionInProperties);
+                var instanceElement = new InstanceElementDto(automationComposition.getInstanceId(), element.getId(),
+                    null, element.getProperties(), element.getOutProperties());
+                listener.delete(messageId, compositionElement, instanceElement);
             }
         }
     }
@@ -298,12 +362,17 @@ public class AutomationCompositionHandler {
      */
     private void handleLockState(UUID messageId, final AutomationComposition automationComposition,
             Integer startPhaseMsg) {
-        for (var acElement : automationComposition.getElements().values()) {
-            int startPhase = ParticipantUtils.findStartPhase(
-                    cacheProvider.getCommonProperties(automationComposition.getInstanceId(), acElement.getId()));
+        for (var element : automationComposition.getElements().values()) {
+            var compositionInProperties = cacheProvider
+                .getCommonProperties(automationComposition.getCompositionId(), element.getDefinition());
+            int startPhase = ParticipantUtils.findStartPhase(compositionInProperties);
             if (startPhaseMsg.equals(startPhase)) {
-                acElement.setLockState(LockState.LOCKING);
-                listener.lock(messageId, automationComposition.getInstanceId(), acElement.getId());
+                element.setLockState(LockState.LOCKING);
+                var compositionElement = createCompositionElementDto(automationComposition.getCompositionId(),
+                    element, compositionInProperties);
+                var instanceElement = new InstanceElementDto(automationComposition.getInstanceId(), element.getId(),
+                    null, element.getProperties(), element.getOutProperties());
+                listener.lock(messageId, compositionElement, instanceElement);
             }
         }
     }
@@ -317,12 +386,17 @@ public class AutomationCompositionHandler {
      */
     private void handleUnlockState(UUID messageId, final AutomationComposition automationComposition,
             Integer startPhaseMsg) {
-        for (var acElement : automationComposition.getElements().values()) {
-            int startPhase = ParticipantUtils.findStartPhase(
-                    cacheProvider.getCommonProperties(automationComposition.getInstanceId(), acElement.getId()));
+        for (var element : automationComposition.getElements().values()) {
+            var compositionInProperties = cacheProvider
+                .getCommonProperties(automationComposition.getCompositionId(), element.getDefinition());
+            int startPhase = ParticipantUtils.findStartPhase(compositionInProperties);
             if (startPhaseMsg.equals(startPhase)) {
-                acElement.setLockState(LockState.UNLOCKING);
-                listener.unlock(messageId, automationComposition.getInstanceId(), acElement.getId());
+                element.setLockState(LockState.UNLOCKING);
+                var compositionElement = createCompositionElementDto(automationComposition.getCompositionId(),
+                    element, compositionInProperties);
+                var instanceElement = new InstanceElementDto(automationComposition.getInstanceId(), element.getId(),
+                    null, element.getProperties(), element.getOutProperties());
+                listener.unlock(messageId, compositionElement, instanceElement);
             }
         }
     }
@@ -335,7 +409,13 @@ public class AutomationCompositionHandler {
      * @param list the list of AutomationCompositionElementDefinition
      */
     public void prime(UUID messageId, UUID compositionId, List<AutomationCompositionElementDefinition> list) {
-        listener.prime(messageId, compositionId, list);
+        var inPropertiesMap = list.stream().collect(Collectors.toMap(
+            AutomationCompositionElementDefinition::getAcElementDefinitionId,
+            el -> el.getAutomationCompositionElementToscaNodeTemplate().getProperties()));
+        var outPropertiesMap = list.stream().collect(Collectors.toMap(
+            AutomationCompositionElementDefinition::getAcElementDefinitionId,
+            AutomationCompositionElementDefinition::getOutProperties));
+        listener.prime(messageId, new CompositionDto(compositionId, inPropertiesMap, outPropertiesMap));
     }
 
     /**
@@ -345,7 +425,19 @@ public class AutomationCompositionHandler {
      * @param compositionId the compositionId
      */
     public void deprime(UUID messageId, UUID compositionId) {
-        listener.deprime(messageId, compositionId);
+        var acElementsDefinitions = cacheProvider.getAcElementsDefinitions().get(compositionId);
+        if (acElementsDefinitions == null) {
+            // this participant does not handle this composition
+            return;
+        }
+        var list = new ArrayList<>(acElementsDefinitions.values());
+        var inPropertiesMap = list.stream().collect(Collectors.toMap(
+            AutomationCompositionElementDefinition::getAcElementDefinitionId,
+            el -> el.getAutomationCompositionElementToscaNodeTemplate().getProperties()));
+        var outPropertiesMap = list.stream().collect(Collectors.toMap(
+            AutomationCompositionElementDefinition::getAcElementDefinitionId,
+            AutomationCompositionElementDefinition::getOutProperties));
+        listener.deprime(messageId, new CompositionDto(compositionId, inPropertiesMap, outPropertiesMap));
     }
 
     /**
@@ -363,7 +455,14 @@ public class AutomationCompositionHandler {
         for (var automationcomposition : automationCompositionList) {
             cacheProvider.initializeAutomationComposition(compositionId, automationcomposition);
         }
-        listener.restarted(messageId, compositionId, list, state, automationCompositionList);
+        var inPropertiesMap = list.stream().collect(Collectors.toMap(
+            AutomationCompositionElementDefinition::getAcElementDefinitionId,
+            el -> el.getAutomationCompositionElementToscaNodeTemplate().getProperties()));
+        var outPropertiesMap = list.stream().collect(Collectors.toMap(
+            AutomationCompositionElementDefinition::getAcElementDefinitionId,
+            AutomationCompositionElementDefinition::getOutProperties));
+        var composition = new CompositionDto(compositionId, inPropertiesMap, outPropertiesMap);
+        listener.restarted(messageId, composition, state, automationCompositionList);
     }
 
     /**
@@ -382,6 +481,7 @@ public class AutomationCompositionHandler {
                     migrationMsg.getAutomationCompositionId());
             return;
         }
+        var acCopy = new AutomationComposition(automationComposition);
         automationComposition.setCompositionTargetId(migrationMsg.getCompositionTargetId());
         for (var participantDeploy : migrationMsg.getParticipantUpdatesList()) {
             if (cacheProvider.getParticipantId().equals(participantDeploy.getParticipantId())) {
@@ -390,15 +490,23 @@ public class AutomationCompositionHandler {
                         DeployState.MIGRATING);
 
                 callParticipantMigrate(migrationMsg.getMessageId(), participantDeploy.getAcElementList(),
-                        migrationMsg.getAutomationCompositionId(), migrationMsg.getCompositionTargetId());
+                    acCopy, migrationMsg.getCompositionTargetId());
             }
         }
     }
 
-    private void callParticipantMigrate(UUID messageId, List<AcElementDeploy> acElements, UUID instanceId,
-            UUID compositionTargetId) {
-        for (var element : acElements) {
-            listener.migrate(messageId, instanceId, element, compositionTargetId, element.getProperties());
+    private void callParticipantMigrate(UUID messageId, List<AcElementDeploy> acElements,
+            AutomationComposition acCopy, UUID compositionTargetId) {
+        var compositionElementMap = getCompositionElementDtoMap(acCopy);
+        var instanceElementMap = getInstanceElementDtoMap(acCopy);
+        var automationComposition = cacheProvider.getAutomationComposition(acCopy.getInstanceId());
+        var compositionElementTargetMap = getCompositionElementDtoMap(automationComposition, compositionTargetId);
+        var instanceElementMigrateMap = getInstanceElementDtoMap(automationComposition);
+
+        for (var acElement : acElements) {
+            listener.migrate(messageId, compositionElementMap.get(acElement.getId()),
+                compositionElementTargetMap.get(acElement.getId()),
+                instanceElementMap.get(acElement.getId()), instanceElementMigrateMap.get(acElement.getId()));
         }
     }
 }

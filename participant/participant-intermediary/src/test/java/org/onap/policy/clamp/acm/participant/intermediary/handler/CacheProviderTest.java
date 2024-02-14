@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class CacheProviderTest {
 
@@ -59,9 +60,10 @@ class CacheProviderTest {
 
         assertThatThrownBy(() -> cacheProvider.getAutomationComposition(null)).isInstanceOf(NullPointerException.class);
 
-        assertThatThrownBy(() -> cacheProvider.getCommonProperties(null, null))
+        var definition = new ToscaConceptIdentifier();
+        assertThatThrownBy(() -> cacheProvider.getCommonProperties(null, definition))
                 .isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> cacheProvider.getCommonProperties(instanceId, null))
+        assertThatThrownBy(() -> cacheProvider.getCommonProperties(instanceId, (UUID) null))
                 .isInstanceOf(NullPointerException.class);
 
         assertThatThrownBy(() -> cacheProvider.removeAutomationComposition(null))

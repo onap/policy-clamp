@@ -125,6 +125,19 @@ public class CacheProvider {
     }
 
     /**
+     * Get CommonProperties.
+     *
+     * @param compositionId the composition Id
+     * @param definition the AutomationCompositionElementDefinition Id
+     * @return the common Properties as Map
+     */
+    public Map<String, Object> getCommonProperties(@NonNull UUID compositionId,
+        @NonNull ToscaConceptIdentifier definition) {
+        return acElementsDefinitions.get(compositionId).get(definition)
+            .getAutomationCompositionElementToscaNodeTemplate().getProperties();
+    }
+
+    /**
      * Initialize an AutomationComposition from a ParticipantDeploy.
      *
      * @param compositionId the composition Id

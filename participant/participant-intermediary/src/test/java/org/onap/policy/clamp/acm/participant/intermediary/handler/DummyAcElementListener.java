@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023 Nordix Foundation.
+ *  Copyright (C) 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,68 +20,71 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.handler;
 
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
-import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
+import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionDto;
+import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
+import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.models.base.PfModelException;
 
 public class DummyAcElementListener implements AutomationCompositionElementListener {
     @Override
-    public void undeploy(UUID automationCompositionId, UUID automationCompositionElementId) throws PfModelException {
+    public void deploy(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
+        throws PfModelException {
 
     }
 
     @Override
-    public void deploy(UUID automationCompositionId, AcElementDeploy element, Map<String, Object> properties)
-            throws PfModelException {
+    public void undeploy(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
+        throws PfModelException {
 
     }
 
     @Override
-    public void lock(UUID automationCompositionId, UUID automationCompositionElementId) throws PfModelException {
+    public void lock(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
+        throws PfModelException {
+
     }
 
     @Override
-    public void unlock(UUID automationCompositionId, UUID automationCompositionElementId) throws PfModelException {
+    public void unlock(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
+        throws PfModelException {
+
     }
 
     @Override
-    public void delete(UUID automationCompositionId, UUID automationCompositionElementId) throws PfModelException {
+    public void delete(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
+        throws PfModelException {
     }
 
     @Override
-    public void update(UUID automationCompositionId, AcElementDeploy element, Map<String, Object> properties)
-            throws PfModelException {
-    }
-
-    @Override
-    public void prime(UUID compositionId, List<AutomationCompositionElementDefinition> elementDefinitionList)
-            throws PfModelException {
-    }
-
-    @Override
-    public void deprime(UUID compositionId) throws PfModelException {
-    }
-
-    @Override
-    public void handleRestartComposition(UUID compositionId,
-            List<AutomationCompositionElementDefinition> elementDefinitionList, AcTypeState state)
+    public void update(CompositionElementDto compositionElement, InstanceElementDto instanceElement,
+                       InstanceElementDto instanceElementUpdated)
             throws PfModelException {
     }
 
     @Override
-    public void handleRestartInstance(UUID automationCompositionId, AcElementDeploy element,
-            Map<String, Object> properties, DeployState deployState, LockState lockState) throws PfModelException {
+    public void prime(CompositionDto composition) throws PfModelException {
     }
 
     @Override
-    public void migrate(UUID instanceId, AcElementDeploy element, UUID compositionTargetId,
-            Map<String, Object> properties) throws PfModelException {
+    public void deprime(CompositionDto composition) throws PfModelException {
+    }
+
+    @Override
+    public void handleRestartComposition(CompositionDto composition, AcTypeState state) throws PfModelException {
+    }
+
+    @Override
+    public void handleRestartInstance(CompositionElementDto compositionElement, InstanceElementDto instanceElement,
+        DeployState deployState, LockState lockState) throws PfModelException {
+    }
+
+    @Override
+    public void migrate(CompositionElementDto compositionElement, CompositionElementDto compositionElementTarget,
+                        InstanceElementDto instanceElement, InstanceElementDto instanceElementMigrate)
+        throws PfModelException {
     }
 }

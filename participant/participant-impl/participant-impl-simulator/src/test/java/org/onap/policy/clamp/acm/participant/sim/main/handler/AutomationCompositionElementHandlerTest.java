@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023 Nordix Foundation.
+ *  Copyright (C) 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,10 +26,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionDto;
+import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
+import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.acm.participant.sim.comm.CommonTestData;
 import org.onap.policy.clamp.acm.participant.sim.model.SimConfig;
@@ -52,17 +54,19 @@ class AutomationCompositionElementHandlerTest {
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
         var acElementHandler = new AutomationCompositionElementHandler(intermediaryApi);
         acElementHandler.setConfig(config);
+        var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
+            Map.of(), Map.of());
         var instanceId = UUID.randomUUID();
-        var element = new AcElementDeploy();
-        element.setId(UUID.randomUUID());
-        acElementHandler.deploy(instanceId, element, Map.of());
-        verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
-                DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Deployed");
+        var elementId = UUID.randomUUID();
+        var instanceElement = new InstanceElementDto(instanceId, elementId, null, Map.of(), Map.of());
+        acElementHandler.deploy(compositionElement, instanceElement);
+        verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, elementId, DeployState.DEPLOYED,
+            null, StateChangeResult.NO_ERROR, "Deployed");
 
         config.setDeploySuccess(false);
-        acElementHandler.deploy(instanceId, element, Map.of());
-        verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
-                DeployState.UNDEPLOYED, null, StateChangeResult.FAILED, "Deploy failed!");
+        acElementHandler.deploy(compositionElement, instanceElement);
+        verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, elementId, DeployState.UNDEPLOYED,
+            null, StateChangeResult.FAILED, "Deploy failed!");
     }
 
     @Test
@@ -72,14 +76,17 @@ class AutomationCompositionElementHandlerTest {
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
         var acElementHandler = new AutomationCompositionElementHandler(intermediaryApi);
         acElementHandler.setConfig(config);
+        var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
+            Map.of(), Map.of());
         var instanceId = UUID.randomUUID();
         var elementId = UUID.randomUUID();
-        acElementHandler.undeploy(instanceId, elementId);
+        var instanceElement = new InstanceElementDto(instanceId, elementId, null, Map.of(), Map.of());
+        acElementHandler.undeploy(compositionElement, instanceElement);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, elementId, DeployState.UNDEPLOYED,
                 null, StateChangeResult.NO_ERROR, "Undeployed");
 
         config.setUndeploySuccess(false);
-        acElementHandler.undeploy(instanceId, elementId);
+        acElementHandler.undeploy(compositionElement, instanceElement);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, elementId, DeployState.DEPLOYED,
                 null, StateChangeResult.FAILED, "Undeploy failed!");
     }
@@ -91,14 +98,17 @@ class AutomationCompositionElementHandlerTest {
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
         var acElementHandler = new AutomationCompositionElementHandler(intermediaryApi);
         acElementHandler.setConfig(config);
+        var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
+            Map.of(), Map.of());
         var instanceId = UUID.randomUUID();
         var elementId = UUID.randomUUID();
-        acElementHandler.lock(instanceId, elementId);
+        var instanceElement = new InstanceElementDto(instanceId, elementId, null, Map.of(), Map.of());
+        acElementHandler.lock(compositionElement, instanceElement);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, elementId, null, LockState.LOCKED,
                 StateChangeResult.NO_ERROR, "Locked");
 
         config.setLockSuccess(false);
-        acElementHandler.lock(instanceId, elementId);
+        acElementHandler.lock(compositionElement, instanceElement);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, elementId, null, LockState.UNLOCKED,
                 StateChangeResult.FAILED, "Lock failed!");
     }
@@ -110,14 +120,17 @@ class AutomationCompositionElementHandlerTest {
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
         var acElementHandler = new AutomationCompositionElementHandler(intermediaryApi);
         acElementHandler.setConfig(config);
+        var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
+            Map.of(), Map.of());
         var instanceId = UUID.randomUUID();
         var elementId = UUID.randomUUID();
-        acElementHandler.unlock(instanceId, elementId);
+        var instanceElement = new InstanceElementDto(instanceId, elementId, null, Map.of(), Map.of());
+        acElementHandler.unlock(compositionElement, instanceElement);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, elementId, null, LockState.UNLOCKED,
                 StateChangeResult.NO_ERROR, "Unlocked");
 
         config.setUnlockSuccess(false);
-        acElementHandler.unlock(instanceId, elementId);
+        acElementHandler.unlock(compositionElement, instanceElement);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, elementId, null, LockState.LOCKED,
                 StateChangeResult.FAILED, "Unlock failed!");
     }
@@ -129,15 +142,20 @@ class AutomationCompositionElementHandlerTest {
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
         var acElementHandler = new AutomationCompositionElementHandler(intermediaryApi);
         acElementHandler.setConfig(config);
+        var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
+            Map.of(), Map.of());
         var instanceId = UUID.randomUUID();
         var element = new AcElementDeploy();
         element.setId(UUID.randomUUID());
-        acElementHandler.update(instanceId, element, Map.of());
+        var instanceElement = new InstanceElementDto(instanceId, element.getId(), null, Map.of(), Map.of());
+        var instanceElementUpdated = new InstanceElementDto(instanceId, element.getId(), null,
+            Map.of("key", "value"), Map.of());
+        acElementHandler.update(compositionElement, instanceElement, instanceElementUpdated);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
                 DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Updated");
 
         config.setUpdateSuccess(false);
-        acElementHandler.update(instanceId, element, Map.of());
+        acElementHandler.update(compositionElement, instanceElement, instanceElementUpdated);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
                 DeployState.DEPLOYED, null, StateChangeResult.FAILED, "Update failed!");
     }
@@ -149,14 +167,17 @@ class AutomationCompositionElementHandlerTest {
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
         var acElementHandler = new AutomationCompositionElementHandler(intermediaryApi);
         acElementHandler.setConfig(config);
+        var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
+            Map.of(), Map.of());
         var instanceId = UUID.randomUUID();
         var elementId = UUID.randomUUID();
-        acElementHandler.delete(instanceId, elementId);
+        var instanceElement = new InstanceElementDto(instanceId, elementId, null, Map.of(), Map.of());
+        acElementHandler.delete(compositionElement, instanceElement);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, elementId, DeployState.DELETED,
                 null, StateChangeResult.NO_ERROR, "Deleted");
 
         config.setDeleteSuccess(false);
-        acElementHandler.delete(instanceId, elementId);
+        acElementHandler.delete(compositionElement, instanceElement);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, elementId, DeployState.UNDEPLOYED,
                 null, StateChangeResult.FAILED, "Delete failed!");
     }
@@ -221,12 +242,13 @@ class AutomationCompositionElementHandlerTest {
         var acElementHandler = new AutomationCompositionElementHandler(intermediaryApi);
         acElementHandler.setConfig(config);
         var compositionId = UUID.randomUUID();
-        acElementHandler.prime(compositionId, List.of());
+        var composition = new CompositionDto(compositionId, Map.of(), Map.of());
+        acElementHandler.prime(composition);
         verify(intermediaryApi).updateCompositionState(compositionId, AcTypeState.PRIMED, StateChangeResult.NO_ERROR,
                 "Primed");
 
         config.setPrimeSuccess(false);
-        acElementHandler.prime(compositionId, List.of());
+        acElementHandler.prime(composition);
         verify(intermediaryApi).updateCompositionState(compositionId, AcTypeState.COMMISSIONED,
                 StateChangeResult.FAILED, "Prime failed!");
     }
@@ -239,12 +261,13 @@ class AutomationCompositionElementHandlerTest {
         var acElementHandler = new AutomationCompositionElementHandler(intermediaryApi);
         acElementHandler.setConfig(config);
         var compositionId = UUID.randomUUID();
-        acElementHandler.deprime(compositionId);
+        var composition = new CompositionDto(compositionId, Map.of(), Map.of());
+        acElementHandler.deprime(composition);
         verify(intermediaryApi).updateCompositionState(compositionId, AcTypeState.COMMISSIONED,
                 StateChangeResult.NO_ERROR, "Deprimed");
 
         config.setDeprimeSuccess(false);
-        acElementHandler.deprime(compositionId);
+        acElementHandler.deprime(composition);
         verify(intermediaryApi).updateCompositionState(compositionId, AcTypeState.PRIMED, StateChangeResult.FAILED,
                 "Deprime failed!");
     }
@@ -257,15 +280,16 @@ class AutomationCompositionElementHandlerTest {
         var acElementHandler = new AutomationCompositionElementHandler(intermediaryApi);
         acElementHandler.setConfig(config);
         var compositionId = UUID.randomUUID();
-        acElementHandler.handleRestartComposition(compositionId, List.of(), AcTypeState.PRIMING);
+        var composition = new CompositionDto(compositionId, Map.of(), Map.of());
+        acElementHandler.handleRestartComposition(composition, AcTypeState.PRIMING);
         verify(intermediaryApi).updateCompositionState(compositionId, AcTypeState.PRIMED, StateChangeResult.NO_ERROR,
                 "Primed");
 
-        acElementHandler.handleRestartComposition(compositionId, List.of(), AcTypeState.PRIMED);
+        acElementHandler.handleRestartComposition(composition, AcTypeState.PRIMED);
         verify(intermediaryApi).updateCompositionState(compositionId, AcTypeState.PRIMED, StateChangeResult.NO_ERROR,
                 "Restarted");
 
-        acElementHandler.handleRestartComposition(compositionId, List.of(), AcTypeState.DEPRIMING);
+        acElementHandler.handleRestartComposition(composition, AcTypeState.DEPRIMING);
         verify(intermediaryApi).updateCompositionState(compositionId, AcTypeState.COMMISSIONED,
                 StateChangeResult.NO_ERROR, "Deprimed");
     }
@@ -278,36 +302,43 @@ class AutomationCompositionElementHandlerTest {
         var acElementHandler = new AutomationCompositionElementHandler(intermediaryApi);
         acElementHandler.setConfig(config);
         var instanceId = UUID.randomUUID();
-        var element = new AcElementDeploy();
-        element.setId(UUID.randomUUID());
-        acElementHandler.handleRestartInstance(instanceId, element, Map.of(), DeployState.DEPLOYING, LockState.NONE);
-        verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
+        var elementId = UUID.randomUUID();
+        var instanceElement = new InstanceElementDto(instanceId, elementId, null, Map.of(), Map.of());
+        var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
+            Map.of(), Map.of());
+        acElementHandler.handleRestartInstance(compositionElement, instanceElement,
+            DeployState.DEPLOYING, LockState.NONE);
+        verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, elementId,
                 DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Deployed");
 
-        acElementHandler.handleRestartInstance(instanceId, element, Map.of(), DeployState.DEPLOYED, LockState.LOCKED);
-        verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
+        acElementHandler.handleRestartInstance(compositionElement, instanceElement,
+            DeployState.DEPLOYED, LockState.LOCKED);
+        verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, elementId,
                 DeployState.DEPLOYED, LockState.LOCKED, StateChangeResult.NO_ERROR, "Restarted");
 
-        acElementHandler.handleRestartInstance(instanceId, element, Map.of(), DeployState.UPDATING, LockState.LOCKED);
-        verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
+        acElementHandler.handleRestartInstance(compositionElement, instanceElement,
+            DeployState.UPDATING, LockState.LOCKED);
+        verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, elementId,
                 DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Updated");
 
-        acElementHandler.handleRestartInstance(instanceId, element, Map.of(), DeployState.UNDEPLOYING,
+        acElementHandler.handleRestartInstance(compositionElement, instanceElement, DeployState.UNDEPLOYING,
                 LockState.LOCKED);
-        verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
+        verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, elementId,
                 DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR, "Undeployed");
 
-        acElementHandler.handleRestartInstance(instanceId, element, Map.of(), DeployState.DELETING, LockState.NONE);
-        verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
+        acElementHandler.handleRestartInstance(compositionElement, instanceElement,
+            DeployState.DELETING, LockState.NONE);
+        verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, elementId,
                 DeployState.DELETED, null, StateChangeResult.NO_ERROR, "Deleted");
 
-        acElementHandler.handleRestartInstance(instanceId, element, Map.of(), DeployState.DEPLOYED, LockState.LOCKING);
-        verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(), null,
+        acElementHandler.handleRestartInstance(compositionElement, instanceElement,
+            DeployState.DEPLOYED, LockState.LOCKING);
+        verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, elementId, null,
                 LockState.LOCKED, StateChangeResult.NO_ERROR, "Locked");
 
-        acElementHandler.handleRestartInstance(instanceId, element, Map.of(), DeployState.DEPLOYED,
+        acElementHandler.handleRestartInstance(compositionElement, instanceElement, DeployState.DEPLOYED,
                 LockState.UNLOCKING);
-        verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(), null,
+        verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, elementId, null,
                 LockState.UNLOCKED, StateChangeResult.NO_ERROR, "Unlocked");
     }
 
@@ -353,15 +384,24 @@ class AutomationCompositionElementHandlerTest {
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
         var acElementHandler = new AutomationCompositionElementHandler(intermediaryApi);
         acElementHandler.setConfig(config);
+        var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
+            Map.of(), Map.of());
+        var compositionElementTraget = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
+            Map.of(), Map.of());
         var instanceId = UUID.randomUUID();
         var element = new AcElementDeploy();
         element.setId(UUID.randomUUID());
-        acElementHandler.migrate(instanceId, element, UUID.randomUUID(), Map.of());
+        var instanceElement = new InstanceElementDto(instanceId, element.getId(), null, Map.of(), Map.of());
+        var instanceElementMigrated = new InstanceElementDto(instanceId, element.getId(),
+            null, Map.of("key", "value"), Map.of());
+        acElementHandler
+            .migrate(compositionElement, compositionElementTraget, instanceElement, instanceElementMigrated);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
                 DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Migrated");
 
         config.setMigrateSuccess(false);
-        acElementHandler.migrate(instanceId, element, UUID.randomUUID(), Map.of());
+        acElementHandler
+            .migrate(compositionElement, compositionElementTraget, instanceElement, instanceElementMigrated);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
                 DeployState.DEPLOYED, null, StateChangeResult.FAILED, "Migrate failed!");
     }

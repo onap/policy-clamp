@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023 Nordix Foundation.
+ *  Copyright (C) 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,17 +22,24 @@ package org.onap.policy.clamp.acm.participant.intermediary.api.impl;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 
+import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
+import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.DummyAcElementListener;
-import org.onap.policy.models.base.PfModelException;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class AutomationCompositionElementListenerTest {
 
     @Test
-    void defaultTest() throws PfModelException {
+    void defaultTest() {
         var listener = new DummyAcElementListener();
-        assertThatCode(() -> listener.lock(UUID.randomUUID(), UUID.randomUUID())).doesNotThrowAnyException();
-        assertThatCode(() -> listener.unlock(UUID.randomUUID(), UUID.randomUUID())).doesNotThrowAnyException();
+        var compositionElementDto = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
+            Map.of(), Map.of());
+        var instanceElementDto = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), null,
+            Map.of(), Map.of());
+        assertThatCode(() -> listener.lock(compositionElementDto, instanceElementDto)).doesNotThrowAnyException();
+        assertThatCode(() -> listener.unlock(compositionElementDto, instanceElementDto)).doesNotThrowAnyException();
     }
 }

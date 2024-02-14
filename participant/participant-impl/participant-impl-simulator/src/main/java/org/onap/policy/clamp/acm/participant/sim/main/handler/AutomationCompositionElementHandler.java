@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023 Nordix Foundation.
+ *  Copyright (C) 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,21 +22,20 @@ package org.onap.policy.clamp.acm.participant.sim.main.handler;
 
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
+import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionDto;
+import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
+import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
+import org.onap.policy.clamp.acm.participant.intermediary.api.impl.AcElementListenerV2;
 import org.onap.policy.clamp.acm.participant.sim.model.InternalData;
 import org.onap.policy.clamp.acm.participant.sim.model.InternalDatas;
 import org.onap.policy.clamp.acm.participant.sim.model.SimConfig;
-import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
@@ -52,41 +51,43 @@ import org.springframework.stereotype.Component;
  * This class handles implementation of automationCompositionElement updates.
  */
 @Component
-@RequiredArgsConstructor
-public class AutomationCompositionElementHandler implements AutomationCompositionElementListener {
+public class AutomationCompositionElementHandler extends AcElementListenerV2 {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
-    private final ParticipantIntermediaryApi intermediaryApi;
 
     @Getter
     @Setter
     private SimConfig config = new SimConfig();
 
+    public AutomationCompositionElementHandler(ParticipantIntermediaryApi intermediaryApi) {
+        super(intermediaryApi);
+    }
+
     /**
-     * Callback method to handle an update on a automation composition element.
+     * Handle a deploy on a automation composition element.
      *
-     * @param automationCompositionId the automationComposition Id
-     * @param element the information on the automation composition element
-     * @param properties properties Map
-     * @throws PfModelException in case of a exception
+     * @param compositionElement the information of the Automation Composition Definition Element
+     * @param instanceElement the information of the Automation Composition Instance Element
+     * @throws PfModelException from Policy framework
      */
     @Override
-    public void deploy(UUID automationCompositionId, AcElementDeploy element, Map<String, Object> properties)
+    public void deploy(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
             throws PfModelException {
-        LOGGER.debug("deploy call");
+        LOGGER.debug("deploy call compositionElement: {}, instanceElement: {}", compositionElement, instanceElement);
 
         if (!execution(config.getDeployTimerMs(), "Current Thread deploy is Interrupted during execution {}",
-                element.getId())) {
+            instanceElement.elementId())) {
             return;
         }
 
         if (config.isDeploySuccess()) {
-            intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
-                    DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Deployed");
+            intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
+                instanceElement.elementId(), DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR,
+                "Deployed");
         } else {
-            intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
-                    DeployState.UNDEPLOYED, null, StateChangeResult.FAILED, "Deploy failed!");
+            intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
+                instanceElement.elementId(), DeployState.UNDEPLOYED, null, StateChangeResult.FAILED,
+                "Deploy failed!");
         }
     }
 
@@ -111,99 +112,108 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
     /**
      * Handle a automation composition element state change.
      *
-     * @param automationCompositionElementId the ID of the automation composition element
+     * @param compositionElement the information of the Automation Composition Definition Element
+     * @param instanceElement the information of the Automation Composition Instance Element
+     * @throws PfModelException from Policy framework
      */
     @Override
-    public void undeploy(UUID automationCompositionId, UUID automationCompositionElementId) throws PfModelException {
-        LOGGER.debug("undeploy call");
+    public void undeploy(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
+        throws PfModelException {
+        LOGGER.debug("undeploy call compositionElement: {}, instanceElement: {}", compositionElement, instanceElement);
 
         if (!execution(config.getUndeployTimerMs(), "Current Thread undeploy is Interrupted during execution {}",
-                automationCompositionElementId)) {
+            instanceElement.elementId())) {
             return;
         }
 
         if (config.isUndeploySuccess()) {
-            intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
-                    automationCompositionElementId, DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR,
+            intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
+                instanceElement.elementId(), DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR,
                     "Undeployed");
         } else {
-            intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
-                    automationCompositionElementId, DeployState.DEPLOYED, null, StateChangeResult.FAILED,
+            intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
+                instanceElement.elementId(), DeployState.DEPLOYED, null, StateChangeResult.FAILED,
                     "Undeploy failed!");
         }
     }
 
     @Override
-    public void lock(UUID automationCompositionId, UUID automationCompositionElementId) throws PfModelException {
-        LOGGER.debug("lock call");
+    public void lock(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
+        throws PfModelException {
+        LOGGER.debug("lock call compositionElement: {}, instanceElement: {}", compositionElement, instanceElement);
 
         if (!execution(config.getLockTimerMs(), "Current Thread lock is Interrupted during execution {}",
-                automationCompositionElementId)) {
+            instanceElement.elementId())) {
             return;
         }
 
         if (config.isLockSuccess()) {
-            intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
-                    automationCompositionElementId, null, LockState.LOCKED, StateChangeResult.NO_ERROR, "Locked");
+            intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
+                instanceElement.elementId(), null, LockState.LOCKED, StateChangeResult.NO_ERROR, "Locked");
         } else {
-            intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
-                    automationCompositionElementId, null, LockState.UNLOCKED, StateChangeResult.FAILED, "Lock failed!");
+            intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
+                instanceElement.elementId(), null, LockState.UNLOCKED, StateChangeResult.FAILED, "Lock failed!");
         }
     }
 
     @Override
-    public void unlock(UUID automationCompositionId, UUID automationCompositionElementId) throws PfModelException {
-        LOGGER.debug("unlock call");
+    public void unlock(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
+        throws PfModelException {
+        LOGGER.debug("unlock call compositionElement: {}, instanceElement: {}", compositionElement, instanceElement);
 
         if (!execution(config.getUnlockTimerMs(), "Current Thread unlock is Interrupted during execution {}",
-                automationCompositionElementId)) {
+            instanceElement.elementId())) {
             return;
         }
 
         if (config.isUnlockSuccess()) {
-            intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
-                    automationCompositionElementId, null, LockState.UNLOCKED, StateChangeResult.NO_ERROR, "Unlocked");
+            intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
+                instanceElement.elementId(), null, LockState.UNLOCKED, StateChangeResult.NO_ERROR, "Unlocked");
         } else {
-            intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
-                    automationCompositionElementId, null, LockState.LOCKED, StateChangeResult.FAILED, "Unlock failed!");
+            intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
+                instanceElement.elementId(), null, LockState.LOCKED, StateChangeResult.FAILED, "Unlock failed!");
         }
     }
 
     @Override
-    public void delete(UUID automationCompositionId, UUID automationCompositionElementId) throws PfModelException {
-        LOGGER.debug("delete call");
+    public void delete(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
+        throws PfModelException {
+        LOGGER.debug("delete call compositionElement: {}, instanceElement: {}", compositionElement, instanceElement);
 
         if (!execution(config.getDeleteTimerMs(), "Current Thread delete is Interrupted during execution {}",
-                automationCompositionElementId)) {
+            instanceElement.elementId())) {
             return;
         }
 
         if (config.isDeleteSuccess()) {
-            intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
-                    automationCompositionElementId, DeployState.DELETED, null, StateChangeResult.NO_ERROR, "Deleted");
+            intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
+                instanceElement.elementId(), DeployState.DELETED, null, StateChangeResult.NO_ERROR, "Deleted");
         } else {
-            intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
-                    automationCompositionElementId, DeployState.UNDEPLOYED, null, StateChangeResult.FAILED,
-                    "Delete failed!");
+            intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
+                instanceElement.elementId(), DeployState.UNDEPLOYED, null, StateChangeResult.FAILED,
+                "Delete failed!");
         }
     }
 
     @Override
-    public void update(UUID automationCompositionId, AcElementDeploy element, Map<String, Object> properties)
-            throws PfModelException {
-        LOGGER.debug("update call");
+    public void update(CompositionElementDto compositionElement, InstanceElementDto instanceElement,
+                       InstanceElementDto instanceElementUpdated) throws PfModelException {
+        LOGGER.debug("update call compositionElement: {}, instanceElement: {}, instanceElementUpdated: {}",
+            compositionElement, instanceElement, instanceElementUpdated);
 
         if (!execution(config.getUpdateTimerMs(), "Current Thread update is Interrupted during execution {}",
-                element.getId())) {
+            instanceElement.elementId())) {
             return;
         }
 
         if (config.isUpdateSuccess()) {
-            intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
-                    DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Updated");
+            intermediaryApi.updateAutomationCompositionElementState(
+                instanceElement.instanceId(), instanceElement.elementId(),
+                DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Updated");
         } else {
-            intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
-                    DeployState.DEPLOYED, null, StateChangeResult.FAILED, "Update failed!");
+            intermediaryApi.updateAutomationCompositionElementState(
+                instanceElement.instanceId(), instanceElement.elementId(),
+                DeployState.DEPLOYED, null, StateChangeResult.FAILED, "Update failed!");
         }
     }
 
@@ -238,39 +248,38 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
     }
 
     @Override
-    public void prime(UUID compositionId, List<AutomationCompositionElementDefinition> elementDefinitionList)
-            throws PfModelException {
-        LOGGER.debug("prime call");
+    public void prime(CompositionDto composition) throws PfModelException {
+        LOGGER.debug("prime call composition: {}", composition);
 
         if (!execution(config.getPrimeTimerMs(), "Current Thread prime is Interrupted during execution {}",
-                compositionId)) {
+            composition.compositionId())) {
             return;
         }
 
         if (config.isPrimeSuccess()) {
-            intermediaryApi.updateCompositionState(compositionId, AcTypeState.PRIMED, StateChangeResult.NO_ERROR,
-                    "Primed");
+            intermediaryApi.updateCompositionState(composition.compositionId(),
+                AcTypeState.PRIMED, StateChangeResult.NO_ERROR, "Primed");
         } else {
-            intermediaryApi.updateCompositionState(compositionId, AcTypeState.COMMISSIONED, StateChangeResult.FAILED,
-                    "Prime failed!");
+            intermediaryApi.updateCompositionState(composition.compositionId(),
+                AcTypeState.COMMISSIONED, StateChangeResult.FAILED, "Prime failed!");
         }
     }
 
     @Override
-    public void deprime(UUID compositionId) throws PfModelException {
-        LOGGER.debug("deprime call");
+    public void deprime(CompositionDto composition) throws PfModelException {
+        LOGGER.debug("deprime call composition: {}", composition);
 
         if (!execution(config.getDeprimeTimerMs(), "Current Thread deprime is Interrupted during execution {}",
-                compositionId)) {
+            composition.compositionId())) {
             return;
         }
 
         if (config.isDeprimeSuccess()) {
-            intermediaryApi.updateCompositionState(compositionId, AcTypeState.COMMISSIONED, StateChangeResult.NO_ERROR,
-                    "Deprimed");
+            intermediaryApi.updateCompositionState(composition.compositionId(), AcTypeState.COMMISSIONED,
+                StateChangeResult.NO_ERROR, "Deprimed");
         } else {
-            intermediaryApi.updateCompositionState(compositionId, AcTypeState.PRIMED, StateChangeResult.FAILED,
-                    "Deprime failed!");
+            intermediaryApi.updateCompositionState(composition.compositionId(), AcTypeState.PRIMED,
+                StateChangeResult.FAILED, "Deprime failed!");
         }
     }
 
@@ -286,6 +295,7 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
             for (var element : instance.getElements().values()) {
                 var data = new InternalData();
                 data.setCompositionId(instance.getCompositionId());
+                data.setCompositionDefinitionElementId(element.getDefinition());
                 data.setAutomationCompositionId(instance.getInstanceId());
                 data.setAutomationCompositionElementId(element.getId());
                 data.setIntProperties(element.getProperties());
@@ -299,55 +309,55 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
     }
 
     @Override
-    public void handleRestartComposition(UUID compositionId,
-            List<AutomationCompositionElementDefinition> elementDefinitionList, AcTypeState state)
-            throws PfModelException {
+    public void handleRestartComposition(CompositionDto composition, AcTypeState state) throws PfModelException {
         LOGGER.debug("restart composition definition call");
         switch (state) {
             case PRIMING:
-                prime(compositionId, elementDefinitionList);
+                prime(composition);
                 break;
 
             case DEPRIMING:
-                deprime(compositionId);
+                deprime(composition);
                 break;
 
             default:
-                intermediaryApi.updateCompositionState(compositionId, state, StateChangeResult.NO_ERROR, "Restarted");
+                intermediaryApi.updateCompositionState(composition.compositionId(), state,
+                    StateChangeResult.NO_ERROR, "Restarted");
         }
     }
 
     @Override
-    public void handleRestartInstance(UUID automationCompositionId, AcElementDeploy element,
-            Map<String, Object> properties, DeployState deployState, LockState lockState) throws PfModelException {
+    public void handleRestartInstance(CompositionElementDto compositionElement, InstanceElementDto instanceElement,
+        DeployState deployState, LockState lockState) throws PfModelException {
         LOGGER.debug("restart instance call");
         if (!AcmUtils.isInTransitionalState(deployState, lockState)) {
-            intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
-                    deployState, lockState, StateChangeResult.NO_ERROR, "Restarted");
+            intermediaryApi.updateAutomationCompositionElementState(
+                instanceElement.instanceId(), instanceElement.elementId(), deployState, lockState,
+                StateChangeResult.NO_ERROR, "Restarted");
             return;
         }
         if (DeployState.DEPLOYING.equals(deployState)) {
-            deploy(automationCompositionId, element, properties);
+            deploy(compositionElement, instanceElement);
             return;
         }
         if (DeployState.UNDEPLOYING.equals(deployState)) {
-            undeploy(automationCompositionId, element.getId());
+            undeploy(compositionElement, instanceElement);
             return;
         }
         if (DeployState.UPDATING.equals(deployState)) {
-            update(automationCompositionId, element, properties);
+            update(compositionElement, instanceElement, instanceElement);
             return;
         }
         if (DeployState.DELETING.equals(deployState)) {
-            delete(automationCompositionId, element.getId());
+            delete(compositionElement, instanceElement);
             return;
         }
         if (LockState.LOCKING.equals(lockState)) {
-            lock(automationCompositionId, element.getId());
+            lock(compositionElement, instanceElement);
             return;
         }
         if (LockState.UNLOCKING.equals(lockState)) {
-            unlock(automationCompositionId, element.getId());
+            unlock(compositionElement, instanceElement);
         }
     }
 
@@ -380,21 +390,26 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
     }
 
     @Override
-    public void migrate(UUID automationCompositionId, AcElementDeploy element, UUID compositionTargetId,
-            Map<String, Object> properties) throws PfModelException {
-        LOGGER.debug("migrate call");
+    public void migrate(CompositionElementDto compositionElement, CompositionElementDto compositionElementTarget,
+                        InstanceElementDto instanceElement, InstanceElementDto instanceElementMigrate)
+        throws PfModelException {
+        LOGGER.debug("migrate call compositionElement: {}, compositionElementTarget: {}, instanceElement: {},"
+                + " instanceElementMigrate: {}",
+            compositionElement, compositionElementTarget, instanceElement, instanceElementMigrate);
 
         if (!execution(config.getMigrateTimerMs(), "Current Thread migrate is Interrupted during execution {}",
-                element.getId())) {
+            instanceElement.elementId())) {
             return;
         }
 
         if (config.isMigrateSuccess()) {
-            intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
-                    DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Migrated");
+            intermediaryApi.updateAutomationCompositionElementState(
+                instanceElement.instanceId(), instanceElement.elementId(),
+                DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Migrated");
         } else {
-            intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
-                    DeployState.DEPLOYED, null, StateChangeResult.FAILED, "Migrate failed!");
+            intermediaryApi.updateAutomationCompositionElementState(
+                instanceElement.instanceId(), instanceElement.elementId(),
+                DeployState.DEPLOYED, null, StateChangeResult.FAILED, "Migrate failed!");
         }
     }
 }

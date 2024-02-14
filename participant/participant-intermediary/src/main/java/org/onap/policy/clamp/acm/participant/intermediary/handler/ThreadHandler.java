@@ -23,7 +23,6 @@ package org.onap.policy.clamp.acm.participant.intermediary.handler;
 import io.opentelemetry.context.Context;
 import java.io.Closeable;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -33,11 +32,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
+import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionDto;
+import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
+import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
-import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
-import org.onap.policy.clamp.models.acm.concepts.AcElementRestart;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantRestartAc;
@@ -62,149 +61,163 @@ public class ThreadHandler implements Closeable {
             Context.taskWrapping(Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()));
 
     /**
-     * Handle an update on a automation composition element.
+     * Handle a deploy on a automation composition element.
      *
      * @param messageId the messageId
-     * @param instanceId the automationComposition Id
-     * @param element the information on the automation composition element
-     * @param properties properties Map
+     * @param compositionElement the information of the Automation Composition Definition Element
+     * @param instanceElement the information of the Automation Composition Instance Element
      */
-    public void deploy(UUID messageId, UUID instanceId, AcElementDeploy element, Map<String, Object> properties) {
-        cleanExecution(element.getId(), messageId);
-        var result = executor.submit(() -> this.deployProcess(instanceId, element, properties));
-        executionMap.put(element.getId(), result);
+    public void deploy(UUID messageId, CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
+        cleanExecution(instanceElement.elementId(), messageId);
+        var result = executor.submit(() -> this.deployProcess(compositionElement, instanceElement));
+        executionMap.put(instanceElement.elementId(), result);
     }
 
-    private void deployProcess(UUID instanceId, AcElementDeploy element, Map<String, Object> properties) {
+    private void deployProcess(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
         try {
-            listener.deploy(instanceId, element, properties);
+            listener.deploy(compositionElement, instanceElement);
         } catch (PfModelException e) {
-            LOGGER.error("Automation composition element deploy failed {} {}", instanceId, e.getMessage());
-            intermediaryApi.updateAutomationCompositionElementState(instanceId, element.getId(), DeployState.UNDEPLOYED,
-                    null, StateChangeResult.FAILED, "Automation composition element deploy failed");
+            LOGGER.error("Automation composition element deploy failed {} {}", instanceElement.elementId(),
+                e.getMessage());
+            intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
+                instanceElement.elementId(), DeployState.UNDEPLOYED, null, StateChangeResult.FAILED,
+                "Automation composition element deploy failed");
         }
-        executionMap.remove(element.getId());
+        executionMap.remove(instanceElement.elementId());
     }
 
     /**
-     * Handle a automation composition element state change.
+     * Handle an udeploy on a automation composition element.
      *
      * @param messageId the messageId
-     * @param instanceId the automationComposition Id
-     * @param elementId the ID of the automation composition element
+     * @param compositionElement the information of the Automation Composition Definition Element
+     * @param instanceElement the information of the Automation Composition Instance Element
      */
-    public void undeploy(UUID messageId, UUID instanceId, UUID elementId) {
-        cleanExecution(elementId, messageId);
-        var result = executor.submit(() -> this.undeployProcess(instanceId, elementId));
-        executionMap.put(elementId, result);
+    public void undeploy(UUID messageId, CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
+        cleanExecution(instanceElement.elementId(), messageId);
+        var result = executor.submit(() -> this.undeployProcess(compositionElement, instanceElement));
+        executionMap.put(instanceElement.elementId(), result);
     }
 
-    private void undeployProcess(UUID instanceId, UUID elementId) {
+    private void undeployProcess(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
         try {
-            listener.undeploy(instanceId, elementId);
+            listener.undeploy(compositionElement, instanceElement);
         } catch (PfModelException e) {
-            LOGGER.error("Automation composition element undeploy failed {} {}", instanceId, e.getMessage());
-            intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId, DeployState.DEPLOYED, null,
-                    StateChangeResult.FAILED, "Automation composition element undeploy failed");
+            LOGGER.error(
+                "Automation composition element undeploy failed {} {}", instanceElement.elementId(), e.getMessage());
+            intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
+                instanceElement.elementId(), DeployState.DEPLOYED, null,
+                StateChangeResult.FAILED, "Automation composition element undeploy failed");
         }
-        executionMap.remove(elementId);
+        executionMap.remove(instanceElement.elementId());
     }
 
     /**
      * Handle a automation composition element lock.
      *
      * @param messageId the messageId
-     * @param instanceId the automationComposition Id
-     * @param elementId the ID of the automation composition element
+     * @param compositionElement the information of the Automation Composition Definition Element
+     * @param instanceElement the information of the Automation Composition Instance Element
      */
-    public void lock(UUID messageId, UUID instanceId, UUID elementId) {
-        cleanExecution(elementId, messageId);
-        var result = executor.submit(() -> this.lockProcess(instanceId, elementId));
-        executionMap.put(elementId, result);
+    public void lock(UUID messageId, CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
+        cleanExecution(instanceElement.elementId(), messageId);
+        var result = executor.submit(() -> this.lockProcess(compositionElement, instanceElement));
+        executionMap.put(instanceElement.elementId(), result);
     }
 
-    private void lockProcess(UUID instanceId, UUID elementId) {
+    private void lockProcess(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
         try {
-            listener.lock(instanceId, elementId);
+            listener.lock(compositionElement, instanceElement);
         } catch (PfModelException e) {
-            LOGGER.error("Automation composition element lock failed {} {}", instanceId, e.getMessage());
-            intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId, null, LockState.UNLOCKED,
-                    StateChangeResult.FAILED, "Automation composition element lock failed");
+            LOGGER.error("Automation composition element lock failed {} {}",
+                instanceElement.elementId(), e.getMessage());
+            intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
+                instanceElement.elementId(), null, LockState.UNLOCKED, StateChangeResult.FAILED,
+                "Automation composition element lock failed");
         }
-        executionMap.remove(elementId);
+        executionMap.remove(instanceElement.elementId());
     }
 
     /**
      * Handle a automation composition element unlock.
      *
      * @param messageId the messageId
-     * @param instanceId the automationComposition Id
-     * @param elementId the ID of the automation composition element
+     * @param compositionElement the information of the Automation Composition Definition Element
+     * @param instanceElement the information of the Automation Composition Instance Element
      */
-    public void unlock(UUID messageId, UUID instanceId, UUID elementId) {
-        cleanExecution(elementId, messageId);
-        var result = executor.submit(() -> this.unlockProcess(instanceId, elementId));
-        executionMap.put(elementId, result);
+    public void unlock(UUID messageId, CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
+        cleanExecution(instanceElement.elementId(), messageId);
+        var result = executor.submit(() -> this.unlockProcess(compositionElement, instanceElement));
+        executionMap.put(instanceElement.elementId(), result);
     }
 
-    private void unlockProcess(UUID instanceId, UUID elementId) {
+    private void unlockProcess(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
         try {
-            listener.unlock(instanceId, elementId);
+            listener.unlock(compositionElement, instanceElement);
         } catch (PfModelException e) {
-            LOGGER.error("Automation composition element unlock failed {} {}", instanceId, e.getMessage());
-            intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId, null, LockState.LOCKED,
-                    StateChangeResult.FAILED, "Automation composition element unlock failed");
+            LOGGER.error("Automation composition element unlock failed {} {}",
+                instanceElement.elementId(), e.getMessage());
+            intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
+                instanceElement.elementId(), null, LockState.LOCKED, StateChangeResult.FAILED,
+                "Automation composition element unlock failed");
         }
-        executionMap.remove(elementId);
+        executionMap.remove(instanceElement.elementId());
     }
 
     /**
      * Handle a automation composition element delete.
      *
      * @param messageId the messageId
-     * @param instanceId the automationComposition Id
-     * @param elementId the ID of the automation composition element
+     * @param compositionElement the information of the Automation Composition Definition Element
+     * @param instanceElement the information of the Automation Composition Instance Element
      */
-    public void delete(UUID messageId, UUID instanceId, UUID elementId) {
-        cleanExecution(elementId, messageId);
-        var result = executor.submit(() -> this.deleteProcess(instanceId, elementId));
-        executionMap.put(elementId, result);
+    public void delete(UUID messageId, CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
+        cleanExecution(instanceElement.elementId(), messageId);
+        var result = executor.submit(() -> this.deleteProcess(compositionElement, instanceElement));
+        executionMap.put(instanceElement.elementId(), result);
     }
 
-    private void deleteProcess(UUID instanceId, UUID elementId) {
+    private void deleteProcess(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
         try {
-            listener.delete(instanceId, elementId);
+            listener.delete(compositionElement, instanceElement);
         } catch (PfModelException e) {
-            LOGGER.error("Automation composition element delete failed {} {}", instanceId, e.getMessage());
-            intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId, DeployState.UNDEPLOYED, null,
-                    StateChangeResult.FAILED, "Automation composition element delete failed");
+            LOGGER.error("Automation composition element delete failed {} {}",
+                instanceElement.elementId(), e.getMessage());
+            intermediaryApi.updateAutomationCompositionElementState(
+                instanceElement.instanceId(), instanceElement.elementId(), DeployState.UNDEPLOYED, null,
+                StateChangeResult.FAILED, "Automation composition element delete failed");
         }
-        executionMap.remove(elementId);
+        executionMap.remove(instanceElement.elementId());
     }
 
     /**
      * Handle a automation composition element properties update.
      *
      * @param messageId the messageId
-     * @param instanceId the automationComposition Id
-     * @param element the information on the automation composition element
-     * @param properties properties Map
+     * @param compositionElement the information of the Automation Composition Definition Element
+     * @param instanceElement the information of the Automation Composition Instance Element
+     * @param instanceElementUpdated the information of the Automation Composition Instance Element updated
      */
-    public void update(UUID messageId, UUID instanceId, AcElementDeploy element, Map<String, Object> properties) {
-        cleanExecution(element.getId(), messageId);
-        var result = executor.submit(() -> this.updateProcess(instanceId, element, properties));
-        executionMap.put(element.getId(), result);
+    public void update(UUID messageId, CompositionElementDto compositionElement, InstanceElementDto instanceElement,
+                       InstanceElementDto instanceElementUpdated) {
+        cleanExecution(instanceElement.elementId(), messageId);
+        var result = executor.submit(() ->
+            this.updateProcess(compositionElement, instanceElement, instanceElementUpdated));
+        executionMap.put(instanceElement.elementId(), result);
     }
 
-    private void updateProcess(UUID instanceId, AcElementDeploy element, Map<String, Object> properties) {
+    private void updateProcess(CompositionElementDto compositionElement, InstanceElementDto instanceElement,
+                               InstanceElementDto instanceElementUpdated) {
         try {
-            listener.update(instanceId, element, properties);
+            listener.update(compositionElement, instanceElement, instanceElementUpdated);
         } catch (PfModelException e) {
-            LOGGER.error("Automation composition element update failed {} {}", instanceId, e.getMessage());
-            intermediaryApi.updateAutomationCompositionElementState(instanceId, element.getId(), DeployState.DEPLOYED,
-                    null, StateChangeResult.FAILED, "Automation composition element update failed");
+            LOGGER.error("Automation composition element update failed {} {}",
+                instanceElement.elementId(), e.getMessage());
+            intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
+                instanceElement.elementId(), DeployState.DEPLOYED, null,
+                StateChangeResult.FAILED, "Automation composition element update failed");
         }
-        executionMap.remove(element.getId());
+        executionMap.remove(instanceElement.elementId());
     }
 
     private void cleanExecution(UUID execIdentificationId, UUID messageId) {
@@ -222,23 +235,22 @@ public class ThreadHandler implements Closeable {
      * Handles prime a Composition Definition.
      *
      * @param messageId the messageId
-     * @param compositionId the compositionId
-     * @param list the list of AutomationCompositionElementDefinition
+     * @param composition the composition
      */
-    public void prime(UUID messageId, UUID compositionId, List<AutomationCompositionElementDefinition> list) {
-        cleanExecution(compositionId, messageId);
-        var result = executor.submit(() -> this.primeProcess(compositionId, list));
-        executionMap.put(compositionId, result);
+    public void prime(UUID messageId, CompositionDto composition) {
+        cleanExecution(composition.compositionId(), messageId);
+        var result = executor.submit(() -> this.primeProcess(composition));
+        executionMap.put(composition.compositionId(), result);
     }
 
-    private void primeProcess(UUID compositionId, List<AutomationCompositionElementDefinition> list) {
+    private void primeProcess(CompositionDto composition) {
         try {
-            listener.prime(compositionId, list);
-            executionMap.remove(compositionId);
+            listener.prime(composition);
+            executionMap.remove(composition.compositionId());
         } catch (PfModelException e) {
-            LOGGER.error("Composition Defintion prime failed {} {}", compositionId, e.getMessage());
-            intermediaryApi.updateCompositionState(compositionId, AcTypeState.COMMISSIONED, StateChangeResult.FAILED,
-                    "Composition Defintion prime failed");
+            LOGGER.error("Composition Defintion prime failed {} {}", composition.compositionId(), e.getMessage());
+            intermediaryApi.updateCompositionState(composition.compositionId(), AcTypeState.COMMISSIONED,
+                StateChangeResult.FAILED, "Composition Defintion prime failed");
         }
     }
 
@@ -246,22 +258,22 @@ public class ThreadHandler implements Closeable {
      * Handles deprime a Composition Definition.
      *
      * @param messageId the messageId
-     * @param compositionId the compositionId
+     * @param composition the composition
      */
-    public void deprime(UUID messageId, UUID compositionId) {
-        cleanExecution(compositionId, messageId);
-        var result = executor.submit(() -> this.deprimeProcess(compositionId));
-        executionMap.put(compositionId, result);
+    public void deprime(UUID messageId, CompositionDto composition) {
+        cleanExecution(composition.compositionId(), messageId);
+        var result = executor.submit(() -> this.deprimeProcess(composition));
+        executionMap.put(composition.compositionId(), result);
     }
 
-    private void deprimeProcess(UUID compositionId) {
+    private void deprimeProcess(CompositionDto composition) {
         try {
-            listener.deprime(compositionId);
-            executionMap.remove(compositionId);
+            listener.deprime(composition);
+            executionMap.remove(composition.compositionId());
         } catch (PfModelException e) {
-            LOGGER.error("Composition Defintion deprime failed {} {}", compositionId, e.getMessage());
-            intermediaryApi.updateCompositionState(compositionId, AcTypeState.PRIMED, StateChangeResult.FAILED,
-                    "Composition Defintion deprime failed");
+            LOGGER.error("Composition Defintion deprime failed {} {}", composition.compositionId(), e.getMessage());
+            intermediaryApi.updateCompositionState(composition.compositionId(), AcTypeState.PRIMED,
+                StateChangeResult.FAILED, "Composition Defintion deprime failed");
         }
     }
 
@@ -269,54 +281,49 @@ public class ThreadHandler implements Closeable {
      * Handles restarted scenario.
      *
      * @param messageId the messageId
-     * @param compositionId the compositionId
-     * @param list the list of AutomationCompositionElementDefinition
+     * @param composition the composition
      * @param state the state of the composition
      * @param automationCompositionList list of ParticipantRestartAc
      */
-    public void restarted(UUID messageId, UUID compositionId, List<AutomationCompositionElementDefinition> list,
+    public void restarted(UUID messageId, CompositionDto composition,
             AcTypeState state, List<ParticipantRestartAc> automationCompositionList) {
         try {
-            listener.handleRestartComposition(compositionId, list, state);
+            listener.handleRestartComposition(composition, state);
         } catch (PfModelException e) {
-            LOGGER.error("Composition Defintion restarted failed {} {}", compositionId, e.getMessage());
-            intermediaryApi.updateCompositionState(compositionId, state, StateChangeResult.FAILED,
+            LOGGER.error("Composition Defintion restarted failed {} {}", composition.compositionId(), e.getMessage());
+            intermediaryApi.updateCompositionState(composition.compositionId(), state, StateChangeResult.FAILED,
                     "Composition Defintion restarted failed");
         }
 
         for (var automationComposition : automationCompositionList) {
             for (var element : automationComposition.getAcElementList()) {
+                var compositionElement = new CompositionElementDto(composition.compositionId(),
+                    element.getDefinition(), composition.inPropertiesMap().get(element.getDefinition()),
+                    composition.outPropertiesMap().get(element.getDefinition()));
+                var instanceElementDto = new InstanceElementDto(automationComposition.getAutomationCompositionId(),
+                    element.getId(), element.getToscaServiceTemplateFragment(),
+                    element.getProperties(), element.getOutProperties());
                 cleanExecution(element.getId(), messageId);
-                var result = executor.submit(() -> this
-                        .restartedInstanceProcess(automationComposition.getAutomationCompositionId(), element));
+                var result = executor.submit(() ->
+                    this.restartedInstanceProcess(compositionElement, instanceElementDto,
+                        element.getDeployState(), element.getLockState()));
                 executionMap.put(element.getId(), result);
             }
         }
     }
 
-    private void restartedInstanceProcess(UUID instanceId, AcElementRestart element) {
+    private void restartedInstanceProcess(CompositionElementDto compositionElement,
+        InstanceElementDto instanceElementDto, DeployState deployState, LockState lockState) {
         try {
-            var map = new HashMap<>(cacheProvider.getCommonProperties(instanceId, element.getId()));
-            map.putAll(element.getProperties());
-
-            listener.handleRestartInstance(instanceId, getAcElementDeploy(element), map, element.getDeployState(),
-                    element.getLockState());
-            executionMap.remove(element.getId());
+            listener.handleRestartInstance(compositionElement, instanceElementDto, deployState, lockState);
+            executionMap.remove(instanceElementDto.elementId());
         } catch (PfModelException e) {
-            LOGGER.error("Automation composition element deploy failed {} {}", instanceId, e.getMessage());
-            intermediaryApi.updateAutomationCompositionElementState(instanceId, element.getId(),
-                    element.getDeployState(), element.getLockState(), StateChangeResult.FAILED,
+            LOGGER.error("Automation composition element deploy failed {} {}",
+                instanceElementDto.elementId(), e.getMessage());
+            intermediaryApi.updateAutomationCompositionElementState(instanceElementDto.instanceId(),
+                instanceElementDto.elementId(), deployState, lockState, StateChangeResult.FAILED,
                     "Automation composition element restart failed");
         }
-    }
-
-    private AcElementDeploy getAcElementDeploy(AcElementRestart element) {
-        var acElementDeploy = new AcElementDeploy();
-        acElementDeploy.setId(element.getId());
-        acElementDeploy.setDefinition(element.getDefinition());
-        acElementDeploy.setProperties(element.getProperties());
-        acElementDeploy.setToscaServiceTemplateFragment(element.getToscaServiceTemplateFragment());
-        return acElementDeploy;
     }
 
     /**
@@ -335,26 +342,32 @@ public class ThreadHandler implements Closeable {
      * Handles AutomationComposition Migration.
      *
      * @param messageId the messageId
-     * @param instanceId the automationComposition Id
-     * @param element the information on the automation composition element
-     * @param compositionTargetId the composition to migrate
+     * @param compositionElement the information of the Automation Composition Definition Element
+     * @param compositionElementTarget the information of the Automation Composition Definition Element Target
+     * @param instanceElement the information of the Automation Composition Instance Element
+     * @param instanceElementMigrate the information of the Automation Composition Instance Element updated
      */
-    public void migrate(UUID messageId, UUID instanceId, AcElementDeploy element, UUID compositionTargetId,
-            Map<String, Object> properties) {
-        cleanExecution(element.getId(), messageId);
-        var result = executor.submit(() -> this.migrateProcess(instanceId, element, compositionTargetId, properties));
-        executionMap.put(element.getId(), result);
+    public void migrate(UUID messageId, CompositionElementDto compositionElement,
+        CompositionElementDto compositionElementTarget, InstanceElementDto instanceElement,
+        InstanceElementDto instanceElementMigrate) {
+        cleanExecution(instanceElement.elementId(), messageId);
+        var result = executor.submit(() ->
+            this.migrateProcess(compositionElement, compositionElementTarget, instanceElement, instanceElementMigrate));
+        executionMap.put(instanceElement.elementId(), result);
     }
 
-    private void migrateProcess(UUID instanceId, AcElementDeploy element, UUID compositionTargetId,
-            Map<String, Object> properties) {
+    private void migrateProcess(CompositionElementDto compositionElement,
+        CompositionElementDto compositionElementTarget, InstanceElementDto instanceElement,
+        InstanceElementDto instanceElementMigrate) {
         try {
-            listener.migrate(instanceId, element, compositionTargetId, properties);
+            listener.migrate(compositionElement, compositionElementTarget, instanceElement, instanceElementMigrate);
         } catch (PfModelException e) {
-            LOGGER.error("Automation composition element migrate failed {} {}", instanceId, e.getMessage());
-            intermediaryApi.updateAutomationCompositionElementState(instanceId, element.getId(), DeployState.DEPLOYED,
-                    null, StateChangeResult.FAILED, "Automation composition element migrate failed");
+            LOGGER.error("Automation composition element migrate failed {} {}",
+                instanceElement.elementId(), e.getMessage());
+            intermediaryApi.updateAutomationCompositionElementState(
+                instanceElement.instanceId(), instanceElement.elementId(), DeployState.DEPLOYED,
+                null, StateChangeResult.FAILED, "Automation composition element migrate failed");
         }
-        executionMap.remove(element.getId());
+        executionMap.remove(instanceElement.elementId());
     }
 }

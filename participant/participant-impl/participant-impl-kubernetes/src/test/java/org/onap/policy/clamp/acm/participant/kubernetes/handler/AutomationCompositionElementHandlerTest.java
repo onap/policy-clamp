@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2023 Nordix Foundation.
+ *  Copyright (C) 2021-2024 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,6 +29,7 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 
 import java.io.File;
 import java.io.IOException;
@@ -78,13 +79,10 @@ class AutomationCompositionElementHandlerTest {
     @InjectMocks
     @Spy
     private AutomationCompositionElementHandler automationCompositionElementHandler =
-            new AutomationCompositionElementHandler();
+            new AutomationCompositionElementHandler(mock(ParticipantIntermediaryApi.class));
 
     @Mock
     private ChartService chartService;
-
-    @Mock
-    private ParticipantIntermediaryApi participantIntermediaryApi;
 
     @Mock
     private ExecutorService executor;

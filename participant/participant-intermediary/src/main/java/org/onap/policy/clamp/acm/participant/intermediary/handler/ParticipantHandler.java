@@ -196,9 +196,11 @@ public class ParticipantHandler {
                     list.addAll(participantDefinition.getAutomationCompositionElementDefinitionList());
                 }
             }
-            cacheProvider.addElementDefinition(participantPrimeMsg.getCompositionId(), list);
-            automationCompositionHandler.prime(participantPrimeMsg.getMessageId(),
+            if (!list.isEmpty()) {
+                cacheProvider.addElementDefinition(participantPrimeMsg.getCompositionId(), list);
+                automationCompositionHandler.prime(participantPrimeMsg.getMessageId(),
                     participantPrimeMsg.getCompositionId(), list);
+            }
         } else {
             // deprime
             automationCompositionHandler.deprime(participantPrimeMsg.getMessageId(),

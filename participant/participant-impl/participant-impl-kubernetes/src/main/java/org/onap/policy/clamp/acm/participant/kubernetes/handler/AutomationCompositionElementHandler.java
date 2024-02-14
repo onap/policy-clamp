@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2023 Nordix Foundation.
+ *  Copyright (C) 2021-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,8 +31,8 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.AccessLevel;
 import lombok.Getter;
-import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
+import org.onap.policy.clamp.acm.participant.intermediary.api.impl.AcElementListenerV1;
 import org.onap.policy.clamp.acm.participant.kubernetes.exception.ServiceException;
 import org.onap.policy.clamp.acm.participant.kubernetes.helm.PodStatusValidator;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartInfo;
@@ -58,7 +58,7 @@ import org.springframework.stereotype.Component;
  * This class handles implementation of automationCompositionElement updates.
  */
 @Component
-public class AutomationCompositionElementHandler implements AutomationCompositionElementListener {
+public class AutomationCompositionElementHandler extends AcElementListenerV1 {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     // Map of helm installation and the status of corresponding pods
@@ -69,12 +69,13 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
     @Autowired
     private ChartService chartService;
 
-    @Autowired
-    private ParticipantIntermediaryApi intermediaryApi;
-
     // Map of acElement Id and installed Helm charts
     @Getter(AccessLevel.PACKAGE)
     private final Map<UUID, ChartInfo> chartMap = new HashMap<>();
+
+    public AutomationCompositionElementHandler(ParticipantIntermediaryApi intermediaryApi) {
+        super(intermediaryApi);
+    }
 
     // Default thread config values
     private static class ThreadConfig {
@@ -248,12 +249,5 @@ public class AutomationCompositionElementHandler implements AutomationCompositio
         lockState = AcmUtils.lockCompleted(deployState, lockState);
         intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(), deployState,
                 lockState, StateChangeResult.NO_ERROR, "Restarted");
-    }
-
-    @Override
-    public void migrate(UUID automationCompositionId, AcElementDeploy element, UUID compositionTargetId,
-            Map<String, Object> properties) throws PfModelException {
-        intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
-                DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Migrated");
     }
 }
