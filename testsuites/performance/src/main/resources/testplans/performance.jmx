@@ -1534,7 +1534,7 @@
                                     &quot;carrierTechnology&quot;: &quot;RESTCLIENT&quot;,&#xd;
                                     &quot;parameterClassName&quot;: &quot;org.onap.policy.apex.plugins.event.carrier.restclient.RestClientCarrierTechnologyParameters&quot;,&#xd;
                                     &quot;parameters&quot;: {&#xd;
-                                        &quot;url&quot;: &quot;http://message-router:3904/events/AC_ELEMENT_MSG/APEX/1?timeout=30000&quot;&#xd;
+                                        &quot;url&quot;: &quot;http://kafka:29092/events/ac_element_msg/APEX/1?timeout=30000&quot;&#xd;
                                     }&#xd;
                                 },&#xd;
                                 &quot;eventProtocolParameters&quot;: {&#xd;
@@ -1564,7 +1564,7 @@
                                     &quot;carrierTechnology&quot;: &quot;RESTCLIENT&quot;,&#xd;
                                     &quot;parameterClassName&quot;: &quot;org.onap.policy.apex.plugins.event.carrier.restclient.RestClientCarrierTechnologyParameters&quot;,&#xd;
                                     &quot;parameters&quot;: {&#xd;
-                                        &quot;url&quot;: &quot;http://message-router:3904/events/POLICY_UPDATE_MSG&quot;&#xd;
+                                        &quot;url&quot;: &quot;http://kafka:29092/events/policy_update_msg&quot;&#xd;
                                     }&#xd;
                                 },&#xd;
                                 &quot;eventProtocolParameters&quot;: {&#xd;
