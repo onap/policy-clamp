@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f7103458_1084d1e1",
+        "filename": "testsuites/performance/src/main/resources/testplans/performance.jmx",
+        "patchSetId": 1
+      },
+      "lineNbr": 1534,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2024-02-15T09:59:53Z",
+      "side": 1,
+      "message": "we require to change carrierTechnology to kafka and its associated parameters I guess? You can refer the policy definitions for apex and clamp from csit",
+      "range": {
+        "startLine": 1534,
+        "startChar": 42,
+        "endLine": 1534,
+        "endChar": 83
+      },
+      "revId": "c1dfc356ed96ecbc0cb86c793135d82bfee225f5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
