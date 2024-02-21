@@ -80,20 +80,6 @@
             <groupId>org.onap.policy.common</groupId>
             <artifactId>policy-endpoints</artifactId>
             <version>${policy.common.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.onap.dmaap.messagerouter.dmaapclient</groupId>
-                    <artifactId>dmaapClient</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.att.nsa</groupId>
-                    <artifactId>cambriaClient</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.onap.aaf.authz</groupId>
-                    <artifactId>aaf-cadi-aaf</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.onap.policy.common</groupId>

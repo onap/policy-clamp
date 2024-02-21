@@ -26,7 +26,6 @@ spring:
         implicit-strategy: org.onap.policy.common.spring.utils.CustomImplicitNamingStrategy
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MariaDB103Dialect
         format_sql: true
 
 metrics:
