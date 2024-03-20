@@ -56,27 +56,77 @@ public class AutomationCompositionOutHandler {
     private final CacheProvider cacheProvider;
 
     /**
+     * Handle a automation composition element stage change message.
+     *
+     * @param instance the automationComposition Id
+     * @param elementId the automationComposition Element Id
+     * @param stage the next stage
+     * @param message the message
+     * @param stateChangeResult the indicator if error occurs
+     */
+    public void updateAutomationCompositionElementStage(UUID instance, UUID elementId,
+        StateChangeResult stateChangeResult, int stage, String message) {
+
+        if (instance == null || elementId == null) {
+            LOGGER.error("Cannot update Automation composition element stage, id is null");
+            return;
+        }
+
+        var automationComposition = cacheProvider.getAutomationComposition(instance);
+        if (automationComposition == null) {
+            LOGGER.error("Cannot update Automation composition element stage, Automation composition id {} not present",
+                instance);
+            return;
+        }
+
+        var element = automationComposition.getElements().get(elementId);
+        if (element == null) {
+            var msg = "Cannot update Automation composition element stage, AC Element id {} not present";
+            LOGGER.error(msg, elementId);
+            return;
+        }
+
+        element.setRestarting(null);
+
+        var automationCompositionStateChangeAck =
+            new AutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_STATECHANGE_ACK);
+        automationCompositionStateChangeAck.setParticipantId(cacheProvider.getParticipantId());
+        automationCompositionStateChangeAck.setMessage(message);
+        automationCompositionStateChangeAck.setResponseTo(cacheProvider.getMsgIdentification().get(element.getId()));
+        automationCompositionStateChangeAck.setStateChangeResult(stateChangeResult);
+        automationCompositionStateChangeAck.setStage(stage);
+        automationCompositionStateChangeAck.setAutomationCompositionId(instance);
+        automationCompositionStateChangeAck.getAutomationCompositionResultMap().put(element.getId(),
+            new AcElementDeployAck(element.getDeployState(), element.getLockState(), element.getOperationalState(),
+                element.getUseState(), element.getOutProperties(), true, message));
+        LOGGER.debug("Automation composition element {} stage changed to {}", elementId, stage);
+        automationCompositionStateChangeAck.setResult(true);
+        publisher.sendAutomationCompositionAck(automationCompositionStateChangeAck);
+        cacheProvider.getMsgIdentification().remove(element.getId());
+    }
+
+    /**
      * Handle a automation composition element state change message.
      *
-     * @param automationCompositionId the automationComposition Id
+     * @param instance the automationComposition Id
      * @param elementId the automationComposition Element Id
      * @param deployState the DeployState state
      * @param lockState the LockState state
      * @param message the message
      * @param stateChangeResult the indicator if error occurs
      */
-    public void updateAutomationCompositionElementState(UUID automationCompositionId, UUID elementId,
+    public void updateAutomationCompositionElementState(UUID instance, UUID elementId,
             DeployState deployState, LockState lockState, StateChangeResult stateChangeResult, String message) {
 
-        if (automationCompositionId == null || elementId == null) {
+        if (instance == null || elementId == null) {
             LOGGER.error("Cannot update Automation composition element state, id is null");
             return;
         }
 
-        var automationComposition = cacheProvider.getAutomationComposition(automationCompositionId);
+        var automationComposition = cacheProvider.getAutomationComposition(instance);
         if (automationComposition == null) {
             LOGGER.error("Cannot update Automation composition element state, Automation composition id {} not present",
-                    automationCompositionId);
+                instance);
             return;
         }
 
@@ -114,7 +164,7 @@ public class AutomationCompositionOutHandler {
         automationCompositionStateChangeAck.setMessage(message);
         automationCompositionStateChangeAck.setResponseTo(cacheProvider.getMsgIdentification().get(element.getId()));
         automationCompositionStateChangeAck.setStateChangeResult(stateChangeResult);
-        automationCompositionStateChangeAck.setAutomationCompositionId(automationCompositionId);
+        automationCompositionStateChangeAck.setAutomationCompositionId(instance);
         automationCompositionStateChangeAck.getAutomationCompositionResultMap().put(element.getId(),
                 new AcElementDeployAck(element.getDeployState(), element.getLockState(), element.getOperationalState(),
                         element.getUseState(), element.getOutProperties(), true, message));

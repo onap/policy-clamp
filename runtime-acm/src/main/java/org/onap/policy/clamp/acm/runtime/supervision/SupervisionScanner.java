@@ -145,17 +145,26 @@ public class SupervisionScanner {
             return;
         }
 
-        if (DeployState.UPDATING.equals(automationComposition.getDeployState())
-                || DeployState.MIGRATING.equals(automationComposition.getDeployState())
+        if (DeployState.MIGRATING.equals(automationComposition.getDeployState())) {
+            scanStage(automationComposition, serviceTemplate);
+        } else if (DeployState.UPDATING.equals(automationComposition.getDeployState())
+                || SubState.PREPARING.equals(automationComposition.getSubState())
+                || SubState.REVIEWING.equals(automationComposition.getSubState())
                 || SubState.MIGRATION_PRECHECKING.equals(automationComposition.getSubState())) {
-
-            scanMigrate(automationComposition, serviceTemplate);
+            simpleScan(automationComposition, serviceTemplate);
         } else {
-            scanDeploy(automationComposition, serviceTemplate);
+            scanWithPhase(automationComposition, serviceTemplate);
         }
     }
 
-    private void scanDeploy(final AutomationComposition automationComposition, ToscaServiceTemplate serviceTemplate) {
+    /**
+     * Scan with startPhase: DEPLOY, UNDEPLOY, LOCK and UNLOCK.
+     *
+     * @param automationComposition the AutomationComposition
+     * @param serviceTemplate the ToscaServiceTemplate
+     */
+    private void scanWithPhase(final AutomationComposition automationComposition,
+            ToscaServiceTemplate serviceTemplate) {
         var completed = true;
         var minSpNotCompleted = 1000; // min startPhase not completed
         var maxSpNotCompleted = 0; // max startPhase not completed
@@ -176,9 +185,6 @@ public class SupervisionScanner {
         }
 
         if (completed) {
-            LOGGER.debug("automation composition scan: transition state {} {} completed",
-                    automationComposition.getDeployState(), automationComposition.getLockState());
-
             complete(automationComposition, serviceTemplate);
         } else {
             LOGGER.debug("automation composition scan: transition state {} {} not completed",
@@ -197,7 +203,31 @@ public class SupervisionScanner {
         }
     }
 
-    private void scanMigrate(final AutomationComposition automationComposition, ToscaServiceTemplate serviceTemplate) {
+    /**
+     * Simple scan: UPDATE, PREPARE, REVIEW, MIGRATE_PRECHECKING.
+     *
+     * @param automationComposition the AutomationComposition
+     * @param serviceTemplate the ToscaServiceTemplate
+     */
+    private void simpleScan(final AutomationComposition automationComposition, ToscaServiceTemplate serviceTemplate) {
+        var completed = automationComposition.getElements().values().stream()
+                .filter(element -> AcmUtils.isInTransitionalState(element.getDeployState(), element.getLockState(),
+                        element.getSubState())).findFirst().isEmpty();
+
+        if (completed) {
+            complete(automationComposition, serviceTemplate);
+        } else {
+            handleTimeout(automationComposition);
+        }
+    }
+
+    /**
+     * Scan with stage: MIGRATE.
+     *
+     * @param automationComposition the AutomationComposition
+     * @param serviceTemplate the ToscaServiceTemplate
+     */
+    private void scanStage(final AutomationComposition automationComposition, ToscaServiceTemplate serviceTemplate) {
         var completed = true;
         var minStageNotCompleted = 1000; // min stage not completed
         for (var element : automationComposition.getElements().values()) {
@@ -214,16 +244,12 @@ public class SupervisionScanner {
         }
 
         if (completed) {
-            LOGGER.debug("automation composition scan: transition state {} {} ", automationComposition.getDeployState(),
-                    automationComposition.getLockState());
-
             complete(automationComposition, serviceTemplate);
         } else {
             LOGGER.debug("automation composition scan: transition from state {} to {} not completed",
                     automationComposition.getDeployState(), automationComposition.getLockState());
 
-            if (DeployState.MIGRATING.equals(automationComposition.getDeployState())
-                    && minStageNotCompleted != automationComposition.getPhase()) {
+            if (minStageNotCompleted != automationComposition.getPhase()) {
                 savePahese(automationComposition, minStageNotCompleted);
                 LOGGER.debug("retry message AutomationCompositionMigration");
                 automationCompositionMigrationPublisher.send(automationComposition, minStageNotCompleted);
@@ -235,6 +261,10 @@ public class SupervisionScanner {
 
     private void complete(final AutomationComposition automationComposition,
             ToscaServiceTemplate serviceTemplate) {
+        LOGGER.debug("automation composition scan: transition state {} {} {} completed",
+                automationComposition.getDeployState(), automationComposition.getLockState(),
+                automationComposition.getSubState());
+
         var deployState = automationComposition.getDeployState();
         if (DeployState.MIGRATING.equals(automationComposition.getDeployState())) {
             // migration scenario
@@ -274,6 +304,10 @@ public class SupervisionScanner {
     }
 
     private void handleTimeout(AutomationComposition automationComposition) {
+        LOGGER.debug("automation composition scan: transition from state {} to {} {} not completed",
+                automationComposition.getDeployState(), automationComposition.getLockState(),
+                automationComposition.getSubState());
+
         if (StateChangeResult.TIMEOUT.equals(automationComposition.getStateChangeResult())) {
             LOGGER.debug("The ac instance is in timeout {}", automationComposition.getInstanceId());
             return;

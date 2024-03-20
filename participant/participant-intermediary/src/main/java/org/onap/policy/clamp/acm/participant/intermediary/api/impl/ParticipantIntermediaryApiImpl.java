@@ -59,7 +59,8 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
     @Override
     public void updateAutomationCompositionElementStage(UUID instance, UUID elementId,
             StateChangeResult stateChangeResult, int stage, String message) {
-        //
+        automationCompositionHandler.updateAutomationCompositionElementStage(instance, elementId, stateChangeResult,
+            stage, message);
     }
 
     @Override

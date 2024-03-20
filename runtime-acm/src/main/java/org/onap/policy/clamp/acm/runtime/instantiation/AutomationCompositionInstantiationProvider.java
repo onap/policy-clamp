@@ -306,8 +306,6 @@ public class AutomationCompositionInstantiationProvider {
         AcmUtils.setCascadedState(acToBeUpdated, DeployState.DEPLOYED, LockState.LOCKED,
             SubState.MIGRATION_PRECHECKING);
         acToBeUpdated.setStateChangeResult(StateChangeResult.NO_ERROR);
-        // excluding removed element in MIGRATION_PRECHECKING
-        elementsRemoved.forEach(uuid -> acToBeUpdated.getElements().get(uuid).setSubState(SubState.NONE));
 
         return createInstantiationResponse(automationCompositionProvider.updateAutomationComposition(acToBeUpdated));
     }

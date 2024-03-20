@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.function.Consumer;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionDeployPublisher;
@@ -49,6 +50,7 @@ import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
+import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
@@ -57,6 +59,8 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 class SupervisionScannerTest {
 
     private static final String AC_JSON = "src/test/resources/rest/acm/AutomationCompositionSmoke.json";
+    private static final String ELEMENT_NAME =
+            "org.onap.domain.database.Http_PMSHMicroserviceAutomationCompositionElement";
 
     private static final UUID compositionId = UUID.randomUUID();
 
@@ -295,8 +299,7 @@ class SupervisionScannerTest {
         automationComposition.setPhase(0);
         automationComposition.setCompositionId(compositionId);
         for (var element : automationComposition.getElements().values()) {
-            if ("org.onap.domain.database.Http_PMSHMicroserviceAutomationCompositionElement"
-                    .equals(element.getDefinition().getName())) {
+            if (ELEMENT_NAME.equals(element.getDefinition().getName())) {
                 element.setDeployState(DeployState.DEPLOYING);
                 element.setLockState(LockState.NONE);
             } else {
@@ -372,6 +375,93 @@ class SupervisionScannerTest {
     }
 
     @Test
+    void testSendAutomationCompositionUpdate() {
+        var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
+        automationComposition.setLockState(LockState.LOCKED);
+        automationComposition.setDeployState(DeployState.UPDATING);
+        for (var element : automationComposition.getElements().values()) {
+            element.setSubState(SubState.NONE);
+            element.setLockState(LockState.LOCKED);
+            if (ELEMENT_NAME.equals(element.getDefinition().getName())) {
+                element.setDeployState(DeployState.UPDATING);
+            } else {
+                element.setDeployState(DeployState.DEPLOYED);
+            }
+        }
+        testSimpleScan(automationComposition, element -> element.setDeployState(DeployState.DEPLOYED));
+    }
+
+    @Test
+    void testSendAutomationCompositionMigratingPrecheck() {
+        var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
+        automationComposition.setLockState(LockState.LOCKED);
+        automationComposition.setDeployState(DeployState.DEPLOYED);
+        automationComposition.setSubState(SubState.MIGRATION_PRECHECKING);
+        for (var element : automationComposition.getElements().values()) {
+            element.setDeployState(DeployState.DEPLOYED);
+            element.setSubState(SubState.NONE);
+            element.setLockState(LockState.LOCKED);
+            if (ELEMENT_NAME.equals(element.getDefinition().getName())) {
+                element.setSubState(SubState.MIGRATION_PRECHECKING);
+            }
+        }
+        testSimpleScan(automationComposition, element -> element.setSubState(SubState.NONE));
+    }
+
+    @Test
+    void testSendAutomationCompositionPrepare() {
+        var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
+        automationComposition.setLockState(LockState.NONE);
+        automationComposition.setDeployState(DeployState.UNDEPLOYED);
+        automationComposition.setSubState(SubState.PREPARING);
+        for (var element : automationComposition.getElements().values()) {
+            element.setDeployState(DeployState.UNDEPLOYED);
+            element.setSubState(SubState.NONE);
+            element.setLockState(LockState.NONE);
+            if (ELEMENT_NAME.equals(element.getDefinition().getName())) {
+                element.setSubState(SubState.PREPARING);
+            }
+        }
+        testSimpleScan(automationComposition, element -> element.setSubState(SubState.NONE));
+    }
+
+    @Test
+    void testSendAutomationCompositionReview() {
+        var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
+        automationComposition.setLockState(LockState.LOCKED);
+        automationComposition.setDeployState(DeployState.DEPLOYED);
+        automationComposition.setSubState(SubState.REVIEWING);
+        for (var element : automationComposition.getElements().values()) {
+            element.setDeployState(DeployState.DEPLOYED);
+            element.setSubState(SubState.NONE);
+            element.setLockState(LockState.LOCKED);
+            if (ELEMENT_NAME.equals(element.getDefinition().getName())) {
+                element.setSubState(SubState.REVIEWING);
+            }
+        }
+        testSimpleScan(automationComposition, element -> element.setSubState(SubState.NONE));
+    }
+
+    private void testSimpleScan(AutomationComposition automationComposition, Consumer<AutomationCompositionElement> c) {
+        automationComposition.setLockState(LockState.NONE);
+        automationComposition.setCompositionId(compositionId);
+        automationComposition.setLastMsg(TimestampHelper.now());
+        var automationCompositionProvider = mock(AutomationCompositionProvider.class);
+        when(automationCompositionProvider.getAcInstancesInTransition()).thenReturn(List.of(automationComposition));
+
+        var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
+        var supervisionScanner = new SupervisionScanner(automationCompositionProvider, createAcDefinitionProvider(),
+                null, null,
+                mock(ParticipantSyncPublisher.class), null, acRuntimeParameterGroup);
+        supervisionScanner.run();
+        verify(automationCompositionProvider, times(0)).updateAcState(any());
+
+        automationComposition.getElements().values().forEach(c);
+        supervisionScanner.run();
+        verify(automationCompositionProvider).updateAcState(any());
+    }
+
+    @Test
     void testSendAutomationCompositionMsgUnlocking() {
         var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
         automationComposition.setDeployState(DeployState.DEPLOYED);
@@ -379,8 +469,7 @@ class SupervisionScannerTest {
         automationComposition.setCompositionId(compositionId);
         automationComposition.setPhase(0);
         for (var element : automationComposition.getElements().values()) {
-            if ("org.onap.domain.database.Http_PMSHMicroserviceAutomationCompositionElement"
-                    .equals(element.getDefinition().getName())) {
+            if (ELEMENT_NAME.equals(element.getDefinition().getName())) {
                 element.setDeployState(DeployState.DEPLOYED);
                 element.setLockState(LockState.UNLOCKING);
             } else {

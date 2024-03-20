@@ -21,16 +21,21 @@
 package org.onap.policy.clamp.acm.participant.intermediary.handler;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
+import org.onap.policy.clamp.acm.participant.intermediary.api.ElementState;
 import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionMigration;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionPrepare;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -77,24 +82,64 @@ public class AcSubStateHandler {
         var acElementList = automationComposition.getElements();
         for (var acElement : acElements) {
             var element = acElementList.get(acElement.getId());
-            element.setSubState(SubState.MIGRATION_PRECHECKING);
+            if (element != null) {
+                element.setSubState(SubState.MIGRATION_PRECHECKING);
+            }
         }
         var acCopyMigrateTo = new AutomationComposition(automationComposition);
-        acElementList = acCopyMigrateTo.getElements();
+        var acElementCopyList = acCopyMigrateTo.getElements();
         for (var acElement : acElements) {
-            var element = acElementList.get(acElement.getId());
-            AcmUtils.recursiveMerge(element.getProperties(), acElement.getProperties());
-            element.setDefinition(acElement.getDefinition());
+            var element = acElementCopyList.get(acElement.getId());
+            if (element != null) {
+                AcmUtils.recursiveMerge(element.getProperties(), acElement.getProperties());
+                element.setDefinition(acElement.getDefinition());
+            } else {
+                element = CacheProvider.createAutomationCompositionElement(acElement);
+                element.setSubState(SubState.MIGRATION_PRECHECKING);
+                acElementCopyList.put(element.getId(), element);
+            }
         }
+        var toDelete = acElementCopyList.values().stream()
+                .filter(el -> !SubState.MIGRATION_PRECHECKING.equals(el.getSubState()))
+                .map(AutomationCompositionElement::getId)
+                .toList();
+        toDelete.forEach(acElementCopyList::remove);
 
         var compositionElementTargetMap = cacheProvider.getCompositionElementDtoMap(acCopyMigrateTo,
             compositionTargetId);
         var instanceElementMigrateMap = cacheProvider.getInstanceElementDtoMap(acCopyMigrateTo);
 
         for (var acElement : acElements) {
-            listener.migratePrecheck(messageId, compositionElementMap.get(acElement.getId()),
-                compositionElementTargetMap.get(acElement.getId()),
-                instanceElementMap.get(acElement.getId()), instanceElementMigrateMap.get(acElement.getId()));
+            var compositionElement = compositionElementMap.get(acElement.getId());
+            var compositionElementTarget = compositionElementTargetMap.get(acElement.getId());
+            var instanceElement = instanceElementMap.get(acElement.getId());
+            var instanceElementMigrate = instanceElementMigrateMap.get(acElement.getId());
+
+            if (instanceElement == null) {
+                // new element scenario
+                compositionElement = new CompositionElementDto(automationComposition.getCompositionId(),
+                        acElement.getDefinition(), Map.of(), Map.of(), ElementState.NOT_PRESENT);
+                instanceElement = new InstanceElementDto(automationComposition.getInstanceId(), acElement.getId(),
+                        new ToscaServiceTemplate(), Map.of(), Map.of(), ElementState.NOT_PRESENT);
+                compositionElementTarget = CacheProvider.changeStateToNew(compositionElementTarget);
+                instanceElementMigrate = CacheProvider.changeStateToNew(instanceElementMigrate);
+            }
+
+            listener.migratePrecheck(messageId, compositionElement, compositionElementTarget,
+                    instanceElement, instanceElementMigrate);
+        }
+
+        for (var elementId : toDelete) {
+            var compositionDtoTarget =
+                    new CompositionElementDto(compositionTargetId,
+                            automationComposition.getElements().get(elementId).getDefinition(),
+                            Map.of(), Map.of(), ElementState.REMOVED);
+            var instanceDtoTarget =
+                    new InstanceElementDto(automationComposition.getInstanceId(), elementId,
+                            null, Map.of(), Map.of(), ElementState.REMOVED);
+
+            listener.migratePrecheck(messageId, compositionElementMap.get(elementId), compositionDtoTarget,
+                    instanceElementMap.get(elementId), instanceDtoTarget);
         }
     }
 

@@ -53,7 +53,7 @@ public class ThreadHandler implements Closeable {
     private final ParticipantIntermediaryApi intermediaryApi;
     private final CacheProvider cacheProvider;
 
-    private final Map<UUID, Future> executionMap = new ConcurrentHashMap<>();
+    private final Map<UUID, Future<?>> executionMap = new ConcurrentHashMap<>();
 
     private final ExecutorService executor =
             Context.taskWrapping(Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()));
@@ -295,21 +295,24 @@ public class ThreadHandler implements Closeable {
      * @param compositionElementTarget the information of the Automation Composition Definition Element Target
      * @param instanceElement the information of the Automation Composition Instance Element
      * @param instanceElementMigrate the information of the Automation Composition Instance Element updated
+     * @param stage the stage
      */
     public void migrate(UUID messageId, CompositionElementDto compositionElement,
         CompositionElementDto compositionElementTarget, InstanceElementDto instanceElement,
-        InstanceElementDto instanceElementMigrate) {
+        InstanceElementDto instanceElementMigrate, int stage) {
         cleanExecution(instanceElement.elementId(), messageId);
         var result = executor.submit(() ->
-            this.migrateProcess(compositionElement, compositionElementTarget, instanceElement, instanceElementMigrate));
+            this.migrateProcess(compositionElement, compositionElementTarget,
+                instanceElement, instanceElementMigrate, stage));
         executionMap.put(instanceElement.elementId(), result);
     }
 
     private void migrateProcess(CompositionElementDto compositionElement,
         CompositionElementDto compositionElementTarget, InstanceElementDto instanceElement,
-        InstanceElementDto instanceElementMigrate) {
+        InstanceElementDto instanceElementMigrate, int stage) {
         try {
-            listener.migrate(compositionElement, compositionElementTarget, instanceElement, instanceElementMigrate, 0);
+            listener.migrate(compositionElement, compositionElementTarget,
+                instanceElement, instanceElementMigrate, stage);
         } catch (PfModelException e) {
             LOGGER.error("Automation composition element migrate failed {} {}",
                 instanceElement.elementId(), e.getMessage());

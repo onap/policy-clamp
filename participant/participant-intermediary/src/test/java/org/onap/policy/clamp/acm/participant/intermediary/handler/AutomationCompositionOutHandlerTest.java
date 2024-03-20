@@ -65,11 +65,35 @@ class AutomationCompositionOutHandlerTest {
         when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
                 .thenReturn(automationComposition);
         assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementState(
-                automationComposition.getInstanceId(), UUID.randomUUID(), DeployState.DEPLOYED, null, null, null));
+                automationComposition.getInstanceId(), UUID.randomUUID(), DeployState.DEPLOYED,
+            null, null, null));
 
         var elementId = automationComposition.getElements().values().iterator().next().getId();
         assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementState(
                 automationComposition.getInstanceId(), elementId, null, null, null, null));
+
+        assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementStage(
+                elementId, null, null, 0, null));
+        assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementStage(
+                null, elementId, null, 0, null));
+        assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementStage(
+                UUID.randomUUID(), elementId, null, 0, null));
+        assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementStage(
+                automationComposition.getInstanceId(), UUID.randomUUID(), null, 0, null));
+    }
+
+    @Test
+    void updateAutomationCompositionElementStageTest() {
+        var publisher = mock(ParticipantMessagePublisher.class);
+        var cacheProvider = mock(CacheProvider.class);
+        var acOutHandler = new AutomationCompositionOutHandler(publisher, cacheProvider);
+        var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
+        when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
+                .thenReturn(automationComposition);
+        var elementId = automationComposition.getElements().values().iterator().next().getId();
+        acOutHandler.updateAutomationCompositionElementStage(
+                automationComposition.getInstanceId(), elementId, StateChangeResult.NO_ERROR, 0, "OK");
+        verify(publisher).sendAutomationCompositionAck(any(AutomationCompositionDeployAck.class));
     }
 
     @Test

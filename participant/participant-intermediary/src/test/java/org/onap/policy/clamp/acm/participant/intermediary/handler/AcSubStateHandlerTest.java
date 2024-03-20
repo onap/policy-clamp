@@ -28,11 +28,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
+import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionMigration;
@@ -64,37 +66,70 @@ class AcSubStateHandlerTest {
 
     @Test
     void handleAcMigrationPrecheckTest() {
-        var listener = mock(ThreadHandler.class);
-        var cacheProvider = mock(CacheProvider.class);
-        var ach = new AcSubStateHandler(cacheProvider, listener);
-        var migrationMsg = new AutomationCompositionMigration();
-        migrationMsg.setPrecheck(true);
-        assertDoesNotThrow(() -> ach.handleAcMigrationPrecheck(migrationMsg));
         var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
-        migrationMsg.setCompositionTargetId(UUID.randomUUID());
+        automationComposition.setCompositionId(UUID.randomUUID());
+        automationComposition.setInstanceId(UUID.randomUUID());
+        automationComposition.setCompositionTargetId(UUID.randomUUID());
+        var cacheProvider = new CacheProvider(CommonTestData.getParticipantParameters());
+        var definitions =
+                CommonTestData.createAutomationCompositionElementDefinitionList(automationComposition);
+        cacheProvider.addElementDefinition(automationComposition.getCompositionId(), definitions);
+        cacheProvider.addElementDefinition(automationComposition.getCompositionTargetId(), definitions);
+        var participantDeploy =
+                CommonTestData.createparticipantDeploy(cacheProvider.getParticipantId(), automationComposition);
+        cacheProvider.initializeAutomationComposition(automationComposition.getCompositionId(),
+                automationComposition.getInstanceId(), participantDeploy);
+        var migrationMsg = new AutomationCompositionMigration();
+        migrationMsg.setStage(0);
+        migrationMsg.setCompositionId(automationComposition.getCompositionId());
         migrationMsg.setAutomationCompositionId(automationComposition.getInstanceId());
-        assertDoesNotThrow(() -> ach.handleAcMigrationPrecheck(migrationMsg));
-        when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
-                .thenReturn(automationComposition);
-        var participantDeploy = new ParticipantDeploy();
-        participantDeploy.setParticipantId(CommonTestData.getParticipantId());
-        when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
-        migrationMsg.getParticipantUpdatesList().add(participantDeploy);
-        Map<ToscaConceptIdentifier, AutomationCompositionElementDefinition> map = new HashMap<>();
-        for (var element : automationComposition.getElements().values()) {
-            var acElementDeploy = new AcElementDeploy();
-            acElementDeploy.setProperties(Map.of());
-            acElementDeploy.setId(element.getId());
-            acElementDeploy.setDefinition(element.getDefinition());
-            participantDeploy.getAcElementList().add(acElementDeploy);
-            map.put(element.getDefinition(), new AutomationCompositionElementDefinition());
-        }
-        when(cacheProvider.getAcElementsDefinitions())
-                .thenReturn(Map.of(automationComposition.getCompositionId(), map,
-                        migrationMsg.getCompositionTargetId(), map));
-
+        migrationMsg.setCompositionTargetId(automationComposition.getCompositionTargetId());
+        migrationMsg.setParticipantUpdatesList(List.of(participantDeploy));
+        migrationMsg.setPrecheck(true);
+        var listener = mock(ThreadHandler.class);
+        var ach = new AcSubStateHandler(cacheProvider, listener);
         ach.handleAcMigrationPrecheck(migrationMsg);
         verify(listener, times(automationComposition.getElements().size()))
+                .migratePrecheck(any(), any(), any(), any(), any());
+    }
+
+    @Test
+    void handleAcMigrationPrecheckAddRemoveTest() {
+        var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
+        automationComposition.setCompositionId(UUID.randomUUID());
+        automationComposition.setInstanceId(UUID.randomUUID());
+        var cacheProvider = new CacheProvider(CommonTestData.getParticipantParameters());
+        var definitions =
+                CommonTestData.createAutomationCompositionElementDefinitionList(automationComposition);
+        cacheProvider.addElementDefinition(automationComposition.getCompositionId(), definitions);
+        var participantDeploy =
+                CommonTestData.createparticipantDeploy(cacheProvider.getParticipantId(), automationComposition);
+        cacheProvider.initializeAutomationComposition(automationComposition.getCompositionId(),
+                automationComposition.getInstanceId(), participantDeploy);
+
+        var acMigrate = new AutomationComposition(automationComposition);
+        acMigrate.setCompositionTargetId(UUID.randomUUID());
+
+        // replacing first element with new one
+        var element = acMigrate.getElements().values().iterator().next();
+        element.setDefinition(new ToscaConceptIdentifier("policy.clamp.new.element", "1.0.0"));
+        element.setId(UUID.randomUUID());
+
+        var migrateDefinitions =
+                CommonTestData.createAutomationCompositionElementDefinitionList(acMigrate);
+        cacheProvider.addElementDefinition(acMigrate.getCompositionTargetId(), migrateDefinitions);
+
+        var migrationMsg = new AutomationCompositionMigration();
+        migrationMsg.setStage(0);
+        migrationMsg.setCompositionId(acMigrate.getCompositionId());
+        migrationMsg.setAutomationCompositionId(acMigrate.getInstanceId());
+        migrationMsg.setCompositionTargetId(acMigrate.getCompositionTargetId());
+        var participantMigrate = CommonTestData.createparticipantDeploy(cacheProvider.getParticipantId(), acMigrate);
+        migrationMsg.setParticipantUpdatesList(List.of(participantMigrate));
+        var listener = mock(ThreadHandler.class);
+        var ach = new AcSubStateHandler(cacheProvider, listener);
+        ach.handleAcMigrationPrecheck(migrationMsg);
+        verify(listener, times(acMigrate.getElements().size() + 1))
                 .migratePrecheck(any(), any(), any(), any(), any());
     }
 

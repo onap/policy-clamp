@@ -30,8 +30,10 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
+import org.onap.policy.clamp.acm.participant.intermediary.api.ElementState;
 import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.parameters.ParticipantParameters;
+import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
@@ -181,14 +183,10 @@ public class CacheProvider {
         var acLast = automationCompositions.get(instanceId);
         Map<UUID, AutomationCompositionElement> acElementMap = new LinkedHashMap<>();
         for (var element : participantDeploy.getAcElementList()) {
-            var acElement = new AutomationCompositionElement();
-            acElement.setId(element.getId());
+            var acElement = createAutomationCompositionElement(element);
             acElement.setParticipantId(getParticipantId());
-            acElement.setDefinition(element.getDefinition());
             acElement.setDeployState(deployState);
-            acElement.setLockState(LockState.NONE);
             acElement.setSubState(subState);
-            acElement.setProperties(element.getProperties());
             var acElementLast = acLast != null ? acLast.getElements().get(element.getId()) : null;
             if (acElementLast != null) {
                 acElement.setOutProperties(acElementLast.getOutProperties());
@@ -249,6 +247,22 @@ public class CacheProvider {
     }
 
     /**
+     * Create AutomationCompositionElement to save in memory.
+     *
+     * @param element AcElementDeploy
+     * @return a new AutomationCompositionElement
+     */
+    public static AutomationCompositionElement createAutomationCompositionElement(AcElementDeploy element) {
+        var acElement = new AutomationCompositionElement();
+        acElement.setId(element.getId());
+        acElement.setDefinition(element.getDefinition());
+        acElement.setProperties(element.getProperties());
+        acElement.setSubState(SubState.NONE);
+        acElement.setLockState(LockState.LOCKED);
+        return acElement;
+    }
+
+    /**
      * Create CompositionElementDto.
      *
      * @param compositionId the composition Id
@@ -301,5 +315,28 @@ public class CacheProvider {
             map.put(element.getId(), instanceElement);
         }
         return map;
+    }
+
+    /**
+     * Create a new InstanceElementDto record with state New.
+     *
+     * @param instanceElement the InstanceElementDto
+     * @return a new InstanceElementDto
+     */
+    public static InstanceElementDto changeStateToNew(InstanceElementDto instanceElement) {
+        return new InstanceElementDto(instanceElement.instanceId(), instanceElement.elementId(),
+                instanceElement.toscaServiceTemplateFragment(),
+                instanceElement.inProperties(), instanceElement.outProperties(), ElementState.NEW);
+    }
+
+    /**
+     * Create a new CompositionElementDto record with state New.
+     *
+     * @param compositionElement the CompositionElementDto
+     * @return a new CompositionElementDto
+     */
+    public static CompositionElementDto changeStateToNew(CompositionElementDto compositionElement) {
+        return new CompositionElementDto(compositionElement.compositionId(), compositionElement.elementDefinitionId(),
+                compositionElement.inProperties(), compositionElement.outProperties(), ElementState.NEW);
     }
 }

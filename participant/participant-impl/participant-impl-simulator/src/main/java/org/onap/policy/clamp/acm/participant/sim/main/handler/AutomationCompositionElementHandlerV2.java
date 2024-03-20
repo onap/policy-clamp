@@ -22,6 +22,7 @@ package org.onap.policy.clamp.acm.participant.sim.main.handler;
 
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
+import org.onap.policy.clamp.acm.participant.intermediary.api.ElementState;
 import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.acm.participant.intermediary.api.impl.AcElementListenerV2;
@@ -116,11 +117,11 @@ public class AutomationCompositionElementHandlerV2 extends AcElementListenerV2 {
                         + " instanceElementMigrate: {}",
                 compositionElement, compositionElementTarget, instanceElement, instanceElementMigrate);
 
-        if (instanceElementMigrate.newElement()) {
+        if (ElementState.NEW.equals(instanceElementMigrate.state())) {
             LOGGER.debug("new element scenario");
 
         }
-        if (instanceElementMigrate.removedElement()) {
+        if (ElementState.REMOVED.equals(instanceElementMigrate.state())) {
             simulatorService.undeploy(instanceElement.instanceId(), instanceElement.elementId());
             simulatorService.delete(instanceElement.instanceId(), instanceElement.elementId());
         } else {

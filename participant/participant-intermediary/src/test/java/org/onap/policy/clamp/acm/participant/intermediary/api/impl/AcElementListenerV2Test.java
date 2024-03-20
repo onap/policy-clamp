@@ -134,7 +134,7 @@ class AcElementListenerV2Test {
         var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
             Map.of(), Map.of());
         var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), null, Map.of(), Map.of());
-        acElementListenerV2.migrate(compositionElement, compositionElement, instanceElement, instanceElement);
+        acElementListenerV2.migrate(compositionElement, compositionElement, instanceElement, instanceElement, 0);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
             instanceElement.elementId(), DeployState.DEPLOYED, null,
             StateChangeResult.NO_ERROR, "Migrated");

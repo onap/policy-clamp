@@ -28,6 +28,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
+import org.onap.policy.clamp.acm.participant.intermediary.api.ElementState;
 import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.acm.participant.sim.comm.CommonTestData;
@@ -229,15 +230,21 @@ class AutomationCompositionElementHandlerV2Test {
         var simulatorService = new SimulatorService(intermediaryApi);
         var acElementHandler = new AutomationCompositionElementHandlerV2(intermediaryApi, simulatorService);
         simulatorService.setConfig(config);
-        var compoElTargetAdd = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
-                Map.of(), Map.of(), true, false);
+
+        var compositionElement = new CompositionElementDto(
+                UUID.randomUUID(), new ToscaConceptIdentifier(), Map.of(), Map.of(), ElementState.NOT_PRESENT);
+
+        var instanceElement = new InstanceElementDto(
+                UUID.randomUUID(), UUID.randomUUID(), null, Map.of(), Map.of(), ElementState.NOT_PRESENT);
+
+        var compoElTargetAdd = new CompositionElementDto(
+                UUID.randomUUID(), new ToscaConceptIdentifier(), Map.of(), Map.of(), ElementState.NEW);
         var inElMigratedAdd = new InstanceElementDto(
-                INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(),
-                null, Map.of("key", "value"), Map.of(), true, false);
+                instanceElement.instanceId(), instanceElement.elementId(), null, Map.of(), Map.of(), ElementState.NEW);
         acElementHandler
-                .migrate(COMPOSITION_ELEMENT, compoElTargetAdd, INSTANCE_ELEMENT, inElMigratedAdd);
+                .migrate(compositionElement, compoElTargetAdd, instanceElement, inElMigratedAdd);
         verify(intermediaryApi).updateAutomationCompositionElementState(
-                INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(),
+                instanceElement.instanceId(), instanceElement.elementId(),
                 DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Migrated");
     }
 
@@ -250,10 +257,10 @@ class AutomationCompositionElementHandlerV2Test {
         simulatorService.setConfig(config);
 
         var compoElTargetRemove = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
-                Map.of(), Map.of(), false, true);
+                Map.of(), Map.of(), ElementState.REMOVED);
         var inElMigratedRemove = new InstanceElementDto(
                 INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(),
-                null, Map.of("key", "value"), Map.of(), false, true);
+                null, Map.of("key", "value"), Map.of(), ElementState.REMOVED);
         acElementHandler
                 .migrate(COMPOSITION_ELEMENT, compoElTargetRemove, INSTANCE_ELEMENT, inElMigratedRemove);
         verify(intermediaryApi).updateAutomationCompositionElementState(

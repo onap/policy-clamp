@@ -24,6 +24,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
+import org.onap.policy.clamp.acm.participant.intermediary.api.ElementState;
 import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.acm.participant.intermediary.api.impl.AcElementListenerV3;
@@ -120,10 +121,10 @@ public class AutomationCompositionElementHandlerV3 extends AcElementListenerV3 {
                 + " instanceElementMigrate: {}, stage: {}",
             compositionElement, compositionElementTarget, instanceElement, instanceElementMigrate, stage);
 
-        if (instanceElementMigrate.newElement()) {
+        if (ElementState.NEW.equals(instanceElementMigrate.state())) {
             LOGGER.debug("new element scenario");
         }
-        if (instanceElementMigrate.removedElement()) {
+        if (ElementState.REMOVED.equals(instanceElementMigrate.state())) {
             simulatorService.undeploy(instanceElement.instanceId(), instanceElement.elementId());
             simulatorService.delete(instanceElement.instanceId(), instanceElement.elementId());
         } else {
