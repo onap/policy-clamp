@@ -245,9 +245,9 @@ public abstract class AcElementListenerV1 implements AutomationCompositionElemen
     public void migrate(CompositionElementDto compositionElement, CompositionElementDto compositionElementTarget,
         InstanceElementDto instanceElement, InstanceElementDto instanceElementMigrate) throws PfModelException {
         var element = new  AcElementDeploy();
-        element.setId(instanceElement.elementId());
-        element.setDefinition(compositionElement.elementDefinitionId());
-        element.setProperties(instanceElement.inProperties());
+        element.setId(instanceElementMigrate.elementId());
+        element.setDefinition(compositionElementTarget.elementDefinitionId());
+        element.setProperties(instanceElementMigrate.inProperties());
         migrate(instanceElementMigrate.instanceId(), element, compositionElementTarget.compositionId(),
             element.getProperties());
     }
