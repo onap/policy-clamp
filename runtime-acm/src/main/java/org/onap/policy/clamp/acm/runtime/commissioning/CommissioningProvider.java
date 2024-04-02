@@ -39,7 +39,6 @@ import org.onap.policy.clamp.models.acm.messages.rest.commissioning.Commissionin
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcTypeStateResolver;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
-import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplates;
@@ -147,7 +146,6 @@ public class CommissioningProvider {
      * @param acName the name of the automation composition, null for all
      * @param acVersion the version of the automation composition, null for all
      * @return automation composition definition
-     * @throws PfModelException on errors getting automation composition definitions
      */
     @Transactional(readOnly = true)
     public ToscaServiceTemplates getAutomationCompositionDefinitions(String acName, String acVersion) {

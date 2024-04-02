@@ -1,6 +1,6 @@
 <!--
   ============LICENSE_START=======================================================
-  Copyright (C) 2021 Nordix Foundation.
+  Copyright (C) 2021, 2024 Nordix Foundation.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -31,6 +31,15 @@
     <artifactId>policy-clamp-participant-impl-http</artifactId>
     <name>${project.artifactId}</name>
     <description>HTTP participant, that performs CRUD operations on Microservices through REST</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.glassfish.jersey.inject</groupId>
+            <artifactId>jersey-hk2</artifactId>
+            <version>${version.jersey}</version>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>

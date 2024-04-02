@@ -1,6 +1,6 @@
 <!--
   ============LICENSE_START=======================================================
-  Copyright (C) 2022 Nordix Foundation.
+  Copyright (C) 2022, 2024 Nordix Foundation.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -31,6 +31,19 @@
     <artifactId>policy-clamp-participant-impl-a1pms</artifactId>
     <name>${project.artifactId}</name>
     <description>A1 PMS participant, that performs operations related to access the A1 Policy Management Service to perform A1 Policy Operations</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.inject</groupId>
+            <artifactId>jersey-hk2</artifactId>
+            <version>${version.jersey}</version>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>
