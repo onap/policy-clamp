@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023 Nordix Foundation.
+ *  Copyright (C) 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import jakarta.ws.rs.core.MediaType;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.participant.sim.controller.genapi.SimulatorParticipantControllerApi;
-import org.onap.policy.clamp.acm.participant.sim.main.handler.AutomationCompositionElementHandler;
+import org.onap.policy.clamp.acm.participant.sim.main.handler.SimulatorService;
 import org.onap.policy.clamp.acm.participant.sim.model.InternalData;
 import org.onap.policy.clamp.acm.participant.sim.model.InternalDatas;
 import org.onap.policy.clamp.acm.participant.sim.model.SimConfig;
@@ -42,33 +42,33 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/v2", produces = {MediaType.APPLICATION_JSON})
 public class SimulatorController implements SimulatorParticipantControllerApi {
 
-    private final AutomationCompositionElementHandler automationCompositionElementHandler;
+    private final SimulatorService simulatorService;
 
     @Override
     public ResponseEntity<SimConfig> getConfig(UUID xonapRequestId) {
-        return new ResponseEntity<>(automationCompositionElementHandler.getConfig(), HttpStatus.OK);
+        return new ResponseEntity<>(simulatorService.getConfig(), HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<Void> setConfig(UUID xonapRequestId, @Valid @RequestBody SimConfig body) {
-        automationCompositionElementHandler.setConfig(body);
+        simulatorService.setConfig(body);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<AutomationCompositions> getAutomationCompositions(UUID xonapRequestId) {
-        return new ResponseEntity<>(automationCompositionElementHandler.getAutomationCompositions(), HttpStatus.OK);
+        return new ResponseEntity<>(simulatorService.getAutomationCompositions(), HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<AutomationComposition> getAutomationComposition(UUID instanceId, UUID xonapRequestId) {
-        return new ResponseEntity<>(automationCompositionElementHandler.getAutomationComposition(instanceId),
+        return new ResponseEntity<>(simulatorService.getAutomationComposition(instanceId),
                 HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<InternalDatas> getDatas(UUID xonapRequestId) {
-        return new ResponseEntity<>(automationCompositionElementHandler.getDataList(), HttpStatus.OK);
+        return new ResponseEntity<>(simulatorService.getDataList(), HttpStatus.OK);
     }
 
     /**
@@ -79,7 +79,7 @@ public class SimulatorController implements SimulatorParticipantControllerApi {
      */
     @Override
     public ResponseEntity<Void> setData(UUID xonapRequestId, @Valid @RequestBody InternalData body) {
-        automationCompositionElementHandler.setOutProperties(body.getAutomationCompositionId(),
+        simulatorService.setOutProperties(body.getAutomationCompositionId(),
                 body.getAutomationCompositionElementId(), body.getUseState(), body.getOperationalState(),
                 body.getOutProperties());
         return new ResponseEntity<>(HttpStatus.OK);
@@ -87,12 +87,12 @@ public class SimulatorController implements SimulatorParticipantControllerApi {
 
     @Override
     public ResponseEntity<InternalDatas> getCompositionDatas(UUID xonapRequestId) {
-        return new ResponseEntity<>(automationCompositionElementHandler.getCompositionDataList(), HttpStatus.OK);
+        return new ResponseEntity<>(simulatorService.getCompositionDataList(), HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<Void> setCompositionData(UUID xonapRequestId, @Valid InternalData body) {
-        automationCompositionElementHandler.setCompositionOutProperties(body.getCompositionId(),
+        simulatorService.setCompositionOutProperties(body.getCompositionId(),
                 body.getCompositionDefinitionElementId(), body.getOutProperties());
         return new ResponseEntity<>(HttpStatus.OK);
     }

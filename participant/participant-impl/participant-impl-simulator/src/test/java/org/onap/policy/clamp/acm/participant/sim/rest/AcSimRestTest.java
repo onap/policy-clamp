@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023 Nordix Foundation.
+ *  Copyright (C) 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,11 +32,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.onap.policy.clamp.acm.participant.sim.comm.CommonTestData;
-import org.onap.policy.clamp.acm.participant.sim.main.handler.AutomationCompositionElementHandler;
+import org.onap.policy.clamp.acm.participant.sim.main.handler.SimulatorService;
 import org.onap.policy.clamp.acm.participant.sim.model.InternalData;
 import org.onap.policy.clamp.acm.participant.sim.model.InternalDatas;
 import org.onap.policy.clamp.acm.participant.sim.model.SimConfig;
 import org.onap.policy.clamp.acm.participant.sim.parameters.ParticipantSimParameters;
+import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -70,7 +71,7 @@ class AcSimRestTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private AutomationCompositionElementHandler automationCompositionElementHandler;
+    private SimulatorService simulatorService;
 
     @Autowired
     private WebApplicationContext context;
@@ -81,10 +82,10 @@ class AcSimRestTest {
     }
 
     @Test
-    void testgetConfig() throws Exception {
+    void testGetConfig() throws Exception {
         var requestBuilder = MockMvcRequestBuilders.get(CONFIG_URL).accept(MediaType.APPLICATION_JSON_VALUE);
 
-        doReturn(new SimConfig()).when(automationCompositionElementHandler).getConfig();
+        doReturn(new SimConfig()).when(simulatorService).getConfig();
 
         mockMvc.perform(requestBuilder).andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -92,7 +93,7 @@ class AcSimRestTest {
     }
 
     @Test
-    void testsetConfig() throws Exception {
+    void testSetConfig() throws Exception {
         var requestBuilder = MockMvcRequestBuilders.put(CONFIG_URL).accept(MediaType.APPLICATION_JSON_VALUE)
                 .content(CODER.encode(new SimConfig())).contentType(MediaType.APPLICATION_JSON_VALUE);
 
@@ -100,13 +101,13 @@ class AcSimRestTest {
     }
 
     @Test
-    void testgetAutomationCompositions() throws Exception {
+    void testGetAutomationCompositions() throws Exception {
         var requestBuilder = MockMvcRequestBuilders.get(INSTANCE_URL).accept(MediaType.APPLICATION_JSON_VALUE);
 
         var automationCompositions = new AutomationCompositions();
         automationCompositions.getAutomationCompositionList().add(CommonTestData.getTestAutomationComposition());
 
-        doReturn(automationCompositions).when(automationCompositionElementHandler).getAutomationCompositions();
+        doReturn(automationCompositions).when(simulatorService).getAutomationCompositions();
 
         var result = mockMvc.perform(requestBuilder).andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON)).andReturn();
@@ -117,13 +118,31 @@ class AcSimRestTest {
     }
 
     @Test
-    void testgetDatas() throws Exception {
+    void testGetAutomationComposition() throws Exception {
+        var automationComposition = CommonTestData.getTestAutomationComposition();
+
+        var requestBuilder = MockMvcRequestBuilders
+                .get(INSTANCE_URL + "/" + automationComposition.getInstanceId())
+                .accept(MediaType.APPLICATION_JSON_VALUE);
+
+        doReturn(automationComposition).when(simulatorService)
+                .getAutomationComposition(automationComposition.getInstanceId());
+
+        var result = mockMvc.perform(requestBuilder).andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON)).andReturn();
+        var body = result.getResponse().getContentAsString();
+        var acsResult = CODER.decode(body, AutomationComposition.class);
+        assertEquals(automationComposition, acsResult);
+    }
+
+    @Test
+    void testGetDatas() throws Exception {
         var internalDatas = new InternalDatas();
         var internalData = new InternalData();
         internalData.setAutomationCompositionId(UUID.randomUUID());
         internalDatas.getList().add(internalData);
 
-        doReturn(internalDatas).when(automationCompositionElementHandler).getDataList();
+        doReturn(internalDatas).when(simulatorService).getDataList();
 
         var requestBuilder = MockMvcRequestBuilders.get(DATAS_URL).accept(MediaType.APPLICATION_JSON_VALUE);
         var result = mockMvc.perform(requestBuilder).andExpect(status().isOk())
@@ -135,7 +154,7 @@ class AcSimRestTest {
     }
 
     @Test
-    void testsetDatas() throws Exception {
+    void testSetDatas() throws Exception {
         var requestBuilder = MockMvcRequestBuilders.put(DATAS_URL).accept(MediaType.APPLICATION_JSON_VALUE)
                 .content(CODER.encode(new InternalData())).contentType(MediaType.APPLICATION_JSON_VALUE);
 
@@ -143,13 +162,13 @@ class AcSimRestTest {
     }
 
     @Test
-    void testgetCompositionDatas() throws Exception {
+    void testGetCompositionDatas() throws Exception {
         var internalDatas = new InternalDatas();
         var internalData = new InternalData();
         internalData.setCompositionId(UUID.randomUUID());
         internalDatas.getList().add(internalData);
 
-        doReturn(internalDatas).when(automationCompositionElementHandler).getCompositionDataList();
+        doReturn(internalDatas).when(simulatorService).getCompositionDataList();
 
         var requestBuilder = MockMvcRequestBuilders.get(COMPOSITION_DATAS_URL).accept(MediaType.APPLICATION_JSON_VALUE);
         var result = mockMvc.perform(requestBuilder).andExpect(status().isOk())
@@ -160,7 +179,7 @@ class AcSimRestTest {
     }
 
     @Test
-    void testsetCompositionDatas() throws Exception {
+    void testSetCompositionDatas() throws Exception {
         var requestBuilder = MockMvcRequestBuilders.put(COMPOSITION_DATAS_URL).accept(MediaType.APPLICATION_JSON_VALUE)
                 .content(CODER.encode(new InternalData())).contentType(MediaType.APPLICATION_JSON_VALUE);
 
