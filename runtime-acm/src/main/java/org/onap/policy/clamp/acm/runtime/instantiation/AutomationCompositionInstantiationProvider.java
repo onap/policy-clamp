@@ -201,7 +201,7 @@ public class AutomationCompositionInstantiationProvider {
             if (dbAcElement == null) {
                 throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, "Element id not present " + elementId);
             }
-            dbAcElement.getProperties().putAll(element.getValue().getProperties());
+            AcmUtils.recursiveMerge(dbAcElement.getProperties(), element.getValue().getProperties());
             var newDefinition = element.getValue().getDefinition();
             var compatibility =
                 newDefinition.asConceptKey().getCompatibility(dbAcElement.getDefinition().asConceptKey());
