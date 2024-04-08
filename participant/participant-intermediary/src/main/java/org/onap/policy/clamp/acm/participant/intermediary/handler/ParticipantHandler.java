@@ -23,12 +23,8 @@
 package org.onap.policy.clamp.acm.participant.intermediary.handler;
 
 import io.micrometer.core.annotation.Timed;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
-import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeploy;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionMigration;
@@ -44,6 +40,7 @@ import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRe
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantStatus;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantStatusReq;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.PropertiesUpdate;
+import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -57,6 +54,8 @@ public class ParticipantHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantHandler.class);
 
     private final AutomationCompositionHandler automationCompositionHandler;
+    private final AcLockHandler acLockHandler;
+    private final AcDefinitionHandler acDefinitionHandler;
     private final ParticipantMessagePublisher publisher;
     private final CacheProvider cacheProvider;
 
@@ -91,7 +90,11 @@ public class ParticipantHandler {
             value = "listener.automation_composition_state_change",
             description = "AUTOMATION_COMPOSITION_STATE_CHANGE messages received")
     public void handleAutomationCompositionStateChange(AutomationCompositionStateChange stateChangeMsg) {
-        automationCompositionHandler.handleAutomationCompositionStateChange(stateChangeMsg);
+        if (DeployOrder.NONE.equals(stateChangeMsg.getDeployOrderedState())) {
+            acLockHandler.handleAutomationCompositionStateChange(stateChangeMsg);
+        } else {
+            automationCompositionHandler.handleAutomationCompositionStateChange(stateChangeMsg);
+        }
     }
 
     /**
@@ -187,25 +190,7 @@ public class ParticipantHandler {
     @Timed(value = "listener.participant_prime", description = "PARTICIPANT_PRIME messages received")
     public void handleParticipantPrime(ParticipantPrime participantPrimeMsg) {
         LOGGER.debug("ParticipantPrime message received for participantId {}", participantPrimeMsg.getParticipantId());
-
-        if (!participantPrimeMsg.getParticipantDefinitionUpdates().isEmpty()) {
-            // prime
-            List<AutomationCompositionElementDefinition> list = new ArrayList<>();
-            for (var participantDefinition : participantPrimeMsg.getParticipantDefinitionUpdates()) {
-                if (participantDefinition.getParticipantId().equals(cacheProvider.getParticipantId())) {
-                    list.addAll(participantDefinition.getAutomationCompositionElementDefinitionList());
-                }
-            }
-            if (!list.isEmpty()) {
-                cacheProvider.addElementDefinition(participantPrimeMsg.getCompositionId(), list);
-                automationCompositionHandler.prime(participantPrimeMsg.getMessageId(),
-                    participantPrimeMsg.getCompositionId(), list);
-            }
-        } else {
-            // deprime
-            automationCompositionHandler.deprime(participantPrimeMsg.getMessageId(),
-                    participantPrimeMsg.getCompositionId());
-        }
+        acDefinitionHandler.handlePrime(participantPrimeMsg);
     }
 
     /**
@@ -217,16 +202,7 @@ public class ParticipantHandler {
     public void handleParticipantRestart(ParticipantRestart participantRestartMsg) {
         LOGGER.debug("ParticipantRestart message received for participantId {}",
                 participantRestartMsg.getParticipantId());
-        List<AutomationCompositionElementDefinition> list = new ArrayList<>();
-        for (var participantDefinition : participantRestartMsg.getParticipantDefinitionUpdates()) {
-            list.addAll(participantDefinition.getAutomationCompositionElementDefinitionList());
-        }
-        if (!AcTypeState.COMMISSIONED.equals(participantRestartMsg.getState())) {
-            cacheProvider.addElementDefinition(participantRestartMsg.getCompositionId(), list);
-        }
-        automationCompositionHandler.restarted(participantRestartMsg.getMessageId(),
-                participantRestartMsg.getCompositionId(), list, participantRestartMsg.getState(),
-                participantRestartMsg.getAutomationcompositionList());
+        acDefinitionHandler.handleParticipantRestart(participantRestartMsg);
     }
 
     /**

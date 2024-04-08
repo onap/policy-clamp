@@ -21,26 +21,18 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.handler;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionDto;
+import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
-import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
-import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantRestartAc;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeploy;
@@ -48,11 +40,8 @@ import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCom
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionMigration;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionStateChange;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessageType;
-import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrimeAck;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.PropertiesUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
-import org.onap.policy.clamp.models.acm.messages.rest.instantiation.LockOrder;
-import org.onap.policy.clamp.models.acm.persistence.provider.AcInstanceStateResolver;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,28 +51,14 @@ import org.springframework.stereotype.Component;
  * This class is responsible for managing the state of all automation compositions in the participant.
  */
 @Component
+@RequiredArgsConstructor
 public class AutomationCompositionHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(AutomationCompositionHandler.class);
 
     private final CacheProvider cacheProvider;
     private final ParticipantMessagePublisher publisher;
     private final ThreadHandler listener;
-    private final AcInstanceStateResolver acInstanceStateResolver;
 
-    /**
-     * Constructor, set the participant ID and messageSender.
-     *
-     * @param cacheProvider the Cache Provider
-     * @param publisher the ParticipantMessage Publisher
-     * @param listener the ThreadHandler Listener
-     */
-    public AutomationCompositionHandler(CacheProvider cacheProvider, ParticipantMessagePublisher publisher,
-            ThreadHandler listener) {
-        this.cacheProvider = cacheProvider;
-        this.publisher = publisher;
-        this.listener = listener;
-        this.acInstanceStateResolver = new AcInstanceStateResolver();
-    }
 
     /**
      * Handle a automation composition state change message.
@@ -115,77 +90,13 @@ public class AutomationCompositionHandler {
             return;
         }
 
-        if (!checkConsistantOrderState(automationComposition, stateChangeMsg.getDeployOrderedState(),
-                stateChangeMsg.getLockOrderedState())) {
-            LOGGER.warn("Not Consistant OrderState Automation composition {}",
-                    stateChangeMsg.getAutomationCompositionId());
-            return;
-        }
-
-        if (DeployOrder.NONE.equals(stateChangeMsg.getDeployOrderedState())) {
-            handleLockOrderState(stateChangeMsg.getMessageId(), automationComposition,
-                    stateChangeMsg.getLockOrderedState(), stateChangeMsg.getStartPhase());
-        } else {
-            handleDeployOrderState(stateChangeMsg.getMessageId(), automationComposition,
-                    stateChangeMsg.getDeployOrderedState(), stateChangeMsg.getStartPhase());
-        }
-    }
-
-    private boolean checkConsistantOrderState(AutomationComposition automationComposition, DeployOrder deployOrder,
-            LockOrder lockOrder) {
-        if (DeployOrder.UPDATE.equals(deployOrder)) {
-            return true;
-        }
-        return acInstanceStateResolver.resolve(deployOrder, lockOrder, automationComposition.getDeployState(),
-                automationComposition.getLockState(), automationComposition.getStateChangeResult()) != null;
-    }
-
-    /**
-     * Method to handle state changes.
-     *
-     * @param messageId the messageId
-     * @param automationComposition participant response
-     * @param orderedState automation composition ordered state
-     * @param startPhaseMsg startPhase from message
-     */
-    private void handleDeployOrderState(UUID messageId, final AutomationComposition automationComposition,
-            DeployOrder orderedState, Integer startPhaseMsg) {
-
-        switch (orderedState) {
-            case UNDEPLOY:
-                handleUndeployState(messageId, automationComposition, startPhaseMsg);
-                break;
-            case DELETE:
-                handleDeleteState(messageId, automationComposition, startPhaseMsg);
-                break;
-
-            default:
-                LOGGER.error("StateChange message has no state, state is null {}", automationComposition.getKey());
-                break;
-        }
-    }
-
-    /**
-     * Method to handle state changes.
-     *
-     * @param messageId the messageId
-     * @param automationComposition participant response
-     * @param orderedState automation composition ordered state
-     * @param startPhaseMsg startPhase from message
-     */
-    private void handleLockOrderState(UUID messageId, final AutomationComposition automationComposition,
-            LockOrder orderedState, Integer startPhaseMsg) {
-
-        switch (orderedState) {
-            case LOCK:
-                handleLockState(messageId, automationComposition, startPhaseMsg);
-                break;
-            case UNLOCK:
-                handleUnlockState(messageId, automationComposition, startPhaseMsg);
-                break;
-            default:
-                LOGGER.error("StateChange message has no state, state is null {}", automationComposition.getKey());
-                break;
+        switch (stateChangeMsg.getDeployOrderedState()) {
+            case UNDEPLOY -> handleUndeployState(stateChangeMsg.getMessageId(), automationComposition,
+                    stateChangeMsg.getStartPhase());
+            case DELETE -> handleDeleteState(stateChangeMsg.getMessageId(), automationComposition,
+                    stateChangeMsg.getStartPhase());
+            default ->
+                    LOGGER.error("StateChange message has no state, state is null {}", automationComposition.getKey());
         }
     }
 
@@ -248,8 +159,8 @@ public class AutomationCompositionHandler {
                 .getCommonProperties(automationComposition.getCompositionId(), element.getDefinition());
             int startPhase = ParticipantUtils.findStartPhase(compositionInProperties);
             if (startPhaseMsg.equals(startPhase)) {
-                var compositionElement = createCompositionElementDto(automationComposition.getCompositionId(),
-                    element, compositionInProperties);
+                var compositionElement = cacheProvider.createCompositionElementDto(
+                        automationComposition.getCompositionId(), element, compositionInProperties);
                 var instanceElement = new InstanceElementDto(instanceId, elementDeploy.getId(),
                     elementDeploy.getToscaServiceTemplateFragment(),
                     elementDeploy.getProperties(), element.getOutProperties());
@@ -258,20 +169,13 @@ public class AutomationCompositionHandler {
         }
     }
 
-    private CompositionElementDto createCompositionElementDto(UUID compositionId, AutomationCompositionElement element,
-        Map<String, Object> compositionInProperties) {
-        var compositionOutProperties = cacheProvider.getAcElementsDefinitions()
-            .get(compositionId).get(element.getDefinition()).getOutProperties();
-        return new CompositionElementDto(compositionId,
-            element.getDefinition(), compositionInProperties, compositionOutProperties);
-    }
-
     private Map<UUID, CompositionElementDto> getCompositionElementDtoMap(AutomationComposition automationComposition,
         UUID compositionId) {
         Map<UUID, CompositionElementDto> map = new HashMap<>();
         for (var element : automationComposition.getElements().values()) {
             var compositionInProperties = cacheProvider.getCommonProperties(compositionId, element.getDefinition());
-            var compositionElement = createCompositionElementDto(compositionId, element, compositionInProperties);
+            var compositionElement = cacheProvider
+                    .createCompositionElementDto(compositionId, element, compositionInProperties);
             map.put(element.getId(), compositionElement);
         }
         return map;
@@ -330,8 +234,8 @@ public class AutomationCompositionHandler {
             int startPhase = ParticipantUtils.findStartPhase(compositionInProperties);
             if (startPhaseMsg.equals(startPhase)) {
                 element.setDeployState(DeployState.UNDEPLOYING);
-                var compositionElement = createCompositionElementDto(automationComposition.getCompositionId(),
-                    element, compositionInProperties);
+                var compositionElement = cacheProvider.createCompositionElementDto(
+                        automationComposition.getCompositionId(), element, compositionInProperties);
                 var instanceElement = new InstanceElementDto(automationComposition.getInstanceId(), element.getId(),
                     null, element.getProperties(), element.getOutProperties());
                 listener.undeploy(messageId, compositionElement, instanceElement);
@@ -347,135 +251,13 @@ public class AutomationCompositionHandler {
             int startPhase = ParticipantUtils.findStartPhase(compositionInProperties);
             if (startPhaseMsg.equals(startPhase)) {
                 element.setDeployState(DeployState.DELETING);
-                var compositionElement = createCompositionElementDto(automationComposition.getCompositionId(),
-                    element, compositionInProperties);
+                var compositionElement = cacheProvider.createCompositionElementDto(
+                        automationComposition.getCompositionId(), element, compositionInProperties);
                 var instanceElement = new InstanceElementDto(automationComposition.getInstanceId(), element.getId(),
                     null, element.getProperties(), element.getOutProperties());
                 listener.delete(messageId, compositionElement, instanceElement);
             }
         }
-    }
-
-    /**
-     * Method to handle when the new state from participant is PASSIVE state.
-     *
-     * @param messageId the messageId
-     * @param automationComposition participant response
-     * @param startPhaseMsg startPhase from message
-     */
-    private void handleLockState(UUID messageId, final AutomationComposition automationComposition,
-            Integer startPhaseMsg) {
-        for (var element : automationComposition.getElements().values()) {
-            var compositionInProperties = cacheProvider
-                .getCommonProperties(automationComposition.getCompositionId(), element.getDefinition());
-            int startPhase = ParticipantUtils.findStartPhase(compositionInProperties);
-            if (startPhaseMsg.equals(startPhase)) {
-                element.setLockState(LockState.LOCKING);
-                var compositionElement = createCompositionElementDto(automationComposition.getCompositionId(),
-                    element, compositionInProperties);
-                var instanceElement = new InstanceElementDto(automationComposition.getInstanceId(), element.getId(),
-                    null, element.getProperties(), element.getOutProperties());
-                listener.lock(messageId, compositionElement, instanceElement);
-            }
-        }
-    }
-
-    /**
-     * Method to handle when the new state from participant is RUNNING state.
-     *
-     * @param messageId the messageId
-     * @param automationComposition participant response
-     * @param startPhaseMsg startPhase from message
-     */
-    private void handleUnlockState(UUID messageId, final AutomationComposition automationComposition,
-            Integer startPhaseMsg) {
-        for (var element : automationComposition.getElements().values()) {
-            var compositionInProperties = cacheProvider
-                .getCommonProperties(automationComposition.getCompositionId(), element.getDefinition());
-            int startPhase = ParticipantUtils.findStartPhase(compositionInProperties);
-            if (startPhaseMsg.equals(startPhase)) {
-                element.setLockState(LockState.UNLOCKING);
-                var compositionElement = createCompositionElementDto(automationComposition.getCompositionId(),
-                    element, compositionInProperties);
-                var instanceElement = new InstanceElementDto(automationComposition.getInstanceId(), element.getId(),
-                    null, element.getProperties(), element.getOutProperties());
-                listener.unlock(messageId, compositionElement, instanceElement);
-            }
-        }
-    }
-
-    /**
-     * Handles prime a Composition Definition.
-     *
-     * @param messageId the messageId
-     * @param compositionId the compositionId
-     * @param list the list of AutomationCompositionElementDefinition
-     */
-    public void prime(UUID messageId, UUID compositionId, List<AutomationCompositionElementDefinition> list) {
-        var inPropertiesMap = list.stream().collect(Collectors.toMap(
-            AutomationCompositionElementDefinition::getAcElementDefinitionId,
-            el -> el.getAutomationCompositionElementToscaNodeTemplate().getProperties()));
-        var outPropertiesMap = list.stream().collect(Collectors.toMap(
-            AutomationCompositionElementDefinition::getAcElementDefinitionId,
-            AutomationCompositionElementDefinition::getOutProperties));
-        listener.prime(messageId, new CompositionDto(compositionId, inPropertiesMap, outPropertiesMap));
-    }
-
-    /**
-     * Handles deprime a Composition Definition.
-     *
-     * @param messageId the messageId
-     * @param compositionId the compositionId
-     */
-    public void deprime(UUID messageId, UUID compositionId) {
-        var acElementsDefinitions = cacheProvider.getAcElementsDefinitions().get(compositionId);
-        if (acElementsDefinitions == null) {
-            // this participant does not handle this composition
-            var participantPrimeAck = new ParticipantPrimeAck();
-            participantPrimeAck.setCompositionId(compositionId);
-            participantPrimeAck.setMessage("Already deprimed or never primed");
-            participantPrimeAck.setResult(true);
-            participantPrimeAck.setResponseTo(messageId);
-            participantPrimeAck.setCompositionState(AcTypeState.COMMISSIONED);
-            participantPrimeAck.setStateChangeResult(StateChangeResult.NO_ERROR);
-            participantPrimeAck.setParticipantId(cacheProvider.getParticipantId());
-            participantPrimeAck.setState(ParticipantState.ON_LINE);
-            publisher.sendParticipantPrimeAck(participantPrimeAck);
-            return;
-        }
-        var list = new ArrayList<>(acElementsDefinitions.values());
-        var inPropertiesMap = list.stream().collect(Collectors.toMap(
-            AutomationCompositionElementDefinition::getAcElementDefinitionId,
-            el -> el.getAutomationCompositionElementToscaNodeTemplate().getProperties()));
-        var outPropertiesMap = list.stream().collect(Collectors.toMap(
-            AutomationCompositionElementDefinition::getAcElementDefinitionId,
-            AutomationCompositionElementDefinition::getOutProperties));
-        listener.deprime(messageId, new CompositionDto(compositionId, inPropertiesMap, outPropertiesMap));
-    }
-
-    /**
-     * Handles restarted scenario.
-     *
-     * @param messageId the messageId
-     * @param compositionId the compositionId
-     * @param list the list of AutomationCompositionElementDefinition
-     * @param state the state of the composition
-     * @param automationCompositionList list of ParticipantRestartAc
-     */
-    public void restarted(UUID messageId, UUID compositionId, List<AutomationCompositionElementDefinition> list,
-            AcTypeState state, List<ParticipantRestartAc> automationCompositionList) {
-
-        for (var automationcomposition : automationCompositionList) {
-            cacheProvider.initializeAutomationComposition(compositionId, automationcomposition);
-        }
-        var inPropertiesMap = list.stream().collect(Collectors.toMap(
-            AutomationCompositionElementDefinition::getAcElementDefinitionId,
-            el -> el.getAutomationCompositionElementToscaNodeTemplate().getProperties()));
-        var outPropertiesMap = list.stream().collect(Collectors.toMap(
-            AutomationCompositionElementDefinition::getAcElementDefinitionId,
-            AutomationCompositionElementDefinition::getOutProperties));
-        var composition = new CompositionDto(compositionId, inPropertiesMap, outPropertiesMap);
-        listener.restarted(messageId, composition, state, automationCompositionList);
     }
 
     /**

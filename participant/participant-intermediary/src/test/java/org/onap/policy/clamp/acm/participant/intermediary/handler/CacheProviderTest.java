@@ -96,6 +96,10 @@ class CacheProviderTest {
             var commonProperties =
                     cacheProvider.getCommonProperties(automationComposition.getInstanceId(), element.getId());
             assertEquals("value", commonProperties.get("key"));
+
+            commonProperties = cacheProvider
+                    .getCommonProperties(automationComposition.getCompositionId(), element.getDefinition());
+            assertEquals("value", commonProperties.get("key"));
         }
 
         assertEquals(automationComposition.getInstanceId(),
@@ -163,6 +167,23 @@ class CacheProviderTest {
             assertEquals(element.getDeployState(), acElementRestart.getDeployState());
             assertEquals(element.getProperties(), acElementRestart.getProperties());
             assertEquals(element.getOutProperties(), acElementRestart.getOutProperties());
+        }
+    }
+
+    @Test
+    void testCreateCompositionElementDto() {
+        var parameter = CommonTestData.getParticipantParameters();
+        var cacheProvider = new CacheProvider(parameter);
+        var compositionId = UUID.randomUUID();
+        var automationComposition =
+                CommonTestData.getTestAutomationCompositions().getAutomationCompositionList().get(0);
+        automationComposition.setCompositionId(compositionId);
+        cacheProvider.addElementDefinition(compositionId,
+                CommonTestData.createAutomationCompositionElementDefinitionList(automationComposition));
+        for (var element : automationComposition.getElements().values()) {
+            var result = cacheProvider.createCompositionElementDto(compositionId, element, Map.of());
+            assertEquals(compositionId, result.compositionId());
+            assertEquals(element.getDefinition(), result.elementDefinitionId());
         }
     }
 }

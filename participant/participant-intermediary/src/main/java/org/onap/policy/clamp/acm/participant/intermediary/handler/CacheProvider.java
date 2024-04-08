@@ -28,6 +28,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.Getter;
 import lombok.NonNull;
+import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.parameters.ParticipantParameters;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
@@ -200,5 +201,21 @@ public class CacheProvider {
         automationComposition.setInstanceId(participantRestartAc.getAutomationCompositionId());
         automationComposition.setElements(acElementMap);
         automationCompositions.put(automationComposition.getInstanceId(), automationComposition);
+    }
+
+    /**
+     * Create CompositionElementDto.
+     *
+     * @param compositionId the composition Id
+     * @param element AutomationComposition Element
+     * @param compositionInProperties composition definition InProperties
+     * @return the CompositionElementDto
+     */
+    public CompositionElementDto createCompositionElementDto(UUID compositionId, AutomationCompositionElement element,
+                                                              Map<String, Object> compositionInProperties) {
+        var compositionOutProperties = getAcElementsDefinitions()
+                .get(compositionId).get(element.getDefinition()).getOutProperties();
+        return new CompositionElementDto(compositionId,
+                element.getDefinition(), compositionInProperties, compositionOutProperties);
     }
 }

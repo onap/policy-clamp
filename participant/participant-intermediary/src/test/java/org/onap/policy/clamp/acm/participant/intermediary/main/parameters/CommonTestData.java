@@ -277,13 +277,24 @@ public class CommonTestData {
             createAutomationCompositionElementDefinitionList(AutomationComposition automationComposition) {
         List<AutomationCompositionElementDefinition> definitions = new ArrayList<>();
         for (var element : automationComposition.getElements().values()) {
-            var acElementDefinition = new AutomationCompositionElementDefinition();
-            acElementDefinition.setAcElementDefinitionId(element.getDefinition());
-            var nodeTemplate = new ToscaNodeTemplate();
-            nodeTemplate.setProperties(Map.of("key", "value"));
-            acElementDefinition.setAutomationCompositionElementToscaNodeTemplate(nodeTemplate);
-            definitions.add(acElementDefinition);
+            definitions.add(createAutomationCompositionElementDefinition(element.getDefinition()));
         }
         return definitions;
+    }
+
+    /**
+     * create a new example of AutomationCompositionElementDefinition.
+     *
+     * @param definition the composition definition element id
+     * @return the AutomationCompositionElementDefinition
+     */
+    public static AutomationCompositionElementDefinition createAutomationCompositionElementDefinition(
+            ToscaConceptIdentifier definition) {
+        var acElementDefinition = new AutomationCompositionElementDefinition();
+        acElementDefinition.setAcElementDefinitionId(definition);
+        var nodeTemplate = new ToscaNodeTemplate();
+        nodeTemplate.setProperties(Map.of("key", "value"));
+        acElementDefinition.setAutomationCompositionElementToscaNodeTemplate(nodeTemplate);
+        return acElementDefinition;
     }
 }
