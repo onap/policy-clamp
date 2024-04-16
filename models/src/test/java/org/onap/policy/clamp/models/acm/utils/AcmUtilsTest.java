@@ -24,6 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -362,5 +363,17 @@ class AcmUtilsTest {
         assertEquals("90", subMap.get("myParameterToUpdate"));
         assertNull(subMap.get("myParameterToRemove"));
         assertEquals("I am new", subMap.get("myParameter"));
+    }
+
+    @Test
+    void testCopyMap() {
+        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> subMap = new HashMap<>();
+        subMap.put("test", "value");
+        map.put("sub", subMap);
+        var result = AcmUtils.cloneMap(map);
+        var subMap2 = (Map<String, Object>) result.get("sub");
+        subMap2.put("test", "value2");
+        assertNotEquals(subMap.get("test"), subMap2.get("test"));
     }
 }

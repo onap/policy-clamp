@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2023 Nordix Foundation.
+ * Copyright (C) 2021-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,13 +23,12 @@ package org.onap.policy.clamp.models.acm.concepts;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.UnaryOperator;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.ToString;
+import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.models.base.PfConceptKey;
-import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
@@ -77,8 +76,8 @@ public class AutomationCompositionElement {
         this.definition = new ToscaConceptIdentifier(otherElement.definition);
         this.participantId = otherElement.participantId;
         this.description = otherElement.description;
-        this.properties = PfUtils.mapMap(otherElement.properties, UnaryOperator.identity());
-        this.outProperties = PfUtils.mapMap(otherElement.outProperties, UnaryOperator.identity());
+        this.properties = AcmUtils.cloneMap(otherElement.properties);
+        this.outProperties = AcmUtils.cloneMap(otherElement.outProperties);
         this.restarting = otherElement.restarting;
         this.deployState = otherElement.deployState;
         this.lockState = otherElement.lockState;
