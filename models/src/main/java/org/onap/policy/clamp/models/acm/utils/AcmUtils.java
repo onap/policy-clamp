@@ -52,6 +52,7 @@ import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.LockOrder;
+import org.onap.policy.clamp.models.acm.persistence.concepts.StringToMapConverter;
 import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.common.parameters.ObjectValidationResult;
 import org.onap.policy.common.parameters.ValidationResult;
@@ -70,6 +71,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class AcmUtils {
     public static final String ENTRY = "entry ";
+    private static StringToMapConverter MAP_CONVERTER = new StringToMapConverter();
 
     /**
      * Get the Policy information in the service template for the deploy message to participants.
@@ -489,5 +491,10 @@ public final class AcmUtils {
                 list1.set(i, valueRight);
             }
         }
+    }
+
+    public static Map<String, Object> cloneMap(Map<String, Object> map) {
+        var str = MAP_CONVERTER.convertToDatabaseColumn(map);
+        return MAP_CONVERTER.convertToEntityAttribute(str);
     }
 }
