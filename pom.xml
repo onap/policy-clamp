@@ -28,7 +28,7 @@
     </parent>
     <groupId>org.onap.policy.clamp</groupId>
     <artifactId>policy-clamp</artifactId>
-    <version>7.1.2-SNAPSHOT</version>
+    <version>7.1.2</version>
     <name>${project.artifactId}</name>
     <packaging>pom</packaging>
     <description>
