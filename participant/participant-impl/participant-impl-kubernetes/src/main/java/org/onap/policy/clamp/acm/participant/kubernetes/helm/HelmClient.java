@@ -1,6 +1,6 @@
 /*-
  * ========================LICENSE_START=================================
- * Copyright (C) 2021-2023 Nordix Foundation. All rights reserved.
+ * Copyright (C) 2021-2024 Nordix Foundation. All rights reserved.
  * ======================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ======================================================================
@@ -81,9 +81,10 @@ public class HelmClient {
             logger.info("Adding repository to helm client");
             executeCommand(prepareRepoAddCommand(repo));
             logger.debug("Added repository {} to the helm client", repo.getRepoName());
-            return true;
+            return updateHelmRepo();
         }
-        logger.info("Repository already exists");
+        logger.info("Repository already exists, updating the repo");
+        updateHelmRepo();
         return false;
     }
 
@@ -270,7 +271,7 @@ public class HelmClient {
 
     private boolean updateHelmRepo() {
         try {
-            logger.info("Updating local helm repositories before verifying the chart");
+            logger.info("Updating local helm repositories");
             executeCommand(new ProcessBuilder().command(COMMAND_HELM, "repo", "update"));
             logger.debug("Helm repositories updated successfully");
         } catch (ServiceException e) {
