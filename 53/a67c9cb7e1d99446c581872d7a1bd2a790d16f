@@ -1,0 +1,9 @@
+Code-Review+2: Adheli Tavares <adheli.tavares@est.tech>
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Verified+1: ONAP Required GHA <releng+onap.required.gha@linuxfoundation.org>
+Code-Review+1: Aravindhan Ayyanathan <aravindhan.a@est.tech>
+Submitted-by: Adheli Tavares <adheli.tavares@est.tech>
+Submitted-at: Tue, 14 May 2024 09:09:28 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/policy/clamp/+/137859
+Project: policy/clamp
+Branch: refs/heads/master
