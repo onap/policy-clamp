@@ -37,6 +37,7 @@ import org.onap.policy.clamp.models.acm.persistence.concepts.JpaNodeTemplateStat
 import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionDefinitionRepository;
 import org.onap.policy.clamp.models.acm.persistence.repository.NodeTemplateStateRepository;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
+import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
@@ -68,6 +69,7 @@ public class AcDefinitionProvider {
         if (serviceTemplate.getMetadata() == null) {
             serviceTemplate.setMetadata(new HashMap<>());
         }
+        acmDefinition.setLastMsg(TimestampHelper.now());
         serviceTemplate.getMetadata().put("compositionId", compositionId);
         acmDefinition.setServiceTemplate(serviceTemplate);
         var acElements = AcmUtils.extractAcElementsFromServiceTemplate(serviceTemplate, toscaElementName);
@@ -100,6 +102,7 @@ public class AcDefinitionProvider {
         var acmDefinition = new AutomationCompositionDefinition();
         acmDefinition.setCompositionId(compositionId);
         acmDefinition.setState(AcTypeState.COMMISSIONED);
+        acmDefinition.setLastMsg(TimestampHelper.now());
         acmDefinition.setServiceTemplate(serviceTemplate);
         var acElements =
                 AcmUtils.extractAcElementsFromServiceTemplate(serviceTemplate, toscaElementName);

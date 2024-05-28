@@ -35,9 +35,11 @@ import org.onap.policy.clamp.acm.runtime.participants.AcmParticipantProvider;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
+import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrime;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
+import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,7 +86,9 @@ public class ParticipantPrimePublisher extends AbstractParticipantPublisher<Part
      * @return list of ParticipantDefinition
      */
     public List<ParticipantDefinition> prepareParticipantPriming(AutomationCompositionDefinition acmDefinition) {
+        acmDefinition.setStateChangeResult(StateChangeResult.NO_ERROR);
         acmDefinition.setState(AcTypeState.PRIMING);
+        acmDefinition.setLastMsg(TimestampHelper.now());
         var acElements = AcmUtils.extractAcElementsFromServiceTemplate(acmDefinition.getServiceTemplate(),
                 acRuntimeParameterGroup.getAcmParameters().getToscaElementName());
         Map<ToscaConceptIdentifier, UUID> supportedElementMap = new HashMap<>();

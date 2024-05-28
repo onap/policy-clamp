@@ -121,6 +121,7 @@ public class CommonTestData {
         var acDefinition = new AutomationCompositionDefinition();
         acDefinition.setCompositionId(UUID.randomUUID());
         acDefinition.setState(state);
+        acDefinition.setLastMsg(TimestampHelper.now());
         acDefinition.setServiceTemplate(serviceTemplate);
         var acElements = AcmUtils
                 .extractAcElementsFromServiceTemplate(serviceTemplate, TOSCA_ELEMENT_NAME);

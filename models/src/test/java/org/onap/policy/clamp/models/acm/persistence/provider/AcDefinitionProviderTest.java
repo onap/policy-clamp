@@ -45,8 +45,10 @@ import org.onap.policy.clamp.models.acm.persistence.concepts.JpaNodeTemplateStat
 import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionDefinitionRepository;
 import org.onap.policy.clamp.models.acm.persistence.repository.NodeTemplateStateRepository;
 import org.onap.policy.clamp.models.acm.utils.CommonTestData;
+import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
 import org.springframework.data.domain.Example;
 
 class AcDefinitionProviderTest {
@@ -61,6 +63,29 @@ class AcDefinitionProviderTest {
     private static final String INVALID_NODE_TYPE = "dummyNodeTypeName";
 
     private static ToscaServiceTemplate inputServiceTemplate;
+
+    @Test
+    void testBadRequest() {
+        var acmDefinitionRepository = mock(AutomationCompositionDefinitionRepository.class);
+        var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository, null);
+
+        var compositionId = UUID.randomUUID();
+        var serviceTemplate = new ToscaServiceTemplate();
+        serviceTemplate.setToscaTopologyTemplate(new ToscaTopologyTemplate());
+        serviceTemplate.getToscaTopologyTemplate().setNodeTemplates(new HashMap<>());
+        assertThatThrownBy(() -> acDefinitionProvider.updateServiceTemplate(compositionId, serviceTemplate,
+                "ElementName", "CompositionName"))
+                .hasMessageMatching("NodeTemplate with element type ElementName must exist!");
+
+        var docServiceTemplate = new DocToscaServiceTemplate(inputServiceTemplate);
+        var acmDefinition = getAcDefinition(docServiceTemplate);
+        assertThatThrownBy(() -> acDefinitionProvider.updateAcDefinition(acmDefinition, "CompositionName"))
+                .hasMessageStartingWith("\"AutomationCompositionDefinition\" INVALID, item has status INVALID");
+
+        assertThatThrownBy(() -> acDefinitionProvider.updateAcDefinitionState(compositionId, AcTypeState.PRIMED,
+                StateChangeResult.NO_ERROR, false))
+                .hasMessageStartingWith("update of Automation Composition Definition");
+    }
 
     @BeforeAll
     static void loadServiceTemplate() {
@@ -304,6 +329,7 @@ class AcDefinitionProviderTest {
         var acmDefinition = new AutomationCompositionDefinition();
         acmDefinition.setCompositionId(UUID.randomUUID());
         acmDefinition.setState(AcTypeState.COMMISSIONED);
+        acmDefinition.setLastMsg(TimestampHelper.now());
         acmDefinition.setServiceTemplate(docServiceTemplate.toAuthorative());
         var nodeTemplateState = new NodeTemplateState();
         nodeTemplateState.setNodeTemplateStateId(UUID.randomUUID());

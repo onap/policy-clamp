@@ -39,6 +39,7 @@ import org.onap.policy.clamp.models.acm.messages.rest.commissioning.Commissionin
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcTypeStateResolver;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
+import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplates;
@@ -209,7 +210,6 @@ public class CommissioningProvider {
     }
 
     private void prime(AutomationCompositionDefinition acmDefinition) {
-        acmDefinition.setStateChangeResult(StateChangeResult.NO_ERROR);
         var preparation = participantPrimePublisher.prepareParticipantPriming(acmDefinition);
         acDefinitionProvider.updateAcDefinition(acmDefinition,
                 acRuntimeParameterGroup.getAcmParameters().getToscaCompositionName());
@@ -232,6 +232,7 @@ public class CommissioningProvider {
             acmParticipantProvider.verifyParticipantState(participantIds);
         }
         acmDefinition.setState(AcTypeState.DEPRIMING);
+        acmDefinition.setLastMsg(TimestampHelper.now());
         acDefinitionProvider.updateAcDefinition(acmDefinition,
                 acRuntimeParameterGroup.getAcmParameters().getToscaCompositionName());
 

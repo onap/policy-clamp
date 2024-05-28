@@ -23,9 +23,7 @@
 package org.onap.policy.clamp.acm.runtime.supervision;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
@@ -40,6 +38,7 @@ import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
+import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,6 +53,8 @@ public class SupervisionScanner {
 
     private final TimeoutHandler<UUID> acTimeout = new TimeoutHandler<>();
     private final Map<UUID, Integer> phaseMap = new HashMap<>();
+
+    private final long maxStatusWaitMs;
 
     private final AutomationCompositionProvider automationCompositionProvider;
     private final AcDefinitionProvider acDefinitionProvider;
@@ -80,6 +81,7 @@ public class SupervisionScanner {
         this.automationCompositionDeployPublisher = automationCompositionDeployPublisher;
 
         acTimeout.setMaxWaitMs(acRuntimeParameterGroup.getParticipantParameters().getMaxStatusWaitMs());
+        this.maxStatusWaitMs = acRuntimeParameterGroup.getParticipantParameters().getMaxStatusWaitMs();
     }
 
     /**
@@ -92,9 +94,6 @@ public class SupervisionScanner {
         for (var acDefinition : acDefinitionList) {
             scanAutomationCompositionDefinition(acDefinition);
         }
-        Set<UUID> set = new HashSet<>();
-        set.addAll(acDefinitionList
-            .stream().map(AutomationCompositionDefinition::getCompositionId).collect(Collectors.toSet()));
 
         var acList = automationCompositionProvider.getAcInstancesInTransition();
         HashMap<UUID, AutomationCompositionDefinition> acDefinitionMap = new HashMap<>();
@@ -106,8 +105,7 @@ public class SupervisionScanner {
             }
             scanAutomationComposition(automationComposition, acDefinition.getServiceTemplate());
         }
-        set.addAll(
-            acList.stream().map(AutomationComposition::getInstanceId).collect(Collectors.toSet()));
+        var set = acList.stream().map(AutomationComposition::getInstanceId).collect(Collectors.toSet());
         acTimeout.removeIfNotPresent(set);
 
         LOGGER.debug("Automation composition scan complete . . .");
@@ -116,17 +114,7 @@ public class SupervisionScanner {
     private void scanAutomationCompositionDefinition(AutomationCompositionDefinition acDefinition) {
         if (StateChangeResult.FAILED.equals(acDefinition.getStateChangeResult())) {
             LOGGER.debug("automation definition {} scanned, OK", acDefinition.getCompositionId());
-
-            // Clear Timeout on ac Definition
-            acTimeout.remove(acDefinition.getCompositionId());
             return;
-        }
-
-        if (acTimeout.isTimeout(acDefinition.getCompositionId())
-                && StateChangeResult.NO_ERROR.equals(acDefinition.getStateChangeResult())) {
-            // retry by the user
-            LOGGER.debug("clearing Timeout for the ac definition");
-            acTimeout.clear(acDefinition.getCompositionId());
         }
 
         boolean completed = true;
@@ -140,7 +128,6 @@ public class SupervisionScanner {
         if (completed) {
             acDefinitionProvider.updateAcDefinitionState(acDefinition.getCompositionId(), finalState,
                 StateChangeResult.NO_ERROR, null);
-            acTimeout.remove(acDefinition.getCompositionId());
         } else {
             handleTimeout(acDefinition);
         }
@@ -252,15 +239,14 @@ public class SupervisionScanner {
     }
 
     private void handleTimeout(AutomationCompositionDefinition acDefinition) {
-        var compositionId = acDefinition.getCompositionId();
-        if (acTimeout.isTimeout(compositionId)) {
+        if (StateChangeResult.TIMEOUT.equals(acDefinition.getStateChangeResult())) {
             LOGGER.debug("The ac definition is in timeout {}", acDefinition.getCompositionId());
             return;
         }
-
-        if (acTimeout.getDuration(compositionId) > acTimeout.getMaxWaitMs()) {
+        var now = TimestampHelper.nowEpochMilli();
+        var lastMsg = TimestampHelper.toEpochMilli(acDefinition.getLastMsg());
+        if ((now - lastMsg) > maxStatusWaitMs) {
             LOGGER.debug("Report timeout for the ac definition {}", acDefinition.getCompositionId());
-            acTimeout.setTimeout(compositionId);
             acDefinition.setStateChangeResult(StateChangeResult.TIMEOUT);
             acDefinitionProvider.updateAcDefinitionState(acDefinition.getCompositionId(),
                 acDefinition.getState(), acDefinition.getStateChangeResult(), acDefinition.getRestarting());

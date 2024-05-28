@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022-2023 Nordix Foundation.
+ *  Copyright (C) 2022-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -42,8 +43,8 @@ import lombok.NonNull;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
-import org.onap.policy.clamp.models.acm.document.base.ToscaServiceTemplateValidation;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplate;
+import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.common.parameters.annotations.NotNull;
 import org.onap.policy.common.parameters.annotations.Pattern;
@@ -87,6 +88,10 @@ public class JpaAutomationCompositionDefinition extends Validated
     @Column
     private StateChangeResult stateChangeResult;
 
+    @Column
+    @NotNull
+    private Timestamp lastMsg;
+
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "compositionId", foreignKey = @ForeignKey(name = "dt_element_fk"))
     private Set<JpaNodeTemplateState> elements = new HashSet<>();
@@ -105,6 +110,7 @@ public class JpaAutomationCompositionDefinition extends Validated
         acmDefinition.setRestarting(this.restarting);
         acmDefinition.setState(this.state);
         acmDefinition.setStateChangeResult(this.stateChangeResult);
+        acmDefinition.setLastMsg(this.lastMsg.toString());
         acmDefinition.setServiceTemplate(this.serviceTemplate.toAuthorative());
         for (var element : this.elements) {
             var key = element.getNodeTemplateId().getName();
@@ -119,6 +125,7 @@ public class JpaAutomationCompositionDefinition extends Validated
         this.restarting = copyConcept.getRestarting();
         this.state = copyConcept.getState();
         this.stateChangeResult = copyConcept.getStateChangeResult();
+        this.lastMsg = TimestampHelper.toTimestamp(copyConcept.getLastMsg());
         this.serviceTemplate = new DocToscaServiceTemplate(copyConcept.getServiceTemplate());
         setName(this.serviceTemplate.getName());
         setVersion(this.serviceTemplate.getVersion());

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022-2023 Nordix Foundation.
+ *  Copyright (C) 2022-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,6 +49,9 @@ public class AutomationCompositionDefinition {
     private StateChangeResult stateChangeResult;
 
     @NonNull
+    private String lastMsg;
+
+    @NonNull
     // Map used to store prime state with key as NodeTemplate Name and value as NodeTemplateState
     private Map<String, NodeTemplateState> elementStateMap = new HashMap<>();
 
@@ -62,6 +65,7 @@ public class AutomationCompositionDefinition {
         this.serviceTemplate = new ToscaServiceTemplate(otherAcmDefinition.serviceTemplate);
         this.restarting = otherAcmDefinition.restarting;
         this.state = otherAcmDefinition.state;
+        this.lastMsg = otherAcmDefinition.lastMsg;
         this.elementStateMap = PfUtils.mapMap(otherAcmDefinition.elementStateMap, NodeTemplateState::new);
         this.stateChangeResult = otherAcmDefinition.stateChangeResult;
     }
