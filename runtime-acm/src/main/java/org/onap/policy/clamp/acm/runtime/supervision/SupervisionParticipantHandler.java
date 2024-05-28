@@ -46,6 +46,7 @@ import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantSt
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
+import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -159,8 +160,9 @@ public class SupervisionParticipantHandler {
     private void checkOnline(Participant participant) {
         if (ParticipantState.OFF_LINE.equals(participant.getParticipantState())) {
             participant.setParticipantState(ParticipantState.ON_LINE);
-            participantProvider.saveParticipant(participant);
         }
+        participant.setLastMsg(TimestampHelper.now());
+        participantProvider.saveParticipant(participant);
     }
 
     private void handleRestart(UUID participantId) {
@@ -226,6 +228,7 @@ public class SupervisionParticipantHandler {
         participant.setParticipantId(participantId);
         participant.setParticipantSupportedElementTypes(participantSupportedElementType);
         participant.setParticipantState(ParticipantState.ON_LINE);
+        participant.setLastMsg(TimestampHelper.now());
         return participant;
     }
 

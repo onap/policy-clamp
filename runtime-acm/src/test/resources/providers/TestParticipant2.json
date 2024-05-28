@@ -8,6 +8,7 @@
   "participantState": "ON_LINE",
   "description": "A dummy PMSH participant2",
   "participantId": "cac01d0a-7ba8-4dda-b9be-6983c46c0546",
+  "lastMsg": "2024-05-22 10:04:37.6020187",
   "participantType": {
     "name": "org.onap.domain.pmsh.PolicyAutomationCompositionDefinition2",
     "version": "1.0.0"

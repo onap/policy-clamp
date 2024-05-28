@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023 Nordix Foundation.
+ *  Copyright (C) 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,26 +31,25 @@ import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
-import org.onap.policy.models.base.PfModelException;
 
 class SupervisionParticipantScannerTest {
 
     @Test
-    void testScanParticipant() throws PfModelException {
+    void testScanParticipant() {
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanParticipant");
         acRuntimeParameterGroup.getParticipantParameters().setMaxStatusWaitMs(-1);
 
         var participant = CommonTestData.createParticipant(CommonTestData.getParticipantId());
-        participant.setParticipantState(ParticipantState.OFF_LINE);
         var participantProvider = mock(ParticipantProvider.class);
         when(participantProvider.getParticipants()).thenReturn(List.of(participant));
 
         var supervisionScanner = new SupervisionPartecipantScanner(participantProvider, acRuntimeParameterGroup);
 
-        supervisionScanner.handleParticipantStatus(participant.getParticipantId());
+        participant.setParticipantState(ParticipantState.OFF_LINE);
         supervisionScanner.run();
-        verify(participantProvider, times(0)).saveParticipant(any());
+        verify(participantProvider, times(0)).updateParticipant(any());
 
+        participant.setParticipantState(ParticipantState.ON_LINE);
         supervisionScanner.run();
         verify(participantProvider, times(1)).updateParticipant(any());
     }

@@ -26,8 +26,6 @@ import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 
 import org.junit.jupiter.api.Test;
-import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
-import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantStatus;
 
 class SupervisionAspectTest {
 
@@ -50,19 +48,6 @@ class SupervisionAspectTest {
             supervisionAspect.doCheck();
             supervisionAspect.doCheck();
             verify(supervisionScanner, timeout(500).times(2)).run();
-        }
-    }
-
-    @Test
-    void testHandleParticipantStatus() throws Exception {
-        var participantStatusMessage = new ParticipantStatus();
-        participantStatusMessage.setParticipantId(CommonTestData.getParticipantId());
-
-        var supervisionScanner = mock(SupervisionScanner.class);
-        var partecipantScanner = mock(SupervisionPartecipantScanner.class);
-        try (var supervisionAspect = new SupervisionAspect(supervisionScanner, partecipantScanner)) {
-            supervisionAspect.handleParticipantStatus(participantStatusMessage);
-            verify(partecipantScanner, timeout(500)).handleParticipantStatus(CommonTestData.getParticipantId());
         }
     }
 }

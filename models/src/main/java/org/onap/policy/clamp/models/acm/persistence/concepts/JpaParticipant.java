@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2023 Nordix Foundation.
+ * Copyright (C) 2021-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -42,6 +43,7 @@ import lombok.NonNull;
 import org.apache.commons.lang3.ObjectUtils;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
+import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 import org.onap.policy.common.parameters.annotations.NotNull;
 import org.onap.policy.common.parameters.annotations.Valid;
 import org.onap.policy.models.base.PfAuthorative;
@@ -72,6 +74,10 @@ public class JpaParticipant extends Validated
     @Column
     private String description;
 
+    @Column
+    @NotNull
+    private Timestamp lastMsg;
+
     @NotNull
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "participantId", referencedColumnName = "participantId",
@@ -96,6 +102,7 @@ public class JpaParticipant extends Validated
         this.participantId = participantId;
         this.participantState = participantState;
         this.supportedElements = supportedElements;
+        this.lastMsg = TimestampHelper.nowTimestamp();
     }
 
     /**
@@ -108,6 +115,7 @@ public class JpaParticipant extends Validated
         this.description = copyConcept.description;
         this.participantId = copyConcept.participantId;
         this.supportedElements = copyConcept.supportedElements;
+        this.lastMsg = copyConcept.lastMsg;
     }
 
     /**
@@ -125,6 +133,7 @@ public class JpaParticipant extends Validated
 
         participant.setParticipantState(participantState);
         participant.setParticipantId(UUID.fromString(participantId));
+        participant.setLastMsg(this.lastMsg.toString());
         participant.setParticipantSupportedElementTypes(new LinkedHashMap<>(this.supportedElements.size()));
         for (var element : this.supportedElements) {
             participant.getParticipantSupportedElementTypes()
@@ -138,6 +147,7 @@ public class JpaParticipant extends Validated
     public void fromAuthorative(@NonNull final Participant participant) {
         this.setParticipantState(participant.getParticipantState());
         this.participantId = participant.getParticipantId().toString();
+        this.lastMsg = TimestampHelper.toTimestamp(participant.getLastMsg());
         this.supportedElements = new ArrayList<>(participant.getParticipantSupportedElementTypes().size());
 
         for (var elementEntry : participant.getParticipantSupportedElementTypes().entrySet()) {
@@ -158,6 +168,11 @@ public class JpaParticipant extends Validated
         }
 
         var result = participantId.compareTo(other.participantId);
+        if (result != 0) {
+            return result;
+        }
+
+        result = lastMsg.compareTo(other.lastMsg);
         if (result != 0) {
             return result;
         }

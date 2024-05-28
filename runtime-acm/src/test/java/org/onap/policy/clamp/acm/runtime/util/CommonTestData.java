@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2023 Nordix Foundation.
+ *  Copyright (C) 2021-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@
 package org.onap.policy.clamp.acm.runtime.util;
 
 import jakarta.ws.rs.core.Response.Status;
-import java.util.List;
 import java.util.UUID;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcmParameters;
@@ -32,6 +31,7 @@ import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
+import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -80,18 +80,6 @@ public class CommonTestData {
     }
 
     /**
-     * Create a List of Participants.
-     *
-     * @return a List of Participants
-     */
-    public static List<Participant> createParticipants() {
-        var participant1 = createParticipant(UUID.fromString("101c62b3-8918-41b9-a747-d21eb79c6c02"));
-        var participant2 = createParticipant(UUID.fromString("101c62b3-8918-41b9-a747-d21eb79c6c01"));
-        var participant3 = createParticipant(UUID.fromString("101c62b3-8918-41b9-a747-d21eb79c6c03"));
-        return List.of(participant1, participant2, participant3);
-    }
-
-    /**
      * Create a new Participant.
      *
      * @param participantId the participant id
@@ -101,6 +89,7 @@ public class CommonTestData {
         var participant = new Participant();
         participant.setParticipantId(participantId);
         participant.setParticipantState(ParticipantState.ON_LINE);
+        participant.setLastMsg(TimestampHelper.now());
         return participant;
     }
 
