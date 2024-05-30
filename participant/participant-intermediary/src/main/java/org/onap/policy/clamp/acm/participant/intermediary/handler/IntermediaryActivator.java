@@ -24,6 +24,8 @@ package org.onap.policy.clamp.acm.participant.intermediary.handler;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import lombok.Getter;
 import org.onap.policy.clamp.acm.participant.intermediary.parameters.ParticipantParameters;
 import org.onap.policy.common.endpoints.event.comm.TopicEndpointManager;
@@ -78,15 +80,15 @@ public class IntermediaryActivator extends ServiceManagerContainer implements Cl
             () -> TopicEndpointManager.getManager().start(),
             () -> TopicEndpointManager.getManager().shutdown());
 
+        listeners.forEach(listener ->
+                addAction("Listener " + listener.getClass().getSimpleName(),
+                        () -> msgDispatcher.register(listener.getType(), listener.getScoListener()),
+                        () -> msgDispatcher.unregister(listener.getType())));
+
         publishers.forEach(publisher ->
             addAction("Publisher " + publisher.getClass().getSimpleName(),
                 () -> publisher.active(topicSinks),
                 publisher::stop));
-
-        listeners.forEach(listener ->
-            addAction("Listener " + listener.getClass().getSimpleName(),
-                () -> msgDispatcher.register(listener.getType(), listener.getScoListener()),
-                () -> msgDispatcher.unregister(listener.getType())));
 
         addAction("Topic Message Dispatcher", this::registerMsgDispatcher, this::unregisterMsgDispatcher);
         // @formatter:on
@@ -101,7 +103,13 @@ public class IntermediaryActivator extends ServiceManagerContainer implements Cl
     public void handleContextRefreshEvent(ContextRefreshedEvent ctxRefreshedEvent) {
         if (!isAlive()) {
             start();
-            sendParticipantRegister();
+            var task = new TimerTask() {
+                @Override
+                public void run() {
+                    new Thread(participantHandler::sendParticipantRegister).start();
+                }
+            };
+            new Timer().schedule(task, 5000);
         }
     }
 
@@ -116,10 +124,6 @@ public class IntermediaryActivator extends ServiceManagerContainer implements Cl
             sendParticipantDeregister();
             stop();
         }
-    }
-
-    private void sendParticipantRegister() {
-        participantHandler.sendParticipantRegister();
     }
 
     private void sendParticipantDeregister() {

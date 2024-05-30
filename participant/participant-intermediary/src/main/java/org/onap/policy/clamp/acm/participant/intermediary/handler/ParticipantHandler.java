@@ -66,7 +66,7 @@ public class ParticipantHandler {
      */
     @Timed(value = "listener.participant_status_req", description = "PARTICIPANT_STATUS_REQ messages received")
     public void handleParticipantStatusReq(final ParticipantStatusReq participantStatusReqMsg) {
-        publisher.sendParticipantStatus(makeHeartbeat());
+        sendHeartbeat();
     }
 
     /**
@@ -159,6 +159,7 @@ public class ParticipantHandler {
     public void handleParticipantRegisterAck(ParticipantRegisterAck participantRegisterAckMsg) {
         LOGGER.debug("ParticipantRegisterAck message received as responseTo {}",
                 participantRegisterAckMsg.getResponseTo());
+        cacheProvider.setRegistered(true);
         publisher.sendParticipantStatus(makeHeartbeat());
     }
 
@@ -210,7 +211,11 @@ public class ParticipantHandler {
      */
     public void sendHeartbeat() {
         if (publisher.isActive()) {
-            publisher.sendHeartbeat(makeHeartbeat());
+            if (!cacheProvider.isRegistered()) {
+                sendParticipantRegister();
+            } else {
+                publisher.sendParticipantStatus(makeHeartbeat());
+            }
         }
     }
 

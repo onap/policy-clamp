@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.clearInvocations;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -58,9 +59,15 @@ class ParticipantHandlerTest {
     @Test
     void handleParticipantStatusReqTest() {
         var publisher = mock(ParticipantMessagePublisher.class);
+        when(publisher.isActive()).thenReturn(true);
         var cacheProvider = mock(CacheProvider.class);
         var participantHandler = new ParticipantHandler(mock(AutomationCompositionHandler.class),
                 mock(AcLockHandler.class), mock(AcDefinitionHandler.class), publisher, cacheProvider);
+        participantHandler.handleParticipantStatusReq(new ParticipantStatusReq());
+        verify(publisher).sendParticipantRegister(any(ParticipantRegister.class));
+
+        when(cacheProvider.isRegistered()).thenReturn(true);
+        clearInvocations(publisher);
         participantHandler.handleParticipantStatusReq(new ParticipantStatusReq());
         verify(publisher).sendParticipantStatus(any(ParticipantStatus.class));
     }
@@ -213,6 +220,7 @@ class ParticipantHandlerTest {
     void sendHeartbeatTest() {
         var cacheProvider = mock(CacheProvider.class);
         when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
+        when(cacheProvider.isRegistered()).thenReturn(false);
         when(cacheProvider.getAutomationCompositions()).thenReturn(CommonTestData.getTestAutomationCompositionMap());
         var publisher = mock(ParticipantMessagePublisher.class);
         when(publisher.isActive()).thenReturn(true);
@@ -220,7 +228,11 @@ class ParticipantHandlerTest {
         var participantHandler = new ParticipantHandler(mock(AutomationCompositionHandler.class),
                 mock(AcLockHandler.class), acHandler, publisher, cacheProvider);
         participantHandler.sendHeartbeat();
-        verify(publisher).sendHeartbeat(any(ParticipantStatus.class));
-    }
+        verify(publisher).sendParticipantRegister(any(ParticipantRegister.class));
 
+        when(cacheProvider.isRegistered()).thenReturn(true);
+        clearInvocations(publisher);
+        participantHandler.sendHeartbeat();
+        verify(publisher).sendParticipantStatus(any(ParticipantStatus.class));
+    }
 }

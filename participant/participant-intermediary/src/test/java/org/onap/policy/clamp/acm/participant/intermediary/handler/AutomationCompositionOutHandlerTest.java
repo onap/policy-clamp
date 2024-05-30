@@ -206,16 +206,16 @@ class AutomationCompositionOutHandlerTest {
         var acOutHandler = new AutomationCompositionOutHandler(publisher, cacheProvider);
 
         acOutHandler.sendAcDefinitionInfo(null, null, Map.of());
-        verify(publisher, times(0)).sendHeartbeat(any(ParticipantStatus.class));
+        verify(publisher, times(0)).sendParticipantStatus(any(ParticipantStatus.class));
 
         acOutHandler.sendAcDefinitionInfo(UUID.randomUUID(), null, Map.of());
-        verify(publisher, times(0)).sendHeartbeat(any(ParticipantStatus.class));
+        verify(publisher, times(0)).sendParticipantStatus(any(ParticipantStatus.class));
 
         acOutHandler.sendAcDefinitionInfo(compositionId, new ToscaConceptIdentifier("wrong", "1.0.0"), Map.of());
-        verify(publisher, times(0)).sendHeartbeat(any(ParticipantStatus.class));
+        verify(publisher, times(0)).sendParticipantStatus(any(ParticipantStatus.class));
 
         acOutHandler.sendAcDefinitionInfo(compositionId, elementId, Map.of());
-        verify(publisher).sendHeartbeat(any(ParticipantStatus.class));
+        verify(publisher).sendParticipantStatus(any(ParticipantStatus.class));
     }
 
     @Test

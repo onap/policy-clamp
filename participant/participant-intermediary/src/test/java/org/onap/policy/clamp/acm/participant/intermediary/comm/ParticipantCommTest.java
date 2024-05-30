@@ -93,8 +93,6 @@ class ParticipantCommTest {
         var participantStatus = new ParticipantStatus();
         assertDoesNotThrow(() -> publisher.sendParticipantStatus(participantStatus));
 
-        assertDoesNotThrow(() -> publisher.sendHeartbeat(participantStatus));
-
         var participantRegister = new ParticipantRegister();
         assertDoesNotThrow(() -> publisher.sendParticipantRegister(participantRegister));
 
@@ -115,7 +113,6 @@ class ParticipantCommTest {
         var participantStatus = new ParticipantStatus();
         assertThrows(AutomationCompositionRuntimeException.class,
                 () -> publisher.sendParticipantStatus(participantStatus));
-        assertThrows(AutomationCompositionRuntimeException.class, () -> publisher.sendHeartbeat(participantStatus));
 
         var participantRegister = new ParticipantRegister();
         assertThrows(AutomationCompositionRuntimeException.class,

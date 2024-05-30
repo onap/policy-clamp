@@ -267,7 +267,7 @@ public class AutomationCompositionOutHandler {
         participantDefinition.setParticipantId(cacheProvider.getParticipantId());
         participantDefinition.setAutomationCompositionElementDefinitionList(List.of(acElementDefinition));
         statusMsg.setParticipantDefinitionUpdates(List.of(participantDefinition));
-        publisher.sendHeartbeat(statusMsg);
+        publisher.sendParticipantStatus(statusMsg);
     }
 
     private AutomationCompositionElementDefinition getAutomationCompositionElementDefinition(

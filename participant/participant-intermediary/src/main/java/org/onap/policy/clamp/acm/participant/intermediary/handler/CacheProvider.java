@@ -28,6 +28,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.parameters.ParticipantParameters;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
@@ -47,6 +48,10 @@ public class CacheProvider {
 
     @Getter
     private final UUID participantId;
+
+    @Getter
+    @Setter
+    private boolean registered = false;
 
     private final List<ParticipantSupportedElementType> supportedAcElementTypes;
 

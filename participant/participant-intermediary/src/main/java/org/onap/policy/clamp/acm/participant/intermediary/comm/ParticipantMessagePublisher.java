@@ -126,18 +126,6 @@ public class ParticipantMessagePublisher implements Publisher {
         LOGGER.debug("Sent AutomationComposition Update/StateChange Ack to runtime - {}", automationCompositionAck);
     }
 
-    /**
-     * Method to send Participant heartbeat to clamp on demand.
-     *
-     * @param participantStatus the Participant Status
-     */
-    @Timed(value = "publisher.participant_status", description = "PARTICIPANT_STATUS messages published")
-    public void sendHeartbeat(final ParticipantStatus participantStatus) {
-        validate();
-        topicSinkClient.send(participantStatus);
-        LOGGER.debug("Sent Participant heartbeat to CLAMP - {}", participantStatus);
-    }
-
     private void validate() {
         if (!active) {
             throw new AutomationCompositionRuntimeException(Status.NOT_ACCEPTABLE, NOT_ACTIVE_TEXT);
