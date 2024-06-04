@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023 Nordix Foundation.
+ *  Copyright (C) 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.HashMap;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 
 class ParticipantInformationTest {
 
@@ -33,6 +34,7 @@ class ParticipantInformationTest {
         var participant = new Participant();
         participant.setParticipantId(UUID.randomUUID());
         participant.setParticipantState(ParticipantState.ON_LINE);
+        participant.setLastMsg(TimestampHelper.now());
         participant.setParticipantSupportedElementTypes(new HashMap<>());
         var participantInfo1 = new ParticipantInformation();
         participantInfo1.setParticipant(participant);

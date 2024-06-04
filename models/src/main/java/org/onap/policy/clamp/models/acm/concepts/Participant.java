@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2023 Nordix Foundation.
+ * Copyright (C) 2021-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,6 +44,9 @@ public class Participant {
     private ParticipantState participantState = ParticipantState.ON_LINE;
 
     @NonNull
+    private String lastMsg;
+
+    @NonNull
     private Map<UUID, ParticipantSupportedElementType> participantSupportedElementTypes = new HashMap<>();
 
     /**
@@ -54,6 +57,7 @@ public class Participant {
     public Participant(Participant otherParticipant) {
         this.participantState = otherParticipant.participantState;
         this.participantId = otherParticipant.participantId;
+        this.lastMsg = otherParticipant.lastMsg;
         this.participantSupportedElementTypes = PfUtils.mapMap(otherParticipant.getParticipantSupportedElementTypes(),
                 ParticipantSupportedElementType::new);
     }

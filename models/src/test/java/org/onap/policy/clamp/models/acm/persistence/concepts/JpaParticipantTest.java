@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2023 Nordix Foundation.
+ *  Copyright (C) 2021-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,12 +27,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
+import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 
 /**
  * Test the {@link JpaParticipant} class.
@@ -43,6 +46,9 @@ class JpaParticipantTest {
 
     @Test
     void testJpaParticipantConstructor() {
+        assertThatThrownBy(() -> new JpaParticipant((Participant) null))
+                .hasMessageMatching("authorativeConcept is marked .*ull but is null");
+
         assertThatThrownBy(() -> new JpaParticipant((JpaParticipant) null))
             .hasMessageMatching("copyConcept is marked .*ull but is null");
 
@@ -64,11 +70,8 @@ class JpaParticipantTest {
 
     @Test
     void testJpaParticipant() {
-        var testJpaParticipant = createJpaParticipantInstance();
-
         var participant = createParticipantInstance();
-
-        participant.setParticipantId(testJpaParticipant.toAuthorative().getParticipantId());
+        var testJpaParticipant = new JpaParticipant(participant);
 
         assertEquals(participant, testJpaParticipant.toAuthorative());
 
@@ -89,7 +92,7 @@ class JpaParticipantTest {
 
     @Test
     void testJpaParticipantValidation() {
-        var testJpaParticipant = createJpaParticipantInstance();
+        var testJpaParticipant = new JpaParticipant(createParticipantInstance());
 
         assertThatThrownBy(() -> testJpaParticipant.validate(null))
             .hasMessageMatching("fieldName is marked .*ull but is null");
@@ -99,7 +102,7 @@ class JpaParticipantTest {
 
     @Test
     void testJpaParticipantCompareTo() {
-        var testJpaParticipant = createJpaParticipantInstance();
+        var testJpaParticipant = new JpaParticipant(createParticipantInstance());
 
         var otherJpaParticipant = new JpaParticipant(testJpaParticipant);
         otherJpaParticipant.setParticipantId(testJpaParticipant.getParticipantId());
@@ -111,6 +114,12 @@ class JpaParticipantTest {
         testJpaParticipant.setParticipantState(ParticipantState.OFF_LINE);
         assertNotEquals(0, testJpaParticipant.compareTo(otherJpaParticipant));
         testJpaParticipant.setParticipantState(ParticipantState.ON_LINE);
+        assertEquals(0, testJpaParticipant.compareTo(otherJpaParticipant));
+        assertEquals(testJpaParticipant, new JpaParticipant(testJpaParticipant));
+
+        testJpaParticipant.setLastMsg(Timestamp.from(Instant.EPOCH));
+        assertNotEquals(0, testJpaParticipant.compareTo(otherJpaParticipant));
+        testJpaParticipant.setLastMsg(otherJpaParticipant.getLastMsg());
         assertEquals(0, testJpaParticipant.compareTo(otherJpaParticipant));
         assertEquals(testJpaParticipant, new JpaParticipant(testJpaParticipant));
 
@@ -140,22 +149,14 @@ class JpaParticipantTest {
 
         var p2 = new JpaParticipant();
         p2.setParticipantId(p0.getParticipantId());
+        p2.setLastMsg(p0.getLastMsg());
         assertEquals(p2, p0);
-    }
-
-    private JpaParticipant createJpaParticipantInstance() {
-        var testParticipant = createParticipantInstance();
-        var testJpaParticipant = new JpaParticipant();
-        testParticipant.setParticipantId(UUID.fromString(testJpaParticipant.getParticipantId()));
-        testJpaParticipant.fromAuthorative(testParticipant);
-        testJpaParticipant.fromAuthorative(testParticipant);
-
-        return testJpaParticipant;
     }
 
     private Participant createParticipantInstance() {
         var testParticipant = new Participant();
         testParticipant.setParticipantId(UUID.randomUUID());
+        testParticipant.setLastMsg(TimestampHelper.now());
         testParticipant.setParticipantSupportedElementTypes(new LinkedHashMap<>());
 
         return testParticipant;
