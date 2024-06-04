@@ -103,6 +103,7 @@ public class AutomationCompositionOutHandler {
         var automationCompositionStateChangeAck =
                 new AutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_STATECHANGE_ACK);
         automationCompositionStateChangeAck.setParticipantId(cacheProvider.getParticipantId());
+        automationCompositionStateChangeAck.setReplicaId(cacheProvider.getReplicaId());
         automationCompositionStateChangeAck.setMessage(message);
         automationCompositionStateChangeAck.setResponseTo(cacheProvider.getMsgIdentification().get(element.getId()));
         automationCompositionStateChangeAck.setStateChangeResult(stateChangeResult);
@@ -228,6 +229,7 @@ public class AutomationCompositionOutHandler {
         participantPrimeAck.setCompositionState(state);
         participantPrimeAck.setStateChangeResult(stateChangeResult);
         participantPrimeAck.setParticipantId(cacheProvider.getParticipantId());
+        participantPrimeAck.setReplicaId(cacheProvider.getReplicaId());
         participantPrimeAck.setState(ParticipantState.ON_LINE);
         publisher.sendParticipantPrimeAck(participantPrimeAck);
         cacheProvider.getMsgIdentification().remove(compositionId);
@@ -286,6 +288,7 @@ public class AutomationCompositionOutHandler {
     private ParticipantStatus createParticipantStatus() {
         var statusMsg = new ParticipantStatus();
         statusMsg.setParticipantId(cacheProvider.getParticipantId());
+        statusMsg.setReplicaId(cacheProvider.getReplicaId());
         statusMsg.setState(ParticipantState.ON_LINE);
         statusMsg.setParticipantSupportedElementType(cacheProvider.getSupportedAcElementTypes());
         return statusMsg;

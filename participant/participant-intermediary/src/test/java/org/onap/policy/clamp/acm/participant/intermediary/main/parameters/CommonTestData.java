@@ -62,6 +62,7 @@ public class CommonTestData {
     public static final UUID AC_ID_0 = UUID.randomUUID();
     public static final UUID AC_ID_1 = UUID.randomUUID();
     public static final UUID PARTCICIPANT_ID = UUID.randomUUID();
+    public static final UUID REPLICA_ID = UUID.randomUUID();
 
     /**
      * Get ParticipantIntermediaryParameters.
@@ -158,6 +159,10 @@ public class CommonTestData {
      */
     public static UUID getParticipantId() {
         return PARTCICIPANT_ID;
+    }
+
+    public static UUID getReplicaId() {
+        return REPLICA_ID;
     }
 
     public static UUID getRndParticipantId() {

@@ -91,6 +91,7 @@ public class AcDefinitionHandler {
             participantPrimeAck.setCompositionState(AcTypeState.COMMISSIONED);
             participantPrimeAck.setStateChangeResult(StateChangeResult.NO_ERROR);
             participantPrimeAck.setParticipantId(cacheProvider.getParticipantId());
+            participantPrimeAck.setReplicaId(cacheProvider.getReplicaId());
             participantPrimeAck.setState(ParticipantState.ON_LINE);
             publisher.sendParticipantPrimeAck(participantPrimeAck);
             return;

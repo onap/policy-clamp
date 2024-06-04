@@ -57,7 +57,8 @@ class ParticipantAckMessageTest {
     @Test
     void testAppliesTo_NullParticipantId() {
         message = makeMessage();
-        assertThatThrownBy(() -> message.appliesTo(null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> message.appliesTo(UUID.randomUUID(), null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> message.appliesTo(null, UUID.randomUUID())).isInstanceOf(NullPointerException.class);
     }
 
     @Test
@@ -65,8 +66,8 @@ class ParticipantAckMessageTest {
         message = makeMessage();
 
         // ParticipantId matches
-        assertTrue(message.appliesTo(CommonTestData.getParticipantId()));
-        assertFalse(message.appliesTo(CommonTestData.getRndParticipantId()));
+        assertTrue(message.appliesTo(CommonTestData.getParticipantId(), CommonTestData.getReplicaId()));
+        assertFalse(message.appliesTo(CommonTestData.getRndParticipantId(), CommonTestData.getReplicaId()));
     }
 
     @Test
@@ -74,8 +75,8 @@ class ParticipantAckMessageTest {
         message = makeMessage();
 
         // ParticipantId does not match
-        assertFalse(message.appliesTo(CommonTestData.getRndParticipantId()));
-        assertTrue(message.appliesTo(CommonTestData.getParticipantId()));
+        assertFalse(message.appliesTo(CommonTestData.getRndParticipantId(), CommonTestData.getReplicaId()));
+        assertTrue(message.appliesTo(CommonTestData.getParticipantId(), CommonTestData.getReplicaId()));
     }
 
     private ParticipantAckMessage makeMessage() {
