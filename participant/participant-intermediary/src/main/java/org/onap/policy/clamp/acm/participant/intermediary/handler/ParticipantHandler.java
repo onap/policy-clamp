@@ -126,7 +126,7 @@ public class ParticipantHandler {
      * @return true if it applies, false otherwise
      */
     public boolean appliesTo(ParticipantMessage participantMsg) {
-        return participantMsg.appliesTo(cacheProvider.getParticipantId());
+        return participantMsg.appliesTo(cacheProvider.getParticipantId(), cacheProvider.getReplicaId());
     }
 
     /**
@@ -136,7 +136,7 @@ public class ParticipantHandler {
      * @return true if it applies, false otherwise
      */
     public boolean appliesTo(ParticipantAckMessage participantMsg) {
-        return participantMsg.appliesTo(cacheProvider.getParticipantId());
+        return participantMsg.appliesTo(cacheProvider.getParticipantId(), cacheProvider.getReplicaId());
     }
 
     /**
@@ -145,6 +145,7 @@ public class ParticipantHandler {
     public void sendParticipantRegister() {
         var participantRegister = new ParticipantRegister();
         participantRegister.setParticipantId(cacheProvider.getParticipantId());
+        participantRegister.setReplicaId(cacheProvider.getReplicaId());
         participantRegister.setParticipantSupportedElementType(cacheProvider.getSupportedAcElementTypes());
 
         publisher.sendParticipantRegister(participantRegister);
@@ -169,6 +170,7 @@ public class ParticipantHandler {
     public void sendParticipantDeregister() {
         var participantDeregister = new ParticipantDeregister();
         participantDeregister.setParticipantId(cacheProvider.getParticipantId());
+        participantDeregister.setReplicaId(cacheProvider.getReplicaId());
         publisher.sendParticipantDeregister(participantDeregister);
     }
 
@@ -225,6 +227,7 @@ public class ParticipantHandler {
     private ParticipantStatus makeHeartbeat() {
         var heartbeat = new ParticipantStatus();
         heartbeat.setParticipantId(cacheProvider.getParticipantId());
+        heartbeat.setReplicaId(cacheProvider.getReplicaId());
         heartbeat.setState(ParticipantState.ON_LINE);
         heartbeat.setParticipantSupportedElementType(cacheProvider.getSupportedAcElementTypes());
 

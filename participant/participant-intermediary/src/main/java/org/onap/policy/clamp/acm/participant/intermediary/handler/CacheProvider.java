@@ -53,6 +53,9 @@ public class CacheProvider {
     @Setter
     private boolean registered = false;
 
+    @Getter
+    private final UUID replicaId;
+
     private final List<ParticipantSupportedElementType> supportedAcElementTypes;
 
     @Getter
@@ -73,6 +76,7 @@ public class CacheProvider {
     public CacheProvider(ParticipantParameters parameters) {
         this.participantId = parameters.getIntermediaryParameters().getParticipantId();
         this.supportedAcElementTypes = parameters.getIntermediaryParameters().getParticipantSupportedElementTypes();
+        this.replicaId = UUID.randomUUID();
     }
 
     public List<ParticipantSupportedElementType> getSupportedAcElementTypes() {

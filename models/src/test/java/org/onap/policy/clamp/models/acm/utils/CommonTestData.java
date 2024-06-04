@@ -38,8 +38,8 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 public class CommonTestData {
 
     public static final UUID PARTCICIPANT_ID = UUID.randomUUID();
+    public static final UUID REPLICA_ID = UUID.randomUUID();
     private static final StandardYamlCoder YAML_TRANSLATOR = new StandardYamlCoder();
-
 
     /**
      * Returns participantId for test cases.
@@ -48,6 +48,15 @@ public class CommonTestData {
      */
     public static UUID getParticipantId() {
         return PARTCICIPANT_ID;
+    }
+
+    /**
+     * Returns participantId for test cases.
+     *
+     * @return participant Id
+     */
+    public static UUID getReplicaId() {
+        return REPLICA_ID;
     }
 
     /**

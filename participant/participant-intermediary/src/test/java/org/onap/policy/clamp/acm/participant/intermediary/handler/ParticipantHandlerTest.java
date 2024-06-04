@@ -125,6 +125,7 @@ class ParticipantHandlerTest {
     void appliesToTest() {
         var cacheProvider = mock(CacheProvider.class);
         when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
+        when(cacheProvider.getReplicaId()).thenReturn(CommonTestData.getReplicaId());
         var participantHandler = new ParticipantHandler(mock(AutomationCompositionHandler.class),
                 mock(AcLockHandler.class), mock(AcDefinitionHandler.class), mock(ParticipantMessagePublisher.class),
                 cacheProvider);

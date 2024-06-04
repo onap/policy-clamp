@@ -51,6 +51,8 @@ public class ParticipantMessage {
      */
     private UUID participantId;
 
+    private UUID replicaId;
+
     /**
      * Automation Composition ID, or {@code null} for messages to participants.
      */
@@ -75,6 +77,7 @@ public class ParticipantMessage {
     public ParticipantMessage(final ParticipantMessage source) {
         this.messageType = source.messageType;
         this.participantId = source.participantId;
+        this.replicaId = source.replicaId;
         this.automationCompositionId = source.automationCompositionId;
         this.compositionId = source.compositionId;
     }
@@ -83,15 +86,17 @@ public class ParticipantMessage {
      * Determines if this message applies to this participant type.
      *
      * @param participantId id of the participant to match against
+     * @param replicaId id of the participant to match against
      * @return {@code true} if this message applies to this participant, {@code false} otherwise
      */
-    public boolean appliesTo(@NonNull final UUID participantId) {
+    public boolean appliesTo(@NonNull final UUID participantId, @NonNull final UUID replicaId) {
         // Broadcast message to all participants
-        if (this.participantId == null) {
+        if ((this.participantId == null)
+                || (participantId.equals(this.participantId) && this.replicaId == null)) {
             return true;
         }
 
         // Targeted message at this specific participant
-        return participantId.equals(this.participantId);
+        return replicaId.equals(this.replicaId);
     }
 }
