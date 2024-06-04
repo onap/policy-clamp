@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2024 Nordix Foundation.
+ * Copyright (C) 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,25 +20,19 @@
 
 package org.onap.policy.clamp.models.acm.concepts;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import org.onap.policy.models.base.PfUtils;
 
-/**
- * Class to represent details of a running participant instance.
- */
 @NoArgsConstructor
 @Data
 @EqualsAndHashCode
-public class Participant {
+public class ParticipantReplica {
 
     @NonNull
-    private UUID participantId;
+    private UUID replicaId;
 
     @NonNull
     private ParticipantState participantState = ParticipantState.ON_LINE;
@@ -46,23 +40,14 @@ public class Participant {
     @NonNull
     private String lastMsg;
 
-    @NonNull
-    private Map<UUID, ParticipantSupportedElementType> participantSupportedElementTypes = new HashMap<>();
-
-    @NonNull
-    private Map<UUID, ParticipantReplica> replicas = new HashMap<>();
-
     /**
      * Copy constructor.
      *
-     * @param otherParticipant the participant to copy from
+     * @param other the ParticipantReplica to copy from
      */
-    public Participant(Participant otherParticipant) {
-        this.participantState = otherParticipant.participantState;
-        this.participantId = otherParticipant.participantId;
-        this.lastMsg = otherParticipant.lastMsg;
-        this.participantSupportedElementTypes = PfUtils.mapMap(otherParticipant.getParticipantSupportedElementTypes(),
-                ParticipantSupportedElementType::new);
-        this.replicas = PfUtils.mapMap(otherParticipant.replicas, ParticipantReplica::new);
+    public ParticipantReplica(ParticipantReplica other) {
+        this.replicaId = other.replicaId;
+        this.participantState = other.participantState;
+        this.lastMsg = other.lastMsg;
     }
 }
