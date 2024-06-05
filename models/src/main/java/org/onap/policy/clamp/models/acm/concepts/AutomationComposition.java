@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2023 Nordix Foundation.
+ * Copyright (C) 2021-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,6 +52,10 @@ public class AutomationComposition extends ToscaEntity implements Comparable<Aut
     @NonNull
     private LockState lockState = LockState.NONE;
 
+    private String lastMsg;
+
+    private Integer phase;
+
     private Map<UUID, AutomationCompositionElement> elements;
 
     private StateChangeResult stateChangeResult;
@@ -69,6 +73,8 @@ public class AutomationComposition extends ToscaEntity implements Comparable<Aut
         this.restarting = otherAutomationComposition.restarting;
         this.deployState = otherAutomationComposition.deployState;
         this.lockState = otherAutomationComposition.lockState;
+        this.lastMsg = otherAutomationComposition.lastMsg;
+        this.phase = otherAutomationComposition.phase;
         this.elements = PfUtils.mapMap(otherAutomationComposition.elements, AutomationCompositionElement::new);
         this.stateChangeResult = otherAutomationComposition.stateChangeResult;
     }

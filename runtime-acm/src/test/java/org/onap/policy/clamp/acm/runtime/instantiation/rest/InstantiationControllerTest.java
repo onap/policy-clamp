@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2023 Nordix Foundation.
+ *  Copyright (C) 2021-2024 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -155,6 +155,7 @@ class InstantiationControllerTest extends CommonRestController {
 
         var automationCompositionFromDb =
                 instantiationProvider.getAutomationComposition(compositionId, instResponse.getInstanceId());
+        automationCompositionFromRsc.setLastMsg(automationCompositionFromDb.getLastMsg());
 
         assertNotNull(automationCompositionFromDb);
         assertEquals(automationCompositionFromRsc, automationCompositionFromDb);
@@ -223,7 +224,9 @@ class InstantiationControllerTest extends CommonRestController {
         var automationCompositionsQuery = rawresp.readEntity(AutomationCompositions.class);
         assertNotNull(automationCompositionsQuery);
         assertThat(automationCompositionsQuery.getAutomationCompositionList()).hasSize(1);
-        assertEquals(automationComposition, automationCompositionsQuery.getAutomationCompositionList().get(0));
+        var automationCompositionRc = automationCompositionsQuery.getAutomationCompositionList().get(0);
+        automationComposition.setLastMsg(automationCompositionRc.getLastMsg());
+        assertEquals(automationComposition, automationCompositionRc);
     }
 
     @Test
@@ -241,6 +244,7 @@ class InstantiationControllerTest extends CommonRestController {
         assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
         var automationCompositionGet = rawresp.readEntity(AutomationComposition.class);
         assertNotNull(automationCompositionGet);
+        automationComposition.setLastMsg(automationCompositionGet.getLastMsg());
         assertEquals(automationComposition, automationCompositionGet);
     }
 
@@ -272,7 +276,9 @@ class InstantiationControllerTest extends CommonRestController {
 
         assertNotNull(automationCompositionsFromDb);
         assertThat(automationCompositionsFromDb.getAutomationCompositionList()).hasSize(1);
-        assertEquals(automationComposition, automationCompositionsFromDb.getAutomationCompositionList().get(0));
+        var acFromDb = automationCompositionsFromDb.getAutomationCompositionList().get(0);
+        automationComposition.setLastMsg(acFromDb.getLastMsg());
+        assertEquals(automationComposition, acFromDb);
     }
 
     @Test

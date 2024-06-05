@@ -23,9 +23,7 @@
 package org.onap.policy.clamp.acm.runtime.supervision;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionDeployPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionStateChangePublisher;
@@ -50,9 +48,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class SupervisionScanner {
     private static final Logger LOGGER = LoggerFactory.getLogger(SupervisionScanner.class);
-
-    private final TimeoutHandler<UUID> acTimeout = new TimeoutHandler<>();
-    private final Map<UUID, Integer> phaseMap = new HashMap<>();
 
     private final long maxStatusWaitMs;
 
@@ -79,8 +74,6 @@ public class SupervisionScanner {
         this.acDefinitionProvider = acDefinitionProvider;
         this.automationCompositionStateChangePublisher = automationCompositionStateChangePublisher;
         this.automationCompositionDeployPublisher = automationCompositionDeployPublisher;
-
-        acTimeout.setMaxWaitMs(acRuntimeParameterGroup.getParticipantParameters().getMaxStatusWaitMs());
         this.maxStatusWaitMs = acRuntimeParameterGroup.getParticipantParameters().getMaxStatusWaitMs();
     }
 
@@ -105,9 +98,6 @@ public class SupervisionScanner {
             }
             scanAutomationComposition(automationComposition, acDefinition.getServiceTemplate());
         }
-        var set = acList.stream().map(AutomationComposition::getInstanceId).collect(Collectors.toSet());
-        acTimeout.removeIfNotPresent(set);
-
         LOGGER.debug("Automation composition scan complete . . .");
     }
 
@@ -143,15 +133,7 @@ public class SupervisionScanner {
             LOGGER.debug("automation composition {} scanned, OK", automationComposition.getInstanceId());
 
             // Clear Timeout on automation composition
-            removeTimeout(automationComposition);
             return;
-        }
-
-        if (acTimeout.isTimeout(automationComposition.getInstanceId())
-                && StateChangeResult.NO_ERROR.equals(automationComposition.getStateChangeResult())) {
-            // retry by the user
-            LOGGER.debug("clearing Timeout for the ac instance");
-            clearTimeout(automationComposition, true);
         }
 
         var completed = true;
@@ -173,18 +155,18 @@ public class SupervisionScanner {
         }
 
         if (completed) {
-            LOGGER.debug("automation composition scan: transition state {} {} ", automationComposition.getDeployState(),
-                    automationComposition.getLockState());
+            LOGGER.debug("automation composition scan: transition state {} {} completed",
+                    automationComposition.getDeployState(), automationComposition.getLockState());
 
             complete(automationComposition);
         } else {
-            LOGGER.debug("automation composition scan: transition from state {} to {} not completed",
+            LOGGER.debug("automation composition scan: transition state {} {} not completed",
                     automationComposition.getDeployState(), automationComposition.getLockState());
 
             if (DeployState.UPDATING.equals(automationComposition.getDeployState())
                     || DeployState.MIGRATING.equals(automationComposition.getDeployState())) {
                 // UPDATING do not need phases
-                handleTimeout(automationComposition);
+                handleTimeoutUpdate(automationComposition);
                 return;
             }
 
@@ -192,14 +174,11 @@ public class SupervisionScanner {
                     AcmUtils.isForward(automationComposition.getDeployState(), automationComposition.getLockState());
 
             var nextSpNotCompleted = isForward ? minSpNotCompleted : maxSpNotCompleted;
-            var firstStartPhase = isForward ? defaultMin : defaultMax;
 
-            if (nextSpNotCompleted != phaseMap.getOrDefault(automationComposition.getInstanceId(), firstStartPhase)) {
-                phaseMap.put(automationComposition.getInstanceId(), nextSpNotCompleted);
-                sendAutomationCompositionMsg(automationComposition, serviceTemplate, nextSpNotCompleted,
-                        firstStartPhase == nextSpNotCompleted);
+            if (nextSpNotCompleted != automationComposition.getPhase()) {
+                sendAutomationCompositionMsg(automationComposition, serviceTemplate, nextSpNotCompleted, false);
             } else {
-                handleTimeout(automationComposition);
+                handleTimeoutWithPhase(automationComposition, serviceTemplate);
             }
         }
     }
@@ -213,6 +192,7 @@ public class SupervisionScanner {
         }
         automationComposition.setDeployState(AcmUtils.deployCompleted(deployState));
         automationComposition.setLockState(AcmUtils.lockCompleted(deployState, automationComposition.getLockState()));
+        automationComposition.setPhase(null);
         if (StateChangeResult.TIMEOUT.equals(automationComposition.getStateChangeResult())) {
             automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
         }
@@ -221,21 +201,6 @@ public class SupervisionScanner {
         } else {
             automationCompositionProvider.updateAutomationComposition(automationComposition);
         }
-
-        // Clear timeout on automation composition
-        removeTimeout(automationComposition);
-    }
-
-    private void clearTimeout(AutomationComposition automationComposition, boolean cleanPhase) {
-        acTimeout.clear(automationComposition.getInstanceId());
-        if (cleanPhase) {
-            phaseMap.remove(automationComposition.getInstanceId());
-        }
-    }
-
-    private void removeTimeout(AutomationComposition automationComposition) {
-        acTimeout.remove(automationComposition.getInstanceId());
-        phaseMap.remove(automationComposition.getInstanceId());
     }
 
     private void handleTimeout(AutomationCompositionDefinition acDefinition) {
@@ -253,23 +218,60 @@ public class SupervisionScanner {
         }
     }
 
-    private void handleTimeout(AutomationComposition automationComposition) {
-        var instanceId = automationComposition.getInstanceId();
-        if (acTimeout.isTimeout(instanceId)) {
+    private void handleTimeoutUpdate(AutomationComposition automationComposition) {
+        if (StateChangeResult.TIMEOUT.equals(automationComposition.getStateChangeResult())) {
             LOGGER.debug("The ac instance is in timeout {}", automationComposition.getInstanceId());
             return;
         }
+        var now = TimestampHelper.nowEpochMilli();
+        var lastMsg = TimestampHelper.toEpochMilli(automationComposition.getLastMsg());
+        for (var element : automationComposition.getElements().values()) {
+            if (!AcmUtils.isInTransitionalState(element.getDeployState(), element.getLockState())) {
+                continue;
+            }
+            if ((now - lastMsg) > maxStatusWaitMs) {
+                LOGGER.debug("Report timeout for the ac instance {}", automationComposition.getInstanceId());
+                automationComposition.setStateChangeResult(StateChangeResult.TIMEOUT);
+                automationCompositionProvider.updateAutomationComposition(automationComposition);
+                break;
+            }
+        }
+    }
 
-        if (acTimeout.getDuration(instanceId) > acTimeout.getMaxWaitMs()) {
-            LOGGER.debug("Report timeout for the ac instance {}", automationComposition.getInstanceId());
-            acTimeout.setTimeout(instanceId);
-            automationComposition.setStateChangeResult(StateChangeResult.TIMEOUT);
-            automationCompositionProvider.updateAutomationComposition(automationComposition);
+    private void handleTimeoutWithPhase(AutomationComposition automationComposition,
+            ToscaServiceTemplate serviceTemplate) {
+        if (StateChangeResult.TIMEOUT.equals(automationComposition.getStateChangeResult())) {
+            LOGGER.debug("The ac instance is in timeout {}", automationComposition.getInstanceId());
+            return;
+        }
+        int currentPhase = automationComposition.getPhase();
+        var now = TimestampHelper.nowEpochMilli();
+        var lastMsg = TimestampHelper.toEpochMilli(automationComposition.getLastMsg());
+        for (var element : automationComposition.getElements().values()) {
+            if (!AcmUtils.isInTransitionalState(element.getDeployState(), element.getLockState())) {
+                continue;
+            }
+            var toscaNodeTemplate = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates()
+                    .get(element.getDefinition().getName());
+            int startPhase = ParticipantUtils.findStartPhase(toscaNodeTemplate.getProperties());
+            if (currentPhase != startPhase) {
+                continue;
+            }
+            if ((now - lastMsg) > maxStatusWaitMs) {
+                LOGGER.debug("Report timeout for the ac instance {}", automationComposition.getInstanceId());
+                automationComposition.setStateChangeResult(StateChangeResult.TIMEOUT);
+                automationCompositionProvider.updateAutomationComposition(automationComposition);
+                break;
+            }
         }
     }
 
     private void sendAutomationCompositionMsg(AutomationComposition automationComposition,
             ToscaServiceTemplate serviceTemplate, int startPhase, boolean firstStartPhase) {
+        automationComposition.setLastMsg(TimestampHelper.now());
+        automationComposition.setPhase(startPhase);
+        automationCompositionProvider.updateAutomationComposition(automationComposition);
+
         if (DeployState.DEPLOYING.equals(automationComposition.getDeployState())) {
             LOGGER.debug("retry message AutomationCompositionUpdate");
             automationCompositionDeployPublisher.send(automationComposition, serviceTemplate, startPhase,
@@ -278,7 +280,5 @@ public class SupervisionScanner {
             LOGGER.debug("retry message AutomationCompositionStateChange");
             automationCompositionStateChangePublisher.send(automationComposition, startPhase, firstStartPhase);
         }
-        // Clear timeout on automation composition
-        clearTimeout(automationComposition, false);
     }
 }

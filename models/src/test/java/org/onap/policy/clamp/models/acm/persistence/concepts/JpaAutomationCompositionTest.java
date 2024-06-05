@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2023 Nordix Foundation.
+ * Copyright (C) 2021-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.UUID;
@@ -35,6 +37,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
+import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 import org.onap.policy.models.base.PfConceptKey;
 
 /**
@@ -93,9 +96,9 @@ class JpaAutomationCompositionTest {
 
     @Test
     void testJpaAutomationComposition() {
-        var jpaAutomationComposition = createJpaAutomationCompositionInstance();
-
         var automationComposition = createAutomationCompositionInstance();
+        var jpaAutomationComposition = new JpaAutomationComposition(automationComposition);
+
         assertEquals(automationComposition, jpaAutomationComposition.toAuthorative());
 
         var target = UUID.randomUUID();
@@ -125,7 +128,7 @@ class JpaAutomationCompositionTest {
 
     @Test
     void testJpaAutomationCompositionValidation() {
-        var testJpaAutomationComposition = createJpaAutomationCompositionInstance();
+        var testJpaAutomationComposition = new JpaAutomationComposition(createAutomationCompositionInstance());
 
         assertThatThrownBy(() -> testJpaAutomationComposition.validate(null))
                 .hasMessageMatching("fieldName is marked .*ull but is null");
@@ -135,7 +138,7 @@ class JpaAutomationCompositionTest {
 
     @Test
     void testJpaAutomationCompositionCompareTo() {
-        var jpaAutomationComposition = createJpaAutomationCompositionInstance();
+        var jpaAutomationComposition = new JpaAutomationComposition(createAutomationCompositionInstance());
 
         var otherJpaAutomationComposition = new JpaAutomationComposition(jpaAutomationComposition);
         assertEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
@@ -166,6 +169,16 @@ class JpaAutomationCompositionTest {
         jpaAutomationComposition.setVersion("0.0.0");
         assertNotEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
         jpaAutomationComposition.setVersion("0.0.1");
+        assertEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
+
+        jpaAutomationComposition.setLastMsg(Timestamp.from(Instant.EPOCH));
+        assertNotEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
+        jpaAutomationComposition.setLastMsg(otherJpaAutomationComposition.getLastMsg());
+        assertEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
+
+        jpaAutomationComposition.setPhase(0);
+        assertNotEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
+        jpaAutomationComposition.setPhase(null);
         assertEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
 
         jpaAutomationComposition.setDeployState(DeployState.DEPLOYED);
@@ -225,19 +238,12 @@ class JpaAutomationCompositionTest {
         assertEquals(ac2, ac0);
     }
 
-    private JpaAutomationComposition createJpaAutomationCompositionInstance() {
-        var testAutomationComposition = createAutomationCompositionInstance();
-        var testJpaAutomationComposition = new JpaAutomationComposition();
-        testJpaAutomationComposition.fromAuthorative(testAutomationComposition);
-
-        return testJpaAutomationComposition;
-    }
-
     private AutomationComposition createAutomationCompositionInstance() {
         var testAutomationComposition = new AutomationComposition();
         testAutomationComposition.setName("automation-composition");
         testAutomationComposition.setInstanceId(UUID.fromString(INSTANCE_ID));
         testAutomationComposition.setVersion("0.0.1");
+        testAutomationComposition.setLastMsg(TimestampHelper.now());
         testAutomationComposition.setCompositionId(UUID.fromString(COMPOSITION_ID));
         testAutomationComposition.setElements(new LinkedHashMap<>());
 

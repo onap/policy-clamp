@@ -29,7 +29,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Queue;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
@@ -71,7 +70,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class AcmUtils {
     public static final String ENTRY = "entry ";
-    private static StringToMapConverter MAP_CONVERTER = new StringToMapConverter();
+    private static final StringToMapConverter MAP_CONVERTER = new StringToMapConverter();
 
     /**
      * Get the Policy information in the service template for the deploy message to participants.
@@ -379,6 +378,7 @@ public final class AcmUtils {
             final DeployState deployState, final LockState lockState) {
         automationComposition.setDeployState(deployState);
         automationComposition.setLockState(lockState);
+        automationComposition.setLastMsg(TimestampHelper.now());
 
         if (MapUtils.isEmpty(automationComposition.getElements())) {
             return;

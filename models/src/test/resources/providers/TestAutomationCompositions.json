@@ -5,6 +5,7 @@
             "instanceId": "809c62b3-8918-41b9-a748-e21eb79c6c89",
             "deployState": "UNDEPLOYED",
             "lockState": "NONE",
+            "lastMsg": "2024-05-22 10:04:37.6020187",
             "elements": {
                 "709c62b3-8918-41b9-a747-e21eb79c6c20": {
                     "id": "709c62b3-8918-41b9-a747-e21eb79c6c20",
@@ -56,6 +57,7 @@
             "instanceId": "809c62b3-8918-41b9-a748-e21eb79c6c90",
             "deployState": "UNDEPLOYED",
             "lockState": "NONE",
+            "lastMsg": "2024-05-22 10:04:37.6020187",
             "elements": {
                 "709c62b3-8918-41b9-a747-e21eb79c6c24": {
                     "id": "709c62b3-8918-41b9-a747-e21eb79c6c24",

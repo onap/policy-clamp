@@ -85,6 +85,7 @@ class AutomationCompositionProviderTest {
 
         var createdAutomationComposition = automationCompositionProvider.createAutomationComposition(inputAc);
         inputAc.setInstanceId(createdAutomationComposition.getInstanceId());
+        inputAc.setLastMsg(createdAutomationComposition.getLastMsg());
         assertEquals(inputAc, createdAutomationComposition);
     }
 

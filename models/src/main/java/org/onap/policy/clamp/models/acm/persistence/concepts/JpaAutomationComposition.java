@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2023 Nordix Foundation.
+ * Copyright (C) 2021-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -44,6 +45,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
+import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 import org.onap.policy.common.parameters.annotations.NotNull;
 import org.onap.policy.common.parameters.annotations.Valid;
 import org.onap.policy.models.base.PfAuthorative;
@@ -98,6 +100,13 @@ public class JpaAutomationComposition extends Validated
     private StateChangeResult stateChangeResult;
 
     @Column
+    @NotNull
+    private Timestamp lastMsg;
+
+    @Column
+    private Integer phase;
+
+    @Column
     private String description;
 
     @NotNull
@@ -149,6 +158,8 @@ public class JpaAutomationComposition extends Validated
         this.restarting = copyConcept.restarting;
         this.deployState = copyConcept.deployState;
         this.lockState = copyConcept.lockState;
+        this.lastMsg = copyConcept.lastMsg;
+        this.phase = copyConcept.phase;
         this.description = copyConcept.description;
         this.stateChangeResult = copyConcept.stateChangeResult;
         this.elements = PfUtils.mapList(copyConcept.elements, JpaAutomationCompositionElement::new);
@@ -177,6 +188,8 @@ public class JpaAutomationComposition extends Validated
         automationComposition.setRestarting(restarting);
         automationComposition.setDeployState(deployState);
         automationComposition.setLockState(lockState);
+        automationComposition.setLastMsg(lastMsg.toString());
+        automationComposition.setPhase(phase);
         automationComposition.setDescription(description);
         automationComposition.setStateChangeResult(stateChangeResult);
         automationComposition.setElements(new LinkedHashMap<>(this.elements.size()));
@@ -199,6 +212,8 @@ public class JpaAutomationComposition extends Validated
         this.restarting = automationComposition.getRestarting();
         this.deployState = automationComposition.getDeployState();
         this.lockState = automationComposition.getLockState();
+        this.lastMsg = TimestampHelper.toTimestamp(automationComposition.getLastMsg());
+        this.phase = automationComposition.getPhase();
         this.description = automationComposition.getDescription();
         this.stateChangeResult = automationComposition.getStateChangeResult();
         this.elements = new ArrayList<>(automationComposition.getElements().size());
@@ -225,6 +240,16 @@ public class JpaAutomationComposition extends Validated
         }
 
         result = ObjectUtils.compare(name, other.name);
+        if (result != 0) {
+            return result;
+        }
+
+        result = lastMsg.compareTo(other.lastMsg);
+        if (result != 0) {
+            return result;
+        }
+
+        result = ObjectUtils.compare(phase, other.phase);
         if (result != 0) {
             return result;
         }

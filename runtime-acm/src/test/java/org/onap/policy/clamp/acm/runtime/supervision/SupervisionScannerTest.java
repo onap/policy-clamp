@@ -243,10 +243,15 @@ class SupervisionScannerTest {
         var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
         automationComposition.setDeployState(DeployState.DEPLOYING);
         automationComposition.setLockState(LockState.NONE);
+        automationComposition.setPhase(0);
         automationComposition.setCompositionId(compositionId);
-        for (Map.Entry<UUID, AutomationCompositionElement> entry : automationComposition.getElements().entrySet()) {
+        for (var entry : automationComposition.getElements().entrySet()) {
             entry.getValue().setDeployState(DeployState.DEPLOYING);
         }
+        // the first element is already completed
+        automationComposition.getElements().entrySet().iterator().next().getValue()
+                .setDeployState(DeployState.DEPLOYED);
+
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         when(automationCompositionProvider.getAcInstancesInTransition()).thenReturn(List.of(automationComposition));
 
@@ -261,14 +266,22 @@ class SupervisionScannerTest {
                 acRuntimeParameterGroup);
 
         automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
+        automationComposition.setLastMsg(TimestampHelper.now());
         scannerObj2.run();
         verify(automationCompositionProvider, times(1)).updateAutomationComposition(any(AutomationComposition.class));
         assertEquals(StateChangeResult.TIMEOUT, automationComposition.getStateChangeResult());
 
+        //already in TIMEOUT
+        clearInvocations(automationCompositionProvider);
+        scannerObj2.run();
+        verify(automationCompositionProvider, times(0)).updateAutomationComposition(any(AutomationComposition.class));
+
+        clearInvocations(automationCompositionProvider);
         for (Map.Entry<UUID, AutomationCompositionElement> entry : automationComposition.getElements().entrySet()) {
             entry.getValue().setDeployState(DeployState.DEPLOYED);
         }
         scannerObj2.run();
+        verify(automationCompositionProvider, times(1)).updateAutomationComposition(any(AutomationComposition.class));
         assertEquals(StateChangeResult.NO_ERROR, automationComposition.getStateChangeResult());
     }
 
@@ -277,6 +290,7 @@ class SupervisionScannerTest {
         var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
         automationComposition.setDeployState(DeployState.DEPLOYING);
         automationComposition.setLockState(LockState.NONE);
+        automationComposition.setPhase(0);
         automationComposition.setCompositionId(compositionId);
         for (var element : automationComposition.getElements().values()) {
             if ("org.onap.domain.database.Http_PMSHMicroserviceAutomationCompositionElement"
@@ -314,10 +328,15 @@ class SupervisionScannerTest {
         var compositionTargetId = UUID.randomUUID();
         automationComposition.setCompositionTargetId(compositionTargetId);
         automationComposition.setLockState(LockState.LOCKED);
+        automationComposition.setLastMsg(TimestampHelper.now());
+        automationComposition.setPhase(0);
         for (var element : automationComposition.getElements().values()) {
             element.setDeployState(DeployState.DEPLOYED);
             element.setLockState(LockState.LOCKED);
         }
+        // first element is not migrated yet
+        automationComposition.getElements().entrySet().iterator().next().getValue()
+                .setDeployState(DeployState.MIGRATING);
 
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         when(automationCompositionProvider.getAcInstancesInTransition()).thenReturn(List.of(automationComposition));
@@ -331,7 +350,15 @@ class SupervisionScannerTest {
                 acRuntimeParameterGroup);
 
         supervisionScanner.run();
+        verify(automationCompositionProvider, times(0)).updateAutomationComposition(any(AutomationComposition.class));
+        assertEquals(DeployState.MIGRATING, automationComposition.getDeployState());
+
+        // first element is migrated
+        automationComposition.getElements().entrySet().iterator().next().getValue()
+                .setDeployState(DeployState.DEPLOYED);
+        supervisionScanner.run();
         verify(automationCompositionProvider, times(1)).updateAutomationComposition(any(AutomationComposition.class));
+
         assertEquals(DeployState.DEPLOYED, automationComposition.getDeployState());
         assertEquals(compositionTargetId, automationComposition.getCompositionId());
     }
@@ -342,6 +369,7 @@ class SupervisionScannerTest {
         automationComposition.setDeployState(DeployState.DEPLOYED);
         automationComposition.setLockState(LockState.UNLOCKING);
         automationComposition.setCompositionId(compositionId);
+        automationComposition.setPhase(0);
         for (var element : automationComposition.getElements().values()) {
             if ("org.onap.domain.database.Http_PMSHMicroserviceAutomationCompositionElement"
                     .equals(element.getDefinition().getName())) {
