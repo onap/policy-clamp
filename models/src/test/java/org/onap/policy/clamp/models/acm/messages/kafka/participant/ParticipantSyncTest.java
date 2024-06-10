@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023-2024 Nordix Foundation.
+ * Copyright (C) 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,15 +38,17 @@ import org.onap.policy.clamp.models.acm.utils.CommonTestData;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
-class ParticipantRestartTest {
+
+
+public class ParticipantSyncTest {
 
     @Test
     void testCopyConstructor() throws CoderException {
 
-        final var orig = new ParticipantRestart();
+        final var orig = new ParticipantSync();
         // verify with null values
         assertEquals(removeVariableFields(orig.toString()),
-                removeVariableFields(new ParticipantRestart(orig).toString()));
+                removeVariableFields(new ParticipantSync(orig).toString()));
 
         orig.setMessageId(UUID.randomUUID());
         orig.setCompositionId(UUID.randomUUID());
@@ -77,8 +79,8 @@ class ParticipantRestartTest {
         orig.setAutomationcompositionList(List.of(acRestart));
 
         assertEquals(removeVariableFields(orig.toString()),
-                removeVariableFields(new ParticipantRestart(orig).toString()));
+                removeVariableFields(new ParticipantSync(orig).toString()));
 
-        assertSerializable(orig, ParticipantRestart.class);
+        assertSerializable(orig, ParticipantSync.class);
     }
 }

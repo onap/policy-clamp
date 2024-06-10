@@ -36,6 +36,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
+import org.onap.policy.clamp.acm.runtime.main.parameters.Topics;
 import org.onap.policy.clamp.acm.runtime.participants.AcmParticipantProvider;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionAcHandler;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionHandler;
@@ -74,7 +75,7 @@ class SupervisionMessagesTest {
     void testSendParticipantRegisterAck() {
         var acRegisterAckPublisher = new ParticipantRegisterAckPublisher();
         var topicSink = mock(TopicSink.class);
-        acRegisterAckPublisher.active(List.of(topicSink));
+        acRegisterAckPublisher.active(topicSink);
         acRegisterAckPublisher.send(new ParticipantRegisterAck());
         verify(topicSink).send(anyString());
         acRegisterAckPublisher.stop();
@@ -100,7 +101,7 @@ class SupervisionMessagesTest {
     void testSendParticipantDeregisterAck() {
         var acDeregisterAckPublisher = new ParticipantDeregisterAckPublisher();
         var topicSink = mock(TopicSink.class);
-        acDeregisterAckPublisher.active(Collections.singletonList(topicSink));
+        acDeregisterAckPublisher.active(topicSink);
         acDeregisterAckPublisher.send(new ParticipantDeregisterAck());
         verify(topicSink).send(anyString());
         acDeregisterAckPublisher.stop();
@@ -140,7 +141,7 @@ class SupervisionMessagesTest {
     void testSendAutomationCompositionStateChangePublisher() {
         var publisher = new AutomationCompositionStateChangePublisher();
         var topicSink = mock(TopicSink.class);
-        publisher.active(List.of(topicSink));
+        publisher.active(topicSink);
         publisher.send(getAutomationComposition(), 0, true);
         verify(topicSink).send(anyString());
         publisher.stop();
@@ -151,7 +152,7 @@ class SupervisionMessagesTest {
         var publisher = new ParticipantPrimePublisher(mock(ParticipantProvider.class),
                 mock(AcmParticipantProvider.class), mock(AcRuntimeParameterGroup.class));
         var topicSink = mock(TopicSink.class);
-        publisher.active(List.of(topicSink));
+        publisher.active(topicSink);
         publisher.sendDepriming(UUID.randomUUID());
         verify(topicSink).send(anyString());
     }
@@ -173,7 +174,7 @@ class SupervisionMessagesTest {
         var publisher = new ParticipantPrimePublisher(participantProvider, mock(AcmParticipantProvider.class),
                 CommonTestData.getTestParamaterGroup());
         var topicSink = mock(TopicSink.class);
-        publisher.active(List.of(topicSink));
+        publisher.active(topicSink);
         var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
         serviceTemplate.setName("Name");
         serviceTemplate.setVersion("1.0.0");
@@ -192,7 +193,7 @@ class SupervisionMessagesTest {
     void testParticipantStatusReqPublisher() {
         var publisher = new ParticipantStatusReqPublisher();
         var topicSink = mock(TopicSink.class);
-        publisher.active(List.of(topicSink));
+        publisher.active(topicSink);
         publisher.send(CommonTestData.getParticipantId());
         verify(topicSink).send(anyString());
     }
@@ -201,7 +202,7 @@ class SupervisionMessagesTest {
     void testParticipantRegisterAckPublisher() {
         var publisher = new ParticipantRegisterAckPublisher();
         var topicSink = mock(TopicSink.class);
-        publisher.active(List.of(topicSink));
+        publisher.active(topicSink);
         publisher.send(UUID.randomUUID(), CommonTestData.getParticipantId());
         verify(topicSink).send(anyString());
     }
@@ -210,7 +211,7 @@ class SupervisionMessagesTest {
     void testParticipantDeregisterAckPublisher() {
         var publisher = new ParticipantDeregisterAckPublisher();
         var topicSink = mock(TopicSink.class);
-        publisher.active(List.of(topicSink));
+        publisher.active(topicSink);
         publisher.send(UUID.randomUUID());
         verify(topicSink).send(anyString());
     }
@@ -219,7 +220,7 @@ class SupervisionMessagesTest {
     void testAcElementPropertiesPublisher() {
         var publisher = new AcElementPropertiesPublisher();
         var topicSink = mock(TopicSink.class);
-        publisher.active(List.of(topicSink));
+        publisher.active(topicSink);
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_UPDATE_JSON, "Crud");
         publisher.send(automationComposition);
@@ -230,7 +231,7 @@ class SupervisionMessagesTest {
     void testAutomationCompositionMigrationPublisher() {
         var publisher = new AutomationCompositionMigrationPublisher();
         var topicSink = mock(TopicSink.class);
-        publisher.active(List.of(topicSink));
+        publisher.active(topicSink);
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_UPDATE_JSON, "Crud");
         publisher.send(automationComposition, UUID.randomUUID());
@@ -241,7 +242,31 @@ class SupervisionMessagesTest {
     void testParticipantRestartPublisher() {
         var publisher = new ParticipantRestartPublisher(CommonTestData.getTestParamaterGroup());
         var topicSink = mock(TopicSink.class);
-        publisher.active(List.of(topicSink));
+        publisher.active(topicSink);
+
+        var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
+        var acmDefinition = new AutomationCompositionDefinition();
+        acmDefinition.setCompositionId(UUID.randomUUID());
+        acmDefinition.setServiceTemplate(serviceTemplate);
+        var acElements = AcmUtils
+                .extractAcElementsFromServiceTemplate(serviceTemplate, "");
+        acmDefinition.setElementStateMap(AcmUtils.createElementStateMap(acElements, AcTypeState.PRIMED));
+
+        var automationComposition =
+                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_UPDATE_JSON, "Crud");
+
+        var participantId = automationComposition.getElements().values().iterator().next().getParticipantId();
+        acmDefinition.getElementStateMap().values().iterator().next().setParticipantId(participantId);
+
+        publisher.send(participantId, acmDefinition, List.of(automationComposition));
+        verify(topicSink).send(anyString());
+    }
+
+    @Test
+    void testParticipantSyncPublisher() {
+        var publisher = new ParticipantSyncPublisher(CommonTestData.getTestParamaterGroup());
+        var topicSink = mock(TopicSink.class);
+        publisher.active(topicSink);
 
         var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
         var acmDefinition = new AutomationCompositionDefinition();

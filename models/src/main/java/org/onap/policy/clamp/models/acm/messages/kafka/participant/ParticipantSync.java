@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021,2024 Nordix Foundation.
+ *  Copyright (C) 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,20 +18,30 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.acm.runtime.config.messaging;
+package org.onap.policy.clamp.models.acm.messages.kafka.participant;
 
-import java.util.List;
-import org.onap.policy.clamp.acm.runtime.main.parameters.Topics;
-import org.onap.policy.common.endpoints.event.comm.TopicSink;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-/**
- * Publisher.
- */
-public interface Publisher {
+@Getter
+@Setter
+@ToString(callSuper = true)
+public class ParticipantSync extends ParticipantRestart {
 
-    void active(TopicSink topicSink);
+    /**
+     * Constructor.
+     */
+    public ParticipantSync() {
+        super(ParticipantMessageType.PARTICIPANT_SYNC_MSG);
+    }
 
-    void stop();
-
-    boolean isDefaultTopic();
+    /**
+     * Constructs the object, making a deep copy.
+     *
+     * @param source source from which to copy
+     */
+    public ParticipantSync(ParticipantSync source) {
+        super(source);
+    }
 }

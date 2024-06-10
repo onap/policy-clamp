@@ -78,8 +78,8 @@ class MessageDispatcherActivatorTest {
             // repeat start - should throw an exception
             assertThatIllegalStateException().isThrownBy(activator::start);
             assertTrue(activator.isAlive());
-            verify(publisherFirst, times(1)).active(anyList());
-            verify(publisherSecond, times(1)).active(anyList());
+            verify(publisherFirst, times(1)).active(any());
+            verify(publisherSecond, times(1)).active(any());
 
             var sco = CODER.decode("{messageType:" + TOPIC_FIRST + "}", StandardCoderObject.class);
             activator.getMsgDispatcher().onTopicEvent(null, "msg", sco);
