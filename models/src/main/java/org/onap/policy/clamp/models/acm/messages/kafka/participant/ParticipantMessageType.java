@@ -110,5 +110,10 @@ public enum ParticipantMessageType {
      * Used by acm runtime to migrate from a composition to another one in participants, triggers a
      * AUTOMATION_COMPOSITION_MIGRATION message with result of AUTOMATION_COMPOSITION_STATE_CHANGE operation.
      */
-    AUTOMATION_COMPOSITION_MIGRATION
+    AUTOMATION_COMPOSITION_MIGRATION,
+
+    /**
+     * Used by runtime to send composition and instances to sync participant replicas.
+     */
+    PARTICIPANT_SYNC_MSG
 }

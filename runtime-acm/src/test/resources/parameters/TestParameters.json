@@ -20,10 +20,15 @@
         "databasePassword": "P01icY",
         "persistenceUnit": "InstantiationTests"
     },
+    "topics":{
+        "operationTopic": "policy-acruntime-participant",
+        "syncTopic": "acm-ppnt-sync"
+    },
     "topicParameterGroup": {
+
         "topicSources": [
             {
-                "topic": "POLICY-ACRUNTIME-PARTICIPANT",
+                "topic": "${topics.operationTopic}",
                 "servers": [
                     "localhost"
                 ],
@@ -33,7 +38,14 @@
         ],
         "topicSinks": [
             {
-                "topic": "POLICY-ACRUNTIME-PARTICIPANT",
+                "topic": "${topics.operationTopic}",
+                "servers": [
+                    "localhost"
+                ],
+                "topicCommInfrastructure": "NOOP"
+            },
+            {
+                "topic": "${topics.syncTopic}",
                 "servers": [
                     "localhost"
                 ],

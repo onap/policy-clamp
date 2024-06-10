@@ -86,12 +86,12 @@ public class ParticipantRestartPublisher extends AbstractParticipantPublisher<Pa
         super.send(message);
     }
 
-    private List<ParticipantDefinition> prepareParticipantRestarting(UUID participantId,
+    protected List<ParticipantDefinition> prepareParticipantRestarting(UUID participantId,
             AutomationCompositionDefinition acmDefinition) {
         var acElements = AcmUtils.extractAcElementsFromServiceTemplate(acmDefinition.getServiceTemplate(),
                 acRuntimeParameterGroup.getAcmParameters().getToscaElementName());
 
-        // list of entry entry filtered by participantId
+        // list of entry filtered by participantId
         List<Entry<String, ToscaNodeTemplate>> elementList = new ArrayList<>();
         Map<ToscaConceptIdentifier, UUID> supportedElementMap = new HashMap<>();
         for (var elementEntry : acElements) {
