@@ -39,6 +39,7 @@ import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRe
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRestart;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantStatus;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantStatusReq;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantSync;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.PropertiesUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.slf4j.Logger;
@@ -206,6 +207,18 @@ public class ParticipantHandler {
         LOGGER.debug("ParticipantRestart message received for participantId {}",
                 participantRestartMsg.getParticipantId());
         acDefinitionHandler.handleParticipantRestart(participantRestartMsg);
+    }
+
+    /**
+     * Handle a ParticipantSync message.
+     *
+     * @param participantSyncMsg the participantSync message
+     */
+    @Timed(value = "listener.participant_sync_msg", description = "PARTICIPANT_SYNC messages received")
+    public void handleParticipantSync(ParticipantSync participantSyncMsg) {
+        LOGGER.debug("ParticipantSync message received for participantId {}",
+                participantSyncMsg.getParticipantId());
+        acDefinitionHandler.handleParticipantRestart(participantSyncMsg);
     }
 
     /**

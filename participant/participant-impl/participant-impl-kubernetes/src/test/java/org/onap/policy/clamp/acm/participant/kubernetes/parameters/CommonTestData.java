@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2023 Nordix Foundation.
+ *  Copyright (C) 2021-2024 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
+import org.onap.policy.clamp.acm.participant.intermediary.parameters.Topics;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.common.endpoints.parameters.TopicParameters;
@@ -39,7 +40,8 @@ public class CommonTestData {
     public static final String PARTICIPANT_GROUP_NAME = "AutomationCompositionParticipantGroup";
     public static final String DESCRIPTION = "Participant description";
     public static final long TIME_INTERVAL = 2000;
-    public static final List<TopicParameters> TOPIC_PARAMS = List.of(getTopicParams());
+    public static final List<TopicParameters> SINK_TOPIC_PARAMS = List.of(getTopicParams());
+    public static final List<TopicParameters> SOURCE_TOPIC_PARAMS = List.of(getTopicParams(), getSyncTopicParams());
     public static final Coder CODER = new StandardCoder();
     private static final UUID AC_ID = UUID.randomUUID();
     private static final String KEY_NAME =
@@ -110,6 +112,7 @@ public class CommonTestData {
             map.put("participantId", getParticipantId());
             map.put("clampAutomationCompositionTopics", getTopicParametersMap(false));
             map.put("participantSupportedElementTypes", new ArrayList<>());
+            map.put("topics", new Topics("policy-acruntime-participant", "acm-ppnt-sync"));
         }
 
         return map;
@@ -133,8 +136,8 @@ public class CommonTestData {
     public Map<String, Object> getTopicParametersMap(final boolean isEmpty) {
         final Map<String, Object> map = new TreeMap<>();
         if (!isEmpty) {
-            map.put("topicSources", TOPIC_PARAMS);
-            map.put("topicSinks", TOPIC_PARAMS);
+            map.put("topicSources", SOURCE_TOPIC_PARAMS);
+            map.put("topicSinks", SINK_TOPIC_PARAMS);
         }
         return map;
     }
@@ -147,6 +150,19 @@ public class CommonTestData {
     public static TopicParameters getTopicParams() {
         final TopicParameters topicParams = new TopicParameters();
         topicParams.setTopic("policy-acruntime-participant");
+        topicParams.setTopicCommInfrastructure("NOOP");
+        topicParams.setServers(List.of("localhost"));
+        return topicParams;
+    }
+
+    /**
+     * Returns sync topic parameters for test cases.
+     *
+     * @return topic parameters
+     */
+    public static TopicParameters getSyncTopicParams() {
+        final TopicParameters topicParams = new TopicParameters();
+        topicParams.setTopic("acm-ppnt-sync");
         topicParams.setTopicCommInfrastructure("NOOP");
         topicParams.setServers(List.of("localhost"));
         return topicParams;

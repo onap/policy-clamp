@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
+import org.onap.policy.clamp.acm.participant.intermediary.parameters.Topics;
 import org.onap.policy.clamp.acm.participant.sim.parameters.ParticipantSimParameters;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
@@ -37,7 +38,8 @@ public class CommonTestData {
     public static final Coder CODER = new StandardCoder();
     public static final String DESCRIPTION = "Participant description";
     public static final long TIME_INTERVAL = 2000;
-    public static final List<TopicParameters> TOPIC_PARAMS = List.of(getTopicParams());
+    public static final List<TopicParameters> SINK_TOPIC_PARAMS = List.of(getSinkTopicParams());
+    public static final List<TopicParameters> SOURCE_TOPIC_PARAMS = List.of(getSinkTopicParams(), getSyncTopicParams());
 
     /**
      * Get ParticipantSimParameters.
@@ -77,6 +79,7 @@ public class CommonTestData {
         map.put("participantId", getParticipantId());
         map.put("clampAutomationCompositionTopics", getTopicParametersMap());
         map.put("participantSupportedElementTypes", new ArrayList<>());
+        map.put("topics", new Topics("policy-acruntime-participant", "acm-ppnt-sync"));
 
         return map;
     }
@@ -88,8 +91,8 @@ public class CommonTestData {
      */
     private static Map<String, Object> getTopicParametersMap() {
         final Map<String, Object> map = new TreeMap<>();
-        map.put("topicSources", TOPIC_PARAMS);
-        map.put("topicSinks", TOPIC_PARAMS);
+        map.put("topicSources", SOURCE_TOPIC_PARAMS);
+        map.put("topicSinks", SINK_TOPIC_PARAMS);
         return map;
     }
 
@@ -98,9 +101,22 @@ public class CommonTestData {
      *
      * @return topic parameters
      */
-    private static TopicParameters getTopicParams() {
+    private static TopicParameters getSinkTopicParams() {
         final TopicParameters topicParams = new TopicParameters();
         topicParams.setTopic("policy-acruntime-participant");
+        topicParams.setTopicCommInfrastructure("NOOP");
+        topicParams.setServers(List.of("localhost"));
+        return topicParams;
+    }
+
+    /**
+     * Returns sync topic parameters for test cases.
+     *
+     * @return topic parameters
+     */
+    private static TopicParameters getSyncTopicParams() {
+        final TopicParameters topicParams = new TopicParameters();
+        topicParams.setTopic("acm-ppnt-sync");
         topicParams.setTopicCommInfrastructure("NOOP");
         topicParams.setServers(List.of("localhost"));
         return topicParams;

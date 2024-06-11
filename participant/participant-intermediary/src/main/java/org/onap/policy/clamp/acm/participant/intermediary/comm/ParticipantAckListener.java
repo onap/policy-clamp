@@ -64,4 +64,9 @@ public abstract class ParticipantAckListener<T extends ParticipantAckMessage> ex
     public ScoListener<T> getScoListener() {
         return this;
     }
+
+    @Override
+    public boolean isDefaultTopic() {
+        return true;
+    }
 }
