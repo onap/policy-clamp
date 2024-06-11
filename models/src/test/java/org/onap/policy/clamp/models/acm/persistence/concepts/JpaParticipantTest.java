@@ -52,20 +52,25 @@ class JpaParticipantTest {
         assertThatThrownBy(() -> new JpaParticipant((JpaParticipant) null))
             .hasMessageMatching("copyConcept is marked .*ull but is null");
 
-        assertThatThrownBy(() -> new JpaParticipant(null, null, null)).hasMessageMatching(NULL_KEY_ERROR);
-
-        assertThatThrownBy(() -> new JpaParticipant(null, ParticipantState.ON_LINE, new ArrayList<>()))
+        assertThatThrownBy(() -> new JpaParticipant(null, ParticipantState.ON_LINE,
+                new ArrayList<>(), new ArrayList<>()))
             .hasMessageMatching(NULL_KEY_ERROR);
 
-        assertThatThrownBy(() -> new JpaParticipant(UUID.randomUUID().toString(), null, new ArrayList<>()))
+        assertThatThrownBy(() -> new JpaParticipant(UUID.randomUUID().toString(), null,
+                new ArrayList<>(), new ArrayList<>()))
             .hasMessageMatching("participantState is marked .*ull but is null");
 
-        assertThatThrownBy(() -> new JpaParticipant(UUID.randomUUID().toString(), ParticipantState.ON_LINE, null))
+        assertThatThrownBy(() -> new JpaParticipant(UUID.randomUUID().toString(), ParticipantState.ON_LINE,
+                null, new ArrayList<>()))
             .hasMessageMatching("supportedElements is marked .*ull but is null");
+
+        assertThatThrownBy(() -> new JpaParticipant(UUID.randomUUID().toString(), ParticipantState.ON_LINE,
+                new ArrayList<>(), null))
+                .hasMessageMatching("replicas is marked .*ull but is null");
 
         assertDoesNotThrow(() -> new JpaParticipant());
         assertDoesNotThrow(() -> new JpaParticipant(UUID.randomUUID().toString(),
-            ParticipantState.ON_LINE, new ArrayList<>()));
+            ParticipantState.ON_LINE, new ArrayList<>(), new ArrayList<>()));
     }
 
     @Test
@@ -158,6 +163,7 @@ class JpaParticipantTest {
         testParticipant.setParticipantId(UUID.randomUUID());
         testParticipant.setLastMsg(TimestampHelper.now());
         testParticipant.setParticipantSupportedElementTypes(new LinkedHashMap<>());
+        testParticipant.setReplicas(new LinkedHashMap<>());
 
         return testParticipant;
     }

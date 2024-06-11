@@ -41,6 +41,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import org.apache.commons.lang3.ObjectUtils;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
@@ -84,11 +86,18 @@ public class JpaParticipant extends Validated
         foreignKey = @ForeignKey(name = "supported_element_fk"))
     private List<@NotNull @Valid JpaParticipantSupportedElementType> supportedElements;
 
+    @NotNull
+    @OneToMany
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JoinColumn(name = "participantId", referencedColumnName = "participantId",
+            foreignKey = @ForeignKey(name = "participant_replica_fk"))
+    private List<@NotNull @Valid JpaParticipantReplica> replicas;
+
     /**
      * The Default Constructor creates a {@link JpaParticipant} object with a null key.
      */
     public JpaParticipant() {
-        this(UUID.randomUUID().toString(), ParticipantState.ON_LINE, new ArrayList<>());
+        this(UUID.randomUUID().toString(), ParticipantState.ON_LINE, new ArrayList<>(), new ArrayList<>());
     }
 
     /**
@@ -96,13 +105,17 @@ public class JpaParticipant extends Validated
      *
      * @param participantId the participant id
      * @param participantState the state of the participant
+     * @param supportedElements the list of supported Element Type
+     * @param replicas the list of replica
      */
     public JpaParticipant(@NonNull String participantId, @NonNull final ParticipantState participantState,
-            @NonNull final List<JpaParticipantSupportedElementType> supportedElements) {
+            @NonNull final List<JpaParticipantSupportedElementType> supportedElements,
+            @NonNull final List<JpaParticipantReplica> replicas) {
         this.participantId = participantId;
         this.participantState = participantState;
         this.supportedElements = supportedElements;
         this.lastMsg = TimestampHelper.nowTimestamp();
+        this.replicas = replicas;
     }
 
     /**
@@ -115,6 +128,7 @@ public class JpaParticipant extends Validated
         this.description = copyConcept.description;
         this.participantId = copyConcept.participantId;
         this.supportedElements = copyConcept.supportedElements;
+        this.replicas = copyConcept.replicas;
         this.lastMsg = copyConcept.lastMsg;
     }
 
@@ -139,7 +153,9 @@ public class JpaParticipant extends Validated
             participant.getParticipantSupportedElementTypes()
                 .put(UUID.fromString(element.getId()), element.toAuthorative());
         }
-
+        for (var replica : this.replicas) {
+            participant.getReplicas().put(UUID.fromString(replica.getReplicaId()), replica.toAuthorative());
+        }
         return participant;
     }
 
@@ -148,13 +164,21 @@ public class JpaParticipant extends Validated
         this.setParticipantState(participant.getParticipantState());
         this.participantId = participant.getParticipantId().toString();
         this.lastMsg = TimestampHelper.toTimestamp(participant.getLastMsg());
-        this.supportedElements = new ArrayList<>(participant.getParticipantSupportedElementTypes().size());
 
+        this.supportedElements = new ArrayList<>(participant.getParticipantSupportedElementTypes().size());
         for (var elementEntry : participant.getParticipantSupportedElementTypes().entrySet()) {
             var jpaParticipantSupportedElementType = new JpaParticipantSupportedElementType();
             jpaParticipantSupportedElementType.setParticipantId(this.participantId);
             jpaParticipantSupportedElementType.fromAuthorative(elementEntry.getValue());
             this.supportedElements.add(jpaParticipantSupportedElementType);
+        }
+
+        this.replicas = new ArrayList<>(participant.getReplicas().size());
+        for (var replicaEntry : participant.getReplicas().entrySet()) {
+            var jpaReplica = new JpaParticipantReplica();
+            jpaReplica.setParticipantId(this.participantId);
+            jpaReplica.fromAuthorative(replicaEntry.getValue());
+            this.replicas.add(jpaReplica);
         }
     }
 

@@ -51,9 +51,9 @@ public class CommonTestData {
     }
 
     /**
-     * Returns participantId for test cases.
+     * Returns participant replica Id for test cases.
      *
-     * @return participant Id
+     * @return replica Id
      */
     public static UUID getReplicaId() {
         return REPLICA_ID;
