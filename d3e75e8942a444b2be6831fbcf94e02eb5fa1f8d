@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "927b61ea_4098f3db",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/test/java/org/onap/policy/clamp/acm/participant/kubernetes/parameters/CommonTestData.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2024-06-11T11:28:38Z",
+      "side": 1,
+      "message": "should this be acm-ppnt-sync?",
+      "range": {
+        "startLine": 115,
+        "startChar": 74,
+        "endLine": 115,
+        "endChar": 86
+      },
+      "revId": "d3e75e8942a444b2be6831fbcf94e02eb5fa1f8d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
