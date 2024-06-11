@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021,2024 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,9 +24,12 @@ package org.onap.policy.clamp.acm.runtime.config.messaging;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.List;
+import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
+import org.onap.policy.common.endpoints.event.comm.Topic;
 import org.onap.policy.common.endpoints.event.comm.TopicEndpointManager;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
 import org.onap.policy.common.endpoints.event.comm.TopicSource;
@@ -65,7 +68,13 @@ public class MessageDispatcherActivator extends ServiceManagerContainer implemen
         topicSources = TopicEndpointManager.getManager()
                 .addTopicSources(acRuntimeParameterGroup.getTopicParameterGroup().getTopicSources());
 
+        var topics = acRuntimeParameterGroup.getTopics();
+
         msgDispatcher = new MessageTypeDispatcher(MSG_TYPE_NAMES);
+
+        var topicMap = topicSinks.stream()
+                .collect(Collectors.toMap(Topic::getTopic, UnaryOperator.identity()));
+
 
         // @formatter:off
         addAction("Topic endpoint management",
@@ -74,7 +83,8 @@ public class MessageDispatcherActivator extends ServiceManagerContainer implemen
 
         publishers.forEach(publisher ->
             addAction("Publisher " + publisher.getClass().getSimpleName(),
-                () -> publisher.active(topicSinks),
+                () -> publisher.active(publisher.isDefaultTopic() ? topicMap.get(topics.getOperationTopic())
+                        : topicMap.get(topics.getSyncTopic())),
                 publisher::stop));
 
         listeners.forEach(listener ->
@@ -90,7 +100,7 @@ public class MessageDispatcherActivator extends ServiceManagerContainer implemen
      * Registers the dispatcher with the topic source(s).
      */
     private void registerMsgDispatcher() {
-        for (final TopicSource source : topicSources) {
+        for (final var source : topicSources) {
             source.register(msgDispatcher);
         }
     }
@@ -99,7 +109,7 @@ public class MessageDispatcherActivator extends ServiceManagerContainer implemen
      * Unregisters the dispatcher from the topic source(s).
      */
     private void unregisterMsgDispatcher() {
-        for (final TopicSource source : topicSources) {
+        for (final var source : topicSources) {
             source.unregister(msgDispatcher);
         }
     }

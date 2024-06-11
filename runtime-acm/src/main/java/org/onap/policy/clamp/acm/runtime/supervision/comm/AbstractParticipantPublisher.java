@@ -22,11 +22,14 @@ package org.onap.policy.clamp.acm.runtime.supervision.comm;
 
 import jakarta.ws.rs.core.Response.Status;
 import java.util.List;
+import java.util.Optional;
 import org.onap.policy.clamp.acm.runtime.config.messaging.Publisher;
+import org.onap.policy.clamp.acm.runtime.main.parameters.Topics;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessage;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
 import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
+
 
 public abstract class AbstractParticipantPublisher<E extends ParticipantMessage> implements Publisher {
 
@@ -47,16 +50,22 @@ public abstract class AbstractParticipantPublisher<E extends ParticipantMessage>
 
 
     @Override
-    public void active(List<TopicSink> topicSinks) {
-        if (topicSinks.size() != 1) {
-            throw new IllegalArgumentException("Topic Sink must be one");
-        }
-        this.topicSinkClient = new TopicSinkClient(topicSinks.get(0));
+    public void active(TopicSink topicSink) {
+        this.topicSinkClient = new TopicSinkClient(topicSink);
         active = true;
     }
 
     @Override
     public void stop() {
         active = false;
+    }
+
+    /**
+     * Is default topic.
+     * @return true if default
+     */
+    @Override
+    public boolean isDefaultTopic() {
+        return true;
     }
 }

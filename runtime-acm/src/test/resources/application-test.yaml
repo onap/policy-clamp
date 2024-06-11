@@ -19,13 +19,16 @@ server:
     context-path: /onap/policy/clamp/acm
 
 runtime:
+  topics:
+    operationTopic: policy-acruntime-participant
+    syncTopic: acm-ppnt-sync
   participantParameters:
     updateParameters:
       maxRetryCount: 3
   topicParameterGroup:
     topicSources:
       -
-        topic: policy-acruntime-participant
+        topic: ${runtime.topics.operationTopic}
         servers:
           - kafka:9092
         topicCommInfrastructure: NOOP
@@ -35,7 +38,12 @@ runtime:
         topicCommInfrastructure: NOOP
         servers:
           - kafka:9092
-        topic: policy-acruntime-participant
+        topic: ${runtime.topics.operationTopic}
+      -
+        topic: ${runtime.topics.syncTopic}
+        servers:
+            - ${topicServer:kafka:9092}
+        topicCommInfrastructure: NOOP
   acmParameters:
     acElementName: org.onap.policy.clamp.acm.AutomationCompositionElement
     acNodeType: org.onap.policy.clamp.acm.AutomationComposition

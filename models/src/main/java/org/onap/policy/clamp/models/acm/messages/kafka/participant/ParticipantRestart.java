@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023,2024 Nordix Foundation.
+ *  Copyright (C) 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ public class ParticipantRestart extends ParticipantMessage {
     // element definition
     private List<ParticipantDefinition> participantDefinitionUpdates = new ArrayList<>();
 
-    // automationcomposition instances list
+    // automation composition instances list
     private List<ParticipantRestartAc> automationcompositionList = new ArrayList<>();
 
     /**
@@ -49,6 +49,14 @@ public class ParticipantRestart extends ParticipantMessage {
      */
     public ParticipantRestart() {
         super(ParticipantMessageType.PARTICIPANT_RESTART);
+    }
+
+    /**
+     * Constructor with message type.
+     * @param messageType messageType
+     */
+    public ParticipantRestart(ParticipantMessageType messageType) {
+        super(messageType);
     }
 
     /**
