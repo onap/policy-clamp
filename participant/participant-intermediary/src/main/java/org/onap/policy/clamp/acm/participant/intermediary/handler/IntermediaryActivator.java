@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021,2024 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,6 +28,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import lombok.Getter;
 import org.onap.policy.clamp.acm.participant.intermediary.parameters.ParticipantParameters;
+import org.onap.policy.clamp.acm.participant.intermediary.parameters.Topics;
 import org.onap.policy.common.endpoints.event.comm.TopicEndpointManager;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
 import org.onap.policy.common.endpoints.event.comm.TopicSource;
@@ -55,6 +56,9 @@ public class IntermediaryActivator extends ServiceManagerContainer implements Cl
     @Getter
     private final MessageTypeDispatcher msgDispatcher;
 
+    @Getter
+    private final MessageTypeDispatcher syncMsgDispatcher;
+
     /**
      * Instantiate the activator for participant.
      *
@@ -75,22 +79,32 @@ public class IntermediaryActivator extends ServiceManagerContainer implements Cl
 
         msgDispatcher = new MessageTypeDispatcher(MSG_TYPE_NAMES);
 
+        syncMsgDispatcher = new MessageTypeDispatcher(MSG_TYPE_NAMES);
+
         // @formatter:off
         addAction("Topic endpoint management",
             () -> TopicEndpointManager.getManager().start(),
             () -> TopicEndpointManager.getManager().shutdown());
 
-        listeners.forEach(listener ->
-                addAction("Listener " + listener.getClass().getSimpleName(),
+        listeners.stream().filter(Listener::isDefaultTopic)
+                .forEach(listener -> addAction("Listener " + listener.getClass().getSimpleName(),
                         () -> msgDispatcher.register(listener.getType(), listener.getScoListener()),
                         () -> msgDispatcher.unregister(listener.getType())));
+
+        listeners.stream().filter(l -> ! l.isDefaultTopic())
+                .forEach(listener -> addAction("Listener " + listener.getClass().getSimpleName(),
+                        () -> syncMsgDispatcher.register(listener.getType(), listener.getScoListener()),
+                        () -> syncMsgDispatcher.unregister(listener.getType())));
 
         publishers.forEach(publisher ->
             addAction("Publisher " + publisher.getClass().getSimpleName(),
                 () -> publisher.active(topicSinks),
                 publisher::stop));
 
-        addAction("Topic Message Dispatcher", this::registerMsgDispatcher, this::unregisterMsgDispatcher);
+        var topics = parameters.getIntermediaryParameters().getTopics();
+
+        addAction("Topic Message Dispatcher", () -> this.registerMsgDispatcher(topics),
+                () -> this.unregisterMsgDispatcher(topics));
         // @formatter:on
     }
 
@@ -133,18 +147,26 @@ public class IntermediaryActivator extends ServiceManagerContainer implements Cl
     /**
      * Registers the dispatcher with the topic source(s).
      */
-    private void registerMsgDispatcher() {
-        for (final TopicSource source : topicSources) {
-            source.register(msgDispatcher);
+    private void registerMsgDispatcher(Topics topics) {
+        for (final var source : topicSources) {
+            if (source.getTopic().equals(topics.getOperationTopic())) {
+                source.register(msgDispatcher);
+            } else if (source.getTopic().equals(topics.getSyncTopic())) {
+                source.register(syncMsgDispatcher);
+            }
         }
     }
 
     /**
      * Unregisters the dispatcher from the topic source(s).
      */
-    private void unregisterMsgDispatcher() {
-        for (final TopicSource source : topicSources) {
-            source.unregister(msgDispatcher);
+    private void unregisterMsgDispatcher(Topics topics) {
+        for (final var source : topicSources) {
+            if (source.getTopic().equals(topics.getOperationTopic())) {
+                source.unregister(msgDispatcher);
+            } else if (source.getTopic().equals(topics.getSyncTopic())) {
+                source.unregister(syncMsgDispatcher);
+            }
         }
     }
 

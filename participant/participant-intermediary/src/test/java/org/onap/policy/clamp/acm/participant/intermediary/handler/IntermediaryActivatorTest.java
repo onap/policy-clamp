@@ -34,8 +34,10 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantStatusReqListener;
+import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantSyncListener;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantStatusReq;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantSync;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.coder.StandardCoderObject;
@@ -59,10 +61,12 @@ class IntermediaryActivatorTest {
         var listenerFirst = mock(ParticipantStatusReqListener.class);
         when(listenerFirst.getType()).thenReturn(TOPIC_FIRST);
         when(listenerFirst.getScoListener()).thenReturn(listenerFirst);
+        when(listenerFirst.isDefaultTopic()).thenReturn(true);
 
         var listenerSecond = mock(ParticipantStatusReqListener.class);
         when(listenerSecond.getType()).thenReturn(TOPIC_SECOND);
         when(listenerSecond.getScoListener()).thenReturn(listenerSecond);
+        when(listenerSecond.isDefaultTopic()).thenReturn(false);
 
         List<Listener<ParticipantStatusReq>> listeners = List.of(listenerFirst, listenerSecond);
 
@@ -84,7 +88,7 @@ class IntermediaryActivatorTest {
             verify(listenerFirst, times(1)).onTopicEvent(any(), any(), any());
 
             sco = CODER.decode("{messageType:" + TOPIC_SECOND + "}", StandardCoderObject.class);
-            activator.getMsgDispatcher().onTopicEvent(null, "msg", sco);
+            activator.getSyncMsgDispatcher().onTopicEvent(null, "msg", sco);
             verify(listenerSecond, times(1)).onTopicEvent(any(), any(), any());
 
             activator.close();

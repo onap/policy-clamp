@@ -30,6 +30,7 @@ import java.util.TreeMap;
 import java.util.UUID;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.DummyParticipantParameters;
 import org.onap.policy.clamp.acm.participant.intermediary.parameters.ParticipantIntermediaryParameters;
+import org.onap.policy.clamp.acm.participant.intermediary.parameters.Topics;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AcElementRestart;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
@@ -58,6 +59,7 @@ public class CommonTestData {
     public static final String DESCRIPTION = "Participant description";
     public static final long TIME_INTERVAL = 2000;
     public static final List<TopicParameters> TOPIC_PARAMS = List.of(getTopicParams());
+    public static final List<TopicParameters> TOPIC_SOURCE_PARAMS = List.of(getTopicParams(), getSyncTopicParams());
     public static final Coder CODER = new StandardCoder();
     public static final UUID AC_ID_0 = UUID.randomUUID();
     public static final UUID AC_ID_1 = UUID.randomUUID();
@@ -116,6 +118,7 @@ public class CommonTestData {
         map.put("description", DESCRIPTION);
         map.put("reportingTimeIntervalMs", TIME_INTERVAL);
         map.put("clampAutomationCompositionTopics", getTopicParametersMap(false));
+        map.put("topics", getTopics());
         var supportedElementType = new ParticipantSupportedElementType();
         supportedElementType.setTypeName("org.onap.policy.clamp.acm.HttpAutomationCompositionElement");
         supportedElementType.setTypeVersion("1.0.0");
@@ -133,7 +136,7 @@ public class CommonTestData {
     public static Map<String, Object> getTopicParametersMap(final boolean isEmpty) {
         final Map<String, Object> map = new TreeMap<>();
         if (!isEmpty) {
-            map.put("topicSources", TOPIC_PARAMS);
+            map.put("topicSources", TOPIC_SOURCE_PARAMS);
             map.put("topicSinks", TOPIC_PARAMS);
         }
         return map;
@@ -150,6 +153,22 @@ public class CommonTestData {
         topicParams.setTopicCommInfrastructure("NOOP");
         topicParams.setServers(List.of("localhost"));
         return topicParams;
+    }
+
+    /**
+     * Returns topic parameters for sync topic.
+     * @return topicparamaters
+     */
+    public static TopicParameters getSyncTopicParams() {
+        final var topicParams = new TopicParameters();
+        topicParams.setTopic("acm-ppnt-sync");
+        topicParams.setTopicCommInfrastructure("NOOP");
+        topicParams.setServers(List.of("localhost"));
+        return topicParams;
+    }
+
+    private static Topics getTopics() {
+        return new Topics("policy-acruntime-participant", "acm-ppnt-sync");
     }
 
     /**

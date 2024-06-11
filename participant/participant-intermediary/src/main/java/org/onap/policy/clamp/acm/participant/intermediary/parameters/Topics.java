@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2024 Nordix Foundation.
+ *  Copyright (C) 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,47 +21,24 @@
 package org.onap.policy.clamp.acm.participant.intermediary.parameters;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import java.util.List;
-import java.util.UUID;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
-import org.onap.policy.common.endpoints.parameters.TopicParameterGroup;
-import org.onap.policy.common.parameters.validation.ParameterGroupConstraint;
 
 /**
- * Class to hold all parameters needed for participant component.
+ * Class to hold topic names for operation and synchronization.
  */
 @Getter
 @Setter
-public class ParticipantIntermediaryParameters {
-
-    // The ID and description of this participant
-    @NotNull
-    @Valid
-    private UUID participantId;
-
-    @NotBlank
-    private String description;
-
-    // The time interval for periodic reporting of status to the CLAMP ACM server
-    @Valid
-    @Positive
-    private long reportingTimeIntervalMs;
-
-    @NotNull
-    @ParameterGroupConstraint
-    private TopicParameterGroup clampAutomationCompositionTopics;
+@AllArgsConstructor
+public class Topics {
 
     @NotNull
     @Valid
-    private List<ParticipantSupportedElementType> participantSupportedElementTypes;
+    private String operationTopic;
 
     @NotNull
     @Valid
-    private Topics topics;
-
+    private String syncTopic;
 }
