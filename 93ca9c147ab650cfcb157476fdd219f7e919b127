@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9b7ec3c5_408699ff",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/config/messaging/MessageDispatcherActivator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2024-06-11T07:53:10Z",
+      "side": 1,
+      "message": "suggestion:\nvar topicMap \u003d topicSinks.stream().collect(Collectors.toMap(Topic::getTopic, UnaryOperator.identity()));",
+      "range": {
+        "startLine": 75,
+        "startChar": 8,
+        "endLine": 76,
+        "endChar": 84
+      },
+      "revId": "93ca9c147ab650cfcb157476fdd219f7e919b127",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
