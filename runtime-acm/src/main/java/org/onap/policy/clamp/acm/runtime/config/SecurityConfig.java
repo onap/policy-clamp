@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021,2023 Nordix Foundation.
+ *  Copyright (C) 2021,2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,8 +34,8 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
 
-    @Value("${metrics.security.disabled}")
-    private boolean disableMetricsSecurity;
+    @Value("${basicAuth:true}")
+    private boolean useBasicAuth;
 
     /**
      * Return the configuration of how access to this module's REST end points is secured.
@@ -48,11 +48,10 @@ public class SecurityConfig {
         http
             .httpBasic(Customizer.withDefaults())
             .authorizeHttpRequests(authorize -> {
-                if (disableMetricsSecurity) {
-                    authorize.requestMatchers("/prometheus").permitAll()
-                        .anyRequest().authenticated();
-                } else {
+                if (useBasicAuth) {
                     authorize.anyRequest().authenticated();
+                } else {
+                    authorize.anyRequest().permitAll();
                 }
             })
             .csrf(AbstractHttpConfigurer::disable);

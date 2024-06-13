@@ -10,10 +10,6 @@ spring:
       ddl-auto: create
     open-in-view: false
 
-metrics:
-  security:
-    disabled: true
-
 server:
   servlet:
     context-path: /onap/policy/clamp/acm
@@ -53,3 +49,5 @@ tracing:
   sampler:
     jaeger-remote:
       endpoint: http://jaeger:14250
+
+basicAuth: false

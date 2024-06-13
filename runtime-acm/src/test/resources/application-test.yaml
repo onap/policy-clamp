@@ -10,10 +10,6 @@ spring:
       ddl-auto: create
     open-in-view: false
 
-metrics:
-  security:
-    disabled: false
-
 server:
   servlet:
     context-path: /onap/policy/clamp/acm

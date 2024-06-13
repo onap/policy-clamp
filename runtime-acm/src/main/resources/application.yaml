@@ -28,10 +28,6 @@ spring:
       hibernate:
         format_sql: true
 
-metrics:
-  security:
-    disabled: false
-
 server:
   port: 6969
   servlet:
