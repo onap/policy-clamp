@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2023 Nordix Foundation.
+ *  Copyright (C) 2021-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,11 +23,13 @@ package org.onap.policy.clamp.acm.participant.http.handler;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.http.main.handler.AutomationCompositionElementHandler;
 import org.onap.policy.clamp.acm.participant.http.main.models.ConfigRequest;
@@ -40,6 +42,8 @@ import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.models.base.PfModelException;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.springframework.http.HttpStatus;
 
 class AcElementHandlerTest {
 
@@ -63,7 +67,7 @@ class AcElementHandlerTest {
     }
 
     @Test
-    void testDeployConstraintViolations() throws PfModelException {
+    void testDeployConstraintViolations() {
         var instanceId = commonTestData.getAutomationCompositionId();
         var element = commonTestData.getAutomationCompositionElement();
         var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
@@ -78,7 +82,7 @@ class AcElementHandlerTest {
     }
 
     @Test
-    void testDeployError() throws PfModelException {
+    void testDeployError() {
         var instanceId = commonTestData.getAutomationCompositionId();
         var element = commonTestData.getAutomationCompositionElement();
         var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
@@ -95,7 +99,30 @@ class AcElementHandlerTest {
     }
 
     @Test
-    void testDeploy() throws Exception {
+    void testDeployFailed() {
+        var serviceTemplate = ToscaUtils.readAutomationCompositionFromTosca();
+        var nodeTemplatesMap = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
+        var map = new HashMap<>(nodeTemplatesMap.get(HTTP_AUTOMATION_COMPOSITION_ELEMENT).getProperties());
+        var element = commonTestData.getAutomationCompositionElement();
+        map.putAll(element.getProperties());
+        var instanceId = commonTestData.getAutomationCompositionId();
+        var acHttpClient = mock(AcHttpClient.class);
+        when(acHttpClient.run(any())).thenReturn(Map.of(new ToscaConceptIdentifier(),
+                Pair.of(HttpStatus.BAD_REQUEST.value(), "")));
+        var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
+
+        var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(participantIntermediaryApi, acHttpClient);
+
+        automationCompositionElementHandler.deploy(instanceId, element, map);
+        verify(acHttpClient).run(any(ConfigRequest.class));
+        verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
+                DeployState.UNDEPLOYED, null, StateChangeResult.FAILED,
+                "Error on Invoking the http request: [(400,)]");
+    }
+
+    @Test
+    void testDeploy() {
         var serviceTemplate = ToscaUtils.readAutomationCompositionFromTosca();
         var nodeTemplatesMap = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
         var map = new HashMap<>(nodeTemplatesMap.get(HTTP_AUTOMATION_COMPOSITION_ELEMENT).getProperties());
@@ -195,50 +222,6 @@ class AcElementHandlerTest {
         automationCompositionElementHandler.deprime(compositionId);
         verify(participantIntermediaryApi).updateCompositionState(compositionId, AcTypeState.COMMISSIONED,
                 StateChangeResult.NO_ERROR, "Deprimed");
-    }
-
-    @Test
-    void testHandleRestartComposition() throws PfModelException {
-        var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
-        var automationCompositionElementHandler =
-                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class));
-
-        var compositionId = UUID.randomUUID();
-        automationCompositionElementHandler.handleRestartComposition(compositionId, List.of(), AcTypeState.PRIMED);
-        verify(participantIntermediaryApi).updateCompositionState(compositionId, AcTypeState.PRIMED,
-                StateChangeResult.NO_ERROR, "Restarted");
-    }
-
-    @Test
-    void testHandleRestartInstanceDeploying() throws PfModelException {
-        var serviceTemplate = ToscaUtils.readAutomationCompositionFromTosca();
-        var nodeTemplatesMap = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
-        var map = new HashMap<>(nodeTemplatesMap.get(HTTP_AUTOMATION_COMPOSITION_ELEMENT).getProperties());
-        var element = commonTestData.getAutomationCompositionElement();
-        map.putAll(element.getProperties());
-        var instanceId = commonTestData.getAutomationCompositionId();
-        var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
-        var automationCompositionElementHandler =
-                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class));
-
-        automationCompositionElementHandler.handleRestartInstance(instanceId, element, map, DeployState.DEPLOYING,
-                LockState.NONE);
-        verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
-                DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Deployed");
-    }
-
-    @Test
-    void testHandleRestartInstanceDeployed() throws PfModelException {
-        var element = commonTestData.getAutomationCompositionElement();
-        var instanceId = commonTestData.getAutomationCompositionId();
-        var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
-        var automationCompositionElementHandler =
-                new AutomationCompositionElementHandler(participantIntermediaryApi, mock(AcHttpClient.class));
-
-        automationCompositionElementHandler.handleRestartInstance(instanceId, element, element.getProperties(),
-                DeployState.DEPLOYED, LockState.LOCKED);
-        verify(participantIntermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
-                DeployState.DEPLOYED, LockState.LOCKED, StateChangeResult.NO_ERROR, "Restarted");
     }
 
     @Test

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2023 Nordix Foundation.
+ *  Copyright (C) 2021-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -136,7 +136,7 @@ class AutomationCompositionElementHandlerTest {
     }
 
     @Test
-    void testDeployPapException() throws PfModelException {
+    void testDeployPapException() {
         var api = mock(PolicyApiHttpClient.class);
         doReturn(Response.ok().build()).when(api).createPolicyType(any());
         doReturn(Response.ok().build()).when(api).createPolicy(any());
@@ -217,55 +217,6 @@ class AutomationCompositionElementHandlerTest {
         handler.deprime(AC_ID);
         verify(intermediaryApi).updateCompositionState(AC_ID, AcTypeState.COMMISSIONED, StateChangeResult.NO_ERROR,
                 "Deprimed");
-    }
-
-    @Test
-    void testHandleRestartComposition() throws PfModelException {
-        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        var automationCompositionElementHandler =
-                new AutomationCompositionElementHandler(mock(PolicyApiHttpClient.class),
-                        mock(PolicyPapHttpClient.class), intermediaryApi);
-
-        var compositionId = UUID.randomUUID();
-        automationCompositionElementHandler.handleRestartComposition(compositionId, List.of(), AcTypeState.PRIMED);
-
-        verify(intermediaryApi).updateCompositionState(compositionId, AcTypeState.PRIMED,
-                StateChangeResult.NO_ERROR, "Restarted");
-    }
-
-    @Test
-    void testHandleRestartInstanceDeploying() throws PfModelException {
-        // Mock success scenario for policy creation and deployment
-        var api = mock(PolicyApiHttpClient.class);
-        doReturn(Response.ok().build()).when(api).createPolicyType(any());
-        doReturn(Response.ok().build()).when(api).createPolicy(any());
-
-        var pap = mock(PolicyPapHttpClient.class);
-        doReturn(Response.accepted().build()).when(pap).handlePolicyDeployOrUndeploy(any(), any(), any());
-
-        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        var handler = new AutomationCompositionElementHandler(api, pap, intermediaryApi);
-        var element = getTestingAcElement();
-
-        handler.handleRestartInstance(AC_ID, element, Map.of(), DeployState.DEPLOYING, LockState.NONE);
-        verify(intermediaryApi).updateAutomationCompositionElementState(AC_ID, automationCompositionElementId,
-                DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Deployed");
-
-        handler.handleRestartInstance(AC_ID, element, Map.of(), DeployState.UNDEPLOYING, LockState.LOCKED);
-        verify(intermediaryApi).updateAutomationCompositionElementState(AC_ID, automationCompositionElementId,
-                DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR, "Undeployed");
-    }
-
-    @Test
-    void testHandleRestartInstanceDeployed() throws PfModelException {
-        var api = mock(PolicyApiHttpClient.class);
-        var pap = mock(PolicyPapHttpClient.class);
-        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        var handler = new AutomationCompositionElementHandler(api, pap, intermediaryApi);
-        var element = getTestingAcElement();
-        handler.handleRestartInstance(AC_ID, element, Map.of(), DeployState.DEPLOYED, LockState.LOCKED);
-        verify(intermediaryApi).updateAutomationCompositionElementState(AC_ID, automationCompositionElementId,
-                DeployState.DEPLOYED, LockState.LOCKED, StateChangeResult.NO_ERROR, "Restarted");
     }
 
     @Test

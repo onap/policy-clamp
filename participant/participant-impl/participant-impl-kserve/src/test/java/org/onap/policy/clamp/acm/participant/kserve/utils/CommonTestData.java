@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023 Nordix Foundation.
+ *  Copyright (C) 2023-2024 Nordix Foundation.
  *  Modifications Copyright (C) 2022 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,9 +22,10 @@
 package org.onap.policy.clamp.acm.participant.kserve.utils;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
-import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
-import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
+import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
+import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 public class CommonTestData {
@@ -34,16 +35,25 @@ public class CommonTestData {
     private static final List<UUID> AC_ID_LIST = List.of(UUID.randomUUID(), UUID.randomUUID());
 
     /**
-     * Get a automationComposition Element.
+     * Get a new InstanceElement.
      *
-     * @return automationCompositionElement object
+     * @return InstanceElementDto object
      */
-    public AcElementDeploy getAutomationCompositionElement() {
-        var element = new AcElementDeploy();
-        element.setId(UUID.randomUUID());
-        element.setDefinition(new ToscaConceptIdentifier(TEST_KEY_NAME, "1.0.1"));
-        element.setOrderedState(DeployOrder.DEPLOY);
-        return element;
+    public InstanceElementDto getAutomationCompositionElement() {
+        return new InstanceElementDto(
+                getAutomationCompositionId(), UUID.randomUUID(), null, Map.of(), Map.of());
+    }
+
+    /**
+     * Get a new CompositionElement.
+     *
+     * @param properties common properties from service template
+     * @return CompositionElementDto object
+     */
+    public CompositionElementDto getCompositionElement(Map<String, Object> properties) {
+        return new CompositionElementDto(UUID.randomUUID(),
+                new ToscaConceptIdentifier(TEST_KEY_NAME, "1.0.1"),
+                properties, Map.of());
     }
 
     /**

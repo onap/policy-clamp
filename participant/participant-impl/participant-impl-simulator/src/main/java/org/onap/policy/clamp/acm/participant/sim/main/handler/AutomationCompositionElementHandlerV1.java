@@ -28,10 +28,7 @@ import org.onap.policy.clamp.acm.participant.intermediary.api.impl.AcElementList
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
-import org.onap.policy.clamp.models.acm.concepts.DeployState;
-import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
-import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.models.base.PfModelException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,63 +98,6 @@ public class AutomationCompositionElementHandlerV1 extends AcElementListenerV1 {
     public void deprime(UUID compositionId) throws PfModelException {
         LOGGER.debug("deprime call compositionId: {}", compositionId);
         simulatorService.deprime(compositionId);
-    }
-
-    @Override
-    public void handleRestartComposition(UUID compositionId,
-        List<AutomationCompositionElementDefinition> elementDefinitionList, AcTypeState state)
-            throws PfModelException {
-        LOGGER.debug("restart composition definition call compositionId: {}, elementDefinitionList: {}, state: {}",
-                compositionId, elementDefinitionList, state);
-
-        switch (state) {
-            case PRIMING:
-                prime(compositionId, elementDefinitionList);
-                break;
-
-            case DEPRIMING:
-                deprime(compositionId);
-                break;
-
-            default:
-                intermediaryApi.updateCompositionState(compositionId, state, StateChangeResult.NO_ERROR, "Restarted");
-        }
-    }
-
-    @Override
-    public void handleRestartInstance(UUID instanceId, AcElementDeploy element,
-        Map<String, Object> properties, DeployState deployState, LockState lockState) throws PfModelException {
-        LOGGER.debug("restart instance call instanceId: {}, element: {}, properties: {},"
-                + "deployState: {}, lockState: {}", instanceId, element, properties, deployState, lockState);
-
-        if (!AcmUtils.isInTransitionalState(deployState, lockState)) {
-            intermediaryApi.updateAutomationCompositionElementState(instanceId, element.getId(),
-                    deployState, lockState, StateChangeResult.NO_ERROR, "Restarted");
-            return;
-        }
-        if (DeployState.DEPLOYING.equals(deployState)) {
-            deploy(instanceId, element, properties);
-            return;
-        }
-        if (DeployState.UNDEPLOYING.equals(deployState)) {
-            undeploy(instanceId, element.getId());
-            return;
-        }
-        if (DeployState.UPDATING.equals(deployState)) {
-            update(instanceId, element, properties);
-            return;
-        }
-        if (DeployState.DELETING.equals(deployState)) {
-            delete(instanceId, element.getId());
-            return;
-        }
-        if (LockState.LOCKING.equals(lockState)) {
-            lock(instanceId, element.getId());
-            return;
-        }
-        if (LockState.UNLOCKING.equals(lockState)) {
-            unlock(instanceId, element.getId());
-        }
     }
 
     @Override
