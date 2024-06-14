@@ -22,18 +22,18 @@ participant:
     participantId: 101c62b3-8918-41b9-a747-d21eb79c6c90
     clampAutomationCompositionTopics:
       topicSources:
-        - topic: ${participant.intermediaryparameters.topics.operationTopic}
+        - topic: ${participant.intermediaryParameters.topics.operationTopic}
           servers:
             - ${topicServer:kafka:9092}
           topicCommInfrastructure: NOOP
           fetchTimeout: 15000
-        - topic: ${participant.intermediaryparameters.topics.syncTopic}
+        - topic: ${participant.intermediaryParameters.topics.syncTopic}
           servers:
             - ${topicServer:kafka:9092}
           topicCommInfrastructure: NOOP
           fetchTimeout: 15000
       topicSinks:
-        - topic: ${participant.intermediaryparameters.topics.operationTopic}
+        - topic: ${participant.intermediaryParameters.topics.operationTopic}
           servers:
             - ${topicServer:kafka:9092}
           topicCommInfrastructure: NOOP

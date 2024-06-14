@@ -20,6 +20,9 @@
 
 package org.onap.policy.clamp.models.acm.messages.kafka.participant;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -28,6 +31,10 @@ import lombok.ToString;
 @Setter
 @ToString(callSuper = true)
 public class ParticipantSync extends ParticipantRestart {
+
+    private Set<UUID> excludeReplicas = new HashSet<>();
+    private boolean restarting = false;
+    private boolean delete = false;
 
     /**
      * Constructor.
@@ -43,5 +50,8 @@ public class ParticipantSync extends ParticipantRestart {
      */
     public ParticipantSync(ParticipantSync source) {
         super(source);
+        this.excludeReplicas = new HashSet<>(source.excludeReplicas);
+        this.restarting = source.restarting;
+        this.delete = source.delete;
     }
 }

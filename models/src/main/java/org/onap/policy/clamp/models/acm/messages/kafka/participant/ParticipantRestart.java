@@ -66,6 +66,7 @@ public class ParticipantRestart extends ParticipantMessage {
      */
     public ParticipantRestart(ParticipantRestart source) {
         super(source);
+        this.state = source.state;
         this.participantDefinitionUpdates =
                 PfUtils.mapList(source.participantDefinitionUpdates, ParticipantDefinition::new);
         this.automationcompositionList = PfUtils.mapList(source.automationcompositionList, ParticipantRestartAc::new);

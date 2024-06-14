@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2023 Nordix Foundation.
+ * Copyright (C) 2021-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,11 +26,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,12 +41,15 @@ import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationComposition;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaNodeTemplateState;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaParticipant;
 import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionElementRepository;
 import org.onap.policy.clamp.models.acm.persistence.repository.NodeTemplateStateRepository;
+import org.onap.policy.clamp.models.acm.persistence.repository.ParticipantReplicaRepository;
 import org.onap.policy.clamp.models.acm.persistence.repository.ParticipantRepository;
+import org.onap.policy.clamp.models.acm.utils.CommonTestData;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
@@ -63,27 +69,24 @@ class ParticipantProviderTest {
 
     private final List<Participant> inputParticipants = new ArrayList<>();
     private List<JpaParticipant> jpaParticipantList;
-    private final String originalJson = ResourceUtils.getResourceAsString(PARTICIPANT_JSON);
-
-    private AutomationCompositions inputAutomationCompositions;
     private List<JpaAutomationComposition> inputAutomationCompositionsJpa;
 
-    private final String originalAcJson = ResourceUtils.getResourceAsString(AUTOMATION_COMPOSITION_JSON);
-    private final String nodeTemplateStatesJson = ResourceUtils.getResourceAsString(NODE_TEMPLATE_STATE_JSON);
-
-    private List<NodeTemplateState> nodeTemplateStateList = new ArrayList<>();
+    private final List<NodeTemplateState> nodeTemplateStateList = new ArrayList<>();
     private List<JpaNodeTemplateState> jpaNodeTemplateStateList;
 
     @BeforeEach
     void beforeSetup() throws Exception {
+        var originalJson = ResourceUtils.getResourceAsString(PARTICIPANT_JSON);
         inputParticipants.add(CODER.decode(originalJson, Participant.class));
         jpaParticipantList = ProviderUtils.getJpaAndValidateList(inputParticipants, JpaParticipant::new, "participant");
 
-        inputAutomationCompositions = CODER.decode(originalAcJson, AutomationCompositions.class);
+        var originalAcJson = ResourceUtils.getResourceAsString(AUTOMATION_COMPOSITION_JSON);
+        var inputAutomationCompositions = CODER.decode(originalAcJson, AutomationCompositions.class);
         inputAutomationCompositionsJpa =
             ProviderUtils.getJpaAndValidateList(inputAutomationCompositions.getAutomationCompositionList(),
                 JpaAutomationComposition::new, "automation compositions");
 
+        var nodeTemplateStatesJson = ResourceUtils.getResourceAsString(NODE_TEMPLATE_STATE_JSON);
         nodeTemplateStateList.add(CODER.decode(nodeTemplateStatesJson, NodeTemplateState.class));
         nodeTemplateStateList.get(0).setState(AcTypeState.COMMISSIONED);
         jpaNodeTemplateStateList = ProviderUtils.getJpaAndValidateList(nodeTemplateStateList,
@@ -97,7 +100,8 @@ class ParticipantProviderTest {
         var nodeTemplateStateRepository = mock(NodeTemplateStateRepository.class);
 
         var participantProvider = new ParticipantProvider(participantRepository,
-            automationCompositionElementRepository, nodeTemplateStateRepository);
+            automationCompositionElementRepository, nodeTemplateStateRepository,
+            mock(ParticipantReplicaRepository.class));
 
         assertThatThrownBy(() -> participantProvider.saveParticipant(null)).hasMessageMatching(LIST_IS_NULL);
 
@@ -116,7 +120,8 @@ class ParticipantProviderTest {
         var nodeTemplateStateRepository = mock(NodeTemplateStateRepository.class);
 
         var participantProvider = new ParticipantProvider(participantRepository,
-            automationCompositionElementRepository, nodeTemplateStateRepository);
+            automationCompositionElementRepository, nodeTemplateStateRepository,
+            mock(ParticipantReplicaRepository.class));
 
         assertThatThrownBy(() -> participantProvider.updateParticipant(null)).hasMessageMatching(LIST_IS_NULL);
 
@@ -133,7 +138,8 @@ class ParticipantProviderTest {
         var automationCompositionElementRepository = mock(AutomationCompositionElementRepository.class);
         var nodeTemplateStateRepository = mock(NodeTemplateStateRepository.class);
         var participantProvider = new ParticipantProvider(participantRepository,
-            automationCompositionElementRepository, nodeTemplateStateRepository);
+            automationCompositionElementRepository, nodeTemplateStateRepository,
+            mock(ParticipantReplicaRepository.class));
 
         assertThat(participantProvider.findParticipant(INVALID_ID)).isEmpty();
 
@@ -156,7 +162,8 @@ class ParticipantProviderTest {
         var automationCompositionElementRepository = mock(AutomationCompositionElementRepository.class);
         var nodeTemplateStateRepository = mock(NodeTemplateStateRepository.class);
         var participantProvider = new ParticipantProvider(participantRepository,
-            automationCompositionElementRepository, nodeTemplateStateRepository);
+            automationCompositionElementRepository, nodeTemplateStateRepository,
+            mock(ParticipantReplicaRepository.class));
 
         assertThatThrownBy(() -> participantProvider.getParticipantById(INVALID_ID)).isInstanceOf(
             PfModelRuntimeException.class).hasMessageMatching("Participant Not Found with ID:.*.");
@@ -168,7 +175,8 @@ class ParticipantProviderTest {
         var automationCompositionElementRepository = mock(AutomationCompositionElementRepository.class);
         var nodeTemplateStateRepository = mock(NodeTemplateStateRepository.class);
         var participantProvider = new ParticipantProvider(participantRepository,
-            automationCompositionElementRepository, nodeTemplateStateRepository);
+            automationCompositionElementRepository, nodeTemplateStateRepository,
+            mock(ParticipantReplicaRepository.class));
 
         var participantId = inputParticipants.get(0).getParticipantId();
         assertThatThrownBy(() -> participantProvider.deleteParticipant(participantId))
@@ -187,13 +195,14 @@ class ParticipantProviderTest {
         var automationCompositionElementRepository = mock(AutomationCompositionElementRepository.class);
         var nodeTemplateStateRepository = mock(NodeTemplateStateRepository.class);
         var participantProvider = new ParticipantProvider(participantRepository,
-            automationCompositionElementRepository, nodeTemplateStateRepository);
+            automationCompositionElementRepository, nodeTemplateStateRepository,
+            mock(ParticipantReplicaRepository.class));
 
         var acElementList = inputAutomationCompositionsJpa.get(0).getElements();
 
         var participantId = UUID.randomUUID();
         when(automationCompositionElementRepository.findByParticipantId(participantId.toString()))
-                .thenReturn(acElementList);
+            .thenReturn(acElementList);
 
         var listOfAcElements = participantProvider.getAutomationCompositionElements(participantId);
 
@@ -210,7 +219,8 @@ class ParticipantProviderTest {
         when(nodeTemplateStateRepository.findByParticipantId(participantId)).thenReturn(jpaNodeTemplateStateList);
 
         var participantProvider = new ParticipantProvider(participantRepository,
-            automationCompositionElementRepository, nodeTemplateStateRepository);
+            automationCompositionElementRepository, nodeTemplateStateRepository,
+            mock(ParticipantReplicaRepository.class));
 
         var listOfNodeTemplateState = participantProvider.getAcNodeTemplateStates(UUID.fromString(participantId));
 
@@ -224,7 +234,8 @@ class ParticipantProviderTest {
         var nodeTemplateStateRepository = mock(NodeTemplateStateRepository.class);
 
         var participantProvider = new ParticipantProvider(participantRepository,
-            automationCompositionElementRepository, nodeTemplateStateRepository);
+            automationCompositionElementRepository, nodeTemplateStateRepository,
+            mock(ParticipantReplicaRepository.class));
 
         assertThrows(NullPointerException.class, () -> participantProvider.getParticipantById(null));
         assertThrows(NullPointerException.class, () -> participantProvider.findParticipant(null));
@@ -233,6 +244,9 @@ class ParticipantProviderTest {
         assertThrows(NullPointerException.class, () -> participantProvider.deleteParticipant(null));
         assertThrows(NullPointerException.class, () -> participantProvider.getAutomationCompositionElements(null));
         assertThrows(NullPointerException.class, () -> participantProvider.getAcNodeTemplateStates(null));
+        assertThrows(NullPointerException.class, () -> participantProvider.findParticipantReplica(null));
+        assertThrows(NullPointerException.class, () -> participantProvider.saveParticipantReplica(null));
+        assertThrows(NullPointerException.class, () -> participantProvider.deleteParticipantReplica(null));
     }
 
     @Test
@@ -242,7 +256,8 @@ class ParticipantProviderTest {
         var nodeTemplateStateRepository = mock(NodeTemplateStateRepository.class);
         when(participantRepository.findAll()).thenReturn(jpaParticipantList);
         var participantProvider = new ParticipantProvider(participantRepository,
-            automationCompositionElementRepository, nodeTemplateStateRepository);
+            automationCompositionElementRepository, nodeTemplateStateRepository,
+            mock(ParticipantReplicaRepository.class));
 
         var result = participantProvider.getSupportedElementMap();
         assertThat(result).hasSize(2);
@@ -258,11 +273,89 @@ class ParticipantProviderTest {
         var automationCompositionElementRepository = mock(AutomationCompositionElementRepository.class);
 
         var participantProvider = new ParticipantProvider(participantRepository,
-            automationCompositionElementRepository, nodeTemplateStateRepository);
+            automationCompositionElementRepository, nodeTemplateStateRepository,
+            mock(ParticipantReplicaRepository.class));
 
         assertThatThrownBy(() -> participantProvider.getCompositionIds(null)).hasMessageMatching(LIST_IS_NULL);
 
         var result = participantProvider.getCompositionIds(participantId);
         assertThat(result).hasSize(1);
+    }
+
+    @Test
+    void testFindParticipantReplica() {
+        var replicaRepository = mock(ParticipantReplicaRepository.class);
+        var replica = inputParticipants.get(0).getReplicas().values().iterator().next();
+        var jpaReplica = jpaParticipantList.get(0).getReplicas().get(0);
+        when(replicaRepository.findById(replica.getReplicaId().toString())).thenReturn(Optional.of(jpaReplica));
+        var participantProvider = new ParticipantProvider(mock(ParticipantRepository.class),
+                mock(AutomationCompositionElementRepository.class), mock(NodeTemplateStateRepository.class),
+                replicaRepository);
+
+        var result = participantProvider.findParticipantReplica(replica.getReplicaId());
+        assertThat(result).isNotEmpty();
+        assertEquals(replica.getReplicaId(), result.get().getReplicaId());
+    }
+
+    @Test
+    void testFindReplicasOnLine() {
+        var replicaRepository = mock(ParticipantReplicaRepository.class);
+        var replica = inputParticipants.get(0).getReplicas().values().iterator().next();
+        var jpaReplica = jpaParticipantList.get(0).getReplicas().get(0);
+        jpaReplica.fromAuthorative(replica);
+        when(replicaRepository.findByParticipantState(ParticipantState.ON_LINE)).thenReturn(List.of(jpaReplica));
+        var participantProvider = new ParticipantProvider(mock(ParticipantRepository.class),
+                mock(AutomationCompositionElementRepository.class), mock(NodeTemplateStateRepository.class),
+                replicaRepository);
+
+        var result = participantProvider.findReplicasOnLine();
+        assertThat(result).hasSize(1);
+        assertEquals(replica.getReplicaId(), result.get(0).getReplicaId());
+    }
+
+    @Test
+    void testSaveParticipantReplica() {
+        var jpaReplica = jpaParticipantList.get(0).getReplicas().get(0);
+        var replicaRepository = mock(ParticipantReplicaRepository.class);
+        when(replicaRepository.getReferenceById(jpaReplica.getReplicaId())).thenReturn(jpaReplica);
+        var participantProvider = new ParticipantProvider(mock(ParticipantRepository.class),
+                mock(AutomationCompositionElementRepository.class), mock(NodeTemplateStateRepository.class),
+                replicaRepository);
+
+        var replica = inputParticipants.get(0).getReplicas().values().iterator().next();
+        participantProvider.saveParticipantReplica(replica);
+        verify(replicaRepository).save(any());
+    }
+
+    @Test
+    void testDeleteParticipantReplica() {
+        var replicaRepository = mock(ParticipantReplicaRepository.class);
+        var participantProvider = new ParticipantProvider(mock(ParticipantRepository.class),
+                mock(AutomationCompositionElementRepository.class), mock(NodeTemplateStateRepository.class),
+                replicaRepository);
+        participantProvider.deleteParticipantReplica(CommonTestData.getReplicaId());
+        verify(replicaRepository).deleteById(CommonTestData.getReplicaId().toString());
+    }
+
+    @Test
+    void testVerifyParticipantState() {
+        var jpaParticipant = new JpaParticipant(jpaParticipantList.get(0));
+        var participantId = jpaParticipant.getParticipantId();
+        var participantRepository = mock(ParticipantRepository.class);
+        when(participantRepository.getReferenceById(participantId)).thenReturn(jpaParticipant);
+
+        var replicaRepository = mock(ParticipantReplicaRepository.class);
+        var participantProvider = new ParticipantProvider(participantRepository,
+                mock(AutomationCompositionElementRepository.class), mock(NodeTemplateStateRepository.class),
+                replicaRepository);
+
+        jpaParticipant.setReplicas(List.of());
+        var set = Set.of(UUID.fromString(participantId));
+        assertThatThrownBy(() -> participantProvider.verifyParticipantState(set))
+                .hasMessageMatching("Participant: " + participantId + " is OFFLINE");
+
+        when(participantRepository.getReferenceById(participantId)).thenReturn(jpaParticipantList.get(0));
+        participantProvider.verifyParticipantState(set);
+        verify(participantRepository, times(2)).getReferenceById(participantId);
     }
 }

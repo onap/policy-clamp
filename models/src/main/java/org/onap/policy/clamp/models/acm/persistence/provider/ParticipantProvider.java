@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2023 Nordix Foundation.
+ * Copyright (C) 2021-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.models.acm.persistence.provider;
 
+import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import java.util.HashMap;
 import java.util.List;
@@ -33,9 +34,13 @@ import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantReplica;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaParticipant;
+import org.onap.policy.clamp.models.acm.persistence.concepts.JpaParticipantReplica;
 import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionElementRepository;
 import org.onap.policy.clamp.models.acm.persistence.repository.NodeTemplateStateRepository;
+import org.onap.policy.clamp.models.acm.persistence.repository.ParticipantReplicaRepository;
 import org.onap.policy.clamp.models.acm.persistence.repository.ParticipantRepository;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -56,6 +61,7 @@ public class ParticipantProvider {
 
     private final NodeTemplateStateRepository nodeTemplateStateRepository;
 
+    private final ParticipantReplicaRepository replicaRepository;
 
     /**
      * Get all participants.
@@ -142,7 +148,6 @@ public class ParticipantProvider {
         return jpaDeleteParticipantOpt.get().toAuthorative();
     }
 
-
     /**
      * Get a map with SupportedElement as key and the participantId as value.
      *
@@ -159,7 +164,6 @@ public class ParticipantProvider {
         }
         return map;
     }
-
 
     /**
      * Retrieve a list of automation composition elements associated with a participantId.
@@ -186,11 +190,64 @@ public class ParticipantProvider {
     /**
      * Get a list of compositionId associated with a participantId from ac definitions.
      * @param participantId the participant id associated with the automation composition elements
-     * @return the list of compositionId
+     * @return the set of compositionId
      */
     public Set<UUID> getCompositionIds(@NonNull final UUID participantId) {
         return nodeTemplateStateRepository.findByParticipantId(participantId.toString()).stream()
                 .map(nodeTemplateState -> UUID.fromString(nodeTemplateState.getCompositionId()))
                 .collect(Collectors.toSet());
+    }
+
+    /**
+     * Get participant replica.
+     *
+     * @param replicaId the Id of the replica to get
+     * @return the replica found
+     */
+    @Transactional(readOnly = true)
+    public Optional<ParticipantReplica> findParticipantReplica(@NonNull final UUID replicaId) {
+        return replicaRepository.findById(replicaId.toString()).map(JpaParticipantReplica::toAuthorative);
+    }
+
+    /**
+     * Save participant replica.
+     *
+     * @param replica replica to save
+     */
+    public void saveParticipantReplica(@NonNull final ParticipantReplica replica) {
+        var jpa = replicaRepository.getReferenceById(replica.getReplicaId().toString());
+        jpa.fromAuthorative(replica);
+        replicaRepository.save(jpa);
+    }
+
+    /**
+     * Delete participant replica.
+     *
+     * @param replicaId the Id of the replica to delete
+     */
+    public void deleteParticipantReplica(@NonNull UUID replicaId) {
+        replicaRepository.deleteById(replicaId.toString());
+    }
+
+    public List<ParticipantReplica> findReplicasOnLine() {
+        return ProviderUtils.asEntityList(replicaRepository.findByParticipantState(ParticipantState.ON_LINE));
+    }
+
+    /**
+     * Verify Participant state.
+     *
+     * @param participantIds The list of UUIDs of the participants to get
+     * @throws  PfModelRuntimeException in case the participant is offline
+     */
+    public void verifyParticipantState(Set<UUID> participantIds) {
+        for (UUID participantId : participantIds) {
+            var jpaParticipant = participantRepository.getReferenceById(participantId.toString());
+            var replicaOnline = jpaParticipant.getReplicas().stream()
+                    .filter(replica -> ParticipantState.ON_LINE.equals(replica.getParticipantState())).findFirst();
+            if (replicaOnline.isEmpty()) {
+                throw new PfModelRuntimeException(Response.Status.CONFLICT,
+                        "Participant: " + participantId + " is OFFLINE");
+            }
+        }
     }
 }

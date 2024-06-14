@@ -38,13 +38,16 @@ server:
     path: /error
 
 runtime:
+  topics:
+    operationTopic: policy-acruntime-participant
+    syncTopic: acm-ppnt-sync
   participantParameters:
     heartBeatMs: 20000
     maxStatusWaitMs: 200000
   topicParameterGroup:
     topicSources:
       -
-        topic: policy-acruntime-participant
+        topic: ${runtime.topics.operationTopic}
         servers:
           - ${topicServer:kafka:9092}
         topicCommInfrastructure: NOOP
@@ -52,11 +55,20 @@ runtime:
         useHttps: true
     topicSinks:
       -
-        topic: policy-acruntime-participant
+        topic: ${runtime.topics.operationTopic}
         servers:
           - ${topicServer:kafka:9092}
         topicCommInfrastructure: NOOP
         useHttps: true
+      -
+        topic: ${runtime.topics.syncTopic}
+        servers:
+          - ${topicServer:kafka:9092}
+        topicCommInfrastructure: NOOP
+        useHttps: true
+  acmParameters:
+    toscaElementName: org.onap.policy.clamp.acm.AutomationCompositionElement
+    toscaCompositionName: org.onap.policy.clamp.acm.AutomationComposition
 
 management:
   endpoints:

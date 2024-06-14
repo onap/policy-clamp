@@ -44,6 +44,8 @@ public class AcElementRestart {
     @NonNull
     private ToscaConceptIdentifier definition = new ToscaConceptIdentifier(PfConceptKey.getNullKey());
 
+    private UUID participantId;
+
     // State of the AutomationCompositionElement
     private DeployState deployState;
 
@@ -69,6 +71,7 @@ public class AcElementRestart {
     public AcElementRestart(final AcElementRestart otherElement) {
         this.id = otherElement.id;
         this.definition = new ToscaConceptIdentifier(otherElement.definition);
+        this.participantId = otherElement.participantId;
         this.deployState = otherElement.deployState;
         this.lockState = otherElement.lockState;
         this.operationalState = otherElement.operationalState;

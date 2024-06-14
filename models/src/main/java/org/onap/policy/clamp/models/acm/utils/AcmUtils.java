@@ -441,6 +441,7 @@ public final class AcmUtils {
         var acElementRestart = new AcElementRestart();
         acElementRestart.setId(element.getId());
         acElementRestart.setDefinition(new ToscaConceptIdentifier(element.getDefinition()));
+        acElementRestart.setParticipantId(element.getParticipantId());
         acElementRestart.setDeployState(element.getDeployState());
         acElementRestart.setLockState(element.getLockState());
         acElementRestart.setOperationalState(element.getOperationalState());
