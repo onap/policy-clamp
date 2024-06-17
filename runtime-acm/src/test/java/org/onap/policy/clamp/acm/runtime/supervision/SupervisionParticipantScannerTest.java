@@ -47,10 +47,10 @@ class SupervisionParticipantScannerTest {
 
         participant.setParticipantState(ParticipantState.OFF_LINE);
         supervisionScanner.run();
-        verify(participantProvider, times(0)).updateParticipant(any());
+        verify(participantProvider, times(0)).saveParticipant(any());
 
         participant.setParticipantState(ParticipantState.ON_LINE);
         supervisionScanner.run();
-        verify(participantProvider, times(1)).updateParticipant(any());
+        verify(participantProvider, times(1)).saveParticipant(any());
     }
 }

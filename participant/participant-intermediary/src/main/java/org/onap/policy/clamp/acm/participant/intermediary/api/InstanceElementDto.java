@@ -22,8 +22,6 @@ package org.onap.policy.clamp.acm.participant.intermediary.api;
 
 import java.util.Map;
 import java.util.UUID;
-import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
-import org.onap.policy.clamp.models.acm.messages.rest.instantiation.LockOrder;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 public record InstanceElementDto(UUID instanceId, UUID elementId, ToscaServiceTemplate toscaServiceTemplateFragment,

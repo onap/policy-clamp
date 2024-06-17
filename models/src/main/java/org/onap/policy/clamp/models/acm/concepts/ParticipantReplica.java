@@ -37,6 +37,7 @@ public class ParticipantReplica {
     @NonNull
     private ParticipantState participantState = ParticipantState.ON_LINE;
 
+    // last time ACM-R has received a status message from participant replica
     @NonNull
     private String lastMsg;
 

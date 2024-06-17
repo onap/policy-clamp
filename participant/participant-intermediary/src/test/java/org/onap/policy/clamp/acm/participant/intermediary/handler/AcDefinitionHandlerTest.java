@@ -40,7 +40,7 @@ import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPr
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRestart;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
-public class AcDefinitionHandlerTest {
+class AcDefinitionHandlerTest {
 
     @Test
     void handleComposiotPrimeTest() {

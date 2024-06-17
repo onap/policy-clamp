@@ -78,7 +78,7 @@ class SupervisionParticipantHandlerTest {
 
         handler.handleParticipantMessage(participantDeregisterMessage);
 
-        verify(participantProvider).updateParticipant(any());
+        verify(participantProvider).saveParticipant(any());
         verify(participantDeregisterAckPublisher).send(participantDeregisterMessage.getMessageId());
     }
 

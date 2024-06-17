@@ -105,7 +105,7 @@ public class SupervisionParticipantHandler {
         if (participantOpt.isPresent()) {
             var participant = participantOpt.get();
             participant.setParticipantState(ParticipantState.OFF_LINE);
-            participantProvider.updateParticipant(participant);
+            participantProvider.saveParticipant(participant);
         }
 
         participantDeregisterAckPublisher.send(participantDeregisterMsg.getMessageId());
