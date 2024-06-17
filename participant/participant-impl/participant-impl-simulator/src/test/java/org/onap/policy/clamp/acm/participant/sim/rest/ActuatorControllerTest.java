@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023 Nordix Foundation.
+ *  Copyright (C) 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,39 +53,42 @@ class ActuatorControllerTest extends CommonActuatorController {
     }
 
     @Test
-    void testGetHealth_Unauthorized() throws Exception {
+    void testGetHealth_Unauthorized() {
         assertUnauthorizedActGet(HEALTH_ENDPOINT);
     }
 
     @Test
-    void testGetMetrics_Unauthorized() throws Exception {
+    void testGetMetrics_Unauthorized() {
         assertUnauthorizedActGet(METRICS_ENDPOINT);
     }
 
     @Test
-    void testGetPrometheus_Unauthorized() throws Exception {
+    void testGetPrometheus_Unauthorized() {
         assertUnauthorizedActGet(PROMETHEUS_ENDPOINT);
     }
 
     @Test
-    void testGetHealth() throws Exception {
+    void testGetHealth() {
         var invocationBuilder = super.sendActRequest(HEALTH_ENDPOINT);
-        var rawresp = invocationBuilder.buildGet().invoke();
-        assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
+        try (var rawresp = invocationBuilder.buildGet().invoke()) {
+            assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
+        }
     }
 
     @Test
-    void testGetMetrics() throws Exception {
+    void testGetMetrics() {
         var invocationBuilder = super.sendActRequest(METRICS_ENDPOINT);
-        var rawresp = invocationBuilder.buildGet().invoke();
-        assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
+        try (var rawresp = invocationBuilder.buildGet().invoke()) {
+            assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
+        }
     }
 
     @Test
-    void testGePrometheus() throws Exception {
+    void testGePrometheus() {
         var invocationBuilder = super.sendActRequest(PROMETHEUS_ENDPOINT);
-        var rawresp = invocationBuilder.buildGet().invoke();
-        assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
+        try (var rawresp = invocationBuilder.buildGet().invoke()) {
+            assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
+        }
     }
 
 }

@@ -36,7 +36,6 @@ import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
-import org.onap.policy.models.base.PfModelException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -76,11 +75,9 @@ public class AutomationCompositionElementHandler extends AcElementListenerV1 {
      * @param automationCompositionId the automationComposition Id
      * @param element the information on the automation composition element
      * @param properties properties Map
-     * @throws PfModelException in case of a exception
      */
     @Override
-    public void deploy(UUID automationCompositionId, AcElementDeploy element, Map<String, Object> properties)
-            throws PfModelException {
+    public void deploy(UUID automationCompositionId, AcElementDeploy element, Map<String, Object> properties) {
         try {
             var configRequest = getConfigRequest(properties);
             var restResponseMap = acHttpClient.run(configRequest);
@@ -104,11 +101,13 @@ public class AutomationCompositionElementHandler extends AcElementListenerV1 {
     private ConfigRequest getConfigRequest(Map<String, Object> properties) throws AutomationCompositionException {
         try {
             var configRequest = CODER.convert(properties, ConfigRequest.class);
-            var violations = Validation.buildDefaultValidatorFactory().getValidator().validate(configRequest);
-            if (!violations.isEmpty()) {
-                LOGGER.error("Violations found in the config request parameters: {}", violations);
-                throw new AutomationCompositionException(Status.BAD_REQUEST,
-                        "Constraint violations in the config request");
+            try (var validatorFactory = Validation.buildDefaultValidatorFactory()) {
+                var violations = validatorFactory.getValidator().validate(configRequest);
+                if (!violations.isEmpty()) {
+                    LOGGER.error("Violations found in the config request parameters: {}", violations);
+                    throw new AutomationCompositionException(Status.BAD_REQUEST,
+                            "Constraint violations in the config request");
+                }
             }
             return configRequest;
         } catch (CoderException e) {

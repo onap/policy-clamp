@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023 Nordix Foundation.
+ *  Copyright (C) 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@
 
 package org.onap.policy.clamp.acm.participant.kserve.handler;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -28,50 +27,25 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 
 import io.kubernetes.client.openapi.ApiException;
+import jakarta.validation.ValidationException;
 import java.io.IOException;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Spy;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.acm.participant.kserve.exception.KserveException;
 import org.onap.policy.clamp.acm.participant.kserve.k8s.KserveClient;
 import org.onap.policy.clamp.acm.participant.kserve.utils.CommonTestData;
 import org.onap.policy.clamp.acm.participant.kserve.utils.ToscaUtils;
-import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
-import org.onap.policy.clamp.models.acm.concepts.DeployState;
-import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@ExtendWith(SpringExtension.class)
 class AcElementHandlerTest {
-
-    private final KserveClient kserveClient = mock(KserveClient.class);
-
-    private ParticipantIntermediaryApi participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
-
-    @InjectMocks
-    @Spy
-    private AutomationCompositionElementHandler automationCompositionElementHandler =
-            new AutomationCompositionElementHandler(participantIntermediaryApi, kserveClient);
-
-    @Mock
-    private ExecutorService executor;
-    @Mock
-    private Future<String> result;
 
     private final CommonTestData commonTestData = new CommonTestData();
 
@@ -84,137 +58,104 @@ class AcElementHandlerTest {
         serviceTemplate = ToscaUtils.readAutomationCompositionFromTosca();
     }
 
-    @BeforeEach
-    void startMocks() throws ExecutionException, InterruptedException, IOException, ApiException {
-        doReturn(true).when(kserveClient).deployInferenceService(any(), any());
-        doReturn(true).when(automationCompositionElementHandler).checkInferenceServiceStatus(any(), any(), anyInt(),
-                anyInt());
-    }
-
     @Test
-    void test_automationCompositionElementStateChange() throws PfModelException {
-        var automationCompositionId = commonTestData.getAutomationCompositionId();
-        var element = commonTestData.getAutomationCompositionElement();
-        var automationCompositionElementId = element.getId();
-
+    void test_automationCompositionElementStateChange()
+            throws ExecutionException, InterruptedException, IOException, ApiException {
         var nodeTemplatesMap = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
-        automationCompositionElementHandler.deploy(commonTestData.getAutomationCompositionId(), element,
+        var compositionElement = commonTestData.getCompositionElement(
                 nodeTemplatesMap.get(KSERVE_AUTOMATION_COMPOSITION_ELEMENT).getProperties());
+        var element = commonTestData.getAutomationCompositionElement();
 
-        assertDoesNotThrow(() -> automationCompositionElementHandler.undeploy(automationCompositionId,
-                automationCompositionElementId));
+        var kserveClient = mock(KserveClient.class);
+        doReturn(true).when(kserveClient).deployInferenceService(any(), any());
+        var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var automationCompositionElementHandler =
+                spy(new AutomationCompositionElementHandler(participantIntermediaryApi, kserveClient));
+        doReturn(true).when(automationCompositionElementHandler)
+                .checkInferenceServiceStatus(any(), any(), anyInt(), anyInt());
 
+        assertDoesNotThrow(() -> automationCompositionElementHandler.deploy(compositionElement, element));
+        assertDoesNotThrow(() -> automationCompositionElementHandler.undeploy(compositionElement, element));
     }
 
     @Test
-    void test_AutomationCompositionElementUpdate() throws IOException, ApiException {
-        var element = commonTestData.getAutomationCompositionElement();
+    void test_automationCompositionElementFailed()
+            throws ExecutionException, InterruptedException, IOException, ApiException {
+        var kserveClient = mock(KserveClient.class);
+        doReturn(false).when(kserveClient).deployInferenceService(any(), any());
+        doReturn(false).when(kserveClient).undeployInferenceService(any(), any());
+        var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var automationCompositionElementHandler =
+                spy(new AutomationCompositionElementHandler(participantIntermediaryApi, kserveClient));
+        doReturn(false).when(automationCompositionElementHandler)
+                .checkInferenceServiceStatus(any(), any(), anyInt(), anyInt());
 
         var nodeTemplatesMap = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
-        assertDoesNotThrow(() -> automationCompositionElementHandler.deploy(commonTestData.getAutomationCompositionId(),
-                element, nodeTemplatesMap.get(KSERVE_AUTOMATION_COMPOSITION_ELEMENT).getProperties()));
-        assertThat(automationCompositionElementHandler.getConfigRequestMap()).hasSize(1).containsKey(element.getId());
+        var compositionElement = commonTestData.getCompositionElement(
+                nodeTemplatesMap.get(KSERVE_AUTOMATION_COMPOSITION_ELEMENT).getProperties());
+        var element = commonTestData.getAutomationCompositionElement();
+        assertDoesNotThrow(() -> automationCompositionElementHandler.deploy(compositionElement, element));
+        assertDoesNotThrow(() -> automationCompositionElementHandler.undeploy(compositionElement, element));
+    }
 
+    @Test
+    void test_automationCompositionElementWrongData() {
+        var nodeTemplatesMap = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
+        var element = commonTestData.getAutomationCompositionElement();
+
+        var kserveClient = mock(KserveClient.class);
+        var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(participantIntermediaryApi, kserveClient);
+
+        var compositionElementEmpty = commonTestData.getCompositionElement(Map.of());
+        assertThrows(ValidationException.class,
+                () -> automationCompositionElementHandler.deploy(compositionElementEmpty, element));
+
+        var compositionElementWrong = commonTestData.getCompositionElement(Map.of("kserveInferenceEntities", "1"));
+        assertThrows(KserveException.class,
+                () -> automationCompositionElementHandler.deploy(compositionElementWrong, element));
+
+        var map = new HashMap<>(nodeTemplatesMap.get(KSERVE_AUTOMATION_COMPOSITION_ELEMENT).getProperties());
+        map.put("uninitializedToPassiveTimeout", " ");
+        var compositionElementWrong2 = commonTestData.getCompositionElement(map);
+        assertThrows(KserveException.class,
+                () -> automationCompositionElementHandler.deploy(compositionElementWrong2, element));
+    }
+
+    @Test
+    void test_AutomationCompositionElementUpdate()
+            throws IOException, ApiException, ExecutionException, InterruptedException {
+        var kserveClient = mock(KserveClient.class);
+        doReturn(true).when(kserveClient).deployInferenceService(any(), any());
+
+        var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var automationCompositionElementHandler =
+                spy(new AutomationCompositionElementHandler(participantIntermediaryApi, kserveClient));
+        doReturn(true).when(automationCompositionElementHandler)
+                .checkInferenceServiceStatus(any(), any(), anyInt(), anyInt());
         doThrow(new ApiException("Error installing the inference service")).when(kserveClient)
                 .deployInferenceService(any(), any());
 
-        var elementId2 = UUID.randomUUID();
-        element.setId(elementId2);
+        var nodeTemplatesMap = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
+        var compositionElement = commonTestData.getCompositionElement(
+                nodeTemplatesMap.get(KSERVE_AUTOMATION_COMPOSITION_ELEMENT).getProperties());
+        var element = commonTestData.getAutomationCompositionElement();
         assertThrows(KserveException.class,
-                () -> automationCompositionElementHandler.deploy(commonTestData.getAutomationCompositionId(), element,
-                        nodeTemplatesMap.get(KSERVE_AUTOMATION_COMPOSITION_ELEMENT).getProperties()));
+                () -> automationCompositionElementHandler.deploy(compositionElement, element));
 
-        assertThat(automationCompositionElementHandler.getConfigRequestMap().containsKey(elementId2)).isFalse();
     }
 
     @Test
-    void test_checkInferenceServiceStatus() throws ExecutionException, InterruptedException {
-        doReturn(result).when(executor).submit(any(Runnable.class), any());
-        doReturn("Done").when(result).get();
-        doReturn(true).when(result).isDone();
+    void test_checkInferenceServiceStatus() throws IOException, ApiException {
+        var kserveClient = mock(KserveClient.class);
+        doReturn("True").when(kserveClient).getInferenceServiceStatus(any(), any());
+        doReturn(true).when(kserveClient).deployInferenceService(any(), any());
+        var participantIntermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var automationCompositionElementHandler =
+                new AutomationCompositionElementHandler(participantIntermediaryApi, kserveClient);
+
         assertDoesNotThrow(() -> automationCompositionElementHandler.checkInferenceServiceStatus("sklearn-iris",
                 "kserve-test", 1, 1));
-    }
-
-    @Test
-    void testUpdate() throws PfModelException {
-        var automationCompositionId = commonTestData.getAutomationCompositionId();
-        var element = commonTestData.getAutomationCompositionElement();
-        assertDoesNotThrow(
-                () -> automationCompositionElementHandler.update(automationCompositionId, element, Map.of()));
-    }
-
-    @Test
-    void testLock() throws PfModelException {
-        assertDoesNotThrow(() -> automationCompositionElementHandler.lock(UUID.randomUUID(), UUID.randomUUID()));
-    }
-
-    @Test
-    void testUnlock() throws PfModelException {
-        assertDoesNotThrow(() -> automationCompositionElementHandler.unlock(UUID.randomUUID(), UUID.randomUUID()));
-    }
-
-    @Test
-    void testDelete() throws PfModelException {
-        assertDoesNotThrow(() -> automationCompositionElementHandler.delete(UUID.randomUUID(), UUID.randomUUID()));
-    }
-
-    @Test
-    void testPrime() throws PfModelException {
-        assertDoesNotThrow(() -> automationCompositionElementHandler.prime(UUID.randomUUID(), List.of()));
-    }
-
-    @Test
-    void testDeprime() throws PfModelException {
-        assertDoesNotThrow(() -> automationCompositionElementHandler.deprime(UUID.randomUUID()));
-    }
-
-    @Test
-    void testHandleRestartComposition() throws PfModelException {
-        assertDoesNotThrow(() -> automationCompositionElementHandler.handleRestartComposition(UUID.randomUUID(),
-                List.of(), AcTypeState.PRIMED));
-    }
-
-    @Test
-    void testHandleRestartInstanceDeploying() throws PfModelException {
-        var element = commonTestData.getAutomationCompositionElement();
-
-        var nodeTemplatesMap = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
-        assertDoesNotThrow(() -> automationCompositionElementHandler.handleRestartInstance(
-                commonTestData.getAutomationCompositionId(), element,
-                nodeTemplatesMap.get(KSERVE_AUTOMATION_COMPOSITION_ELEMENT).getProperties(), DeployState.DEPLOYING,
-                LockState.NONE));
-        assertThat(automationCompositionElementHandler.getConfigRequestMap()).containsKey(element.getId());
-    }
-
-    @Test
-    void testHandleRestartInstanceDeployed() throws PfModelException {
-        var element = commonTestData.getAutomationCompositionElement();
-
-        var nodeTemplatesMap = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
-        assertDoesNotThrow(() -> automationCompositionElementHandler.handleRestartInstance(
-                commonTestData.getAutomationCompositionId(), element,
-                nodeTemplatesMap.get(KSERVE_AUTOMATION_COMPOSITION_ELEMENT).getProperties(), DeployState.DEPLOYED,
-                LockState.LOCKED));
-        assertThat(automationCompositionElementHandler.getConfigRequestMap()).containsKey(element.getId());
-    }
-
-    @Test
-    void testHandleRestartInstanceUndeployed() throws PfModelException {
-        var element = commonTestData.getAutomationCompositionElement();
-
-        var nodeTemplatesMap = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates();
-        assertDoesNotThrow(() -> automationCompositionElementHandler.handleRestartInstance(
-                commonTestData.getAutomationCompositionId(), element,
-                nodeTemplatesMap.get(KSERVE_AUTOMATION_COMPOSITION_ELEMENT).getProperties(), DeployState.UNDEPLOYING,
-                LockState.LOCKED));
-    }
-
-    @Test
-    void testMigrate() throws PfModelException {
-        var automationCompositionId = commonTestData.getAutomationCompositionId();
-        var element = commonTestData.getAutomationCompositionElement();
-        assertDoesNotThrow(() -> automationCompositionElementHandler.migrate(automationCompositionId, element,
-                UUID.randomUUID(), Map.of()));
     }
 }

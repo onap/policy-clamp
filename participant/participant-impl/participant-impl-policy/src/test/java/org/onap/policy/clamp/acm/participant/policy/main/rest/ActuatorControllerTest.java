@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2023 Nordix Foundation.
+ *  Copyright (C) 2021-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ package org.onap.policy.clamp.acm.participant.policy.main.rest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import jakarta.ws.rs.client.Invocation;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -71,21 +70,24 @@ class ActuatorControllerTest extends CommonActuatorController {
     @Test
     void testGetHealth() {
         var invocationBuilder = super.sendActRequest(HEALTH_ENDPOINT);
-        var rawresp = invocationBuilder.buildGet().invoke();
-        assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
+        try (var rawresp = invocationBuilder.buildGet().invoke()) {
+            assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
+        }
     }
 
     @Test
     void testGetMetrics() {
         var invocationBuilder = super.sendActRequest(METRICS_ENDPOINT);
-        var rawresp = invocationBuilder.buildGet().invoke();
-        assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
+        try (var rawresp = invocationBuilder.buildGet().invoke()) {
+            assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
+        }
     }
 
     @Test
     void testGePrometheus() {
         var invocationBuilder = super.sendActRequest(PROMETHEUS_ENDPOINT);
-        var rawresp = invocationBuilder.buildGet().invoke();
-        assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
+        try (var rawresp = invocationBuilder.buildGet().invoke()) {
+            assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
+        }
     }
 }

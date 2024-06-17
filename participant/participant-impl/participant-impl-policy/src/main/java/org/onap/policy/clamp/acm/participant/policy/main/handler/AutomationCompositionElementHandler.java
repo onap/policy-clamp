@@ -35,9 +35,7 @@ import org.onap.policy.clamp.acm.participant.policy.client.PolicyApiHttpClient;
 import org.onap.policy.clamp.acm.participant.policy.client.PolicyPapHttpClient;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
-import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
-import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.pdp.concepts.DeploymentSubGroup;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -220,27 +218,5 @@ public class AutomationCompositionElementHandler extends AcElementListenerV1 {
         }
 
         return policyList;
-    }
-
-    @Override
-    public void handleRestartInstance(UUID automationCompositionId, AcElementDeploy element,
-            Map<String, Object> properties, DeployState deployState, LockState lockState) throws PfModelException {
-        if (DeployState.DEPLOYING.equals(deployState)) {
-            deploy(automationCompositionId, element, properties);
-            return;
-        }
-        if (DeployState.UNDEPLOYING.equals(deployState) || DeployState.DEPLOYED.equals(deployState)
-                || DeployState.UPDATING.equals(deployState)) {
-            var automationCompositionDefinition = element.getToscaServiceTemplateFragment();
-            serviceTemplateMap.put(element.getId(), automationCompositionDefinition);
-        }
-        if (DeployState.UNDEPLOYING.equals(deployState)) {
-            undeploy(automationCompositionId, element.getId());
-            return;
-        }
-        deployState = AcmUtils.deployCompleted(deployState);
-        lockState = AcmUtils.lockCompleted(deployState, lockState);
-        intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(), deployState,
-                lockState, StateChangeResult.NO_ERROR, "Restarted");
     }
 }

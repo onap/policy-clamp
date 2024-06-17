@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023 Nordix Foundation.
+ *  Copyright (C) 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,30 +24,24 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 
 import io.kubernetes.client.openapi.ApiException;
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.onap.policy.clamp.acm.participant.kserve.exception.KserveException;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-
-@ExtendWith(SpringExtension.class)
 class InferenceServiceValidatorTest {
 
-    private static int TIMEOUT = 2;
-    private static int STATUS_CHECK_INTERVAL = 1;
+    private static final int TIMEOUT = 2;
+    private static final int STATUS_CHECK_INTERVAL = 1;
 
-    @MockBean
-    private KserveClient kserveClient;
-
-    String inferenceSvcName = "inference-test";
-    String namespace = "test";
+    private static final String inferenceSvcName = "inference-test";
+    private static final String namespace = "test";
 
     @Test
     void test_runningPodState() throws IOException, ApiException {
+        var kserveClient = mock(KserveClient.class);
         doReturn("True").when(kserveClient).getInferenceServiceStatus(any(), any());
         var inferenceServiceValidator =
                 new InferenceServiceValidator(inferenceSvcName, namespace, TIMEOUT, STATUS_CHECK_INTERVAL,
@@ -57,6 +51,7 @@ class InferenceServiceValidatorTest {
 
     @Test
     void test_EmptyPodState() throws IOException, ApiException {
+        var kserveClient = mock(KserveClient.class);
         doReturn("").when(kserveClient).getInferenceServiceStatus(any(), any());
         var inferenceServiceValidator =
                 new InferenceServiceValidator("", namespace, TIMEOUT, STATUS_CHECK_INTERVAL,
@@ -67,6 +62,7 @@ class InferenceServiceValidatorTest {
 
     @Test
     void test_PodFailureState() throws IOException, ApiException {
+        var kserveClient = mock(KserveClient.class);
         doReturn("False").when(kserveClient).getInferenceServiceStatus(any(), any());
         var inferenceServiceValidator =
                 new InferenceServiceValidator(inferenceSvcName, namespace, TIMEOUT, STATUS_CHECK_INTERVAL,
