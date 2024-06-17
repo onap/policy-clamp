@@ -76,7 +76,7 @@ public class SupervisionPartecipantScanner {
         if ((now - lastMsg) > maxWaitMs) {
             LOGGER.debug("report Participant OFF_LINE {}", id);
             participant.setParticipantState(ParticipantState.OFF_LINE);
-            participantProvider.updateParticipant(participant);
+            participantProvider.saveParticipant(participant);
         }
     }
 }

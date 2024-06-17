@@ -114,25 +114,6 @@ class ParticipantProviderTest {
     }
 
     @Test
-    void testParticipantUpdate() {
-        var participantRepository = mock(ParticipantRepository.class);
-        var automationCompositionElementRepository = mock(AutomationCompositionElementRepository.class);
-        var nodeTemplateStateRepository = mock(NodeTemplateStateRepository.class);
-
-        var participantProvider = new ParticipantProvider(participantRepository,
-            automationCompositionElementRepository, nodeTemplateStateRepository,
-            mock(ParticipantReplicaRepository.class));
-
-        assertThatThrownBy(() -> participantProvider.updateParticipant(null)).hasMessageMatching(LIST_IS_NULL);
-
-        when(participantRepository.save(any())).thenReturn(jpaParticipantList.get(0));
-
-        var updatedParticipant = participantProvider.updateParticipant(inputParticipants.get(0));
-        updatedParticipant.setParticipantId(inputParticipants.get(0).getParticipantId());
-        assertThat(updatedParticipant).usingRecursiveComparison().isEqualTo(inputParticipants.get(0));
-    }
-
-    @Test
     void testGetAutomationCompositions() {
         var participantRepository = mock(ParticipantRepository.class);
         var automationCompositionElementRepository = mock(AutomationCompositionElementRepository.class);
@@ -240,7 +221,6 @@ class ParticipantProviderTest {
         assertThrows(NullPointerException.class, () -> participantProvider.getParticipantById(null));
         assertThrows(NullPointerException.class, () -> participantProvider.findParticipant(null));
         assertThrows(NullPointerException.class, () -> participantProvider.saveParticipant(null));
-        assertThrows(NullPointerException.class, () -> participantProvider.updateParticipant(null));
         assertThrows(NullPointerException.class, () -> participantProvider.deleteParticipant(null));
         assertThrows(NullPointerException.class, () -> participantProvider.getAutomationCompositionElements(null));
         assertThrows(NullPointerException.class, () -> participantProvider.getAcNodeTemplateStates(null));

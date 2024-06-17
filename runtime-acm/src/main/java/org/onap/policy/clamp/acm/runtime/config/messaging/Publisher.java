@@ -20,8 +20,6 @@
 
 package org.onap.policy.clamp.acm.runtime.config.messaging;
 
-import java.util.List;
-import org.onap.policy.clamp.acm.runtime.main.parameters.Topics;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
 
 /**

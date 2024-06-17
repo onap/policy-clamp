@@ -28,7 +28,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVICE_TEMPLATE_YAML;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +35,6 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
-import org.onap.policy.clamp.acm.runtime.main.parameters.Topics;
 import org.onap.policy.clamp.acm.runtime.participants.AcmParticipantProvider;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionAcHandler;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionHandler;
@@ -107,6 +105,7 @@ class SupervisionMessagesTest {
         acDeregisterAckPublisher.stop();
     }
 
+    @Test
     void testSendParticipantDeregisterAckNoActive() {
         var acDeregisterAckPublisher = new ParticipantDeregisterAckPublisher();
         assertThatThrownBy(() -> acDeregisterAckPublisher.send(new ParticipantDeregisterAck()))

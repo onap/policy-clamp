@@ -116,20 +116,6 @@ public class ParticipantProvider {
     }
 
     /**
-     * Updates an existing participant.
-     *
-     * @param participant participant to update
-     * @return the participant updated
-     */
-    public Participant updateParticipant(@NonNull final Participant participant) {
-        var result = participantRepository
-            .save(ProviderUtils.getJpaAndValidate(participant, JpaParticipant::new, "participant"));
-
-        // Return the saved participant
-        return result.toAuthorative();
-    }
-
-    /**
      * Delete a participant.
      *
      * @param participantId the Id of the participant to delete

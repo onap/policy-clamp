@@ -21,10 +21,7 @@
 package org.onap.policy.clamp.acm.runtime.supervision.comm;
 
 import jakarta.ws.rs.core.Response.Status;
-import java.util.List;
-import java.util.Optional;
 import org.onap.policy.clamp.acm.runtime.config.messaging.Publisher;
-import org.onap.policy.clamp.acm.runtime.main.parameters.Topics;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessage;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;

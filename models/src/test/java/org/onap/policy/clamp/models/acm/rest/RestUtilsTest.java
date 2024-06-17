@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ *  Copyright (C) 2021,2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ class RestUtilsTest {
 
         var response = RestUtils.toSimpleResponse(ex);
 
-        assertThat(response.getStatusCodeValue()).isEqualTo(STATUS_ERROR.getStatusCode());
+        assertThat(response.getStatusCode().value()).isEqualTo(STATUS_ERROR.getStatusCode());
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getBody().getErrorDetails()).isEqualTo(MESSAGE_ERROR);
     }

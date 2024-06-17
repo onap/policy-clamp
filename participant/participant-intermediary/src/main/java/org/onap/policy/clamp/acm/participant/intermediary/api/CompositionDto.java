@@ -20,10 +20,8 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.api;
 
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 public record CompositionDto(UUID compositionId,

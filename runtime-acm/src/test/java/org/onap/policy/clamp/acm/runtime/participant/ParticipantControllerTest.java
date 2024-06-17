@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2023 Nordix Foundation.
+ * Copyright (C) 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,6 @@ import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
-import org.onap.policy.models.base.PfModelException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -104,61 +103,61 @@ class ParticipantControllerTest extends CommonRestController {
     @Test
     void testQueryParticipant() {
         participantProvider.saveParticipant(inputParticipants.get(0));
-        UUID participantId = participantProvider.getParticipants().get(0).getParticipantId();
+        var participantId = participantProvider.getParticipants().get(0).getParticipantId();
         var invocationBuilder = super.sendRequest(PARTICIPANTS_ENDPOINT + "/" + participantId);
-        var response = invocationBuilder.buildGet().invoke();
-        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-        var entityList = response.readEntity(ParticipantInformation.class);
-        assertNotNull(entityList);
+        try (var response = invocationBuilder.buildGet().invoke()) {
+            assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+            var entityList = response.readEntity(ParticipantInformation.class);
+            assertNotNull(entityList);
+        }
     }
 
     @Test
     void testBadQueryParticipant() {
         participantProvider.saveParticipant(inputParticipants.get(0));
         var invocationBuilder = super.sendRequest(PARTICIPANTS_ENDPOINT + "/" + UUID.randomUUID());
-        var response = invocationBuilder.buildGet().invoke();
-        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatus());
+        try (var response = invocationBuilder.buildGet().invoke()) {
+            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatus());
+        }
     }
 
     @Test
     void getAllParticipants() {
-        inputParticipants.forEach(p -> {
-            participantProvider.saveParticipant(p);
-        });
+        inputParticipants.forEach(p -> participantProvider.saveParticipant(p));
         var invocationBuilder = super.sendRequest(PARTICIPANTS_ENDPOINT);
-        var response = invocationBuilder.buildGet().invoke();
-        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-        List<ParticipantInformation> entityList = response.readEntity(new GenericType<>() {});
-        assertThat(entityList).isNotEmpty();
-        var participantIds = entityList.stream().map(ParticipantInformation::getParticipant)
-                .map(Participant::getParticipantId).collect(Collectors.toSet());
-        inputParticipants.forEach(p -> {
-            assertThat(participantIds).contains(p.getParticipantId());
-        });
+        try (var response = invocationBuilder.buildGet().invoke()) {
+            assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+            List<ParticipantInformation> entityList = response.readEntity(new GenericType<>() {});
+            assertThat(entityList).isNotEmpty();
+            var participantIds =
+                    entityList.stream().map(ParticipantInformation::getParticipant).map(Participant::getParticipantId)
+                            .collect(Collectors.toSet());
+            inputParticipants.forEach(p -> assertThat(participantIds).contains(p.getParticipantId()));
+        }
     }
 
     @Test
-    void testOrderParticipantReport() throws PfModelException {
+    void testOrderParticipantReport() {
         participantProvider.saveParticipant(inputParticipants.get(0));
-        UUID participantId = participantProvider.getParticipants().get(0).getParticipantId();
+        var participantId = participantProvider.getParticipants().get(0).getParticipantId();
         var invocationBuilder = super.sendRequest(PARTICIPANTS_ENDPOINT
             + "/"
             + participantId);
-        var response = invocationBuilder.header("Content-Length", 0).put(Entity.entity(""
-            +
-            "", MediaType.APPLICATION_JSON));
-        assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
+        try (var response = invocationBuilder.header("Content-Length", 0)
+                .put(Entity.entity("", MediaType.APPLICATION_JSON))) {
+            assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
+        }
     }
 
     @Test
-    void testBadOrderParticipantReport() throws PfModelException {
+    void testBadOrderParticipantReport() {
         var invocationBuilder = super.sendRequest(PARTICIPANTS_ENDPOINT
             + "/"
             + UUID.randomUUID());
-        var response = invocationBuilder.header("Content-Length", 0).put(Entity.entity(""
-            +
-            "", MediaType.APPLICATION_JSON));
-        assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatus());
+        try (var response = invocationBuilder.header("Content-Length", 0)
+                .put(Entity.entity("", MediaType.APPLICATION_JSON))) {
+            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatus());
+        }
     }
 
     @Test
@@ -167,9 +166,9 @@ class ParticipantControllerTest extends CommonRestController {
             participantProvider.saveParticipant(p);
         });
         var invocationBuilder = super.sendRequest(PARTICIPANTS_ENDPOINT);
-        var response = invocationBuilder.header("Content-Length", 0).put(Entity.entity(""
-            +
-            "", MediaType.APPLICATION_JSON));
-        assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
+        try (var response = invocationBuilder.header("Content-Length", 0)
+                .put(Entity.entity("", MediaType.APPLICATION_JSON))) {
+            assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
+        }
     }
 }

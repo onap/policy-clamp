@@ -40,7 +40,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 
 
-public class ParticipantSyncTest {
+class ParticipantSyncTest {
 
     @Test
     void testCopyConstructor() throws CoderException {

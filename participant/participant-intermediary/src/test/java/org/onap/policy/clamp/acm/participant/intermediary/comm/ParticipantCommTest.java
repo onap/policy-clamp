@@ -42,12 +42,11 @@ import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRe
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantStatus;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantStatusReq;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
-import org.onap.policy.common.utils.coder.CoderException;
 
 class ParticipantCommTest {
 
     @Test
-    void participantListenerTest() throws CoderException {
+    void participantListenerTest() {
         var participantHandler = mock(ParticipantHandler.class);
 
         var participantRegisterAckListener = new ParticipantRegisterAckListener(participantHandler);
@@ -137,7 +136,7 @@ class ParticipantCommTest {
     }
 
     @Test
-    void messageSenderTest() throws CoderException {
+    void messageSenderTest() {
         var participantHandler = mock(ParticipantHandler.class);
         var participantParameters = CommonTestData.getParticipantParameters();
         var messageSender = new MessageSender(participantHandler, participantParameters);

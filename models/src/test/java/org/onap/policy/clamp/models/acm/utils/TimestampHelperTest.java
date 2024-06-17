@@ -30,7 +30,7 @@ class TimestampHelperTest {
     void testNow() {
         assertThat(TimestampHelper.nowTimestamp()).isNotNull();
         assertThat(TimestampHelper.now()).isNotNull();
-        assertThat(TimestampHelper.nowEpochMilli()).isNotNull();
+        assertThat(TimestampHelper.nowEpochMilli()).isNotZero();
     }
 
     @Test
