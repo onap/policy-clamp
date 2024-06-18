@@ -218,7 +218,6 @@ public class ParticipantHandler {
     public void handleParticipantSync(ParticipantSync participantSyncMsg) {
         LOGGER.debug("ParticipantSync message received for participantId {}",
                 participantSyncMsg.getParticipantId());
-        acDefinitionHandler.handleParticipantRestart(participantSyncMsg);
     }
 
     /**

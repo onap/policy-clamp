@@ -22,22 +22,15 @@ package org.onap.policy.clamp.acm.runtime.supervision.comm;
 
 import io.micrometer.core.annotation.Timed;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantRestartAc;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRestart;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -66,52 +59,18 @@ public class ParticipantRestartPublisher extends AbstractParticipantPublisher<Pa
         message.setMessageId(UUID.randomUUID());
         message.setTimestamp(Instant.now());
         message.setState(acmDefinition.getState());
-        message.setParticipantDefinitionUpdates(prepareParticipantRestarting(participantId, acmDefinition));
+        message.setParticipantDefinitionUpdates(
+                AcmUtils.prepareParticipantRestarting(participantId, acmDefinition,
+                        acRuntimeParameterGroup.getAcmParameters().getToscaElementName()));
         var toscaServiceTemplateFragment = AcmUtils.getToscaServiceTemplateFragment(acmDefinition.getServiceTemplate());
 
         for (var automationComposition : automationCompositions) {
-            var restartAc = new ParticipantRestartAc();
-            restartAc.setAutomationCompositionId(automationComposition.getInstanceId());
-            for (var element : automationComposition.getElements().values()) {
-                if (participantId.equals(element.getParticipantId())) {
-                    var acElementRestart = AcmUtils.createAcElementRestart(element);
-                    acElementRestart.setToscaServiceTemplateFragment(toscaServiceTemplateFragment);
-                    restartAc.getAcElementList().add(acElementRestart);
-                }
-            }
+            var restartAc = AcmUtils
+                    .createAcRestart(automationComposition, participantId, toscaServiceTemplateFragment);
             message.getAutomationcompositionList().add(restartAc);
         }
 
         LOGGER.debug("Participant Restart sent {}", message);
         super.send(message);
-    }
-
-    protected List<ParticipantDefinition> prepareParticipantRestarting(UUID participantId,
-            AutomationCompositionDefinition acmDefinition) {
-        var acElements = AcmUtils.extractAcElementsFromServiceTemplate(acmDefinition.getServiceTemplate(),
-                acRuntimeParameterGroup.getAcmParameters().getToscaElementName());
-
-        // list of entry filtered by participantId
-        List<Entry<String, ToscaNodeTemplate>> elementList = new ArrayList<>();
-        Map<ToscaConceptIdentifier, UUID> supportedElementMap = new HashMap<>();
-        for (var elementEntry : acElements) {
-            var elementState = acmDefinition.getElementStateMap().get(elementEntry.getKey());
-            if (participantId.equals(elementState.getParticipantId())) {
-                var type = new ToscaConceptIdentifier(elementEntry.getValue().getType(),
-                        elementEntry.getValue().getTypeVersion());
-                supportedElementMap.put(type, participantId);
-                elementList.add(elementEntry);
-            }
-        }
-        var list = AcmUtils.prepareParticipantPriming(elementList, supportedElementMap);
-        for (var participantDefinition : list) {
-            for (var elementDe : participantDefinition.getAutomationCompositionElementDefinitionList()) {
-                var state = acmDefinition.getElementStateMap().get(elementDe.getAcElementDefinitionId().getName());
-                if (state != null) {
-                    elementDe.setOutProperties(state.getOutProperties());
-                }
-            }
-        }
-        return list;
     }
 }

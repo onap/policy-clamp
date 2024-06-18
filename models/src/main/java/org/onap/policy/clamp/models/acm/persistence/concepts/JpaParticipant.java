@@ -32,7 +32,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -44,8 +43,6 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
-import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 import org.onap.policy.common.parameters.annotations.NotNull;
 import org.onap.policy.common.parameters.annotations.Valid;
 import org.onap.policy.models.base.PfAuthorative;
@@ -70,51 +67,42 @@ public class JpaParticipant extends Validated
     private String participantId;
 
     @Column
-    @NotNull
-    private ParticipantState participantState;
-
-    @Column
     private String description;
-
-    @Column
-    @NotNull
-    private Timestamp lastMsg;
 
     @NotNull
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "participantId", referencedColumnName = "participantId",
         foreignKey = @ForeignKey(name = "supported_element_fk"))
+    @SuppressWarnings("squid:S1948")
     private List<@NotNull @Valid JpaParticipantSupportedElementType> supportedElements;
 
     @NotNull
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
     @JoinColumn(name = "participantId", referencedColumnName = "participantId",
             foreignKey = @ForeignKey(name = "participant_replica_fk"))
+    @SuppressWarnings("squid:S1948")
     private List<@NotNull @Valid JpaParticipantReplica> replicas;
 
     /**
      * The Default Constructor creates a {@link JpaParticipant} object with a null key.
      */
     public JpaParticipant() {
-        this(UUID.randomUUID().toString(), ParticipantState.ON_LINE, new ArrayList<>(), new ArrayList<>());
+        this(UUID.randomUUID().toString(), new ArrayList<>(), new ArrayList<>());
     }
 
     /**
      * The Key Constructor creates a {@link JpaParticipant} object with all mandatory fields.
      *
      * @param participantId the participant id
-     * @param participantState the state of the participant
      * @param supportedElements the list of supported Element Type
      * @param replicas the list of replica
      */
-    public JpaParticipant(@NonNull String participantId, @NonNull final ParticipantState participantState,
+    public JpaParticipant(@NonNull String participantId,
             @NonNull final List<JpaParticipantSupportedElementType> supportedElements,
             @NonNull final List<JpaParticipantReplica> replicas) {
         this.participantId = participantId;
-        this.participantState = participantState;
         this.supportedElements = supportedElements;
-        this.lastMsg = TimestampHelper.nowTimestamp();
         this.replicas = replicas;
     }
 
@@ -124,12 +112,10 @@ public class JpaParticipant extends Validated
      * @param copyConcept the concept to copy from
      */
     public JpaParticipant(@NonNull final JpaParticipant copyConcept) {
-        this.participantState = copyConcept.participantState;
         this.description = copyConcept.description;
         this.participantId = copyConcept.participantId;
         this.supportedElements = copyConcept.supportedElements;
         this.replicas = copyConcept.replicas;
-        this.lastMsg = copyConcept.lastMsg;
     }
 
     /**
@@ -145,9 +131,7 @@ public class JpaParticipant extends Validated
     public Participant toAuthorative() {
         var participant = new Participant();
 
-        participant.setParticipantState(participantState);
         participant.setParticipantId(UUID.fromString(participantId));
-        participant.setLastMsg(this.lastMsg.toString());
         participant.setParticipantSupportedElementTypes(new LinkedHashMap<>(this.supportedElements.size()));
         for (var element : this.supportedElements) {
             participant.getParticipantSupportedElementTypes()
@@ -161,9 +145,7 @@ public class JpaParticipant extends Validated
 
     @Override
     public void fromAuthorative(@NonNull final Participant participant) {
-        this.setParticipantState(participant.getParticipantState());
         this.participantId = participant.getParticipantId().toString();
-        this.lastMsg = TimestampHelper.toTimestamp(participant.getLastMsg());
 
         this.supportedElements = new ArrayList<>(participant.getParticipantSupportedElementTypes().size());
         for (var elementEntry : participant.getParticipantSupportedElementTypes().entrySet()) {
@@ -192,16 +174,6 @@ public class JpaParticipant extends Validated
         }
 
         var result = participantId.compareTo(other.participantId);
-        if (result != 0) {
-            return result;
-        }
-
-        result = lastMsg.compareTo(other.lastMsg);
-        if (result != 0) {
-            return result;
-        }
-
-        result = ObjectUtils.compare(participantState, other.participantState);
         if (result != 0) {
             return result;
         }

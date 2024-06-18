@@ -42,6 +42,7 @@ import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AcElementRestart;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
@@ -49,6 +50,7 @@ import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantRestartAc;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.LockOrder;
 import org.onap.policy.clamp.models.acm.persistence.concepts.StringToMapConverter;
@@ -115,6 +117,10 @@ public final class AcmUtils {
         return false;
     }
 
+    public static ToscaConceptIdentifier getType(ToscaNodeTemplate nodeTemplate) {
+        return new ToscaConceptIdentifier(nodeTemplate.getType(), nodeTemplate.getTypeVersion());
+    }
+
     /**
      * Prepare list of ParticipantDefinition for the Priming message.
      *
@@ -126,8 +132,7 @@ public final class AcmUtils {
 
         Map<UUID, List<AutomationCompositionElementDefinition>> map = new HashMap<>();
         for (var elementEntry : acElements) {
-            var type = new ToscaConceptIdentifier(elementEntry.getValue().getType(),
-                    elementEntry.getValue().getTypeVersion());
+            var type = getType(elementEntry.getValue());
             var participantId = supportedElementMap.get(type);
             if (participantId == null) {
                 throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
@@ -432,6 +437,30 @@ public final class AcmUtils {
     }
 
     /**
+     * Create a new ParticipantRestartAc for restarting scenario.
+     *
+     * @param automationComposition the AutomationComposition
+     * @param participantId the participantId of the participant restarted
+     * @param serviceTemplateFragment the ToscaServiceTemplate with policies and policy types
+     * @return the ParticipantRestartAc
+     */
+    public static ParticipantRestartAc createAcRestart(AutomationComposition automationComposition,
+            UUID participantId, ToscaServiceTemplate serviceTemplateFragment) {
+        var syncAc = new ParticipantRestartAc();
+        syncAc.setDeployState(automationComposition.getDeployState());
+        syncAc.setLockState(automationComposition.getLockState());
+        syncAc.setAutomationCompositionId(automationComposition.getInstanceId());
+        for (var element : automationComposition.getElements().values()) {
+            if (participantId.equals(element.getParticipantId())) {
+                var acElementSync = createAcElementRestart(element);
+                acElementSync.setToscaServiceTemplateFragment(serviceTemplateFragment);
+                syncAc.getAcElementList().add(acElementSync);
+            }
+        }
+        return syncAc;
+    }
+
+    /**
      * Create a new AcElementRestart from an AutomationCompositionElement.
      *
      * @param element the AutomationCompositionElement
@@ -450,6 +479,42 @@ public final class AcmUtils {
         acElementRestart.setOutProperties(PfUtils.mapMap(element.getOutProperties(), UnaryOperator.identity()));
         return acElementRestart;
     }
+
+    /**
+     * Prepare the list of ParticipantDefinition for Participant Restarting/Sync msg.
+     *
+     * @param participantId the participantId
+     * @param acmDefinition the AutomationCompositionDefinition
+     * @param toscaElementName the ElementName
+     * @return List of ParticipantDefinition
+     */
+    public static List<ParticipantDefinition> prepareParticipantRestarting(UUID participantId,
+            AutomationCompositionDefinition acmDefinition, String toscaElementName) {
+        var acElements = extractAcElementsFromServiceTemplate(acmDefinition.getServiceTemplate(),
+                toscaElementName);
+
+        // list of entry filtered by participantId
+        List<Entry<String, ToscaNodeTemplate>> elementList = new ArrayList<>();
+        Map<ToscaConceptIdentifier, UUID> supportedElementMap = new HashMap<>();
+        for (var elementEntry : acElements) {
+            var elementState = acmDefinition.getElementStateMap().get(elementEntry.getKey());
+            if (participantId == null || participantId.equals(elementState.getParticipantId())) {
+                supportedElementMap.put(getType(elementEntry.getValue()), elementState.getParticipantId());
+                elementList.add(elementEntry);
+            }
+        }
+        var list = prepareParticipantPriming(elementList, supportedElementMap);
+        for (var participantDefinition : list) {
+            for (var elementDe : participantDefinition.getAutomationCompositionElementDefinitionList()) {
+                var state = acmDefinition.getElementStateMap().get(elementDe.getAcElementDefinitionId().getName());
+                if (state != null) {
+                    elementDe.setOutProperties(state.getOutProperties());
+                }
+            }
+        }
+        return list;
+    }
+
 
     /**
      * Recursive Merge.

@@ -21,7 +21,6 @@
 package org.onap.policy.clamp.acm.runtime.supervision;
 
 import io.micrometer.core.annotation.Timed;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,11 +31,13 @@ import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantDeregisterAckPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantRegisterAckPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantRestartPublisher;
+import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantReplica;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
@@ -65,6 +66,7 @@ public class SupervisionParticipantHandler {
     private final AutomationCompositionProvider automationCompositionProvider;
     private final AcDefinitionProvider acDefinitionProvider;
     private final ParticipantRestartPublisher participantRestartPublisher;
+    private final ParticipantSyncPublisher participantSyncPublisher;
     private final AcRuntimeParameterGroup acRuntimeParameterGroup;
 
     /**
@@ -72,21 +74,11 @@ public class SupervisionParticipantHandler {
      *
      * @param participantRegisterMsg the ParticipantRegister message received from a participant
      */
-    @MessageIntercept
     @Timed(value = "listener.participant_register", description = "PARTICIPANT_REGISTER messages received")
     public void handleParticipantMessage(ParticipantRegister participantRegisterMsg) {
-        var participantOpt = participantProvider.findParticipant(participantRegisterMsg.getParticipantId());
-
-        if (participantOpt.isPresent()) {
-            var participant = participantOpt.get();
-            checkOnline(participant);
-            handleRestart(participant.getParticipantId());
-        } else {
-            var participant = createParticipant(participantRegisterMsg.getParticipantId(),
-                    listToMap(participantRegisterMsg.getParticipantSupportedElementType()));
-            participantProvider.saveParticipant(participant);
-
-        }
+        saveIfNotPresent(participantRegisterMsg.getReplicaId(),
+                participantRegisterMsg.getParticipantId(),
+                participantRegisterMsg.getParticipantSupportedElementType(), true);
 
         participantRegisterAckPublisher.send(participantRegisterMsg.getMessageId(),
                 participantRegisterMsg.getParticipantId());
@@ -97,15 +89,13 @@ public class SupervisionParticipantHandler {
      *
      * @param participantDeregisterMsg the ParticipantDeregister message received from a participant
      */
-    @MessageIntercept
     @Timed(value = "listener.participant_deregister", description = "PARTICIPANT_DEREGISTER messages received")
     public void handleParticipantMessage(ParticipantDeregister participantDeregisterMsg) {
-        var participantOpt = participantProvider.findParticipant(participantDeregisterMsg.getParticipantId());
-
-        if (participantOpt.isPresent()) {
-            var participant = participantOpt.get();
-            participant.setParticipantState(ParticipantState.OFF_LINE);
-            participantProvider.saveParticipant(participant);
+        var replicaId = participantDeregisterMsg.getReplicaId() != null
+                ? participantDeregisterMsg.getReplicaId() : participantDeregisterMsg.getParticipantId();
+        var replicaOpt = participantProvider.findParticipantReplica(replicaId);
+        if (replicaOpt.isPresent()) {
+            participantProvider.deleteParticipantReplica(replicaId);
         }
 
         participantDeregisterAckPublisher.send(participantDeregisterMsg.getMessageId());
@@ -116,32 +106,57 @@ public class SupervisionParticipantHandler {
      *
      * @param participantStatusMsg the ParticipantStatus message received from a participant
      */
-    @MessageIntercept
     @Timed(value = "listener.participant_status", description = "PARTICIPANT_STATUS messages received")
     public void handleParticipantMessage(ParticipantStatus participantStatusMsg) {
+        saveIfNotPresent(participantStatusMsg.getReplicaId(), participantStatusMsg.getParticipantId(),
+                participantStatusMsg.getParticipantSupportedElementType(), false);
 
-        var participantOpt = participantProvider.findParticipant(participantStatusMsg.getParticipantId());
-        if (participantOpt.isEmpty()) {
-            var participant = createParticipant(participantStatusMsg.getParticipantId(),
-                    listToMap(participantStatusMsg.getParticipantSupportedElementType()));
-            participantProvider.saveParticipant(participant);
-        } else {
-            checkOnline(participantOpt.get());
-        }
         if (!participantStatusMsg.getAutomationCompositionInfoList().isEmpty()) {
             automationCompositionProvider.upgradeStates(participantStatusMsg.getAutomationCompositionInfoList());
         }
         if (!participantStatusMsg.getParticipantDefinitionUpdates().isEmpty()
                 && participantStatusMsg.getCompositionId() != null) {
             updateAcDefinitionOutProperties(participantStatusMsg.getCompositionId(),
-                    participantStatusMsg.getParticipantDefinitionUpdates());
+                participantStatusMsg.getReplicaId(), participantStatusMsg.getParticipantDefinitionUpdates());
         }
     }
 
-    private void updateAcDefinitionOutProperties(UUID composotionId, List<ParticipantDefinition> list) {
-        var acDefinitionOpt = acDefinitionProvider.findAcDefinition(composotionId);
+    private void saveIfNotPresent(UUID msgReplicaId, UUID participantId,
+            List<ParticipantSupportedElementType> participantSupportedElementType, boolean registration) {
+        var replicaId = msgReplicaId != null ? msgReplicaId : participantId;
+        var replicaOpt = participantProvider.findParticipantReplica(replicaId);
+        if (replicaOpt.isPresent()) {
+            var replica = replicaOpt.get();
+            checkOnline(replica);
+        } else {
+            var participant = getParticipant(participantId, listToMap(participantSupportedElementType));
+            participant.getReplicas().put(replicaId, createReplica(replicaId));
+            participantProvider.saveParticipant(participant);
+        }
+        if (registration) {
+            handleRestart(participantId, replicaId);
+        }
+    }
+
+    private Participant getParticipant(UUID participantId,
+            Map<UUID, ParticipantSupportedElementType> participantSupportedElementType) {
+        var participantOpt = participantProvider.findParticipant(participantId);
+        return participantOpt.orElseGet(() -> createParticipant(participantId, participantSupportedElementType));
+    }
+
+    private ParticipantReplica createReplica(UUID replicaId) {
+        var replica = new ParticipantReplica();
+        replica.setReplicaId(replicaId);
+        replica.setParticipantState(ParticipantState.ON_LINE);
+        replica.setLastMsg(TimestampHelper.now());
+        return replica;
+
+    }
+
+    private void updateAcDefinitionOutProperties(UUID compositionId, UUID replicaId, List<ParticipantDefinition> list) {
+        var acDefinitionOpt = acDefinitionProvider.findAcDefinition(compositionId);
         if (acDefinitionOpt.isEmpty()) {
-            LOGGER.error("Ac Definition with id {} not found", composotionId);
+            LOGGER.error("Ac Definition with id {} not found", compositionId);
             return;
         }
         var acDefinition = acDefinitionOpt.get();
@@ -155,26 +170,32 @@ public class SupervisionParticipantHandler {
         }
         acDefinitionProvider.updateAcDefinition(acDefinition,
                 acRuntimeParameterGroup.getAcmParameters().getToscaCompositionName());
+        participantSyncPublisher.sendSync(acDefinition, replicaId);
     }
 
-    private void checkOnline(Participant participant) {
-        if (ParticipantState.OFF_LINE.equals(participant.getParticipantState())) {
-            participant.setParticipantState(ParticipantState.ON_LINE);
+    private void checkOnline(ParticipantReplica replica) {
+        if (ParticipantState.OFF_LINE.equals(replica.getParticipantState())) {
+            replica.setParticipantState(ParticipantState.ON_LINE);
         }
-        participant.setLastMsg(TimestampHelper.now());
-        participantProvider.saveParticipant(participant);
+        replica.setLastMsg(TimestampHelper.now());
+        participantProvider.saveParticipantReplica(replica);
     }
 
-    private void handleRestart(UUID participantId) {
+    private void handleRestart(UUID participantId, UUID replicaId) {
         var compositionIds = participantProvider.getCompositionIds(participantId);
+        var oldParticipant = participantId.equals(replicaId);
         for (var compositionId : compositionIds) {
             var acDefinition = acDefinitionProvider.getAcDefinition(compositionId);
             LOGGER.debug("Scan Composition {} for restart", acDefinition.getCompositionId());
-            handleRestart(participantId, acDefinition);
+            if (oldParticipant) {
+                handleRestart(participantId, acDefinition);
+            } else {
+                handleSyncRestart(participantId, replicaId, acDefinition);
+            }
         }
     }
 
-    private void handleRestart(UUID participantId, AutomationCompositionDefinition acDefinition) {
+    private void handleRestart(final UUID participantId, AutomationCompositionDefinition acDefinition) {
         if (AcTypeState.COMMISSIONED.equals(acDefinition.getState())) {
             LOGGER.debug("Composition {} COMMISSIONED", acDefinition.getCompositionId());
             return;
@@ -185,14 +206,6 @@ public class SupervisionParticipantHandler {
                 elementState.setRestarting(true);
             }
         }
-        var automationCompositionList =
-                automationCompositionProvider.getAcInstancesByCompositionId(acDefinition.getCompositionId());
-        List<AutomationComposition> automationCompositions = new ArrayList<>();
-        for (var automationComposition : automationCompositionList) {
-            if (isAcToBeRestarted(participantId, automationComposition)) {
-                automationCompositions.add(automationComposition);
-            }
-        }
         // expected final state
         if (StateChangeResult.TIMEOUT.equals(acDefinition.getStateChangeResult())) {
             acDefinition.setStateChangeResult(StateChangeResult.NO_ERROR);
@@ -200,6 +213,11 @@ public class SupervisionParticipantHandler {
         acDefinition.setRestarting(true);
         acDefinitionProvider.updateAcDefinition(acDefinition,
                 acRuntimeParameterGroup.getAcmParameters().getToscaCompositionName());
+
+        var automationCompositionList =
+                automationCompositionProvider.getAcInstancesByCompositionId(acDefinition.getCompositionId());
+        var automationCompositions = automationCompositionList.stream()
+                .filter(ac -> isAcToBeRestarted(participantId, ac)).toList();
         participantRestartPublisher.send(participantId, acDefinition, automationCompositions);
     }
 
@@ -222,13 +240,34 @@ public class SupervisionParticipantHandler {
         return toAdd;
     }
 
+    private void handleSyncRestart(final UUID participantId, UUID replicaId,
+            AutomationCompositionDefinition acDefinition) {
+        if (AcTypeState.COMMISSIONED.equals(acDefinition.getState())) {
+            LOGGER.debug("Composition {} COMMISSIONED", acDefinition.getCompositionId());
+            return;
+        }
+        LOGGER.debug("Composition to be send in Restart message {}", acDefinition.getCompositionId());
+        var automationCompositionList =
+                automationCompositionProvider.getAcInstancesByCompositionId(acDefinition.getCompositionId());
+        var automationCompositions = automationCompositionList.stream()
+                .filter(ac -> isAcToBeSyncRestarted(participantId, ac)).toList();
+        participantSyncPublisher.sendRestartMsg(participantId, replicaId, acDefinition, automationCompositions);
+    }
+
+    private boolean isAcToBeSyncRestarted(UUID participantId, AutomationComposition automationComposition) {
+        for (var element : automationComposition.getElements().values()) {
+            if (participantId.equals(element.getParticipantId())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private Participant createParticipant(UUID participantId,
             Map<UUID, ParticipantSupportedElementType> participantSupportedElementType) {
         var participant = new Participant();
         participant.setParticipantId(participantId);
         participant.setParticipantSupportedElementTypes(participantSupportedElementType);
-        participant.setParticipantState(ParticipantState.ON_LINE);
-        participant.setLastMsg(TimestampHelper.now());
         return participant;
     }
 

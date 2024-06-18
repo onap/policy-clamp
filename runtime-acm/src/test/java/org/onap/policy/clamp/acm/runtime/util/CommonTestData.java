@@ -28,6 +28,7 @@ import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeEx
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantReplica;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
@@ -88,9 +89,21 @@ public class CommonTestData {
     public static Participant createParticipant(UUID participantId) {
         var participant = new Participant();
         participant.setParticipantId(participantId);
-        participant.setParticipantState(ParticipantState.ON_LINE);
-        participant.setLastMsg(TimestampHelper.now());
         return participant;
+    }
+
+    /**
+     * Create a new ParticipantReplica.
+     *
+     * @param replicaId the replica id
+     * @return a new ParticipantReplica
+     */
+    public static ParticipantReplica createParticipantReplica(UUID replicaId) {
+        var replica = new ParticipantReplica();
+        replica.setReplicaId(replicaId);
+        replica.setParticipantState(ParticipantState.ON_LINE);
+        replica.setLastMsg(TimestampHelper.now());
+        return replica;
     }
 
     /**
@@ -103,6 +116,10 @@ public class CommonTestData {
         supportedElementType.setTypeName("Type");
         supportedElementType.setTypeVersion("1.0.0");
         return supportedElementType;
+    }
+
+    public static UUID getReplicaId() {
+        return UUID.fromString("201c62b3-8918-41b9-a747-d21eb79c6c09");
     }
 
     public static UUID getParticipantId() {

@@ -29,28 +29,26 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
 
 class SupervisionParticipantScannerTest {
 
     @Test
     void testScanParticipant() {
-        var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanParticipant");
-        acRuntimeParameterGroup.getParticipantParameters().setMaxStatusWaitMs(-1);
-
-        var participant = CommonTestData.createParticipant(CommonTestData.getParticipantId());
         var participantProvider = mock(ParticipantProvider.class);
-        when(participantProvider.getParticipants()).thenReturn(List.of(participant));
+        var replica = CommonTestData.createParticipantReplica(CommonTestData.getReplicaId());
+        when(participantProvider.findReplicasOnLine()).thenReturn(List.of(replica));
 
-        var supervisionScanner = new SupervisionPartecipantScanner(participantProvider, acRuntimeParameterGroup);
+        var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanParticipant");
+        var supervisionScanner = new SupervisionParticipantScanner(participantProvider, acRuntimeParameterGroup);
 
-        participant.setParticipantState(ParticipantState.OFF_LINE);
+        acRuntimeParameterGroup.getParticipantParameters().setMaxStatusWaitMs(100000);
         supervisionScanner.run();
-        verify(participantProvider, times(0)).saveParticipant(any());
+        verify(participantProvider, times(0)).saveParticipantReplica(any());
 
-        participant.setParticipantState(ParticipantState.ON_LINE);
+        acRuntimeParameterGroup.getParticipantParameters().setMaxStatusWaitMs(-1);
+        supervisionScanner = new SupervisionParticipantScanner(participantProvider, acRuntimeParameterGroup);
         supervisionScanner.run();
-        verify(participantProvider, times(1)).saveParticipant(any());
+        verify(participantProvider).deleteParticipantReplica(CommonTestData.getReplicaId());
     }
 }

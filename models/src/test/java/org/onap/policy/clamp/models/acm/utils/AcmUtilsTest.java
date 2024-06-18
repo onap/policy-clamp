@@ -37,7 +37,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
@@ -45,6 +47,7 @@ import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplat
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.LockOrder;
 import org.onap.policy.common.utils.coder.StandardCoder;
+import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaDataType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
@@ -276,9 +279,7 @@ class AcmUtilsTest {
     }
 
     private Map<String, ToscaPolicyType> getDummyPolicyTypesMap() {
-        Map<String, ToscaPolicyType> policyTypes = new HashMap<>();
-        policyTypes.put("onap.policies.Match", new ToscaPolicyType());
-        return policyTypes;
+        return Map.of("onap.policies.Match", new ToscaPolicyType());
     }
 
     private Map<String, ToscaDataType> getDummyToscaDataTypeMap() {
@@ -290,9 +291,42 @@ class AcmUtilsTest {
     private Map<String, ToscaNodeTemplate> getDummyNodeTemplates() {
         Map<String, ToscaNodeTemplate> nodeTemplates = new HashMap<>();
         var nodeTemplate = new ToscaNodeTemplate();
-        nodeTemplate.setType("org.onap.policy.clamp.acm.AutomationCompositionElement");
+        nodeTemplate.setType(AUTOMATION_COMPOSITION_ELEMENT);
         nodeTemplates.put("org.onap.dcae.acm.DCAEMicroserviceAutomationCompositionParticipant", nodeTemplate);
         return nodeTemplates;
+    }
+
+    @Test
+    void testcreateAcRestart() {
+        var automationComposition = getDummyAutomationComposition();
+        automationComposition.setInstanceId(UUID.randomUUID());
+        var toscaServiceTemplate = getDummyToscaServiceTemplate();
+        var participantId = automationComposition.getElements().values().iterator().next().getParticipantId();
+        var serviceTemplateFragment = AcmUtils.getToscaServiceTemplateFragment(toscaServiceTemplate);
+        var result = AcmUtils.createAcRestart(automationComposition, participantId, serviceTemplateFragment);
+        assertEquals(result.getAutomationCompositionId(), automationComposition.getInstanceId());
+        assertThat(result.getAcElementList()).hasSize(1);
+    }
+
+    @Test
+    void testPrepareParticipantRestarting() {
+        var serviceTemplate = CommonTestData.getToscaServiceTemplate(TOSCA_TEMPLATE_YAML);
+        var acmDefinition = new AutomationCompositionDefinition();
+        acmDefinition.setElementStateMap(Map.of());
+        acmDefinition.setServiceTemplate(serviceTemplate);
+        var acElements = AcmUtils.extractAcElementsFromServiceTemplate(serviceTemplate, AUTOMATION_COMPOSITION_ELEMENT);
+        acmDefinition.setElementStateMap(AcmUtils.createElementStateMap(acElements, AcTypeState.COMMISSIONED));
+        acmDefinition.getElementStateMap()
+                .values().forEach(element -> element.setParticipantId(UUID.randomUUID()));
+        var participantId = UUID.randomUUID();
+        var result = AcmUtils.prepareParticipantRestarting(participantId, acmDefinition,
+                AUTOMATION_COMPOSITION_ELEMENT);
+        assertThat(result).isEmpty();
+
+        participantId = acmDefinition.getElementStateMap().values().iterator().next().getParticipantId();
+        result = AcmUtils.prepareParticipantRestarting(participantId, acmDefinition,
+                AUTOMATION_COMPOSITION_ELEMENT);
+        assertThat(result).hasSize(1);
     }
 
     @Test

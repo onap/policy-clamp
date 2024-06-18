@@ -37,7 +37,6 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
-import org.onap.policy.clamp.acm.runtime.participants.AcmParticipantProvider;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionAcHandler;
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
@@ -52,6 +51,7 @@ import org.onap.policy.clamp.models.acm.messages.rest.instantiation.LockOrder;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcInstanceStateResolver;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
+import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ProviderUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
@@ -101,9 +101,9 @@ class AutomationCompositionInstantiationProviderTest {
         when(acDefinitionProvider.getAcDefinition(compositionId)).thenReturn(acDefinition);
         var acProvider = mock(AutomationCompositionProvider.class);
         var supervisionAcHandler = mock(SupervisionAcHandler.class);
-        var acmParticipantProvider = mock(AcmParticipantProvider.class);
+        var participantProvider = mock(ParticipantProvider.class);
         var instantiationProvider = new AutomationCompositionInstantiationProvider(acProvider, acDefinitionProvider,
-                null, supervisionAcHandler, acmParticipantProvider,
+                null, supervisionAcHandler, participantProvider,
                 CommonTestData.getTestParamaterGroup());
         var automationCompositionCreate =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Crud");
@@ -141,7 +141,7 @@ class AutomationCompositionInstantiationProviderTest {
 
         when(acProvider.deleteAutomationComposition(automationCompositionUpdate.getInstanceId()))
                 .thenReturn(automationCompositionUpdate);
-        doNothing().when(acmParticipantProvider).verifyParticipantState(any());
+        doNothing().when(participantProvider).verifyParticipantState(any());
         instantiationProvider.deleteAutomationComposition(automationCompositionCreate.getCompositionId(),
                 automationCompositionCreate.getInstanceId());
 
@@ -167,9 +167,9 @@ class AutomationCompositionInstantiationProviderTest {
         when(acProvider.updateAutomationComposition(acmFromDb)).thenReturn(acmFromDb);
 
         var supervisionAcHandler = mock(SupervisionAcHandler.class);
-        var acmParticipantProvider = mock(AcmParticipantProvider.class);
+        var participantProvider = mock(ParticipantProvider.class);
         var instantiationProvider = new AutomationCompositionInstantiationProvider(acProvider, acDefinitionProvider,
-                null, supervisionAcHandler, acmParticipantProvider,
+                null, supervisionAcHandler, participantProvider,
                 CommonTestData.getTestParamaterGroup());
         var instantiationResponse = instantiationProvider.updateAutomationComposition(
                 automationCompositionUpdate.getCompositionId(), automationCompositionUpdate);
@@ -201,7 +201,7 @@ class AutomationCompositionInstantiationProviderTest {
 
         var instantiationProvider =
                 new AutomationCompositionInstantiationProvider(acProvider, mock(AcDefinitionProvider.class), null,
-                        mock(SupervisionAcHandler.class), mock(AcmParticipantProvider.class),
+                        mock(SupervisionAcHandler.class), mock(ParticipantProvider.class),
                         mock(AcRuntimeParameterGroup.class));
 
         var compositionId = automationCompositionUpdate.getCompositionId();
@@ -232,7 +232,7 @@ class AutomationCompositionInstantiationProviderTest {
 
         var instantiationProvider =
                 new AutomationCompositionInstantiationProvider(acProvider, mock(AcDefinitionProvider.class), null,
-                        mock(SupervisionAcHandler.class), mock(AcmParticipantProvider.class),
+                        mock(SupervisionAcHandler.class), mock(ParticipantProvider.class),
                         mock(AcRuntimeParameterGroup.class));
 
         var compositionId = automationCompositionUpdate.getCompositionId();
@@ -273,9 +273,9 @@ class AutomationCompositionInstantiationProviderTest {
                 .thenReturn(automationCompositionUpdate);
 
         var supervisionAcHandler = mock(SupervisionAcHandler.class);
-        var acmParticipantProvider = mock(AcmParticipantProvider.class);
+        var participantProvider = mock(ParticipantProvider.class);
         var instantiationProvider = new AutomationCompositionInstantiationProvider(acProvider, acDefinitionProvider,
-                null, supervisionAcHandler, acmParticipantProvider,
+                null, supervisionAcHandler, participantProvider,
                 mock(AcRuntimeParameterGroup.class));
         assertThatThrownBy(
                 () -> instantiationProvider.updateAutomationComposition(compositionId, automationCompositionUpdate))
@@ -303,9 +303,9 @@ class AutomationCompositionInstantiationProviderTest {
         when(acProvider.updateAutomationComposition(automationComposition)).thenReturn(automationComposition);
 
         var supervisionAcHandler = mock(SupervisionAcHandler.class);
-        var acmParticipantProvider = mock(AcmParticipantProvider.class);
+        var participantProvider = mock(ParticipantProvider.class);
         var instantiationProvider = new AutomationCompositionInstantiationProvider(acProvider, acDefinitionProvider,
-                null, supervisionAcHandler, acmParticipantProvider, new AcRuntimeParameterGroup());
+                null, supervisionAcHandler, participantProvider, new AcRuntimeParameterGroup());
 
         assertThatThrownBy(() -> instantiationProvider
                 .updateAutomationComposition(automationComposition.getCompositionId(), automationComposition))
@@ -352,9 +352,9 @@ class AutomationCompositionInstantiationProviderTest {
         automationComposition.getElements().clear();
 
         var supervisionAcHandler = mock(SupervisionAcHandler.class);
-        var acmParticipantProvider = mock(AcmParticipantProvider.class);
+        var participantProvider = mock(ParticipantProvider.class);
         var instantiationProvider = new AutomationCompositionInstantiationProvider(acProvider, acDefinitionProvider,
-                null, supervisionAcHandler, acmParticipantProvider, new AcRuntimeParameterGroup());
+                null, supervisionAcHandler, participantProvider, new AcRuntimeParameterGroup());
 
         assertThatThrownBy(() -> instantiationProvider
                 .updateAutomationComposition(automationComposition.getCompositionId(), acMigrate))
@@ -373,11 +373,11 @@ class AutomationCompositionInstantiationProviderTest {
         when(acDefinitionProvider.getAcDefinition(compositionId)).thenReturn(acDefinition);
         automationComposition.setCompositionId(compositionId);
         var supervisionAcHandler = mock(SupervisionAcHandler.class);
-        var acmParticipantProvider = mock(AcmParticipantProvider.class);
+        var participantProvider = mock(ParticipantProvider.class);
         var acRuntimeParameterGroup = mock(AcRuntimeParameterGroup.class);
 
         var instantiationProvider = new AutomationCompositionInstantiationProvider(acProvider, acDefinitionProvider,
-                null, supervisionAcHandler, acmParticipantProvider, acRuntimeParameterGroup);
+                null, supervisionAcHandler, participantProvider, acRuntimeParameterGroup);
 
         when(acProvider.getAutomationComposition(automationComposition.getInstanceId()))
                 .thenReturn(automationComposition);
@@ -436,10 +436,10 @@ class AutomationCompositionInstantiationProviderTest {
         var acProvider = mock(AutomationCompositionProvider.class);
         when(acProvider.createAutomationComposition(automationCompositionCreate))
                 .thenReturn(automationCompositionCreate);
-        var acmParticipantProvider = mock(AcmParticipantProvider.class);
+        var participantProvider = mock(ParticipantProvider.class);
 
         var instantiationProvider = new AutomationCompositionInstantiationProvider(acProvider, acDefinitionProvider,
-                null, null, acmParticipantProvider,
+                null, null, participantProvider,
                 CommonTestData.getTestParamaterGroup());
 
         var instantiationResponse = instantiationProvider.createAutomationComposition(
@@ -457,7 +457,7 @@ class AutomationCompositionInstantiationProviderTest {
     @Test
     void testCreateAutomationCompositions_CommissionedAcElementNotFound() {
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
-        var acmParticipantProvider = mock(AcmParticipantProvider.class);
+        var participantProvider = mock(ParticipantProvider.class);
         var acDefinition = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
         var compositionId = acDefinition.getCompositionId();
         when(acDefinitionProvider.findAcDefinition(compositionId)).thenReturn(Optional.of(acDefinition));
@@ -467,7 +467,7 @@ class AutomationCompositionInstantiationProviderTest {
 
         var acProvider = mock(AutomationCompositionProvider.class);
         var provider = new AutomationCompositionInstantiationProvider(acProvider, acDefinitionProvider, null, null,
-                acmParticipantProvider, CommonTestData.getTestParamaterGroup());
+                participantProvider, CommonTestData.getTestParamaterGroup());
 
         assertThatThrownBy(() -> provider.createAutomationComposition(compositionId, automationComposition))
                 .hasMessageMatching(AC_ELEMENT_NAME_NOT_FOUND);
@@ -572,9 +572,9 @@ class AutomationCompositionInstantiationProviderTest {
         when(acProvider.getAutomationComposition(instanceId)).thenReturn(automationComposition);
 
         var supervisionAcHandler = mock(SupervisionAcHandler.class);
-        var acmParticipantProvider = mock(AcmParticipantProvider.class);
+        var participantProvider = mock(ParticipantProvider.class);
         var provider = new AutomationCompositionInstantiationProvider(acProvider, acDefinitionProvider,
-                new AcInstanceStateResolver(), supervisionAcHandler, acmParticipantProvider,
+                new AcInstanceStateResolver(), supervisionAcHandler, participantProvider,
                 mock(AcRuntimeParameterGroup.class));
 
         var acInstanceStateUpdate = new AcInstanceStateUpdate();

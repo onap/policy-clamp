@@ -32,19 +32,19 @@ class SupervisionAspectTest {
     @Test
     void testSchedule() throws Exception {
         var supervisionScanner = mock(SupervisionScanner.class);
-        var partecipantScanner = mock(SupervisionPartecipantScanner.class);
-        try (var supervisionAspect = new SupervisionAspect(supervisionScanner, partecipantScanner)) {
+        var participantScanner = mock(SupervisionParticipantScanner.class);
+        try (var supervisionAspect = new SupervisionAspect(supervisionScanner, participantScanner)) {
             supervisionAspect.schedule();
             verify(supervisionScanner, timeout(500)).run();
-            verify(partecipantScanner, timeout(500)).run();
+            verify(participantScanner, timeout(500)).run();
         }
     }
 
     @Test
     void testDoCheck() throws Exception {
         var supervisionScanner = mock(SupervisionScanner.class);
-        var partecipantScanner = mock(SupervisionPartecipantScanner.class);
-        try (var supervisionAspect = new SupervisionAspect(supervisionScanner, partecipantScanner)) {
+        var participantScanner = mock(SupervisionParticipantScanner.class);
+        try (var supervisionAspect = new SupervisionAspect(supervisionScanner, participantScanner)) {
             supervisionAspect.doCheck();
             supervisionAspect.doCheck();
             verify(supervisionScanner, timeout(500).times(2)).run();

@@ -36,7 +36,7 @@ import org.onap.policy.models.base.PfUtils;
 public class ParticipantRestart extends ParticipantMessage {
 
     // composition state
-    AcTypeState state;
+    private AcTypeState state;
 
     // element definition
     private List<ParticipantDefinition> participantDefinitionUpdates = new ArrayList<>();

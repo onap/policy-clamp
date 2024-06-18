@@ -41,12 +41,6 @@ public class Participant {
     private UUID participantId;
 
     @NonNull
-    private ParticipantState participantState = ParticipantState.ON_LINE;
-
-    @NonNull
-    private String lastMsg;
-
-    @NonNull
     private Map<UUID, ParticipantSupportedElementType> participantSupportedElementTypes = new HashMap<>();
 
     @NonNull
@@ -58,9 +52,7 @@ public class Participant {
      * @param otherParticipant the participant to copy from
      */
     public Participant(Participant otherParticipant) {
-        this.participantState = otherParticipant.participantState;
         this.participantId = otherParticipant.participantId;
-        this.lastMsg = otherParticipant.lastMsg;
         this.participantSupportedElementTypes = PfUtils.mapMap(otherParticipant.getParticipantSupportedElementTypes(),
                 ParticipantSupportedElementType::new);
         this.replicas = PfUtils.mapMap(otherParticipant.replicas, ParticipantReplica::new);

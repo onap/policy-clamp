@@ -21,8 +21,7 @@
 package org.onap.policy.clamp.acm.runtime.supervision;
 
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
-import org.onap.policy.clamp.models.acm.concepts.Participant;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantReplica;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 import org.slf4j.Logger;
@@ -33,20 +32,20 @@ import org.springframework.stereotype.Component;
  * This class is used to scan the automation compositions in the database and check if they are in the correct state.
  */
 @Component
-public class SupervisionPartecipantScanner {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SupervisionPartecipantScanner.class);
+public class SupervisionParticipantScanner {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SupervisionParticipantScanner.class);
 
     private final long maxWaitMs;
 
     private final ParticipantProvider participantProvider;
 
     /**
-     * Constructor for instantiating SupervisionPartecipantScanner.
+     * Constructor for instantiating SupervisionParticipantScanner.
      *
      * @param participantProvider the Participant Provider
      * @param acRuntimeParameterGroup the parameters for the automation composition runtime
      */
-    public SupervisionPartecipantScanner(final ParticipantProvider participantProvider,
+    public SupervisionParticipantScanner(final ParticipantProvider participantProvider,
             final AcRuntimeParameterGroup acRuntimeParameterGroup) {
         this.participantProvider = participantProvider;
         this.maxWaitMs = acRuntimeParameterGroup.getParticipantParameters().getMaxStatusWaitMs();
@@ -56,27 +55,17 @@ public class SupervisionPartecipantScanner {
      * Run Scanning.
      */
     public void run() {
-        LOGGER.debug("Scanning participans in the database . . .");
-
-        for (var participant : participantProvider.getParticipants()) {
-            scanParticipantStatus(participant);
-        }
-
-        LOGGER.debug("Participans scan complete . . .");
+        LOGGER.debug("Scanning participants in the database . . .");
+        participantProvider.findReplicasOnLine().forEach(this::scanParticipantReplicaStatus);
+        LOGGER.debug("Participants scan complete . . .");
     }
 
-    private void scanParticipantStatus(Participant participant) {
-        var id = participant.getParticipantId();
-        if (ParticipantState.OFF_LINE.equals(participant.getParticipantState())) {
-            LOGGER.debug("report Participant is still OFF_LINE {}", id);
-            return;
-        }
+    private void scanParticipantReplicaStatus(ParticipantReplica replica) {
         var now = TimestampHelper.nowEpochMilli();
-        var lastMsg = TimestampHelper.toEpochMilli(participant.getLastMsg());
+        var lastMsg = TimestampHelper.toEpochMilli(replica.getLastMsg());
         if ((now - lastMsg) > maxWaitMs) {
-            LOGGER.debug("report Participant OFF_LINE {}", id);
-            participant.setParticipantState(ParticipantState.OFF_LINE);
-            participantProvider.saveParticipant(participant);
+            LOGGER.debug("Participant OFF_LINE {}", replica.getReplicaId());
+            participantProvider.deleteParticipantReplica(replica.getReplicaId());
         }
     }
 }

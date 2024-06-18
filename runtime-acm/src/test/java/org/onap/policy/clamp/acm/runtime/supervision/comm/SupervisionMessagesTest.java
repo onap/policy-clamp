@@ -35,7 +35,6 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
-import org.onap.policy.clamp.acm.runtime.participants.AcmParticipantProvider;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionAcHandler;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionHandler;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionParticipantHandler;
@@ -149,7 +148,7 @@ class SupervisionMessagesTest {
     @Test
     void testParticipantPrimePublisherDecommissioning() {
         var publisher = new ParticipantPrimePublisher(mock(ParticipantProvider.class),
-                mock(AcmParticipantProvider.class), mock(AcRuntimeParameterGroup.class));
+                mock(AcRuntimeParameterGroup.class));
         var topicSink = mock(TopicSink.class);
         publisher.active(topicSink);
         publisher.sendDepriming(UUID.randomUUID());
@@ -170,8 +169,7 @@ class SupervisionMessagesTest {
                 participantId);
         var participantProvider = mock(ParticipantProvider.class);
         when(participantProvider.getSupportedElementMap()).thenReturn(supportedElementMap);
-        var publisher = new ParticipantPrimePublisher(participantProvider, mock(AcmParticipantProvider.class),
-                CommonTestData.getTestParamaterGroup());
+        var publisher = new ParticipantPrimePublisher(participantProvider, CommonTestData.getTestParamaterGroup());
         var topicSink = mock(TopicSink.class);
         publisher.active(topicSink);
         var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
@@ -262,27 +260,68 @@ class SupervisionMessagesTest {
     }
 
     @Test
-    void testParticipantSyncPublisher() {
+    void testParticipantSyncPublisherAutomationComposition() {
         var publisher = new ParticipantSyncPublisher(CommonTestData.getTestParamaterGroup());
         var topicSink = mock(TopicSink.class);
         publisher.active(topicSink);
 
         var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
-        var acmDefinition = new AutomationCompositionDefinition();
-        acmDefinition.setCompositionId(UUID.randomUUID());
-        acmDefinition.setServiceTemplate(serviceTemplate);
-        var acElements = AcmUtils
-                .extractAcElementsFromServiceTemplate(serviceTemplate, "");
-        acmDefinition.setElementStateMap(AcmUtils.createElementStateMap(acElements, AcTypeState.PRIMED));
+        var automationComposition =
+                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_UPDATE_JSON, "Crud");
+        publisher.sendSync(serviceTemplate, automationComposition);
+        verify(topicSink).send(anyString());
+    }
+
+    @Test
+    void testParticipantSyncPublisherAcDefinition() {
+        var publisher = new ParticipantSyncPublisher(CommonTestData.getTestParamaterGroup());
+        var topicSink = mock(TopicSink.class);
+        publisher.active(topicSink);
+
+        var acmDefinition = getAcmDefinition();
+        publisher.sendSync(acmDefinition, null);
+        verify(topicSink).send(anyString());
+    }
+
+    @Test
+    void testParticipantSyncPublisherAcDefinitionCommissioned() {
+        var publisher = new ParticipantSyncPublisher(CommonTestData.getTestParamaterGroup());
+        var topicSink = mock(TopicSink.class);
+        publisher.active(topicSink);
+
+        var acmDefinition = getAcmDefinition();
+        acmDefinition.setState(AcTypeState.COMMISSIONED);
+        publisher.sendSync(acmDefinition, UUID.randomUUID());
+        verify(topicSink).send(anyString());
+    }
+
+    @Test
+    void testParticipantSyncPublisherRestart() {
+        var publisher = new ParticipantSyncPublisher(CommonTestData.getTestParamaterGroup());
+        var topicSink = mock(TopicSink.class);
+        publisher.active(topicSink);
 
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_UPDATE_JSON, "Crud");
-
         var participantId = automationComposition.getElements().values().iterator().next().getParticipantId();
+        var acmDefinition = getAcmDefinition();
         acmDefinition.getElementStateMap().values().iterator().next().setParticipantId(participantId);
-
-        publisher.send(participantId, acmDefinition, List.of(automationComposition));
+        var replicaId = UUID.randomUUID();
+        publisher.sendRestartMsg(participantId, replicaId, acmDefinition, List.of(automationComposition));
         verify(topicSink).send(anyString());
+    }
+
+    private AutomationCompositionDefinition getAcmDefinition() {
+        var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
+        var acmDefinition = new AutomationCompositionDefinition();
+        acmDefinition.setCompositionId(UUID.randomUUID());
+        acmDefinition.setState(AcTypeState.PRIMED);
+        acmDefinition.setServiceTemplate(serviceTemplate);
+        var acElements = AcmUtils
+                .extractAcElementsFromServiceTemplate(serviceTemplate, TOSCA_ELEMENT_NAME);
+        acmDefinition.setElementStateMap(AcmUtils.createElementStateMap(acElements, AcTypeState.PRIMED));
+        acmDefinition.getElementStateMap().values().forEach(element -> element.setParticipantId(UUID.randomUUID()));
+        return acmDefinition;
     }
 
     @Test

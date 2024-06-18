@@ -23,6 +23,7 @@ package org.onap.policy.clamp.acm.runtime.supervision;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -37,6 +38,7 @@ import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantDeregisterAckPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantRegisterAckPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantRestartPublisher;
+import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
@@ -45,6 +47,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionInfo;
 import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantReplica;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantDeregister;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRegister;
@@ -60,25 +63,26 @@ class SupervisionParticipantHandlerTest {
 
     @Test
     void testHandleParticipantDeregister() {
-        var participant = CommonTestData.createParticipant(CommonTestData.getParticipantId());
+        var replica = CommonTestData.createParticipantReplica(CommonTestData.getReplicaId());
 
         var participantProvider = mock(ParticipantProvider.class);
-        when(participantProvider.findParticipant(CommonTestData.getParticipantId()))
-                .thenReturn(Optional.of(participant));
+        when(participantProvider.findParticipantReplica(replica.getReplicaId()))
+                .thenReturn(Optional.of(replica));
 
         var participantDeregisterMessage = new ParticipantDeregister();
         participantDeregisterMessage.setMessageId(UUID.randomUUID());
         participantDeregisterMessage.setParticipantId(CommonTestData.getParticipantId());
+        participantDeregisterMessage.setReplicaId(replica.getReplicaId());
         var participantDeregisterAckPublisher = mock(ParticipantDeregisterAckPublisher.class);
         var handler =
                 new SupervisionParticipantHandler(participantProvider, mock(ParticipantRegisterAckPublisher.class),
                         participantDeregisterAckPublisher, mock(AutomationCompositionProvider.class),
                         mock(AcDefinitionProvider.class), mock(ParticipantRestartPublisher.class),
-                        mock(AcRuntimeParameterGroup.class));
+                        mock(ParticipantSyncPublisher.class), mock(AcRuntimeParameterGroup.class));
 
         handler.handleParticipantMessage(participantDeregisterMessage);
 
-        verify(participantProvider).saveParticipant(any());
+        verify(participantProvider).deleteParticipantReplica(CommonTestData.getReplicaId());
         verify(participantDeregisterAckPublisher).send(participantDeregisterMessage.getMessageId());
     }
 
@@ -95,7 +99,7 @@ class SupervisionParticipantHandlerTest {
         var handler = new SupervisionParticipantHandler(participantProvider, participantRegisterAckPublisher,
                 mock(ParticipantDeregisterAckPublisher.class), mock(AutomationCompositionProvider.class),
                 mock(AcDefinitionProvider.class), mock(ParticipantRestartPublisher.class),
-                mock(AcRuntimeParameterGroup.class));
+                mock(ParticipantSyncPublisher.class), mock(AcRuntimeParameterGroup.class));
         handler.handleParticipantMessage(participantRegisterMessage);
 
         verify(participantProvider).saveParticipant(any());
@@ -109,13 +113,18 @@ class SupervisionParticipantHandlerTest {
         participantRegisterMessage.setMessageId(UUID.randomUUID());
         var participantId = CommonTestData.getParticipantId();
         participantRegisterMessage.setParticipantId(participantId);
+        participantRegisterMessage.setReplicaId(participantId);
         var supportedElementType = CommonTestData.createParticipantSupportedElementType();
         participantRegisterMessage.setParticipantSupportedElementType(List.of(supportedElementType));
 
         var participant = new Participant();
+        var replica = new ParticipantReplica();
+        replica.setReplicaId(participantId);
         participant.setParticipantId(participantId);
+        participant.getReplicas().put(replica.getReplicaId(), replica);
         var participantProvider = mock(ParticipantProvider.class);
         when(participantProvider.findParticipant(participantId)).thenReturn(Optional.of(participant));
+        when(participantProvider.findParticipantReplica(participantId)).thenReturn(Optional.of(replica));
         var compositionId = UUID.randomUUID();
         var composition2Id = UUID.randomUUID();
         when(participantProvider.getCompositionIds(participantId)).thenReturn(Set.of(compositionId, composition2Id));
@@ -145,13 +154,73 @@ class SupervisionParticipantHandlerTest {
         var participantRestartPublisher = mock(ParticipantRestartPublisher.class);
         var handler = new SupervisionParticipantHandler(participantProvider, participantRegisterAckPublisher,
                 mock(ParticipantDeregisterAckPublisher.class), automationCompositionProvider, acDefinitionProvider,
-                participantRestartPublisher, CommonTestData.getTestParamaterGroup());
+                participantRestartPublisher, mock(ParticipantSyncPublisher.class),
+                CommonTestData.getTestParamaterGroup());
         handler.handleParticipantMessage(participantRegisterMessage);
 
         verify(participantRegisterAckPublisher).send(participantRegisterMessage.getMessageId(), participantId);
         verify(acDefinitionProvider).updateAcDefinition(any(AutomationCompositionDefinition.class),
                 eq(CommonTestData.TOSCA_COMP_NAME));
         verify(participantRestartPublisher).send(any(), any(AutomationCompositionDefinition.class), any());
+    }
+
+    @Test
+    void testHandleParticipantSyncRestart() {
+        var participantRegisterMessage = new ParticipantRegister();
+        participantRegisterMessage.setMessageId(UUID.randomUUID());
+        var participantId = CommonTestData.getParticipantId();
+        participantRegisterMessage.setParticipantId(participantId);
+        var replicaId = CommonTestData.getReplicaId();
+        participantRegisterMessage.setReplicaId(replicaId);
+        var supportedElementType = CommonTestData.createParticipantSupportedElementType();
+        participantRegisterMessage.setParticipantSupportedElementType(List.of(supportedElementType));
+
+        var participant = new Participant();
+        var replica = new ParticipantReplica();
+        replica.setReplicaId(replicaId);
+        participant.setParticipantId(participantId);
+        participant.getReplicas().put(replica.getReplicaId(), replica);
+        var participantProvider = mock(ParticipantProvider.class);
+        when(participantProvider.findParticipant(participantId)).thenReturn(Optional.of(participant));
+        when(participantProvider.findParticipantReplica(replicaId)).thenReturn(Optional.of(replica));
+        var compositionId = UUID.randomUUID();
+        var composition2Id = UUID.randomUUID();
+        when(participantProvider.getCompositionIds(participantId)).thenReturn(Set.of(compositionId, composition2Id));
+
+        var acDefinitionProvider = mock(AcDefinitionProvider.class);
+        var acDefinition = new AutomationCompositionDefinition();
+        acDefinition.setState(AcTypeState.COMMISSIONED);
+        acDefinition.setCompositionId(composition2Id);
+        when(acDefinitionProvider.getAcDefinition(composition2Id)).thenReturn(acDefinition);
+
+        acDefinition = new AutomationCompositionDefinition();
+        acDefinition.setCompositionId(compositionId);
+        acDefinition.setState(AcTypeState.PRIMED);
+        var nodeTemplateState = new NodeTemplateState();
+        nodeTemplateState.setParticipantId(participantId);
+        acDefinition.setElementStateMap(Map.of("code", nodeTemplateState));
+        when(acDefinitionProvider.getAcDefinition(compositionId)).thenReturn(acDefinition);
+
+        var automationComposition =
+                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Crud");
+        automationComposition.getElements().values().iterator().next().setParticipantId(participantId);
+        var automationCompositionProvider = mock(AutomationCompositionProvider.class);
+        when(automationCompositionProvider.getAcInstancesByCompositionId(compositionId))
+                .thenReturn(List.of(automationComposition));
+
+        var participantRegisterAckPublisher = mock(ParticipantRegisterAckPublisher.class);
+        var participantSyncPublisher = mock(ParticipantSyncPublisher.class);
+        var handler = new SupervisionParticipantHandler(participantProvider, participantRegisterAckPublisher,
+                mock(ParticipantDeregisterAckPublisher.class), automationCompositionProvider, acDefinitionProvider,
+                mock(ParticipantRestartPublisher.class), participantSyncPublisher,
+                CommonTestData.getTestParamaterGroup());
+        handler.handleParticipantMessage(participantRegisterMessage);
+
+        verify(participantRegisterAckPublisher).send(participantRegisterMessage.getMessageId(), participantId);
+        verify(acDefinitionProvider, times(0)).updateAcDefinition(any(AutomationCompositionDefinition.class),
+                eq(CommonTestData.TOSCA_COMP_NAME));
+        verify(participantSyncPublisher)
+                .sendRestartMsg(any(), any(), any(AutomationCompositionDefinition.class), any());
     }
 
     @Test
@@ -165,7 +234,7 @@ class SupervisionParticipantHandlerTest {
                 new SupervisionParticipantHandler(participantProvider, mock(ParticipantRegisterAckPublisher.class),
                         mock(ParticipantDeregisterAckPublisher.class), automationCompositionProvider,
                         mock(AcDefinitionProvider.class), mock(ParticipantRestartPublisher.class),
-                        mock(AcRuntimeParameterGroup.class));
+                        mock(ParticipantSyncPublisher.class), mock(AcRuntimeParameterGroup.class));
         var participant = CommonTestData.createParticipant(CommonTestData.getParticipantId());
         when(participantProvider.findParticipant(CommonTestData.getParticipantId()))
                 .thenReturn(Optional.of(participant));
@@ -201,7 +270,7 @@ class SupervisionParticipantHandlerTest {
                 new SupervisionParticipantHandler(participantProvider, mock(ParticipantRegisterAckPublisher.class),
                         mock(ParticipantDeregisterAckPublisher.class), mock(AutomationCompositionProvider.class),
                         acDefinitionProvider, mock(ParticipantRestartPublisher.class),
-                       CommonTestData.getTestParamaterGroup());
+                        mock(ParticipantSyncPublisher.class), CommonTestData.getTestParamaterGroup());
         handler.handleParticipantMessage(participantStatusMessage);
 
         verify(acDefinitionProvider).updateAcDefinition(acDefinition, CommonTestData.TOSCA_COMP_NAME);
@@ -218,7 +287,7 @@ class SupervisionParticipantHandlerTest {
                 new SupervisionParticipantHandler(participantProvider, mock(ParticipantRegisterAckPublisher.class),
                         mock(ParticipantDeregisterAckPublisher.class), automationCompositionProvider,
                         mock(AcDefinitionProvider.class), mock(ParticipantRestartPublisher.class),
-                        mock(AcRuntimeParameterGroup.class));
+                        mock(ParticipantSyncPublisher.class), mock(AcRuntimeParameterGroup.class));
         handler.handleParticipantMessage(participantStatusMessage);
 
         verify(participantProvider).saveParticipant(any());
@@ -236,9 +305,8 @@ class SupervisionParticipantHandlerTest {
                 new SupervisionParticipantHandler(participantProvider, mock(ParticipantRegisterAckPublisher.class),
                         mock(ParticipantDeregisterAckPublisher.class), automationCompositionProvider,
                         mock(AcDefinitionProvider.class), mock(ParticipantRestartPublisher.class),
-                        mock(AcRuntimeParameterGroup.class));
+                        mock(ParticipantSyncPublisher.class), mock(AcRuntimeParameterGroup.class));
         var participant = CommonTestData.createParticipant(CommonTestData.getParticipantId());
-        participant.setParticipantState(ParticipantState.OFF_LINE);
         when(participantProvider.findParticipant(CommonTestData.getParticipantId()))
                 .thenReturn(Optional.of(participant));
         handler.handleParticipantMessage(participantStatusMessage);
