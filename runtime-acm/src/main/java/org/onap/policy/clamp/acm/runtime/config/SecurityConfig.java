@@ -45,16 +45,16 @@ public class SecurityConfig {
      */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .httpBasic(Customizer.withDefaults())
-            .authorizeHttpRequests(authorize -> {
-                if (useBasicAuth) {
-                    authorize.anyRequest().authenticated();
-                } else {
-                    authorize.anyRequest().permitAll();
-                }
-            })
-            .csrf(AbstractHttpConfigurer::disable);
+        if (useBasicAuth) {
+            http
+                    .httpBasic(Customizer.withDefaults())
+                    .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated());
+        } else {
+            http
+                    .authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll());
+        }
+
+        http.csrf(AbstractHttpConfigurer::disable);
         return http.build();
     }
 }
