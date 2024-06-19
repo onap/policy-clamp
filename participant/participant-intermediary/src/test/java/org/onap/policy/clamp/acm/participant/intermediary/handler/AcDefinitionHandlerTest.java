@@ -37,7 +37,7 @@ import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrime;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrimeAck;
-import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRestart;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantSync;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class AcDefinitionHandlerTest {
@@ -95,7 +95,7 @@ class AcDefinitionHandlerTest {
 
     @Test
     void restartedTest() {
-        var participantRestartMsg = new ParticipantRestart();
+        var participantRestartMsg = new ParticipantSync();
         participantRestartMsg.setState(AcTypeState.PRIMED);
         participantRestartMsg.setCompositionId(UUID.randomUUID());
         participantRestartMsg.getParticipantDefinitionUpdates().add(createParticipantDefinition());
@@ -107,5 +107,23 @@ class AcDefinitionHandlerTest {
         ach.handleParticipantRestart(participantRestartMsg);
         verify(cacheProvider).initializeAutomationComposition(any(UUID.class), any());
         verify(cacheProvider).addElementDefinition(any(), any());
+    }
+
+    @Test
+    void restartedDeleteTest() {
+        var participantRestartMsg = new ParticipantSync();
+        participantRestartMsg.setState(AcTypeState.COMMISSIONED);
+        participantRestartMsg.setDelete(true);
+        participantRestartMsg.setCompositionId(UUID.randomUUID());
+        participantRestartMsg.getParticipantDefinitionUpdates().add(createParticipantDefinition());
+        var restartAc = CommonTestData.createParticipantRestartAc();
+        participantRestartMsg.setAutomationcompositionList(List.of(restartAc));
+
+        var cacheProvider = mock(CacheProvider.class);
+        var listener = mock(ThreadHandler.class);
+        var ach = new AcDefinitionHandler(cacheProvider, mock(ParticipantMessagePublisher.class), listener);
+        ach.handleParticipantRestart(participantRestartMsg);
+        verify(cacheProvider).removeElementDefinition(participantRestartMsg.getCompositionId());
+        verify(cacheProvider).removeAutomationComposition(restartAc.getAutomationCompositionId());
     }
 }

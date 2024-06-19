@@ -23,7 +23,6 @@ package org.onap.policy.clamp.acm.participant.intermediary.handler;
 import io.opentelemetry.context.Context;
 import java.io.Closeable;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -39,7 +38,6 @@ import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantInterme
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantRestartAc;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.models.base.PfModelException;
 import org.slf4j.Logger;
@@ -274,55 +272,6 @@ public class ThreadHandler implements Closeable {
             LOGGER.error("Composition Defintion deprime failed {} {}", composition.compositionId(), e.getMessage());
             intermediaryApi.updateCompositionState(composition.compositionId(), AcTypeState.PRIMED,
                 StateChangeResult.FAILED, "Composition Defintion deprime failed");
-        }
-    }
-
-    /**
-     * Handles restarted scenario.
-     *
-     * @param messageId the messageId
-     * @param composition the composition
-     * @param state the state of the composition
-     * @param automationCompositionList list of ParticipantRestartAc
-     */
-    public void restarted(UUID messageId, CompositionDto composition,
-            AcTypeState state, List<ParticipantRestartAc> automationCompositionList) {
-        try {
-            listener.handleRestartComposition(composition, state);
-        } catch (PfModelException e) {
-            LOGGER.error("Composition Defintion restarted failed {} {}", composition.compositionId(), e.getMessage());
-            intermediaryApi.updateCompositionState(composition.compositionId(), state, StateChangeResult.FAILED,
-                    "Composition Defintion restarted failed");
-        }
-
-        for (var automationComposition : automationCompositionList) {
-            for (var element : automationComposition.getAcElementList()) {
-                var compositionElement = new CompositionElementDto(composition.compositionId(),
-                    element.getDefinition(), composition.inPropertiesMap().get(element.getDefinition()),
-                    composition.outPropertiesMap().get(element.getDefinition()));
-                var instanceElementDto = new InstanceElementDto(automationComposition.getAutomationCompositionId(),
-                    element.getId(), element.getToscaServiceTemplateFragment(),
-                    element.getProperties(), element.getOutProperties());
-                cleanExecution(element.getId(), messageId);
-                var result = executor.submit(() ->
-                    this.restartedInstanceProcess(compositionElement, instanceElementDto,
-                        element.getDeployState(), element.getLockState()));
-                executionMap.put(element.getId(), result);
-            }
-        }
-    }
-
-    private void restartedInstanceProcess(CompositionElementDto compositionElement,
-        InstanceElementDto instanceElementDto, DeployState deployState, LockState lockState) {
-        try {
-            listener.handleRestartInstance(compositionElement, instanceElementDto, deployState, lockState);
-            executionMap.remove(instanceElementDto.elementId());
-        } catch (PfModelException e) {
-            LOGGER.error("Automation composition element deploy failed {} {}",
-                instanceElementDto.elementId(), e.getMessage());
-            intermediaryApi.updateAutomationCompositionElementState(instanceElementDto.instanceId(),
-                instanceElementDto.elementId(), deployState, lockState, StateChangeResult.FAILED,
-                    "Automation composition element restart failed");
         }
     }
 

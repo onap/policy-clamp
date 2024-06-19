@@ -184,10 +184,6 @@ public class CommonTestData {
         return REPLICA_ID;
     }
 
-    public static UUID getRndParticipantId() {
-        return UUID.randomUUID();
-    }
-
     public static ToscaConceptIdentifier getDefinition() {
         return new ToscaConceptIdentifier("org.onap.domain.pmsh.PMSH_DCAEMicroservice", "1.2.3");
     }
@@ -196,8 +192,6 @@ public class CommonTestData {
      * Returns a Map of ToscaConceptIdentifier and AutomationComposition for test cases.
      *
      * @return automationCompositionMap
-     *
-     * @throws CoderException if there is an error with .json file.
      */
     public static Map<UUID, AutomationComposition> getTestAutomationCompositionMap() {
         var automationCompositions = getTestAutomationCompositions();
@@ -211,8 +205,6 @@ public class CommonTestData {
      * Returns List of AutomationComposition for test cases.
      *
      * @return AutomationCompositions
-     *
-     * @throws CoderException if there is an error with .json file.
      */
     public static AutomationCompositions getTestAutomationCompositions() {
         try {
@@ -257,8 +249,11 @@ public class CommonTestData {
     public static ParticipantRestartAc createParticipantRestartAc() {
         var participantRestartAc = new ParticipantRestartAc();
         participantRestartAc.setAutomationCompositionId(AC_ID_0);
+        participantRestartAc.setDeployState(DeployState.DEPLOYED);
+        participantRestartAc.setLockState(LockState.LOCKED);
         var acElementRestart = new AcElementRestart();
         acElementRestart.setDefinition(getDefinition());
+        acElementRestart.setParticipantId(PARTCICIPANT_ID);
         acElementRestart.setDeployState(DeployState.DEPLOYED);
         acElementRestart.setLockState(LockState.LOCKED);
         acElementRestart.setOperationalState("OperationalState");

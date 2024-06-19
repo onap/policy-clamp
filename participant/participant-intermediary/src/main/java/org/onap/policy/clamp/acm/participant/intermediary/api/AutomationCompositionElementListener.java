@@ -20,9 +20,6 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.api;
 
-import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
-import org.onap.policy.clamp.models.acm.concepts.DeployState;
-import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.models.base.PfModelException;
 
 /**
@@ -88,11 +85,6 @@ public interface AutomationCompositionElementListener {
     void prime(CompositionDto composition) throws PfModelException;
 
     void deprime(CompositionDto composition) throws PfModelException;
-
-    void handleRestartComposition(CompositionDto composition, AcTypeState state) throws PfModelException;
-
-    void handleRestartInstance(CompositionElementDto compositionElement, InstanceElementDto instanceElement,
-            DeployState deployState, LockState lockState) throws PfModelException;
 
     /**
      * Handle an update on a automation composition element.

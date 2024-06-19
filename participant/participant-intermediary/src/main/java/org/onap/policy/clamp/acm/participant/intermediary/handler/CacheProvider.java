@@ -191,6 +191,9 @@ public class CacheProvider {
             ParticipantRestartAc participantRestartAc) {
         Map<UUID, AutomationCompositionElement> acElementMap = new LinkedHashMap<>();
         for (var element : participantRestartAc.getAcElementList()) {
+            if (!getParticipantId().equals(element.getParticipantId())) {
+                continue;
+            }
             var acElement = new AutomationCompositionElement();
             acElement.setId(element.getId());
             acElement.setParticipantId(getParticipantId());
@@ -201,12 +204,13 @@ public class CacheProvider {
             acElement.setUseState(element.getUseState());
             acElement.setProperties(element.getProperties());
             acElement.setOutProperties(element.getOutProperties());
-            acElement.setRestarting(true);
             acElementMap.put(element.getId(), acElement);
         }
 
         var automationComposition = new AutomationComposition();
         automationComposition.setCompositionId(compositionId);
+        automationComposition.setDeployState(participantRestartAc.getDeployState());
+        automationComposition.setLockState(participantRestartAc.getLockState());
         automationComposition.setInstanceId(participantRestartAc.getAutomationCompositionId());
         automationComposition.setElements(acElementMap);
         automationCompositions.put(automationComposition.getInstanceId(), automationComposition);

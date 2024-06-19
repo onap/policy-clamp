@@ -47,9 +47,9 @@ import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMe
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrime;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRegister;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRegisterAck;
-import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRestart;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantStatus;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantStatusReq;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantSync;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.PropertiesUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.LockOrder;
@@ -203,17 +203,19 @@ class ParticipantHandlerTest {
 
     @Test
     void handleParticipantRestartTest() {
-        var participantRestartMsg = new ParticipantRestart();
+        var participantRestartMsg = new ParticipantSync();
         participantRestartMsg.setState(AcTypeState.PRIMED);
         participantRestartMsg.setCompositionId(UUID.randomUUID());
+        participantRestartMsg.setReplicaId(CommonTestData.getReplicaId());
 
         var cacheProvider = mock(CacheProvider.class);
+        when(cacheProvider.getReplicaId()).thenReturn(CommonTestData.getReplicaId());
         var publisher = mock(ParticipantMessagePublisher.class);
         var acHandler = mock(AcDefinitionHandler.class);
         var participantHandler = new ParticipantHandler(mock(AutomationCompositionHandler.class),
                 mock(AcLockHandler.class), acHandler, publisher, cacheProvider);
 
-        participantHandler.handleParticipantRestart(participantRestartMsg);
+        participantHandler.handleParticipantSync(participantRestartMsg);
         verify(acHandler).handleParticipantRestart(participantRestartMsg);
     }
 
