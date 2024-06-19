@@ -24,9 +24,6 @@ import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationComposit
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
-import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
-import org.onap.policy.clamp.models.acm.concepts.DeployState;
-import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.models.base.PfModelException;
 
 public class DummyAcElementListener implements AutomationCompositionElementListener {
@@ -71,15 +68,6 @@ public class DummyAcElementListener implements AutomationCompositionElementListe
 
     @Override
     public void deprime(CompositionDto composition) throws PfModelException {
-    }
-
-    @Override
-    public void handleRestartComposition(CompositionDto composition, AcTypeState state) throws PfModelException {
-    }
-
-    @Override
-    public void handleRestartInstance(CompositionElementDto compositionElement, InstanceElementDto instanceElement,
-        DeployState deployState, LockState lockState) throws PfModelException {
     }
 
     @Override

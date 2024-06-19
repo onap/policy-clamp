@@ -36,7 +36,6 @@ import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMe
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrime;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRegister;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRegisterAck;
-import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRestart;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantStatus;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantStatusReq;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantSync;
@@ -198,26 +197,18 @@ public class ParticipantHandler {
     }
 
     /**
-     * Handle a ParticipantRestart message.
-     *
-     * @param participantRestartMsg the participantRestart message
-     */
-    @Timed(value = "listener.participant_restart", description = "PARTICIPANT_RESTART messages received")
-    public void handleParticipantRestart(ParticipantRestart participantRestartMsg) {
-        LOGGER.debug("ParticipantRestart message received for participantId {}",
-                participantRestartMsg.getParticipantId());
-        acDefinitionHandler.handleParticipantRestart(participantRestartMsg);
-    }
-
-    /**
      * Handle a ParticipantSync message.
      *
      * @param participantSyncMsg the participantSync message
      */
     @Timed(value = "listener.participant_sync_msg", description = "PARTICIPANT_SYNC messages received")
     public void handleParticipantSync(ParticipantSync participantSyncMsg) {
-        LOGGER.debug("ParticipantSync message received for participantId {}",
-                participantSyncMsg.getParticipantId());
+        if (participantSyncMsg.getExcludeReplicas().contains(cacheProvider.getReplicaId())) {
+            LOGGER.debug("Ignore ParticipantSync message {}", participantSyncMsg.getMessageId());
+            return;
+        }
+        LOGGER.debug("ParticipantSync message received for participantId {}", participantSyncMsg.getParticipantId());
+        acDefinitionHandler.handleParticipantSync(participantSyncMsg);
     }
 
     /**

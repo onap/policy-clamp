@@ -20,7 +20,6 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.handler;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.clearInvocations;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -29,7 +28,6 @@ import static org.mockito.Mockito.verify;
 
 import jakarta.ws.rs.core.Response.Status;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -39,11 +37,9 @@ import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElement
 import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
-import org.onap.policy.clamp.models.acm.concepts.AcElementRestart;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantRestartAc;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -189,30 +185,6 @@ class ThreadHandlerTest {
             threadHandler.deprime(messageId, composition);
             verify(intermediaryApi, timeout(TIMEOUT)).updateCompositionState(compositionId, AcTypeState.PRIMED,
                     StateChangeResult.FAILED, "Composition Defintion deprime failed");
-
-            clearInvocations(listener);
-            doThrow(new PfModelException(Status.INTERNAL_SERVER_ERROR, "Error")).when(listener)
-                    .handleRestartComposition(composition, AcTypeState.PRIMING);
-            threadHandler.restarted(messageId, composition, AcTypeState.PRIMING, List.of());
-            verify(intermediaryApi).updateCompositionState(compositionId, AcTypeState.PRIMED, StateChangeResult.FAILED,
-                    "Composition Defintion deprime failed");
-        }
-    }
-
-    @Test
-    void testRestarted() throws IOException, PfModelException {
-        var listener = mock(AutomationCompositionElementListener.class);
-        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        var cacheProvider = mock(CacheProvider.class);
-        try (var threadHandler = new ThreadHandler(listener, intermediaryApi, cacheProvider)) {
-            var messageId = UUID.randomUUID();
-            var compositionId = UUID.randomUUID();
-            var participantRestartAc = new ParticipantRestartAc();
-            participantRestartAc.setAutomationCompositionId(UUID.randomUUID());
-            participantRestartAc.getAcElementList().add(new AcElementRestart());
-            var composition = new CompositionDto(compositionId, Map.of(), Map.of());
-            threadHandler.restarted(messageId, composition, AcTypeState.PRIMED, List.of(participantRestartAc));
-            verify(listener, timeout(TIMEOUT)).handleRestartInstance(any(), any(), any(), any());
         }
     }
 }

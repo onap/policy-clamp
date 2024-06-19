@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.api.impl;
 
+import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,8 +45,11 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
  * Wrapper of AutomationCompositionElementListener.
  * Valid since 7.1.0 release.
  */
-public abstract class AcElementListenerV1 implements AutomationCompositionElementListener {
+public abstract class AcElementListenerV1
+        implements AutomationCompositionElementListener, AutomationCompositionElementListenerV1 {
     protected final ParticipantIntermediaryApi intermediaryApi;
+
+    private static final String NOT_SUPPORTED = "not supported!";
 
     protected AcElementListenerV1(ParticipantIntermediaryApi intermediaryApi) {
         this.intermediaryApi = intermediaryApi;
@@ -64,16 +68,11 @@ public abstract class AcElementListenerV1 implements AutomationCompositionElemen
         deploy(instanceElement.instanceId(), element, properties);
     }
 
-    public abstract void deploy(UUID instanceId, AcElementDeploy element, Map<String, Object> properties)
-        throws PfModelException;
-
     @Override
     public void undeploy(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
         throws PfModelException {
         undeploy(instanceElement.instanceId(), instanceElement.elementId());
     }
-
-    public abstract void undeploy(UUID instanceId, UUID elementId) throws PfModelException;
 
     @Override
     public void lock(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
@@ -81,6 +80,7 @@ public abstract class AcElementListenerV1 implements AutomationCompositionElemen
         lock(instanceElement.instanceId(), instanceElement.elementId());
     }
 
+    @Override
     public void lock(UUID instanceId, UUID elementId) throws PfModelException {
         intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId, null, LockState.LOCKED,
             StateChangeResult.NO_ERROR, "Locked");
@@ -92,6 +92,7 @@ public abstract class AcElementListenerV1 implements AutomationCompositionElemen
         unlock(instanceElement.instanceId(), instanceElement.elementId());
     }
 
+    @Override
     public void unlock(UUID instanceId, UUID elementId) throws PfModelException {
         intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId, null, LockState.UNLOCKED,
             StateChangeResult.NO_ERROR, "Unlocked");
@@ -103,6 +104,7 @@ public abstract class AcElementListenerV1 implements AutomationCompositionElemen
         delete(instanceElement.instanceId(), instanceElement.elementId());
     }
 
+    @Override
     public void delete(UUID instanceId, UUID elementId) throws PfModelException {
         intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId, DeployState.DELETED, null,
             StateChangeResult.NO_ERROR, "Deleted");
@@ -150,6 +152,7 @@ public abstract class AcElementListenerV1 implements AutomationCompositionElemen
         prime(composition.compositionId(), createAcElementDefinitionList(composition));
     }
 
+    @Override
     public void prime(UUID compositionId, List<AutomationCompositionElementDefinition> elementDefinitionList)
         throws PfModelException {
         intermediaryApi.updateCompositionState(compositionId, AcTypeState.PRIMED, StateChangeResult.NO_ERROR, "Primed");
@@ -160,14 +163,14 @@ public abstract class AcElementListenerV1 implements AutomationCompositionElemen
         deprime(composition.compositionId());
     }
 
+    @Override
     public void deprime(UUID compositionId) throws PfModelException {
         intermediaryApi.updateCompositionState(compositionId, AcTypeState.COMMISSIONED, StateChangeResult.NO_ERROR,
             "Deprimed");
     }
 
-    @Override
     public void handleRestartComposition(CompositionDto composition, AcTypeState state) throws PfModelException {
-        handleRestartComposition(composition.compositionId(), createAcElementDefinitionList(composition), state);
+        throw new PfModelException(Response.Status.BAD_REQUEST, NOT_SUPPORTED);
     }
 
     /**
@@ -180,24 +183,12 @@ public abstract class AcElementListenerV1 implements AutomationCompositionElemen
      */
     public void handleRestartComposition(UUID compositionId,
         List<AutomationCompositionElementDefinition> elementDefinitionList, AcTypeState state) throws PfModelException {
-        switch (state) {
-            case PRIMING -> prime(compositionId, elementDefinitionList);
-            case DEPRIMING -> deprime(compositionId);
-            default ->
-                intermediaryApi.updateCompositionState(compositionId, state, StateChangeResult.NO_ERROR, "Restarted");
-        }
+        throw new PfModelException(Response.Status.BAD_REQUEST, NOT_SUPPORTED);
     }
 
-    @Override
     public void handleRestartInstance(CompositionElementDto compositionElement, InstanceElementDto instanceElement,
         DeployState deployState, LockState lockState) throws PfModelException {
-        var element = new  AcElementDeploy();
-        element.setId(instanceElement.elementId());
-        element.setDefinition(compositionElement.elementDefinitionId());
-        element.setProperties(instanceElement.inProperties());
-        Map<String, Object> properties = new HashMap<>(instanceElement.inProperties());
-        properties.putAll(compositionElement.inProperties());
-        handleRestartInstance(instanceElement.instanceId(), element, properties, deployState, lockState);
+        throw new PfModelException(Response.Status.BAD_REQUEST, NOT_SUPPORTED);
     }
 
     /**
@@ -212,33 +203,8 @@ public abstract class AcElementListenerV1 implements AutomationCompositionElemen
      */
     public void handleRestartInstance(UUID instanceId, AcElementDeploy element,
         Map<String, Object> properties, DeployState deployState, LockState lockState) throws PfModelException {
+        throw new PfModelException(Response.Status.BAD_REQUEST, NOT_SUPPORTED);
 
-        if (DeployState.DEPLOYING.equals(deployState)) {
-            deploy(instanceId, element, properties);
-            return;
-        }
-        if (DeployState.UNDEPLOYING.equals(deployState)) {
-            undeploy(instanceId, element.getId());
-            return;
-        }
-        if (DeployState.UPDATING.equals(deployState)) {
-            update(instanceId, element, properties);
-            return;
-        }
-        if (DeployState.DELETING.equals(deployState)) {
-            delete(instanceId, element.getId());
-            return;
-        }
-        if (LockState.LOCKING.equals(lockState)) {
-            lock(instanceId, element.getId());
-            return;
-        }
-        if (LockState.UNLOCKING.equals(lockState)) {
-            unlock(instanceId, element.getId());
-            return;
-        }
-        intermediaryApi.updateAutomationCompositionElementState(instanceId, element.getId(),
-            deployState, lockState, StateChangeResult.NO_ERROR, "Restarted");
     }
 
     @Override
@@ -252,6 +218,7 @@ public abstract class AcElementListenerV1 implements AutomationCompositionElemen
             element.getProperties());
     }
 
+    @Override
     public void migrate(UUID instanceId, AcElementDeploy element, UUID compositionTargetId,
                         Map<String, Object> properties) throws PfModelException {
         intermediaryApi.updateAutomationCompositionElementState(instanceId, element.getId(),
