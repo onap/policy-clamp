@@ -34,7 +34,7 @@ import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrime;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrimeAck;
-import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRestart;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantSync;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -107,32 +107,33 @@ public class AcDefinitionHandler {
     }
 
     /**
-     * Handle a ParticipantRestart message.
+     * Handle a Participant Sync message.
      *
-     * @param participantRestartMsg the participantRestart message
+     * @param participantSyncMsg the participantRestart message
      */
-    public void handleParticipantRestart(ParticipantRestart participantRestartMsg) {
-        List<AutomationCompositionElementDefinition> list = new ArrayList<>();
-        for (var participantDefinition : participantRestartMsg.getParticipantDefinitionUpdates()) {
-            list.addAll(participantDefinition.getAutomationCompositionElementDefinitionList());
-        }
-        if (!AcTypeState.COMMISSIONED.equals(participantRestartMsg.getState())) {
-            cacheProvider.addElementDefinition(participantRestartMsg.getCompositionId(), list);
+    public void handleParticipantSync(ParticipantSync participantSyncMsg) {
+
+        if (participantSyncMsg.isDelete()) {
+            if (AcTypeState.COMMISSIONED.equals(participantSyncMsg.getState())) {
+                cacheProvider.removeElementDefinition(participantSyncMsg.getCompositionId());
+            }
+            for (var automationcomposition : participantSyncMsg.getAutomationcompositionList()) {
+                cacheProvider.removeAutomationComposition(automationcomposition.getAutomationCompositionId());
+            }
+            return;
         }
 
-        for (var automationcomposition : participantRestartMsg.getAutomationcompositionList()) {
-            cacheProvider
-                    .initializeAutomationComposition(participantRestartMsg.getCompositionId(), automationcomposition);
+        if (!participantSyncMsg.getParticipantDefinitionUpdates().isEmpty()) {
+            List<AutomationCompositionElementDefinition> list = new ArrayList<>();
+            for (var participantDefinition : participantSyncMsg.getParticipantDefinitionUpdates()) {
+                list.addAll(participantDefinition.getAutomationCompositionElementDefinitionList());
+            }
+            cacheProvider.addElementDefinition(participantSyncMsg.getCompositionId(), list);
         }
-        var inPropertiesMap = list.stream().collect(Collectors.toMap(
-                AutomationCompositionElementDefinition::getAcElementDefinitionId,
-                el -> el.getAutomationCompositionElementToscaNodeTemplate().getProperties()));
-        var outPropertiesMap = list.stream().collect(Collectors.toMap(
-                AutomationCompositionElementDefinition::getAcElementDefinitionId,
-                AutomationCompositionElementDefinition::getOutProperties));
-        var composition =
-                new CompositionDto(participantRestartMsg.getCompositionId(), inPropertiesMap, outPropertiesMap);
-        listener.restarted(participantRestartMsg.getMessageId(), composition, participantRestartMsg.getState(),
-                participantRestartMsg.getAutomationcompositionList());
+
+        for (var automationcomposition : participantSyncMsg.getAutomationcompositionList()) {
+            cacheProvider
+                    .initializeAutomationComposition(participantSyncMsg.getCompositionId(), automationcomposition);
+        }
     }
 }

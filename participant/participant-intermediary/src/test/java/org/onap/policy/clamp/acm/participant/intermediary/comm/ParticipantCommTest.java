@@ -77,10 +77,6 @@ class ParticipantCommTest {
         assertEquals(ParticipantMessageType.AUTOMATION_COMPOSITION_STATE_CHANGE.name(),
                 automationCompositionStateChangeListener.getType());
 
-        var participantRestartListener = new ParticipantRestartListener(participantHandler);
-        assertEquals(ParticipantMessageType.PARTICIPANT_RESTART.name(),
-                participantRestartListener.getType());
-
         var participantSyncListener = new ParticipantSyncListener(participantHandler);
         assertEquals(ParticipantMessageType.PARTICIPANT_SYNC_MSG.name(),
                 participantSyncListener.getType());

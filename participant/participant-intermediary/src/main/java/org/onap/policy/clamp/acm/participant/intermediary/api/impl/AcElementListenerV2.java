@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.api.impl;
 
+import jakarta.ws.rs.core.Response;
 import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
@@ -84,46 +85,13 @@ public abstract class AcElementListenerV2 implements AutomationCompositionElemen
             StateChangeResult.NO_ERROR, "Deprimed");
     }
 
-    @Override
     public void handleRestartComposition(CompositionDto composition, AcTypeState state) throws PfModelException {
-        switch (state) {
-            case PRIMING -> prime(composition);
-            case DEPRIMING -> deprime(composition);
-            default -> intermediaryApi
-                .updateCompositionState(composition.compositionId(), state, StateChangeResult.NO_ERROR, "Restarted");
-        }
+        throw new PfModelException(Response.Status.BAD_REQUEST, "not supported!");
     }
 
-    @Override
     public void handleRestartInstance(CompositionElementDto compositionElement, InstanceElementDto instanceElement,
                                       DeployState deployState, LockState lockState) throws PfModelException {
-
-        if (DeployState.DEPLOYING.equals(deployState)) {
-            deploy(compositionElement, instanceElement);
-            return;
-        }
-        if (DeployState.UNDEPLOYING.equals(deployState)) {
-            undeploy(compositionElement, instanceElement);
-            return;
-        }
-        if (DeployState.UPDATING.equals(deployState)) {
-            update(compositionElement, instanceElement, instanceElement);
-            return;
-        }
-        if (DeployState.DELETING.equals(deployState)) {
-            delete(compositionElement, instanceElement);
-            return;
-        }
-        if (LockState.LOCKING.equals(lockState)) {
-            lock(compositionElement, instanceElement);
-            return;
-        }
-        if (LockState.UNLOCKING.equals(lockState)) {
-            unlock(compositionElement, instanceElement);
-            return;
-        }
-        intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
-            instanceElement.elementId(), deployState, lockState, StateChangeResult.NO_ERROR, "Restarted");
+        throw new PfModelException(Response.Status.BAD_REQUEST, "not supported!");
     }
 
     @Override

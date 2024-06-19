@@ -42,7 +42,6 @@ import org.onap.policy.clamp.acm.participant.kserve.exception.KserveException;
 import org.onap.policy.clamp.acm.participant.kserve.k8s.KserveClient;
 import org.onap.policy.clamp.acm.participant.kserve.utils.CommonTestData;
 import org.onap.policy.clamp.acm.participant.kserve.utils.ToscaUtils;
-import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 class AcElementHandlerTest {

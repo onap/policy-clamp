@@ -20,8 +20,8 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.api.impl;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.clearInvocations;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -51,11 +51,6 @@ class AcElementListenerV1Test {
         var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), null, Map.of(), Map.of());
         acElementListenerV1.deploy(compositionElement, instanceElement);
         verify(acElementListenerV1).deploy(any(), any(), any());
-
-        clearInvocations(acElementListenerV1);
-        acElementListenerV1.handleRestartInstance(compositionElement, instanceElement,
-            DeployState.DEPLOYING, LockState.NONE);
-        verify(acElementListenerV1).deploy(any(), any(), any());
     }
 
     @Test
@@ -65,11 +60,6 @@ class AcElementListenerV1Test {
             Map.of(), Map.of());
         var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), null, Map.of(), Map.of());
         acElementListenerV1.undeploy(compositionElement, instanceElement);
-        verify(acElementListenerV1).undeploy(instanceElement.instanceId(), instanceElement.elementId());
-
-        clearInvocations(acElementListenerV1);
-        acElementListenerV1.handleRestartInstance(compositionElement, instanceElement,
-            DeployState.UNDEPLOYING, LockState.NONE);
         verify(acElementListenerV1).undeploy(instanceElement.instanceId(), instanceElement.elementId());
     }
 
@@ -147,66 +137,17 @@ class AcElementListenerV1Test {
     }
 
     @Test
-    void handleRestartComposition() throws PfModelException {
-        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        var acElementListenerV1 = createAcElementListenerV1(intermediaryApi);
-        var compositionId = UUID.randomUUID();
-        var toscaConceptIdentifier = new ToscaConceptIdentifier();
-        var composition = new CompositionDto(compositionId, Map.of(toscaConceptIdentifier, Map.of()), Map.of());
-
-        acElementListenerV1.handleRestartComposition(composition, AcTypeState.PRIMED);
-        verify(intermediaryApi)
-            .updateCompositionState(compositionId, AcTypeState.PRIMED, StateChangeResult.NO_ERROR, "Restarted");
-
-        clearInvocations(intermediaryApi);
-        acElementListenerV1.handleRestartComposition(composition, AcTypeState.PRIMING);
-        verify(intermediaryApi)
-            .updateCompositionState(compositionId, AcTypeState.PRIMED, StateChangeResult.NO_ERROR, "Primed");
-
-        clearInvocations(intermediaryApi);
-        acElementListenerV1.handleRestartComposition(composition, AcTypeState.DEPRIMING);
-        verify(intermediaryApi)
-            .updateCompositionState(compositionId, AcTypeState.COMMISSIONED, StateChangeResult.NO_ERROR, "Deprimed");
+    void handleRestartComposition() {
+        var acElementListenerV1 = createAcElementListenerV1(mock(ParticipantIntermediaryApi.class));
+        assertThatThrownBy(() -> acElementListenerV1.handleRestartComposition(null, null))
+                .isInstanceOf(PfModelException.class);
     }
 
     @Test
-    void handleRestartInstance() throws PfModelException {
-        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        var acElementListenerV1 = createAcElementListenerV1(intermediaryApi);
-        var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
-            Map.of(), Map.of());
-        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), null, Map.of(), Map.of());
-
-        acElementListenerV1.handleRestartInstance(compositionElement, instanceElement,
-            DeployState.DEPLOYED, LockState.LOCKED);
-        verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
-            instanceElement.elementId(), DeployState.DEPLOYED, LockState.LOCKED,
-            StateChangeResult.NO_ERROR, "Restarted");
-
-        clearInvocations(intermediaryApi);
-        acElementListenerV1.handleRestartInstance(compositionElement, instanceElement,
-            DeployState.DEPLOYED, LockState.LOCKING);
-        verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
-            instanceElement.elementId(), null, LockState.LOCKED, StateChangeResult.NO_ERROR, "Locked");
-
-        clearInvocations(intermediaryApi);
-        acElementListenerV1.handleRestartInstance(compositionElement, instanceElement,
-            DeployState.DEPLOYED, LockState.UNLOCKING);
-        verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
-            instanceElement.elementId(), null, LockState.UNLOCKED, StateChangeResult.NO_ERROR, "Unlocked");
-
-        clearInvocations(intermediaryApi);
-        acElementListenerV1.handleRestartInstance(compositionElement, instanceElement,
-            DeployState.UPDATING, LockState.LOCKED);
-        verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
-            instanceElement.elementId(), DeployState.DEPLOYED, null,
-            StateChangeResult.NO_ERROR, "Update not supported");
-
-        clearInvocations(intermediaryApi);
-        acElementListenerV1.handleRestartInstance(compositionElement, instanceElement,
-            DeployState.DELETING, LockState.NONE);
-        verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
-            instanceElement.elementId(), DeployState.DELETED, null, StateChangeResult.NO_ERROR, "Deleted");
+    void handleRestartInstance() {
+        var acElementListenerV1 = createAcElementListenerV1(mock(ParticipantIntermediaryApi.class));
+        assertThatThrownBy(() -> acElementListenerV1.handleRestartInstance(null, null,
+                null, null)).isInstanceOf(PfModelException.class);
     }
 
     @Test

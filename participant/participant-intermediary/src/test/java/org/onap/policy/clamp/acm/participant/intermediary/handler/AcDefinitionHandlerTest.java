@@ -37,7 +37,7 @@ import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrime;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrimeAck;
-import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRestart;
+import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantSync;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class AcDefinitionHandlerTest {
@@ -94,18 +94,36 @@ class AcDefinitionHandlerTest {
     }
 
     @Test
-    void restartedTest() {
-        var participantRestartMsg = new ParticipantRestart();
-        participantRestartMsg.setState(AcTypeState.PRIMED);
-        participantRestartMsg.setCompositionId(UUID.randomUUID());
-        participantRestartMsg.getParticipantDefinitionUpdates().add(createParticipantDefinition());
-        participantRestartMsg.setAutomationcompositionList(List.of(CommonTestData.createParticipantRestartAc()));
+    void syncTest() {
+        var participantSyncMsg = new ParticipantSync();
+        participantSyncMsg.setState(AcTypeState.PRIMED);
+        participantSyncMsg.setCompositionId(UUID.randomUUID());
+        participantSyncMsg.getParticipantDefinitionUpdates().add(createParticipantDefinition());
+        participantSyncMsg.setAutomationcompositionList(List.of(CommonTestData.createParticipantRestartAc()));
 
         var cacheProvider = mock(CacheProvider.class);
         var listener = mock(ThreadHandler.class);
         var ach = new AcDefinitionHandler(cacheProvider, mock(ParticipantMessagePublisher.class), listener);
-        ach.handleParticipantRestart(participantRestartMsg);
+        ach.handleParticipantSync(participantSyncMsg);
         verify(cacheProvider).initializeAutomationComposition(any(UUID.class), any());
         verify(cacheProvider).addElementDefinition(any(), any());
+    }
+
+    @Test
+    void syncDeleteTest() {
+        var participantSyncMsg = new ParticipantSync();
+        participantSyncMsg.setState(AcTypeState.COMMISSIONED);
+        participantSyncMsg.setDelete(true);
+        participantSyncMsg.setCompositionId(UUID.randomUUID());
+        participantSyncMsg.getParticipantDefinitionUpdates().add(createParticipantDefinition());
+        var restartAc = CommonTestData.createParticipantRestartAc();
+        participantSyncMsg.setAutomationcompositionList(List.of(restartAc));
+
+        var cacheProvider = mock(CacheProvider.class);
+        var listener = mock(ThreadHandler.class);
+        var ach = new AcDefinitionHandler(cacheProvider, mock(ParticipantMessagePublisher.class), listener);
+        ach.handleParticipantSync(participantSyncMsg);
+        verify(cacheProvider).removeElementDefinition(participantSyncMsg.getCompositionId());
+        verify(cacheProvider).removeAutomationComposition(restartAc.getAutomationCompositionId());
     }
 }
