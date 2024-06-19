@@ -23,9 +23,10 @@ package org.onap.policy.clamp.acm.runtime.supervision;
 
 import io.micrometer.core.annotation.Timed;
 import lombok.AllArgsConstructor;
-import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
+import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
+import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrimeAck;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
@@ -43,7 +44,7 @@ public class SupervisionHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(SupervisionHandler.class);
 
     private final AcDefinitionProvider acDefinitionProvider;
-    private final AcRuntimeParameterGroup acRuntimeParameterGroup;
+    private final ParticipantSyncPublisher participantSyncPublisher;
 
     /**
      * Handle a ParticipantPrimeAck message from a participant.
@@ -82,12 +83,7 @@ public class SupervisionHandler {
         boolean completed = true;
         boolean restarting = false;
         for (var element : acDefinition.getElementStateMap().values()) {
-            if (participantPrimeAckMessage.getParticipantId().equals(element.getParticipantId())) {
-                element.setMessage(participantPrimeAckMessage.getMessage());
-                element.setState(participantPrimeAckMessage.getCompositionState());
-                element.setRestarting(null);
-                acDefinitionProvider.updateAcDefinitionElement(element, acDefinition.getCompositionId());
-            }
+            handlePrimeAckElement(participantPrimeAckMessage, element);
             if (!finalState.equals(element.getState())) {
                 completed = false;
             }
@@ -110,6 +106,18 @@ public class SupervisionHandler {
         if (toUpdate) {
             acDefinitionProvider.updateAcDefinitionState(acDefinition.getCompositionId(), acDefinition.getState(),
                 acDefinition.getStateChangeResult(), acDefinition.getRestarting());
+            if (!participantPrimeAckMessage.getParticipantId().equals(participantPrimeAckMessage.getReplicaId())) {
+                participantSyncPublisher.sendSync(acDefinition, participantPrimeAckMessage.getReplicaId());
+            }
+        }
+    }
+
+    private void handlePrimeAckElement(ParticipantPrimeAck participantPrimeAckMessage, NodeTemplateState element) {
+        if (participantPrimeAckMessage.getParticipantId().equals(element.getParticipantId())) {
+            element.setMessage(participantPrimeAckMessage.getMessage());
+            element.setState(participantPrimeAckMessage.getCompositionState());
+            element.setRestarting(null);
+            acDefinitionProvider.updateAcDefinitionElement(element, participantPrimeAckMessage.getCompositionId());
         }
     }
 }

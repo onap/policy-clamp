@@ -374,6 +374,9 @@ class InstantiationControllerTest extends CommonRestController {
     }
 
     private void saveDummyParticipantInDb() {
-        participantProvider.saveParticipant(CommonTestData.createParticipant(CommonTestData.getParticipantId()));
+        var participant = CommonTestData.createParticipant(CommonTestData.getParticipantId());
+        var replica = CommonTestData.createParticipantReplica(CommonTestData.getReplicaId());
+        participant.getReplicas().put(replica.getReplicaId(), replica);
+        participantProvider.saveParticipant(participant);
     }
 }

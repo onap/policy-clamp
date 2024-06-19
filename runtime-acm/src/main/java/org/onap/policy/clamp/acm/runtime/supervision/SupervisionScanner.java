@@ -27,6 +27,7 @@ import java.util.UUID;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionDeployPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionStateChangePublisher;
+import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
@@ -55,6 +56,7 @@ public class SupervisionScanner {
     private final AcDefinitionProvider acDefinitionProvider;
     private final AutomationCompositionStateChangePublisher automationCompositionStateChangePublisher;
     private final AutomationCompositionDeployPublisher automationCompositionDeployPublisher;
+    private final ParticipantSyncPublisher participantSyncPublisher;
 
     /**
      * Constructor for instantiating SupervisionScanner.
@@ -69,11 +71,13 @@ public class SupervisionScanner {
             final AcDefinitionProvider acDefinitionProvider,
             final AutomationCompositionStateChangePublisher automationCompositionStateChangePublisher,
             final AutomationCompositionDeployPublisher automationCompositionDeployPublisher,
+            final ParticipantSyncPublisher participantSyncPublisher,
             final AcRuntimeParameterGroup acRuntimeParameterGroup) {
         this.automationCompositionProvider = automationCompositionProvider;
         this.acDefinitionProvider = acDefinitionProvider;
         this.automationCompositionStateChangePublisher = automationCompositionStateChangePublisher;
         this.automationCompositionDeployPublisher = automationCompositionDeployPublisher;
+        this.participantSyncPublisher = participantSyncPublisher;
         this.maxStatusWaitMs = acRuntimeParameterGroup.getParticipantParameters().getMaxStatusWaitMs();
     }
 
@@ -118,6 +122,7 @@ public class SupervisionScanner {
         if (completed) {
             acDefinitionProvider.updateAcDefinitionState(acDefinition.getCompositionId(), finalState,
                 StateChangeResult.NO_ERROR, null);
+            participantSyncPublisher.sendSync(acDefinition, null);
         } else {
             handleTimeout(acDefinition);
         }
@@ -132,7 +137,6 @@ public class SupervisionScanner {
                 || StateChangeResult.FAILED.equals(automationComposition.getStateChangeResult())) {
             LOGGER.debug("automation composition {} scanned, OK", automationComposition.getInstanceId());
 
-            // Clear Timeout on automation composition
             return;
         }
 
@@ -158,7 +162,7 @@ public class SupervisionScanner {
             LOGGER.debug("automation composition scan: transition state {} {} completed",
                     automationComposition.getDeployState(), automationComposition.getLockState());
 
-            complete(automationComposition);
+            complete(automationComposition, serviceTemplate);
         } else {
             LOGGER.debug("automation composition scan: transition state {} {} not completed",
                     automationComposition.getDeployState(), automationComposition.getLockState());
@@ -183,7 +187,8 @@ public class SupervisionScanner {
         }
     }
 
-    private void complete(final AutomationComposition automationComposition) {
+    private void complete(final AutomationComposition automationComposition,
+            ToscaServiceTemplate serviceTemplate) {
         var deployState = automationComposition.getDeployState();
         if (DeployState.MIGRATING.equals(automationComposition.getDeployState())) {
             // migration scenario
@@ -201,6 +206,7 @@ public class SupervisionScanner {
         } else {
             automationCompositionProvider.updateAutomationComposition(automationComposition);
         }
+        participantSyncPublisher.sendSync(serviceTemplate, automationComposition);
     }
 
     private void handleTimeout(AutomationCompositionDefinition acDefinition) {

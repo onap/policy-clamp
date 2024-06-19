@@ -25,7 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.HashMap;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
-import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 
 class ParticipantInformationTest {
 
@@ -33,8 +32,6 @@ class ParticipantInformationTest {
     void testCopyConstructor() {
         var participant = new Participant();
         participant.setParticipantId(UUID.randomUUID());
-        participant.setParticipantState(ParticipantState.ON_LINE);
-        participant.setLastMsg(TimestampHelper.now());
         participant.setParticipantSupportedElementTypes(new HashMap<>());
         var participantInfo1 = new ParticipantInformation();
         participantInfo1.setParticipant(participant);

@@ -33,6 +33,7 @@ import org.onap.policy.clamp.acm.runtime.supervision.comm.AcElementPropertiesPub
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionDeployPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionMigrationPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionStateChangePublisher;
+import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeployAck;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
@@ -42,6 +43,7 @@ import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeployAck;
+import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.slf4j.Logger;
@@ -58,12 +60,14 @@ public class SupervisionAcHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(SupervisionAcHandler.class);
 
     private final AutomationCompositionProvider automationCompositionProvider;
+    private final AcDefinitionProvider acDefinitionProvider;
 
     // Publishers for participant communication
     private final AutomationCompositionDeployPublisher automationCompositionDeployPublisher;
     private final AutomationCompositionStateChangePublisher automationCompositionStateChangePublisher;
     private final AcElementPropertiesPublisher acElementPropertiesPublisher;
     private final AutomationCompositionMigrationPublisher acCompositionMigrationPublisher;
+    private final ParticipantSyncPublisher participantSyncPublisher;
 
     private final ExecutorService executor = Context.taskWrapping(Executors.newFixedThreadPool(1));
 
@@ -260,6 +264,8 @@ public class SupervisionAcHandler {
                 automationCompositionAckMessage.getStateChangeResult());
         if (updated) {
             automationCompositionProvider.updateAutomationComposition(automationComposition);
+            var acDefinition = acDefinitionProvider.getAcDefinition(automationComposition.getCompositionId());
+            participantSyncPublisher.sendSync(acDefinition.getServiceTemplate(), automationComposition);
         }
     }
 

@@ -41,9 +41,9 @@ public class SupervisionAspect implements Closeable {
     private static final Logger LOGGER = LoggerFactory.getLogger(SupervisionAspect.class);
 
     private final SupervisionScanner supervisionScanner;
-    private final SupervisionPartecipantScanner partecipantScanner;
+    private final SupervisionParticipantScanner participantScanner;
 
-    private ThreadPoolExecutor executor =
+    private final ThreadPoolExecutor executor =
             new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
 
     @Scheduled(
@@ -56,7 +56,7 @@ public class SupervisionAspect implements Closeable {
 
     private void executeScan() {
         supervisionScanner.run();
-        partecipantScanner.run();
+        participantScanner.run();
     }
 
     /**

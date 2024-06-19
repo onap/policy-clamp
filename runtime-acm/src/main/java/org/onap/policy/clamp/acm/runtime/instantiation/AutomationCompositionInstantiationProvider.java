@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
-import org.onap.policy.clamp.acm.runtime.participants.AcmParticipantProvider;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionAcHandler;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
@@ -43,6 +42,7 @@ import org.onap.policy.clamp.models.acm.messages.rest.instantiation.Instantiatio
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcInstanceStateResolver;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
+import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.common.parameters.ObjectValidationResult;
@@ -69,7 +69,7 @@ public class AutomationCompositionInstantiationProvider {
     private final AcDefinitionProvider acDefinitionProvider;
     private final AcInstanceStateResolver acInstanceStateResolver;
     private final SupervisionAcHandler supervisionAcHandler;
-    private final AcmParticipantProvider acmParticipantProvider;
+    private final ParticipantProvider participantProvider;
     private final AcRuntimeParameterGroup acRuntimeParameterGroup;
 
     /**
@@ -265,7 +265,7 @@ public class AutomationCompositionInstantiationProvider {
         var participantIds = acDefinitionOpt.get().getElementStateMap().values().stream()
                 .map(NodeTemplateState::getParticipantId).collect(Collectors.toSet());
 
-        acmParticipantProvider.verifyParticipantState(participantIds);
+        participantProvider.verifyParticipantState(participantIds);
 
         result.addResult(AcmUtils.validateAutomationComposition(automationComposition,
                 acDefinitionOpt.get().getServiceTemplate(),
@@ -331,7 +331,7 @@ public class AutomationCompositionInstantiationProvider {
         var acDefinition = acDefinitionProvider.getAcDefinition(automationComposition.getCompositionId());
         var participantIds = acDefinition.getElementStateMap().values().stream()
             .map(NodeTemplateState::getParticipantId).collect(Collectors.toSet());
-        acmParticipantProvider.verifyParticipantState(participantIds);
+        participantProvider.verifyParticipantState(participantIds);
         supervisionAcHandler.delete(automationComposition, acDefinition);
         var response = new InstantiationResponse();
         response.setInstanceId(automationComposition.getInstanceId());
@@ -374,7 +374,7 @@ public class AutomationCompositionInstantiationProvider {
         var participantIds = acDefinition.getElementStateMap().values().stream()
                 .map(NodeTemplateState::getParticipantId).collect(Collectors.toSet());
 
-        acmParticipantProvider.verifyParticipantState(participantIds);
+        participantProvider.verifyParticipantState(participantIds);
         var result = acInstanceStateResolver.resolve(acInstanceStateUpdate.getDeployOrder(),
                 acInstanceStateUpdate.getLockOrder(), automationComposition.getDeployState(),
                 automationComposition.getLockState(), automationComposition.getStateChangeResult());

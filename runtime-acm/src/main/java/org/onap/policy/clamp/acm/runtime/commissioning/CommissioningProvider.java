@@ -29,7 +29,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
-import org.onap.policy.clamp.acm.runtime.participants.AcmParticipantProvider;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantPrimePublisher;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
@@ -39,6 +38,7 @@ import org.onap.policy.clamp.models.acm.messages.rest.commissioning.Commissionin
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcTypeStateResolver;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
+import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
@@ -56,7 +56,7 @@ public class CommissioningProvider {
 
     private final AcDefinitionProvider acDefinitionProvider;
     private final AutomationCompositionProvider acProvider;
-    private final AcmParticipantProvider acmParticipantProvider;
+    private final ParticipantProvider participantProvider;
     private final AcTypeStateResolver acTypeStateResolver;
     private final ParticipantPrimePublisher participantPrimePublisher;
     private final AcRuntimeParameterGroup acRuntimeParameterGroup;
@@ -229,7 +229,7 @@ public class CommissioningProvider {
             }
         }
         if (!participantIds.isEmpty()) {
-            acmParticipantProvider.verifyParticipantState(participantIds);
+            participantProvider.verifyParticipantState(participantIds);
         }
         acmDefinition.setState(AcTypeState.DEPRIMING);
         acmDefinition.setLastMsg(TimestampHelper.now());

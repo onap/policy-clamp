@@ -31,7 +31,6 @@ import java.util.Map;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
-import org.onap.policy.clamp.acm.runtime.participants.AcmParticipantProvider;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
@@ -55,7 +54,6 @@ public class ParticipantPrimePublisher extends AbstractParticipantPublisher<Part
     private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantPrimePublisher.class);
 
     private final ParticipantProvider participantProvider;
-    private final AcmParticipantProvider acmParticipantProvider;
     private final AcRuntimeParameterGroup acRuntimeParameterGroup;
 
     /**
@@ -99,9 +97,7 @@ public class ParticipantPrimePublisher extends AbstractParticipantPublisher<Part
                 var elementState = acmDefinition.getElementStateMap().get(elementEntry.getKey());
                 elementState.setState(AcTypeState.PRIMING);
                 participantIds.add(elementState.getParticipantId());
-                var type = new ToscaConceptIdentifier(elementEntry.getValue().getType(),
-                        elementEntry.getValue().getTypeVersion());
-                supportedElementMap.put(type, elementState.getParticipantId());
+                supportedElementMap.put(AcmUtils.getType(elementEntry.getValue()), elementState.getParticipantId());
             }
         } else {
             // scenario Prime participants not assigned yet
@@ -109,16 +105,14 @@ public class ParticipantPrimePublisher extends AbstractParticipantPublisher<Part
             for (var elementEntry : acElements) {
                 var elementState = acmDefinition.getElementStateMap().get(elementEntry.getKey());
                 elementState.setState(AcTypeState.PRIMING);
-                var type = new ToscaConceptIdentifier(elementEntry.getValue().getType(),
-                        elementEntry.getValue().getTypeVersion());
-                var participantId = supportedElementMap.get(type);
+                var participantId = supportedElementMap.get(AcmUtils.getType(elementEntry.getValue()));
                 if (participantId != null) {
                     elementState.setParticipantId(participantId);
                     participantIds.add(participantId);
                 }
             }
         }
-        acmParticipantProvider.verifyParticipantState(participantIds);
+        participantProvider.verifyParticipantState(participantIds);
         return AcmUtils.prepareParticipantPriming(acElements, supportedElementMap);
     }
 

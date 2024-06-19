@@ -27,15 +27,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
-import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 
 /**
  * Test the {@link JpaParticipant} class.
@@ -47,30 +43,23 @@ class JpaParticipantTest {
     @Test
     void testJpaParticipantConstructor() {
         assertThatThrownBy(() -> new JpaParticipant((Participant) null))
-                .hasMessageMatching("authorativeConcept is marked .*ull but is null");
+            .hasMessageMatching("authorativeConcept is marked .*ull but is null");
 
         assertThatThrownBy(() -> new JpaParticipant((JpaParticipant) null))
             .hasMessageMatching("copyConcept is marked .*ull but is null");
 
-        assertThatThrownBy(() -> new JpaParticipant(null, ParticipantState.ON_LINE,
-                new ArrayList<>(), new ArrayList<>()))
+        assertThatThrownBy(() -> new JpaParticipant(null, new ArrayList<>(), new ArrayList<>()))
             .hasMessageMatching(NULL_KEY_ERROR);
 
-        assertThatThrownBy(() -> new JpaParticipant(UUID.randomUUID().toString(), null,
-                new ArrayList<>(), new ArrayList<>()))
-            .hasMessageMatching("participantState is marked .*ull but is null");
-
-        assertThatThrownBy(() -> new JpaParticipant(UUID.randomUUID().toString(), ParticipantState.ON_LINE,
-                null, new ArrayList<>()))
+        assertThatThrownBy(() -> new JpaParticipant(UUID.randomUUID().toString(), null, new ArrayList<>()))
             .hasMessageMatching("supportedElements is marked .*ull but is null");
 
-        assertThatThrownBy(() -> new JpaParticipant(UUID.randomUUID().toString(), ParticipantState.ON_LINE,
-                new ArrayList<>(), null))
-                .hasMessageMatching("replicas is marked .*ull but is null");
+        assertThatThrownBy(() -> new JpaParticipant(UUID.randomUUID().toString(), new ArrayList<>(), null))
+            .hasMessageMatching("replicas is marked .*ull but is null");
 
         assertDoesNotThrow(() -> new JpaParticipant());
         assertDoesNotThrow(() -> new JpaParticipant(UUID.randomUUID().toString(),
-            ParticipantState.ON_LINE, new ArrayList<>(), new ArrayList<>()));
+                new ArrayList<>(), new ArrayList<>()));
     }
 
     @Test
@@ -116,18 +105,6 @@ class JpaParticipantTest {
         assertEquals(0, testJpaParticipant.compareTo(testJpaParticipant));
         assertNotEquals(0, testJpaParticipant.compareTo(new DummyJpaParticipantChild()));
 
-        testJpaParticipant.setParticipantState(ParticipantState.OFF_LINE);
-        assertNotEquals(0, testJpaParticipant.compareTo(otherJpaParticipant));
-        testJpaParticipant.setParticipantState(ParticipantState.ON_LINE);
-        assertEquals(0, testJpaParticipant.compareTo(otherJpaParticipant));
-        assertEquals(testJpaParticipant, new JpaParticipant(testJpaParticipant));
-
-        testJpaParticipant.setLastMsg(Timestamp.from(Instant.EPOCH));
-        assertNotEquals(0, testJpaParticipant.compareTo(otherJpaParticipant));
-        testJpaParticipant.setLastMsg(otherJpaParticipant.getLastMsg());
-        assertEquals(0, testJpaParticipant.compareTo(otherJpaParticipant));
-        assertEquals(testJpaParticipant, new JpaParticipant(testJpaParticipant));
-
         var newJpaParticipant = new JpaParticipant(testJpaParticipant);
         newJpaParticipant.setParticipantId(testJpaParticipant.getParticipantId());
         assertEquals(testJpaParticipant, newJpaParticipant);
@@ -143,8 +120,6 @@ class JpaParticipantTest {
 
 
         var p1 = new JpaParticipant();
-        p1.setParticipantState(ParticipantState.ON_LINE);
-
         assertThat(p1.toString()).contains("Participant(");
         assertNotEquals(0, p1.hashCode());
         assertNotEquals(p1, p0);
@@ -154,14 +129,12 @@ class JpaParticipantTest {
 
         var p2 = new JpaParticipant();
         p2.setParticipantId(p0.getParticipantId());
-        p2.setLastMsg(p0.getLastMsg());
         assertEquals(p2, p0);
     }
 
     private Participant createParticipantInstance() {
         var testParticipant = new Participant();
         testParticipant.setParticipantId(UUID.randomUUID());
-        testParticipant.setLastMsg(TimestampHelper.now());
         testParticipant.setParticipantSupportedElementTypes(new LinkedHashMap<>());
         testParticipant.setReplicas(new LinkedHashMap<>());
 

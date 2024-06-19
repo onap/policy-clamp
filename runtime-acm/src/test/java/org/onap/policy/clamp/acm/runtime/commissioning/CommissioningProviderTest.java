@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2023 Nordix Foundation.
+ *  Copyright (C) 2021-2024 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -36,7 +36,6 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
-import org.onap.policy.clamp.acm.runtime.participants.AcmParticipantProvider;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantPrimePublisher;
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
@@ -47,6 +46,7 @@ import org.onap.policy.clamp.models.acm.messages.rest.commissioning.PrimeOrder;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcTypeStateResolver;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
+import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 class CommissioningProviderTest {
@@ -165,7 +165,7 @@ class CommissioningProviderTest {
 
         var participantPrimePublisher = mock(ParticipantPrimePublisher.class);
         var provider = new CommissioningProvider(acDefinitionProvider, mock(AutomationCompositionProvider.class),
-                mock(AcmParticipantProvider.class), new AcTypeStateResolver(), participantPrimePublisher,
+                mock(ParticipantProvider.class), new AcTypeStateResolver(), participantPrimePublisher,
                 CommonTestData.getTestParamaterGroup());
 
         var acTypeStateUpdate = new AcTypeStateUpdate();
@@ -184,15 +184,15 @@ class CommissioningProviderTest {
         when(acDefinitionProvider.getAcDefinition(compositionId)).thenReturn(acmDefinition);
 
         var participantPrimePublisher = mock(ParticipantPrimePublisher.class);
-        var acmParticipantProvider = mock(AcmParticipantProvider.class);
+        var participantProvider = mock(ParticipantProvider.class);
         var provider = new CommissioningProvider(acDefinitionProvider, mock(AutomationCompositionProvider.class),
-                acmParticipantProvider, new AcTypeStateResolver(), participantPrimePublisher,
+                participantProvider, new AcTypeStateResolver(), participantPrimePublisher,
                 CommonTestData.getTestParamaterGroup());
 
         var acTypeStateUpdate = new AcTypeStateUpdate();
         acTypeStateUpdate.setPrimeOrder(PrimeOrder.DEPRIME);
 
-        doNothing().when(acmParticipantProvider).verifyParticipantState(any());
+        doNothing().when(participantProvider).verifyParticipantState(any());
         provider.compositionDefinitionPriming(compositionId, acTypeStateUpdate);
         verify(participantPrimePublisher, timeout(1000).times(1)).sendDepriming(compositionId);
     }
@@ -201,7 +201,7 @@ class CommissioningProviderTest {
     void testBadRequest() {
         var acProvider = mock(AutomationCompositionProvider.class);
         var provider = new CommissioningProvider(mock(AcDefinitionProvider.class), acProvider,
-                mock(AcmParticipantProvider.class), new AcTypeStateResolver(), mock(ParticipantPrimePublisher.class),
+                mock(ParticipantProvider.class), new AcTypeStateResolver(), mock(ParticipantPrimePublisher.class),
                 mock(AcRuntimeParameterGroup.class));
 
         var compositionId = UUID.randomUUID();
@@ -225,7 +225,7 @@ class CommissioningProviderTest {
         when(acDefinitionProvider.getAcDefinition(compositionId)).thenReturn(acmDefinition);
 
         var provider = new CommissioningProvider(acDefinitionProvider, mock(AutomationCompositionProvider.class),
-                mock(AcmParticipantProvider.class), new AcTypeStateResolver(), mock(ParticipantPrimePublisher.class),
+                mock(ParticipantProvider.class), new AcTypeStateResolver(), mock(ParticipantPrimePublisher.class),
                 mock(AcRuntimeParameterGroup.class));
 
         assertThatThrownBy(() -> provider.updateCompositionDefinition(compositionId, toscaServiceTemplate))
@@ -245,7 +245,7 @@ class CommissioningProviderTest {
         when(acDefinitionProvider.getAcDefinition(compositionId)).thenReturn(acmDefinition);
 
         var provider = new CommissioningProvider(acDefinitionProvider, mock(AutomationCompositionProvider.class),
-                mock(AcmParticipantProvider.class), new AcTypeStateResolver(), mock(ParticipantPrimePublisher.class),
+                mock(ParticipantProvider.class), new AcTypeStateResolver(), mock(ParticipantPrimePublisher.class),
                 mock(AcRuntimeParameterGroup.class));
 
         var acTypeStateUpdate = new AcTypeStateUpdate();

@@ -23,69 +23,58 @@ package org.onap.policy.clamp.acm.runtime.supervision.comm;
 import io.micrometer.core.annotation.Timed;
 import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
+import lombok.AllArgsConstructor;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
-import org.onap.policy.clamp.acm.runtime.main.parameters.Topics;
+import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantRestartAc;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantSync;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
-import org.onap.policy.common.endpoints.event.comm.TopicSink;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-
 @Component
-public class ParticipantSyncPublisher extends ParticipantRestartPublisher {
+@AllArgsConstructor
+public class ParticipantSyncPublisher extends AbstractParticipantPublisher<ParticipantSync> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantSyncPublisher.class);
-
     private final AcRuntimeParameterGroup acRuntimeParameterGroup;
 
-    public ParticipantSyncPublisher(AcRuntimeParameterGroup acRuntimeParameterGroup) {
-        super(acRuntimeParameterGroup);
-        this.acRuntimeParameterGroup = acRuntimeParameterGroup;
-    }
-
-
     /**
-     * Send sync msg to Participant.
+     * Send Restart sync msg to Participant by participantId.
      *
-     * @param participantId the ParticipantId
+     * @param participantId the participantId
+     * @param replicaId the replicaId
      * @param acmDefinition the AutomationComposition Definition
      * @param automationCompositions the list of automationCompositions
      */
-    @Override
     @Timed(value = "publisher.participant_sync_msg", description = "Participant Sync published")
-    public void send(UUID participantId, AutomationCompositionDefinition acmDefinition,
+    public void sendRestartMsg(UUID participantId, UUID replicaId, AutomationCompositionDefinition acmDefinition,
                      List<AutomationComposition> automationCompositions) {
 
         var message = new ParticipantSync();
         message.setParticipantId(participantId);
+        message.setReplicaId(replicaId);
+        message.setRestarting(true);
         message.setCompositionId(acmDefinition.getCompositionId());
         message.setMessageId(UUID.randomUUID());
         message.setTimestamp(Instant.now());
         message.setState(acmDefinition.getState());
-        message.setParticipantDefinitionUpdates(prepareParticipantRestarting(participantId, acmDefinition));
+        message.setParticipantDefinitionUpdates(AcmUtils.prepareParticipantRestarting(participantId, acmDefinition,
+                acRuntimeParameterGroup.getAcmParameters().getToscaElementName()));
         var toscaServiceTemplateFragment = AcmUtils.getToscaServiceTemplateFragment(acmDefinition.getServiceTemplate());
 
         for (var automationComposition : automationCompositions) {
-            var syncAc = new ParticipantRestartAc();
-            syncAc.setAutomationCompositionId(automationComposition.getInstanceId());
-            for (var element : automationComposition.getElements().values()) {
-                if (participantId.equals(element.getParticipantId())) {
-                    var acElementSync = AcmUtils.createAcElementRestart(element);
-                    acElementSync.setToscaServiceTemplateFragment(toscaServiceTemplateFragment);
-                    syncAc.getAcElementList().add(acElementSync);
-                }
-            }
+            var syncAc = AcmUtils.createAcRestart(automationComposition, participantId, toscaServiceTemplateFragment);
             message.getAutomationcompositionList().add(syncAc);
         }
 
-        LOGGER.debug("Participant Sync sent {}", message);
+        LOGGER.debug("Participant Restarting Sync sent {}", message);
         super.send(message);
     }
 
@@ -98,4 +87,64 @@ public class ParticipantSyncPublisher extends ParticipantRestartPublisher {
         return false;
     }
 
+    /**
+     * Send AutomationCompositionDefinition sync msg to all Participants.
+     *
+     * @param acDefinition the AutomationComposition Definition
+     * @param excludeReplicaId the replica to be excluded
+     */
+    @Timed(value = "publisher.participant_sync_msg", description = "Participant Sync published")
+    public void sendSync(AutomationCompositionDefinition acDefinition, UUID excludeReplicaId) {
+        var message = new ParticipantSync();
+        message.setCompositionId(acDefinition.getCompositionId());
+        if (excludeReplicaId != null) {
+            message.getExcludeReplicas().add(excludeReplicaId);
+        }
+        message.setState(acDefinition.getState());
+        message.setMessageId(UUID.randomUUID());
+        message.setTimestamp(Instant.now());
+        if (AcTypeState.COMMISSIONED.equals(acDefinition.getState())) {
+            message.setDelete(true);
+        } else {
+            message.setParticipantDefinitionUpdates(AcmUtils.prepareParticipantRestarting(null, acDefinition,
+                    acRuntimeParameterGroup.getAcmParameters().getToscaElementName()));
+        }
+        LOGGER.debug("Participant AutomationCompositionDefinition Sync sent {}", message);
+        super.send(message);
+    }
+
+    /**
+     * Send AutomationComposition sync msg to all Participants.
+     *
+     * @param serviceTemplate the ServiceTemplate
+     * @param automationComposition the automationComposition
+     */
+    @Timed(value = "publisher.participant_sync_msg", description = "Participant Sync published")
+    public void sendSync(ToscaServiceTemplate serviceTemplate, AutomationComposition automationComposition) {
+        var message = new ParticipantSync();
+        message.setCompositionId(automationComposition.getCompositionId());
+        message.setAutomationCompositionId(automationComposition.getInstanceId());
+        message.setState(AcTypeState.PRIMED);
+        message.setMessageId(UUID.randomUUID());
+        message.setTimestamp(Instant.now());
+        var syncAc = new ParticipantRestartAc();
+        syncAc.setAutomationCompositionId(automationComposition.getInstanceId());
+        syncAc.setDeployState(automationComposition.getDeployState());
+        syncAc.setLockState(automationComposition.getLockState());
+        if (DeployState.DELETED.equals(automationComposition.getDeployState())) {
+            message.setDelete(true);
+        } else {
+            var toscaServiceTemplateFragment = AcmUtils.getToscaServiceTemplateFragment(serviceTemplate);
+            for (var element : automationComposition.getElements().values()) {
+                var acElementSync = AcmUtils.createAcElementRestart(element);
+                acElementSync.setToscaServiceTemplateFragment(toscaServiceTemplateFragment);
+                syncAc.getAcElementList().add(acElementSync);
+
+            }
+        }
+        message.getAutomationcompositionList().add(syncAc);
+
+        LOGGER.debug("Participant AutomationComposition Sync sent {}", message);
+        super.send(message);
+    }
 }

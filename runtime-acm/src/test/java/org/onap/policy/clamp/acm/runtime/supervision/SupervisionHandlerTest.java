@@ -30,7 +30,7 @@ import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVIC
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
-import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
+import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
@@ -46,8 +46,7 @@ class SupervisionHandlerTest {
         participantPrimeAckMessage.setParticipantId(CommonTestData.getParticipantId());
         participantPrimeAckMessage.setState(ParticipantState.ON_LINE);
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
-        var acRuntimeParameterGroup = mock(AcRuntimeParameterGroup.class);
-        var handler = new SupervisionHandler(acDefinitionProvider, acRuntimeParameterGroup);
+        var handler = new SupervisionHandler(acDefinitionProvider, mock(ParticipantSyncPublisher.class));
 
         handler.handleParticipantMessage(participantPrimeAckMessage);
         verify(acDefinitionProvider).findAcDefinition(any());
@@ -66,9 +65,7 @@ class SupervisionHandlerTest {
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
         when(acDefinitionProvider.findAcDefinition(acDefinition.getCompositionId()))
                 .thenReturn(Optional.of(acDefinition));
-        var acRuntimeParameterGroup = mock(AcRuntimeParameterGroup.class);
-
-        var handler = new SupervisionHandler(acDefinitionProvider, acRuntimeParameterGroup);
+        var handler = new SupervisionHandler(acDefinitionProvider, mock(ParticipantSyncPublisher.class));
 
         handler.handleParticipantMessage(participantPrimeAckMessage);
         verify(acDefinitionProvider).findAcDefinition(any());
@@ -93,7 +90,7 @@ class SupervisionHandlerTest {
         when(acDefinitionProvider.findAcDefinition(acDefinition.getCompositionId()))
                 .thenReturn(Optional.of(acDefinition));
 
-        var handler = new SupervisionHandler(acDefinitionProvider, CommonTestData.getTestParamaterGroup());
+        var handler = new SupervisionHandler(acDefinitionProvider, mock(ParticipantSyncPublisher.class));
 
         handler.handleParticipantMessage(participantPrimeAckMessage);
         verify(acDefinitionProvider).findAcDefinition(any());
@@ -120,7 +117,7 @@ class SupervisionHandlerTest {
         when(acDefinitionProvider.findAcDefinition(acDefinition.getCompositionId()))
                 .thenReturn(Optional.of(acDefinition));
 
-        var handler = new SupervisionHandler(acDefinitionProvider, CommonTestData.getTestParamaterGroup());
+        var handler = new SupervisionHandler(acDefinitionProvider, mock(ParticipantSyncPublisher.class));
 
         handler.handleParticipantMessage(participantPrimeAckMessage);
         verify(acDefinitionProvider).findAcDefinition(any());
@@ -150,7 +147,7 @@ class SupervisionHandlerTest {
         when(acDefinitionProvider.findAcDefinition(acDefinition.getCompositionId()))
             .thenReturn(Optional.of(acDefinition));
 
-        var handler = new SupervisionHandler(acDefinitionProvider, CommonTestData.getTestParamaterGroup());
+        var handler = new SupervisionHandler(acDefinitionProvider, mock(ParticipantSyncPublisher.class));
 
         handler.handleParticipantMessage(participantPrimeAckMessage);
         verify(acDefinitionProvider).findAcDefinition(any());

@@ -39,16 +39,19 @@ import org.onap.policy.clamp.acm.runtime.supervision.comm.AcElementPropertiesPub
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionDeployPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionMigrationPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionStateChangePublisher;
+import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeployAck;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeployAck;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessageType;
+import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 
 class SupervisionAcHandlerTest {
@@ -64,9 +67,14 @@ class SupervisionAcHandlerTest {
         when(automationCompositionProvider.findAutomationComposition(IDENTIFIER))
                 .thenReturn(Optional.of(automationComposition));
 
-        var handler = new SupervisionAcHandler(automationCompositionProvider,
+        var acDefinitionProvider = mock(AcDefinitionProvider.class);
+        when(acDefinitionProvider.getAcDefinition(automationComposition.getCompositionId()))
+                .thenReturn(new AutomationCompositionDefinition());
+
+        var handler = new SupervisionAcHandler(automationCompositionProvider, acDefinitionProvider,
                 mock(AutomationCompositionDeployPublisher.class), mock(AutomationCompositionStateChangePublisher.class),
-                mock(AcElementPropertiesPublisher.class), null);
+                mock(AcElementPropertiesPublisher.class), null,
+                mock(ParticipantSyncPublisher.class));
 
         var automationCompositionAckMessage =
                 getAutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_STATECHANGE_ACK,
@@ -100,14 +108,19 @@ class SupervisionAcHandlerTest {
         when(automationCompositionProvider.findAutomationComposition(IDENTIFIER))
                 .thenReturn(Optional.of(automationComposition));
 
+        var acDefinitionProvider = mock(AcDefinitionProvider.class);
+        when(acDefinitionProvider.getAcDefinition(automationComposition.getCompositionId()))
+                .thenReturn(new AutomationCompositionDefinition());
+
         var automationCompositionAckMessage =
                 getAutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_DEPLOY_ACK,
                         automationComposition, DeployState.DEPLOYED, LockState.LOCKED);
         automationCompositionAckMessage.setParticipantId(CommonTestData.getParticipantId());
 
-        var handler = new SupervisionAcHandler(automationCompositionProvider,
+        var handler = new SupervisionAcHandler(automationCompositionProvider, acDefinitionProvider,
                 mock(AutomationCompositionDeployPublisher.class), mock(AutomationCompositionStateChangePublisher.class),
-                mock(AcElementPropertiesPublisher.class), null);
+                mock(AcElementPropertiesPublisher.class), null,
+                mock(ParticipantSyncPublisher.class));
 
         handler.handleAutomationCompositionUpdateAckMessage(automationCompositionAckMessage);
 
@@ -142,9 +155,9 @@ class SupervisionAcHandlerTest {
 
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
 
-        var handler = new SupervisionAcHandler(automationCompositionProvider,
+        var handler = new SupervisionAcHandler(automationCompositionProvider, mock(AcDefinitionProvider.class),
                 mock(AutomationCompositionDeployPublisher.class), automationCompositionStateChangePublisher, null,
-                null);
+                null, mock(ParticipantSyncPublisher.class));
 
         handler.handleAutomationCompositionUpdateAckMessage(automationCompositionAckMessage);
 
@@ -156,8 +169,9 @@ class SupervisionAcHandlerTest {
     void testDeployFailed() {
         var automationCompositionDeployPublisher = mock(AutomationCompositionDeployPublisher.class);
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
-        var handler = new SupervisionAcHandler(automationCompositionProvider, automationCompositionDeployPublisher,
-                mock(AutomationCompositionStateChangePublisher.class), mock(AcElementPropertiesPublisher.class), null);
+        var handler = new SupervisionAcHandler(automationCompositionProvider, mock(AcDefinitionProvider.class),
+                automationCompositionDeployPublisher, mock(AutomationCompositionStateChangePublisher.class),
+                mock(AcElementPropertiesPublisher.class), null, mock(ParticipantSyncPublisher.class));
 
         var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
         var acDefinition = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
@@ -174,9 +188,10 @@ class SupervisionAcHandlerTest {
     void testUndeploy() {
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         var acStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
-        var handler = new SupervisionAcHandler(automationCompositionProvider,
+        var handler = new SupervisionAcHandler(automationCompositionProvider, mock(AcDefinitionProvider.class),
                 mock(AutomationCompositionDeployPublisher.class), acStateChangePublisher,
-                mock(AcElementPropertiesPublisher.class), null);
+                mock(AcElementPropertiesPublisher.class), null,
+                mock(ParticipantSyncPublisher.class));
         var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
         var acDefinition = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
         var automationComposition =
@@ -191,9 +206,10 @@ class SupervisionAcHandlerTest {
     void testUndeployFailed() {
         var acStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
-        var handler = new SupervisionAcHandler(automationCompositionProvider,
+        var handler = new SupervisionAcHandler(automationCompositionProvider, mock(AcDefinitionProvider.class),
                 mock(AutomationCompositionDeployPublisher.class), acStateChangePublisher,
-                mock(AcElementPropertiesPublisher.class), null);
+                mock(AcElementPropertiesPublisher.class), null,
+                mock(ParticipantSyncPublisher.class));
 
         var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
         var acDefinition = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
@@ -211,9 +227,10 @@ class SupervisionAcHandlerTest {
     void testUnlock() {
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         var acStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
-        var handler = new SupervisionAcHandler(automationCompositionProvider,
+        var handler = new SupervisionAcHandler(automationCompositionProvider, mock(AcDefinitionProvider.class),
                 mock(AutomationCompositionDeployPublisher.class), acStateChangePublisher,
-                mock(AcElementPropertiesPublisher.class), null);
+                mock(AcElementPropertiesPublisher.class), null,
+                mock(ParticipantSyncPublisher.class));
         var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
         var acDefinition = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
         var automationComposition =
@@ -228,9 +245,10 @@ class SupervisionAcHandlerTest {
     void testUnlockFailed() {
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         var acStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
-        var handler = new SupervisionAcHandler(automationCompositionProvider,
+        var handler = new SupervisionAcHandler(automationCompositionProvider, mock(AcDefinitionProvider.class),
                 mock(AutomationCompositionDeployPublisher.class), acStateChangePublisher,
-                mock(AcElementPropertiesPublisher.class), null);
+                mock(AcElementPropertiesPublisher.class), null,
+                mock(ParticipantSyncPublisher.class));
         var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
         var acDefinition = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
         var automationComposition =
@@ -247,9 +265,10 @@ class SupervisionAcHandlerTest {
     void testLock() {
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         var acStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
-        var handler = new SupervisionAcHandler(automationCompositionProvider,
+        var handler = new SupervisionAcHandler(automationCompositionProvider, mock(AcDefinitionProvider.class),
                 mock(AutomationCompositionDeployPublisher.class), acStateChangePublisher,
-                mock(AcElementPropertiesPublisher.class), null);
+                mock(AcElementPropertiesPublisher.class), null,
+                mock(ParticipantSyncPublisher.class));
         var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
         var acDefinition = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
         var automationComposition =
@@ -264,9 +283,10 @@ class SupervisionAcHandlerTest {
     void testLockFailed() {
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         var acStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
-        var handler = new SupervisionAcHandler(automationCompositionProvider,
+        var handler = new SupervisionAcHandler(automationCompositionProvider, mock(AcDefinitionProvider.class),
                 mock(AutomationCompositionDeployPublisher.class), acStateChangePublisher,
-                mock(AcElementPropertiesPublisher.class), null);
+                mock(AcElementPropertiesPublisher.class), null,
+                mock(ParticipantSyncPublisher.class));
         var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
         var acDefinition = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
         var automationComposition =
@@ -294,9 +314,10 @@ class SupervisionAcHandlerTest {
                 .setParticipantId(automationComposition.getElements().values().iterator().next().getParticipantId());
         automationCompositionAckMessage.setAutomationCompositionId(IDENTIFIER);
 
-        var handler = new SupervisionAcHandler(automationCompositionProvider,
+        var handler = new SupervisionAcHandler(automationCompositionProvider, mock(AcDefinitionProvider.class),
                 mock(AutomationCompositionDeployPublisher.class), mock(AutomationCompositionStateChangePublisher.class),
-                mock(AcElementPropertiesPublisher.class), null);
+                mock(AcElementPropertiesPublisher.class), null,
+                mock(ParticipantSyncPublisher.class));
 
         handler.handleAutomationCompositionUpdateAckMessage(automationCompositionAckMessage);
 
@@ -308,8 +329,9 @@ class SupervisionAcHandlerTest {
     void testUpdate() {
         var acElementPropertiesPublisher = mock(AcElementPropertiesPublisher.class);
         var handler = new SupervisionAcHandler(mock(AutomationCompositionProvider.class),
-                mock(AutomationCompositionDeployPublisher.class), mock(AutomationCompositionStateChangePublisher.class),
-                acElementPropertiesPublisher, null);
+                mock(AcDefinitionProvider.class), mock(AutomationCompositionDeployPublisher.class),
+                mock(AutomationCompositionStateChangePublisher.class), acElementPropertiesPublisher, null,
+                mock(ParticipantSyncPublisher.class));
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Lock");
         handler.update(automationComposition);
@@ -320,8 +342,9 @@ class SupervisionAcHandlerTest {
     void testMigrate() {
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         var acCompositionMigrationPublisher = mock(AutomationCompositionMigrationPublisher.class);
-        var handler = new SupervisionAcHandler(automationCompositionProvider, null, null, null,
-                acCompositionMigrationPublisher);
+        var handler = new SupervisionAcHandler(automationCompositionProvider, mock(AcDefinitionProvider.class),
+                null, null, null,
+                acCompositionMigrationPublisher, mock(ParticipantSyncPublisher.class));
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Migrate");
         handler.migrate(automationComposition, UUID.randomUUID());

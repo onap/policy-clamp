@@ -40,7 +40,7 @@ public class ParticipantStatusReqPublisher extends AbstractParticipantPublisher<
      */
     @Timed(value = "publisher.participant_status_req", description = "PARTICIPANT_STATUS_REQ messages published")
     public void send(UUID participantId) {
-        ParticipantStatusReq message = new ParticipantStatusReq();
+        var message = new ParticipantStatusReq();
         message.setParticipantId(participantId);
         message.setTimestamp(Instant.now());
 
