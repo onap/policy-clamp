@@ -59,7 +59,6 @@ public class AutomationCompositionHandler {
     private final ParticipantMessagePublisher publisher;
     private final ThreadHandler listener;
 
-
     /**
      * Handle a automation composition state change message.
      *
@@ -116,9 +115,10 @@ public class AutomationCompositionHandler {
 
         for (var participantDeploy : updateMsg.getParticipantUpdatesList()) {
             if (cacheProvider.getParticipantId().equals(participantDeploy.getParticipantId())) {
-
-                var acCopy = new AutomationComposition(cacheProvider.getAutomationComposition(
-                    updateMsg.getAutomationCompositionId()));
+                var automationComposition = cacheProvider.getAutomationComposition(
+                        updateMsg.getAutomationCompositionId());
+                automationComposition.setDeployState(DeployState.UPDATING);
+                var acCopy = new AutomationComposition(automationComposition);
                 updateExistingElementsOnThisParticipant(updateMsg.getAutomationCompositionId(), participantDeploy,
                         DeployState.UPDATING);
 
@@ -154,6 +154,7 @@ public class AutomationCompositionHandler {
     private void callParticipanDeploy(UUID messageId, List<AcElementDeploy> acElementDeployList,
             Integer startPhaseMsg, UUID instanceId) {
         var automationComposition = cacheProvider.getAutomationComposition(instanceId);
+        automationComposition.setDeployState(DeployState.DEPLOYING);
         for (var elementDeploy : acElementDeployList) {
             var element = automationComposition.getElements().get(elementDeploy.getId());
             var compositionInProperties = cacheProvider
@@ -188,9 +189,11 @@ public class AutomationCompositionHandler {
 
     private Map<UUID, InstanceElementDto> getInstanceElementDtoMap(AutomationComposition automationComposition) {
         Map<UUID, InstanceElementDto> map = new HashMap<>();
+        var serviceTemplateFragment = cacheProvider
+                .getServiceTemplateFragmentMap().get(automationComposition.getCompositionId());
         for (var element : automationComposition.getElements().values()) {
             var instanceElement = new InstanceElementDto(automationComposition.getInstanceId(), element.getId(),
-                null, element.getProperties(), element.getOutProperties());
+                    serviceTemplateFragment, element.getProperties(), element.getOutProperties());
             map.put(element.getId(), instanceElement);
         }
         return map;
@@ -229,6 +232,9 @@ public class AutomationCompositionHandler {
     private void handleUndeployState(UUID messageId, final AutomationComposition automationComposition,
             Integer startPhaseMsg) {
         automationComposition.setCompositionTargetId(null);
+        automationComposition.setDeployState(DeployState.UNDEPLOYING);
+        var serviceTemplateFragment = cacheProvider
+                .getServiceTemplateFragmentMap().get(automationComposition.getCompositionId());
         for (var element : automationComposition.getElements().values()) {
             var compositionInProperties = cacheProvider
                 .getCommonProperties(automationComposition.getCompositionId(), element.getDefinition());
@@ -238,7 +244,7 @@ public class AutomationCompositionHandler {
                 var compositionElement = cacheProvider.createCompositionElementDto(
                         automationComposition.getCompositionId(), element, compositionInProperties);
                 var instanceElement = new InstanceElementDto(automationComposition.getInstanceId(), element.getId(),
-                    null, element.getProperties(), element.getOutProperties());
+                        serviceTemplateFragment, element.getProperties(), element.getOutProperties());
                 listener.undeploy(messageId, compositionElement, instanceElement);
             }
         }
@@ -246,6 +252,9 @@ public class AutomationCompositionHandler {
 
     private void handleDeleteState(UUID messageId, final AutomationComposition automationComposition,
             Integer startPhaseMsg) {
+        automationComposition.setDeployState(DeployState.DELETING);
+        var serviceTemplateFragment = cacheProvider
+                .getServiceTemplateFragmentMap().get(automationComposition.getCompositionId());
         for (var element : automationComposition.getElements().values()) {
             var compositionInProperties = cacheProvider
                 .getCommonProperties(automationComposition.getCompositionId(), element.getDefinition());
@@ -255,7 +264,7 @@ public class AutomationCompositionHandler {
                 var compositionElement = cacheProvider.createCompositionElementDto(
                         automationComposition.getCompositionId(), element, compositionInProperties);
                 var instanceElement = new InstanceElementDto(automationComposition.getInstanceId(), element.getId(),
-                    null, element.getProperties(), element.getOutProperties());
+                        serviceTemplateFragment, element.getProperties(), element.getOutProperties());
                 listener.delete(messageId, compositionElement, instanceElement);
             }
         }
@@ -279,6 +288,7 @@ public class AutomationCompositionHandler {
         }
         var acCopy = new AutomationComposition(automationComposition);
         automationComposition.setCompositionTargetId(migrationMsg.getCompositionTargetId());
+        automationComposition.setDeployState(DeployState.MIGRATING);
         for (var participantDeploy : migrationMsg.getParticipantUpdatesList()) {
             if (cacheProvider.getParticipantId().equals(participantDeploy.getParticipantId())) {
 

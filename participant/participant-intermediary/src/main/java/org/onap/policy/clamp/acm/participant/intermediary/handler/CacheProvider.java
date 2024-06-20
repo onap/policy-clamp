@@ -41,6 +41,7 @@ import org.onap.policy.clamp.models.acm.concepts.ParticipantRestartAc;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -67,6 +68,9 @@ public class CacheProvider {
 
     @Getter
     private final Map<UUID, UUID> msgIdentification = new ConcurrentHashMap<>();
+
+    @Getter
+    private final Map<UUID, ToscaServiceTemplate> serviceTemplateFragmentMap = new ConcurrentHashMap<>();
 
     /**
      * Constructor.
@@ -118,6 +122,7 @@ public class CacheProvider {
 
     public void removeElementDefinition(@NonNull UUID compositionId) {
         acElementsDefinitions.remove(compositionId);
+        serviceTemplateFragmentMap.remove(compositionId);
     }
 
     /**
@@ -171,6 +176,9 @@ public class CacheProvider {
                 acElement.setOutProperties(acElementLast.getOutProperties());
                 acElement.setOperationalState(acElementLast.getOperationalState());
                 acElement.setUseState(acElementLast.getUseState());
+                if (element.getToscaServiceTemplateFragment() != null) {
+                    serviceTemplateFragmentMap.put(compositionId, element.getToscaServiceTemplateFragment());
+                }
             }
             acElementMap.put(element.getId(), acElement);
         }
@@ -205,6 +213,9 @@ public class CacheProvider {
             acElement.setProperties(element.getProperties());
             acElement.setOutProperties(element.getOutProperties());
             acElementMap.put(element.getId(), acElement);
+            if (element.getToscaServiceTemplateFragment() != null) {
+                serviceTemplateFragmentMap.put(compositionId, element.getToscaServiceTemplateFragment());
+            }
         }
 
         var automationComposition = new AutomationComposition();

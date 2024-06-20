@@ -70,6 +70,9 @@ public class AcLockHandler {
 
     private void handleLockState(UUID messageId, final AutomationComposition automationComposition,
                                  Integer startPhaseMsg) {
+        automationComposition.setLockState(LockState.LOCKING);
+        var serviceTemplateFragment = cacheProvider
+                .getServiceTemplateFragmentMap().get(automationComposition.getCompositionId());
         for (var element : automationComposition.getElements().values()) {
             var compositionInProperties = cacheProvider
                     .getCommonProperties(automationComposition.getCompositionId(), element.getDefinition());
@@ -79,7 +82,7 @@ public class AcLockHandler {
                 var compositionElement = cacheProvider.createCompositionElementDto(
                         automationComposition.getCompositionId(), element, compositionInProperties);
                 var instanceElement = new InstanceElementDto(automationComposition.getInstanceId(), element.getId(),
-                        null, element.getProperties(), element.getOutProperties());
+                        serviceTemplateFragment, element.getProperties(), element.getOutProperties());
                 listener.lock(messageId, compositionElement, instanceElement);
             }
         }
@@ -87,6 +90,9 @@ public class AcLockHandler {
 
     private void handleUnlockState(UUID messageId, final AutomationComposition automationComposition,
                                    Integer startPhaseMsg) {
+        automationComposition.setLockState(LockState.UNLOCKING);
+        var serviceTemplateFragment = cacheProvider
+                .getServiceTemplateFragmentMap().get(automationComposition.getCompositionId());
         for (var element : automationComposition.getElements().values()) {
             var compositionInProperties = cacheProvider
                     .getCommonProperties(automationComposition.getCompositionId(), element.getDefinition());
@@ -96,7 +102,7 @@ public class AcLockHandler {
                 var compositionElement = cacheProvider.createCompositionElementDto(
                         automationComposition.getCompositionId(), element, compositionInProperties);
                 var instanceElement = new InstanceElementDto(automationComposition.getInstanceId(), element.getId(),
-                        null, element.getProperties(), element.getOutProperties());
+                        serviceTemplateFragment, element.getProperties(), element.getOutProperties());
                 listener.unlock(messageId, compositionElement, instanceElement);
             }
         }

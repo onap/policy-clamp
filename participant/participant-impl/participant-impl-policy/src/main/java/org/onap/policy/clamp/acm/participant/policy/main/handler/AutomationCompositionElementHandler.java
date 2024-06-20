@@ -27,13 +27,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 import org.apache.http.HttpStatus;
+import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
+import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
-import org.onap.policy.clamp.acm.participant.intermediary.api.impl.AcElementListenerV1;
+import org.onap.policy.clamp.acm.participant.intermediary.api.impl.AcElementListenerV2;
 import org.onap.policy.clamp.acm.participant.policy.client.PolicyApiHttpClient;
 import org.onap.policy.clamp.acm.participant.policy.client.PolicyPapHttpClient;
-import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.models.base.PfModelException;
@@ -48,11 +48,9 @@ import org.springframework.stereotype.Component;
  * This class handles implementation of automationCompositionElement updates.
  */
 @Component
-public class AutomationCompositionElementHandler extends AcElementListenerV1 {
+public class AutomationCompositionElementHandler extends AcElementListenerV2 {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AutomationCompositionElementHandler.class);
-
-    private final Map<UUID, ToscaServiceTemplate> serviceTemplateMap = new ConcurrentHashMap<>();
 
     private final PolicyApiHttpClient apiHttpClient;
     private final PolicyPapHttpClient papHttpClient;
@@ -74,26 +72,28 @@ public class AutomationCompositionElementHandler extends AcElementListenerV1 {
     /**
      * Callback method to handle a automation composition element state change.
      *
-     * @param automationCompositionId the ID of the automation composition
-     * @param automationCompositionElementId the ID of the automation composition element
+     * @param compositionElement the information of the Automation Composition Definition Element
+     * @param instanceElement the information of the Automation Composition Instance Element
+     * @throws PfModelException in case of a model exception
      */
     @Override
-    public void undeploy(UUID automationCompositionId, UUID automationCompositionElementId) throws PfModelException {
-        var automationCompositionDefinition = serviceTemplateMap.get(automationCompositionElementId);
-        if (automationCompositionDefinition == null) {
-            LOGGER.debug("No policies to undeploy to {}", automationCompositionElementId);
-            intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
-                    automationCompositionElementId, DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR,
+    public void undeploy(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
+            throws PfModelException {
+        var automationCompositionDefinition = instanceElement.toscaServiceTemplateFragment();
+        if (automationCompositionDefinition.getToscaTopologyTemplate() == null) {
+            LOGGER.debug("No policies to undeploy to {}", instanceElement.elementId());
+            intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
+                    instanceElement.elementId(), DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR,
                     "Undeployed");
             return;
         }
         var policyList = getPolicyList(automationCompositionDefinition);
-        undeployPolicies(policyList, automationCompositionElementId);
+        undeployPolicies(policyList, instanceElement.elementId());
         var policyTypeList = getPolicyTypeList(automationCompositionDefinition);
         deletePolicyData(policyTypeList, policyList);
-        serviceTemplateMap.remove(automationCompositionElementId);
-        intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, automationCompositionElementId,
-                DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR, "Undeployed");
+        intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
+                instanceElement.elementId(), DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR,
+                "Undeployed");
     }
 
     private void deletePolicyData(List<ToscaConceptIdentifier> policyTypeList,
@@ -151,24 +151,23 @@ public class AutomationCompositionElementHandler extends AcElementListenerV1 {
     /**
      * Callback method to handle an update on automation composition element.
      *
-     * @param automationCompositionId the automationComposition Id
-     * @param element the information on the automation composition element
-     * @param properties properties Map
-     * @throws PfModelException in case of an exception
+     * @param compositionElement the information of the Automation Composition Definition Element
+     * @param instanceElement the information of the Automation Composition Instance Element
+     * @throws PfModelException from Policy framework
      */
     @Override
-    public void deploy(UUID automationCompositionId, AcElementDeploy element, Map<String, Object> properties)
+    public void deploy(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
             throws PfModelException {
         var createPolicyTypeResp = HttpStatus.SC_OK;
         var createPolicyResp = HttpStatus.SC_OK;
 
-        var automationCompositionDefinition = element.getToscaServiceTemplateFragment();
+        var automationCompositionDefinition = instanceElement.toscaServiceTemplateFragment();
         if (automationCompositionDefinition.getToscaTopologyTemplate() == null) {
-            intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
-                    DeployState.UNDEPLOYED, null, StateChangeResult.FAILED, "ToscaTopologyTemplate not defined");
+            intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
+                    instanceElement.elementId(), DeployState.UNDEPLOYED, null, StateChangeResult.FAILED,
+                    "ToscaTopologyTemplate not defined");
             return;
         }
-        serviceTemplateMap.put(element.getId(), automationCompositionDefinition);
         if (automationCompositionDefinition.getPolicyTypes() != null) {
             LOGGER.info("Found Policy Types in automation composition definition: {} , Creating Policy Types",
                     automationCompositionDefinition.getName());
@@ -186,12 +185,12 @@ public class AutomationCompositionElementHandler extends AcElementListenerV1 {
         if (createPolicyTypeResp == HttpStatus.SC_OK && createPolicyResp == HttpStatus.SC_OK) {
             LOGGER.info(
                     "PolicyTypes/Policies for the automation composition element : {} are created " + "successfully",
-                    element.getId());
+                    instanceElement.elementId());
             var policyList = getPolicyList(automationCompositionDefinition);
-            deployPolicies(policyList, automationCompositionId, element.getId());
+            deployPolicies(policyList, instanceElement.instanceId(), instanceElement.elementId());
         } else {
-            intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
-                    DeployState.UNDEPLOYED, null, StateChangeResult.FAILED,
+            intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
+                    instanceElement.elementId(), DeployState.UNDEPLOYED, null, StateChangeResult.FAILED,
                     "Creation of PolicyTypes/Policies failed. Policies will not be deployed.");
         }
     }

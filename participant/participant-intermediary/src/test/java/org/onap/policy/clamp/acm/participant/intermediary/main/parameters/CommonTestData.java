@@ -50,6 +50,7 @@ import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 /**
  * Class to hold/create all parameters for test cases.
@@ -260,6 +261,7 @@ public class CommonTestData {
         acElementRestart.setUseState("UseState");
         acElementRestart.setProperties(Map.of("key", "value"));
         acElementRestart.setOutProperties(Map.of("keyOut", "valueOut"));
+        acElementRestart.setToscaServiceTemplateFragment(new ToscaServiceTemplate());
         acElementRestart.setId(UUID.randomUUID());
         participantRestartAc.getAcElementList().add(acElementRestart);
         return participantRestartAc;
@@ -281,6 +283,7 @@ public class CommonTestData {
             acElement.setId(element.getId());
             acElement.setDefinition(element.getDefinition());
             acElement.setProperties(element.getProperties());
+            acElement.setToscaServiceTemplateFragment(new ToscaServiceTemplate());
             participantDeploy.getAcElementList().add(acElement);
         }
         return participantDeploy;
