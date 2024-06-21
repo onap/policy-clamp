@@ -24,6 +24,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4f02bc79_33a0b85e",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/test/java/org/onap/policy/clamp/acm/participant/kubernetes/handler/AutomationCompositionElementHandlerTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2024-06-21T09:39:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a0ecdb25_9032940d",
+      "range": {
+        "startLine": 80,
+        "startChar": 16,
+        "endLine": 80,
+        "endChar": 20
+      },
+      "revId": "3d2d59d82fccdcbe43d9e15f0465baca2bda9c8a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "507261e2_bb11bd72",
@@ -37,6 +61,30 @@
       "writtenOn": "2024-06-21T09:23:48Z",
       "side": 1,
       "message": "in this test spy is useless",
+      "range": {
+        "startLine": 129,
+        "startChar": 16,
+        "endLine": 129,
+        "endChar": 20
+      },
+      "revId": "3d2d59d82fccdcbe43d9e15f0465baca2bda9c8a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1f2aeb9e_ddf6fee7",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/test/java/org/onap/policy/clamp/acm/participant/kubernetes/handler/AutomationCompositionElementHandlerTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2024-06-21T09:39:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "507261e2_bb11bd72",
       "range": {
         "startLine": 129,
         "startChar": 16,
@@ -70,6 +118,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "01d7d4e3_25f4eefa",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/test/java/org/onap/policy/clamp/acm/participant/kubernetes/handler/AutomationCompositionElementHandlerTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2024-06-21T09:39:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "676c3efc_5585c952",
+      "range": {
+        "startLine": 142,
+        "startChar": 16,
+        "endLine": 142,
+        "endChar": 20
+      },
+      "revId": "3d2d59d82fccdcbe43d9e15f0465baca2bda9c8a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "34d7997d_997581b5",
@@ -83,6 +155,30 @@
       "writtenOn": "2024-06-21T09:23:48Z",
       "side": 1,
       "message": "in this test spy is useless",
+      "range": {
+        "startLine": 153,
+        "startChar": 15,
+        "endLine": 153,
+        "endChar": 20
+      },
+      "revId": "3d2d59d82fccdcbe43d9e15f0465baca2bda9c8a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cf186ce8_c7ca6889",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/test/java/org/onap/policy/clamp/acm/participant/kubernetes/handler/AutomationCompositionElementHandlerTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2024-06-21T09:39:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "34d7997d_997581b5",
       "range": {
         "startLine": 153,
         "startChar": 15,
@@ -116,6 +212,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "429d8965_466ca76e",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/test/java/org/onap/policy/clamp/acm/participant/kubernetes/handler/AutomationCompositionElementHandlerTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2024-06-21T09:39:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "52cce4f0_41a1c9c3",
+      "range": {
+        "startLine": 163,
+        "startChar": 16,
+        "endLine": 163,
+        "endChar": 20
+      },
+      "revId": "3d2d59d82fccdcbe43d9e15f0465baca2bda9c8a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d2f8ff3d_ef5ef043",
@@ -129,6 +249,30 @@
       "writtenOn": "2024-06-21T09:23:48Z",
       "side": 1,
       "message": "in this test spy is useless",
+      "range": {
+        "startLine": 174,
+        "startChar": 16,
+        "endLine": 174,
+        "endChar": 20
+      },
+      "revId": "3d2d59d82fccdcbe43d9e15f0465baca2bda9c8a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "70481d06_3cf8037c",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/test/java/org/onap/policy/clamp/acm/participant/kubernetes/handler/AutomationCompositionElementHandlerTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2024-06-21T09:39:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d2f8ff3d_ef5ef043",
       "range": {
         "startLine": 174,
         "startChar": 16,
@@ -162,6 +306,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "30aa4a3e_571965fd",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/test/java/org/onap/policy/clamp/acm/participant/kubernetes/handler/AutomationCompositionElementHandlerTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2024-06-21T09:39:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1dabfaec_13753bb6",
+      "range": {
+        "startLine": 185,
+        "startChar": 16,
+        "endLine": 185,
+        "endChar": 20
+      },
+      "revId": "3d2d59d82fccdcbe43d9e15f0465baca2bda9c8a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f206796a_59fbf654",
@@ -185,6 +353,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a71114bd_8be73505",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/test/java/org/onap/policy/clamp/acm/participant/kubernetes/handler/AutomationCompositionElementHandlerTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2024-06-21T09:39:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f206796a_59fbf654",
+      "range": {
+        "startLine": 195,
+        "startChar": 16,
+        "endLine": 195,
+        "endChar": 19
+      },
+      "revId": "3d2d59d82fccdcbe43d9e15f0465baca2bda9c8a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "acbc2c75_2dc4a27c",
@@ -198,6 +390,30 @@
       "writtenOn": "2024-06-21T09:23:48Z",
       "side": 1,
       "message": "in this test spy is useless",
+      "range": {
+        "startLine": 205,
+        "startChar": 16,
+        "endLine": 205,
+        "endChar": 20
+      },
+      "revId": "3d2d59d82fccdcbe43d9e15f0465baca2bda9c8a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9fa32b9e_92f553e6",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/test/java/org/onap/policy/clamp/acm/participant/kubernetes/handler/AutomationCompositionElementHandlerTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2024-06-21T09:39:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "acbc2c75_2dc4a27c",
       "range": {
         "startLine": 205,
         "startChar": 16,
