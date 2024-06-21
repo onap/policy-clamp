@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2022 Nordix Foundation.
+ *  Copyright (C) 2021-2022,2024 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,7 +21,6 @@
 
 package org.onap.policy.clamp.acm.participant.kubernetes.helm;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -29,20 +28,18 @@ import static org.mockito.Mockito.doReturn;
 
 import java.io.File;
 import java.util.List;
-import java.util.Map;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.onap.policy.clamp.acm.participant.kubernetes.exception.ServiceException;
-import org.onap.policy.clamp.acm.participant.kubernetes.handler.AutomationCompositionElementHandler;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartInfo;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartList;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
+import org.onap.policy.models.base.PfModelException;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
@@ -71,29 +68,19 @@ class PodStatusValidatorTest {
         charts = CODER.decode(new File(CHART_INFO_YAML), ChartList.class).getCharts();
     }
 
-    @AfterEach
-    void clearPodStatusMap() {
-        AutomationCompositionElementHandler.getPodStatusMap().clear();
-    }
-
 
     @Test
     void test_RunningPodState() throws ServiceException {
         String runningPod = "NAME\tREADY\tSTATUS\tRESTARTS\tAGE\r\nHelloWorld-54777df9f8-qpzqr\t1/1\tRunning\t0\t9h";
         doReturn(runningPod).when(client).executeCommand(any());
         assertDoesNotThrow(() -> podStatusValidator.run());
-        assertThat(AutomationCompositionElementHandler.getPodStatusMap()).hasSize(1);
-        assertThat(AutomationCompositionElementHandler.getPodStatusMap()).containsKey(charts.get(0).getReleaseName());
-        assertThat(AutomationCompositionElementHandler.getPodStatusMap())
-            .containsValue(Map.of("HelloWorld-54777df9f8-qpzqr", "Running"));
     }
 
     @Test
     void test_InvalidPodState() throws ServiceException {
         String invalidPod = "NAME\tREADY\tSTATUS\tRESTARTS\tAGE\nhellofromdocker-54777df9f8-qpzqr\t1/1\tInit\t0\t9h";
         doReturn(invalidPod).when(client).executeCommand(any());
-        assertThrows(ServiceException.class, () -> podStatusValidator.run());
-        assertThat(AutomationCompositionElementHandler.getPodStatusMap()).isEmpty();
+        assertThrows(PfModelException.class, () -> podStatusValidator.run());
     }
 
     // Use case scenario: Hard coded pod name
@@ -102,9 +89,5 @@ class PodStatusValidatorTest {
         String runningPod = "NAME\tREADY\tSTATUS\tRESTARTS\tAGE\r\nhelloallworld-54777df9f8-qpzqr\t1/1\tRunning\t0\t9h";
         doReturn(runningPod).when(client).executeCommand(any());
         assertDoesNotThrow(() -> podValidatorWithPodName.run());
-        assertThat(AutomationCompositionElementHandler.getPodStatusMap()).hasSize(1);
-        assertThat(AutomationCompositionElementHandler.getPodStatusMap()).containsKey(charts.get(2).getReleaseName());
-        assertThat(AutomationCompositionElementHandler.getPodStatusMap())
-            .containsValue(Map.of("helloallworld-54777df9f8-qpzqr", "Running"));
     }
 }
