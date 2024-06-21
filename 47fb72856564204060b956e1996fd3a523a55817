@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a863d448_aafbe27a",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/acm/participant/kubernetes/handler/AutomationCompositionElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2024-06-21T07:55:22Z",
+      "side": 1,
+      "message": "Spring components should use constructor injection:\n\n    private final ChartService chartService;\n\n    public AutomationCompositionElementHandler(ParticipantIntermediaryApi intermediaryApi, ChartService chartService) {\n        super(intermediaryApi);\n        this.chartService \u003d chartService;\n    }",
+      "range": {
+        "startLine": 57,
+        "startChar": 4,
+        "endLine": 62,
+        "endChar": 5
+      },
+      "revId": "47fb72856564204060b956e1996fd3a523a55817",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ba806c49_58bf8dbd",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/acm/participant/kubernetes/handler/AutomationCompositionElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2024-06-21T07:55:22Z",
+      "side": 1,
+      "message": "var chart \u003d getChartInfo(instanceElement.inProperties());",
+      "range": {
+        "startLine": 81,
+        "startChar": 8,
+        "endLine": 82,
+        "endChar": 61
+      },
+      "revId": "47fb72856564204060b956e1996fd3a523a55817",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "38f80d14_878d2a7a",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/test/java/org/onap/policy/clamp/acm/participant/kubernetes/helm/PodStatusValidatorTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2024-06-21T07:55:22Z",
+      "side": 1,
+      "message": "2021-2022,2024",
+      "range": {
+        "startLine": 3,
+        "startChar": 18,
+        "endLine": 3,
+        "endChar": 27
+      },
+      "revId": "47fb72856564204060b956e1996fd3a523a55817",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
