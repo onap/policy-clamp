@@ -200,7 +200,7 @@ class SupervisionMessagesTest {
         var publisher = new ParticipantRegisterAckPublisher();
         var topicSink = mock(TopicSink.class);
         publisher.active(topicSink);
-        publisher.send(UUID.randomUUID(), CommonTestData.getParticipantId());
+        publisher.send(UUID.randomUUID(), CommonTestData.getParticipantId(), CommonTestData.getReplicaId());
         verify(topicSink).send(anyString());
     }
 

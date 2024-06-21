@@ -45,4 +45,9 @@ public class ParticipantRegisterAckListener extends ParticipantAckListener<Parti
     public String getType() {
         return ParticipantMessageType.PARTICIPANT_REGISTER_ACK.name();
     }
+
+    @Override
+    public boolean isDefaultTopic() {
+        return false;
+    }
 }

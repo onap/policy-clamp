@@ -104,7 +104,7 @@ class SupervisionParticipantHandlerTest {
 
         verify(participantProvider).saveParticipant(any());
         verify(participantRegisterAckPublisher).send(participantRegisterMessage.getMessageId(),
-                CommonTestData.getParticipantId());
+                CommonTestData.getParticipantId(), null);
     }
 
     @Test
@@ -158,7 +158,8 @@ class SupervisionParticipantHandlerTest {
                 CommonTestData.getTestParamaterGroup());
         handler.handleParticipantMessage(participantRegisterMessage);
 
-        verify(participantRegisterAckPublisher).send(participantRegisterMessage.getMessageId(), participantId);
+        verify(participantRegisterAckPublisher)
+                .send(participantRegisterMessage.getMessageId(), participantId, participantId);
         verify(acDefinitionProvider).updateAcDefinition(any(AutomationCompositionDefinition.class),
                 eq(CommonTestData.TOSCA_COMP_NAME));
         verify(participantRestartPublisher).send(any(), any(AutomationCompositionDefinition.class), any());
@@ -216,7 +217,8 @@ class SupervisionParticipantHandlerTest {
                 CommonTestData.getTestParamaterGroup());
         handler.handleParticipantMessage(participantRegisterMessage);
 
-        verify(participantRegisterAckPublisher).send(participantRegisterMessage.getMessageId(), participantId);
+        verify(participantRegisterAckPublisher)
+                .send(participantRegisterMessage.getMessageId(), participantId, replicaId);
         verify(acDefinitionProvider, times(0)).updateAcDefinition(any(AutomationCompositionDefinition.class),
                 eq(CommonTestData.TOSCA_COMP_NAME));
         verify(participantSyncPublisher)

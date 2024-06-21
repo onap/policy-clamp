@@ -36,14 +36,21 @@ public class ParticipantRegisterAckPublisher extends AbstractParticipantAckPubli
      *
      * @param responseTo the original request id in the request.
      * @param participantId the participant Id
+     * @param replicaId the participant replica Id
      */
     @Timed(value = "publisher.participant_register_ack", description = "PARTICIPANT_REGISTER_ACK messages published")
-    public void send(UUID responseTo, UUID participantId) {
+    public void send(UUID responseTo, UUID participantId, UUID replicaId) {
         var message = new ParticipantRegisterAck();
         message.setParticipantId(participantId);
+        message.setReplicaId(replicaId);
         message.setResponseTo(responseTo);
         message.setMessage("Participant Register Ack");
         message.setResult(true);
         super.send(message);
+    }
+
+    @Override
+    public boolean isDefaultTopic() {
+        return false;
     }
 }

@@ -81,7 +81,7 @@ public class SupervisionParticipantHandler {
                 participantRegisterMsg.getParticipantSupportedElementType(), true);
 
         participantRegisterAckPublisher.send(participantRegisterMsg.getMessageId(),
-                participantRegisterMsg.getParticipantId());
+                participantRegisterMsg.getParticipantId(), participantRegisterMsg.getReplicaId());
     }
 
     /**
