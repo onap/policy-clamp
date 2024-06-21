@@ -1,0 +1,211 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a0ecdb25_9032940d",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/test/java/org/onap/policy/clamp/acm/participant/kubernetes/handler/AutomationCompositionElementHandlerTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2024-06-21T09:23:48Z",
+      "side": 1,
+      "message": "in this test spy is useless",
+      "range": {
+        "startLine": 80,
+        "startChar": 16,
+        "endLine": 80,
+        "endChar": 20
+      },
+      "revId": "3d2d59d82fccdcbe43d9e15f0465baca2bda9c8a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "507261e2_bb11bd72",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/test/java/org/onap/policy/clamp/acm/participant/kubernetes/handler/AutomationCompositionElementHandlerTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2024-06-21T09:23:48Z",
+      "side": 1,
+      "message": "in this test spy is useless",
+      "range": {
+        "startLine": 129,
+        "startChar": 16,
+        "endLine": 129,
+        "endChar": 20
+      },
+      "revId": "3d2d59d82fccdcbe43d9e15f0465baca2bda9c8a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "676c3efc_5585c952",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/test/java/org/onap/policy/clamp/acm/participant/kubernetes/handler/AutomationCompositionElementHandlerTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2024-06-21T09:23:48Z",
+      "side": 1,
+      "message": "in this test spy is useless",
+      "range": {
+        "startLine": 142,
+        "startChar": 16,
+        "endLine": 142,
+        "endChar": 20
+      },
+      "revId": "3d2d59d82fccdcbe43d9e15f0465baca2bda9c8a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "34d7997d_997581b5",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/test/java/org/onap/policy/clamp/acm/participant/kubernetes/handler/AutomationCompositionElementHandlerTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2024-06-21T09:23:48Z",
+      "side": 1,
+      "message": "in this test spy is useless",
+      "range": {
+        "startLine": 153,
+        "startChar": 15,
+        "endLine": 153,
+        "endChar": 20
+      },
+      "revId": "3d2d59d82fccdcbe43d9e15f0465baca2bda9c8a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "52cce4f0_41a1c9c3",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/test/java/org/onap/policy/clamp/acm/participant/kubernetes/handler/AutomationCompositionElementHandlerTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2024-06-21T09:23:48Z",
+      "side": 1,
+      "message": "in this test spy is useless",
+      "range": {
+        "startLine": 163,
+        "startChar": 16,
+        "endLine": 163,
+        "endChar": 20
+      },
+      "revId": "3d2d59d82fccdcbe43d9e15f0465baca2bda9c8a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d2f8ff3d_ef5ef043",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/test/java/org/onap/policy/clamp/acm/participant/kubernetes/handler/AutomationCompositionElementHandlerTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2024-06-21T09:23:48Z",
+      "side": 1,
+      "message": "in this test spy is useless",
+      "range": {
+        "startLine": 174,
+        "startChar": 16,
+        "endLine": 174,
+        "endChar": 20
+      },
+      "revId": "3d2d59d82fccdcbe43d9e15f0465baca2bda9c8a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1dabfaec_13753bb6",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/test/java/org/onap/policy/clamp/acm/participant/kubernetes/handler/AutomationCompositionElementHandlerTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2024-06-21T09:23:48Z",
+      "side": 1,
+      "message": "in this test spy is useless",
+      "range": {
+        "startLine": 185,
+        "startChar": 16,
+        "endLine": 185,
+        "endChar": 20
+      },
+      "revId": "3d2d59d82fccdcbe43d9e15f0465baca2bda9c8a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f206796a_59fbf654",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/test/java/org/onap/policy/clamp/acm/participant/kubernetes/handler/AutomationCompositionElementHandlerTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2024-06-21T09:23:48Z",
+      "side": 1,
+      "message": "in this test spy is useless",
+      "range": {
+        "startLine": 195,
+        "startChar": 16,
+        "endLine": 195,
+        "endChar": 19
+      },
+      "revId": "3d2d59d82fccdcbe43d9e15f0465baca2bda9c8a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "acbc2c75_2dc4a27c",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/test/java/org/onap/policy/clamp/acm/participant/kubernetes/handler/AutomationCompositionElementHandlerTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2024-06-21T09:23:48Z",
+      "side": 1,
+      "message": "in this test spy is useless",
+      "range": {
+        "startLine": 205,
+        "startChar": 16,
+        "endLine": 205,
+        "endChar": 20
+      },
+      "revId": "3d2d59d82fccdcbe43d9e15f0465baca2bda9c8a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
