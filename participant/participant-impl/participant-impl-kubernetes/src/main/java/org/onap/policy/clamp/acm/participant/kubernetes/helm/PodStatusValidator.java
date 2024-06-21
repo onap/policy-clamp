@@ -1,6 +1,6 @@
 /*-
  * ========================LICENSE_START=================================
- * Copyright (C) 2021-2023 Nordix Foundation. All rights reserved.
+ * Copyright (C) 2021-2024 Nordix Foundation. All rights reserved.
  * ======================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 
 package org.onap.policy.clamp.acm.participant.kubernetes.helm;
 
+import jakarta.ws.rs.core.Response;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -28,8 +29,8 @@ import java.util.Map;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.onap.policy.clamp.acm.participant.kubernetes.exception.ServiceException;
-import org.onap.policy.clamp.acm.participant.kubernetes.handler.AutomationCompositionElementHandler;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartInfo;
+import org.onap.policy.models.base.PfModelException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,17 +67,17 @@ public class PodStatusValidator {
      * @throws InterruptedException in case of an exception
      * @throws ServiceException in case of an exception
      */
-    public void run() throws InterruptedException, ServiceException {
+    public void run() throws InterruptedException, PfModelException {
         logger.info("Polling the status of deployed pods for the chart {}", chart.getChartId().getName());
 
         try {
             verifyPodStatus();
-        } catch (IOException e) {
-            throw new ServiceException("Error verifying the status of the pod. Exiting", e);
+        } catch (IOException | ServiceException e) {
+            throw new PfModelException(Response.Status.BAD_REQUEST, "Error verifying the status of the pod. Exiting");
         }
     }
 
-    private void verifyPodStatus() throws ServiceException, IOException, InterruptedException {
+    private void verifyPodStatus() throws ServiceException, IOException, InterruptedException, PfModelException {
         var isVerified = false;
         long endTime = System.currentTimeMillis() + (timeout * 1000L);
 
@@ -92,11 +93,11 @@ public class PodStatusValidator {
                 Thread.sleep(statusCheckInterval * 1000L);
             } else {
                 logger.info("All pods are in running state for the helm chart {}", chart.getChartId().getName());
-                AutomationCompositionElementHandler.getPodStatusMap().put(chart.getReleaseName(), podStatusMap);
             }
         }
         if (!isVerified) {
-            throw new ServiceException("Time out Exception verifying the status of the pod");
+            throw new PfModelException(Response.Status.GATEWAY_TIMEOUT,
+                    "Time out Exception verifying the status of the pod");
         }
     }
 

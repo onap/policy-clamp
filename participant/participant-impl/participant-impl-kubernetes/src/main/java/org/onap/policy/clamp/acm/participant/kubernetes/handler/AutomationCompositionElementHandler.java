@@ -24,20 +24,16 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import lombok.AccessLevel;
-import lombok.Getter;
+import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
+import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
-import org.onap.policy.clamp.acm.participant.intermediary.api.impl.AcElementListenerV1;
+import org.onap.policy.clamp.acm.participant.intermediary.api.impl.AcElementListenerV2;
 import org.onap.policy.clamp.acm.participant.kubernetes.exception.ServiceException;
 import org.onap.policy.clamp.acm.participant.kubernetes.helm.PodStatusValidator;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartInfo;
 import org.onap.policy.clamp.acm.participant.kubernetes.service.ChartService;
-import org.onap.policy.clamp.common.acm.exception.AutomationCompositionException;
-import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.common.utils.coder.Coder;
@@ -53,24 +49,18 @@ import org.springframework.stereotype.Component;
  * This class handles implementation of automationCompositionElement updates.
  */
 @Component
-public class AutomationCompositionElementHandler extends AcElementListenerV1 {
+public class AutomationCompositionElementHandler extends AcElementListenerV2 {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    // Map of helm installation and the status of corresponding pods
-    @Getter
-    private static Map<String, Map<String, String>> podStatusMap = new ConcurrentHashMap<>();
     private static final Coder CODER = new StandardCoder();
 
-    @Autowired
-    private ChartService chartService;
+    private final ChartService chartService;
 
-    // Map of acElement Id and installed Helm charts
-    @Getter(AccessLevel.PACKAGE)
-    private final Map<UUID, ChartInfo> chartMap = new HashMap<>();
-
-    public AutomationCompositionElementHandler(ParticipantIntermediaryApi intermediaryApi) {
+    public AutomationCompositionElementHandler(ParticipantIntermediaryApi intermediaryApi, ChartService chartService) {
         super(intermediaryApi);
+        this.chartService = chartService;
     }
+
 
     // Default thread config values
     private static class ThreadConfig {
@@ -79,97 +69,99 @@ public class AutomationCompositionElementHandler extends AcElementListenerV1 {
     }
 
     /**
-     * Callback method to handle a automation composition element state change.
+     * Handle an undeploy on a automation composition element.
      *
-     * @param automationCompositionElementId the ID of the automation composition element
+     * @param compositionElement the information of the Automation Composition Definition Element
+     * @param instanceElement    the information of the Automation Composition Instance Element
+     * @throws PfModelException in case of a model exception
      */
     @Override
-    public synchronized void undeploy(UUID automationCompositionId, UUID automationCompositionElementId) {
-        var chart = chartMap.get(automationCompositionElementId);
+    public void undeploy(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
+            throws PfModelException {
+
+        var chart = getChartInfo(instanceElement.inProperties());
         if (chart != null) {
             LOGGER.info("Helm deployment to be deleted {} ", chart.getReleaseName());
             try {
                 chartService.uninstallChart(chart);
-                intermediaryApi.updateAutomationCompositionElementState(automationCompositionId,
-                        automationCompositionElementId, DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR,
+                intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
+                        instanceElement.elementId(), DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR,
                         "Undeployed");
-                chartMap.remove(automationCompositionElementId);
-                podStatusMap.remove(chart.getReleaseName());
+                instanceElement.outProperties().remove(chart.getReleaseName());
+                intermediaryApi.sendAcElementInfo(instanceElement.instanceId(), instanceElement.elementId(),
+                        null, null, instanceElement.outProperties());
             } catch (ServiceException se) {
-                LOGGER.warn("Deletion of Helm deployment failed", se);
+                throw new PfModelException(Status.EXPECTATION_FAILED, "Deletion of Helm deployment failed", se);
             }
         }
+
     }
 
     /**
-     * Callback method to handle an update on a automation composition element.
+     * Handle a deploy on a automation composition element.
      *
-     * @param automationCompositionId the automationComposition Id
-     * @param element the information on the automation composition element
-     * @param properties properties Map
-     * @throws PfModelException in case of an exception
+     * @param compositionElement the information of the Automation Composition Definition Element
+     * @param instanceElement    the information of the Automation Composition Instance Element
+     * @throws PfModelException from Policy framework
      */
     @Override
-    public synchronized void deploy(UUID automationCompositionId, AcElementDeploy element,
-            Map<String, Object> properties) throws PfModelException {
-
+    public void deploy(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
+            throws PfModelException {
         try {
-            var chartInfo = getChartInfo(properties);
+            var chartInfo = getChartInfo(instanceElement.inProperties());
             if (chartService.installChart(chartInfo)) {
-                chartMap.put(element.getId(), chartInfo);
-
-                var config = getThreadConfig(properties);
-                checkPodStatus(automationCompositionId, element.getId(), chartInfo,
-                        config.uninitializedToPassiveTimeout, config.podStatusCheckInterval);
+                var config = getThreadConfig(compositionElement.inProperties());
+                checkPodStatus(instanceElement.instanceId(), instanceElement.elementId(), chartInfo,
+                        config.uninitializedToPassiveTimeout, config.podStatusCheckInterval, instanceElement);
             } else {
-                intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
-                        DeployState.UNDEPLOYED, null, StateChangeResult.FAILED, "Chart not installed");
+                throw new PfModelException(Response.Status.BAD_REQUEST, "Installation of Helm chart failed ");
             }
-        } catch (ServiceException | IOException e) {
-            throw new PfModelException(Response.Status.BAD_REQUEST, "Installation of Helm chart failed ", e);
-        } catch (InterruptedException e) {
+        } catch (ServiceException | IOException | InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new PfModelException(Response.Status.BAD_REQUEST, "Error invoking ExecutorService ", e);
-        } catch (AutomationCompositionException e) {
-            intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, element.getId(),
-                    DeployState.UNDEPLOYED, null, StateChangeResult.FAILED, e.getMessage());
+            throw new PfModelException(Response.Status.BAD_REQUEST, "Installation of Helm chart failed ", e);
         }
+
     }
 
-    private ThreadConfig getThreadConfig(Map<String, Object> properties) throws AutomationCompositionException {
+    private ThreadConfig getThreadConfig(Map<String, Object> properties) throws PfModelException {
         try {
             return CODER.convert(properties, ThreadConfig.class);
         } catch (CoderException e) {
-            throw new AutomationCompositionException(Status.BAD_REQUEST, "Error extracting ThreadConfig ", e);
+            throw new PfModelException(Status.BAD_REQUEST, "Error extracting ThreadConfig ", e);
         }
     }
 
-    private ChartInfo getChartInfo(Map<String, Object> properties) throws AutomationCompositionException {
+    private ChartInfo getChartInfo(Map<String, Object> properties) throws PfModelException {
         @SuppressWarnings("unchecked")
         var chartData = (Map<String, Object>) properties.get("chart");
-
         LOGGER.info("Installation request received for the Helm Chart {} ", chartData);
         try {
             return CODER.convert(chartData, ChartInfo.class);
         } catch (CoderException e) {
-            throw new AutomationCompositionException(Status.BAD_REQUEST, "Error extracting ChartInfo ", e);
+            throw new PfModelException(Status.BAD_REQUEST, "Error extracting ChartInfo", e);
         }
+
     }
 
     /**
      * Invoke a new thread to check the status of deployed pods.
      *
      * @param chart ChartInfo
-     * @throws ServiceException in case of an exception
+     * @throws PfModelException in case of an exception
      */
     public void checkPodStatus(UUID automationCompositionId, UUID elementId, ChartInfo chart, int timeout,
-            int podStatusCheckInterval) throws InterruptedException, ServiceException {
+            int podStatusCheckInterval, InstanceElementDto instanceElement) throws InterruptedException,
+            PfModelException {
 
         var result = new PodStatusValidator(chart, timeout, podStatusCheckInterval);
         result.run();
         LOGGER.info("Pod Status Validator Completed");
         intermediaryApi.updateAutomationCompositionElementState(automationCompositionId, elementId,
                 DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Deployed");
+        instanceElement.outProperties().put(chart.getReleaseName(), "Running");
+
+        intermediaryApi.sendAcElementInfo(automationCompositionId, elementId, null, null,
+                instanceElement.outProperties());
 
     }
 }
