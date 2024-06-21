@@ -21,7 +21,6 @@
 
 package org.onap.policy.clamp.acm.participant.kubernetes.handler;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -31,6 +30,8 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -43,6 +44,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
+import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.acm.participant.kubernetes.exception.ServiceException;
 import org.onap.policy.clamp.acm.participant.kubernetes.models.ChartInfo;
@@ -85,58 +87,54 @@ class AutomationCompositionElementHandlerTest {
     }
 
     @Test
-    void test_AutomationCompositionElementStateChange() throws ServiceException {
-        var automationCompositionElementId1 = UUID.randomUUID();
-        var automationCompositionElementId2 = UUID.randomUUID();
-
-        automationCompositionElementHandler.getChartMap().put(automationCompositionElementId1, charts.get(0));
-        automationCompositionElementHandler.getChartMap().put(automationCompositionElementId2, charts.get(1));
+    void test_AutomationCompositionElementStateChange() throws ServiceException, PfModelException {
 
         doNothing().when(chartService).uninstallChart(charts.get(0));
 
-        automationCompositionElementHandler.undeploy(commonTestData.getAutomationCompositionId(),
-                automationCompositionElementId1);
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> inPropertiesMap = objectMapper.convertValue(charts.get(0), new TypeReference<>() {});
+
+        automationCompositionElementHandler.undeploy(commonTestData.createCompositionElementDto(),
+                commonTestData.createInstanceElementDto(Map.of("chart", inPropertiesMap)));
 
         doThrow(new ServiceException("Error uninstalling the chart")).when(chartService).uninstallChart(charts.get(0));
 
         assertDoesNotThrow(() -> automationCompositionElementHandler
-                .undeploy(commonTestData.getAutomationCompositionId(), automationCompositionElementId1));
+                .undeploy(commonTestData.createCompositionElementDto(),
+                        commonTestData.createInstanceElementDto(inPropertiesMap)));
     }
 
     @Test
     void test_AutomationCompositionElementUpdate()
             throws PfModelException, IOException, ServiceException, InterruptedException {
-        doNothing().when(automationCompositionElementHandler).checkPodStatus(any(), any(), any(), anyInt(), anyInt());
-        var element = CommonTestData.createAcElementDeploy();
+        doNothing().when(automationCompositionElementHandler).checkPodStatus(any(), any(), any(), anyInt(), anyInt(),
+                any());
         var nodeTemplatesMap = toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates();
+        var instanceElementDto = commonTestData.createInstanceElementDto(nodeTemplatesMap
+                .get(K8S_AUTOMATION_COMPOSITION_ELEMENT).getProperties());
+        var compositionElementDto = commonTestData.createCompositionElementDto();
 
         doReturn(false).when(chartService).installChart(any());
-        assertDoesNotThrow(() -> automationCompositionElementHandler.deploy(commonTestData.getAutomationCompositionId(),
-                element, nodeTemplatesMap.get(K8S_AUTOMATION_COMPOSITION_ELEMENT).getProperties()));
+        assertThrows(PfModelException.class, () -> automationCompositionElementHandler.deploy(compositionElementDto,
+                instanceElementDto));
 
         doReturn(true).when(chartService).installChart(any());
-        automationCompositionElementHandler.deploy(commonTestData.getAutomationCompositionId(), element,
-                nodeTemplatesMap.get(K8S_AUTOMATION_COMPOSITION_ELEMENT).getProperties());
-
-        assertThat(automationCompositionElementHandler.getChartMap()).hasSize(1).containsKey(element.getId());
+        automationCompositionElementHandler.deploy(compositionElementDto, instanceElementDto);
 
         doThrow(new ServiceException("Error installing the chart")).when(chartService).installChart(Mockito.any());
 
-        var elementId2 = UUID.randomUUID();
-        element.setId(elementId2);
         assertThrows(PfModelException.class,
-                () -> automationCompositionElementHandler.deploy(commonTestData.getAutomationCompositionId(), element,
-                        nodeTemplatesMap.get(K8S_AUTOMATION_COMPOSITION_ELEMENT).getProperties()));
+                () -> automationCompositionElementHandler.deploy(compositionElementDto, instanceElementDto));
 
-        assertThat(automationCompositionElementHandler.getChartMap().containsKey(elementId2)).isFalse();
     }
 
     @Test
     void test_checkPodStatus() {
         var chartInfo = charts.get(0);
         var automationCompositionId = UUID.randomUUID();
-        assertThrows(ServiceException.class, () -> automationCompositionElementHandler
-                .checkPodStatus(automationCompositionId, UUID.randomUUID(), chartInfo, 1, 1));
+        assertThrows(PfModelException.class, () -> automationCompositionElementHandler
+                .checkPodStatus(automationCompositionId, UUID.randomUUID(), chartInfo, 1, 1,
+                        commonTestData.createInstanceElementDto(Map.of())));
     }
 
     @Test
@@ -144,39 +142,50 @@ class AutomationCompositionElementHandlerTest {
         var element = CommonTestData.createAcElementDeploy();
         var automationCompositionId = commonTestData.getAutomationCompositionId();
         assertDoesNotThrow(
-                () -> automationCompositionElementHandler.update(automationCompositionId, element, Map.of()));
+                () -> automationCompositionElementHandler.update(commonTestData.createCompositionElementDto(),
+                        commonTestData.createInstanceElementDto(Map.of()),
+                        commonTestData.createInstanceElementDto(Map.of())));
     }
 
     @Test
     void testLock() {
-        assertDoesNotThrow(() -> automationCompositionElementHandler.lock(UUID.randomUUID(), UUID.randomUUID()));
+        assertDoesNotThrow(() -> automationCompositionElementHandler.lock(commonTestData.createCompositionElementDto(),
+                commonTestData.createInstanceElementDto(Map.of())));
     }
 
     @Test
     void testUnlock() {
-        assertDoesNotThrow(() -> automationCompositionElementHandler.unlock(UUID.randomUUID(), UUID.randomUUID()));
+        assertDoesNotThrow(() -> automationCompositionElementHandler
+                .unlock(commonTestData.createCompositionElementDto(),
+                        commonTestData.createInstanceElementDto(Map.of())));
     }
 
     @Test
     void testDelete() {
-        assertDoesNotThrow(() -> automationCompositionElementHandler.delete(UUID.randomUUID(), UUID.randomUUID()));
+        assertDoesNotThrow(() -> automationCompositionElementHandler
+                .delete(commonTestData.createCompositionElementDto(),
+                commonTestData.createInstanceElementDto(Map.of())));
     }
 
     @Test
     void testPrime() {
-        assertDoesNotThrow(() -> automationCompositionElementHandler.prime(UUID.randomUUID(), List.of()));
+        assertDoesNotThrow(() -> automationCompositionElementHandler.prime(new CompositionDto(UUID.randomUUID(),
+                Map.of(), Map.of())));
     }
 
     @Test
     void testDeprime() {
-        assertDoesNotThrow(() -> automationCompositionElementHandler.deprime(UUID.randomUUID()));
+        assertDoesNotThrow(() -> automationCompositionElementHandler.deprime(new CompositionDto(UUID.randomUUID(),
+                Map.of(), Map.of())));
     }
 
     @Test
     void testMigrate() {
         var element = CommonTestData.createAcElementDeploy();
         var automationCompositionId = commonTestData.getAutomationCompositionId();
-        assertDoesNotThrow(() -> automationCompositionElementHandler.migrate(automationCompositionId, element,
-                UUID.randomUUID(), Map.of()));
+        assertDoesNotThrow(() -> automationCompositionElementHandler
+                .migrate(commonTestData.createCompositionElementDto(),
+                commonTestData.createCompositionElementDto(), commonTestData.createInstanceElementDto(Map.of()),
+                commonTestData.createInstanceElementDto(Map.of())));
     }
 }

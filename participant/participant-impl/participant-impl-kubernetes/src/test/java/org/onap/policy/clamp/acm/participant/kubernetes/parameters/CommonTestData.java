@@ -22,10 +22,13 @@
 package org.onap.policy.clamp.acm.participant.kubernetes.parameters;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
+import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
+import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.parameters.Topics;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
@@ -34,6 +37,7 @@ import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 public class CommonTestData {
 
@@ -187,5 +191,26 @@ public class CommonTestData {
         element.setDefinition(new ToscaConceptIdentifier(KEY_NAME, "1.0.1"));
         element.setOrderedState(DeployOrder.DEPLOY);
         return element;
+    }
+
+    /**
+     * Create an InstanceElementDto.
+     *
+     * @return an InstanceElementDto
+     */
+    public InstanceElementDto createInstanceElementDto(Map<String, Object> inProperties) {
+        return new InstanceElementDto(getAutomationCompositionId(), UUID.randomUUID(),
+                new ToscaServiceTemplate(), inProperties, new HashMap<>());
+    }
+
+
+    /**
+     * Create an compositionElementDto.
+     *
+     * @return an compositionElementDto
+     */
+    public CompositionElementDto createCompositionElementDto() {
+        return new CompositionElementDto(getAutomationCompositionId(), null,
+                Map.of("uninitializedToPassiveTimeout", 100, "podStatusCheckInterval", "30"), null);
     }
 }
