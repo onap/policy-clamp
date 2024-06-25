@@ -47,4 +47,9 @@ public class ParticipantStatusReqPublisher extends AbstractParticipantPublisher<
         LOGGER.debug("Participant StatusReq sent {}", message);
         super.send(message);
     }
+
+    @Override
+    public boolean isDefaultTopic() {
+        return false;
+    }
 }

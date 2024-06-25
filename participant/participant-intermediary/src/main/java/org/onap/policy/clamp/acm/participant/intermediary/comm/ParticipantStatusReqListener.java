@@ -44,4 +44,9 @@ public class ParticipantStatusReqListener extends ParticipantListener<Participan
     public String getType() {
         return ParticipantMessageType.PARTICIPANT_STATUS_REQ.name();
     }
+
+    @Override
+    public boolean isDefaultTopic() {
+        return false;
+    }
 }

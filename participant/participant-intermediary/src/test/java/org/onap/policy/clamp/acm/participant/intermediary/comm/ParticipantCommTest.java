@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 import java.util.Collections;
@@ -52,12 +53,14 @@ class ParticipantCommTest {
         var participantRegisterAckListener = new ParticipantRegisterAckListener(participantHandler);
         participantRegisterAckListener.onTopicEvent(null, null, null, new ParticipantRegisterAck());
         assertEquals(ParticipantMessageType.PARTICIPANT_REGISTER_ACK.name(), participantRegisterAckListener.getType());
+        assertFalse(participantRegisterAckListener.isDefaultTopic());
         assertEquals(participantRegisterAckListener, participantRegisterAckListener.getScoListener());
 
         var participantStatusReqListener = new ParticipantStatusReqListener(participantHandler);
         participantStatusReqListener.onTopicEvent(null, null, null, new ParticipantStatusReq());
         assertEquals(ParticipantMessageType.PARTICIPANT_STATUS_REQ.name(), participantStatusReqListener.getType());
         assertEquals(participantStatusReqListener, participantStatusReqListener.getScoListener());
+        assertFalse(participantStatusReqListener.isDefaultTopic());
 
         var participantDeregisterAckListener = new ParticipantDeregisterAckListener(participantHandler);
         assertEquals(ParticipantMessageType.PARTICIPANT_DEREGISTER_ACK.name(),
@@ -65,6 +68,7 @@ class ParticipantCommTest {
 
         var participantPrimeListener = new ParticipantPrimeListener(participantHandler);
         assertEquals(ParticipantMessageType.PARTICIPANT_PRIME.name(), participantPrimeListener.getType());
+        assertTrue(participantPrimeListener.isDefaultTopic());
 
         var acPropertyUpdateListener = new AcPropertyUpdateListener(participantHandler);
         assertEquals(ParticipantMessageType.PROPERTIES_UPDATE.name(), acPropertyUpdateListener.getType());
@@ -80,6 +84,7 @@ class ParticipantCommTest {
         var participantSyncListener = new ParticipantSyncListener(participantHandler);
         assertEquals(ParticipantMessageType.PARTICIPANT_SYNC_MSG.name(),
                 participantSyncListener.getType());
+        assertFalse(participantSyncListener.isDefaultTopic());
 
         var acMigrationListener = new AutomationCompositionMigrationListener(participantHandler);
         assertEquals(ParticipantMessageType.AUTOMATION_COMPOSITION_MIGRATION.name(), acMigrationListener.getType());
