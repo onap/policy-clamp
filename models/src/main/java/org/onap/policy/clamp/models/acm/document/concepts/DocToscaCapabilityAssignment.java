@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022 Nordix Foundation.
+ *  Copyright (C) 2022,2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,10 @@ public class DocToscaCapabilityAssignment extends DocToscaWithTypeAndStringPrope
     @Serial
     private static final long serialVersionUID = 1L;
 
+    @SuppressWarnings("squid:S1948")
     private Map<@NotNull String, @NotNull Object> attributes;
+
+    @SuppressWarnings("squid:S1948")
     private List<@NotNull Object> occurrences;
 
     /**

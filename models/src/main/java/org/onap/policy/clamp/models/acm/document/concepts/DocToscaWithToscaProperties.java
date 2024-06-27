@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022 Nordix Foundation.
+ *  Copyright (C) 2022,2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.apache.commons.collections4.CollectionUtils;
 import org.onap.policy.clamp.models.acm.document.base.DocConceptKey;
+import org.onap.policy.clamp.models.acm.document.base.DocUtil;
 import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.common.parameters.annotations.NotBlank;
 import org.onap.policy.common.parameters.annotations.NotNull;
@@ -49,6 +50,7 @@ public class DocToscaWithToscaProperties<T extends ToscaWithToscaProperties> ext
     @Serial
     private static final long serialVersionUID = 1L;
 
+    @SuppressWarnings("squid:S1948")
     private Map<@NotNull @NotBlank String, @NotNull @Valid DocToscaProperty> properties;
 
     /**
@@ -120,5 +122,21 @@ public class DocToscaWithToscaProperties<T extends ToscaWithToscaProperties> ext
         var set = ToscaUtils.getPredefinedDataTypes().stream().map(DocConceptKey::new).collect(Collectors.toSet());
         referencedDataTypes.removeAll(set);
         return referencedDataTypes;
+    }
+
+    @Override
+    public int compareTo(final DocToscaEntity<T> otherConcept) {
+        if (this == otherConcept) {
+            return 0;
+        }
+
+        int result = super.compareTo(otherConcept);
+        if (result != 0) {
+            return result;
+        }
+
+        final var other = (DocToscaWithToscaProperties<T>) otherConcept;
+
+        return DocUtil.compareMaps(properties, other.properties);
     }
 }

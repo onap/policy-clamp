@@ -57,7 +57,12 @@ class MessageHandlerTest {
         var bridge = createMockElementService(ElementType.BRIDGE);
         var messageHandler = createMessageHandler(List.of(starter, bridge));
 
-        assertThatThrownBy(() -> messageHandler.getActiveService())
+        assertThatThrownBy(() -> messageHandler.active(null))
+                .isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> messageHandler.update(null))
+                .isInstanceOf(NullPointerException.class);
+
+        assertThatThrownBy(messageHandler::getActiveService)
                 .isInstanceOf(AutomationCompositionRuntimeException.class);
 
         var elementConfig = new ElementConfig();

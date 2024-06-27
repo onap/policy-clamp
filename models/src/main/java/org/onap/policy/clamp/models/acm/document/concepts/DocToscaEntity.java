@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022 Nordix Foundation.
+ *  Copyright (C) 2022,2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,6 +59,7 @@ public class DocToscaEntity<T extends ToscaEntity> extends Validated
     @SerializedName("derived_from")
     private String derivedFrom;
 
+    @SuppressWarnings("squid:S1948")
     private Map<@NotNull @NotBlank String, @NotNull @NotBlank Object> metadata = new LinkedHashMap<>();
 
     @NotBlank

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022 Nordix Foundation.
+ *  Copyright (C) 2022,2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,6 +60,7 @@ public class DocToscaProperty implements PfAuthorative<ToscaProperty>, Serializa
 
     @SerializedName("default")
     @NotBlank
+    @SuppressWarnings("squid:S1948")
     private Object defaultValue;
 
     private boolean required = false;
@@ -208,7 +209,7 @@ public class DocToscaProperty implements PfAuthorative<ToscaProperty>, Serializa
             return result;
         }
 
-        result = entrySchema.compareTo(other.entrySchema);
+        result = ObjectUtils.compare(entrySchema, other.entrySchema);
         if (result != 0) {
             return result;
         }

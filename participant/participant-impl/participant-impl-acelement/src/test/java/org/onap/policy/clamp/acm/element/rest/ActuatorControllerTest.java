@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022-2023 Nordix Foundation.
+ *  Copyright (C) 2022-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,6 +45,8 @@ class ActuatorControllerTest extends CommonActuatorController {
     private static final String PROMETHEUS_ENDPOINT = "onap/policy/clamp/acelement/v2/prometheus";
     private static final String SWAGGER_ENDPOINT = "onap/policy/clamp/acelement/v2/v3/api-docs";
 
+    private static final String WRONG_ENDPOINT = "onap/policy/clamp/acelement/v2/wrong";
+
     @LocalServerPort
     private int randomServerPort;
 
@@ -76,28 +78,40 @@ class ActuatorControllerTest extends CommonActuatorController {
     @Test
     void testGetHealth() {
         var invocationBuilder = super.sendActRequest(HEALTH_ENDPOINT);
-        var rawresp = invocationBuilder.buildGet().invoke();
-        assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
+        try (var rawresp = invocationBuilder.buildGet().invoke()) {
+            assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
+        }
     }
 
     @Test
     void testGetMetrics() {
         var invocationBuilder = super.sendActRequest(METRICS_ENDPOINT);
-        var rawresp = invocationBuilder.buildGet().invoke();
-        assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
+        try (var rawresp = invocationBuilder.buildGet().invoke()) {
+            assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
+        }
     }
 
     @Test
     void testGetPrometheus() {
         var invocationBuilder = super.sendActRequest(PROMETHEUS_ENDPOINT);
-        var rawresp = invocationBuilder.buildGet().invoke();
-        assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
+        try (var rawresp = invocationBuilder.buildGet().invoke()) {
+            assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
+        }
     }
 
     @Test
     void testGetSwagger() {
         var invocationBuilder = super.sendActRequest(SWAGGER_ENDPOINT);
-        var rawresp = invocationBuilder.buildGet().invoke();
-        assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
+        try (var rawresp = invocationBuilder.buildGet().invoke()) {
+            assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
+        }
+    }
+
+    @Test
+    void testWrongEndPoint() {
+        var invocationBuilder = super.sendActRequest(WRONG_ENDPOINT);
+        try (var rawresp = invocationBuilder.buildGet().invoke()) {
+            assertEquals(Response.Status.NOT_FOUND.getStatusCode(), rawresp.getStatus());
+        }
     }
 }

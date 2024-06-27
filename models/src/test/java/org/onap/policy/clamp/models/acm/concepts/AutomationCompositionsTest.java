@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021,2024 Nordix Foundation.
+ *  Copyright (C) 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,36 +13,25 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
  * ============LICENSE_END=========================================================
  */
 
 package org.onap.policy.clamp.models.acm.concepts;
 
-import java.util.ArrayList;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import org.onap.policy.models.base.PfUtils;
+import org.junit.jupiter.api.Test;
 
-@Getter
-@Setter
-@ToString
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode
-public class AutomationCompositions {
-    private List<AutomationComposition> automationCompositionList = new ArrayList<>();
+class AutomationCompositionsTest {
 
-    /**
-     * Copy constructor, does a deep copy.
-     *
-     * @param other the other element to copy from
-     */
-    public AutomationCompositions(final AutomationCompositions other) {
-        this.automationCompositionList = PfUtils.mapList(other.automationCompositionList, AutomationComposition::new);
+    @Test
+    void testAutomationCompositions() {
+        var ac0 = new AutomationCompositions();
+        ac0.setAutomationCompositionList(List.of(new AutomationComposition()));
+        var ac1 = new AutomationCompositions(ac0);
+        assertEquals(ac0.getAutomationCompositionList(), ac1.getAutomationCompositionList());
     }
 }

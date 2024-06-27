@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2023 Nordix Foundation.
+ * Copyright (C) 2021-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,6 +48,8 @@ class JpaAutomationCompositionElementTest {
     private static final String ELEMENT_ID = "a95757ba-b34a-4049-a2a8-46773abcbe5e";
     private static final String INSTANCE_ID = "a78757co-b34a-8949-a2a8-46773abcbe2a";
 
+    private static final PfConceptKey CONCEPT_KEY = new PfConceptKey();
+
     @Test
     void testJpaAutomationCompositionElementConstructor() {
         assertThatThrownBy(() -> {
@@ -85,19 +87,19 @@ class JpaAutomationCompositionElementTest {
         }).hasMessageMatching("definition" + NULL_ERROR);
 
         assertThatThrownBy(() -> {
-            new JpaAutomationCompositionElement("key", "key", new PfConceptKey(),
+            new JpaAutomationCompositionElement("key", "key", CONCEPT_KEY,
                 null, LockState.LOCKED);
         }).hasMessageMatching("deployState" + NULL_ERROR);
 
         assertThatThrownBy(() -> {
-            new JpaAutomationCompositionElement("key", "key", new PfConceptKey(),
+            new JpaAutomationCompositionElement("key", "key", CONCEPT_KEY,
                 DeployState.UNDEPLOYED, null);
         }).hasMessageMatching("lockState" + NULL_ERROR);
 
         assertDoesNotThrow(() -> new JpaAutomationCompositionElement());
         assertDoesNotThrow(() -> new JpaAutomationCompositionElement("key", "key"));
         assertDoesNotThrow(() -> new JpaAutomationCompositionElement("key", "key",
-            new PfConceptKey(), DeployState.UNDEPLOYED, LockState.LOCKED));
+                CONCEPT_KEY, DeployState.UNDEPLOYED, LockState.LOCKED));
     }
 
     @Test
@@ -141,7 +143,7 @@ class JpaAutomationCompositionElementTest {
     }
 
     @Test
-    void testJpaAutomationCompositionElementCompareTo() {
+    void testJpaAcElementCompareTo() {
         var testJpaAcElement = createJpaAutomationCompositionElementInstance();
 
         var otherJpaAcElement =
@@ -151,6 +153,16 @@ class JpaAutomationCompositionElementTest {
         assertEquals(0, testJpaAcElement.compareTo(testJpaAcElement));
         assertNotEquals(0,
                 testJpaAcElement.compareTo(new DummyJpaAutomationCompositionElementChild()));
+
+        assertEquals(testJpaAcElement, new JpaAutomationCompositionElement(testJpaAcElement));
+    }
+
+    @Test
+    void testJpaAutomationCompositionElementCompareTo() {
+        var testJpaAcElement = createJpaAutomationCompositionElementInstance();
+
+        var otherJpaAcElement =
+                new JpaAutomationCompositionElement(testJpaAcElement);
 
         testJpaAcElement.setElementId("BadValue");
         assertNotEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
@@ -205,7 +217,6 @@ class JpaAutomationCompositionElementTest {
         testJpaAcElement.setParticipantId(UUID.randomUUID().toString());
         assertNotEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
 
-        assertEquals(testJpaAcElement, new JpaAutomationCompositionElement(testJpaAcElement));
     }
 
     @Test
