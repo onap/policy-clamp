@@ -182,7 +182,7 @@ public class AutomationCompositionElementHandler extends AcElementListenerV2 {
                 createPolicyResp = response.getStatus();
             }
         }
-        if (createPolicyTypeResp == HttpStatus.SC_OK && createPolicyResp == HttpStatus.SC_OK) {
+        if (isSuccess(createPolicyTypeResp) && isSuccess(createPolicyResp)) {
             LOGGER.info(
                     "PolicyTypes/Policies for the automation composition element : {} are created " + "successfully",
                     instanceElement.elementId());
@@ -193,6 +193,10 @@ public class AutomationCompositionElementHandler extends AcElementListenerV2 {
                     instanceElement.elementId(), DeployState.UNDEPLOYED, null, StateChangeResult.FAILED,
                     "Creation of PolicyTypes/Policies failed. Policies will not be deployed.");
         }
+    }
+
+    private boolean isSuccess(int status) {
+        return status == HttpStatus.SC_OK || status == HttpStatus.SC_CREATED;
     }
 
     private List<ToscaConceptIdentifier> getPolicyTypeList(ToscaServiceTemplate serviceTemplate) {
