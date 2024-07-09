@@ -69,7 +69,7 @@ public class ParticipantRestartPublisher extends AbstractParticipantPublisher<Pa
             message.getAutomationcompositionList().add(restartAc);
         }
 
-        LOGGER.debug("Participant Restart sent {}", message);
+        LOGGER.debug("Participant Restart sent {}", message.getMessageId());
         super.send(message);
     }
 }

@@ -66,6 +66,8 @@ class SupervisionAcHandlerTest {
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         when(automationCompositionProvider.findAutomationComposition(IDENTIFIER))
                 .thenReturn(Optional.of(automationComposition));
+        when(automationCompositionProvider.updateAcState(any(AutomationComposition.class)))
+                .thenReturn(automationComposition);
 
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
         when(acDefinitionProvider.getAcDefinition(automationComposition.getCompositionId()))
@@ -82,7 +84,7 @@ class SupervisionAcHandlerTest {
         handler.handleAutomationCompositionStateChangeAckMessage(automationCompositionAckMessage);
 
         verify(automationCompositionProvider, times(3))
-            .updateAutomationCompositionElement(any(AutomationCompositionElement.class), any());
+            .updateAutomationCompositionElement(any(AutomationCompositionElement.class));
     }
 
     private AutomationCompositionDeployAck getAutomationCompositionDeployAck(ParticipantMessageType messageType,
@@ -107,6 +109,8 @@ class SupervisionAcHandlerTest {
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         when(automationCompositionProvider.findAutomationComposition(IDENTIFIER))
                 .thenReturn(Optional.of(automationComposition));
+        when(automationCompositionProvider.updateAcState(any(AutomationComposition.class)))
+                .thenReturn(automationComposition);
 
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
         when(acDefinitionProvider.getAcDefinition(automationComposition.getCompositionId()))
@@ -124,7 +128,7 @@ class SupervisionAcHandlerTest {
 
         handler.handleAutomationCompositionUpdateAckMessage(automationCompositionAckMessage);
 
-        verify(automationCompositionProvider).updateAutomationComposition(any(AutomationComposition.class));
+        verify(automationCompositionProvider).updateAcState(any(AutomationComposition.class));
     }
 
     @Test
@@ -162,7 +166,7 @@ class SupervisionAcHandlerTest {
         handler.handleAutomationCompositionUpdateAckMessage(automationCompositionAckMessage);
 
         verify(automationCompositionProvider)
-            .updateAutomationCompositionElement(any(AutomationCompositionElement.class), any());
+            .updateAutomationCompositionElement(any(AutomationCompositionElement.class));
     }
 
     @Test
@@ -322,7 +326,7 @@ class SupervisionAcHandlerTest {
         handler.handleAutomationCompositionUpdateAckMessage(automationCompositionAckMessage);
 
         verify(automationCompositionProvider)
-            .updateAutomationCompositionElement(any(AutomationCompositionElement.class), any());
+            .updateAutomationCompositionElement(any(AutomationCompositionElement.class));
     }
 
     @Test

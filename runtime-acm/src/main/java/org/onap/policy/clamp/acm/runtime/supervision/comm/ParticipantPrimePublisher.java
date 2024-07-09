@@ -72,7 +72,7 @@ public class ParticipantPrimePublisher extends AbstractParticipantPublisher<Part
         message.setParticipantId(participantId);
         message.setTimestamp(Instant.now());
         message.setParticipantDefinitionUpdates(participantDefinitions);
-        LOGGER.debug("Participant Update sent {}", message);
+        LOGGER.debug("Participant Update sent {}", message.getMessageId());
         super.send(message);
     }
 
@@ -127,7 +127,7 @@ public class ParticipantPrimePublisher extends AbstractParticipantPublisher<Part
         // DeCommission the automation composition but deleting participantdefinitions on participants
         message.setParticipantDefinitionUpdates(null);
 
-        LOGGER.debug("Participant Update sent {}", message);
+        LOGGER.debug("Participant Update sent {}", message.getMessageId());
         super.send(message);
     }
 }

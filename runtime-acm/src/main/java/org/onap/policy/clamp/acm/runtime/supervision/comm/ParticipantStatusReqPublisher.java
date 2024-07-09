@@ -44,7 +44,7 @@ public class ParticipantStatusReqPublisher extends AbstractParticipantPublisher<
         message.setParticipantId(participantId);
         message.setTimestamp(Instant.now());
 
-        LOGGER.debug("Participant StatusReq sent {}", message);
+        LOGGER.debug("Participant StatusReq sent {}", message.getMessageId());
         super.send(message);
     }
 

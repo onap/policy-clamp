@@ -247,8 +247,7 @@ public class SupervisionAcHandler {
                 for (var element : automationComposition.getElements().values()) {
                     if (element.getParticipantId().equals(automationCompositionAckMessage.getParticipantId())) {
                         element.setDeployState(DeployState.DELETED);
-                        automationCompositionProvider.updateAutomationCompositionElement(element,
-                            automationComposition.getInstanceId());
+                        automationCompositionProvider.updateAutomationCompositionElement(element);
                     }
                 }
             } else {
@@ -263,7 +262,7 @@ public class SupervisionAcHandler {
                 automationCompositionAckMessage.getAutomationCompositionResultMap().entrySet(),
                 automationCompositionAckMessage.getStateChangeResult());
         if (updated) {
-            automationCompositionProvider.updateAutomationComposition(automationComposition);
+            automationComposition = automationCompositionProvider.updateAcState(automationComposition);
             var acDefinition = acDefinitionProvider.getAcDefinition(automationComposition.getCompositionId());
             participantSyncPublisher.sendSync(acDefinition.getServiceTemplate(), automationComposition);
         }
@@ -289,8 +288,7 @@ public class SupervisionAcHandler {
                 element.setDeployState(acElementAck.getValue().getDeployState());
                 element.setLockState(acElementAck.getValue().getLockState());
                 element.setRestarting(null);
-                automationCompositionProvider.updateAutomationCompositionElement(element,
-                    automationComposition.getInstanceId());
+                automationCompositionProvider.updateAutomationCompositionElement(element);
             }
         }
 

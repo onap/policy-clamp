@@ -56,7 +56,7 @@ public class AcElementPropertiesPublisher extends AbstractParticipantPublisher<P
         propertiesUpdate.setParticipantUpdatesList(
                 AcmUtils.createParticipantDeployList(automationComposition, DeployOrder.UPDATE));
 
-        LOGGER.debug("AC Element properties update sent {}", propertiesUpdate);
+        LOGGER.debug("AC Element properties update sent {}", propertiesUpdate.getMessageId());
         super.send(propertiesUpdate);
     }
 }

@@ -117,6 +117,23 @@ public class AutomationCompositionProvider {
         return result.toAuthorative();
     }
 
+
+    /**
+     * Update automation composition state.
+     *
+     * @param acSource the automation composition to update
+     * @return the updated automation composition
+     */
+    public AutomationComposition updateAcState(final AutomationComposition acSource) {
+        var automationComposition = automationCompositionRepository
+                .getReferenceById(acSource.getInstanceId().toString());
+        automationComposition.fromAuthorativeBase(acSource);
+        var result = automationCompositionRepository.save(automationComposition);
+        automationCompositionRepository.flush();
+        // Return the saved automation composition
+        return result.toAuthorative();
+    }
+
     /**
      * Update automation composition.
      *
@@ -232,12 +249,17 @@ public class AutomationCompositionProvider {
      * Update AutomationCompositionElement.
      *
      * @param element the AutomationCompositionElement
-     * @param instanceId the instance Id
      */
-    public void updateAutomationCompositionElement(@NonNull final AutomationCompositionElement element,
-                @NonNull final UUID instanceId) {
-        var jpaAcElement = new JpaAutomationCompositionElement(element.getId().toString(), instanceId.toString());
-        jpaAcElement.fromAuthorative(element);
+    public void updateAutomationCompositionElement(@NonNull final AutomationCompositionElement element) {
+        var jpaAcElement = acElementRepository.getReferenceById(element.getId().toString());
+        jpaAcElement.setMessage(element.getMessage());
+        jpaAcElement.setOutProperties(element.getOutProperties());
+        jpaAcElement.setOperationalState(element.getOperationalState());
+        jpaAcElement.setUseState(element.getUseState());
+        jpaAcElement.setDeployState(element.getDeployState());
+        jpaAcElement.setLockState(element.getLockState());
+        jpaAcElement.setRestarting(element.getRestarting());
+
         ProviderUtils.validate(element, jpaAcElement, "AutomationCompositionElement");
         acElementRepository.save(jpaAcElement);
     }
