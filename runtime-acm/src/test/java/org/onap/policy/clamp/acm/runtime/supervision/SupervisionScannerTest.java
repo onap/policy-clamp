@@ -186,6 +186,7 @@ class SupervisionScannerTest {
         automationComposition.setCompositionId(compositionId);
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         when(automationCompositionProvider.getAcInstancesInTransition()).thenReturn(List.of(automationComposition));
+        when(automationCompositionProvider.updateAcState(any())).thenReturn(automationComposition);
 
         var automationCompositionDeployPublisher = mock(AutomationCompositionDeployPublisher.class);
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
@@ -196,7 +197,7 @@ class SupervisionScannerTest {
                 mock(ParticipantSyncPublisher.class), acRuntimeParameterGroup);
         supervisionScanner.run();
 
-        verify(automationCompositionProvider).updateAutomationComposition(any(AutomationComposition.class));
+        verify(automationCompositionProvider).updateAcState(any(AutomationComposition.class));
     }
 
     @Test
@@ -255,7 +256,7 @@ class SupervisionScannerTest {
 
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         when(automationCompositionProvider.getAcInstancesInTransition()).thenReturn(List.of(automationComposition));
-
+        when(automationCompositionProvider.updateAcState(any())).thenReturn(automationComposition);
         var automationCompositionDeployPublisher = mock(AutomationCompositionDeployPublisher.class);
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
@@ -282,7 +283,7 @@ class SupervisionScannerTest {
             entry.getValue().setDeployState(DeployState.DEPLOYED);
         }
         scannerObj2.run();
-        verify(automationCompositionProvider, times(1)).updateAutomationComposition(any(AutomationComposition.class));
+        verify(automationCompositionProvider, times(1)).updateAcState(any(AutomationComposition.class));
         assertEquals(StateChangeResult.NO_ERROR, automationComposition.getStateChangeResult());
     }
 
@@ -341,6 +342,7 @@ class SupervisionScannerTest {
 
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         when(automationCompositionProvider.getAcInstancesInTransition()).thenReturn(List.of(automationComposition));
+        when(automationCompositionProvider.updateAcState(any())).thenReturn(automationComposition);
 
         var automationCompositionDeployPublisher = mock(AutomationCompositionDeployPublisher.class);
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
@@ -358,7 +360,7 @@ class SupervisionScannerTest {
         automationComposition.getElements().entrySet().iterator().next().getValue()
                 .setDeployState(DeployState.DEPLOYED);
         supervisionScanner.run();
-        verify(automationCompositionProvider, times(1)).updateAutomationComposition(any(AutomationComposition.class));
+        verify(automationCompositionProvider, times(1)).updateAcState(any(AutomationComposition.class));
 
         assertEquals(DeployState.DEPLOYED, automationComposition.getDeployState());
         assertEquals(compositionTargetId, automationComposition.getCompositionId());

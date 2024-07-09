@@ -201,12 +201,13 @@ public class SupervisionScanner {
         if (StateChangeResult.TIMEOUT.equals(automationComposition.getStateChangeResult())) {
             automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
         }
+        var acTuUpdate = automationComposition;
         if (DeployState.DELETED.equals(automationComposition.getDeployState())) {
             automationCompositionProvider.deleteAutomationComposition(automationComposition.getInstanceId());
         } else {
-            automationCompositionProvider.updateAutomationComposition(automationComposition);
+            acTuUpdate = automationCompositionProvider.updateAcState(acTuUpdate);
         }
-        participantSyncPublisher.sendSync(serviceTemplate, automationComposition);
+        participantSyncPublisher.sendSync(serviceTemplate, acTuUpdate);
     }
 
     private void handleTimeout(AutomationCompositionDefinition acDefinition) {

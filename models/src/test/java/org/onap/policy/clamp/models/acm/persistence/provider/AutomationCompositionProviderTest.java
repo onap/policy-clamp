@@ -225,12 +225,18 @@ class AutomationCompositionProviderTest {
         var automationCompositionProvider = new AutomationCompositionProvider(
             mock(AutomationCompositionRepository.class), acElementRepository);
 
-        assertThatThrownBy(() -> automationCompositionProvider.updateAutomationCompositionElement(null, null))
+        assertThatThrownBy(() -> automationCompositionProvider.updateAutomationCompositionElement(null))
             .hasMessageMatching(ACELEMENT_IS_NULL);
 
         var acElement = inputAutomationCompositions.getAutomationCompositionList().get(0).getElements().values()
             .iterator().next();
-        automationCompositionProvider.updateAutomationCompositionElement(acElement, UUID.randomUUID());
+        var jpa = new JpaAutomationCompositionElement();
+        jpa.setElementId(acElement.getId().toString());
+        jpa.setInstanceId(UUID.randomUUID().toString());
+        jpa.fromAuthorative(acElement);
+        when(acElementRepository.getReferenceById(acElement.getId().toString())).thenReturn(jpa);
+
+        automationCompositionProvider.updateAutomationCompositionElement(acElement);
         verify(acElementRepository).save(any());
     }
 

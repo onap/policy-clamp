@@ -144,7 +144,7 @@ public class ParticipantSyncPublisher extends AbstractParticipantPublisher<Parti
         }
         message.getAutomationcompositionList().add(syncAc);
 
-        LOGGER.debug("Participant AutomationComposition Sync sent {}", message);
+        LOGGER.debug("Participant AutomationComposition Sync sent {}", message.getMessageId());
         super.send(message);
     }
 }

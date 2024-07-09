@@ -87,7 +87,7 @@ public class AutomationCompositionDeployPublisher extends AbstractParticipantPub
         acDeployMsg.setTimestamp(Instant.now());
         acDeployMsg.setParticipantUpdatesList(participantDeploys);
 
-        LOGGER.debug("AutomationCompositionDeploy message sent {}", acDeployMsg);
+        LOGGER.debug("AutomationCompositionDeploy message sent {}", acDeployMsg.getMessageId());
         super.send(acDeployMsg);
     }
 }
