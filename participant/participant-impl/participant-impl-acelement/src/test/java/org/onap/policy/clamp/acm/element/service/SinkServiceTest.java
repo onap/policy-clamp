@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2022,2024 Nordix Foundation.
+ * Copyright (C) 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,19 +20,25 @@
 
 package org.onap.policy.clamp.acm.element.service;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
+import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.element.handler.messages.ElementMessage;
+import org.onap.policy.clamp.acm.element.handler.messages.ElementMessageType;
 import org.onap.policy.clamp.acm.element.main.concepts.ElementConfig;
-import org.onap.policy.clamp.acm.element.main.concepts.ElementType;
+import org.onap.policy.clamp.acm.element.main.parameters.AcElement;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
-public interface ElementService {
+class SinkServiceTest {
 
-    ElementType getType();
-
-    public void active(ElementConfig elementConfig);
-
-    public void update(ElementConfig elementConfig);
-
-    void handleMessage(ElementMessage message);
-
-    void deactivate();
+    @Test
+    void testNotThrow() {
+        var acElement = new AcElement();
+        acElement.setElementId(new ToscaConceptIdentifier("onap.policy.clamp.ac.element1", "1.0.0"));
+        var sinkService = new SinkService();
+        var elementConfig = new ElementConfig();
+        assertDoesNotThrow(() -> sinkService.active(elementConfig));
+        var message = new ElementMessage(ElementMessageType.STATUS);
+        assertDoesNotThrow(() -> sinkService.handleMessage(message));
+    }
 }

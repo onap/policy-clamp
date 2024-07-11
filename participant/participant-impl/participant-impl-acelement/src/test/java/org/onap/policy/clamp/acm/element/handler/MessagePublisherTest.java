@@ -27,8 +27,8 @@ import static org.mockito.Mockito.verify;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import org.onap.policy.clamp.models.acm.messages.kafka.element.ElementMessage;
-import org.onap.policy.clamp.models.acm.messages.kafka.element.ElementMessageType;
+import org.onap.policy.clamp.acm.element.handler.messages.ElementMessage;
+import org.onap.policy.clamp.acm.element.handler.messages.ElementMessageType;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
 
 

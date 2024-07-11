@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.models.acm.messages.rest.element;
+package org.onap.policy.clamp.acm.element.main.concepts;
 
 import lombok.Data;
 

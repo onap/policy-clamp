@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2022,2024 Nordix Foundation.
+ * Copyright (C) 2022,2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,19 +18,19 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.models.acm.messages.kafka.element;
+package org.onap.policy.clamp.acm.element.main.concepts;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
-@Getter
-@Setter
-@ToString(callSuper = true)
-public class ElementStatus extends ElementMessage {
+@Data
+public class ElementConfig {
 
-    public ElementStatus() {
-        super(ElementMessageType.STATUS);
-    }
+    private ToscaConceptIdentifier receiverId;
 
+    private ElementType elementType;
+
+    private Integer timerMs;
+
+    private KafkaConfig topicParameterGroup;
 }

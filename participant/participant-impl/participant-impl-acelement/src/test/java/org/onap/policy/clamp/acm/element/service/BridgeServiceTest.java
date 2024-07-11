@@ -22,21 +22,32 @@ package org.onap.policy.clamp.acm.element.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.element.handler.MessagePublisher;
+import org.onap.policy.clamp.acm.element.handler.messages.ElementMessage;
+import org.onap.policy.clamp.acm.element.handler.messages.ElementStatus;
+import org.onap.policy.clamp.acm.element.main.concepts.ElementConfig;
+import org.onap.policy.clamp.acm.element.main.concepts.ElementType;
 import org.onap.policy.clamp.acm.element.main.parameters.AcElement;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
-import org.onap.policy.clamp.models.acm.messages.kafka.element.ElementMessage;
-import org.onap.policy.clamp.models.acm.messages.kafka.element.ElementStatus;
-import org.onap.policy.clamp.models.acm.messages.rest.element.ElementConfig;
-import org.onap.policy.clamp.models.acm.messages.rest.element.ElementType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class BridgeServiceTest {
+
+    @Test
+    void testNotThrow() {
+        var acElement = new AcElement();
+        acElement.setElementId(new ToscaConceptIdentifier("onap.policy.clamp.ac.element1", "1.0.0"));
+        var bridgeService = new BridgeService(mock(MessagePublisher.class), acElement);
+        assertDoesNotThrow(bridgeService::deactivate);
+        var elementConfig = new ElementConfig();
+        assertDoesNotThrow(() -> bridgeService.update(elementConfig));
+    }
 
     @Test
     void testHandleMessage() {

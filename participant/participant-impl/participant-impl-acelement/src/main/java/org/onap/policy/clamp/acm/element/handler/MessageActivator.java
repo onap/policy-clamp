@@ -22,7 +22,7 @@ package org.onap.policy.clamp.acm.element.handler;
 
 import java.io.IOException;
 import java.util.List;
-import org.onap.policy.clamp.models.acm.messages.kafka.element.ElementMessageType;
+import org.onap.policy.clamp.acm.element.handler.messages.ElementMessageType;
 import org.onap.policy.common.endpoints.event.comm.TopicEndpointManager;
 import org.onap.policy.common.endpoints.event.comm.TopicSource;
 import org.onap.policy.common.endpoints.listeners.MessageTypeDispatcher;

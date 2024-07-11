@@ -26,12 +26,12 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import lombok.NonNull;
+import org.onap.policy.clamp.acm.element.handler.messages.ElementMessage;
+import org.onap.policy.clamp.acm.element.main.concepts.ElementConfig;
+import org.onap.policy.clamp.acm.element.main.concepts.ElementType;
 import org.onap.policy.clamp.acm.element.main.parameters.AcElement;
 import org.onap.policy.clamp.acm.element.service.ElementService;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
-import org.onap.policy.clamp.models.acm.messages.kafka.element.ElementMessage;
-import org.onap.policy.clamp.models.acm.messages.rest.element.ElementConfig;
-import org.onap.policy.clamp.models.acm.messages.rest.element.ElementType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.springframework.stereotype.Component;
 

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2022 Nordix Foundation.
+ * Copyright (C) 2022,2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,13 +22,14 @@ package org.onap.policy.clamp.acm.element.service;
 
 import jakarta.ws.rs.core.Response;
 import java.util.List;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.element.handler.MessageActivator;
 import org.onap.policy.clamp.acm.element.handler.MessageHandler;
+import org.onap.policy.clamp.acm.element.main.concepts.ElementConfig;
 import org.onap.policy.clamp.acm.element.main.parameters.ElementTopicParameters;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
-import org.onap.policy.clamp.models.acm.messages.rest.element.ElementConfig;
 import org.onap.policy.common.endpoints.parameters.TopicParameterGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +41,7 @@ public class ConfigService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ConfigService.class);
 
+    @Getter
     private ElementConfig elementConfig = new ElementConfig();
 
     private final MessageHandler handler;
@@ -75,15 +77,6 @@ public class ConfigService {
         this.elementConfig = elementConfig;
 
         LOGGER.info("Messages and service activated");
-    }
-
-    /**
-     * Fetch element configuration.
-     *
-     * @return element configuration present
-     */
-    public ElementConfig getElementConfig() {
-        return elementConfig;
     }
 
     /**

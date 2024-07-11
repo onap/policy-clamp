@@ -18,19 +18,9 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.models.acm.messages.rest.element;
+package org.onap.policy.clamp.acm.element.main.concepts;
 
-import lombok.Data;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+public enum ElementType {
 
-@Data
-public class ElementConfig {
-
-    private ToscaConceptIdentifier receiverId;
-
-    private ElementType elementType;
-
-    private Integer timerMs;
-
-    private KafkaConfig topicParameterGroup;
+    STARTER, BRIDGE, SINK
 }

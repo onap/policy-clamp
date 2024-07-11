@@ -88,6 +88,9 @@ class ParticipantCommTest {
 
         var acMigrationListener = new AutomationCompositionMigrationListener(participantHandler);
         assertEquals(ParticipantMessageType.AUTOMATION_COMPOSITION_MIGRATION.name(), acMigrationListener.getType());
+
+        var acPrepareListener = new AcPrepareListener(participantHandler);
+        assertEquals(ParticipantMessageType.AUTOMATION_COMPOSITION_PREPARE.name(), acPrepareListener.getType());
     }
 
     @Test

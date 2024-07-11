@@ -29,10 +29,10 @@ import static org.mockito.Mockito.verify;
 
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.element.handler.MessagePublisher;
+import org.onap.policy.clamp.acm.element.handler.messages.ElementMessage;
+import org.onap.policy.clamp.acm.element.main.concepts.ElementConfig;
+import org.onap.policy.clamp.acm.element.main.concepts.ElementType;
 import org.onap.policy.clamp.acm.element.main.parameters.AcElement;
-import org.onap.policy.clamp.models.acm.messages.kafka.element.ElementMessage;
-import org.onap.policy.clamp.models.acm.messages.rest.element.ElementConfig;
-import org.onap.policy.clamp.models.acm.messages.rest.element.ElementType;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 

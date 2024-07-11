@@ -20,8 +20,8 @@
 
 package org.onap.policy.clamp.acm.element.service;
 
-import org.onap.policy.clamp.models.acm.messages.kafka.element.ElementMessage;
-import org.onap.policy.clamp.models.acm.messages.rest.element.ElementConfig;
+import org.onap.policy.clamp.acm.element.handler.messages.ElementMessage;
+import org.onap.policy.clamp.acm.element.main.concepts.ElementConfig;
 
 public abstract class AbstractElementService implements ElementService {
 

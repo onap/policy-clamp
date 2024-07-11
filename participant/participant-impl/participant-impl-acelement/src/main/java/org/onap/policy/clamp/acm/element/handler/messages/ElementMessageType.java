@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2022 Nordix Foundation.
+ * Copyright (C) 2021-2022,2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,8 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.models.acm.messages.rest.element;
+package org.onap.policy.clamp.acm.element.handler.messages;
 
-public enum ElementType {
-
-    STARTER, BRIDGE, SINK
+public enum ElementMessageType {
+    STATUS, ACK_MSG
 }

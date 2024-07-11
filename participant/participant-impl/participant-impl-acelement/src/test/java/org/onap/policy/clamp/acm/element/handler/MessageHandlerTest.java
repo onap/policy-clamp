@@ -28,12 +28,12 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.clamp.acm.element.handler.messages.ElementStatus;
+import org.onap.policy.clamp.acm.element.main.concepts.ElementConfig;
+import org.onap.policy.clamp.acm.element.main.concepts.ElementType;
 import org.onap.policy.clamp.acm.element.main.parameters.AcElement;
 import org.onap.policy.clamp.acm.element.service.ElementService;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
-import org.onap.policy.clamp.models.acm.messages.kafka.element.ElementStatus;
-import org.onap.policy.clamp.models.acm.messages.rest.element.ElementConfig;
-import org.onap.policy.clamp.models.acm.messages.rest.element.ElementType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class MessageHandlerTest {

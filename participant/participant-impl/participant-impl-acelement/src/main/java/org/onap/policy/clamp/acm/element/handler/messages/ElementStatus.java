@@ -18,8 +18,19 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.models.acm.messages.kafka.element;
+package org.onap.policy.clamp.acm.element.handler.messages;
 
-public enum ElementMessageType {
-    STATUS, ACK_MSG
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@ToString(callSuper = true)
+public class ElementStatus extends ElementMessage {
+
+    public ElementStatus() {
+        super(ElementMessageType.STATUS);
+    }
+
 }

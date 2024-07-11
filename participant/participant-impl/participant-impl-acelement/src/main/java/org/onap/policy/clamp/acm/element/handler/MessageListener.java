@@ -20,7 +20,7 @@
 
 package org.onap.policy.clamp.acm.element.handler;
 
-import org.onap.policy.clamp.models.acm.messages.kafka.element.ElementStatus;
+import org.onap.policy.clamp.acm.element.handler.messages.ElementStatus;
 import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
 import org.onap.policy.common.endpoints.listeners.ScoListener;
 import org.onap.policy.common.utils.coder.StandardCoderObject;

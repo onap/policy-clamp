@@ -67,7 +67,7 @@
                             <generateModels>false</generateModels>
                             <generateSupportingFiles>false</generateSupportingFiles>
                             <importMappings>
-                                ElementConfig=org.onap.policy.clamp.models.acm.messages.rest.element.ElementConfig
+                                ElementConfig=org.onap.policy.clamp.acm.element.main.concepts.ElementConfig
                             </importMappings>
                             <configOptions>
                                 <sourceFolder>src/gen/java</sourceFolder>

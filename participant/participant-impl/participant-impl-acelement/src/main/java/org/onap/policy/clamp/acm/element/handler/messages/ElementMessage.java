@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.models.acm.messages.kafka.element;
+package org.onap.policy.clamp.acm.element.handler.messages;
 
 import java.time.Instant;
 import java.util.UUID;

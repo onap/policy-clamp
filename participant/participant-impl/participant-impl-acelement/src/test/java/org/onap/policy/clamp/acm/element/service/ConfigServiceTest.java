@@ -28,8 +28,8 @@ import static org.mockito.Mockito.verify;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.element.handler.MessageActivator;
 import org.onap.policy.clamp.acm.element.handler.MessageHandler;
-import org.onap.policy.clamp.models.acm.messages.rest.element.ElementConfig;
-import org.onap.policy.clamp.models.acm.messages.rest.element.KafkaConfig;
+import org.onap.policy.clamp.acm.element.main.concepts.ElementConfig;
+import org.onap.policy.clamp.acm.element.main.concepts.KafkaConfig;
 import org.onap.policy.common.endpoints.parameters.TopicParameterGroup;
 
 class ConfigServiceTest {
