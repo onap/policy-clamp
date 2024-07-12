@@ -20,6 +20,7 @@ package org.onap.policy.clamp.acm.runtime.main.parameters;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.validation.annotation.Validated;
 
@@ -27,6 +28,7 @@ import org.springframework.validation.annotation.Validated;
 @Setter
 @Validated
 @AllArgsConstructor
+@NoArgsConstructor
 public class Topics {
 
     private String operationTopic;

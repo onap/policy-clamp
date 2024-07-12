@@ -62,6 +62,6 @@ public class ParticipantIntermediaryParameters {
 
     @NotNull
     @Valid
-    private Topics topics;
+    private Topics topics = new Topics();
 
 }

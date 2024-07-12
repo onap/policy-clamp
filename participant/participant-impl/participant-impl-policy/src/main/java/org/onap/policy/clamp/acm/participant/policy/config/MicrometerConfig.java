@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2022 Nordix Foundation.
+ * Copyright (C) 2022, 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ package org.onap.policy.clamp.acm.participant.policy.config;
 import io.micrometer.core.aop.TimedAspect;
 import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,8 +35,9 @@ public class MicrometerConfig {
      * Load up the metrics registry.
      */
     @Bean
-    public InitializingBean forcePrometheusPostProcessor(BeanPostProcessor meterRegistryPostProcessor,
-            MeterRegistry registry) {
+    public InitializingBean forcePrometheusPostProcessor(@Qualifier("meterRegistryPostProcessor")
+                                                         BeanPostProcessor meterRegistryPostProcessor,
+                                                         MeterRegistry registry) {
         return () -> meterRegistryPostProcessor.postProcessAfterInitialization(registry, "");
     }
 

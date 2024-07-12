@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2023 Nordix Foundation.
+ *  Copyright (C) 2021-2024 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,6 +34,7 @@ import jakarta.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -61,7 +62,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@ActiveProfiles({ "test", "default" })
+@ActiveProfiles({"test", "default"})
 class CommissioningControllerTest extends CommonRestController {
 
     private static final String COMMISSIONING_ENDPOINT = "compositions";
@@ -72,6 +73,7 @@ class CommissioningControllerTest extends CommonRestController {
 
     @Autowired
     private ParticipantProvider participantProvider;
+
     @LocalServerPort
     private int randomServerPort;
 
@@ -86,6 +88,11 @@ class CommissioningControllerTest extends CommonRestController {
     @BeforeEach
     public void setUpPort() {
         super.setHttpPrefix(randomServerPort);
+    }
+
+    @AfterEach
+    void after() {
+        super.client.close();
     }
 
     @Test
@@ -111,15 +118,16 @@ class CommissioningControllerTest extends CommonRestController {
     @Test
     void testCreateBadRequest() {
         var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT);
-        var resp = invocationBuilder.post(Entity.json("NotToscaServiceTempalte"));
+        var resp = invocationBuilder.post(Entity.json("NotToscaServiceTemplate"));
 
         assertThat(Response.Status.BAD_REQUEST.getStatusCode()).isEqualTo(resp.getStatus());
         var commissioningResponse = resp.readEntity(CommissioningResponse.class);
         assertThat(commissioningResponse.getErrorDetails())
             .isEqualTo("org.springframework.http.converter.HttpMessageNotReadableException "
-                + "Bad Request Could not read JSON: java.lang.IllegalStateException: "
+                + "Could not read JSON: java.lang.IllegalStateException: "
                 + "Expected BEGIN_OBJECT but was STRING at line 1 column 1 path $");
         assertThat(commissioningResponse.getAffectedAutomationCompositionDefinitions()).isNull();
+        resp.close();
     }
 
     @Test
@@ -132,7 +140,7 @@ class CommissioningControllerTest extends CommonRestController {
 
         var commissioningResponse = createServiceTemplate(serviceTemplateCreate, Response.Status.INTERNAL_SERVER_ERROR);
         assertThat(commissioningResponse.getErrorDetails())
-            .isEqualTo("java.lang.IllegalArgumentException Internal Server Error parameter "
+            .isEqualTo("java.lang.IllegalArgumentException parameter "
                 + "\"version\": value \"1.0.wrong\", does not match regular expression \""
                 + PfKey.VERSION_REGEXP + "\"");
         assertThat(commissioningResponse.getAffectedAutomationCompositionDefinitions()).isNull();
@@ -149,7 +157,7 @@ class CommissioningControllerTest extends CommonRestController {
         assertThat(commissioningResponse.getAffectedAutomationCompositionDefinitions()).hasSize(7);
         for (var nodeTemplateName : serviceTemplateCreate.getToscaTopologyTemplate().getNodeTemplates().keySet()) {
             assertTrue(commissioningResponse.getAffectedAutomationCompositionDefinitions().stream()
-                    .anyMatch(ac -> ac.getName().equals(nodeTemplateName)));
+                .anyMatch(ac -> ac.getName().equals(nodeTemplateName)));
         }
     }
 
@@ -161,6 +169,7 @@ class CommissioningControllerTest extends CommonRestController {
         assertNull(commissioningResponse.getErrorDetails());
         // Response should return the number of node templates present in the service template
         assertThat(commissioningResponse.getAffectedAutomationCompositionDefinitions()).hasSize(11);
+        assertNotNull(serviceTemplateCreate);
         for (var nodeTemplateName : serviceTemplateCreate.getToscaTopologyTemplate().getNodeTemplates().keySet()) {
             assertTrue(commissioningResponse.getAffectedAutomationCompositionDefinitions().stream()
                 .anyMatch(ac -> ac.getName().equals(nodeTemplateName)));
@@ -168,7 +177,7 @@ class CommissioningControllerTest extends CommonRestController {
     }
 
     private CommissioningResponse createServiceTemplate(ToscaServiceTemplate serviceTemplateCreate,
-        Response.Status statusExpected) {
+                                                        Response.Status statusExpected) {
         var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT);
         try (var resp = invocationBuilder.post(Entity.json(serviceTemplateCreate))) {
             assertEquals(statusExpected.getStatusCode(), resp.getStatus());
@@ -199,17 +208,17 @@ class CommissioningControllerTest extends CommonRestController {
         assertThat(commissioningResponse.getAffectedAutomationCompositionDefinitions()).hasSize(7);
         for (var nodeTemplateName : serviceTemplateUpdate.getToscaTopologyTemplate().getNodeTemplates().keySet()) {
             assertTrue(commissioningResponse.getAffectedAutomationCompositionDefinitions().stream()
-                    .anyMatch(ac -> ac.getName().equals(nodeTemplateName)));
+                .anyMatch(ac -> ac.getName().equals(nodeTemplateName)));
         }
 
-        var entity = getServiceTemplate(COMMISSIONING_ENDPOINT + "/" + compositionId, Response.Status.OK);
+        var entity = getServiceTemplate(COMMISSIONING_ENDPOINT + "/" + compositionId);
         assertThat(entity.getServiceTemplate().getDataTypes()).containsKey(toscaDataType.getName());
     }
 
-    private AutomationCompositionDefinition getServiceTemplate(String url, Response.Status statusExpected) {
+    private AutomationCompositionDefinition getServiceTemplate(String url) {
         var invocationBuilder = super.sendRequest(url);
         try (var resp = invocationBuilder.buildGet().invoke()) {
-            assertEquals(statusExpected.getStatusCode(), resp.getStatus());
+            assertEquals(Response.Status.OK.getStatusCode(), resp.getStatus());
             return resp.readEntity(AutomationCompositionDefinition.class);
         }
     }
@@ -221,6 +230,7 @@ class CommissioningControllerTest extends CommonRestController {
         assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
         var entityList = rawresp.readEntity(ToscaServiceTemplate.class);
         assertThat(entityList.getNodeTypes()).isNull();
+        rawresp.close();
     }
 
     @Test
@@ -232,6 +242,7 @@ class CommissioningControllerTest extends CommonRestController {
         assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
         var entityList = rawresp.readEntity(ToscaServiceTemplate.class);
         assertNotNull(entityList);
+        rawresp.close();
     }
 
     @Test
@@ -264,14 +275,15 @@ class CommissioningControllerTest extends CommonRestController {
         body.setPrimeOrder(PrimeOrder.PRIME);
         var resp = invocationBuilder.put(Entity.json(body));
         assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), resp.getStatus());
+        resp.close();
     }
 
     private UUID createEntryInDB(String name) {
         var serviceTemplateCreate = new ToscaServiceTemplate(serviceTemplate);
         serviceTemplateCreate.setName(name);
         var acmDefinition = acDefinitionProvider
-                .createAutomationCompositionDefinition(serviceTemplateCreate, CommonTestData.TOSCA_ELEMENT_NAME,
-                        CommonTestData.TOSCA_COMP_NAME);
+            .createAutomationCompositionDefinition(serviceTemplateCreate, CommonTestData.TOSCA_ELEMENT_NAME,
+                CommonTestData.TOSCA_COMP_NAME);
 
         return acmDefinition.getCompositionId();
     }
