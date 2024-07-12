@@ -44,21 +44,18 @@ runtime:
     maxStatusWaitMs: 200000
   topicParameterGroup:
     topicSources:
-      -
-        topic: ${runtime.topics.operationTopic}
+      - topic: ${runtime.topics.operationTopic}
         servers:
           - ${topicServer:kafka:9092}
         topicCommInfrastructure: NOOP
         fetchTimeout: 15000
     topicSinks:
-      -
-        topic: ${runtime.topics.operationTopic}
+      - topic: ${runtime.topics.operationTopic}
         servers:
           - ${topicServer:kafka:9092}
         topicCommInfrastructure: NOOP
 
-      -
-        topic: ${runtime.topics.syncTopic}
+      - topic: ${runtime.topics.syncTopic}
         servers:
           - ${topicServer:kafka:9092}
         topicCommInfrastructure: NOOP

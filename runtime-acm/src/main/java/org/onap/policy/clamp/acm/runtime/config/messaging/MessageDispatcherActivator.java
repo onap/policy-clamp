@@ -22,7 +22,6 @@
 package org.onap.policy.clamp.acm.runtime.config.messaging;
 
 import java.io.Closeable;
-import java.io.IOException;
 import java.util.List;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
@@ -139,7 +138,7 @@ public class MessageDispatcherActivator extends ServiceManagerContainer implemen
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
         if (isAlive()) {
             super.shutdown();
         }

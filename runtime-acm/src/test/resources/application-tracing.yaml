@@ -7,16 +7,21 @@ spring:
       maximumPoolSize: 3
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: create-drop
     open-in-view: false
+
+management:
+  tracing:
+    propagation:
+      produce: b3
+    sampling:
+      probability: 1.0
 
 tracing:
   enabled: true
   exporter:
-    endpoint: http://jaeger:4318
-    protocol: http
+    endpoint: http://jaeger:4317
+    protocol: grpc
   sampler:
     jaeger-remote:
       endpoint: http://jaeger:14250
-
-basicAuth: false

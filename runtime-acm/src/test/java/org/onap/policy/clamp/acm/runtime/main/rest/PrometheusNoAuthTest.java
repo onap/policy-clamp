@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023 Nordix Foundation.
+ *  Copyright (C) 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,39 +20,29 @@
 
 package org.onap.policy.clamp.acm.runtime.main.rest;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.http.MediaType.TEXT_PLAIN;
 
-import jakarta.ws.rs.client.Invocation;
-import jakarta.ws.rs.core.Response;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.onap.policy.clamp.acm.runtime.util.rest.CommonRestController;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.actuate.observability.AutoConfigureObservability;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.reactive.server.WebTestClient;
 
 @AutoConfigureObservability(tracing = false)
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles({ "prometheus-noauth", "default" })
-class PrometheusNoAuthTest extends CommonRestController {
-    private static final String PROMETHEUS_ENDPOINT = "prometheus";
+@ActiveProfiles({"prometheus-noauth", "default"})
+class PrometheusNoAuthTest {
 
-    @LocalServerPort
-    private int randomServerPort;
-
-    @BeforeEach
-    public void setUpPort() {
-        super.setHttpPrefix(randomServerPort);
-    }
+    @Autowired
+    WebTestClient webClient;
 
     @Test
-    void testGetPrometheusNoAuth() {
-        Invocation.Builder invocationBuilder = super.sendNoAuthActRequest(PROMETHEUS_ENDPOINT);
-        Response rawresp = invocationBuilder.buildGet().invoke();
-        assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
+    void testGetPrometheus() {
+        webClient.get().uri("/prometheus").accept(TEXT_PLAIN)
+            .exchange().expectStatus().isOk();
     }
 }

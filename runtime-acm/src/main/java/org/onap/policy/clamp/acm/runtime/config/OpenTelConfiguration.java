@@ -35,7 +35,7 @@ import org.springframework.context.annotation.Configuration;
 public class OpenTelConfiguration {
 
     @Bean
-    @ConditionalOnProperty(prefix = "tracing", name = "enabled", havingValue = "true", matchIfMissing = false)
+    @ConditionalOnProperty(prefix = "tracing", name = "enabled", havingValue = "true")
     @ConditionalOnExpression("'http'.equals('${tracing.exporter.protocol}')")
     OtlpHttpSpanExporter otlpHttpSpanExporter(@Value("${tracing.exporter.endpoint:http://jaeger:4318/v1/traces}") String url) {
         return OtlpHttpSpanExporter.builder()
@@ -44,7 +44,7 @@ public class OpenTelConfiguration {
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "tracing", name = "enabled", havingValue = "true", matchIfMissing = false)
+    @ConditionalOnProperty(prefix = "tracing", name = "enabled", havingValue = "true")
     @ConditionalOnExpression("'grpc'.equals('${tracing.exporter.protocol}')")
     OtlpGrpcSpanExporter otlpGrpcSpanExporter(@Value("${tracing.exporter.endpoint:http://jaeger:4317}") String url) {
         return OtlpGrpcSpanExporter.builder()
@@ -53,7 +53,7 @@ public class OpenTelConfiguration {
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "tracing", name = "enabled", havingValue = "true", matchIfMissing = false)
+    @ConditionalOnProperty(prefix = "tracing", name = "enabled", havingValue = "true")
     JaegerRemoteSampler jaegerRemoteSampler(
             @Value("${tracing.sampler.jaeger-remote.endpoint:http://jaeger:14250}") String url,
             @Value("${SERVICE_ID:unknown_service}") String serviceId) {

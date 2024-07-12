@@ -53,5 +53,5 @@ public class AcRuntimeParameterGroup {
 
     @Valid
     @NotNull
-    private Topics topics;
+    private Topics topics = new Topics();
 }
