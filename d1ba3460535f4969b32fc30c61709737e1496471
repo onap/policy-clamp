@@ -22,6 +22,30 @@
       },
       "revId": "d1ba3460535f4969b32fc30c61709737e1496471",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cd3c2c82_18c622f8",
+        "filename": "runtime-acm/src/test/java/org/onap/policy/clamp/acm/runtime/util/rest/CommonRestController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2024-07-17T09:25:21Z",
+      "side": 1,
+      "message": "but then that was already happening before, with none of the new objects being closed.",
+      "parentUuid": "8568df81_1dad3bc2",
+      "range": {
+        "startLine": 100,
+        "startChar": 6,
+        "endLine": 100,
+        "endChar": 52
+      },
+      "revId": "d1ba3460535f4969b32fc30c61709737e1496471",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
