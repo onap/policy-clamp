@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b2b3f319_5c8ac0d4",
+        "filename": "runtime-acm/src/test/resources/application-test.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2024-07-17T09:34:22Z",
+      "side": 0,
+      "message": "Test classes are not using this properties file?",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 7
+      },
+      "revId": "cf1cc9f1f57e8213009077fae5c5e768c6c5f3ff",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
