@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8568df81_1dad3bc2",
+        "filename": "runtime-acm/src/test/java/org/onap/policy/clamp/acm/runtime/util/rest/CommonRestController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2024-07-17T09:22:38Z",
+      "side": 1,
+      "message": "the \"sendFqeRequest\" method will be called several times during any single test, so \"client\" will be created several times, but it will be closed in \"AfterEach\" only the last created",
+      "range": {
+        "startLine": 100,
+        "startChar": 6,
+        "endLine": 100,
+        "endChar": 52
+      },
+      "revId": "d1ba3460535f4969b32fc30c61709737e1496471",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
