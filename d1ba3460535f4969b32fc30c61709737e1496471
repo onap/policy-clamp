@@ -117,6 +117,30 @@
       },
       "revId": "d1ba3460535f4969b32fc30c61709737e1496471",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8335ccab_a299e038",
+        "filename": "runtime-acm/src/test/java/org/onap/policy/clamp/acm/runtime/util/rest/CommonRestController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2024-07-17T13:05:42Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "cd3c2c82_18c622f8",
+      "range": {
+        "startLine": 100,
+        "startChar": 6,
+        "endLine": 100,
+        "endChar": 52
+      },
+      "revId": "d1ba3460535f4969b32fc30c61709737e1496471",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
