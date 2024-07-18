@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2023 Nordix Foundation.
+ * Copyright (C) 2021-2024 Nordix Foundation.
  * ================================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -42,6 +42,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.common.parameters.annotations.NotNull;
 import org.onap.policy.common.parameters.annotations.Valid;
 import org.onap.policy.models.base.PfAuthorative;
@@ -94,6 +95,10 @@ public class JpaAutomationCompositionElement extends Validated
     private LockState lockState;
 
     @Column
+    @NotNull
+    private SubState subState;
+
+    @Column
     private String operationalState;
 
     @Column
@@ -134,7 +139,7 @@ public class JpaAutomationCompositionElement extends Validated
      */
     public JpaAutomationCompositionElement(@NonNull final String elementId, @NonNull final String instanceId) {
         this(elementId, instanceId, new PfConceptKey(),
-            DeployState.UNDEPLOYED, LockState.LOCKED);
+            DeployState.UNDEPLOYED, LockState.NONE, SubState.NONE);
     }
 
     /**
@@ -145,15 +150,18 @@ public class JpaAutomationCompositionElement extends Validated
      * @param definition the TOSCA definition of the automation composition element
      * @param deployState the Deploy State of the automation composition
      * @param lockState the Lock State of the automation composition
+     * @param subState the Sub State of the automation composition
      */
     public JpaAutomationCompositionElement(@NonNull final String elementId, @NonNull final String instanceId,
             @NonNull final PfConceptKey definition,
-            @NonNull final DeployState deployState, @NonNull final LockState lockState) {
+            @NonNull final DeployState deployState, @NonNull final LockState lockState,
+            @NonNull final SubState subState) {
         this.elementId = elementId;
         this.instanceId = instanceId;
         this.definition = definition;
         this.deployState = deployState;
         this.lockState = lockState;
+        this.subState = subState;
     }
 
     /**
@@ -174,6 +182,7 @@ public class JpaAutomationCompositionElement extends Validated
         this.restarting = copyConcept.restarting;
         this.deployState = copyConcept.deployState;
         this.lockState = copyConcept.lockState;
+        this.subState = copyConcept.subState;
         this.operationalState = copyConcept.operationalState;
         this.useState = copyConcept.useState;
         this.message = copyConcept.message;
@@ -201,6 +210,7 @@ public class JpaAutomationCompositionElement extends Validated
         element.setRestarting(restarting);
         element.setDeployState(deployState);
         element.setLockState(lockState);
+        element.setSubState(subState);
         element.setOperationalState(operationalState);
         element.setUseState(useState);
         element.setMessage(message);
@@ -218,6 +228,7 @@ public class JpaAutomationCompositionElement extends Validated
         this.restarting = element.getRestarting();
         this.deployState = element.getDeployState();
         this.lockState = element.getLockState();
+        this.subState = element.getSubState();
         this.operationalState = element.getOperationalState();
         this.useState = element.getUseState();
         this.message = element.getMessage();
@@ -263,6 +274,11 @@ public class JpaAutomationCompositionElement extends Validated
         }
 
         result = ObjectUtils.compare(lockState, other.lockState);
+        if (result != 0) {
+            return result;
+        }
+
+        result = ObjectUtils.compare(subState, other.subState);
         if (result != 0) {
             return result;
         }

@@ -33,6 +33,7 @@ import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.utils.CommonTestData;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -47,6 +48,8 @@ class JpaAutomationCompositionElementTest {
     private static final String NULL_ERROR = " is marked .*ull but is null";
     private static final String ELEMENT_ID = "a95757ba-b34a-4049-a2a8-46773abcbe5e";
     private static final String INSTANCE_ID = "a78757co-b34a-8949-a2a8-46773abcbe2a";
+    private static final String KEY = "key";
+    private static final String BAD_VALUE = "BadValue";
 
     private static final PfConceptKey CONCEPT_KEY = new PfConceptKey();
 
@@ -54,18 +57,18 @@ class JpaAutomationCompositionElementTest {
     void testJpaAutomationCompositionElementConstructor() {
         assertThatThrownBy(() -> {
             new JpaAutomationCompositionElement((AutomationCompositionElement) null);
-        }).hasMessageMatching("authorativeConcept is marked .*ull but is null");
+        }).hasMessageMatching("authorativeConcept" + NULL_ERROR);
 
         assertThatThrownBy(() -> {
             new JpaAutomationCompositionElement((JpaAutomationCompositionElement) null);
-        }).hasMessageMatching("copyConcept is marked .*ull but is null");
+        }).hasMessageMatching("copyConcept" + NULL_ERROR);
 
         assertThatThrownBy(() -> {
-            new JpaAutomationCompositionElement("key", null);
+            new JpaAutomationCompositionElement(KEY, null);
         }).hasMessageMatching(NULL_INSTANCE_ID_ERROR);
 
         assertThatThrownBy(() -> {
-            new JpaAutomationCompositionElement(null, "key");
+            new JpaAutomationCompositionElement(null, KEY);
         }).hasMessageMatching(NULL_ELEMENT_ID_ERROR);
 
         assertThatThrownBy(() -> {
@@ -73,33 +76,38 @@ class JpaAutomationCompositionElementTest {
         }).hasMessageMatching(NULL_ELEMENT_ID_ERROR);
 
         assertThatThrownBy(() -> {
-            new JpaAutomationCompositionElement(null, null, null, null, null);
+            new JpaAutomationCompositionElement(null, null, null, null, null, null);
         }).hasMessageMatching(NULL_ELEMENT_ID_ERROR);
 
         assertThatThrownBy(() -> {
-            new JpaAutomationCompositionElement("key", null, null,
-                DeployState.UNDEPLOYED, LockState.LOCKED);
+            new JpaAutomationCompositionElement(KEY, null, null,
+                DeployState.UNDEPLOYED, LockState.LOCKED, SubState.NONE);
         }).hasMessageMatching(NULL_INSTANCE_ID_ERROR);
 
         assertThatThrownBy(() -> {
-            new JpaAutomationCompositionElement("key", "key", null,
-                DeployState.UNDEPLOYED, LockState.LOCKED);
+            new JpaAutomationCompositionElement(KEY, KEY, null,
+                DeployState.UNDEPLOYED, LockState.LOCKED, SubState.NONE);
         }).hasMessageMatching("definition" + NULL_ERROR);
 
         assertThatThrownBy(() -> {
-            new JpaAutomationCompositionElement("key", "key", CONCEPT_KEY,
-                null, LockState.LOCKED);
+            new JpaAutomationCompositionElement(KEY, KEY, CONCEPT_KEY,
+                    null, LockState.LOCKED, SubState.NONE);
         }).hasMessageMatching("deployState" + NULL_ERROR);
 
         assertThatThrownBy(() -> {
-            new JpaAutomationCompositionElement("key", "key", CONCEPT_KEY,
-                DeployState.UNDEPLOYED, null);
+            new JpaAutomationCompositionElement(KEY, KEY, CONCEPT_KEY,
+                DeployState.UNDEPLOYED, null, SubState.NONE);
         }).hasMessageMatching("lockState" + NULL_ERROR);
 
+        assertThatThrownBy(() -> {
+            new JpaAutomationCompositionElement(KEY, KEY, CONCEPT_KEY,
+                    DeployState.UNDEPLOYED, LockState.NONE, null);
+        }).hasMessageMatching("subState" + NULL_ERROR);
+
         assertDoesNotThrow(() -> new JpaAutomationCompositionElement());
-        assertDoesNotThrow(() -> new JpaAutomationCompositionElement("key", "key"));
-        assertDoesNotThrow(() -> new JpaAutomationCompositionElement("key", "key",
-                CONCEPT_KEY, DeployState.UNDEPLOYED, LockState.LOCKED));
+        assertDoesNotThrow(() -> new JpaAutomationCompositionElement(KEY, KEY));
+        assertDoesNotThrow(() -> new JpaAutomationCompositionElement(KEY, KEY,
+            new PfConceptKey(), DeployState.UNDEPLOYED, LockState.LOCKED, SubState.NONE));
     }
 
     @Test
@@ -111,7 +119,7 @@ class JpaAutomationCompositionElementTest {
 
         assertThatThrownBy(() -> {
             testJpaAcElement.fromAuthorative(null);
-        }).hasMessageMatching("element is marked .*ull but is null");
+        }).hasMessageMatching("element" + NULL_ERROR);
 
         assertThatThrownBy(() -> new JpaAutomationCompositionElement((JpaAutomationCompositionElement) null))
                 .isInstanceOf(NullPointerException.class);
@@ -137,7 +145,7 @@ class JpaAutomationCompositionElementTest {
         var testJpaAutomationCompositionElement = createJpaAutomationCompositionElementInstance();
 
         assertThatThrownBy(() -> testJpaAutomationCompositionElement.validate(null))
-                .hasMessageMatching("fieldName is marked .*ull but is null");
+                .hasMessageMatching("fieldName" + NULL_ERROR);
 
         assertTrue(testJpaAutomationCompositionElement.validate("").isValid());
     }
@@ -164,17 +172,17 @@ class JpaAutomationCompositionElementTest {
         var otherJpaAcElement =
                 new JpaAutomationCompositionElement(testJpaAcElement);
 
-        testJpaAcElement.setElementId("BadValue");
+        testJpaAcElement.setElementId(BAD_VALUE);
         assertNotEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
         testJpaAcElement.setElementId(ELEMENT_ID);
         assertEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
 
-        testJpaAcElement.setInstanceId("BadValue");
+        testJpaAcElement.setInstanceId(BAD_VALUE);
         assertNotEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
         testJpaAcElement.setInstanceId(INSTANCE_ID);
         assertEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
 
-        testJpaAcElement.setDefinition(new PfConceptKey("BadValue", "0.0.1"));
+        testJpaAcElement.setDefinition(new PfConceptKey(BAD_VALUE, "0.0.1"));
         assertNotEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
         testJpaAcElement.setDefinition(new PfConceptKey("aceDef", "0.0.1"));
         assertEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
@@ -194,12 +202,17 @@ class JpaAutomationCompositionElementTest {
         testJpaAcElement.setLockState(LockState.LOCKED);
         assertEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
 
-        testJpaAcElement.setUseState("BadValue");
+        testJpaAcElement.setSubState(SubState.PREPARING);
+        assertNotEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
+        testJpaAcElement.setSubState(SubState.NONE);
+        assertEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
+
+        testJpaAcElement.setUseState(BAD_VALUE);
         assertNotEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
         testJpaAcElement.setUseState("IDLE");
         assertEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
 
-        testJpaAcElement.setOperationalState("BadValue");
+        testJpaAcElement.setOperationalState(BAD_VALUE);
         assertNotEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
         testJpaAcElement.setOperationalState("DEFAULT");
         assertEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
@@ -249,7 +262,7 @@ class JpaAutomationCompositionElementTest {
         var testJpaAcElement =
                 new JpaAutomationCompositionElement(testAce.getId().toString(), INSTANCE_ID);
         testJpaAcElement.fromAuthorative(testAce);
-        testJpaAcElement.setProperties(Map.of("key", "{}"));
+        testJpaAcElement.setProperties(Map.of(KEY, "{}"));
 
         return testJpaAcElement;
     }
@@ -259,7 +272,7 @@ class JpaAutomationCompositionElementTest {
         automationCompositionElement.setId(UUID.fromString(ELEMENT_ID));
         automationCompositionElement.setDefinition(new ToscaConceptIdentifier("aceDef", "0.0.1"));
         automationCompositionElement.setParticipantId(CommonTestData.getParticipantId());
-        automationCompositionElement.setProperties(Map.of("key", "{}"));
+        automationCompositionElement.setProperties(Map.of(KEY, "{}"));
         automationCompositionElement.setUseState("IDLE");
         automationCompositionElement.setOperationalState("DEFAULT");
 

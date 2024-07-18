@@ -115,5 +115,10 @@ public enum ParticipantMessageType {
     /**
      * Used by runtime to send composition and instances to sync participant replicas.
      */
-    PARTICIPANT_SYNC_MSG
+    PARTICIPANT_SYNC_MSG,
+
+    /**
+     * Used by the acm runtime to ask for a preparation check to participants.
+     */
+    AUTOMATION_COMPOSITION_PREPARE
 }

@@ -35,6 +35,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionInfo;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationComposition;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionElementRepository;
@@ -172,6 +173,8 @@ public class AutomationCompositionProvider {
             DeployState.UNDEPLOYING, DeployState.DELETING, DeployState.UPDATING, DeployState.MIGRATING));
         jpaList.addAll(automationCompositionRepository.findByLockStateIn(
             List.of(LockState.LOCKING, LockState.UNLOCKING)));
+        jpaList.addAll(automationCompositionRepository.findBySubStateIn(
+                List.of(SubState.PREPARING, SubState.MIGRATION_PRECHECKING, SubState.REVIEWING)));
         return ProviderUtils.asEntityList(jpaList);
     }
 
@@ -258,6 +261,7 @@ public class AutomationCompositionProvider {
         jpaAcElement.setUseState(element.getUseState());
         jpaAcElement.setDeployState(element.getDeployState());
         jpaAcElement.setLockState(element.getLockState());
+        jpaAcElement.setSubState(element.getSubState());
         jpaAcElement.setRestarting(element.getRestarting());
 
         ProviderUtils.validate(element, jpaAcElement, "AutomationCompositionElement");

@@ -55,6 +55,9 @@ public class AutomationCompositionElement {
     @NonNull
     private LockState lockState = LockState.LOCKED;
 
+    @NonNull
+    private SubState subState = SubState.NONE;
+
     private String operationalState;
     private String useState;
     private String description;
@@ -81,6 +84,7 @@ public class AutomationCompositionElement {
         this.restarting = otherElement.restarting;
         this.deployState = otherElement.deployState;
         this.lockState = otherElement.lockState;
+        this.subState = otherElement.subState;
         this.operationalState = otherElement.operationalState;
         this.useState = otherElement.useState;
         this.message = otherElement.message;

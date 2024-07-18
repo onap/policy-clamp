@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2023-2024 Nordix Foundation.
+ * Copyright (C) 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,24 +22,36 @@ package org.onap.policy.clamp.models.acm.messages.kafka.participant;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
+import org.onap.policy.models.base.PfUtils;
 
 @Getter
 @Setter
 @ToString(callSuper = true)
-public class AutomationCompositionMigration extends ParticipantMessage {
+public class AutomationCompositionPrepare extends ParticipantMessage {
 
-    private UUID compositionTargetId;
-    // A list of updates to AC element properties
-    private List<ParticipantDeploy> participantUpdatesList = new ArrayList<>();
+    private List<ParticipantDeploy> participantList = new ArrayList<>();
+    private boolean preDeploy = true;
 
-    private Boolean precheck = false;
+    /**
+     * Constructor for instantiating class with message name.
+     *
+     */
+    public AutomationCompositionPrepare() {
+        super(ParticipantMessageType.AUTOMATION_COMPOSITION_PREPARE);
+    }
 
-    public AutomationCompositionMigration() {
-        super(ParticipantMessageType.AUTOMATION_COMPOSITION_MIGRATION);
+    /**
+     * Constructs the object, making a deep copy.
+     *
+     * @param source source from which to copy
+     */
+    public AutomationCompositionPrepare(AutomationCompositionPrepare source) {
+        super(source);
+        this.preDeploy = source.preDeploy;
+        this.participantList = PfUtils.mapList(source.participantList, ParticipantDeploy::new);
     }
 }

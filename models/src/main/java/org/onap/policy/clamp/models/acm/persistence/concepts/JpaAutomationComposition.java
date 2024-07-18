@@ -45,6 +45,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
+import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 import org.onap.policy.common.parameters.annotations.NotNull;
 import org.onap.policy.common.parameters.annotations.Valid;
@@ -97,6 +98,10 @@ public class JpaAutomationComposition extends Validated
     private LockState lockState;
 
     @Column
+    @NotNull
+    private SubState subState;
+
+    @Column
     private StateChangeResult stateChangeResult;
 
     @Column
@@ -119,7 +124,7 @@ public class JpaAutomationComposition extends Validated
      */
     public JpaAutomationComposition() {
         this(UUID.randomUUID().toString(), new PfConceptKey(), UUID.randomUUID().toString(), new ArrayList<>(),
-                DeployState.UNDEPLOYED, LockState.NONE);
+                DeployState.UNDEPLOYED, LockState.NONE, SubState.NONE);
     }
 
     /**
@@ -131,10 +136,12 @@ public class JpaAutomationComposition extends Validated
      * @param elements the elements of the automation composition in participants
      * @param deployState the Deploy State
      * @param lockState the Lock State
+     * @param subState the Sub State
      */
     public JpaAutomationComposition(@NonNull final String instanceId, @NonNull final PfConceptKey key,
             @NonNull final String compositionId, @NonNull final List<JpaAutomationCompositionElement> elements,
-            @NonNull final DeployState deployState, @NonNull final LockState lockState) {
+            @NonNull final DeployState deployState, @NonNull final LockState lockState,
+            @NonNull final SubState subState) {
         this.instanceId = instanceId;
         this.name = key.getName();
         this.version = key.getVersion();
@@ -142,6 +149,7 @@ public class JpaAutomationComposition extends Validated
         this.deployState = deployState;
         this.lockState = lockState;
         this.elements = elements;
+        this.subState = subState;
     }
 
     /**
@@ -160,6 +168,7 @@ public class JpaAutomationComposition extends Validated
         this.lockState = copyConcept.lockState;
         this.lastMsg = copyConcept.lastMsg;
         this.phase = copyConcept.phase;
+        this.subState = copyConcept.subState;
         this.description = copyConcept.description;
         this.stateChangeResult = copyConcept.stateChangeResult;
         this.elements = PfUtils.mapList(copyConcept.elements, JpaAutomationCompositionElement::new);
@@ -190,6 +199,7 @@ public class JpaAutomationComposition extends Validated
         automationComposition.setLockState(lockState);
         automationComposition.setLastMsg(lastMsg.toString());
         automationComposition.setPhase(phase);
+        automationComposition.setSubState(subState);
         automationComposition.setDescription(description);
         automationComposition.setStateChangeResult(stateChangeResult);
         automationComposition.setElements(new LinkedHashMap<>(this.elements.size()));
@@ -230,6 +240,7 @@ public class JpaAutomationComposition extends Validated
         this.lockState = automationComposition.getLockState();
         this.lastMsg = TimestampHelper.toTimestamp(automationComposition.getLastMsg());
         this.phase = automationComposition.getPhase();
+        this.subState = automationComposition.getSubState();
         this.description = automationComposition.getDescription();
         this.stateChangeResult = automationComposition.getStateChangeResult();
     }
@@ -289,6 +300,11 @@ public class JpaAutomationComposition extends Validated
         }
 
         result = ObjectUtils.compare(lockState, other.lockState);
+        if (result != 0) {
+            return result;
+        }
+
+        result = ObjectUtils.compare(subState, other.subState);
         if (result != 0) {
             return result;
         }

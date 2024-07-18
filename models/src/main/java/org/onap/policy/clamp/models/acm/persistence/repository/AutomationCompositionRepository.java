@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.List;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationComposition;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -36,4 +37,6 @@ public interface AutomationCompositionRepository extends JpaRepository<JpaAutoma
     List<JpaAutomationComposition> findByDeployStateIn(Collection<DeployState> deployStates);
 
     List<JpaAutomationComposition> findByLockStateIn(Collection<LockState> lockStates);
+
+    List<JpaAutomationComposition> findBySubStateIn(Collection<SubState> subStates);
 }
