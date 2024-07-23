@@ -25,5 +25,12 @@ import java.util.UUID;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 public record CompositionElementDto(UUID compositionId, ToscaConceptIdentifier elementDefinitionId,
-                                    Map<String, Object> inProperties, Map<String, Object> outProperties) {
+                                    Map<String, Object> inProperties, Map<String, Object> outProperties,
+                                    boolean newElement, boolean removedElement) {
+
+    public CompositionElementDto(UUID compositionId, ToscaConceptIdentifier elementDefinitionId,
+                                 Map<String, Object> inProperties, Map<String, Object> outProperties) {
+        this(compositionId, elementDefinitionId, inProperties, outProperties, false, false);
+
+    }
 }

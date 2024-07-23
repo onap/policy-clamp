@@ -35,6 +35,7 @@ import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
+import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
@@ -203,16 +204,34 @@ class AutomationCompositionHandlerTest {
         var migrationMsg = new AutomationCompositionMigration();
         assertDoesNotThrow(() -> ach.handleAutomationCompositionMigration(migrationMsg));
         var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
-        migrationMsg.setCompositionTargetId(UUID.randomUUID());
-        migrationMsg.setAutomationCompositionId(automationComposition.getInstanceId());
+
         assertDoesNotThrow(() -> ach.handleAutomationCompositionMigration(migrationMsg));
         when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
                 .thenReturn(automationComposition);
-        var participantDeploy = new ParticipantDeploy();
-        participantDeploy.setParticipantId(CommonTestData.getParticipantId());
         when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
-        migrationMsg.getParticipantUpdatesList().add(participantDeploy);
+
         Map<ToscaConceptIdentifier, AutomationCompositionElementDefinition> map = new HashMap<>();
+        var participantDeploy = new ParticipantDeploy();
+        populateMigrationMsg(automationComposition, migrationMsg, map, participantDeploy);
+        when(cacheProvider.getAcElementsDefinitions())
+                .thenReturn(Map.of(automationComposition.getCompositionId(), map,
+                        migrationMsg.getCompositionTargetId(), map));
+
+        ach.handleAutomationCompositionMigration(migrationMsg);
+        verify(listener, times(automationComposition.getElements().size() + 1))
+                .migrate(any(), any(), any(), any(), any());
+    }
+
+    private void populateMigrationMsg(AutomationComposition automationComposition,
+                                      AutomationCompositionMigration migrationMsg,
+                                      Map<ToscaConceptIdentifier,
+                                              AutomationCompositionElementDefinition> map,
+                                      ParticipantDeploy participantDeploy) {
+
+        participantDeploy.setParticipantId(CommonTestData.getParticipantId());
+        migrationMsg.setCompositionTargetId(UUID.randomUUID());
+        migrationMsg.setAutomationCompositionId(automationComposition.getInstanceId());
+        migrationMsg.getParticipantUpdatesList().add(participantDeploy);
         for (var element : automationComposition.getElements().values()) {
             var acElementDeploy = new AcElementDeploy();
             acElementDeploy.setProperties(Map.of());
@@ -221,11 +240,14 @@ class AutomationCompositionHandlerTest {
             participantDeploy.getAcElementList().add(acElementDeploy);
             map.put(element.getDefinition(), new AutomationCompositionElementDefinition());
         }
-        when(cacheProvider.getAcElementsDefinitions())
-            .thenReturn(Map.of(automationComposition.getCompositionId(), map,
-                migrationMsg.getCompositionTargetId(), map));
+        // remove an element
+        participantDeploy.getAcElementList().remove(0);
+        // Add a new element
+        var acElementDeploy = new AcElementDeploy();
+        acElementDeploy.setProperties(Map.of());
+        acElementDeploy.setId(UUID.randomUUID());
+        acElementDeploy.setDefinition(new ToscaConceptIdentifier("1.2.3", "policy.clamp.new.element"));
+        participantDeploy.getAcElementList().add(acElementDeploy);
 
-        ach.handleAutomationCompositionMigration(migrationMsg);
-        verify(listener, times(automationComposition.getElements().size())).migrate(any(), any(), any(), any(), any());
     }
 }
