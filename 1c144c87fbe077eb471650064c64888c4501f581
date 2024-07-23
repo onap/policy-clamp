@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dda5023c_5ed5b6c3",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/instantiation/AutomationCompositionInstantiationProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2024-07-23T14:03:11Z",
+      "side": 1,
+      "message": "This field needs to be set by the user in the migration request, to trigger migration precheck ?",
+      "range": {
+        "startLine": 153,
+        "startChar": 36,
+        "endLine": 153,
+        "endChar": 71
+      },
+      "revId": "1c144c87fbe077eb471650064c64888c4501f581",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fadeb058_25451969",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/supervision/SupervisionAcHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2024-07-23T14:03:11Z",
+      "side": 1,
+      "message": "prepare and review to be specified as deploy order in the request body? Could you please clarify how this methods are triggered",
+      "range": {
+        "startLine": 160,
+        "startChar": 16,
+        "endLine": 160,
+        "endChar": 23
+      },
+      "revId": "1c144c87fbe077eb471650064c64888c4501f581",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
