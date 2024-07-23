@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f9133803_3d7d843e",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/api/impl/AcElementListenerV2.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2024-07-23T14:41:13Z",
+      "side": 1,
+      "message": "Is it intentionally specified as \"not supported\" in the ListenerV2?",
+      "range": {
+        "startLine": 121,
+        "startChar": 40,
+        "endLine": 121,
+        "endChar": 61
+      },
+      "revId": "f9497947cb7e18203b254a044efd29e73d7718a6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
