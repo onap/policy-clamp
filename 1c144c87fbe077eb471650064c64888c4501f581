@@ -48,6 +48,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bf86ff2f_aef4fbe3",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/instantiation/AutomationCompositionInstantiationProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2024-07-23T14:32:23Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "d2c63ccc_95c23d08",
+      "range": {
+        "startLine": 153,
+        "startChar": 36,
+        "endLine": 153,
+        "endChar": 71
+      },
+      "revId": "1c144c87fbe077eb471650064c64888c4501f581",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fadeb058_25451969",
@@ -85,6 +109,30 @@
       "side": 1,
       "message": "there is a new subOrder in AcInstanceStateUpdate: the user can trigger prepare with\nthis json: { \"subOrder\": \"PREPARE\" }",
       "parentUuid": "fadeb058_25451969",
+      "range": {
+        "startLine": 160,
+        "startChar": 16,
+        "endLine": 160,
+        "endChar": 23
+      },
+      "revId": "1c144c87fbe077eb471650064c64888c4501f581",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "37dea29d_fcad9349",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/supervision/SupervisionAcHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2024-07-23T14:32:23Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "3f34ddc5_662bd87a",
       "range": {
         "startLine": 160,
         "startChar": 16,
