@@ -21,14 +21,20 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.handler;
 
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
@@ -41,6 +47,7 @@ import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMe
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.PropertiesUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -186,11 +193,51 @@ public class AutomationCompositionHandler {
         var acElementList = cacheProvider.getAutomationComposition(instanceId).getElements();
         for (var element : participantDeploy.getAcElementList()) {
             var acElement = acElementList.get(element.getId());
-            AcmUtils.recursiveMerge(acElement.getProperties(), element.getProperties());
-            acElement.setDeployState(deployState);
-            acElement.setSubState(SubState.NONE);
-            acElement.setDefinition(element.getDefinition());
+            if (acElement == null && deployState.equals(DeployState.MIGRATING)) {
+                var newElement = new AutomationCompositionElement();
+                newElement.setId(element.getId());
+                newElement.setParticipantId(participantDeploy.getParticipantId());
+                newElement.setDefinition(element.getDefinition());
+                newElement.setDeployState(deployState);
+                newElement.setSubState(SubState.NONE);
+                newElement.setLockState(LockState.LOCKED);
+                newElement.setProperties(element.getProperties());
+
+                acElementList.put(element.getId(), newElement);
+                LOGGER.info("New Ac Element with id {} is added in Migration", element.getId());
+            } else if (acElement != null) {
+                AcmUtils.recursiveMerge(acElement.getProperties(), element.getProperties());
+                acElement.setDeployState(deployState);
+                acElement.setSubState(SubState.NONE);
+                acElement.setDefinition(element.getDefinition());
+            }
         }
+        if (deployState.equals(DeployState.MIGRATING)) {
+            // Check for missing elements and remove them from cache
+            List<UUID> elementsToRemove = findElementsToRemove(participantDeploy.getAcElementList(), acElementList);
+            for (UUID key : elementsToRemove) {
+                acElementList.remove(key);
+                LOGGER.info("Element with id {} is removed in Migration", key);
+            }
+        }
+    }
+
+    private List<UUID> findElementsToRemove(List<AcElementDeploy> acElementDeployList, Map<UUID,
+            AutomationCompositionElement> acElementList) {
+        List<UUID> elementsToRemove = new ArrayList<>();
+        for (var elementInCache : acElementList.entrySet()) {
+            boolean found = false;
+            for (var element : acElementDeployList) {
+                if (element.getId().equals(elementInCache.getValue().getId())) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                elementsToRemove.add(elementInCache.getKey());
+            }
+        }
+        return elementsToRemove;
     }
 
     /**
@@ -282,10 +329,34 @@ public class AutomationCompositionHandler {
             compositionTargetId);
         var instanceElementMigrateMap = cacheProvider.getInstanceElementDtoMap(automationComposition);
 
+        // Call migrate for newly added and updated elements
         for (var acElement : acElements) {
-            listener.migrate(messageId, compositionElementMap.get(acElement.getId()),
-                compositionElementTargetMap.get(acElement.getId()),
-                instanceElementMap.get(acElement.getId()), instanceElementMigrateMap.get(acElement.getId()));
+            if (instanceElementMap.get(acElement.getId()) == null) {
+                var compositionDto = new CompositionElementDto(acElement.getId(), acElement.getDefinition(),
+                        Map.of(), Map.of(), true, false);
+                var instanceDto = new InstanceElementDto(acCopy.getInstanceId(), acElement.getId(),
+                        new ToscaServiceTemplate(), Map.of(), Map.of(), true, false);
+
+                listener.migrate(messageId, compositionDto,
+                        compositionElementTargetMap.get(acElement.getId()),
+                        instanceDto, instanceElementMigrateMap.get(acElement.getId()));
+            } else {
+                listener.migrate(messageId, compositionElementMap.get(acElement.getId()),
+                        compositionElementTargetMap.get(acElement.getId()),
+                        instanceElementMap.get(acElement.getId()), instanceElementMigrateMap.get(acElement.getId()));
+            }
+        }
+        // Call migrate for removed elements
+        List<UUID> removedElements = findElementsToRemove(acElements, acCopy.getElements());
+        for (var elementId : removedElements) {
+            var compositionDtoTarget = new CompositionElementDto(elementId, acCopy.getElements().get(elementId)
+                    .getDefinition(), Map.of(), Map.of(), false, true);
+            var instanceDtoTarget = new InstanceElementDto(acCopy.getInstanceId(), elementId,
+                    new ToscaServiceTemplate(), Map.of(), Map.of(), false, true);
+
+            listener.migrate(messageId, compositionElementMap.get(elementId),
+                    compositionDtoTarget,
+                    instanceElementMap.get(elementId), instanceDtoTarget);
         }
     }
 }
