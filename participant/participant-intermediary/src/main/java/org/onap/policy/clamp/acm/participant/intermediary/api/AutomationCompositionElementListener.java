@@ -97,4 +97,13 @@ public interface AutomationCompositionElementListener {
      */
     void migrate(CompositionElementDto compositionElement, CompositionElementDto compositionElementTarget,
             InstanceElementDto instanceElement, InstanceElementDto instanceElementMigrate) throws PfModelException;
+
+    void migratePrecheck(CompositionElementDto compositionElement, CompositionElementDto compositionElementTarget,
+            InstanceElementDto instanceElement, InstanceElementDto instanceElementMigrate) throws PfModelException;
+
+    void review(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
+        throws PfModelException;
+
+    void prepare(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
+        throws PfModelException;
 }

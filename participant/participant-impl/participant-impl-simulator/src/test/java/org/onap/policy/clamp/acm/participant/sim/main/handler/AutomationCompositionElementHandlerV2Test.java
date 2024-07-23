@@ -42,7 +42,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 class AutomationCompositionElementHandlerV2Test {
 
     @Test
-    void testDeploy() throws PfModelException {
+    void testDeploy() {
         var config = new SimConfig();
         config.setDeployTimerMs(1);
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
@@ -65,7 +65,7 @@ class AutomationCompositionElementHandlerV2Test {
     }
 
     @Test
-    void testUndeploy() throws PfModelException {
+    void testUndeploy() {
         var config = new SimConfig();
         config.setUndeployTimerMs(1);
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
@@ -88,7 +88,7 @@ class AutomationCompositionElementHandlerV2Test {
     }
 
     @Test
-    void testLock() throws PfModelException {
+    void testLock() {
         var config = new SimConfig();
         config.setLockTimerMs(1);
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
@@ -111,7 +111,7 @@ class AutomationCompositionElementHandlerV2Test {
     }
 
     @Test
-    void testUnlock() throws PfModelException {
+    void testUnlock() {
         var config = new SimConfig();
         config.setUnlockTimerMs(1);
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
@@ -134,7 +134,7 @@ class AutomationCompositionElementHandlerV2Test {
     }
 
     @Test
-    void testUpdate() throws PfModelException {
+    void testUpdate() {
         var config = new SimConfig();
         config.setUpdateTimerMs(1);
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
@@ -160,7 +160,7 @@ class AutomationCompositionElementHandlerV2Test {
     }
 
     @Test
-    void testDelete() throws PfModelException {
+    void testDelete() {
         var config = new SimConfig();
         config.setDeleteTimerMs(1);
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
@@ -183,7 +183,7 @@ class AutomationCompositionElementHandlerV2Test {
     }
 
     @Test
-    void testPrime() throws PfModelException {
+    void testPrime() {
         var config = new SimConfig();
         config.setPrimeTimerMs(1);
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
@@ -203,7 +203,7 @@ class AutomationCompositionElementHandlerV2Test {
     }
 
     @Test
-    void testDeprime() throws PfModelException {
+    void testDeprime() {
         var config = new SimConfig();
         config.setDeprimeTimerMs(1);
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
@@ -250,5 +250,83 @@ class AutomationCompositionElementHandlerV2Test {
                 .migrate(compositionElement, compositionElementTraget, instanceElement, instanceElementMigrated);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
                 DeployState.DEPLOYED, null, StateChangeResult.FAILED, "Migrate failed!");
+    }
+
+    @Test
+    void testMigratePrecheck() {
+        var config = new SimConfig();
+        config.setUpdateTimerMs(1);
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var simulatorService = new SimulatorService(intermediaryApi);
+        var acElementHandler = new AutomationCompositionElementHandlerV2(intermediaryApi, simulatorService);
+        simulatorService.setConfig(config);
+        var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
+                Map.of(), Map.of());
+        var compositionElementTraget = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
+                Map.of(), Map.of());
+        var instanceId = UUID.randomUUID();
+        var element = new AcElementDeploy();
+        element.setId(UUID.randomUUID());
+        var instanceElement = new InstanceElementDto(instanceId, element.getId(), null, Map.of(), Map.of());
+        var instanceElementMigrated = new InstanceElementDto(instanceId, element.getId(),
+                null, Map.of("key", "value"), Map.of());
+        acElementHandler.migratePrecheck(compositionElement, compositionElementTraget,
+                instanceElement, instanceElementMigrated);
+        verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
+                DeployState.DEPLOYED, null,
+                StateChangeResult.NO_ERROR, "Migration precheck completed");
+
+        config.setMigratePrecheck(false);
+        acElementHandler.migratePrecheck(compositionElement, compositionElementTraget,
+                instanceElement, instanceElementMigrated);
+        verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, element.getId(),
+                DeployState.DEPLOYED, null,
+                StateChangeResult.FAILED, "Migration precheck failed");
+    }
+
+    @Test
+    void testPrepare() {
+        var config = new SimConfig();
+        config.setDeployTimerMs(1);
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var simulatorService = new SimulatorService(intermediaryApi);
+        var acElementHandler = new AutomationCompositionElementHandlerV2(intermediaryApi, simulatorService);
+        simulatorService.setConfig(config);
+        var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
+                Map.of(), Map.of());
+        var instanceId = UUID.randomUUID();
+        var elementId = UUID.randomUUID();
+        var instanceElement = new InstanceElementDto(instanceId, elementId, null, Map.of(), Map.of());
+        acElementHandler.prepare(compositionElement, instanceElement);
+        verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, elementId, DeployState.UNDEPLOYED,
+                null, StateChangeResult.NO_ERROR, "Prepare completed");
+
+        config.setPrepare(false);
+        acElementHandler.prepare(compositionElement, instanceElement);
+        verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, elementId, DeployState.UNDEPLOYED,
+                null, StateChangeResult.FAILED, "Prepare failed");
+    }
+
+    @Test
+    void testReview() {
+        var config = new SimConfig();
+        config.setDeployTimerMs(1);
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var simulatorService = new SimulatorService(intermediaryApi);
+        var acElementHandler = new AutomationCompositionElementHandlerV2(intermediaryApi, simulatorService);
+        simulatorService.setConfig(config);
+        var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
+                Map.of(), Map.of());
+        var instanceId = UUID.randomUUID();
+        var elementId = UUID.randomUUID();
+        var instanceElement = new InstanceElementDto(instanceId, elementId, null, Map.of(), Map.of());
+        acElementHandler.review(compositionElement, instanceElement);
+        verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, elementId, DeployState.DEPLOYED,
+                null, StateChangeResult.NO_ERROR, "Review completed");
+
+        config.setReview(false);
+        acElementHandler.review(compositionElement, instanceElement);
+        verify(intermediaryApi).updateAutomationCompositionElementState(instanceId, elementId, DeployState.DEPLOYED,
+                null, StateChangeResult.FAILED, "Review failed");
     }
 }

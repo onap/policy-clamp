@@ -140,16 +140,55 @@ class AcElementListenerV2Test {
             StateChangeResult.NO_ERROR, "Migrated");
     }
 
+    @Test
+    void migratePrecheckTest() throws PfModelException {
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var acElementListenerV1 = createAcElementListenerV2(intermediaryApi);
+        var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
+                Map.of(), Map.of());
+        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), null, Map.of(), Map.of());
+        acElementListenerV1.migratePrecheck(compositionElement, compositionElement, instanceElement, instanceElement);
+        verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
+                instanceElement.elementId(), DeployState.DEPLOYED, null,
+                StateChangeResult.NO_ERROR, "Migration Precheck not supported");
+    }
+
+    @Test
+    void reviewTest() throws PfModelException {
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var acElementListenerV1 = createAcElementListenerV2(intermediaryApi);
+        var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
+                Map.of(), Map.of());
+        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), null, Map.of(), Map.of());
+        acElementListenerV1.review(compositionElement, instanceElement);
+        verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
+                instanceElement.elementId(), DeployState.DEPLOYED, null,
+                StateChangeResult.NO_ERROR, "Review not supported");
+    }
+
+    @Test
+    void prepareTest() throws PfModelException {
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var acElementListenerV1 = createAcElementListenerV2(intermediaryApi);
+        var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
+                Map.of(), Map.of());
+        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), null, Map.of(), Map.of());
+        acElementListenerV1.prepare(compositionElement, instanceElement);
+        verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
+                instanceElement.elementId(), DeployState.UNDEPLOYED, null,
+                StateChangeResult.NO_ERROR, "Prepare not supported");
+    }
+
     private AcElementListenerV2 createAcElementListenerV2(ParticipantIntermediaryApi intermediaryApi) {
         return new AcElementListenerV2(intermediaryApi) {
             @Override
-            public void deploy(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
-                throws PfModelException {
+            public void deploy(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
+                // dummy implementation
             }
 
             @Override
-            public void undeploy(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
-                throws PfModelException {
+            public void undeploy(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
+                // dummy implementation
             }
         };
     }

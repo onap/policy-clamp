@@ -53,11 +53,9 @@ public class AutomationCompositionElementHandlerV2 extends AcElementListenerV2 {
      *
      * @param compositionElement the information of the Automation Composition Definition Element
      * @param instanceElement the information of the Automation Composition Instance Element
-     * @throws PfModelException from Policy framework
      */
     @Override
-    public void deploy(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
-            throws PfModelException {
+    public void deploy(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
         LOGGER.debug("deploy call compositionElement: {}, instanceElement: {}", compositionElement, instanceElement);
         simulatorService.deploy(instanceElement.instanceId(), instanceElement.elementId());
     }
@@ -67,52 +65,47 @@ public class AutomationCompositionElementHandlerV2 extends AcElementListenerV2 {
      *
      * @param compositionElement the information of the Automation Composition Definition Element
      * @param instanceElement the information of the Automation Composition Instance Element
-     * @throws PfModelException from Policy framework
      */
     @Override
-    public void undeploy(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
-            throws PfModelException {
+    public void undeploy(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
         LOGGER.debug("undeploy call compositionElement: {}, instanceElement: {}", compositionElement, instanceElement);
         simulatorService.undeploy(instanceElement.instanceId(), instanceElement.elementId());
     }
 
     @Override
-    public void lock(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
-            throws PfModelException {
+    public void lock(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
         LOGGER.debug("lock call compositionElement: {}, instanceElement: {}", compositionElement, instanceElement);
         simulatorService.lock(instanceElement.instanceId(), instanceElement.elementId());
     }
 
     @Override
-    public void unlock(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
-            throws PfModelException {
+    public void unlock(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
         LOGGER.debug("unlock call compositionElement: {}, instanceElement: {}", compositionElement, instanceElement);
         simulatorService.unlock(instanceElement.instanceId(), instanceElement.elementId());
     }
 
     @Override
-    public void delete(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
-            throws PfModelException {
+    public void delete(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
         LOGGER.debug("delete call compositionElement: {}, instanceElement: {}", compositionElement, instanceElement);
         simulatorService.delete(instanceElement.instanceId(), instanceElement.elementId());
     }
 
     @Override
     public void update(CompositionElementDto compositionElement, InstanceElementDto instanceElement,
-                       InstanceElementDto instanceElementUpdated) throws PfModelException {
+                       InstanceElementDto instanceElementUpdated) {
         LOGGER.debug("update call compositionElement: {}, instanceElement: {}, instanceElementUpdated: {}",
                 compositionElement, instanceElement, instanceElementUpdated);
         simulatorService.update(instanceElement.instanceId(), instanceElement.elementId());
     }
 
     @Override
-    public void prime(CompositionDto composition) throws PfModelException {
+    public void prime(CompositionDto composition) {
         LOGGER.debug("prime call composition: {}", composition);
         simulatorService.prime(composition.compositionId());
     }
 
     @Override
-    public void deprime(CompositionDto composition) throws PfModelException {
+    public void deprime(CompositionDto composition) {
         LOGGER.debug("deprime call composition: {}", composition);
         simulatorService.deprime(composition.compositionId());
     }
@@ -125,5 +118,27 @@ public class AutomationCompositionElementHandlerV2 extends AcElementListenerV2 {
                         + " instanceElementMigrate: {}",
                 compositionElement, compositionElementTarget, instanceElement, instanceElementMigrate);
         simulatorService.migrate(instanceElement.instanceId(), instanceElement.elementId());
+    }
+
+    @Override
+    public void migratePrecheck(CompositionElementDto compositionElement,
+                                CompositionElementDto compositionElementTarget, InstanceElementDto instanceElement,
+                                InstanceElementDto instanceElementMigrate) {
+        LOGGER.debug("migrate precheck call compositionElement: {}, compositionElementTarget: {}, instanceElement: {},"
+                        + " instanceElementMigrate: {}",
+                compositionElement, compositionElementTarget, instanceElement, instanceElementMigrate);
+        simulatorService.migratePrecheck(instanceElement.instanceId(), instanceElement.elementId());
+    }
+
+    @Override
+    public void prepare(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
+        LOGGER.debug("prepare call compositionElement: {}, instanceElement: {}", compositionElement, instanceElement);
+        simulatorService.prepare(instanceElement.instanceId(), instanceElement.elementId());
+    }
+
+    @Override
+    public void review(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
+        LOGGER.debug("review call compositionElement: {}, instanceElement: {}", compositionElement, instanceElement);
+        simulatorService.review(instanceElement.instanceId(), instanceElement.elementId());
     }
 }

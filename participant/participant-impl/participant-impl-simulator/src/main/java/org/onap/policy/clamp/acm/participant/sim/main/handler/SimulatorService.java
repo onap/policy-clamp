@@ -342,4 +342,67 @@ public class SimulatorService {
                     DeployState.DEPLOYED, null, StateChangeResult.FAILED, "Migrate failed!");
         }
     }
+
+    /**
+     * Handle a Migrate Precheck on a automation composition element.
+     *
+     * @param instanceId the instanceId
+     * @param elementId the elementId
+     */
+    public void migratePrecheck(UUID instanceId, UUID elementId) {
+        if (!execution(config.getMigratePrecheckTimerMs(),
+                "Current Thread migrate precheck is Interrupted during execution {}", elementId)) {
+            return;
+        }
+
+        if (config.isMigratePrecheck()) {
+            intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId,
+                    DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Migration precheck completed");
+        } else {
+            intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId,
+                    DeployState.DEPLOYED, null, StateChangeResult.FAILED, "Migration precheck failed");
+        }
+    }
+
+    /**
+     * Handle a Prepare on a automation composition element.
+     *
+     * @param instanceId the instanceId
+     * @param elementId the elementId
+     */
+    public void prepare(UUID instanceId, UUID elementId) {
+        if (!execution(config.getPrepareTimerMs(),
+                "Current Thread prepare is Interrupted during execution {}", elementId)) {
+            return;
+        }
+
+        if (config.isPrepare()) {
+            intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId,
+                    DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR, "Prepare completed");
+        } else {
+            intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId,
+                    DeployState.UNDEPLOYED, null, StateChangeResult.FAILED, "Prepare failed");
+        }
+    }
+
+    /**
+     * Handle a Review on a automation composition element.
+     *
+     * @param instanceId the instanceId
+     * @param elementId the elementId
+     */
+    public void review(UUID instanceId, UUID elementId) {
+        if (!execution(config.getReviewTimerMs(),
+                "Current Thread review is Interrupted during execution {}", elementId)) {
+            return;
+        }
+
+        if (config.isReview()) {
+            intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId,
+                    DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Review completed");
+        } else {
+            intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId,
+                    DeployState.DEPLOYED, null, StateChangeResult.FAILED, "Review failed");
+        }
+    }
 }
