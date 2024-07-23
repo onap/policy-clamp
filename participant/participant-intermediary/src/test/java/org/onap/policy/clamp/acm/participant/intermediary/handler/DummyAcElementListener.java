@@ -75,4 +75,20 @@ public class DummyAcElementListener implements AutomationCompositionElementListe
                         InstanceElementDto instanceElement, InstanceElementDto instanceElementMigrate)
         throws PfModelException {
     }
+
+    @Override
+    public void migratePrecheck(CompositionElementDto compositionElement,
+        CompositionElementDto compositionElementTarget, InstanceElementDto instanceElement,
+        InstanceElementDto instanceElementMigrate) throws PfModelException {
+    }
+
+    @Override
+    public void prepare(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
+        throws PfModelException {
+    }
+
+    @Override
+    public void review(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
+        throws PfModelException {
+    }
 }

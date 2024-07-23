@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023 Nordix Foundation.
+ *  Copyright (C) 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,12 @@ public class SimConfig {
 
     private boolean migrateSuccess = true;
 
+    private boolean migratePrecheck = true;
+
+    private boolean prepare = true;
+
+    private boolean review = true;
+
     private boolean primeSuccess = true;
 
     private boolean deprimeSuccess = true;
@@ -53,6 +59,12 @@ public class SimConfig {
     private int updateTimerMs = 100;
 
     private int migrateTimerMs = 100;
+
+    private int migratePrecheckTimerMs = 100;
+
+    private int prepareTimerMs = 100;
+
+    private int reviewTimerMs = 100;
 
     private int deleteTimerMs = 100;
 

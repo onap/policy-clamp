@@ -27,7 +27,6 @@ import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantInterme
 import org.onap.policy.clamp.acm.participant.intermediary.api.impl.AcElementListenerV1;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
-import org.onap.policy.models.base.PfModelException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
@@ -48,59 +47,56 @@ public class AutomationCompositionElementHandlerV1 extends AcElementListenerV1 {
     }
 
     @Override
-    public void deploy(UUID instanceId, AcElementDeploy element, Map<String, Object> properties)
-            throws PfModelException {
+    public void deploy(UUID instanceId, AcElementDeploy element, Map<String, Object> properties) {
         LOGGER.debug("deploy call instanceId: {}, element: {}, properties: {}", instanceId, element, properties);
         simulatorService.deploy(instanceId, element.getId());
     }
 
     @Override
-    public void undeploy(UUID instanceId, UUID elementId) throws PfModelException {
+    public void undeploy(UUID instanceId, UUID elementId) {
         LOGGER.debug("undeploy call instanceId: {}, elementId: {}", instanceId, elementId);
         simulatorService.undeploy(instanceId, elementId);
     }
 
     @Override
-    public void lock(UUID instanceId, UUID elementId) throws PfModelException {
+    public void lock(UUID instanceId, UUID elementId) {
         LOGGER.debug("lock call instanceId: {}, elementId: {}", instanceId, elementId);
         simulatorService.lock(instanceId, elementId);
     }
 
     @Override
-    public void unlock(UUID instanceId, UUID elementId) throws PfModelException {
+    public void unlock(UUID instanceId, UUID elementId) {
         LOGGER.debug("unlock call instanceId: {}, elementId: {}", instanceId, elementId);
         simulatorService.unlock(instanceId, elementId);
     }
 
     @Override
-    public void delete(UUID instanceId, UUID elementId) throws PfModelException {
+    public void delete(UUID instanceId, UUID elementId) {
         LOGGER.debug("delete call instanceId: {}, elementId: {}", instanceId, elementId);
         simulatorService.delete(instanceId, elementId);
     }
 
     @Override
-    public void update(UUID instanceId, AcElementDeploy element, Map<String, Object> properties)
-            throws PfModelException {
+    public void update(UUID instanceId, AcElementDeploy element, Map<String, Object> properties) {
         LOGGER.debug("update call instanceId: {}, element: {}, properties: {}", instanceId, element, properties);
         simulatorService.update(instanceId, element.getId());
     }
 
     @Override
-    public void prime(UUID compositionId, List<AutomationCompositionElementDefinition> elementDefinitionList)
-            throws PfModelException {
+    public void prime(UUID compositionId, List<AutomationCompositionElementDefinition> elementDefinitionList) {
         LOGGER.debug("prime call compositionId: {}, elementDefinitionList: {}", compositionId, elementDefinitionList);
         simulatorService.prime(compositionId);
     }
 
     @Override
-    public void deprime(UUID compositionId) throws PfModelException {
+    public void deprime(UUID compositionId) {
         LOGGER.debug("deprime call compositionId: {}", compositionId);
         simulatorService.deprime(compositionId);
     }
 
     @Override
     public void migrate(UUID instanceId, AcElementDeploy element, UUID compositionTargetId,
-        Map<String, Object> properties) throws PfModelException {
+        Map<String, Object> properties) {
         LOGGER.debug("migrate call instanceId: {}, element: {}, compositionTargetId: {}, properties: {}",
                 instanceId, element, compositionTargetId, properties);
         simulatorService.migrate(instanceId, element.getId());
