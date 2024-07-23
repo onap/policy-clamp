@@ -103,4 +103,29 @@ public abstract class AcElementListenerV2 implements AutomationCompositionElemen
         intermediaryApi.updateAutomationCompositionElementState(instanceElementMigrate.instanceId(),
             instanceElementMigrate.elementId(), DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Migrated");
     }
+
+    @Override
+    public void migratePrecheck(CompositionElementDto compositionElement,
+                                CompositionElementDto compositionElementTarget, InstanceElementDto instanceElement,
+                                InstanceElementDto instanceElementMigrate) throws PfModelException {
+        intermediaryApi.updateAutomationCompositionElementState(instanceElementMigrate.instanceId(),
+            instanceElementMigrate.elementId(), DeployState.DEPLOYED, null,
+            StateChangeResult.NO_ERROR, "Migration Precheck completed");
+    }
+
+    @Override
+    public void review(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
+        throws PfModelException {
+        intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
+            instanceElement.elementId(), DeployState.DEPLOYED, null,
+            StateChangeResult.NO_ERROR, "Review completed");
+    }
+
+    @Override
+    public void prepare(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
+        throws PfModelException {
+        intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
+            instanceElement.elementId(), DeployState.UNDEPLOYED, null,
+            StateChangeResult.NO_ERROR, "Prepare completed");
+    }
 }
