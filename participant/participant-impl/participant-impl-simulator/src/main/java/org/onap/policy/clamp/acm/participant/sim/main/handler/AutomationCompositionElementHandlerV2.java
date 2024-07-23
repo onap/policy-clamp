@@ -124,6 +124,15 @@ public class AutomationCompositionElementHandlerV2 extends AcElementListenerV2 {
         LOGGER.debug("migrate call compositionElement: {}, compositionElementTarget: {}, instanceElement: {},"
                         + " instanceElementMigrate: {}",
                 compositionElement, compositionElementTarget, instanceElement, instanceElementMigrate);
-        simulatorService.migrate(instanceElement.instanceId(), instanceElement.elementId());
+        if (instanceElement.newElement()) {
+            simulatorService.migrate(instanceElementMigrate.instanceId(), instanceElementMigrate.elementId());
+
+        } else if (instanceElementMigrate.removedElement()) {
+            simulatorService.undeploy(instanceElement.instanceId(), instanceElement.elementId());
+            simulatorService.delete(instanceElement.instanceId(), instanceElement.elementId());
+        } else {
+            simulatorService.migrate(instanceElement.instanceId(), instanceElement.elementId());
+        }
+
     }
 }
