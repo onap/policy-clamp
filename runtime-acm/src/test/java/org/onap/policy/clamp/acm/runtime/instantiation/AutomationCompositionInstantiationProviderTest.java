@@ -23,6 +23,7 @@ package org.onap.policy.clamp.acm.runtime.instantiation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
@@ -32,6 +33,7 @@ import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVIC
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeAll;
@@ -42,9 +44,11 @@ import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
+import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.AcInstanceStateUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.LockOrder;
@@ -54,6 +58,9 @@ import org.onap.policy.clamp.models.acm.persistence.provider.AcInstanceStateReso
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ProviderUtils;
+import org.onap.policy.clamp.models.acm.utils.AcmUtils;
+import org.onap.policy.models.base.PfConceptKey;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
 
@@ -65,6 +72,7 @@ class AutomationCompositionInstantiationProviderTest {
     private static final String AC_INSTANTIATION_CREATE_JSON = "src/test/resources/rest/acm/AutomationComposition.json";
     private static final String AC_INSTANTIATION_UPDATE_JSON =
             "src/test/resources/rest/acm/AutomationCompositionUpdate.json";
+    private static final String AC_MIGRATE_JSON = "src/test/resources/rest/acm/AutomationCompositionMigrate.json";
 
     private static final String AC_INSTANTIATION_DEFINITION_NAME_NOT_FOUND_JSON =
             "src/test/resources/rest/acm/AutomationCompositionElementsNotFound.json";
@@ -280,11 +288,110 @@ class AutomationCompositionInstantiationProviderTest {
         var instantiationProvider = new AutomationCompositionInstantiationProvider(acProvider, acDefinitionProvider,
                 new AcInstanceStateResolver(), supervisionAcHandler, participantProvider,
                 mock(AcRuntimeParameterGroup.class));
+        var message =
+                  """
+                  "AutomationComposition" INVALID, item has status INVALID
+                    item "ServiceTemplate.restarting" value "true" INVALID, There is a restarting process in composition
+                  """;
+
         assertThatThrownBy(
                 () -> instantiationProvider.updateAutomationComposition(compositionId, automationCompositionUpdate))
-                        .hasMessageMatching("\"AutomationComposition\" INVALID, item has status INVALID\n"
-                                + "  item \"ServiceTemplate.restarting\" value \"true\" INVALID,"
-                                + " There is a restarting process in composition\n");
+                        .hasMessageMatching(message);
+    }
+
+    @Test
+    void testMigrationAddRemoveElements() {
+        var acDefinitionProvider = mock(AcDefinitionProvider.class);
+        var acDefinition = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
+        var compositionId = acDefinition.getCompositionId();
+        when(acDefinitionProvider.findAcDefinition(compositionId)).thenReturn(Optional.of(acDefinition));
+        var instanceId = UUID.randomUUID();
+
+        var automationComposition =
+                InstantiationUtils.getAutomationCompositionFromResource(AC_MIGRATE_JSON, "Crud");
+        automationComposition.setCompositionId(compositionId);
+        automationComposition.setInstanceId(instanceId);
+        automationComposition.setDeployState(DeployState.DEPLOYED);
+        automationComposition.setLockState(LockState.LOCKED);
+        var acProvider = mock(AutomationCompositionProvider.class);
+        when(acProvider.getAutomationComposition(automationComposition.getInstanceId()))
+                .thenReturn(automationComposition);
+
+        var automationCompositionTarget = new AutomationComposition(automationComposition);
+        automationCompositionTarget.setInstanceId(instanceId);
+        automationCompositionTarget.setCompositionId(compositionId);
+        // Add a new element
+        var uuid = UUID.randomUUID();
+        var newElement = new AutomationCompositionElement();
+        newElement.setId(uuid);
+        newElement.setDefinition(new ToscaConceptIdentifier(
+                "org.onap.domain.pmsh.PMSH_OperationalPolicyAutomationCompositionElement", "1.2.3"));
+        newElement.setProperties(Map.of("testVar", "1", "testVar2", "2"));
+        automationCompositionTarget.getElements().put(uuid, newElement);
+
+        //Remove an existing element
+        var elementIdToRemove = UUID.randomUUID();
+        for (var element : automationCompositionTarget.getElements().values()) {
+            if (element.getDefinition().getName()
+                    .equals("org.onap.domain.database.Http_PMSHMicroserviceAutomationCompositionElement")) {
+                elementIdToRemove = element.getId();
+            }
+        }
+        automationCompositionTarget.getElements().remove(elementIdToRemove);
+
+        var acDefinitionTarget = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
+        var compositionTargetId = acDefinitionTarget.getCompositionId();
+        automationCompositionTarget.setCompositionTargetId(compositionTargetId);
+        when(acDefinitionProvider.findAcDefinition(compositionTargetId)).thenReturn(Optional.of(acDefinitionTarget));
+        when(acProvider.updateAutomationComposition(any())).thenReturn(automationCompositionTarget);
+
+        var supervisionAcHandler = mock(SupervisionAcHandler.class);
+        var participantProvider = mock(ParticipantProvider.class);
+        var instantiationProvider = new AutomationCompositionInstantiationProvider(acProvider, acDefinitionProvider,
+                new AcInstanceStateResolver(), supervisionAcHandler, participantProvider,
+                new AcRuntimeParameterGroup());
+
+        automationCompositionTarget.setPrecheck(true);
+        var preCheckResponse = instantiationProvider.updateAutomationComposition(compositionId,
+                automationCompositionTarget);
+        verify(supervisionAcHandler).migratePrecheck(any());
+        InstantiationUtils.assertInstantiationResponse(preCheckResponse, automationCompositionTarget);
+
+        automationCompositionTarget.setPrecheck(false);
+        AcmUtils.setCascadedState(automationComposition, DeployState.DEPLOYED, LockState.LOCKED,
+                SubState.NONE);
+        var instantiationResponse = instantiationProvider.updateAutomationComposition(compositionId,
+                        automationCompositionTarget);
+
+        verify(supervisionAcHandler).migrate(any());
+        InstantiationUtils.assertInstantiationResponse(instantiationResponse, automationCompositionTarget);
+
+    }
+
+    @Test
+    void testVersionCompatibility() {
+        var acProvider = mock(AutomationCompositionProvider.class);
+        var acDefinitionProvider = mock(AcDefinitionProvider.class);
+        var supervisionAcHandler = mock(SupervisionAcHandler.class);
+        var participantProvider = mock(ParticipantProvider.class);
+        var newDefinition = new PfConceptKey("policy.clamp.element", "1.2.3");
+        var oldDefinition = new PfConceptKey("policy.clamp.element", "2.2.3");
+
+        var instantiationProvider = new AutomationCompositionInstantiationProvider(acProvider, acDefinitionProvider,
+                new AcInstanceStateResolver(), supervisionAcHandler, participantProvider,
+                new AcRuntimeParameterGroup());
+        var instanceId = UUID.randomUUID();
+        assertDoesNotThrow(() -> {
+            instantiationProvider.checkCompatibility(newDefinition, oldDefinition, instanceId);
+        }, "No exception for major version update");
+
+        // Not compatible
+        newDefinition.setName("policy.clamp.newElement");
+        newDefinition.setVersion("2.2.4");
+
+        assertThatThrownBy(() -> instantiationProvider
+                .checkCompatibility(newDefinition, oldDefinition, instanceId))
+                .hasMessageContaining("is not compatible");
     }
 
     @Test
@@ -396,7 +503,7 @@ class AutomationCompositionInstantiationProviderTest {
 
         var acMigrate = new AutomationComposition(automationComposition);
         acMigrate.setCompositionTargetId(compositionTargetId);
-        automationComposition.getElements().clear();
+        automationComposition.setDeployState(DeployState.DEPLOYING);
 
         var supervisionAcHandler = mock(SupervisionAcHandler.class);
         var participantProvider = mock(ParticipantProvider.class);
@@ -406,7 +513,7 @@ class AutomationCompositionInstantiationProviderTest {
 
         assertThatThrownBy(() -> instantiationProvider
                 .updateAutomationComposition(automationComposition.getCompositionId(), acMigrate))
-                .hasMessageStartingWith("Element id not present");
+                .hasMessageStartingWith("Not allowed to MIGRATE in the state DEPLOYING");
     }
 
     @Test
@@ -433,7 +540,8 @@ class AutomationCompositionInstantiationProviderTest {
 
         var acMigrate = new AutomationComposition(automationComposition);
         acMigrate.setCompositionTargetId(compositionTargetId);
-        automationComposition.getElements().clear();
+        automationComposition.setDeployState(DeployState.DEPLOYING);
+        automationComposition.setPrecheck(true);
 
         var supervisionAcHandler = mock(SupervisionAcHandler.class);
         var participantProvider = mock(ParticipantProvider.class);
@@ -443,7 +551,7 @@ class AutomationCompositionInstantiationProviderTest {
 
         assertThatThrownBy(() -> instantiationProvider
                 .updateAutomationComposition(automationComposition.getCompositionId(), acMigrate))
-                .hasMessageStartingWith("Element id not present");
+                .hasMessageStartingWith("Not allowed to NONE in the state DEPLOYING");
     }
 
     @Test
@@ -635,10 +743,14 @@ class AutomationCompositionInstantiationProviderTest {
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Crud");
         automationComposition.setCompositionId(compositionId);
+        var message = """
+                      "AutomationComposition" INVALID, item has status INVALID
+                        item "ServiceTemplate.state" value "COMMISSIONED" INVALID, Commissioned automation composition \
+                      definition not primed
+                      """;
+
         assertThatThrownBy(() -> provider.createAutomationComposition(compositionId, automationComposition))
-                .hasMessageMatching("\"AutomationComposition\" INVALID, item has status INVALID\n"
-                        + "  item \"ServiceTemplate.state\" value \"COMMISSIONED\" INVALID,"
-                        + " Commissioned automation composition definition not primed\n");
+                .hasMessageMatching(message);
     }
 
     @Test

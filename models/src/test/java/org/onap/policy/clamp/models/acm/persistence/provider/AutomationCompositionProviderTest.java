@@ -56,6 +56,7 @@ class AutomationCompositionProviderTest {
 
     private static final String AC_IS_NULL = "automationComposition is marked non-null but is null";
     private static final String ACELEMENT_IS_NULL = "element is marked non-null but is null";
+    private static final String ACELEMENT_ID_IS_NULL = "elementId is marked non-null but is null";
 
     private static final Coder CODER = new StandardCoder();
     private static final String AUTOMATION_COMPOSITION_JSON =
@@ -238,6 +239,18 @@ class AutomationCompositionProviderTest {
 
         automationCompositionProvider.updateAutomationCompositionElement(acElement);
         verify(acElementRepository).save(any());
+    }
+
+    @Test
+    void testDeleteElementById() {
+        var acElementRepository = mock(AutomationCompositionElementRepository.class);
+        var automationCompositionProvider = new AutomationCompositionProvider(
+                mock(AutomationCompositionRepository.class), acElementRepository);
+        assertThatThrownBy(() -> automationCompositionProvider.deleteAutomationCompositionElement(null))
+                .hasMessageMatching(ACELEMENT_ID_IS_NULL);
+        var elementId = UUID.randomUUID();
+        automationCompositionProvider.deleteAutomationCompositionElement(elementId);
+        verify(acElementRepository).deleteById(elementId.toString());
     }
 
     @Test

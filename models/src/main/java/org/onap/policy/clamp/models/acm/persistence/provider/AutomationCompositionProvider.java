@@ -269,6 +269,15 @@ public class AutomationCompositionProvider {
     }
 
     /**
+     * Delete AutomationCompositionElement.
+     *
+     * @param elementId the AutomationCompositionElement Id
+     */
+    public void deleteAutomationCompositionElement(@NonNull final UUID elementId) {
+        acElementRepository.deleteById(elementId.toString());
+    }
+
+    /**
      * Validate ElementIds.
      *
      * @param automationComposition the AutomationComposition

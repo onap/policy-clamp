@@ -23,6 +23,8 @@ package org.onap.policy.clamp.acm.runtime.instantiation;
 
 import jakarta.validation.Valid;
 import jakarta.ws.rs.core.Response.Status;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.NonNull;
@@ -50,6 +52,7 @@ import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.common.parameters.ObjectValidationResult;
 import org.onap.policy.common.parameters.ValidationStatus;
+import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfKey;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.slf4j.Logger;
@@ -215,23 +218,29 @@ public class AutomationCompositionInstantiationProvider {
         for (var element : automationComposition.getElements().entrySet()) {
             var elementId = element.getKey();
             var dbAcElement = acToBeUpdated.getElements().get(elementId);
+            // Add additional elements if present for migration
             if (dbAcElement == null) {
-                throw new PfModelRuntimeException(Status.BAD_REQUEST, "Element id not present " + elementId);
+                LOGGER.info("New Ac element {} added in Migration", elementId);
+                acToBeUpdated.getElements().put(elementId, automationComposition.getElements().get(elementId));
+            } else {
+                AcmUtils.recursiveMerge(dbAcElement.getProperties(), element.getValue().getProperties());
+                var newDefinition = element.getValue().getDefinition().asConceptKey();
+                var dbElementDefinition = dbAcElement.getDefinition().asConceptKey();
+                checkCompatibility(newDefinition, dbElementDefinition, automationComposition.getInstanceId());
+                dbAcElement.setDefinition(element.getValue().getDefinition());
             }
-            AcmUtils.recursiveMerge(dbAcElement.getProperties(), element.getValue().getProperties());
-            var newDefinition = element.getValue().getDefinition();
-            var compatibility =
-                newDefinition.asConceptKey().getCompatibility(dbAcElement.getDefinition().asConceptKey());
-            if (PfKey.Compatibility.DIFFERENT.equals(compatibility)) {
-                throw new PfModelRuntimeException(Status.BAD_REQUEST,
-                    dbAcElement.getDefinition() + " is not compatible with " + newDefinition);
-            }
-            if (PfKey.Compatibility.MAJOR.equals(compatibility) || PfKey.Compatibility.MINOR.equals(compatibility)) {
-                LOGGER.warn("Migrate {}: Version {} has {} compatibility with {} ",
-                    automationComposition.getInstanceId(), newDefinition, compatibility, dbAcElement.getDefinition());
-            }
-            dbAcElement.setDefinition(element.getValue().getDefinition());
         }
+        // Remove element which is not present in the new Ac instance
+        List<UUID> elementsRemoved = new ArrayList<>();
+        for (var dbElement : acToBeUpdated.getElements().entrySet()) {
+            var dbElementId = dbElement.getKey();
+            if (automationComposition.getElements().get(dbElementId) == null) {
+                LOGGER.info("Element with id {} is removed in Migration", dbElementId);
+                elementsRemoved.add(dbElementId);
+                automationCompositionProvider.deleteAutomationCompositionElement(dbElementId);
+            }
+        }
+        elementsRemoved.forEach(uuid -> acToBeUpdated.getElements().remove(uuid));
 
         var validationResult =
             validateAutomationComposition(acToBeUpdated, automationComposition.getCompositionTargetId());
@@ -244,7 +253,22 @@ public class AutomationCompositionInstantiationProvider {
         supervisionAcHandler.migrate(acToBeUpdated);
 
         automationComposition = automationCompositionProvider.updateAutomationComposition(acToBeUpdated);
+        elementsRemoved.forEach(automationCompositionProvider::deleteAutomationCompositionElement);
         return createInstantiationResponse(automationComposition);
+    }
+
+    void checkCompatibility(PfConceptKey newDefinition, PfConceptKey dbElementDefinition,
+                            UUID instanceId) {
+        var compatibility = newDefinition.getCompatibility(dbElementDefinition);
+        if (PfKey.Compatibility.DIFFERENT.equals(compatibility)) {
+            throw new PfModelRuntimeException(Status.BAD_REQUEST,
+                    dbElementDefinition + " is not compatible with " + newDefinition);
+        }
+        if (PfKey.Compatibility.MAJOR.equals(compatibility) || PfKey.Compatibility.MINOR
+                .equals(compatibility)) {
+            LOGGER.warn("Migrate {}: Version {} has {} compatibility with {} ", instanceId, newDefinition,
+                    compatibility, dbElementDefinition);
+        }
     }
 
     private InstantiationResponse migratePrecheckAc(
@@ -256,19 +280,29 @@ public class AutomationCompositionInstantiationProvider {
         for (var element : automationComposition.getElements().entrySet()) {
             var elementId = element.getKey();
             var copyElement = copyAc.getElements().get(elementId);
+            // Add additional elements if present for migration
             if (copyElement == null) {
-                throw new PfModelRuntimeException(Status.BAD_REQUEST, "Element id not present " + elementId);
+                LOGGER.info("New Ac element {} added in Migration", elementId);
+                copyAc.getElements().put(elementId, automationComposition.getElements().get(elementId));
+            } else {
+                AcmUtils.recursiveMerge(copyElement.getProperties(), element.getValue().getProperties());
+                var newDefinition = element.getValue().getDefinition().asConceptKey();
+                var copyElementDefinition = copyElement.getDefinition().asConceptKey();
+                checkCompatibility(newDefinition, copyElementDefinition, automationComposition.getInstanceId());
+                copyElement.setDefinition(element.getValue().getDefinition());
             }
-            AcmUtils.recursiveMerge(copyElement.getProperties(), element.getValue().getProperties());
-            var newDefinition = element.getValue().getDefinition();
-            var compatibility =
-                    newDefinition.asConceptKey().getCompatibility(copyElement.getDefinition().asConceptKey());
-            if (PfKey.Compatibility.DIFFERENT.equals(compatibility)) {
-                throw new PfModelRuntimeException(Status.BAD_REQUEST,
-                        copyElement.getDefinition() + " is not compatible with " + newDefinition);
-            }
-            copyElement.setDefinition(element.getValue().getDefinition());
         }
+        // Remove element which is not present in the new Ac instance
+        List<UUID> elementsRemoved = new ArrayList<>();
+        for (var dbElement : copyAc.getElements().entrySet()) {
+            var dbElementId = dbElement.getKey();
+            if (automationComposition.getElements().get(dbElementId) == null) {
+                LOGGER.info("Element with id {} is removed in Migration", dbElementId);
+                elementsRemoved.add(dbElementId);
+            }
+        }
+
+        elementsRemoved.forEach(uuid -> copyAc.getElements().remove(uuid));
 
         var validationResult =
                 validateAutomationComposition(copyAc, automationComposition.getCompositionTargetId());
