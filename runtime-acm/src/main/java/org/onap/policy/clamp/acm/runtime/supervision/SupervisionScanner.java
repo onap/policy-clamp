@@ -34,6 +34,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
+import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
@@ -133,7 +134,7 @@ public class SupervisionScanner {
         LOGGER.debug("scanning automation composition {} . . .", automationComposition.getInstanceId());
 
         if (!AcmUtils.isInTransitionalState(automationComposition.getDeployState(),
-                automationComposition.getLockState())
+                automationComposition.getLockState(), automationComposition.getSubState())
                 || StateChangeResult.FAILED.equals(automationComposition.getStateChangeResult())) {
             LOGGER.debug("automation composition {} scanned, OK", automationComposition.getInstanceId());
 
@@ -151,7 +152,8 @@ public class SupervisionScanner {
             int startPhase = ParticipantUtils.findStartPhase(toscaNodeTemplate.getProperties());
             defaultMin = Math.min(defaultMin, startPhase);
             defaultMax = Math.max(defaultMax, startPhase);
-            if (AcmUtils.isInTransitionalState(element.getDeployState(), element.getLockState())) {
+            if (AcmUtils.isInTransitionalState(element.getDeployState(), element.getLockState(),
+                    element.getSubState())) {
                 completed = false;
                 minSpNotCompleted = Math.min(minSpNotCompleted, startPhase);
                 maxSpNotCompleted = Math.max(maxSpNotCompleted, startPhase);
@@ -168,7 +170,8 @@ public class SupervisionScanner {
                     automationComposition.getDeployState(), automationComposition.getLockState());
 
             if (DeployState.UPDATING.equals(automationComposition.getDeployState())
-                    || DeployState.MIGRATING.equals(automationComposition.getDeployState())) {
+                    || DeployState.MIGRATING.equals(automationComposition.getDeployState())
+                    || !SubState.NONE.equals(automationComposition.getSubState())) {
                 // UPDATING do not need phases
                 handleTimeoutUpdate(automationComposition);
                 return;
@@ -198,6 +201,8 @@ public class SupervisionScanner {
         automationComposition.setDeployState(AcmUtils.deployCompleted(deployState));
         automationComposition.setLockState(AcmUtils.lockCompleted(deployState, automationComposition.getLockState()));
         automationComposition.setPhase(null);
+        automationComposition.setSubState(SubState.NONE);
+        automationComposition.setPrecheck(null);
         if (StateChangeResult.TIMEOUT.equals(automationComposition.getStateChangeResult())) {
             automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
         }
@@ -233,7 +238,8 @@ public class SupervisionScanner {
         var now = TimestampHelper.nowEpochMilli();
         var lastMsg = TimestampHelper.toEpochMilli(automationComposition.getLastMsg());
         for (var element : automationComposition.getElements().values()) {
-            if (!AcmUtils.isInTransitionalState(element.getDeployState(), element.getLockState())) {
+            if (!AcmUtils.isInTransitionalState(
+                    element.getDeployState(), element.getLockState(), element.getSubState())) {
                 continue;
             }
             if ((now - lastMsg) > maxStatusWaitMs) {
@@ -255,7 +261,8 @@ public class SupervisionScanner {
         var now = TimestampHelper.nowEpochMilli();
         var lastMsg = TimestampHelper.toEpochMilli(automationComposition.getLastMsg());
         for (var element : automationComposition.getElements().values()) {
-            if (!AcmUtils.isInTransitionalState(element.getDeployState(), element.getLockState())) {
+            if (!AcmUtils.isInTransitionalState(
+                    element.getDeployState(), element.getLockState(), element.getSubState())) {
                 continue;
             }
             var toscaNodeTemplate = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates()

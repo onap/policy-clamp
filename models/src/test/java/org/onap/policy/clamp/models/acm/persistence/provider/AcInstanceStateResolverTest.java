@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023 Nordix Foundation.
+ *  Copyright (C) 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,42 +26,78 @@ import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
+import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.LockOrder;
+import org.onap.policy.clamp.models.acm.messages.rest.instantiation.SubOrder;
 
 class AcInstanceStateResolverTest {
 
     @Test
     void testResolve() {
         var acTypeStateResolver = new AcInstanceStateResolver();
-        var result = acTypeStateResolver.resolve(DeployOrder.DEPLOY, LockOrder.NONE, DeployState.UNDEPLOYED,
-                LockState.NONE, StateChangeResult.NO_ERROR);
+        // deploy
+        var result = acTypeStateResolver.resolve(DeployOrder.DEPLOY, LockOrder.NONE, SubOrder.NONE,
+            DeployState.UNDEPLOYED, LockState.NONE, SubState.NONE, StateChangeResult.NO_ERROR);
         assertThat(result).isEqualTo(AcInstanceStateResolver.DEPLOY);
-        result = acTypeStateResolver.resolve(DeployOrder.UNDEPLOY, LockOrder.NONE, DeployState.DEPLOYED,
-                LockState.LOCKED, StateChangeResult.NO_ERROR);
+
+        // undeploy
+        result = acTypeStateResolver.resolve(DeployOrder.UNDEPLOY, LockOrder.NONE, SubOrder.NONE,
+            DeployState.DEPLOYED, LockState.LOCKED, SubState.NONE, StateChangeResult.NO_ERROR);
         assertThat(result).isEqualTo(AcInstanceStateResolver.UNDEPLOY);
-        result = acTypeStateResolver.resolve(DeployOrder.NONE, LockOrder.UNLOCK, DeployState.DEPLOYED, LockState.LOCKED,
-                StateChangeResult.NO_ERROR);
+
+        // unlock
+        result = acTypeStateResolver.resolve(DeployOrder.NONE, LockOrder.UNLOCK, SubOrder.NONE,
+            DeployState.DEPLOYED, LockState.LOCKED, SubState.NONE, StateChangeResult.NO_ERROR);
         assertThat(result).isEqualTo(AcInstanceStateResolver.UNLOCK);
-        result = acTypeStateResolver.resolve(DeployOrder.NONE, LockOrder.LOCK, DeployState.DEPLOYED, LockState.UNLOCKED,
-                StateChangeResult.NO_ERROR);
+
+        // lock
+        result = acTypeStateResolver.resolve(DeployOrder.NONE, LockOrder.LOCK, SubOrder.NONE,
+            DeployState.DEPLOYED, LockState.UNLOCKED, SubState.NONE, StateChangeResult.NO_ERROR);
         assertThat(result).isEqualTo(AcInstanceStateResolver.LOCK);
 
-        result = acTypeStateResolver.resolve(DeployOrder.NONE, LockOrder.NONE, DeployState.UNDEPLOYED, LockState.NONE,
-                StateChangeResult.NO_ERROR);
-        assertThat(result).isEqualTo(AcInstanceStateResolver.NONE);
-        result = acTypeStateResolver.resolve(DeployOrder.UNDEPLOY, LockOrder.UNLOCK, DeployState.DEPLOYED,
-                LockState.LOCKED, StateChangeResult.NO_ERROR);
-        assertThat(result).isEqualTo(AcInstanceStateResolver.NONE);
-        result = acTypeStateResolver.resolve(DeployOrder.NONE, LockOrder.UNLOCK, DeployState.UNDEPLOYED, LockState.NONE,
-                StateChangeResult.NO_ERROR);
-        assertThat(result).isEqualTo(AcInstanceStateResolver.NONE);
-        result = acTypeStateResolver.resolve(DeployOrder.UNDEPLOY, LockOrder.NONE, DeployState.DEPLOYING,
-                LockState.NONE, StateChangeResult.NO_ERROR);
-        assertThat(result).isEqualTo(AcInstanceStateResolver.NONE);
+        // migrate
+        result = acTypeStateResolver.resolve(DeployOrder.MIGRATE, LockOrder.NONE, SubOrder.NONE,
+            DeployState.DEPLOYED, LockState.LOCKED, SubState.NONE, StateChangeResult.NO_ERROR);
+        assertThat(result).isEqualTo(AcInstanceStateResolver.MIGRATE);
 
-        result = acTypeStateResolver.resolve(null, null, null, null, null);
-        assertThat(result).isEqualTo(AcInstanceStateResolver.NONE);
+        // migrate-precheck
+        result = acTypeStateResolver.resolve(DeployOrder.NONE, LockOrder.NONE, SubOrder.MIGRATE_PRECHECK,
+            DeployState.DEPLOYED, LockState.LOCKED, SubState.NONE, StateChangeResult.NO_ERROR);
+        assertThat(result).isEqualTo(AcInstanceStateResolver.MIGRATE_PRECHECK);
+
+        // prepare
+        result = acTypeStateResolver.resolve(DeployOrder.NONE, LockOrder.NONE, SubOrder.PREPARE,
+            DeployState.UNDEPLOYED, LockState.NONE, SubState.NONE, StateChangeResult.NO_ERROR);
+        assertThat(result).isEqualTo(AcInstanceStateResolver.PREPARE);
+
+        // review
+        result = acTypeStateResolver.resolve(DeployOrder.NONE, LockOrder.NONE, SubOrder.REVIEW,
+            DeployState.DEPLOYED, LockState.LOCKED, SubState.NONE, StateChangeResult.NO_ERROR);
+        assertThat(result).isEqualTo(AcInstanceStateResolver.REVIEW);
     }
 
+    @Test
+    void testResolveWrongOrder() {
+        var acTypeStateResolver = new AcInstanceStateResolver();
+
+        var result = acTypeStateResolver.resolve(DeployOrder.NONE, LockOrder.NONE, SubOrder.NONE,
+            DeployState.UNDEPLOYED, LockState.NONE, SubState.NONE, StateChangeResult.NO_ERROR);
+        assertThat(result).isEqualTo(AcInstanceStateResolver.NONE);
+
+        result = acTypeStateResolver.resolve(DeployOrder.UNDEPLOY, LockOrder.UNLOCK, SubOrder.NONE,
+            DeployState.DEPLOYED, LockState.LOCKED, SubState.NONE, StateChangeResult.NO_ERROR);
+        assertThat(result).isEqualTo(AcInstanceStateResolver.NONE);
+
+        result = acTypeStateResolver.resolve(DeployOrder.NONE, LockOrder.UNLOCK, SubOrder.NONE,
+            DeployState.UNDEPLOYED, LockState.NONE, SubState.NONE, StateChangeResult.NO_ERROR);
+        assertThat(result).isEqualTo(AcInstanceStateResolver.NONE);
+
+        result = acTypeStateResolver.resolve(DeployOrder.UNDEPLOY, LockOrder.NONE, SubOrder.NONE,
+            DeployState.DEPLOYING, LockState.NONE, SubState.NONE, StateChangeResult.NO_ERROR);
+        assertThat(result).isEqualTo(AcInstanceStateResolver.NONE);
+
+        result = acTypeStateResolver.resolve(null, null, null, null, null, null, null);
+        assertThat(result).isEqualTo(AcInstanceStateResolver.NONE);
+    }
 }

@@ -36,17 +36,17 @@ public class AutomationCompositionMigrationPublisher
      * Send AutomationCompositionMigration message to Participant.
      *
      * @param automationComposition the AutomationComposition
-     * @param compositionTargetId the Composition Definition Target
      */
     @Timed(
             value = "publisher.automation_composition_migration",
             description = "AUTOMATION_COMPOSITION_MIGRATION messages published")
-    public void send(AutomationComposition automationComposition, UUID compositionTargetId) {
+    public void send(AutomationComposition automationComposition) {
         var acsc = new AutomationCompositionMigration();
+        acsc.setPrecheck(Boolean.TRUE.equals(automationComposition.getPrecheck()));
         acsc.setCompositionId(automationComposition.getCompositionId());
         acsc.setAutomationCompositionId(automationComposition.getInstanceId());
         acsc.setMessageId(UUID.randomUUID());
-        acsc.setCompositionTargetId(compositionTargetId);
+        acsc.setCompositionTargetId(automationComposition.getCompositionTargetId());
         acsc.setParticipantUpdatesList(
                 AcmUtils.createParticipantDeployList(automationComposition, DeployOrder.MIGRATE));
 

@@ -30,6 +30,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import lombok.AllArgsConstructor;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AcElementPropertiesPublisher;
+import org.onap.policy.clamp.acm.runtime.supervision.comm.AcPreparePublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionDeployPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionMigrationPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionStateChangePublisher;
@@ -42,6 +43,7 @@ import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
+import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeployAck;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
@@ -68,6 +70,7 @@ public class SupervisionAcHandler {
     private final AcElementPropertiesPublisher acElementPropertiesPublisher;
     private final AutomationCompositionMigrationPublisher acCompositionMigrationPublisher;
     private final ParticipantSyncPublisher participantSyncPublisher;
+    private final AcPreparePublisher acPreparePublisher;
 
     private final ExecutorService executor = Context.taskWrapping(Executors.newFixedThreadPool(1));
 
@@ -147,6 +150,30 @@ public class SupervisionAcHandler {
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         executor.execute(
             () -> automationCompositionStateChangePublisher.send(automationComposition, startPhase, true));
+    }
+
+    /**
+     * Handle prepare Pre Deploy an AutomationComposition instance.
+     *
+     * @param automationComposition the AutomationComposition
+     */
+    public void prepare(AutomationComposition automationComposition) {
+        AcmUtils.setCascadedState(automationComposition, DeployState.UNDEPLOYED, LockState.NONE, SubState.PREPARING);
+        automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
+        automationCompositionProvider.updateAutomationComposition(automationComposition);
+        executor.execute(() -> acPreparePublisher.sendPrepare(automationComposition));
+    }
+
+    /**
+     * Handle prepare Post Deploy an AutomationComposition instance.
+     *
+     * @param automationComposition the AutomationComposition
+     */
+    public void review(AutomationComposition automationComposition) {
+        AcmUtils.setCascadedState(automationComposition, DeployState.DEPLOYED, LockState.LOCKED, SubState.REVIEWING);
+        automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
+        automationCompositionProvider.updateAutomationComposition(automationComposition);
+        executor.execute(() -> acPreparePublisher.sendRevew(automationComposition));
     }
 
     /**
@@ -285,6 +312,7 @@ public class SupervisionAcHandler {
                 element.setOutProperties(acElementAck.getValue().getOutProperties());
                 element.setOperationalState(acElementAck.getValue().getOperationalState());
                 element.setUseState(acElementAck.getValue().getUseState());
+                element.setSubState(SubState.NONE);
                 element.setDeployState(acElementAck.getValue().getDeployState());
                 element.setLockState(acElementAck.getValue().getLockState());
                 element.setRestarting(null);
@@ -308,12 +336,19 @@ public class SupervisionAcHandler {
      * Handle Migration of an AutomationComposition instance to other ACM Definition.
      *
      * @param automationComposition the AutomationComposition
-     * @param compositionTargetId the ACM Definition Id
      */
-    public void migrate(AutomationComposition automationComposition, UUID compositionTargetId) {
+    public void migrate(AutomationComposition automationComposition) {
         AcmUtils.setCascadedState(automationComposition, DeployState.MIGRATING, LockState.LOCKED);
         automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
-        executor.execute(
-            () -> acCompositionMigrationPublisher.send(automationComposition, compositionTargetId));
+        executor.execute(() -> acCompositionMigrationPublisher.send(automationComposition));
+    }
+
+    /**
+     * Handle Migration precheck of an AutomationComposition instance to other ACM Definition.
+     *
+     * @param automationComposition the AutomationComposition
+     */
+    public void migratePrecheck(AutomationComposition automationComposition) {
+        executor.execute(() -> acCompositionMigrationPublisher.send(automationComposition));
     }
 }

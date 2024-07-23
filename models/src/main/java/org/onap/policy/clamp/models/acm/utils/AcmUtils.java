@@ -51,6 +51,7 @@ import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantRestartAc;
+import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.LockOrder;
 import org.onap.policy.clamp.models.acm.persistence.concepts.StringToMapConverter;
@@ -288,16 +289,20 @@ public final class AcmUtils {
         // @formatter:on
     }
 
+
     /**
-     * Return true if DeployState and LockState are in a Transitional State.
+     * Return true if DeployState, LockState and SubState are in a Transitional State.
      *
-     * @return true if DeployState and LockState are in a Transitional State
+     * @param deployState the DeployState
+     * @param lockState the LockState
+     * @param subState the SubState
+     * @return true if there is a state in a Transitional State
      */
-    public static boolean isInTransitionalState(DeployState deployState, LockState lockState) {
+    public static boolean isInTransitionalState(DeployState deployState, LockState lockState, SubState subState) {
         return DeployState.DEPLOYING.equals(deployState) || DeployState.UNDEPLOYING.equals(deployState)
                 || LockState.LOCKING.equals(lockState) || LockState.UNLOCKING.equals(lockState)
                 || DeployState.DELETING.equals(deployState) || DeployState.UPDATING.equals(deployState)
-                || DeployState.MIGRATING.equals(deployState);
+                || DeployState.MIGRATING.equals(deployState) || !SubState.NONE.equals(subState);
     }
 
     /**
@@ -381,9 +386,23 @@ public final class AcmUtils {
      */
     public static void setCascadedState(final AutomationComposition automationComposition,
             final DeployState deployState, final LockState lockState) {
+        setCascadedState(automationComposition, deployState, lockState, SubState.NONE);
+    }
+
+    /**
+     /**
+     * Set the states on the automation composition and on all its automation composition elements.
+     *
+     * @param deployState the DeployState we want the automation composition to transition to
+     * @param lockState the LockState we want the automation composition to transition to
+     * @param subState the SubState we want the automation composition to transition to
+     */
+    public static void setCascadedState(final AutomationComposition automationComposition,
+        final DeployState deployState, final LockState lockState, final SubState subState) {
         automationComposition.setDeployState(deployState);
         automationComposition.setLockState(lockState);
         automationComposition.setLastMsg(TimestampHelper.now());
+        automationComposition.setSubState(subState);
 
         if (MapUtils.isEmpty(automationComposition.getElements())) {
             return;
@@ -392,6 +411,7 @@ public final class AcmUtils {
         for (var element : automationComposition.getElements().values()) {
             element.setDeployState(deployState);
             element.setLockState(lockState);
+            element.setSubState(subState);
             element.setMessage(null);
         }
     }

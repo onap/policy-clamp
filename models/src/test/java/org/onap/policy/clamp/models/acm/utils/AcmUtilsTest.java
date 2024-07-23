@@ -43,6 +43,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplate;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.LockOrder;
@@ -68,14 +69,16 @@ class AcmUtilsTest {
 
     @Test
     void testIsInTransitionalState() {
-        assertThat(AcmUtils.isInTransitionalState(DeployState.DEPLOYED, LockState.LOCKED)).isFalse();
-        assertThat(AcmUtils.isInTransitionalState(DeployState.DEPLOYING, LockState.NONE)).isTrue();
-        assertThat(AcmUtils.isInTransitionalState(DeployState.UNDEPLOYING, LockState.NONE)).isTrue();
-        assertThat(AcmUtils.isInTransitionalState(DeployState.DEPLOYED, LockState.LOCKING)).isTrue();
-        assertThat(AcmUtils.isInTransitionalState(DeployState.DEPLOYED, LockState.UNLOCKING)).isTrue();
-        assertThat(AcmUtils.isInTransitionalState(DeployState.DELETING, LockState.NONE)).isTrue();
-        assertThat(AcmUtils.isInTransitionalState(DeployState.UPDATING, LockState.LOCKED)).isTrue();
-        assertThat(AcmUtils.isInTransitionalState(DeployState.MIGRATING, LockState.LOCKED)).isTrue();
+        assertThat(AcmUtils.isInTransitionalState(DeployState.DEPLOYED, LockState.LOCKED, SubState.NONE)).isFalse();
+        assertThat(AcmUtils.isInTransitionalState(DeployState.DEPLOYING, LockState.NONE, SubState.NONE)).isTrue();
+        assertThat(AcmUtils.isInTransitionalState(DeployState.UNDEPLOYING, LockState.NONE, SubState.NONE)).isTrue();
+        assertThat(AcmUtils.isInTransitionalState(DeployState.DEPLOYED, LockState.LOCKING, SubState.NONE)).isTrue();
+        assertThat(AcmUtils.isInTransitionalState(DeployState.DEPLOYED, LockState.UNLOCKING, SubState.NONE)).isTrue();
+        assertThat(AcmUtils.isInTransitionalState(DeployState.DELETING, LockState.NONE, SubState.NONE)).isTrue();
+        assertThat(AcmUtils.isInTransitionalState(DeployState.UPDATING, LockState.LOCKED, SubState.NONE)).isTrue();
+        assertThat(AcmUtils.isInTransitionalState(DeployState.MIGRATING, LockState.LOCKED, SubState.NONE)).isTrue();
+        assertThat(AcmUtils.isInTransitionalState(DeployState.DEPLOYED, LockState.LOCKED,
+                SubState.MIGRATION_PRECHECKING)).isTrue();
     }
 
     @Test

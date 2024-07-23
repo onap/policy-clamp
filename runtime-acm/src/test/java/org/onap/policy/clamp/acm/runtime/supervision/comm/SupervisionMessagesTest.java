@@ -231,7 +231,29 @@ class SupervisionMessagesTest {
         publisher.active(topicSink);
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_UPDATE_JSON, "Crud");
-        publisher.send(automationComposition, UUID.randomUUID());
+        publisher.send(automationComposition);
+        verify(topicSink).send(anyString());
+    }
+
+    @Test
+    void testAcPreparePublisher() {
+        var publisher = new AcPreparePublisher();
+        var topicSink = mock(TopicSink.class);
+        publisher.active(topicSink);
+        var automationComposition =
+                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_UPDATE_JSON, "Crud");
+        publisher.sendPrepare(automationComposition);
+        verify(topicSink).send(anyString());
+    }
+
+    @Test
+    void testAcReviewPublisher() {
+        var publisher = new AcPreparePublisher();
+        var topicSink = mock(TopicSink.class);
+        publisher.active(topicSink);
+        var automationComposition =
+                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_UPDATE_JSON, "Crud");
+        publisher.sendRevew(automationComposition);
         verify(topicSink).send(anyString());
     }
 

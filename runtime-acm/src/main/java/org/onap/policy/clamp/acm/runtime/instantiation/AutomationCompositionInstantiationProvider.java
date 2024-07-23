@@ -22,7 +22,6 @@
 package org.onap.policy.clamp.acm.runtime.instantiation;
 
 import jakarta.validation.Valid;
-import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -37,8 +36,12 @@ import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
+import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.AcInstanceStateUpdate;
+import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse;
+import org.onap.policy.clamp.models.acm.messages.rest.instantiation.LockOrder;
+import org.onap.policy.clamp.models.acm.messages.rest.instantiation.SubOrder;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcInstanceStateResolver;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
@@ -82,19 +85,19 @@ public class AutomationCompositionInstantiationProvider {
     public InstantiationResponse createAutomationComposition(UUID compositionId,
             AutomationComposition automationComposition) {
         if (!compositionId.equals(automationComposition.getCompositionId())) {
-            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
+            throw new PfModelRuntimeException(Status.BAD_REQUEST,
                     automationComposition.getCompositionId() + DO_NOT_MATCH + compositionId);
         }
         var checkAutomationCompositionOpt =
                 automationCompositionProvider.findAutomationComposition(automationComposition.getKey().asIdentifier());
         if (checkAutomationCompositionOpt.isPresent()) {
-            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
+            throw new PfModelRuntimeException(Status.BAD_REQUEST,
                     automationComposition.getKey().asIdentifier() + " already defined");
         }
 
         var validationResult = validateAutomationComposition(automationComposition);
         if (!validationResult.isValid()) {
-            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, validationResult.getResult());
+            throw new PfModelRuntimeException(Status.BAD_REQUEST, validationResult.getResult());
         }
         automationComposition = automationCompositionProvider.createAutomationComposition(automationComposition);
 
@@ -120,7 +123,7 @@ public class AutomationCompositionInstantiationProvider {
         var instanceId = automationComposition.getInstanceId();
         var acToUpdate = automationCompositionProvider.getAutomationComposition(instanceId);
         if (!compositionId.equals(acToUpdate.getCompositionId())) {
-            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
+            throw new PfModelRuntimeException(Status.BAD_REQUEST,
                     automationComposition.getCompositionId() + DO_NOT_MATCH + compositionId);
         }
         if (DeployState.UNDEPLOYED.equals(acToUpdate.getDeployState())) {
@@ -131,22 +134,42 @@ public class AutomationCompositionInstantiationProvider {
             acToUpdate.setDerivedFrom(automationComposition.getDerivedFrom());
             var validationResult = validateAutomationComposition(acToUpdate);
             if (!validationResult.isValid()) {
-                throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, validationResult.getResult());
+                throw new PfModelRuntimeException(Status.BAD_REQUEST, validationResult.getResult());
             }
             automationComposition = automationCompositionProvider.updateAutomationComposition(acToUpdate);
             return createInstantiationResponse(automationComposition);
 
-        } else if ((DeployState.DEPLOYED.equals(acToUpdate.getDeployState())
-                || DeployState.UPDATING.equals(acToUpdate.getDeployState()))
-                && LockState.LOCKED.equals(acToUpdate.getLockState())) {
-            if (automationComposition.getCompositionTargetId() != null) {
-                return  migrateAutomationComposition(automationComposition, acToUpdate);
+        }
+
+        if (automationComposition.getRestarting() != null) {
+            throw new PfModelRuntimeException(Status.BAD_REQUEST, "There is a restarting process, Update not allowed");
+        }
+
+        var deployOrder = DeployOrder.UPDATE;
+        var subOrder = SubOrder.NONE;
+
+        if (automationComposition.getCompositionTargetId() != null) {
+
+            if (Boolean.TRUE.equals(automationComposition.getPrecheck())) {
+                subOrder = SubOrder.MIGRATE_PRECHECK;
+                deployOrder = DeployOrder.NONE;
             } else {
-                return updateDeployedAutomationComposition(automationComposition, acToUpdate);
+                deployOrder = DeployOrder.MIGRATE;
             }
         }
-        throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
-                "Not allowed to update in the state " + acToUpdate.getDeployState());
+        var result = acInstanceStateResolver.resolve(deployOrder, LockOrder.NONE, subOrder,
+                acToUpdate.getDeployState(), acToUpdate.getLockState(), acToUpdate.getSubState(),
+                acToUpdate.getStateChangeResult());
+        return switch (result) {
+            case "UPDATE" -> updateDeployedAutomationComposition(automationComposition, acToUpdate);
+
+            case "MIGRATE" -> migrateAutomationComposition(automationComposition, acToUpdate);
+
+            case "MIGRATE_PRECHECK" -> migratePrecheckAc(automationComposition, acToUpdate);
+
+            default -> throw new PfModelRuntimeException(Status.BAD_REQUEST,
+                    "Not allowed to " + deployOrder + " in the state " + acToUpdate.getDeployState());
+        };
     }
 
     /**
@@ -164,17 +187,14 @@ public class AutomationCompositionInstantiationProvider {
             var elementId = element.getKey();
             var dbAcElement = acToBeUpdated.getElements().get(elementId);
             if (dbAcElement == null) {
-                throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, "Element id not present " + elementId);
+                throw new PfModelRuntimeException(Status.BAD_REQUEST, "Element id not present " + elementId);
             }
             AcmUtils.recursiveMerge(dbAcElement.getProperties(), element.getValue().getProperties());
-        }
-        if (automationComposition.getRestarting() != null) {
-            throw new PfModelRuntimeException(Status.BAD_REQUEST, "There is a restarting process, Update not allowed");
         }
 
         var validationResult = validateAutomationComposition(acToBeUpdated);
         if (!validationResult.isValid()) {
-            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, validationResult.getResult());
+            throw new PfModelRuntimeException(Status.BAD_REQUEST, validationResult.getResult());
         }
         // Publish property update event to the participants
         supervisionAcHandler.update(acToBeUpdated);
@@ -187,11 +207,8 @@ public class AutomationCompositionInstantiationProvider {
         AutomationComposition automationComposition, AutomationComposition acToBeUpdated) {
 
         if (!DeployState.DEPLOYED.equals(acToBeUpdated.getDeployState())) {
-            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
+            throw new PfModelRuntimeException(Status.BAD_REQUEST,
                 "Not allowed to migrate in the state " + acToBeUpdated.getDeployState());
-        }
-        if (automationComposition.getRestarting() != null) {
-            throw new PfModelRuntimeException(Status.BAD_REQUEST, "There is a restarting process, Migrate not allowed");
         }
 
         // Iterate and update the element property values
@@ -199,14 +216,14 @@ public class AutomationCompositionInstantiationProvider {
             var elementId = element.getKey();
             var dbAcElement = acToBeUpdated.getElements().get(elementId);
             if (dbAcElement == null) {
-                throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, "Element id not present " + elementId);
+                throw new PfModelRuntimeException(Status.BAD_REQUEST, "Element id not present " + elementId);
             }
             AcmUtils.recursiveMerge(dbAcElement.getProperties(), element.getValue().getProperties());
             var newDefinition = element.getValue().getDefinition();
             var compatibility =
                 newDefinition.asConceptKey().getCompatibility(dbAcElement.getDefinition().asConceptKey());
             if (PfKey.Compatibility.DIFFERENT.equals(compatibility)) {
-                throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
+                throw new PfModelRuntimeException(Status.BAD_REQUEST,
                     dbAcElement.getDefinition() + " is not compatible with " + newDefinition);
             }
             if (PfKey.Compatibility.MAJOR.equals(compatibility) || PfKey.Compatibility.MINOR.equals(compatibility)) {
@@ -219,15 +236,55 @@ public class AutomationCompositionInstantiationProvider {
         var validationResult =
             validateAutomationComposition(acToBeUpdated, automationComposition.getCompositionTargetId());
         if (!validationResult.isValid()) {
-            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, validationResult.getResult());
+            throw new PfModelRuntimeException(Status.BAD_REQUEST, validationResult.getResult());
         }
         acToBeUpdated.setCompositionTargetId(automationComposition.getCompositionTargetId());
 
         // Publish migrate event to the participants
-        supervisionAcHandler.migrate(acToBeUpdated, automationComposition.getCompositionTargetId());
+        supervisionAcHandler.migrate(acToBeUpdated);
 
         automationComposition = automationCompositionProvider.updateAutomationComposition(acToBeUpdated);
         return createInstantiationResponse(automationComposition);
+    }
+
+    private InstantiationResponse migratePrecheckAc(
+            AutomationComposition automationComposition, AutomationComposition acToBeUpdated) {
+
+        acToBeUpdated.setPrecheck(true);
+        var copyAc = new AutomationComposition(acToBeUpdated);
+        // Iterate and update the element property values
+        for (var element : automationComposition.getElements().entrySet()) {
+            var elementId = element.getKey();
+            var copyElement = copyAc.getElements().get(elementId);
+            if (copyElement == null) {
+                throw new PfModelRuntimeException(Status.BAD_REQUEST, "Element id not present " + elementId);
+            }
+            AcmUtils.recursiveMerge(copyElement.getProperties(), element.getValue().getProperties());
+            var newDefinition = element.getValue().getDefinition();
+            var compatibility =
+                    newDefinition.asConceptKey().getCompatibility(copyElement.getDefinition().asConceptKey());
+            if (PfKey.Compatibility.DIFFERENT.equals(compatibility)) {
+                throw new PfModelRuntimeException(Status.BAD_REQUEST,
+                        copyElement.getDefinition() + " is not compatible with " + newDefinition);
+            }
+            copyElement.setDefinition(element.getValue().getDefinition());
+        }
+
+        var validationResult =
+                validateAutomationComposition(copyAc, automationComposition.getCompositionTargetId());
+        if (!validationResult.isValid()) {
+            throw new PfModelRuntimeException(Status.BAD_REQUEST, validationResult.getResult());
+        }
+        copyAc.setCompositionTargetId(automationComposition.getCompositionTargetId());
+
+        // Publish migrate event to the participants
+        supervisionAcHandler.migratePrecheck(copyAc);
+
+        AcmUtils.setCascadedState(acToBeUpdated, DeployState.DEPLOYED, LockState.LOCKED,
+            SubState.MIGRATION_PRECHECKING);
+        acToBeUpdated.setStateChangeResult(StateChangeResult.NO_ERROR);
+
+        return createInstantiationResponse(automationCompositionProvider.updateAutomationComposition(acToBeUpdated));
     }
 
     private BeanValidationResult validateAutomationComposition(AutomationComposition automationComposition) {
@@ -296,7 +353,7 @@ public class AutomationCompositionInstantiationProvider {
         var automationComposition = automationCompositionProvider.getAutomationComposition(instanceId);
         if (!compositionId.equals(automationComposition.getCompositionId())
                         && !compositionId.equals(automationComposition.getCompositionTargetId())) {
-            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
+            throw new PfModelRuntimeException(Status.BAD_REQUEST,
                     automationComposition.getCompositionId() + DO_NOT_MATCH + compositionId);
         }
         return automationComposition;
@@ -312,17 +369,17 @@ public class AutomationCompositionInstantiationProvider {
     public InstantiationResponse deleteAutomationComposition(UUID compositionId, UUID instanceId) {
         var automationComposition = automationCompositionProvider.getAutomationComposition(instanceId);
         if (!compositionId.equals(automationComposition.getCompositionId())) {
-            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
+            throw new PfModelRuntimeException(Status.BAD_REQUEST,
                     automationComposition.getCompositionId() + DO_NOT_MATCH + compositionId);
         }
         if (!DeployState.UNDEPLOYED.equals(automationComposition.getDeployState())
                 && !DeployState.DELETING.equals(automationComposition.getDeployState())) {
-            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
+            throw new PfModelRuntimeException(Status.BAD_REQUEST,
                     "Automation composition state is still " + automationComposition.getDeployState());
         }
         if (DeployState.DELETING.equals(automationComposition.getDeployState())
                 && StateChangeResult.NO_ERROR.equals(automationComposition.getStateChangeResult())) {
-            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
+            throw new PfModelRuntimeException(Status.BAD_REQUEST,
                     "Automation composition state is still " + automationComposition.getDeployState());
         }
         if (automationComposition.getRestarting() != null) {
@@ -366,7 +423,7 @@ public class AutomationCompositionInstantiationProvider {
             @Valid AcInstanceStateUpdate acInstanceStateUpdate) {
         var automationComposition = automationCompositionProvider.getAutomationComposition(instanceId);
         if (!compositionId.equals(automationComposition.getCompositionId())) {
-            throw new PfModelRuntimeException(Response.Status.BAD_REQUEST,
+            throw new PfModelRuntimeException(Status.BAD_REQUEST,
                     automationComposition.getCompositionId() + DO_NOT_MATCH + compositionId);
         }
         var acDefinition = acDefinitionProvider.getAcDefinition(automationComposition.getCompositionId());
@@ -376,8 +433,9 @@ public class AutomationCompositionInstantiationProvider {
 
         participantProvider.verifyParticipantState(participantIds);
         var result = acInstanceStateResolver.resolve(acInstanceStateUpdate.getDeployOrder(),
-                acInstanceStateUpdate.getLockOrder(), automationComposition.getDeployState(),
-                automationComposition.getLockState(), automationComposition.getStateChangeResult());
+                acInstanceStateUpdate.getLockOrder(), acInstanceStateUpdate.getSubOrder(),
+                automationComposition.getDeployState(), automationComposition.getLockState(),
+                automationComposition.getSubState(), automationComposition.getStateChangeResult());
         switch (result) {
             case "DEPLOY":
                 supervisionAcHandler.deploy(automationComposition, acDefinition);
@@ -393,6 +451,14 @@ public class AutomationCompositionInstantiationProvider {
 
             case "UNLOCK":
                 supervisionAcHandler.unlock(automationComposition, acDefinition);
+                break;
+
+            case "PREPARE":
+                supervisionAcHandler.prepare(automationComposition);
+                break;
+
+            case "REVIEW":
+                supervisionAcHandler.review(automationComposition);
                 break;
 
             default:
