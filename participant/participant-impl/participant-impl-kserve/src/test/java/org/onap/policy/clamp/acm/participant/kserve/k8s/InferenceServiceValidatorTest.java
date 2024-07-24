@@ -36,15 +36,15 @@ class InferenceServiceValidatorTest {
     private static final int TIMEOUT = 2;
     private static final int STATUS_CHECK_INTERVAL = 1;
 
-    private static final String inferenceSvcName = "inference-test";
-    private static final String namespace = "test";
+    private static final String INFERENCE_SVC_NAME = "inference-test";
+    private static final String NAMESPACE = "test";
 
     @Test
     void test_runningPodState() throws IOException, ApiException {
         var kserveClient = mock(KserveClient.class);
         doReturn("True").when(kserveClient).getInferenceServiceStatus(any(), any());
         var inferenceServiceValidator =
-                new InferenceServiceValidator(inferenceSvcName, namespace, TIMEOUT, STATUS_CHECK_INTERVAL,
+                new InferenceServiceValidator(INFERENCE_SVC_NAME, NAMESPACE, TIMEOUT, STATUS_CHECK_INTERVAL,
                         kserveClient);
         assertDoesNotThrow(inferenceServiceValidator::run);
     }
@@ -54,7 +54,7 @@ class InferenceServiceValidatorTest {
         var kserveClient = mock(KserveClient.class);
         doReturn("").when(kserveClient).getInferenceServiceStatus(any(), any());
         var inferenceServiceValidator =
-                new InferenceServiceValidator("", namespace, TIMEOUT, STATUS_CHECK_INTERVAL,
+                new InferenceServiceValidator("", NAMESPACE, TIMEOUT, STATUS_CHECK_INTERVAL,
                         kserveClient);
         assertThatThrownBy(inferenceServiceValidator::run).isInstanceOf(KserveException.class)
                 .cause().hasMessage("Kserve setup is unavailable for inference service to be deployed");
@@ -65,7 +65,7 @@ class InferenceServiceValidatorTest {
         var kserveClient = mock(KserveClient.class);
         doReturn("False").when(kserveClient).getInferenceServiceStatus(any(), any());
         var inferenceServiceValidator =
-                new InferenceServiceValidator(inferenceSvcName, namespace, TIMEOUT, STATUS_CHECK_INTERVAL,
+                new InferenceServiceValidator(INFERENCE_SVC_NAME, NAMESPACE, TIMEOUT, STATUS_CHECK_INTERVAL,
                         kserveClient);
         assertThatThrownBy(inferenceServiceValidator::run).isInstanceOf(KserveException.class)
                 .hasMessage("Error verifying the status of the inference service. Exiting");

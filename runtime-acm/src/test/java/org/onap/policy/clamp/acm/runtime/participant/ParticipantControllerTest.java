@@ -70,8 +70,8 @@ class ParticipantControllerTest extends CommonRestController {
     private static final String PARTICIPANT_JSON2 = "src/test/resources/providers/TestParticipant2.json";
 
     private static final List<Participant> inputParticipants = new ArrayList<>();
-    private static final String originalJson = ResourceUtils.getResourceAsString(PARTICIPANT_JSON);
-    private static final String originalJson2 = ResourceUtils.getResourceAsString(PARTICIPANT_JSON2);
+    private static final String ORIGINAL_JSON = ResourceUtils.getResourceAsString(PARTICIPANT_JSON);
+    private static final String ORIGINAL_JSON2 = ResourceUtils.getResourceAsString(PARTICIPANT_JSON2);
 
     @Autowired
     private ParticipantProvider participantProvider;
@@ -81,8 +81,8 @@ class ParticipantControllerTest extends CommonRestController {
      */
     @BeforeAll
     public static void setUpBeforeClass() throws CoderException {
-        inputParticipants.add(CODER.decode(originalJson, Participant.class));
-        inputParticipants.add(CODER.decode(originalJson2, Participant.class));
+        inputParticipants.add(CODER.decode(ORIGINAL_JSON, Participant.class));
+        inputParticipants.add(CODER.decode(ORIGINAL_JSON2, Participant.class));
     }
 
     @BeforeEach

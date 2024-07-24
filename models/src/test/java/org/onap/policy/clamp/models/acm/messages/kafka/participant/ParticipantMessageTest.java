@@ -33,7 +33,6 @@ import org.onap.policy.clamp.models.acm.utils.CommonTestData;
 import org.onap.policy.common.utils.coder.CoderException;
 
 class ParticipantMessageTest {
-    private ParticipantMessage message;
 
     @Test
     void testCopyConstructor() throws CoderException {
@@ -41,7 +40,7 @@ class ParticipantMessageTest {
                 .isInstanceOf(NullPointerException.class);
 
         // verify with null values
-        message = new ParticipantMessage(ParticipantMessageType.PARTICIPANT_STATE_CHANGE);
+        var message = new ParticipantMessage(ParticipantMessageType.PARTICIPANT_STATE_CHANGE);
         var newmsg = new ParticipantMessage(message);
         newmsg.setMessageId(message.getMessageId());
         newmsg.setTimestamp(message.getTimestamp());
@@ -59,15 +58,15 @@ class ParticipantMessageTest {
 
     @Test
     void testAppliesTo_NullParticipantId() {
-        message = makeMessage();
-
-        assertThatThrownBy(() -> message.appliesTo(UUID.randomUUID(), null)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> message.appliesTo(null, UUID.randomUUID())).isInstanceOf(NullPointerException.class);
+        var message = makeMessage();
+        var participantId = CommonTestData.getParticipantId();
+        assertThatThrownBy(() -> message.appliesTo(participantId, null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> message.appliesTo(null, participantId)).isInstanceOf(NullPointerException.class);
     }
 
     @Test
     void testAppliesTo_ParticipantIdMatches() {
-        message = makeMessage();
+        var message = makeMessage();
 
         // ParticipantId matches
         assertTrue(message.appliesTo(CommonTestData.getParticipantId(), CommonTestData.getReplicaId()));
@@ -76,7 +75,7 @@ class ParticipantMessageTest {
 
     @Test
     void testAppliesTo_ParticipantIdNoMatch() {
-        message = makeMessage();
+        var message = makeMessage();
         assertFalse(message.appliesTo(CommonTestData.getRndParticipantId(), CommonTestData.getReplicaId()));
         assertTrue(message.appliesTo(CommonTestData.getParticipantId(), CommonTestData.getReplicaId()));
     }

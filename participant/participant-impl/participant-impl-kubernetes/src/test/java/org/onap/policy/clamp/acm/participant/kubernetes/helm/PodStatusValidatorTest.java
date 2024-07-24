@@ -47,8 +47,8 @@ class PodStatusValidatorTest {
 
     private static final Coder CODER = new StandardCoder();
     private static final String CHART_INFO_YAML = "src/test/resources/ChartList.json";
-    private static int TIMEOUT = 2;
-    private static int STATUS_CHECK_INTERVAL = 1;
+    private static final int TIMEOUT = 2;
+    private static final int STATUS_CHECK_INTERVAL = 1;
     private static List<ChartInfo> charts;
 
     @InjectMocks

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2023 Nordix Foundation.
+ *  Copyright (C) 2021-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -84,7 +84,7 @@ class ParticipantIntermediaryApiImplTest {
         var automationComposiitonHandler = mock(AutomationCompositionOutHandler.class);
         var apiImpl = new ParticipantIntermediaryApiImpl(automationComposiitonHandler, mock(CacheProvider.class));
         apiImpl.sendAcDefinitionInfo(COMPOSITION_ID, DEFINITION_ELEMENT_ID, MAP);
-        verify(automationComposiitonHandler).sendAcDefinitionInfo(COMPOSITION_ID, DEFINITION_ELEMENT_ID, MAP);;
+        verify(automationComposiitonHandler).sendAcDefinitionInfo(COMPOSITION_ID, DEFINITION_ELEMENT_ID, MAP);
     }
 
     @Test

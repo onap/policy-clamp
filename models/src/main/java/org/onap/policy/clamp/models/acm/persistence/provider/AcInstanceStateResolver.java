@@ -42,8 +42,6 @@ public class AcInstanceStateResolver {
     private static final String DELETING = DeployState.DELETING.name();
     private static final String MIGRATING = DeployState.MIGRATING.name();
     private static final String MIGRATION_PRECHECKING = SubState.MIGRATION_PRECHECKING.name();
-    private static final String PREPARING = SubState.PREPARING.name();
-    private static final String REVIEWING = SubState.REVIEWING.name();
     private static final String SUB_STATE_NONE = SubState.NONE.name();
 
     private static final String LOCKED = LockState.LOCKED.name();

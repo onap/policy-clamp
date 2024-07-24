@@ -72,15 +72,17 @@ class AutomationCompositionInstantiationProviderTest {
             "src/test/resources/rest/acm/AutomationCompositionNotFound.json";
     private static final String DELETE_BAD_REQUEST = "Automation composition state is still %s";
 
-    private static final String AC_ELEMENT_NAME_NOT_FOUND =
-            "\"AutomationComposition\" INVALID, item has status INVALID\n"
-                    + "  \"entry PMSHInstance0AcElementNotFound\" INVALID, item has status INVALID\n"
-                    + "    \"entry org.onap.domain.pmsh.DCAEMicroservice\" INVALID, Not found\n"
-                    + "    \"entry org.onap.domain.pmsh.PMSH_MonitoringPolicyAutomationCompositionElement\""
-                    + " INVALID, Not found\n";
-    private static final String AC_DEFINITION_NOT_FOUND = "\"AutomationComposition\" INVALID, item has status INVALID\n"
-            + "  item \"ServiceTemplate\" value \"%s\" INVALID,"
-            + " Commissioned automation composition definition not found\n";
+    private static final String AC_ELEMENT_NAME_NOT_FOUND = """
+            "AutomationComposition" INVALID, item has status INVALID
+              "entry PMSHInstance0AcElementNotFound" INVALID, item has status INVALID
+                "entry org.onap.domain.pmsh.DCAEMicroservice" INVALID, Not found
+                "entry org.onap.domain.pmsh.PMSH_MonitoringPolicyAutomationCompositionElement" INVALID, Not found
+            """;
+    private static final String AC_DEFINITION_NOT_FOUND = """
+            "AutomationComposition" INVALID, item has status INVALID
+              item "ServiceTemplate" value "%s" INVALID, Commissioned automation composition definition not found
+            """;
+
     private static final String DO_NOT_MATCH = " do not match with ";
 
     private static ToscaServiceTemplate serviceTemplate = new ToscaServiceTemplate();

@@ -32,7 +32,6 @@ import org.onap.policy.clamp.models.acm.utils.CommonTestData;
 import org.onap.policy.common.utils.coder.CoderException;
 
 class ParticipantAckMessageTest {
-    private ParticipantAckMessage message;
 
     @Test
     void testCopyConstructor() throws CoderException {
@@ -40,8 +39,8 @@ class ParticipantAckMessageTest {
                 .isInstanceOf(NullPointerException.class);
 
         // verify with null values
-        message = new ParticipantAckMessage(ParticipantMessageType.PARTICIPANT_STATE_CHANGE);
-        ParticipantAckMessage newmsg = new ParticipantAckMessage(message);
+        var message = new ParticipantAckMessage(ParticipantMessageType.PARTICIPANT_STATE_CHANGE);
+        var newmsg = new ParticipantAckMessage(message);
         newmsg.setResponseTo(message.getResponseTo());
         assertEquals(message.toString(), newmsg.toString());
 
@@ -56,14 +55,15 @@ class ParticipantAckMessageTest {
 
     @Test
     void testAppliesTo_NullParticipantId() {
-        message = makeMessage();
-        assertThatThrownBy(() -> message.appliesTo(UUID.randomUUID(), null)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> message.appliesTo(null, UUID.randomUUID())).isInstanceOf(NullPointerException.class);
+        var message = makeMessage();
+        var participantId = CommonTestData.getRndParticipantId();
+        assertThatThrownBy(() -> message.appliesTo(participantId, null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> message.appliesTo(null, participantId)).isInstanceOf(NullPointerException.class);
     }
 
     @Test
     void testAppliesTo_ParticipantIdMatches() {
-        message = makeMessage();
+        var message = makeMessage();
 
         // ParticipantId matches
         assertTrue(message.appliesTo(CommonTestData.getParticipantId(), CommonTestData.getReplicaId()));
@@ -72,7 +72,7 @@ class ParticipantAckMessageTest {
 
     @Test
     void testAppliesTo_ParticipantIdNoMatch() {
-        message = makeMessage();
+        var message = makeMessage();
 
         // ParticipantId does not match
         assertFalse(message.appliesTo(CommonTestData.getRndParticipantId(), CommonTestData.getReplicaId()));
@@ -80,7 +80,7 @@ class ParticipantAckMessageTest {
     }
 
     private ParticipantAckMessage makeMessage() {
-        ParticipantAckMessage msg = new ParticipantAckMessage(ParticipantMessageType.PARTICIPANT_DEREGISTER_ACK);
+        var msg = new ParticipantAckMessage(ParticipantMessageType.PARTICIPANT_DEREGISTER_ACK);
 
         msg.setParticipantId(CommonTestData.getParticipantId());
         msg.setMessage("Successfull Ack");
