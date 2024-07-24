@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e3968570_fb45f009",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2024-07-24T09:03:38Z",
+      "side": 1,
+      "message": "coverage on new code is very low, 55%. We need at least 80%, ideally 90% to not drop the overall coverage.",
+      "revId": "c0c67e3c19b99162e7bcbb8fab908cd4d98c2da7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2248fd51_6c9841be",
