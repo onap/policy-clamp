@@ -24,6 +24,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4fcce6b8_309d6aef",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/instantiation/AutomationCompositionInstantiationProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2024-07-26T10:20:37Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "d715e6ec_1e4b5587",
+      "range": {
+        "startLine": 225,
+        "startChar": 12,
+        "endLine": 228,
+        "endChar": 13
+      },
+      "revId": "a2f6493f89eff78a78d8ba2aa34f6080d6ab8830",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "14bbea1e_5794378d",
@@ -37,6 +61,30 @@
       "writtenOn": "2024-07-26T07:54:32Z",
       "side": 0,
       "message": "Why you delete this?",
+      "range": {
+        "startLine": 266,
+        "startChar": 11,
+        "endLine": 269,
+        "endChar": 13
+      },
+      "revId": "a2f6493f89eff78a78d8ba2aa34f6080d6ab8830",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7d9439d8_61d7fbd6",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/instantiation/AutomationCompositionInstantiationProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2024-07-26T10:20:37Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "14bbea1e_5794378d",
       "range": {
         "startLine": 266,
         "startChar": 11,
