@@ -105,6 +105,9 @@ public class JpaAutomationCompositionElement extends Validated
     private String useState;
 
     @Column
+    private Integer stage;
+
+    @Column
     private String description;
 
     @Column
@@ -185,6 +188,7 @@ public class JpaAutomationCompositionElement extends Validated
         this.subState = copyConcept.subState;
         this.operationalState = copyConcept.operationalState;
         this.useState = copyConcept.useState;
+        this.stage = copyConcept.stage;
         this.message = copyConcept.message;
     }
 
@@ -213,6 +217,7 @@ public class JpaAutomationCompositionElement extends Validated
         element.setSubState(subState);
         element.setOperationalState(operationalState);
         element.setUseState(useState);
+        element.setStage(stage);
         element.setMessage(message);
 
         return element;
@@ -231,6 +236,7 @@ public class JpaAutomationCompositionElement extends Validated
         this.subState = element.getSubState();
         this.operationalState = element.getOperationalState();
         this.useState = element.getUseState();
+        this.stage = element.getStage();
         this.message = element.getMessage();
     }
 
@@ -284,6 +290,11 @@ public class JpaAutomationCompositionElement extends Validated
         }
 
         result = ObjectUtils.compare(useState, other.useState);
+        if (result != 0) {
+            return result;
+        }
+
+        result = ObjectUtils.compare(stage, other.stage);
         if (result != 0) {
             return result;
         }

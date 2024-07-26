@@ -217,6 +217,11 @@ class JpaAutomationCompositionElementTest {
         testJpaAcElement.setOperationalState("DEFAULT");
         assertEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
 
+        testJpaAcElement.setStage(1);
+        assertNotEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
+        testJpaAcElement.setStage(null);
+        assertEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
+
         testJpaAcElement.setMessage("Message");
         assertNotEquals(0, testJpaAcElement.compareTo(otherJpaAcElement));
         testJpaAcElement.setMessage(null);

@@ -41,7 +41,7 @@ import org.onap.policy.models.base.PfUtils;
 public class AutomationCompositionDeployAck extends ParticipantAckMessage {
 
     private UUID automationCompositionId;
-    private Integer startPhase;
+    private Integer stage;
 
     // A map with AutomationCompositionElementID as its key, and a pair of result and message as value per
     // AutomationCompositionElement.
@@ -63,7 +63,7 @@ public class AutomationCompositionDeployAck extends ParticipantAckMessage {
     public AutomationCompositionDeployAck(final AutomationCompositionDeployAck source) {
         super(source);
         this.automationCompositionId = source.automationCompositionId;
-        this.startPhase = source.startPhase;
+        this.stage = source.stage;
         this.automationCompositionResultMap =
             PfUtils.mapMap(source.automationCompositionResultMap, UnaryOperator.identity());
     }

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2023 Nordix Foundation.
+ *  Copyright (C) 2021-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,11 @@
 
 package org.onap.policy.clamp.models.acm.concepts;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
@@ -50,8 +54,26 @@ public final class ParticipantUtils {
         }
 
         return DeployState.DEPLOYING.equals(automationComposition.getDeployState())
-            || LockState.UNLOCKING.equals(automationComposition.getLockState()) ? minStartPhase
-                : maxStartPhase;
+            || LockState.UNLOCKING.equals(automationComposition.getLockState()) ? minStartPhase : maxStartPhase;
+    }
+
+    /**
+     * Get the First Stage.
+     *
+     * @param automationComposition the automation composition
+     * @param toscaServiceTemplate the ToscaServiceTemplate
+     * @return the First stage
+     */
+    public static int getFirstStage(
+        AutomationComposition automationComposition, ToscaServiceTemplate toscaServiceTemplate) {
+        Set<Integer> minStage = new HashSet<>();
+        for (var element : automationComposition.getElements().values()) {
+            var toscaNodeTemplate = toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates()
+                .get(element.getDefinition().getName());
+            var stage = ParticipantUtils.findStageSet(toscaNodeTemplate.getProperties());
+            minStage.addAll(stage);
+        }
+        return minStage.stream().min(Integer::compare).orElse(0);
     }
 
     /**
@@ -63,8 +85,25 @@ public final class ParticipantUtils {
     public static int findStartPhase(Map<String, Object> properties) {
         var objStartPhase = properties.get("startPhase");
         if (objStartPhase != null) {
-            return Integer.valueOf(objStartPhase.toString());
+            return Integer.parseInt(objStartPhase.toString());
         }
         return 0;
+    }
+
+
+    /**
+     * Finds stage from a map of properties.
+     *
+     * @param properties Map of properties
+     * @return stage
+     */
+    public static Set<Integer> findStageSet(Map<String, Object> properties) {
+        var objStage = properties.get("stage");
+        if (objStage instanceof List<?> stageSet) {
+            return stageSet.stream()
+                .map(obj -> Integer.valueOf(obj.toString()))
+                .collect(Collectors.toSet());
+        }
+        return Set.of(0);
     }
 }

@@ -317,6 +317,15 @@ node_types:
       provider:
         type: string
         required: false
+      stage:
+        type: array
+        required: false
+        items:
+          type: integer
+          constraints:
+            - greater-or-equal: 0
+        metadata:
+          common: true
       startPhase:
         type: integer
         required: false
@@ -394,6 +403,7 @@ topology_template:
       description: Participant for DCAE microservices
       properties:
         provider: ONAP
+        startPhase: 0
     org.onap.policy.acm.PolicyAutomationCompositionParticipant:
       version: 2.3.1
       type: org.onap.policy.clamp.acm.Participant
@@ -401,6 +411,7 @@ topology_template:
       description: Participant for DCAE microservices
       properties:
         provider: ONAP
+        startPhase: 0
     org.onap.ccsdk.cds.acm.CdsAutomationCompositionParticipant:
       version: 2.2.1
       type: org.onap.policy.clamp.acm.Participant
@@ -408,6 +419,7 @@ topology_template:
       description: Participant for DCAE microservices
       properties:
         provider: ONAP
+        startPhase: 1
     org.onap.domain.pmsh.PMSH_DCAEMicroservice:
       version: 1.2.3
       type: org.onap.policy.clamp.acm.DCAEMicroserviceAutomationCompositionElement
@@ -415,6 +427,7 @@ topology_template:
       description: Automation composition element for the DCAE microservice for Performance Management Subscription Handling
       properties:
         provider: Ericsson
+        startPhase: 1
         dcae_blueprint:
           tosca_definitions_version: cloudify_dsl_1_3
           imports:
@@ -641,6 +654,7 @@ topology_template:
           version: 1.0.0
         policy_id:
           get_input: pmsh_monitoring_policy
+        stage: [0,1,2]
     org.onap.domain.pmsh.PMSH_OperationalPolicyAutomationCompositionElement:
       version: 1.2.3
       type: org.onap.policy.clamp.acm.PolicyAutomationCompositionElement
