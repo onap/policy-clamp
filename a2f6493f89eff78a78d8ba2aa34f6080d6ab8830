@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d715e6ec_1e4b5587",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/instantiation/AutomationCompositionInstantiationProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2024-07-26T07:54:32Z",
+      "side": 0,
+      "message": "Why you delete this?",
+      "range": {
+        "startLine": 225,
+        "startChar": 12,
+        "endLine": 228,
+        "endChar": 13
+      },
+      "revId": "a2f6493f89eff78a78d8ba2aa34f6080d6ab8830",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "14bbea1e_5794378d",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/instantiation/AutomationCompositionInstantiationProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2024-07-26T07:54:32Z",
+      "side": 0,
+      "message": "Why you delete this?",
+      "range": {
+        "startLine": 266,
+        "startChar": 11,
+        "endLine": 269,
+        "endChar": 13
+      },
+      "revId": "a2f6493f89eff78a78d8ba2aa34f6080d6ab8830",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
