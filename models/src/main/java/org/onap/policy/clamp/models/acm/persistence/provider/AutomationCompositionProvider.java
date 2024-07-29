@@ -262,6 +262,7 @@ public class AutomationCompositionProvider {
         jpaAcElement.setDeployState(element.getDeployState());
         jpaAcElement.setLockState(element.getLockState());
         jpaAcElement.setSubState(element.getSubState());
+        jpaAcElement.setStage(element.getStage());
         jpaAcElement.setRestarting(element.getRestarting());
 
         ProviderUtils.validate(element, jpaAcElement, "AutomationCompositionElement");

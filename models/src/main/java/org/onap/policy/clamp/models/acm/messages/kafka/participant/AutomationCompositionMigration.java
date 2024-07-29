@@ -38,6 +38,7 @@ public class AutomationCompositionMigration extends ParticipantMessage {
     private List<ParticipantDeploy> participantUpdatesList = new ArrayList<>();
 
     private Boolean precheck = false;
+    private Integer stage = 0;
 
     public AutomationCompositionMigration() {
         super(ParticipantMessageType.AUTOMATION_COMPOSITION_MIGRATION);

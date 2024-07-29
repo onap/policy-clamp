@@ -58,6 +58,8 @@ public class AutomationCompositionElement {
     @NonNull
     private SubState subState = SubState.NONE;
 
+    private Integer stage;
+
     private String operationalState;
     private String useState;
     private String description;
@@ -87,6 +89,7 @@ public class AutomationCompositionElement {
         this.subState = otherElement.subState;
         this.operationalState = otherElement.operationalState;
         this.useState = otherElement.useState;
+        this.stage = otherElement.stage;
         this.message = otherElement.message;
     }
 }

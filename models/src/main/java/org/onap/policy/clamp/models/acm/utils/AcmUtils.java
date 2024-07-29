@@ -413,6 +413,7 @@ public final class AcmUtils {
             element.setLockState(lockState);
             element.setSubState(subState);
             element.setMessage(null);
+            element.setStage(null);
         }
     }
 
