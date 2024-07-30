@@ -353,8 +353,9 @@ class SupervisionAcHandlerTest {
                 acCompositionMigrationPublisher, mock(ParticipantSyncPublisher.class), null);
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Migrate");
-        handler.migrate(automationComposition);
-        verify(acCompositionMigrationPublisher, timeout(1000)).send(any(AutomationComposition.class));
+        var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
+        handler.migrate(automationComposition, serviceTemplate);
+        verify(acCompositionMigrationPublisher, timeout(1000)).send(any(AutomationComposition.class), anyInt());
     }
 
     @Test
@@ -366,7 +367,7 @@ class SupervisionAcHandlerTest {
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Migrate");
         handler.migratePrecheck(automationComposition);
-        verify(acCompositionMigrationPublisher, timeout(1000)).send(any(AutomationComposition.class));
+        verify(acCompositionMigrationPublisher, timeout(1000)).send(any(AutomationComposition.class), anyInt());
     }
 
     @Test

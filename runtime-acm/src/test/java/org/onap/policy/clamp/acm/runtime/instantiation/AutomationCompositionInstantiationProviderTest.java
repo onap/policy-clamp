@@ -296,7 +296,7 @@ class AutomationCompositionInstantiationProviderTest {
 
         assertThatThrownBy(
                 () -> instantiationProvider.updateAutomationComposition(compositionId, automationCompositionUpdate))
-                        .hasMessageMatching(message);
+                .hasMessageMatching(message);
     }
 
     @Test
@@ -343,6 +343,7 @@ class AutomationCompositionInstantiationProviderTest {
         var compositionTargetId = acDefinitionTarget.getCompositionId();
         automationCompositionTarget.setCompositionTargetId(compositionTargetId);
         when(acDefinitionProvider.findAcDefinition(compositionTargetId)).thenReturn(Optional.of(acDefinitionTarget));
+        when(acDefinitionProvider.getAcDefinition(compositionTargetId)).thenReturn(acDefinitionTarget);
         when(acProvider.updateAutomationComposition(any())).thenReturn(automationCompositionTarget);
 
         var supervisionAcHandler = mock(SupervisionAcHandler.class);
@@ -363,7 +364,7 @@ class AutomationCompositionInstantiationProviderTest {
         var instantiationResponse = instantiationProvider.updateAutomationComposition(compositionId,
                         automationCompositionTarget);
 
-        verify(supervisionAcHandler).migrate(any());
+        verify(supervisionAcHandler).migrate(any(), any());
         InstantiationUtils.assertInstantiationResponse(instantiationResponse, automationCompositionTarget);
 
     }
@@ -425,17 +426,17 @@ class AutomationCompositionInstantiationProviderTest {
         var acDefinitionTarget = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
         var compositionTargetId = acDefinitionTarget.getCompositionId();
         when(acDefinitionProvider.findAcDefinition(compositionTargetId)).thenReturn(Optional.of(acDefinitionTarget));
+        when(acDefinitionProvider.getAcDefinition(compositionTargetId)).thenReturn(acDefinitionTarget);
 
         automationComposition.setCompositionTargetId(compositionTargetId);
 
         var instantiationResponse = instantiationProvider
                 .updateAutomationComposition(automationComposition.getCompositionId(), automationComposition);
 
-        verify(supervisionAcHandler).migrate(any());
+        verify(supervisionAcHandler).migrate(any(), any());
         verify(acProvider).updateAutomationComposition(automationComposition);
         InstantiationUtils.assertInstantiationResponse(instantiationResponse, automationComposition);
     }
-
 
     @Test
     void testInstantiationMigrationPrecheck() {
