@@ -36,20 +36,22 @@ public class AutomationCompositionMigrationPublisher
      * Send AutomationCompositionMigration message to Participant.
      *
      * @param automationComposition the AutomationComposition
+     * @param stage the stage to execute
      */
     @Timed(
             value = "publisher.automation_composition_migration",
             description = "AUTOMATION_COMPOSITION_MIGRATION messages published")
-    public void send(AutomationComposition automationComposition) {
-        var acsc = new AutomationCompositionMigration();
-        acsc.setPrecheck(Boolean.TRUE.equals(automationComposition.getPrecheck()));
-        acsc.setCompositionId(automationComposition.getCompositionId());
-        acsc.setAutomationCompositionId(automationComposition.getInstanceId());
-        acsc.setMessageId(UUID.randomUUID());
-        acsc.setCompositionTargetId(automationComposition.getCompositionTargetId());
-        acsc.setParticipantUpdatesList(
+    public void send(AutomationComposition automationComposition, int stage) {
+        var acMigration = new AutomationCompositionMigration();
+        acMigration.setPrecheck(Boolean.TRUE.equals(automationComposition.getPrecheck()));
+        acMigration.setCompositionId(automationComposition.getCompositionId());
+        acMigration.setAutomationCompositionId(automationComposition.getInstanceId());
+        acMigration.setMessageId(UUID.randomUUID());
+        acMigration.setCompositionTargetId(automationComposition.getCompositionTargetId());
+        acMigration.setStage(stage);
+        acMigration.setParticipantUpdatesList(
                 AcmUtils.createParticipantDeployList(automationComposition, DeployOrder.MIGRATE));
 
-        super.send(acsc);
+        super.send(acMigration);
     }
 }

@@ -23,7 +23,6 @@ package org.onap.policy.clamp.acm.runtime.instantiation;
 
 import jakarta.validation.Valid;
 import jakarta.ws.rs.core.Response.Status;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -68,6 +67,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AutomationCompositionInstantiationProvider {
     private static final String DO_NOT_MATCH = " do not match with ";
+    private static final String ELEMENT_ID_NOT_PRESENT = "Element id not present ";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AutomationCompositionInstantiationProvider.class);
 
@@ -190,7 +190,7 @@ public class AutomationCompositionInstantiationProvider {
             var elementId = element.getKey();
             var dbAcElement = acToBeUpdated.getElements().get(elementId);
             if (dbAcElement == null) {
-                throw new PfModelRuntimeException(Status.BAD_REQUEST, "Element id not present " + elementId);
+                throw new PfModelRuntimeException(Status.BAD_REQUEST, ELEMENT_ID_NOT_PRESENT + elementId);
             }
             AcmUtils.recursiveMerge(dbAcElement.getProperties(), element.getValue().getProperties());
         }
@@ -221,7 +221,7 @@ public class AutomationCompositionInstantiationProvider {
             // Add additional elements if present for migration
             if (dbAcElement == null) {
                 LOGGER.info("New Ac element {} added in Migration", elementId);
-                acToBeUpdated.getElements().put(elementId, automationComposition.getElements().get(elementId));
+                acToBeUpdated.getElements().put(elementId, element.getValue());
             } else {
                 AcmUtils.recursiveMerge(dbAcElement.getProperties(), element.getValue().getProperties());
                 var newDefinition = element.getValue().getDefinition().asConceptKey();
@@ -231,30 +231,27 @@ public class AutomationCompositionInstantiationProvider {
             }
         }
         // Remove element which is not present in the new Ac instance
-        List<UUID> elementsRemoved = new ArrayList<>();
-        for (var dbElement : acToBeUpdated.getElements().entrySet()) {
-            var dbElementId = dbElement.getKey();
-            if (automationComposition.getElements().get(dbElementId) == null) {
-                LOGGER.info("Element with id {} is removed in Migration", dbElementId);
-                elementsRemoved.add(dbElementId);
-                automationCompositionProvider.deleteAutomationCompositionElement(dbElementId);
-            }
-        }
+        var elementsRemoved = getElementRemoved(acToBeUpdated, automationComposition);
         elementsRemoved.forEach(uuid -> acToBeUpdated.getElements().remove(uuid));
 
         var validationResult =
-            validateAutomationComposition(acToBeUpdated, automationComposition.getCompositionTargetId());
+                validateAutomationComposition(acToBeUpdated, automationComposition.getCompositionTargetId());
         if (!validationResult.isValid()) {
             throw new PfModelRuntimeException(Status.BAD_REQUEST, validationResult.getResult());
         }
         acToBeUpdated.setCompositionTargetId(automationComposition.getCompositionTargetId());
-
+        var acDefinition = acDefinitionProvider.getAcDefinition(automationComposition.getCompositionTargetId());
         // Publish migrate event to the participants
-        supervisionAcHandler.migrate(acToBeUpdated);
+        supervisionAcHandler.migrate(acToBeUpdated, acDefinition.getServiceTemplate());
 
-        automationComposition = automationCompositionProvider.updateAutomationComposition(acToBeUpdated);
+        var ac = automationCompositionProvider.updateAutomationComposition(acToBeUpdated);
         elementsRemoved.forEach(automationCompositionProvider::deleteAutomationCompositionElement);
-        return createInstantiationResponse(automationComposition);
+        return createInstantiationResponse(ac);
+    }
+
+    private List<UUID> getElementRemoved(AutomationComposition acFromDb, AutomationComposition acFromMigration) {
+        return acFromDb.getElements().keySet().stream()
+                .filter(id -> acFromMigration.getElements().get(id) == null).toList();
     }
 
     void checkCompatibility(PfConceptKey newDefinition, PfConceptKey dbElementDefinition,
@@ -283,7 +280,7 @@ public class AutomationCompositionInstantiationProvider {
             // Add additional elements if present for migration
             if (copyElement == null) {
                 LOGGER.info("New Ac element {} added in Migration", elementId);
-                copyAc.getElements().put(elementId, automationComposition.getElements().get(elementId));
+                copyAc.getElements().put(elementId, element.getValue());
             } else {
                 AcmUtils.recursiveMerge(copyElement.getProperties(), element.getValue().getProperties());
                 var newDefinition = element.getValue().getDefinition().asConceptKey();
@@ -293,15 +290,7 @@ public class AutomationCompositionInstantiationProvider {
             }
         }
         // Remove element which is not present in the new Ac instance
-        List<UUID> elementsRemoved = new ArrayList<>();
-        for (var dbElement : copyAc.getElements().entrySet()) {
-            var dbElementId = dbElement.getKey();
-            if (automationComposition.getElements().get(dbElementId) == null) {
-                LOGGER.info("Element with id {} is removed in Migration", dbElementId);
-                elementsRemoved.add(dbElementId);
-            }
-        }
-
+        var elementsRemoved = getElementRemoved(copyAc, automationComposition);
         elementsRemoved.forEach(uuid -> copyAc.getElements().remove(uuid));
 
         var validationResult =
@@ -317,6 +306,8 @@ public class AutomationCompositionInstantiationProvider {
         AcmUtils.setCascadedState(acToBeUpdated, DeployState.DEPLOYED, LockState.LOCKED,
             SubState.MIGRATION_PRECHECKING);
         acToBeUpdated.setStateChangeResult(StateChangeResult.NO_ERROR);
+        // excluding removed element in MIGRATION_PRECHECKING
+        elementsRemoved.forEach(uuid -> acToBeUpdated.getElements().get(uuid).setSubState(SubState.NONE));
 
         return createInstantiationResponse(automationCompositionProvider.updateAutomationComposition(acToBeUpdated));
     }
