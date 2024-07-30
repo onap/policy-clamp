@@ -231,7 +231,7 @@ class SupervisionMessagesTest {
         publisher.active(topicSink);
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_UPDATE_JSON, "Crud");
-        publisher.send(automationComposition);
+        publisher.send(automationComposition, 0);
         verify(topicSink).send(anyString());
     }
 

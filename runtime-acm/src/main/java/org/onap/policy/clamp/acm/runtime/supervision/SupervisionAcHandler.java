@@ -48,6 +48,7 @@ import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCom
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -287,7 +288,7 @@ public class SupervisionAcHandler {
 
         var updated = updateState(automationComposition,
                 automationCompositionAckMessage.getAutomationCompositionResultMap().entrySet(),
-                automationCompositionAckMessage.getStateChangeResult());
+                automationCompositionAckMessage.getStateChangeResult(), automationCompositionAckMessage.getStage());
         if (updated) {
             automationComposition = automationCompositionProvider.updateAcState(automationComposition);
             var acDefinition = acDefinitionProvider.getAcDefinition(automationComposition.getCompositionId());
@@ -297,7 +298,7 @@ public class SupervisionAcHandler {
 
     private boolean updateState(AutomationComposition automationComposition,
             Set<Map.Entry<UUID, AcElementDeployAck>> automationCompositionResultSet,
-            StateChangeResult stateChangeResult) {
+            StateChangeResult stateChangeResult, Integer stage) {
         var updated = false;
         boolean inProgress = !StateChangeResult.FAILED.equals(automationComposition.getStateChangeResult());
         if (inProgress && !stateChangeResult.equals(automationComposition.getStateChangeResult())) {
@@ -315,6 +316,7 @@ public class SupervisionAcHandler {
                 element.setSubState(SubState.NONE);
                 element.setDeployState(acElementAck.getValue().getDeployState());
                 element.setLockState(acElementAck.getValue().getLockState());
+                element.setStage(stage);
                 element.setRestarting(null);
                 automationCompositionProvider.updateAutomationCompositionElement(element);
             }
@@ -336,11 +338,14 @@ public class SupervisionAcHandler {
      * Handle Migration of an AutomationComposition instance to other ACM Definition.
      *
      * @param automationComposition the AutomationComposition
+     * @param serviceTemplate the ServiceTemplate
      */
-    public void migrate(AutomationComposition automationComposition) {
+    public void migrate(AutomationComposition automationComposition, ToscaServiceTemplate serviceTemplate) {
         AcmUtils.setCascadedState(automationComposition, DeployState.MIGRATING, LockState.LOCKED);
+        var stage = ParticipantUtils.getFirstStage(automationComposition, serviceTemplate);
         automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
-        executor.execute(() -> acCompositionMigrationPublisher.send(automationComposition));
+        automationComposition.setPhase(stage);
+        executor.execute(() -> acCompositionMigrationPublisher.send(automationComposition, stage));
     }
 
     /**
@@ -349,6 +354,6 @@ public class SupervisionAcHandler {
      * @param automationComposition the AutomationComposition
      */
     public void migratePrecheck(AutomationComposition automationComposition) {
-        executor.execute(() -> acCompositionMigrationPublisher.send(automationComposition));
+        executor.execute(() -> acCompositionMigrationPublisher.send(automationComposition, 0));
     }
 }
