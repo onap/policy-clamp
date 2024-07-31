@@ -36,7 +36,8 @@ import org.onap.policy.models.base.PfModelException;
  * Wrapper of AutomationCompositionElementListener.
  * Valid since 7.1.1 release.
  */
-public abstract class AcElementListenerV2 implements AutomationCompositionElementListener {
+public abstract class AcElementListenerV2
+        implements AutomationCompositionElementListener, AutomationCompositionElementListenerV2 {
     protected final ParticipantIntermediaryApi intermediaryApi;
 
     private static final String NOT_SUPPORTED = "not supported!";
@@ -94,6 +95,13 @@ public abstract class AcElementListenerV2 implements AutomationCompositionElemen
     public void handleRestartInstance(CompositionElementDto compositionElement, InstanceElementDto instanceElement,
                                       DeployState deployState, LockState lockState) throws PfModelException {
         throw new PfModelException(Response.Status.BAD_REQUEST, NOT_SUPPORTED);
+    }
+
+    @Override
+    public void migrate(CompositionElementDto compositionElement, CompositionElementDto compositionElementTarget,
+                        InstanceElementDto instanceElement, InstanceElementDto instanceElementMigrate, int stage)
+        throws PfModelException {
+        migrate(compositionElement, compositionElementTarget, instanceElement, instanceElementMigrate);
     }
 
     @Override

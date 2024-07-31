@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023-2024 Nordix Foundation.
+ *  Copyright (C) 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,11 +20,13 @@
 
 package org.onap.policy.clamp.acm.participant.sim.main.handler;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
-import org.onap.policy.clamp.acm.participant.intermediary.api.impl.AcElementListenerV2;
+import org.onap.policy.clamp.acm.participant.intermediary.api.impl.AcElementListenerV3;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
@@ -33,15 +35,17 @@ import org.springframework.stereotype.Component;
 /**
  * This class handles implementation of automationCompositionElement updates.
  */
-@ConditionalOnExpression("'${element.handler}'=='AcElementHandlerV2'")
+@Getter
+@Setter
+@ConditionalOnExpression("'${element.handler:AcElementHandlerV3}' == 'AcElementHandlerV3'")
 @Component
-public class AutomationCompositionElementHandlerV2 extends AcElementListenerV2 {
+public class AutomationCompositionElementHandlerV3 extends AcElementListenerV3 {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AutomationCompositionElementHandlerV2.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AutomationCompositionElementHandlerV3.class);
 
     private final SimulatorService simulatorService;
 
-    public AutomationCompositionElementHandlerV2(ParticipantIntermediaryApi intermediaryApi,
+    public AutomationCompositionElementHandlerV3(ParticipantIntermediaryApi intermediaryApi,
         SimulatorService simulatorService) {
         super(intermediaryApi);
         this.simulatorService = simulatorService;
@@ -111,28 +115,27 @@ public class AutomationCompositionElementHandlerV2 extends AcElementListenerV2 {
 
     @Override
     public void migrate(CompositionElementDto compositionElement, CompositionElementDto compositionElementTarget,
-                        InstanceElementDto instanceElement, InstanceElementDto instanceElementMigrate) {
+                        InstanceElementDto instanceElement, InstanceElementDto instanceElementMigrate, int stage) {
         LOGGER.debug("migrate call compositionElement: {}, compositionElementTarget: {}, instanceElement: {},"
-                        + " instanceElementMigrate: {}",
-                compositionElement, compositionElementTarget, instanceElement, instanceElementMigrate);
+                + " instanceElementMigrate: {}, stage: {}",
+            compositionElement, compositionElementTarget, instanceElement, instanceElementMigrate, stage);
 
         if (instanceElementMigrate.newElement()) {
             LOGGER.debug("new element scenario");
-
         }
         if (instanceElementMigrate.removedElement()) {
             simulatorService.undeploy(instanceElement.instanceId(), instanceElement.elementId());
             simulatorService.delete(instanceElement.instanceId(), instanceElement.elementId());
         } else {
-            simulatorService.migrate(instanceElement.instanceId(), instanceElement.elementId(),
-                    0, compositionElementTarget.inProperties());
+            simulatorService.migrate(instanceElement.instanceId(), instanceElement.elementId(), stage,
+                    compositionElementTarget.inProperties());
         }
     }
 
     @Override
     public void migratePrecheck(CompositionElementDto compositionElement,
-                                CompositionElementDto compositionElementTarget, InstanceElementDto instanceElement,
-                                InstanceElementDto instanceElementMigrate) {
+            CompositionElementDto compositionElementTarget, InstanceElementDto instanceElement,
+            InstanceElementDto instanceElementMigrate) {
         LOGGER.debug("migrate precheck call compositionElement: {}, compositionElementTarget: {}, instanceElement: {},"
                         + " instanceElementMigrate: {}",
                 compositionElement, compositionElementTarget, instanceElement, instanceElementMigrate);

@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
 import org.onap.policy.clamp.acm.participant.intermediary.parameters.Topics;
+import org.onap.policy.clamp.acm.participant.sim.model.SimConfig;
 import org.onap.policy.clamp.acm.participant.sim.parameters.ParticipantSimParameters;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
@@ -102,7 +103,7 @@ public class CommonTestData {
      * @return topic parameters
      */
     private static TopicParameters getSinkTopicParams() {
-        final TopicParameters topicParams = new TopicParameters();
+        final var topicParams = new TopicParameters();
         topicParams.setTopic("policy-acruntime-participant");
         topicParams.setTopicCommInfrastructure("NOOP");
         topicParams.setServers(List.of("localhost"));
@@ -115,7 +116,7 @@ public class CommonTestData {
      * @return topic parameters
      */
     private static TopicParameters getSyncTopicParams() {
-        final TopicParameters topicParams = new TopicParameters();
+        final var topicParams = new TopicParameters();
         topicParams.setTopic("acm-ppnt-sync");
         topicParams.setTopicCommInfrastructure("NOOP");
         topicParams.setServers(List.of("localhost"));
@@ -135,8 +136,6 @@ public class CommonTestData {
      * Returns a Map of ToscaConceptIdentifier and AutomationComposition for test cases.
      *
      * @return automationCompositionMap
-     *
-     * @throws CoderException if there is an error with .json file.
      */
     public static Map<UUID, AutomationComposition> getTestAutomationCompositionMap() {
         var automationComposition = getTestAutomationComposition();
@@ -147,8 +146,6 @@ public class CommonTestData {
      * Returns List of AutomationComposition for test cases.
      *
      * @return AutomationCompositions
-     *
-     * @throws CoderException if there is an error with .json file.
      */
     public static AutomationComposition getTestAutomationComposition() {
         var automationComposition = new AutomationComposition();
@@ -157,5 +154,27 @@ public class CommonTestData {
         element.setId(UUID.randomUUID());
         automationComposition.setElements(Map.of(element.getId(), element));
         return automationComposition;
+    }
+
+    /**
+     * Create a new SimConfig.
+     *
+     * @return a new SimConfig
+     */
+    public static SimConfig createSimConfig() {
+        var config = new SimConfig();
+        config.setPrepareTimerMs(1);
+        config.setDeployTimerMs(1);
+        config.setReviewTimerMs(1);
+        config.setUndeployTimerMs(1);
+        config.setLockTimerMs(1);
+        config.setUnlockTimerMs(1);
+        config.setUpdateTimerMs(1);
+        config.setDeleteTimerMs(1);
+        config.setPrimeTimerMs(1);
+        config.setDeprimeTimerMs(1);
+        config.setMigrateTimerMs(1);
+        config.setMigratePrecheckTimerMs(1);
+        return config;
     }
 }

@@ -119,7 +119,7 @@ class ThreadHandlerTest {
             threadHandler.migrate(messageId, compositionElement, compositionElementTarget,
                 instanceElement, instanceElementUpdated);
             verify(listener, timeout(TIMEOUT)).migrate(compositionElement, compositionElementTarget,
-                instanceElement, instanceElementUpdated);
+                instanceElement, instanceElementUpdated, 0);
 
             clearInvocations(listener);
             threadHandler.undeploy(messageId, compositionElement, instanceElement);
@@ -168,7 +168,7 @@ class ThreadHandlerTest {
             var compositionElementTarget = new CompositionElementDto(compositionTargetId, new ToscaConceptIdentifier(),
                 properties, properties);
             doThrow(new PfModelException(Status.INTERNAL_SERVER_ERROR, "Error")).when(listener)
-                .migrate(compositionElement, compositionElementTarget, instanceElement, instanceElementUpdated);
+                .migrate(compositionElement, compositionElementTarget, instanceElement, instanceElementUpdated, 0);
             threadHandler.migrate(messageId, compositionElement, compositionElementTarget,
                 instanceElement, instanceElementUpdated);
             verify(intermediaryApi, timeout(TIMEOUT)).updateAutomationCompositionElementState(instanceId, elementId,

@@ -99,6 +99,6 @@ public class AutomationCompositionElementHandlerV1 extends AcElementListenerV1 {
         Map<String, Object> properties) {
         LOGGER.debug("migrate call instanceId: {}, element: {}, compositionTargetId: {}, properties: {}",
                 instanceId, element, compositionTargetId, properties);
-        simulatorService.migrate(instanceId, element.getId());
+        simulatorService.migrate(instanceId, element.getId(), 0, Map.of());
     }
 }

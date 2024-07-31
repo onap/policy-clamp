@@ -134,7 +134,7 @@ class ParticipantIntermediaryApiImplTest {
         assertEquals(map, mapResult);
 
         var result = apiImpl.getAcElementsDefinitions(UUID.randomUUID());
-        assertThat(result).isNull();
+        assertThat(result).isEmpty();
 
         result = apiImpl.getAcElementsDefinitions(COMPOSITION_ID);
         assertEquals(elementsDefinitions, result);
