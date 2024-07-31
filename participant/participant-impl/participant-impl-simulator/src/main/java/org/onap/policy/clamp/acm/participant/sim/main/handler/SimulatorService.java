@@ -35,6 +35,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.slf4j.Logger;
@@ -327,18 +328,34 @@ public class SimulatorService {
      *
      * @param instanceId the instanceId
      * @param elementId the elementId
+     * @param stage the stage
      */
-    public void migrate(UUID instanceId, UUID elementId) {
+    public void migrate(UUID instanceId, UUID elementId, int stage, Map<String, Object> compositionInProperties) {
         if (!execution(getConfig().getMigrateTimerMs(),
                 "Current Thread migrate is Interrupted during execution {}", elementId)) {
             return;
         }
 
-        if (getConfig().isMigrateSuccess()) {
-            intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId,
-                    DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Migrated");
+        if (config.isMigrateSuccess()) {
+            var stageSet = ParticipantUtils.findStageSet(compositionInProperties);
+            var nextStage = 1000;
+            for (var s : stageSet) {
+                if (s > stage) {
+                    nextStage = Math.min(s, nextStage);
+                }
+            }
+            if (nextStage == 1000) {
+                intermediaryApi.updateAutomationCompositionElementState(
+                        instanceId, elementId,
+                        DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Migrated");
+            } else {
+                intermediaryApi.updateAutomationCompositionElementStage(
+                        instanceId, elementId,
+                        StateChangeResult.NO_ERROR, nextStage, "stage " + stage + " Migrated");
+            }
         } else {
-            intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId,
+            intermediaryApi.updateAutomationCompositionElementState(
+                    instanceId, elementId,
                     DeployState.DEPLOYED, null, StateChangeResult.FAILED, "Migrate failed!");
         }
     }

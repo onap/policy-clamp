@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023-2024 Nordix Foundation.
+ *  Copyright (C) 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ package org.onap.policy.clamp.acm.participant.sim.main.handler;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -37,7 +38,7 @@ import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
-class AutomationCompositionElementHandlerV2Test {
+class AutomationCompositionElementHandlerV3Test {
 
     private static final CompositionElementDto COMPOSITION_ELEMENT =
             new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(), Map.of(), Map.of());
@@ -50,7 +51,7 @@ class AutomationCompositionElementHandlerV2Test {
         var config = CommonTestData.createSimConfig();
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
         var simulatorService = new SimulatorService(intermediaryApi);
-        var acElementHandler = new AutomationCompositionElementHandlerV2(intermediaryApi, simulatorService);
+        var acElementHandler = new AutomationCompositionElementHandlerV3(intermediaryApi, simulatorService);
         simulatorService.setConfig(config);
         acElementHandler.deploy(COMPOSITION_ELEMENT, INSTANCE_ELEMENT);
         verify(intermediaryApi).updateAutomationCompositionElementState(
@@ -69,7 +70,7 @@ class AutomationCompositionElementHandlerV2Test {
         var config = CommonTestData.createSimConfig();
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
         var simulatorService = new SimulatorService(intermediaryApi);
-        var acElementHandler = new AutomationCompositionElementHandlerV2(intermediaryApi, simulatorService);
+        var acElementHandler = new AutomationCompositionElementHandlerV3(intermediaryApi, simulatorService);
         simulatorService.setConfig(config);
         acElementHandler.undeploy(COMPOSITION_ELEMENT, INSTANCE_ELEMENT);
         verify(intermediaryApi).updateAutomationCompositionElementState(
@@ -88,7 +89,7 @@ class AutomationCompositionElementHandlerV2Test {
         var config = CommonTestData.createSimConfig();
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
         var simulatorService = new SimulatorService(intermediaryApi);
-        var acElementHandler = new AutomationCompositionElementHandlerV2(intermediaryApi, simulatorService);
+        var acElementHandler = new AutomationCompositionElementHandlerV3(intermediaryApi, simulatorService);
         simulatorService.setConfig(config);
         acElementHandler.lock(COMPOSITION_ELEMENT, INSTANCE_ELEMENT);
         verify(intermediaryApi).updateAutomationCompositionElementState(
@@ -107,7 +108,7 @@ class AutomationCompositionElementHandlerV2Test {
         var config = CommonTestData.createSimConfig();
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
         var simulatorService = new SimulatorService(intermediaryApi);
-        var acElementHandler = new AutomationCompositionElementHandlerV2(intermediaryApi, simulatorService);
+        var acElementHandler = new AutomationCompositionElementHandlerV3(intermediaryApi, simulatorService);
         simulatorService.setConfig(config);
         acElementHandler.unlock(COMPOSITION_ELEMENT, INSTANCE_ELEMENT);
         verify(intermediaryApi).updateAutomationCompositionElementState(
@@ -126,7 +127,7 @@ class AutomationCompositionElementHandlerV2Test {
         var config = CommonTestData.createSimConfig();
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
         var simulatorService = new SimulatorService(intermediaryApi);
-        var acElementHandler = new AutomationCompositionElementHandlerV2(intermediaryApi, simulatorService);
+        var acElementHandler = new AutomationCompositionElementHandlerV3(intermediaryApi, simulatorService);
         simulatorService.setConfig(config);
         var instanceElementUpdated = new InstanceElementDto(
                 INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(), null,
@@ -148,7 +149,7 @@ class AutomationCompositionElementHandlerV2Test {
         var config = CommonTestData.createSimConfig();
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
         var simulatorService = new SimulatorService(intermediaryApi);
-        var acElementHandler = new AutomationCompositionElementHandlerV2(intermediaryApi, simulatorService);
+        var acElementHandler = new AutomationCompositionElementHandlerV3(intermediaryApi, simulatorService);
         simulatorService.setConfig(config);
         acElementHandler.delete(COMPOSITION_ELEMENT, INSTANCE_ELEMENT);
         verify(intermediaryApi).updateAutomationCompositionElementState(
@@ -167,7 +168,7 @@ class AutomationCompositionElementHandlerV2Test {
         var config = CommonTestData.createSimConfig();
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
         var simulatorService = new SimulatorService(intermediaryApi);
-        var acElementHandler = new AutomationCompositionElementHandlerV2(intermediaryApi, simulatorService);
+        var acElementHandler = new AutomationCompositionElementHandlerV3(intermediaryApi, simulatorService);
         simulatorService.setConfig(config);
         acElementHandler.prime(COMPOSITION);
         verify(intermediaryApi).updateCompositionState(
@@ -184,7 +185,7 @@ class AutomationCompositionElementHandlerV2Test {
         var config = CommonTestData.createSimConfig();
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
         var simulatorService = new SimulatorService(intermediaryApi);
-        var acElementHandler = new AutomationCompositionElementHandlerV2(intermediaryApi, simulatorService);
+        var acElementHandler = new AutomationCompositionElementHandlerV3(intermediaryApi, simulatorService);
         simulatorService.setConfig(config);
         acElementHandler.deprime(COMPOSITION);
         verify(intermediaryApi).updateCompositionState(
@@ -201,7 +202,7 @@ class AutomationCompositionElementHandlerV2Test {
         var config = CommonTestData.createSimConfig();
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
         var simulatorService = new SimulatorService(intermediaryApi);
-        var acElementHandler = new AutomationCompositionElementHandlerV2(intermediaryApi, simulatorService);
+        var acElementHandler = new AutomationCompositionElementHandlerV3(intermediaryApi, simulatorService);
         simulatorService.setConfig(config);
         var compositionElementTarget = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
                 Map.of(), Map.of());
@@ -209,17 +210,36 @@ class AutomationCompositionElementHandlerV2Test {
                 INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(),
                 null, Map.of("key", "value"), Map.of());
         acElementHandler
-            .migrate(COMPOSITION_ELEMENT, compositionElementTarget, INSTANCE_ELEMENT, instanceElementMigrated);
+                .migrate(COMPOSITION_ELEMENT, compositionElementTarget, INSTANCE_ELEMENT, instanceElementMigrated, 0);
         verify(intermediaryApi).updateAutomationCompositionElementState(
                 INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(),
                 DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Migrated");
 
         config.setMigrateSuccess(false);
         acElementHandler
-            .migrate(COMPOSITION_ELEMENT, compositionElementTarget, INSTANCE_ELEMENT, instanceElementMigrated);
+                .migrate(COMPOSITION_ELEMENT, compositionElementTarget, INSTANCE_ELEMENT, instanceElementMigrated, 0);
         verify(intermediaryApi).updateAutomationCompositionElementState(
                 INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(),
                 DeployState.DEPLOYED, null, StateChangeResult.FAILED, "Migrate failed!");
+    }
+
+    @Test
+    void testMigrateStage() {
+        var config = CommonTestData.createSimConfig();
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var simulatorService = new SimulatorService(intermediaryApi);
+        var acElementHandler = new AutomationCompositionElementHandlerV3(intermediaryApi, simulatorService);
+        simulatorService.setConfig(config);
+        var compositionElementTarget = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
+                Map.of("stage", List.of(1, 2)), Map.of());
+        var instanceElementMigrated = new InstanceElementDto(
+                INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(),
+                null, Map.of(), Map.of());
+        acElementHandler
+                .migrate(COMPOSITION_ELEMENT, compositionElementTarget, INSTANCE_ELEMENT, instanceElementMigrated, 1);
+        verify(intermediaryApi).updateAutomationCompositionElementStage(
+                INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(),
+                StateChangeResult.NO_ERROR, 2, "stage 1 Migrated");
     }
 
     @Test
@@ -227,7 +247,7 @@ class AutomationCompositionElementHandlerV2Test {
         var config = CommonTestData.createSimConfig();
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
         var simulatorService = new SimulatorService(intermediaryApi);
-        var acElementHandler = new AutomationCompositionElementHandlerV2(intermediaryApi, simulatorService);
+        var acElementHandler = new AutomationCompositionElementHandlerV3(intermediaryApi, simulatorService);
         simulatorService.setConfig(config);
         var compoElTargetAdd = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
                 Map.of(), Map.of(), true, false);
@@ -235,7 +255,7 @@ class AutomationCompositionElementHandlerV2Test {
                 INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(),
                 null, Map.of("key", "value"), Map.of(), true, false);
         acElementHandler
-                .migrate(COMPOSITION_ELEMENT, compoElTargetAdd, INSTANCE_ELEMENT, inElMigratedAdd);
+                .migrate(COMPOSITION_ELEMENT, compoElTargetAdd, INSTANCE_ELEMENT, inElMigratedAdd, 0);
         verify(intermediaryApi).updateAutomationCompositionElementState(
                 INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(),
                 DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Migrated");
@@ -246,7 +266,7 @@ class AutomationCompositionElementHandlerV2Test {
         var config = CommonTestData.createSimConfig();
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
         var simulatorService = new SimulatorService(intermediaryApi);
-        var acElementHandler = new AutomationCompositionElementHandlerV2(intermediaryApi, simulatorService);
+        var acElementHandler = new AutomationCompositionElementHandlerV3(intermediaryApi, simulatorService);
         simulatorService.setConfig(config);
 
         var compoElTargetRemove = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
@@ -255,7 +275,7 @@ class AutomationCompositionElementHandlerV2Test {
                 INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(),
                 null, Map.of("key", "value"), Map.of(), false, true);
         acElementHandler
-                .migrate(COMPOSITION_ELEMENT, compoElTargetRemove, INSTANCE_ELEMENT, inElMigratedRemove);
+                .migrate(COMPOSITION_ELEMENT, compoElTargetRemove, INSTANCE_ELEMENT, inElMigratedRemove, 0);
         verify(intermediaryApi).updateAutomationCompositionElementState(
                 INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(),
                 DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR, "Undeployed");
@@ -269,7 +289,7 @@ class AutomationCompositionElementHandlerV2Test {
         var config = CommonTestData.createSimConfig();
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
         var simulatorService = new SimulatorService(intermediaryApi);
-        var acElementHandler = new AutomationCompositionElementHandlerV2(intermediaryApi, simulatorService);
+        var acElementHandler = new AutomationCompositionElementHandlerV3(intermediaryApi, simulatorService);
         simulatorService.setConfig(config);
         var compositionElementTarget = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
                 Map.of(), Map.of());
@@ -297,7 +317,7 @@ class AutomationCompositionElementHandlerV2Test {
         var config = CommonTestData.createSimConfig();
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
         var simulatorService = new SimulatorService(intermediaryApi);
-        var acElementHandler = new AutomationCompositionElementHandlerV2(intermediaryApi, simulatorService);
+        var acElementHandler = new AutomationCompositionElementHandlerV3(intermediaryApi, simulatorService);
         simulatorService.setConfig(config);
         acElementHandler.prepare(COMPOSITION_ELEMENT, INSTANCE_ELEMENT);
         verify(intermediaryApi).updateAutomationCompositionElementState(
@@ -316,7 +336,7 @@ class AutomationCompositionElementHandlerV2Test {
         var config = CommonTestData.createSimConfig();
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
         var simulatorService = new SimulatorService(intermediaryApi);
-        var acElementHandler = new AutomationCompositionElementHandlerV2(intermediaryApi, simulatorService);
+        var acElementHandler = new AutomationCompositionElementHandlerV3(intermediaryApi, simulatorService);
         simulatorService.setConfig(config);
         acElementHandler.review(COMPOSITION_ELEMENT, INSTANCE_ELEMENT);
         verify(intermediaryApi).updateAutomationCompositionElementState(

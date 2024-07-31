@@ -50,16 +50,22 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
     private final CacheProvider cacheProvider;
 
     @Override
-    public void updateAutomationCompositionElementState(UUID automationCompositionId, UUID id, DeployState newState,
+    public void updateAutomationCompositionElementState(UUID instance, UUID elementId, DeployState deployState,
             LockState lockState, StateChangeResult stateChangeResult, String message) {
-        automationCompositionHandler.updateAutomationCompositionElementState(automationCompositionId, id, newState,
-                lockState, stateChangeResult, message);
+        automationCompositionHandler.updateAutomationCompositionElementState(instance, elementId, deployState,
+            lockState, stateChangeResult, message);
     }
 
     @Override
-    public void sendAcElementInfo(UUID automationCompositionId, UUID elementId, String useState,
+    public void updateAutomationCompositionElementStage(UUID instance, UUID elementId,
+            StateChangeResult stateChangeResult, int stage, String message) {
+        //
+    }
+
+    @Override
+    public void sendAcElementInfo(UUID instance, UUID elementId, String useState,
             String operationalState, Map<String, Object> outProperties) {
-        automationCompositionHandler.sendAcElementInfo(automationCompositionId, elementId, useState, operationalState,
+        automationCompositionHandler.sendAcElementInfo(instance, elementId, useState, operationalState,
                 outProperties);
     }
 
@@ -75,8 +81,8 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
     }
 
     @Override
-    public AutomationCompositionElement getAutomationCompositionElement(UUID automationCompositionId, UUID elementId) {
-        var automationComposition = cacheProvider.getAutomationCompositions().get(automationCompositionId);
+    public AutomationCompositionElement getAutomationCompositionElement(UUID instanceId, UUID elementId) {
+        var automationComposition = cacheProvider.getAutomationCompositions().get(instanceId);
         if (automationComposition == null) {
             return null;
         }
@@ -91,8 +97,8 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
     }
 
     @Override
-    public AutomationComposition getAutomationComposition(UUID automationCompositionId) {
-        var automationComposition = cacheProvider.getAutomationCompositions().get(automationCompositionId);
+    public AutomationComposition getAutomationComposition(UUID instanceId) {
+        var automationComposition = cacheProvider.getAutomationCompositions().get(instanceId);
         return automationComposition != null ? new AutomationComposition(automationComposition) : null;
     }
 

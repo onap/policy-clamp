@@ -209,7 +209,8 @@ public abstract class AcElementListenerV1
 
     @Override
     public void migrate(CompositionElementDto compositionElement, CompositionElementDto compositionElementTarget,
-        InstanceElementDto instanceElement, InstanceElementDto instanceElementMigrate) throws PfModelException {
+                        InstanceElementDto instanceElement, InstanceElementDto instanceElementMigrate,
+                        int stage) throws PfModelException {
         var element = new  AcElementDeploy();
         element.setId(instanceElementMigrate.elementId());
         element.setDefinition(compositionElementTarget.elementDefinitionId());

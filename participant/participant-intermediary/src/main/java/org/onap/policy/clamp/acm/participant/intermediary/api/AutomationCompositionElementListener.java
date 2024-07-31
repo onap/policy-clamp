@@ -89,14 +89,16 @@ public interface AutomationCompositionElementListener {
     /**
      * Handle an update on a automation composition element.
      *
-     * @param compositionElement the information of the Automation Composition Definition Element
+     * @param compositionElement       the information of the Automation Composition Definition Element
      * @param compositionElementTarget the information of the Automation Composition Definition Element Target
-     * @param instanceElement the information of the Automation Composition Instance Element
-     * @param instanceElementMigrate the information of the Automation Composition Instance Element updated
+     * @param instanceElement          the information of the Automation Composition Instance Element
+     * @param instanceElementMigrate   the information of the Automation Composition Instance Element updated
+     * @param nextStage                    the next stage
      * @throws PfModelException from Policy framework
      */
     void migrate(CompositionElementDto compositionElement, CompositionElementDto compositionElementTarget,
-            InstanceElementDto instanceElement, InstanceElementDto instanceElementMigrate) throws PfModelException;
+            InstanceElementDto instanceElement, InstanceElementDto instanceElementMigrate,
+            int nextStage) throws PfModelException;
 
     void migratePrecheck(CompositionElementDto compositionElement, CompositionElementDto compositionElementTarget,
             InstanceElementDto instanceElement, InstanceElementDto instanceElementMigrate) throws PfModelException;

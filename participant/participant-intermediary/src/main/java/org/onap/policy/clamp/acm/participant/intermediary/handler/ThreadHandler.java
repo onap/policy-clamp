@@ -309,7 +309,7 @@ public class ThreadHandler implements Closeable {
         CompositionElementDto compositionElementTarget, InstanceElementDto instanceElement,
         InstanceElementDto instanceElementMigrate) {
         try {
-            listener.migrate(compositionElement, compositionElementTarget, instanceElement, instanceElementMigrate);
+            listener.migrate(compositionElement, compositionElementTarget, instanceElement, instanceElementMigrate, 0);
         } catch (PfModelException e) {
             LOGGER.error("Automation composition element migrate failed {} {}",
                 instanceElement.elementId(), e.getMessage());

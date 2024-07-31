@@ -38,41 +38,52 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 public interface ParticipantIntermediaryApi {
 
     /**
-     * Update the state of a automation composition element.
+     * Update the state of a AutomationComposition Instance Element.
      *
-     * @param automationCompositionId the ID of the automation composition to update the state on
-     * @param elementId the ID of the automation composition element to update the state on
-     * @param deployState the Deploy State of the automation composition element
-     * @param lockState the Lock State of the automation composition element
+     * @param instance the ID of the AutomationComposition Instance to update the state on
+     * @param elementId the ID of the AutomationComposition Instance element to update the state on
+     * @param deployState the Deploy State of the AutomationComposition Instance element
+     * @param lockState the Lock State of the AutomationComposition Instance element
      * @param stateChangeResult the indicator if error occurs
      * @param message the message
      */
-    void updateAutomationCompositionElementState(UUID automationCompositionId, UUID elementId, DeployState deployState,
+    void updateAutomationCompositionElementState(UUID instance, UUID elementId, DeployState deployState,
             LockState lockState, StateChangeResult stateChangeResult, String message);
 
     /**
-     * Get a copy of all AutomationCompositions.
+     * Update the stage of a AutomationComposition Instance Element.
      *
-     * @return get all AutomationCompositions
+     * @param instance the ID of the AutomationComposition Instance to update the state on
+     * @param elementId the ID of the AutomationComposition Instance Element to update the state on
+     * @param stateChangeResult the indicator if error occurs
+     * @param message the message
+     */
+    void updateAutomationCompositionElementStage(UUID instance, UUID elementId, StateChangeResult stateChangeResult,
+            int stage, String message);
+
+    /**
+     * Get a copy of all AutomationComposition Instances.
+     *
+     * @return get all AutomationComposition Instances
      */
     Map<UUID, AutomationComposition> getAutomationCompositions();
 
     /**
-     * Get a copy of the AutomationComposition by automationCompositionId.
+     * Get a copy of the AutomationComposition Instance by AutomationComposition Instance Id.
      *
-     * @param automationCompositionId the ID of the automation composition to update the state on
-     * @return get the AutomationComposition
+     * @param instanceId the ID of the AutomationComposition Instance to update the state on
+     * @return get the AutomationComposition Instance
      */
-    AutomationComposition getAutomationComposition(UUID automationCompositionId);
+    AutomationComposition getAutomationComposition(UUID instanceId);
 
     /**
-     * Get a copy of the AutomationCompositionElement by automationCompositionId and elementId.
+     * Get a copy of the AutomationCompositionElement by AutomationComposition Instance Id and elementId.
      *
-     * @param automationCompositionId the ID of the automation composition to update the state on
-     * @param elementId the ID of the automation composition element to update the state on
+     * @param instanceId the ID of the AutomationComposition Instance to update the state on
+     * @param elementId the ID of the AutomationComposition Instance Element to update the state on
      * @return get the AutomationCompositionElement
      */
-    AutomationCompositionElement getAutomationCompositionElement(UUID automationCompositionId, UUID elementId);
+    AutomationCompositionElement getAutomationCompositionElement(UUID instanceId, UUID elementId);
 
     /**
      * Get a copy of all AutomationCompositionElementDefinition from all primed compositions.
@@ -99,15 +110,15 @@ public interface ParticipantIntermediaryApi {
     AutomationCompositionElementDefinition getAcElementDefinition(UUID compositionId, ToscaConceptIdentifier elementId);
 
     /**
-     * Send Automation Composition Element update Info to AC-runtime.
+     * Send AutomationComposition Instance Element update Info to AC-runtime.
      *
-     * @param automationCompositionId the ID of the automation composition to update the states
-     * @param elementId the ID of the automation composition element to update the states
+     * @param instanceId the ID of the AutomationComposition Instance to update the states
+     * @param elementId the ID of the AutomationComposition Instance Element to update the states
      * @param useState the use State
      * @param operationalState the operational State
      * @param outProperties the output Properties Map
      */
-    void sendAcElementInfo(UUID automationCompositionId, UUID elementId, String useState, String operationalState,
+    void sendAcElementInfo(UUID instanceId, UUID elementId, String useState, String operationalState,
             Map<String, Object> outProperties);
 
     /**
