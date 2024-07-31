@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f1a51f0e_a9610048",
+        "filename": "runtime-acm/src/test/java/org/onap/policy/clamp/acm/runtime/instantiation/AutomationCompositionInstantiationProviderTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2024-07-31T16:52:38Z",
+      "side": 1,
+      "message": "Is this used somewhere?",
+      "range": {
+        "startLine": 96,
+        "startChar": 0,
+        "endLine": 99,
+        "endChar": 16
+      },
+      "revId": "c9c3cdcfc14aeff170ab1daf6a165f8684eaf999",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
