@@ -1,0 +1,9 @@
+Code-Review+1: Saul Gill <saul.gill@est.tech>
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Verified+1: ONAP Required GHA <releng+onap.required.gha@linuxfoundation.org>
+Code-Review+2: Adheli Tavares <adheli.tavares@est.tech>
+Submitted-by: Adheli Tavares <adheli.tavares@est.tech>
+Submitted-at: Thu, 01 Aug 2024 09:28:26 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/policy/clamp/+/138602
+Project: policy/clamp
+Branch: refs/heads/master
