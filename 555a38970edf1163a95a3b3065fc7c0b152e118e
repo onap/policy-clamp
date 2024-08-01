@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "207c58bb_c7140955",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/api/ParticipantIntermediaryApi.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2024-08-01T16:11:44Z",
+      "side": 1,
+      "message": "update year",
+      "range": {
+        "startLine": 3,
+        "startChar": 18,
+        "endLine": 3,
+        "endChar": 27
+      },
+      "revId": "555a38970edf1163a95a3b3065fc7c0b152e118e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "889a9021_094964a7",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/api/impl/ParticipantIntermediaryApiImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2024-08-01T16:11:44Z",
+      "side": 1,
+      "message": "update year",
+      "range": {
+        "startLine": 3,
+        "startChar": 18,
+        "endLine": 3,
+        "endChar": 27
+      },
+      "revId": "555a38970edf1163a95a3b3065fc7c0b152e118e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "388801cf_5172816f",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/api/impl/ParticipantIntermediaryApiImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2024-08-01T16:11:44Z",
+      "side": 1,
+      "message": "maybe this could be returned as Collections.emptyMap()? As long as that doesn\u0027t break anything",
+      "range": {
+        "startLine": 116,
+        "startChar": 12,
+        "endLine": 116,
+        "endChar": 23
+      },
+      "revId": "555a38970edf1163a95a3b3065fc7c0b152e118e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
