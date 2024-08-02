@@ -24,6 +24,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "55468740_eae9f600",
+        "filename": "participant/participant-impl/participant-impl-simulator/src/main/java/org/onap/policy/clamp/acm/participant/sim/main/handler/AutomationCompositionElementHandlerV2.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2024-08-02T08:34:58Z",
+      "side": 1,
+      "message": "flow does not stop there",
+      "parentUuid": "02c5eb17_7c34d235",
+      "range": {
+        "startLine": 120,
+        "startChar": 11,
+        "endLine": 120,
+        "endChar": 49
+      },
+      "revId": "555a38970edf1163a95a3b3065fc7c0b152e118e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "207c58bb_c7140955",
@@ -37,6 +61,30 @@
       "writtenOn": "2024-08-01T16:11:44Z",
       "side": 1,
       "message": "update year",
+      "range": {
+        "startLine": 3,
+        "startChar": 18,
+        "endLine": 3,
+        "endChar": 27
+      },
+      "revId": "555a38970edf1163a95a3b3065fc7c0b152e118e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0f98d625_7a3b30af",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/api/ParticipantIntermediaryApi.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2024-08-02T08:34:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "207c58bb_c7140955",
       "range": {
         "startLine": 3,
         "startChar": 18,
@@ -70,6 +118,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4502feed_c55405b8",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/api/impl/ParticipantIntermediaryApiImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2024-08-02T08:34:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "889a9021_094964a7",
+      "range": {
+        "startLine": 3,
+        "startChar": 18,
+        "endLine": 3,
+        "endChar": 27
+      },
+      "revId": "555a38970edf1163a95a3b3065fc7c0b152e118e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "388801cf_5172816f",
@@ -83,6 +155,30 @@
       "writtenOn": "2024-08-01T16:11:44Z",
       "side": 1,
       "message": "maybe this could be returned as Collections.emptyMap()? As long as that doesn\u0027t break anything",
+      "range": {
+        "startLine": 116,
+        "startChar": 12,
+        "endLine": 116,
+        "endChar": 23
+      },
+      "revId": "555a38970edf1163a95a3b3065fc7c0b152e118e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ac8a49b3_b45690d7",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/api/impl/ParticipantIntermediaryApiImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2024-08-02T08:34:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "388801cf_5172816f",
       "range": {
         "startLine": 116,
         "startChar": 12,
