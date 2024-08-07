@@ -60,6 +60,68 @@ class SupervisionAcHandlerTest {
     private static final UUID IDENTIFIER = UUID.randomUUID();
 
     @Test
+    void testAutomationCompositionDeployAckNull() {
+        var automationCompositionProvider = mock(AutomationCompositionProvider.class);
+        var handler = new SupervisionAcHandler(automationCompositionProvider, mock(AcDefinitionProvider.class),
+                mock(AutomationCompositionDeployPublisher.class), mock(AutomationCompositionStateChangePublisher.class),
+                mock(AcElementPropertiesPublisher.class), null,
+                mock(ParticipantSyncPublisher.class), null);
+
+        var automationComposition =
+                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Crud");
+        automationComposition.setInstanceId(IDENTIFIER);
+        var automationCompositionAckMessage =
+                getAutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_STATECHANGE_ACK,
+                        automationComposition, DeployState.DEPLOYED, LockState.UNLOCKED);
+        automationCompositionAckMessage.setStateChangeResult(null);
+        handler.handleAutomationCompositionStateChangeAckMessage(automationCompositionAckMessage);
+
+        automationCompositionAckMessage.setStateChangeResult(StateChangeResult.NO_ERROR);
+        automationCompositionAckMessage.setAutomationCompositionId(null);
+        handler.handleAutomationCompositionStateChangeAckMessage(automationCompositionAckMessage);
+
+        automationCompositionAckMessage.setAutomationCompositionId(automationComposition.getInstanceId());
+        handler.handleAutomationCompositionStateChangeAckMessage(automationCompositionAckMessage);
+
+        automationCompositionAckMessage =
+                getAutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_STATECHANGE_ACK,
+                        automationComposition, DeployState.DEPLOYING, LockState.UNLOCKED);
+        handler.handleAutomationCompositionStateChangeAckMessage(automationCompositionAckMessage);
+
+        verify(automationCompositionProvider, times(0)).updateAutomationCompositionElement(any());
+    }
+
+    @Test
+    void testHandleAcMigrationWithStage() {
+        var automationComposition =
+                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Crud");
+        automationComposition.setInstanceId(IDENTIFIER);
+        var automationCompositionProvider = mock(AutomationCompositionProvider.class);
+        when(automationCompositionProvider.findAutomationComposition(IDENTIFIER))
+                .thenReturn(Optional.of(automationComposition));
+        when(automationCompositionProvider.updateAcState(any(AutomationComposition.class)))
+                .thenReturn(automationComposition);
+
+        var acDefinitionProvider = mock(AcDefinitionProvider.class);
+        when(acDefinitionProvider.getAcDefinition(automationComposition.getCompositionId()))
+                .thenReturn(new AutomationCompositionDefinition());
+
+        var handler = new SupervisionAcHandler(automationCompositionProvider, acDefinitionProvider,
+                mock(AutomationCompositionDeployPublisher.class), mock(AutomationCompositionStateChangePublisher.class),
+                mock(AcElementPropertiesPublisher.class), null,
+                mock(ParticipantSyncPublisher.class), null);
+
+        var automationCompositionAckMessage =
+                getAutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_STATECHANGE_ACK,
+                        automationComposition, DeployState.MIGRATING, LockState.LOCKED);
+        automationCompositionAckMessage.setStage(1);
+        handler.handleAutomationCompositionStateChangeAckMessage(automationCompositionAckMessage);
+
+        verify(automationCompositionProvider, times(3))
+                .updateAutomationCompositionElement(any(AutomationCompositionElement.class));
+    }
+
+    @Test
     void testHandleAutomationCompositionStateChangeAckMessage() {
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Crud");
@@ -319,6 +381,7 @@ class SupervisionAcHandlerTest {
         automationCompositionAckMessage
                 .setParticipantId(automationComposition.getElements().values().iterator().next().getParticipantId());
         automationCompositionAckMessage.setAutomationCompositionId(IDENTIFIER);
+        automationCompositionAckMessage.setStateChangeResult(StateChangeResult.NO_ERROR);
 
         var handler = new SupervisionAcHandler(automationCompositionProvider, mock(AcDefinitionProvider.class),
                 mock(AutomationCompositionDeployPublisher.class), mock(AutomationCompositionStateChangePublisher.class),

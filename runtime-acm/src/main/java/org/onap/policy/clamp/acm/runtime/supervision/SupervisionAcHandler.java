@@ -23,7 +23,6 @@ package org.onap.policy.clamp.acm.runtime.supervision;
 import io.micrometer.core.annotation.Timed;
 import io.opentelemetry.context.Context;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
@@ -38,7 +37,6 @@ import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublish
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeployAck;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
@@ -259,10 +257,25 @@ public class SupervisionAcHandler {
     }
 
     private void setAcElementStateInDb(AutomationCompositionDeployAck automationCompositionAckMessage) {
+        if (automationCompositionAckMessage.getAutomationCompositionId() == null
+                || automationCompositionAckMessage.getStateChangeResult() == null) {
+            LOGGER.error("Not valid AutomationCompositionDeployAck message");
+            return;
+        }
+
+        if (automationCompositionAckMessage.getStage() == null) {
+            for (var el : automationCompositionAckMessage.getAutomationCompositionResultMap().values()) {
+                if (AcmUtils.isInTransitionalState(el.getDeployState(), el.getLockState(), SubState.NONE)) {
+                    LOGGER.error("Not valid AutomationCompositionDeployAck message, states are not valid");
+                    return;
+                }
+            }
+        }
+
         var automationCompositionOpt = automationCompositionProvider
                 .findAutomationComposition(automationCompositionAckMessage.getAutomationCompositionId());
         if (automationCompositionOpt.isEmpty()) {
-            LOGGER.warn("AutomationComposition not found in database {}",
+            LOGGER.error("AutomationComposition not found in database {}",
                     automationCompositionAckMessage.getAutomationCompositionId());
             return;
         }
@@ -271,13 +284,7 @@ public class SupervisionAcHandler {
         if (automationCompositionAckMessage.getAutomationCompositionResultMap() == null
                 || automationCompositionAckMessage.getAutomationCompositionResultMap().isEmpty()) {
             if (DeployState.DELETING.equals(automationComposition.getDeployState())) {
-                // scenario when Automation Composition instance has never been deployed
-                for (var element : automationComposition.getElements().values()) {
-                    if (element.getParticipantId().equals(automationCompositionAckMessage.getParticipantId())) {
-                        element.setDeployState(DeployState.DELETED);
-                        automationCompositionProvider.updateAutomationCompositionElement(element);
-                    }
-                }
+                deleteAcInstance(automationComposition, automationCompositionAckMessage.getParticipantId());
             } else {
                 LOGGER.warn("Empty AutomationCompositionResultMap  {} {}",
                         automationCompositionAckMessage.getAutomationCompositionId(),
@@ -293,6 +300,16 @@ public class SupervisionAcHandler {
             automationComposition = automationCompositionProvider.updateAcState(automationComposition);
             var acDefinition = acDefinitionProvider.getAcDefinition(automationComposition.getCompositionId());
             participantSyncPublisher.sendSync(acDefinition.getServiceTemplate(), automationComposition);
+        }
+    }
+
+    private void deleteAcInstance(AutomationComposition automationComposition, UUID participantId) {
+        // scenario when Automation Composition instance has never been deployed
+        for (var element : automationComposition.getElements().values()) {
+            if (element.getParticipantId().equals(participantId)) {
+                element.setDeployState(DeployState.DELETED);
+                automationCompositionProvider.updateAutomationCompositionElement(element);
+            }
         }
     }
 
@@ -313,21 +330,13 @@ public class SupervisionAcHandler {
                 element.setOutProperties(acElementAck.getValue().getOutProperties());
                 element.setOperationalState(acElementAck.getValue().getOperationalState());
                 element.setUseState(acElementAck.getValue().getUseState());
-                element.setSubState(SubState.NONE);
+                if (stage == null) {
+                    element.setSubState(SubState.NONE);
+                }
                 element.setDeployState(acElementAck.getValue().getDeployState());
                 element.setLockState(acElementAck.getValue().getLockState());
                 element.setStage(stage);
-                element.setRestarting(null);
                 automationCompositionProvider.updateAutomationCompositionElement(element);
-            }
-        }
-
-        if (automationComposition.getRestarting() != null) {
-            var restarting = automationComposition.getElements().values().stream()
-                    .map(AutomationCompositionElement::getRestarting).filter(Objects::nonNull).findAny();
-            if (restarting.isEmpty()) {
-                automationComposition.setRestarting(null);
-                updated = true;
             }
         }
 

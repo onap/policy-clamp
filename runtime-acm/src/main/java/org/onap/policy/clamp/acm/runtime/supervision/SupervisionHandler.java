@@ -53,6 +53,17 @@ public class SupervisionHandler {
      */
     @Timed(value = "listener.participant_prime_ack", description = "PARTICIPANT_PRIME_ACK messages received")
     public void handleParticipantMessage(ParticipantPrimeAck participantPrimeAckMessage) {
+        if (participantPrimeAckMessage.getCompositionId() == null
+                || participantPrimeAckMessage.getCompositionState() == null
+                || participantPrimeAckMessage.getStateChangeResult() == null) {
+            LOGGER.error("Not valid ParticipantPrimeAck message");
+            return;
+        }
+        if (AcTypeState.PRIMING.equals(participantPrimeAckMessage.getCompositionState())
+                || AcTypeState.DEPRIMING.equals(participantPrimeAckMessage.getCompositionState())) {
+            LOGGER.error("Not valid state {}", participantPrimeAckMessage.getCompositionState());
+            return;
+        }
         var acDefinitionOpt = acDefinitionProvider.findAcDefinition(participantPrimeAckMessage.getCompositionId());
         if (acDefinitionOpt.isEmpty()) {
             LOGGER.warn("AC Definition not found in database {}", participantPrimeAckMessage.getCompositionId());
@@ -60,7 +71,7 @@ public class SupervisionHandler {
         }
         var acDefinition = acDefinitionOpt.get();
         if (!AcTypeState.PRIMING.equals(acDefinition.getState())
-                && !AcTypeState.DEPRIMING.equals(acDefinition.getState()) && acDefinition.getRestarting() == null) {
+                && !AcTypeState.DEPRIMING.equals(acDefinition.getState())) {
             LOGGER.error("AC Definition {} already primed/deprimed with participant {}",
                     participantPrimeAckMessage.getCompositionId(), participantPrimeAckMessage.getParticipantId());
             return;
@@ -81,14 +92,10 @@ public class SupervisionHandler {
         }
 
         boolean completed = true;
-        boolean restarting = false;
         for (var element : acDefinition.getElementStateMap().values()) {
             handlePrimeAckElement(participantPrimeAckMessage, element);
             if (!finalState.equals(element.getState())) {
                 completed = false;
-            }
-            if (element.getRestarting() != null) {
-                restarting = true;
             }
         }
 
@@ -99,13 +106,9 @@ public class SupervisionHandler {
                 acDefinition.setStateChangeResult(StateChangeResult.NO_ERROR);
             }
         }
-        if (!restarting && acDefinition.getRestarting() != null) {
-            toUpdate = true;
-            acDefinition.setRestarting(null);
-        }
         if (toUpdate) {
             acDefinitionProvider.updateAcDefinitionState(acDefinition.getCompositionId(), acDefinition.getState(),
-                acDefinition.getStateChangeResult(), acDefinition.getRestarting());
+                acDefinition.getStateChangeResult(), null);
             if (!participantPrimeAckMessage.getParticipantId().equals(participantPrimeAckMessage.getReplicaId())) {
                 participantSyncPublisher.sendSync(acDefinition, participantPrimeAckMessage.getReplicaId());
             }
@@ -116,7 +119,6 @@ public class SupervisionHandler {
         if (participantPrimeAckMessage.getParticipantId().equals(element.getParticipantId())) {
             element.setMessage(participantPrimeAckMessage.getMessage());
             element.setState(participantPrimeAckMessage.getCompositionState());
-            element.setRestarting(null);
             acDefinitionProvider.updateAcDefinitionElement(element, participantPrimeAckMessage.getCompositionId());
         }
     }
