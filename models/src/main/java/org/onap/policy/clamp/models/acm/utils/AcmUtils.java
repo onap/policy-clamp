@@ -65,6 +65,8 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Utility functions used in acm-runtime and participants.
@@ -74,6 +76,8 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
 public final class AcmUtils {
     public static final String ENTRY = "entry ";
     private static final StringToMapConverter MAP_CONVERTER = new StringToMapConverter();
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AcmUtils.class);
 
     /**
      * Get the Policy information in the service template for the deploy message to participants.
@@ -536,6 +540,19 @@ public final class AcmUtils {
         return list;
     }
 
+    /**
+     * Validated the Message field.
+     *
+     * @param message the message
+     * @return a validated message
+     */
+    public static String validatedMessage(String message) {
+        if (message != null && message.length() > 255) {
+            LOGGER.warn("message too long {}", message);
+            return message.substring(0, 255);
+        }
+        return message;
+    }
 
     /**
      * Recursive Merge.

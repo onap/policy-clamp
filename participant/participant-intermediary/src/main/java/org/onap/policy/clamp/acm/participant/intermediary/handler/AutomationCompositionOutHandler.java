@@ -42,6 +42,7 @@ import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCom
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessageType;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrimeAck;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantStatus;
+import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,9 +67,7 @@ public class AutomationCompositionOutHandler {
      */
     public void updateAutomationCompositionElementStage(UUID instance, UUID elementId,
         StateChangeResult stateChangeResult, int stage, String message) {
-
-        if (instance == null || elementId == null) {
-            LOGGER.error("Cannot update Automation composition element stage, id is null");
+        if (!validateData(instance, elementId, stateChangeResult)) {
             return;
         }
 
@@ -86,12 +85,10 @@ public class AutomationCompositionOutHandler {
             return;
         }
 
-        element.setRestarting(null);
-
         var automationCompositionStateChangeAck =
             new AutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_STATECHANGE_ACK);
         automationCompositionStateChangeAck.setParticipantId(cacheProvider.getParticipantId());
-        automationCompositionStateChangeAck.setMessage(message);
+        automationCompositionStateChangeAck.setMessage(AcmUtils.validatedMessage(message));
         automationCompositionStateChangeAck.setResponseTo(cacheProvider.getMsgIdentification().get(element.getId()));
         automationCompositionStateChangeAck.setStateChangeResult(stateChangeResult);
         automationCompositionStateChangeAck.setStage(stage);
@@ -103,6 +100,23 @@ public class AutomationCompositionOutHandler {
         automationCompositionStateChangeAck.setResult(true);
         publisher.sendAutomationCompositionAck(automationCompositionStateChangeAck);
         cacheProvider.getMsgIdentification().remove(element.getId());
+    }
+
+    private boolean validateData(UUID instance, UUID elementId, StateChangeResult stateChangeResult) {
+        if (instance == null || elementId == null) {
+            LOGGER.error("Not valid Ac instance, id is null");
+            return false;
+        }
+        if (stateChangeResult == null) {
+            LOGGER.error("Not valid Ac instance, stateChangeResult is null");
+            return false;
+        }
+        if (!StateChangeResult.NO_ERROR.equals(stateChangeResult)
+                && !StateChangeResult.FAILED.equals(stateChangeResult)) {
+            LOGGER.error("Not valid Ac instance, stateChangeResult is not valid");
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -117,9 +131,13 @@ public class AutomationCompositionOutHandler {
      */
     public void updateAutomationCompositionElementState(UUID instance, UUID elementId,
             DeployState deployState, LockState lockState, StateChangeResult stateChangeResult, String message) {
+        if (!validateData(instance, elementId, stateChangeResult)) {
+            return;
+        }
 
-        if (instance == null || elementId == null) {
-            LOGGER.error("Cannot update Automation composition element state, id is null");
+        if ((deployState != null && lockState != null) || (deployState == null && lockState == null)
+                || AcmUtils.isInTransitionalState(deployState, lockState, SubState.NONE)) {
+            LOGGER.error("state error {} and {} cannot be handled", deployState, lockState);
             return;
         }
 
@@ -136,13 +154,6 @@ public class AutomationCompositionOutHandler {
             LOGGER.error(msg, elementId);
             return;
         }
-
-        if ((element.getRestarting() == null)
-                && ((deployState != null && lockState != null) || (deployState == null && lockState == null))) {
-            LOGGER.error("state error {} and {} cannot be handled", deployState, lockState);
-            return;
-        }
-        element.setRestarting(null);
 
         if (deployState != null && !SubState.NONE.equals(element.getSubState())) {
             handleSubState(automationComposition, element);
@@ -161,7 +172,7 @@ public class AutomationCompositionOutHandler {
                 new AutomationCompositionDeployAck(ParticipantMessageType.AUTOMATION_COMPOSITION_STATECHANGE_ACK);
         automationCompositionStateChangeAck.setParticipantId(cacheProvider.getParticipantId());
         automationCompositionStateChangeAck.setReplicaId(cacheProvider.getReplicaId());
-        automationCompositionStateChangeAck.setMessage(message);
+        automationCompositionStateChangeAck.setMessage(AcmUtils.validatedMessage(message));
         automationCompositionStateChangeAck.setResponseTo(cacheProvider.getMsgIdentification().get(element.getId()));
         automationCompositionStateChangeAck.setStateChangeResult(stateChangeResult);
         automationCompositionStateChangeAck.setAutomationCompositionId(instance);
@@ -289,9 +300,29 @@ public class AutomationCompositionOutHandler {
      */
     public void updateCompositionState(UUID compositionId, AcTypeState state, StateChangeResult stateChangeResult,
             String message) {
+        if (compositionId == null) {
+            LOGGER.error("Cannot update Automation composition definition state, id is null");
+            return;
+        }
+
+        if (stateChangeResult == null) {
+            LOGGER.error("Cannot update Automation composition definition state, stateChangeResult is null");
+            return;
+        }
+        if (!StateChangeResult.NO_ERROR.equals(stateChangeResult)
+                && !StateChangeResult.FAILED.equals(stateChangeResult)) {
+            LOGGER.error("Cannot update Automation composition definition state, stateChangeResult is not valid");
+            return;
+        }
+
+        if ((state == null) || AcTypeState.PRIMING.equals(state) || AcTypeState.DEPRIMING.equals(state)) {
+            LOGGER.error("state invalid {} cannot be handled", state);
+            return;
+        }
+
         var participantPrimeAck = new ParticipantPrimeAck();
         participantPrimeAck.setCompositionId(compositionId);
-        participantPrimeAck.setMessage(message);
+        participantPrimeAck.setMessage(AcmUtils.validatedMessage(message));
         participantPrimeAck.setResult(true);
         participantPrimeAck.setResponseTo(cacheProvider.getMsgIdentification().get(compositionId));
         participantPrimeAck.setCompositionState(state);

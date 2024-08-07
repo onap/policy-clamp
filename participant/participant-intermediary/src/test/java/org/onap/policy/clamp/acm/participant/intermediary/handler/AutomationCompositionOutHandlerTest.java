@@ -20,7 +20,6 @@
 
 package org.onap.policy.clamp.acm.participant.intermediary.handler;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -50,13 +49,23 @@ class AutomationCompositionOutHandlerTest {
     @Test
     void updateAutomationCompositionElementStateNullTest() {
         var cacheProvider = mock(CacheProvider.class);
-        var acOutHandler = new AutomationCompositionOutHandler(mock(ParticipantMessagePublisher.class), cacheProvider);
+        var publisher = mock(ParticipantMessagePublisher.class);
+        var acOutHandler = new AutomationCompositionOutHandler(publisher, cacheProvider);
 
         assertDoesNotThrow(
                 () -> acOutHandler.updateAutomationCompositionElementState(null, null, null, null, null, null));
 
+        assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementState(null,
+                UUID.randomUUID(), null, null, null, null));
+
+        assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementState(UUID.randomUUID(),
+                null, null, null, null, null));
+
         assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementState(UUID.randomUUID(),
                 UUID.randomUUID(), null, null, null, null));
+
+        assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementState(UUID.randomUUID(),
+                UUID.randomUUID(), DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, null));
 
         assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementState(UUID.randomUUID(),
                 UUID.randomUUID(), DeployState.DEPLOYED, null, null, null));
@@ -66,20 +75,33 @@ class AutomationCompositionOutHandlerTest {
                 .thenReturn(automationComposition);
         assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementState(
                 automationComposition.getInstanceId(), UUID.randomUUID(), DeployState.DEPLOYED,
-            null, null, null));
+            null, StateChangeResult.NO_ERROR, null));
 
         var elementId = automationComposition.getElements().values().iterator().next().getId();
         assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementState(
-                automationComposition.getInstanceId(), elementId, null, null, null, null));
+                automationComposition.getInstanceId(), elementId, null, null,
+                StateChangeResult.NO_ERROR, null));
 
         assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementStage(
-                elementId, null, null, 0, null));
+                elementId, null, StateChangeResult.NO_ERROR, 0, null));
         assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementStage(
-                null, elementId, null, 0, null));
+                null, elementId, StateChangeResult.NO_ERROR, 0, null));
         assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementStage(
-                UUID.randomUUID(), elementId, null, 0, null));
+                UUID.randomUUID(), elementId, StateChangeResult.NO_ERROR, 0, null));
         assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementStage(
-                automationComposition.getInstanceId(), UUID.randomUUID(), null, 0, null));
+                automationComposition.getInstanceId(), UUID.randomUUID(),
+                StateChangeResult.NO_ERROR, 0, null));
+        assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementState(
+                automationComposition.getInstanceId(), elementId, DeployState.DEPLOYED, LockState.LOCKED,
+                StateChangeResult.NO_ERROR, null));
+        assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementState(
+                automationComposition.getInstanceId(), elementId, DeployState.DEPLOYING, null,
+                StateChangeResult.NO_ERROR, ""));
+        assertDoesNotThrow(() -> acOutHandler.updateAutomationCompositionElementState(
+                automationComposition.getInstanceId(), elementId, DeployState.DEPLOYED, null,
+                StateChangeResult.TIMEOUT, ""));
+
+        verify(publisher, times(0)).sendAutomationCompositionAck(any());
     }
 
     @Test
@@ -144,23 +166,6 @@ class AutomationCompositionOutHandlerTest {
     }
 
     @Test
-    void updateAutomationCompositionElementStateRestartedTest() {
-        var publisher = mock(ParticipantMessagePublisher.class);
-        var cacheProvider = mock(CacheProvider.class);
-        var acOutHandler = new AutomationCompositionOutHandler(publisher, cacheProvider);
-
-        var automationComposition = CommonTestData.getTestAutomationCompositionMap().values().iterator().next();
-        when(cacheProvider.getAutomationComposition(automationComposition.getInstanceId()))
-                .thenReturn(automationComposition);
-        var element = automationComposition.getElements().values().iterator().next();
-        element.setRestarting(true);
-        acOutHandler.updateAutomationCompositionElementState(automationComposition.getInstanceId(), element.getId(),
-                DeployState.DEPLOYED, LockState.LOCKED, StateChangeResult.NO_ERROR, "Restarted");
-        verify(publisher).sendAutomationCompositionAck(any(AutomationCompositionDeployAck.class));
-        assertThat(element.getRestarting()).isNull();
-    }
-
-    @Test
     void updateAutomationCompositionElementStateDeleteTest() {
         var publisher = mock(ParticipantMessagePublisher.class);
         var cacheProvider = mock(CacheProvider.class);
@@ -208,6 +213,28 @@ class AutomationCompositionOutHandlerTest {
         var elementId = automationComposition.getElements().values().iterator().next().getId();
         acOutHandler.sendAcElementInfo(automationComposition.getInstanceId(), elementId, "", "", Map.of());
         verify(publisher).sendParticipantStatus(any(ParticipantStatus.class));
+    }
+
+    @Test
+    void updateCompositionStateNullTest() {
+        var publisher = mock(ParticipantMessagePublisher.class);
+        var cacheProvider = mock(CacheProvider.class);
+        var acOutHandler = new AutomationCompositionOutHandler(publisher, cacheProvider);
+
+        assertDoesNotThrow(
+                () -> acOutHandler.updateCompositionState(null, null, null, null));
+        assertDoesNotThrow(() -> acOutHandler.updateCompositionState(UUID.randomUUID(), null,
+                                StateChangeResult.NO_ERROR, null));
+        assertDoesNotThrow(
+                () -> acOutHandler.updateCompositionState(UUID.randomUUID(), AcTypeState.PRIMED, null, null));
+        assertDoesNotThrow(() -> acOutHandler.updateCompositionState(UUID.randomUUID(), AcTypeState.PRIMING,
+                StateChangeResult.NO_ERROR, null));
+        assertDoesNotThrow(() -> acOutHandler.updateCompositionState(UUID.randomUUID(), AcTypeState.DEPRIMING,
+                StateChangeResult.NO_ERROR, null));
+        assertDoesNotThrow(() -> acOutHandler.updateCompositionState(UUID.randomUUID(), AcTypeState.PRIMED,
+                StateChangeResult.TIMEOUT, null));
+
+        verify(publisher, times(0)).sendParticipantPrimeAck(any());
     }
 
     @Test
