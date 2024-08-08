@@ -23,6 +23,7 @@ package org.onap.policy.clamp.acm.participant.sim.main.handler;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -209,7 +210,7 @@ class AutomationCompositionElementHandlerV3Test {
                 Map.of(), Map.of());
         var instanceElementMigrated = new InstanceElementDto(
                 INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(),
-                null, Map.of("key", "value"), Map.of());
+                null, Map.of("key", "value"), new HashMap<>());
         acElementHandler
                 .migrate(COMPOSITION_ELEMENT, compositionElementTarget, INSTANCE_ELEMENT, instanceElementMigrated, 0);
         verify(intermediaryApi).updateAutomationCompositionElementState(
@@ -233,9 +234,8 @@ class AutomationCompositionElementHandlerV3Test {
         simulatorService.setConfig(config);
         var compositionElementTarget = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
                 Map.of("stage", List.of(1, 2)), Map.of());
-        var instanceElementMigrated = new InstanceElementDto(
-                INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(),
-                null, Map.of(), Map.of());
+        var instanceElementMigrated = new InstanceElementDto(INSTANCE_ELEMENT.instanceId(),
+                INSTANCE_ELEMENT.elementId(), null, Map.of(), new HashMap<>());
         acElementHandler
                 .migrate(COMPOSITION_ELEMENT, compositionElementTarget, INSTANCE_ELEMENT, instanceElementMigrated, 1);
         verify(intermediaryApi).updateAutomationCompositionElementStage(
@@ -258,8 +258,8 @@ class AutomationCompositionElementHandlerV3Test {
 
         var compoElTargetAdd = new CompositionElementDto(
                 UUID.randomUUID(), new ToscaConceptIdentifier(), Map.of(), Map.of(), ElementState.NEW);
-        var inElMigratedAdd = new InstanceElementDto(
-                instanceElement.instanceId(), instanceElement.elementId(), null, Map.of(), Map.of(), ElementState.NEW);
+        var inElMigratedAdd = new InstanceElementDto(instanceElement.instanceId(), instanceElement.elementId(),
+                null, Map.of(), new HashMap<>(), ElementState.NEW);
         acElementHandler
                 .migrate(compositionElement, compoElTargetAdd, instanceElement, inElMigratedAdd, 0);
         verify(intermediaryApi).updateAutomationCompositionElementState(
