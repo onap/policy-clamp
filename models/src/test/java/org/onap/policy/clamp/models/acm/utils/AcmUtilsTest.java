@@ -238,6 +238,16 @@ class AcmUtilsTest {
         assertEquals(element.getOutProperties(), result.getOutProperties());
     }
 
+    @Test
+    void testValidatedMessage() {
+        var message = "completed";
+        assertEquals(message, AcmUtils.validatedMessage(message));
+
+        var serviceTemplate = CommonTestData.getToscaServiceTemplate(TOSCA_TEMPLATE_YAML);
+        message = serviceTemplate.toString();
+        assertEquals(message.substring(0, 255), AcmUtils.validatedMessage(message));
+    }
+
     private AutomationComposition getDummyAutomationComposition() {
         var automationComposition = new AutomationComposition();
         automationComposition.setCompositionId(UUID.randomUUID());

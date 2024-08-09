@@ -28,12 +28,12 @@ import static org.mockito.Mockito.when;
 import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVICE_TEMPLATE_YAML;
 
 import java.util.Optional;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrimeAck;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
@@ -41,22 +41,55 @@ import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvide
 class SupervisionHandlerTest {
 
     @Test
-    void testParticipantPrimeAckNotFound() {
-        var participantPrimeAckMessage = new ParticipantPrimeAck();
-        participantPrimeAckMessage.setParticipantId(CommonTestData.getParticipantId());
-        participantPrimeAckMessage.setState(ParticipantState.ON_LINE);
+    void testParticipantPrimeAckNull() {
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
         var handler = new SupervisionHandler(acDefinitionProvider, mock(ParticipantSyncPublisher.class));
 
+        var participantPrimeAckMessage = new ParticipantPrimeAck();
+        participantPrimeAckMessage.setParticipantId(CommonTestData.getParticipantId());
         handler.handleParticipantMessage(participantPrimeAckMessage);
-        verify(acDefinitionProvider).findAcDefinition(any());
+
+        participantPrimeAckMessage.setCompositionId(UUID.randomUUID());
+        handler.handleParticipantMessage(participantPrimeAckMessage);
+
+        participantPrimeAckMessage.setStateChangeResult(StateChangeResult.NO_ERROR);
+        handler.handleParticipantMessage(participantPrimeAckMessage);
+
+        participantPrimeAckMessage.setStateChangeResult(null);
+        participantPrimeAckMessage.setCompositionState(AcTypeState.PRIMED);
+        handler.handleParticipantMessage(participantPrimeAckMessage);
+
+        participantPrimeAckMessage.setStateChangeResult(StateChangeResult.NO_ERROR);
+        participantPrimeAckMessage.setCompositionState(AcTypeState.PRIMING);
+        handler.handleParticipantMessage(participantPrimeAckMessage);
+
+        participantPrimeAckMessage.setCompositionState(AcTypeState.DEPRIMING);
+        handler.handleParticipantMessage(participantPrimeAckMessage);
+
+        verify(acDefinitionProvider, times(0)).findAcDefinition(any());
+        verify(acDefinitionProvider, times(0)).updateAcDefinitionElement(any(), any());
+    }
+
+    @Test
+    void testParticipantPrimeAckNotFound() {
+        var participantPrimeAckMessage = new ParticipantPrimeAck();
+        participantPrimeAckMessage.setParticipantId(CommonTestData.getParticipantId());
+        participantPrimeAckMessage.setStateChangeResult(StateChangeResult.NO_ERROR);
+        participantPrimeAckMessage.setCompositionId(UUID.randomUUID());
+        participantPrimeAckMessage.setCompositionState(AcTypeState.PRIMED);
+        var acDefinitionProvider = mock(AcDefinitionProvider.class);
+        var handler = new SupervisionHandler(acDefinitionProvider, mock(ParticipantSyncPublisher.class));
+        handler.handleParticipantMessage(participantPrimeAckMessage);
+        verify(acDefinitionProvider).findAcDefinition(participantPrimeAckMessage.getCompositionId());
+        verify(acDefinitionProvider, times(0)).updateAcDefinitionElement(any(), any());
     }
 
     @Test
     void testParticipantPrimeAckPrimed() {
         var participantPrimeAckMessage = new ParticipantPrimeAck();
         participantPrimeAckMessage.setParticipantId(CommonTestData.getParticipantId());
-        participantPrimeAckMessage.setState(ParticipantState.ON_LINE);
+        participantPrimeAckMessage.setStateChangeResult(StateChangeResult.NO_ERROR);
+        participantPrimeAckMessage.setCompositionState(AcTypeState.PRIMED);
 
         var acDefinition = CommonTestData.createAcDefinition(
                 InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML), AcTypeState.PRIMED);
@@ -76,7 +109,7 @@ class SupervisionHandlerTest {
         var participantPrimeAckMessage = new ParticipantPrimeAck();
         participantPrimeAckMessage.setParticipantId(CommonTestData.getParticipantId());
         participantPrimeAckMessage.setCompositionState(AcTypeState.PRIMED);
-        participantPrimeAckMessage.setState(ParticipantState.ON_LINE);
+        participantPrimeAckMessage.setStateChangeResult(StateChangeResult.NO_ERROR);
 
         var acDefinition = CommonTestData.createAcDefinition(
                 InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML), AcTypeState.PRIMING);
@@ -104,7 +137,7 @@ class SupervisionHandlerTest {
     void testParticipantPrimeAckFailed() {
         var participantPrimeAckMessage = new ParticipantPrimeAck();
         participantPrimeAckMessage.setParticipantId(CommonTestData.getParticipantId());
-        participantPrimeAckMessage.setState(ParticipantState.ON_LINE);
+        participantPrimeAckMessage.setCompositionState(AcTypeState.COMMISSIONED);
         participantPrimeAckMessage.setStateChangeResult(StateChangeResult.FAILED);
 
         var acDefinition = CommonTestData.createAcDefinition(
@@ -124,36 +157,5 @@ class SupervisionHandlerTest {
         verify(acDefinitionProvider).updateAcDefinitionElement(any(), any());
         verify(acDefinitionProvider).updateAcDefinitionState(acDefinition.getCompositionId(), AcTypeState.PRIMING,
             StateChangeResult.FAILED, null);
-    }
-
-    @Test
-    void testParticipantPrimeAckRestarted() {
-        var participantPrimeAckMessage = new ParticipantPrimeAck();
-        participantPrimeAckMessage.setParticipantId(CommonTestData.getParticipantId());
-        participantPrimeAckMessage.setCompositionState(AcTypeState.PRIMED);
-        participantPrimeAckMessage.setState(ParticipantState.ON_LINE);
-
-        var acDefinition = CommonTestData.createAcDefinition(
-            InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML), AcTypeState.PRIMED);
-        acDefinition.setStateChangeResult(StateChangeResult.TIMEOUT);
-        acDefinition.setRestarting(true);
-        participantPrimeAckMessage.setCompositionId(acDefinition.getCompositionId());
-        for (var element : acDefinition.getElementStateMap().values()) {
-            element.setParticipantId(CommonTestData.getParticipantId());
-            element.setRestarting(true);
-        }
-
-        var acDefinitionProvider = mock(AcDefinitionProvider.class);
-        when(acDefinitionProvider.findAcDefinition(acDefinition.getCompositionId()))
-            .thenReturn(Optional.of(acDefinition));
-
-        var handler = new SupervisionHandler(acDefinitionProvider, mock(ParticipantSyncPublisher.class));
-
-        handler.handleParticipantMessage(participantPrimeAckMessage);
-        verify(acDefinitionProvider).findAcDefinition(any());
-        verify(acDefinitionProvider, times(acDefinition.getElementStateMap().size()))
-            .updateAcDefinitionElement(any(), any());
-        verify(acDefinitionProvider).updateAcDefinitionState(acDefinition.getCompositionId(), AcTypeState.PRIMED,
-            StateChangeResult.NO_ERROR, null);
     }
 }
