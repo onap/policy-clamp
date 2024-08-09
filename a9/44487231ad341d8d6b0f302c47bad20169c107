@@ -1,0 +1,10 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+2: Ramesh Murugan Iyer <ramesh.murugan.iyer@est.tech>
+Code-Review+1: Adheli Tavares <adheli.tavares@est.tech>
+Code-Review+1: Saul Gill <saul.gill@est.tech>
+Verified+1: ONAP Required GHA <releng+onap.required.gha@linuxfoundation.org>
+Submitted-by: Ramesh Murugan Iyer <ramesh.murugan.iyer@est.tech>
+Submitted-at: Fri, 09 Aug 2024 16:10:33 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/policy/clamp/+/138647
+Project: policy/clamp
+Branch: refs/heads/master
