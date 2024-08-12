@@ -20,14 +20,17 @@
 
 package org.onap.policy.clamp.models.acm.persistence.repository;
 
+import jakarta.persistence.LockModeType;
 import java.util.List;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationCompositionElement;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.query.QueryByExampleExecutor;
+import org.springframework.data.jpa.repository.Lock;
 
-public interface AutomationCompositionElementRepository extends
-    JpaRepository<JpaAutomationCompositionElement, String>,
-    QueryByExampleExecutor<JpaAutomationCompositionElement> {
+public interface AutomationCompositionElementRepository extends JpaRepository<JpaAutomationCompositionElement, String> {
+
+    @Override
+    @Lock(LockModeType.PESSIMISTIC_READ)
+    JpaAutomationCompositionElement getReferenceById(String id);
 
     List<JpaAutomationCompositionElement> findByParticipantId(String participantId);
 }
