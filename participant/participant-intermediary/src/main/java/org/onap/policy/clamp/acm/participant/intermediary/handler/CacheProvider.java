@@ -287,10 +287,16 @@ public class CacheProvider {
      */
     public Map<UUID, CompositionElementDto> getCompositionElementDtoMap(AutomationComposition automationComposition,
             UUID compositionId) {
+        var definitions = acElementsDefinitions.get(compositionId);
         Map<UUID, CompositionElementDto> map = new HashMap<>();
         for (var element : automationComposition.getElements().values()) {
-            var compositionInProperties = getCommonProperties(compositionId, element.getDefinition());
-            var compositionElement = createCompositionElementDto(compositionId, element, compositionInProperties);
+            var definition = definitions.get(element.getDefinition());
+            var compositionElement = (definition != null)
+                    ? new CompositionElementDto(compositionId, element.getDefinition(),
+                            definition.getAutomationCompositionElementToscaNodeTemplate().getProperties(),
+                            definition.getOutProperties()) :
+                    new CompositionElementDto(compositionId, element.getDefinition(),
+                            Map.of(), Map.of(), ElementState.NOT_PRESENT);
             map.put(element.getId(), compositionElement);
         }
         return map;
