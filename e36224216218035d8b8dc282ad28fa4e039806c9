@@ -24,6 +24,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2cf8ba17_211f6307",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/persistence/repository/AutomationCompositionElementRepository.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2024-08-14T09:17:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "850bf239_d8b4791b",
+      "range": {
+        "startLine": 3,
+        "startChar": 17,
+        "endLine": 3,
+        "endChar": 21
+      },
+      "revId": "e36224216218035d8b8dc282ad28fa4e039806c9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "21a2673d_89406c47",
@@ -37,6 +61,30 @@
       "writtenOn": "2024-08-14T08:08:50Z",
       "side": 1,
       "message": "should this be annotated with @NotNull?",
+      "range": {
+        "startLine": 31,
+        "startChar": 4,
+        "endLine": 33,
+        "endChar": 64
+      },
+      "revId": "e36224216218035d8b8dc282ad28fa4e039806c9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2bf75ad9_6407503c",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/persistence/repository/AutomationCompositionElementRepository.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2024-08-14T09:17:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "21a2673d_89406c47",
       "range": {
         "startLine": 31,
         "startChar": 4,
