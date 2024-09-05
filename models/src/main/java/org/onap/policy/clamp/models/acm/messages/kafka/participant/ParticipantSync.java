@@ -20,17 +20,32 @@
 
 package org.onap.policy.clamp.models.acm.messages.kafka.participant;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantRestartAc;
+import org.onap.policy.models.base.PfUtils;
 
 @Getter
 @Setter
 @ToString(callSuper = true)
-public class ParticipantSync extends ParticipantRestart {
+public class ParticipantSync extends ParticipantMessage {
+
+    // composition state
+    private AcTypeState state;
+
+    // element definition
+    private List<ParticipantDefinition> participantDefinitionUpdates = new ArrayList<>();
+
+    // automation composition instances list
+    private List<ParticipantRestartAc> automationcompositionList = new ArrayList<>();
 
     private Set<UUID> excludeReplicas = new HashSet<>();
     private boolean restarting = false;
@@ -50,6 +65,10 @@ public class ParticipantSync extends ParticipantRestart {
      */
     public ParticipantSync(ParticipantSync source) {
         super(source);
+        this.state = source.state;
+        this.participantDefinitionUpdates =
+                PfUtils.mapList(source.participantDefinitionUpdates, ParticipantDefinition::new);
+        this.automationcompositionList = PfUtils.mapList(source.automationcompositionList, ParticipantRestartAc::new);
         this.excludeReplicas = new HashSet<>(source.excludeReplicas);
         this.restarting = source.restarting;
         this.delete = source.delete;

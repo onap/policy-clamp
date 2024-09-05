@@ -114,7 +114,7 @@ public class SupervisionHandler {
         }
         if (toUpdate) {
             acDefinitionProvider.updateAcDefinitionState(acDefinition.getCompositionId(), acDefinition.getState(),
-                acDefinition.getStateChangeResult(), null);
+                acDefinition.getStateChangeResult());
             if (!participantPrimeAckMessage.getParticipantId().equals(participantPrimeAckMessage.getReplicaId())) {
                 participantSyncPublisher.sendSync(acDefinition, participantPrimeAckMessage.getReplicaId());
             }

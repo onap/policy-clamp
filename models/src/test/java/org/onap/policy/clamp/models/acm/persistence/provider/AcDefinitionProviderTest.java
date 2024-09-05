@@ -83,7 +83,7 @@ class AcDefinitionProviderTest {
                 .hasMessageStartingWith("\"AutomationCompositionDefinition\" INVALID, item has status INVALID");
 
         assertThatThrownBy(() -> acDefinitionProvider.updateAcDefinitionState(compositionId, AcTypeState.PRIMED,
-                StateChangeResult.NO_ERROR, false))
+                StateChangeResult.NO_ERROR))
                 .hasMessageStartingWith("update of Automation Composition Definition");
     }
 
@@ -195,7 +195,7 @@ class AcDefinitionProviderTest {
         when(acmDefinitionRepository.findById(acmDefinition.getCompositionId().toString()))
             .thenReturn(Optional.of(jpa));
         acDefinitionProvider.updateAcDefinitionState(acmDefinition.getCompositionId(), AcTypeState.PRIMED,
-            StateChangeResult.NO_ERROR, false);
+            StateChangeResult.NO_ERROR);
         verify(acmDefinitionRepository).save(jpa);
     }
 

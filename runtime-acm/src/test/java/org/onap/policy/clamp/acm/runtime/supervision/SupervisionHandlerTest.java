@@ -130,7 +130,7 @@ class SupervisionHandlerTest {
         verify(acDefinitionProvider, times(acDefinition.getElementStateMap().size()))
             .updateAcDefinitionElement(any(), any());
         verify(acDefinitionProvider).updateAcDefinitionState(acDefinition.getCompositionId(), AcTypeState.PRIMED,
-            StateChangeResult.NO_ERROR, null);
+            StateChangeResult.NO_ERROR);
     }
 
     @Test
@@ -156,6 +156,6 @@ class SupervisionHandlerTest {
         verify(acDefinitionProvider).findAcDefinition(any());
         verify(acDefinitionProvider).updateAcDefinitionElement(any(), any());
         verify(acDefinitionProvider).updateAcDefinitionState(acDefinition.getCompositionId(), AcTypeState.PRIMING,
-            StateChangeResult.FAILED, null);
+            StateChangeResult.FAILED);
     }
 }

@@ -30,7 +30,6 @@ import org.apache.commons.collections4.MapUtils;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantDeregisterAckPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantRegisterAckPublisher;
-import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantRestartPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
@@ -40,7 +39,6 @@ import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantReplica;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
-import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantDeregister;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRegister;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantStatus;
@@ -65,7 +63,6 @@ public class SupervisionParticipantHandler {
     private final ParticipantDeregisterAckPublisher participantDeregisterAckPublisher;
     private final AutomationCompositionProvider automationCompositionProvider;
     private final AcDefinitionProvider acDefinitionProvider;
-    private final ParticipantRestartPublisher participantRestartPublisher;
     private final ParticipantSyncPublisher participantSyncPublisher;
     private final AcRuntimeParameterGroup acRuntimeParameterGroup;
 
@@ -183,61 +180,11 @@ public class SupervisionParticipantHandler {
 
     private void handleRestart(UUID participantId, UUID replicaId) {
         var compositionIds = participantProvider.getCompositionIds(participantId);
-        var oldParticipant = participantId.equals(replicaId);
         for (var compositionId : compositionIds) {
             var acDefinition = acDefinitionProvider.getAcDefinition(compositionId);
             LOGGER.debug("Scan Composition {} for restart", acDefinition.getCompositionId());
-            if (oldParticipant) {
-                handleRestart(participantId, acDefinition);
-            } else {
-                handleSyncRestart(participantId, replicaId, acDefinition);
-            }
+            handleSyncRestart(participantId, replicaId, acDefinition);
         }
-    }
-
-    private void handleRestart(final UUID participantId, AutomationCompositionDefinition acDefinition) {
-        if (AcTypeState.COMMISSIONED.equals(acDefinition.getState())) {
-            LOGGER.debug("Composition {} COMMISSIONED", acDefinition.getCompositionId());
-            return;
-        }
-        LOGGER.debug("Composition to be send in Restart message {}", acDefinition.getCompositionId());
-        for (var elementState : acDefinition.getElementStateMap().values()) {
-            if (participantId.equals(elementState.getParticipantId())) {
-                elementState.setRestarting(true);
-            }
-        }
-        // expected final state
-        if (StateChangeResult.TIMEOUT.equals(acDefinition.getStateChangeResult())) {
-            acDefinition.setStateChangeResult(StateChangeResult.NO_ERROR);
-        }
-        acDefinition.setRestarting(true);
-        acDefinitionProvider.updateAcDefinition(acDefinition,
-                acRuntimeParameterGroup.getAcmParameters().getToscaCompositionName());
-
-        var automationCompositionList =
-                automationCompositionProvider.getAcInstancesByCompositionId(acDefinition.getCompositionId());
-        var automationCompositions = automationCompositionList.stream()
-                .filter(ac -> isAcToBeRestarted(participantId, ac)).toList();
-        participantRestartPublisher.send(participantId, acDefinition, automationCompositions);
-    }
-
-    private boolean isAcToBeRestarted(UUID participantId, AutomationComposition automationComposition) {
-        boolean toAdd = false;
-        for (var element : automationComposition.getElements().values()) {
-            if (participantId.equals(element.getParticipantId())) {
-                element.setRestarting(true);
-                toAdd = true;
-            }
-        }
-        if (toAdd) {
-            automationComposition.setRestarting(true);
-            // expected final state
-            if (StateChangeResult.TIMEOUT.equals(automationComposition.getStateChangeResult())) {
-                automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
-            }
-            automationCompositionProvider.updateAutomationComposition(automationComposition);
-        }
-        return toAdd;
     }
 
     private void handleSyncRestart(final UUID participantId, UUID replicaId,

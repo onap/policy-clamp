@@ -126,7 +126,7 @@ public class SupervisionScanner {
         }
         if (completed) {
             acDefinitionProvider.updateAcDefinitionState(acDefinition.getCompositionId(), finalState,
-                StateChangeResult.NO_ERROR, null);
+                StateChangeResult.NO_ERROR);
             participantSyncPublisher.sendSync(acDefinition, null);
         } else {
             handleTimeout(acDefinition);
@@ -299,7 +299,7 @@ public class SupervisionScanner {
             LOGGER.debug("Report timeout for the ac definition {}", acDefinition.getCompositionId());
             acDefinition.setStateChangeResult(StateChangeResult.TIMEOUT);
             acDefinitionProvider.updateAcDefinitionState(acDefinition.getCompositionId(),
-                acDefinition.getState(), acDefinition.getStateChangeResult(), acDefinition.getRestarting());
+                acDefinition.getState(), acDefinition.getStateChangeResult());
         }
     }
 

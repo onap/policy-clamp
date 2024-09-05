@@ -108,7 +108,7 @@ class SupervisionScannerTest {
                 mock(AutomationCompositionStateChangePublisher.class), mock(AutomationCompositionDeployPublisher.class),
                 mock(ParticipantSyncPublisher.class), null, acRuntimeParameterGroup);
         supervisionScanner.run();
-        verify(acDefinitionProvider, times(0)).updateAcDefinitionState(any(), any(), any(), any());
+        verify(acDefinitionProvider, times(0)).updateAcDefinitionState(any(), any(), any());
     }
 
     @Test
@@ -121,7 +121,7 @@ class SupervisionScannerTest {
                 mock(ParticipantSyncPublisher.class), null, acRuntimeParameterGroup);
         supervisionScanner.run();
         // Ac Definition in Priming state
-        verify(acDefinitionProvider, times(0)).updateAcDefinitionState(any(), any(), any(), any());
+        verify(acDefinitionProvider, times(0)).updateAcDefinitionState(any(), any(), any());
 
         acRuntimeParameterGroup.getParticipantParameters().setMaxStatusWaitMs(-1);
         supervisionScanner = new SupervisionScanner(mock(AutomationCompositionProvider.class), acDefinitionProvider,
@@ -130,13 +130,13 @@ class SupervisionScannerTest {
         supervisionScanner.run();
         // set Timeout
         verify(acDefinitionProvider).updateAcDefinitionState(acDefinition.getCompositionId(), acDefinition.getState(),
-            StateChangeResult.TIMEOUT, null);
+            StateChangeResult.TIMEOUT);
 
         clearInvocations(acDefinitionProvider);
         acDefinition.setStateChangeResult(StateChangeResult.TIMEOUT);
         supervisionScanner.run();
         // already in Timeout
-        verify(acDefinitionProvider, times(0)).updateAcDefinitionState(any(), any(), any(), any());
+        verify(acDefinitionProvider, times(0)).updateAcDefinitionState(any(), any(), any());
 
         clearInvocations(acDefinitionProvider);
         // retry by the user
@@ -144,7 +144,7 @@ class SupervisionScannerTest {
         supervisionScanner.run();
         // set Timeout
         verify(acDefinitionProvider).updateAcDefinitionState(acDefinition.getCompositionId(), acDefinition.getState(),
-            StateChangeResult.TIMEOUT, null);
+            StateChangeResult.TIMEOUT);
 
         clearInvocations(acDefinitionProvider);
         for (var element : acDefinition.getElementStateMap().values()) {
@@ -153,7 +153,7 @@ class SupervisionScannerTest {
         supervisionScanner.run();
         // completed
         verify(acDefinitionProvider).updateAcDefinitionState(acDefinition.getCompositionId(), AcTypeState.PRIMED,
-            StateChangeResult.NO_ERROR, null);
+            StateChangeResult.NO_ERROR);
     }
 
     @Test

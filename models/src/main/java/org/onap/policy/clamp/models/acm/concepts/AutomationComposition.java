@@ -44,8 +44,6 @@ public class AutomationComposition extends ToscaEntity implements Comparable<Aut
 
     private UUID compositionTargetId;
 
-    private Boolean restarting;
-
     private Boolean precheck;
 
     @NonNull
@@ -75,7 +73,6 @@ public class AutomationComposition extends ToscaEntity implements Comparable<Aut
         this.instanceId = otherAutomationComposition.instanceId;
         this.compositionId = otherAutomationComposition.compositionId;
         this.compositionTargetId = otherAutomationComposition.compositionTargetId;
-        this.restarting = otherAutomationComposition.restarting;
         this.precheck = otherAutomationComposition.precheck;
         this.deployState = otherAutomationComposition.deployState;
         this.lockState = otherAutomationComposition.lockState;

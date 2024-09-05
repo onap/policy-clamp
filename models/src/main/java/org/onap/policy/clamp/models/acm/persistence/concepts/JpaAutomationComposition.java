@@ -87,9 +87,6 @@ public class JpaAutomationComposition extends Validated
     private String compositionTargetId;
 
     @Column
-    private Boolean restarting;
-
-    @Column
     @NotNull
     private DeployState deployState;
 
@@ -163,7 +160,6 @@ public class JpaAutomationComposition extends Validated
         this.version = copyConcept.version;
         this.compositionId = copyConcept.compositionId;
         this.compositionTargetId = copyConcept.compositionTargetId;
-        this.restarting = copyConcept.restarting;
         this.deployState = copyConcept.deployState;
         this.lockState = copyConcept.lockState;
         this.lastMsg = copyConcept.lastMsg;
@@ -194,7 +190,6 @@ public class JpaAutomationComposition extends Validated
         if (compositionTargetId != null) {
             automationComposition.setCompositionTargetId(UUID.fromString(compositionTargetId));
         }
-        automationComposition.setRestarting(restarting);
         automationComposition.setDeployState(deployState);
         automationComposition.setLockState(lockState);
         automationComposition.setLastMsg(lastMsg.toString());
@@ -235,7 +230,6 @@ public class JpaAutomationComposition extends Validated
         if (automationComposition.getCompositionTargetId() != null) {
             this.compositionTargetId = automationComposition.getCompositionTargetId().toString();
         }
-        this.restarting = automationComposition.getRestarting();
         this.deployState = automationComposition.getDeployState();
         this.lockState = automationComposition.getLockState();
         this.lastMsg = TimestampHelper.toTimestamp(automationComposition.getLastMsg());
@@ -285,11 +279,6 @@ public class JpaAutomationComposition extends Validated
         }
 
         result = ObjectUtils.compare(compositionTargetId, other.compositionTargetId);
-        if (result != 0) {
-            return result;
-        }
-
-        result = ObjectUtils.compare(restarting, other.restarting);
         if (result != 0) {
             return result;
         }

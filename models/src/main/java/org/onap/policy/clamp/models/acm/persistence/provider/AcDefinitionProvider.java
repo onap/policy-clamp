@@ -138,10 +138,8 @@ public class AcDefinitionProvider {
      * @param compositionId The UUID of the automation composition definition to update
      * @param state the AcTypeState
      * @param stateChangeResult the StateChangeResult
-     * @param restarting restarting process
      */
-    public void updateAcDefinitionState(UUID compositionId, AcTypeState state, StateChangeResult stateChangeResult,
-                                      Boolean restarting) {
+    public void updateAcDefinitionState(UUID compositionId, AcTypeState state, StateChangeResult stateChangeResult) {
         var jpaUpdate = acmDefinitionRepository.findById(compositionId.toString());
         if (jpaUpdate.isEmpty()) {
             String errorMessage = "update of Automation Composition Definition \"" + compositionId
@@ -151,7 +149,6 @@ public class AcDefinitionProvider {
         var acDefinition = jpaUpdate.get();
         acDefinition.setState(state);
         acDefinition.setStateChangeResult(stateChangeResult);
-        acDefinition.setRestarting(restarting);
         acmDefinitionRepository.save(acDefinition);
         acmDefinitionRepository.flush();
     }

@@ -213,11 +213,6 @@ class JpaAutomationCompositionTest {
         jpaAutomationComposition.setDescription(null);
         assertEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
 
-        jpaAutomationComposition.setRestarting(true);
-        assertNotEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-        jpaAutomationComposition.setRestarting(null);
-        assertEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
-
         jpaAutomationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
         assertNotEquals(0, jpaAutomationComposition.compareTo(otherJpaAutomationComposition));
         jpaAutomationComposition.setStateChangeResult(null);

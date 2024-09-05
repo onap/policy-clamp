@@ -188,10 +188,6 @@ public class CommissioningProvider {
             throw new PfModelRuntimeException(Status.BAD_REQUEST, "There are instances, Priming/Depriming not allowed");
         }
         var acmDefinition = acDefinitionProvider.getAcDefinition(compositionId);
-        if (acmDefinition.getRestarting() != null) {
-            throw new PfModelRuntimeException(Status.BAD_REQUEST,
-                    "There is a restarting process, Priming/Depriming not allowed");
-        }
         var stateOrdered = acTypeStateResolver.resolve(acTypeStateUpdate.getPrimeOrder(), acmDefinition.getState(),
                 acmDefinition.getStateChangeResult());
         switch (stateOrdered) {
