@@ -36,6 +36,9 @@ import org.onap.policy.clamp.acm.participant.policy.client.PolicyApiHttpClient;
 import org.onap.policy.clamp.acm.participant.policy.client.PolicyPapHttpClient;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
+import org.onap.policy.common.utils.coder.Coder;
+import org.onap.policy.common.utils.coder.CoderException;
+import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.pdp.concepts.DeploymentSubGroup;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -51,6 +54,7 @@ import org.springframework.stereotype.Component;
 public class AutomationCompositionElementHandler extends AcElementListenerV2 {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AutomationCompositionElementHandler.class);
+    private static final Coder CODER = new StandardCoder();
 
     private final PolicyApiHttpClient apiHttpClient;
     private final PolicyPapHttpClient papHttpClient;
@@ -79,7 +83,7 @@ public class AutomationCompositionElementHandler extends AcElementListenerV2 {
     @Override
     public void undeploy(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
             throws PfModelException {
-        var automationCompositionDefinition = instanceElement.toscaServiceTemplateFragment();
+        var automationCompositionDefinition = getToscaServiceTemplate(instanceElement.inProperties());
         if (automationCompositionDefinition.getToscaTopologyTemplate() == null) {
             LOGGER.debug("No policies to undeploy to {}", instanceElement.elementId());
             intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
@@ -161,7 +165,7 @@ public class AutomationCompositionElementHandler extends AcElementListenerV2 {
         var createPolicyTypeResp = HttpStatus.SC_OK;
         var createPolicyResp = HttpStatus.SC_OK;
 
-        var automationCompositionDefinition = instanceElement.toscaServiceTemplateFragment();
+        var automationCompositionDefinition = getToscaServiceTemplate(instanceElement.inProperties());
         if (automationCompositionDefinition.getToscaTopologyTemplate() == null) {
             intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
                     instanceElement.elementId(), DeployState.UNDEPLOYED, null, StateChangeResult.FAILED,
@@ -221,5 +225,13 @@ public class AutomationCompositionElementHandler extends AcElementListenerV2 {
         }
 
         return policyList;
+    }
+
+    private ToscaServiceTemplate getToscaServiceTemplate(Map<String, Object> properties) throws PfModelException {
+        try {
+            return  CODER.convert(properties, ToscaServiceTemplate.class);
+        } catch (CoderException e) {
+            throw new PfModelException(Status.BAD_REQUEST, e.getMessage());
+        }
     }
 }

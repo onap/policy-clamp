@@ -55,7 +55,8 @@ public class AcElementRestart {
     private String operationalState;
     private String useState;
 
-    private ToscaServiceTemplate toscaServiceTemplateFragment;
+    // backward compatibility
+    private ToscaServiceTemplate toscaServiceTemplateFragment = new ToscaServiceTemplate();
 
     // A map indexed by the property name. Each map entry is the serialized value of the property,
     // which can be deserialized into an instance of the type of the property.

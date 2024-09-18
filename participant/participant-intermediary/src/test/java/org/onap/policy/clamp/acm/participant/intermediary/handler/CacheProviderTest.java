@@ -29,6 +29,9 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ElementState;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
+import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class CacheProviderTest {
@@ -43,16 +46,35 @@ class CacheProviderTest {
     }
 
     @Test
+    void testInitializeAutomationCompositionNotNull() {
+        var parameter = CommonTestData.getParticipantParameters();
+        var cacheProvider = new CacheProvider(parameter);
+        var instanceId = UUID.randomUUID();
+        var participantDeploy = new ParticipantDeploy();
+
+        assertThatThrownBy(() -> cacheProvider.initializeAutomationComposition(null, instanceId, participantDeploy))
+                .isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> cacheProvider.initializeAutomationComposition(instanceId, null, participantDeploy))
+                .isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> cacheProvider.initializeAutomationComposition(instanceId, instanceId, null))
+                .isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> cacheProvider.initializeAutomationComposition(null, null))
+                .isInstanceOf(NullPointerException.class);
+
+        var deployState = DeployState.DEPLOYED;
+        var subState = SubState.NONE;
+
+        assertThatThrownBy(() -> cacheProvider.initializeAutomationComposition(null, instanceId, participantDeploy,
+                deployState, subState)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> cacheProvider.initializeAutomationComposition(instanceId, null, participantDeploy,
+                deployState, subState)).isInstanceOf(NullPointerException.class);
+    }
+
+    @Test
     void testNotNull() {
         var parameter = CommonTestData.getParticipantParameters();
         var cacheProvider = new CacheProvider(parameter);
         var instanceId = UUID.randomUUID();
-        assertThatThrownBy(() -> cacheProvider.initializeAutomationComposition(null, null, null))
-                .isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> cacheProvider.initializeAutomationComposition(instanceId, null, null))
-                .isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> cacheProvider.initializeAutomationComposition(instanceId, instanceId, null))
-                .isInstanceOf(NullPointerException.class);
 
         assertThatThrownBy(() -> cacheProvider.addElementDefinition(null, null))
                 .isInstanceOf(NullPointerException.class);
@@ -64,6 +86,8 @@ class CacheProviderTest {
         var definition = new ToscaConceptIdentifier();
         assertThatThrownBy(() -> cacheProvider.getCommonProperties(null, definition))
                 .isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> cacheProvider.getCommonProperties(instanceId, (ToscaConceptIdentifier) null))
+                .isInstanceOf(NullPointerException.class);
         assertThatThrownBy(() -> cacheProvider.getCommonProperties(instanceId, (UUID) null))
                 .isInstanceOf(NullPointerException.class);
         assertThatThrownBy(() -> cacheProvider.getCommonProperties(null, instanceId))
@@ -73,9 +97,6 @@ class CacheProviderTest {
                 .isInstanceOf(NullPointerException.class);
 
         assertThatThrownBy(() -> cacheProvider.removeElementDefinition(null)).isInstanceOf(NullPointerException.class);
-
-        assertThatThrownBy(() -> cacheProvider.initializeAutomationComposition(null, null))
-                .isInstanceOf(NullPointerException.class);
     }
 
     @Test

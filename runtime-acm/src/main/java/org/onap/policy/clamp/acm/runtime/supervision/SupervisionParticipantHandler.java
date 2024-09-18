@@ -110,8 +110,7 @@ public class SupervisionParticipantHandler {
                 participantStatusMsg.getParticipantSupportedElementType(), false);
 
         if (!participantStatusMsg.getAutomationCompositionInfoList().isEmpty()) {
-            updateAcOutProperties(participantStatusMsg.getAutomationCompositionInfoList(),
-                participantStatusMsg.getCompositionId());
+            updateAcOutProperties(participantStatusMsg.getAutomationCompositionInfoList());
         }
         if (!participantStatusMsg.getParticipantDefinitionUpdates().isEmpty()
                 && participantStatusMsg.getCompositionId() != null) {
@@ -152,13 +151,11 @@ public class SupervisionParticipantHandler {
 
     }
 
-    private void updateAcOutProperties(List<AutomationCompositionInfo> automationCompositionInfoList,
-            UUID compositionId) {
+    private void updateAcOutProperties(List<AutomationCompositionInfo> automationCompositionInfoList) {
         automationCompositionProvider.upgradeStates(automationCompositionInfoList);
-        var acDefinition = acDefinitionProvider.getAcDefinition(compositionId);
         for (var acInfo : automationCompositionInfoList) {
             var ac = automationCompositionProvider.getAutomationComposition(acInfo.getAutomationCompositionId());
-            participantSyncPublisher.sendSync(acDefinition.getServiceTemplate(), ac);
+            participantSyncPublisher.sendSync(ac);
         }
     }
 
