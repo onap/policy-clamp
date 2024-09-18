@@ -23,6 +23,7 @@ package org.onap.policy.clamp.acm.runtime.supervision.comm;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.clearInvocations;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -263,10 +264,14 @@ class SupervisionMessagesTest {
         var topicSink = mock(TopicSink.class);
         publisher.active(topicSink);
 
-        var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_UPDATE_JSON, "Crud");
-        publisher.sendSync(serviceTemplate, automationComposition);
+        publisher.sendSync(automationComposition);
+        verify(topicSink).send(anyString());
+
+        clearInvocations(topicSink);
+        automationComposition.setDeployState(DeployState.DELETED);
+        publisher.sendSync(automationComposition);
         verify(topicSink).send(anyString());
     }
 

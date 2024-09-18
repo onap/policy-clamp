@@ -199,10 +199,8 @@ public class CommonTestData {
      * @return an InstanceElementDto
      */
     public InstanceElementDto createInstanceElementDto(Map<String, Object> inProperties) {
-        return new InstanceElementDto(getAutomationCompositionId(), UUID.randomUUID(),
-                new ToscaServiceTemplate(), inProperties, new HashMap<>());
+        return new InstanceElementDto(getAutomationCompositionId(), UUID.randomUUID(), inProperties, new HashMap<>());
     }
-
 
     /**
      * Create an compositionElementDto.

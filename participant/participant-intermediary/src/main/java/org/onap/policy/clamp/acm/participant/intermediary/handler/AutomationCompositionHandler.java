@@ -167,7 +167,6 @@ public class AutomationCompositionHandler {
                 var compositionElement = cacheProvider.createCompositionElementDto(
                         automationComposition.getCompositionId(), element, compositionInProperties);
                 var instanceElement = new InstanceElementDto(instanceId, elementDeploy.getId(),
-                    elementDeploy.getToscaServiceTemplateFragment(),
                     elementDeploy.getProperties(), element.getOutProperties());
                 listener.deploy(messageId, compositionElement, instanceElement);
             }
@@ -249,8 +248,6 @@ public class AutomationCompositionHandler {
             Integer startPhaseMsg) {
         automationComposition.setCompositionTargetId(null);
         automationComposition.setDeployState(DeployState.UNDEPLOYING);
-        var serviceTemplateFragment = cacheProvider
-                .getServiceTemplateFragmentMap().get(automationComposition.getCompositionId());
         for (var element : automationComposition.getElements().values()) {
             var compositionInProperties = cacheProvider
                 .getCommonProperties(automationComposition.getCompositionId(), element.getDefinition());
@@ -260,7 +257,7 @@ public class AutomationCompositionHandler {
                 var compositionElement = cacheProvider.createCompositionElementDto(
                         automationComposition.getCompositionId(), element, compositionInProperties);
                 var instanceElement = new InstanceElementDto(automationComposition.getInstanceId(), element.getId(),
-                        serviceTemplateFragment, element.getProperties(), element.getOutProperties());
+                        element.getProperties(), element.getOutProperties());
                 listener.undeploy(messageId, compositionElement, instanceElement);
             }
         }
@@ -269,8 +266,6 @@ public class AutomationCompositionHandler {
     private void handleDeleteState(UUID messageId, final AutomationComposition automationComposition,
             Integer startPhaseMsg) {
         automationComposition.setDeployState(DeployState.DELETING);
-        var serviceTemplateFragment = cacheProvider
-                .getServiceTemplateFragmentMap().get(automationComposition.getCompositionId());
         for (var element : automationComposition.getElements().values()) {
             var compositionInProperties = cacheProvider
                 .getCommonProperties(automationComposition.getCompositionId(), element.getDefinition());
@@ -281,7 +276,7 @@ public class AutomationCompositionHandler {
                 var compositionElement = cacheProvider.createCompositionElementDto(
                         automationComposition.getCompositionId(), element, compositionInProperties);
                 var instanceElement = new InstanceElementDto(automationComposition.getInstanceId(), element.getId(),
-                        serviceTemplateFragment, element.getProperties(), element.getOutProperties());
+                        element.getProperties(), element.getOutProperties());
                 listener.delete(messageId, compositionElement, instanceElement);
             }
         }
@@ -338,7 +333,7 @@ public class AutomationCompositionHandler {
                             new CompositionElementDto(acCopy.getCompositionId(), acElement.getDefinition(),
                                     Map.of(), Map.of(), ElementState.NOT_PRESENT);
                     var instanceElementDto = new InstanceElementDto(acCopy.getInstanceId(), acElement.getId(),
-                            null, Map.of(), Map.of(), ElementState.NOT_PRESENT);
+                            Map.of(), Map.of(), ElementState.NOT_PRESENT);
                     var compositionElementTargetDto = CacheProvider.changeStateToNew(
                             compositionElementTargetMap.get(acElement.getId()));
                     var instanceElementMigrateDto = CacheProvider
@@ -358,12 +353,10 @@ public class AutomationCompositionHandler {
             // Call migrate for removed elements
             List<UUID> removedElements = findElementsToRemove(acElements, acCopy.getElements());
             for (var elementId : removedElements) {
-                var compositionDtoTarget =
-                        new CompositionElementDto(compositionTargetId,
+                var compositionDtoTarget = new CompositionElementDto(compositionTargetId,
                                 acCopy.getElements().get(elementId).getDefinition(),
                                 Map.of(), Map.of(), ElementState.REMOVED);
-                var instanceDtoTarget =
-                        new InstanceElementDto(acCopy.getInstanceId(), elementId, null, Map.of(),
+                var instanceDtoTarget = new InstanceElementDto(acCopy.getInstanceId(), elementId, Map.of(),
                                 Map.of(), ElementState.REMOVED);
 
                 listener.migrate(messageId, compositionElementMap.get(elementId), compositionDtoTarget,

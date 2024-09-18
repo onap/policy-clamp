@@ -101,6 +101,11 @@ class AutomationCompositionHandlerTest {
         for (var element : automationComposition.getElements().values()) {
             assertEquals(DeployState.UNDEPLOYING, element.getDeployState());
         }
+
+        clearInvocations(listener);
+        automationCompositionStateChange.setStartPhase(2);
+        ach.handleAutomationCompositionStateChange(automationCompositionStateChange);
+        verify(listener, times(0)).undeploy(any(), any(), any());
     }
 
     @Test
@@ -127,6 +132,11 @@ class AutomationCompositionHandlerTest {
         for (var element : automationComposition.getElements().values()) {
             assertEquals(DeployState.DELETING, element.getDeployState());
         }
+
+        clearInvocations(listener);
+        automationCompositionStateChange.setStartPhase(2);
+        ach.handleAutomationCompositionStateChange(automationCompositionStateChange);
+        verify(listener, times(0)).delete(any(), any(), any());
     }
 
     @Test
@@ -197,6 +207,12 @@ class AutomationCompositionHandlerTest {
 
         ach.handleAutomationCompositionDeploy(deployMsg);
         verify(listener, times(automationComposition.getElements().size())).deploy(any(), any(), any());
+
+        clearInvocations(listener);
+        deployMsg.setStartPhase(2);
+        deployMsg.setFirstStartPhase(false);
+        ach.handleAutomationCompositionDeploy(deployMsg);
+        verify(listener, times(0)).deploy(any(), any(), any());
     }
 
     @Test
@@ -340,5 +356,4 @@ class AutomationCompositionHandlerTest {
         ach.handleAutomationCompositionMigration(migrationMsg);
         verify(listener, times(expectedMigrated)).migrate(any(), any(), any(), any(), any(), anyInt());
     }
-
 }

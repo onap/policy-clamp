@@ -45,7 +45,7 @@ class AutomationCompositionElementHandlerV3Test {
     private static final CompositionElementDto COMPOSITION_ELEMENT =
             new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(), Map.of(), Map.of());
     private static final InstanceElementDto INSTANCE_ELEMENT =
-            new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), null, Map.of(), Map.of());
+            new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), Map.of(), Map.of());
     private static final CompositionDto COMPOSITION = new CompositionDto(UUID.randomUUID(), Map.of(), Map.of());
 
     @Test
@@ -132,7 +132,7 @@ class AutomationCompositionElementHandlerV3Test {
         var acElementHandler = new AutomationCompositionElementHandlerV3(intermediaryApi, simulatorService);
         simulatorService.setConfig(config);
         var instanceElementUpdated = new InstanceElementDto(
-                INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(), null,
+                INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(),
                 Map.of("key", "value"), Map.of());
         acElementHandler.update(COMPOSITION_ELEMENT, INSTANCE_ELEMENT, instanceElementUpdated);
         verify(intermediaryApi).updateAutomationCompositionElementState(
@@ -210,7 +210,7 @@ class AutomationCompositionElementHandlerV3Test {
                 Map.of(), Map.of());
         var instanceElementMigrated = new InstanceElementDto(
                 INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(),
-                null, Map.of("key", "value"), new HashMap<>());
+                Map.of("key", "value"), new HashMap<>());
         acElementHandler
                 .migrate(COMPOSITION_ELEMENT, compositionElementTarget, INSTANCE_ELEMENT, instanceElementMigrated, 0);
         verify(intermediaryApi).updateAutomationCompositionElementState(
@@ -235,7 +235,7 @@ class AutomationCompositionElementHandlerV3Test {
         var compositionElementTarget = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
                 Map.of("stage", List.of(1, 2)), Map.of());
         var instanceElementMigrated = new InstanceElementDto(INSTANCE_ELEMENT.instanceId(),
-                INSTANCE_ELEMENT.elementId(), null, Map.of(), new HashMap<>());
+                INSTANCE_ELEMENT.elementId(), Map.of(), new HashMap<>());
         acElementHandler
                 .migrate(COMPOSITION_ELEMENT, compositionElementTarget, INSTANCE_ELEMENT, instanceElementMigrated, 1);
         verify(intermediaryApi).updateAutomationCompositionElementStage(
@@ -254,12 +254,12 @@ class AutomationCompositionElementHandlerV3Test {
                 UUID.randomUUID(), new ToscaConceptIdentifier(), Map.of(), Map.of(), ElementState.NOT_PRESENT);
 
         var instanceElement = new InstanceElementDto(
-                UUID.randomUUID(), UUID.randomUUID(), null, Map.of(), Map.of(), ElementState.NOT_PRESENT);
+                UUID.randomUUID(), UUID.randomUUID(), Map.of(), Map.of(), ElementState.NOT_PRESENT);
 
         var compoElTargetAdd = new CompositionElementDto(
                 UUID.randomUUID(), new ToscaConceptIdentifier(), Map.of(), Map.of(), ElementState.NEW);
         var inElMigratedAdd = new InstanceElementDto(instanceElement.instanceId(), instanceElement.elementId(),
-                null, Map.of(), new HashMap<>(), ElementState.NEW);
+                Map.of(), new HashMap<>(), ElementState.NEW);
         acElementHandler
                 .migrate(compositionElement, compoElTargetAdd, instanceElement, inElMigratedAdd, 0);
         verify(intermediaryApi).updateAutomationCompositionElementState(
@@ -279,7 +279,7 @@ class AutomationCompositionElementHandlerV3Test {
                 Map.of(), Map.of(), ElementState.REMOVED);
         var inElMigratedRemove = new InstanceElementDto(
                 INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(),
-                null, Map.of("key", "value"), Map.of(), ElementState.REMOVED);
+                Map.of("key", "value"), Map.of(), ElementState.REMOVED);
         acElementHandler
                 .migrate(COMPOSITION_ELEMENT, compoElTargetRemove, INSTANCE_ELEMENT, inElMigratedRemove, 0);
         verify(intermediaryApi).updateAutomationCompositionElementState(
@@ -301,7 +301,7 @@ class AutomationCompositionElementHandlerV3Test {
                 Map.of(), Map.of());
         var instanceElementMigrated = new InstanceElementDto(
                 INSTANCE_ELEMENT.instanceId(), INSTANCE_ELEMENT.elementId(),
-                null, Map.of("key", "value"), Map.of());
+                Map.of("key", "value"), Map.of());
         acElementHandler.migratePrecheck(COMPOSITION_ELEMENT, compositionElementTarget,
                 INSTANCE_ELEMENT, instanceElementMigrated);
         verify(intermediaryApi).updateAutomationCompositionElementState(

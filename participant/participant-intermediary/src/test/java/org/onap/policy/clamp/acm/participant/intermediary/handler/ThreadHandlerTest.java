@@ -98,7 +98,7 @@ class ThreadHandlerTest {
             var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
                 properties, properties);
             var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(),
-                    null, properties, properties);
+                properties, properties);
             var messageId = UUID.randomUUID();
             threadHandler.deploy(messageId, compositionElement, instanceElement);
             verify(listener, timeout(TIMEOUT)).deploy(compositionElement, instanceElement);
@@ -108,7 +108,7 @@ class ThreadHandlerTest {
             var elementId = UUID.randomUUID();
             element.setId(elementId);
             var instanceElementUpdated = new InstanceElementDto(instanceElement.instanceId(),
-                instanceElement.elementId(), null, properties, properties);
+                instanceElement.elementId(), properties, properties);
             threadHandler.update(messageId, compositionElement, instanceElement, instanceElementUpdated);
             verify(listener, timeout(TIMEOUT)).update(compositionElement, instanceElement, instanceElementUpdated);
 
@@ -142,7 +142,7 @@ class ThreadHandlerTest {
                 properties, properties);
             var instanceId = UUID.randomUUID();
             var elementId = UUID.randomUUID();
-            var instanceElement = new InstanceElementDto(instanceId, elementId, null, properties, properties);
+            var instanceElement = new InstanceElementDto(instanceId, elementId, properties, properties);
             var element = new AcElementDeploy();
             element.setId(elementId);
             doThrow(new PfModelException(Status.INTERNAL_SERVER_ERROR, "Error")).when(listener)
@@ -155,7 +155,7 @@ class ThreadHandlerTest {
 
             clearInvocations(listener);
             var instanceElementUpdated = new InstanceElementDto(instanceElement.instanceId(),
-                instanceElement.elementId(), null, properties, properties);
+                instanceElement.elementId(), properties, properties);
             doThrow(new PfModelException(Status.INTERNAL_SERVER_ERROR, "Error")).when(listener)
                 .update(compositionElement, instanceElement, instanceElementUpdated);
             threadHandler.update(messageId, compositionElement, instanceElement, instanceElementUpdated);
@@ -203,7 +203,7 @@ class ThreadHandlerTest {
             var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
                 properties, properties);
             var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(),
-                null, properties, properties);
+                properties, properties);
             var messageId = UUID.randomUUID();
             threadHandler.lock(messageId, compositionElement, instanceElement);
             verify(listener, timeout(TIMEOUT)).lock(compositionElement, instanceElement);
@@ -229,7 +229,7 @@ class ThreadHandlerTest {
                 properties, properties);
             var instanceId = UUID.randomUUID();
             var elementId = UUID.randomUUID();
-            var instanceElement = new InstanceElementDto(instanceId, elementId, null, properties, properties);
+            var instanceElement = new InstanceElementDto(instanceId, elementId, properties, properties);
             var element = new AcElementDeploy();
             element.setId(elementId);
             var messageId = UUID.randomUUID();
@@ -258,7 +258,7 @@ class ThreadHandlerTest {
             var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
                 properties, properties);
             var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(),
-                null, properties, properties);
+                properties, properties);
             var messageId = UUID.randomUUID();
             threadHandler.prepare(messageId, compositionElement, instanceElement);
             verify(listener, timeout(TIMEOUT)).prepare(compositionElement, instanceElement);
@@ -269,7 +269,7 @@ class ThreadHandlerTest {
 
             clearInvocations(listener);
             var instanceElementMigrate = new InstanceElementDto(instanceElement.instanceId(),
-                instanceElement.elementId(), null, properties, properties);
+                instanceElement.elementId(), properties, properties);
             var compositionTargetId = UUID.randomUUID();
             var compositionElementTarget = new CompositionElementDto(compositionTargetId, new ToscaConceptIdentifier(),
                 properties, properties);
@@ -291,7 +291,7 @@ class ThreadHandlerTest {
                 properties, properties);
             var instanceId = UUID.randomUUID();
             var elementId = UUID.randomUUID();
-            var instanceElement = new InstanceElementDto(instanceId, elementId, null, properties, properties);
+            var instanceElement = new InstanceElementDto(instanceId, elementId, properties, properties);
             var element = new AcElementDeploy();
             element.setId(elementId);
             doThrow(new PfModelException(Status.INTERNAL_SERVER_ERROR, "Error")).when(listener)
@@ -315,7 +315,7 @@ class ThreadHandlerTest {
             var compositionElementTarget = new CompositionElementDto(compositionTargetId, new ToscaConceptIdentifier(),
                 properties, properties);
             var instanceElementMigrate = new InstanceElementDto(instanceElement.instanceId(),
-                instanceElement.elementId(), null, properties, properties);
+                instanceElement.elementId(), properties, properties);
             doThrow(new PfModelException(Status.INTERNAL_SERVER_ERROR, "Error")).when(listener)
                 .migratePrecheck(compositionElement, compositionElementTarget, instanceElement, instanceElementMigrate);
             threadHandler.migratePrecheck(messageId, compositionElement, compositionElementTarget,

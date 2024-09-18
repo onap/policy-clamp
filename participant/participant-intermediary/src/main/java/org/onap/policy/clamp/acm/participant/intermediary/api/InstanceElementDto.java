@@ -24,12 +24,16 @@ import java.util.Map;
 import java.util.UUID;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
-public record InstanceElementDto(UUID instanceId, UUID elementId, ToscaServiceTemplate toscaServiceTemplateFragment,
-                                 Map<String, Object> inProperties, Map<String, Object> outProperties,
-                                 ElementState state) {
+public record InstanceElementDto(UUID instanceId, UUID elementId,
+            Map<String, Object> inProperties, Map<String, Object> outProperties, ElementState state) {
 
     public InstanceElementDto(UUID instanceId, UUID elementId, ToscaServiceTemplate toscaServiceTemplateFragment,
-                              Map<String, Object> inProperties, Map<String, Object> outProperties) {
-        this(instanceId, elementId, toscaServiceTemplateFragment, inProperties, outProperties, ElementState.PRESENT);
+            Map<String, Object> inProperties, Map<String, Object> outProperties) {
+        this(instanceId, elementId, inProperties, outProperties, ElementState.PRESENT);
+    }
+
+    public InstanceElementDto(UUID instanceId, UUID elementId,
+            Map<String, Object> inProperties, Map<String, Object> outProperties) {
+        this(instanceId, elementId, inProperties, outProperties, ElementState.PRESENT);
     }
 }

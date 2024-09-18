@@ -35,7 +35,6 @@ import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionMigration;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionPrepare;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -120,7 +119,7 @@ public class AcSubStateHandler {
                 compositionElement = new CompositionElementDto(automationComposition.getCompositionId(),
                         acElement.getDefinition(), Map.of(), Map.of(), ElementState.NOT_PRESENT);
                 instanceElement = new InstanceElementDto(automationComposition.getInstanceId(), acElement.getId(),
-                        new ToscaServiceTemplate(), Map.of(), Map.of(), ElementState.NOT_PRESENT);
+                        Map.of(), Map.of(), ElementState.NOT_PRESENT);
                 compositionElementTarget = CacheProvider.changeStateToNew(compositionElementTarget);
                 instanceElementMigrate = CacheProvider.changeStateToNew(instanceElementMigrate);
             }
@@ -136,7 +135,7 @@ public class AcSubStateHandler {
                             Map.of(), Map.of(), ElementState.REMOVED);
             var instanceDtoTarget =
                     new InstanceElementDto(automationComposition.getInstanceId(), elementId,
-                            null, Map.of(), Map.of(), ElementState.REMOVED);
+                            Map.of(), Map.of(), ElementState.REMOVED);
 
             listener.migratePrecheck(messageId, compositionElementMap.get(elementId), compositionDtoTarget,
                     instanceElementMap.get(elementId), instanceDtoTarget);
@@ -176,7 +175,6 @@ public class AcSubStateHandler {
             var compositionElement = cacheProvider.createCompositionElementDto(automationComposition.getCompositionId(),
                 element, compositionInProperties);
             var instanceElement = new InstanceElementDto(instanceId, elementDeploy.getId(),
-                elementDeploy.getToscaServiceTemplateFragment(),
                 elementDeploy.getProperties(), element.getOutProperties());
             listener.prepare(messageId, compositionElement, instanceElement);
         }
@@ -190,7 +188,7 @@ public class AcSubStateHandler {
             var compositionElement = cacheProvider.createCompositionElementDto(automationComposition.getCompositionId(),
                 element, compositionInProperties);
             var instanceElement = new InstanceElementDto(automationComposition.getInstanceId(), element.getId(),
-                null, element.getProperties(), element.getOutProperties());
+                element.getProperties(), element.getOutProperties());
             listener.review(messageId, compositionElement, instanceElement);
         }
     }

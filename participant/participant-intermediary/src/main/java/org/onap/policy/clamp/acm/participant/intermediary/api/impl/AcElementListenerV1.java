@@ -61,7 +61,6 @@ public abstract class AcElementListenerV1
         var element = new AcElementDeploy();
         element.setId(instanceElement.elementId());
         element.setDefinition(compositionElement.elementDefinitionId());
-        element.setToscaServiceTemplateFragment(instanceElement.toscaServiceTemplateFragment());
         element.setProperties(instanceElement.inProperties());
         Map<String, Object> properties = new HashMap<>(instanceElement.inProperties());
         properties.putAll(compositionElement.inProperties());

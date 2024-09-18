@@ -158,7 +158,7 @@ public class SupervisionParticipantHandler {
         var acDefinition = acDefinitionProvider.getAcDefinition(compositionId);
         for (var acInfo : automationCompositionInfoList) {
             var ac = automationCompositionProvider.getAutomationComposition(acInfo.getAutomationCompositionId());
-            participantSyncPublisher.sendSync(acDefinition.getServiceTemplate(), ac);
+            participantSyncPublisher.sendSync(ac);
         }
     }
 
