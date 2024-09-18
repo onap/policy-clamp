@@ -33,7 +33,6 @@ import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantRestartAc;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantSync;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -67,10 +66,9 @@ public class ParticipantSyncPublisher extends AbstractParticipantPublisher<Parti
         message.setState(acmDefinition.getState());
         message.setParticipantDefinitionUpdates(AcmUtils.prepareParticipantRestarting(participantId, acmDefinition,
                 acRuntimeParameterGroup.getAcmParameters().getToscaElementName()));
-        var toscaServiceTemplateFragment = AcmUtils.getToscaServiceTemplateFragment(acmDefinition.getServiceTemplate());
 
         for (var automationComposition : automationCompositions) {
-            var syncAc = AcmUtils.createAcRestart(automationComposition, participantId, toscaServiceTemplateFragment);
+            var syncAc = AcmUtils.createAcRestart(automationComposition, participantId);
             message.getAutomationcompositionList().add(syncAc);
         }
 
@@ -117,11 +115,10 @@ public class ParticipantSyncPublisher extends AbstractParticipantPublisher<Parti
     /**
      * Send AutomationComposition sync msg to all Participants.
      *
-     * @param serviceTemplate the ServiceTemplate
      * @param automationComposition the automationComposition
      */
     @Timed(value = "publisher.participant_sync_msg", description = "Participant Sync published")
-    public void sendSync(ToscaServiceTemplate serviceTemplate, AutomationComposition automationComposition) {
+    public void sendSync(AutomationComposition automationComposition) {
         var message = new ParticipantSync();
         message.setCompositionId(automationComposition.getCompositionId());
         message.setAutomationCompositionId(automationComposition.getInstanceId());
@@ -136,10 +133,8 @@ public class ParticipantSyncPublisher extends AbstractParticipantPublisher<Parti
         if (DeployState.DELETED.equals(automationComposition.getDeployState())) {
             message.setDelete(true);
         } else {
-            var toscaServiceTemplateFragment = AcmUtils.getToscaServiceTemplateFragment(serviceTemplate);
             for (var element : automationComposition.getElements().values()) {
                 var acElementSync = AcmUtils.createAcElementRestart(element);
-                acElementSync.setToscaServiceTemplateFragment(toscaServiceTemplateFragment);
                 syncAc.getAcElementList().add(acElementSync);
 
             }

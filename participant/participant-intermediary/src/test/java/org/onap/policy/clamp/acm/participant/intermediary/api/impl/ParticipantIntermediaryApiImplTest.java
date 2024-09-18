@@ -29,6 +29,7 @@ import static org.mockito.Mockito.when;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.AutomationCompositionOutHandler;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.CacheProvider;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
@@ -40,6 +41,7 @@ import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 class ParticipantIntermediaryApiImplTest {
 
@@ -147,5 +149,14 @@ class ParticipantIntermediaryApiImplTest {
 
         element = apiImpl.getAcElementDefinition(COMPOSITION_ID, DEFINITION_ELEMENT_ID);
         assertEquals(acElementDefinition, element);
+    }
+
+    @Test
+    void testInstanceElementDto() {
+        // test InstanceElementDto with toscaServiceTemplateFragment
+        var instanceElementDto = new InstanceElementDto(COMPOSITION_ID, ELEMENT_ID, new ToscaServiceTemplate(),
+                Map.of(), Map.of());
+        assertEquals(COMPOSITION_ID, instanceElementDto.instanceId());
+        assertEquals(ELEMENT_ID, instanceElementDto.elementId());
     }
 }

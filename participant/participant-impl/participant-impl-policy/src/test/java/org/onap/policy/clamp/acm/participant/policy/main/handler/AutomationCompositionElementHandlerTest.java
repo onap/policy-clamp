@@ -22,6 +22,7 @@ package org.onap.policy.clamp.acm.participant.policy.main.handler;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.clearInvocations;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -38,6 +39,9 @@ import org.onap.policy.clamp.acm.participant.policy.client.PolicyApiHttpClient;
 import org.onap.policy.clamp.acm.participant.policy.client.PolicyPapHttpClient;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
+import org.onap.policy.common.utils.coder.Coder;
+import org.onap.policy.common.utils.coder.CoderException;
+import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicy;
@@ -46,6 +50,8 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
 
 class AutomationCompositionElementHandlerTest {
+
+    private static final Coder CODER = new StandardCoder();
 
     private static final ToscaConceptIdentifier DEFINITION =
             new ToscaConceptIdentifier("1.0.1", "org.onap.PM_CDS_Blueprint");
@@ -74,7 +80,17 @@ class AutomationCompositionElementHandlerTest {
         template.setToscaTopologyTemplate(new ToscaTopologyTemplate());
         template.getToscaTopologyTemplate().setPolicies(List.of(Map.of("DummyPolicy", new ToscaPolicy())));
         template.setPolicyTypes(Map.of("dummy policy type", new ToscaPolicyType()));
-        return new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), template, Map.of(), Map.of());
+        var inProperties = getProperties(template);
+        return new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), inProperties, Map.of());
+    }
+
+    private Map<String, Object> getProperties(ToscaServiceTemplate template) {
+        try {
+            var json = CODER.encode(template);
+            return CODER.decode(json, Map.class);
+        } catch (CoderException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test
@@ -98,6 +114,7 @@ class AutomationCompositionElementHandlerTest {
                 instanceElement.elementId(), DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR,
                 "Deployed");
 
+        clearInvocations(intermediaryApi);
         handler.undeploy(compositionElement, instanceElement);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
                 instanceElement.elementId(), DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR,
@@ -116,12 +133,33 @@ class AutomationCompositionElementHandlerTest {
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
                 instanceElement.elementId(), DeployState.UNDEPLOYED, null, StateChangeResult.FAILED,
                 "ToscaTopologyTemplate not defined");
+
+        clearInvocations(intermediaryApi);
+        instanceElement = getInstanceElementWithNoPolicy();
+        handler.deploy(compositionElement, instanceElement);
+        verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
+                instanceElement.elementId(), DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR,
+                "Deployed");
+
+        clearInvocations(intermediaryApi);
+        handler.undeploy(compositionElement, instanceElement);
+        verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
+                instanceElement.elementId(), DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR,
+                "Undeployed");
     }
 
     private InstanceElementDto getInstanceElementWithNullTopology() {
         var template = new ToscaServiceTemplate();
         template.setToscaTopologyTemplate(null);
-        return new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), template, Map.of(), Map.of());
+        var inProperties = getProperties(template);
+        return new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), inProperties, Map.of());
+    }
+
+    private InstanceElementDto getInstanceElementWithNoPolicy() {
+        var template = new ToscaServiceTemplate();
+        template.setToscaTopologyTemplate(new ToscaTopologyTemplate());
+        var inProperties = getProperties(template);
+        return new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), inProperties, Map.of());
     }
 
     @Test

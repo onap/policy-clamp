@@ -54,7 +54,6 @@ import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 class SupervisionScannerTest {
 
@@ -282,7 +281,7 @@ class SupervisionScannerTest {
         automationComposition.setLastMsg(TimestampHelper.now());
         scannerObj2.run();
         verify(automationCompositionProvider).updateAcState(any(AutomationComposition.class));
-        verify(participantSyncPublisher).sendSync(any(ToscaServiceTemplate.class), any(AutomationComposition.class));
+        verify(participantSyncPublisher).sendSync(any(AutomationComposition.class));
         assertEquals(StateChangeResult.TIMEOUT, automationComposition.getStateChangeResult());
 
         //already in TIMEOUT
@@ -291,7 +290,7 @@ class SupervisionScannerTest {
         scannerObj2.run();
         verify(automationCompositionProvider, times(0)).updateAutomationComposition(any(AutomationComposition.class));
         verify(participantSyncPublisher, times(0))
-                .sendSync(any(ToscaServiceTemplate.class), any(AutomationComposition.class));
+                .sendSync(any(AutomationComposition.class));
 
         clearInvocations(automationCompositionProvider);
         clearInvocations(participantSyncPublisher);
@@ -300,7 +299,7 @@ class SupervisionScannerTest {
         }
         scannerObj2.run();
         verify(automationCompositionProvider).updateAcState(any(AutomationComposition.class));
-        verify(participantSyncPublisher).sendSync(any(ToscaServiceTemplate.class), any(AutomationComposition.class));
+        verify(participantSyncPublisher).sendSync(any(AutomationComposition.class));
         assertEquals(StateChangeResult.NO_ERROR, automationComposition.getStateChangeResult());
     }
 
@@ -334,8 +333,7 @@ class SupervisionScannerTest {
 
         supervisionScanner.run();
 
-        verify(automationCompositionDeployPublisher).send(any(AutomationComposition.class),
-                any(ToscaServiceTemplate.class), anyInt(), anyBoolean());
+        verify(automationCompositionDeployPublisher).send(any(AutomationComposition.class), anyInt(), anyBoolean());
     }
 
     @Test
@@ -370,8 +368,8 @@ class SupervisionScannerTest {
 
         supervisionScanner.run();
 
-        verify(automationCompositionDeployPublisher, times(0)).send(any(AutomationComposition.class),
-                any(ToscaServiceTemplate.class), anyInt(), anyBoolean());
+        verify(automationCompositionDeployPublisher, times(0))
+                .send(any(AutomationComposition.class), anyInt(), anyBoolean());
     }
 
     @Test

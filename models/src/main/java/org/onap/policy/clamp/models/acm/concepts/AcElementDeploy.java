@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2023 Nordix Foundation.
+ * Copyright (C) 2023-2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,7 +51,8 @@ public class AcElementDeploy {
     @NonNull
     private DeployOrder orderedState = DeployOrder.DEPLOY;
 
-    private ToscaServiceTemplate toscaServiceTemplateFragment;
+    // backward compatibility
+    private ToscaServiceTemplate toscaServiceTemplateFragment = new ToscaServiceTemplate();
 
     // A map indexed by the property name. Each map entry is the serialized value of the property,
     // which can be deserialized into an instance of the type of the property.

@@ -119,24 +119,6 @@ class AcmUtilsTest {
     }
 
     @Test
-    void testCommonUtilsServiceTemplate() {
-        var toscaServiceTemplate = getDummyToscaServiceTemplate();
-        var toscaServiceTemplateFragment = AcmUtils.getToscaServiceTemplateFragment(toscaServiceTemplate);
-        assertEquals(getDummyToscaDataTypeMap(), toscaServiceTemplateFragment.getDataTypes());
-    }
-
-    @Test
-    void testSetServiceTemplatePolicyInfoWithNullInfo() {
-        var toscaServiceTemplate = getDummyToscaServiceTemplate();
-        toscaServiceTemplate.setPolicyTypes(null);
-        toscaServiceTemplate.getToscaTopologyTemplate().setPolicies(null);
-        var toscaServiceTemplateFragment = AcmUtils.getToscaServiceTemplateFragment(toscaServiceTemplate);
-        assertNull(toscaServiceTemplateFragment.getPolicyTypes());
-        assertNull(toscaServiceTemplateFragment.getToscaTopologyTemplate());
-        assertNull(toscaServiceTemplateFragment.getDataTypes());
-    }
-
-    @Test
     void testValidateAutomationComposition() {
         var automationComposition = getDummyAutomationComposition();
         var toscaServiceTemplate = getDummyToscaServiceTemplate();
@@ -312,10 +294,12 @@ class AcmUtilsTest {
     void testcreateAcRestart() {
         var automationComposition = getDummyAutomationComposition();
         automationComposition.setInstanceId(UUID.randomUUID());
-        var toscaServiceTemplate = getDummyToscaServiceTemplate();
-        var participantId = automationComposition.getElements().values().iterator().next().getParticipantId();
-        var serviceTemplateFragment = AcmUtils.getToscaServiceTemplateFragment(toscaServiceTemplate);
-        var result = AcmUtils.createAcRestart(automationComposition, participantId, serviceTemplateFragment);
+        var element = automationComposition.getElements().values().iterator().next();
+        var secondElement = new AutomationCompositionElement(element);
+        secondElement.setParticipantId(UUID.randomUUID());
+        secondElement.setId(UUID.randomUUID());
+        automationComposition.getElements().put(secondElement.getId(), secondElement);
+        var result = AcmUtils.createAcRestart(automationComposition, element.getParticipantId());
         assertEquals(result.getAutomationCompositionId(), automationComposition.getInstanceId());
         assertThat(result.getAcElementList()).hasSize(1);
     }

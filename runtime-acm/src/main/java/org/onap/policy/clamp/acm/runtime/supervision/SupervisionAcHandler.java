@@ -43,7 +43,6 @@ import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeployAck;
-import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
@@ -61,7 +60,6 @@ public class SupervisionAcHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(SupervisionAcHandler.class);
 
     private final AutomationCompositionProvider automationCompositionProvider;
-    private final AcDefinitionProvider acDefinitionProvider;
 
     // Publishers for participant communication
     private final AutomationCompositionDeployPublisher automationCompositionDeployPublisher;
@@ -96,8 +94,7 @@ public class SupervisionAcHandler {
         automationComposition.setPhase(startPhase);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         executor.execute(
-            () -> automationCompositionDeployPublisher.send(automationComposition, acDefinition.getServiceTemplate(),
-                startPhase, true));
+            () -> automationCompositionDeployPublisher.send(automationComposition, startPhase, true));
     }
 
     /**
@@ -287,8 +284,7 @@ public class SupervisionAcHandler {
                 automationCompositionAckMessage.getStateChangeResult(), automationCompositionAckMessage.getStage());
         if (updated) {
             automationComposition = automationCompositionProvider.updateAcState(automationComposition);
-            var acDefinition = acDefinitionProvider.getAcDefinition(automationComposition.getCompositionId());
-            participantSyncPublisher.sendSync(acDefinition.getServiceTemplate(), automationComposition);
+            participantSyncPublisher.sendSync(automationComposition);
         }
     }
 
