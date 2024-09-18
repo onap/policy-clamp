@@ -46,7 +46,6 @@ import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -73,9 +72,6 @@ public class CacheProvider {
 
     @Getter
     private final Map<UUID, UUID> msgIdentification = new ConcurrentHashMap<>();
-
-    @Getter
-    private final Map<UUID, ToscaServiceTemplate> serviceTemplateFragmentMap = new ConcurrentHashMap<>();
 
     /**
      * Constructor.
@@ -127,7 +123,6 @@ public class CacheProvider {
 
     public void removeElementDefinition(@NonNull UUID compositionId) {
         acElementsDefinitions.remove(compositionId);
-        serviceTemplateFragmentMap.remove(compositionId);
     }
 
     /**
@@ -206,9 +201,6 @@ public class CacheProvider {
                 acElement.setOutProperties(acElementLast.getOutProperties());
                 acElement.setOperationalState(acElementLast.getOperationalState());
                 acElement.setUseState(acElementLast.getUseState());
-                if (element.getToscaServiceTemplateFragment() != null) {
-                    serviceTemplateFragmentMap.put(compositionId, element.getToscaServiceTemplateFragment());
-                }
             }
             acElementMap.put(element.getId(), acElement);
         }
@@ -246,9 +238,6 @@ public class CacheProvider {
             acElement.setProperties(element.getProperties());
             acElement.setOutProperties(element.getOutProperties());
             acElementMap.put(element.getId(), acElement);
-            if (element.getToscaServiceTemplateFragment() != null) {
-                serviceTemplateFragmentMap.put(compositionId, element.getToscaServiceTemplateFragment());
-            }
         }
 
         var automationComposition = new AutomationComposition();
@@ -329,10 +318,9 @@ public class CacheProvider {
      */
     public Map<UUID, InstanceElementDto> getInstanceElementDtoMap(AutomationComposition automationComposition) {
         Map<UUID, InstanceElementDto> map = new HashMap<>();
-        var serviceTemplateFragment = serviceTemplateFragmentMap.get(automationComposition.getCompositionId());
         for (var element : automationComposition.getElements().values()) {
             var instanceElement = new InstanceElementDto(automationComposition.getInstanceId(), element.getId(),
-                    serviceTemplateFragment, element.getProperties(), element.getOutProperties());
+                    element.getProperties(), element.getOutProperties());
             map.put(element.getId(), instanceElement);
         }
         return map;
@@ -346,7 +334,6 @@ public class CacheProvider {
      */
     public static InstanceElementDto changeStateToNew(InstanceElementDto instanceElement) {
         return new InstanceElementDto(instanceElement.instanceId(), instanceElement.elementId(),
-                instanceElement.toscaServiceTemplateFragment(),
                 instanceElement.inProperties(), instanceElement.outProperties(), ElementState.NEW);
     }
 

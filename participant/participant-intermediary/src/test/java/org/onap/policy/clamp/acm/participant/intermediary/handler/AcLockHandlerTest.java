@@ -23,6 +23,7 @@ package org.onap.policy.clamp.acm.participant.intermediary.handler;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.clearInvocations;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -81,6 +82,11 @@ class AcLockHandlerTest {
         for (var element : automationComposition.getElements().values()) {
             assertEquals(LockState.LOCKING, element.getLockState());
         }
+
+        clearInvocations(listener);
+        automationCompositionStateChange.setStartPhase(2);
+        ach.handleAutomationCompositionStateChange(automationCompositionStateChange);
+        verify(listener, times(0)).lock(any(), any(), any());
     }
 
     @Test
@@ -108,5 +114,10 @@ class AcLockHandlerTest {
         for (var element : automationComposition.getElements().values()) {
             assertEquals(LockState.UNLOCKING, element.getLockState());
         }
+
+        clearInvocations(listener);
+        automationCompositionStateChange.setStartPhase(2);
+        ach.handleAutomationCompositionStateChange(automationCompositionStateChange);
+        verify(listener, times(0)).unlock(any(), any(), any());
     }
 }

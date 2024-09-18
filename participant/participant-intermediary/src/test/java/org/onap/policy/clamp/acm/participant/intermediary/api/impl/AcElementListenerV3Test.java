@@ -45,7 +45,7 @@ class AcElementListenerV3Test {
         var acElementListenerV2 = createAcElementListenerV3(intermediaryApi);
         var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
             Map.of(), Map.of());
-        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), null, Map.of(), Map.of());
+        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), Map.of(), Map.of());
         acElementListenerV2.lock(compositionElement, instanceElement);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
             instanceElement.elementId(), null, LockState.LOCKED, StateChangeResult.NO_ERROR, "Locked");
@@ -57,7 +57,7 @@ class AcElementListenerV3Test {
         var acElementListenerV2 = createAcElementListenerV3(intermediaryApi);
         var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
             Map.of(), Map.of());
-        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), null, Map.of(), Map.of());
+        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), Map.of(), Map.of());
         acElementListenerV2.delete(compositionElement, instanceElement);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
             instanceElement.elementId(), DeployState.DELETED, null, StateChangeResult.NO_ERROR, "Deleted");
@@ -69,7 +69,7 @@ class AcElementListenerV3Test {
         var acElementListenerV2 = createAcElementListenerV3(intermediaryApi);
         var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
             Map.of(), Map.of());
-        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), null, Map.of(), Map.of());
+        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), Map.of(), Map.of());
         acElementListenerV2.update(compositionElement, instanceElement, instanceElement);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
             instanceElement.elementId(), DeployState.DEPLOYED, null,
@@ -82,7 +82,7 @@ class AcElementListenerV3Test {
         var acElementListenerV2 = createAcElementListenerV3(intermediaryApi);
         var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
             Map.of(), Map.of());
-        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), null, Map.of(), Map.of());
+        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), Map.of(), Map.of());
         acElementListenerV2.unlock(compositionElement, instanceElement);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
             instanceElement.elementId(), null, LockState.UNLOCKED, StateChangeResult.NO_ERROR, "Unlocked");
@@ -118,7 +118,7 @@ class AcElementListenerV3Test {
         var acElementListenerV2 = createAcElementListenerV3(intermediaryApi);
         var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
             Map.of(), Map.of());
-        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), null, Map.of(), Map.of());
+        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), Map.of(), Map.of());
         acElementListenerV2.migrate(compositionElement, compositionElement, instanceElement, instanceElement, 0);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
             instanceElement.elementId(), DeployState.DEPLOYED, null,
@@ -131,7 +131,7 @@ class AcElementListenerV3Test {
         var acElementListenerV1 = createAcElementListenerV3(intermediaryApi);
         var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
                 Map.of(), Map.of());
-        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), null, Map.of(), Map.of());
+        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), Map.of(), Map.of());
         acElementListenerV1.migratePrecheck(compositionElement, compositionElement, instanceElement, instanceElement);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
                 instanceElement.elementId(), DeployState.DEPLOYED, null,
@@ -144,7 +144,7 @@ class AcElementListenerV3Test {
         var acElementListenerV1 = createAcElementListenerV3(intermediaryApi);
         var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
                 Map.of(), Map.of());
-        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), null, Map.of(), Map.of());
+        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), Map.of(), Map.of());
         acElementListenerV1.review(compositionElement, instanceElement);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
                 instanceElement.elementId(), DeployState.DEPLOYED, null,
@@ -157,7 +157,7 @@ class AcElementListenerV3Test {
         var acElementListenerV1 = createAcElementListenerV3(intermediaryApi);
         var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
                 Map.of(), Map.of());
-        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), null, Map.of(), Map.of());
+        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), Map.of(), Map.of());
         acElementListenerV1.prepare(compositionElement, instanceElement);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
                 instanceElement.elementId(), DeployState.UNDEPLOYED, null,

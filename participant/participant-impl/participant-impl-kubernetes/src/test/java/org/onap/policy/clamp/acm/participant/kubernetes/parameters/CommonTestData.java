@@ -37,7 +37,6 @@ import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 public class CommonTestData {
 
@@ -199,10 +198,8 @@ public class CommonTestData {
      * @return an InstanceElementDto
      */
     public InstanceElementDto createInstanceElementDto(Map<String, Object> inProperties) {
-        return new InstanceElementDto(getAutomationCompositionId(), UUID.randomUUID(),
-                new ToscaServiceTemplate(), inProperties, new HashMap<>());
+        return new InstanceElementDto(getAutomationCompositionId(), UUID.randomUUID(), inProperties, new HashMap<>());
     }
-
 
     /**
      * Create an compositionElementDto.

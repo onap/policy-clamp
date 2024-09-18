@@ -36,7 +36,6 @@ import org.onap.policy.clamp.models.acm.concepts.ParticipantDeploy;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeploy;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -59,14 +58,10 @@ public class AutomationCompositionDeployPublisher extends AbstractParticipantPub
      */
     @Timed(value = "publisher.automation_composition_deploy",
             description = "AUTOMATION_COMPOSITION_DEPLOY messages published")
-    public void send(AutomationComposition automationComposition, ToscaServiceTemplate toscaServiceTemplate,
-            int startPhase, boolean firstStartPhase) {
-        var toscaServiceTemplateFragment = AcmUtils.getToscaServiceTemplateFragment(toscaServiceTemplate);
+    public void send(AutomationComposition automationComposition, int startPhase, boolean firstStartPhase) {
         Map<UUID, List<AcElementDeploy>> map = new HashMap<>();
         for (var element : automationComposition.getElements().values()) {
             var acElementDeploy = AcmUtils.createAcElementDeploy(element, DeployOrder.DEPLOY);
-            acElementDeploy.setToscaServiceTemplateFragment(toscaServiceTemplateFragment);
-
             map.putIfAbsent(element.getParticipantId(), new ArrayList<>());
             map.get(element.getParticipantId()).add(acElementDeploy);
         }

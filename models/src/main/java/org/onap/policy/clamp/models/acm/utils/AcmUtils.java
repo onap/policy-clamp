@@ -64,7 +64,6 @@ import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaTopologyTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,26 +77,6 @@ public final class AcmUtils {
     private static final StringToMapConverter MAP_CONVERTER = new StringToMapConverter();
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AcmUtils.class);
-
-    /**
-     * Get the Policy information in the service template for the deploy message to participants.
-     *
-     * @param toscaServiceTemplate ToscaServiceTemplate
-     */
-    public static ToscaServiceTemplate getToscaServiceTemplateFragment(ToscaServiceTemplate toscaServiceTemplate) {
-        // Pass respective PolicyTypes or Policies as part of toscaServiceTemplateFragment
-        if (toscaServiceTemplate.getPolicyTypes() == null
-                && toscaServiceTemplate.getToscaTopologyTemplate().getPolicies() == null) {
-            return new ToscaServiceTemplate();
-        }
-        var toscaServiceTemplateFragment = new ToscaServiceTemplate();
-        toscaServiceTemplateFragment.setPolicyTypes(toscaServiceTemplate.getPolicyTypes());
-        var toscaTopologyTemplate = new ToscaTopologyTemplate();
-        toscaTopologyTemplate.setPolicies(toscaServiceTemplate.getToscaTopologyTemplate().getPolicies());
-        toscaServiceTemplateFragment.setToscaTopologyTemplate(toscaTopologyTemplate);
-        toscaServiceTemplateFragment.setDataTypes(toscaServiceTemplate.getDataTypes());
-        return toscaServiceTemplateFragment;
-    }
 
     /**
      * Checks if a NodeTemplate is an AutomationCompositionElement.
@@ -466,11 +445,10 @@ public final class AcmUtils {
      *
      * @param automationComposition the AutomationComposition
      * @param participantId the participantId of the participant restarted
-     * @param serviceTemplateFragment the ToscaServiceTemplate with policies and policy types
      * @return the ParticipantRestartAc
      */
     public static ParticipantRestartAc createAcRestart(AutomationComposition automationComposition,
-            UUID participantId, ToscaServiceTemplate serviceTemplateFragment) {
+            UUID participantId) {
         var syncAc = new ParticipantRestartAc();
         syncAc.setDeployState(automationComposition.getDeployState());
         syncAc.setLockState(automationComposition.getLockState());
@@ -478,7 +456,6 @@ public final class AcmUtils {
         for (var element : automationComposition.getElements().values()) {
             if (participantId.equals(element.getParticipantId())) {
                 var acElementSync = createAcElementRestart(element);
-                acElementSync.setToscaServiceTemplateFragment(serviceTemplateFragment);
                 syncAc.getAcElementList().add(acElementSync);
             }
         }

@@ -48,7 +48,7 @@ class AcElementListenerV1Test {
         var acElementListenerV1 = mock(AcElementListenerV1.class, Answers.CALLS_REAL_METHODS);
         var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
             Map.of(), Map.of());
-        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), null, Map.of(), Map.of());
+        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), Map.of(), Map.of());
         acElementListenerV1.deploy(compositionElement, instanceElement);
         verify(acElementListenerV1).deploy(any(), any(), any());
     }
@@ -58,7 +58,7 @@ class AcElementListenerV1Test {
         var acElementListenerV1 = mock(AcElementListenerV1.class, Answers.CALLS_REAL_METHODS);
         var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
             Map.of(), Map.of());
-        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), null, Map.of(), Map.of());
+        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), Map.of(), Map.of());
         acElementListenerV1.undeploy(compositionElement, instanceElement);
         verify(acElementListenerV1).undeploy(instanceElement.instanceId(), instanceElement.elementId());
     }
@@ -69,7 +69,7 @@ class AcElementListenerV1Test {
         var acElementListenerV1 = createAcElementListenerV1(intermediaryApi);
         var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
             Map.of(), Map.of());
-        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), null, Map.of(), Map.of());
+        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), Map.of(), Map.of());
         acElementListenerV1.lock(compositionElement, instanceElement);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
             instanceElement.elementId(), null, LockState.LOCKED, StateChangeResult.NO_ERROR, "Locked");
@@ -81,7 +81,7 @@ class AcElementListenerV1Test {
         var acElementListenerV1 = createAcElementListenerV1(intermediaryApi);
         var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
             Map.of(), Map.of());
-        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), null, Map.of(), Map.of());
+        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), Map.of(), Map.of());
         acElementListenerV1.delete(compositionElement, instanceElement);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
             instanceElement.elementId(), DeployState.DELETED, null, StateChangeResult.NO_ERROR, "Deleted");
@@ -93,7 +93,7 @@ class AcElementListenerV1Test {
         var acElementListenerV1 = createAcElementListenerV1(intermediaryApi);
         var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
             Map.of(), Map.of());
-        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), null, Map.of(), Map.of());
+        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), Map.of(), Map.of());
         acElementListenerV1.update(compositionElement, instanceElement, instanceElement);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
             instanceElement.elementId(), DeployState.DEPLOYED, null,
@@ -106,7 +106,7 @@ class AcElementListenerV1Test {
         var acElementListenerV1 = createAcElementListenerV1(intermediaryApi);
         var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
             Map.of(), Map.of());
-        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), null, Map.of(), Map.of());
+        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), Map.of(), Map.of());
         acElementListenerV1.unlock(compositionElement, instanceElement);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
             instanceElement.elementId(), null, LockState.UNLOCKED, StateChangeResult.NO_ERROR, "Unlocked");
@@ -156,7 +156,7 @@ class AcElementListenerV1Test {
         var acElementListenerV1 = createAcElementListenerV1(intermediaryApi);
         var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
             Map.of(), Map.of());
-        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), null, Map.of(), Map.of());
+        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), Map.of(), Map.of());
         acElementListenerV1.migrate(compositionElement, compositionElement, instanceElement, instanceElement, 0);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
             instanceElement.elementId(), DeployState.DEPLOYED, null,
@@ -169,7 +169,7 @@ class AcElementListenerV1Test {
         var acElementListenerV1 = createAcElementListenerV1(intermediaryApi);
         var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
                 Map.of(), Map.of());
-        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), null, Map.of(), Map.of());
+        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), Map.of(), Map.of());
         acElementListenerV1.migratePrecheck(compositionElement, compositionElement, instanceElement, instanceElement);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
                 instanceElement.elementId(), DeployState.DEPLOYED, null,
@@ -182,7 +182,7 @@ class AcElementListenerV1Test {
         var acElementListenerV1 = createAcElementListenerV1(intermediaryApi);
         var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
                 Map.of(), Map.of());
-        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), null, Map.of(), Map.of());
+        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), Map.of(), Map.of());
         acElementListenerV1.review(compositionElement, instanceElement);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
                 instanceElement.elementId(), DeployState.DEPLOYED, null,
@@ -195,7 +195,7 @@ class AcElementListenerV1Test {
         var acElementListenerV1 = createAcElementListenerV1(intermediaryApi);
         var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
                 Map.of(), Map.of());
-        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), null, Map.of(), Map.of());
+        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), Map.of(), Map.of());
         acElementListenerV1.prepare(compositionElement, instanceElement);
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
                 instanceElement.elementId(), DeployState.UNDEPLOYED, null,
