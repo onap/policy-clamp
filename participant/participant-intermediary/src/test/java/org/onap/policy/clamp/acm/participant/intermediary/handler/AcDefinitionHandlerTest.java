@@ -35,6 +35,7 @@ import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessag
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
+import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrime;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrimeAck;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantSync;
@@ -107,6 +108,28 @@ class AcDefinitionHandlerTest {
         ach.handleParticipantSync(participantSyncMsg);
         verify(cacheProvider).initializeAutomationComposition(any(UUID.class), any());
         verify(cacheProvider).addElementDefinition(any(), any());
+    }
+
+    @Test
+    void syncCompositionDefinitionTimeout() {
+        var participantSyncMsg = new ParticipantSync();
+        participantSyncMsg.setState(AcTypeState.PRIMED);
+        participantSyncMsg.setStateChangeResult(StateChangeResult.TIMEOUT);
+        participantSyncMsg.setCompositionId(UUID.randomUUID());
+        participantSyncMsg.getParticipantDefinitionUpdates().add(createParticipantDefinition());
+        var participantRestartAc = CommonTestData.createParticipantRestartAc();
+        participantRestartAc.setStateChangeResult(StateChangeResult.TIMEOUT);
+        participantSyncMsg.setAutomationcompositionList(List.of(participantRestartAc));
+
+        var cacheProvider = mock(CacheProvider.class);
+        var listener = mock(ThreadHandler.class);
+        var ach = new AcDefinitionHandler(cacheProvider, mock(ParticipantMessagePublisher.class), listener);
+        ach.handleParticipantSync(participantSyncMsg);
+        verify(cacheProvider).initializeAutomationComposition(any(UUID.class), any());
+        verify(cacheProvider).addElementDefinition(any(), any());
+        verify(listener).cleanExecution(participantSyncMsg.getCompositionId(), participantSyncMsg.getMessageId());
+        var elementId = participantRestartAc.getAcElementList().get(0).getId();
+        verify(listener).cleanExecution(elementId, participantSyncMsg.getMessageId());
     }
 
     @Test

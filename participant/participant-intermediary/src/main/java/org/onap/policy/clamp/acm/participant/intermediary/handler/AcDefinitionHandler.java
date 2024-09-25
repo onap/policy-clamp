@@ -114,16 +114,15 @@ public class AcDefinitionHandler {
     public void handleParticipantSync(ParticipantSync participantSyncMsg) {
 
         if (participantSyncMsg.isDelete()) {
-            if (AcTypeState.COMMISSIONED.equals(participantSyncMsg.getState())) {
-                cacheProvider.removeElementDefinition(participantSyncMsg.getCompositionId());
-            }
-            for (var automationcomposition : participantSyncMsg.getAutomationcompositionList()) {
-                cacheProvider.removeAutomationComposition(automationcomposition.getAutomationCompositionId());
-            }
+            deleteScenario(participantSyncMsg);
             return;
         }
 
         if (!participantSyncMsg.getParticipantDefinitionUpdates().isEmpty()) {
+            if (StateChangeResult.TIMEOUT.equals(participantSyncMsg.getStateChangeResult())) {
+                listener.cleanExecution(participantSyncMsg.getCompositionId(), participantSyncMsg.getMessageId());
+            }
+
             List<AutomationCompositionElementDefinition> list = new ArrayList<>();
             for (var participantDefinition : participantSyncMsg.getParticipantDefinitionUpdates()) {
                 list.addAll(participantDefinition.getAutomationCompositionElementDefinitionList());
@@ -134,6 +133,20 @@ public class AcDefinitionHandler {
         for (var automationcomposition : participantSyncMsg.getAutomationcompositionList()) {
             cacheProvider
                     .initializeAutomationComposition(participantSyncMsg.getCompositionId(), automationcomposition);
+            if (StateChangeResult.TIMEOUT.equals(automationcomposition.getStateChangeResult())) {
+                for (var element : automationcomposition.getAcElementList()) {
+                    listener.cleanExecution(element.getId(), participantSyncMsg.getMessageId());
+                }
+            }
+        }
+    }
+
+    private void deleteScenario(ParticipantSync participantSyncMsg) {
+        if (AcTypeState.COMMISSIONED.equals(participantSyncMsg.getState())) {
+            cacheProvider.removeElementDefinition(participantSyncMsg.getCompositionId());
+        }
+        for (var automationcomposition : participantSyncMsg.getAutomationcompositionList()) {
+            cacheProvider.removeAutomationComposition(automationcomposition.getAutomationCompositionId());
         }
     }
 }

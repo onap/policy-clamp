@@ -115,10 +115,11 @@ class SupervisionScannerTest {
     void testAcDefinitionPrimeTimeout() {
         var acDefinition = createAutomationCompositionDefinition(AcTypeState.PRIMING, StateChangeResult.NO_ERROR);
         var acDefinitionProvider = createAcDefinitionProvider(acDefinition);
+        var participantSyncPublisher = mock(ParticipantSyncPublisher.class);
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
         var supervisionScanner = new SupervisionScanner(mock(AutomationCompositionProvider.class), acDefinitionProvider,
                 mock(AutomationCompositionStateChangePublisher.class), mock(AutomationCompositionDeployPublisher.class),
-                mock(ParticipantSyncPublisher.class), null, acRuntimeParameterGroup);
+                participantSyncPublisher, null, acRuntimeParameterGroup);
         supervisionScanner.run();
         // Ac Definition in Priming state
         verify(acDefinitionProvider, times(0)).updateAcDefinitionState(any(), any(), any());
@@ -126,25 +127,30 @@ class SupervisionScannerTest {
         acRuntimeParameterGroup.getParticipantParameters().setMaxStatusWaitMs(-1);
         supervisionScanner = new SupervisionScanner(mock(AutomationCompositionProvider.class), acDefinitionProvider,
                 mock(AutomationCompositionStateChangePublisher.class), mock(AutomationCompositionDeployPublisher.class),
-                mock(ParticipantSyncPublisher.class), null, acRuntimeParameterGroup);
+                participantSyncPublisher, null, acRuntimeParameterGroup);
         supervisionScanner.run();
         // set Timeout
         verify(acDefinitionProvider).updateAcDefinitionState(acDefinition.getCompositionId(), acDefinition.getState(),
             StateChangeResult.TIMEOUT);
+        verify(participantSyncPublisher).sendSync(any(AutomationCompositionDefinition.class), any());
 
         clearInvocations(acDefinitionProvider);
+        clearInvocations(participantSyncPublisher);
         acDefinition.setStateChangeResult(StateChangeResult.TIMEOUT);
         supervisionScanner.run();
         // already in Timeout
         verify(acDefinitionProvider, times(0)).updateAcDefinitionState(any(), any(), any());
+        verify(participantSyncPublisher, times(0)).sendSync(acDefinition, null);
 
         clearInvocations(acDefinitionProvider);
+        clearInvocations(participantSyncPublisher);
         // retry by the user
         acDefinition.setStateChangeResult(StateChangeResult.NO_ERROR);
         supervisionScanner.run();
         // set Timeout
         verify(acDefinitionProvider).updateAcDefinitionState(acDefinition.getCompositionId(), acDefinition.getState(),
             StateChangeResult.TIMEOUT);
+        verify(participantSyncPublisher).sendSync(any(AutomationCompositionDefinition.class), any());
 
         clearInvocations(acDefinitionProvider);
         for (var element : acDefinition.getElementStateMap().values()) {
@@ -263,31 +269,38 @@ class SupervisionScannerTest {
         when(automationCompositionProvider.updateAcState(any())).thenReturn(automationComposition);
         var automationCompositionDeployPublisher = mock(AutomationCompositionDeployPublisher.class);
         var automationCompositionStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
+        var participantSyncPublisher = mock(ParticipantSyncPublisher.class);
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
         acRuntimeParameterGroup.getParticipantParameters().setMaxStatusWaitMs(-1);
 
         // verify timeout scenario
         var scannerObj2 = new SupervisionScanner(automationCompositionProvider, createAcDefinitionProvider(),
                 automationCompositionStateChangePublisher, automationCompositionDeployPublisher,
-                mock(ParticipantSyncPublisher.class), null, acRuntimeParameterGroup);
+                participantSyncPublisher, null, acRuntimeParameterGroup);
 
         automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
         automationComposition.setLastMsg(TimestampHelper.now());
         scannerObj2.run();
-        verify(automationCompositionProvider, times(1)).updateAcState(any(AutomationComposition.class));
+        verify(automationCompositionProvider).updateAcState(any(AutomationComposition.class));
+        verify(participantSyncPublisher).sendSync(any(ToscaServiceTemplate.class), any(AutomationComposition.class));
         assertEquals(StateChangeResult.TIMEOUT, automationComposition.getStateChangeResult());
 
         //already in TIMEOUT
         clearInvocations(automationCompositionProvider);
+        clearInvocations(participantSyncPublisher);
         scannerObj2.run();
         verify(automationCompositionProvider, times(0)).updateAutomationComposition(any(AutomationComposition.class));
+        verify(participantSyncPublisher, times(0))
+                .sendSync(any(ToscaServiceTemplate.class), any(AutomationComposition.class));
 
         clearInvocations(automationCompositionProvider);
+        clearInvocations(participantSyncPublisher);
         for (Map.Entry<UUID, AutomationCompositionElement> entry : automationComposition.getElements().entrySet()) {
             entry.getValue().setDeployState(DeployState.DEPLOYED);
         }
         scannerObj2.run();
-        verify(automationCompositionProvider, times(1)).updateAcState(any(AutomationComposition.class));
+        verify(automationCompositionProvider).updateAcState(any(AutomationComposition.class));
+        verify(participantSyncPublisher).sendSync(any(ToscaServiceTemplate.class), any(AutomationComposition.class));
         assertEquals(StateChangeResult.NO_ERROR, automationComposition.getStateChangeResult());
     }
 

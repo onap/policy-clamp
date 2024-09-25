@@ -39,6 +39,7 @@ public class ParticipantRestartAc {
 
     private DeployState deployState;
     private LockState lockState;
+    private StateChangeResult stateChangeResult;
 
     private List<AcElementRestart> acElementList = new ArrayList<>();
 
@@ -51,6 +52,7 @@ public class ParticipantRestartAc {
         this.automationCompositionId = copyConstructor.automationCompositionId;
         this.deployState = copyConstructor.deployState;
         this.lockState = copyConstructor.lockState;
+        this.stateChangeResult = copyConstructor.stateChangeResult;
         this.acElementList = PfUtils.mapList(copyConstructor.acElementList, AcElementRestart::new);
     }
 }

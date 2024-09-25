@@ -31,6 +31,7 @@ import lombok.ToString;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantRestartAc;
+import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.models.base.PfUtils;
 
 @Getter
@@ -50,6 +51,7 @@ public class ParticipantSync extends ParticipantMessage {
     private Set<UUID> excludeReplicas = new HashSet<>();
     private boolean restarting = false;
     private boolean delete = false;
+    private StateChangeResult stateChangeResult;
 
     /**
      * Constructor.
@@ -72,5 +74,6 @@ public class ParticipantSync extends ParticipantMessage {
         this.excludeReplicas = new HashSet<>(source.excludeReplicas);
         this.restarting = source.restarting;
         this.delete = source.delete;
+        this.stateChangeResult = source.getStateChangeResult();
     }
 }

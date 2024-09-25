@@ -218,7 +218,13 @@ public class ThreadHandler implements Closeable {
         executionMap.remove(instanceElement.elementId());
     }
 
-    private void cleanExecution(UUID execIdentificationId, UUID messageId) {
+    /**
+     * Clean Execution.
+     *
+     * @param execIdentificationId the identification Id
+     * @param messageId the messageId
+     */
+    public void cleanExecution(UUID execIdentificationId, UUID messageId) {
         var process = executionMap.get(execIdentificationId);
         if (process != null) {
             if (!process.isDone()) {

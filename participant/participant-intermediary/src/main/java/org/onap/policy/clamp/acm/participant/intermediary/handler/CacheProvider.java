@@ -243,6 +243,7 @@ public class CacheProvider {
         automationComposition.setLockState(participantRestartAc.getLockState());
         automationComposition.setInstanceId(participantRestartAc.getAutomationCompositionId());
         automationComposition.setElements(acElementMap);
+        automationComposition.setStateChangeResult(participantRestartAc.getStateChangeResult());
         automationCompositions.put(automationComposition.getInstanceId(), automationComposition);
     }
 

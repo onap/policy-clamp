@@ -198,7 +198,7 @@ public class SupervisionScanner {
             if (nextSpNotCompleted != automationComposition.getPhase()) {
                 sendAutomationCompositionMsg(automationComposition, serviceTemplate, nextSpNotCompleted);
             } else {
-                handleTimeout(automationComposition);
+                handleTimeout(automationComposition, serviceTemplate);
             }
         }
     }
@@ -217,7 +217,7 @@ public class SupervisionScanner {
         if (completed) {
             complete(automationComposition, serviceTemplate);
         } else {
-            handleTimeout(automationComposition);
+            handleTimeout(automationComposition, serviceTemplate);
         }
     }
 
@@ -250,11 +250,11 @@ public class SupervisionScanner {
                     automationComposition.getDeployState(), automationComposition.getLockState());
 
             if (minStageNotCompleted != automationComposition.getPhase()) {
-                savePahese(automationComposition, minStageNotCompleted);
+                savePhase(automationComposition, minStageNotCompleted);
                 LOGGER.debug("retry message AutomationCompositionMigration");
                 automationCompositionMigrationPublisher.send(automationComposition, minStageNotCompleted);
             } else {
-                handleTimeout(automationComposition);
+                handleTimeout(automationComposition, serviceTemplate);
             }
         }
     }
@@ -300,10 +300,12 @@ public class SupervisionScanner {
             acDefinition.setStateChangeResult(StateChangeResult.TIMEOUT);
             acDefinitionProvider.updateAcDefinitionState(acDefinition.getCompositionId(),
                 acDefinition.getState(), acDefinition.getStateChangeResult());
+            participantSyncPublisher.sendSync(acDefinition, null);
         }
     }
 
-    private void handleTimeout(AutomationComposition automationComposition) {
+    private void handleTimeout(AutomationComposition automationComposition,
+            ToscaServiceTemplate serviceTemplate) {
         LOGGER.debug("automation composition scan: transition from state {} to {} {} not completed",
                 automationComposition.getDeployState(), automationComposition.getLockState(),
                 automationComposition.getSubState());
@@ -318,10 +320,11 @@ public class SupervisionScanner {
             LOGGER.debug("Report timeout for the ac instance {}", automationComposition.getInstanceId());
             automationComposition.setStateChangeResult(StateChangeResult.TIMEOUT);
             automationCompositionProvider.updateAcState(automationComposition);
+            participantSyncPublisher.sendSync(serviceTemplate, automationComposition);
         }
     }
 
-    private void savePahese(AutomationComposition automationComposition, int startPhase) {
+    private void savePhase(AutomationComposition automationComposition, int startPhase) {
         automationComposition.setLastMsg(TimestampHelper.now());
         automationComposition.setPhase(startPhase);
         automationCompositionProvider.updateAcState(automationComposition);
@@ -329,7 +332,7 @@ public class SupervisionScanner {
 
     private void sendAutomationCompositionMsg(AutomationComposition automationComposition,
             ToscaServiceTemplate serviceTemplate, int startPhase) {
-        savePahese(automationComposition, startPhase);
+        savePhase(automationComposition, startPhase);
 
         if (DeployState.DEPLOYING.equals(automationComposition.getDeployState())) {
             LOGGER.debug("retry message AutomationCompositionDeploy");

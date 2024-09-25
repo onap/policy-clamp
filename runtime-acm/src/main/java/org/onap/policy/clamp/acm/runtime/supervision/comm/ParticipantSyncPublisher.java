@@ -101,6 +101,7 @@ public class ParticipantSyncPublisher extends AbstractParticipantPublisher<Parti
             message.getExcludeReplicas().add(excludeReplicaId);
         }
         message.setState(acDefinition.getState());
+        message.setStateChangeResult(acDefinition.getStateChangeResult());
         message.setMessageId(UUID.randomUUID());
         message.setTimestamp(Instant.now());
         if (AcTypeState.COMMISSIONED.equals(acDefinition.getState())) {
@@ -131,6 +132,7 @@ public class ParticipantSyncPublisher extends AbstractParticipantPublisher<Parti
         syncAc.setAutomationCompositionId(automationComposition.getInstanceId());
         syncAc.setDeployState(automationComposition.getDeployState());
         syncAc.setLockState(automationComposition.getLockState());
+        syncAc.setStateChangeResult(automationComposition.getStateChangeResult());
         if (DeployState.DELETED.equals(automationComposition.getDeployState())) {
             message.setDelete(true);
         } else {
