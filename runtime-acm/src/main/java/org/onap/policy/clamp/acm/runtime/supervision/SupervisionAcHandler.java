@@ -340,9 +340,6 @@ public class SupervisionAcHandler {
             var element = automationComposition.getElements().get(acElementAck.getKey());
             if (element != null) {
                 element.setMessage(AcmUtils.validatedMessage(acElementAck.getValue().getMessage()));
-                element.setOutProperties(acElementAck.getValue().getOutProperties());
-                element.setOperationalState(acElementAck.getValue().getOperationalState());
-                element.setUseState(acElementAck.getValue().getUseState());
                 if (stage == null) {
                     element.setSubState(SubState.NONE);
                 }

@@ -34,6 +34,7 @@ import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublish
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionInfo;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantReplica;
@@ -109,7 +110,8 @@ public class SupervisionParticipantHandler {
                 participantStatusMsg.getParticipantSupportedElementType(), false);
 
         if (!participantStatusMsg.getAutomationCompositionInfoList().isEmpty()) {
-            automationCompositionProvider.upgradeStates(participantStatusMsg.getAutomationCompositionInfoList());
+            updateAcOutProperties(participantStatusMsg.getAutomationCompositionInfoList(),
+                participantStatusMsg.getCompositionId());
         }
         if (!participantStatusMsg.getParticipantDefinitionUpdates().isEmpty()
                 && participantStatusMsg.getCompositionId() != null) {
@@ -148,6 +150,16 @@ public class SupervisionParticipantHandler {
         replica.setLastMsg(TimestampHelper.now());
         return replica;
 
+    }
+
+    private void updateAcOutProperties(List<AutomationCompositionInfo> automationCompositionInfoList,
+            UUID compositionId) {
+        automationCompositionProvider.upgradeStates(automationCompositionInfoList);
+        var acDefinition = acDefinitionProvider.getAcDefinition(compositionId);
+        for (var acInfo : automationCompositionInfoList) {
+            var ac = automationCompositionProvider.getAutomationComposition(acInfo.getAutomationCompositionId());
+            participantSyncPublisher.sendSync(acDefinition.getServiceTemplate(), ac);
+        }
     }
 
     private void updateAcDefinitionOutProperties(UUID compositionId, UUID replicaId, List<ParticipantDefinition> list) {
