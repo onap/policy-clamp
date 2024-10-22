@@ -126,7 +126,7 @@ public class AutomationCompositionElementHandlerV2 extends AcElementListenerV2 {
             simulatorService.delete(instanceElement.instanceId(), instanceElement.elementId());
         } else {
             simulatorService.migrate(instanceElement.instanceId(), instanceElement.elementId(),
-                    0, compositionElementTarget.inProperties());
+                    0, compositionElementTarget.inProperties(), instanceElementMigrate.outProperties());
         }
     }
 
