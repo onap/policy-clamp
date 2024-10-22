@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.acm.participant.sim.main.handler;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -99,6 +100,7 @@ public class AutomationCompositionElementHandlerV1 extends AcElementListenerV1 {
         Map<String, Object> properties) {
         LOGGER.debug("migrate call instanceId: {}, element: {}, compositionTargetId: {}, properties: {}",
                 instanceId, element, compositionTargetId, properties);
-        simulatorService.migrate(instanceId, element.getId(), 0, Map.of());
+
+        simulatorService.migrate(instanceId, element.getId(), 0, properties, new HashMap<>());
     }
 }

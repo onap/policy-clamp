@@ -21,6 +21,7 @@
 package org.onap.policy.clamp.acm.participant.sim.main.handler;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import lombok.Getter;
@@ -330,7 +331,8 @@ public class SimulatorService {
      * @param elementId the elementId
      * @param stage the stage
      */
-    public void migrate(UUID instanceId, UUID elementId, int stage, Map<String, Object> compositionInProperties) {
+    public void migrate(UUID instanceId, UUID elementId, int stage, Map<String, Object> compositionInProperties,
+            Map<String, Object> instanceOutProperties) {
         if (!execution(getConfig().getMigrateTimerMs(),
                 "Current Thread migrate is Interrupted during execution {}", elementId)) {
             return;
@@ -344,6 +346,11 @@ public class SimulatorService {
                     nextStage = Math.min(s, nextStage);
                 }
             }
+            instanceOutProperties.putIfAbsent("stage", new ArrayList<>());
+            @SuppressWarnings("unchecked")
+            var stageList = (List<Integer>) instanceOutProperties.get("stage");
+            stageList.add(stage);
+            intermediaryApi.sendAcElementInfo(instanceId, elementId, null, null, instanceOutProperties);
             if (nextStage == 1000) {
                 intermediaryApi.updateAutomationCompositionElementState(
                         instanceId, elementId,

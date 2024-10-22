@@ -131,13 +131,7 @@ public class AutomationCompositionElementHandlerV3 extends AcElementListenerV3 {
             simulatorService.delete(instanceElement.instanceId(), instanceElement.elementId());
         } else {
             simulatorService.migrate(instanceElementMigrate.instanceId(), instanceElementMigrate.elementId(), stage,
-                    compositionElementTarget.inProperties());
-            instanceElementMigrate.outProperties().putIfAbsent("stage", new ArrayList<>());
-            @SuppressWarnings("unchecked")
-            var stageList = (List<Integer>) instanceElementMigrate.outProperties().get("stage");
-            stageList.add(stage);
-            intermediaryApi.sendAcElementInfo(instanceElementMigrate.instanceId(), instanceElementMigrate.elementId(),
-                    null, null, instanceElementMigrate.outProperties());
+                    compositionElementTarget.inProperties(), instanceElementMigrate.outProperties());
         }
     }
 
