@@ -20,7 +20,7 @@
 
 package org.onap.policy.clamp.acm.runtime.config.messaging;
 
-import org.onap.policy.common.endpoints.event.comm.TopicSink;
+import org.onap.policy.common.message.bus.event.TopicSink;
 
 /**
  * Publisher.

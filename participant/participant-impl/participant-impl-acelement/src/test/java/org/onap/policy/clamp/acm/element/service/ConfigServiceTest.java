@@ -30,7 +30,7 @@ import org.onap.policy.clamp.acm.element.handler.MessageActivator;
 import org.onap.policy.clamp.acm.element.handler.MessageHandler;
 import org.onap.policy.clamp.acm.element.main.concepts.ElementConfig;
 import org.onap.policy.clamp.acm.element.main.concepts.KafkaConfig;
-import org.onap.policy.common.endpoints.parameters.TopicParameterGroup;
+import org.onap.policy.common.parameters.topic.TopicParameterGroup;
 
 class ConfigServiceTest {
 

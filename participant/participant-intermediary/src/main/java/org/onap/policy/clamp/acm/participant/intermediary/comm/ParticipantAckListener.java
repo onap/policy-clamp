@@ -27,8 +27,8 @@ import java.util.function.Consumer;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.Listener;
 import org.onap.policy.clamp.acm.participant.intermediary.handler.ParticipantHandler;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantAckMessage;
-import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
 import org.onap.policy.common.endpoints.listeners.ScoListener;
+import org.onap.policy.common.message.bus.event.Topic.CommInfrastructure;
 import org.onap.policy.common.utils.coder.StandardCoderObject;
 
 /**

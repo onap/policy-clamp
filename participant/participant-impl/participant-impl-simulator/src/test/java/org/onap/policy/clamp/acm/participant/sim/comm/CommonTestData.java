@@ -30,7 +30,7 @@ import org.onap.policy.clamp.acm.participant.sim.model.SimConfig;
 import org.onap.policy.clamp.acm.participant.sim.parameters.ParticipantSimParameters;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
-import org.onap.policy.common.endpoints.parameters.TopicParameters;
+import org.onap.policy.common.parameters.topic.TopicParameters;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;

@@ -25,8 +25,8 @@ import static org.mockito.Mockito.mock;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import org.onap.policy.common.endpoints.parameters.TopicParameterGroup;
-import org.onap.policy.common.endpoints.parameters.TopicParameters;
+import org.onap.policy.common.parameters.topic.TopicParameterGroup;
+import org.onap.policy.common.parameters.topic.TopicParameters;
 
 class MessageActivatorTest {
 

@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
 import org.onap.policy.clamp.acm.participant.intermediary.parameters.Topics;
-import org.onap.policy.common.endpoints.parameters.TopicParameters;
+import org.onap.policy.common.parameters.topic.TopicParameters;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;

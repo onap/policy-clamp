@@ -29,7 +29,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.element.handler.messages.ElementMessage;
 import org.onap.policy.clamp.acm.element.handler.messages.ElementMessageType;
-import org.onap.policy.common.endpoints.event.comm.TopicSink;
+import org.onap.policy.common.message.bus.event.TopicSink;
 
 
 class MessagePublisherTest {

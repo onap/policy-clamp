@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022 Nordix Foundation.
+ * Copyright (C) 2022, 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.participant.policy.main.parameters.ParticipantPolicyParameters;
 import org.onap.policy.clamp.acm.participant.policy.main.utils.MockServer;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
-import org.onap.policy.common.endpoints.parameters.RestClientParameters;
+import org.onap.policy.common.parameters.rest.RestClientParameters;
 import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.models.pdp.concepts.DeploymentSubGroup;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;

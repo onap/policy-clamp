@@ -29,7 +29,7 @@ import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
-import org.onap.policy.common.endpoints.parameters.TopicParameterGroup;
+import org.onap.policy.common.parameters.topic.TopicParameterGroup;
 import org.onap.policy.common.parameters.validation.ParameterGroupConstraint;
 
 /**

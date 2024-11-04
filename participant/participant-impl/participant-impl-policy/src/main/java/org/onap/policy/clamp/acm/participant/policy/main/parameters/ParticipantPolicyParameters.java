@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ * Copyright (C) 2021, 2024 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.onap.policy.clamp.acm.participant.intermediary.parameters.ParticipantIntermediaryParameters;
 import org.onap.policy.clamp.acm.participant.intermediary.parameters.ParticipantParameters;
-import org.onap.policy.common.endpoints.parameters.RestClientParameters;
+import org.onap.policy.common.parameters.rest.RestClientParameters;
 import org.onap.policy.common.parameters.validation.ParameterGroupConstraint;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;

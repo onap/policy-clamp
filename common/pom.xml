@@ -36,11 +36,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.onap.policy.clamp</groupId>
-            <artifactId>policy-clamp-models</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.onap.policy.models</groupId>
             <artifactId>policy-models-errors</artifactId>
             <version>${policy.models.version}</version>
@@ -60,7 +55,6 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>${version.spring}</version>
         </dependency>
         <dependency>
             <groupId>jakarta.servlet</groupId>
@@ -68,8 +62,7 @@
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>${version.jupiter}</version>
+            <artifactId>junit-jupiter-api</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

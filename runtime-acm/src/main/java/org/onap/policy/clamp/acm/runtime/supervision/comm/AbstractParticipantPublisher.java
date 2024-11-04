@@ -24,8 +24,8 @@ import jakarta.ws.rs.core.Response.Status;
 import org.onap.policy.clamp.acm.runtime.config.messaging.Publisher;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessage;
-import org.onap.policy.common.endpoints.event.comm.TopicSink;
-import org.onap.policy.common.endpoints.event.comm.client.TopicSinkClient;
+import org.onap.policy.common.message.bus.event.TopicSink;
+import org.onap.policy.common.message.bus.event.client.TopicSinkClient;
 
 
 public abstract class AbstractParticipantPublisher<E extends ParticipantMessage> implements Publisher {
