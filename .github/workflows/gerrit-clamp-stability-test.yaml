@@ -1,4 +1,4 @@
-name: acm-performance-test
+name: acm-stability-test
 
 on:
   workflow_dispatch:
@@ -58,7 +58,7 @@ jobs:
 
       - name: Run S3P script
         working-directory: ${{ github.workspace }}/testsuites
-        run: sudo bash ./run-s3p-test.sh run performance
+        run: sudo bash ./run-s3p-test.sh run stability
 
       - name: Archive result jtl
         uses: actions/upload-artifact@v4
