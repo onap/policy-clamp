@@ -29,7 +29,7 @@ export ACM_STAB_TEST_FILE=$TESTDIR/stability/src/main/resources/testplans/stabil
 if [ $1 == "run" ]
 then
 
-  mkdir automate-performance;cd automate-performance;
+  mkdir automate-s3p-test;cd automate-s3p-test;
   git clone "https://gerrit.onap.org/r/policy/docker"
   cd docker/csit
 
