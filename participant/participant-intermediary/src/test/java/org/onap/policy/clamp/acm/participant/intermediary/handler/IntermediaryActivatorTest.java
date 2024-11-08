@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2024 Nordix Foundation.
+ *  Copyright (C) 2021-2024-2025 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@
 package org.onap.policy.clamp.acm.participant.intermediary.handler;
 
 import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -39,8 +38,6 @@ import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantSt
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.coder.StandardCoderObject;
-import org.springframework.context.event.ContextClosedEvent;
-import org.springframework.context.event.ContextRefreshedEvent;
 
 class IntermediaryActivatorTest {
     private static final Coder CODER = new StandardCoder();
@@ -68,8 +65,8 @@ class IntermediaryActivatorTest {
 
         List<Listener<ParticipantStatusReq>> listeners = List.of(listenerFirst, listenerSecond);
 
-        var handler = mock(ParticipantHandler.class);
-        try (var activator = new IntermediaryActivator(parameters, handler, publishers, listeners)) {
+        try (var activator = new IntermediaryActivator()) {
+            activator.config(parameters, publishers, listeners);
 
             assertFalse(activator.isAlive());
             activator.start();
@@ -95,9 +92,6 @@ class IntermediaryActivatorTest {
             // repeat stop - should throw an exception
             assertThatIllegalStateException().isThrownBy(activator::stop);
             assertFalse(activator.isAlive());
-
-            assertDoesNotThrow(() -> activator.handleContextRefreshEvent(mock(ContextRefreshedEvent.class)));
-            assertDoesNotThrow(() -> activator.handleContextClosedEvent(mock(ContextClosedEvent.class)));
         }
     }
 }

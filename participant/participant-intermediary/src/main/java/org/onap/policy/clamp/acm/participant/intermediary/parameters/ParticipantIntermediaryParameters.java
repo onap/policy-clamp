@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2024 Nordix Foundation.
+ *  Copyright (C) 2021-2024-2025 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
 import org.onap.policy.common.parameters.topic.TopicParameterGroup;
+import org.onap.policy.common.parameters.topic.TopicParameters;
 import org.onap.policy.common.parameters.validation.ParameterGroupConstraint;
 
 /**
@@ -64,4 +65,7 @@ public class ParticipantIntermediaryParameters {
     @Valid
     private Topics topics = new Topics();
 
+    private Boolean topicValidation = false;
+
+    private TopicParameters clampAdminTopics;
 }

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021,2024 Nordix Foundation.
+ *  Copyright (C) 2021,2024-2025 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,9 +23,8 @@ package org.onap.policy.clamp.acm.participant.intermediary.handler;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import lombok.Getter;
 import org.onap.policy.clamp.acm.participant.intermediary.parameters.ParticipantParameters;
 import org.onap.policy.clamp.acm.participant.intermediary.parameters.Topics;
@@ -34,9 +33,6 @@ import org.onap.policy.common.message.bus.event.TopicEndpointManager;
 import org.onap.policy.common.message.bus.event.TopicSink;
 import org.onap.policy.common.message.bus.event.TopicSource;
 import org.onap.policy.common.utils.services.ServiceManagerContainer;
-import org.springframework.context.event.ContextClosedEvent;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
@@ -48,10 +44,8 @@ public class IntermediaryActivator extends ServiceManagerContainer implements Cl
     private static final String[] MSG_TYPE_NAMES = {"messageType"};
 
     // Topics from which the participant receives and to which the participant sends messages
-    private final List<TopicSink> topicSinks;
-    private final List<TopicSource> topicSources;
-
-    private final ParticipantHandler participantHandler;
+    private final List<TopicSink> topicSinks = new ArrayList<>();
+    private final List<TopicSource> topicSources = new ArrayList<>();
 
     @Getter
     private final MessageTypeDispatcher msgDispatcher;
@@ -60,26 +54,29 @@ public class IntermediaryActivator extends ServiceManagerContainer implements Cl
     private final MessageTypeDispatcher syncMsgDispatcher;
 
     /**
+     * Constructor.
+     */
+    public IntermediaryActivator() {
+        msgDispatcher = new MessageTypeDispatcher(MSG_TYPE_NAMES);
+        syncMsgDispatcher = new MessageTypeDispatcher(MSG_TYPE_NAMES);
+    }
+
+    /**
      * Instantiate the activator for participant.
      *
      * @param parameters the ParticipantParameters
-     * @param participantHandler the ParticipantHandler
      * @param publishers list of Publishers
      * @param listeners list of Listeners
      */
-    public <T> IntermediaryActivator(final ParticipantParameters parameters, ParticipantHandler participantHandler,
-        List<Publisher> publishers, List<Listener<T>> listeners) {
-        this.participantHandler = participantHandler;
+    public <T> void config(ParticipantParameters parameters,
+            List<Publisher> publishers, List<Listener<T>> listeners) {
 
-        topicSinks = TopicEndpointManager.getManager().addTopicSinks(
-            parameters.getIntermediaryParameters().getClampAutomationCompositionTopics().getTopicSinks());
+        topicSinks.addAll(TopicEndpointManager.getManager().addTopicSinks(
+                parameters.getIntermediaryParameters().getClampAutomationCompositionTopics().getTopicSinks()));
 
-        topicSources = TopicEndpointManager.getManager().addTopicSources(
-            parameters.getIntermediaryParameters().getClampAutomationCompositionTopics().getTopicSources());
+        topicSources.addAll(TopicEndpointManager.getManager().addTopicSources(
+            parameters.getIntermediaryParameters().getClampAutomationCompositionTopics().getTopicSources()));
 
-        msgDispatcher = new MessageTypeDispatcher(MSG_TYPE_NAMES);
-
-        syncMsgDispatcher = new MessageTypeDispatcher(MSG_TYPE_NAMES);
 
         // @formatter:off
         addAction("Topic endpoint management",
@@ -106,42 +103,6 @@ public class IntermediaryActivator extends ServiceManagerContainer implements Cl
         addAction("Topic Message Dispatcher", () -> this.registerMsgDispatcher(topics),
                 () -> this.unregisterMsgDispatcher(topics));
         // @formatter:on
-    }
-
-    /**
-     * Handle ContextRefreshEvent.
-     *
-     * @param ctxRefreshedEvent ContextRefreshedEvent
-     */
-    @EventListener
-    public void handleContextRefreshEvent(ContextRefreshedEvent ctxRefreshedEvent) {
-        if (!isAlive()) {
-            start();
-            var task = new TimerTask() {
-                @Override
-                public void run() {
-                    new Thread(participantHandler::sendParticipantRegister).start();
-                }
-            };
-            new Timer().schedule(task, 5000);
-        }
-    }
-
-    /**
-     * Handle ContextClosedEvent.
-     *
-     * @param ctxClosedEvent ContextClosedEvent
-     */
-    @EventListener
-    public void handleContextClosedEvent(ContextClosedEvent ctxClosedEvent) {
-        if (isAlive()) {
-            sendParticipantDeregister();
-            stop();
-        }
-    }
-
-    private void sendParticipantDeregister() {
-        participantHandler.sendParticipantDeregister();
     }
 
     /**
