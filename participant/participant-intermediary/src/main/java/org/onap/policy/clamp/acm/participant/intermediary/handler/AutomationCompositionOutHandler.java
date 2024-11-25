@@ -162,10 +162,10 @@ public class AutomationCompositionOutHandler {
                 LOGGER.warn("SubState has always NO_ERROR result!");
             }
         } else if (deployState != null) {
-            handleDeployState(automationComposition, element, deployState);
+            handleDeployState(automationComposition, element, deployState, stateChangeResult);
         }
         if (lockState != null) {
-            handleLockState(automationComposition, element, lockState);
+            handleLockState(automationComposition, element, lockState, stateChangeResult);
         }
 
         var automationCompositionStateChangeAck =
@@ -186,9 +186,12 @@ public class AutomationCompositionOutHandler {
     }
 
     private void handleDeployState(AutomationComposition automationComposition, AutomationCompositionElement element,
-            DeployState deployState) {
+            DeployState deployState, StateChangeResult stateChangeResult) {
         element.setDeployState(deployState);
         element.setLockState(DeployState.DEPLOYED.equals(element.getDeployState()) ? LockState.LOCKED : LockState.NONE);
+        if (StateChangeResult.FAILED.equals(stateChangeResult)) {
+            return;
+        }
         var checkOpt = automationComposition.getElements().values().stream()
                 .filter(acElement -> !deployState.equals(acElement.getDeployState())).findAny();
         if (checkOpt.isEmpty()) {
@@ -209,8 +212,11 @@ public class AutomationCompositionOutHandler {
     }
 
     private void handleLockState(AutomationComposition automationComposition, AutomationCompositionElement element,
-            LockState lockState) {
+            LockState lockState, StateChangeResult stateChangeResult) {
         element.setLockState(lockState);
+        if (StateChangeResult.FAILED.equals(stateChangeResult)) {
+            return;
+        }
         var checkOpt = automationComposition.getElements().values().stream()
                 .filter(acElement -> !lockState.equals(acElement.getLockState())).findAny();
         if (checkOpt.isEmpty()) {
