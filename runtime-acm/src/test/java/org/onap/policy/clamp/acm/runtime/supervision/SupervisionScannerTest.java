@@ -339,6 +339,42 @@ class SupervisionScannerTest {
     }
 
     @Test
+    void testStartPhaseWithNull() {
+        var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
+        automationComposition.setDeployState(DeployState.DEPLOYING);
+        automationComposition.setLockState(LockState.NONE);
+        automationComposition.setPhase(0);
+        automationComposition.setLastMsg(TimestampHelper.now());
+        automationComposition.setCompositionId(compositionId);
+        for (var element : automationComposition.getElements().values()) {
+            if (ELEMENT_NAME.equals(element.getDefinition().getName())) {
+                element.setDeployState(DeployState.DEPLOYING);
+                element.getDefinition().setName("NotExistElement");
+                element.setLockState(LockState.NONE);
+            } else {
+                element.setDeployState(DeployState.DEPLOYING);
+                element.getDefinition().setVersion("0.0.0");
+                element.setLockState(LockState.NONE);
+            }
+        }
+
+        var automationCompositionProvider = mock(AutomationCompositionProvider.class);
+        when(automationCompositionProvider.getAcInstancesInTransition()).thenReturn(List.of(automationComposition));
+
+        var automationCompositionDeployPublisher = mock(AutomationCompositionDeployPublisher.class);
+        var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
+
+        var supervisionScanner = new SupervisionScanner(automationCompositionProvider, createAcDefinitionProvider(),
+                mock(AutomationCompositionStateChangePublisher.class), automationCompositionDeployPublisher,
+                mock(ParticipantSyncPublisher.class), null, acRuntimeParameterGroup);
+
+        supervisionScanner.run();
+
+        verify(automationCompositionDeployPublisher, times(0)).send(any(AutomationComposition.class),
+                any(ToscaServiceTemplate.class), anyInt(), anyBoolean());
+    }
+
+    @Test
     void testSendAutomationCompositionMigrate() {
         var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
         automationComposition.setDeployState(DeployState.MIGRATING);

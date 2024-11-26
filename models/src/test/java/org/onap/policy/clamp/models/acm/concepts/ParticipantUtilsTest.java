@@ -67,6 +67,45 @@ class ParticipantUtilsTest {
     }
 
     @Test
+    void testGetFirstStartPhaseWithNull() throws CoderException {
+        var serviceTemplate = CommonTestData.getToscaServiceTemplate(TOSCA_TEMPLATE_YAML);
+        var automationComposition =
+            CODER.decode(ResourceUtils.getResourceAsString(AUTOMATION_COMPOSITION_JSON), AutomationCompositions.class)
+                    .getAutomationCompositionList().get(0);
+        automationComposition.setDeployState(DeployState.DEPLOYING);
+        automationComposition.setLockState(LockState.NONE);
+
+        serviceTemplate.getToscaTopologyTemplate().getNodeTemplates().values()
+            .forEach(node -> node.setVersion("0.0.0"));
+        var result = ParticipantUtils.getFirstStartPhase(automationComposition, serviceTemplate);
+        assertThat(result).isZero();
+
+        automationComposition.setDeployState(DeployState.DEPLOYED);
+        automationComposition.setLockState(LockState.UNLOCKING);
+        result = ParticipantUtils.getFirstStartPhase(automationComposition, serviceTemplate);
+        assertThat(result).isZero();
+
+        automationComposition.setDeployState(DeployState.UNDEPLOYING);
+        automationComposition.setLockState(LockState.NONE);
+        result = ParticipantUtils.getFirstStartPhase(automationComposition, serviceTemplate);
+        assertThat(result).isZero();
+
+        serviceTemplate.getToscaTopologyTemplate().getNodeTemplates().clear();
+        result = ParticipantUtils.getFirstStartPhase(automationComposition, serviceTemplate);
+        assertThat(result).isZero();
+
+        automationComposition.setDeployState(DeployState.DEPLOYED);
+        automationComposition.setLockState(LockState.UNLOCKING);
+        result = ParticipantUtils.getFirstStartPhase(automationComposition, serviceTemplate);
+        assertThat(result).isZero();
+
+        automationComposition.setDeployState(DeployState.UNDEPLOYING);
+        automationComposition.setLockState(LockState.NONE);
+        result = ParticipantUtils.getFirstStartPhase(automationComposition, serviceTemplate);
+        assertThat(result).isZero();
+    }
+
+    @Test
     void testGetFirstStage() throws CoderException {
         var serviceTemplate = CommonTestData.getToscaServiceTemplate(TOSCA_TEMPLATE_YAML);
         var automationCompositions =

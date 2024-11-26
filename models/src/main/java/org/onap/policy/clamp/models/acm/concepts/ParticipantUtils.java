@@ -48,7 +48,9 @@ public final class ParticipantUtils {
         for (var element : automationComposition.getElements().values()) {
             var toscaNodeTemplate = toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates()
                 .get(element.getDefinition().getName());
-            int startPhase = ParticipantUtils.findStartPhase(toscaNodeTemplate.getProperties());
+            int startPhase = toscaNodeTemplate != null
+                    && element.getDefinition().getVersion().equals(toscaNodeTemplate.getVersion())
+                    ? ParticipantUtils.findStartPhase(toscaNodeTemplate.getProperties()) : 0;
             minStartPhase = Math.min(minStartPhase, startPhase);
             maxStartPhase = Math.max(maxStartPhase, startPhase);
         }

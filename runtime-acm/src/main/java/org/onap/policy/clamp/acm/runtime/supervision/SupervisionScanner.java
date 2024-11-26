@@ -173,7 +173,9 @@ public class SupervisionScanner {
         for (var element : automationComposition.getElements().values()) {
             var toscaNodeTemplate = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates()
                     .get(element.getDefinition().getName());
-            int startPhase = ParticipantUtils.findStartPhase(toscaNodeTemplate.getProperties());
+            int startPhase = toscaNodeTemplate != null
+                    && element.getDefinition().getVersion().equals(toscaNodeTemplate.getVersion())
+                    ? ParticipantUtils.findStartPhase(toscaNodeTemplate.getProperties()) : 0;
             defaultMin = Math.min(defaultMin, startPhase);
             defaultMax = Math.max(defaultMax, startPhase);
             if (AcmUtils.isInTransitionalState(element.getDeployState(), element.getLockState(),

@@ -65,6 +65,8 @@ class CacheProviderTest {
                 .isInstanceOf(NullPointerException.class);
         assertThatThrownBy(() -> cacheProvider.getCommonProperties(instanceId, (UUID) null))
                 .isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> cacheProvider.getCommonProperties(null, instanceId))
+                .isInstanceOf(NullPointerException.class);
 
         assertThatThrownBy(() -> cacheProvider.removeAutomationComposition(null))
                 .isInstanceOf(NullPointerException.class);

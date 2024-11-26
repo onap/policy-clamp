@@ -45,6 +45,7 @@ import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.stereotype.Component;
 
@@ -140,7 +141,8 @@ public class CacheProvider {
         var automationComposition = automationCompositions.get(instanceId);
         var map = acElementsDefinitions.get(automationComposition.getCompositionId());
         var element = automationComposition.getElements().get(acElementId);
-        return map.get(element.getDefinition()).getAutomationCompositionElementToscaNodeTemplate().getProperties();
+        return getAcElementDefinition(map, element.getDefinition())
+                .getAutomationCompositionElementToscaNodeTemplate().getProperties();
     }
 
     /**
@@ -152,8 +154,20 @@ public class CacheProvider {
      */
     public Map<String, Object> getCommonProperties(@NonNull UUID compositionId,
         @NonNull ToscaConceptIdentifier definition) {
-        return acElementsDefinitions.get(compositionId).get(definition)
-            .getAutomationCompositionElementToscaNodeTemplate().getProperties();
+        return getAcElementDefinition(acElementsDefinitions.get(compositionId), definition)
+                .getAutomationCompositionElementToscaNodeTemplate().getProperties();
+    }
+
+    private AutomationCompositionElementDefinition getAcElementDefinition(
+            Map<ToscaConceptIdentifier, AutomationCompositionElementDefinition> map,
+            ToscaConceptIdentifier definition) {
+        var nodeTemplate = map.get(definition);
+        if (nodeTemplate == null) {
+            nodeTemplate = new AutomationCompositionElementDefinition();
+            nodeTemplate.setAutomationCompositionElementToscaNodeTemplate(new ToscaNodeTemplate());
+            nodeTemplate.getAutomationCompositionElementToscaNodeTemplate().setProperties(new HashMap<>());
+        }
+        return nodeTemplate;
     }
 
     /**
@@ -273,8 +287,8 @@ public class CacheProvider {
      */
     public CompositionElementDto createCompositionElementDto(UUID compositionId, AutomationCompositionElement element,
             Map<String, Object> compositionInProperties) {
-        var compositionOutProperties = getAcElementsDefinitions()
-                .get(compositionId).get(element.getDefinition()).getOutProperties();
+        var compositionOutProperties = getAcElementDefinition(acElementsDefinitions
+                .get(compositionId), element.getDefinition()).getOutProperties();
         return new CompositionElementDto(compositionId,
                 element.getDefinition(), compositionInProperties, compositionOutProperties);
     }
@@ -291,7 +305,7 @@ public class CacheProvider {
         var definitions = acElementsDefinitions.get(compositionId);
         Map<UUID, CompositionElementDto> map = new HashMap<>();
         for (var element : automationComposition.getElements().values()) {
-            var definition = definitions.get(element.getDefinition());
+            var definition = getAcElementDefinition(definitions, element.getDefinition());
             var compositionElement = (definition != null)
                     ? new CompositionElementDto(compositionId, element.getDefinition(),
                             definition.getAutomationCompositionElementToscaNodeTemplate().getProperties(),

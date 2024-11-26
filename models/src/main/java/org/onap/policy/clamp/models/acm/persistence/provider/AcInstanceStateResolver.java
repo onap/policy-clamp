@@ -139,6 +139,8 @@ public class AcInstanceStateResolver {
         this.graph.put(new String[] {UNDEPLOY, LOCK_NONE, SUB_NONE,
             UNDEPLOYING, STATE_LOCKED_NONE, SUB_STATE_NONE, TIMEOUT}, UNDEPLOY);
         this.graph.put(new String[] {UNDEPLOY, LOCK_NONE, SUB_NONE,
+            UNDEPLOYING, LOCKED, SUB_STATE_NONE, TIMEOUT}, UNDEPLOY);
+        this.graph.put(new String[] {UNDEPLOY, LOCK_NONE, SUB_NONE,
             UPDATING, LOCKED, SUB_STATE_NONE, TIMEOUT}, UNDEPLOY);
         this.graph.put(new String[] {UNDEPLOY, LOCK_NONE, SUB_NONE,
             MIGRATING, LOCKED, SUB_STATE_NONE, TIMEOUT}, UNDEPLOY);
