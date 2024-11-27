@@ -305,7 +305,7 @@ public class CacheProvider {
         var definitions = acElementsDefinitions.get(compositionId);
         Map<UUID, CompositionElementDto> map = new HashMap<>();
         for (var element : automationComposition.getElements().values()) {
-            var definition = getAcElementDefinition(definitions, element.getDefinition());
+            var definition = definitions.get(element.getDefinition());
             var compositionElement = (definition != null)
                     ? new CompositionElementDto(compositionId, element.getDefinition(),
                             definition.getAutomationCompositionElementToscaNodeTemplate().getProperties(),

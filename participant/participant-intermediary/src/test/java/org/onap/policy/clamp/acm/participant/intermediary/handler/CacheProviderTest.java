@@ -27,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.clamp.acm.participant.intermediary.api.ElementState;
 import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
@@ -203,7 +204,12 @@ class CacheProviderTest {
         for (var element : automationComposition.getElements().values()) {
             var compositionElementDto = result.get(element.getId());
             assertEquals(element.getDefinition(), compositionElementDto.elementDefinitionId());
+            assertEquals(ElementState.PRESENT, result.get(element.getId()).state());
         }
+        var element = automationComposition.getElements().values().iterator().next();
+        element.setDefinition(new ToscaConceptIdentifier("NotExist", "0.0.0"));
+        result = cacheProvider.getCompositionElementDtoMap(automationComposition);
+        assertEquals(ElementState.NOT_PRESENT, result.get(element.getId()).state());
     }
 
     @Test
