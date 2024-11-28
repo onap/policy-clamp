@@ -68,6 +68,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class AutomationCompositionInstantiationProvider {
     private static final String DO_NOT_MATCH = " do not match with ";
     private static final String ELEMENT_ID_NOT_PRESENT = "Element id not present ";
+    private static final String NOT_VALID_ORDER =
+            "Not valid order %s; DeployState: %s; LockState: %s; SubState: %s; StateChangeResult: %s";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AutomationCompositionInstantiationProvider.class);
 
@@ -472,7 +474,10 @@ public class AutomationCompositionInstantiationProvider {
                 break;
 
             default:
-                throw new PfModelRuntimeException(Status.BAD_REQUEST, "Not valid " + acInstanceStateUpdate);
+                var msg = String.format(NOT_VALID_ORDER, acInstanceStateUpdate,
+                        automationComposition.getDeployState(), automationComposition.getLockState(),
+                        automationComposition.getSubState(), automationComposition.getStateChangeResult());
+                throw new PfModelRuntimeException(Status.BAD_REQUEST, msg);
         }
     }
 }

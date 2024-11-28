@@ -100,19 +100,12 @@ public class AcInstanceStateResolver {
             DEPLOYED, LOCKED, SUB_STATE_NONE, NO_ERROR}, MIGRATE_PRECHECK);
 
         // make an order in a failed scenario
-        this.graph.put(new String[] {DEPLOY, LOCK_NONE, SUB_NONE,
-            UNDEPLOYING, STATE_LOCKED_NONE, SUB_STATE_NONE, FAILED}, DEPLOY);
-        this.graph.put(new String[] {DEPLOY, LOCK_NONE, SUB_NONE,
-            DEPLOYING, STATE_LOCKED_NONE, SUB_STATE_NONE, FAILED}, DEPLOY);
-
-        this.graph.put(new String[] {UNDEPLOY, LOCK_NONE, SUB_NONE,
-            UNDEPLOYING, STATE_LOCKED_NONE, SUB_STATE_NONE, FAILED}, UNDEPLOY);
+        setAllowed(DEPLOY);
+        setAllowed(UNDEPLOY);
         this.graph.put(new String[] {UNDEPLOY, LOCK_NONE, SUB_NONE,
             UPDATING, LOCKED, SUB_STATE_NONE, FAILED}, UNDEPLOY);
         this.graph.put(new String[] {UNDEPLOY, LOCK_NONE, SUB_NONE,
             MIGRATING, LOCKED, SUB_STATE_NONE, FAILED}, UNDEPLOY);
-        this.graph.put(new String[] {UNDEPLOY, LOCK_NONE, SUB_NONE,
-            DEPLOYING, STATE_LOCKED_NONE, SUB_STATE_NONE, FAILED}, UNDEPLOY);
 
         this.graph.put(new String[] {DELETE, LOCK_NONE, SUB_NONE,
             DELETING, LOCK_NONE, SUB_STATE_NONE, FAILED}, DELETE);
@@ -131,23 +124,12 @@ public class AcInstanceStateResolver {
             DEPLOYED, LOCKED, MIGRATION_PRECHECKING, FAILED}, MIGRATE_PRECHECK);
 
         // timeout
-        this.graph.put(new String[] {DEPLOY, LOCK_NONE, SUB_NONE,
-            UNDEPLOYING, STATE_LOCKED_NONE, SUB_STATE_NONE, TIMEOUT}, DEPLOY);
-        this.graph.put(new String[] {DEPLOY, LOCK_NONE, SUB_NONE,
-            DEPLOYING, STATE_LOCKED_NONE, SUB_STATE_NONE, TIMEOUT}, DEPLOY);
-
-        this.graph.put(new String[] {UNDEPLOY, LOCK_NONE, SUB_NONE,
-            UNDEPLOYING, STATE_LOCKED_NONE, SUB_STATE_NONE, TIMEOUT}, UNDEPLOY);
-        this.graph.put(new String[] {UNDEPLOY, LOCK_NONE, SUB_NONE,
-            UNDEPLOYING, LOCKED, SUB_STATE_NONE, TIMEOUT}, UNDEPLOY);
         this.graph.put(new String[] {UNDEPLOY, LOCK_NONE, SUB_NONE,
             UPDATING, LOCKED, SUB_STATE_NONE, TIMEOUT}, UNDEPLOY);
         this.graph.put(new String[] {UNDEPLOY, LOCK_NONE, SUB_NONE,
             MIGRATING, LOCKED, SUB_STATE_NONE, TIMEOUT}, UNDEPLOY);
         this.graph.put(new String[] {UNDEPLOY, LOCK_NONE, SUB_NONE,
             MIGRATION_PRECHECKING, LOCKED, SUB_STATE_NONE, TIMEOUT}, UNDEPLOY);
-        this.graph.put(new String[] {UNDEPLOY, LOCK_NONE, SUB_NONE,
-            DEPLOYING, STATE_LOCKED_NONE, SUB_STATE_NONE, TIMEOUT}, UNDEPLOY);
 
         this.graph.put(new String[] {DELETE, LOCK_NONE, SUB_NONE,
             DELETING, LOCK_NONE, SUB_STATE_NONE, TIMEOUT}, DELETE);
@@ -166,6 +148,28 @@ public class AcInstanceStateResolver {
 
         this.graph.put(new String[] {DEPLOY_NONE, LOCK_NONE, MIGRATE_PRECHECK,
             DEPLOYED, LOCKED, MIGRATION_PRECHECKING, TIMEOUT}, MIGRATE_PRECHECK);
+    }
+
+    private void setAllowed(String deployOrder) {
+        this.graph.put(new String[] {deployOrder, LOCK_NONE, SUB_NONE,
+            UNDEPLOYING, STATE_LOCKED_NONE, SUB_STATE_NONE, FAILED}, deployOrder);
+        this.graph.put(new String[] {deployOrder, LOCK_NONE, SUB_NONE,
+            UNDEPLOYING, LOCKED, SUB_STATE_NONE, FAILED}, deployOrder);
+
+        this.graph.put(new String[] {deployOrder, LOCK_NONE, SUB_NONE,
+            UNDEPLOYING, STATE_LOCKED_NONE, SUB_STATE_NONE, TIMEOUT}, deployOrder);
+        this.graph.put(new String[] {deployOrder, LOCK_NONE, SUB_NONE,
+            UNDEPLOYING, LOCKED, SUB_STATE_NONE, TIMEOUT}, deployOrder);
+
+        this.graph.put(new String[] {deployOrder, LOCK_NONE, SUB_NONE,
+            DEPLOYING, STATE_LOCKED_NONE, SUB_STATE_NONE, FAILED}, deployOrder);
+        this.graph.put(new String[] {deployOrder, LOCK_NONE, SUB_NONE,
+            DEPLOYING, LOCKED, SUB_STATE_NONE, FAILED}, deployOrder);
+
+        this.graph.put(new String[] {deployOrder, LOCK_NONE, SUB_NONE,
+            DEPLOYING, STATE_LOCKED_NONE, SUB_STATE_NONE, TIMEOUT}, deployOrder);
+        this.graph.put(new String[] {deployOrder, LOCK_NONE, SUB_NONE,
+            DEPLOYING, LOCKED, SUB_STATE_NONE, TIMEOUT}, deployOrder);
     }
 
     /**
