@@ -22,6 +22,30 @@
       },
       "revId": "0ddf9621ff0a8bdcf3f08638dab35d958e978843",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "997a656b_e921d7e1",
+        "filename": "runtime-acm/src/test/resources/logback.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2024-12-02T17:04:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2bb5c575_4563e3d3",
+      "range": {
+        "startLine": 3,
+        "startChar": 22,
+        "endLine": 3,
+        "endChar": 30
+      },
+      "revId": "0ddf9621ff0a8bdcf3f08638dab35d958e978843",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
