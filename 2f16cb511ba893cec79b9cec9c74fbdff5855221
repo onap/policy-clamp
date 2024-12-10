@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "91d48ba5_f1e95215",
+        "filename": "participant/participant-intermediary/src/test/java/org/onap/policy/clamp/acm/participant/intermediary/api/impl/ParticipantIntermediaryApiImplTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2024-12-10T15:15:17Z",
+      "side": 1,
+      "message": "sonar said this is not being used.\nhttps://sonarcloud.io/project/issues?sinceLeakPeriod\u003dtrue\u0026issueStatuses\u003dOPEN%2CCONFIRMED\u0026branch\u003d139704-2\u0026id\u003donap_policy-clamp\u0026open\u003dAZOww66G8_r8rK9wFLBk",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 25,
+        "endChar": 61
+      },
+      "revId": "2f16cb511ba893cec79b9cec9c74fbdff5855221",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
