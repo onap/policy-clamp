@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b309a614_efa658a0",
+        "filename": "examples/src/main/resources/clamp/acm/acelement-helm/acelement/values.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2024-12-11T14:47:09Z",
+      "side": 1,
+      "message": "Should we use the latest version 8.0.1 ?",
+      "range": {
+        "startLine": 29,
+        "startChar": 8,
+        "endLine": 29,
+        "endChar": 13
+      },
+      "revId": "62574d5d0a802317202a872ba73675c42af456bf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3a823d2d_aad1a6ca",
+        "filename": "examples/src/main/resources/clamp/acm/acm-demo/AutomationComposition.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2024-12-11T14:47:09Z",
+      "side": 1,
+      "message": "Should there a be a field inside properties for providing the full tosca template ?",
+      "range": {
+        "startLine": 31,
+        "startChar": 6,
+        "endLine": 31,
+        "endChar": 31
+      },
+      "revId": "62574d5d0a802317202a872ba73675c42af456bf",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
