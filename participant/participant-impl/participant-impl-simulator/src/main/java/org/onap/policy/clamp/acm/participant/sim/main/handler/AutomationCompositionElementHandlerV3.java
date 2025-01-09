@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024 Nordix Foundation.
+ *  Copyright (C) 2024-2025 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,6 @@ import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantInterme
 import org.onap.policy.clamp.acm.participant.intermediary.api.impl.AcElementListenerV3;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
 
 /**
@@ -38,7 +37,6 @@ import org.springframework.stereotype.Component;
  */
 @Getter
 @Setter
-@ConditionalOnExpression("'${element.handler:AcElementHandlerV3}' == 'AcElementHandlerV3'")
 @Component
 public class AutomationCompositionElementHandlerV3 extends AcElementListenerV3 {
 
@@ -61,7 +59,8 @@ public class AutomationCompositionElementHandlerV3 extends AcElementListenerV3 {
     @Override
     public void deploy(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
         LOGGER.debug("deploy call compositionElement: {}, instanceElement: {}", compositionElement, instanceElement);
-        simulatorService.deploy(instanceElement.instanceId(), instanceElement.elementId());
+        simulatorService.deploy(instanceElement.instanceId(), instanceElement.elementId(),
+                instanceElement.outProperties());
     }
 
     /**
@@ -73,7 +72,8 @@ public class AutomationCompositionElementHandlerV3 extends AcElementListenerV3 {
     @Override
     public void undeploy(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
         LOGGER.debug("undeploy call compositionElement: {}, instanceElement: {}", compositionElement, instanceElement);
-        simulatorService.undeploy(instanceElement.instanceId(), instanceElement.elementId());
+        simulatorService.undeploy(instanceElement.instanceId(), instanceElement.elementId(),
+                instanceElement.outProperties());
     }
 
     @Override
@@ -105,13 +105,13 @@ public class AutomationCompositionElementHandlerV3 extends AcElementListenerV3 {
     @Override
     public void prime(CompositionDto composition) {
         LOGGER.debug("prime call composition: {}", composition);
-        simulatorService.prime(composition.compositionId());
+        simulatorService.prime(composition);
     }
 
     @Override
     public void deprime(CompositionDto composition) {
         LOGGER.debug("deprime call composition: {}", composition);
-        simulatorService.deprime(composition.compositionId());
+        simulatorService.deprime(composition);
     }
 
     @Override
@@ -125,7 +125,8 @@ public class AutomationCompositionElementHandlerV3 extends AcElementListenerV3 {
             LOGGER.debug("new element scenario");
         }
         if (ElementState.REMOVED.equals(instanceElementMigrate.state())) {
-            simulatorService.undeploy(instanceElement.instanceId(), instanceElement.elementId());
+            simulatorService.undeploy(instanceElement.instanceId(), instanceElement.elementId(),
+                    instanceElement.outProperties());
             simulatorService.delete(instanceElement.instanceId(), instanceElement.elementId());
         } else {
             simulatorService.migrate(instanceElementMigrate.instanceId(), instanceElementMigrate.elementId(), stage,

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024 Nordix Foundation.
+ *  Copyright (C) 2024-2025 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,56 +36,13 @@ import org.onap.policy.models.base.PfModelException;
  * Wrapper of AutomationCompositionElementListener.
  * Valid since 7.1.1 release.
  */
-public abstract class AcElementListenerV2
+public abstract class AcElementListenerV2 extends AcElementListenerV3
         implements AutomationCompositionElementListener, AutomationCompositionElementListenerV2 {
-    protected final ParticipantIntermediaryApi intermediaryApi;
 
-    private static final String NOT_SUPPORTED = "not supported!";
+    protected static final String NOT_SUPPORTED = "not supported!";
 
     protected AcElementListenerV2(ParticipantIntermediaryApi intermediaryApi) {
-        this.intermediaryApi = intermediaryApi;
-    }
-
-    @Override
-    public void lock(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
-        throws PfModelException {
-        intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
-            instanceElement.elementId(), null, LockState.LOCKED, StateChangeResult.NO_ERROR, "Locked");
-    }
-
-    @Override
-    public void unlock(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
-        throws PfModelException {
-        intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
-            instanceElement.elementId(), null, LockState.UNLOCKED, StateChangeResult.NO_ERROR, "Unlocked");
-    }
-
-    @Override
-    public void delete(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
-        throws PfModelException {
-        intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
-            instanceElement.elementId(), DeployState.DELETED, null, StateChangeResult.NO_ERROR, "Deleted");
-    }
-
-    @Override
-    public void update(CompositionElementDto compositionElement, InstanceElementDto instanceElement,
-                       InstanceElementDto instanceElementUpdated) throws PfModelException {
-        intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
-            instanceElement.elementId(), DeployState.DEPLOYED, null,
-            StateChangeResult.NO_ERROR, "Update not supported");
-
-    }
-
-    @Override
-    public void prime(CompositionDto composition) throws PfModelException {
-        intermediaryApi.updateCompositionState(composition.compositionId(), AcTypeState.PRIMED,
-            StateChangeResult.NO_ERROR, "Primed");
-    }
-
-    @Override
-    public void deprime(CompositionDto composition) throws PfModelException {
-        intermediaryApi.updateCompositionState(composition.compositionId(), AcTypeState.COMMISSIONED,
-            StateChangeResult.NO_ERROR, "Deprimed");
+        super(intermediaryApi);
     }
 
     public void handleRestartComposition(CompositionDto composition, AcTypeState state) throws PfModelException {
@@ -110,30 +67,5 @@ public abstract class AcElementListenerV2
         throws PfModelException {
         intermediaryApi.updateAutomationCompositionElementState(instanceElementMigrate.instanceId(),
             instanceElementMigrate.elementId(), DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Migrated");
-    }
-
-    @Override
-    public void migratePrecheck(CompositionElementDto compositionElement,
-                                CompositionElementDto compositionElementTarget, InstanceElementDto instanceElement,
-                                InstanceElementDto instanceElementMigrate) throws PfModelException {
-        intermediaryApi.updateAutomationCompositionElementState(instanceElementMigrate.instanceId(),
-            instanceElementMigrate.elementId(), DeployState.DEPLOYED, null,
-            StateChangeResult.NO_ERROR, "Migration Precheck completed");
-    }
-
-    @Override
-    public void review(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
-        throws PfModelException {
-        intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
-            instanceElement.elementId(), DeployState.DEPLOYED, null,
-            StateChangeResult.NO_ERROR, "Review completed");
-    }
-
-    @Override
-    public void prepare(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
-        throws PfModelException {
-        intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
-            instanceElement.elementId(), DeployState.UNDEPLOYED, null,
-            StateChangeResult.NO_ERROR, "Prepare completed");
     }
 }
