@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023-2024 Nordix Foundation.
+ *  Copyright (C) 2023-2025 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,7 +57,8 @@ public class AutomationCompositionElementHandlerV2 extends AcElementListenerV2 {
     @Override
     public void deploy(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
         LOGGER.debug("deploy call compositionElement: {}, instanceElement: {}", compositionElement, instanceElement);
-        simulatorService.deploy(instanceElement.instanceId(), instanceElement.elementId());
+        simulatorService.deploy(instanceElement.instanceId(), instanceElement.elementId(),
+                instanceElement.outProperties());
     }
 
     /**
@@ -69,7 +70,8 @@ public class AutomationCompositionElementHandlerV2 extends AcElementListenerV2 {
     @Override
     public void undeploy(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
         LOGGER.debug("undeploy call compositionElement: {}, instanceElement: {}", compositionElement, instanceElement);
-        simulatorService.undeploy(instanceElement.instanceId(), instanceElement.elementId());
+        simulatorService.undeploy(instanceElement.instanceId(), instanceElement.elementId(),
+                instanceElement.outProperties());
     }
 
     @Override
@@ -101,13 +103,13 @@ public class AutomationCompositionElementHandlerV2 extends AcElementListenerV2 {
     @Override
     public void prime(CompositionDto composition) {
         LOGGER.debug("prime call composition: {}", composition);
-        simulatorService.prime(composition.compositionId());
+        simulatorService.prime(composition);
     }
 
     @Override
     public void deprime(CompositionDto composition) {
         LOGGER.debug("deprime call composition: {}", composition);
-        simulatorService.deprime(composition.compositionId());
+        simulatorService.deprime(composition);
     }
 
     @Override
@@ -122,7 +124,8 @@ public class AutomationCompositionElementHandlerV2 extends AcElementListenerV2 {
 
         }
         if (ElementState.REMOVED.equals(instanceElementMigrate.state())) {
-            simulatorService.undeploy(instanceElement.instanceId(), instanceElement.elementId());
+            simulatorService.undeploy(instanceElement.instanceId(), instanceElement.elementId(),
+                    instanceElement.outProperties());
             simulatorService.delete(instanceElement.instanceId(), instanceElement.elementId());
         } else {
             simulatorService.migrate(instanceElement.instanceId(), instanceElement.elementId(),

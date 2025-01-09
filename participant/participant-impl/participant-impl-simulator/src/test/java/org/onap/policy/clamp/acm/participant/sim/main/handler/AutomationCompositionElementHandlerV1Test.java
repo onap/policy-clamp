@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023-2024 Nordix Foundation.
+ *  Copyright (C) 2023-2025 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,9 @@ package org.onap.policy.clamp.acm.participant.sim.main.handler;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -31,9 +33,12 @@ import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantInterme
 import org.onap.policy.clamp.acm.participant.sim.comm.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 
 class AutomationCompositionElementHandlerV1Test {
 
@@ -158,12 +163,12 @@ class AutomationCompositionElementHandlerV1Test {
         var simulatorService = new SimulatorService(intermediaryApi);
         var acElementHandler = new AutomationCompositionElementHandlerV1(intermediaryApi, simulatorService);
         simulatorService.setConfig(config);
-        acElementHandler.prime(COMPOSITION_ID, List.of());
+        acElementHandler.prime(COMPOSITION_ID, List.of(createAutomationCompositionElementDefinition()));
         verify(intermediaryApi).updateCompositionState(COMPOSITION_ID, AcTypeState.PRIMED, StateChangeResult.NO_ERROR,
                 "Primed");
 
         config.setPrimeSuccess(false);
-        acElementHandler.prime(COMPOSITION_ID, List.of());
+        acElementHandler.prime(COMPOSITION_ID, List.of(createAutomationCompositionElementDefinition()));
         verify(intermediaryApi).updateCompositionState(COMPOSITION_ID, AcTypeState.COMMISSIONED,
                 StateChangeResult.FAILED, "Prime failed!");
     }
@@ -172,6 +177,9 @@ class AutomationCompositionElementHandlerV1Test {
     void testDeprime() {
         var config = CommonTestData.createSimConfig();
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var acElementDefinition = createAutomationCompositionElementDefinition();
+        when(intermediaryApi.getAcElementsDefinitions(COMPOSITION_ID))
+                .thenReturn(Map.of(acElementDefinition.getAcElementDefinitionId(), acElementDefinition));
         var simulatorService = new SimulatorService(intermediaryApi);
         var acElementHandler = new AutomationCompositionElementHandlerV1(intermediaryApi, simulatorService);
         simulatorService.setConfig(config);
@@ -183,6 +191,15 @@ class AutomationCompositionElementHandlerV1Test {
         acElementHandler.deprime(COMPOSITION_ID);
         verify(intermediaryApi).updateCompositionState(COMPOSITION_ID, AcTypeState.PRIMED, StateChangeResult.FAILED,
                 "Deprime failed!");
+    }
+
+    private AutomationCompositionElementDefinition createAutomationCompositionElementDefinition() {
+        var acElementDefinition = new AutomationCompositionElementDefinition();
+        acElementDefinition.setAutomationCompositionElementToscaNodeTemplate(new ToscaNodeTemplate());
+        acElementDefinition.getAutomationCompositionElementToscaNodeTemplate().setProperties(Map.of());
+        acElementDefinition.setAcElementDefinitionId(new ToscaConceptIdentifier("name", "1.0.0"));
+        acElementDefinition.setOutProperties(new HashMap<>());
+        return acElementDefinition;
     }
 
     @Test

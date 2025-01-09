@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024 Nordix Foundation.
+ *  Copyright (C) 2024-2025 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.acm.participant.intermediary.api.impl.AcElementListenerV1;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
@@ -50,13 +52,13 @@ public class AutomationCompositionElementHandlerV1 extends AcElementListenerV1 {
     @Override
     public void deploy(UUID instanceId, AcElementDeploy element, Map<String, Object> properties) {
         LOGGER.debug("deploy call instanceId: {}, element: {}, properties: {}", instanceId, element, properties);
-        simulatorService.deploy(instanceId, element.getId());
+        simulatorService.deploy(instanceId, element.getId(), new HashMap<>());
     }
 
     @Override
     public void undeploy(UUID instanceId, UUID elementId) {
         LOGGER.debug("undeploy call instanceId: {}, elementId: {}", instanceId, elementId);
-        simulatorService.undeploy(instanceId, elementId);
+        simulatorService.undeploy(instanceId, elementId, new HashMap<>());
     }
 
     @Override
@@ -86,13 +88,28 @@ public class AutomationCompositionElementHandlerV1 extends AcElementListenerV1 {
     @Override
     public void prime(UUID compositionId, List<AutomationCompositionElementDefinition> elementDefinitionList) {
         LOGGER.debug("prime call compositionId: {}, elementDefinitionList: {}", compositionId, elementDefinitionList);
-        simulatorService.prime(compositionId);
+        var outPropertiesMap = elementDefinitionList.stream().collect(Collectors.toMap(
+                AutomationCompositionElementDefinition::getAcElementDefinitionId,
+                AutomationCompositionElementDefinition::getOutProperties));
+        var inPropertiesMap = elementDefinitionList.stream().collect(Collectors.toMap(
+                AutomationCompositionElementDefinition::getAcElementDefinitionId,
+                acDef -> acDef.getAutomationCompositionElementToscaNodeTemplate().getProperties()));
+        var composition = new CompositionDto(compositionId, inPropertiesMap, outPropertiesMap);
+        simulatorService.prime(composition);
     }
 
     @Override
     public void deprime(UUID compositionId) {
         LOGGER.debug("deprime call compositionId: {}", compositionId);
-        simulatorService.deprime(compositionId);
+        var map = intermediaryApi.getAcElementsDefinitions(compositionId);
+        var outPropertiesMap = map.values().stream().collect(Collectors.toMap(
+                AutomationCompositionElementDefinition::getAcElementDefinitionId,
+                AutomationCompositionElementDefinition::getOutProperties));
+        var inPropertiesMap = map.values().stream().collect(Collectors.toMap(
+                AutomationCompositionElementDefinition::getAcElementDefinitionId,
+                acDef -> acDef.getAutomationCompositionElementToscaNodeTemplate().getProperties()));
+        var composition = new CompositionDto(compositionId, inPropertiesMap, outPropertiesMap);
+        simulatorService.deprime(composition);
     }
 
     @Override
