@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024 Nordix Foundation.
+ *  Copyright (C) 2024-2025 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,11 +42,13 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 class AutomationCompositionElementHandlerV3Test {
 
+    private static final ToscaConceptIdentifier ELEMENT_DEFINITION_ID = new ToscaConceptIdentifier("name", "1.0.0");
     private static final CompositionElementDto COMPOSITION_ELEMENT =
-            new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(), Map.of(), Map.of());
+            new CompositionElementDto(UUID.randomUUID(), ELEMENT_DEFINITION_ID, Map.of(), Map.of());
     private static final InstanceElementDto INSTANCE_ELEMENT =
-            new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), Map.of(), Map.of());
-    private static final CompositionDto COMPOSITION = new CompositionDto(UUID.randomUUID(), Map.of(), Map.of());
+            new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), Map.of(), new HashMap<>());
+    private static final CompositionDto COMPOSITION = new CompositionDto(UUID.randomUUID(),
+            Map.of(ELEMENT_DEFINITION_ID, Map.of()), Map.of(ELEMENT_DEFINITION_ID, new HashMap<>()));
 
     @Test
     void testDeploy() {

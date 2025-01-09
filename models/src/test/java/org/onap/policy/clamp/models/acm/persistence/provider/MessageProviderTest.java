@@ -191,7 +191,7 @@ class MessageProviderTest {
         var messageJobRepository = mock(MessageJobRepository.class);
         var jpaJob1 = new JpaMessageJob(UUID.randomUUID().toString());
         var jpaJob2 = new JpaMessageJob(UUID.randomUUID().toString());
-        var old = Timestamp.from(Instant.now().minusSeconds(200));
+        var old = Timestamp.from(Instant.now().minusSeconds(220));
         jpaJob2.setJobStarted(old);
         when(messageJobRepository.findAll()).thenReturn(List.of(jpaJob1, jpaJob2));
         var messageProvider = new MessageProvider(mock(MessageRepository.class), messageJobRepository);

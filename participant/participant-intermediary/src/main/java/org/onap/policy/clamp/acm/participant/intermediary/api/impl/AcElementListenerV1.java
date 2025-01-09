@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024 Nordix Foundation.
+ *  Copyright (C) 2024-2025 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,14 +45,11 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
  * Wrapper of AutomationCompositionElementListener.
  * Valid since 7.1.0 release.
  */
-public abstract class AcElementListenerV1
+public abstract class AcElementListenerV1 extends AcElementListenerV2
         implements AutomationCompositionElementListener, AutomationCompositionElementListenerV1 {
-    protected final ParticipantIntermediaryApi intermediaryApi;
-
-    private static final String NOT_SUPPORTED = "not supported!";
 
     protected AcElementListenerV1(ParticipantIntermediaryApi intermediaryApi) {
-        this.intermediaryApi = intermediaryApi;
+        super(intermediaryApi);
     }
 
     @Override
@@ -168,10 +165,6 @@ public abstract class AcElementListenerV1
             "Deprimed");
     }
 
-    public void handleRestartComposition(CompositionDto composition, AcTypeState state) throws PfModelException {
-        throw new PfModelException(Response.Status.BAD_REQUEST, NOT_SUPPORTED);
-    }
-
     /**
      * Default implementation of handle Restart Composition.
      *
@@ -182,11 +175,6 @@ public abstract class AcElementListenerV1
      */
     public void handleRestartComposition(UUID compositionId,
         List<AutomationCompositionElementDefinition> elementDefinitionList, AcTypeState state) throws PfModelException {
-        throw new PfModelException(Response.Status.BAD_REQUEST, NOT_SUPPORTED);
-    }
-
-    public void handleRestartInstance(CompositionElementDto compositionElement, InstanceElementDto instanceElement,
-        DeployState deployState, LockState lockState) throws PfModelException {
         throw new PfModelException(Response.Status.BAD_REQUEST, NOT_SUPPORTED);
     }
 
@@ -223,30 +211,5 @@ public abstract class AcElementListenerV1
                         Map<String, Object> properties) throws PfModelException {
         intermediaryApi.updateAutomationCompositionElementState(instanceId, element.getId(),
             DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Migrated");
-    }
-
-    @Override
-    public void migratePrecheck(CompositionElementDto compositionElement,
-        CompositionElementDto compositionElementTarget, InstanceElementDto instanceElement,
-        InstanceElementDto instanceElementMigrate) throws PfModelException {
-        intermediaryApi.updateAutomationCompositionElementState(instanceElementMigrate.instanceId(),
-            instanceElementMigrate.elementId(), DeployState.DEPLOYED, null,
-            StateChangeResult.NO_ERROR, "Migration Precheck completed");
-    }
-
-    @Override
-    public void review(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
-        throws PfModelException {
-        intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
-            instanceElement.elementId(), DeployState.DEPLOYED, null,
-            StateChangeResult.NO_ERROR, "Review completed");
-    }
-
-    @Override
-    public void prepare(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
-        throws PfModelException {
-        intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
-            instanceElement.elementId(), DeployState.UNDEPLOYED, null,
-            StateChangeResult.NO_ERROR, "Prepare completed");
     }
 }

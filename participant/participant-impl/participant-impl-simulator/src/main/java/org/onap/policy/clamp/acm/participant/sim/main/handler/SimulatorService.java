@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024 Nordix Foundation.
+ *  Copyright (C) 2024-2025 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import java.util.UUID;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.acm.participant.sim.model.InternalData;
 import org.onap.policy.clamp.acm.participant.sim.model.InternalDatas;
@@ -53,6 +54,7 @@ public class SimulatorService {
     private final ParticipantIntermediaryApi intermediaryApi;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SimulatorService.class);
+    private static final String INTERNAL_STATE = "InternalState";
 
     @Getter
     @Setter
@@ -140,7 +142,7 @@ public class SimulatorService {
 
     }
 
-    private boolean execution(int timeMs, String msg, UUID elementId) {
+    protected boolean execution(int timeMs, String msg, UUID elementId) {
         long endTime = System.currentTimeMillis() + timeMs;
         while (System.currentTimeMillis() < endTime) {
             try {
@@ -163,17 +165,24 @@ public class SimulatorService {
      *
      * @param instanceId the instanceId
      * @param elementId the elementId
+     * @param outProperties the outProperties
      */
-    public void deploy(UUID instanceId, UUID elementId) {
+    public void deploy(UUID instanceId, UUID elementId, Map<String, Object> outProperties) {
         if (!execution(getConfig().getDeployTimerMs(),
                 "Current Thread deploy is Interrupted during execution {}", elementId)) {
             return;
         }
 
         if (getConfig().isDeploySuccess()) {
+            outProperties.put(INTERNAL_STATE, DeployState.DEPLOYED.name());
+            intermediaryApi.sendAcElementInfo(instanceId, elementId, null, null, outProperties);
+
             intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId,
                     DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Deployed");
         } else {
+            outProperties.put(INTERNAL_STATE, DeployState.UNDEPLOYED.name());
+            intermediaryApi.sendAcElementInfo(instanceId, elementId, null, null, outProperties);
+
             intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId,
                     DeployState.UNDEPLOYED, null, StateChangeResult.FAILED, "Deploy failed!");
         }
@@ -184,17 +193,24 @@ public class SimulatorService {
      *
      * @param instanceId the instanceId
      * @param elementId the elementId
+     * @param outProperties the outProperties
      */
-    public void undeploy(UUID instanceId, UUID elementId) {
+    public void undeploy(UUID instanceId, UUID elementId, Map<String, Object> outProperties) {
         if (!execution(getConfig().getUndeployTimerMs(),
                 "Current Thread undeploy is Interrupted during execution {}", elementId)) {
             return;
         }
 
         if (getConfig().isUndeploySuccess()) {
+            outProperties.put(INTERNAL_STATE, DeployState.UNDEPLOYED.name());
+            intermediaryApi.sendAcElementInfo(instanceId, elementId, null, null, outProperties);
+
             intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId,
                     DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR, "Undeployed");
         } else {
+            outProperties.put(INTERNAL_STATE, DeployState.DEPLOYED.name());
+            intermediaryApi.sendAcElementInfo(instanceId, elementId, null, null, outProperties);
+
             intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId,
                     DeployState.DEPLOYED, null, StateChangeResult.FAILED, "Undeploy failed!");
         }
@@ -287,40 +303,52 @@ public class SimulatorService {
     /**
      * Handle a prime on a automation composition definition.
      *
-     * @param compositionId the compositionId
+     * @param composition the information of the Automation Composition Definition
      */
-    public void prime(UUID compositionId) {
+    public void prime(CompositionDto composition) {
         if (!execution(getConfig().getPrimeTimerMs(),
-                "Current Thread prime is Interrupted during execution {}", compositionId)) {
+                "Current Thread prime is Interrupted during execution {}", composition.compositionId())) {
             return;
         }
 
         if (getConfig().isPrimeSuccess()) {
-            intermediaryApi.updateCompositionState(compositionId, AcTypeState.PRIMED, StateChangeResult.NO_ERROR,
-                    "Primed");
+            sendOutProperties(composition, AcTypeState.PRIMED.name());
+            intermediaryApi.updateCompositionState(composition.compositionId(), AcTypeState.PRIMED,
+                    StateChangeResult.NO_ERROR, "Primed");
         } else {
-            intermediaryApi.updateCompositionState(compositionId, AcTypeState.COMMISSIONED, StateChangeResult.FAILED,
-                    "Prime failed!");
+            sendOutProperties(composition, AcTypeState.COMMISSIONED.name());
+            intermediaryApi.updateCompositionState(composition.compositionId(), AcTypeState.COMMISSIONED,
+                    StateChangeResult.FAILED, "Prime failed!");
+        }
+    }
+
+    private void sendOutProperties(CompositionDto composition, String data) {
+        for (var elementEntry : composition.outPropertiesMap().entrySet()) {
+            elementEntry.getValue().put(INTERNAL_STATE, data);
+            intermediaryApi.sendAcDefinitionInfo(
+                    composition.compositionId(), elementEntry.getKey(), elementEntry.getValue());
         }
     }
 
     /**
      * Handle a deprime on a automation composition definition.
      *
-     * @param compositionId the compositionId
+     * @param composition the information of the Automation Composition Definition
      */
-    public void deprime(UUID compositionId) {
+    public void deprime(CompositionDto composition) {
         if (!execution(getConfig().getDeprimeTimerMs(),
-                "Current Thread deprime is Interrupted during execution {}", compositionId)) {
+                "Current Thread deprime is Interrupted during execution {}", composition.compositionId())) {
             return;
         }
 
         if (getConfig().isDeprimeSuccess()) {
-            intermediaryApi.updateCompositionState(compositionId, AcTypeState.COMMISSIONED, StateChangeResult.NO_ERROR,
-                    "Deprimed");
+            sendOutProperties(composition, AcTypeState.COMMISSIONED.name());
+            intermediaryApi.updateCompositionState(composition.compositionId(), AcTypeState.COMMISSIONED,
+                    StateChangeResult.NO_ERROR, "Deprimed");
         } else {
-            intermediaryApi.updateCompositionState(compositionId, AcTypeState.PRIMED, StateChangeResult.FAILED,
-                    "Deprime failed!");
+            sendOutProperties(composition, AcTypeState.PRIMED.name());
+            intermediaryApi.updateCompositionState(composition.compositionId(), AcTypeState.PRIMED,
+                    StateChangeResult.FAILED, "Deprime failed!");
         }
     }
 
