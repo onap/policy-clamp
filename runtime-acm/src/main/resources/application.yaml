@@ -9,8 +9,8 @@ spring:
     converters:
       preferred-json-mapper: gson
   datasource:
-    url: jdbc:mariadb://${mariadb.host:localhost}:${mariadb.port:3306}/clampacm
-    driverClassName: org.mariadb.jdbc.Driver
+    url: jdbc:postgresql://${postgresql.host:localhost}:${postgresql.port:5432}/clampacm
+    driverClassName: org.postgresql.Driver
     username: policy
     password: P01icY
     hikari:
