@@ -25,7 +25,7 @@ import jakarta.validation.ValidationException;
 import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.http.HttpStatus;
+import org.apache.hc.core5.http.HttpStatus;
 import org.onap.policy.clamp.acm.participant.a1pms.exception.A1PolicyServiceException;
 import org.onap.policy.clamp.acm.participant.a1pms.models.ConfigurationEntity;
 import org.onap.policy.clamp.acm.participant.a1pms.webclient.AcA1PmsClient;
