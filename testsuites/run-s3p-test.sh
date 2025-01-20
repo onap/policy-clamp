@@ -22,28 +22,42 @@ if [ -z "${WORKSPACE}" ]; then
     export WORKSPACE=$(git rev-parse --show-toplevel)
 fi
 
+export PROJECT="clamp"
 export TESTDIR=${WORKSPACE}/testsuites
 export ACM_PERF_TEST_FILE=$TESTDIR/performance/src/main/resources/testplans/performance.jmx
 export ACM_STAB_TEST_FILE=$TESTDIR/stability/src/main/resources/testplans/stability.jmx
 
-if [ $1 == "run" ]
-then
+function run_tests() {
+    local test_file=$1
 
-  mkdir automate-s3p-test;cd automate-s3p-test;
-  git clone "https://gerrit.onap.org/r/policy/docker"
-  cd docker/csit
+    mkdir -p automate-s3p-test
+    cd automate-s3p-test || exit 1
+    git clone "https://gerrit.onap.org/r/policy/docker"
+    cd docker/csit || exit 1
 
-  if [ $2 == "performance" ]
-  then
-    bash start-s3p-tests.sh run $ACM_PERF_TEST_FILE;
-  elif [ $2 == "stability" ]
-  then
-    bash start-s3p-tests.sh run $ACM_STAB_TEST_FILE;
-  else
-    echo "echo Invalid arguments provided. Usage: $0 [option..] {performance | stability}"
-  fi
+    bash run-s3p-tests.sh test "$test_file" $PROJECT
+}
 
-else
-  echo "Invalid arguments provided. Usage: $0 [option..] {run | uninstall}"
-fi
+function clean() {
+    cd $TESTDIR/automate-s3p-test/docker/csit
+    bash run-s3p-tests.sh clean
+}
 
+echo "================================="
+echo "Triggering S3P test for: $PROJECT"
+echo "================================="
+
+case $1 in
+    performance)
+        run_tests "$ACM_PERF_TEST_FILE"
+        ;;
+    stability)
+        run_tests "$ACM_STAB_TEST_FILE"
+        ;;
+    clean)
+        clean
+        ;;
+    *)
+        echo "Invalid arguments provided. Usage: $0 {performance | stability | clean}"
+        exit 1
+        ;;
