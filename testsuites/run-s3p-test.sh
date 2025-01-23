@@ -61,3 +61,4 @@ case $1 in
         echo "Invalid arguments provided. Usage: $0 {performance | stability | clean}"
         exit 1
         ;;
+esac
