@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2024 Nordix Foundation.
+ * Copyright (C) 2021-2025 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -207,22 +207,6 @@ public class JpaAutomationComposition extends Validated
 
     @Override
     public void fromAuthorative(@NonNull final AutomationComposition automationComposition) {
-        this.fromAuthorativeBase(automationComposition);
-        this.elements = new ArrayList<>(automationComposition.getElements().size());
-        for (var elementEntry : automationComposition.getElements().entrySet()) {
-            var jpaAutomationCompositionElement =
-                    new JpaAutomationCompositionElement(elementEntry.getKey().toString(), this.instanceId);
-            jpaAutomationCompositionElement.fromAuthorative(elementEntry.getValue());
-            this.elements.add(jpaAutomationCompositionElement);
-        }
-    }
-
-    /**
-     * Set an instance of the persist concept to the equivalent values as the other concept without copy the elements.
-     *
-     * @param automationComposition the authorative concept
-     */
-    public void fromAuthorativeBase(@NonNull final AutomationComposition automationComposition) {
         this.instanceId = automationComposition.getInstanceId().toString();
         this.name = automationComposition.getName();
         this.version = automationComposition.getVersion();
@@ -237,6 +221,13 @@ public class JpaAutomationComposition extends Validated
         this.subState = automationComposition.getSubState();
         this.description = automationComposition.getDescription();
         this.stateChangeResult = automationComposition.getStateChangeResult();
+        this.elements = new ArrayList<>(automationComposition.getElements().size());
+        for (var elementEntry : automationComposition.getElements().entrySet()) {
+            var jpaAutomationCompositionElement =
+                    new JpaAutomationCompositionElement(elementEntry.getKey().toString(), this.instanceId);
+            jpaAutomationCompositionElement.fromAuthorative(elementEntry.getValue());
+            this.elements.add(jpaAutomationCompositionElement);
+        }
     }
 
     @Override

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2024 Nordix Foundation.
+ * Copyright (C) 2021-2025 Nordix Foundation.
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -137,7 +137,7 @@ public class CommissioningProvider {
             throw new PfModelRuntimeException(Status.BAD_REQUEST,
                     "ACM not in COMMISSIONED state, Delete of ACM Definition not allowed");
         }
-        var serviceTemplate = acDefinitionProvider.deleteAcDefintion(compositionId);
+        var serviceTemplate = acDefinitionProvider.deleteAcDefinition(compositionId);
         return createCommissioningResponse(compositionId, serviceTemplate);
     }
 

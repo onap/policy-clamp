@@ -244,8 +244,7 @@ class AcDefinitionProviderTest {
                 .thenReturn(Optional.of(new JpaAutomationCompositionDefinition(acmDefinition)));
 
         var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository);
-        var result = acDefinitionProvider.deleteAcDefintion(acmDefinition.getCompositionId());
-
+        var result = acDefinitionProvider.deleteAcDefinition(acmDefinition.getCompositionId());
         assertThat(result).isEqualTo(docServiceTemplate.toAuthorative());
     }
 
@@ -254,7 +253,7 @@ class AcDefinitionProviderTest {
         var compositionId = UUID.randomUUID();
         var acmDefinitionRepository = mock(AutomationCompositionDefinitionRepository.class);
         var acDefinitionProvider = new AcDefinitionProvider(acmDefinitionRepository);
-        assertThatThrownBy(() -> acDefinitionProvider.deleteAcDefintion(compositionId))
+        assertThatThrownBy(() -> acDefinitionProvider.deleteAcDefinition(compositionId))
                 .hasMessage("delete of Automation Composition Definition \"" + compositionId
                         + "\" failed, Automation Composition Definition does not exist");
     }

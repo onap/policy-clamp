@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2024 Nordix Foundation.
+ *  Copyright (C) 2021-2025 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -138,7 +138,7 @@ class CommissioningProviderTest {
         var compositionId = UUID.randomUUID();
         var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
         assertNotNull(serviceTemplate);
-        when(acDefinitionProvider.deleteAcDefintion(compositionId)).thenReturn(serviceTemplate);
+        when(acDefinitionProvider.deleteAcDefinition(compositionId)).thenReturn(serviceTemplate);
 
         var acmDefinition = new AutomationCompositionDefinition();
         acmDefinition.setCompositionId(compositionId);
@@ -151,7 +151,7 @@ class CommissioningProviderTest {
 
         provider.deleteAutomationCompositionDefinition(compositionId);
 
-        verify(acDefinitionProvider).deleteAcDefintion(compositionId);
+        verify(acDefinitionProvider).deleteAcDefinition(compositionId);
     }
 
     @Test

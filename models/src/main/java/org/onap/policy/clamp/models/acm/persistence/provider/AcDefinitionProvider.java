@@ -148,7 +148,7 @@ public class AcDefinitionProvider {
      * @param compositionId The UUID of the automation composition definition to delete
      * @return the TOSCA service template that was deleted
      */
-    public ToscaServiceTemplate deleteAcDefintion(UUID compositionId) {
+    public ToscaServiceTemplate deleteAcDefinition(UUID compositionId) {
         var jpaDelete = acmDefinitionRepository.findById(compositionId.toString());
         if (jpaDelete.isEmpty()) {
             String errorMessage = "delete of Automation Composition Definition \"" + compositionId

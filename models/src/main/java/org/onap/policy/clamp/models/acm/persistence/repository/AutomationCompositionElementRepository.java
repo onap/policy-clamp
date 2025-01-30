@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2024 Nordix Foundation.
+ * Copyright (C) 2025 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,19 +20,11 @@
 
 package org.onap.policy.clamp.models.acm.persistence.repository;
 
-import jakarta.persistence.LockModeType;
 import java.util.List;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationCompositionElement;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Lock;
-import org.springframework.lang.NonNull;
 
 public interface AutomationCompositionElementRepository extends JpaRepository<JpaAutomationCompositionElement, String> {
-
-    @NonNull
-    @Override
-    @Lock(LockModeType.PESSIMISTIC_READ)
-    JpaAutomationCompositionElement getReferenceById(@NonNull String id);
 
     List<JpaAutomationCompositionElement> findByParticipantId(String participantId);
 }
