@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2025 Nordix Foundation.
+ * Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,7 +70,7 @@ public class StageScanner extends AbstractScanner {
                     element.getSubState())) {
                 var toscaNodeTemplate = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates()
                         .get(element.getDefinition().getName());
-                var stageSet = ParticipantUtils.findStageSet(toscaNodeTemplate.getProperties());
+                var stageSet = ParticipantUtils.findStageSetMigrate(toscaNodeTemplate.getProperties());
                 var minStage = stageSet.stream().min(Comparator.comparing(Integer::valueOf)).orElse(0);
                 int stage = element.getStage() != null ? element.getStage() : minStage;
                 minStageNotCompleted = Math.min(minStageNotCompleted, stage);

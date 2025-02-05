@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2024 Nordix Foundation.
+ *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -192,7 +192,7 @@ public class AutomationCompositionHandler {
         for (var element : participantDeploy.getAcElementList()) {
             var compositionInProperties =
                     cacheProvider.getCommonProperties(compositionTargetId, element.getDefinition());
-            var stageSet = ParticipantUtils.findStageSet(compositionInProperties);
+            var stageSet = ParticipantUtils.findStageSetMigrate(compositionInProperties);
             if (stageSet.contains(stage)) {
                 var acElement = acElementList.get(element.getId());
                 if (acElement == null) {
@@ -326,7 +326,7 @@ public class AutomationCompositionHandler {
         for (var acElement : acElements) {
             var compositionInProperties = cacheProvider
                     .getCommonProperties(compositionTargetId, acElement.getDefinition());
-            var stageSet = ParticipantUtils.findStageSet(compositionInProperties);
+            var stageSet = ParticipantUtils.findStageSetMigrate(compositionInProperties);
             if (stageSet.contains(stage)) {
                 if (instanceElementMap.get(acElement.getId()) == null) {
                     var compositionElementDto =
