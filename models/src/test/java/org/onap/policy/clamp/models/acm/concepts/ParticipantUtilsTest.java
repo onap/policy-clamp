@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2023 Nordix Foundation.
+ *  Copyright (C) 2021-2023,2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +36,13 @@ class ParticipantUtilsTest {
     private static final String TOSCA_TEMPLATE_YAML = "examples/acm/test-pm-subscription-handling.yaml";
     private static final String AUTOMATION_COMPOSITION_JSON =
         "src/test/resources/providers/TestAutomationCompositions.json";
+
+    private static final String PROPERTIES = """
+            stage:
+              prepare: [1,2]
+              migrate: [2,3]
+            """;
+
 
     @Test
     void testFindStartPhase() {
@@ -108,10 +115,40 @@ class ParticipantUtilsTest {
     @Test
     void testGetFirstStage() throws CoderException {
         var serviceTemplate = CommonTestData.getToscaServiceTemplate(TOSCA_TEMPLATE_YAML);
-        var automationCompositions =
-            CODER.decode(ResourceUtils.getResourceAsString(AUTOMATION_COMPOSITION_JSON), AutomationCompositions.class);
-        var result = ParticipantUtils.getFirstStage(automationCompositions.getAutomationCompositionList().get(0),
-            serviceTemplate);
+        var automationComposition =
+            CODER.decode(ResourceUtils.getResourceAsString(AUTOMATION_COMPOSITION_JSON), AutomationCompositions.class)
+                    .getAutomationCompositionList().get(0);
+        automationComposition.setDeployState(DeployState.MIGRATING);
+        var result = ParticipantUtils.getFirstStage(automationComposition, serviceTemplate);
         assertThat(result).isZero();
+
+        automationComposition.setDeployState(DeployState.UNDEPLOYED);
+        automationComposition.setSubState(SubState.PREPARING);
+        result = ParticipantUtils.getFirstStage(automationComposition, serviceTemplate);
+        assertThat(result).isZero();
+    }
+
+    @Test
+    void testFindStageSetPrepare() {
+        var result = ParticipantUtils.findStageSetPrepare(Map.of());
+        assertThat(result).hasSize(1).contains(0);
+        result = ParticipantUtils.findStageSetPrepare(Map.of("stage", 1));
+        assertThat(result).hasSize(1).contains(0);
+
+        Map<String, Object> map = CommonTestData.getObject(PROPERTIES, Map.class);
+        result = ParticipantUtils.findStageSetPrepare(map);
+        assertThat(result).hasSize(2).contains(1).contains(2);
+    }
+
+    @Test
+    void testFindStageSetMigrate() {
+        var result = ParticipantUtils.findStageSetMigrate(Map.of());
+        assertThat(result).hasSize(1).contains(0);
+        result = ParticipantUtils.findStageSetMigrate(Map.of("stage", 1));
+        assertThat(result).hasSize(1).contains(0);
+
+        Map<String, Object> map = CommonTestData.getObject(PROPERTIES, Map.class);
+        result = ParticipantUtils.findStageSetMigrate(map);
+        assertThat(result).hasSize(2).contains(2).contains(3);
     }
 }

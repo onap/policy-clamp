@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023-2024 Nordix Foundation.
+ *  Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,6 +43,8 @@ public class AcInstanceStateResolver {
     private static final String MIGRATING = DeployState.MIGRATING.name();
     private static final String MIGRATION_PRECHECKING = SubState.MIGRATION_PRECHECKING.name();
     private static final String SUB_STATE_NONE = SubState.NONE.name();
+    private static final String PREPARING = SubState.PREPARING.name();
+    private static final String REVIEWING = SubState.REVIEWING.name();
 
     private static final String LOCKED = LockState.LOCKED.name();
     private static final String LOCKING = LockState.LOCKING.name();
@@ -78,98 +80,95 @@ public class AcInstanceStateResolver {
         this.graph = new StateDefinition<>(7, NONE);
 
         // make an order when there are no fails
-        this.graph.put(new String[] {DEPLOY, LOCK_NONE, SUB_NONE,
-            UNDEPLOYED, STATE_LOCKED_NONE, SUB_STATE_NONE, NO_ERROR}, DEPLOY);
-        this.graph.put(new String[] {UNDEPLOY, LOCK_NONE, SUB_NONE,
-            DEPLOYED, LOCKED, SUB_STATE_NONE, NO_ERROR}, UNDEPLOY);
-        this.graph.put(new String[] {DELETE, LOCK_NONE, SUB_NONE,
-            UNDEPLOYED, LOCK_NONE, SUB_STATE_NONE, NO_ERROR}, DELETE);
-        this.graph.put(new String[] {DEPLOY_NONE, UNLOCK, SUB_NONE,
-            DEPLOYED, LOCKED, SUB_STATE_NONE, NO_ERROR}, UNLOCK);
-        this.graph.put(new String[] {DEPLOY_NONE, LOCK, SUB_NONE,
-            DEPLOYED, UNLOCKED, SUB_STATE_NONE, NO_ERROR}, LOCK);
-        this.graph.put(new String[] {MIGRATE, LOCK_NONE, SUB_NONE,
-            DEPLOYED, LOCKED, SUB_STATE_NONE, NO_ERROR}, MIGRATE);
-        this.graph.put(new String[] {UPDATE, LOCK_NONE, SUB_NONE,
-            DEPLOYED, LOCKED, SUB_STATE_NONE, NO_ERROR}, UPDATE);
-        this.graph.put(new String[] {DEPLOY_NONE, LOCK_NONE, REVIEW,
-            DEPLOYED, LOCKED, SUB_STATE_NONE, NO_ERROR}, REVIEW);
-        this.graph.put(new String[] {DEPLOY_NONE, LOCK_NONE, PREPARE,
-            UNDEPLOYED, STATE_LOCKED_NONE, SUB_STATE_NONE, NO_ERROR}, PREPARE);
-        this.graph.put(new String[] {DEPLOY_NONE, LOCK_NONE, MIGRATE_PRECHECK,
-            DEPLOYED, LOCKED, SUB_STATE_NONE, NO_ERROR}, MIGRATE_PRECHECK);
+        addDeployOrder(DEPLOY, UNDEPLOYED, STATE_LOCKED_NONE);
+        addDeployOrder(UNDEPLOY, DEPLOYED, LOCKED);
+        addDeployOrder(DELETE, UNDEPLOYED, STATE_LOCKED_NONE);
+        addDeployOrder(MIGRATE, DEPLOYED, LOCKED);
+        addDeployOrder(UPDATE, DEPLOYED, LOCKED);
 
-        // make an order in a failed scenario
+        addLockOrder(UNLOCK, LOCKED);
+        addLockOrder(LOCK, UNLOCKED);
+
+        addSubOrder(REVIEW, DEPLOYED, LOCKED);
+        addSubOrder(PREPARE, UNDEPLOYED, STATE_LOCKED_NONE);
+        addSubOrder(MIGRATE_PRECHECK, DEPLOYED, LOCKED);
+
+        // failed or timeout scenario
         setAllowed(DEPLOY);
         setAllowed(UNDEPLOY);
-        this.graph.put(new String[] {UNDEPLOY, LOCK_NONE, SUB_NONE,
-            UPDATING, LOCKED, SUB_STATE_NONE, FAILED}, UNDEPLOY);
-        this.graph.put(new String[] {UNDEPLOY, LOCK_NONE, SUB_NONE,
-            MIGRATING, LOCKED, SUB_STATE_NONE, FAILED}, UNDEPLOY);
 
-        this.graph.put(new String[] {DELETE, LOCK_NONE, SUB_NONE,
-            DELETING, LOCK_NONE, SUB_STATE_NONE, FAILED}, DELETE);
+        // undeploy order in a failed or timeout scenario
+        addDeployOrderWithFail(UNDEPLOY, UPDATING, LOCKED, SUB_STATE_NONE);
+        addDeployOrderWithFail(UNDEPLOY, MIGRATING, LOCKED, SUB_STATE_NONE);
+        addDeployOrderWithFail(UNDEPLOY, MIGRATION_PRECHECKING, LOCKED, SUB_STATE_NONE);
+        addDeployOrderWithFail(UNDEPLOY, REVIEWING, LOCKED, SUB_STATE_NONE);
 
-        this.graph.put(new String[] {DEPLOY_NONE, UNLOCK, SUB_NONE,
-            DEPLOYED, LOCKING, SUB_STATE_NONE, FAILED}, UNLOCK);
-        this.graph.put(new String[] {DEPLOY_NONE, UNLOCK, SUB_NONE,
-            DEPLOYED, UNLOCKING, SUB_STATE_NONE, FAILED}, UNLOCK);
+        // delete order in a failed or timeout scenario
+        addDeployOrderWithFail(DELETE, DELETING, LOCK_NONE, SUB_STATE_NONE);
+        addDeployOrderWithFail(DELETE, UNDEPLOYED, LOCK_NONE, PREPARING);
 
-        this.graph.put(new String[] {DEPLOY_NONE, LOCK, SUB_NONE, DEPLOYED, LOCKING, SUB_STATE_NONE, FAILED}, LOCK);
-        this.graph.put(new String[] {DEPLOY_NONE, LOCK, SUB_NONE, DEPLOYED, UNLOCKING, SUB_STATE_NONE, FAILED}, LOCK);
+        // update order in a failed or timeout scenario
+        addDeployOrderWithFail(UPDATE, UPDATING, LOCKED, SUB_STATE_NONE);
 
-        this.graph.put(new String[] {UPDATE, LOCK_NONE, SUB_NONE, UPDATING, LOCKED, SUB_STATE_NONE, FAILED}, UPDATE);
+        // unlock order in a failed or timeout scenario
+        addLockOrderWithFail(UNLOCK, LOCKING);
+        addLockOrderWithFail(UNLOCK, UNLOCKING);
 
-        this.graph.put(new String[] {DEPLOY_NONE, LOCK_NONE, MIGRATE_PRECHECK,
-            DEPLOYED, LOCKED, MIGRATION_PRECHECKING, FAILED}, MIGRATE_PRECHECK);
+        // lock order in a failed or timeout scenario
+        addLockOrderWithFail(LOCK, LOCKING);
+        addLockOrderWithFail(LOCK, UNLOCKING);
 
-        // timeout
-        this.graph.put(new String[] {UNDEPLOY, LOCK_NONE, SUB_NONE,
-            UPDATING, LOCKED, SUB_STATE_NONE, TIMEOUT}, UNDEPLOY);
-        this.graph.put(new String[] {UNDEPLOY, LOCK_NONE, SUB_NONE,
-            MIGRATING, LOCKED, SUB_STATE_NONE, TIMEOUT}, UNDEPLOY);
-        this.graph.put(new String[] {UNDEPLOY, LOCK_NONE, SUB_NONE,
-            MIGRATION_PRECHECKING, LOCKED, SUB_STATE_NONE, TIMEOUT}, UNDEPLOY);
+        // migrate-precheck order in a failed or timeout scenario
+        addSubOrderWithFail(MIGRATE_PRECHECK, DEPLOYED, LOCKED, MIGRATION_PRECHECKING);
 
-        this.graph.put(new String[] {DELETE, LOCK_NONE, SUB_NONE,
-            DELETING, LOCK_NONE, SUB_STATE_NONE, TIMEOUT}, DELETE);
+        // prepare order in a failed or timeout scenario
+        addSubOrderWithFail(PREPARE, UNDEPLOYED, LOCK_NONE, PREPARING);
 
-        this.graph.put(new String[] {DEPLOY_NONE, UNLOCK, SUB_NONE,
-            DEPLOYED, LOCKING, SUB_STATE_NONE, TIMEOUT}, UNLOCK);
-        this.graph.put(new String[] {DEPLOY_NONE, LOCK, SUB_NONE,
-            DEPLOYED, LOCKING, SUB_STATE_NONE, TIMEOUT}, LOCK);
+        // review order in a failed or timeout scenario
+        addSubOrderWithFail(REVIEW, DEPLOYED, LOCKED, REVIEWING);
+    }
 
-        this.graph.put(new String[] {DEPLOY_NONE, LOCK, SUB_NONE,
-            DEPLOYED, UNLOCKING, SUB_STATE_NONE, TIMEOUT}, LOCK);
-        this.graph.put(new String[] {DEPLOY_NONE, UNLOCK, SUB_NONE,
-            DEPLOYED, UNLOCKING, SUB_STATE_NONE, TIMEOUT}, UNLOCK);
+    private void addDeployOrder(String deployOrder, String deployState, String lockState) {
+        this.graph.put(new String[] {
+            deployOrder, LOCK_NONE, SUB_NONE, deployState, lockState, STATE_LOCKED_NONE, NO_ERROR}, deployOrder);
+    }
 
-        this.graph.put(new String[] {UPDATE, LOCK_NONE, SUB_NONE, UPDATING, LOCKED, SUB_STATE_NONE, TIMEOUT}, UPDATE);
+    private void addDeployOrderWithFail(String deployOrder, String deployState, String lockState, String subState) {
+        this.graph.put(new String[] {
+            deployOrder, LOCK_NONE, SUB_NONE, deployState, lockState, subState, FAILED}, deployOrder);
+        this.graph.put(new String[] {
+            deployOrder, LOCK_NONE, SUB_NONE, deployState, lockState, subState, TIMEOUT}, deployOrder);
+    }
 
-        this.graph.put(new String[] {DEPLOY_NONE, LOCK_NONE, MIGRATE_PRECHECK,
-            DEPLOYED, LOCKED, MIGRATION_PRECHECKING, TIMEOUT}, MIGRATE_PRECHECK);
+    private void addSubOrder(String subOrder, String deployState, String lockState) {
+        this.graph.put(new String[] {
+            DEPLOY_NONE, LOCK_NONE, subOrder, deployState, lockState, SUB_STATE_NONE, NO_ERROR}, subOrder);
+    }
+
+    private void addSubOrderWithFail(String subOrder, String deployState, String lockState, String subState) {
+        this.graph.put(new String[] {
+            DEPLOY_NONE, LOCK_NONE, subOrder, deployState, lockState, subState, FAILED}, subOrder);
+        this.graph.put(new String[] {
+            DEPLOY_NONE, LOCK_NONE, subOrder, deployState, lockState, subState, TIMEOUT}, subOrder);
+    }
+
+    private void addLockOrder(String lockOrder, String lockState) {
+        this.graph.put(new String[] {
+            DEPLOY_NONE, lockOrder, SUB_NONE, DEPLOYED, lockState, SUB_STATE_NONE, NO_ERROR}, lockOrder);
+    }
+
+    private void addLockOrderWithFail(String lockOrder, String lockState) {
+        this.graph.put(new String[] {
+            DEPLOY_NONE, lockOrder, SUB_NONE, DEPLOYED, lockState, SUB_STATE_NONE, FAILED}, lockOrder);
+        this.graph.put(new String[] {
+            DEPLOY_NONE, lockOrder, SUB_NONE, DEPLOYED, lockState, SUB_STATE_NONE, TIMEOUT}, lockOrder);
     }
 
     private void setAllowed(String deployOrder) {
-        this.graph.put(new String[] {deployOrder, LOCK_NONE, SUB_NONE,
-            UNDEPLOYING, STATE_LOCKED_NONE, SUB_STATE_NONE, FAILED}, deployOrder);
-        this.graph.put(new String[] {deployOrder, LOCK_NONE, SUB_NONE,
-            UNDEPLOYING, LOCKED, SUB_STATE_NONE, FAILED}, deployOrder);
-
-        this.graph.put(new String[] {deployOrder, LOCK_NONE, SUB_NONE,
-            UNDEPLOYING, STATE_LOCKED_NONE, SUB_STATE_NONE, TIMEOUT}, deployOrder);
-        this.graph.put(new String[] {deployOrder, LOCK_NONE, SUB_NONE,
-            UNDEPLOYING, LOCKED, SUB_STATE_NONE, TIMEOUT}, deployOrder);
-
-        this.graph.put(new String[] {deployOrder, LOCK_NONE, SUB_NONE,
-            DEPLOYING, STATE_LOCKED_NONE, SUB_STATE_NONE, FAILED}, deployOrder);
-        this.graph.put(new String[] {deployOrder, LOCK_NONE, SUB_NONE,
-            DEPLOYING, LOCKED, SUB_STATE_NONE, FAILED}, deployOrder);
-
-        this.graph.put(new String[] {deployOrder, LOCK_NONE, SUB_NONE,
-            DEPLOYING, STATE_LOCKED_NONE, SUB_STATE_NONE, TIMEOUT}, deployOrder);
-        this.graph.put(new String[] {deployOrder, LOCK_NONE, SUB_NONE,
-            DEPLOYING, LOCKED, SUB_STATE_NONE, TIMEOUT}, deployOrder);
+        addDeployOrderWithFail(deployOrder, UNDEPLOYING, STATE_LOCKED_NONE, SUB_STATE_NONE);
+        addDeployOrderWithFail(deployOrder, UNDEPLOYING, LOCKED, SUB_STATE_NONE);
+        addDeployOrderWithFail(deployOrder, DEPLOYING, STATE_LOCKED_NONE, SUB_STATE_NONE);
+        addDeployOrderWithFail(deployOrder, DEPLOYING, LOCKED, SUB_STATE_NONE);
     }
 
     /**

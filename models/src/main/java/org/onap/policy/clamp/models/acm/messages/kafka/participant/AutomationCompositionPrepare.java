@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2024 Nordix Foundation.
+ * Copyright (C) 2024-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ public class AutomationCompositionPrepare extends ParticipantMessage {
 
     private List<ParticipantDeploy> participantList = new ArrayList<>();
     private boolean preDeploy = true;
+    private Integer stage = 0;
 
     /**
      * Constructor for instantiating class with message name.
@@ -52,6 +53,7 @@ public class AutomationCompositionPrepare extends ParticipantMessage {
     public AutomationCompositionPrepare(AutomationCompositionPrepare source) {
         super(source);
         this.preDeploy = source.preDeploy;
+        this.stage = source.stage;
         this.participantList = PfUtils.mapList(source.participantList, ParticipantDeploy::new);
     }
 }

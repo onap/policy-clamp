@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2024 Nordix Foundation.
+ *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,9 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ParticipantUtils {
+    private static final String STAGE_MIGRATE = "migrate";
+    private static final String STAGE_PREPARE = "prepare";
+
     /**
      * Get the First StartPhase.
      *
@@ -66,13 +69,15 @@ public final class ParticipantUtils {
      * @param toscaServiceTemplate the ToscaServiceTemplate
      * @return the First stage
      */
-    public static int getFirstStage(
-        AutomationComposition automationComposition, ToscaServiceTemplate toscaServiceTemplate) {
+    public static int getFirstStage(AutomationComposition automationComposition,
+            ToscaServiceTemplate toscaServiceTemplate) {
         Set<Integer> minStage = new HashSet<>();
         for (var element : automationComposition.getElements().values()) {
             var toscaNodeTemplate = toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates()
                 .get(element.getDefinition().getName());
-            var stage = ParticipantUtils.findStageSet(toscaNodeTemplate.getProperties());
+            var stage = DeployState.MIGRATING.equals(automationComposition.getDeployState())
+                    ? ParticipantUtils.findStageSetMigrate(toscaNodeTemplate.getProperties())
+                    : ParticipantUtils.findStageSetPrepare(toscaNodeTemplate.getProperties());
             minStage.addAll(stage);
         }
         return minStage.stream().min(Integer::compare).orElse(0);
@@ -92,19 +97,40 @@ public final class ParticipantUtils {
         return 0;
     }
 
-
     /**
-     * Finds stage from a map of properties.
+     * Finds stage from a map of properties for Prepare.
      *
      * @param properties Map of properties
      * @return stage
      */
-    public static Set<Integer> findStageSet(Map<String, Object> properties) {
+    public static Set<Integer> findStageSetPrepare(Map<String, Object> properties) {
         var objStage = properties.get("stage");
+        if (objStage instanceof Map<?, ?>) {
+            objStage = ((Map<?, ?>) objStage).get(STAGE_PREPARE);
+            return findStageSet(objStage);
+        }
+        return Set.of(0);
+    }
+
+    /**
+     * Finds stage from a map of properties for Migrate.
+     *
+     * @param properties Map of properties
+     * @return stage
+     */
+    public static Set<Integer> findStageSetMigrate(Map<String, Object> properties) {
+        var objStage = properties.get("stage");
+        if (objStage instanceof Map<?, ?>) {
+            objStage = ((Map<?, ?>) objStage).get(STAGE_MIGRATE);
+        }
+        return findStageSet(objStage);
+    }
+
+    private static Set<Integer> findStageSet(Object objStage) {
         if (objStage instanceof List<?> stageSet) {
             return stageSet.stream()
-                .map(obj -> Integer.valueOf(obj.toString()))
-                .collect(Collectors.toSet());
+                    .map(obj -> Integer.valueOf(obj.toString()))
+                    .collect(Collectors.toSet());
         }
         return Set.of(0);
     }
