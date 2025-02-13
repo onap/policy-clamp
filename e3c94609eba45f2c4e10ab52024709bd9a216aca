@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "08d077c0_36caf427",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/persistence/concepts/JpaMessage.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2025-02-13T13:44:52Z",
+      "side": 1,
+      "message": "We need to check the impact of acm-r supervision on the NotNull fields here when upgrading an old acm-r with new acmr with existing db instances. If db-migrator doesn\u0027t upgrade for any reasons, could we check if any additional error handling are needed in the code.Thanks",
+      "range": {
+        "startLine": 59,
+        "startChar": 5,
+        "endLine": 59,
+        "endChar": 12
+      },
+      "revId": "e3c94609eba45f2c4e10ab52024709bd9a216aca",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
