@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2024 Nordix Foundation.
+ *  Copyright (C) 2021-2025 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ package org.onap.policy.clamp.models.acm.persistence.provider;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.clearInvocations;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -197,6 +198,10 @@ class AcDefinitionProviderTest {
         acDefinitionProvider.updateAcDefinitionState(acmDefinition.getCompositionId(), AcTypeState.PRIMED,
             StateChangeResult.NO_ERROR);
         verify(acmDefinitionRepository).save(jpa);
+
+        clearInvocations(acmDefinitionRepository);
+        acDefinitionProvider.updateAcDefinitionState(acmDefinition);
+        verify(acmDefinitionRepository).save(any());
     }
 
     @Test

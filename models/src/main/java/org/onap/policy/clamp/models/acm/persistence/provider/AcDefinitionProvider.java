@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2024 Nordix Foundation.
+ *  Copyright (C) 2021-2025 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,6 +50,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @RequiredArgsConstructor
 public class AcDefinitionProvider {
+
+    private static final String NAME = "AutomationCompositionDefinition";
 
     private final AutomationCompositionDefinitionRepository acmDefinitionRepository;
     private final NodeTemplateStateRepository nodeTemplateStateRepository;
@@ -121,13 +123,25 @@ public class AcDefinitionProvider {
      */
     public void updateAcDefinition(AutomationCompositionDefinition acDefinition, String toscaCompositionName) {
         var jpaAcmDefinition = ProviderUtils.getJpaAndValidate(acDefinition, JpaAutomationCompositionDefinition::new,
-                "AutomationCompositionDefinition");
-        var validationResult = new BeanValidationResult("AutomationCompositionDefinition", acDefinition);
+                NAME);
+        var validationResult = new BeanValidationResult(NAME, acDefinition);
         ToscaServiceTemplateValidation.validate(validationResult, jpaAcmDefinition.getServiceTemplate(),
                 toscaCompositionName);
         if (! validationResult.isValid()) {
             throw new PfModelRuntimeException(Response.Status.BAD_REQUEST, validationResult.getResult());
         }
+        acmDefinitionRepository.save(jpaAcmDefinition);
+        acmDefinitionRepository.flush();
+    }
+
+    /**
+     * Update Ac Definition with unchanged service template.
+     *
+     * @param acDefinition the AutomationCompositionDefinition to be updated
+     */
+    public void updateAcDefinitionState(AutomationCompositionDefinition acDefinition) {
+        var jpaAcmDefinition = ProviderUtils.getJpaAndValidate(acDefinition, JpaAutomationCompositionDefinition::new,
+                NAME);
         acmDefinitionRepository.save(jpaAcmDefinition);
         acmDefinitionRepository.flush();
     }
