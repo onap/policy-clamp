@@ -22,6 +22,30 @@
       },
       "revId": "b46059b60fa4d6a362077ba9c71800db89546ef0",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d152be14_38fe76ab",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/supervision/scanner/UpdateSync.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2025-02-14T14:01:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d7ecc283_b8e24a77",
+      "range": {
+        "startLine": 2,
+        "startChar": 0,
+        "endLine": 2,
+        "endChar": 1
+      },
+      "revId": "b46059b60fa4d6a362077ba9c71800db89546ef0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
