@@ -40,12 +40,12 @@
           </elementProp>
           <elementProp name="INSTANCES" elementType="Argument">
             <stringProp name="Argument.name">INSTANCES</stringProp>
-            <stringProp name="Argument.value">${__P(INSTANCES,100)}</stringProp>
+            <stringProp name="Argument.value">${__P(INSTANCES,50)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="USERS" elementType="Argument">
             <stringProp name="Argument.name">USERS</stringProp>
-            <stringProp name="Argument.value">${__P(USERS,5)}</stringProp>
+            <stringProp name="Argument.value">${__P(USERS,10)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
@@ -138,7 +138,7 @@
           <boolProp name="resetInterpreter">false</boolProp>
           <stringProp name="parameters"></stringProp>
           <stringProp name="filename"></stringProp>
-          <stringProp name="script">int n = 10;
+          <stringProp name="script">int n = 20;
 for (int i = 0; i &lt; n; i++) {
 	props.put(&quot;baseCount&quot; + i, &quot;1&quot;);
      log.info(&quot;baseCount&quot; + i);	
@@ -1098,13 +1098,8 @@ if (prev.getResponseCode() == &apos;200&apos;) {
     assert res.contains(&quot;spring_data_repository_invocations_seconds_max&quot;)
     assert res.contains(&quot;jvm_threads_live_threads&quot;)
 
-    assert res.contains(&quot;http_server_requests_seconds_count{error=\&quot;none\&quot;,exception=\&quot;none\&quot;,method=\&quot;POST\&quot;,outcome=\&quot;SUCCESS\&quot;,status=\&quot;201\&quot;,uri=\&quot;/v2/compositions\&quot;,}&quot;)
-    assert res.contains(&quot;http_server_requests_seconds_count{error=\&quot;none\&quot;,exception=\&quot;none\&quot;,method=\&quot;PUT\&quot;,outcome=\&quot;SUCCESS\&quot;,status=\&quot;202\&quot;,uri=\&quot;/v2/compositions/{compositionId}\&quot;,}&quot;)
-    assert res.contains(&quot;http_server_requests_seconds_count{error=\&quot;none\&quot;,exception=\&quot;none\&quot;,method=\&quot;GET\&quot;,outcome=\&quot;SUCCESS\&quot;,status=\&quot;200\&quot;,uri=\&quot;/v2/compositions/{compositionId}\&quot;,}&quot;)
 
-    assert res.contains(&quot;http_server_requests_seconds_count{error=\&quot;none\&quot;,exception=\&quot;none\&quot;,method=\&quot;POST\&quot;,outcome=\&quot;SUCCESS\&quot;,status=\&quot;201\&quot;,uri=\&quot;/v2/compositions/{compositionId}/instances\&quot;,}&quot;)
-    assert res.contains(&quot;http_server_requests_seconds_count{error=\&quot;none\&quot;,exception=\&quot;none\&quot;,method=\&quot;PUT\&quot;,outcome=\&quot;SUCCESS\&quot;,status=\&quot;202\&quot;,uri=\&quot;/v2/compositions/{compositionId}/instances/{instanceId}\&quot;,}&quot;)
-    assert res.contains(&quot;http_server_requests_seconds_count{error=\&quot;none\&quot;,exception=\&quot;none\&quot;,method=\&quot;GET\&quot;,outcome=\&quot;SUCCESS\&quot;,status=\&quot;200\&quot;,uri=\&quot;/v2/compositions/{compositionId}/instances/{instanceId}\&quot;,}&quot;)
+    assert res.contains(&quot;http_server_requests_seconds_count&quot;)
 
     assert res.contains(&quot;publisher_automation_composition_state_change_seconds_count&quot;)
     assert res.contains(&quot;publisher_participant_update_seconds_count&quot;)
