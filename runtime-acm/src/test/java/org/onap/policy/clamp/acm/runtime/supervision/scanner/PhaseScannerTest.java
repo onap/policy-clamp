@@ -35,6 +35,7 @@ import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
+import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionDeployPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionStateChangePublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
@@ -68,9 +69,10 @@ class PhaseScannerTest {
         var acDeployPublisher = mock(AutomationCompositionDeployPublisher.class);
         var acStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
+        var encryptionUtils = new EncryptionUtils(acRuntimeParameterGroup);
 
         var phaseScanner = new PhaseScanner(automationCompositionProvider, mock(ParticipantSyncPublisher.class),
-                acStateChangePublisher, acDeployPublisher, acRuntimeParameterGroup);
+                acStateChangePublisher, acDeployPublisher, acRuntimeParameterGroup, encryptionUtils);
         var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
         phaseScanner.scanWithPhase(automationComposition, serviceTemplate, new UpdateSync());
 
@@ -88,9 +90,10 @@ class PhaseScannerTest {
         var acDeployPublisher = mock(AutomationCompositionDeployPublisher.class);
         var acStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
+        var encryptionUtils = new EncryptionUtils(acRuntimeParameterGroup);
 
         var phaseScanner = new PhaseScanner(automationCompositionProvider, mock(ParticipantSyncPublisher.class),
-                acStateChangePublisher, acDeployPublisher, acRuntimeParameterGroup);
+                acStateChangePublisher, acDeployPublisher, acRuntimeParameterGroup, encryptionUtils);
         var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
         phaseScanner.scanWithPhase(automationComposition, serviceTemplate, new UpdateSync());
 
@@ -119,10 +122,11 @@ class PhaseScannerTest {
         var participantSyncPublisher = mock(ParticipantSyncPublisher.class);
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
         acRuntimeParameterGroup.getParticipantParameters().setMaxStatusWaitMs(-1);
+        var encryptionUtils = new EncryptionUtils(acRuntimeParameterGroup);
 
         // verify timeout scenario
         var phaseScanner = new PhaseScanner(automationCompositionProvider, participantSyncPublisher,
-                acStateChangePublisher, acDeployPublisher, acRuntimeParameterGroup);
+                acStateChangePublisher, acDeployPublisher, acRuntimeParameterGroup, encryptionUtils);
 
         automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
         automationComposition.setLastMsg(TimestampHelper.now());
@@ -173,9 +177,10 @@ class PhaseScannerTest {
         var acDeployPublisher = mock(AutomationCompositionDeployPublisher.class);
         var acStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
+        var encryptionUtils = new EncryptionUtils(acRuntimeParameterGroup);
 
         var phaseScanner = new PhaseScanner(automationCompositionProvider, mock(ParticipantSyncPublisher.class),
-                acStateChangePublisher, acDeployPublisher, acRuntimeParameterGroup);
+                acStateChangePublisher, acDeployPublisher, acRuntimeParameterGroup, encryptionUtils);
 
         var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
         phaseScanner.scanWithPhase(automationComposition, serviceTemplate, new UpdateSync());
@@ -207,10 +212,11 @@ class PhaseScannerTest {
         var acProvider = mock(AutomationCompositionProvider.class);
         var acDeployPublisher = mock(AutomationCompositionDeployPublisher.class);
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
+        var encryptionUtils = new EncryptionUtils(acRuntimeParameterGroup);
 
         var phaseScanner = new PhaseScanner(acProvider, mock(ParticipantSyncPublisher.class),
                 mock(AutomationCompositionStateChangePublisher.class), acDeployPublisher,
-                acRuntimeParameterGroup);
+                acRuntimeParameterGroup, encryptionUtils);
 
         var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
         phaseScanner.scanWithPhase(automationComposition, serviceTemplate, new UpdateSync());
@@ -241,9 +247,10 @@ class PhaseScannerTest {
         var acDeployPublisher = mock(AutomationCompositionDeployPublisher.class);
         var acStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
+        var encryptionUtils = new EncryptionUtils(acRuntimeParameterGroup);
 
         var phaseScanner = new PhaseScanner(acProvider, mock(ParticipantSyncPublisher.class),
-                acStateChangePublisher, acDeployPublisher, acRuntimeParameterGroup);
+                acStateChangePublisher, acDeployPublisher, acRuntimeParameterGroup, encryptionUtils);
 
         var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
         phaseScanner.scanWithPhase(automationComposition, serviceTemplate, new UpdateSync());

@@ -21,6 +21,7 @@
 package org.onap.policy.clamp.acm.runtime.supervision.scanner;
 
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
+import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
@@ -40,13 +41,15 @@ public abstract class AbstractScanner {
 
     protected final AutomationCompositionProvider acProvider;
     private final ParticipantSyncPublisher participantSyncPublisher;
+    private final EncryptionUtils encryptionUtils;
 
     protected AbstractScanner(final AutomationCompositionProvider acProvider,
             final ParticipantSyncPublisher participantSyncPublisher,
-            final AcRuntimeParameterGroup acRuntimeParameterGroup) {
+            final AcRuntimeParameterGroup acRuntimeParameterGroup, final EncryptionUtils encryptionUtils) {
         this.acProvider = acProvider;
         this.participantSyncPublisher = participantSyncPublisher;
         this.maxStatusWaitMs = acRuntimeParameterGroup.getParticipantParameters().getMaxStatusWaitMs();
+        this.encryptionUtils = encryptionUtils;
     }
 
     protected void complete(final AutomationComposition automationComposition, UpdateSync updateSync) {
@@ -118,7 +121,14 @@ public abstract class AbstractScanner {
             acProvider.deleteAutomationComposition(automationComposition.getInstanceId());
         }
         if (updateSync.isToBeSync()) {
+            decryptInstanceProperties(automationComposition);
             participantSyncPublisher.sendSync(automationComposition);
+        }
+    }
+
+    protected void decryptInstanceProperties(AutomationComposition automationComposition) {
+        if (encryptionUtils.encryptionEnabled()) {
+            encryptionUtils.findAndDecryptSensitiveData(automationComposition);
         }
     }
 }
