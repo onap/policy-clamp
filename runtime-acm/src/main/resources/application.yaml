@@ -62,6 +62,8 @@ runtime:
   acmParameters:
     toscaElementName: org.onap.policy.clamp.acm.AutomationCompositionElement
     toscaCompositionName: org.onap.policy.clamp.acm.AutomationComposition
+    passPhrase: 1234AbCEncryptionPassPhrase
+    salt: runtimeFixedSalt
 
 management:
   endpoints:

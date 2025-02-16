@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023 Nordix Foundation.
+ *  Copyright (C) 2023,2025 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,5 +34,9 @@ public class AcmParameters {
     private String toscaElementName = "org.onap.policy.clamp.acm.AutomationCompositionElement";
 
     private String toscaCompositionName = "org.onap.policy.clamp.acm.AutomationComposition";
+
+    private String passPhrase;
+
+    private String salt;
 
 }

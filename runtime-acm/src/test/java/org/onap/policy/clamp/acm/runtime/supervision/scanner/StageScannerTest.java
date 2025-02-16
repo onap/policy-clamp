@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
+import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionMigrationPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
@@ -70,8 +71,9 @@ class StageScannerTest {
         when(acProvider.updateAutomationComposition(any())).thenReturn(automationComposition);
 
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
+        var encryptionUtils = new EncryptionUtils(acRuntimeParameterGroup);
         var supervisionScanner = new StageScanner(acProvider, mock(ParticipantSyncPublisher.class),
-                mock(AutomationCompositionMigrationPublisher.class), acRuntimeParameterGroup);
+                mock(AutomationCompositionMigrationPublisher.class), acRuntimeParameterGroup, encryptionUtils);
 
         var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
         supervisionScanner.scanStage(automationComposition, serviceTemplate, new UpdateSync());

@@ -22,6 +22,7 @@ package org.onap.policy.clamp.acm.runtime.supervision.scanner;
 
 import java.util.Comparator;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
+import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionMigrationPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
@@ -45,10 +46,11 @@ public class StageScanner extends AbstractScanner {
      * @param acRuntimeParameterGroup the parameters for the automation composition runtime
      */
     public StageScanner(final AutomationCompositionProvider acProvider,
-            final ParticipantSyncPublisher participantSyncPublisher,
-            final AutomationCompositionMigrationPublisher acMigrationPublisher,
-            final AcRuntimeParameterGroup acRuntimeParameterGroup) {
-        super(acProvider, participantSyncPublisher, acRuntimeParameterGroup);
+                        final ParticipantSyncPublisher participantSyncPublisher,
+                        final AutomationCompositionMigrationPublisher acMigrationPublisher,
+                        final AcRuntimeParameterGroup acRuntimeParameterGroup,
+                        final EncryptionUtils encryptionUtils) {
+        super(acProvider, participantSyncPublisher, acRuntimeParameterGroup, encryptionUtils);
         this.acMigrationPublisher = acMigrationPublisher;
     }
 
@@ -87,7 +89,9 @@ public class StageScanner extends AbstractScanner {
                 updateSync.setUpdated(true);
                 saveAndSync(automationComposition, updateSync);
                 LOGGER.debug("retry message AutomationCompositionMigration");
-                acMigrationPublisher.send(automationComposition, minStageNotCompleted);
+                var acToSend = new AutomationComposition(automationComposition);
+                decryptInstanceProperties(acToSend);
+                acMigrationPublisher.send(acToSend, minStageNotCompleted);
             } else {
                 handleTimeout(automationComposition, updateSync);
             }

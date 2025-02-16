@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2024 Nordix Foundation.
+ *  Copyright (C) 2021-2025 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -162,6 +162,18 @@ public class CommonTestData {
         acmParameters.setToscaCompositionName(TOSCA_COMP_NAME);
         acmParameters.setToscaElementName(TOSCA_ELEMENT_NAME);
         acRuntimeParameterGroup.setAcmParameters(acmParameters);
+        return acRuntimeParameterGroup;
+    }
+
+    /**
+     * Create a new Test parameter group for Encryption.
+     *
+     * @return a new AutomationCompositionDefinition
+     */
+    public static AcRuntimeParameterGroup getEncryptionParamaterGroup() {
+        var acRuntimeParameterGroup = getTestParamaterGroup();
+        acRuntimeParameterGroup.getAcmParameters().setSalt("randomSalt");
+        acRuntimeParameterGroup.getAcmParameters().setPassPhrase("randomPhrase");
         return acRuntimeParameterGroup;
     }
 

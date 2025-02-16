@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2024 Nordix Foundation.
+ * Copyright (C) 2021-2025 Nordix Foundation.
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
+import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionAcHandler;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
@@ -79,6 +80,7 @@ public class AutomationCompositionInstantiationProvider {
     private final SupervisionAcHandler supervisionAcHandler;
     private final ParticipantProvider participantProvider;
     private final AcRuntimeParameterGroup acRuntimeParameterGroup;
+    private final EncryptionUtils encryptionUtils;
 
     /**
      * Create automation composition.
@@ -104,6 +106,7 @@ public class AutomationCompositionInstantiationProvider {
         if (!validationResult.isValid()) {
             throw new PfModelRuntimeException(Status.BAD_REQUEST, validationResult.getResult());
         }
+        encryptInstanceProperties(automationComposition, compositionId);
         automationComposition = automationCompositionProvider.createAutomationComposition(automationComposition);
 
         return createInstantiationResponse(automationComposition);
@@ -141,6 +144,7 @@ public class AutomationCompositionInstantiationProvider {
             if (!validationResult.isValid()) {
                 throw new PfModelRuntimeException(Status.BAD_REQUEST, validationResult.getResult());
             }
+            encryptInstanceProperties(acToUpdate, compositionId);
             automationComposition = automationCompositionProvider.updateAutomationComposition(acToUpdate);
             return createInstantiationResponse(automationComposition);
 
@@ -200,6 +204,8 @@ public class AutomationCompositionInstantiationProvider {
         // Publish property update event to the participants
         supervisionAcHandler.update(acToBeUpdated);
 
+        encryptInstanceProperties(acToBeUpdated, acToBeUpdated.getCompositionId());
+
         automationComposition = automationCompositionProvider.updateAutomationComposition(acToBeUpdated);
         return createInstantiationResponse(automationComposition);
     }
@@ -241,6 +247,8 @@ public class AutomationCompositionInstantiationProvider {
         var acDefinition = acDefinitionProvider.getAcDefinition(automationComposition.getCompositionTargetId());
         // Publish migrate event to the participants
         supervisionAcHandler.migrate(acToBeUpdated, acDefinition.getServiceTemplate());
+
+        encryptInstanceProperties(acToBeUpdated, acToBeUpdated.getCompositionTargetId());
 
         var ac = automationCompositionProvider.updateAutomationComposition(acToBeUpdated);
         elementsRemoved.forEach(automationCompositionProvider::deleteAutomationCompositionElement);
@@ -354,6 +362,15 @@ public class AutomationCompositionInstantiationProvider {
         }
 
         return result;
+    }
+
+
+    private void encryptInstanceProperties(AutomationComposition automationComposition, UUID compositionId) {
+        if (encryptionUtils.encryptionEnabled()) {
+            var acDefinitionOpt = acDefinitionProvider.findAcDefinition(compositionId);
+            acDefinitionOpt.ifPresent(acDefinition
+                    -> encryptionUtils.findAndEncryptSensitiveData(acDefinition, automationComposition));
+        }
     }
 
     /**

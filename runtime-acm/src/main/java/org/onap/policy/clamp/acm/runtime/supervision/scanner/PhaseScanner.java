@@ -21,6 +21,7 @@
 package org.onap.policy.clamp.acm.runtime.supervision.scanner;
 
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
+import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionDeployPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionStateChangePublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
@@ -52,8 +53,9 @@ public class PhaseScanner extends AbstractScanner {
             final ParticipantSyncPublisher participantSyncPublisher,
             final AutomationCompositionStateChangePublisher acStateChangePublisher,
             final AutomationCompositionDeployPublisher acDeployPublisher,
-            final AcRuntimeParameterGroup acRuntimeParameterGroup) {
-        super(acProvider, participantSyncPublisher, acRuntimeParameterGroup);
+            final AcRuntimeParameterGroup acRuntimeParameterGroup,
+            final EncryptionUtils encryptionUtils) {
+        super(acProvider, participantSyncPublisher, acRuntimeParameterGroup, encryptionUtils);
         this.acStateChangePublisher = acStateChangePublisher;
         this.acDeployPublisher = acDeployPublisher;
     }
@@ -115,7 +117,9 @@ public class PhaseScanner extends AbstractScanner {
 
         if (DeployState.DEPLOYING.equals(automationComposition.getDeployState())) {
             LOGGER.debug("retry message AutomationCompositionDeploy");
-            acDeployPublisher.send(automationComposition, startPhase, false);
+            var acToSend = new AutomationComposition(automationComposition);
+            decryptInstanceProperties(acToSend);
+            acDeployPublisher.send(acToSend, startPhase, false);
         } else {
             LOGGER.debug("retry message AutomationCompositionStateChange");
             acStateChangePublisher.send(automationComposition, startPhase, false);
