@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2024 Nordix Foundation.
+ *  Copyright (C) 2021-2025 Nordix Foundation.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,14 +23,11 @@ package org.onap.policy.clamp.acm.runtime.supervision;
 
 import io.micrometer.core.annotation.Timed;
 import lombok.AllArgsConstructor;
-import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
-import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrimeAck;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
-import org.onap.policy.clamp.models.acm.utils.AcmUtils;
+import org.onap.policy.clamp.models.acm.persistence.provider.MessageProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -45,13 +42,14 @@ public class SupervisionHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(SupervisionHandler.class);
 
     private final AcDefinitionProvider acDefinitionProvider;
-    private final ParticipantSyncPublisher participantSyncPublisher;
+    private final MessageProvider messageProvider;
 
     /**
      * Handle a ParticipantPrimeAck message from a participant.
      *
      * @param participantPrimeAckMessage the ParticipantPrimeAck message received from a participant
      */
+    @MessageIntercept
     @Timed(value = "listener.participant_prime_ack", description = "PARTICIPANT_PRIME_ACK messages received")
     public void handleParticipantMessage(ParticipantPrimeAck participantPrimeAckMessage) {
         if (participantPrimeAckMessage.getCompositionId() == null
@@ -82,50 +80,6 @@ public class SupervisionHandler {
                     participantPrimeAckMessage.getCompositionId(), participantPrimeAckMessage.getParticipantId());
             return;
         }
-        handleParticipantPrimeAck(participantPrimeAckMessage, acDefinition);
-    }
-
-    private void handleParticipantPrimeAck(ParticipantPrimeAck participantPrimeAckMessage,
-            AutomationCompositionDefinition acDefinition) {
-        var finalState = AcTypeState.PRIMING.equals(acDefinition.getState())
-                || AcTypeState.PRIMED.equals(acDefinition.getState()) ? AcTypeState.PRIMED : AcTypeState.COMMISSIONED;
-        var msgInErrors = StateChangeResult.FAILED.equals(participantPrimeAckMessage.getStateChangeResult());
-        boolean inProgress = !StateChangeResult.FAILED.equals(acDefinition.getStateChangeResult());
-        boolean toUpdate = false;
-        if (inProgress && msgInErrors) {
-            acDefinition.setStateChangeResult(StateChangeResult.FAILED);
-            toUpdate = true;
-        }
-
-        boolean completed = true;
-        for (var element : acDefinition.getElementStateMap().values()) {
-            handlePrimeAckElement(participantPrimeAckMessage, element);
-            if (!finalState.equals(element.getState())) {
-                completed = false;
-            }
-        }
-
-        if (inProgress && !msgInErrors && completed) {
-            toUpdate = true;
-            acDefinition.setState(finalState);
-            if (StateChangeResult.TIMEOUT.equals(acDefinition.getStateChangeResult())) {
-                acDefinition.setStateChangeResult(StateChangeResult.NO_ERROR);
-            }
-        }
-        if (toUpdate) {
-            acDefinitionProvider.updateAcDefinitionState(acDefinition.getCompositionId(), acDefinition.getState(),
-                acDefinition.getStateChangeResult());
-            if (!participantPrimeAckMessage.getParticipantId().equals(participantPrimeAckMessage.getReplicaId())) {
-                participantSyncPublisher.sendSync(acDefinition, participantPrimeAckMessage.getReplicaId());
-            }
-        }
-    }
-
-    private void handlePrimeAckElement(ParticipantPrimeAck participantPrimeAckMessage, NodeTemplateState element) {
-        if (participantPrimeAckMessage.getParticipantId().equals(element.getParticipantId())) {
-            element.setMessage(AcmUtils.validatedMessage(participantPrimeAckMessage.getMessage()));
-            element.setState(participantPrimeAckMessage.getCompositionState());
-            acDefinitionProvider.updateAcDefinitionElement(element, participantPrimeAckMessage.getCompositionId());
-        }
+        messageProvider.save(participantPrimeAckMessage);
     }
 }

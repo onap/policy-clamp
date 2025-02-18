@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023-2024 Nordix Foundation.
+ *  Copyright (C) 2023-2025 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +22,8 @@ package org.onap.policy.clamp.acm.runtime.supervision;
 
 import io.micrometer.core.annotation.Timed;
 import io.opentelemetry.context.Context;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import lombok.AllArgsConstructor;
@@ -33,7 +32,6 @@ import org.onap.policy.clamp.acm.runtime.supervision.comm.AcPreparePublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionDeployPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionMigrationPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionStateChangePublisher;
-import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeployAck;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
@@ -44,6 +42,7 @@ import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeployAck;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
+import org.onap.policy.clamp.models.acm.persistence.provider.MessageProvider;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
@@ -66,8 +65,8 @@ public class SupervisionAcHandler {
     private final AutomationCompositionStateChangePublisher automationCompositionStateChangePublisher;
     private final AcElementPropertiesPublisher acElementPropertiesPublisher;
     private final AutomationCompositionMigrationPublisher acCompositionMigrationPublisher;
-    private final ParticipantSyncPublisher participantSyncPublisher;
     private final AcPreparePublisher acPreparePublisher;
+    private final MessageProvider messageProvider;
 
     private final ExecutorService executor = Context.taskWrapping(Executors.newFixedThreadPool(1));
 
@@ -270,22 +269,24 @@ public class SupervisionAcHandler {
         if (automationCompositionAckMessage.getAutomationCompositionResultMap() == null
                 || automationCompositionAckMessage.getAutomationCompositionResultMap().isEmpty()) {
             if (DeployState.DELETING.equals(automationComposition.getDeployState())) {
-                deleteAcInstance(automationComposition, automationCompositionAckMessage.getParticipantId());
+                // scenario automationComposition has never deployed
+                automationCompositionAckMessage.setAutomationCompositionResultMap(new HashMap<>());
+                for (var element : automationComposition.getElements().values()) {
+                    if (element.getParticipantId().equals(automationCompositionAckMessage.getParticipantId())) {
+                        var acElement = new AcElementDeployAck(DeployState.DELETED, LockState.NONE,
+                                null, null, Map.of(), true, "");
+                        automationCompositionAckMessage.getAutomationCompositionResultMap()
+                                .put(element.getId(), acElement);
+                    }
+                }
             } else {
                 LOGGER.warn("Empty AutomationCompositionResultMap  {} {}",
                         automationCompositionAckMessage.getAutomationCompositionId(),
                         automationCompositionAckMessage.getMessage());
+                return;
             }
-            return;
         }
-
-        var updated = updateState(automationComposition,
-                automationCompositionAckMessage.getAutomationCompositionResultMap().entrySet(),
-                automationCompositionAckMessage.getStateChangeResult(), automationCompositionAckMessage.getStage());
-        if (updated) {
-            automationComposition = automationCompositionProvider.updateAcState(automationComposition);
-            participantSyncPublisher.sendSync(automationComposition);
-        }
+        messageProvider.save(automationCompositionAckMessage);
     }
 
     private boolean validateMessage(AutomationCompositionDeployAck acAckMessage) {
@@ -301,7 +302,8 @@ public class SupervisionAcHandler {
             return false;
         }
 
-        if (acAckMessage.getStage() == null) {
+        if ((acAckMessage.getStage() == null)
+            && (acAckMessage.getAutomationCompositionResultMap() != null)) {
             for (var el : acAckMessage.getAutomationCompositionResultMap().values()) {
                 if (AcmUtils.isInTransitionalState(el.getDeployState(), el.getLockState(), SubState.NONE)) {
                     LOGGER.error("Not valid AutomationCompositionDeployAck message, states are not valid");
@@ -310,43 +312,6 @@ public class SupervisionAcHandler {
             }
         }
         return true;
-    }
-
-    private void deleteAcInstance(AutomationComposition automationComposition, UUID participantId) {
-        // scenario when Automation Composition instance has never been deployed
-        for (var element : automationComposition.getElements().values()) {
-            if (element.getParticipantId().equals(participantId)) {
-                element.setDeployState(DeployState.DELETED);
-                automationCompositionProvider.updateAutomationCompositionElement(element);
-            }
-        }
-    }
-
-    private boolean updateState(AutomationComposition automationComposition,
-            Set<Map.Entry<UUID, AcElementDeployAck>> automationCompositionResultSet,
-            StateChangeResult stateChangeResult, Integer stage) {
-        var updated = false;
-        boolean inProgress = !StateChangeResult.FAILED.equals(automationComposition.getStateChangeResult());
-        if (inProgress && !stateChangeResult.equals(automationComposition.getStateChangeResult())) {
-            automationComposition.setStateChangeResult(stateChangeResult);
-            updated = true;
-        }
-
-        for (var acElementAck : automationCompositionResultSet) {
-            var element = automationComposition.getElements().get(acElementAck.getKey());
-            if (element != null) {
-                element.setMessage(AcmUtils.validatedMessage(acElementAck.getValue().getMessage()));
-                if (stage == null) {
-                    element.setSubState(SubState.NONE);
-                }
-                element.setDeployState(acElementAck.getValue().getDeployState());
-                element.setLockState(acElementAck.getValue().getLockState());
-                element.setStage(stage);
-                automationCompositionProvider.updateAutomationCompositionElement(element);
-            }
-        }
-
-        return updated;
     }
 
     /**

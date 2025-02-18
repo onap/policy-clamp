@@ -80,10 +80,10 @@ public class SimpleScanner extends AbstractScanner {
         if (element != null) {
             element.setDeployState(message.getDeployState());
             element.setLockState(message.getLockState());
-            if (element.getStage() == null) {
+            if (message.getStage() == null) {
                 element.setSubState(SubState.NONE);
             }
-            element.setStage(element.getStage());
+            element.setStage(message.getStage());
             element.setMessage(message.getMessage());
             result.setUpdated(true);
         }

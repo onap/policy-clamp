@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2024 Nordix Foundation.
+ * Copyright (C) 2021-2025 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,11 +22,9 @@ package org.onap.policy.clamp.models.acm.persistence.provider;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyIterable;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -38,8 +36,6 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementInfo;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionInfo;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
@@ -55,7 +51,6 @@ import org.springframework.data.domain.Example;
 class AutomationCompositionProviderTest {
 
     private static final String AC_IS_NULL = "automationComposition is marked non-null but is null";
-    private static final String ACELEMENT_IS_NULL = "element is marked non-null but is null";
     private static final String ACELEMENT_ID_IS_NULL = "elementId is marked non-null but is null";
 
     private static final Coder CODER = new StandardCoder();
@@ -199,7 +194,9 @@ class AutomationCompositionProviderTest {
         when(automationCompositionRepository.findByLockStateIn(List.of(LockState.LOCKING, LockState.UNLOCKING)))
             .thenReturn(List.of(inputAutomationCompositionsJpa.get(1)));
         var acList = automationCompositionProvider.getAcInstancesInTransition();
-        assertEquals(inputAutomationCompositions.getAutomationCompositionList(), acList);
+        assertThat(acList).hasSize(2)
+                .contains(inputAutomationCompositions.getAutomationCompositionList().get(0).getInstanceId())
+                .contains(inputAutomationCompositions.getAutomationCompositionList().get(1).getInstanceId());
     }
 
     @Test
@@ -218,27 +215,6 @@ class AutomationCompositionProviderTest {
         var deletedAc =
                 automationCompositionProvider.deleteAutomationComposition(automationComposition.getInstanceId());
         assertEquals(automationComposition, deletedAc);
-    }
-
-    @Test
-    void testAutomationCompositionElementUpdate() {
-        var acElementRepository = mock(AutomationCompositionElementRepository.class);
-        var automationCompositionProvider = new AutomationCompositionProvider(
-            mock(AutomationCompositionRepository.class), acElementRepository);
-
-        assertThatThrownBy(() -> automationCompositionProvider.updateAutomationCompositionElement(null))
-            .hasMessageMatching(ACELEMENT_IS_NULL);
-
-        var acElement = inputAutomationCompositions.getAutomationCompositionList().get(0).getElements().values()
-            .iterator().next();
-        var jpa = new JpaAutomationCompositionElement();
-        jpa.setElementId(acElement.getId().toString());
-        jpa.setInstanceId(UUID.randomUUID().toString());
-        jpa.fromAuthorative(acElement);
-        when(acElementRepository.getReferenceById(acElement.getId().toString())).thenReturn(jpa);
-
-        automationCompositionProvider.updateAutomationCompositionElement(acElement);
-        verify(acElementRepository).save(any());
     }
 
     @Test
@@ -281,27 +257,5 @@ class AutomationCompositionProviderTest {
         jpaElement.setInstanceId(ac.getInstanceId().toString());
         result = automationCompositionProvider.validateElementIds(ac);
         assertThat(result.isValid()).isTrue();
-    }
-
-    @Test
-    void testUpgradeStates() {
-        var acElementRepository = mock(AutomationCompositionElementRepository.class);
-        var automationCompositionProvider = new AutomationCompositionProvider(
-            mock(AutomationCompositionRepository.class), acElementRepository);
-
-        assertDoesNotThrow(() -> automationCompositionProvider.upgradeStates(List.of()));
-        var acElement = inputAutomationCompositions.getAutomationCompositionList().get(0).getElements().values()
-            .iterator().next();
-
-        var acInfo = new AutomationCompositionInfo();
-        var acElementInfo = new AutomationCompositionElementInfo();
-        acInfo.setElements(List.of(acElementInfo));
-        acElementInfo.setAutomationCompositionElementId(acElement.getId());
-
-        when(acElementRepository.getReferenceById(acElement.getId().toString()))
-            .thenReturn(new JpaAutomationCompositionElement(acElement));
-
-        automationCompositionProvider.upgradeStates(List.of(acInfo));
-        verify(acElementRepository).saveAll(anyList());
     }
 }
