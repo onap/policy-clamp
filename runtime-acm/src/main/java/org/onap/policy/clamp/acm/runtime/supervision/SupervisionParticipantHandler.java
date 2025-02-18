@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023-2024 Nordix Foundation.
+ *  Copyright (C) 2023-2025 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,16 +27,13 @@ import java.util.Map;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.MapUtils;
-import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantDeregisterAckPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantRegisterAckPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionInfo;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
-import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantReplica;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantSupportedElementType;
@@ -45,6 +42,7 @@ import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantRe
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantStatus;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
+import org.onap.policy.clamp.models.acm.persistence.provider.MessageProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 import org.slf4j.Logger;
@@ -65,7 +63,7 @@ public class SupervisionParticipantHandler {
     private final AutomationCompositionProvider automationCompositionProvider;
     private final AcDefinitionProvider acDefinitionProvider;
     private final ParticipantSyncPublisher participantSyncPublisher;
-    private final AcRuntimeParameterGroup acRuntimeParameterGroup;
+    private final MessageProvider messageProvider;
 
     /**
      * Handle a ParticipantRegister message from a participant.
@@ -104,18 +102,18 @@ public class SupervisionParticipantHandler {
      *
      * @param participantStatusMsg the ParticipantStatus message received from a participant
      */
+    @MessageIntercept
     @Timed(value = "listener.participant_status", description = "PARTICIPANT_STATUS messages received")
     public void handleParticipantMessage(ParticipantStatus participantStatusMsg) {
         saveIfNotPresent(participantStatusMsg.getReplicaId(), participantStatusMsg.getParticipantId(),
                 participantStatusMsg.getParticipantSupportedElementType(), false);
 
         if (!participantStatusMsg.getAutomationCompositionInfoList().isEmpty()) {
-            updateAcOutProperties(participantStatusMsg.getAutomationCompositionInfoList());
+            messageProvider.save(participantStatusMsg);
         }
         if (!participantStatusMsg.getParticipantDefinitionUpdates().isEmpty()
                 && participantStatusMsg.getCompositionId() != null) {
-            updateAcDefinitionOutProperties(participantStatusMsg.getCompositionId(),
-                participantStatusMsg.getReplicaId(), participantStatusMsg.getParticipantDefinitionUpdates());
+            messageProvider.save(participantStatusMsg);
         }
     }
 
@@ -149,34 +147,6 @@ public class SupervisionParticipantHandler {
         replica.setLastMsg(TimestampHelper.now());
         return replica;
 
-    }
-
-    private void updateAcOutProperties(List<AutomationCompositionInfo> automationCompositionInfoList) {
-        automationCompositionProvider.upgradeStates(automationCompositionInfoList);
-        for (var acInfo : automationCompositionInfoList) {
-            var ac = automationCompositionProvider.getAutomationComposition(acInfo.getAutomationCompositionId());
-            participantSyncPublisher.sendSync(ac);
-        }
-    }
-
-    private void updateAcDefinitionOutProperties(UUID compositionId, UUID replicaId, List<ParticipantDefinition> list) {
-        var acDefinitionOpt = acDefinitionProvider.findAcDefinition(compositionId);
-        if (acDefinitionOpt.isEmpty()) {
-            LOGGER.error("Ac Definition with id {} not found", compositionId);
-            return;
-        }
-        var acDefinition = acDefinitionOpt.get();
-        for (var acElements : list) {
-            for (var element : acElements.getAutomationCompositionElementDefinitionList()) {
-                var state = acDefinition.getElementStateMap().get(element.getAcElementDefinitionId().getName());
-                if (state != null) {
-                    state.setOutProperties(element.getOutProperties());
-                }
-            }
-        }
-        acDefinitionProvider.updateAcDefinition(acDefinition,
-                acRuntimeParameterGroup.getAcmParameters().getToscaCompositionName());
-        participantSyncPublisher.sendSync(acDefinition, replicaId);
     }
 
     private void checkOnline(ParticipantReplica replica) {

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2024 Nordix Foundation.
+ *  Copyright (C) 2021-2025 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,19 +31,19 @@ import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
-import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrimeAck;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
+import org.onap.policy.clamp.models.acm.persistence.provider.MessageProvider;
 
 class SupervisionHandlerTest {
 
     @Test
     void testParticipantPrimeAckNull() {
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
-        var handler = new SupervisionHandler(acDefinitionProvider, mock(ParticipantSyncPublisher.class));
+        var handler = new SupervisionHandler(acDefinitionProvider, mock(MessageProvider.class));
 
         var participantPrimeAckMessage = new ParticipantPrimeAck();
         participantPrimeAckMessage.setParticipantId(CommonTestData.getParticipantId());
@@ -66,8 +66,11 @@ class SupervisionHandlerTest {
         participantPrimeAckMessage.setCompositionState(AcTypeState.DEPRIMING);
         handler.handleParticipantMessage(participantPrimeAckMessage);
 
+        participantPrimeAckMessage.setCompositionState(AcTypeState.COMMISSIONED);
+        participantPrimeAckMessage.setStateChangeResult(StateChangeResult.TIMEOUT);
+        handler.handleParticipantMessage(participantPrimeAckMessage);
+
         verify(acDefinitionProvider, times(0)).findAcDefinition(any());
-        verify(acDefinitionProvider, times(0)).updateAcDefinitionElement(any(), any());
     }
 
     @Test
@@ -78,10 +81,9 @@ class SupervisionHandlerTest {
         participantPrimeAckMessage.setCompositionId(UUID.randomUUID());
         participantPrimeAckMessage.setCompositionState(AcTypeState.PRIMED);
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
-        var handler = new SupervisionHandler(acDefinitionProvider, mock(ParticipantSyncPublisher.class));
+        var handler = new SupervisionHandler(acDefinitionProvider, mock(MessageProvider.class));
         handler.handleParticipantMessage(participantPrimeAckMessage);
         verify(acDefinitionProvider).findAcDefinition(participantPrimeAckMessage.getCompositionId());
-        verify(acDefinitionProvider, times(0)).updateAcDefinitionElement(any(), any());
     }
 
     @Test
@@ -98,7 +100,7 @@ class SupervisionHandlerTest {
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
         when(acDefinitionProvider.findAcDefinition(acDefinition.getCompositionId()))
                 .thenReturn(Optional.of(acDefinition));
-        var handler = new SupervisionHandler(acDefinitionProvider, mock(ParticipantSyncPublisher.class));
+        var handler = new SupervisionHandler(acDefinitionProvider, mock(MessageProvider.class));
 
         handler.handleParticipantMessage(participantPrimeAckMessage);
         verify(acDefinitionProvider).findAcDefinition(any());
@@ -123,14 +125,10 @@ class SupervisionHandlerTest {
         when(acDefinitionProvider.findAcDefinition(acDefinition.getCompositionId()))
                 .thenReturn(Optional.of(acDefinition));
 
-        var handler = new SupervisionHandler(acDefinitionProvider, mock(ParticipantSyncPublisher.class));
+        var handler = new SupervisionHandler(acDefinitionProvider, mock(MessageProvider.class));
 
         handler.handleParticipantMessage(participantPrimeAckMessage);
         verify(acDefinitionProvider).findAcDefinition(any());
-        verify(acDefinitionProvider, times(acDefinition.getElementStateMap().size()))
-            .updateAcDefinitionElement(any(), any());
-        verify(acDefinitionProvider).updateAcDefinitionState(acDefinition.getCompositionId(), AcTypeState.PRIMED,
-            StateChangeResult.NO_ERROR);
     }
 
     @Test
@@ -150,12 +148,9 @@ class SupervisionHandlerTest {
         when(acDefinitionProvider.findAcDefinition(acDefinition.getCompositionId()))
                 .thenReturn(Optional.of(acDefinition));
 
-        var handler = new SupervisionHandler(acDefinitionProvider, mock(ParticipantSyncPublisher.class));
+        var handler = new SupervisionHandler(acDefinitionProvider, mock(MessageProvider.class));
 
         handler.handleParticipantMessage(participantPrimeAckMessage);
         verify(acDefinitionProvider).findAcDefinition(any());
-        verify(acDefinitionProvider).updateAcDefinitionElement(any(), any());
-        verify(acDefinitionProvider).updateAcDefinitionState(acDefinition.getCompositionId(), AcTypeState.PRIMING,
-            StateChangeResult.FAILED);
     }
 }

@@ -24,18 +24,16 @@ import jakarta.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
-import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
-import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.document.base.ToscaServiceTemplateValidation;
 import org.onap.policy.clamp.models.acm.document.concepts.DocToscaServiceTemplate;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationCompositionDefinition;
-import org.onap.policy.clamp.models.acm.persistence.concepts.JpaNodeTemplateState;
 import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionDefinitionRepository;
-import org.onap.policy.clamp.models.acm.persistence.repository.NodeTemplateStateRepository;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 import org.onap.policy.common.parameters.BeanValidationResult;
@@ -43,7 +41,6 @@ import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -54,7 +51,6 @@ public class AcDefinitionProvider {
     private static final String NAME = "AutomationCompositionDefinition";
 
     private final AutomationCompositionDefinitionRepository acmDefinitionRepository;
-    private final NodeTemplateStateRepository nodeTemplateStateRepository;
 
     /**
      * Create Automation Composition Definition.
@@ -147,40 +143,6 @@ public class AcDefinitionProvider {
     }
 
     /**
-     * Update Ac Definition AcTypeState, StateChangeResult and restarting.
-     *
-     * @param compositionId The UUID of the automation composition definition to update
-     * @param state the AcTypeState
-     * @param stateChangeResult the StateChangeResult
-     */
-    public void updateAcDefinitionState(UUID compositionId, AcTypeState state, StateChangeResult stateChangeResult) {
-        var jpaUpdate = acmDefinitionRepository.findById(compositionId.toString());
-        if (jpaUpdate.isEmpty()) {
-            String errorMessage = "update of Automation Composition Definition \"" + compositionId
-                + "\" failed, Automation Composition Definition does not exist";
-            throw new PfModelRuntimeException(Response.Status.NOT_FOUND, errorMessage);
-        }
-        var acDefinition = jpaUpdate.get();
-        acDefinition.setState(state);
-        acDefinition.setStateChangeResult(stateChangeResult);
-        acmDefinitionRepository.save(acDefinition);
-        acmDefinitionRepository.flush();
-    }
-
-    /**
-     * Update Ac DefinitionElement.
-     *
-     * @param nodeTemplateState the NodeTemplateState
-     * @param compositionId The UUID of the automation composition definition
-     */
-    public void updateAcDefinitionElement(NodeTemplateState nodeTemplateState, UUID compositionId) {
-        var jpaNodeTemplateState = new JpaNodeTemplateState(
-            nodeTemplateState.getNodeTemplateStateId().toString(), compositionId.toString());
-        jpaNodeTemplateState.fromAuthorative(nodeTemplateState);
-        nodeTemplateStateRepository.save(jpaNodeTemplateState);
-    }
-
-    /**
      * Delete Automation Composition Definition.
      *
      * @param compositionId The UUID of the automation composition definition to delete
@@ -222,7 +184,7 @@ public class AcDefinitionProvider {
      * @param compositionId The UUID of the automation composition definition to delete
      * @return the automation composition definition
      */
-    @Transactional(readOnly = true, isolation = Isolation.READ_UNCOMMITTED)
+    @Transactional(readOnly = true)
     public Optional<AutomationCompositionDefinition> findAcDefinition(UUID compositionId) {
         var jpaGet = acmDefinitionRepository.findById(compositionId.toString());
         return jpaGet.stream().map(JpaAutomationCompositionDefinition::toAuthorative).findFirst();
@@ -234,9 +196,10 @@ public class AcDefinitionProvider {
      * @return the Automation Composition Definitions found
      */
     @Transactional(readOnly = true)
-    public List<AutomationCompositionDefinition> getAllAcDefinitionsInTransition() {
+    public Set<UUID> getAllAcDefinitionsInTransition() {
         var jpaList = acmDefinitionRepository.findByStateIn(List.of(AcTypeState.PRIMING, AcTypeState.DEPRIMING));
-        return ProviderUtils.asEntityList(jpaList);
+        return jpaList.stream().map(JpaAutomationCompositionDefinition::getCompositionId)
+                .map(UUID::fromString).collect(Collectors.toSet());
     }
 
     /**

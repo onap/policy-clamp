@@ -38,6 +38,7 @@ import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
+import org.onap.policy.clamp.models.acm.persistence.provider.MessageProvider;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
@@ -58,6 +59,7 @@ public class SupervisionScanner {
     private final StageScanner stageScanner;
     private final SimpleScanner simpleScanner;
     private final PhaseScanner phaseScanner;
+    private final MessageProvider messageProvider;
 
     /**
      * Run Scanning.
@@ -65,30 +67,54 @@ public class SupervisionScanner {
     public void run() {
         LOGGER.debug("Scanning automation compositions in the database . . .");
 
-        var acDefinitions = acDefinitionProvider.getAllAcDefinitionsInTransition();
-        for (var acDefinition : acDefinitions) {
-            scanAcDefinition(acDefinition.getCompositionId());
+        messageProvider.removeOldJobs();
+
+        var compositionIds = acDefinitionProvider.getAllAcDefinitionsInTransition();
+        compositionIds.addAll(messageProvider.findCompositionMessages());
+        for (var compositionId : compositionIds) {
+            scanAcDefinition(compositionId);
         }
 
-        var instances = automationCompositionProvider.getAcInstancesInTransition();
+        var instanceIds = automationCompositionProvider.getAcInstancesInTransition();
+        instanceIds.addAll(messageProvider.findInstanceMessages());
         Map<UUID, AutomationCompositionDefinition> acDefinitionMap = new HashMap<>();
-        for (var instance : instances) {
-            scanAutomationComposition(instance.getInstanceId(), acDefinitionMap);
+        for (var instanceId : instanceIds) {
+            scanAutomationComposition(instanceId, acDefinitionMap);
         }
         LOGGER.debug("Automation composition scan complete . . .");
     }
 
     private void scanAcDefinition(UUID compositionId) {
+        var optJobId = messageProvider.createJob(compositionId);
+        if (optJobId.isEmpty()) {
+            return;
+        }
+        var messages = messageProvider.getAllMessages(compositionId);
         var acDefinitionOpt = acDefinitionProvider.findAcDefinition(compositionId);
         var updateSync = new UpdateSync();
+        for (var message : messages) {
+            acDefinitionOpt.ifPresent(
+                    acDefinition -> updateSync.or(acDefinitionScanner.scanMessage(acDefinition, message)));
+            messageProvider.removeMessage(message.getMessageId());
+        }
         acDefinitionOpt.ifPresent(acDefinition ->
                 acDefinitionScanner.scanAutomationCompositionDefinition(acDefinition, updateSync));
+        messageProvider.removeJob(optJobId.get());
     }
 
     private void scanAutomationComposition(UUID instanceId,
             Map<UUID, AutomationCompositionDefinition> acDefinitionMap) {
+        var optJobId = messageProvider.createJob(instanceId);
+        if (optJobId.isEmpty()) {
+            return;
+        }
+        var messages = messageProvider.getAllMessages(instanceId);
         var automationCompositionOpt = automationCompositionProvider.findAutomationComposition(instanceId);
         var updateSync = new UpdateSync();
+        for (var message : messages) {
+            automationCompositionOpt.ifPresent(ac -> updateSync.or(simpleScanner.scanMessage(ac, message)));
+            messageProvider.removeMessage(message.getMessageId());
+        }
         if (automationCompositionOpt.isPresent()) {
             var automationComposition = automationCompositionOpt.get();
             var compositionId = automationComposition.getCompositionTargetId() != null
@@ -96,6 +122,8 @@ public class SupervisionScanner {
             var acDefinition = acDefinitionMap.computeIfAbsent(compositionId, acDefinitionProvider::getAcDefinition);
             scanAutomationComposition(automationComposition, acDefinition.getServiceTemplate(), updateSync);
         }
+
+        messageProvider.removeJob(optJobId.get());
     }
 
     private void scanAutomationComposition(final AutomationComposition automationComposition,
@@ -107,6 +135,7 @@ public class SupervisionScanner {
                 || StateChangeResult.FAILED.equals(automationComposition.getStateChangeResult())) {
             LOGGER.debug("automation composition {} scanned, OK", automationComposition.getInstanceId());
             simpleScanner.saveAndSync(automationComposition, updateSync);
+            return;
         }
 
         if (DeployState.MIGRATING.equals(automationComposition.getDeployState())) {

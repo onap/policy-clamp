@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2024 Nordix Foundation.
+ * Copyright (C) 2021-2025 Nordix Foundation.
  * ================================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -24,20 +24,19 @@ package org.onap.policy.clamp.models.acm.persistence.provider;
 
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
-import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionInfo;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationComposition;
-import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionElementRepository;
 import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionRepository;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
@@ -118,23 +117,6 @@ public class AutomationCompositionProvider {
         return result.toAuthorative();
     }
 
-
-    /**
-     * Update automation composition state.
-     *
-     * @param acSource the automation composition to update
-     * @return the updated automation composition
-     */
-    public AutomationComposition updateAcState(final AutomationComposition acSource) {
-        var automationComposition = automationCompositionRepository
-                .getReferenceById(acSource.getInstanceId().toString());
-        automationComposition.fromAuthorativeBase(acSource);
-        var result = automationCompositionRepository.save(automationComposition);
-        automationCompositionRepository.flush();
-        // Return the saved automation composition
-        return result.toAuthorative();
-    }
-
     /**
      * Update automation composition.
      *
@@ -168,14 +150,15 @@ public class AutomationCompositionProvider {
      * @return all automation compositions found
      */
     @Transactional(readOnly = true)
-    public List<AutomationComposition> getAcInstancesInTransition() {
+    public Set<UUID> getAcInstancesInTransition() {
         var jpaList = automationCompositionRepository.findByDeployStateIn(List.of(DeployState.DEPLOYING,
             DeployState.UNDEPLOYING, DeployState.DELETING, DeployState.UPDATING, DeployState.MIGRATING));
         jpaList.addAll(automationCompositionRepository.findByLockStateIn(
             List.of(LockState.LOCKING, LockState.UNLOCKING)));
         jpaList.addAll(automationCompositionRepository.findBySubStateIn(
                 List.of(SubState.PREPARING, SubState.MIGRATION_PRECHECKING, SubState.REVIEWING)));
-        return ProviderUtils.asEntityList(jpaList);
+        return jpaList.stream().map(JpaAutomationComposition::getInstanceId)
+                .map(UUID::fromString).collect(Collectors.toSet());
     }
 
     /**
@@ -224,49 +207,6 @@ public class AutomationCompositionProvider {
         automationCompositionRepository.deleteById(instanceId.toString());
 
         return jpaDeleteAutomationComposition.get().toAuthorative();
-    }
-
-    /**
-     * Upgrade States.
-     *
-     * @param automationCompositionInfoList list of AutomationCompositionInfo
-     */
-    public void upgradeStates(@NonNull final List<AutomationCompositionInfo> automationCompositionInfoList) {
-        if (automationCompositionInfoList.isEmpty()) {
-            return;
-        }
-        List<JpaAutomationCompositionElement> jpaList = new ArrayList<>();
-        for (var acInstance : automationCompositionInfoList) {
-            for (var element : acInstance.getElements()) {
-                var jpa = acElementRepository.getReferenceById(element.getAutomationCompositionElementId().toString());
-                jpa.setUseState(element.getUseState());
-                jpa.setOperationalState(element.getOperationalState());
-                jpa.setOutProperties(element.getOutProperties());
-                jpaList.add(jpa);
-            }
-        }
-        acElementRepository.saveAll(jpaList);
-    }
-
-    /**
-     * Update AutomationCompositionElement.
-     *
-     * @param element the AutomationCompositionElement
-     */
-    public void updateAutomationCompositionElement(@NonNull final AutomationCompositionElement element) {
-        var jpaAcElement = acElementRepository.getReferenceById(element.getId().toString());
-        jpaAcElement.setMessage(element.getMessage());
-        jpaAcElement.setOutProperties(element.getOutProperties());
-        jpaAcElement.setOperationalState(element.getOperationalState());
-        jpaAcElement.setUseState(element.getUseState());
-        jpaAcElement.setDeployState(element.getDeployState());
-        jpaAcElement.setLockState(element.getLockState());
-        jpaAcElement.setSubState(element.getSubState());
-        jpaAcElement.setStage(element.getStage());
-        jpaAcElement.setRestarting(element.getRestarting());
-
-        ProviderUtils.validate(element, jpaAcElement, "AutomationCompositionElement");
-        acElementRepository.save(jpaAcElement);
     }
 
     /**

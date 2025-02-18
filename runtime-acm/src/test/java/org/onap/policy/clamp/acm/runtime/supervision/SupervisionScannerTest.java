@@ -28,10 +28,12 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVICE_TEMPLATE_YAML;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
@@ -48,23 +50,27 @@ import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
+import org.onap.policy.clamp.models.acm.document.concepts.DocMessage;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
+import org.onap.policy.clamp.models.acm.persistence.provider.MessageProvider;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 
 class SupervisionScannerTest {
 
     private static final String AC_JSON = "src/test/resources/rest/acm/AutomationCompositionSmoke.json";
 
-    private static final UUID compositionId = UUID.randomUUID();
+    private static final UUID COMPOSITION_ID = UUID.randomUUID();
+    private static final UUID INSTANCE_ID = UUID.randomUUID();
+    private static final String JOB_ID = "JOB_ID";
 
-    private AutomationCompositionDefinition createAutomationCompositionDefinition(AcTypeState acTypeState,
-                                                                                  StateChangeResult stateChangeResult) {
+    private AutomationCompositionDefinition createAutomationCompositionDefinition(
+            AcTypeState acTypeState, StateChangeResult stateChangeResult) {
         var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
         var acDefinition = new AutomationCompositionDefinition();
         acDefinition.setState(acTypeState);
         acDefinition.setStateChangeResult(stateChangeResult);
-        acDefinition.setCompositionId(compositionId);
+        acDefinition.setCompositionId(COMPOSITION_ID);
         acDefinition.setLastMsg(TimestampHelper.now());
         acDefinition.setServiceTemplate(Objects.requireNonNull(serviceTemplate));
         var node = new NodeTemplateState();
@@ -78,13 +84,15 @@ class SupervisionScannerTest {
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
         var acTypeState = acDefinition.getState();
         if (AcTypeState.PRIMING.equals(acTypeState) || AcTypeState.DEPRIMING.equals(acTypeState)) {
-            when(acDefinitionProvider.getAllAcDefinitionsInTransition()).thenReturn(List.of(acDefinition));
+            Set<UUID> set = new HashSet<>();
+            set.add(acDefinition.getCompositionId());
+            when(acDefinitionProvider.getAllAcDefinitionsInTransition()).thenReturn(set);
             when(acDefinitionProvider.getAcDefinition(acDefinition.getCompositionId()))
                     .thenReturn(Objects.requireNonNull(acDefinition));
             when(acDefinitionProvider.findAcDefinition(acDefinition.getCompositionId()))
                     .thenReturn(Optional.of(Objects.requireNonNull(acDefinition)));
         }
-        when(acDefinitionProvider.getAcDefinition(compositionId)).thenReturn(acDefinition);
+        when(acDefinitionProvider.getAcDefinition(COMPOSITION_ID)).thenReturn(acDefinition);
         return acDefinitionProvider;
     }
 
@@ -101,36 +109,95 @@ class SupervisionScannerTest {
     void testAcDefinition() {
         var acDefinitionProvider = createAcDefinitionProvider(AcTypeState.PRIMING, StateChangeResult.NO_ERROR);
         var acDefinitionScanner = mock(AcDefinitionScanner.class);
+        when(acDefinitionScanner.scanMessage(any(), any())).thenReturn(new UpdateSync());
+        var messageProvider = mock(MessageProvider.class);
+        when(messageProvider.createJob(COMPOSITION_ID)).thenReturn(Optional.of(JOB_ID));
+        when(messageProvider.findCompositionMessages()).thenReturn(Set.of(COMPOSITION_ID));
+        var message = new DocMessage();
+        when(messageProvider.getAllMessages(COMPOSITION_ID)).thenReturn(List.of(message));
         var supervisionScanner = new SupervisionScanner(mock(AutomationCompositionProvider.class), acDefinitionProvider,
-                acDefinitionScanner, mock(StageScanner.class), mock(SimpleScanner.class), mock(PhaseScanner.class));
+                acDefinitionScanner, mock(StageScanner.class), mock(SimpleScanner.class), mock(PhaseScanner.class),
+                messageProvider);
         supervisionScanner.run();
         verify(acDefinitionScanner).scanAutomationCompositionDefinition(any(), any());
+        verify(messageProvider).removeMessage(message.getMessageId());
+        verify(messageProvider).removeJob(JOB_ID);
+    }
+
+    @Test
+    void testAcDefinitionJobExist() {
+        var acDefinitionProvider = createAcDefinitionProvider(AcTypeState.PRIMING, StateChangeResult.NO_ERROR);
+        var acDefinitionScanner = mock(AcDefinitionScanner.class);
+        var messageProvider = mock(MessageProvider.class);
+        when(messageProvider.createJob(COMPOSITION_ID)).thenReturn(Optional.empty());
+        when(messageProvider.findCompositionMessages()).thenReturn(Set.of());
+        var supervisionScanner = new SupervisionScanner(mock(AutomationCompositionProvider.class), acDefinitionProvider,
+                acDefinitionScanner, mock(StageScanner.class), mock(SimpleScanner.class), mock(PhaseScanner.class),
+                messageProvider);
+        supervisionScanner.run();
+        verify(acDefinitionScanner, times(0)).scanAutomationCompositionDefinition(any(), any());
     }
 
     @Test
     void testAcNotInTransitionOrFailed() {
-        var automationCompositionProvider = mock(AutomationCompositionProvider.class);
-
         var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
-        automationComposition.setCompositionId(Objects.requireNonNull(compositionId));
-        when(automationCompositionProvider.getAcInstancesInTransition()).thenReturn(List.of(automationComposition));
+        automationComposition.setInstanceId(Objects.requireNonNull(INSTANCE_ID));
+        automationComposition.setCompositionId(Objects.requireNonNull(COMPOSITION_ID));
+        Set<UUID> set = new HashSet<>();
+        set.add(automationComposition.getInstanceId());
+        var automationCompositionProvider = mock(AutomationCompositionProvider.class);
+        when(automationCompositionProvider.getAcInstancesInTransition()).thenReturn(set);
 
         var stageScanner = mock(StageScanner.class);
         var simpleScanner = mock(SimpleScanner.class);
         var phaseScanner = mock(PhaseScanner.class);
+        var messageProvider = mock(MessageProvider.class);
         var supervisionScanner = new SupervisionScanner(automationCompositionProvider, createAcDefinitionProvider(),
-                mock(AcDefinitionScanner.class), stageScanner, simpleScanner, phaseScanner);
+                mock(AcDefinitionScanner.class), stageScanner, simpleScanner, phaseScanner, messageProvider);
 
         // not in transition
         supervisionScanner.run();
-        verify(stageScanner, times(0)).scanStage(any(), any(), any());
-        verify(simpleScanner, times(0)).simpleScan(any(), any());
-        verify(phaseScanner, times(0)).scanWithPhase(any(), any(), any());
+        verifyNoInteraction(stageScanner, simpleScanner, phaseScanner);
 
+        // failed
         automationComposition.setDeployState(DeployState.DEPLOYING);
         automationComposition.setStateChangeResult(StateChangeResult.FAILED);
         supervisionScanner.run();
-        // failed
+        verifyNoInteraction(stageScanner, simpleScanner, phaseScanner);
+
+        // job already exist
+        automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
+        when(messageProvider.createJob(automationComposition.getInstanceId())).thenReturn(Optional.empty());
+        supervisionScanner.run();
+        verifyNoInteraction(stageScanner, simpleScanner, phaseScanner);
+    }
+
+    @Test
+    void testAcRemoved() {
+        var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
+        automationComposition.setInstanceId(Objects.requireNonNull(INSTANCE_ID));
+        automationComposition.setCompositionId(Objects.requireNonNull(COMPOSITION_ID));
+        Set<UUID> set = new HashSet<>();
+        set.add(automationComposition.getInstanceId());
+        var automationCompositionProvider = mock(AutomationCompositionProvider.class);
+        when(automationCompositionProvider.getAcInstancesInTransition()).thenReturn(set);
+
+        var stageScanner = mock(StageScanner.class);
+        var simpleScanner = mock(SimpleScanner.class);
+        var phaseScanner = mock(PhaseScanner.class);
+        var messageProvider = mock(MessageProvider.class);
+        when(messageProvider.createJob(automationComposition.getInstanceId())).thenReturn(Optional.of(JOB_ID));
+        var supervisionScanner = new SupervisionScanner(automationCompositionProvider, createAcDefinitionProvider(),
+                mock(AcDefinitionScanner.class), stageScanner, simpleScanner, phaseScanner, messageProvider);
+
+        // automationComposition not present in DB
+        supervisionScanner.run();
+        verifyNoInteraction(stageScanner, simpleScanner, phaseScanner);
+        verify(messageProvider).removeJob(JOB_ID);
+    }
+
+    private void verifyNoInteraction(
+            StageScanner stageScanner, SimpleScanner simpleScanner, PhaseScanner phaseScanner) {
         verify(stageScanner, times(0)).scanStage(any(), any(), any());
         verify(simpleScanner, times(0)).simpleScan(any(), any());
         verify(phaseScanner, times(0)).scanWithPhase(any(), any(), any());
@@ -139,31 +206,44 @@ class SupervisionScannerTest {
     @Test
     void testScanner() {
         var automationComposition = new AutomationComposition();
-        automationComposition.setCompositionId(compositionId);
+        automationComposition.setInstanceId(INSTANCE_ID);
+        automationComposition.setCompositionId(COMPOSITION_ID);
         automationComposition.setDeployState(DeployState.DEPLOYING);
+        Set<UUID> set = new HashSet<>();
+        set.add(automationComposition.getInstanceId());
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
-        when(automationCompositionProvider.getAcInstancesInTransition()).thenReturn(List.of(automationComposition));
+        when(automationCompositionProvider.getAcInstancesInTransition()).thenReturn(set);
         when(automationCompositionProvider.findAutomationComposition(automationComposition.getInstanceId()))
                 .thenReturn(Optional.of(automationComposition));
 
         var stageScanner = mock(StageScanner.class);
         var simpleScanner = mock(SimpleScanner.class);
+        when(simpleScanner.scanMessage(any(), any())).thenReturn(new UpdateSync());
         var phaseScanner = mock(PhaseScanner.class);
 
+        var messageProvider = mock(MessageProvider.class);
+        when(messageProvider.createJob(automationComposition.getInstanceId())).thenReturn(Optional.of(JOB_ID));
+        var message = new  DocMessage();
+        when(messageProvider.getAllMessages(INSTANCE_ID)).thenReturn(List.of(message));
+        when(messageProvider.findInstanceMessages()).thenReturn(Set.of(INSTANCE_ID));
+
         var supervisionScanner = new SupervisionScanner(automationCompositionProvider, createAcDefinitionProvider(),
-                mock(AcDefinitionScanner.class), stageScanner, simpleScanner, phaseScanner);
+                mock(AcDefinitionScanner.class), stageScanner, simpleScanner, phaseScanner, messageProvider);
 
         supervisionScanner.run();
         verify(stageScanner, times(0)).scanStage(any(), any(), any());
         verify(simpleScanner, times(0)).simpleScan(any(), any());
         verify(phaseScanner).scanWithPhase(any(), any(), any());
+        verify(messageProvider).removeMessage(message.getMessageId());
+        verify(messageProvider).removeJob(JOB_ID);
     }
 
     @Test
     void testSendAutomationCompositionMigrate() {
         var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
         automationComposition.setDeployState(DeployState.MIGRATING);
-        automationComposition.setCompositionId(compositionId);
+        automationComposition.setInstanceId(INSTANCE_ID);
+        automationComposition.setCompositionId(COMPOSITION_ID);
         var compositionTargetId = UUID.randomUUID();
         automationComposition.setCompositionTargetId(compositionTargetId);
         automationComposition.setLockState(LockState.LOCKED);
@@ -175,7 +255,9 @@ class SupervisionScannerTest {
         }
 
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
-        when(automationCompositionProvider.getAcInstancesInTransition()).thenReturn(List.of(automationComposition));
+        Set<UUID> set = new HashSet<>();
+        set.add(automationComposition.getInstanceId());
+        when(automationCompositionProvider.getAcInstancesInTransition()).thenReturn(set);
         when(automationCompositionProvider.findAutomationComposition(automationComposition.getInstanceId()))
                 .thenReturn(Optional.of(automationComposition));
 
@@ -185,12 +267,17 @@ class SupervisionScannerTest {
         when(acDefinitionProvider.getAcDefinition(compositionTargetId)).thenReturn(definitionTarget);
         var stageScanner = mock(StageScanner.class);
 
+        var messageProvider = mock(MessageProvider.class);
+        when(messageProvider.createJob(automationComposition.getInstanceId())).thenReturn(Optional.of(JOB_ID));
+
         var supervisionScanner = new SupervisionScanner(automationCompositionProvider, acDefinitionProvider,
-                mock(AcDefinitionScanner.class), stageScanner, mock(SimpleScanner.class), mock(PhaseScanner.class));
+                mock(AcDefinitionScanner.class), stageScanner, mock(SimpleScanner.class),
+                mock(PhaseScanner.class), messageProvider);
 
         supervisionScanner.run();
         verify(stageScanner).scanStage(automationComposition, definitionTarget.getServiceTemplate(),
                 new UpdateSync());
+        verify(messageProvider).removeJob(JOB_ID);
     }
 
     @Test
@@ -200,35 +287,86 @@ class SupervisionScannerTest {
         automationComposition.setDeployState(DeployState.DEPLOYED);
         automationComposition.setSubState(SubState.MIGRATION_PRECHECKING);
         automationComposition.setLockState(LockState.NONE);
-        automationComposition.setCompositionId(compositionId);
+        automationComposition.setInstanceId(INSTANCE_ID);
+        automationComposition.setCompositionId(COMPOSITION_ID);
         automationComposition.setLastMsg(TimestampHelper.now());
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
-        when(automationCompositionProvider.getAcInstancesInTransition()).thenReturn(List.of(automationComposition));
+        Set<UUID> set = new HashSet<>();
+        set.add(automationComposition.getInstanceId());
+        when(automationCompositionProvider.getAcInstancesInTransition()).thenReturn(set);
         when(automationCompositionProvider.findAutomationComposition(automationComposition.getInstanceId()))
                 .thenReturn(Optional.of(automationComposition));
 
+        var messageProvider = mock(MessageProvider.class);
+        when(messageProvider.createJob(automationComposition.getInstanceId())).thenReturn(Optional.of(JOB_ID));
+
         var simpleScanner = mock(SimpleScanner.class);
         var supervisionScanner = new SupervisionScanner(automationCompositionProvider, createAcDefinitionProvider(),
-                mock(AcDefinitionScanner.class), mock(StageScanner.class), simpleScanner, mock(PhaseScanner.class));
+                mock(AcDefinitionScanner.class), mock(StageScanner.class), simpleScanner, mock(PhaseScanner.class),
+                messageProvider);
         supervisionScanner.run();
         verify(simpleScanner).simpleScan(automationComposition, new UpdateSync());
+        verify(messageProvider).removeJob(JOB_ID);
 
         clearInvocations(simpleScanner);
+        clearInvocations(messageProvider);
         automationComposition.setDeployState(DeployState.UNDEPLOYED);
         automationComposition.setSubState(SubState.PREPARING);
         supervisionScanner.run();
         verify(simpleScanner).simpleScan(automationComposition, new UpdateSync());
+        verify(messageProvider).removeJob(JOB_ID);
 
         clearInvocations(simpleScanner);
+        clearInvocations(messageProvider);
         automationComposition.setDeployState(DeployState.DEPLOYED);
         automationComposition.setSubState(SubState.REVIEWING);
         supervisionScanner.run();
         verify(simpleScanner).simpleScan(automationComposition, new UpdateSync());
+        verify(messageProvider).removeJob(JOB_ID);
 
         clearInvocations(simpleScanner);
+        clearInvocations(messageProvider);
         automationComposition.setDeployState(DeployState.UPDATING);
         automationComposition.setSubState(SubState.NONE);
         supervisionScanner.run();
         verify(simpleScanner).simpleScan(automationComposition, new UpdateSync());
+        verify(messageProvider).removeJob(JOB_ID);
     }
+
+    @Test
+    void testSaveAcByMessageUpdate() {
+        var automationComposition = new AutomationComposition();
+        automationComposition.setInstanceId(INSTANCE_ID);
+        automationComposition.setCompositionId(COMPOSITION_ID);
+        automationComposition.setDeployState(DeployState.DEPLOYED);
+        automationComposition.setLockState(LockState.LOCKED);
+        automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
+        var automationCompositionProvider = mock(AutomationCompositionProvider.class);
+        when(automationCompositionProvider.getAcInstancesInTransition()).thenReturn(new HashSet<>());
+        when(automationCompositionProvider.findAutomationComposition(automationComposition.getInstanceId()))
+                .thenReturn(Optional.of(automationComposition));
+
+        var simpleScanner = mock(SimpleScanner.class);
+        var updateSync = new UpdateSync();
+        updateSync.setUpdated(true);
+        when(simpleScanner.scanMessage(any(), any())).thenReturn(updateSync);
+
+        var messageProvider = mock(MessageProvider.class);
+        when(messageProvider.createJob(automationComposition.getInstanceId())).thenReturn(Optional.of(JOB_ID));
+        var message = new  DocMessage();
+        when(messageProvider.getAllMessages(INSTANCE_ID)).thenReturn(List.of(message));
+        when(messageProvider.findInstanceMessages()).thenReturn(Set.of(INSTANCE_ID));
+
+        var phaseScanner = mock(PhaseScanner.class);
+        var stageScanner = mock(StageScanner.class);
+        var supervisionScanner = new SupervisionScanner(automationCompositionProvider, createAcDefinitionProvider(),
+                mock(AcDefinitionScanner.class), stageScanner, simpleScanner, phaseScanner, messageProvider);
+
+        supervisionScanner.run();
+        verifyNoInteraction(stageScanner, simpleScanner, phaseScanner);
+        verify(simpleScanner).saveAndSync(any(), any());
+        verify(messageProvider).removeMessage(message.getMessageId());
+        verify(messageProvider).removeJob(JOB_ID);
+    }
+
 }
