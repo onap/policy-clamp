@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2024 Nordix Foundation.
+ *  Copyright (C) 2021-2025 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,12 +42,12 @@ import org.springframework.web.reactive.function.client.ExchangeFilterFunctions;
 class ActuatorControllerTest {
 
     @Autowired
-    WebTestClient webClient;
+    private WebTestClient webClient;
 
     @Value("${spring.security.user.name}")
-    String username;
+    private String username;
     @Value("${spring.security.user.password}")
-    String password;
+    private String password;
 
     @BeforeEach
     void beforeEach() {

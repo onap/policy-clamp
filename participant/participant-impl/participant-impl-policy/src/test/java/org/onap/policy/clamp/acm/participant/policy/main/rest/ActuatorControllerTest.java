@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2024 Nordix Foundation.
+ *  Copyright (C) 2021-2025 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,74 +20,56 @@
 
 package org.onap.policy.clamp.acm.participant.policy.main.rest;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.http.MediaType.TEXT_PLAIN;
 
-import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.onap.policy.clamp.acm.participant.policy.main.utils.CommonActuatorController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.actuate.observability.AutoConfigureObservability;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.reactive.function.client.ExchangeFilterFunctions;
 
-@AutoConfigureObservability(tracing = false)
-@ExtendWith(SpringExtension.class)
+@AutoConfigureObservability
+@AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-class ActuatorControllerTest extends CommonActuatorController {
+class ActuatorControllerTest {
 
-    private static final String HEALTH_ENDPOINT = "health";
-    private static final String METRICS_ENDPOINT = "metrics";
-    private static final String PROMETHEUS_ENDPOINT = "prometheus";
+    @Autowired
+    private WebTestClient webClient;
 
-    @LocalServerPort
-    private int randomServerPort;
+    @Value("${spring.security.user.name}")
+    private String username;
+    @Value("${spring.security.user.password}")
+    private String password;
 
     @BeforeEach
-    public void setUpPort() {
-        super.setHttpPrefix(randomServerPort);
-    }
-
-    @Test
-    void testGetHealth_Unauthorized() {
-        assertUnauthorizedActGet(HEALTH_ENDPOINT);
-    }
-
-    @Test
-    void testGetMetrics_Unauthorized() {
-        assertUnauthorizedActGet(METRICS_ENDPOINT);
-    }
-
-    @Test
-    void testGetPrometheus_Unauthorized() {
-        assertUnauthorizedActGet(PROMETHEUS_ENDPOINT);
+    void beforeEach() {
+        var filter = ExchangeFilterFunctions.basicAuthentication(username, password);
+        webClient = webClient.mutate().filter(filter).build();
     }
 
     @Test
     void testGetHealth() {
-        var invocationBuilder = super.sendActRequest(HEALTH_ENDPOINT);
-        try (var rawresp = invocationBuilder.buildGet().invoke()) {
-            assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
-        }
+        webClient.get().uri("/health").accept(APPLICATION_JSON)
+                .exchange().expectStatus().isOk();
     }
 
     @Test
     void testGetMetrics() {
-        var invocationBuilder = super.sendActRequest(METRICS_ENDPOINT);
-        try (var rawresp = invocationBuilder.buildGet().invoke()) {
-            assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
-        }
+        webClient.get().uri("/metrics").accept(APPLICATION_JSON)
+                .exchange().expectStatus().isOk();
     }
 
     @Test
-    void testGePrometheus() {
-        var invocationBuilder = super.sendActRequest(PROMETHEUS_ENDPOINT);
-        try (var rawresp = invocationBuilder.buildGet().invoke()) {
-            assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
-        }
+    void testGetPrometheus() {
+        webClient.get().uri("/prometheus").accept(TEXT_PLAIN)
+                .exchange().expectStatus().isOk();
     }
 }
