@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2024 Nordix Foundation.
+ * Copyright (C) 2021-2025 Nordix Foundation.
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,6 +22,7 @@
 package org.onap.policy.clamp.acm.runtime.supervision.comm;
 
 import org.onap.policy.clamp.acm.runtime.config.messaging.Listener;
+import org.onap.policy.clamp.acm.runtime.main.utils.NetLoggerUtil;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionParticipantHandler;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantMessageType;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantStatus;
@@ -52,7 +53,7 @@ public class ParticipantStatusListener extends ScoListener<ParticipantStatus> im
     @Override
     public void onTopicEvent(final CommInfrastructure infra, final String topic, final StandardCoderObject sco,
             final ParticipantStatus participantStatusMessage) {
-        LOGGER.debug("ParticipantStatus message received from participant - {}", participantStatusMessage);
+        NetLoggerUtil.log(NetLoggerUtil.EventType.IN, infra, topic, participantStatusMessage.toString());
         supervisionHandler.handleParticipantMessage(participantStatusMessage);
     }
 
