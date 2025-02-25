@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023-2024 Nordix Foundation.
+ *  Copyright (C) 2023-2025 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@ import java.util.function.UnaryOperator;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import lombok.ToString;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -35,7 +34,6 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 @NoArgsConstructor
 @Data
-@ToString
 public class AcElementRestart {
 
     @NonNull
@@ -82,4 +80,19 @@ public class AcElementRestart {
         this.outProperties = PfUtils.mapMap(otherElement.outProperties, UnaryOperator.identity());
     }
 
+    @Override
+    public String toString() {
+        // Exclude instance properties
+        return "AcElementRestart{"
+                + "id=" + id
+                + ", definition=" + definition
+                + ", participantId=" + participantId
+                + ", deployState=" + deployState
+                + ", lockState=" + lockState
+                + ", operationalState='" + operationalState + '\''
+                + ", useState='" + useState + '\''
+                + ", toscaServiceTemplateFragment=" + toscaServiceTemplateFragment
+                + ", outProperties=" + outProperties
+                + '}';
+    }
 }

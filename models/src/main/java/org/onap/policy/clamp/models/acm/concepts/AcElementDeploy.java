@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2023-2024 Nordix Foundation.
+ * Copyright (C) 2023-2025 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@ import java.util.function.UnaryOperator;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import lombok.ToString;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfUtils;
@@ -39,7 +38,6 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
  */
 @NoArgsConstructor
 @Data
-@ToString
 public class AcElementDeploy {
 
     @NonNull
@@ -69,5 +67,16 @@ public class AcElementDeploy {
         this.orderedState = otherElement.orderedState;
         this.toscaServiceTemplateFragment = otherElement.toscaServiceTemplateFragment;
         this.properties = PfUtils.mapMap(otherElement.properties, UnaryOperator.identity());
+    }
+
+    @Override
+    public String toString() {
+        // Exclude instance properties
+        return "AcElementDeploy{"
+                + "id=" + id
+                + ", definition=" + definition
+                + ", orderedState=" + orderedState
+                + ", toscaServiceTemplateFragment="
+                + toscaServiceTemplateFragment + '}';
     }
 }
