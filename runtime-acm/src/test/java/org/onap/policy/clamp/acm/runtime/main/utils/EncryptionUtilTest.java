@@ -53,16 +53,18 @@ class EncryptionUtilTest {
     void testEncryptAcInstanceProperties() {
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(INSTANTIATE_JSON, "Crud");
-        var encryptionUtils = new EncryptionUtils(CommonTestData.getEncryptionParamaterGroup());
+        var encryptionUtils = new EncryptionUtils(CommonTestData.getEncryptionParameterGroup());
         assertTrue(encryptionUtils.encryptionEnabled());
         assertDoesNotThrow(()
                 -> {
             assert automationComposition != null;
             encryptionUtils.findAndEncryptSensitiveData(acDefinition, automationComposition);
         });
+
+        var encryptionUtil2 = new EncryptionUtils(CommonTestData.getEncryptionParameterGroup());
         assertDoesNotThrow(() -> {
             assert automationComposition != null;
-            encryptionUtils.findAndDecryptSensitiveData(automationComposition);
+            encryptionUtil2.findAndDecryptSensitiveData(automationComposition);
         });
     }
 

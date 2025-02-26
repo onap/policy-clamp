@@ -12,7 +12,7 @@
       },
       "description": "Starter Automation Composition Element for the Demo",
       "properties": {
-        "credential": "mycred1",
+        "secret": "mysecret1",
         "password": "mypass1",
         "baseUrl": "http://address:30800",
         "httpHeaders": {
@@ -37,9 +37,15 @@
                 "expectedResponse": 201
               }
             ],
+            "k8s-secret": "valueToEncrypt",
             "myParameterToUpdate": "text1"
           }
-        ]
+        ],
+        "customProperty": {
+          "name": "test",
+          "k8s-secret": "customValueToEncrypt"
+        }
+
       }
     },
     "709c62b3-8918-41b9-a747-d21eb79c6c35": {
@@ -52,7 +58,7 @@
       "properties": {
         "baseUrl": "http://address:30801",
         "password": "mypass2",
-        "credential": "mycred2",
+        "secret": "secret2",
         "httpHeaders": {
           "Content-Type": "application/json",
           "Authorization": "Basic YWNtVXNlcjp6YiFYenRHMzQ="
@@ -75,7 +81,8 @@
                 "expectedResponse": 201
               }
             ],
-            "myParameterToUpdate": "text2"
+            "myParameterToUpdate": "text2",
+            "k8s-secret": "valueToEncrypt2"
           }
         ]
       }
