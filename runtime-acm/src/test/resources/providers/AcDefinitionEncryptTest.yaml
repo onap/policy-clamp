@@ -27,6 +27,25 @@ data_types:
       version:
         type: string
         required: true
+  org.onap.datatypes.policy.clamp.acm.httpAutomationCompositionElement.ConfigurationEntity:
+    version: 1.0.0
+    derived_from: tosca.datatypes.Root
+    properties:
+      configurationEntityId:
+        type: onap.datatypes.ToscaConceptIdentifier
+        required: true
+        description: The name and version of a Configuration Entity to be handled
+          by the HTTP Automation Composition Element
+      restSequence:
+        type: list
+        entry_schema:
+          type: org.onap.datatypes.policy.clamp.acm.httpAutomationCompositionElement.RestRequest
+          type_version: 1.0.0
+        description: A sequence of REST commands to send to the REST endpoint
+      k8s-secret:
+        type: String
+        metadata:
+          sensitive: true
 
 node_types:
   org.onap.policy.clamp.acm.Participant:
@@ -90,7 +109,7 @@ node_types:
         type: String
         metadata:
           sensitive: true
-      credential:
+      secret:
         type: String
         metadata:
           sensitive: true
@@ -106,11 +125,9 @@ node_types:
         description: HTTP headers to send on REST requests
       configurationEntities:
         type: map
-        required: true
         entry_schema:
-          type: map
-        metadata:
-          sensitive: true
+          type: org.onap.datatypes.policy.clamp.acm.httpAutomationCompositionElement.ConfigurationEntity
+        required: true
         description: The configuration entities the Automation Composition Element is managing and their associated REST requests
 
 

@@ -35,8 +35,8 @@ public class AcmParameters {
 
     private String toscaCompositionName = "org.onap.policy.clamp.acm.AutomationComposition";
 
-    private String passPhrase;
+    private String passPhrase = "encrypt";
 
-    private String salt;
+    private boolean enableEncryption = false;
 
 }
