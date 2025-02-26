@@ -170,10 +170,9 @@ public class CommonTestData {
      *
      * @return a new AutomationCompositionDefinition
      */
-    public static AcRuntimeParameterGroup getEncryptionParamaterGroup() {
+    public static AcRuntimeParameterGroup getEncryptionParameterGroup() {
         var acRuntimeParameterGroup = getTestParamaterGroup();
-        acRuntimeParameterGroup.getAcmParameters().setSalt("randomSalt");
-        acRuntimeParameterGroup.getAcmParameters().setPassPhrase("randomPhrase");
+        acRuntimeParameterGroup.getAcmParameters().setEnableEncryption(true);
         return acRuntimeParameterGroup;
     }
 
