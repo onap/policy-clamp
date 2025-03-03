@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f9fd5275_68efaf5d",
+        "filename": "runtime-acm/src/main/java/org/onap/policy/clamp/acm/runtime/main/parameters/AcmParameters.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-03-03T13:17:03Z",
+      "side": 1,
+      "message": "you need to rename this new variable, as sonar thinks this is a password of sorts.\nhttps://sonarcloud.io/project/security_hotspots?id\u003donap_policy-clamp\u0026branch\u003d140355-2\u0026sinceLeakPeriod\u003dtrue",
+      "range": {
+        "startLine": 38,
+        "startChar": 19,
+        "endLine": 38,
+        "endChar": 29
+      },
+      "revId": "d6a790de6a1bdb7ef49840d657722f113b551c25",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
