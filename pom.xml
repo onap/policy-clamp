@@ -1,6 +1,6 @@
 <!--
   ============LICENSE_START=======================================================
-  Copyright (C) 2021-2024 Nordix Foundation.
+  Copyright (C) 2021-2025 Nordix Foundation.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -52,7 +52,6 @@
     <properties>
         <policy.common.version>3.1.1-SNAPSHOT</policy.common.version>
         <policy.models.version>4.1.1-SNAPSHOT</policy.models.version>
-        <version.netty>4.1.112.Final</version.netty>
     </properties>
     <modules>
         <module>common</module>
@@ -62,4 +61,17 @@
         <module>runtime-acm</module>
         <module>participant</module>
     </modules>
+
+    <!-- Fix transitive dependencies' vulnerabilities -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-bom</artifactId>
+                <version>4.1.119.Final</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>
