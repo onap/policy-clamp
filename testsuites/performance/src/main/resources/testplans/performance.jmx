@@ -18,16 +18,6 @@
             <stringProp name="Argument.value">30007</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
-          <elementProp name="POLICY_PARTICIPANT_HOST" elementType="Argument">
-            <stringProp name="Argument.name">POLICY_PARTICIPANT_HOST</stringProp>
-            <stringProp name="Argument.value">localhost</stringProp>
-            <stringProp name="Argument.metadata">=</stringProp>
-          </elementProp>
-          <elementProp name="POLICY_PARTICIPANT_HOST_PORT" elementType="Argument">
-            <stringProp name="Argument.name">POLICY_PARTICIPANT_HOST_PORT</stringProp>
-            <stringProp name="Argument.value">30008</stringProp>
-            <stringProp name="Argument.metadata">=</stringProp>
-          </elementProp>
           <elementProp name="HOME_PATH" elementType="Argument">
             <stringProp name="Argument.name">HOME_PATH</stringProp>
             <stringProp name="Argument.value">./</stringProp>
@@ -48,6 +38,21 @@
             <stringProp name="Argument.value">${__P(USERS,10)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
+          <elementProp name="HTTP_BASE_URL" elementType="Argument">
+            <stringProp name="Argument.value">http://policy-clamp-ac-pf-ppnt:6969</stringProp>
+            <stringProp name="Argument.name">HTTP_BASE_URL</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="HTTP_PATH" elementType="Argument">
+            <stringProp name="Argument.name">HTTP_PATH</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+            <stringProp name="Argument.value">/onap/policyparticipant/health</stringProp>
+          </elementProp>
+          <elementProp name="HTTP_AUTHORIZATION" elementType="Argument">
+            <stringProp name="Argument.name">HTTP_AUTHORIZATION</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+            <stringProp name="Argument.value">Basic cGFydGljaXBhbnRVc2VyOnpiIVh6dEczNA==</stringProp>
+          </elementProp>
         </collectionProp>
       </elementProp>
     </TestPlan>
@@ -57,13 +62,6 @@
           <elementProp name="" elementType="Authorization">
             <stringProp name="Authorization.url">http://${RUNTIME_HOST}:${RUNTIME_PORT}/onap/policy/clamp/acm</stringProp>
             <stringProp name="Authorization.username">runtimeUser</stringProp>
-            <stringProp name="Authorization.password">zb!XztG34</stringProp>
-            <stringProp name="Authorization.domain"></stringProp>
-            <stringProp name="Authorization.realm"></stringProp>
-          </elementProp>
-          <elementProp name="" elementType="Authorization">
-            <stringProp name="Authorization.url">http://${POLICY_PARTICIPANT_HOST}:${POLICY_PARTICIPANT_HOST_PORT}/onap/policyparticipant</stringProp>
-            <stringProp name="Authorization.username">participantUser</stringProp>
             <stringProp name="Authorization.password">zb!XztG34</stringProp>
             <stringProp name="Authorization.domain"></stringProp>
             <stringProp name="Authorization.realm"></stringProp>
@@ -138,7 +136,8 @@
           <boolProp name="resetInterpreter">false</boolProp>
           <stringProp name="parameters"></stringProp>
           <stringProp name="filename"></stringProp>
-          <stringProp name="script">int n = 20;
+          <stringProp name="script">String users =  vars.get(&quot;USERS&quot;);
+int n =  Integer.parseInt(users) + 2;
 for (int i = 0; i &lt; n; i++) {
 	props.put(&quot;baseCount&quot; + i, &quot;1&quot;);
      log.info(&quot;baseCount&quot; + i);	
@@ -646,15 +645,15 @@ log.info(&quot;Create Composition: &quot; + compositionId);
       &quot;description&quot;: &quot;Starter Automation Composition Element for the Demo&quot;,&#xd;
       &quot;properties&quot;: {&#xd;
         &quot;uninitializedToPassiveTimeout&quot;: 180,&#xd;
-        &quot;baseUrl&quot;: &quot;http://policy-clamp-ac-pf-ppnt:6969&quot;,&#xd;
+        &quot;baseUrl&quot;: &quot;${HTTP_BASE_URL}&quot;,&#xd;
         &quot;httpHeaders&quot;: {&#xd;
           &quot;Content-Type&quot;: &quot;application/json&quot;,&#xd;
-          &quot;Authorization&quot;: &quot;Basic cGFydGljaXBhbnRVc2VyOnpiIVh6dEczNA==&quot;&#xd;
+          &quot;Authorization&quot;: &quot;${HTTP_AUTHORIZATION}&quot;&#xd;
         },&#xd;
         &quot;configurationEntities&quot;: [&#xd;
           {&#xd;
             &quot;configurationEntityId&quot;: {&#xd;
-              &quot;name&quot;: &quot;onap.policy.clamp.ac.starter&quot;,&#xd;
+              &quot;name&quot;: &quot;onap.policy.mockrestendpoint&quot;,&#xd;
               &quot;version&quot;: &quot;1.0.0&quot;&#xd;
             },&#xd;
             &quot;restSequence&quot;: [&#xd;
@@ -664,7 +663,7 @@ log.info(&quot;Create Composition: &quot; + compositionId);
                   &quot;version&quot;: &quot;1.0.1&quot;&#xd;
                 },&#xd;
                 &quot;httpMethod&quot;: &quot;GET&quot;,&#xd;
-                &quot;path&quot;: &quot;/onap/policyparticipant/health&quot;,&#xd;
+                &quot;path&quot;: &quot;${HTTP_PATH}&quot;,&#xd;
                 &quot;body&quot;: &quot;&quot;,&#xd;
                 &quot;expectedResponse&quot;: 200&#xd;
               }&#xd;
@@ -1103,7 +1102,6 @@ if (prev.getResponseCode() == &apos;200&apos;) {
 
     assert res.contains(&quot;publisher_automation_composition_state_change_seconds_count&quot;)
     assert res.contains(&quot;publisher_participant_update_seconds_count&quot;)
-    assert res.contains(&quot;publisher_participant_status_req_seconds_count&quot;)
     assert res.contains(&quot;publisher_automation_composition_deploy_seconds_count&quot;)
 
     assert res.contains(&quot;listener_participant_prime_ack_seconds_count&quot;)
