@@ -187,6 +187,7 @@ class AutomationCompositionInstantiationProviderTest {
         var instantiationProvider = new AutomationCompositionInstantiationProvider(acProvider, acDefinitionProvider,
                 new AcInstanceStateResolver(), supervisionAcHandler, participantProvider,
                 CommonTestData.getTestParamaterGroup(), encryptionUtils);
+
         var instantiationResponse = instantiationProvider.updateAutomationComposition(
                 automationCompositionUpdate.getCompositionId(), automationCompositionUpdate);
 
@@ -200,9 +201,12 @@ class AutomationCompositionInstantiationProviderTest {
             element.setId(UUID.randomUUID());
             automationCompositionUpdate.getElements().put(element.getId(), element);
         }
+        acmFromDb.getElements().values().forEach(element -> element.setDeployState(DeployState.DEPLOYED));
+        acmFromDb.setDeployState(DeployState.DEPLOYED);
         assertThatThrownBy(
-            () -> instantiationProvider.updateAutomationComposition(compositionId, automationCompositionUpdate))
-            .hasMessageStartingWith("Element id not present ");
+                () -> instantiationProvider.updateAutomationComposition(compositionId, automationCompositionUpdate))
+                .hasMessageStartingWith("Element id not present ");
+
     }
 
     @Test
@@ -302,7 +306,7 @@ class AutomationCompositionInstantiationProviderTest {
         var instantiationResponse = instantiationProvider.updateAutomationComposition(compositionId,
                         automationCompositionTarget);
 
-        verify(supervisionAcHandler).migrate(any(), any());
+        verify(supervisionAcHandler).migrate(any());
         InstantiationUtils.assertInstantiationResponse(instantiationResponse, automationCompositionTarget);
 
     }
@@ -373,7 +377,7 @@ class AutomationCompositionInstantiationProviderTest {
         var instantiationResponse = instantiationProvider
                 .updateAutomationComposition(automationComposition.getCompositionId(), automationComposition);
 
-        verify(supervisionAcHandler).migrate(any(), any());
+        verify(supervisionAcHandler).migrate(any());
         verify(acProvider).updateAutomationComposition(automationComposition);
         InstantiationUtils.assertInstantiationResponse(instantiationResponse, automationComposition);
     }
