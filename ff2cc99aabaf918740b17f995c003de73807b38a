@@ -1,0 +1,199 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ab5af346_b7bd2ecd",
+        "filename": "packages/policy-clamp-docker/src/main/docker/A1pmsParticipant.Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-03-12T14:10:06Z",
+      "side": 1,
+      "message": "2025",
+      "range": {
+        "startLine": 3,
+        "startChar": 22,
+        "endLine": 3,
+        "endChar": 26
+      },
+      "revId": "ff2cc99aabaf918740b17f995c003de73807b38a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6cd59579_7405e47a",
+        "filename": "packages/policy-clamp-docker/src/main/docker/AcmRuntime.Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-03-12T14:10:06Z",
+      "side": 1,
+      "message": "2025",
+      "range": {
+        "startLine": 3,
+        "startChar": 22,
+        "endLine": 3,
+        "endChar": 26
+      },
+      "revId": "ff2cc99aabaf918740b17f995c003de73807b38a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e15f9430_1c326af3",
+        "filename": "packages/policy-clamp-docker/src/main/docker/ElementParticipant.Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-03-12T14:10:06Z",
+      "side": 1,
+      "message": "2025",
+      "range": {
+        "startLine": 3,
+        "startChar": 22,
+        "endLine": 3,
+        "endChar": 26
+      },
+      "revId": "ff2cc99aabaf918740b17f995c003de73807b38a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e8dd7abf_5cd08e59",
+        "filename": "packages/policy-clamp-docker/src/main/docker/HttpParticipant.Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-03-12T14:10:06Z",
+      "side": 1,
+      "message": "2025",
+      "revId": "ff2cc99aabaf918740b17f995c003de73807b38a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d116ef82_b357e2f0",
+        "filename": "packages/policy-clamp-docker/src/main/docker/KserveParticipant.Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-03-12T14:10:06Z",
+      "side": 1,
+      "message": "2023-2025",
+      "range": {
+        "startLine": 3,
+        "startChar": 17,
+        "endLine": 3,
+        "endChar": 21
+      },
+      "revId": "ff2cc99aabaf918740b17f995c003de73807b38a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8adf45f1_c3fb0d88",
+        "filename": "packages/policy-clamp-docker/src/main/docker/KubernetesParticipant.Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-03-12T14:10:06Z",
+      "side": 1,
+      "message": "2025",
+      "range": {
+        "startLine": 3,
+        "startChar": 22,
+        "endLine": 3,
+        "endChar": 26
+      },
+      "revId": "ff2cc99aabaf918740b17f995c003de73807b38a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "68dadf58_8e776038",
+        "filename": "packages/policy-clamp-docker/src/main/docker/PolicyParticipant.Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-03-12T14:10:06Z",
+      "side": 1,
+      "message": "2025",
+      "range": {
+        "startLine": 3,
+        "startChar": 22,
+        "endLine": 3,
+        "endChar": 26
+      },
+      "revId": "ff2cc99aabaf918740b17f995c003de73807b38a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3204265a_b0670b24",
+        "filename": "packages/policy-clamp-docker/src/main/docker/SimParticipant.Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-03-12T14:10:06Z",
+      "side": 1,
+      "message": "2023-2025",
+      "revId": "ff2cc99aabaf918740b17f995c003de73807b38a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e2952188_934797bd",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-03-12T14:10:06Z",
+      "side": 1,
+      "message": "SPDX License",
+      "range": {
+        "startLine": 15,
+        "startChar": 24,
+        "endLine": 15,
+        "endChar": 31
+      },
+      "revId": "ff2cc99aabaf918740b17f995c003de73807b38a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
