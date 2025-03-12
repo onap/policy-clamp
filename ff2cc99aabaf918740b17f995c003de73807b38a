@@ -24,6 +24,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "216ac1c0_09f7722e",
+        "filename": "packages/policy-clamp-docker/src/main/docker/A1pmsParticipant.Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2025-03-12T14:32:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ab5af346_b7bd2ecd",
+      "range": {
+        "startLine": 3,
+        "startChar": 22,
+        "endLine": 3,
+        "endChar": 26
+      },
+      "revId": "ff2cc99aabaf918740b17f995c003de73807b38a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6cd59579_7405e47a",
@@ -37,6 +61,30 @@
       "writtenOn": "2025-03-12T14:10:06Z",
       "side": 1,
       "message": "2025",
+      "range": {
+        "startLine": 3,
+        "startChar": 22,
+        "endLine": 3,
+        "endChar": 26
+      },
+      "revId": "ff2cc99aabaf918740b17f995c003de73807b38a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e2ff2a36_c9e6061e",
+        "filename": "packages/policy-clamp-docker/src/main/docker/AcmRuntime.Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2025-03-12T14:32:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6cd59579_7405e47a",
       "range": {
         "startLine": 3,
         "startChar": 22,
@@ -70,6 +118,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "41c7c0df_e325146c",
+        "filename": "packages/policy-clamp-docker/src/main/docker/ElementParticipant.Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2025-03-12T14:32:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e15f9430_1c326af3",
+      "range": {
+        "startLine": 3,
+        "startChar": 22,
+        "endLine": 3,
+        "endChar": 26
+      },
+      "revId": "ff2cc99aabaf918740b17f995c003de73807b38a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e8dd7abf_5cd08e59",
@@ -87,6 +159,24 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b892a33c_eaca25ca",
+        "filename": "packages/policy-clamp-docker/src/main/docker/HttpParticipant.Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2025-03-12T14:32:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e8dd7abf_5cd08e59",
+      "revId": "ff2cc99aabaf918740b17f995c003de73807b38a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d116ef82_b357e2f0",
@@ -100,6 +190,30 @@
       "writtenOn": "2025-03-12T14:10:06Z",
       "side": 1,
       "message": "2023-2025",
+      "range": {
+        "startLine": 3,
+        "startChar": 17,
+        "endLine": 3,
+        "endChar": 21
+      },
+      "revId": "ff2cc99aabaf918740b17f995c003de73807b38a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9d04f380_02f717be",
+        "filename": "packages/policy-clamp-docker/src/main/docker/KserveParticipant.Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2025-03-12T14:32:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d116ef82_b357e2f0",
       "range": {
         "startLine": 3,
         "startChar": 17,
@@ -133,6 +247,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cedcdaac_80bbfc14",
+        "filename": "packages/policy-clamp-docker/src/main/docker/KubernetesParticipant.Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2025-03-12T14:32:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8adf45f1_c3fb0d88",
+      "range": {
+        "startLine": 3,
+        "startChar": 22,
+        "endLine": 3,
+        "endChar": 26
+      },
+      "revId": "ff2cc99aabaf918740b17f995c003de73807b38a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "68dadf58_8e776038",
@@ -146,6 +284,30 @@
       "writtenOn": "2025-03-12T14:10:06Z",
       "side": 1,
       "message": "2025",
+      "range": {
+        "startLine": 3,
+        "startChar": 22,
+        "endLine": 3,
+        "endChar": 26
+      },
+      "revId": "ff2cc99aabaf918740b17f995c003de73807b38a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a5dc6faf_3f632018",
+        "filename": "packages/policy-clamp-docker/src/main/docker/PolicyParticipant.Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2025-03-12T14:32:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "68dadf58_8e776038",
       "range": {
         "startLine": 3,
         "startChar": 22,
@@ -173,6 +335,24 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a28c2e43_f0402055",
+        "filename": "packages/policy-clamp-docker/src/main/docker/SimParticipant.Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2025-03-12T14:32:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3204265a_b0670b24",
+      "revId": "ff2cc99aabaf918740b17f995c003de73807b38a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e2952188_934797bd",
@@ -186,6 +366,30 @@
       "writtenOn": "2025-03-12T14:10:06Z",
       "side": 1,
       "message": "SPDX License",
+      "range": {
+        "startLine": 15,
+        "startChar": 24,
+        "endLine": 15,
+        "endChar": 31
+      },
+      "revId": "ff2cc99aabaf918740b17f995c003de73807b38a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e662f8a6_f42fc1a2",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 6722
+      },
+      "writtenOn": "2025-03-12T14:32:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e2952188_934797bd",
       "range": {
         "startLine": 15,
         "startChar": 24,
