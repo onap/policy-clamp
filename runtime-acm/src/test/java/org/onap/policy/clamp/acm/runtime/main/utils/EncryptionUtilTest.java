@@ -21,12 +21,17 @@
 package org.onap.policy.clamp.acm.runtime.main.utils;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.security.InvalidAlgorithmParameterException;
+import javax.crypto.Cipher;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
+import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.persistence.provider.ProviderUtils;
@@ -61,11 +66,41 @@ class EncryptionUtilTest {
             encryptionUtils.findAndEncryptSensitiveData(acDefinition, automationComposition);
         });
 
+        assert automationComposition != null;
+        automationComposition.getElements().values().forEach(element -> {
+            assertTrue(element.getProperties().get("secret").toString().startsWith("ENCRYPTED:"));
+            assertTrue(element.getProperties().get("password").toString().startsWith("ENCRYPTED:"));
+        });
+
         var encryptionUtil2 = new EncryptionUtils(CommonTestData.getEncryptionParameterGroup());
         assertDoesNotThrow(() -> {
-            assert automationComposition != null;
             encryptionUtil2.findAndDecryptSensitiveData(automationComposition);
         });
+        automationComposition.getElements().values().forEach(element -> {
+            assertEquals("mysecret", element.getProperties().get("secret").toString());
+            assertEquals("mypass", element.getProperties().get("password").toString());
+        });
+    }
+
+    @Test
+    void testErrorScenario() {
+        var encryptionUtils = new EncryptionUtils(CommonTestData.getEncryptionParameterGroup()) {
+            @Override
+            protected Cipher getCipher(byte[] iv, int mode) throws InvalidAlgorithmParameterException {
+                throw new InvalidAlgorithmParameterException();
+            }
+        };
+        var automationComposition =
+                InstantiationUtils.getAutomationCompositionFromResource(INSTANTIATE_JSON, "Crud");
+        assertDoesNotThrow(() -> encryptionUtils.findAndEncryptSensitiveData(acDefinition, null));
+
+        var encryptionUtils2 = new EncryptionUtils(CommonTestData.getEncryptionParameterGroup());
+        encryptionUtils2.findAndEncryptSensitiveData(acDefinition, automationComposition);
+
+        assert automationComposition != null;
+        assertThrows(AutomationCompositionRuntimeException.class,
+                () -> encryptionUtils.findAndDecryptSensitiveData(automationComposition));
+
     }
 
 }

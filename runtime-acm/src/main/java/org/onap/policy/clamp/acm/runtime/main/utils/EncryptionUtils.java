@@ -35,9 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
@@ -133,13 +131,13 @@ public class EncryptionUtils {
                         var encryptedVal = encrypt(sensitiveStr);
                         elementProperties.put(property.getName(), encryptedVal);
                         LOGGER.debug("Property {} is successfully encrypted", property.getName());
+
                     }
                 }
             }
 
         } catch (Exception e) {
-            throw new AutomationCompositionRuntimeException(Response.Status.fromStatusCode(500),
-                    "Failed to encrypt instance field ", e);
+            LOGGER.error("Failed to encrypt instance parameter with error {}", e.getMessage());
         }
     }
 
@@ -149,28 +147,21 @@ public class EncryptionUtils {
      * @param automationComposition acInstance
      */
     public void findAndDecryptSensitiveData(AutomationComposition automationComposition) {
-        try {
-            for (var acInstanceElement: automationComposition.getElements().values()) {
-                for (var property : acInstanceElement.getProperties().entrySet()) {
-                    var propertyVal = property.getValue();
-                    if (propertyVal instanceof String propertyValStr && propertyValStr.startsWith(MARKER)) {
-                        var decryptedVal = decrypt(propertyValStr);
-                        acInstanceElement.getProperties().put(property.getKey(), decryptedVal);
-                        LOGGER.debug("Property {} is successfully decrypted", property.getKey());
-                    } else {
-                        decryptNested(propertyVal);
-                    }
+        for (var acInstanceElement: automationComposition.getElements().values()) {
+            for (var property : acInstanceElement.getProperties().entrySet()) {
+                var propertyVal = property.getValue();
+                if (propertyVal instanceof String propertyValStr && propertyValStr.startsWith(MARKER)) {
+                    var decryptedVal = decrypt(propertyValStr);
+                    acInstanceElement.getProperties().put(property.getKey(), decryptedVal);
+                    LOGGER.debug("Property {} is successfully decrypted", property.getKey());
+                } else {
+                    decryptNested(propertyVal);
                 }
             }
-        } catch (Exception e) {
-            throw new AutomationCompositionRuntimeException(Response.Status.fromStatusCode(500),
-                    "Failed to decrypt instance field ", e);
         }
     }
 
-    private void decryptNested(Object propertyVal) throws InvalidAlgorithmParameterException, IllegalBlockSizeException,
-            NoSuchPaddingException, BadPaddingException, NoSuchAlgorithmException, InvalidKeySpecException,
-            InvalidKeyException {
+    private void decryptNested(Object propertyVal) {
         if (propertyVal instanceof List<?> listVal) {
             for (var listEntry : listVal) {
                 if (listEntry instanceof Map<?, ?> tempMap) {
@@ -182,9 +173,7 @@ public class EncryptionUtils {
         }
     }
 
-    private void decryptNestedMap(Map<?, ?> tempMap) throws InvalidAlgorithmParameterException,
-            IllegalBlockSizeException, NoSuchPaddingException, BadPaddingException, NoSuchAlgorithmException,
-            InvalidKeySpecException, InvalidKeyException {
+    private void decryptNestedMap(Map<?, ?> tempMap) {
         @SuppressWarnings("unchecked")
         var nestedMap = (Map<Object, Object>) tempMap;
         for (var prop : nestedMap.entrySet()) {
@@ -196,9 +185,7 @@ public class EncryptionUtils {
         }
     }
 
-    private void encryptNested(ToscaProperty property, Map<?, ?> properties)
-            throws InvalidAlgorithmParameterException, IllegalBlockSizeException, NoSuchPaddingException,
-            BadPaddingException, NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException {
+    private void encryptNested(ToscaProperty property, Map<?, ?> properties) {
         // Iterate over nested maps to check if the property exists inside them
         for (var mapEntry : properties.entrySet()) {
             if (mapEntry.getValue() instanceof List<?> listVal) {
@@ -214,9 +201,7 @@ public class EncryptionUtils {
 
     }
 
-    private void encryptNestedMaps(ToscaProperty property, Map<?, ?> tempMap) throws InvalidAlgorithmParameterException,
-            IllegalBlockSizeException, NoSuchPaddingException, BadPaddingException, NoSuchAlgorithmException,
-            InvalidKeySpecException, InvalidKeyException {
+    private void encryptNestedMaps(ToscaProperty property, Map<?, ?> tempMap) {
         @SuppressWarnings("unchecked")
         var nestedMap = (Map<Object, Object>) tempMap;
         var nestedValue = nestedMap.get(property.getName());
@@ -283,32 +268,45 @@ public class EncryptionUtils {
         return new SecretKeySpec(factory.generateSecret(spec).getEncoded(), "AES");
     }
 
-    private String encrypt(String input) throws IllegalBlockSizeException, BadPaddingException,
-            NoSuchAlgorithmException, InvalidKeySpecException, InvalidAlgorithmParameterException, InvalidKeyException,
-            NoSuchPaddingException {
-        var iv = generateIV();
-        var parameterSpec = new GCMParameterSpec(GCM_TAG, iv);
-        var cipher = Cipher.getInstance(ALGORITHM);
-        cipher.init(Cipher.ENCRYPT_MODE, getSecretKey(), parameterSpec);
-        var cipherText = cipher.doFinal(input.getBytes());
-        var cipherByte = ByteBuffer.allocate(iv.length + cipherText.length).put(iv).put(cipherText).array();
-        return MARKER + Base64.getEncoder().encodeToString(cipherByte);
+    private String encrypt(String input) {
+        try {
+            var iv = generateIV();
+            var cipher = getCipher(iv, Cipher.ENCRYPT_MODE);
+            var cipherText = cipher.doFinal(input.getBytes());
+            var cipherByte = ByteBuffer.allocate(iv.length + cipherText.length).put(iv).put(cipherText).array();
+            return MARKER + Base64.getEncoder().encodeToString(cipherByte);
+
+        } catch (Exception e) {
+            LOGGER.error("Failed to encrypt instance field with error {}", e.getMessage());
+        }
+        return input;
     }
 
-    private String decrypt(String cipherText) throws IllegalBlockSizeException, BadPaddingException,
-            NoSuchAlgorithmException, InvalidKeySpecException,
-            InvalidAlgorithmParameterException, InvalidKeyException, NoSuchPaddingException {
-        var decodedText = Base64.getDecoder().decode(cipherText.substring(MARKER.length()).getBytes());
-        var byteBuffer = ByteBuffer.wrap(decodedText);
-        var iv = new byte[IV_LENGTH];
-        byteBuffer.get(iv);
-        var encryptedByte = new byte[byteBuffer.remaining()];
-        byteBuffer.get(encryptedByte);
-
+    protected Cipher getCipher(byte[] iv, int mode) throws NoSuchPaddingException, NoSuchAlgorithmException,
+            InvalidKeySpecException, InvalidAlgorithmParameterException, InvalidKeyException {
         var parameterSpec = new GCMParameterSpec(GCM_TAG, iv);
         var cipher = Cipher.getInstance(ALGORITHM);
-        cipher.init(Cipher.DECRYPT_MODE, getSecretKey(), parameterSpec);
-        var plainText = cipher.doFinal(encryptedByte);
-        return new String(plainText);
+        cipher.init(mode, getSecretKey(), parameterSpec);
+        return cipher;
+    }
+
+    private String decrypt(String cipherText) {
+        try {
+            var decodedText = Base64.getDecoder().decode(cipherText.substring(MARKER.length()).getBytes());
+            var byteBuffer = ByteBuffer.wrap(decodedText);
+            var iv = new byte[IV_LENGTH];
+            byteBuffer.get(iv);
+            var encryptedByte = new byte[byteBuffer.remaining()];
+            byteBuffer.get(encryptedByte);
+
+            var cipher = getCipher(iv, Cipher.DECRYPT_MODE);
+            var plainText = cipher.doFinal(encryptedByte);
+            return new String(plainText);
+
+        } catch (Exception e) {
+            throw new AutomationCompositionRuntimeException(Response.Status.fromStatusCode(500),
+                    "Failed to decrypt instance field ", e);
+        }
+
     }
 }

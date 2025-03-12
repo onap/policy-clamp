@@ -12,8 +12,8 @@
       },
       "description": "Starter Automation Composition Element for the Demo",
       "properties": {
-        "secret": "mysecret1",
-        "password": "mypass1",
+        "secret": "mysecret",
+        "password": "mypass",
         "baseUrl": "http://address:30800",
         "httpHeaders": {
           "Content-Type": "application/json",
@@ -57,8 +57,8 @@
       "description": "Bridge Automation Composition Element for the Demo",
       "properties": {
         "baseUrl": "http://address:30801",
-        "password": "mypass2",
-        "secret": "secret2",
+        "password": "mypass",
+        "secret": "mysecret",
         "httpHeaders": {
           "Content-Type": "application/json",
           "Authorization": "Basic YWNtVXNlcjp6YiFYenRHMzQ="

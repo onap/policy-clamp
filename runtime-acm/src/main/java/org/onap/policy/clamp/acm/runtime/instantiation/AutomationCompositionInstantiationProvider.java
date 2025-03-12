@@ -33,10 +33,12 @@ import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.SupervisionAcHandler;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.AcInstanceStateUpdate;
@@ -201,12 +203,15 @@ public class AutomationCompositionInstantiationProvider {
         if (!validationResult.isValid()) {
             throw new PfModelRuntimeException(Status.BAD_REQUEST, validationResult.getResult());
         }
-        // Publish property update event to the participants
-        supervisionAcHandler.update(acToBeUpdated);
+        updateAcForProperties(acToBeUpdated);
+
+        var acToPublish = new AutomationComposition(acToBeUpdated);
 
         encryptInstanceProperties(acToBeUpdated, acToBeUpdated.getCompositionId());
 
         automationComposition = automationCompositionProvider.updateAutomationComposition(acToBeUpdated);
+        // Publish property update event to the participants
+        supervisionAcHandler.update(acToPublish);
         return createInstantiationResponse(automationComposition);
     }
 
@@ -245,14 +250,32 @@ public class AutomationCompositionInstantiationProvider {
         }
         acToBeUpdated.setCompositionTargetId(automationComposition.getCompositionTargetId());
         var acDefinition = acDefinitionProvider.getAcDefinition(automationComposition.getCompositionTargetId());
-        // Publish migrate event to the participants
-        supervisionAcHandler.migrate(acToBeUpdated, acDefinition.getServiceTemplate());
+
+        updateAcForMigration(acToBeUpdated, acDefinition);
+
+        var acToPublish = new AutomationComposition(acToBeUpdated);
 
         encryptInstanceProperties(acToBeUpdated, acToBeUpdated.getCompositionTargetId());
 
         var ac = automationCompositionProvider.updateAutomationComposition(acToBeUpdated);
         elementsRemoved.forEach(automationCompositionProvider::deleteAutomationCompositionElement);
+
+        // Publish migrate event to the participants
+        supervisionAcHandler.migrate(acToPublish);
         return createInstantiationResponse(ac);
+    }
+
+    private void updateAcForMigration(AutomationComposition acToBeUpdated,
+                                      AutomationCompositionDefinition acDefinition) {
+        AcmUtils.setCascadedState(acToBeUpdated, DeployState.MIGRATING, LockState.LOCKED);
+        acToBeUpdated.setStateChangeResult(StateChangeResult.NO_ERROR);
+        var stage = ParticipantUtils.getFirstStage(acToBeUpdated, acDefinition.getServiceTemplate());
+        acToBeUpdated.setPhase(stage);
+    }
+
+    private void updateAcForProperties(AutomationComposition acToBeUpdated) {
+        AcmUtils.setCascadedState(acToBeUpdated, DeployState.UPDATING, acToBeUpdated.getLockState());
+        acToBeUpdated.setStateChangeResult(StateChangeResult.NO_ERROR);
     }
 
     private List<UUID> getElementRemoved(AutomationComposition acFromDb, AutomationComposition acFromMigration) {

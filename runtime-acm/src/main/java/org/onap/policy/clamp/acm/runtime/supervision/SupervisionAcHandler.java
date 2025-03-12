@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import lombok.AllArgsConstructor;
+import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AcElementPropertiesPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AcPreparePublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionDeployPublisher;
@@ -44,7 +45,6 @@ import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCom
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.MessageProvider;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -67,6 +67,7 @@ public class SupervisionAcHandler {
     private final AutomationCompositionMigrationPublisher acCompositionMigrationPublisher;
     private final AcPreparePublisher acPreparePublisher;
     private final MessageProvider messageProvider;
+    private final EncryptionUtils encryptionUtils;
 
     private final ExecutorService executor = Context.taskWrapping(Executors.newFixedThreadPool(1));
 
@@ -93,7 +94,11 @@ public class SupervisionAcHandler {
         automationComposition.setPhase(startPhase);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         executor.execute(
-            () -> automationCompositionDeployPublisher.send(automationComposition, startPhase, true));
+            () -> {
+                var acToSend = new AutomationComposition(automationComposition);
+                decryptInstanceProperties(acToSend);
+                automationCompositionDeployPublisher.send(acToSend, startPhase, true);
+            });
     }
 
     /**
@@ -156,7 +161,11 @@ public class SupervisionAcHandler {
         AcmUtils.setCascadedState(automationComposition, DeployState.UNDEPLOYED, LockState.NONE, SubState.PREPARING);
         automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
-        executor.execute(() -> acPreparePublisher.sendPrepare(automationComposition));
+        executor.execute(() -> {
+            var acToSend = new AutomationComposition(automationComposition);
+            decryptInstanceProperties(acToSend);
+            acPreparePublisher.sendPrepare(acToSend);
+        });
     }
 
     /**
@@ -202,10 +211,11 @@ public class SupervisionAcHandler {
      * @param automationComposition the AutomationComposition
      */
     public void update(AutomationComposition automationComposition) {
-        AcmUtils.setCascadedState(automationComposition, DeployState.UPDATING, automationComposition.getLockState());
-        automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
         executor.execute(
-            () -> acElementPropertiesPublisher.send(automationComposition));
+            () -> {
+                decryptInstanceProperties(automationComposition);
+                acElementPropertiesPublisher.send(automationComposition);
+            });
     }
 
     /**
@@ -318,14 +328,12 @@ public class SupervisionAcHandler {
      * Handle Migration of an AutomationComposition instance to other ACM Definition.
      *
      * @param automationComposition the AutomationComposition
-     * @param serviceTemplate the ServiceTemplate
      */
-    public void migrate(AutomationComposition automationComposition, ToscaServiceTemplate serviceTemplate) {
-        AcmUtils.setCascadedState(automationComposition, DeployState.MIGRATING, LockState.LOCKED);
-        var stage = ParticipantUtils.getFirstStage(automationComposition, serviceTemplate);
-        automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
-        automationComposition.setPhase(stage);
-        executor.execute(() -> acCompositionMigrationPublisher.send(automationComposition, stage));
+    public void migrate(AutomationComposition automationComposition) {
+        executor.execute(() -> {
+            decryptInstanceProperties(automationComposition);
+            acCompositionMigrationPublisher.send(automationComposition, automationComposition.getPhase());
+        });
     }
 
     /**
@@ -335,5 +343,11 @@ public class SupervisionAcHandler {
      */
     public void migratePrecheck(AutomationComposition automationComposition) {
         executor.execute(() -> acCompositionMigrationPublisher.send(automationComposition, 0));
+    }
+
+    private void decryptInstanceProperties(AutomationComposition automationComposition) {
+        if (encryptionUtils.encryptionEnabled()) {
+            encryptionUtils.findAndDecryptSensitiveData(automationComposition);
+        }
     }
 }
