@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023-2024 Nordix Foundation.
+ *  Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -397,17 +397,19 @@ public class ThreadHandler implements Closeable {
      * @param messageId the messageId
      * @param compositionElement the information of the Automation Composition Definition Element
      * @param instanceElement the information of the Automation Composition Instance Element
+     * @param stage the stage
      */
     public void prepare(UUID messageId, CompositionElementDto compositionElement,
-        InstanceElementDto instanceElement) {
+        InstanceElementDto instanceElement, int stage) {
         cleanExecution(instanceElement.elementId(), messageId);
-        var result = executor.submit(() -> this.prepareProcess(compositionElement, instanceElement));
+        var result = executor.submit(() -> this.prepareProcess(compositionElement, instanceElement, stage));
         executionMap.put(instanceElement.elementId(), result);
     }
 
-    private void prepareProcess(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
+    private void prepareProcess(CompositionElementDto compositionElement, InstanceElementDto instanceElement,
+        int stage) {
         try {
-            listener.prepare(compositionElement, instanceElement);
+            listener.prepare(compositionElement, instanceElement, stage);
         } catch (PfModelException e) {
             LOGGER.error("Automation composition element prepare Pre Deploy failed {} {}",
                 instanceElement.elementId(), e.getMessage());

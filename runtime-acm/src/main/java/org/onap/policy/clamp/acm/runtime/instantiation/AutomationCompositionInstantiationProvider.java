@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2025 Nordix Foundation.
+ * Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -427,25 +427,22 @@ public class AutomationCompositionInstantiationProvider {
             throw new PfModelRuntimeException(Status.BAD_REQUEST,
                     automationComposition.getCompositionId() + DO_NOT_MATCH + compositionId);
         }
-        if (!DeployState.UNDEPLOYED.equals(automationComposition.getDeployState())
-                && !DeployState.DELETING.equals(automationComposition.getDeployState())) {
-            throw new PfModelRuntimeException(Status.BAD_REQUEST,
-                    "Automation composition state is still " + automationComposition.getDeployState());
-        }
-        if (DeployState.DELETING.equals(automationComposition.getDeployState())
-                && StateChangeResult.NO_ERROR.equals(automationComposition.getStateChangeResult())) {
-            throw new PfModelRuntimeException(Status.BAD_REQUEST,
-                    "Automation composition state is still " + automationComposition.getDeployState());
-        }
         var acDefinition = acDefinitionProvider.getAcDefinition(automationComposition.getCompositionId());
         var participantIds = acDefinition.getElementStateMap().values().stream()
             .map(NodeTemplateState::getParticipantId).collect(Collectors.toSet());
         participantProvider.verifyParticipantState(participantIds);
+        var result = acInstanceStateResolver.resolve(DeployOrder.DELETE,
+                null, null,
+                automationComposition.getDeployState(), automationComposition.getLockState(),
+                automationComposition.getSubState(), automationComposition.getStateChangeResult());
+        if (!DeployOrder.DELETE.name().equals(result)) {
+            var msg = String.format(NOT_VALID_ORDER, DeployOrder.DELETE,
+                    automationComposition.getDeployState(), automationComposition.getLockState(),
+                    automationComposition.getSubState(), automationComposition.getStateChangeResult());
+            throw new PfModelRuntimeException(Status.BAD_REQUEST, msg);
+        }
         supervisionAcHandler.delete(automationComposition, acDefinition);
-        var response = new InstantiationResponse();
-        response.setInstanceId(automationComposition.getInstanceId());
-        response.setAffectedAutomationComposition(automationComposition.getKey().asIdentifier());
-        return response;
+        return createInstantiationResponse(automationComposition);
     }
 
     /**
@@ -506,7 +503,7 @@ public class AutomationCompositionInstantiationProvider {
                 break;
 
             case "PREPARE":
-                supervisionAcHandler.prepare(automationComposition);
+                supervisionAcHandler.prepare(automationComposition, acDefinition);
                 break;
 
             case "REVIEW":

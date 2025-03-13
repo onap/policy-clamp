@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2025 Nordix Foundation.
+ *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -79,7 +79,7 @@ class AutomationCompositionInstantiationProviderTest {
             "src/test/resources/rest/acm/AutomationCompositionElementsNotFound.json";
     private static final String AC_INSTANTIATION_AC_DEFINITION_NOT_FOUND_JSON =
             "src/test/resources/rest/acm/AutomationCompositionNotFound.json";
-    private static final String DELETE_BAD_REQUEST = "Automation composition state is still %s";
+    private static final String DELETE_BAD_REQUEST = "Not valid order DELETE;";
 
     private static final String AC_ELEMENT_NAME_NOT_FOUND = """
             "AutomationComposition" INVALID, item has status INVALID
@@ -118,7 +118,7 @@ class AutomationCompositionInstantiationProviderTest {
         var participantProvider = mock(ParticipantProvider.class);
         var encryptionUtils = new EncryptionUtils(CommonTestData.getTestParamaterGroup());
         var instantiationProvider = new AutomationCompositionInstantiationProvider(acProvider, acDefinitionProvider,
-                null, supervisionAcHandler, participantProvider,
+                new AcInstanceStateResolver(), supervisionAcHandler, participantProvider,
                 CommonTestData.getTestParamaterGroup(), encryptionUtils);
         var automationCompositionCreate =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Crud");
@@ -520,7 +520,7 @@ class AutomationCompositionInstantiationProviderTest {
         var encryptionUtils = mock(EncryptionUtils.class);
 
         var instantiationProvider = new AutomationCompositionInstantiationProvider(acProvider, acDefinitionProvider,
-                null, supervisionAcHandler, participantProvider, acRuntimeParameterGroup,
+                new AcInstanceStateResolver(), supervisionAcHandler, participantProvider, acRuntimeParameterGroup,
                 encryptionUtils);
 
         when(acProvider.getAutomationComposition(automationComposition.getInstanceId()))
@@ -531,17 +531,22 @@ class AutomationCompositionInstantiationProviderTest {
         assertThatThrownBy(() -> instantiationProvider.deleteAutomationComposition(wrongCompositionId, instanceId))
                 .hasMessageMatching(compositionId + DO_NOT_MATCH + wrongCompositionId);
 
+        automationComposition.setDeployState(DeployState.UNDEPLOYED);
+        automationComposition.setLockState(LockState.NONE);
+        when(acProvider.deleteAutomationComposition(instanceId)).thenReturn(automationComposition);
+        instantiationProvider.deleteAutomationComposition(compositionId, instanceId);
+        verify(supervisionAcHandler).delete(any(), any());
+    }
+
+    @Test
+    void testInstantiationDeleteError() {
+        var automationComposition =
+                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Delete");
+        automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
         assertThatDeleteThrownBy(automationComposition, DeployState.DEPLOYED, LockState.LOCKED);
         assertThatDeleteThrownBy(automationComposition, DeployState.DEPLOYING, LockState.NONE);
         assertThatDeleteThrownBy(automationComposition, DeployState.UNDEPLOYING, LockState.LOCKED);
         assertThatDeleteThrownBy(automationComposition, DeployState.DELETING, LockState.NONE);
-
-        automationComposition.setDeployState(DeployState.UNDEPLOYED);
-        automationComposition.setLockState(LockState.NONE);
-        when(acProvider.deleteAutomationComposition(instanceId)).thenReturn(automationComposition);
-
-        instantiationProvider.deleteAutomationComposition(compositionId, instanceId);
-        verify(supervisionAcHandler).delete(any(), any());
     }
 
     private void assertThatDeleteThrownBy(AutomationComposition automationComposition, DeployState deployState,
@@ -549,20 +554,24 @@ class AutomationCompositionInstantiationProviderTest {
         automationComposition.setDeployState(deployState);
         automationComposition.setLockState(lockState);
         var acProvider = mock(AutomationCompositionProvider.class);
+        when(acProvider.getAutomationComposition(automationComposition.getInstanceId()))
+                .thenReturn(automationComposition);
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
         var acRuntimeParamaterGroup = mock(AcRuntimeParameterGroup.class);
 
         var instantiationProvider =
-                new AutomationCompositionInstantiationProvider(acProvider, acDefinitionProvider, null, null, null,
+                new AutomationCompositionInstantiationProvider(acProvider, acDefinitionProvider,
+                        new AcInstanceStateResolver(), null, mock(ParticipantProvider.class),
                         acRuntimeParamaterGroup, null);
 
-        when(acProvider.getAutomationComposition(automationComposition.getInstanceId()))
-                .thenReturn(automationComposition);
+        var acDefinition = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
+        var compositionId = acDefinition.getCompositionId();
+        when(acDefinitionProvider.getAcDefinition(compositionId)).thenReturn(acDefinition);
+        automationComposition.setCompositionId(compositionId);
 
-        var compositionId = automationComposition.getCompositionId();
         var instanceId = automationComposition.getInstanceId();
         assertThatThrownBy(() -> instantiationProvider.deleteAutomationComposition(compositionId, instanceId))
-                .hasMessageMatching(String.format(DELETE_BAD_REQUEST, deployState));
+                .hasMessageStartingWith(String.format(DELETE_BAD_REQUEST));
     }
 
     @Test
@@ -762,7 +771,7 @@ class AutomationCompositionInstantiationProviderTest {
         acInstanceStateUpdate.setLockOrder(LockOrder.NONE);
         acInstanceStateUpdate.setSubOrder(SubOrder.PREPARE);
         provider.compositionInstanceState(compositionId, instanceId, acInstanceStateUpdate);
-        verify(supervisionAcHandler).prepare(any(AutomationComposition.class));
+        verify(supervisionAcHandler).prepare(any(AutomationComposition.class), any());
 
         automationComposition.setDeployState(DeployState.DEPLOYED);
         automationComposition.setLockState(LockState.LOCKED);
