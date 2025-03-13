@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2025 Nordix Foundation.
+ * Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,12 +35,14 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.acm.runtime.instantiation.InstantiationUtils;
 import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils;
+import org.onap.policy.clamp.acm.runtime.supervision.comm.AcPreparePublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionMigrationPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
 import org.onap.policy.clamp.acm.runtime.util.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 
@@ -69,12 +71,11 @@ class StageScannerTest {
 
         var acProvider = mock(AutomationCompositionProvider.class);
         when(acProvider.updateAutomationComposition(any())).thenReturn(automationComposition);
-
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
         var encryptionUtils = new EncryptionUtils(acRuntimeParameterGroup);
         var supervisionScanner = new StageScanner(acProvider, mock(ParticipantSyncPublisher.class),
-                mock(AutomationCompositionMigrationPublisher.class), acRuntimeParameterGroup, encryptionUtils);
-
+                mock(AutomationCompositionMigrationPublisher.class), mock(AcPreparePublisher.class),
+                acRuntimeParameterGroup, encryptionUtils);
         var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
         supervisionScanner.scanStage(automationComposition, serviceTemplate, new UpdateSync());
         verify(acProvider, times(0)).updateAutomationComposition(any(AutomationComposition.class));
@@ -98,5 +99,57 @@ class StageScannerTest {
 
         assertEquals(DeployState.DEPLOYED, automationComposition.getDeployState());
         assertEquals(compositionTargetId, automationComposition.getCompositionId());
+    }
+
+    @Test
+    void testSendAutomationCompositionPrepare() {
+        var automationComposition = InstantiationUtils.getAutomationCompositionFromResource(AC_JSON, "Crud");
+        automationComposition.setDeployState(DeployState.UNDEPLOYED);
+        automationComposition.setSubState(SubState.PREPARING);
+        automationComposition.setLockState(LockState.NONE);
+        automationComposition.setCompositionId(COMPOSITION_ID);
+        automationComposition.setLastMsg(TimestampHelper.now());
+        automationComposition.setPhase(0);
+        for (var element : automationComposition.getElements().values()) {
+            element.setDeployState(DeployState.UNDEPLOYED);
+            element.setLockState(LockState.NONE);
+            element.setSubState(SubState.NONE);
+        }
+        // first element is not prepared yet
+        var element = automationComposition.getElements().entrySet().iterator().next().getValue();
+        element.setSubState(SubState.PREPARING);
+
+        var acProvider = mock(AutomationCompositionProvider.class);
+        when(acProvider.updateAutomationComposition(any())).thenReturn(automationComposition);
+
+        var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
+        var encryptionUtils = new EncryptionUtils(acRuntimeParameterGroup);
+        var supervisionScanner = new StageScanner(acProvider, mock(ParticipantSyncPublisher.class),
+                mock(AutomationCompositionMigrationPublisher.class), mock(AcPreparePublisher.class),
+                acRuntimeParameterGroup, encryptionUtils);
+
+        var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
+        supervisionScanner.scanStage(automationComposition, serviceTemplate, new UpdateSync());
+        verify(acProvider, times(0)).updateAutomationComposition(any(AutomationComposition.class));
+        assertEquals(SubState.PREPARING, automationComposition.getSubState());
+
+        // send message for next stage
+        clearInvocations(acProvider);
+        var toscaNodeTemplate = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates()
+                .get(element.getDefinition().getName());
+        var prepare = Map.of("prepare", List.of(1));
+        toscaNodeTemplate.setProperties(Map.of("stage", prepare));
+
+        supervisionScanner.scanStage(automationComposition, serviceTemplate, new UpdateSync());
+        verify(acProvider).updateAutomationComposition(any(AutomationComposition.class));
+        assertEquals(SubState.PREPARING, automationComposition.getSubState());
+
+        // first element is prepared
+        clearInvocations(acProvider);
+        element.setSubState(SubState.NONE);
+        supervisionScanner.scanStage(automationComposition, serviceTemplate, new UpdateSync());
+        verify(acProvider).updateAutomationComposition(any(AutomationComposition.class));
+
+        assertEquals(SubState.NONE, automationComposition.getSubState());
     }
 }

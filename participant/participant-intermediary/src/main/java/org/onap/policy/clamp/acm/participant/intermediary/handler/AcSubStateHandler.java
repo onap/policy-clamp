@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024 Nordix Foundation.
+ *  Copyright (C) 2024-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionMigration;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionPrepare;
@@ -155,7 +156,7 @@ public class AcSubStateHandler {
                         acPrepareMsg.getAutomationCompositionId(), participantPrepare, DeployState.UNDEPLOYED,
                         SubState.PREPARING);
                     callParticipanPrepare(acPrepareMsg.getMessageId(), participantPrepare.getAcElementList(),
-                        acPrepareMsg.getAutomationCompositionId());
+                        acPrepareMsg.getStage(), acPrepareMsg.getAutomationCompositionId());
                 }
             }
         } else {
@@ -166,7 +167,8 @@ public class AcSubStateHandler {
         }
     }
 
-    private void callParticipanPrepare(UUID messageId, List<AcElementDeploy> acElementList, UUID instanceId) {
+    private void callParticipanPrepare(UUID messageId, List<AcElementDeploy> acElementList, Integer stageMsg,
+            UUID instanceId) {
         var automationComposition = cacheProvider.getAutomationComposition(instanceId);
         for (var elementDeploy : acElementList) {
             var element = automationComposition.getElements().get(elementDeploy.getId());
@@ -174,9 +176,13 @@ public class AcSubStateHandler {
                 .getCommonProperties(automationComposition.getCompositionId(), element.getDefinition());
             var compositionElement = cacheProvider.createCompositionElementDto(automationComposition.getCompositionId(),
                 element, compositionInProperties);
-            var instanceElement = new InstanceElementDto(instanceId, elementDeploy.getId(),
-                elementDeploy.getProperties(), element.getOutProperties());
-            listener.prepare(messageId, compositionElement, instanceElement);
+            var stageSet = ParticipantUtils.findStageSetPrepare(compositionInProperties);
+            if (stageSet.contains(stageMsg)) {
+                var instanceElement =
+                        new InstanceElementDto(instanceId, elementDeploy.getId(), elementDeploy.getProperties(),
+                                element.getOutProperties());
+                listener.prepare(messageId, compositionElement, instanceElement, stageMsg);
+            }
         }
     }
 

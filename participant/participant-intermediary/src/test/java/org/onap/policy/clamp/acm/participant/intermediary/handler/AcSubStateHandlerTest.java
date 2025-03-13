@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024 Nordix Foundation.
+ *  Copyright (C) 2024-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ package org.onap.policy.clamp.acm.participant.intermediary.handler;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -141,6 +142,7 @@ class AcSubStateHandlerTest {
 
         var acPrepareMsg = new AutomationCompositionPrepare();
         acPrepareMsg.setPreDeploy(true);
+        acPrepareMsg.setStage(0);
         assertDoesNotThrow(() -> ach.handleAcPrepare(acPrepareMsg));
 
         acPrepareMsg.setParticipantId(CommonTestData.getParticipantId());
@@ -165,7 +167,7 @@ class AcSubStateHandlerTest {
             .thenReturn(Map.of(automationComposition.getCompositionId(), map));
 
         ach.handleAcPrepare(acPrepareMsg);
-        verify(listener, times(automationComposition.getElements().size())).prepare(any(), any(), any());
+        verify(listener, times(automationComposition.getElements().size())).prepare(any(), any(), any(), anyInt());
     }
 
     @Test

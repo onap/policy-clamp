@@ -23,10 +23,13 @@ package org.onap.policy.clamp.acm.runtime.supervision.scanner;
 import java.util.Comparator;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
 import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils;
+import org.onap.policy.clamp.acm.runtime.supervision.comm.AcPreparePublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.AutomationCompositionMigrationPublisher;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
+import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
@@ -36,6 +39,7 @@ import org.springframework.stereotype.Component;
 public class StageScanner extends AbstractScanner {
 
     private final AutomationCompositionMigrationPublisher acMigrationPublisher;
+    private final AcPreparePublisher acPreparePublisher;
 
     /**
      * Constructor for instantiating StageScanner.
@@ -44,14 +48,18 @@ public class StageScanner extends AbstractScanner {
      * @param participantSyncPublisher the Participant Sync Publisher
      * @param acMigrationPublisher the AutomationComposition Migration Publisher
      * @param acRuntimeParameterGroup the parameters for the automation composition runtime
+     * @param encryptionUtils the EncryptionUtils
      */
-    public StageScanner(final AutomationCompositionProvider acProvider,
-                        final ParticipantSyncPublisher participantSyncPublisher,
-                        final AutomationCompositionMigrationPublisher acMigrationPublisher,
-                        final AcRuntimeParameterGroup acRuntimeParameterGroup,
-                        final EncryptionUtils encryptionUtils) {
+    public StageScanner(
+            final AutomationCompositionProvider acProvider,
+            final ParticipantSyncPublisher participantSyncPublisher,
+            final AutomationCompositionMigrationPublisher acMigrationPublisher,
+            final AcPreparePublisher acPreparePublisher,
+            final AcRuntimeParameterGroup acRuntimeParameterGroup,
+            final EncryptionUtils encryptionUtils) {
         super(acProvider, participantSyncPublisher, acRuntimeParameterGroup, encryptionUtils);
         this.acMigrationPublisher = acMigrationPublisher;
+        this.acPreparePublisher = acPreparePublisher;
     }
 
     /**
@@ -70,7 +78,9 @@ public class StageScanner extends AbstractScanner {
                     element.getSubState())) {
                 var toscaNodeTemplate = serviceTemplate.getToscaTopologyTemplate().getNodeTemplates()
                         .get(element.getDefinition().getName());
-                var stageSet = ParticipantUtils.findStageSetMigrate(toscaNodeTemplate.getProperties());
+                var stageSet = DeployState.MIGRATING.equals(automationComposition.getDeployState())
+                        ? ParticipantUtils.findStageSetMigrate(toscaNodeTemplate.getProperties())
+                        : ParticipantUtils.findStageSetPrepare(toscaNodeTemplate.getProperties());
                 var minStage = stageSet.stream().min(Comparator.comparing(Integer::valueOf)).orElse(0);
                 int stage = element.getStage() != null ? element.getStage() : minStage;
                 minStageNotCompleted = Math.min(minStageNotCompleted, stage);
@@ -91,10 +101,21 @@ public class StageScanner extends AbstractScanner {
                 LOGGER.debug("retry message AutomationCompositionMigration");
                 var acToSend = new AutomationComposition(automationComposition);
                 decryptInstanceProperties(acToSend);
-                acMigrationPublisher.send(acToSend, minStageNotCompleted);
+                sendNextStage(acToSend, minStageNotCompleted);
             } else {
                 handleTimeout(automationComposition, updateSync);
             }
+        }
+    }
+
+    private void sendNextStage(final AutomationComposition automationComposition, int minStageNotCompleted) {
+        if (DeployState.MIGRATING.equals(automationComposition.getDeployState())) {
+            LOGGER.debug("retry message AutomationCompositionMigration");
+            acMigrationPublisher.send(automationComposition, minStageNotCompleted);
+        }
+        if (SubState.PREPARING.equals(automationComposition.getSubState())) {
+            LOGGER.debug("retry message AutomationCompositionPrepare");
+            acPreparePublisher.sendPrepare(automationComposition, minStageNotCompleted);
         }
     }
 }

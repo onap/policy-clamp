@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023-2025 Nordix Foundation.
+ *  Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -156,15 +156,18 @@ public class SupervisionAcHandler {
      * Handle prepare Pre Deploy an AutomationComposition instance.
      *
      * @param automationComposition the AutomationComposition
+     * @param acDefinition the AutomationCompositionDefinition
      */
-    public void prepare(AutomationComposition automationComposition) {
+    public void prepare(AutomationComposition automationComposition, AutomationCompositionDefinition acDefinition) {
         AcmUtils.setCascadedState(automationComposition, DeployState.UNDEPLOYED, LockState.NONE, SubState.PREPARING);
         automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
+        var stage = ParticipantUtils.getFirstStage(automationComposition, acDefinition.getServiceTemplate());
+        automationComposition.setPhase(stage);
         automationCompositionProvider.updateAutomationComposition(automationComposition);
         executor.execute(() -> {
             var acToSend = new AutomationComposition(automationComposition);
             decryptInstanceProperties(acToSend);
-            acPreparePublisher.sendPrepare(acToSend);
+            acPreparePublisher.sendPrepare(acToSend, stage);
         });
     }
 

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024-2025 Nordix Foundation.
+ *  Copyright (C) 2024-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -144,10 +144,8 @@ class SimulatorServiceTest {
         simulatorService.delete(UUID.randomUUID(), UUID.randomUUID());
         simulatorService.update(UUID.randomUUID(), UUID.randomUUID());
         simulatorService.review(UUID.randomUUID(), UUID.randomUUID());
-        simulatorService.prepare(UUID.randomUUID(), UUID.randomUUID());
+        simulatorService.prepare(UUID.randomUUID(), UUID.randomUUID(), 0, new HashMap<>(), new HashMap<>());
         simulatorService.migratePrecheck(UUID.randomUUID(), UUID.randomUUID());
         verify(intermediaryApi, times(0)).sendAcDefinitionInfo(any(), any(), any());
-
     }
-
 }

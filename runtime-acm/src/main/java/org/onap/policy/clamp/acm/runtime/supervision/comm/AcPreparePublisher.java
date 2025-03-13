@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2024 Nordix Foundation.
+ * Copyright (C) 2024-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,11 +42,13 @@ public class AcPreparePublisher extends AbstractParticipantPublisher<AutomationC
      * Send AutomationCompositionPrepare Prepare message to Participant.
      *
      * @param automationComposition the AutomationComposition
+     * @param stage the stage
      */
     @Timed(value = "publisher.prepare", description = "AC Prepare Pre Deploy published")
-    public void sendPrepare(AutomationComposition automationComposition) {
+    public void sendPrepare(AutomationComposition automationComposition, int stage) {
         var acPrepare = createAutomationCompositionPrepare(automationComposition.getCompositionId(),
             automationComposition.getInstanceId());
+        acPrepare.setStage(stage);
         acPrepare.setParticipantList(
             AcmUtils.createParticipantDeployList(automationComposition, DeployOrder.NONE));
         LOGGER.debug("AC Prepare sent {}", acPrepare);
