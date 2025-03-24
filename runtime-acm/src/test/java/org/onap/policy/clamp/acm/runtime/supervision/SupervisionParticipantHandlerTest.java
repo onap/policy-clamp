@@ -169,15 +169,10 @@ class SupervisionParticipantHandlerTest {
     }
 
     @Test
-    void testHandleParticipantStatus() {
+    void testHandleParticipantStatusWithInstanceOutProperties() {
         var participantStatusMessage = createParticipantStatus();
         participantStatusMessage.setAutomationCompositionInfoList(List.of(new AutomationCompositionInfo()));
         participantStatusMessage.setCompositionId(UUID.randomUUID());
-
-        var acDefinitionProvider = mock(AcDefinitionProvider.class);
-        var acDefinition = new AutomationCompositionDefinition();
-        acDefinition.setCompositionId(participantStatusMessage.getCompositionId());
-        when(acDefinitionProvider.getAcDefinition(acDefinition.getCompositionId())).thenReturn(acDefinition);
 
         var participantProvider = mock(ParticipantProvider.class);
         var participant = CommonTestData.createParticipant(CommonTestData.getParticipantId());
@@ -190,17 +185,18 @@ class SupervisionParticipantHandlerTest {
 
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         var messageProvider = mock(MessageProvider.class);
+        var acDefinitionProvider = mock(AcDefinitionProvider.class);
         var handler =
                 new SupervisionParticipantHandler(participantProvider, mock(ParticipantRegisterAckPublisher.class),
                         mock(ParticipantDeregisterAckPublisher.class), automationCompositionProvider,
                         acDefinitionProvider, mock(ParticipantSyncPublisher.class), messageProvider);
         handler.handleParticipantMessage(participantStatusMessage);
 
-        verify(messageProvider).save(any(ParticipantStatus.class));
+        verify(messageProvider).saveInstanceOutProperties(any(ParticipantStatus.class));
     }
 
     @Test
-    void testAcDefinitionOutProperties() {
+    void testHandleParticipantStatusWithCompositionOutProperties() {
         var participantStatusMessage = createParticipantStatus();
         var participantDefinition = new ParticipantDefinition();
         participantStatusMessage.setParticipantDefinitionUpdates(List.of(participantDefinition));
@@ -228,31 +224,30 @@ class SupervisionParticipantHandlerTest {
                         mock(ParticipantDeregisterAckPublisher.class), mock(AutomationCompositionProvider.class),
                         acDefinitionProvider, mock(ParticipantSyncPublisher.class), messageProvider);
         handler.handleParticipantMessage(participantStatusMessage);
-        verify(messageProvider).save(participantStatusMessage);
+        verify(messageProvider).saveCompositionOutProperties(any(), any());
     }
 
     @Test
-    void testAcOutProperties() {
+    void testAcOutPropertiesNotValid() {
         var participantStatusMessage = createParticipantStatus();
-        participantStatusMessage.setAutomationCompositionInfoList(List.of(new AutomationCompositionInfo()));
+        var participantDefinition = new ParticipantDefinition();
+        participantStatusMessage.setParticipantDefinitionUpdates(List.of(participantDefinition));
+        participantDefinition.setParticipantId(participantStatusMessage.getParticipantId());
+        var acElementDefinition = new AutomationCompositionElementDefinition();
+        acElementDefinition.setAcElementDefinitionId(new ToscaConceptIdentifier("code", "1.0.0"));
+        participantDefinition.setAutomationCompositionElementDefinitionList(List.of(acElementDefinition));
 
         var compositionId = UUID.randomUUID();
         participantStatusMessage.setCompositionId(compositionId);
-        var acDefinition = new AutomationCompositionDefinition();
-        acDefinition.setState(AcTypeState.COMMISSIONED);
-        acDefinition.setCompositionId(compositionId);
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
         var messageProvider = mock(MessageProvider.class);
-        when(acDefinitionProvider.findAcDefinition(compositionId)).thenReturn(Optional.of(acDefinition));
-        when(acDefinitionProvider.getAcDefinition(compositionId)).thenReturn(acDefinition);
-
         var participantProvider = mock(ParticipantProvider.class);
         var handler =
                 new SupervisionParticipantHandler(participantProvider, mock(ParticipantRegisterAckPublisher.class),
                         mock(ParticipantDeregisterAckPublisher.class), mock(AutomationCompositionProvider.class),
                         acDefinitionProvider, mock(ParticipantSyncPublisher.class), messageProvider);
         handler.handleParticipantMessage(participantStatusMessage);
-        verify(messageProvider).save(participantStatusMessage);
+        verify(messageProvider, times(0)).saveCompositionOutProperties(any(), any());
     }
 
     @Test
@@ -275,7 +270,6 @@ class SupervisionParticipantHandlerTest {
     @Test
     void testHandleParticipantStatusCheckOnline() {
         var participantStatusMessage = createParticipantStatus();
-        participantStatusMessage.setAutomationCompositionInfoList(List.of(new AutomationCompositionInfo()));
         participantStatusMessage.setCompositionId(UUID.randomUUID());
 
         var acDefinitionProvider = mock(AcDefinitionProvider.class);
@@ -296,7 +290,6 @@ class SupervisionParticipantHandlerTest {
         handler.handleParticipantMessage(participantStatusMessage);
 
         verify(participantProvider).saveParticipant(any());
-        verify(messageProvider).save(any(ParticipantStatus.class));
     }
 
     private ParticipantStatus createParticipantStatus() {

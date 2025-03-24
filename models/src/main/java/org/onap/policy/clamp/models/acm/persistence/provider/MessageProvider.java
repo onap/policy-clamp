@@ -23,12 +23,15 @@ package org.onap.policy.clamp.models.acm.persistence.provider;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
+import org.hibernate.exception.ConstraintViolationException;
+import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
 import org.onap.policy.clamp.models.acm.document.concepts.DocMessage;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeployAck;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantAckMessage;
@@ -39,6 +42,9 @@ import org.onap.policy.clamp.models.acm.persistence.concepts.JpaMessageJob;
 import org.onap.policy.clamp.models.acm.persistence.repository.MessageJobRepository;
 import org.onap.policy.clamp.models.acm.persistence.repository.MessageRepository;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,6 +52,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @AllArgsConstructor
 public class MessageProvider {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MessageProvider.class);
 
     private final MessageRepository messageRepository;
     private final MessageJobRepository messageJobRepository;
@@ -85,20 +93,11 @@ public class MessageProvider {
     }
 
     /**
-     * Save ParticipantStatus message.
+     * Save instance OutProperties.
      *
      * @param message the ParticipantStatus message
      */
-    public void save(ParticipantStatus message) {
-        if (!message.getAutomationCompositionInfoList().isEmpty()) {
-            saveInstanceOutProperties(message);
-        }
-        if (!message.getParticipantDefinitionUpdates().isEmpty()) {
-            saveCompositionOutProperties(message);
-        }
-    }
-
-    private void saveInstanceOutProperties(ParticipantStatus message) {
+    public void saveInstanceOutProperties(ParticipantStatus message) {
         for (var instance : message.getAutomationCompositionInfoList()) {
             for (var element : instance.getElements()) {
                 var jpa = new JpaMessage();
@@ -116,17 +115,27 @@ public class MessageProvider {
         }
     }
 
-    private void saveCompositionOutProperties(ParticipantStatus message) {
+    /**
+     * Save composition OutProperties.
+     *
+     * @param message the ParticipantStatus message
+     * @param elementStateMap the NodeTemplateState map
+     */
+    public void saveCompositionOutProperties(ParticipantStatus message,
+            Map<ToscaConceptIdentifier, NodeTemplateState> elementStateMap) {
         for (var acDefinition : message.getParticipantDefinitionUpdates()) {
             for (var element : acDefinition.getAutomationCompositionElementDefinitionList()) {
-                var jpa = new JpaMessage();
-                jpa.setIdentificationId(message.getCompositionId().toString());
-                var doc = from(message);
-                doc.setOutProperties(element.getOutProperties());
-                doc.setAcElementDefinitionId(element.getAcElementDefinitionId());
-                jpa.fromAuthorative(doc);
-                ProviderUtils.validate(doc, jpa, "ParticipantStatus composition message");
-                messageRepository.save(jpa);
+                var elementState = elementStateMap.get(element.getAcElementDefinitionId());
+                if (elementState != null && elementState.getParticipantId().equals(message.getParticipantId())) {
+                    var jpa = new JpaMessage();
+                    jpa.setIdentificationId(message.getCompositionId().toString());
+                    var doc = from(message);
+                    doc.setOutProperties(element.getOutProperties());
+                    doc.setAcElementDefinitionId(element.getAcElementDefinitionId());
+                    jpa.fromAuthorative(doc);
+                    ProviderUtils.validate(doc, jpa, "ParticipantStatus composition message");
+                    messageRepository.save(jpa);
+                }
             }
         }
     }
@@ -223,8 +232,14 @@ public class MessageProvider {
             return Optional.empty();
         }
         var job = new JpaMessageJob(identificationId.toString());
-        var result = messageJobRepository.save(job);
-        return Optional.of(result.getJobId());
+        try {
+            var result = messageJobRepository.save(job);
+            return Optional.of(result.getJobId());
+        } catch (ConstraintViolationException ex) {
+            // already exist a job with this identificationId
+            LOGGER.warn(ex.getMessage());
+        }
+        return Optional.empty();
     }
 
     /**

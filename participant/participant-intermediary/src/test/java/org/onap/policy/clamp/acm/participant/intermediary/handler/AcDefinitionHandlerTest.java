@@ -44,7 +44,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 class AcDefinitionHandlerTest {
 
     @Test
-    void handleComposiotPrimeTest() {
+    void handleCompositionPrimeTest() {
         var listener = mock(ThreadHandler.class);
         var cacheProvider = mock(CacheProvider.class);
         when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
@@ -103,6 +103,7 @@ class AcDefinitionHandlerTest {
         participantSyncMsg.setAutomationcompositionList(List.of(CommonTestData.createParticipantRestartAc()));
 
         var cacheProvider = mock(CacheProvider.class);
+        when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
         var listener = mock(ThreadHandler.class);
         var ach = new AcDefinitionHandler(cacheProvider, mock(ParticipantMessagePublisher.class), listener);
         ach.handleParticipantSync(participantSyncMsg);
@@ -122,6 +123,7 @@ class AcDefinitionHandlerTest {
         participantSyncMsg.setAutomationcompositionList(List.of(participantRestartAc));
 
         var cacheProvider = mock(CacheProvider.class);
+        when(cacheProvider.getParticipantId()).thenReturn(CommonTestData.getParticipantId());
         var listener = mock(ThreadHandler.class);
         var ach = new AcDefinitionHandler(cacheProvider, mock(ParticipantMessagePublisher.class), listener);
         ach.handleParticipantSync(participantSyncMsg);

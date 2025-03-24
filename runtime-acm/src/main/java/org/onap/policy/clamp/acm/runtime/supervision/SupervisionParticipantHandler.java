@@ -25,6 +25,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.MapUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantDeregisterAckPublisher;
@@ -33,6 +35,7 @@ import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublish
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
+import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
 import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantReplica;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
@@ -109,11 +112,19 @@ public class SupervisionParticipantHandler {
                 participantStatusMsg.getParticipantSupportedElementType(), false);
 
         if (!participantStatusMsg.getAutomationCompositionInfoList().isEmpty()) {
-            messageProvider.save(participantStatusMsg);
+            messageProvider.saveInstanceOutProperties(participantStatusMsg);
         }
         if (!participantStatusMsg.getParticipantDefinitionUpdates().isEmpty()
                 && participantStatusMsg.getCompositionId() != null) {
-            messageProvider.save(participantStatusMsg);
+            var acDefinition = acDefinitionProvider.findAcDefinition(participantStatusMsg.getCompositionId());
+            if (acDefinition.isPresent()) {
+                var map = acDefinition.get().getElementStateMap()
+                        .values().stream().collect(Collectors.toMap(NodeTemplateState::getNodeTemplateId,
+                                UnaryOperator.identity()));
+                messageProvider.saveCompositionOutProperties(participantStatusMsg, map);
+            } else {
+                LOGGER.error("Not valid ParticipantStatus message");
+            }
         }
     }
 

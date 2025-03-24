@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeployAck;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
@@ -41,6 +42,7 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementInf
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionInfo;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
+import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.document.concepts.DocMessage;
@@ -95,13 +97,30 @@ class MessageProviderTest {
         message.setReplicaId(UUID.randomUUID());
         var participantDefinition = new ParticipantDefinition();
         participantDefinition.setParticipantId(message.getParticipantId());
-        var element = CommonTestData.getAcElementDefinition(new ToscaConceptIdentifier("name", "1.0.0"));
-        element.setOutProperties(Map.of("compositionProperty", "value"));
-        participantDefinition.setAutomationCompositionElementDefinitionList(List.of(element));
+        var element1 = CommonTestData.getAcElementDefinition(new ToscaConceptIdentifier("name1", "1.0.0"));
+        element1.setOutProperties(Map.of("compositionProperty1", "value"));
+        var element2 = CommonTestData.getAcElementDefinition(new ToscaConceptIdentifier("name2", "1.0.0"));
+        element2.setOutProperties(Map.of("compositionProperty2", "value"));
+        participantDefinition.setAutomationCompositionElementDefinitionList(List.of(element1, element2));
         message.setParticipantDefinitionUpdates(List.of(participantDefinition));
+
+        var nodeTemplateState1 = new NodeTemplateState();
+        nodeTemplateState1.setParticipantId(message.getParticipantId());
+        nodeTemplateState1.setNodeTemplateId(element1.getAcElementDefinitionId());
+
+        var nodeTemplateState2 = new NodeTemplateState();
+        nodeTemplateState2.setParticipantId(UUID.randomUUID());
+        nodeTemplateState2.setNodeTemplateId(element2.getAcElementDefinitionId());
+
         var messageRepository = mock(MessageRepository.class);
         var messageProvider = new MessageProvider(messageRepository, mock(MessageJobRepository.class));
-        messageProvider.save(message);
+
+        messageProvider.saveCompositionOutProperties(message, Map.of());
+        verify(messageRepository, times(0)).save(any());
+
+        messageProvider.saveCompositionOutProperties(message,
+                Map.of(nodeTemplateState1.getNodeTemplateId(), nodeTemplateState1,
+                        nodeTemplateState2.getNodeTemplateId(), nodeTemplateState2));
         verify(messageRepository).save(any());
     }
 
@@ -120,7 +139,7 @@ class MessageProviderTest {
         message.setAutomationCompositionInfoList(List.of(automationCompositionInfo));
         var messageRepository = mock(MessageRepository.class);
         var messageProvider = new MessageProvider(messageRepository, mock(MessageJobRepository.class));
-        messageProvider.save(message);
+        messageProvider.saveInstanceOutProperties(message);
         verify(messageRepository).save(any());
     }
 
@@ -213,6 +232,16 @@ class MessageProviderTest {
 
         when(messageJobRepository.findByIdentificationId(identificationId.toString())).thenReturn(Optional.of(jpaJob));
         opt = messageProvider.createJob(identificationId);
+        assertThat(opt).isEmpty();
+    }
+
+    @Test
+    void testCreateJobFail() {
+        var messageJobRepository = mock(MessageJobRepository.class);
+        var identificationId = UUID.randomUUID();
+        when(messageJobRepository.save(any())).thenThrow(new ConstraintViolationException("", null, ""));
+        var messageProvider = new MessageProvider(mock(MessageRepository.class), messageJobRepository);
+        var opt = messageProvider.createJob(identificationId);
         assertThat(opt).isEmpty();
     }
 

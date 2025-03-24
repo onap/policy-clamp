@@ -30,6 +30,7 @@ import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionDto;
 import org.onap.policy.clamp.acm.participant.intermediary.comm.ParticipantMessagePublisher;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantDefinition;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.ParticipantPrime;
@@ -53,12 +54,7 @@ public class AcDefinitionHandler {
     public void handlePrime(ParticipantPrime participantPrimeMsg) {
         if (!participantPrimeMsg.getParticipantDefinitionUpdates().isEmpty()) {
             // prime
-            List<AutomationCompositionElementDefinition> list = new ArrayList<>();
-            for (var participantDefinition : participantPrimeMsg.getParticipantDefinitionUpdates()) {
-                if (participantDefinition.getParticipantId().equals(cacheProvider.getParticipantId())) {
-                    list.addAll(participantDefinition.getAutomationCompositionElementDefinitionList());
-                }
-            }
+            var list = collectAcElementDefinition(participantPrimeMsg.getParticipantDefinitionUpdates());
             if (!list.isEmpty()) {
                 cacheProvider.addElementDefinition(participantPrimeMsg.getCompositionId(), list);
                 prime(participantPrimeMsg.getMessageId(), participantPrimeMsg.getCompositionId(), list);
@@ -67,6 +63,17 @@ public class AcDefinitionHandler {
             // deprime
             deprime(participantPrimeMsg.getMessageId(), participantPrimeMsg.getCompositionId());
         }
+    }
+
+    private List<AutomationCompositionElementDefinition> collectAcElementDefinition(
+            List<ParticipantDefinition> participantDefinitionList) {
+        List<AutomationCompositionElementDefinition> list = new ArrayList<>();
+        for (var participantDefinition : participantDefinitionList) {
+            if (participantDefinition.getParticipantId().equals(cacheProvider.getParticipantId())) {
+                list.addAll(participantDefinition.getAutomationCompositionElementDefinitionList());
+            }
+        }
+        return list;
     }
 
     private void prime(UUID messageId, UUID compositionId, List<AutomationCompositionElementDefinition> list) {
@@ -123,11 +130,10 @@ public class AcDefinitionHandler {
                 listener.cleanExecution(participantSyncMsg.getCompositionId(), participantSyncMsg.getMessageId());
             }
 
-            List<AutomationCompositionElementDefinition> list = new ArrayList<>();
-            for (var participantDefinition : participantSyncMsg.getParticipantDefinitionUpdates()) {
-                list.addAll(participantDefinition.getAutomationCompositionElementDefinitionList());
+            var list = collectAcElementDefinition(participantSyncMsg.getParticipantDefinitionUpdates());
+            if (!list.isEmpty()) {
+                cacheProvider.addElementDefinition(participantSyncMsg.getCompositionId(), list);
             }
-            cacheProvider.addElementDefinition(participantSyncMsg.getCompositionId(), list);
         }
 
         for (var automationcomposition : participantSyncMsg.getAutomationcompositionList()) {
