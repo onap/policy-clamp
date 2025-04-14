@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022-2023 Nordix Foundation.
+ * Copyright (C) 2022-2023, 2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,13 +42,13 @@ class CommissioningControllerStubTest extends CommonRestController {
 
     private static final String COMMISSIONING_ENDPOINT = "compositions";
     private static final String COMPOSITION_ID = "1aeed185-a98b-45b6-af22-8d5d20485ea3";
-    private static ToscaServiceTemplate serviceTemplate = new ToscaServiceTemplate();
+    private static final ToscaServiceTemplate serviceTemplate = new ToscaServiceTemplate();
 
     @LocalServerPort
     private int randomServerPort;
 
     @BeforeEach
-    public void setUpPort() {
+    void setUpPort() {
         super.setHttpPrefix(randomServerPort);
     }
 
@@ -71,6 +71,7 @@ class CommissioningControllerStubTest extends CommonRestController {
         var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT + "/" + COMPOSITION_ID);
         var respPost = invocationBuilder.put(Entity.json(serviceTemplate));
         assertThat(Response.Status.ACCEPTED.getStatusCode()).isEqualTo(respPost.getStatus());
+        respPost.close();
     }
 
     @Test
@@ -78,6 +79,7 @@ class CommissioningControllerStubTest extends CommonRestController {
         var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT);
         var respPost = invocationBuilder.post(Entity.json(serviceTemplate));
         assertThat(Response.Status.OK.getStatusCode()).isEqualTo(respPost.getStatus());
+        respPost.close();
     }
 
     @Test
@@ -85,5 +87,6 @@ class CommissioningControllerStubTest extends CommonRestController {
         var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT + "/" + COMPOSITION_ID);
         var respPost = invocationBuilder.delete();
         assertThat(Response.Status.OK.getStatusCode()).isEqualTo(respPost.getStatus());
+        respPost.close();
     }
 }

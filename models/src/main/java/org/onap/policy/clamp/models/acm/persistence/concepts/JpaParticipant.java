@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2024 Nordix Foundation.
+ * Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -60,6 +61,8 @@ import org.onap.policy.models.base.Validated;
 @EqualsAndHashCode(callSuper = false)
 public class JpaParticipant extends Validated
         implements PfAuthorative<Participant>, Comparable<JpaParticipant>, Serializable {
+
+    @Serial
     private static final long serialVersionUID = -4697758484642403483L;
 
     @Id

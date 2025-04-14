@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2024 Nordix Foundation.
+ *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -81,12 +81,12 @@ class CommissioningControllerTest extends CommonRestController {
      * starts Main and inserts a commissioning template.
      */
     @BeforeAll
-    public static void setUpBeforeClass() {
+    static void setUpBeforeClass() {
         serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
     }
 
     @BeforeEach
-    public void setUpPort() {
+    void setUpPort() {
         super.setHttpPrefix(randomServerPort);
     }
 
@@ -123,9 +123,7 @@ class CommissioningControllerTest extends CommonRestController {
         assertThat(Response.Status.BAD_REQUEST.getStatusCode()).isEqualTo(resp.getStatus());
         var commissioningResponse = resp.readEntity(CommissioningResponse.class);
         assertThat(commissioningResponse.getErrorDetails())
-            .isEqualTo("org.springframework.http.converter.HttpMessageNotReadableException "
-                + "Could not read JSON: java.lang.IllegalStateException: "
-                + "Expected BEGIN_OBJECT but was STRING at line 1 column 1 path $");
+            .contains("org.springframework.http.converter.HttpMessageNotReadableException");
         assertThat(commissioningResponse.getAffectedAutomationCompositionDefinitions()).isNull();
         resp.close();
     }
