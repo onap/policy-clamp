@@ -48,6 +48,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "168150f0_dd273f15",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/api/impl/AcElementListenerV3.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-04-16T09:29:18Z",
+      "side": 1,
+      "message": "it still doesn\u0027t make sense that a previous version would extend a new version. also if you could refer the documentation you mentioned.",
+      "parentUuid": "93b15187_d368cf7e",
+      "range": {
+        "startLine": 35,
+        "startChar": 51,
+        "endLine": 36,
+        "endChar": 69
+      },
+      "revId": "5ba17489da76d1012c376efacd1f087a8a8fda25",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d159dad9_8c925a4f",
@@ -85,6 +109,30 @@
       "side": 1,
       "message": "That approach is defined in documentation and is a common methodology in the most library.\nThe participant already extends one of the old abstract classes AcElementListenerV1 or AcElementListenerV2 or AcElementListenerV3. So the participant java code will always compile using the new intermediary.\nThe participant, in order to implement the new requirement have to move to new AcElementListenerV4 that have some methods with different signature.\nAcElementListenerV4 should not have backward compatibility because already exist AcElementListenerV3 from old version.\nAcElementListenerV1, AcElementListenerV2 and AcElementListenerV3 could be deprecated in the future without break the code of the AcElementListenerV4.",
       "parentUuid": "d159dad9_8c925a4f",
+      "range": {
+        "startLine": 28,
+        "startChar": 17,
+        "endLine": 28,
+        "endChar": 55
+      },
+      "revId": "5ba17489da76d1012c376efacd1f087a8a8fda25",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "28a2c29a_48fe15c6",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/api/impl/AutomationCompositionElementListenerV3.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-04-16T09:29:18Z",
+      "side": 1,
+      "message": "this doesn\u0027t really answer it - it was about duplicated code in an interface, not about the implementation.",
+      "parentUuid": "921b2b36_07e39f32",
       "range": {
         "startLine": 28,
         "startChar": 17,
