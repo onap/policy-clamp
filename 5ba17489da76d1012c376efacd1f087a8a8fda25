@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "51698715_9b2212a5",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/api/impl/AcElementListenerV3.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-04-16T07:24:22Z",
+      "side": 1,
+      "message": "shouldn\u0027t this be the other way around? V4 extends V3 for retro compatibility?",
+      "range": {
+        "startLine": 35,
+        "startChar": 51,
+        "endLine": 36,
+        "endChar": 69
+      },
+      "revId": "5ba17489da76d1012c376efacd1f087a8a8fda25",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d159dad9_8c925a4f",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/api/impl/AutomationCompositionElementListenerV3.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-04-16T07:24:22Z",
+      "side": 1,
+      "message": "this could extend the original listener interface and then add prepare() method to avoid duplication.",
+      "range": {
+        "startLine": 28,
+        "startChar": 17,
+        "endLine": 28,
+        "endChar": 55
+      },
+      "revId": "5ba17489da76d1012c376efacd1f087a8a8fda25",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
