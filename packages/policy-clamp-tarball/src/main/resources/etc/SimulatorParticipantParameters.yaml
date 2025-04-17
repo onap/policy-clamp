@@ -20,6 +20,7 @@ participant:
     reportingTimeIntervalMs: 120000
     description: Participant Description
     participantId: ${participantId:101c62b3-8918-41b9-a747-d21eb79c6c90}
+    threadPoolSize: 10
     clampAutomationCompositionTopics:
       topicSources:
         - topic: ${participant.intermediaryParameters.topics.operationTopic}
