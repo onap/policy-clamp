@@ -36,6 +36,7 @@ import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
+import org.onap.policy.clamp.acm.participant.intermediary.main.parameters.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AcElementDeploy;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
@@ -48,11 +49,17 @@ class ThreadHandlerTest {
 
     private static final int TIMEOUT = 400;
 
+    private ThreadHandler createThreadHandler(AutomationCompositionElementListener listener,
+            ParticipantIntermediaryApi intermediaryApi) {
+        return new ThreadHandler(listener, intermediaryApi, mock(CacheProvider.class),
+                CommonTestData.getParticipantParameters());
+    }
+
     @Test
     void testPrime() throws PfModelException, IOException {
         var listener = mock(AutomationCompositionElementListener.class);
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        try (var threadHandler = new ThreadHandler(listener, intermediaryApi, mock(CacheProvider.class))) {
+        try (var threadHandler = createThreadHandler(listener, intermediaryApi)) {
 
             var compositionId = UUID.randomUUID();
             var messageId = UUID.randomUUID();
@@ -70,7 +77,7 @@ class ThreadHandlerTest {
     void testPrimeException() throws PfModelException, IOException {
         var listener = mock(AutomationCompositionElementListener.class);
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        try (var threadHandler = new ThreadHandler(listener, intermediaryApi, mock(CacheProvider.class))) {
+        try (var threadHandler = createThreadHandler(listener, intermediaryApi)) {
 
             var compositionId = UUID.randomUUID();
             var composition = new CompositionDto(compositionId, Map.of(), Map.of());
@@ -92,7 +99,7 @@ class ThreadHandlerTest {
     void testDeploy() throws PfModelException, IOException {
         var listener = mock(AutomationCompositionElementListener.class);
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        try (var threadHandler = new ThreadHandler(listener, intermediaryApi, mock(CacheProvider.class))) {
+        try (var threadHandler = createThreadHandler(listener, intermediaryApi)) {
 
             Map<String, Object> properties = Map.of("key", "value");
             var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
@@ -135,7 +142,7 @@ class ThreadHandlerTest {
     void testDeployException() throws PfModelException, IOException {
         var listener = mock(AutomationCompositionElementListener.class);
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        try (var threadHandler = new ThreadHandler(listener, intermediaryApi, mock(CacheProvider.class))) {
+        try (var threadHandler = createThreadHandler(listener, intermediaryApi)) {
 
             Map<String, Object> properties = Map.of("key", "value");
             var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
@@ -197,7 +204,7 @@ class ThreadHandlerTest {
     void testLock() throws PfModelException, IOException {
         var listener = mock(AutomationCompositionElementListener.class);
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        try (var threadHandler = new ThreadHandler(listener, intermediaryApi, mock(CacheProvider.class))) {
+        try (var threadHandler = createThreadHandler(listener, intermediaryApi)) {
 
             Map<String, Object> properties = Map.of("key", "value");
             var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
@@ -222,7 +229,7 @@ class ThreadHandlerTest {
     void testLockException() throws PfModelException, IOException {
         var listener = mock(AutomationCompositionElementListener.class);
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        try (var threadHandler = new ThreadHandler(listener, intermediaryApi, mock(CacheProvider.class))) {
+        try (var threadHandler = createThreadHandler(listener, intermediaryApi)) {
 
             Map<String, Object> properties = Map.of("key", "value");
             var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
@@ -252,7 +259,7 @@ class ThreadHandlerTest {
     void testSubState() throws PfModelException, IOException {
         var listener = mock(AutomationCompositionElementListener.class);
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        try (var threadHandler = new ThreadHandler(listener, intermediaryApi, mock(CacheProvider.class))) {
+        try (var threadHandler = createThreadHandler(listener, intermediaryApi)) {
 
             Map<String, Object> properties = Map.of("key", "value");
             var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
@@ -284,7 +291,7 @@ class ThreadHandlerTest {
     void testSubStateException() throws PfModelException, IOException {
         var listener = mock(AutomationCompositionElementListener.class);
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
-        try (var threadHandler = new ThreadHandler(listener, intermediaryApi, mock(CacheProvider.class))) {
+        try (var threadHandler = createThreadHandler(listener, intermediaryApi)) {
 
             Map<String, Object> properties = Map.of("key", "value");
             var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),

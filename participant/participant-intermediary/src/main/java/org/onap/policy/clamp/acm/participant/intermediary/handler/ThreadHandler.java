@@ -29,12 +29,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.participant.intermediary.api.AutomationCompositionElementListener;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
+import org.onap.policy.clamp.acm.participant.intermediary.parameters.ParticipantParameters;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
@@ -45,7 +45,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
 public class ThreadHandler implements Closeable {
     private static final Logger LOGGER = LoggerFactory.getLogger(ThreadHandler.class);
 
@@ -55,8 +54,24 @@ public class ThreadHandler implements Closeable {
 
     private final Map<UUID, Future<?>> executionMap = new ConcurrentHashMap<>();
 
-    private final ExecutorService executor =
-            Context.taskWrapping(Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()));
+    private final ExecutorService executor;
+
+    /**
+     * Constructor.
+     *
+     * @param listener the AutomationComposition ElementListener
+     * @param intermediaryApi the intermediaryApi
+     * @param cacheProvider the CacheProvider
+     * @param parameters the parameters
+     */
+    public ThreadHandler(AutomationCompositionElementListener listener, ParticipantIntermediaryApi intermediaryApi,
+            CacheProvider cacheProvider, ParticipantParameters parameters) {
+        this.listener = listener;
+        this.intermediaryApi = intermediaryApi;
+        this.cacheProvider = cacheProvider;
+        executor = Context.taskWrapping(Executors.newFixedThreadPool(
+                parameters.getIntermediaryParameters().getNumThreads()));
+    }
 
     /**
      * Handle a deploy on a automation composition element.
