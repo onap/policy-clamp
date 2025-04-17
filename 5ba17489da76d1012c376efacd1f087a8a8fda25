@@ -72,6 +72,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8268c9aa_a675d890",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/api/impl/AcElementListenerV3.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2025-04-17T11:35:14Z",
+      "side": 1,
+      "message": "https://docs.onap.org/projects/onap-policy-parent/en/latest/clamp/acm/acm-participant-guide.html#interfaces-to-implement",
+      "parentUuid": "168150f0_dd273f15",
+      "range": {
+        "startLine": 35,
+        "startChar": 51,
+        "endLine": 36,
+        "endChar": 69
+      },
+      "revId": "5ba17489da76d1012c376efacd1f087a8a8fda25",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d159dad9_8c925a4f",
@@ -133,6 +157,30 @@
       "side": 1,
       "message": "this doesn\u0027t really answer it - it was about duplicated code in an interface, not about the implementation.",
       "parentUuid": "921b2b36_07e39f32",
+      "range": {
+        "startLine": 28,
+        "startChar": 17,
+        "endLine": 28,
+        "endChar": 55
+      },
+      "revId": "5ba17489da76d1012c376efacd1f087a8a8fda25",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0729a119_ff8b5f6d",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/api/impl/AutomationCompositionElementListenerV3.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2025-04-17T11:35:14Z",
+      "side": 1,
+      "message": "AcElementListenerV1 extends AcElementListenerV2\nAcElementListenerV2 extends AcElementListenerV3",
+      "parentUuid": "28a2c29a_48fe15c6",
       "range": {
         "startLine": 28,
         "startChar": 17,
