@@ -148,7 +148,7 @@ class MessageProviderTest {
         var messageRepository = mock(MessageRepository.class);
         var instanceId = UUID.randomUUID();
         var jpaMessage = new JpaMessage();
-        when(messageRepository.findByIdentificationIdOrderByLastMsgDesc(instanceId.toString()))
+        when(messageRepository.findByIdentificationIdOrderByLastMsgAsc(instanceId.toString()))
                 .thenReturn(List.of(jpaMessage));
         var messageProvider = new MessageProvider(messageRepository, mock(MessageJobRepository.class));
         var result = messageProvider.getAllMessages(instanceId);

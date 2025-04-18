@@ -26,5 +26,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MessageRepository extends JpaRepository<JpaMessage, String> {
 
-    List<JpaMessage> findByIdentificationIdOrderByLastMsgDesc(String identificationId);
+    List<JpaMessage> findByIdentificationIdOrderByLastMsgAsc(String identificationId);
 }

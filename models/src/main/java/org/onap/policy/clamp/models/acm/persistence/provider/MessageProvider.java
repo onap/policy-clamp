@@ -102,6 +102,7 @@ public class MessageProvider {
             for (var element : instance.getElements()) {
                 var jpa = new JpaMessage();
                 jpa.setIdentificationId(instance.getAutomationCompositionId().toString());
+                jpa.setLastMsg(Timestamp.from(message.getTimestamp()));
                 var doc = from(message);
                 doc.setInstanceId(instance.getAutomationCompositionId());
                 doc.setUseState(element.getUseState());
@@ -129,6 +130,7 @@ public class MessageProvider {
                 if (elementState != null && elementState.getParticipantId().equals(message.getParticipantId())) {
                     var jpa = new JpaMessage();
                     jpa.setIdentificationId(message.getCompositionId().toString());
+                    jpa.setLastMsg(Timestamp.from(message.getTimestamp()));
                     var doc = from(message);
                     doc.setOutProperties(element.getOutProperties());
                     doc.setAcElementDefinitionId(element.getAcElementDefinitionId());
@@ -162,7 +164,7 @@ public class MessageProvider {
 
     @Transactional(readOnly = true)
     public List<DocMessage> getAllMessages(UUID identificationId) {
-        var result = messageRepository.findByIdentificationIdOrderByLastMsgDesc(identificationId.toString());
+        var result = messageRepository.findByIdentificationIdOrderByLastMsgAsc(identificationId.toString());
         return result.stream().map(JpaMessage::toAuthorative).toList();
     }
 
