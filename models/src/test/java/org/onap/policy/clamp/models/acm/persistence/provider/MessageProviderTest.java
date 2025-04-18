@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2025 Nordix Foundation.
+ * Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -148,7 +148,7 @@ class MessageProviderTest {
         var messageRepository = mock(MessageRepository.class);
         var instanceId = UUID.randomUUID();
         var jpaMessage = new JpaMessage();
-        when(messageRepository.findByIdentificationIdOrderByLastMsgDesc(instanceId.toString()))
+        when(messageRepository.findByIdentificationIdOrderByLastMsgAsc(instanceId.toString()))
                 .thenReturn(List.of(jpaMessage));
         var messageProvider = new MessageProvider(messageRepository, mock(MessageJobRepository.class));
         var result = messageProvider.getAllMessages(instanceId);
