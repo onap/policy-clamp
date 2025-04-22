@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c98aea6e_2429aa2d",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/persistence/provider/MessageProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-04-22T08:22:24Z",
+      "side": 1,
+      "message": "update to OpenInfra",
+      "range": {
+        "startLine": 3,
+        "startChar": 22,
+        "endLine": 3,
+        "endChar": 40
+      },
+      "revId": "4f8b5819993349958bd33a53b045c148520a1dcd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e1fbad96_361b0559",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/persistence/repository/MessageRepository.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-04-22T08:22:24Z",
+      "side": 1,
+      "message": "update to OpenInfra",
+      "range": {
+        "startLine": 3,
+        "startChar": 22,
+        "endLine": 3,
+        "endChar": 40
+      },
+      "revId": "4f8b5819993349958bd33a53b045c148520a1dcd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b2ccd2b5_55c028af",
+        "filename": "models/src/test/java/org/onap/policy/clamp/models/acm/persistence/provider/MessageProviderTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-04-22T08:22:24Z",
+      "side": 1,
+      "message": "update to OpenInfra",
+      "range": {
+        "startLine": 3,
+        "startChar": 22,
+        "endLine": 3,
+        "endChar": 40
+      },
+      "revId": "4f8b5819993349958bd33a53b045c148520a1dcd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
