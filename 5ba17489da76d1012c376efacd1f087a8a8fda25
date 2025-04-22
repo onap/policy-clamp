@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e8dd0562_4bc96ca2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2025-04-22T09:07:28Z",
+      "side": 1,
+      "message": "Merging this one, we can discuss internally on the versioning strategy of intermediary abstract classes in detail .",
+      "revId": "5ba17489da76d1012c376efacd1f087a8a8fda25",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "51698715_9b2212a5",
