@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023-2024 Nordix Foundation.
+ *  Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -260,8 +260,8 @@ class ThreadHandlerTest {
             var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(),
                 properties, properties);
             var messageId = UUID.randomUUID();
-            threadHandler.prepare(messageId, compositionElement, instanceElement);
-            verify(listener, timeout(TIMEOUT)).prepare(compositionElement, instanceElement);
+            threadHandler.prepare(messageId, compositionElement, instanceElement, 0);
+            verify(listener, timeout(TIMEOUT)).prepare(compositionElement, instanceElement, 0);
 
             clearInvocations(listener);
             threadHandler.review(messageId, compositionElement, instanceElement);
@@ -295,9 +295,9 @@ class ThreadHandlerTest {
             var element = new AcElementDeploy();
             element.setId(elementId);
             doThrow(new PfModelException(Status.INTERNAL_SERVER_ERROR, "Error")).when(listener)
-                .prepare(compositionElement, instanceElement);
+                .prepare(compositionElement, instanceElement, 0);
             var messageId = UUID.randomUUID();
-            threadHandler.prepare(messageId, compositionElement, instanceElement);
+            threadHandler.prepare(messageId, compositionElement, instanceElement, 0);
             verify(intermediaryApi, timeout(TIMEOUT)).updateAutomationCompositionElementState(instanceId, elementId,
                 DeployState.UNDEPLOYED, null, StateChangeResult.FAILED,
                 "Automation composition element prepare Pre Deploy failed");

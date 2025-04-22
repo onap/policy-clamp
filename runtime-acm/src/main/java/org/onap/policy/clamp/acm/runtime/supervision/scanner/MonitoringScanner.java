@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2025 Nordix Foundation.
+ * Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -109,11 +109,11 @@ public class MonitoringScanner {
             return;
         }
 
-        if (DeployState.MIGRATING.equals(automationComposition.getDeployState())) {
+        if (DeployState.MIGRATING.equals(automationComposition.getDeployState())
+                || SubState.PREPARING.equals(automationComposition.getSubState())) {
             stageScanner.scanStage(automationComposition, serviceTemplate, updateSync);
         } else if (DeployState.UPDATING.equals(automationComposition.getDeployState())
                 || SubState.REVIEWING.equals(automationComposition.getSubState())
-                || SubState.PREPARING.equals(automationComposition.getSubState())
                 || SubState.MIGRATION_PRECHECKING.equals(automationComposition.getSubState())) {
             simpleScanner.simpleScan(automationComposition, updateSync);
         } else {

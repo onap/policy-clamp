@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023-2025 Nordix Foundation.
+ *  Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -437,10 +437,12 @@ class SupervisionAcHandlerTest {
                 mock(AutomationCompositionDeployPublisher.class), mock(AutomationCompositionStateChangePublisher.class),
                 mock(AcElementPropertiesPublisher.class), mock(AutomationCompositionMigrationPublisher.class),
                 acPreparePublisher, mock(MessageProvider.class), mock(EncryptionUtils.class));
+        var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
+        var acDefinition = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Migrate");
-        handler.prepare(automationComposition);
-        verify(acPreparePublisher, timeout(1000)).sendPrepare(any(AutomationComposition.class));
+        handler.prepare(automationComposition, acDefinition);
+        verify(acPreparePublisher, timeout(1000)).sendPrepare(any(AutomationComposition.class), anyInt());
     }
 
     @Test

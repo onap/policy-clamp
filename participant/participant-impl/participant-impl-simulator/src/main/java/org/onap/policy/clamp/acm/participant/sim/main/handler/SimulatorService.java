@@ -55,6 +55,8 @@ public class SimulatorService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SimulatorService.class);
     private static final String INTERNAL_STATE = "InternalState";
+    private static final String MIGRATION_PROPERTY = "stage";
+    private static final String PREPARE_PROPERTY = "prepareStage";
 
     @Getter
     @Setter
@@ -358,6 +360,8 @@ public class SimulatorService {
      * @param instanceId the instanceId
      * @param elementId the elementId
      * @param stage the stage
+     * @param compositionInProperties in Properties from composition definition element
+     * @param instanceOutProperties in Properties from instance element
      */
     public void migrate(UUID instanceId, UUID elementId, int stage, Map<String, Object> compositionInProperties,
             Map<String, Object> instanceOutProperties) {
@@ -374,9 +378,9 @@ public class SimulatorService {
                     nextStage = Math.min(s, nextStage);
                 }
             }
-            instanceOutProperties.putIfAbsent("stage", new ArrayList<>());
+            instanceOutProperties.putIfAbsent(MIGRATION_PROPERTY, new ArrayList<>());
             @SuppressWarnings("unchecked")
-            var stageList = (List<Integer>) instanceOutProperties.get("stage");
+            var stageList = (List<Integer>) instanceOutProperties.get(MIGRATION_PROPERTY);
             stageList.add(stage);
             intermediaryApi.sendAcElementInfo(instanceId, elementId, null, null, instanceOutProperties);
             if (nextStage == 1000) {
@@ -421,16 +425,38 @@ public class SimulatorService {
      *
      * @param instanceId the instanceId
      * @param elementId the elementId
+     * @param stage the stage
+     * @param compositionInProperties in Properties from composition definition element
+     * @param instanceOutProperties in Properties from instance element
      */
-    public void prepare(UUID instanceId, UUID elementId) {
+    public void prepare(UUID instanceId, UUID elementId, int stage, Map<String, Object> compositionInProperties,
+            Map<String, Object> instanceOutProperties) {
         if (!execution(config.getPrepareTimerMs(),
                 "Current Thread prepare is Interrupted during execution {}", elementId)) {
             return;
         }
 
         if (config.isPrepare()) {
-            intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId,
-                    DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR, "Prepare completed");
+            var stageSet = ParticipantUtils.findStageSetPrepare(compositionInProperties);
+            var nextStage = 1000;
+            for (var s : stageSet) {
+                if (s > stage) {
+                    nextStage = Math.min(s, nextStage);
+                }
+            }
+            instanceOutProperties.putIfAbsent(PREPARE_PROPERTY, new ArrayList<>());
+            @SuppressWarnings("unchecked")
+            var stageList = (List<Integer>) instanceOutProperties.get(PREPARE_PROPERTY);
+            stageList.add(stage);
+            intermediaryApi.sendAcElementInfo(instanceId, elementId, null, null, instanceOutProperties);
+            if (nextStage == 1000) {
+                intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId,
+                        DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR, "Prepare completed");
+            } else {
+                intermediaryApi.updateAutomationCompositionElementStage(
+                        instanceId, elementId,
+                        StateChangeResult.NO_ERROR, nextStage, "stage " + stage + " Prepared");
+            }
         } else {
             intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId,
                     DeployState.UNDEPLOYED, null, StateChangeResult.FAILED, "Prepare failed");

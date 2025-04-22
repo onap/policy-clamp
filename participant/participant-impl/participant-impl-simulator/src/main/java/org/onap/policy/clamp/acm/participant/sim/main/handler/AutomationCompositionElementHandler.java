@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024-2025 Nordix Foundation.
+ *  Copyright (C) 2024-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionElement
 import org.onap.policy.clamp.acm.participant.intermediary.api.ElementState;
 import org.onap.policy.clamp.acm.participant.intermediary.api.InstanceElementDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
-import org.onap.policy.clamp.acm.participant.intermediary.api.impl.AcElementListenerV3;
+import org.onap.policy.clamp.acm.participant.intermediary.api.impl.AcElementListenerV4;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -38,13 +38,13 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 @Component
-public class AutomationCompositionElementHandlerV3 extends AcElementListenerV3 {
+public class AutomationCompositionElementHandler extends AcElementListenerV4 {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AutomationCompositionElementHandlerV3.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AutomationCompositionElementHandler.class);
 
     private final SimulatorService simulatorService;
 
-    public AutomationCompositionElementHandlerV3(ParticipantIntermediaryApi intermediaryApi,
+    public AutomationCompositionElementHandler(ParticipantIntermediaryApi intermediaryApi,
         SimulatorService simulatorService) {
         super(intermediaryApi);
         this.simulatorService = simulatorService;
@@ -145,9 +145,10 @@ public class AutomationCompositionElementHandlerV3 extends AcElementListenerV3 {
     }
 
     @Override
-    public void prepare(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
+    public void prepare(CompositionElementDto compositionElement, InstanceElementDto instanceElement, int stage) {
         LOGGER.debug("prepare call compositionElement: {}, instanceElement: {}", compositionElement, instanceElement);
-        simulatorService.prepare(instanceElement.instanceId(), instanceElement.elementId());
+        simulatorService.prepare(instanceElement.instanceId(), instanceElement.elementId(),
+                stage, compositionElement.inProperties(), instanceElement.outProperties());
     }
 
     @Override

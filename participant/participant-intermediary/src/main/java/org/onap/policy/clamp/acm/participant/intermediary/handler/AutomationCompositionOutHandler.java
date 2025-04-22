@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023-2024 Nordix Foundation.
+ *  Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -155,11 +155,9 @@ public class AutomationCompositionOutHandler {
             return;
         }
 
-        if (deployState != null && !SubState.NONE.equals(element.getSubState())) {
-            handleSubState(automationComposition, element);
+        if (!SubState.NONE.equals(element.getSubState())) {
             if (!StateChangeResult.NO_ERROR.equals(stateChangeResult)) {
-                stateChangeResult = StateChangeResult.NO_ERROR;
-                LOGGER.warn("SubState has always NO_ERROR result!");
+                handleSubState(automationComposition, element, stateChangeResult);
             }
         } else if (deployState != null) {
             handleDeployState(automationComposition, element, deployState, stateChangeResult);
@@ -225,7 +223,11 @@ public class AutomationCompositionOutHandler {
         }
     }
 
-    private void handleSubState(AutomationComposition automationComposition, AutomationCompositionElement element) {
+    private void handleSubState(AutomationComposition automationComposition, AutomationCompositionElement element,
+            StateChangeResult stateChangeResult) {
+        if (StateChangeResult.FAILED.equals(stateChangeResult)) {
+            return;
+        }
         element.setSubState(SubState.NONE);
         var checkOpt = automationComposition.getElements().values().stream()
                 .filter(acElement -> !SubState.NONE.equals(acElement.getSubState())).findAny();

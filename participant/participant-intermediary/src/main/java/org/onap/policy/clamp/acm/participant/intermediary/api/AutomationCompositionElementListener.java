@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2024 Nordix Foundation.
+ *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -106,6 +106,6 @@ public interface AutomationCompositionElementListener {
     void review(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
         throws PfModelException;
 
-    void prepare(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
+    void prepare(CompositionElementDto compositionElement, InstanceElementDto instanceElement, int nextStage)
         throws PfModelException;
 }
