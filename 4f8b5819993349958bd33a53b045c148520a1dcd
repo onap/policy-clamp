@@ -24,6 +24,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c63c4ded_253878ab",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/persistence/provider/MessageProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2025-04-22T08:48:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c98aea6e_2429aa2d",
+      "range": {
+        "startLine": 3,
+        "startChar": 22,
+        "endLine": 3,
+        "endChar": 40
+      },
+      "revId": "4f8b5819993349958bd33a53b045c148520a1dcd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e1fbad96_361b0559",
@@ -47,6 +71,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6f14a747_3d2d2c10",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/persistence/repository/MessageRepository.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2025-04-22T08:48:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e1fbad96_361b0559",
+      "range": {
+        "startLine": 3,
+        "startChar": 22,
+        "endLine": 3,
+        "endChar": 40
+      },
+      "revId": "4f8b5819993349958bd33a53b045c148520a1dcd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b2ccd2b5_55c028af",
@@ -60,6 +108,30 @@
       "writtenOn": "2025-04-22T08:22:24Z",
       "side": 1,
       "message": "update to OpenInfra",
+      "range": {
+        "startLine": 3,
+        "startChar": 22,
+        "endLine": 3,
+        "endChar": 40
+      },
+      "revId": "4f8b5819993349958bd33a53b045c148520a1dcd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5d8ba1c5_a8142137",
+        "filename": "models/src/test/java/org/onap/policy/clamp/models/acm/persistence/provider/MessageProviderTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2025-04-22T08:48:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b2ccd2b5_55c028af",
       "range": {
         "startLine": 3,
         "startChar": 22,
