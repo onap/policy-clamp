@@ -1,6 +1,6 @@
 <!--
   ============LICENSE_START=======================================================
-  Copyright (C) 2021-2025 Nordix Foundation.
+  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
     <parent>
         <groupId>org.onap.policy.parent</groupId>
         <artifactId>integration</artifactId>
-        <version>5.1.2-SNAPSHOT</version>
+        <version>5.1.2</version>
         <relativePath />
     </parent>
     <groupId>org.onap.policy.clamp</groupId>
@@ -52,8 +52,8 @@
         o policy-clamp-participant-impl-kserve: A standard participant for Kserve
     </description>
     <properties>
-        <policy.common.version>3.1.2-SNAPSHOT</policy.common.version>
-        <policy.models.version>4.1.2-SNAPSHOT</policy.models.version>
+        <policy.common.version>3.1.2</policy.common.version>
+        <policy.models.version>4.1.2</policy.models.version>
     </properties>
     <modules>
         <module>common</module>
