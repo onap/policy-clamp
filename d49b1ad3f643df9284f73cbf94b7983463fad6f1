@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2b73e515_71b05f70",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2025-04-24T08:56:58Z",
+      "side": 1,
+      "message": "Should we provide",
+      "revId": "d49b1ad3f643df9284f73cbf94b7983463fad6f1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f7c297b8_fde966f2",
+        "filename": "participant/participant-intermediary/src/main/java/org/onap/policy/clamp/acm/participant/intermediary/parameters/ParticipantIntermediaryParameters.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2025-04-24T08:56:58Z",
+      "side": 1,
+      "message": "Should this parameter placeholder be added to the properties file for reference? And can we define this parameter name like threadPoolSize or something for better understanding?",
+      "range": {
+        "startLine": 58,
+        "startChar": 16,
+        "endLine": 58,
+        "endChar": 27
+      },
+      "revId": "d49b1ad3f643df9284f73cbf94b7983463fad6f1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
