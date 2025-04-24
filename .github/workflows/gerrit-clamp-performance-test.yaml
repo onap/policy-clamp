@@ -87,6 +87,6 @@ jobs:
       - name: Archive JMeter logs
         uses: actions/upload-artifact@v4
         with:
-          name: acm-s3p-results
+          name: acm-s3p-jmeter-logs
           path: ${{ github.workspace }}/testsuites/automate-s3p-test/jmeter.log
 
