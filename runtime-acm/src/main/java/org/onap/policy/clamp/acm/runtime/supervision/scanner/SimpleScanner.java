@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2025 Nordix Foundation.
+ * Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup
 import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
+import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.document.concepts.DocMessage;
@@ -73,23 +74,28 @@ public class SimpleScanner extends AbstractScanner {
 
     private UpdateSync handleAcStateChange(AutomationComposition automationComposition, DocMessage message) {
         var result = new UpdateSync();
+        var element = automationComposition.getElements().get(message.getInstanceElementId());
+        if (element == null || !validateStateMessage(automationComposition, message)) {
+            return result;
+        }
+        result.setUpdated(true);
         if (StateChangeResult.FAILED.equals(message.getStateChangeResult())) {
             automationComposition.setStateChangeResult(StateChangeResult.FAILED);
-            result.setUpdated(true);
             result.setToBeSync(true);
         }
-        var element = automationComposition.getElements().get(message.getInstanceElementId());
-        if (element != null) {
-            element.setDeployState(message.getDeployState());
-            element.setLockState(message.getLockState());
-            if (message.getStage() == null) {
-                element.setSubState(SubState.NONE);
-            }
-            element.setStage(message.getStage());
-            element.setMessage(message.getMessage());
-            result.setUpdated(true);
+        element.setDeployState(message.getDeployState());
+        element.setLockState(message.getLockState());
+        if (message.getStage() == null) {
+            element.setSubState(SubState.NONE);
         }
+        element.setStage(message.getStage());
+        element.setMessage(message.getMessage());
         return result;
+    }
+
+    private boolean validateStateMessage(AutomationComposition automationComposition, DocMessage message) {
+        return !DeployState.DELETED.equals(message.getDeployState())
+                || (DeployState.DELETING.equals(automationComposition.getDeployState()));
     }
 
     private UpdateSync handleOutProperties(AutomationComposition automationComposition, DocMessage message) {

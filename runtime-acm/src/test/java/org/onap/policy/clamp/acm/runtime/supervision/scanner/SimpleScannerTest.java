@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2025 Nordix Foundation.
+ * Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -118,6 +118,14 @@ class SimpleScannerTest {
         result = simpleScanner.scanMessage(automationComposition, docMessage);
         assertFalse(result.isUpdated());
         assertFalse(result.isToBeSync());
+
+        // wrong Delete State
+        docMessage.setMessageType(ParticipantMessageType.AUTOMATION_COMPOSITION_STATECHANGE_ACK);
+        docMessage.setInstanceElementId(elementId);
+        docMessage.setDeployState(DeployState.DELETED);
+        result = simpleScanner.scanMessage(automationComposition, docMessage);
+        assertFalse(result.isUpdated());
+        assertFalse(result.isToBeSync());
     }
 
     @Test
@@ -152,6 +160,34 @@ class SimpleScannerTest {
         docMessage.setInstanceElementId(elementId);
         docMessage.setDeployState(DeployState.DEPLOYED);
         docMessage.setLockState(LockState.LOCKED);
+        var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
+        var acProvider = mock(AutomationCompositionProvider.class);
+        var encryptionUtils = new EncryptionUtils(acRuntimeParameterGroup);
+        var simpleScanner = new SimpleScanner(acProvider, mock(ParticipantSyncPublisher.class),
+                acRuntimeParameterGroup, encryptionUtils);
+        var result = simpleScanner.scanMessage(automationComposition, docMessage);
+        assertTrue(result.isUpdated());
+        assertFalse(result.isToBeSync());
+        assertEquals(docMessage.getDeployState(),
+                automationComposition.getElements().get(elementId).getDeployState());
+        assertEquals(docMessage.getLockState(),
+                automationComposition.getElements().get(elementId).getLockState());
+    }
+
+
+    @Test
+    void testScanMessageStateChangeDelete() {
+        var automationComposition = createDeploying();
+        automationComposition.setDeployState(DeployState.DELETING);
+        automationComposition.setLockState(LockState.NONE);
+        var elementId = automationComposition.getElements().values().iterator().next().getId();
+        var docMessage = new DocMessage();
+        docMessage.setMessageType(ParticipantMessageType.AUTOMATION_COMPOSITION_DEPLOY_ACK);
+        docMessage.setStateChangeResult(StateChangeResult.NO_ERROR);
+        docMessage.setInstanceId(INSTANCE_ID);
+        docMessage.setInstanceElementId(elementId);
+        docMessage.setDeployState(DeployState.DELETED);
+        docMessage.setLockState(LockState.NONE);
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
         var acProvider = mock(AutomationCompositionProvider.class);
         var encryptionUtils = new EncryptionUtils(acRuntimeParameterGroup);

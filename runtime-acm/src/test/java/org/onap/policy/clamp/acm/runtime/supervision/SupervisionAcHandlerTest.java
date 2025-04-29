@@ -96,7 +96,7 @@ class SupervisionAcHandlerTest {
                 .thenReturn(Optional.of(automationComposition));
         automationCompositionAckMessage.setAutomationCompositionResultMap(null);
         handler.handleAutomationCompositionStateChangeAckMessage(automationCompositionAckMessage);
-        verify(messageProvider, times(0)).save(any(AutomationCompositionDeployAck.class));
+        verify(messageProvider).save(any(AutomationCompositionDeployAck.class));
     }
 
     @Test

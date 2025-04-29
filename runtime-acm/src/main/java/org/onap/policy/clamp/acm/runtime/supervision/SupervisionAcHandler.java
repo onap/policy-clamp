@@ -281,22 +281,14 @@ public class SupervisionAcHandler {
 
         if (automationCompositionAckMessage.getAutomationCompositionResultMap() == null
                 || automationCompositionAckMessage.getAutomationCompositionResultMap().isEmpty()) {
-            if (DeployState.DELETING.equals(automationComposition.getDeployState())) {
-                // scenario automationComposition has never deployed
-                automationCompositionAckMessage.setAutomationCompositionResultMap(new HashMap<>());
-                for (var element : automationComposition.getElements().values()) {
-                    if (element.getParticipantId().equals(automationCompositionAckMessage.getParticipantId())) {
-                        var acElement = new AcElementDeployAck(DeployState.DELETED, LockState.NONE,
-                                null, null, Map.of(), true, "");
-                        automationCompositionAckMessage.getAutomationCompositionResultMap()
-                                .put(element.getId(), acElement);
-                    }
+            // scenario automationComposition has never been deployed
+            automationCompositionAckMessage.setAutomationCompositionResultMap(new HashMap<>());
+            for (var element : automationComposition.getElements().values()) {
+                if (element.getParticipantId().equals(automationCompositionAckMessage.getParticipantId())) {
+                    var acElement =
+                            new AcElementDeployAck(DeployState.DELETED, LockState.NONE, null, null, Map.of(), true, "");
+                    automationCompositionAckMessage.getAutomationCompositionResultMap().put(element.getId(), acElement);
                 }
-            } else {
-                LOGGER.warn("Empty AutomationCompositionResultMap  {} {}",
-                        automationCompositionAckMessage.getAutomationCompositionId(),
-                        automationCompositionAckMessage.getMessage());
-                return;
             }
         }
         messageProvider.save(automationCompositionAckMessage);
