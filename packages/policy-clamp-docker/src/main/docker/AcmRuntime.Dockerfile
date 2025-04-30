@@ -50,6 +50,20 @@ WORKDIR $POLICY_HOME
 COPY --chown=policy:policy acm-runtime.sh bin/
 COPY --chown=policy:policy /maven/policy-clamp-runtime-acm.jar /app/app.jar
 
+RUN if python -c "import setuptools" 2>/dev/null; then \
+      pip uninstall -y setuptools; \
+    else \
+      echo "setuptools not installed, skipping uninstall."; \
+    fi
+
+RUN if python3 -c "import pip" 2>/dev/null; then \
+      python3 -m pip uninstall -y pip; \
+      echo "pip uninstalled."; \
+    else \
+      echo "pip not installed, skipping uninstall."; \
+    fi && \
+    rm -rf /usr/bin/pip* /usr/local/bin/pip*
+
 RUN chmod 755 bin/*.sh
 
 EXPOSE 6969
