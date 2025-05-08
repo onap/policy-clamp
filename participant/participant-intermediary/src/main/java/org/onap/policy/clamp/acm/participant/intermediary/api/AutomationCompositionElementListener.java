@@ -27,85 +27,98 @@ import org.onap.policy.models.base.PfModelException;
  */
 public interface AutomationCompositionElementListener {
     /**
-     * Handle a deploy on a automation composition element.
+     * Handle a deployment on an automation composition element.
      *
      * @param compositionElement the information of the Automation Composition Definition Element
-     * @param instanceElement the information of the Automation Composition Instance Element
+     * @param instanceElement    the information of the Automation Composition Instance Element
      * @throws PfModelException from Policy framework
      */
     void deploy(CompositionElementDto compositionElement, InstanceElementDto instanceElement) throws PfModelException;
 
     /**
-     * Handle an udeploy on a automation composition element.
+     * Handle an udeploy on an automation composition element.
      *
      * @param compositionElement the information of the Automation Composition Definition Element
-     * @param instanceElement the information of the Automation Composition Instance Element
+     * @param instanceElement    the information of the Automation Composition Instance Element
      * @throws PfModelException in case of a model exception
      */
     void undeploy(CompositionElementDto compositionElement, InstanceElementDto instanceElement) throws PfModelException;
 
     /**
-     * Handle a lock on a automation composition element.
+     * Handle a lock on an automation composition element.
      *
      * @param compositionElement the information of the Automation Composition Definition Element
-     * @param instanceElement the information of the Automation Composition Instance Element
+     * @param instanceElement    the information of the Automation Composition Instance Element
      * @throws PfModelException in case of a model exception
      */
     void lock(CompositionElementDto compositionElement, InstanceElementDto instanceElement) throws PfModelException;
 
     /**
-     * Handle an unlock on a automation composition element.
+     * Handle an unlock on an automation composition element.
      *
      * @param compositionElement the information of the Automation Composition Definition Element
-     * @param instanceElement the information of the Automation Composition Instance Element
+     * @param instanceElement    the information of the Automation Composition Instance Element
      * @throws PfModelException in case of a model exception
      */
     void unlock(CompositionElementDto compositionElement, InstanceElementDto instanceElement) throws PfModelException;
 
     /**
-     * Handle a delete on a automation composition element.
+     * Handle delete on an automation composition element.
      *
      * @param compositionElement the information of the Automation Composition Definition Element
-     * @param instanceElement the information of the Automation Composition Instance Element
+     * @param instanceElement    the information of the Automation Composition Instance Element
      * @throws PfModelException in case of a model exception
      */
     void delete(CompositionElementDto compositionElement, InstanceElementDto instanceElement) throws PfModelException;
 
     /**
-     * Handle an update on a automation composition element.
+     * Handle an update on an automation composition element.
      *
-     * @param compositionElement the information of the Automation Composition Definition Element
-     * @param instanceElement the information of the Automation Composition Instance Element
+     * @param compositionElement     the information of the Automation Composition Definition Element
+     * @param instanceElement        the information of the Automation Composition Instance Element
      * @param instanceElementUpdated the information of the Automation Composition Instance Element updated
      * @throws PfModelException from Policy framework
      */
     void update(CompositionElementDto compositionElement, InstanceElementDto instanceElement,
-            InstanceElementDto instanceElementUpdated) throws PfModelException;
+                InstanceElementDto instanceElementUpdated) throws PfModelException;
 
     void prime(CompositionDto composition) throws PfModelException;
 
     void deprime(CompositionDto composition) throws PfModelException;
 
     /**
-     * Handle an update on a automation composition element.
+     * Handle an update on an automation composition element.
      *
      * @param compositionElement       the information of the Automation Composition Definition Element
      * @param compositionElementTarget the information of the Automation Composition Definition Element Target
      * @param instanceElement          the information of the Automation Composition Instance Element
      * @param instanceElementMigrate   the information of the Automation Composition Instance Element updated
-     * @param nextStage                    the next stage
+     * @param nextStage                the next stage
      * @throws PfModelException from Policy framework
      */
     void migrate(CompositionElementDto compositionElement, CompositionElementDto compositionElementTarget,
-            InstanceElementDto instanceElement, InstanceElementDto instanceElementMigrate,
-            int nextStage) throws PfModelException;
+                 InstanceElementDto instanceElement, InstanceElementDto instanceElementMigrate,
+                 int nextStage) throws PfModelException;
 
     void migratePrecheck(CompositionElementDto compositionElement, CompositionElementDto compositionElementTarget,
-            InstanceElementDto instanceElement, InstanceElementDto instanceElementMigrate) throws PfModelException;
+                         InstanceElementDto instanceElement, InstanceElementDto instanceElementMigrate)
+        throws PfModelException;
 
     void review(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
         throws PfModelException;
 
     void prepare(CompositionElementDto compositionElement, InstanceElementDto instanceElement, int nextStage)
+        throws PfModelException;
+
+    /**
+     * Rollback migration changes done to a composition.
+     *
+     * @param compositionElement the composition to roll back the changes
+     * @param instanceElement    instance to roll back the changes
+     * @param nextStage         in which stage should the instance be after the rollback
+     * @throws PfModelException if anything goes wrong
+     */
+    void rollbackMigration(CompositionElementDto compositionElement,
+                           InstanceElementDto instanceElement, int nextStage)
         throws PfModelException;
 }

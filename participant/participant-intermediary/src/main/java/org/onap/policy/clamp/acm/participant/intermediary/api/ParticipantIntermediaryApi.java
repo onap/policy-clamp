@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2024 Nordix Foundation.
+ *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -38,7 +38,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 public interface ParticipantIntermediaryApi {
 
     /**
-     * Update the state of a AutomationComposition Instance Element.
+     * Update the state of an AutomationComposition Instance Element.
      *
      * @param instance the ID of the AutomationComposition Instance to update the state on
      * @param elementId the ID of the AutomationComposition Instance element to update the state on
@@ -51,7 +51,7 @@ public interface ParticipantIntermediaryApi {
             LockState lockState, StateChangeResult stateChangeResult, String message);
 
     /**
-     * Update the stage of a AutomationComposition Instance Element.
+     * Update the stage of an AutomationComposition Instance Element.
      *
      * @param instance the ID of the AutomationComposition Instance to update the state on
      * @param elementId the ID of the AutomationComposition Instance Element to update the state on
@@ -69,7 +69,7 @@ public interface ParticipantIntermediaryApi {
     Map<UUID, AutomationComposition> getAutomationCompositions();
 
     /**
-     * Get a copy of the AutomationComposition Instance by AutomationComposition Instance Id.
+     * Get a copy of the AutomationComposition Instance by AutomationComposition instanceId.
      *
      * @param instanceId the ID of the AutomationComposition Instance to update the state on
      * @return get the AutomationComposition Instance
@@ -77,7 +77,7 @@ public interface ParticipantIntermediaryApi {
     AutomationComposition getAutomationComposition(UUID instanceId);
 
     /**
-     * Get a copy of the AutomationCompositionElement by AutomationComposition Instance Id and elementId.
+     * Get a copy of the AutomationCompositionElement by AutomationComposition instanceId and elementId.
      *
      * @param instanceId the ID of the AutomationComposition Instance to update the state on
      * @param elementId the ID of the AutomationComposition Instance Element to update the state on
@@ -96,15 +96,15 @@ public interface ParticipantIntermediaryApi {
      * Get a copy of AutomationCompositionElementDefinitions of a composition.
      *
      * @param compositionId the composition id
-     * @return a Map by element definition Id of AutomationCompositionElementDefinitions
+     * @return a Map by element definition id of AutomationCompositionElementDefinitions
      */
     Map<ToscaConceptIdentifier, AutomationCompositionElementDefinition> getAcElementsDefinitions(UUID compositionId);
 
     /**
-     * Get a copy of the AutomationCompositionElementDefinition by compositionId and element definition Id.
+     * Get a copy of the AutomationCompositionElementDefinition by compositionId and element definition id.
      *
      * @param compositionId the composition id
-     * @param elementId the element definition Id
+     * @param elementId the element definition id
      * @return the AutomationCompositionElementDefinition
      */
     AutomationCompositionElementDefinition getAcElementDefinition(UUID compositionId, ToscaConceptIdentifier elementId);
@@ -125,13 +125,13 @@ public interface ParticipantIntermediaryApi {
      * Send Automation Composition Definition update Info to AC-runtime.
      *
      * @param compositionId the composition id
-     * @param elementId the element definition Id
+     * @param elementId the element definition id
      * @param outProperties the output Properties Map
      */
     void sendAcDefinitionInfo(UUID compositionId, ToscaConceptIdentifier elementId, Map<String, Object> outProperties);
 
     /**
-     * Update the state of a Automation Composition Definition.
+     * Update the state of an Automation Composition Definition.
      *
      * @param compositionId the composition id
      * @param state the state of Automation Composition Definition

@@ -51,7 +51,7 @@ public class AutomationCompositionElementHandler extends AcElementListenerV4 {
     }
 
     /**
-     * Handle a deploy on a automation composition element.
+     * Handle deploying an automation composition element.
      *
      * @param compositionElement the information of the Automation Composition Definition Element
      * @param instanceElement the information of the Automation Composition Instance Element
@@ -64,7 +64,7 @@ public class AutomationCompositionElementHandler extends AcElementListenerV4 {
     }
 
     /**
-     * Handle a automation composition element state change.
+     * Handle an automation composition element state change.
      *
      * @param compositionElement the information of the Automation Composition Definition Element
      * @param instanceElement the information of the Automation Composition Instance Element
@@ -155,5 +155,12 @@ public class AutomationCompositionElementHandler extends AcElementListenerV4 {
     public void review(CompositionElementDto compositionElement, InstanceElementDto instanceElement) {
         LOGGER.debug("review call compositionElement: {}, instanceElement: {}", compositionElement, instanceElement);
         simulatorService.review(instanceElement.instanceId(), instanceElement.elementId());
+    }
+
+    @Override
+    public void rollbackMigration(CompositionElementDto compositionElement,
+                                  InstanceElementDto instanceElement, int nextStage) {
+        LOGGER.debug("rollback call compositionElement: {}, instanceElement: {}", compositionElement, instanceElement);
+        simulatorService.rollback(instanceElement.instanceId(), instanceElement.elementId());
     }
 }
