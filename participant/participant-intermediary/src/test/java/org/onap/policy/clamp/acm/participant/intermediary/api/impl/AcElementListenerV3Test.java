@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024 Nordix Foundation.
+ *  Copyright (C) 2024-2025 OpenInfra Foundation Europe. All rights reserved.
   * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -162,6 +162,19 @@ class AcElementListenerV3Test {
         verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
                 instanceElement.elementId(), DeployState.UNDEPLOYED, null,
                 StateChangeResult.NO_ERROR, "Prepare completed");
+    }
+
+    @Test
+    void testRollbackMigration() {
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var acElementListenerV3 = createAcElementListenerV3(intermediaryApi);
+        var compositionElement = new CompositionElementDto(UUID.randomUUID(), new ToscaConceptIdentifier(),
+            Map.of(), Map.of());
+        var instanceElement = new InstanceElementDto(UUID.randomUUID(), UUID.randomUUID(), Map.of(), Map.of());
+        acElementListenerV3.rollbackMigration(compositionElement, instanceElement, 1);
+        verify(intermediaryApi).updateAutomationCompositionElementState(instanceElement.instanceId(),
+            instanceElement.elementId(), DeployState.DEPLOYED, null,
+            StateChangeResult.NO_ERROR, "Migration rollback done");
     }
 
     private AcElementListenerV3 createAcElementListenerV3(ParticipantIntermediaryApi intermediaryApi) {

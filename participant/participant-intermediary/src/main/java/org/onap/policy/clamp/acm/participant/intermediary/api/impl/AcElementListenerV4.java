@@ -94,26 +94,34 @@ public abstract class AcElementListenerV4 implements AutomationCompositionElemen
 
     @Override
     public void migratePrecheck(CompositionElementDto compositionElement,
-            CompositionElementDto compositionElementTarget, InstanceElementDto instanceElement,
-            InstanceElementDto instanceElementMigrate) throws PfModelException {
+                                CompositionElementDto compositionElementTarget, InstanceElementDto instanceElement,
+                                InstanceElementDto instanceElementMigrate) throws PfModelException {
         intermediaryApi.updateAutomationCompositionElementState(instanceElementMigrate.instanceId(),
-                instanceElementMigrate.elementId(), DeployState.DEPLOYED, null,
-                StateChangeResult.NO_ERROR, "Migration Precheck completed");
+            instanceElementMigrate.elementId(), DeployState.DEPLOYED, null,
+            StateChangeResult.NO_ERROR, "Migration Precheck completed");
     }
 
     @Override
     public void review(CompositionElementDto compositionElement, InstanceElementDto instanceElement)
-            throws PfModelException {
+        throws PfModelException {
         intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
-                instanceElement.elementId(), DeployState.DEPLOYED, null,
-                StateChangeResult.NO_ERROR, "Review completed");
+            instanceElement.elementId(), DeployState.DEPLOYED, null,
+            StateChangeResult.NO_ERROR, "Review completed");
     }
 
     @Override
     public void prepare(CompositionElementDto compositionElement, InstanceElementDto instanceElement, int nextStage)
-            throws PfModelException {
+        throws PfModelException {
         intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
-                instanceElement.elementId(), DeployState.UNDEPLOYED, null,
-                StateChangeResult.NO_ERROR, "Prepare completed");
+            instanceElement.elementId(), DeployState.UNDEPLOYED, null,
+            StateChangeResult.NO_ERROR, "Prepare completed");
+    }
+
+    @Override
+    public void rollbackMigration(CompositionElementDto compositionElement,
+                                  InstanceElementDto instanceElement, int nextStage) {
+        intermediaryApi.updateAutomationCompositionElementState(instanceElement.instanceId(),
+            instanceElement.elementId(), DeployState.DEPLOYED, null,
+            StateChangeResult.NO_ERROR, "Migration rollback done");
     }
 }

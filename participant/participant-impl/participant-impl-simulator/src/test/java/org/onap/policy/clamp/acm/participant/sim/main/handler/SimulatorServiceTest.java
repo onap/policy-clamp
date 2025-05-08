@@ -22,6 +22,7 @@ package org.onap.policy.clamp.acm.participant.sim.main.handler;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -32,6 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.onap.policy.clamp.acm.participant.intermediary.api.CompositionDto;
 import org.onap.policy.clamp.acm.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.acm.participant.sim.comm.CommonTestData;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElementDefinition;
@@ -132,8 +134,8 @@ class SimulatorServiceTest {
         var intermediaryApi = mock(ParticipantIntermediaryApi.class);
         var simulatorService = new SimulatorService(intermediaryApi) {
             @Override
-            protected boolean execution(int timeMs, String msg, UUID elementId) {
-                return false;
+            protected boolean isInterrupted(int timeMs, String msg, UUID elementId) {
+                return true;
             }
         };
 
@@ -143,9 +145,27 @@ class SimulatorServiceTest {
         simulatorService.unlock(UUID.randomUUID(), UUID.randomUUID());
         simulatorService.delete(UUID.randomUUID(), UUID.randomUUID());
         simulatorService.update(UUID.randomUUID(), UUID.randomUUID());
+        simulatorService.prime(mock(CompositionDto.class));
+        simulatorService.deprime(mock(CompositionDto.class));
+        simulatorService.migrate(UUID.randomUUID(), UUID.randomUUID(), 0, new HashMap<>(), new HashMap<>());
         simulatorService.review(UUID.randomUUID(), UUID.randomUUID());
         simulatorService.prepare(UUID.randomUUID(), UUID.randomUUID(), 0, new HashMap<>(), new HashMap<>());
         simulatorService.migratePrecheck(UUID.randomUUID(), UUID.randomUUID());
         verify(intermediaryApi, times(0)).sendAcDefinitionInfo(any(), any(), any());
+    }
+
+    @Test
+    void testImmediateInterruption() throws InterruptedException {
+        var intermediaryApi = mock(ParticipantIntermediaryApi.class);
+        var simulatorService = new SimulatorService(intermediaryApi);
+
+        Thread testThread = new Thread(() -> {
+            boolean result = simulatorService.isInterrupted(5000, "test", UUID.randomUUID());
+            assertTrue(result, "Thread was supposed to be interrupted");
+        });
+
+        testThread.start();
+        testThread.interrupt();
+        testThread.join();
     }
 }
