@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2023 Nordix Foundation.
+ *  Copyright (C) 2021-2023,2025 OpenInfra Foundation Europe. All rights reserved.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,6 +32,8 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.AcInstanceStateUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -93,9 +95,9 @@ public class InstantiationController extends AbstractRestController implements A
      */
     @Override
     public ResponseEntity<AutomationCompositions> queryCompositionInstances(UUID compositionId, String name,
-            String version, UUID requestId) {
-
-        return ResponseEntity.ok().body(provider.getAutomationCompositions(compositionId, name, version));
+            String version, Integer page, Integer size, UUID requestId) {
+        var pageable = page != null && size != null ? PageRequest.of(page, size) : Pageable.unpaged();
+        return ResponseEntity.ok().body(provider.getAutomationCompositions(compositionId, name, version, pageable));
     }
 
     /**

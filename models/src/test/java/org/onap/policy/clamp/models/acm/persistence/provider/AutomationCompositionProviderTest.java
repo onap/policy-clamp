@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2025 Nordix Foundation.
+ * Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,6 +47,9 @@ import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 class AutomationCompositionProviderTest {
 
@@ -104,20 +107,42 @@ class AutomationCompositionProviderTest {
     }
 
     @Test
+    void testGetAutomationCompositionsWithNull() {
+        var automationCompositionProvider = new AutomationCompositionProvider(
+                mock(AutomationCompositionRepository.class), mock(AutomationCompositionElementRepository.class));
+
+        assertThatThrownBy(() -> automationCompositionProvider
+                .getAutomationCompositions(UUID.randomUUID(), null, null, null))
+                .hasMessage("pageable is marked non-null but is null");
+
+        assertThatThrownBy(() -> automationCompositionProvider
+                .getAutomationCompositions(null, null, null, Pageable.unpaged()))
+                .hasMessage("compositionId is marked non-null but is null");
+    }
+
+    @Test
     void testGetAutomationCompositions() {
         var automationCompositionRepository = mock(AutomationCompositionRepository.class);
         var automationCompositionProvider = new AutomationCompositionProvider(automationCompositionRepository,
                 mock(AutomationCompositionElementRepository.class));
 
         var automationComposition = inputAutomationCompositions.getAutomationCompositionList().get(0);
+        when(automationCompositionRepository
+                .findAll(Mockito.<Example<JpaAutomationComposition>>any(), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(inputAutomationCompositionsJpa));
         var acList = automationCompositionProvider.getAutomationCompositions(UUID.randomUUID(),
-                automationComposition.getName(), automationComposition.getVersion());
-        assertThat(acList).isEmpty();
+                automationComposition.getName(), automationComposition.getVersion(), Pageable.unpaged());
+        assertThat(acList).hasSize(2);
 
-        when(automationCompositionRepository.findAll(Mockito.<Example<JpaAutomationComposition>>any()))
-                .thenReturn(inputAutomationCompositionsJpa);
         acList = automationCompositionProvider.getAutomationCompositions(automationComposition.getCompositionId(), null,
-                null);
+                null, Pageable.unpaged());
+        assertThat(acList).hasSize(2);
+
+        when(automationCompositionRepository
+            .findAll(Mockito.<Example<JpaAutomationComposition>>any(), Mockito.any(Pageable.class)))
+            .thenReturn(new PageImpl<>(inputAutomationCompositionsJpa));
+        acList = automationCompositionProvider.getAutomationCompositions(automationComposition.getCompositionId(), null,
+            null, PageRequest.of(0, 10));
         assertThat(acList).hasSize(2);
     }
 

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2024 Nordix Foundation.
+ *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
  *  Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -54,6 +54,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -66,6 +67,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ActiveProfiles({ "test", "default" })
 class InstantiationControllerTest extends CommonRestController {
 
+    private static final int NUMBER_ISTANCES = 10;
     private static final String AC_INSTANTIATION_CREATE_JSON = "src/test/resources/rest/acm/AutomationComposition.json";
     private static final String AC_VERSIONING_YAML = "src/test/resources/rest/acm/AutomationCompositionVersioning.yaml";
 
@@ -202,10 +204,11 @@ class InstantiationControllerTest extends CommonRestController {
     void testQuery_NoResultWithThisName() {
         var invocationBuilder =
                 super.sendRequest(getInstanceEndPoint(UUID.randomUUID()) + "?name=noResultWithThisName");
-        var rawresp = invocationBuilder.buildGet().invoke();
-        assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
-        var resp = rawresp.readEntity(AutomationCompositions.class);
-        assertThat(resp.getAutomationCompositionList()).isEmpty();
+        try (var rawresp = invocationBuilder.buildGet().invoke()) {
+            assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
+            var resp = rawresp.readEntity(AutomationCompositions.class);
+            assertThat(resp.getAutomationCompositionList()).isEmpty();
+        }
     }
 
     @Test
@@ -219,14 +222,55 @@ class InstantiationControllerTest extends CommonRestController {
 
         var invocationBuilder = super.sendRequest(
                 getInstanceEndPoint(compositionId) + "?name=" + automationComposition.getKey().getName());
-        var rawresp = invocationBuilder.buildGet().invoke();
-        assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
-        var automationCompositionsQuery = rawresp.readEntity(AutomationCompositions.class);
-        assertNotNull(automationCompositionsQuery);
-        assertThat(automationCompositionsQuery.getAutomationCompositionList()).hasSize(1);
-        var automationCompositionRc = automationCompositionsQuery.getAutomationCompositionList().get(0);
-        automationComposition.setLastMsg(automationCompositionRc.getLastMsg());
-        assertEquals(automationComposition, automationCompositionRc);
+        try (var rawresp = invocationBuilder.buildGet().invoke()) {
+            assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
+            var automationCompositionsQuery = rawresp.readEntity(AutomationCompositions.class);
+            assertNotNull(automationCompositionsQuery);
+            assertThat(automationCompositionsQuery.getAutomationCompositionList()).hasSize(1);
+            var automationCompositionRc = automationCompositionsQuery.getAutomationCompositionList().get(0);
+            automationComposition.setLastMsg(automationCompositionRc.getLastMsg());
+            assertEquals(automationComposition, automationCompositionRc);
+        }
+    }
+
+    @Test
+    void testQueryPageable() {
+        var compositionId = createAcDefinitionInDB("Query");
+        var automationComposition =
+            InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Query");
+        automationComposition.setCompositionId(compositionId);
+        for (var i = 0; i < NUMBER_ISTANCES; i++) {
+            automationComposition.setName("acm_" + i);
+            instantiationProvider.createAutomationComposition(compositionId, automationComposition);
+        }
+        var endpoint = getInstanceEndPoint(compositionId);
+        validateQueryPageable(endpoint + "?name=wrong_name", 0);
+        validateQueryPageable(endpoint + "?name=acm_1", 1);
+        validateQueryPageable(endpoint + "?page=1&size=4", 4);
+
+        validateQueryNotPageable(endpoint + "?page=0");
+        validateQueryNotPageable(endpoint + "?size=5");
+        validateQueryNotPageable(endpoint);
+    }
+
+    private void validateQueryNotPageable(String link) {
+        var invocationBuilder = super.sendRequest(link);
+        try (var response = invocationBuilder.buildGet().invoke()) {
+            assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+            var resultList = response.readEntity(AutomationCompositions.class);
+            assertNotNull(resultList);
+            assertThat(resultList.getAutomationCompositionList()).hasSizeGreaterThanOrEqualTo(NUMBER_ISTANCES);
+        }
+    }
+
+    private void validateQueryPageable(String link, int size) {
+        var invocationBuilder = super.sendRequest(link);
+        try (var response = invocationBuilder.buildGet().invoke()) {
+            assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+            var resultList = response.readEntity(AutomationCompositions.class);
+            assertNotNull(resultList);
+            assertThat(resultList.getAutomationCompositionList()).hasSize(size);
+        }
     }
 
     @Test
@@ -271,8 +315,9 @@ class InstantiationControllerTest extends CommonRestController {
         var instResponse = resp.readEntity(InstantiationResponse.class);
         InstantiationUtils.assertInstantiationResponse(instResponse, automationComposition);
 
-        var automationCompositionsFromDb = instantiationProvider.getAutomationCompositions(compositionId,
-                automationComposition.getKey().getName(), automationComposition.getKey().getVersion());
+        var automationCompositionsFromDb = instantiationProvider.getAutomationCompositions(
+                compositionId, automationComposition.getKey().getName(),
+                automationComposition.getKey().getVersion(), Pageable.unpaged());
 
         assertNotNull(automationCompositionsFromDb);
         assertThat(automationCompositionsFromDb.getAutomationCompositionList()).hasSize(1);
@@ -298,7 +343,8 @@ class InstantiationControllerTest extends CommonRestController {
         InstantiationUtils.assertInstantiationResponse(instResponse, automationCompositionFromRsc);
 
         var automationCompositionsFromDb = instantiationProvider.getAutomationCompositions(compositionId,
-                automationCompositionFromRsc.getKey().getName(), automationCompositionFromRsc.getKey().getVersion());
+                automationCompositionFromRsc.getKey().getName(), automationCompositionFromRsc.getKey().getVersion(),
+                Pageable.unpaged());
         assertEquals(DeployState.DELETING,
                 automationCompositionsFromDb.getAutomationCompositionList().get(0).getDeployState());
     }

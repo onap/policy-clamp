@@ -59,6 +59,7 @@ import org.onap.policy.models.base.PfKey;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -450,13 +451,15 @@ public class AutomationCompositionInstantiationProvider {
      *
      * @param name the name of the automation composition to get, null for all automation compositions
      * @param version the version of the automation composition to get, null for all automation compositions
+     * @param pageable the Pageable
      * @return the automation compositions
      */
     @Transactional(readOnly = true)
-    public AutomationCompositions getAutomationCompositions(UUID compositionId, String name, String version) {
+    public AutomationCompositions getAutomationCompositions(@NonNull final UUID compositionId,
+            final String name, final String version, @NonNull final Pageable pageable) {
         var automationCompositions = new AutomationCompositions();
         automationCompositions.setAutomationCompositionList(
-                automationCompositionProvider.getAutomationCompositions(compositionId, name, version));
+                automationCompositionProvider.getAutomationCompositions(compositionId, name, version, pageable));
 
         return automationCompositions;
     }

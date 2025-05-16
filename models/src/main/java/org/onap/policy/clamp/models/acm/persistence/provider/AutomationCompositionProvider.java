@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2025 Nordix Foundation.
+ * Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -45,6 +45,7 @@ import org.onap.policy.common.parameters.ValidationStatus;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -166,14 +167,14 @@ public class AutomationCompositionProvider {
      *
      * @param name the name of the automation composition to get, null to get all automation compositions
      * @param version the version of the automation composition to get, null to get all automation compositions
+     * @param pageable the Pageable
      * @return the automation compositions found
      */
     @Transactional(readOnly = true)
-    public List<AutomationComposition> getAutomationCompositions(final UUID compositionId, final String name,
-            final String version) {
-
-        return ProviderUtils
-                .asEntityList(automationCompositionRepository.findAll(createExample(compositionId, name, version)));
+    public List<AutomationComposition> getAutomationCompositions(@NonNull final UUID compositionId, final String name,
+            final String version, @NonNull final Pageable pageable) {
+        return ProviderUtils.asEntityList(automationCompositionRepository
+                .findAll(createExample(compositionId, name, version), pageable).toList());
     }
 
     private Example<JpaAutomationComposition> createExample(final UUID compositionId, final String name,

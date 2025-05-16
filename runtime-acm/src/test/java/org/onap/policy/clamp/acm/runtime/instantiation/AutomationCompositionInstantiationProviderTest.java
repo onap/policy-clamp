@@ -64,6 +64,7 @@ import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
+import org.springframework.data.domain.Pageable;
 
 /**
  * Class to perform unit test of {@link AutomationCompositionInstantiationProvider}}.
@@ -94,8 +95,6 @@ class AutomationCompositionInstantiationProviderTest {
 
     private static final String DO_NOT_MATCH = " do not match with ";
 
-
-
     private static ToscaServiceTemplate serviceTemplate = new ToscaServiceTemplate();
 
     @BeforeAll
@@ -104,6 +103,20 @@ class AutomationCompositionInstantiationProviderTest {
         var jpa =
                 ProviderUtils.getJpaAndValidate(serviceTemplate, JpaToscaServiceTemplate::new, "toscaServiceTemplate");
         serviceTemplate = jpa.toAuthorative();
+    }
+
+    @Test
+    void testGetAutomationCompositionsWithNull() {
+        var instantiationProvider = new AutomationCompositionInstantiationProvider(
+                mock(AutomationCompositionProvider.class), mock(AcDefinitionProvider.class),
+                new AcInstanceStateResolver(), mock(SupervisionAcHandler.class), mock(ParticipantProvider.class),
+                CommonTestData.getTestParamaterGroup(), new EncryptionUtils(CommonTestData.getTestParamaterGroup()));
+        assertThatThrownBy(() -> instantiationProvider
+                .getAutomationCompositions(null, null, null, Pageable.unpaged()))
+                .hasMessage("compositionId is marked non-null but is null");
+        assertThatThrownBy(() -> instantiationProvider
+                .getAutomationCompositions(UUID.randomUUID(), null, null, null))
+                .hasMessage("pageable is marked non-null but is null");
     }
 
     @Test
@@ -133,10 +146,11 @@ class AutomationCompositionInstantiationProviderTest {
         verify(acProvider).createAutomationComposition(automationCompositionCreate);
 
         when(acProvider.getAutomationCompositions(compositionId, automationCompositionCreate.getName(),
-                automationCompositionCreate.getVersion())).thenReturn(List.of(automationCompositionCreate));
+                automationCompositionCreate.getVersion(), Pageable.unpaged()))
+                .thenReturn(List.of(automationCompositionCreate));
 
         var automationCompositionsGet = instantiationProvider.getAutomationCompositions(compositionId,
-                automationCompositionCreate.getName(), automationCompositionCreate.getVersion());
+                automationCompositionCreate.getName(), automationCompositionCreate.getVersion(), Pageable.unpaged());
         assertThat(automationCompositionCreate)
                 .isEqualTo(automationCompositionsGet.getAutomationCompositionList().get(0));
 
@@ -308,7 +322,6 @@ class AutomationCompositionInstantiationProviderTest {
 
         verify(supervisionAcHandler).migrate(any());
         InstantiationUtils.assertInstantiationResponse(instantiationResponse, automationCompositionTarget);
-
     }
 
     @Test
