@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2025 Nordix Foundation.
+ * Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ public abstract class AbstractScanner {
 
     protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractScanner.class);
 
-    protected final long maxStatusWaitMs;
+    protected final long maxOperationWaitMs;
 
     protected final AutomationCompositionProvider acProvider;
     private final ParticipantSyncPublisher participantSyncPublisher;
@@ -48,7 +48,7 @@ public abstract class AbstractScanner {
             final AcRuntimeParameterGroup acRuntimeParameterGroup, final EncryptionUtils encryptionUtils) {
         this.acProvider = acProvider;
         this.participantSyncPublisher = participantSyncPublisher;
-        this.maxStatusWaitMs = acRuntimeParameterGroup.getParticipantParameters().getMaxStatusWaitMs();
+        this.maxOperationWaitMs = acRuntimeParameterGroup.getParticipantParameters().getMaxOperationWaitMs();
         this.encryptionUtils = encryptionUtils;
     }
 
@@ -98,7 +98,7 @@ public abstract class AbstractScanner {
         }
         var now = TimestampHelper.nowEpochMilli();
         var lastMsg = TimestampHelper.toEpochMilli(automationComposition.getLastMsg());
-        if ((now - lastMsg) > maxStatusWaitMs) {
+        if ((now - lastMsg) > maxOperationWaitMs) {
             LOGGER.debug("Report timeout for the ac instance {}", automationComposition.getInstanceId());
             automationComposition.setStateChangeResult(StateChangeResult.TIMEOUT);
             updateSync.setUpdated(true);

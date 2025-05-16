@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021,2023 Nordix Foundation.
+ *  Copyright (C) 2021,2023,2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,8 +32,11 @@ import org.springframework.validation.annotation.Validated;
 public class ParticipantParameters {
 
     @Min(100)
-    private long heartBeatMs;
+    private long heartBeatMs = 20000;
 
     @Min(100)
-    private long maxStatusWaitMs;
+    private long maxStatusWaitMs = 150000;
+
+    @Min(100)
+    private long maxOperationWaitMs = 200000;
 }

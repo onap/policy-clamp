@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2025 Nordix Foundation.
+ * Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ import org.springframework.stereotype.Component;
 public class AcDefinitionScanner {
     private static final Logger LOGGER = LoggerFactory.getLogger(AcDefinitionScanner.class);
 
-    private final long maxStatusWaitMs;
+    private final long maxOperationWaitMs;
 
     private final AcDefinitionProvider acDefinitionProvider;
     private final ParticipantSyncPublisher participantSyncPublisher;
@@ -53,7 +53,7 @@ public class AcDefinitionScanner {
             final AcRuntimeParameterGroup acRuntimeParameterGroup) {
         this.acDefinitionProvider = acDefinitionProvider;
         this.participantSyncPublisher = participantSyncPublisher;
-        this.maxStatusWaitMs = acRuntimeParameterGroup.getParticipantParameters().getMaxStatusWaitMs();
+        this.maxOperationWaitMs = acRuntimeParameterGroup.getParticipantParameters().getMaxOperationWaitMs();
     }
 
     private UpdateSync handlePrimeAckElement(DocMessage message, AutomationCompositionDefinition acDefinition) {
@@ -145,7 +145,7 @@ public class AcDefinitionScanner {
         }
         var now = TimestampHelper.nowEpochMilli();
         var lastMsg = TimestampHelper.toEpochMilli(acDefinition.getLastMsg());
-        if ((now - lastMsg) > maxStatusWaitMs) {
+        if ((now - lastMsg) > maxOperationWaitMs) {
             LOGGER.debug("Report timeout for the ac definition {}", acDefinition.getCompositionId());
             acDefinition.setStateChangeResult(StateChangeResult.TIMEOUT);
             result.setUpdated(true);

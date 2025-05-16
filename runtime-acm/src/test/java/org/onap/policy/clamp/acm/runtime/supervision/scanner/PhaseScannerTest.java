@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2025 Nordix Foundation.
+ * Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -121,7 +121,7 @@ class PhaseScannerTest {
         var acStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
         var participantSyncPublisher = mock(ParticipantSyncPublisher.class);
         var acRuntimeParameterGroup = CommonTestData.geParameterGroup("dbScanner");
-        acRuntimeParameterGroup.getParticipantParameters().setMaxStatusWaitMs(-1);
+        acRuntimeParameterGroup.getParticipantParameters().setMaxOperationWaitMs(-1);
         var encryptionUtils = new EncryptionUtils(acRuntimeParameterGroup);
 
         // verify timeout scenario
