@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2024 Nordix Foundation.
+ * Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Modifications Copyright (C) 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -29,7 +29,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
-import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -113,14 +112,12 @@ public class JpaAutomationCompositionElement extends Validated
     @Column
     private String message;
 
-    @Lob
     @NotNull
     @Valid
     @Convert(converter = StringToMapConverter.class)
     @Column(length = 100000)
     private Map<String, Object> properties;
 
-    @Lob
     @NotNull
     @Valid
     @Convert(converter = StringToMapConverter.class)

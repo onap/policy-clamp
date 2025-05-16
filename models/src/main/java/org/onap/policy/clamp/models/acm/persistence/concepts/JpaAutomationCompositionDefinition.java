@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2022-2024 Nordix Foundation.
+ *  Copyright (C) 2022-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.sql.Timestamp;
@@ -93,7 +92,6 @@ public class JpaAutomationCompositionDefinition extends Validated
     @JoinColumn(name = "compositionId", foreignKey = @ForeignKey(name = "dt_element_fk"))
     private Set<JpaNodeTemplateState> elements = new HashSet<>();
 
-    @Lob
     @Column(length = 100000)
     @Convert(converter = StringToServiceTemplateConverter.class)
     @NotNull

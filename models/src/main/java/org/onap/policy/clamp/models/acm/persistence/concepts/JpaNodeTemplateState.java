@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023 Nordix Foundation.
+ *  Copyright (C) 2023,2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
-import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import java.util.Map;
 import java.util.UUID;
@@ -79,7 +78,6 @@ public class JpaNodeTemplateState extends Validated implements PfAuthorative<Nod
     @Column
     private String message;
 
-    @Lob
     @NotNull
     @Valid
     @Convert(converter = StringToMapConverter.class)
