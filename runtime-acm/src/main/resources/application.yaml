@@ -41,7 +41,8 @@ runtime:
     syncTopic: acm-ppnt-sync
   participantParameters:
     heartBeatMs: 20000
-    maxStatusWaitMs: 200000
+    maxStatusWaitMs: 150000
+    maxOperationWaitMs: 200000
   topicParameterGroup:
     topicSources:
       - topic: ${runtime.topics.operationTopic}

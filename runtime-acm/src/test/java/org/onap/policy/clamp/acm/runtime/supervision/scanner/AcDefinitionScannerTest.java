@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2025 Nordix Foundation.
+ * Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -205,7 +205,7 @@ class AcDefinitionScannerTest {
         verify(acDefinitionProvider, times(0)).updateAcDefinitionState(any());
         verify(participantSyncPublisher, times(0)).sendSync(any(), any());
 
-        acRuntimeParameterGroup.getParticipantParameters().setMaxStatusWaitMs(-1);
+        acRuntimeParameterGroup.getParticipantParameters().setMaxOperationWaitMs(-1);
         acDefinitionScanner = new AcDefinitionScanner(acDefinitionProvider, participantSyncPublisher,
                 acRuntimeParameterGroup);
         acDefinition = createAutomationCompositionDefinition(AcTypeState.PRIMING, StateChangeResult.NO_ERROR);
