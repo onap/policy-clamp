@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2024 Nordix Foundation.
+ * Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,6 +54,8 @@ import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 import org.onap.policy.models.base.PfModelRuntimeException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 class ParticipantProviderTest {
 
@@ -182,10 +184,11 @@ class ParticipantProviderTest {
         var acElementList = inputAutomationCompositionsJpa.get(0).getElements();
 
         var participantId = UUID.randomUUID();
-        when(automationCompositionElementRepository.findByParticipantId(participantId.toString()))
-            .thenReturn(acElementList);
+        var pageable = PageRequest.of(0, 5);
+        when(automationCompositionElementRepository.findByParticipantId(participantId.toString(), pageable))
+                .thenReturn(acElementList);
 
-        var listOfAcElements = participantProvider.getAutomationCompositionElements(participantId);
+        var listOfAcElements = participantProvider.getAutomationCompositionElements(participantId, pageable);
 
         assertThat(listOfAcElements).hasSameSizeAs(acElementList);
         assertEquals(UUID.fromString(acElementList.get(0).getElementId()), listOfAcElements.get(0).getId());
@@ -197,13 +200,16 @@ class ParticipantProviderTest {
         var automationCompositionElementRepository = mock(AutomationCompositionElementRepository.class);
         var nodeTemplateStateRepository = mock(NodeTemplateStateRepository.class);
         var participantId = jpaParticipantList.get(0).getParticipantId();
-        when(nodeTemplateStateRepository.findByParticipantId(participantId)).thenReturn(jpaNodeTemplateStateList);
+        var pageable = PageRequest.of(0, 5);
+        when(nodeTemplateStateRepository
+            .findByParticipantId(participantId, pageable)).thenReturn(jpaNodeTemplateStateList);
 
         var participantProvider = new ParticipantProvider(participantRepository,
             automationCompositionElementRepository, nodeTemplateStateRepository,
             mock(ParticipantReplicaRepository.class));
 
-        var listOfNodeTemplateState = participantProvider.getAcNodeTemplateStates(UUID.fromString(participantId));
+        var listOfNodeTemplateState =
+            participantProvider.getAcNodeTemplateStates(UUID.fromString(participantId), pageable);
 
         assertEquals(listOfNodeTemplateState, nodeTemplateStateList);
     }
@@ -222,11 +228,26 @@ class ParticipantProviderTest {
         assertThrows(NullPointerException.class, () -> participantProvider.findParticipant(null));
         assertThrows(NullPointerException.class, () -> participantProvider.saveParticipant(null));
         assertThrows(NullPointerException.class, () -> participantProvider.deleteParticipant(null));
-        assertThrows(NullPointerException.class, () -> participantProvider.getAutomationCompositionElements(null));
-        assertThrows(NullPointerException.class, () -> participantProvider.getAcNodeTemplateStates(null));
+
+        var pageable = Pageable.unpaged();
+        assertThrows(NullPointerException.class, () ->
+                participantProvider.getAutomationCompositionElements(null, pageable));
+        var participantId = UUID.randomUUID();
+        assertThrows(NullPointerException.class, () ->
+                participantProvider.getAutomationCompositionElements(participantId, null));
+        assertThrows(NullPointerException.class, () ->
+                participantProvider.getAcNodeTemplateStates(null, pageable));
+        assertThrows(NullPointerException.class, () ->
+                participantProvider.getAcNodeTemplateStates(participantId, null));
+
         assertThrows(NullPointerException.class, () -> participantProvider.findParticipantReplica(null));
         assertThrows(NullPointerException.class, () -> participantProvider.saveParticipantReplica(null));
         assertThrows(NullPointerException.class, () -> participantProvider.deleteParticipantReplica(null));
+        assertThrows(NullPointerException.class, () ->
+                participantProvider.getAutomationCompositionElements(null, pageable));
+        assertThrows(NullPointerException.class, () ->
+                participantProvider.getAutomationCompositionElements(participantId, null));
+        assertThrows(NullPointerException.class, () -> participantProvider.getAcNodeTemplateStates(null, null));
     }
 
     @Test

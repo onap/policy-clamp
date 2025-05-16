@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2024 Nordix Foundation.
+ * Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,6 +44,7 @@ import org.onap.policy.clamp.models.acm.persistence.repository.ParticipantReplic
 import org.onap.policy.clamp.models.acm.persistence.repository.ParticipantRepository;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -155,22 +156,26 @@ public class ParticipantProvider {
      * Retrieve a list of automation composition elements associated with a participantId.
      *
      * @param participantId the participant id associated with the automation composition elements
+     * @param pageable the Pageable
      * @return the list of associated elements
      */
-    public List<AutomationCompositionElement> getAutomationCompositionElements(@NonNull final UUID participantId) {
+    public List<AutomationCompositionElement> getAutomationCompositionElements(
+        @NonNull final UUID participantId, @NonNull final Pageable pageable) {
         return ProviderUtils.asEntityList(automationCompositionElementRepository
-            .findByParticipantId(participantId.toString()));
+            .findByParticipantId(participantId.toString(), pageable));
     }
 
     /**
      * Retrieve a list of node template states elements associated with a participantId from ac definitions.
      *
      * @param participantId the participant id associated with the automation composition elements
+     * @param pageable the Pageable
      * @return the list of associated elements
      */
-    public List<NodeTemplateState> getAcNodeTemplateStates(@NonNull final UUID participantId) {
+    public List<NodeTemplateState> getAcNodeTemplateStates(
+            @NonNull final UUID participantId, @NonNull final Pageable pageable) {
         return ProviderUtils.asEntityList(nodeTemplateStateRepository
-            .findByParticipantId(participantId.toString()));
+            .findByParticipantId(participantId.toString(), pageable));
     }
 
     /**

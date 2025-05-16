@@ -32,8 +32,6 @@ import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.AcInstanceStateUpdate;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse;
 import org.springframework.context.annotation.Profile;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -96,7 +94,7 @@ public class InstantiationController extends AbstractRestController implements A
     @Override
     public ResponseEntity<AutomationCompositions> queryCompositionInstances(UUID compositionId, String name,
             String version, Integer page, Integer size, UUID requestId) {
-        var pageable = page != null && size != null ? PageRequest.of(page, size) : Pageable.unpaged();
+        var pageable = getPageable(page, size);
         return ResponseEntity.ok().body(provider.getAutomationCompositions(compositionId, name, version, pageable));
     }
 

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2025 Nordix Foundation.
+ * Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +22,10 @@ package org.onap.policy.clamp.models.acm.persistence.repository;
 
 import java.util.List;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationCompositionElement;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AutomationCompositionElementRepository extends JpaRepository<JpaAutomationCompositionElement, String> {
 
-    List<JpaAutomationCompositionElement> findByParticipantId(String participantId);
+    List<JpaAutomationCompositionElement> findByParticipantId(String participantId, Pageable pageable);
 }

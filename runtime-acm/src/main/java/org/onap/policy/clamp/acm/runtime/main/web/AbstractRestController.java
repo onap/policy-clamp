@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2021-2022 Nordix Foundation.
+ * Copyright (C) 2021-2022,2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,8 @@ import jakarta.ws.rs.core.Response;
 import java.net.URI;
 import java.net.URISyntaxException;
 import org.onap.policy.clamp.common.acm.exception.AutomationCompositionRuntimeException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -47,5 +49,9 @@ public abstract class AbstractRestController {
         } catch (URISyntaxException e) {
             throw new AutomationCompositionRuntimeException(Response.Status.INTERNAL_SERVER_ERROR, e.getMessage());
         }
+    }
+
+    protected Pageable getPageable(Integer page, Integer size) {
+        return page != null && size != null ? PageRequest.of(page, size) : Pageable.unpaged();
     }
 }

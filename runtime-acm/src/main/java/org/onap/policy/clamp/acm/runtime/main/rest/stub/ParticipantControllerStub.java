@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2023 Nordix Foundation.
+ *  Copyright (C) 2023,2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,8 @@ public class ParticipantControllerStub extends AbstractRestController implements
     private String pathToParticipantList;
 
     @Override
-    public ResponseEntity<ParticipantInformation> getParticipant(UUID participantId, UUID xonaprequestid) {
+    public ResponseEntity<ParticipantInformation> getParticipant(UUID participantId, Integer page, Integer size,
+        UUID xonaprequestid) {
         return stubUtils.getResponse(pathToSingleParticipant, ParticipantInformation.class);
     }
 
@@ -62,7 +63,7 @@ public class ParticipantControllerStub extends AbstractRestController implements
 
     @Override
     public ResponseEntity<List<ParticipantInformation>> queryParticipants(String name, String version,
-                                                                          UUID xonaprequestid) {
+        Integer page, Integer size, UUID xonaprequestid) {
         List<ParticipantInformation> participantInformationList = new ArrayList<>();
         return (ResponseEntity<List<ParticipantInformation>>) stubUtils
             .getResponse(pathToParticipantList, participantInformationList.getClass());

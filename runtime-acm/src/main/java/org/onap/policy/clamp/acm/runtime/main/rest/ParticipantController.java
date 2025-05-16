@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2023-2024 Nordix Foundation.
+ * Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,8 +40,10 @@ public class ParticipantController extends AbstractRestController implements Par
     private final AcmParticipantProvider acmParticipantProvider;
 
     @Override
-    public ResponseEntity<ParticipantInformation> getParticipant(UUID participantId, UUID requestId) {
-        var participantInformation = acmParticipantProvider.getParticipantById(participantId);
+    public ResponseEntity<ParticipantInformation> getParticipant(UUID participantId, Integer page, Integer size,
+        UUID requestId) {
+        var pageable = getPageable(page, size);
+        var participantInformation = acmParticipantProvider.getParticipantById(participantId, pageable);
         return ResponseEntity.ok().body(participantInformation);
     }
 
@@ -59,8 +61,9 @@ public class ParticipantController extends AbstractRestController implements Par
 
     @Override
     public ResponseEntity<List<ParticipantInformation>> queryParticipants(String name, String version,
-                                                                          UUID requestId) {
-        var participantInformationList = acmParticipantProvider.getAllParticipants();
+        Integer page, Integer size, UUID requestId) {
+        var pageable = getPageable(page, size);
+        var participantInformationList = acmParticipantProvider.getAllParticipants(pageable);
         return ResponseEntity.ok().body(participantInformationList);
     }
 }

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2023-2024 Nordix Foundation.
+ * Copyright (C) 2023-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,20 +20,21 @@
 
 package org.onap.policy.clamp.acm.runtime.participants;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.collections4.MapUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantStatusReqPublisher;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
+import org.onap.policy.clamp.models.acm.concepts.Participant;
 import org.onap.policy.clamp.models.acm.concepts.ParticipantInformation;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,39 +50,34 @@ public class AcmParticipantProvider {
     /**
      * Get all participants.
      *
+     * @param pageable the Pageable
      * @return A list of available participants
      */
-    public List<ParticipantInformation> getAllParticipants() {
+    public List<ParticipantInformation> getAllParticipants(final Pageable pageable) {
         var participants = this.participantProvider.getParticipants();
+        return participants.stream().map(participant -> createParticipantInformation(participant, pageable)).toList();
+    }
 
-        List<ParticipantInformation> participantInformationList = new ArrayList<>();
-        participants.forEach(participant -> {
-            ParticipantInformation participantInformation = new ParticipantInformation();
-            participantInformation.setParticipant(participant);
-            participantInformation.setAcElementInstanceMap(getAutomationCompositionElementsForParticipant(participant
-                .getParticipantId()));
-            participantInformation.setAcNodeTemplateStateDefinitionMap(getNodeTemplateStatesForParticipant(participant
-                .getParticipantId()));
-            participantInformationList.add(participantInformation);
-        });
-        return participantInformationList;
+    private ParticipantInformation createParticipantInformation(Participant participant, Pageable pageable) {
+        var participantInformation = new ParticipantInformation();
+        participantInformation.setParticipant(participant);
+        participantInformation.setAcElementInstanceMap(
+            getAcElementsForParticipant(participant.getParticipantId(), pageable));
+        participantInformation.setAcNodeTemplateStateDefinitionMap(
+            getNodeTemplateStatesForParticipant(participant.getParticipantId(), pageable));
+        return participantInformation;
     }
 
     /**
      * Get a participant.
      *
      * @param participantId The UUID of the participant to get
+     * @param pageable the Pageable
      * @return The participant
      */
-    public ParticipantInformation getParticipantById(UUID participantId) {
+    public ParticipantInformation getParticipantById(final UUID participantId, final Pageable pageable) {
         var participant = this.participantProvider.getParticipantById(participantId);
-        var participantInformation = new ParticipantInformation();
-        participantInformation.setParticipant(participant);
-
-        participantInformation.setAcElementInstanceMap(getAutomationCompositionElementsForParticipant(participantId));
-        participantInformation.setAcNodeTemplateStateDefinitionMap(getNodeTemplateStatesForParticipant(participantId));
-
-        return participantInformation;
+        return createParticipantInformation(participant, pageable);
     }
 
     /**
@@ -105,20 +101,16 @@ public class AcmParticipantProvider {
         this.participantStatusReqPublisher.send((UUID) null);
     }
 
-    private Map<UUID, AutomationCompositionElement> getAutomationCompositionElementsForParticipant(UUID participantId) {
-        var automationCompositionElements = participantProvider
-            .getAutomationCompositionElements(participantId);
-        Map<UUID, AutomationCompositionElement> map = new HashMap<>();
-        MapUtils.populateMap(map, automationCompositionElements, AutomationCompositionElement::getId);
-
-        return map;
+    private Map<UUID, AutomationCompositionElement> getAcElementsForParticipant(UUID participantId, Pageable pageable) {
+        var automationCompositionElements =
+            participantProvider.getAutomationCompositionElements(participantId, pageable);
+        return automationCompositionElements
+            .stream().collect(Collectors.toMap(AutomationCompositionElement::getId, Function.identity()));
     }
 
-    private Map<UUID, NodeTemplateState> getNodeTemplateStatesForParticipant(UUID participantId) {
-        var acNodeTemplateStates = participantProvider.getAcNodeTemplateStates(participantId);
-        Map<UUID, NodeTemplateState> map = new HashMap<>();
-        MapUtils.populateMap(map, acNodeTemplateStates, NodeTemplateState::getNodeTemplateStateId);
-
-        return map;
+    private Map<UUID, NodeTemplateState> getNodeTemplateStatesForParticipant(UUID participantId, Pageable pageable) {
+        var acNodeTemplateStates = participantProvider.getAcNodeTemplateStates(participantId, pageable);
+        return acNodeTemplateStates
+            .stream().collect(Collectors.toMap(NodeTemplateState::getNodeTemplateStateId, Function.identity()));
     }
 }
