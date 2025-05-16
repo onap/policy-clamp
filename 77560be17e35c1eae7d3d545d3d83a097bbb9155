@@ -1,0 +1,136 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6c1f51f9_06e40692",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-05-16T15:53:14Z",
+      "side": 1,
+      "message": "The copyright headers should use OpenInfra",
+      "revId": "77560be17e35c1eae7d3d545d3d83a097bbb9155",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6e62f22e_30ea508f",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationCompositionRollback.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-05-16T15:53:14Z",
+      "side": 1,
+      "message": "open infra headers",
+      "range": {
+        "startLine": 3,
+        "startChar": 21,
+        "endLine": 3,
+        "endChar": 40
+      },
+      "revId": "77560be17e35c1eae7d3d545d3d83a097bbb9155",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "08c1c498_0a9f36fc",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/persistence/concepts/JpaAutomationCompositionRollback.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-05-16T15:53:14Z",
+      "side": 1,
+      "message": "use the util PfUtils.mapMap(map1, map2)",
+      "range": {
+        "startLine": 84,
+        "startChar": 24,
+        "endLine": 84,
+        "endChar": 32
+      },
+      "revId": "77560be17e35c1eae7d3d545d3d83a097bbb9155",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9e61215a_4b801657",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/persistence/concepts/JpaAutomationCompositionRollback.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-05-16T15:53:14Z",
+      "side": 1,
+      "message": "use the util PfUtils.mapMap(map1, map2)",
+      "range": {
+        "startLine": 95,
+        "startChar": 36,
+        "endLine": 95,
+        "endChar": 44
+      },
+      "revId": "77560be17e35c1eae7d3d545d3d83a097bbb9155",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "553d3f5a_7e13915e",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/persistence/concepts/JpaAutomationCompositionRollback.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-05-16T15:53:14Z",
+      "side": 1,
+      "message": "use the util PfUtils.mapMap(map1, map2)",
+      "range": {
+        "startLine": 112,
+        "startChar": 20,
+        "endLine": 112,
+        "endChar": 31
+      },
+      "revId": "77560be17e35c1eae7d3d545d3d83a097bbb9155",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b696c83d_8aee1f0b",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/persistence/concepts/JpaAutomationCompositionRollback.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 7625
+      },
+      "writtenOn": "2025-05-16T15:53:14Z",
+      "side": 1,
+      "message": "use the util PfUtils.mapMap(map1, map2)",
+      "range": {
+        "startLine": 120,
+        "startChar": 24,
+        "endLine": 120,
+        "endChar": 35
+      },
+      "revId": "77560be17e35c1eae7d3d545d3d83a097bbb9155",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
