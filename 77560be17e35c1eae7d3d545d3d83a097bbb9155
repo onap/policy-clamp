@@ -41,6 +41,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1e4d5e49_fb124933",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationCompositionRollback.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7927
+      },
+      "writtenOn": "2025-05-19T15:26:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6e62f22e_30ea508f",
+      "range": {
+        "startLine": 3,
+        "startChar": 21,
+        "endLine": 3,
+        "endChar": 40
+      },
+      "revId": "77560be17e35c1eae7d3d545d3d83a097bbb9155",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c79badcf_8b51dd84",
@@ -54,6 +78,30 @@
       "writtenOn": "2025-05-19T11:29:40Z",
       "side": 1,
       "message": "\u003d new LinkedHashMap\u003c\u003e();",
+      "range": {
+        "startLine": 42,
+        "startChar": 40,
+        "endLine": 42,
+        "endChar": 42
+      },
+      "revId": "77560be17e35c1eae7d3d545d3d83a097bbb9155",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "516ed98c_d001dad7",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationCompositionRollback.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 7927
+      },
+      "writtenOn": "2025-05-19T15:26:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c79badcf_8b51dd84",
       "range": {
         "startLine": 42,
         "startChar": 40,
@@ -87,6 +135,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "435b77e7_e76c2865",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationCompositionRollback.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 7927
+      },
+      "writtenOn": "2025-05-19T15:26:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4cc20fb4_549a3de7",
+      "range": {
+        "startLine": 52,
+        "startChar": 23,
+        "endLine": 52,
+        "endChar": 50
+      },
+      "revId": "77560be17e35c1eae7d3d545d3d83a097bbb9155",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bff0e8d4_15c58ae2",
@@ -100,6 +172,30 @@
       "writtenOn": "2025-05-19T11:29:40Z",
       "side": 1,
       "message": "\u003d new LinkedHashMap\u003c\u003e();",
+      "range": {
+        "startLine": 64,
+        "startChar": 40,
+        "endLine": 64,
+        "endChar": 42
+      },
+      "revId": "77560be17e35c1eae7d3d545d3d83a097bbb9155",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "66599941_425e2ed6",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/persistence/concepts/JpaAutomationCompositionRollback.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 7927
+      },
+      "writtenOn": "2025-05-19T15:26:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bff0e8d4_15c58ae2",
       "range": {
         "startLine": 64,
         "startChar": 40,
@@ -133,6 +229,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1fe4cc60_a50ae991",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/persistence/concepts/JpaAutomationCompositionRollback.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 7927
+      },
+      "writtenOn": "2025-05-19T15:26:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "08c1c498_0a9f36fc",
+      "range": {
+        "startLine": 84,
+        "startChar": 24,
+        "endLine": 84,
+        "endChar": 32
+      },
+      "revId": "77560be17e35c1eae7d3d545d3d83a097bbb9155",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9e61215a_4b801657",
@@ -146,6 +266,30 @@
       "writtenOn": "2025-05-16T15:53:14Z",
       "side": 1,
       "message": "use the util PfUtils.mapMap(map1, map2)",
+      "range": {
+        "startLine": 95,
+        "startChar": 36,
+        "endLine": 95,
+        "endChar": 44
+      },
+      "revId": "77560be17e35c1eae7d3d545d3d83a097bbb9155",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ca6e3006_36ee7c30",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/persistence/concepts/JpaAutomationCompositionRollback.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 7927
+      },
+      "writtenOn": "2025-05-19T15:26:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9e61215a_4b801657",
       "range": {
         "startLine": 95,
         "startChar": 36,
@@ -179,6 +323,30 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4d705ac5_eb3c564f",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/persistence/concepts/JpaAutomationCompositionRollback.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 7927
+      },
+      "writtenOn": "2025-05-19T15:26:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "553d3f5a_7e13915e",
+      "range": {
+        "startLine": 112,
+        "startChar": 20,
+        "endLine": 112,
+        "endChar": 31
+      },
+      "revId": "77560be17e35c1eae7d3d545d3d83a097bbb9155",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b696c83d_8aee1f0b",
@@ -192,6 +360,30 @@
       "writtenOn": "2025-05-16T15:53:14Z",
       "side": 1,
       "message": "use the util PfUtils.mapMap(map1, map2)",
+      "range": {
+        "startLine": 120,
+        "startChar": 24,
+        "endLine": 120,
+        "endChar": 35
+      },
+      "revId": "77560be17e35c1eae7d3d545d3d83a097bbb9155",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "071f4948_de4fda83",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/persistence/concepts/JpaAutomationCompositionRollback.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 7927
+      },
+      "writtenOn": "2025-05-19T15:26:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b696c83d_8aee1f0b",
       "range": {
         "startLine": 120,
         "startChar": 24,
