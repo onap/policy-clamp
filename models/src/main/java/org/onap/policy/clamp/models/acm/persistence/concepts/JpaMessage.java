@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * Copyright (C) 2025 Nordix Foundation.
+ * Copyright (C) 2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
-import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import java.sql.Timestamp;
 import java.util.UUID;
@@ -59,7 +58,6 @@ public class JpaMessage extends Validated implements PfAuthorative<DocMessage> {
     @NotNull
     private Timestamp lastMsg = TimestampHelper.nowTimestamp();
 
-    @Lob
     @Column(length = 100000)
     @Convert(converter = StringToDocMessage.class)
     @NotNull
