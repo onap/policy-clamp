@@ -22,6 +22,30 @@
       },
       "revId": "c34f93bf0ce791ecebd5694e34c1c18c561359af",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1a6edbf5_e8294275",
+        "filename": "models/src/main/java/org/onap/policy/clamp/models/acm/concepts/AutomationCompositionRollback.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 7927
+      },
+      "writtenOn": "2025-05-20T11:44:01Z",
+      "side": 1,
+      "message": "Not needed, have removed now, thank you.",
+      "parentUuid": "16718951_082d2008",
+      "range": {
+        "startLine": 35,
+        "startChar": 1,
+        "endLine": 35,
+        "endChar": 10
+      },
+      "revId": "c34f93bf0ce791ecebd5694e34c1c18c561359af",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     }
   ]
 }
