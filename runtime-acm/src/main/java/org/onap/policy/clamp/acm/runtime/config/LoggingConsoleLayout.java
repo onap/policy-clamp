@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024 Nordix Foundation.
+ *  Copyright (C) 2024-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -94,12 +94,13 @@ public class LoggingConsoleLayout extends LayoutBase<ILoggingEvent> {
         map.put("timestamp", getTimestamp(event.getInstant()));
         map.put("severity", event.getLevel().toString());
         map.put("message", event.getFormattedMessage());
-        Map<String, String> extraDatamap = new HashMap<>();
+        Map<String, Object> extraDatamap = new HashMap<>();
         extraDatamap.put("logger", event.getLoggerName());
         extraDatamap.put("thread", event.getThreadName());
         var throwableProxy = event.getThrowableProxy();
         if (throwableProxy != null) {
-            extraDatamap.put("exception", ThrowableProxyUtil.asString(throwableProxy));
+            var m = Map.of("stack_trace", ThrowableProxyUtil.asString(throwableProxy));
+            extraDatamap.put("exception", m);
         }
         map.put("extra_data", extraDatamap);
         map.putAll(staticParameterMap);

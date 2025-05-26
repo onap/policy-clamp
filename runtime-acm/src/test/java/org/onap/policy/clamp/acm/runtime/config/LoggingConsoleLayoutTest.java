@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2024 Nordix Foundation.
+ *  Copyright (C) 2024-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,11 +22,13 @@ package org.onap.policy.clamp.acm.runtime.config;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
 import ch.qos.logback.classic.spi.LoggerContextVO;
+import ch.qos.logback.classic.spi.ThrowableProxy;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
@@ -137,6 +139,15 @@ class LoggingConsoleLayoutTest {
         layout.setTimestampFormatTimezoneId("");
         layout.start();
         testingResult(layout, event);
+
+        //event with exception
+        layout.setTimestampFormat(FORMAT);
+        layout.setTimestampFormatTimezoneId("UTC");
+        layout.setStaticParameters("service_id=policy-acm|application_id=policy-acm");
+        layout.start();
+        var throwable = new Throwable("PSQL Exception: Unable to modify object");
+        event.setThrowableProxy(new ThrowableProxy(throwable));
+        testingResult(layout, event);
     }
 
     private void testingResult(LoggingConsoleLayout layout, DummyEvent event) throws CoderException {
@@ -146,8 +157,11 @@ class LoggingConsoleLayoutTest {
         assertEquals(event.level.toString(), map.get("severity"));
         assertEquals(event.message, map.get("message"));
         @SuppressWarnings("unchecked")
-        var extraData = (Map<String, String>) map.get("extra_data");
+        var extraData = (Map<String, Object>) map.get("extra_data");
         assertEquals(event.loggerName, extraData.get("logger"));
         assertEquals(event.threadName, extraData.get("thread"));
+        if (event.getThrowableProxy() != null) {
+            assertTrue(((Map<?, ?>) extraData.get("exception")).containsKey("stack_trace"));
+        }
     }
 }
