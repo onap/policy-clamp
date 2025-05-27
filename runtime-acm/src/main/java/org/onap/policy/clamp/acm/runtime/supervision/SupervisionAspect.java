@@ -43,7 +43,8 @@ public class SupervisionAspect implements Closeable {
     private final SupervisionParticipantScanner participantScanner;
 
     private final ThreadPoolExecutor executor =
-            new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
+            new ThreadPoolExecutor(1, 1, 0L,
+                    TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), new AcmThreadFactory());
 
     @Scheduled(
             fixedRateString = "${runtime.participantParameters.heartBeatMs}",

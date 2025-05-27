@@ -69,7 +69,8 @@ public class SupervisionAcHandler {
     private final MessageProvider messageProvider;
     private final EncryptionUtils encryptionUtils;
 
-    private final ExecutorService executor = Context.taskWrapping(Executors.newFixedThreadPool(1));
+    private final ExecutorService executor =
+            Context.taskWrapping(Executors.newFixedThreadPool(1, new AcmThreadFactory()));
 
     /**
      * Handle Deploy an AutomationComposition instance.
