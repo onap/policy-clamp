@@ -30,6 +30,7 @@ import java.util.concurrent.Executors;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.onap.policy.clamp.acm.runtime.main.parameters.AcRuntimeParameterGroup;
+import org.onap.policy.clamp.acm.runtime.supervision.AcmThreadFactory;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantPrimePublisher;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
@@ -63,7 +64,8 @@ public class CommissioningProvider {
     private final ParticipantPrimePublisher participantPrimePublisher;
     private final AcRuntimeParameterGroup acRuntimeParameterGroup;
 
-    private final ExecutorService executor = Context.taskWrapping(Executors.newFixedThreadPool(1));
+    private final ExecutorService executor =
+            Context.taskWrapping(Executors.newFixedThreadPool(1, new AcmThreadFactory()));
 
     private CommissioningResponse createCommissioningResponse(UUID compositionId,
             ToscaServiceTemplate serviceTemplate) {

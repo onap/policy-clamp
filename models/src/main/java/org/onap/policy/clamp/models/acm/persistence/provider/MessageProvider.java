@@ -30,7 +30,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
-import org.hibernate.exception.ConstraintViolationException;
 import org.onap.policy.clamp.models.acm.concepts.NodeTemplateState;
 import org.onap.policy.clamp.models.acm.document.concepts.DocMessage;
 import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCompositionDeployAck;
@@ -237,7 +236,7 @@ public class MessageProvider {
         try {
             var result = messageJobRepository.save(job);
             return Optional.of(result.getJobId());
-        } catch (ConstraintViolationException ex) {
+        } catch (RuntimeException ex) {
             // already exist a job with this identificationId
             LOGGER.warn(ex.getMessage());
         }
