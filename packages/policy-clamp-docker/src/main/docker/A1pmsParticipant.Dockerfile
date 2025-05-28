@@ -23,7 +23,7 @@ RUN mkdir /packages /extracted
 COPY /maven/lib/a1pms-participant.tar.gz /packages/
 RUN tar xvzf /packages/a1pms-participant.tar.gz --directory /extracted/
 
-FROM onap/policy-jre-alpine:4.1.3-SNAPSHOT
+FROM onap/policy-jre-alpine:4.2.0-SNAPSHOT
 
 LABEL maintainer="Policy Team"
 LABEL org.opencontainers.image.title="Policy CLAMP ACM A1 PMS Participant"
