@@ -23,7 +23,7 @@ RUN mkdir /packages /extracted
 COPY /maven/lib/kserve-participant.tar.gz /packages/
 RUN tar xvzf /packages/kserve-participant.tar.gz --directory /extracted/
 
-FROM onap/policy-jre-alpine:4.2.0-SNAPSHOT
+FROM onap/policy-jre-alpine:4.2.0
 
 LABEL maintainer="Policy Team"
 LABEL org.opencontainers.image.title="Policy CLAMP ACM KSERVE Participant"
