@@ -53,7 +53,7 @@ import org.onap.policy.models.base.PfKey;
 import org.onap.policy.models.base.Validated;
 
 /**
- * Class to represent a automation composition definition in the database.
+ * Class to represent an automation composition definition in the database.
  */
 @Entity
 @Table(name = "AutomationCompositionDefinition")

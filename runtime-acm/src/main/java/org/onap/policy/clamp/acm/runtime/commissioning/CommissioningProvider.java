@@ -50,7 +50,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * This class provides the create, read and delete actions on Commissioning of automation composition concepts in the
+ * This class provides the creation, read and delete actions on Commissioning of automation composition concepts in the
  * database to the callers.
  */
 @Service
@@ -202,7 +202,6 @@ public class CommissioningProvider {
 
             case DEPRIME:
                 deprime(acmDefinition);
-
                 break;
 
             default:

@@ -33,12 +33,15 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionRollback;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationComposition;
+import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationCompositionRollback;
 import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionElementRepository;
 import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionRepository;
+import org.onap.policy.clamp.models.acm.persistence.repository.AutomationCompositionRollbackRepository;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.common.parameters.ValidationStatus;
@@ -60,6 +63,7 @@ public class AutomationCompositionProvider {
 
     private final AutomationCompositionRepository automationCompositionRepository;
     private final AutomationCompositionElementRepository acElementRepository;
+    private final AutomationCompositionRollbackRepository acRollbackRepository;
 
     /**
      * Get automation composition.
@@ -96,23 +100,23 @@ public class AutomationCompositionProvider {
      */
     @Transactional(readOnly = true)
     public Optional<AutomationComposition> findAutomationComposition(
-            final ToscaConceptIdentifier automationCompositionId) {
+        final ToscaConceptIdentifier automationCompositionId) {
         return automationCompositionRepository
-                .findOne(createExample(null, automationCompositionId.getName(), automationCompositionId.getVersion()))
-                .map(JpaAutomationComposition::toAuthorative);
+            .findOne(createExample(null, automationCompositionId.getName(), automationCompositionId.getVersion()))
+            .map(JpaAutomationComposition::toAuthorative);
     }
 
     /**
      * Create automation composition.
      *
      * @param automationComposition the automation composition to create
-     * @return the create automation composition
+     * @return the created automation composition
      */
     public AutomationComposition createAutomationComposition(final AutomationComposition automationComposition) {
         automationComposition.setInstanceId(UUID.randomUUID());
         AcmUtils.setCascadedState(automationComposition, DeployState.UNDEPLOYED, LockState.NONE);
         var result = automationCompositionRepository.save(ProviderUtils.getJpaAndValidate(automationComposition,
-                JpaAutomationComposition::new, "automation composition"));
+            JpaAutomationComposition::new, "automation composition"));
 
         // Return the saved automation composition
         return result.toAuthorative();
@@ -125,9 +129,9 @@ public class AutomationCompositionProvider {
      * @return the updated automation composition
      */
     public AutomationComposition updateAutomationComposition(
-            @NonNull final AutomationComposition automationComposition) {
+        @NonNull final AutomationComposition automationComposition) {
         var result = automationCompositionRepository.save(ProviderUtils.getJpaAndValidate(automationComposition,
-                JpaAutomationComposition::new, "automation composition"));
+            JpaAutomationComposition::new, "automation composition"));
         automationCompositionRepository.flush();
         // Return the saved automation composition
         return result.toAuthorative();
@@ -142,11 +146,11 @@ public class AutomationCompositionProvider {
     @Transactional(readOnly = true)
     public List<AutomationComposition> getAcInstancesByCompositionId(UUID compositionId) {
         return ProviderUtils
-                .asEntityList(automationCompositionRepository.findByCompositionId(compositionId.toString()));
+            .asEntityList(automationCompositionRepository.findByCompositionId(compositionId.toString()));
     }
 
     /**
-     * Get all automation compositions in transition..
+     * Get all automation compositions in transition.
      *
      * @return all automation compositions found
      */
@@ -157,28 +161,29 @@ public class AutomationCompositionProvider {
         jpaList.addAll(automationCompositionRepository.findByLockStateIn(
             List.of(LockState.LOCKING, LockState.UNLOCKING)));
         jpaList.addAll(automationCompositionRepository.findBySubStateIn(
-                List.of(SubState.PREPARING, SubState.MIGRATION_PRECHECKING, SubState.REVIEWING)));
+            List.of(SubState.PREPARING, SubState.MIGRATION_PRECHECKING, SubState.REVIEWING)));
         return jpaList.stream().map(JpaAutomationComposition::getInstanceId)
-                .map(UUID::fromString).collect(Collectors.toSet());
+            .map(UUID::fromString).collect(Collectors.toSet());
     }
 
     /**
      * Get automation compositions.
      *
-     * @param name the name of the automation composition to get, null to get all automation compositions
-     * @param version the version of the automation composition to get, null to get all automation compositions
+     * @param name     the name of the automation composition to get, null to get all automation compositions
+     * @param version  the version of the automation composition to get, null to get all automation compositions
      * @param pageable the Pageable
      * @return the automation compositions found
      */
     @Transactional(readOnly = true)
     public List<AutomationComposition> getAutomationCompositions(@NonNull final UUID compositionId, final String name,
-            final String version, @NonNull final Pageable pageable) {
+                                                                 final String version,
+                                                                 @NonNull final Pageable pageable) {
         return ProviderUtils.asEntityList(automationCompositionRepository
-                .findAll(createExample(compositionId, name, version), pageable).toList());
+            .findAll(createExample(compositionId, name, version), pageable).toList());
     }
 
     private Example<JpaAutomationComposition> createExample(final UUID compositionId, final String name,
-            final String version) {
+                                                            final String version) {
         var example = new JpaAutomationComposition();
         example.setCompositionId(compositionId != null ? compositionId.toString() : null);
         example.setName(name);
@@ -201,7 +206,7 @@ public class AutomationCompositionProvider {
         var jpaDeleteAutomationComposition = automationCompositionRepository.findById(instanceId.toString());
         if (jpaDeleteAutomationComposition.isEmpty()) {
             var errorMessage = "delete of automation composition \"" + instanceId
-                    + "\" failed, automation composition does not exist";
+                + "\" failed, automation composition does not exist";
             throw new PfModelRuntimeException(Response.Status.NOT_FOUND, errorMessage);
         }
 
@@ -248,5 +253,17 @@ public class AutomationCompositionProvider {
             }
         }
         return result;
+    }
+
+    /**
+     * Save a copy of an automation composition to the copy table in case of a rollback.
+     *
+     * @param automationComposition the composition to be copied
+     */
+    public void copyAcElementsBeforeMigrate(AutomationComposition automationComposition) {
+        var copy = new AutomationCompositionRollback(automationComposition);
+        var jpaCopy = new JpaAutomationCompositionRollback(copy);
+        acRollbackRepository.save(jpaCopy);
+        acRollbackRepository.flush();
     }
 }
