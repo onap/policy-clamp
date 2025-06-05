@@ -1,5 +1,5 @@
 #  ============LICENSE_START=======================================================
-#  Copyright (C) 2022-2023,2025 OpenInfra Foundation Europe. All rights reserved.
+#  Copyright (C) 2022-2023, 2025 OpenInfra Foundation Europe. All rights reserved.
 #  ================================================================================
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ servers:
         description: This value is assigned by the service provider
 tags:
 - name: Participant Monitoring
-  description: Pariticipant Monitoring Controller, for monitoring of and requesting information from participants
+  description: Participant Monitoring Controller, for monitoring of and requesting information from participants
 - name: Automation Composition Definition
   description: Automation Composition Definition Controller, for definition and management of Automation Composition Types
 - name: Automation Composition Instance
@@ -44,7 +44,7 @@ paths:
     get:
       tags:
       - Participant Monitoring
-      summary: Query Particicpants
+      summary: Query Participants
       description: Query the participants that are registered on the ACM runtime
       operationId: queryParticipants
       parameters:
@@ -146,12 +146,12 @@ paths:
       security:
       - basicAuth: []
       x-interface info:
-        api-version: 1.0.0
-        last-mod-release: London
+        api-version: 8.2.1
+        last-mod-release: Paris
     put:
       tags:
       - Participant Monitoring
-      summary: Order an immendiate Participant Report from all participants
+      summary: Order an immediate Participant Report from all participants
       description: Requests all participants to immediately generate a heartbeat report with their information and status
         and the information and status of all their AC Element Types and Instances. The results are published on subsequent
         GET REST requests on the "participants" endpoint.
@@ -226,8 +226,8 @@ paths:
       security:
       - basicAuth: []
       x-interface info:
-        api-version: 1.0.0
-        last-mod-release: London
+        api-version: 8.2.1
+        last-mod-release: Paris
       x-codegen-request-body-name: body
   /participants/{participantId}:
     get:
@@ -235,7 +235,7 @@ paths:
       - Participant Monitoring
       summary: Get details of the requested participant
         definitions
-      description: Get details of the requested commissioned participant, returning all pariticipant details
+      description: Get details of the requested commissioned participant, returning all participant details
       operationId: getParticipant
       parameters:
       - name : participantId
@@ -341,12 +341,12 @@ paths:
       security:
       - basicAuth: []
       x-interface info:
-        api-version: 1.0.0
-        last-mod-release: London
+        api-version: 8.2.1
+        last-mod-release: Paris
     put:
       tags:
       - Participant Monitoring
-      summary: Order an immendiate Participant Report from a participant
+      summary: Order an immediate Participant Report from a participant
       description: Requests the participants to immediately generate a heartbeat report with its information and status
         and the information and status of all its AC Element Types and Instances. The results are published on subsequent
         GET REST requests on the "participants" endpoint.
@@ -444,8 +444,8 @@ paths:
       security:
       - basicAuth: []
       x-interface info:
-        api-version: 1.0.0
-        last-mod-release: London
+        api-version: 8.2.1
+        last-mod-release: Paris
       x-codegen-request-body-name: body
   /compositions:
     get:
@@ -549,8 +549,8 @@ paths:
       security:
       - basicAuth: []
       x-interface info:
-        api-version: 1.0.0
-        last-mod-release: London
+        api-version: 8.2.1
+        last-mod-release: Paris
     post:
       tags:
       - Automation Composition Definition
@@ -657,8 +657,8 @@ paths:
       security:
       - basicAuth: []
       x-interface info:
-        api-version: 1.0.0
-        last-mod-release: London
+        api-version: 8.2.1
+        last-mod-release: Paris
       x-codegen-request-body-name: body
   /compositions/{compositionId}:
     get:
@@ -760,8 +760,8 @@ paths:
       security:
       - basicAuth: []
       x-interface info:
-        api-version: 1.0.0
-        last-mod-release: London
+        api-version: 8.2.1
+        last-mod-release: Paris
     put:
       tags:
       - Automation Composition Definition
@@ -877,8 +877,8 @@ paths:
       security:
       - basicAuth: []
       x-interface info:
-        api-version: 1.0.0
-        last-mod-release: London
+        api-version: 8.2.1
+        last-mod-release: Paris
       x-codegen-request-body-name: body
     delete:
       tags:
@@ -992,8 +992,8 @@ paths:
       security:
       - basicAuth: []
       x-interface info:
-        api-version: 1.0.0
-        last-mod-release: London
+        api-version: 8.2.1
+        last-mod-release: Paris
   /compositions/{compositionId}/instances:
     get:
       tags:
@@ -1116,8 +1116,8 @@ paths:
       security:
       - basicAuth: []
       x-interface info:
-        api-version: 1.0.0
-        last-mod-release: London
+        api-version: 8.2.1
+        last-mod-release: Paris
     post:
       tags:
       - Automation Composition Instance
@@ -1258,8 +1258,8 @@ paths:
       security:
       - basicAuth: []
       x-interface info:
-        api-version: 1.0.0
-        last-mod-release: London
+        api-version: 8.2.1
+        last-mod-release: Paris
       x-codegen-request-body-name: body
   /compositions/{compositionId}/instances/{instanceId}:
     get:
@@ -1365,8 +1365,8 @@ paths:
       security:
       - basicAuth: []
       x-interface info:
-        api-version: 1.0.0
-        last-mod-release: London
+        api-version: 8.2.1
+        last-mod-release: Paris
     put:
       tags:
       - Automation Composition Instance
@@ -1491,8 +1491,8 @@ paths:
       security:
       - basicAuth: []
       x-interface info:
-        api-version: 1.0.0
-        last-mod-release: London
+        api-version: 8.2.1
+        last-mod-release: Paris
       x-codegen-request-body-name: body
     delete:
       tags:
@@ -1613,8 +1613,8 @@ paths:
       security:
       - basicAuth: []
       x-interface info:
-        api-version: 1.0.0
-        last-mod-release: London
+        api-version: 8.2.1
+        last-mod-release: Paris
 
 components:
   securitySchemes:

@@ -27,7 +27,6 @@ import java.util.function.UnaryOperator;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import lombok.ToString;
 import org.onap.policy.models.base.PfUtils;
 
 @NoArgsConstructor
@@ -52,5 +51,20 @@ public class AutomationCompositionRollback {
         this.instanceId = otherAcmRollback.instanceId;
         this.compositionId = otherAcmRollback.compositionId;
         this.elements = PfUtils.mapMap(otherAcmRollback.elements, UnaryOperator.identity());
+    }
+
+    /**
+     * Create a copy from an automation composition.
+     *
+     * @param automationComposition the composition being migrated that needs a copy
+     */
+    public AutomationCompositionRollback(final AutomationComposition automationComposition) {
+        this.instanceId = automationComposition.getInstanceId();
+        this.compositionId = automationComposition.getCompositionId();
+        var originalElements = automationComposition.getElements();
+
+        this.elements = new LinkedHashMap<>();
+        originalElements.forEach((uuid, element) ->
+            this.elements.put(uuid.toString(), element));
     }
 }
