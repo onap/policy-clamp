@@ -67,6 +67,7 @@ class SupervisionScannerTest {
 
     private AutomationCompositionDefinition createAutomationCompositionDefinition(AcTypeState acTypeState) {
         var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
+        serviceTemplate.setMetadata(Map.of("compositionId", COMPOSITION_ID));
         var acDefinition = new AutomationCompositionDefinition();
         acDefinition.setState(acTypeState);
         acDefinition.setStateChangeResult(StateChangeResult.NO_ERROR);

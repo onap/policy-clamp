@@ -33,6 +33,20 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 public final class ParticipantUtils {
     private static final String STAGE_MIGRATE = "migrate";
     private static final String STAGE_PREPARE = "prepare";
+    public static final String DEFAULT_TIMEOUT = "maxOperationWaitMs";
+    public static final String PRIME_TIMEOUT = "primeTimeoutMs";
+    public static final String DEPRIME_TIMEOUT = "deprimeTimeoutMs";
+    public static final String DEPLOY_TIMEOUT = "deployTimeoutMs";
+    public static final String UNDEPLOY_TIMEOUT = "undeployTimeoutMs";
+    public static final String UPDATE_TIMEOUT = "updateTimeoutMs";
+    public static final String MIGRATE_TIMEOUT = "migrateTimeoutMs";
+    public static final String DELETE_TIMEOUT = "deleteTimeoutMs";
+
+    public static final Map<DeployState, String> MAP_TIMEOUT = Map.of(DeployState.DEPLOYING, DEPLOY_TIMEOUT,
+            DeployState.UNDEPLOYING, UNDEPLOY_TIMEOUT,
+            DeployState.UPDATING, UPDATE_TIMEOUT,
+            DeployState.MIGRATING, MIGRATE_TIMEOUT,
+            DeployState.DELETING, DELETE_TIMEOUT);
 
     /**
      * Get the First StartPhase.
@@ -110,6 +124,42 @@ public final class ParticipantUtils {
             return findStageSet(objStage);
         }
         return Set.of(0);
+    }
+
+    /**
+     * Get timeout value from properties by name operation, return default value if not present.
+     *
+     * @param properties instance properties
+     * @param name the operation name
+     * @param defaultValue the default value
+     * @return the timeout value
+     */
+    public static long getTimeout(Map<String, Object> properties, String name, long defaultValue) {
+        var objTimeout = properties.get(name);
+        if (objTimeout != null) {
+            return Long.parseLong(objTimeout.toString());
+        }
+        return defaultValue;
+    }
+
+    /**
+     * Get operation name of a composition definition.
+     *
+     * @param state the state of the composition definition
+     * @return the operation name
+     */
+    public static String getOpName(AcTypeState state) {
+        return AcTypeState.PRIMING.equals(state) ? PRIME_TIMEOUT : DEPRIME_TIMEOUT;
+    }
+
+    /**
+     * Get operation name of a AutomationComposition.
+     *
+     * @param deployState the state of the AutomationComposition
+     * @return the operation name
+     */
+    public static String getOpName(DeployState deployState) {
+        return MAP_TIMEOUT.getOrDefault(deployState, DEFAULT_TIMEOUT);
     }
 
     /**

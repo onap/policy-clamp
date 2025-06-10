@@ -14,7 +14,12 @@
             },
             "deployState": "UNDEPLOYED",
             "lockState": "NONE",
-            "description": "Automation composition element for the K8S microservice for PMSH"
+            "description": "Automation composition element for the K8S microservice for PMSH",
+            "deployTimeoutMs": "200000",
+            "undeployTimeoutMs": "150000",
+            "updateTimeoutMs": "200000",
+            "migrateTimeoutMs": "200000",
+            "deleteTimeoutMs": "100000"
         },
         "709c62b3-8918-41b9-a747-d21eb79c6c21": {
             "id": "709c62b3-8918-41b9-a747-d21eb79c6c21",
@@ -24,7 +29,12 @@
             },
             "deployState": "UNDEPLOYED",
             "lockState": "NONE",
-            "description": "Automation composition element for the http requests of PMSH microservice"
+            "description": "Automation composition element for the http requests of PMSH microservice",
+            "deployTimeoutMs": "200000",
+            "undeployTimeoutMs": "150000",
+            "updateTimeoutMs": "200000",
+            "migrateTimeoutMs": "200000",
+            "deleteTimeoutMs": "100000"
         },
         "709c62b3-8918-41b9-a747-d21eb79c6c22": {
             "id": "709c62b3-8918-41b9-a747-d21eb79c6c22",
@@ -34,7 +44,12 @@
             },
             "deployState": "UNDEPLOYED",
             "lockState": "NONE",
-            "description": "Automation composition element for the operational policy for Performance Management Subscription Handling"
+            "description": "Automation composition element for the operational policy for Performance Management Subscription Handling",
+            "deployTimeoutMs": "200000",
+            "undeployTimeoutMs": "150000",
+            "updateTimeoutMs": "200000",
+            "migrateTimeoutMs": "200000",
+            "deleteTimeoutMs": "100000"
         }
     }
 }

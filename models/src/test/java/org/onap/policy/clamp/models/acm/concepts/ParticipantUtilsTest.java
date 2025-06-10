@@ -21,6 +21,7 @@
 package org.onap.policy.clamp.models.acm.concepts;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -150,5 +151,35 @@ class ParticipantUtilsTest {
         Map<String, Object> map = CommonTestData.getObject(PROPERTIES, Map.class);
         result = ParticipantUtils.findStageSetMigrate(map);
         assertThat(result).hasSize(2).contains(2).contains(3);
+    }
+
+    @Test
+    void testGetTimeout() {
+        var result = ParticipantUtils.getTimeout(Map.of(), ParticipantUtils.DEPLOY_TIMEOUT, 1000);
+        assertEquals(1000, result);
+
+        result = ParticipantUtils.getTimeout(Map.of(ParticipantUtils.DEPLOY_TIMEOUT, 20000),
+                ParticipantUtils.DEPLOY_TIMEOUT, 1000);
+        assertEquals(20000, result);
+    }
+
+    @Test
+    void testGetOpName() {
+        var result = ParticipantUtils.getOpName(AcTypeState.PRIMING);
+        assertEquals(ParticipantUtils.PRIME_TIMEOUT, result);
+        result = ParticipantUtils.getOpName(AcTypeState.DEPRIMING);
+        assertEquals(ParticipantUtils.DEPRIME_TIMEOUT, result);
+        result = ParticipantUtils.getOpName(DeployState.DEPLOYING);
+        assertEquals(ParticipantUtils.DEPLOY_TIMEOUT, result);
+        result = ParticipantUtils.getOpName(DeployState.UNDEPLOYING);
+        assertEquals(ParticipantUtils.UNDEPLOY_TIMEOUT, result);
+        result = ParticipantUtils.getOpName(DeployState.UPDATING);
+        assertEquals(ParticipantUtils.UPDATE_TIMEOUT, result);
+        result = ParticipantUtils.getOpName(DeployState.DELETING);
+        assertEquals(ParticipantUtils.DELETE_TIMEOUT, result);
+        result = ParticipantUtils.getOpName(DeployState.MIGRATING);
+        assertEquals(ParticipantUtils.MIGRATE_TIMEOUT, result);
+        result = ParticipantUtils.getOpName(DeployState.DEPLOYED);
+        assertEquals(ParticipantUtils.DEFAULT_TIMEOUT, result);
     }
 }

@@ -158,6 +158,7 @@ class AcDefinitionScannerTest {
     private AutomationCompositionDefinition createAutomationCompositionDefinition(AcTypeState acTypeState,
             StateChangeResult stateChangeResult) {
         var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
+        serviceTemplate.setMetadata(Map.of("compositionId", COMPOSITION_ID));
         var acDefinition = new AutomationCompositionDefinition();
         acDefinition.setState(acTypeState);
         acDefinition.setStateChangeResult(stateChangeResult);

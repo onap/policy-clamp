@@ -25,6 +25,7 @@ import org.onap.policy.clamp.acm.runtime.main.utils.EncryptionUtils;
 import org.onap.policy.clamp.acm.runtime.supervision.comm.ParticipantSyncPublisher;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
+import org.onap.policy.clamp.models.acm.concepts.ParticipantUtils;
 import org.onap.policy.clamp.models.acm.concepts.StateChangeResult;
 import org.onap.policy.clamp.models.acm.concepts.SubState;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
@@ -96,9 +97,14 @@ public abstract class AbstractScanner {
             saveAndSync(automationComposition, updateSync);
             return;
         }
+        var name = ParticipantUtils.getOpName(automationComposition.getDeployState());
+        var element = automationComposition.getElements().values().stream()
+                .filter(el -> automationComposition.getDeployState().equals(el.getDeployState())).findFirst();
+        var maxWaitMs = element.map(automationCompositionElement -> ParticipantUtils.getTimeout(
+                automationCompositionElement.getProperties(), name, maxOperationWaitMs)).orElse(maxOperationWaitMs);
         var now = TimestampHelper.nowEpochMilli();
         var lastMsg = TimestampHelper.toEpochMilli(automationComposition.getLastMsg());
-        if ((now - lastMsg) > maxOperationWaitMs) {
+        if ((now - lastMsg) > maxWaitMs) {
             LOGGER.debug("Report timeout for the ac instance {}", automationComposition.getInstanceId());
             automationComposition.setStateChangeResult(StateChangeResult.TIMEOUT);
             updateSync.setUpdated(true);
