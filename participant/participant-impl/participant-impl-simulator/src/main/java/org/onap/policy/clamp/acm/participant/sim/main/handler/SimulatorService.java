@@ -157,6 +157,12 @@ public class SimulatorService {
         return false;
     }
 
+    private void sendAcInternalState(UUID instanceId, UUID elementId, Map<String, Object> outProperties,
+            DeployState deployState) {
+        outProperties.put(INTERNAL_STATE, deployState.name());
+        intermediaryApi.sendAcElementInfo(instanceId, elementId, null, null, outProperties);
+    }
+
     /**
      * Handle deploying an automation composition element.
      *
@@ -165,20 +171,20 @@ public class SimulatorService {
      * @param outProperties the outProperties
      */
     public void deploy(UUID instanceId, UUID elementId, Map<String, Object> outProperties) {
+        sendAcInternalState(instanceId, elementId, outProperties, DeployState.DEPLOYING);
+
         if (isInterrupted(getConfig().getDeployTimerMs(),
             "Current Thread deploy is Interrupted during execution {}", elementId)) {
             return;
         }
 
         if (getConfig().isDeploySuccess()) {
-            outProperties.put(INTERNAL_STATE, DeployState.DEPLOYED.name());
-            intermediaryApi.sendAcElementInfo(instanceId, elementId, null, null, outProperties);
+            sendAcInternalState(instanceId, elementId, outProperties, DeployState.DEPLOYED);
 
             intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId,
                 DeployState.DEPLOYED, null, StateChangeResult.NO_ERROR, "Deployed");
         } else {
-            outProperties.put(INTERNAL_STATE, DeployState.UNDEPLOYED.name());
-            intermediaryApi.sendAcElementInfo(instanceId, elementId, null, null, outProperties);
+            sendAcInternalState(instanceId, elementId, outProperties, DeployState.UNDEPLOYED);
 
             intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId,
                 DeployState.UNDEPLOYED, null, StateChangeResult.FAILED, "Deploy failed!");
@@ -193,20 +199,20 @@ public class SimulatorService {
      * @param outProperties the outProperties
      */
     public void undeploy(UUID instanceId, UUID elementId, Map<String, Object> outProperties) {
+        sendAcInternalState(instanceId, elementId, outProperties, DeployState.UNDEPLOYING);
+
         if (isInterrupted(getConfig().getUndeployTimerMs(),
             "Current Thread undeploy is Interrupted during execution {}", elementId)) {
             return;
         }
 
         if (getConfig().isUndeploySuccess()) {
-            outProperties.put(INTERNAL_STATE, DeployState.UNDEPLOYED.name());
-            intermediaryApi.sendAcElementInfo(instanceId, elementId, null, null, outProperties);
+            sendAcInternalState(instanceId, elementId, outProperties, DeployState.UNDEPLOYED);
 
             intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId,
                 DeployState.UNDEPLOYED, null, StateChangeResult.NO_ERROR, "Undeployed");
         } else {
-            outProperties.put(INTERNAL_STATE, DeployState.DEPLOYED.name());
-            intermediaryApi.sendAcElementInfo(instanceId, elementId, null, null, outProperties);
+            sendAcInternalState(instanceId, elementId, outProperties, DeployState.DEPLOYED);
 
             intermediaryApi.updateAutomationCompositionElementState(instanceId, elementId,
                 DeployState.DEPLOYED, null, StateChangeResult.FAILED, "Undeploy failed!");

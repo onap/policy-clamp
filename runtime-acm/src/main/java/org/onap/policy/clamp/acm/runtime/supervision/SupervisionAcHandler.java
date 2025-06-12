@@ -45,6 +45,7 @@ import org.onap.policy.clamp.models.acm.messages.kafka.participant.AutomationCom
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.MessageProvider;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
+import org.onap.policy.clamp.models.acm.utils.TimestampHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -79,8 +80,10 @@ public class SupervisionAcHandler {
      * @param acDefinition the AutomationCompositionDefinition
      */
     public void deploy(AutomationComposition automationComposition, AutomationCompositionDefinition acDefinition) {
-        if (StateChangeResult.FAILED.equals(automationComposition.getStateChangeResult())) {
-            automationComposition.setDeployState(DeployState.DEPLOYING);
+        if (StateChangeResult.FAILED.equals(automationComposition.getStateChangeResult())
+                && DeployState.DEPLOYING.equals(automationComposition.getDeployState())
+                && automationComposition.getElements().size() > 1) {
+            automationComposition.setLastMsg(TimestampHelper.now());
             for (var element : automationComposition.getElements().values()) {
                 if (!DeployState.DEPLOYED.equals(element.getDeployState())) {
                     element.setDeployState(DeployState.DEPLOYING);
@@ -109,11 +112,14 @@ public class SupervisionAcHandler {
      * @param acDefinition the AutomationCompositionDefinition
      */
     public void undeploy(AutomationComposition automationComposition, AutomationCompositionDefinition acDefinition) {
-        if (StateChangeResult.FAILED.equals(automationComposition.getStateChangeResult())) {
-            automationComposition.setDeployState(DeployState.UNDEPLOYING);
+        if (StateChangeResult.FAILED.equals(automationComposition.getStateChangeResult())
+                && DeployState.UNDEPLOYING.equals(automationComposition.getDeployState())
+                && automationComposition.getElements().size() > 1) {
+            automationComposition.setLastMsg(TimestampHelper.now());
             for (var element : automationComposition.getElements().values()) {
                 if (!DeployState.UNDEPLOYED.equals(element.getDeployState())) {
                     element.setDeployState(DeployState.UNDEPLOYING);
+                    element.setMessage(null);
                 }
             }
         } else {
@@ -135,8 +141,10 @@ public class SupervisionAcHandler {
      * @param acDefinition the AutomationCompositionDefinition
      */
     public void unlock(AutomationComposition automationComposition, AutomationCompositionDefinition acDefinition) {
-        if (StateChangeResult.FAILED.equals(automationComposition.getStateChangeResult())) {
-            automationComposition.setLockState(LockState.UNLOCKING);
+        if (StateChangeResult.FAILED.equals(automationComposition.getStateChangeResult())
+                && LockState.UNLOCKING.equals(automationComposition.getLockState())
+                && automationComposition.getElements().size() > 1) {
+            automationComposition.setLastMsg(TimestampHelper.now());
             for (var element : automationComposition.getElements().values()) {
                 if (!LockState.UNLOCKED.equals(element.getLockState())) {
                     element.setLockState(LockState.UNLOCKING);
@@ -191,8 +199,10 @@ public class SupervisionAcHandler {
      * @param acDefinition the AutomationCompositionDefinition
      */
     public void lock(AutomationComposition automationComposition, AutomationCompositionDefinition acDefinition) {
-        if (StateChangeResult.FAILED.equals(automationComposition.getStateChangeResult())) {
-            automationComposition.setLockState(LockState.LOCKING);
+        if (StateChangeResult.FAILED.equals(automationComposition.getStateChangeResult())
+                && LockState.LOCKING.equals(automationComposition.getLockState())
+                && automationComposition.getElements().size() > 1) {
+            automationComposition.setLastMsg(TimestampHelper.now());
             for (var element : automationComposition.getElements().values()) {
                 if (!LockState.LOCKED.equals(element.getLockState())) {
                     element.setLockState(LockState.LOCKING);

@@ -55,6 +55,8 @@ import org.onap.policy.clamp.models.acm.persistence.provider.MessageProvider;
 
 class SupervisionAcHandlerTest {
     private static final String AC_INSTANTIATION_CREATE_JSON = "src/test/resources/rest/acm/AutomationComposition.json";
+    private static final String AC_INSTANTIATION_SIMPLE_JSON =
+            "src/test/resources/rest/acm/AutomationCompositionSimple.json";
     private static final UUID IDENTIFIER = UUID.randomUUID();
 
     @Test
@@ -225,26 +227,76 @@ class SupervisionAcHandlerTest {
     }
 
     @Test
-    void testDeployFailed() {
-        var automationCompositionDeployPublisher = mock(AutomationCompositionDeployPublisher.class);
-        var automationCompositionProvider = mock(AutomationCompositionProvider.class);
-        var handler = new SupervisionAcHandler(automationCompositionProvider,
-                automationCompositionDeployPublisher, mock(AutomationCompositionStateChangePublisher.class),
-                mock(AcElementPropertiesPublisher.class), mock(AutomationCompositionMigrationPublisher.class),
-                mock(AcPreparePublisher.class), mock(MessageProvider.class), mock(EncryptionUtils.class));
-
-        var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
-        var acDefinition = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
+    void testDeploy() {
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Deploy");
+        automationComposition.setDeployState(DeployState.UNDEPLOYED);
+        deploy(automationComposition);
+    }
+
+    @Test
+    void testDeployFailed() {
+        var automationComposition =
+                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Deploy");
+        automationComposition.setDeployState(DeployState.UNDEPLOYING);
+        automationComposition.getElements().values()
+                .forEach(element -> element.setDeployState(DeployState.UNDEPLOYING));
         automationComposition.setStateChangeResult(StateChangeResult.FAILED);
+        deploy(automationComposition);
+
+        automationComposition.setDeployState(DeployState.DEPLOYING);
+        automationComposition.setStateChangeResult(StateChangeResult.FAILED);
+        automationComposition.getElements().values()
+                .forEach(element -> element.setDeployState(DeployState.DEPLOYING));
+        automationComposition.getElements().values().iterator().next().setDeployState(DeployState.DEPLOYED);
+        deploy(automationComposition);
+    }
+
+    @Test
+    void testDeployFailedSimple() {
+        var automationComposition =
+                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_SIMPLE_JSON, "Deploy");
+        automationComposition.setDeployState(DeployState.UNDEPLOYED);
+        automationComposition.getElements().values().iterator().next().setDeployState(DeployState.UNDEPLOYED);
+        deploy(automationComposition);
+
+        automationComposition.setDeployState(DeployState.UNDEPLOYING);
+        automationComposition.setStateChangeResult(StateChangeResult.FAILED);
+        automationComposition.getElements().values().iterator().next().setDeployState(DeployState.DEPLOYED);
+        deploy(automationComposition);
+
+        automationComposition.setDeployState(DeployState.DEPLOYING);
+        automationComposition.setStateChangeResult(StateChangeResult.FAILED);
+        automationComposition.getElements().values().iterator().next().setDeployState(DeployState.UNDEPLOYED);
+        deploy(automationComposition);
+    }
+
+    private void deploy(AutomationComposition automationComposition) {
+        var acDeployPublisher = mock(AutomationCompositionDeployPublisher.class);
+        var acProvider = mock(AutomationCompositionProvider.class);
+        var handler = new SupervisionAcHandler(acProvider, acDeployPublisher,
+                mock(AutomationCompositionStateChangePublisher.class),
+                mock(AcElementPropertiesPublisher.class), mock(AutomationCompositionMigrationPublisher.class),
+                mock(AcPreparePublisher.class), mock(MessageProvider.class), mock(EncryptionUtils.class));
+        var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
+        var acDefinition = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
         handler.deploy(automationComposition, acDefinition);
-        verify(automationCompositionProvider).updateAutomationComposition(automationComposition);
-        verify(automationCompositionDeployPublisher, timeout(1000)).send(automationComposition, 0, true);
+        verify(acProvider).updateAutomationComposition(automationComposition);
+        verify(acDeployPublisher, timeout(1000)).send(automationComposition, 0, true);
     }
 
     @Test
     void testUndeploy() {
+        var automationComposition =
+                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Undeploy");
+        automationComposition.setDeployState(DeployState.DEPLOYED);
+        automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
+        automationComposition.getElements().values()
+                .forEach(element -> element.setDeployState(DeployState.DEPLOYED));
+        undeploy(automationComposition);
+    }
+
+    private void undeploy(AutomationComposition automationComposition) {
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         var acStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
         var handler = new SupervisionAcHandler(automationCompositionProvider,
@@ -253,8 +305,6 @@ class SupervisionAcHandlerTest {
                 mock(AcPreparePublisher.class), mock(MessageProvider.class), mock(EncryptionUtils.class));
         var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
         var acDefinition = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
-        var automationComposition =
-                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Undeploy");
         handler.undeploy(automationComposition, acDefinition);
 
         verify(automationCompositionProvider).updateAutomationComposition(any(AutomationComposition.class));
@@ -263,65 +313,103 @@ class SupervisionAcHandlerTest {
 
     @Test
     void testUndeployFailed() {
-        var acStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
-        var automationCompositionProvider = mock(AutomationCompositionProvider.class);
-        var handler = new SupervisionAcHandler(automationCompositionProvider,
-                mock(AutomationCompositionDeployPublisher.class), acStateChangePublisher,
-                mock(AcElementPropertiesPublisher.class), mock(AutomationCompositionMigrationPublisher.class),
-                mock(AcPreparePublisher.class), mock(MessageProvider.class), mock(EncryptionUtils.class));
-
-        var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
-        var acDefinition = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "UnDeploy");
+        automationComposition.setDeployState(DeployState.DEPLOYING);
         automationComposition.setStateChangeResult(StateChangeResult.FAILED);
         automationComposition.getElements().values()
-                .forEach(element -> element.setDeployState(DeployState.UNDEPLOYING));
-        handler.undeploy(automationComposition, acDefinition);
-        verify(automationCompositionProvider).updateAutomationComposition(automationComposition);
-        verify(acStateChangePublisher, timeout(1000)).send(any(AutomationComposition.class), anyInt(), anyBoolean());
+                .forEach(element -> element.setDeployState(DeployState.UNDEPLOYED));
+        undeploy(automationComposition);
+
+        automationComposition.setDeployState(DeployState.UNDEPLOYING);
+        automationComposition.setStateChangeResult(StateChangeResult.FAILED);
+        automationComposition.getElements().values()
+                .forEach(element -> element.setDeployState(DeployState.DEPLOYING));
+        automationComposition.getElements().values().iterator().next().setDeployState(DeployState.UNDEPLOYED);
+        undeploy(automationComposition);
+    }
+
+    @Test
+    void testUndeployFailedSimple() {
+        var automationComposition =
+                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_SIMPLE_JSON, "UnDeploy");
+        automationComposition.setDeployState(DeployState.DEPLOYING);
+        automationComposition.setStateChangeResult(StateChangeResult.FAILED);
+        automationComposition.getElements().values().iterator().next().setDeployState(DeployState.UNDEPLOYED);
+        undeploy(automationComposition);
+
+        automationComposition.setDeployState(DeployState.UNDEPLOYING);
+        automationComposition.setStateChangeResult(StateChangeResult.FAILED);
+        automationComposition.getElements().values().iterator().next().setDeployState(DeployState.DEPLOYED);
+        undeploy(automationComposition);
     }
 
     @Test
     void testUnlock() {
-        var automationCompositionProvider = mock(AutomationCompositionProvider.class);
+        var automationComposition =
+                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "UnLock");
+        automationComposition.setLockState(LockState.LOCKED);
+        automationComposition.getElements().values()
+                .forEach(element -> element.setLockState(LockState.LOCKED));
+        unlock(automationComposition);
+    }
+
+    private void unlock(AutomationComposition automationComposition) {
+        var acProvider = mock(AutomationCompositionProvider.class);
         var acStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
-        var handler = new SupervisionAcHandler(automationCompositionProvider,
+        var handler = new SupervisionAcHandler(acProvider,
                 mock(AutomationCompositionDeployPublisher.class), acStateChangePublisher,
                 mock(AcElementPropertiesPublisher.class), mock(AutomationCompositionMigrationPublisher.class),
                 mock(AcPreparePublisher.class), mock(MessageProvider.class), mock(EncryptionUtils.class));
         var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
         var acDefinition = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
-        var automationComposition =
-                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "UnLock");
         handler.unlock(automationComposition, acDefinition);
 
-        verify(automationCompositionProvider).updateAutomationComposition(any(AutomationComposition.class));
+        verify(acProvider).updateAutomationComposition(any(AutomationComposition.class));
         verify(acStateChangePublisher, timeout(1000)).send(any(AutomationComposition.class), anyInt(), anyBoolean());
     }
 
     @Test
     void testUnlockFailed() {
-        var automationCompositionProvider = mock(AutomationCompositionProvider.class);
-        var acStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
-        var handler = new SupervisionAcHandler(automationCompositionProvider,
-                mock(AutomationCompositionDeployPublisher.class), acStateChangePublisher,
-                mock(AcElementPropertiesPublisher.class), mock(AutomationCompositionMigrationPublisher.class),
-                mock(AcPreparePublisher.class), mock(MessageProvider.class), mock(EncryptionUtils.class));
-        var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
-        var acDefinition = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "UnLock");
         automationComposition.setStateChangeResult(StateChangeResult.FAILED);
-        automationComposition.getElements().values().forEach(element -> element.setLockState(LockState.UNLOCKING));
-        handler.unlock(automationComposition, acDefinition);
+        automationComposition.setLockState(LockState.LOCKING);
+        automationComposition.getElements().values().forEach(element -> element.setLockState(LockState.LOCKING));
+        unlock(automationComposition);
 
-        verify(automationCompositionProvider).updateAutomationComposition(any(AutomationComposition.class));
-        verify(acStateChangePublisher, timeout(1000)).send(any(AutomationComposition.class), anyInt(), anyBoolean());
+        automationComposition.setStateChangeResult(StateChangeResult.FAILED);
+        automationComposition.setLockState(LockState.UNLOCKING);
+        automationComposition.getElements().values().forEach(element -> element.setLockState(LockState.UNLOCKING));
+        automationComposition.getElements().values().iterator().next().setLockState(LockState.UNLOCKED);
+        unlock(automationComposition);
+    }
+
+    @Test
+    void testUnlockSimple() {
+        var automationComposition =
+                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_SIMPLE_JSON, "UnLock");
+        automationComposition.setStateChangeResult(StateChangeResult.FAILED);
+        automationComposition.setLockState(LockState.LOCKING);
+        automationComposition.getElements().values().iterator().next().setLockState(LockState.UNLOCKED);
+        unlock(automationComposition);
+
+        automationComposition.setStateChangeResult(StateChangeResult.FAILED);
+        automationComposition.setLockState(LockState.UNLOCKING);
+        automationComposition.getElements().values().iterator().next().setLockState(LockState.LOCKED);
+        unlock(automationComposition);
     }
 
     @Test
     void testLock() {
+        var automationComposition =
+                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Lock");
+        automationComposition.setLockState(LockState.UNLOCKED);
+        automationComposition.getElements().values().forEach(element -> element.setLockState(LockState.UNLOCKED));
+        lock(automationComposition);
+    }
+
+    private void lock(AutomationComposition automationComposition) {
         var automationCompositionProvider = mock(AutomationCompositionProvider.class);
         var acStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
         var handler = new SupervisionAcHandler(automationCompositionProvider,
@@ -330,8 +418,6 @@ class SupervisionAcHandlerTest {
                 mock(AcPreparePublisher.class), mock(MessageProvider.class), mock(EncryptionUtils.class));
         var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
         var acDefinition = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
-        var automationComposition =
-                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Lock");
         handler.lock(automationComposition, acDefinition);
 
         verify(automationCompositionProvider).updateAutomationComposition(any(AutomationComposition.class));
@@ -340,22 +426,33 @@ class SupervisionAcHandlerTest {
 
     @Test
     void testLockFailed() {
-        var automationCompositionProvider = mock(AutomationCompositionProvider.class);
-        var acStateChangePublisher = mock(AutomationCompositionStateChangePublisher.class);
-        var handler = new SupervisionAcHandler(automationCompositionProvider,
-                mock(AutomationCompositionDeployPublisher.class), acStateChangePublisher,
-                mock(AcElementPropertiesPublisher.class), mock(AutomationCompositionMigrationPublisher.class),
-                mock(AcPreparePublisher.class), mock(MessageProvider.class), mock(EncryptionUtils.class));
-        var serviceTemplate = InstantiationUtils.getToscaServiceTemplate(TOSCA_SERVICE_TEMPLATE_YAML);
-        var acDefinition = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
         var automationComposition =
                 InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Lock");
+        automationComposition.setLockState(LockState.UNLOCKING);
         automationComposition.setStateChangeResult(StateChangeResult.FAILED);
-        automationComposition.getElements().values().forEach(element -> element.setLockState(LockState.LOCKING));
-        handler.lock(automationComposition, acDefinition);
+        automationComposition.getElements().values().forEach(element -> element.setLockState(LockState.UNLOCKING));
+        lock(automationComposition);
 
-        verify(automationCompositionProvider).updateAutomationComposition(any(AutomationComposition.class));
-        verify(acStateChangePublisher, timeout(1000)).send(any(AutomationComposition.class), anyInt(), anyBoolean());
+        automationComposition.setStateChangeResult(StateChangeResult.FAILED);
+        automationComposition.setLockState(LockState.LOCKING);
+        automationComposition.getElements().values().forEach(element -> element.setLockState(LockState.LOCKING));
+        automationComposition.getElements().values().iterator().next().setLockState(LockState.LOCKED);
+        lock(automationComposition);
+    }
+
+    @Test
+    void testLockSimple() {
+        var automationComposition =
+                InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_SIMPLE_JSON, "Lock");
+        automationComposition.setLockState(LockState.UNLOCKING);
+        automationComposition.setStateChangeResult(StateChangeResult.FAILED);
+        automationComposition.getElements().values().iterator().next().setLockState(LockState.LOCKED);
+        lock(automationComposition);
+
+        automationComposition.setStateChangeResult(StateChangeResult.FAILED);
+        automationComposition.setLockState(LockState.LOCKING);
+        automationComposition.getElements().values().iterator().next().setLockState(LockState.UNLOCKED);
+        lock(automationComposition);
     }
 
     @Test
