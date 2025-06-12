@@ -65,7 +65,7 @@ public class SupervisionAspect implements Closeable {
     @After("@annotation(MessageIntercept)")
     public void doCheck() {
         if (executor.getQueue().size() < 2) {
-            LOGGER.debug("Add scanning Message");
+            LOGGER.info("Add scanning Message");
             executor.execute(supervisionScanner::run);
         }
     }
