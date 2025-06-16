@@ -23,7 +23,9 @@ package org.onap.policy.clamp.acm.runtime.instantiation;
 
 import jakarta.validation.Valid;
 import jakarta.ws.rs.core.Response.Status;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.NonNull;
@@ -34,6 +36,7 @@ import org.onap.policy.clamp.acm.runtime.supervision.SupervisionAcHandler;
 import org.onap.policy.clamp.models.acm.concepts.AcTypeState;
 import org.onap.policy.clamp.models.acm.concepts.AutomationComposition;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionDefinition;
+import org.onap.policy.clamp.models.acm.concepts.AutomationCompositionElement;
 import org.onap.policy.clamp.models.acm.concepts.AutomationCompositions;
 import org.onap.policy.clamp.models.acm.concepts.DeployState;
 import org.onap.policy.clamp.models.acm.concepts.LockState;
@@ -46,6 +49,7 @@ import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.LockOrder;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.SubOrder;
+import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationCompositionRollback;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcInstanceStateResolver;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
@@ -454,6 +458,32 @@ public class AutomationCompositionInstantiationProvider {
                     automationComposition.getSubState(), automationComposition.getStateChangeResult());
                 throw new PfModelRuntimeException(Status.BAD_REQUEST, msg);
         }
+    }
+
+    /**
+     * Rollback AC Instance.
+     *
+     * @param instanceId         the instanceId
+     */
+    public InstantiationResponse rollback(UUID instanceId) {
+        var automationComposition = automationCompositionProvider.getAutomationComposition(instanceId);
+        var automationCompositionToRollback =
+            automationCompositionProvider.getAutomationCompositionRollback(instanceId.toString());
+
+        if (DeployState.MIGRATION_ROLLBACKING.equals(automationComposition.getDeployState())
+            && automationComposition.getCompositionId().toString().equals(automationCompositionToRollback
+                .getCompositionId())) {
+            automationComposition.setCompositionId(UUID.fromString(automationCompositionToRollback.getCompositionId()));
+            automationComposition.setInstanceId(UUID.fromString(automationCompositionToRollback.getInstanceId()));
+            Map<UUID, AutomationCompositionElement> elements = new HashMap<>();
+            automationCompositionToRollback.getElements().forEach((String uuid, Object acElement) ->
+                elements.put(UUID.fromString(uuid), (AutomationCompositionElement) acElement));
+            automationComposition.setElements(elements);
+            automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
+            automationComposition.setDeployState(DeployState.UPDATING);
+            automationCompositionProvider.updateAutomationComposition(automationComposition);
+        }
+        return createInstantiationResponse(automationComposition);
     }
 
     private List<UUID> updateElementsProperties(AutomationComposition automationComposition,
