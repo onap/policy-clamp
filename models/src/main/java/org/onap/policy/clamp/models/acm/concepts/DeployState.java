@@ -28,5 +28,6 @@ public enum DeployState {
     DELETING,
     DELETED,
     UPDATING,
-    MIGRATING
+    MIGRATING,
+    MIGRATION_ROLLBACKING
 }
