@@ -266,4 +266,18 @@ public class AutomationCompositionProvider {
         acRollbackRepository.save(jpaCopy);
         acRollbackRepository.flush();
     }
+
+    /**
+     * Get the copied automation composition from the RollbackRepository.
+     *
+     * @param compositionId     the composition id of the ac instance
+     * @return the acRollback object
+     */
+    public JpaAutomationCompositionRollback getAutomationCompositionRollback(String compositionId) {
+        JpaAutomationCompositionRollback acRollback = new JpaAutomationCompositionRollback();
+        if (!acRollbackRepository.findByCompositionId(compositionId).isEmpty()) {
+            acRollback = acRollbackRepository.findByCompositionId(compositionId).get(0);
+        }
+        return acRollback;
+    }
 }

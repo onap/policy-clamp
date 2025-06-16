@@ -23,6 +23,7 @@ package org.onap.policy.clamp.models.acm.persistence.provider;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.Mockito.mock;
@@ -264,5 +265,9 @@ class AutomationCompositionProviderTest {
         automationCompositionProvider.copyAcElementsBeforeUpdate(ac);
 
         verify(acRollbackRepository).save(any(JpaAutomationCompositionRollback.class));
+
+        var acRollback = automationCompositionProvider.getAutomationCompositionRollback(ac
+            .getCompositionId().toString());
+        assertNotNull(acRollback);
     }
 }
