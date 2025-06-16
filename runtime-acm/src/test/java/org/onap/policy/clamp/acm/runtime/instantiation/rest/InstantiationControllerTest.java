@@ -25,6 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVICE_TEMPLATE_YAML;
 import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_VERSIONING;
 
@@ -49,6 +50,7 @@ import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.InstantiationResponse;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider;
+import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -73,6 +75,9 @@ class InstantiationControllerTest extends CommonRestController {
 
     private static final String AC_INSTANTIATION_UPDATE_JSON =
             "src/test/resources/rest/acm/AutomationCompositionUpdate.json";
+
+    private static final String AC_INSTANTIATION_ROLLBACK_JSON =
+        "src/test/resources/rest/acm/AutomationCompositionRollback.json";
 
     private static final String INSTANTIATION_ENDPOINT = "compositions/%s/instances";
 
@@ -325,6 +330,27 @@ class InstantiationControllerTest extends CommonRestController {
         automationComposition.setLastMsg(acFromDb.getLastMsg());
         assertEquals(automationComposition, acFromDb);
     }
+
+    @Test
+    void testRollback() {
+        var compositionId = createAcDefinitionInDB("Rollback");
+        var automationCompositionCreate =
+            InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Rollback");
+        automationCompositionCreate.setCompositionId(compositionId);
+
+        var response = instantiationProvider.createAutomationComposition(compositionId, automationCompositionCreate);
+
+        var automationComposition =
+            InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_ROLLBACK_JSON, "Rollback");
+        automationComposition.setCompositionId(compositionId);
+        automationComposition.setInstanceId(response.getInstanceId());
+        automationComposition.getElements().values()
+            .forEach(element -> element.setParticipantId(CommonTestData.getParticipantId()));
+
+        assertThrows(PfModelRuntimeException.class, () -> instantiationProvider
+            .rollback(automationCompositionCreate.getInstanceId()));
+    }
+
 
     @Test
     void testDelete() {

@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021-2024 Nordix Foundation.
+ *  Copyright (C) 2021-2025 OpenInfra Foundation Europe. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -225,6 +225,8 @@ class AutomationCompositionHandlerTest {
         migrationMsg.setAutomationCompositionId(UUID.randomUUID());
         migrationMsg.setCompositionTargetId(UUID.randomUUID());
         assertDoesNotThrow(() -> ach.handleAutomationCompositionMigration(migrationMsg));
+        migrationMsg.setRollback(true);
+        assertDoesNotThrow(() -> ach.handleAutomationCompositionMigration(migrationMsg));
     }
 
     @Test
@@ -347,6 +349,7 @@ class AutomationCompositionHandlerTest {
         migrationMsg.setCompositionId(acMigrate.getCompositionId());
         migrationMsg.setAutomationCompositionId(acMigrate.getInstanceId());
         migrationMsg.setCompositionTargetId(acMigrate.getCompositionTargetId());
+        migrationMsg.setRollback(false);
         var participantMigrate = CommonTestData.createparticipantDeploy(cacheProvider.getParticipantId(), acMigrate);
         migrationMsg.setParticipantUpdatesList(List.of(participantMigrate));
         var listener = mock(ThreadHandler.class);
