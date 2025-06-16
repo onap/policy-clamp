@@ -75,6 +75,11 @@ class AcInstanceStateResolverTest {
         result = acTypeStateResolver.resolve(DeployOrder.NONE, LockOrder.NONE, SubOrder.REVIEW,
             DeployState.DEPLOYED, LockState.LOCKED, SubState.NONE, StateChangeResult.NO_ERROR);
         assertThat(result).isEqualTo(AcInstanceStateResolver.REVIEW);
+
+        // rollback
+        result = acTypeStateResolver.resolve(DeployOrder.MIGRATE, LockOrder.NONE, SubOrder.REVIEW,
+            DeployState.MIGRATION_ROLLBACKING, LockState.LOCKED, SubState.NONE, StateChangeResult.NO_ERROR);
+        assertThat(result).isEqualTo(AcInstanceStateResolver.NONE);
     }
 
     @Test
