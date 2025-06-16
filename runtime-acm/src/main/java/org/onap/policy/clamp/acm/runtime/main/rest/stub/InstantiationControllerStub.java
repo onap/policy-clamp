@@ -90,4 +90,9 @@ public class InstantiationControllerStub extends AbstractRestController implemen
             @Valid AcInstanceStateUpdate body, UUID requestId) {
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
+
+    @Override
+    public ResponseEntity<Void> rollbackCompositionInstance(UUID instanceId, String compositionId) {
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
 }

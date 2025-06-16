@@ -1615,7 +1615,132 @@ paths:
       x-interface info:
         api-version: 8.2.1
         last-mod-release: Paris
-
+  /compositions/{compositionId}/instances/{instanceId}/rollback:
+    post:
+      tags:
+        - Automation Composition Instance
+      summary: Rollback an automation composition instance to a previous state
+      description: Triggers a rollback of the specified instance.
+      operationId: rollbackCompositionInstance
+      parameters:
+        - name: instanceId
+          in: path
+          description: The UUID of the automation composition definition on which to rollback
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: compositionId
+          in: path
+          description: The compoition id of the automation composition instance to rollback to
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Parameters for the rollback (e.g., target version)
+        required: true
+        content:
+          application/json:
+            schema:
+          application/yaml:
+            schema:
+      responses:
+        202:
+          description: Rollback initiated
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+        400:
+          description: Bad request
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+        401:
+          description: Authentication Error, returns an instance of
+            [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+          headers:
+            X-LatestVersion:
+              $ref: '#/components/headers/X-LatestVersion'
+            X-PatchVersion:
+              $ref: '#/components/headers/X-PatchVersion'
+            X-MinorVersion:
+              $ref: '#/components/headers/X-MinorVersion'
+            X-onap-RequestId:
+              $ref: '#/components/headers/X-onap-RequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleResponse'
+          404:
+            description: The specified automation composition definition was not found, returns an instance of
+              [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+            headers:
+              X-LatestVersion:
+                $ref: '#/components/headers/X-LatestVersion'
+              X-PatchVersion:
+                $ref: '#/components/headers/X-PatchVersion'
+              X-MinorVersion:
+                $ref: '#/components/headers/X-MinorVersion'
+              X-onap-RequestId:
+                $ref: '#/components/headers/X-onap-RequestId'
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/SimpleResponse'
+          400:
+            description: Bad Request, returns an instance of
+              [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+            headers:
+              X-LatestVersion:
+                $ref: '#/components/headers/X-LatestVersion'
+              X-PatchVersion:
+                $ref: '#/components/headers/X-PatchVersion'
+              X-MinorVersion:
+                $ref: '#/components/headers/X-MinorVersion'
+              X-onap-RequestId:
+                $ref: '#/components/headers/X-onap-RequestId'
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/SimpleResponse'
+          500:
+            description: Internal Server Error, returns an instance of
+              [SimpleResponse](https://github.com/onap/policy-clamp/blob/master/models/src/main/java/org/onap/policy/clamp/models/acm/messages/rest/SimpleResponse.java)
+            headers:
+              X-LatestVersion:
+                $ref: '#/components/headers/X-LatestVersion'
+              X-PatchVersion:
+                $ref: '#/components/headers/X-PatchVersion'
+              X-MinorVersion:
+                $ref: '#/components/headers/X-MinorVersion'
+              X-onap-RequestId:
+                $ref: '#/components/headers/X-onap-RequestId'
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/SimpleResponse'
+          security:
+          - basicAuth: [ ]
+          x-interface info:
+            api-version: 8.2.1
+            last-mod-release: Paris
+          x-codegen-request-body-name: body
 components:
   securitySchemes:
     basicAuth:
