@@ -24,9 +24,13 @@ package org.onap.policy.clamp.acm.runtime.instantiation;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.onap.policy.clamp.acm.runtime.util.CommonTestData.TOSCA_SERVICE_TEMPLATE_YAML;
@@ -54,6 +58,7 @@ import org.onap.policy.clamp.models.acm.messages.rest.instantiation.AcInstanceSt
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.DeployOrder;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.LockOrder;
 import org.onap.policy.clamp.models.acm.messages.rest.instantiation.SubOrder;
+import org.onap.policy.clamp.models.acm.persistence.concepts.JpaAutomationCompositionRollback;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcDefinitionProvider;
 import org.onap.policy.clamp.models.acm.persistence.provider.AcInstanceStateResolver;
 import org.onap.policy.clamp.models.acm.persistence.provider.AutomationCompositionProvider;
@@ -61,6 +66,7 @@ import org.onap.policy.clamp.models.acm.persistence.provider.ParticipantProvider
 import org.onap.policy.clamp.models.acm.persistence.provider.ProviderUtils;
 import org.onap.policy.clamp.models.acm.utils.AcmUtils;
 import org.onap.policy.models.base.PfConceptKey;
+import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.onap.policy.models.tosca.simple.concepts.JpaToscaServiceTemplate;
@@ -560,6 +566,96 @@ class AutomationCompositionInstantiationProviderTest {
         assertThatDeleteThrownBy(automationComposition, DeployState.DEPLOYING, LockState.NONE);
         assertThatDeleteThrownBy(automationComposition, DeployState.UNDEPLOYING, LockState.LOCKED);
         assertThatDeleteThrownBy(automationComposition, DeployState.DELETING, LockState.NONE);
+    }
+
+    @Test
+    void testRollbackFailure() {
+        var acDefinition = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
+        var compositionId = acDefinition.getCompositionId();
+        var automationComposition =
+            InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Rollback");
+        automationComposition.setCompositionId(compositionId);
+        automationComposition.setInstanceId(UUID.randomUUID());
+        automationComposition.setDeployState(DeployState.MIGRATION_REVERTING);
+        automationComposition.setCompositionTargetId(UUID.randomUUID());
+
+        var acProvider = mock(AutomationCompositionProvider.class);
+        when(acProvider.getAutomationComposition(automationComposition.getInstanceId()))
+            .thenReturn(automationComposition);
+        var rollbackRecord = mock(JpaAutomationCompositionRollback.class);
+        when(acProvider.getAutomationCompositionRollback(anyString())).thenReturn(rollbackRecord);
+
+        final var acDefinitionProvider = mock(AcDefinitionProvider.class);
+        final var supervisionAcHandler = mock(SupervisionAcHandler.class);
+        final var participantProvider = mock(ParticipantProvider.class);
+        final var encryptionUtils = new EncryptionUtils(CommonTestData.getTestParamaterGroup());
+        var instantiationProvider = new AutomationCompositionInstantiationProvider(acProvider, acDefinitionProvider,
+            new AcInstanceStateResolver(), supervisionAcHandler, participantProvider, new AcRuntimeParameterGroup(),
+            encryptionUtils);
+
+        assertThrows(PfModelRuntimeException.class, () -> instantiationProvider
+            .rollback(automationComposition.getInstanceId()));
+
+        // DeployState != MIGRATION_REVERTING
+        when(acProvider.getAutomationComposition(automationComposition.getInstanceId()))
+            .thenReturn(automationComposition);
+        when(acProvider.getAutomationCompositionRollback(anyString())).thenReturn(rollbackRecord);
+
+        automationComposition.setDeployState(DeployState.DELETING);
+        assertThrows(PfModelRuntimeException.class, () -> instantiationProvider
+            .rollback(automationComposition.getInstanceId()));
+
+        // SubState != NONE
+        automationComposition.setDeployState(DeployState.DEPLOYED);
+        automationComposition.setSubState(SubState.PREPARING);
+        assertThrows(PfModelRuntimeException.class, () -> instantiationProvider
+            .rollback(automationComposition.getInstanceId()));
+
+        // StateChangeResult != NO_ERROR
+        automationComposition.setSubState(SubState.NONE);
+        automationComposition.setStateChangeResult(StateChangeResult.FAILED);
+        assertThrows(PfModelRuntimeException.class, () -> instantiationProvider
+            .rollback(automationComposition.getInstanceId()));
+
+        verify(acProvider, never()).updateAutomationComposition(any());
+    }
+
+    @Test
+    void testRollbackSuccess() {
+        final var acDefinitionProvider = mock(AcDefinitionProvider.class);
+        final var acDefinition = CommonTestData.createAcDefinition(serviceTemplate, AcTypeState.PRIMED);
+        final var compositionId = acDefinition.getCompositionId();
+
+        var automationComposition =
+            InstantiationUtils.getAutomationCompositionFromResource(AC_INSTANTIATION_CREATE_JSON, "Rollback");
+        automationComposition.setInstanceId(UUID.randomUUID());
+        automationComposition.setCompositionId(compositionId);
+        automationComposition.setDeployState(DeployState.DEPLOYED);
+        automationComposition.setStateChangeResult(StateChangeResult.NO_ERROR);
+        automationComposition.setSubState(SubState.NONE);
+        automationComposition.setCompositionTargetId(UUID.randomUUID());
+
+        var acProvider = mock(AutomationCompositionProvider.class);
+        when(acProvider.getAutomationComposition(automationComposition.getInstanceId()))
+            .thenReturn(automationComposition);
+        final var supervisionAcHandler = mock(SupervisionAcHandler.class);
+        final var participantProvider = mock(ParticipantProvider.class);
+        final var encryptionUtils = new EncryptionUtils(CommonTestData.getTestParamaterGroup());
+        final var instantiationProvider = new AutomationCompositionInstantiationProvider(acProvider,
+            acDefinitionProvider, new AcInstanceStateResolver(), supervisionAcHandler,
+            participantProvider, new AcRuntimeParameterGroup(), encryptionUtils);
+
+        var rollbackRecord = new JpaAutomationCompositionRollback();
+        rollbackRecord.setCompositionId(automationComposition.getCompositionId().toString());
+
+        when(acProvider.getAutomationComposition(automationComposition.getInstanceId()))
+            .thenReturn(automationComposition);
+        when(acProvider.getAutomationCompositionRollback(anyString())).thenReturn(rollbackRecord);
+
+        instantiationProvider.rollback(automationComposition.getInstanceId());
+
+        verify(acProvider).updateAutomationComposition(automationComposition);
+        assertEquals(DeployState.MIGRATION_REVERTING, automationComposition.getDeployState());
     }
 
     private void assertThatDeleteThrownBy(AutomationComposition automationComposition, DeployState deployState,

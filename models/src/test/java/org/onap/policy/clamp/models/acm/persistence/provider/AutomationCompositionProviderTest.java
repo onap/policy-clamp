@@ -23,8 +23,11 @@ package org.onap.policy.clamp.models.acm.persistence.provider;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyIterable;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -48,6 +51,7 @@ import org.onap.policy.clamp.models.acm.persistence.repository.AutomationComposi
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.StandardCoder;
 import org.onap.policy.common.utils.resources.ResourceUtils;
+import org.onap.policy.models.base.PfModelRuntimeException;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -264,5 +268,28 @@ class AutomationCompositionProviderTest {
         automationCompositionProvider.copyAcElementsBeforeUpdate(ac);
 
         verify(acRollbackRepository).save(any(JpaAutomationCompositionRollback.class));
+        assertThrows(PfModelRuntimeException.class, () -> automationCompositionProvider // NOSONAR
+            .getAutomationCompositionRollback(ac.getInstanceId().toString()));
+    }
+
+    @Test
+    void testGetRollbackSuccess() {
+        var ac = inputAutomationCompositions.getAutomationCompositionList().get(0);
+        var rollback = new JpaAutomationCompositionRollback();
+        rollback.setInstanceId(ac.getInstanceId().toString());
+        rollback.setCompositionId(ac.getCompositionId().toString());
+
+        when(acRollbackRepository.findById(anyString())).thenReturn(Optional.of(rollback));
+
+        var rbFromDb = automationCompositionProvider.getAutomationCompositionRollback(ac.getInstanceId()
+            .toString());
+        assertNotNull(rbFromDb);
+    }
+
+    @Test
+    void testGetRollbackEmpty() {
+        when(acRollbackRepository.findById(anyString())).thenReturn(Optional.empty());
+        assertThrows(PfModelRuntimeException.class, () -> automationCompositionProvider
+            .getAutomationCompositionRollback("empty"));
     }
 }

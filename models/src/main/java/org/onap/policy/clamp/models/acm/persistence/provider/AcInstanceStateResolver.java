@@ -42,6 +42,7 @@ public class AcInstanceStateResolver {
     private static final String DELETING = DeployState.DELETING.name();
     private static final String MIGRATING = DeployState.MIGRATING.name();
     private static final String MIGRATION_PRECHECKING = SubState.MIGRATION_PRECHECKING.name();
+    private static final String MIGRATION_REVERTING = DeployState.MIGRATION_REVERTING.name();
     private static final String SUB_STATE_NONE = SubState.NONE.name();
     private static final String PREPARING = SubState.PREPARING.name();
     private static final String REVIEWING = SubState.REVIEWING.name();
@@ -126,6 +127,10 @@ public class AcInstanceStateResolver {
 
         // review order in a failed or timeout scenario
         addSubOrderWithFail(REVIEW, DEPLOYED, LOCKED, REVIEWING);
+
+        // rollback
+        addDeployOrderWithFail(MIGRATION_REVERTING, MIGRATING, LOCKED, SUB_STATE_NONE);
+        addDeployOrderWithFail(UNDEPLOY, MIGRATION_REVERTING, LOCKED, SUB_STATE_NONE);
     }
 
     private void addDeployOrder(String deployOrder, String deployState, String lockState) {
@@ -177,7 +182,7 @@ public class AcInstanceStateResolver {
      * @param acDeployOrder the Deploy Ordered
      * @param acLockOrder the Lock Ordered
      * @param acSubOrder the Sub Ordered
-     * @param acDeployState then current Deploy State
+     * @param acDeployState the current Deploy State
      * @param acLockState the current Lock State
      * @param acSubState the current Sub State
      * @param acStateChangeResult the current Result of the State Change
