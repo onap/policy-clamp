@@ -36,7 +36,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Class to provide REST end points for creating, deleting, query and commanding a automation composition definition.
+ * Class to provide REST end points for creating, deleting, query and commanding an automation composition definition.
  */
 @RestController
 @RequiredArgsConstructor
@@ -117,6 +117,12 @@ public class InstantiationController extends AbstractRestController implements A
     public ResponseEntity<Void> compositionInstanceState(UUID compositionId, UUID instanceId,
             @Valid AcInstanceStateUpdate body, UUID requestId) {
         provider.compositionInstanceState(compositionId, instanceId, body);
+        return ResponseEntity.accepted().build();
+    }
+
+    @Override
+    public ResponseEntity<Void> rollbackCompositionInstance(UUID instanceId) {
+        provider.rollback(instanceId);
         return ResponseEntity.accepted().build();
     }
 }

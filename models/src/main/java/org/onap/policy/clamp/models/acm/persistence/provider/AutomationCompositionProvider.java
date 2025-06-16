@@ -266,4 +266,18 @@ public class AutomationCompositionProvider {
         acRollbackRepository.save(jpaCopy);
         acRollbackRepository.flush();
     }
+
+    /**
+     * Get the copied automation composition from the RollbackRepository.
+     *
+     * @param instanceId the id of the ac instance
+     * @return the acRollback object
+     */
+    public JpaAutomationCompositionRollback getAutomationCompositionRollback(String instanceId) {
+        var result = acRollbackRepository.findById(instanceId);
+        if (result.isEmpty()) {
+            throw new PfModelRuntimeException(Status.NOT_FOUND, "Instance not found for rollback");
+        }
+        return result.get();
+    }
 }

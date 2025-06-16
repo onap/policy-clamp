@@ -45,6 +45,7 @@ class InstantiationControllerStubTest extends CommonRestController {
     private static final String INSTANTIATION_ENDPOINT = "instances";
     private static final String COMPOSITION_ID = "1aeed185-a98b-45b6-af22-8d5d20485ea3";
     private static final String INSTANCE_ID = "709c62b3-8918-41b9-a747-d21eb79c6c23";
+    private static final String ROLLBACK = "rollback";
 
     @LocalServerPort
     private int randomServerPort;
@@ -100,5 +101,16 @@ class InstantiationControllerStubTest extends CommonRestController {
                 + "/" + INSTANCE_ID);
         var respPost = invocationBuilder.delete();
         assertThat(Response.Status.OK.getStatusCode()).isEqualTo(respPost.getStatus());
+    }
+
+    @Test
+    void testRollback() {
+        var invocationBuilder = super.sendRequest(COMMISSIONING_ENDPOINT
+            + "/" + COMPOSITION_ID
+            + "/" + INSTANTIATION_ENDPOINT
+            + "/" + INSTANCE_ID
+            + "/" + ROLLBACK);
+        var respPost = invocationBuilder.post(Entity.json(new AcInstanceStateUpdate()));
+        assertThat(Response.Status.ACCEPTED.getStatusCode()).isEqualTo(respPost.getStatus());
     }
 }
