@@ -434,4 +434,36 @@ public class ThreadHandler implements Closeable {
         }
         executionMap.remove(instanceElement.elementId());
     }
+
+    /**
+     * Handles AutomationComposition Rollback.
+     *
+     * @param messageId the messageId
+     * @param compositionElement the information of the Automation Composition Definition Element
+     * @param instanceElement the information of the Automation Composition Instance Element
+     * @param stage the stage
+     */
+    public void rollback(UUID messageId, CompositionElementDto compositionElement,
+                         InstanceElementDto instanceElement,
+                         int stage) {
+        cleanExecution(instanceElement.elementId(), messageId);
+        var result = executor.submit(() ->
+                this.rollbackProcess(compositionElement,
+                        instanceElement, stage));
+        executionMap.put(instanceElement.elementId(), result);
+    }
+
+    private void rollbackProcess(CompositionElementDto compositionElement, InstanceElementDto instanceElement,
+                                 int stage) {
+        try {
+            listener.rollbackMigration(compositionElement, instanceElement, stage);
+        } catch (PfModelException e) {
+            LOGGER.error("Automation composition element rollback failed {} {}",
+                    instanceElement.elementId(), e.getMessage());
+            intermediaryApi.updateAutomationCompositionElementState(
+                    instanceElement.instanceId(), instanceElement.elementId(), DeployState.DEPLOYED,
+                    null, StateChangeResult.FAILED, "Automation composition rollback migrate failed");
+        }
+        executionMap.remove(instanceElement.elementId());
+    }
 }
