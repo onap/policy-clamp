@@ -129,6 +129,10 @@ class ThreadHandlerTest {
                 instanceElement, instanceElementUpdated, 0);
 
             clearInvocations(listener);
+            threadHandler.rollback(messageId, compositionElement, instanceElement, 0);
+            verify(listener, timeout(TIMEOUT)).rollbackMigration(compositionElement, instanceElement, 0);
+
+            clearInvocations(listener);
             threadHandler.undeploy(messageId, compositionElement, instanceElement);
             verify(listener, timeout(TIMEOUT)).undeploy(compositionElement, instanceElement);
 

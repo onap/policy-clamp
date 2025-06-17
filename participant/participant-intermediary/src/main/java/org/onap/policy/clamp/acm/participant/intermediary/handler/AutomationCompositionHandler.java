@@ -308,13 +308,13 @@ public class AutomationCompositionHandler {
                         migrationMsg.getCompositionTargetId(), participantDeploy, migrationMsg.getStage());
 
                 callParticipantMigrate(migrationMsg.getMessageId(), participantDeploy.getAcElementList(),
-                    acCopy, migrationMsg.getCompositionTargetId(), migrationMsg.getStage());
+                    acCopy, migrationMsg.getCompositionTargetId(), migrationMsg.getStage(), migrationMsg.getRollback());
             }
         }
     }
 
     private void callParticipantMigrate(UUID messageId, List<AcElementDeploy> acElements,
-            AutomationComposition acCopy, UUID compositionTargetId, int stage) {
+            AutomationComposition acCopy, UUID compositionTargetId, int stage, boolean rollback) {
         var compositionElementMap = cacheProvider.getCompositionElementDtoMap(acCopy);
         var instanceElementMap = cacheProvider.getInstanceElementDtoMap(acCopy);
         var automationComposition = cacheProvider.getAutomationComposition(acCopy.getInstanceId());
@@ -339,16 +339,27 @@ public class AutomationCompositionHandler {
                     var instanceElementMigrateDto = CacheProvider
                             .changeStateToNew(instanceElementMigrateMap.get(acElement.getId()));
 
-                    listener.migrate(messageId, compositionElementDto, compositionElementTargetDto, instanceElementDto,
-                            instanceElementMigrateDto, stage);
+                    if (rollback) {
+                        listener.rollback(messageId, compositionElementDto, instanceElementDto, stage);
+                    } else {
+                        listener.migrate(messageId, compositionElementDto, compositionElementTargetDto,
+                            instanceElementDto, instanceElementMigrateDto, stage);
+                    }
                 } else {
-                    listener.migrate(messageId, compositionElementMap.get(acElement.getId()),
-                            compositionElementTargetMap.get(acElement.getId()),
-                            instanceElementMap.get(acElement.getId()), instanceElementMigrateMap.get(acElement.getId()),
-                            stage);
+                    if (rollback) {
+                        listener.rollback(messageId, compositionElementMap.get(acElement.getId()),
+                                instanceElementMap.get(acElement.getId()), stage);
+                    } else {
+                        listener.migrate(messageId, compositionElementMap.get(acElement.getId()),
+                                compositionElementTargetMap.get(acElement.getId()),
+                                instanceElementMap.get(acElement.getId()), instanceElementMigrateMap
+                                        .get(acElement.getId()),
+                                stage);
+                    }
                 }
             }
         }
+
         if (stage == 0) {
             // Call migrate for removed elements
             List<UUID> removedElements = findElementsToRemove(acElements, acCopy.getElements());
@@ -358,9 +369,13 @@ public class AutomationCompositionHandler {
                                 Map.of(), Map.of(), ElementState.REMOVED);
                 var instanceDtoTarget = new InstanceElementDto(acCopy.getInstanceId(), elementId, Map.of(),
                                 Map.of(), ElementState.REMOVED);
-
-                listener.migrate(messageId, compositionElementMap.get(elementId), compositionDtoTarget,
-                        instanceElementMap.get(elementId), instanceDtoTarget, 0);
+                if (rollback) {
+                    listener.rollback(messageId, compositionElementMap.get(elementId),
+                            instanceElementMap.get(elementId), 0);
+                } else {
+                    listener.migrate(messageId, compositionElementMap.get(elementId), compositionDtoTarget,
+                            instanceElementMap.get(elementId), instanceDtoTarget, 0);
+                }
             }
         }
     }
