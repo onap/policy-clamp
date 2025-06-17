@@ -244,7 +244,7 @@ class AutomationCompositionHandlerTest {
                 automationComposition.getInstanceId(), definitions,
                 automationComposition.getCompositionTargetId(), definitions);
 
-        testMigration(cacheProvider, automationComposition, 0, automationComposition.getElements().size());
+        testMigration(cacheProvider, automationComposition, 0, automationComposition.getElements().size(), false);
     }
 
     @Test
@@ -272,7 +272,7 @@ class AutomationCompositionHandlerTest {
                 automationComposition.getInstanceId(), definitions,
                 acMigrate.getCompositionTargetId(), migrateDefinitions);
 
-        testMigration(cacheProvider, acMigrate, 0, acMigrate.getElements().size() + 1);
+        testMigration(cacheProvider, acMigrate, 0, acMigrate.getElements().size() + 1, false);
     }
 
     @Test
@@ -312,10 +312,11 @@ class AutomationCompositionHandlerTest {
                 .setProperties(Map.of("stage", List.of(1, 2))));
 
         // expected the element deleted
-        testMigration(cacheProvider, acMigrate, 0, 1);
+        testMigration(cacheProvider, acMigrate, 0, 1, false);
 
         // expected 4 elements from stage 1
-        testMigration(cacheProvider, acMigrate, 1, 4);
+        testMigration(cacheProvider, acMigrate, 1, 4, false);
+        testMigration(cacheProvider, acMigrate, 1, 4, true);
 
         // scenario 0,2
         cacheProvider = createCacheProvider(participantDeploy, automationComposition.getCompositionId(),
@@ -326,10 +327,11 @@ class AutomationCompositionHandlerTest {
                 .setProperties(Map.of("stage", List.of(0, 2))));
 
         // expected the element deleted + 4 elements from stage 0
-        testMigration(cacheProvider, acMigrate, 0, 5);
+        testMigration(cacheProvider, acMigrate, 0, 5, false);
 
         // expected 0 elements
-        testMigration(cacheProvider, acMigrate, 1, 0);
+        testMigration(cacheProvider, acMigrate, 1, 0, false);
+        testMigration(cacheProvider, acMigrate, 1, 0, true);
     }
 
     private CacheProvider createCacheProvider(ParticipantDeploy participantDeploy,
@@ -343,7 +345,7 @@ class AutomationCompositionHandlerTest {
     }
 
     private void testMigration(CacheProvider cacheProvider, AutomationComposition acMigrate,
-            int stage, int expectedMigrated) {
+            int stage, int expectedMigrated, boolean rollback) {
         var migrationMsg = new AutomationCompositionMigration();
         migrationMsg.setStage(stage);
         migrationMsg.setCompositionId(acMigrate.getCompositionId());
@@ -358,5 +360,12 @@ class AutomationCompositionHandlerTest {
         var ach = new AutomationCompositionHandler(cacheProvider, mock(ParticipantMessagePublisher.class), listener);
         ach.handleAutomationCompositionMigration(migrationMsg);
         verify(listener, times(expectedMigrated)).migrate(any(), any(), any(), any(), any(), anyInt());
+
+        if (rollback) {
+            clearInvocations();
+            migrationMsg.setRollback(true);
+            ach.handleAutomationCompositionMigration(migrationMsg);
+            verify(listener, times(expectedMigrated)).rollback(any(), any(), any(), anyInt());
+        }
     }
 }
